@@ -273,19 +273,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
                     canMapCnt = hcOrderRegisterMapper.chkCanMapCnt(params);
 
                     if (canMapCnt > 0) {
-                      qtyHcAcCmbByGrpCnt = hcOrderRegisterMapper.chkQtyHcAcCmbByGroup(params);
-                      cmbGrpMaxQty = hcOrderRegisterMapper.chkCmbGrpMaxQty(params);
-
-                      logger.info("[HcOrderRegisterServiceImpl] qtyHcAcCmbByGrpCnt > 0 :: {} " + qtyHcAcCmbByGrpCnt);
-                      logger.info("[HcOrderRegisterServiceImpl] cmbGrpMaxQty > 0 :: {} " + cmbGrpMaxQty);
-
-                      if(qtyHcAcCmbByGrpCnt != cmbGrpMaxQty) {
                          // PASS
                           return 3;
-                      }else{
-                           // FAIL
-                          return 4;
-                      }
                     } else {
                       // FAIL
                       return 4;
