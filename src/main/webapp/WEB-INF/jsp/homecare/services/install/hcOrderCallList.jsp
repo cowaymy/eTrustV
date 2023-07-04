@@ -303,8 +303,8 @@
         {
             dataField : "callLogEntryDate",
             headerText : 'Call Log Entry Date',
-            dataType: "date",
-            formatString: "dd/mm/yyyy",
+            /* dataType: "date",
+            formatString: "dd/mm/yyyy", */
             editable : false,
             width : 120
         },{
