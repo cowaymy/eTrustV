@@ -265,7 +265,20 @@ function popup(location){
 		Common.popupDiv("/sales/ccp/ccpRentalListingPop.do", $("#popForm").serializeJSON(), null, true);
 	}else if(location == 'summary'){
 		Common.popupDiv("/sales/ccp/ccpRentalSummaryReportPop.do", $("#popForm").serializeJSON(), null, true);
-	}/* else if(location == 'consignmentCourier'){
+	}else if(location == 'agmActive'){
+		let orgInfo = {
+			memType  : MEM_TYPE,
+			orgCode  : '${orgCode}',
+			grpCode  : '${grpCode}',
+			deptCode : '${deptCode}',
+			memCode  : '${memCode}',
+			memLvl   : '${SESSION_INFO.memberLevel}'
+		}
+
+		//console.log(orgInfo);
+        Common.popupDiv("/sales/ccp/ccpRentalSummaryAgmActivePop.do", orgInfo , null, true);
+    }
+	/* else if(location == 'consignmentCourier'){
 		Common.popupDiv("/sales/ccp/ccpRentalConsignmentCourierListingPop.do", $("#popForm").serializeJSON(), null, true);
 	} */
 
@@ -409,6 +422,9 @@ function popup(location){
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')"><spring:message code="sal.title.text.summary" /></a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('agmActive')"><spring:message code="sal.title.text.agmActiveListingRaw" /></a></p></li>
         </c:if>
         <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('consignmentCourier')"><spring:message code="sal.title.text.consCourier" /></a></p></li>

@@ -1700,5 +1700,9 @@ SET RESULT_ID = #{resultId},
                     WHERE
                         GOV_AG_ITM_SALES_ORD_ID = #{salesOrdId}
                         and GOV_AG_ID = #{govAgreeIdSeq}
-</update>
+    </update>
+
+    <select id="selectAgreementProgressStatus" parameterType="Map" resultType="egovMap">
+        SELECT GOV_AG_PRGRS_ID id, GOV_AG_PRGRS_NAME code_name FROM SAL0309C
+    </select>
 </mapper>

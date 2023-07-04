@@ -395,6 +395,12 @@ public class CcpRentalAgreementController {
 		return "sales/ccp/ccpRentalSummaryReportPop";
 	}
 
+	@RequestMapping(value="/ccpRentalSummaryAgmActivePop.do")
+  public String ccpRentalSummaryAgmActivePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	  model.put("orgInfo", params);
+    return "sales/ccp/ccpRentalSummaryAgmActivePop";
+  }
+
 	@RequestMapping(value="/ccpRentalConsignmentCourierListingPop.do")
 	public String ccpRentalConsignmentCourierListingPop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/ccp/ccpRentalConsignmentCourierListingPop";
@@ -451,6 +457,11 @@ public class CcpRentalAgreementController {
 		returnMap = ccpRentalAgreementService.updateAgreementMtcEdit(params);
 
 		return ResponseEntity.ok(returnMap);
+	}
+
+	@RequestMapping(value = "/selectAgreementProgressStatus.do")
+  public ResponseEntity<List<EgovMap>> selectAgreementProgressStatus (@RequestParam Map<String, Object> params) throws Exception{
+    return ResponseEntity.ok(ccpRentalAgreementService.selectAgreementProgressStatus(params));
 	}
 
 	/*@RequestMapping(value="/ccpCalListingPop.do")

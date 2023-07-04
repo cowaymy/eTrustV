@@ -114,6 +114,12 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		return ccpRentalAgreementMapper.selectOrderJsonList(params);
 	}
 
+	 @Override
+	  public List<EgovMap> selectAgreementProgressStatus(Map<String, Object> params) throws Exception {
+	    return ccpRentalAgreementMapper.selectAgreementProgressStatus(params);
+	  }
+
+
 	@Override
 	@Transactional
 	public Map<String, Object> insertAgreement(Map<String, Object> params) throws Exception {
@@ -1038,6 +1044,8 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 		return str;
 	}
+
+
 
 
 }

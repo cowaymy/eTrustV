@@ -29,6 +29,8 @@ public interface CcpRentalAgreementMapper {
 
 	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectAgreementProgressStatus(Map<String, Object> params) throws Exception;
+
 	/*###### SEQUENCE ######*/
 
 	String crtSeqSAL0305D();//
