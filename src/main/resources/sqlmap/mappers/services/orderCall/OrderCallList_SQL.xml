@@ -190,13 +190,13 @@
       <![CDATA[ AND Extent1.SALES_ORD_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
     </if>
     <if test="endDate != '' ">
-      <![CDATA[ AND Extent1.SALES_ORD_DT <= TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[ AND Extent1.SALES_ORD_DT <= TO_DATE(#{endDate}, 'DD/MM/YYYY') +1 ]]>
     </if>
     <if test="callStrDate != '' ">
       <![CDATA[ AND Extent1.CALL_LOG_DT >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
     </if>
     <if test="callEndDate != '' ">
-      <![CDATA[ AND Extent1.CALL_LOG_DT <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[ AND Extent1.CALL_LOG_DT <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') +1 ]]>
     </if>
     <if test="ordStatus != '' and ordStatus != '' ">
       AND TRIM(UPPER(Extent1.STATE)) = TRIM(UPPER(#{ordStatus}))
