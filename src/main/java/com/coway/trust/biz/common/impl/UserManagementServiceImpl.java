@@ -119,7 +119,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 			//update password in keycloak
 			if(params.get("userType") != null){
 				if(params.get("userType").toString().equals("1") || params.get("userType").toString().toString().equals("2") || params.get("userType").toString().toString().equals("3")
-						|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")){
+						|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")  || params.get("userType").toString().toString().equals("6672")){
 					Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
 					ssoParamsOldMem.put("memCode", params.get("username"));
 					ssoParamsOldMem.put("password", params.get("userPasswd"));

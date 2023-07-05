@@ -152,7 +152,7 @@ public class LoginServiceImpl implements LoginService {
 		//ssoLogin
 		try{
 			if(params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2") || params.get("userTypeId").toString().equals("3")
-					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5")){
+					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5") || params.get("userTypeId").toString().equals("6672")){
 				//update password in keycloak
 				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
 				ssoParamsOldMem.put("memCode", params.get("userName"));
