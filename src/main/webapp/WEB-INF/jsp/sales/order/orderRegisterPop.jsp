@@ -4,10 +4,10 @@
 <%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
 
 <script type="text/javaScript" language="javascript">
-	var TODAY_DD      = "${toDay}";
-	var BEFORE_DD = "${bfDay}";
-	var blockDtFrom = "${hsBlockDtFrom}";
-	var blockDtTo = "${hsBlockDtTo}";
+    var TODAY_DD      = "${toDay}";
+    var BEFORE_DD = "${bfDay}";
+    var blockDtFrom = "${hsBlockDtFrom}";
+    var blockDtTo = "${hsBlockDtTo}";
 
     doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
@@ -23,7 +23,7 @@
     var GST_MANNUAL = 'N';
     var alwSale = 1 ;
 
-   	function getSub() {
+    function getSub() {
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
@@ -57,7 +57,7 @@
         if(copyChangeYn == 'Y') {
             fn_loadCopyChange();
         }
-   	}
+    }
 
     $(document).ready(function(){
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', 'getSub'); //Common Code
@@ -191,10 +191,10 @@
                 $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
                 if(custInfo.receivingMarketingMsgStatus == 1){
-                	$("#marketMessageYes").prop("checked", true);
+                    $("#marketMessageYes").prop("checked", true);
                 }
                 else{
-                	$("#marketMessageNo").prop("checked", true);
+                    $("#marketMessageNo").prop("checked", true);
                 }
 
                 if(custInfo.corpTypeId > 0) {
@@ -427,10 +427,10 @@
                 }
 
                 //if(convToOrdYn != 'Y'){
-                	if(vCodeId == '3198'){ // SOF Form, check default when it is not eKey-in
-                		AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
-                		if(docDefaultChk == false) docDefaultChk = true;
-                	}
+                    if(vCodeId == '3198'){ // SOF Form, check default when it is not eKey-in
+                        AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                        if(docDefaultChk == false) docDefaultChk = true;
+                    }
                 //}
             }
             else {
@@ -572,13 +572,13 @@
                 $('#billMthdEstm').prop("checked", true);
                 $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdEmail2').removeAttr("disabled");
-                //$('#billMthdEmailTxt1').removeAttr("disabled");
+                $('#billMthdEmailTxt1').removeAttr("disabled");
                 $('#billMthdEmailTxt2').removeAttr("disabled");
 
                 if($("#corpTypeId").val() == 1151 || $("#corpTypeId").val() ==1154 || $("#corpTypeId").val() == 1333){
-                	$('#billMthdPost').removeAttr("disabled");
+                    $('#billMthdPost').removeAttr("disabled");
                 }else{
-                	$('#billMthdPost').prop("disabled",true);
+                    $('#billMthdPost').prop("disabled",true);
                 }
             }
             else if($('#typeId').val() == '964') { //Individual
@@ -599,7 +599,7 @@
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
-                    //$('#billMthdEmailTxt1').removeAttr("disabled");
+                    $('#billMthdEmailTxt1').removeAttr("disabled");
                     $('#billMthdEmailTxt2').removeAttr("disabled");
                     $('#billMthdPost').removeAttr("disabled");
                 }
@@ -643,11 +643,11 @@
 
     $(function(){
         $('#btnRltdNo').click(function() {
-        	   //** Start exTrade Neo to Neo Plus **//
+               //** Start exTrade Neo to Neo Plus **//
 //             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod:$('#ordProudct').val(), extrade:$("#exTrade").val()}, null, true);
-        	   //** End exTrade Neo to Neo Plus **//
+               //** End exTrade Neo to Neo Plus **//
 
-        	   Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+               Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
@@ -768,17 +768,17 @@
             }
         });
         $('#billMthdPost').change(function() {
-        	if($("#billMthdPost").is(":checked")) {
-        		$('#billMthdEstm').change();
-        		$('#billMthdSms').change();
-        	}
+            if($("#billMthdPost").is(":checked")) {
+                $('#billMthdEstm').change();
+                $('#billMthdSms').change();
+            }
         });
         $('#billMthdSms').change(function() {
             $('#billMthdSms1').prop("checked", false).prop("disabled", true);
             $('#billMthdSms2').prop("checked", false).prop("disabled", true);
 
             if($("#billMthdSms").is(":checked")) {
-            	$('#billMthdEstm').change();
+                $('#billMthdEstm').change();
                 $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdSms2').removeAttr("disabled");
             }
@@ -789,16 +789,16 @@
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
             $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
-            //$('#billMthdEmailTxt1').val("").prop("disabled", true);
+            $('#billMthdEmailTxt1').val("").prop("disabled", true);
             $('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
-            	$('#billMthdSms').change();
+                $('#billMthdSms').change();
                 $('#spEmail1').text("*");
                 $('#spEmail2').text("*");
                 $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdEmail2').removeAttr("disabled");
-                //$('#billMthdEmailTxt1').removeAttr("disabled").val($('#custCntcEmail').val().trim());
+                $('#billMthdEmailTxt1').removeAttr("disabled").val($('#custCntcEmail').val().trim());
                 $('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
             }
         });
@@ -917,11 +917,11 @@
                             appSubType = '367';
                             var vCustType = $("#typeId").val();
                             if (vCustType == '965' ){
-                            	$("#corpCustType").val('').removeAttr("disabled");
-                            	$("#agreementType").val('').removeAttr("disabled");
+                                $("#corpCustType").val('').removeAttr("disabled");
+                                $("#agreementType").val('').removeAttr("disabled");
                             }
                             else{
-                            	$("#corpCustType").val('').prop("disabled", true);
+                                $("#corpCustType").val('').prop("disabled", true);
                                 $("#agreementType").val('').prop("disabled", true);
                             }
 
@@ -1094,11 +1094,11 @@
             }
         });
         $('#ordProudct').change(function() {
-        	   //** Start exTrade Neo to Neo Plus **//
+               //** Start exTrade Neo to Neo Plus **//
                //   $('#relatedNo').val('');
-        	   //** End exTrade Neo to Neo Plus **//
+               //** End exTrade Neo to Neo Plus **//
 
-        	if(FormUtil.checkReqValue($('#exTrade'))) {
+            if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
                 $('#ordProudct').val('');
                 return;
@@ -1225,7 +1225,7 @@
                 $('#btnRltdNo').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
-                	$('#isReturnExtrade').prop("checked", true);
+                    $('#isReturnExtrade').prop("checked", true);
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -1378,15 +1378,15 @@
         if (convToOrdYn != 'Y'
             //&& copyChangeYn != 'Y'
         ) {
-	        $('[name="ordSaveBtn"]').click(function() {
-	            if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
-	                var data = {memCode : $("#salesmanCd").val()};
-	                Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
-	            }
-	            else {
-	                fn_preCheckSave();
-	            }
-	        });
+            $('[name="ordSaveBtn"]').click(function() {
+                if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
+                    var data = {memCode : $("#salesmanCd").val()};
+                    Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
+                }
+                else {
+                    fn_preCheckSave();
+                }
+            });
         }
     });
 
@@ -1465,60 +1465,60 @@
 
         if(convToOrdYn == 'Y'){// if it is eKeyin order
 
-        	console.log("preOrdId::"+ preOrdId);
+            console.log("preOrdId::"+ preOrdId);
             console.log("rcdTms::"+rcdTms);
-        	Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
-	            if(result.code == "99"){
-	            	Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
-	            	return;
-	            }else{
-	            	if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ){
+            Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
+                if(result.code == "99"){
+                    Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
+                    return;
+                }else{
+                    if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ){
 
-	                    var contactNumber = {
-	                              contactNumber       : $('#custCntcTelM').val()
-	                            , residenceNumber    : $('#custCntcTelR').val()
-	                            , officeNumber          : $('#custCntcTelO').val()
-	                            , faxNumber             : $('#custCntcTelF').val()
-	                            , asContactNumber    : $('#srvCntcTelM').val()
-	                            , asResidenceNumber : $('#srvCntcTelR').val()
-	                            , asOfficeNumber       : $('#srvCntcTelO').val()
-	                            , asFaxNumber          : $('#srvCntcTelF').val()
-	                    };
+                        var contactNumber = {
+                                  contactNumber       : $('#custCntcTelM').val()
+                                , residenceNumber    : $('#custCntcTelR').val()
+                                , officeNumber          : $('#custCntcTelO').val()
+                                , faxNumber             : $('#custCntcTelF').val()
+                                , asContactNumber    : $('#srvCntcTelM').val()
+                                , asResidenceNumber : $('#srvCntcTelR').val()
+                                , asOfficeNumber       : $('#srvCntcTelO').val()
+                                , asFaxNumber          : $('#srvCntcTelF').val()
+                        };
 
-	                    Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
-	                        if(result != null){
-	                            Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
-	                            function(){
-	                                if(docSelCnt <= 0){
-	                                    Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-	                                }else{
-	                                    if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-	                                        console.log('!@#### ordSaveBtn click START 11111');
-	                                        $('#txtOldOrderID').val();
-	                                        $('#relatedNo').val();
-	                                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
-	                                    }
-	                                    else{
-	                                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-	                                    }
-	                                    }
-	                            });
-	                        }
-	                         else{
-	                             if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-	                                 console.log('!@#### ordSaveBtn click START 11111');
-	                                 $('#txtOldOrderID').val();
-	                                 $('#relatedNo').val();
-	                                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
-	                             }
-	                             else{
-	                             Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-	                             }
-	                         }
-	                    });
-	                }
-	            }
-        	});
+                        Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                            if(result != null){
+                                Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
+                                function(){
+                                    if(docSelCnt <= 0){
+                                        Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+                                    }else{
+                                        if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                            console.log('!@#### ordSaveBtn click START 11111');
+                                            $('#txtOldOrderID').val();
+                                            $('#relatedNo').val();
+                                            Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
+                                        }
+                                        else{
+                                        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                        }
+                                        }
+                                });
+                            }
+                             else{
+                                 if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                     console.log('!@#### ordSaveBtn click START 11111');
+                                     $('#txtOldOrderID').val();
+                                     $('#relatedNo').val();
+                                     Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
+                                 }
+                                 else{
+                                 Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                 }
+                             }
+                        });
+                    }
+                }
+            });
         }else{
 
             console.log('!@#### isValid'+isValid);
@@ -2037,12 +2037,12 @@ console.log("vBindingNo" + vBindingNo);
         }
 
         /* if (custType == '965' && appTypeVal == '66'){
-        	if ($("#corpCustType option:selected").index() <= 0) {
-        		isValid = false;
+            if ($("#corpCustType option:selected").index() <= 0) {
+                isValid = false;
                 msg += '* Please select SST Type<br>';
-        	}
+            }
 
-        	if ($("#agreementType option:selected").index() <= 0) {
+            if ($("#agreementType option:selected").index() <= 0) {
                 isValid = false;
                 msg += '* Please select Agreement Type<br>';
             }
@@ -2206,11 +2206,6 @@ console.log("vBindingNo" + vBindingNo);
                                 isValid = false;
                                 msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
                             }
-                        }
-
-                        if(FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
-                            isValid = false;
-                            msg += '* <spring:message code="sal.alert.msg.plzKeyInEmailAddr" /><br>';
                         }
                     }
                 }
@@ -2433,56 +2428,56 @@ console.log("vBindingNo" + vBindingNo);
 
         if(LoginRoleID != "105" && LoginRoleID != "97")//Modified by Keyi bypass HOR & Supervisor Key In restriction
         {
-	        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
-	            console.log("memRC checking");
+            Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
+                console.log("memRC checking");
 
-	            if(memRc != null) {
-	                if(memRc.rookie == 1) {
-	                    if(memRc.rcPrct != null) {
-	                        if(memRc.rcPrct < 30) {
-	                            fn_clearOrderSalesman();
-	                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-	                            return false;
-	                        }
-	                    }
-	                } else {
-	                    fn_clearOrderSalesman();
-	                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
-	                    return false;
-	                }
-	            }
-	        });
+                if(memRc != null) {
+                    if(memRc.rookie == 1) {
+                        if(memRc.rcPrct != null) {
+                            if(memRc.rcPrct < 30) {
+                                fn_clearOrderSalesman();
+                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+                                return false;
+                            }
+                        }
+                    } else {
+                        fn_clearOrderSalesman();
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
+                        return false;
+                    }
+                }
+            });
         }
 
-	    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
-	    	   if(memInfo == null) {
-	    		    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-	    		    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-	           }
-	           else {
-	        	    $('#hiddenSalesmanId').val(memInfo.memId);
-	                $('#salesmanCd').val(memInfo.memCode);
-	                $('#salesmanType').val(memInfo.codeName);
-	                $('#salesmanTypeId').val(memInfo.memType);
-	                $('#salesmanNm').val(memInfo.name);
-	                $('#salesmanNric').val(memInfo.nric);
-	                $('#departCd').val(memInfo.deptCode);
-	                $('#departMemId').val(memInfo.lvl3UpId);
-	                $('#grpCd').val(memInfo.grpCode);
-	                $('#grpMemId').val(memInfo.lvl2UpId);
-	                $('#orgCd').val(memInfo.orgCode);
-	                $('#orgMemId').val(memInfo.lvl1UpId);
+               if(memInfo == null) {
+                    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+               }
+               else {
+                    $('#hiddenSalesmanId').val(memInfo.memId);
+                    $('#salesmanCd').val(memInfo.memCode);
+                    $('#salesmanType').val(memInfo.codeName);
+                    $('#salesmanTypeId').val(memInfo.memType);
+                    $('#salesmanNm').val(memInfo.name);
+                    $('#salesmanNric').val(memInfo.nric);
+                    $('#departCd').val(memInfo.deptCode);
+                    $('#departMemId').val(memInfo.lvl3UpId);
+                    $('#grpCd').val(memInfo.grpCode);
+                    $('#grpMemId').val(memInfo.lvl2UpId);
+                    $('#orgCd').val(memInfo.orgCode);
+                    $('#orgMemId').val(memInfo.lvl1UpId);
 
-	                $('#salesmanCd').removeClass("readonly");
-	                //$('#salesmanType').removeClass("readonly");
-	                //$('#salesmanNm').removeClass("readonly");
-	                //$('#salesmanNric').removeClass("readonly");
-	                $('#departCd').removeClass("readonly");
-	                $('#grpCd').removeClass("readonly");
-	                $('#orgCd').removeClass("readonly");
-	            }
-	     });
+                    $('#salesmanCd').removeClass("readonly");
+                    //$('#salesmanType').removeClass("readonly");
+                    //$('#salesmanNm').removeClass("readonly");
+                    //$('#salesmanNric').removeClass("readonly");
+                    $('#departCd').removeClass("readonly");
+                    $('#grpCd').removeClass("readonly");
+                    $('#orgCd').removeClass("readonly");
+                }
+         });
     }
 
     function fn_loadTrialNo(trialNo) {
@@ -2993,17 +2988,17 @@ console.log("vBindingNo" + vBindingNo);
     <td colspan="3"><select id="empChk" name="empChk" class="w100p"></select></select></td>
 </tr>
  <tr>
-	<th scope="row">Receiving Marketing Message</th>
-	<td>
-		<div style="display:inline-block;width:100%;">
-			<div style="display:inline-block;">
-			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
-			</div>
-			<div style="display:inline-block;">
-			<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
-			</div>
-		</div>
-	</td>
+    <th scope="row">Receiving Marketing Message</th>
+    <td>
+        <div style="display:inline-block;width:100%;">
+            <div style="display:inline-block;">
+            <input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+            </div>
+            <div style="display:inline-block;">
+            <input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+            </div>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
@@ -3558,7 +3553,7 @@ console.log("vBindingNo" + vBindingNo);
     <label><input id="billMthdEmail2" name="billMthdEmail2" type="checkbox" disabled/><span><spring:message code="sal.text.email" /> 2</span></label>
     </td>
     <th scope="row"><spring:message code="sal.title.text.eamilOne" /><span id="spEmail1" class="must">*</span></th>
-    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" /></td>
+    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
     <td></td>
