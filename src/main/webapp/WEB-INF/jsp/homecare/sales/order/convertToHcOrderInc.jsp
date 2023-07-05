@@ -28,7 +28,7 @@
                 $("#gender").val(custInfo.gender); //Gender
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
-                $("#email").val('${preOrderInfo.custBillEmail}'); //Email
+                $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
                 if(custInfo.receivingMarketingMsgStatus == 1){
