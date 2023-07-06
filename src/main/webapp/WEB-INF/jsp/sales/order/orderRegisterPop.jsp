@@ -190,6 +190,8 @@
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
+                $("#hiddenCustCrtDt").val(custInfo.crtDt); //cust create date
+
                 if(custInfo.receivingMarketingMsgStatus == 1){
                     $("#marketMessageYes").prop("checked", true);
                 }
@@ -1917,9 +1919,14 @@ console.log("vBindingNo" + vBindingNo);
             msg = '<spring:message code="sal.alert.msg.plzSelIndvCustOutP" />';
         }
 
-        if(FormUtil.checkReqValue($('#email'))) {
-            isValid = false;
-            msg += '<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />';
+        var newCustDt = new Date("01/02/2023").getTime();
+        var custCrtDt = $('#hiddenCustCrtDt').val();
+
+        if(custCrtDt > newCustDt &&  $("#typeId").val() == 964){
+        	if(FormUtil.checkReqValue($('#email'))) {
+                isValid = false;
+                msg += '<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />';
+            }
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -2923,6 +2930,7 @@ console.log("vBindingNo" + vBindingNo);
     <input id="hiddenCustId" name="custId"   type="hidden"/>
     <input id="hiddenOldOrderId" name="hiddenOldOrderId" type="hidden"/>
     <input id="hiddenCopyQty" name="hiddenCopyQty" type="hidden"/>
+    <input id="hiddenCustCrtDt" name="hiddenCustCrtDt"   type="hidden"/>
 
 </form>
 <form id="custForm" name="custForm" action="#" method="post">
