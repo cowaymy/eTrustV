@@ -696,8 +696,9 @@
                                                                           pay24d.SRV_MEM_DT_TM   ,
                                                                           pay24d.SRV_MEM_AMT   ,
                                                                           pay24d.SRV_MEM_BATCH_NO,
-                                                                          pay24d.SRV_MEM_QOTAT_ID
+                                                       CASE    WHEN ( pay24d.SRV_MEM_QOTAT_ID is not null AND pay24d.SRV_MEM_QOTAT_ID != 0) THEN pay24d.SRV_MEM_QOTAT_ID  ELSE sal93d.SRV_MEM_QUOT_ID  END SRV_MEM_QOTAT_ID
                                                                 FROM PAY0024D pay24d
+                                                                LEFT JOIN SAL0093D sal93d ON sal93d.SRV_MEM_ID = pay24d.SRV_MEM_ID
 						                                             WHERE  pay24d.SRV_MEM_ID = #{MBRSH_ID}
 						                                      ) sL01   ON 1 = 1
                                                JOIN SYS0013M s13m   ON s13m.CODE_ID = sL01.SRV_MEM_DOC_TYPE_ID
