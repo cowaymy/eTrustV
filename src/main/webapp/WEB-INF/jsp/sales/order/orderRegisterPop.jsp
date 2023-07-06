@@ -1922,11 +1922,9 @@ console.log("vBindingNo" + vBindingNo);
         var newCustDt = new Date("01/02/2023").getTime();
         var custCrtDt = $('#hiddenCustCrtDt').val();
 
-        if(custCrtDt > newCustDt &&  $("#typeId").val() == 964){
-        	if(FormUtil.checkReqValue($('#email'))) {
-                isValid = false;
-                msg += '<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />';
-            }
+        if(custCrtDt > newCustDt && $("#typeId").val() == 964 && FormUtil.checkReqValue($('#email'))){
+	       isValid = false;
+	       msg += '<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />';
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -2987,7 +2985,7 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p"/></td>
+    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.indutryCd" /></th>
     <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
 </tr>
