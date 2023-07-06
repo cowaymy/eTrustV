@@ -1129,15 +1129,17 @@ $(document).ready(function(){
                 }
             })
 
-	         if (fn_validRequiredField_Save() == false)
-	             return;
-	         if (fn_CheckRentalOrder(billMonth)) {
-	             if (fn_CheckSalesPersonCode()) {
-	                 fn_unconfirmSalesPerson();
+	        if (rtnVAL == false) {
+	            if (fn_validRequiredField_Save() == false)
+	                 return;
+	             if (fn_CheckRentalOrder(billMonth)) {
+	                 if (fn_CheckSalesPersonCode()) {
+	                     fn_unconfirmSalesPerson();
+	                 }
 	             }
-	         }
+	        }
 
-	         return rtnVAL;
+            return rtnVAL;
 	}
 
 	function fn_validRequiredField_Save() {
