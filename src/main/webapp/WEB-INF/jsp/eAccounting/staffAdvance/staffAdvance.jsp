@@ -528,7 +528,7 @@
                 $("#advReqClmNo").val(results.advReqClmNo);
                 $("#refKeyDate").val(results.entryDt);
                 $("#refCostCenterCode").val(results.costCenter);
-                $("#refCreateUsername").val(results.crtUserNm);
+                $("#refCreateUsername").val(results.crtUserName);
                 $("#refPayeeCode").val(results.payee);
                 $("#refPayeeName").val(results.payeeName);
                 $("#refBankName").val(results.bankName);
