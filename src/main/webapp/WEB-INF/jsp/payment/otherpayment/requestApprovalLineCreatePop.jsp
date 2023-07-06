@@ -192,7 +192,7 @@ function fn_submitNewAdjustmentWithApprovalLine(){
             fn_submitRequestFT();
             break;
 		case "REF" :
-            fn_submitRequestREF();
+			fn_submitRefund();
             break;
 		default:
 			break;

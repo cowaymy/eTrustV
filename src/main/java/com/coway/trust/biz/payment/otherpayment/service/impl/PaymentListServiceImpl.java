@@ -419,6 +419,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		paramMap.put("groupSeq", groupSeq);
 		paramMap.put("payId", payId);
 		paramMap.put("appTypeId", appTypeId);
+		paramMap.put("ind", "REF");
 
 		String userId = paramMap.get("userId").toString();
 		String userName = paramMap.get("userName").toString();
@@ -684,7 +685,9 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
 			Map<String, Object> ntf = new HashMap<String, Object>();
 			String refundReqId = paymentListMapper.selectRefundReqId(appvPrcssNo);
-			ntf.put("memCode", params.get("memCode"));
+			//ntf.put("memCode", params.get("memCode"));
+			ntf.put("appvPrcssNo", appvPrcssNo);
+			ntf.put("appvLineSeq", params.get("appvLineSeq"));
 			ntf.put("refundReqId", refundReqId);
 
 			EgovMap ntfDtls = paymentListMapper.getNtfUser(ntf);

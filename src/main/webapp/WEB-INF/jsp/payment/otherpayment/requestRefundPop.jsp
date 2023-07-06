@@ -126,6 +126,10 @@ function validateSave(refMode, reasonCd){
 	        Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
 	        return validFlg = false;
 	    }
+		else if( Number($("#oldAmt").val() > oldAmt)){
+			Common.alert("Key-in Amount cannot be greater than Total Amount. ");
+			return validFlg = false;
+		}
 	}
 
 	if(refMode != null && refMode != "" && refMode != "0" && refMode == "107"){ //CreditCard Mode

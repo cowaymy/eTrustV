@@ -668,13 +668,13 @@ public class PaymentListController {
 						validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
 
 						if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
-							if((selectedOrder.get(i).get("bankStateMappingDt") != null && selectedOrder.get(i).get("bankStateMappingDt") != "") || (selectedOrder.get(i).get("crcStateMappingDt") != null && selectedOrder.get(i).get("crcStateMappingDt") != "")){
+							//if((selectedOrder.get(i).get("bankStateMappingDt") != null && selectedOrder.get(i).get("bankStateMappingDt") != "") || (selectedOrder.get(i).get("crcStateMappingDt") != null && selectedOrder.get(i).get("crcStateMappingDt") != "")){
 								validationParams.put("bkCrcFlg", "Y");
-							}
-							else{ //not allow to proceed if statement mapping date is empty but statement mapping id is not null
-								allowFlg = "N";
-								break;
-							}
+//							}
+//							else{ //not allow to proceed if statement mapping date is empty but statement mapping id is not null
+//								allowFlg = "N";
+//								break;
+//							}
 						}
 						else
 						{
@@ -1013,6 +1013,7 @@ public class PaymentListController {
 		model.put("refStusId", params.get("refStusId").toString().replace("\"", ""));
 		model.put("salesOrdNo", params.get("salesOrdNo").toString().replace("\"", ""));
 		model.put("appvStus", params.get("appvStus"));
+		model.put("reqNo", params.get("reqNo"));
 
 		LOGGER.debug("payment List params : {} ", params);
 
