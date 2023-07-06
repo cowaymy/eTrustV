@@ -582,7 +582,7 @@ FROM (
     AND Extent1.MEM_CODE LIKE '%' || #{code} || '%'
   </if>
   <if test="name != null and name != ''">
-    AND Extent1.NAME in LIKE '%' || #{name} || '%')
+    AND Extent1.NAME LIKE UPPER('%' || #{name} || '%')
   </if>
   <if test="icNum != null and icNum != ''">
     AND Extent1.NRIC LIKE '%' || #{icNum} || '%'
