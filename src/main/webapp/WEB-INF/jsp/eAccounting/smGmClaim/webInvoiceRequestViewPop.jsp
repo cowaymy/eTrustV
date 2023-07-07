@@ -55,35 +55,13 @@ var myColumnLayout = [ {
 }, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />'
-}, /*{
-    dataField : "netAmt",
-    headerText : '<spring:message code="newWebInvoice.netAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
 }, {
-    dataField : "taxAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
     editable : false//,
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    }*/
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
@@ -146,42 +124,12 @@ var mGridColumnLayout = [ {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, /*{
-    dataField : "gstBeforAmt",
-    headerText : '<spring:message code="newWebInvoice.netAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
 }, {
-    dataField : "oriTaxAmt",
-    dataType: "numeric",
-    visible : false, // Color 칼럼은 숨긴채 출력시킴
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt * (item.taxRate / 100));
-    }
-}, {
-    dataField : "gstAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    }*/
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -456,12 +404,13 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
         url = "/eAccounting/creditCard/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
     } else {
     	var clmType1 = clmNo.substr(0, 3);
-        if(clmType1 == "SGM"){
-            url = "/eAccounting/smGmClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
-        }else{
-            // same table, same query
+    	if(clmType1 == "SGM"){
+    		url = "/eAccounting/smGmClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+    	}else{
+    		// same table, same query
             url = "/eAccounting/staffClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
-        }
+    	}
+
     }
     Common.ajax("POST", url, obj, function(result) {
     	console.log("STEP 1::")

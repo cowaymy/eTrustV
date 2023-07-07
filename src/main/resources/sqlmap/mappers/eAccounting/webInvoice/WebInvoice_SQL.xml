@@ -150,7 +150,14 @@ SELECT   T.CLM_NO
                 BANK_CODE,
                 BANK_NAME,
                 BANK_ACC_NO
-    FROM FCM0006M
+    FROM FCM0006M T1
+    <if test="levelChk != null and levelChk != ''">
+	    JOIN (SELECT A.MEM_CODE FROM ORG0001D A
+	    LEFT JOIN ORG0005D B ON B.MEM_ID = A.MEM_ID
+	    WHERE A.MEM_TYPE =1
+	    AND B.MEM_LVL IN ( 1,2,3)
+	    ) T2 ON T2.MEM_CODE = SUBSTR(T1.MEM_ACC_ID,3,6)
+    </if>
     WHERE 1=1
     <if test="memAccId != null and memAccId != ''">
     AND UPPER(MEM_ACC_ID) = UPPER(#{memAccId})

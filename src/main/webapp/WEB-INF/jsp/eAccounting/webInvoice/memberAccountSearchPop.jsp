@@ -131,6 +131,8 @@ function fn_selectMember() {
 <input type="hidden" id="search_bankCode">
 <input type="hidden" id="search_bankName">
 <input type="hidden" id="search_bankAccNo">
+<input type="hidden" id="levelChk" name="levelChk" value="${levelChk}">
+<input type="hidden" id="memLvl" name="memLvl" value="${memLvl}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>

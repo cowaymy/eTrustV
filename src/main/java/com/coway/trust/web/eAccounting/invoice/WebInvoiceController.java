@@ -84,13 +84,14 @@ public class WebInvoiceController {
 	}
 
 	@RequestMapping(value = "/supplierSearchPop.do")
-	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 
 		LOGGER.debug("params =====================================>>  " + params);
 
 		model.addAttribute("pop", params.get("pop"));
 		model.addAttribute("accGrp", params.get("accGrp"));
 		model.addAttribute("entry", params.get("entry"));
+		model.addAttribute("levelChk", params.get("levelChk"));
 		return "eAccounting/webInvoice/memberAccountSearchPop";
 	}
 
@@ -321,7 +322,7 @@ public class WebInvoiceController {
 	}
 
 	@RequestMapping(value = "/selectSupplier.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSupplier(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectSupplier(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
 		List<EgovMap> list = webInvoiceService.selectSupplier(params);
 
 		return ResponseEntity.ok(list);

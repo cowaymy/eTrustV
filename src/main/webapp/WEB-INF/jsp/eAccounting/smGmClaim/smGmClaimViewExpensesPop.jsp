@@ -83,7 +83,8 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "taxCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+}
+/* , {
     dataField : "taxName",
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
 }, {
@@ -96,7 +97,8 @@ var newGridColumnLayout = [ {
     dataField : "invcTypeName",
     headerText : '<spring:message code="pettyCashNewExp.invcBrType" />',
     style : "aui-grid-user-custom-left"
-}, {
+} */
+, {
     dataField : "invcNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -105,7 +107,8 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />'
-}, {
+}
+/* , {
     dataField : "gstBeforAmt",
     headerText : '<spring:message code="pettyCashNewExp.amtBrBeforeGst" />',
     style : "aui-grid-user-custom-right",
@@ -123,26 +126,18 @@ var newGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
-}, {
+} */
+, {
     dataField : "totAmt",
     headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
-    formatString : "#,##0.00",
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    },
-    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        if(item.yN == "N") {
-            return "my-cell-style";
-        }
-        return null;
-    }
+    formatString : "#,##0.00"
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+}
+/* , {
     dataField : "carMilagDt",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -166,7 +161,8 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "purpose",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+} */
+, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.remark" />',
     style : "aui-grid-user-custom-left",
@@ -179,7 +175,7 @@ var newGridColumnLayout = [ {
 
 //그리드 속성 설정
 var newGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -219,7 +215,7 @@ var myGridColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -261,7 +257,8 @@ var myGridColumnLayout = [ {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, {
+}
+/* , {
     dataField : "gstBeforAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -305,22 +302,18 @@ var myGridColumnLayout = [ {
         autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
-}, {
+} */
+, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    },
-    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        if(item.yN == "N") {
-            return "my-cell-style";
-        }
-        return null;
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
     dataField : "atchFileGrpId",
@@ -439,19 +432,29 @@ $(document).ready(function () {
     } else {
         myGridID = AUIGrid.create("#my_grid_wrap", approvalColumnLayout, myGridPros);
     }
-    
+
     AUIGrid.setGridData(newGridID, $.parseJSON('${itemList}'));
     console.log($.parseJSON('${itemList}'))
-    
+
     var result = $.parseJSON('${itemList}');
     var allTotAmt = "0.00";
     if(result.length > 0) {
         allTotAmt = "" + result[0].allTotAmt;
     }
     $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-    
+
     setInputFile2();
-    
+    var date = new Date();
+    var numDate = date.getDate();
+    var monthYear = "";
+    if(numDate <= 5){
+        monthYear = (date.getMonth()).toString().padStart(2, '0') + "/" + date.getFullYear();
+    }else{
+        monthYear = (date.getMonth() + 1).toString().padStart(2, '0') + "/" + date.getFullYear();
+    }
+
+    $("#newClmMonth").val(monthYear);
+
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
@@ -463,7 +466,8 @@ $(document).ready(function () {
     $("#request_btn").click(fn_approveLinePop);
     $("#add_row").click(fn_addMyGridRow);
     $("#remove_row").click(fn_removeMyGridRow);
-    
+    $("#smGmClose").click(fn_selectStaffClaimList);
+
     AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) {
     	console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         console.log("CellDoubleClick clmNo : " + event.item.clmNo + " CellDoubleClick clmSeq : " + event.item.clmSeq);
@@ -478,7 +482,7 @@ $(document).ready(function () {
             Common.alert('<spring:message code="pettyCashNewExp.beforeSave.msg" />');
         }
     });
-    
+
     AUIGrid.bind(newGridID, "cellClick", function( event ) {
     	console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         console.log("CellClick expTypeName : " + event.item.expTypeName + " CellClick clmSeq : " + event.item.clmSeq);
@@ -487,12 +491,12 @@ $(document).ready(function () {
         clmSeq = event.item.clmSeq;
         atchFileGrpId = event.item.atchFileGrpId;
     });
-    
+
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
-    
+
     fn_myGridSetEvent();
-    
+
     fn_setEvent();
 });
 
@@ -504,6 +508,30 @@ function setInputFile2(){//인풋파일 세팅하기
 function fn_tempSave() {
 	fn_updateStaffClaimExp(callType);
 }
+
+/* function fn_updateStaffClaimExp(st) {
+    // row의 수가 0개 이상일때만 insert
+    var gridDataList = AUIGrid.getOrgGridData(newGridID);
+    if(gridDataList.length > 0){
+        var gridDataObj = GridCommon.getEditData(newGridID);
+        gridDataObj.clmNo = clmNo;
+        gridDataObj.allTotAmt = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+        console.log(gridDataObj);
+        Common.ajax("POST", "/eAccounting/smGmClaim/updateSmGmClaimExp.do", gridDataObj, function(result) {
+            console.log(result);
+            clmNo = result.data.clmNo;
+            fn_selectStaffClaimItemList();
+            if(st == "view"){
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
+                $("#viewStaffClaimPop").remove();
+            }
+            fn_selectStaffClaimList();
+        });
+    } else {
+        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
+    }
+    Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+} */
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -511,7 +539,7 @@ function fn_tempSave() {
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="viewStaffClaim.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="smGmClose"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -529,6 +557,7 @@ function fn_tempSave() {
 <input type="hidden" id="glAccCode" name="glAccCode">
 <input type="hidden" id="glAccCodeName" name="glAccCodeName">
 <input type="hidden" id="taxRate">
+<input type="hidden" id="entAmt">
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
@@ -547,10 +576,10 @@ function fn_tempSave() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /><span style="color:red">*</span></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row"><spring:message code="smGmClaim.hpCode" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<th scope="row"><spring:message code="smGmClaim.hpCode" /><span style="color:red">*</span></th>
+	<td><input type="text" title="" placeholder="" class="readonly"  readonly="readonly" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
@@ -559,10 +588,10 @@ function fn_tempSave() {
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
-	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
-	<th scope="row"></th>
-    <td></td>
+	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /><span style="color:red">*</span></th>
+	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class=" w100p readonly" readonly="readonly" id="newClmMonth" name="clmMonth" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
+	<th scope="row">Entitlement</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="entitleAmt" name="entitleAmt"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -585,17 +614,6 @@ function fn_tempSave() {
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="supplirName" name="supplirName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td>
-    <select class="w100p" id="invcType" name="invcType" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
-        <option value="F"><spring:message code="newWebInvoice.select.fullTax" /></option>
-        <option value="S"><spring:message code="newWebInvoice.select.simpleTax" /></option>
-    </select>
-    </td>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>

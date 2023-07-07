@@ -12,7 +12,29 @@
 }
 </style>
 <script type="text/javascript">
-var staffClaimColumnLayout = [ {
+var memId = '${SESSION_INFO.memId}';
+
+var staffClaimColumnLayout = [
+{
+	dataField : "isActive",
+	headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	width: 30,
+	renderer : {
+	    type : "CheckBoxEditRenderer",
+	    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	    checkValue : "Active", // true, false 인 경우가 기본
+	    unCheckValue : "Inactive",
+	    // 체크박스 disabled 함수
+	    disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+	        if(item.curAppvUserId == memId){
+	            return false;
+	        }else{
+	            return true;
+	        }
+	    }
+	}
+},{
     dataField : "memAccId",
     headerText : '<spring:message code="smGmClaim.hpId" />'
 }, {
@@ -48,6 +70,9 @@ var staffClaimColumnLayout = [ {
     dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
+    dataField : "appvLineSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
@@ -56,6 +81,9 @@ var staffClaimColumnLayout = [ {
     headerText : '<spring:message code="pettyCashRqst.appvalDt" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
+}, {
+    dataField : "curAppvUserId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
 
@@ -78,6 +106,8 @@ $(document).ready(function () {
 
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#registration_btn").click(fn_newStaffClaimPop);
+    $("#approve_btn").click(fn_approvalSubmit);
+    $("#reject_btn").click(fn_RejectSubmit);
     $("#_staffClaimBtn").click(function() {
 
         //Param Set
@@ -98,21 +128,21 @@ $(document).ready(function () {
     });
 
     AUIGrid.bind(staffClaimGridID, "cellDoubleClick", function( event )
-            {
-                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellDoubleClick clmNo : " + event.item.clmNo);
-                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
-                console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
-                // TODO detail popup open
-                if(event.item.appvPrcssStusCode == "T") {
-                	fn_viewStaffClaimPop(event.item.clmNo);
-                } else {
-                	var clmNo = event.item.clmNo;
-                    var clmType = clmNo.substr(0, 2);
-                	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
-                }
+	{
+	    console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+	    console.log("CellDoubleClick clmNo : " + event.item.clmNo);
+	    console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+	    console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
+	    // TODO detail popup open
+	    if(event.item.appvPrcssStusCode == "T") {
+	    	fn_viewStaffClaimPop(event.item.clmNo);
+	    } else {
+	    	var clmNo = event.item.clmNo;
+	        var clmType = clmNo.substr(0, 2);
+	    	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
+	    }
 
-            });
+	});
 
     $("#appvPrcssStus").multipleSelect("checkAll");
 
@@ -120,7 +150,7 @@ $(document).ready(function () {
 });
 
 function fn_setToMonth() {
-    var month = new Date();
+    /* var month = new Date();
 
     var mm = month.getMonth() + 1;
     var yyyy = month.getFullYear();
@@ -130,22 +160,33 @@ function fn_setToMonth() {
     }
 
     month = mm + "/" + yyyy;
-    $("#clmMonth").val(month)
+    $("#clmMonth").val(month) */
+
+    var date = new Date();
+    var numDate = date.getDate();
+    var monthYear = "";
+    if(numDate <= 5){
+        monthYear = (date.getMonth()).toString().padStart(2, '0') + "/" + date.getFullYear();
+    }else{
+        monthYear = (date.getMonth() + 1).toString().padStart(2, '0') + "/" + date.getFullYear();
+    }
+
+    $("#clmMonth").val(monthYear);
 }
 
 function fn_clearData() {
     /* $("#form_newStaffClaim").each(function() {
         this.reset();
-    }); */
+    });*/
 
     $("#invcDt").val("");
     $("#supplirName").val("");
-    $("#gstRgistNo").val("");
-    $("#invcType").val("F");
+    //$("#gstRgistNo").val("");
+    //$("#invcType").val("F");
     $("#invcNo").val("");
     $("#expDesc").val("");
 
-    fn_destroyMyGrid();
+    //fn_destroyMyGrid();
     fn_createMyGrid();
 
     fn_myGridSetEvent();
@@ -183,6 +224,8 @@ function fn_setEvent() {
                 Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
                 $(this).val(mm + "/" + yyyy);
             }
+
+            fn_selectEntitlement();
         } else if(id == "newCostCenter") {
             if(!FormUtil.isEmpty($("#newCostCenter").val())){
                 Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
@@ -193,15 +236,6 @@ function fn_setEvent() {
                         $("#newCostCenterText").val(row.costCenterText);
                     }
                 });
-            }
-        } else if(id == "gstRgistNo") {
-            if($("#invcType").val() == "F") {
-                var gstRgistNo = $(this).val();
-                console.log(gstRgistNo);
-                /*if(gstRgistNo.length != 12) {
-                    Common.alert('Please insert 12 digits GST Registration No');
-                    $("#gstRgistNo").val("");
-                }*/
             }
         }
    });
@@ -226,7 +260,7 @@ function fn_setPopCostCenter() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM09"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM09",levelChk:"Y",memLvl:['1','2','3']}, null, true, "supplierSearchPop");
 }
 
 function fn_setPopSupplier() {
@@ -235,6 +269,8 @@ function fn_setPopSupplier() {
     $("#bankCode").val($("#search_bankCode").val());
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
+
+    fn_selectEntitlement();
 }
 
 function fn_setCostCenterEvent() {
@@ -270,8 +306,21 @@ function fn_setSupplierEvent() {
                     $("#bankAccNo").val(row.bankAccNo);
                 }
             });
+
+            fn_selectEntitlement();
         }
    });
+}
+
+function fn_selectEntitlement() {
+	Common.ajax("GET", "/eAccounting/smGmClaim/selectEntitlement.do", {memAccId:$("#newMemAccId").val(),clmMonth:$("#newClmMonth").val()}, function(result) {
+        console.log(result);
+        if(result != null){
+        	$("#entitleAmt").val("RM " + result.amount);
+        	$("#entAmt").val(result.amount);
+        }
+
+    });
 }
 
 function fn_PopExpenseTypeSearchPop() {
@@ -333,7 +382,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if($("#invcType").val() == "F") {
+    /* if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#supplirName").val())) {
             Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
             checkResult = false;
@@ -369,12 +418,12 @@ function fn_checkEmpty() {
                 }
             }
         }
-    }
+    } */
     return checkResult;
 }
 
 //AUIGrid 를 생성합니다.
-function fn_createMyGrid() {
+/* function fn_createMyGrid() {
     // 이미 생성되어 있는 경우
     console.log("isCreated : " + AUIGrid.isCreated("#my_grid_wrap"));
     if(AUIGrid.isCreated("#my_grid_wrap")) {
@@ -387,26 +436,27 @@ function fn_createMyGrid() {
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
 
     fn_myGridSetEvent();
-}
+} */
 
 // 그리드를 제거합니다.
-function fn_destroyMyGrid() {
+/* function fn_destroyMyGrid() {
     AUIGrid.destroy("#my_grid_wrap");
     myGridID = null;
-}
+} */
 
 function fn_addMyGridRow() {
     if(AUIGrid.getRowCount(myGridID) > 0) {
         AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),expGrp:"0",cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
     } else {
-        Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J6"}, function(result) {
+        Common.ajax("GET", "/eAccounting/smGmClaim/selectSubClaimNo.do", null, function(result) {
             console.log(result);
-            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,expGrp:"0",cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+            AUIGrid.addRow(myGridID, {clamUn:result.subClaimNo,expGrp:"0",cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
         });
     }
 }
 
 function fn_removeMyGridRow() {
+	clmSeq = 0;
     AUIGrid.removeRow(myGridID, selectRowIdx);
 }
 
@@ -414,7 +464,8 @@ function fn_addRow() {
     // 파일 업로드 전에 필수 값 체크
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
     if(fn_checkEmpty()) {
-    	var formData = Common.getFormData("form_newStaffClaim");
+        var formData = Common.getFormData("form_newStaffClaim");
+        console.log("fn_addRow clmSeq " + clmSeq);
         if(clmSeq == 0) {
             var data = {
                     costCentr : $("#newCostCenter").val()
@@ -425,21 +476,20 @@ function fn_addRow() {
                     ,clmMonth : $("#newClmMonth").val()
                     ,supplir : $("#supplir").val()
                     ,supplirName : $("#supplirName").val()
-                    ,invcType : $("#invcType").val()
-                    ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
                     ,invcDt : $("#invcDt").val()
-                    ,gstRgistNo : $("#gstRgistNo").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
 
             Common.ajaxFile("/eAccounting/smGmClaim/attachFileUpload.do", formData, function(result) {
-                console.log(result);
+                //debugger;
+                console.log("result" + result);
 
-                data.atchFileGrpId = result.data.fileGroupKey
-                console.log(data);
+                data.atchFileGrpId = result.data.fileGroupKey;
+                atchFileGrpId = result.data.fileGroupKey;
+                console.log("data" + data);
 
                 if(data.gridData.add.length > 0) {
                     for(var i = 0; i < data.gridData.add.length; i++) {
@@ -451,11 +501,8 @@ function fn_addRow() {
                         data.gridData.add[i].clmMonth = data.clmMonth;
                         data.gridData.add[i].supplir = data.supplir;
                         data.gridData.add[i].supplirName = data.supplirName;
-                        data.gridData.add[i].invcType = data.invcType;
-                        data.gridData.add[i].invcTypeName = data.invcTypeName;
                         data.gridData.add[i].invcNo = data.invcNo;
                         data.gridData.add[i].invcDt = data.invcDt;
-                        data.gridData.add[i].gstRgistNo = data.gstRgistNo;
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
@@ -466,6 +513,7 @@ function fn_addRow() {
                 fn_getAllTotAmt();
             });
         } else {
+        	debugger;
             var data = {
                     costCentr : $("#newCostCenter").val()
                     ,costCentrName : $("#newCostCenterText").val()
@@ -475,11 +523,8 @@ function fn_addRow() {
                     ,clmMonth : $("#newClmMonth").val()
                     ,supplir : $("#supplir").val()
                     ,supplirName : $("#supplirName").val()
-                    ,invcType : $("#invcType").val()
-                    ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
                     ,invcDt : $("#invcDt").val()
-                    ,gstRgistNo : $("#gstRgistNo").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
                     ,gridData : GridCommon.getEditData(myGridID)
@@ -508,11 +553,8 @@ function fn_addRow() {
                         data.gridData.add[i].clmMonth = data.clmMonth;
                         data.gridData.add[i].supplir = data.supplir;
                         data.gridData.add[i].supplirName = data.supplirName;
-                        data.gridData.add[i].invcType = data.invcType;
-                        data.gridData.add[i].invcTypeName = data.invcTypeName;
                         data.gridData.add[i].invcNo = data.invcNo;
                         data.gridData.add[i].invcDt = data.invcDt;
-                        data.gridData.add[i].gstRgistNo = data.gstRgistNo;
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
@@ -529,11 +571,8 @@ function fn_addRow() {
                         data.gridData.update[i].clmMonth = data.clmMonth;
                         data.gridData.update[i].supplir = data.supplir;
                         data.gridData.update[i].supplirName = data.supplirName;
-                        data.gridData.update[i].invcType = data.invcType;
-                        data.gridData.update[i].invcTypeName = data.invcTypeName;
                         data.gridData.update[i].invcNo = data.invcNo;
                         data.gridData.update[i].invcDt = data.invcDt;
-                        data.gridData.update[i].gstRgistNo = data.gstRgistNo;
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
@@ -547,7 +586,8 @@ function fn_addRow() {
 
                 fn_getAllTotAmt();
 
-                clmSeq = 0;
+                //clmSeq = 0;
+
             });
         }
 
@@ -571,7 +611,7 @@ function fn_getAllTotAmt() {
     $("#allTotAmt_text").text(allTotAmt);
 }
 
-function fn_insertStaffClaimExp(st) {
+/* function fn_insertStaffClaimExp(st) {
     // row의 수가 0개 이상일때만 insert
     var gridDataList = AUIGrid.getOrgGridData(newGridID);
     if(gridDataList.length > 0){
@@ -594,7 +634,7 @@ function fn_insertStaffClaimExp(st) {
     } else {
         Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
     }
-}
+} */
 
 function fn_selectStaffClaimItemList() {
     var obj = {
@@ -630,7 +670,9 @@ function fn_selectStaffClaimInfo() {
         $("#bankCode").val(result.bankCode);
         $("#bankName").val(result.bankName);
         $("#bankAccNo").val(result.bankAccNo);
-        $("#newClmMonth").val(result.clmMonth);
+        if($("#newClmMonth").val()  == ""){
+        	$("#newClmMonth").val(result.clmMonth);
+        }
         $("#supplir").val(result.supplir);
         $("#supplirName").val(result.supplirName);
         $("#invcType").val(result.invcType);
@@ -640,6 +682,8 @@ function fn_selectStaffClaimInfo() {
         $("#expDesc").val(result.expDesc);
 
         AUIGrid.setGridData(myGridID, result.itemGrp);
+
+        fn_selectEntitlement();
 
         // TODO attachFile
         attachList = result.attachList;
@@ -731,8 +775,32 @@ function fn_fileListPop() {
 }
 
 function fn_updateStaffClaimExp(st) {
+
+/* 	var date = new Date();
+    var numDate = date.getDate();
+    var monthYear = "";
+    if(numDate <= 5){
+        monthYear = (date.getMonth()).toString().padStart(2, '0') + "/" + date.getFullYear();
+    }else{
+        monthYear = (date.getMonth() + 1).toString().padStart(2, '0') + "/" + date.getFullYear();
+    } */
+    var formData = Common.getFormData("form_newStaffClaim");
+    var data = {
+    		clmNo : clmNo
+            ,costCentr : $("#newCostCenter").val()
+            ,costCentrName : $("#newCostCenterText").val()
+            ,memAccId : $("#newMemAccId").val()
+            ,bankCode : $("#bankCode").val()
+            ,bankAccNo : $("#bankAccNo").val()
+            ,clmMonth : $("#newClmMonth").val()
+            ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
+    };
+    Common.ajax("POST", "/eAccounting/smGmClaim/updateSmGmClaimExpMain.do", data, function(result) {
+        console.log(result);
+    });
+
     // row의 수가 0개 이상일때만 insert
-    var gridDataList = AUIGrid.getOrgGridData(newGridID);
+	var gridDataList = AUIGrid.getOrgGridData(newGridID);
     if(gridDataList.length > 0){
         var gridDataObj = GridCommon.getEditData(newGridID);
         gridDataObj.clmNo = clmNo;
@@ -750,10 +818,41 @@ function fn_updateStaffClaimExp(st) {
         });
     } else {
         Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
+        return 0;
     }
+    return 1;
 }
 
 function fn_approveLinePop() {
+    // tempSave를 하지 않고 바로 submit인 경우
+    var count = 0;
+
+    var val1 = Number($("#entAmt").val());
+    var val2 = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+
+    if(val1 == 0){
+        Common.alert('Kindly fill in mandatory field(s).');
+        return;
+    }
+
+    if(val1 >= val2) {
+        if(FormUtil.isEmpty(clmNo)) {
+            count = fn_insertStaffClaimExp("");
+        } else {
+            // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+            count =  fn_updateStaffClaimExp("");
+        }
+
+    } else{
+        Common.alert('Claim Amount is exceeded.');
+    }
+
+    if(count > 0 ){
+        Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    }
+
+}
+/* function fn_approveLinePop() {
     // tempSave를 하지 않고 바로 submit인 경우
     if(FormUtil.isEmpty(clmNo)) {
     	fn_insertStaffClaimExp("");
@@ -763,7 +862,7 @@ function fn_approveLinePop() {
     }
 
     Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
-}
+} */
 
 function fn_deleteStaffClaimExp() {
 	// Grid Row 삭제
@@ -800,35 +899,18 @@ function fn_selectTaxRate() {
 
 function fn_myGridSetEvent() {
     AUIGrid.bind(myGridID, "cellClick", function( event )
-            {
-                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                selectRowIdx = event.rowIndex;
-            });
-
-    AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
-        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
-        if($("#invcType").val() == "S") {
-            if(event.dataField == "taxNonClmAmt") {
-                if(event.item.taxAmt <= 30) {
-                    Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
-                    AUIGrid.forceEditingComplete(myGridID, null, true);
-                }
-            }
-        } else {
-            if(event.dataField == "taxNonClmAmt") {
-                Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
-                AUIGrid.forceEditingComplete(myGridID, null, true);
-            }
-        }
-  });
+    {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        selectRowIdx = event.rowIndex;
+    });
 
     AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "gstBeforAmt" || event.dataField == "gstAmt" || event.dataField == "taxNonClmAmt") {
             var taxAmt = 0;
             var taxNonClmAmt = 0;
             if($("#invcType").val() == "S") {
-                if(event.dataField == "gstBeforAmt") {
-                	var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                /* if(event.dataField == "gstBeforAmt") {
+                    var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
                     if(taxAmtCnt >= 30) {
                         taxNonClmAmt = event.item.oriTaxAmt;
                     } else {
@@ -857,7 +939,7 @@ function fn_myGridSetEvent() {
                     AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
                 }
                 if(event.dataField == "gstAmt") {
-                	if(event.value > 30) {
+                    if(event.value > 30) {
                         Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
                         AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
                     } else {
@@ -867,7 +949,7 @@ function fn_myGridSetEvent() {
                             AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
                         }
                     }
-                }
+                } */
             } else {
                 if(event.dataField == "gstBeforAmt") {
                     taxAmt = event.item.oriTaxAmt;
@@ -876,19 +958,8 @@ function fn_myGridSetEvent() {
                 }
             }
         }
-        if(event.dataField == "taxCode") {
-            console.log("taxCode Choice Action");
-            console.log(event.item.taxCode);
-            var data = {
-                    taxCode : event.item.taxCode
-            };
-            Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
-                console.log(result);
-                AUIGrid.setCellValue(myGridID, event.rowIndex, "taxRate", result.taxRate);
-                AUIGrid.setCellValue(myGridID, event.rowIndex, "taxName", result.taxName);
-            });
-        }
-  });
+
+    });
 }
 
 function fn_getTotTaxAmt(rowIndex) {
@@ -913,7 +984,7 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
     		clmType : clmType
             ,appvPrcssNo : appvPrcssNo
     };
-    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
+    Common.popupDiv("/eAccounting/smGmClaim/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
 
 function fn_report() {
@@ -921,6 +992,80 @@ function fn_report() {
         isProcedure : true
     };
     Common.report("dataForm", option);
+}
+
+function fn_approvalSubmit() {
+
+    /* var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    }
+    console.log("what day? " + date);
+    if(date > 15){
+        Common.alert('Before 15th of the month just able to APPROVE Claims.');
+        return;
+    } */
+
+    var checkedItems = AUIGrid.getItemsByValue(staffClaimGridID, "isActive", "Active");
+    if(checkedItems.length <= 0) {
+        Common.alert('No data selected.');
+        return;
+    }
+
+    Common.confirm("Are you sure you want to approve this Claim submit form?",function (){
+        console.log("click yes");
+        fn_appvRejctSubmit("appv", "");
+    });
+}
+
+function fn_appvRejctSubmit(type, rejctResn) {
+	 // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+	 var checkedItems = AUIGrid.getItemsByValue(staffClaimGridID, "isActive", "Active");
+	 var gridDataLength = AUIGrid.getGridData(staffClaimGridID).length;
+
+	 console.log('gridDataLength ' + gridDataLength);
+	 //console.log('gridData ' + checkedItems);
+
+	 var data = {
+	         invoAppvGridList : checkedItems
+	         ,rejctResn : rejctResn
+	 };
+
+	 if(type == "appv") {
+	     url = "/eAccounting/smGmClaim/approvalSubmit.do";
+	 } else if(type == "rejct") {
+	     url = "/eAccounting/smGmClaim/rejectionSubmit.do";
+	 }
+
+	 Common.ajax("POST", url, data, function(result) {
+     console.log(result);
+     if(result.code == "99") {
+
+     }else{
+         if(type == "appv") {
+             Common.alert("The Claim has been approved.");
+         }else if(type == "rejct") {
+             Common.alert("The Claim has been rejected.");
+         }
+         fn_selectStaffClaimList();
+     }
+
+ });
+
+}
+function fn_RejectSubmit() {
+
+    var checkedItems = AUIGrid.getItemsByValue(staffClaimGridID, "isActive", "Active");
+    if(checkedItems.length <= 0) {
+        Common.alert('No data selected.');
+        return;
+    }
+
+    Common.popupDiv("/eAccounting/ctDutyAllowance/rejectRegistPop.do", null, null, true, "rejectMsgPop");
+
+    /* var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
+    AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
+    fn_rejectRegistPop(); */
 }
 </script>
 
@@ -951,7 +1096,13 @@ function fn_report() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_staffClaim">
-<input type="hidden" id="memAccName" name="memAccName">
+    <c:if test="${PAGE_AUTH.funcUserDefine3 != 'Y'}"><!-- 'N' see own approval claim only,'Y' can see all ppl claim -->
+    <input type="hidden" id="apprvUserId" name="apprvUserId" value='${SESSION_INFO.memId}'>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine5  != 'Y'}"> <!-- 'N' see own claim only,'Y' can see all ppl claim -->
+        <input type="hidden" id="loginUserId" name="loginUserId" value='${SESSION_INFO.userId}'>
+    </c:if>
+    <input type="hidden" id="memAccName" name="memAccName">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -1009,8 +1160,12 @@ function fn_report() {
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="pettyCashExp.newExpClm" /></a></p></li>
+	   <li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="pettyCashExp.newExpClm" /></a></p></li>
 	</c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+	    <li><p class="btn_grid"><a href="#" id="approve_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
+	    <li><p class="btn_grid"><a href="#" id="reject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+    </c:if>
 </ul>
 
 <article class="grid_wrap" id="staffClaim_grid_wrap"><!-- grid_wrap start -->

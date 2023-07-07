@@ -7,11 +7,13 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 
 public interface SmGmClaimApplication {
-	
+
 	void insertSmGmClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
-	
+
 	void updateSmGmClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
-	
+
 	void deleteSmGmClaimAttachBiz(FileType type, Map<String, Object> params);
+
+	int cntNonIncentiveUploadBatch(Map<String, Object> params);
 
 }
