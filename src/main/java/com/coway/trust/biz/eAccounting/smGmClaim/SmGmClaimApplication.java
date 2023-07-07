@@ -14,6 +14,4 @@ public interface SmGmClaimApplication {
 
 	void deleteSmGmClaimAttachBiz(FileType type, Map<String, Object> params);
 
-	int cntNonIncentiveUploadBatch(Map<String, Object> params);
-
 }
