@@ -328,27 +328,22 @@
             LEFT OUTER JOIN SAL0333M Extent11 ON Extent11.CUST_ID = Extent1.CUST_ID
             LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent11.TIER_RANK AND Extent12.CODE_MASTER_ID = 538
             left join (
-            select * from (
-                select
-            q1.cust_id, q1.sales_tier_stus
-            , case when q1.sales_tier_stus = q1.min_status and q1.sales_tier_stus <> 7082
-                then sum(q1.SALES_TOT_SCORE) + sum(nvl(q2.REWRD_POINT,0))
+                select * from (
+                select q1.cust_id,q1.SALES_TIER_STUS
+                ,case when q1.sales_tier_stus = q2.min_status
+                then sum(q1.SALES_TOT_SCORE) + sum(nvl(q3.REWRD_POINT,0))
                 else sum(q1.SALES_TOT_SCORE)
                 end SALES_TOT_SCORE
-            from (
-            select
-            a.CUST_ID,a.SALES_TIER_STUS
-                ,CASE WHEN a.SALES_TIER_STUS = 7082 THEN a.SALES_EXP_SCORE
-                ELSE a.SALES_TOT_SCORE END SALES_TOT_SCORE
-                ,c.SALES_TIER_STUS min_status
-                from SAL0330D a
-                left join
-                    (
-                    select CUST_ID, min(SALES_TIER_STUS) SALES_TIER_STUS from SAL0330D group by  cust_id
-                    ) c on a.cust_id = c.cust_id
+                from (
+                select CUST_ID,SALES_TIER_STUS SALES_TIER_STUS
+                ,CASE WHEN SALES_TIER_STUS = 7082 THEN sum(SALES_EXP_SCORE)
+                ELSE sum(SALES_TOT_SCORE) END SALES_TOT_SCORE
+                from SAL0330D
+                group by cust_id,SALES_TIER_STUS
                 ) q1
-                left join (select cust_id,sum(REWRD_POINT)REWRD_POINT from SAL0332D group by cust_id) q2 on q1.cust_id = q2.cust_id
-                group by q1.cust_id, q1.sales_tier_stus,q1.min_status
+                left join (select CUST_ID, min(SALES_TIER_STUS) min_status from SAL0330D group by  cust_id) q2 on q1.cust_id = q2.cust_id
+                left join (select cust_id,sum(REWRD_POINT)REWRD_POINT from SAL0332D group by cust_id) q3 on q1.cust_id = q3.cust_id
+                group by q1.cust_id,q1.sales_tier_stus,q2.min_status
                 )
                 pivot
                 (

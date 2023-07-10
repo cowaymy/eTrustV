@@ -431,42 +431,37 @@
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
     select
 	a.CUST_ID, cd.code cust_tier, a.TIER_SCORE, a.TOT_SALES_CNT,a.TIER_COLC_SCORE, a.TIER_REWD_SCORE
-	, nvl(curp.rpoint,0) t_cur_point,nvl(onhp.rpoint,0) t_onhold_point,nvl(expingp.rpoint,0) t_expiring_point,nvl(expedp.rpoint,0) t_expired_point
+	,nvl(b.cur_point,0) t_cur_point, nvl(b.onhold_point,0) t_onhold_point, nvl(b.exping_point,0) t_expiring_point, nvl(b.expired_point,0) t_expired_point
 	from
 	SAL0333M a
 	left join sys0013m cd on cd.code_id = a.TIER_RANK
-	left join (
-	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
-	    from SAL0330D
-	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE <![CDATA[>]]> 0
-	    and SALES_TIER_STUS = 7079
-	    group by cust_id,SALES_TIER_STUS
-	) curp on curp.cust_id = a.cust_id
-	left join (
-	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
-	    from SAL0330D
-	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE <![CDATA[>]]> 0
-	    and SALES_TIER_STUS = 7080
-	    group by cust_id,SALES_TIER_STUS
-	) onhp on onhp.cust_id = a.cust_id
-	left join (
-	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
-	    from SAL0330D
-	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE <![CDATA[>]]> 0
-	    and SALES_TIER_STUS = 7081
-	    group by cust_id,SALES_TIER_STUS
-	) expingp on expingp.cust_id = a.cust_id
-	left join (
-	    select cust_id,SALES_TIER_STUS, sum(SALES_EXP_SCORE) rpoint
-	    from SAL0330D
-	    where CUST_ID = #{custId}
-	    and SALES_EXP_SCORE <![CDATA[>]]> 0
-	    and SALES_TIER_STUS = 7082
-	    group by cust_id,SALES_TIER_STUS
-	) expedp on expedp.cust_id = a.cust_id
+	left join(
+    select * from (
+                select q1.cust_id,q1.SALES_TIER_STUS
+                ,case when q1.sales_tier_stus = q2.min_status
+                then sum(q1.SALES_TOT_SCORE) + sum(nvl(q3.REWRD_POINT,0))
+                else sum(q1.SALES_TOT_SCORE)
+                end SALES_TOT_SCORE
+                from (
+                select CUST_ID,SALES_TIER_STUS SALES_TIER_STUS
+                ,CASE WHEN SALES_TIER_STUS = 7082 THEN sum(SALES_EXP_SCORE)
+                ELSE sum(SALES_TOT_SCORE) END SALES_TOT_SCORE
+                from SAL0330D
+                group by cust_id,SALES_TIER_STUS
+                ) q1
+                left join (select CUST_ID, min(SALES_TIER_STUS) min_status from SAL0330D group by  cust_id) q2 on q1.cust_id = q2.cust_id
+                left join (select cust_id,sum(REWRD_POINT)REWRD_POINT from SAL0332D group by cust_id) q3 on q1.cust_id = q3.cust_id
+                group by q1.cust_id,q1.sales_tier_stus,q2.min_status
+                )
+                pivot
+                (
+                    sum(SALES_TOT_SCORE)
+                    for SALES_TIER_STUS in (
+                    7079 cur_point,7080 onhold_point,7081 exping_point,7082 expired_point
+                    )
+                )
+                where cust_id = #{custId}
+    ) b on b.cust_id = a.cust_id
 	where
 	a.CUST_ID = #{custId}
 
