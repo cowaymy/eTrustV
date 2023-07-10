@@ -22,7 +22,7 @@
 		LEFT JOIN SYS0013M s0013m2
 		ON s0029d.CORP_TYPE_ID = s0013m2.CODE_ID
 		WHERE 1=1
-		AND s0029d.NRIC = #{nric}
+		AND (s0029d.NRIC = #{nric} OR s0029d.CUST_ID = #{nric})
 	</select>
 
 	<select id="getCustomerOutstandingOrder" parameterType="Map" resultType="egovMap">
