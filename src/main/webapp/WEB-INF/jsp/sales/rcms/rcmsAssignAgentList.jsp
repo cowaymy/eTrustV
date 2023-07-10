@@ -56,13 +56,13 @@
 				doDefCombo(ynData, '', 'sensitiveYn', 'S', '');
 				doDefCombo(ynData, '', 'assignYn', 'S', '');
 				//Application Type
-				CommonCombo.make("appType", "/common/selectCodeList.do", {
+				/* CommonCombo.make("appType", "/common/selectCodeList.do", {
 					groupCode : '10'
 				}, '66', {
 					id : "codeId",
 					name : "codeName",
 					isShowChoose : false
-				});
+				}); */
 				//orderStatus
 				CommonCombo.make('orderStatus',
 						"/status/selectStatusCategoryCdList.do", {
@@ -461,7 +461,7 @@
 
 					$("#orderNo").val("");
 					$("#salesOrdId").val("");
-					$("#appType").prop("disabled", true);
+					//$("#appType").prop("disabled", true);
 
 				});
 	}
@@ -652,9 +652,12 @@
 					<tr>
 						<th scope="row"><spring:message
 								code="sal.title.text.rcmsAppType" /><span class="must">*</span></th>
-						<td><select id="appType" name="appType"
-							class="w100p disabled" disabled="disabled">
-						</select></td>
+						<td>
+                          <select id="appType" name="appType" class="w100p">
+                                <option value="66" >Rental</option>
+                                <option value="1412" >Outright Plus</option>
+                        </select>
+                        </td>
 						<th scope="row"><spring:message code="sal.title.text.ordStus" /><span
 							class="must">*</span></th>
 						<td><select id="orderStatus" name="orderStatus" class="w100p"></select>
@@ -738,15 +741,19 @@
 
 						<th scope="row"><spring:message
 								code="sal.title.text.productCategory" /></th>
-						<td><select id="productCategory" name="productCategory"
-							class="multy_select w100p" multiple="multiple">
-								<option value="54" >Water Purifier</option>
-								<option value="55" >Air Purifier</option>
-								<option value="56" >Bidet</option>
-								<option value="57" >Softener</option>
-								<option value="5706" >Mattress</option>
-								<option value="5707" >Frame</option>
-						</select></td>
+						<td>
+                        <select id="productCategory" name="productCategory" class="multy_select w100p" multiple="multiple">
+							<option value="54" >Water Purifier</option>
+							<option value="55" >Air Purifier</option>
+							<option value="56" >Bidet</option>
+							<option value="57" >Softener</option>
+							<option value="5706" >Mattress</option>
+							<option value="5707" >Frame</option>
+                            <option value="7177" >Massage Chair</option>
+                            <option value="7237" >Air Conditioner (Indoor)</option>
+                            <option value="7241" >Air Conditioner (Outdoor)</option>
+						</select>
+                        </td>
 					</tr>
 					<tr>
 						<th scope="row"><spring:message code="sal.title.bsMonth" /></th>

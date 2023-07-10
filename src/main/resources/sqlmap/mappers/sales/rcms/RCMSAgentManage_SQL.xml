@@ -158,7 +158,7 @@
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
-   WITH FIRST_INSTALL AS
+   <!-- WITH FIRST_INSTALL AS
     (SELECT SALES_ORD_ID, INSTALL_DT
               FROM (SELECT SALES_ORD_ID,
               INSTALL_DT,
@@ -168,12 +168,18 @@
                               RANK
                       FROM SAL0046D
                      WHERE STUS_CODE_ID = 4)
-             WHERE RANK = 1)
-    SELECT DISTINCT C.SALES_ORD_NO
+             WHERE RANK = 1) -->
+    WITH AGENT_GRP AS (
+         SELECT
+            DISTINCT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
+         FROM SAL0148M A
+         JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
+         JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID AND B.CODE_MASTER_ID = 329 AND DISAB = 0 )
+    SELECT C.SALES_ORD_NO
                 ,A.SALES_ORD_ID
                 ,A.CUST_ID
                 ,B.NAME
-                ,CASE WHEN B.CORP_TYPE_ID = 0 THEN null ELSE H.CODE_NAME  END  CORP_TYPE_ID
+                ,H.CODE_NAME  CORP_TYPE_ID
                 ,A.COLCT_TRGET
 
                  <choose>
@@ -184,21 +190,21 @@
                     GROUP BY RENT_SO_ID) RENT_AMT
                   </when>
                   <otherwise>
-                      ,(SELECT SUM(TRADE_AMT) AS CURRENT_OS
-                    FROM PAY0035D
-                    WHERE RENT_SO_ID = C.SALES_ORD_ID
-                    GROUP BY RENT_SO_ID) RENT_AMT
+                      , ROUND((SELECT SUM(INSTLMT_AMT)  AS CURRENT_OS
+                          FROM PAY0010D Z
+                         WHERE Z.INSTLMT_SO_ID = C.SALES_ORD_ID
+                         GROUP BY Z.INSTLMT_SO_ID), 2) RENT_AMT
                   </otherwise>
                  </choose>
 
                 ,A.OPEN_MTH_AGING
-                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN null ELSE  C.AGENT_NAME END AGENT_GRP_ID
-                ,CASE WHEN A.PREV_AGENT_GRP_ID = 0 THEN null ELSE D.AGENT_NAME END ORI_PREV_AGENT_GRP_ID
+                , (SELECT AGENT_NAME FROM AGENT_GRP WHERE AGENT_GRP_ID = A.AGENT_GRP_ID)  AGENT_GRP_ID_
+                , (SELECT AGENT_NAME FROM AGENT_GRP WHERE AGENT_GRP_ID = A.PREV_AGENT_GRP_ID)  ORI_PREV_AGENT_GRP_ID
                 ,CASE WHEN A.AGENT_GRP_ID = 0 THEN null ELSE A.AGENT_GRP_ID END PREV_AGENT_GRP_ID
                 ,CASE WHEN A.AGENT_GRP_ID = 0 THEN  (SELECT NVL(AGENT_GRP_ID, 0) FROM SAL0149D WHERE CUST_ID = A.CUST_ID AND AGENT_GRP_ID <![CDATA[<>]]> 0 AND ROWNUM =1)  ELSE A.AGENT_GRP_ID  END SUGGEST_AGENT
-                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN 'N' ELSE 'Y' END ASSIGNED
-                ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG
-                ,CASE WHEN A.ETR_FG = 0 or A.ETR_FG is null THEN 'N' ELSE 'Y' END ETR_FG
+                , DECODE(A.AGENT_GRP_ID,0,'N','Y') ASSIGNED
+                , DECODE(A.SENSITIVE_FG,0,'N','Y') SENSITIVE_FG
+                , DECODE(A.ETR_FG,0,'N','Y') ETR_FG
                 ,E.STUS_CODE_ID CURR_RENTAL_STUS
                 ,C.STUS_CODE_ID
                 ,B.TYPE_ID
@@ -210,7 +216,7 @@
                 ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
          FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
             JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-        LEFT JOIN ( SELECT DISTINCT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
+        <!-- LEFT JOIN ( SELECT DISTINCT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
                     FROM SAL0148M A
                     JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
@@ -223,14 +229,13 @@
                     JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
-                  ) D ON A.PREV_AGENT_GRP_ID = D.AGENT_GRP_ID
+                  ) D ON A.PREV_AGENT_GRP_ID = D.AGENT_GRP_ID -->
         LEFT JOIN SAL0071D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
         LEFT JOIN SYS0013M F ON F.CODE_ID = B.RACE_ID
-        LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID
+        <!-- LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID -->
         JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
         LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0 AND gstrb.stus_id = 1
         LEFT JOIN SYS0013M H ON H.CODE_ID = B.CORP_TYPE_ID
-        LEFT JOIN SVC0008D I ON I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
         LEFT JOIN SAL0074D J ON J.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0002D K ON K.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SYS0026M L ON L.STK_ID = K.ITM_STK_ID
@@ -270,10 +275,20 @@
                   </if>
                   <if test="bsMonth != null and bsMonth !=''">
                                     <if test="bsMonth == 1">
-                        AND I.MONTH IS NOT NULL
+                        AND EXISTS (
+                            SELECT
+                                I.SALES_ORD_ID
+                            FROM SVC0008D I
+                            WHERE I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
+                        )
                     </if>
                     <if test="bsMonth == 2">
-                        AND I.MONTH IS NULL
+                        AND NOT EXISTS (
+                            SELECT
+                                I.SALES_ORD_ID
+                            FROM SVC0008D I
+                            WHERE I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
+                        )
                     </if>
                     </if>
                     <if test="payMode != null and payMode !='' ">
@@ -325,7 +340,7 @@
             </when>
             <otherwise>
                   <if test="appType != null and appType !='' ">
-<!--                    AND C.APP_TYPE_ID = #{appType} -->
+                        AND C.APP_TYPE_ID = #{appType}
                   </if>
                   <if test="orderStatus != null and orderStatus !='' ">
 <!--                    AND C.STUS_CODE_ID = #{orderStatus} -->
@@ -377,15 +392,15 @@
                         AND A.AGENT_GRP_ID <![CDATA[<>]]> 0
                       </if>
                       <if test="assignYn == 0">
-                        AND (A.AGENT_GRP_ID = 0 OR A.AGENT_GRP_ID IS NULL)
+                        AND NVL(A.AGENT_GRP_ID,0) = 0
                       </if>
                   </if>
 
                   <if test="sensitiveYn != null and sensitiveYn !='' ">
-                    AND A.SENSITIVE_FG  = #{sensitiveYn}
+                    AND NVL(A.SENSITIVE_FG,0)  = #{sensitiveYn}
                     </if>
                     <if test="etrYn != null and etrYn !='' ">
-                    AND A.ETR_FG = #{etrYn}
+                    AND NVL(A.ETR_FG,0) = #{etrYn}
                     </if>
                     <if test="raceId != null and raceId !='' ">
                       AND B.RACE_ID IN
@@ -394,7 +409,7 @@
                     </foreach>
                     </if>
                     <if test="over60 != null and over60 !='' ">
-                    AND G.INSTALL_DT <![CDATA[ < ]]> ADD_MONTHS(SYSDATE, -60)
+                    AND cD.INSTALL_DT <![CDATA[ < ]]> ADD_MONTHS(SYSDATE, -60)
                     </if>
                     <if test="custName != null and custName !='' ">
                     AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
@@ -411,12 +426,22 @@
                   </if>
 
                   <if test="bsMonth != null and bsMonth !=''">
-                            <if test="bsMonth == 1">
-                                AND I.MONTH IS NOT NULL
-                            </if>
-                            <if test="bsMonth == 2">
-                                AND I.MONTH IS NULL
-                            </if>
+                        <if test="bsMonth == 1">
+                            AND EXISTS (
+                              SELECT
+                                  I.SALES_ORD_ID
+                              FROM SVC0008D I
+                              WHERE I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
+                            )
+                        </if>
+                        <if test="bsMonth == 2">
+                            AND NOT EXISTS (
+                               SELECT
+                                    I.SALES_ORD_ID
+                               FROM SVC0008D I
+                               WHERE I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
+                            )
+                        </if>
 
                   </if>
                     <if test="payMode != null and payMode !='' ">
@@ -486,7 +511,6 @@
          SELECT count(-1) cnt
           FROM SAL0149D A JOIN SAL0001D B
                                       ON A.SALES_ORD_ID = B.SALES_ORD_ID
-                                      AND B.APP_TYPE_ID = 66
          WHERE B.SALES_ORD_NO =  #{orderNo}
      </select>
 
@@ -509,9 +533,8 @@
                     A.ETR_REM,
                     A.CUST_ID,
                     B.SALES_ORD_NO
-          FROM SAL0149D A JOIN SAL0001D B
-                                      ON A.SALES_ORD_ID = B.SALES_ORD_ID
-                                      AND B.APP_TYPE_ID = 66
+          FROM SAL0149D A
+          JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
          WHERE B.SALES_ORD_NO =  #{orderNo}
      </select>
 
