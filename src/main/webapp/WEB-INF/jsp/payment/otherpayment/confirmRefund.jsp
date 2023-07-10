@@ -240,7 +240,8 @@
                     "reqId" : JSON.stringify(refReqId.join()),
                     "refStusId" : JSON.stringify(refStusId.join()),
                     "salesOrdNo" : JSON.stringify(refSalesOrdNo.join()),
-                    "appvStus" : appvStus
+                    "appvStus" : appvStus,
+                    "reqNo" : $("#reqNo").val()
             };
         	console.log(selectedData);
             Common.popupDiv('/payment/initConfirmRefundPop.do', selectedData, null , true ,'_confirmRefundPop');

@@ -703,7 +703,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
             LOGGER.debug("ntf =====================================>>  " + ntf);
 
-            paymentListMapper.insertNotification(ntf);
+//            paymentListMapper.insertNotification(ntf);
             returnMap.put("msg", "You have successfully approved the Refund Request. Notification has been sent to the next Approver.");
 		}
 

@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 var myRequestRefundGridID;
 var attachList = null;
+var parseReqNo = ${reqNo};
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
@@ -170,7 +171,7 @@ function fn_approval(){
 /* 		console.log(appvPrcssNo);
 		console.log(appvLineSeq); */
 		var reqId = AUIGrid.getColumnDistinctValues(myRequestRefundGridID, "reqId");
-		$("#reqId").val(reqId);
+		$("#reqId").val(parseReqNo);
 		console.log("display: " + $("#_refundSearchForm").serializeJSON());
 
 	    Common.ajax("POST", "/payment/approvalRefund.do", $("#_refundSearchForm").serializeJSON(), function(result) {
