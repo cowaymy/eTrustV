@@ -162,7 +162,7 @@
 	                       </if>
 			        )D
 			        JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
-			        WHERE  D.TYPE_ID IN (67, 1412) <!--  remove 1412 for outplus order -->
+			        WHERE  D.TYPE_ID IN (67) <!--  remove 1412 for outplus order -->
 			        GROUP BY
 			            D.ORD_ID, D.ORD_NO, D.TYPE_ID,
 			            0,'',
