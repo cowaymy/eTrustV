@@ -4,7 +4,6 @@
 <script type="text/javaScript">
 var myRequestRefundGridID;
 var attachList = null;
-var parseReqNo = ${reqNo};
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
@@ -50,6 +49,7 @@ $(document).ready(function(){
 	      $("#approvalDiv").hide();
 	      $("#headerLbl").text("View Confirm Refund");
 	      $("#remark").prop("disabled", true);
+	      $("#remarkSec").hide();
 	}
 
 });
@@ -78,6 +78,7 @@ function searchReqRefundInfo(){
 			$("#onlineSec").show();
 		}
 		$("#beneficiaryName").val(result.reqRefundInfo.cardHolder);
+		$("#refundAmt").val(result.reqRefundInfo.newTotalAmt.toFixed(2));
 		$("#bankAccNo").val(result.reqRefundInfo.bankAcc);
 		$("#bankName").val(result.reqRefundInfo.issueBankName);
 		$("#crcCardNo").val(result.reqRefundInfo.cardNo);
@@ -171,7 +172,7 @@ function fn_approval(){
 /* 		console.log(appvPrcssNo);
 		console.log(appvLineSeq); */
 		var reqId = AUIGrid.getColumnDistinctValues(myRequestRefundGridID, "reqId");
-		$("#reqId").val(parseReqNo);
+		//$("#reqId").val(parseReqNo);
 		console.log("display: " + $("#_refundSearchForm").serializeJSON());
 
 	    Common.ajax("POST", "/payment/approvalRefund.do", $("#_refundSearchForm").serializeJSON(), function(result) {
@@ -271,7 +272,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 				<input id="refStusId" name="refStusId" value="${refStusId}" type="hidden" />
 				<input id="salesOrdNo" name="salesOrdNo" value="${salesOrdNo}" type="hidden" />
 				<input id="appvStus" name="appvStus" value="${appvStus}" type="hidden" />
-				<input id="reqId" name="reqId" type="hidden" />
+				<input id="reqId" name="reqId" value="${reqNo}" type="hidden" />
 
 				<aside class="title_line"><!-- title_line start -->
 				<h1 id="headerConfirmRefundLbl">Refund Information</h1>
@@ -289,6 +290,12 @@ function fn_atchViewDown(fileGrpId, fileId) {
 					       <th>Refund Type</th>
 					       <td colspan="3">
 					           <input id="refundType" name="refundType" type="text" class="readonly w100p" readonly/>
+					       </td>
+					   </tr>
+					   <tr>
+					       <th>Refund Amount (RM)</th>
+					       <td colspan="3">
+					           <input id="refundAmt" name="refundAmt" type="text" class="readonly w100p" readonly/>
 					       </td>
 					   </tr>
 					   <tbody id="onlineSec" style="display: none;">
@@ -350,7 +357,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
                                 <textarea id="reqRemark" name="reqRemark"  cols="15" rows="3" placeholder="" class="readonly" readonly></textarea>
                             </td>
                         </tr>
-                        <tr>
+                        <tr id="remarkSec">
                             <th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
                             <td colspan="3">
                                 <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>

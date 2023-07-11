@@ -13,7 +13,7 @@ var cifId = 0;
 var cifFileName = "";
 var requestType = "REF";
 var myFileCaches = {};
-var oldAmt = 0;
+var newAmt = 0;
 
 //Grid Properties 설정
 var gridPros = {
@@ -72,10 +72,13 @@ function searchRefundList(){
 		$("#oldOrdNo").val(result.salesOrdNo);
 		$("#oldCustNm").val(result.custNm);
 		$("#oldAmt").val(result.totAmt);
+		$("#newAmt").val(result.totAmt);
 		$("#oldOrNo").val(result.orNo);
 		AUIGrid.setGridData(myRequestRefundFinalGridID, result);
 		calculateOldAmt();
 
+		console.log("New Amt: " + $("#newAmt").val());
+		console.log("Old Amt: " + $("#oldAmt").val());
 		//recalculateTotalAmt();
 	});
 }
@@ -85,10 +88,10 @@ function fn_reasonOnChange(selectedReason) {
 	var reasonCd = selectedReason.value;
 
 	if(reasonCd != null && reasonCd != 0 && (reasonCd == "3524" || reasonCd == "3523" || reasonCd == "3522" || reasonCd == "3521")) {
-		$("#oldAmt").removeAttr("readonly");
+		$("#newAmt").removeAttr("readonly");
 
 	}else{
-		$("#oldAmt").attr("readonly", "readonly");
+		$("#newAmt").attr("readonly", "readonly");
 		calculateOldAmt();
 	}
 }
@@ -122,11 +125,11 @@ function validateSave(refMode, reasonCd){
 	var validFlg = true;
 
 	if(reasonCd != "3519" && reasonCd != "3520") { //reasonCd that is not allow for partial refund
-		if( Number($("#oldAmt").val()) <= 0 ){
+		if( Number($("#newAmt").val()) <= 0 ){
 	        Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
 	        return validFlg = false;
 	    }
-		else if( Number($("#oldAmt").val() > oldAmt)){
+		else if( Number($("#newAmt").val() > newAmt)){
 			Common.alert("Key-in Amount cannot be greater than Total Amount. ");
 			return validFlg = false;
 		}
@@ -239,8 +242,13 @@ function calculateOldAmt(){
 		}
 	}
 
+	$("#newAmt").val(totalAmt.toFixed(2));
 	$("#oldAmt").val(totalAmt.toFixed(2));
-	oldAmt = $("#oldAmt").val();
+
+	newAmt = $("#newAmt").val();
+
+	console.log("New Amt 2: " + $("#newAmt").val());
+	console.log("Old Amt 2: " + $("#oldAmt").val());
 	// $("#newAmt").val(totalAmt.toFixed(2));
 
 }
@@ -261,9 +269,9 @@ function isNumberKey(evt){
 }
 
 function validateDecimal(){
-	var totalAmt = $("#oldAmt").val();
+	var totalAmt = $("#newAmt").val();
 	totalAmt = Number.parseFloat(totalAmt);
-	$("#oldAmt").val(AUIGrid.formatNumber(Number(totalAmt), "#,##0.00"));
+	$("#newAmt").val(AUIGrid.formatNumber(Number(totalAmt), "#,##0.00"));
 	/* var a=Number.parseFloat($("#budget_project").val()); // from input field
 	var b=Number.parseFloat(html); // from ajax
 	var c=a-b;
@@ -349,6 +357,7 @@ function closeApproveLine(){
 				<input id="requestType" name="requestType" type="hidden" />
 				<input id="atchFileId" name="atchFileId" type="hidden" />
 				<input id="fileGroupKey" name="fileGroupKey" type="hidden" />
+				<input id="oldAmt" name="oldAmt" type="hidden" />
 
 				<!-- title_line start -->
 				<aside class="title_line">
@@ -372,7 +381,7 @@ function closeApproveLine(){
                             </td>
                             <th scope="row">Total Amount<span class="must">*</span></th>
                             <td colspan="3">
-                                 <input type="text" name="oldAmt" id="oldAmt" title="" placeholder="" class="w100p"  readonly  onkeypress="return isNumberKey(event)" onblur="validateDecimal()"/>
+                                 <input type="text" name="newAmt" id="newAmt" title="" placeholder="" class="w100p"  readonly  onkeypress="return isNumberKey(event)" onblur="validateDecimal()"/>
                             </td>
                         </tr>
 						<tr>

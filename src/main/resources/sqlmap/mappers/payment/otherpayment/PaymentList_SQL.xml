@@ -993,7 +993,7 @@
                 #{newRemark},
                 #{oldAmt},
                 #{refundMode},
-                #{oldAmt},
+                #{newAmt},
                 #{bankAccNo},
                 #{keyInCardNo1} || #{keyInCardNo2} || #{keyInCardNo3} || #{keyInCardNo4},
                 #{apprNo},
@@ -1453,10 +1453,13 @@
         LEFT JOIN SYS0047M D ON D.USER_NAME = B.REQST_USER_ID
         LEFT JOIN SYS0013M PT ON PT.CODE = A.NEW_PAY_TYPE AND PT.CODE_MASTER_ID = 395
         LEFT JOIN SYS0004M BK ON BK.BANK_ID = A.ISSUE_BANK AND BK.STUS_CODE_ID = 1
-        WHERE A.REQ_ID IN
+        WHERE 1=1
+        <if test="reqNo != null and reqNo != '' ">
+            AND A.REQ_ID IN
             <foreach item="item" collection="reqNo" index="index" open="(" separator="," close=")">
                    #{item}
             </foreach>
+        </if>
     </select>
 
     <select id="selectReqRefundApprovalItem" parameterType="Map" resultType="egovMap">
