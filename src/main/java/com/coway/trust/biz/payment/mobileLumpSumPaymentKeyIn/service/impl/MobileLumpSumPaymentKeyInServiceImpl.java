@@ -137,6 +137,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	@Override
 	public Map<String, Object> submissionSave(Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<>();
+		result.put("result", 0);
 		int nextGroupID = mobileLumpSumPaymentKeyInMapper.selectNextMobPayGroupId();
 		EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
 		params.put("userId", user.get("userId"));
@@ -177,8 +178,14 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				orderDetails.get(i).put("mobilePayGrpNo", nextGroupID);
 				mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
 			}
+			result.put("result", 1);
+			throw new ApplicationException(AppConstants.FAIL, "Please check the status value of the suggestion.");
 		}
-		return result;
+		else{
+			return result;
+			//throw new ApplicationException(AppConstants.FAIL, "Please check the status value of the suggestion.");
+		}
+		//return result;
 	}
 
 	@Override
