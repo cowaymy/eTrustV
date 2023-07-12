@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,6 +81,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		List<EgovMap> customerInfoSearchResult = null;
 		if (params.get("nric") != null && !params.get("nric").toString().isEmpty()) {
+			String nric = params.get("nric").toString();
+			if(nric.matches("^[0-9]*$")){
+				params.put("custId", params.get("custCi").toString());
+			}
 			customerInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerInfo(params);
 		}
 
