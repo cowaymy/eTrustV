@@ -1066,6 +1066,7 @@ $("#HP_img").dblclick(function(){
     <li><a href="#" >Training</a></li>
     <li><a href="#" >HP Loyalty Status</a></li>
     <li><a href="#" >Working History</a></li>
+    <li id="awardHistory" style="display:none;"><a>Award History</a></li>
     <li id="attachmentTab" style="display:none;"><a href="#" >Attachment</a></li>
 </ul>
 
@@ -1666,6 +1667,12 @@ $("#HP_img").dblclick(function(){
     </article><!-- grid_wrap end -->
 </article><!-- tap_area end -->
 
+<article class="tap_area">
+    <article class="grid_wrap">
+       <div id="grid_wrap_awardHistory" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    </article>
+</article>
+
 <article class="tap_area"><!-- tap_area start -->
 <h2>Attachment</h2>
 <table class="type1 mt10" id="attachmentDiv"><!-- table start -->
@@ -1927,3 +1934,38 @@ $("#HP_img").dblclick(function(){
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
+
+
+<script>
+
+const hpAwardHistoryGrid =   GridCommon.createAUIGrid('grid_wrap_awardHistory',[
+      {
+          dataField : 'month', headerText : 'Month'
+      },
+      {
+          dataField : 'year', headerText : 'Year'
+      },
+      {
+          dataField : 'description', headerText : 'Description'
+      },
+      {
+          dataField : 'destination', headerText : 'Destination'
+      }],'',
+	{
+	      usePaging: true,
+	      pageRowCount: 20,
+	      editable: false,
+	      showRowNumColumn: true,
+	      wordWrap: true,
+	      showStateColumn: false
+	});
+
+	if('${memberView.memType}' =="1"){
+		$("#awardHistory").show();
+	    fetch("/organization/selectEachHpAwardHistory.do?memCode="+'${memberView.memCode}')
+	    .then(r=>r.json())
+	    .then(data => {
+	         AUIGrid.setGridData(hpAwardHistoryGrid, data);
+	    });
+	}
+</script>
