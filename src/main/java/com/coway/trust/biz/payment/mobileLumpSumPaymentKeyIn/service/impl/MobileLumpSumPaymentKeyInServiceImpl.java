@@ -179,13 +179,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
 			}
 			result.put("result", 1);
-			throw new ApplicationException(AppConstants.FAIL, "Please check the status value of the suggestion.");
 		}
 		else{
-			return result;
-			//throw new ApplicationException(AppConstants.FAIL, "Please check the status value of the suggestion.");
+			throw new ApplicationException(AppConstants.FAIL, "There is no orders being submit for payment. Please Contact IT.");
 		}
-		//return result;
+		return result;
 	}
 
 	@Override
