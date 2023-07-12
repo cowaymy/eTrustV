@@ -140,7 +140,7 @@ var custNricOri;
                     });
                 } else{
                 	maskedNric = custNricOri;
-                	$("#spanNric").html(oriNric);
+                	$("#spanNric").html(custNricOri);
                 }
 
                 $('#rentalStus').val(result.orderOutstandingView[0].rentalstatus);
