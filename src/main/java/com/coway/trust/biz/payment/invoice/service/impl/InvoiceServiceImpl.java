@@ -1,5 +1,6 @@
 package com.coway.trust.biz.payment.invoice.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -7,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
 import com.coway.trust.biz.payment.invoice.service.InvoiceService;
 import com.coway.trust.config.datasource.DataSource;
@@ -62,7 +64,18 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 	@Override
 	@DataSource(value = DataSourceType.LONG_TIME)
 	public void createTaxInvoice(Map<String, Object> params) {
-		membershipMapper.createTaxInvoice(params);
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+
+		if(checkList.size() > 0){
+			for (int i = 0; i < checkList.size(); i++) {
+				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
+				Map<String, Object> param = new HashMap<String, Object>();
+				param = (Map<String, Object>) tmpMap.get("item");
+				param.put("userId", params.get("userId"));
+				membershipMapper.createTaxInvoice(param);
+				params.put("p1",param.get("p1"));
+			}
+		}
 	}
 
 	@Override

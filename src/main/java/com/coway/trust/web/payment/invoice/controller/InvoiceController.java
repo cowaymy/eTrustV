@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -110,7 +111,7 @@ public class InvoiceController {
 	}
 
 	@RequestMapping(value = "/generateInvoice.do")
-	public ResponseEntity<Boolean> generateInvoice(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<Boolean> generateInvoice(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		boolean result = false;
 		int userId = sessionVO.getUserId();
