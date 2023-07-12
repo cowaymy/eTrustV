@@ -102,7 +102,12 @@ public class MobileLumpSumPaymentApiController {
 		Map<String, Object> searchResult = mobileLumpSumPaymentKeyInService.submissionSave(params);
 
 		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
-		result.setResponseCode(1);
+		if(Integer.parseInt(searchResult.get("result").toString()) == 1){
+			result.setResponseCode(1);
+		}
+		else{
+			result.setResponseCode(0);
+		}
 		return ResponseEntity.ok(result);
 	}
 
