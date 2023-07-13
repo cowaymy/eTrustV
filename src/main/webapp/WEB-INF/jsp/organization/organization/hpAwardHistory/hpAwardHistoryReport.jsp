@@ -158,12 +158,6 @@
 	          rowStyleFunction: (i, item) => { return "height-style";}
 	   });
 
-//        fetch("/organization/selectHpAwardHistoryReport.do")
-//        .then(r=>r.json())
-//        .then(data => {
-//             AUIGrid.setGridData(hpAwardHistoryReportGrid, data);
-//        });
-
        const downloadExcel = () => {
     	    GridCommon.exportTo("hpAwardHistoryReportGrid", "xlsx", "HP - Award History_" + reportType + "_" + moment().format("YYYYMMDD"));
        }
@@ -173,8 +167,8 @@
            $("#grpCode").val("${grpCode}");
            $("#deptCode").val("${deptCode}");
 
-           switch(${SESSION_INFO.memberLevel}) {
-           case 3:
+           switch("${SESSION_INFO.memberLevel}") {
+           case "3":
                reportType = "HM";
                $("#orgCode").attr("class", "w100p readonly");
                $("#orgCode").attr("readonly", "readonly");
@@ -183,14 +177,14 @@
                $("#deptCode").attr("class", "w100p readonly");
                $("#deptCode").attr("readonly", "readonly");
                break;
-           case 2:
+           case "2":
                reportType = "SM";
                $("#orgCode").attr("class", "w100p readonly");
                $("#orgCode").attr("readonly", "readonly");
                $("#grpCode").attr("class", "w100p readonly");
                $("#grpCode").attr("readonly", "readonly");
                break;
-           case 1:
+           case "1":
                reportType = "GM";
                $("#orgCode").attr("class", "w100p readonly");
                $("#orgCode").attr("readonly", "readonly");
