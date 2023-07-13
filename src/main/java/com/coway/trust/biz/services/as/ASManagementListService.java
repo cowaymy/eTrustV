@@ -4,6 +4,7 @@ import java.util.List;
 
 import java.util.Map;
 
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -226,5 +227,7 @@ public interface ASManagementListService {
 	// void sendSms(Map<String, Object> smsList);
 
 	void insertASResultLog(String params, String reqstUrl, String asId, int userId);
+
+	EgovMap selectSubmissionRecords(Map<String, Object> params) throws Exception;
 
 }

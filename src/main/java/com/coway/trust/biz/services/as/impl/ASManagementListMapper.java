@@ -358,4 +358,7 @@ List<EgovMap> selectWaterSrcType();
 List<EgovMap> selectASNotMatch();
 
 void insertASResultLog(Map<String, Object> p);
+
+EgovMap selectSubmissionRecords(Map<String, Object> params);
+
 }

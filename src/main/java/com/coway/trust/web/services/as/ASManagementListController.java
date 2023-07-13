@@ -259,10 +259,13 @@ public class ASManagementListController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
 
+    EgovMap preASInfo = ASManagementListService.selectSubmissionRecords(params);
+
     List<EgovMap> timePick = ASManagementListService.selectTimePick();
 
     model.put("orderDetail", orderDetail);
     model.put("as_ord_basicInfo", as_ord_basicInfo);
+    model.put("preASInfo",preASInfo);
     model.put("timePick", timePick);
     model.put("AS_NO", (String) params.get("AS_NO"));
     model.put("AS_ID", (String) params.get("AS_ID"));

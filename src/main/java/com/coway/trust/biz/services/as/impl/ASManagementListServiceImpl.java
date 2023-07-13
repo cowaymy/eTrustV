@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
@@ -70,6 +73,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Resource(name = "posMapper")
   private PosMapper posMapper;
+
+  @Resource(name = "asFromCodyApiServiceMapper")
+  private AsFromCodyApiServiceMapper asFromCodyApiServiceMapper;
+
 
   @Override
   public List<EgovMap> selectASManagementList(Map<String, Object> params) {
@@ -4240,5 +4247,10 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 	  p.put("asId", asId);
 	  p.put("userId", userId);
 	  ASManagementListMapper.insertASResultLog(p);
+  }
+
+  @Override
+  public EgovMap selectSubmissionRecords(Map<String, Object> params) {
+    return ASManagementListMapper.selectSubmissionRecords(params);
   }
 }

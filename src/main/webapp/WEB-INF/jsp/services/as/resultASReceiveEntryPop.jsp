@@ -55,8 +55,12 @@
         $("#preAsType").val('${preAsType}');
     }
 
+    if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
+    	$("#requestor").val("${preAsMemType}");
+        $("#txtRequestor").val('${preASInfo.userId}');
+    }
 
-    $("#checkComm").prop("checked", true);
+    $("#checkComm").prop("checkpreASInfoed", true);
 
     fn_setComboBox2();
 
