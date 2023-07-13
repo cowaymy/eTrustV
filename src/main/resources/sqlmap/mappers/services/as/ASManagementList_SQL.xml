@@ -5076,6 +5076,7 @@
 
   <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
     <![CDATA[
+        SELECT * FROM (
         SELECT
             A.REG_ID AS USER_ID,
             CASE WHEN D.MEM_TYPE = '1' THEN '717'
@@ -5095,6 +5096,7 @@
 	    WHERE 1 = 1
 	       AND A.SALES_ORDER_NO = #{orderNo}
 	    ORDER BY A.CRT_DT DESC
+	    )WHERE ROWNUM = 1
     ]]>
   </select>
 
