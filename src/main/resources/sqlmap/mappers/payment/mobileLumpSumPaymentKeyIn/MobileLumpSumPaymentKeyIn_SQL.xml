@@ -203,7 +203,7 @@
 		               #{item}
 		             </foreach>
 	       			</if>
-		           AND A.APP_TYPE_ID IN (67, 1412)
+		           AND A.APP_TYPE_ID IN (67)
 		)D
 		JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
 		WHERE 1=1
