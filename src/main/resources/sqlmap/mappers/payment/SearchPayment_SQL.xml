@@ -86,7 +86,8 @@
             LEFT JOIN  H ON pay.PAY_ID = H.PAY_ID
             LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
             LEFT JOIN  I ON pay.MTCH_ID = I.PAY_ID
-            LEFT JOIN PAY0064D J ON J.PAY_ID = PAY.MTCH_ID AND 101 = J.TYPE_ID
+            LEFT JOIN PAY0064D K ON K.PAY_ID = PAY.PAY_ID
+            LEFT JOIN PAY0064D J ON J.PAY_ID = PAY.MTCH_ID AND 101 = K.TYPE_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
