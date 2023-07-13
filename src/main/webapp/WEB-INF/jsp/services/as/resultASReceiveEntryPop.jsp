@@ -56,7 +56,7 @@
     }
 
     if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
-    	$("#requestor").val("${preAsMemType}");
+    	$("#requestor").val("${preAsMemType.preAsMemType}");
         $("#txtRequestor").val('${preASInfo.userId}');
     }
 
