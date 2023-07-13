@@ -156,8 +156,9 @@ var custNricOri;
 
                 $('#memBankAcc').val(result.orderOutstandingView[0].bankaccno);
                 $('#memIssueBank').val(result.orderOutstandingView[0].bankname);
-                $('#svmTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].rensvmoutstndtot, 2));
-                $('#srvContractTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].outsvmoutstndtot,2));
+                console.log('masuk woi', result.orderOutstandingView[0].outsvmoutstndtotal);
+                $('#svmTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].outsvmoutstndtotal, 2));
+                $('#srvContractTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].rensvmoutstndtotal,2));
             }else{
             	Common.alert("<spring:message code='pay.alert.enterValidOrderNo'/>");
             }
