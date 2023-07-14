@@ -113,7 +113,8 @@
     <th scope="row">Product Return</th>
     <td colspan="1">
         <c:if test="${orderDetail.basicInfo.exTradePr == 1}">Yes</c:if>
-        <c:if test="${orderDetail.basicInfo.exTradePr == null || orderDetail.basicInfo.exTradePr == 0}">No</c:if>
+        <c:if test="${orderDetail.basicInfo.exTradePr == null}"></c:if>
+        <c:if test="${orderDetail.basicInfo.exTradePr == 0}">No</c:if>
     </td>
 </tr>
 <tr>
