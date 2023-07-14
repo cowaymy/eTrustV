@@ -242,7 +242,8 @@ function createExcelAUIGrid(){
 //                      return "-";
 //                 }
 //          }
-    }];
+//    }
+    ];
 
     //그리드 속성 설정
     var excelGridPros = {
