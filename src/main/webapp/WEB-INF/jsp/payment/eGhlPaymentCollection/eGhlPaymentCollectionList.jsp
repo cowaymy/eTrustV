@@ -224,23 +224,24 @@ function createExcelAUIGrid(){
          headerText : "Status",
          editable : false
      },{
-         dataField : "payId",
-         headerText : "WOR",
+         dataField : "payReceipt",
+         headerText : "Payment Receipt",
          editable : false
-     },{
-         dataField : "paymentLink",
-         headerText : "Link",
-         editable : false,
-         labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
-                // logic processing
-                // Return value here, reprocessed or formatted as desired.
-                // The return value of the function is immediately printed in the cell.
-                if(item.statusCodeId == '44') {
-                     return "Copy Link";
-                } else {
-                     return "-";
-                }
-         }
+     }
+//      ,{
+//          dataField : "paymentLink",
+//          headerText : "Link",
+//          editable : false,
+//          labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+//                 // logic processing
+//                 // Return value here, reprocessed or formatted as desired.
+//                 // The return value of the function is immediately printed in the cell.
+//                 if(item.statusCodeId == '44') {
+//                      return "Copy Link";
+//                 } else {
+//                      return "-";
+//                 }
+//          }
     }];
 
     //그리드 속성 설정
