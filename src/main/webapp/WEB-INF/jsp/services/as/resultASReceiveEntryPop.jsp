@@ -34,7 +34,7 @@
 
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
-    fn_setComboBox1();
+    fn_setComboBox1('${preASInfo.preAsMemType}');
 
     fn_getErrMstList('${orderDetail.basicInfo.ordNo}');
     $("#ordNo").val('${orderDetail.basicInfo.ordNo}');
@@ -64,13 +64,12 @@
     fn_checkASReceiveEntryPop();
 
     if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
-    	console.log('${preASInfo.preAsMemType}');
+    	//setTimeout(function() {('#requestor').val('${preASInfo.preAsMemType}')},2000);
         $('#requestor').val('${preASInfo.preAsMemType}');
         $('#txtRequestor').val('${preASInfo.userId}');
     }
 
   });
-
 
   function fn_getErrMstList(_ordNo) {
     var SALES_ORD_NO = _ordNo;
@@ -107,8 +106,8 @@
     $("#branchDSC").val(asBrCde);
   }
 
-  function fn_setComboBox1() {
-    doGetCombo('/common/selectCodeList.do', '24', '', 'requestor', 'S', '');
+  function fn_setComboBox1(preAsMemType) {
+    doGetCombo('/common/selectCodeList.do', '24', preAsMemType, 'requestor', 'S', '');
   }
 
   function fn_setComboBox2() {
