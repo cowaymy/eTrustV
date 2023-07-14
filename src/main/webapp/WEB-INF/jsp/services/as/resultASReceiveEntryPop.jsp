@@ -55,11 +55,6 @@
         $("#preAsType").val('${preAsType}');
     }
 
-    if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
-    	$("#requestor").val("${preAsMemType.preAsMemType}");
-        $("#txtRequestor").val('${preASInfo.userId}');
-    }
-
     $("#checkComm").prop("checkpreASInfoed", true);
 
     fn_setComboBox2();
@@ -67,6 +62,12 @@
     fn_checkASInstallationArea();
 
     fn_checkASReceiveEntryPop();
+
+    if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
+    	console.log('${preASInfo.preAsMemType}');
+        $('#requestor').val('${preASInfo.preAsMemType}');
+        $('#txtRequestor').val('${preASInfo.userId}');
+    }
 
   });
 
