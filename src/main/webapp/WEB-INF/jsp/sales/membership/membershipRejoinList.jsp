@@ -117,6 +117,7 @@ $(document).ready(function(){
             wordWrap : true,
             headerHeight :40,
             fixedColumnCount : 5,
+            editable : false
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
