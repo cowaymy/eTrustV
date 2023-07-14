@@ -66,6 +66,9 @@ public class HcASReportController {
       model.addAttribute("branchList", hcASManagementListService.selectHomeCareBranchWithNm());
       //model.addAttribute("branchList", hcASManagementListService.getBrnchId(null));
 
+      List<EgovMap> asSumStat = ASReportService.selectAsSumStat();
+      model.addAttribute("asSumStat", asSumStat);
+
       return "homecare/services/as/hcAsLogBookListPop";
     }
 

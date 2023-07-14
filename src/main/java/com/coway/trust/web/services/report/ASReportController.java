@@ -72,6 +72,11 @@ public class ASReportController {
 	public ResponseEntity<List<EgovMap>> selectMemberCode2(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
+
+		String search = (String) params.get("groupCode");
+		String[] searchValue = search.split("∈");
+
+		params.put("groupCode", searchValue);
 		/*
 		 * BY KV - branch - CT
 		 */

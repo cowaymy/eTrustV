@@ -45,8 +45,12 @@
                    AND ( ORG5.MEM_LVL in ( '4','3','2') )
 
                    <!-- By KV link with branch in as log book list jsp -->
+
                    <if test="groupCode != null and groupCode !='' ">
-                     AND Extent1.BRNCH = #{groupCode}
+                     AND Extent1.BRNCH IN
+                     <foreach item="item" collection="groupCode" index="index" open="(" separator="," close=")">
+                     #{item}
+                     </foreach>
                    </if>
       ) Project1
       ORDER BY Project1.MEM_CODE ASC

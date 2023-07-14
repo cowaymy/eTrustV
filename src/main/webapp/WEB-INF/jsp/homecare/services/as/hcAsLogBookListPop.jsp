@@ -30,11 +30,22 @@ var branchDs = [];
     });
 
   function fn_validation() {
-    if ($("#asAppDate").val() == '') {
+	var startDate = $('#asAppDate').val();
+    var endDate = $('#asAppDate2').val();
+
+    if ($("#asAppDate").val() == '' || $("#asAppDate2").val() == '') {
       var text = "<spring:message code='service.title.AppointmentDate' />";
       Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
       return false;
     }
+
+    if (fn_getDateGap(startDate, endDate) > 31) {
+        var fName = "Appointment Date";
+
+        Common.alert("<spring:message code='service.msg.asSearchDtRange' arguments='" + fName + " ; <b>" + 31 +"</b>' htmlEscape='false' argumentSeparator=';' />");
+        return false;
+    }
+
     return true;
   }
 
@@ -43,12 +54,16 @@ var branchDs = [];
     var month = date.getMonth() + 1;
     var day = date.getDate();
     var runNo1 = 0;
+    var runNo2 = 0;
     var asType = "";
+    var asStus = "";
+
     if (date.getDate() < 10) {
       day = "0" + date.getDate();
     }
     if (fn_validation()) {
       var ASAppDate = $("#asAppDate").val() == '' ? "" : $("#asAppDate").val();
+      var ASAppDate2 = $("#asAppDate2").val() == '' ? "" : $("#asAppDate2").val();
       var ASCTCode = $("#CTCode").val() == '' ? "" : $("#CTCode option:selected").text();
       var ASBranch = $("#branch").val() == '' ? "" : $("#branch option:selected").text();
       var ASCTGroup = $("#CTGroup").val() == '' ? "" : $("#CTGroup option:selected").text();
@@ -70,8 +85,8 @@ var branchDs = [];
       if ($("#asType :checked").val() != '' && $("#asType :checked").val() != null) {
         whereSql += " AND ae.AS_TYPE_ID IN (" + asType + ") ";
       }
-      if ($("#asAppDate").val() != '' && $("#asAppDate").val() != null) {
-        whereSql += " AND ae.AS_APPNT_DT = TO_DATE('" + $("#asAppDate").val() + "','DD/MM/YYYY') AND ae.AS_STUS_ID IN (1, 19)";
+      if ($("#asAppDate").val() != '' && $("#asAppDate").val() != null && $("#asAppDate2").val() != '' && $("#asAppDate2").val() != null ) {
+        whereSql += " AND ae.AS_APPNT_DT >= TO_DATE('" + $("#asAppDate").val() + "','DD/MM/YYYY') AND ae.AS_APPNT_DT <= TO_DATE('" + $("#asAppDate2").val() + "','DD/MM/YYYY')";
       }
       if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
         whereSql += " AND mr.MEM_ID = " + $("#CTCode").val() + " ";
@@ -86,6 +101,24 @@ var branchDs = [];
       // HomeCare add
       whereSql += " AND OM.BNDL_ID IS NOT NULL ";
 
+      if ($("#asStatus1 :checked").length > 0) {
+          $("#asStatus1 :checked").each(function(i, mul) {
+            if ($(mul).val() != "0") {
+              if (runNo2 > 0) {
+                asStus += ", " + $(mul).val() + " ";
+              } else {
+                asStus += " " + $(mul).val() + " ";
+              }
+              runNo2 += 1;
+            }
+          });
+        }
+
+      if ($("#asStatus1 :selected").val() != ''
+          && $("#asStatus1 :selected").val() != null) {
+        whereSql += " AND ae.AS_STUS_ID IN (" + asStus + ") ";
+      }
+
       $("#reportFormList #reportFileName").val('/homecare/hcASLogBookList.rpt');
       $("#reportFormList #reportDownFileName").val("ASLogBook_" + day + month + date.getFullYear());
       $("#reportFormList #viewType").val("PDF");
@@ -94,6 +127,7 @@ var branchDs = [];
       $("#reportFormList #V_ORDERBYSQL").val();
       $("#reportFormList #V_FULLSQL").val();
       $("#reportFormList #V_ASAPPDATE").val(ASAppDate);
+      $("#reportFormList #V_ASAPPDATE2").val(ASAppDate2);
       $("#reportFormList #V_ASCTCODE").val(ASCTCode);
       $("#reportFormList #V_ASBRANCH").val(ASBranch);
       $("#reportFormList #V_ASCTGROUP").val(ASCTGroup);
@@ -105,6 +139,19 @@ var branchDs = [];
       Common.report("reportFormList", option);
     }
   }
+
+  function fn_getDateGap(sdate, edate) {
+	    var startArr, endArr;
+
+	    startArr = sdate.split('/');
+	    endArr = edate.split('/');
+
+	    var keyStartDate = new Date(startArr[2], startArr[1], startArr[0]);
+	    var keyEndDate = new Date(endArr[2], endArr[1], endArr[0]);
+	    var gap = (keyEndDate.getTime() - keyStartDate.getTime()) / 1000 / 60 / 60 / 24;
+
+	    return gap;
+	  }
 
   $.fn.clearForm = function() {
     return this.each(function() {
@@ -146,6 +193,7 @@ var branchDs = [];
     <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" />
     <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" />
     <input type="hidden" id="V_ASAPPDATE" name="V_ASAPPDATE" />
+    <input type="hidden" id="V_ASAPPDATE2" name="V_ASAPPDATE2" />
     <input type="hidden" id="V_ASCTCODE" name="V_ASCTCODE" />
     <input type="hidden" id="V_ASBRANCH" name="V_ASBRANCH" />
     <input type="hidden" id="V_ASCTGROUP" name="V_ASCTGROUP" />
@@ -171,7 +219,20 @@ var branchDs = [];
         </c:forEach>
        </select></td>
        <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class='must'>*</span></th>
-       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDate" /></td>
+        <td>
+        <div class="date_set">
+         <!-- date_set start -->
+         <p>
+          <input type="text" title="Create start Date"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDate" />
+         </p>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
+         <p>
+          <input type="text" title="Create end Date"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDate2" />
+         </p>
+        </div> <!-- date_set end -->
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='sal.title.text.dscBrnch' /></th>
@@ -194,8 +255,14 @@ var branchDs = [];
           <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach>
        </select></td>
-       <th scope="row"></th>
-       <td></td>
+       <th scope="row"><spring:message code='service.text.Status' /></th>
+       <td>
+        <select class="multy_select w100p" multiple="multiple" id="asStatus1" name="asStatus1">
+         <c:forEach var="list" items="${asSumStat}" varStatus="status">
+           <option value="${list.codeId}" selected>${list.codeName}</option>
+         </c:forEach>
+       </select>
+       </td>
       </tr>
      </tbody>
     </table>

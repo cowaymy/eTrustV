@@ -14,8 +14,7 @@
 
     //doGetCombo('/services/as/report/selectMemberCodeList.do', '', '', 'CTCode', 'S', '');
     //doGetComboSepa("/common/selectBranchCodeList.do", 5758, '-', '', 'branch', 'S', '');
-    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - '
-            , '',   'branch', 'S', ''); //Branch Code
+    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '',   'branch', 'M', 'fn_multiCombo'); //Branch Code
   });
 
   function fn_validation() {
@@ -65,12 +64,13 @@
     return true;
   }
 
-  function fn_openGenerate() {
+  function fn_openGenerate(type) {
     var date = new Date();
     var month = date.getMonth() + 1;
     var day = date.getDate();
 
     var runNo1 = 0;
+    var runNo2 = 0;
     var asStus = "";
 
     if (date.getDate() < 10) {
@@ -128,15 +128,52 @@
       }
 
       var ctCode = "";
+      if ($("#CTCode :checked").length > 0) {
+          $("#CTCode :checked").each(function(i, mul) {
+            if ($(mul).val() != "0") {
+              if (runNo2 > 0) {
+            	  ctCode += ", " + $(mul).val() + " ";
+              } else {
+            	  ctCode += " " + $(mul).val() + " ";
+              }
+              runNo2 += 1;
+            }
+          });
+          whereSql += "AND mr.Mem_ID IN ( " + ctCode + ") ";
+        }
+
+      var ctCodeText = "";
       if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
-        ctCode = $("#CTCode option:selected").text();
-        whereSql += "AND mr.Mem_ID = " + $("#CTCode").val() + " ";
+          var runNo3 = 0;
+          $("#CTCode  option:selected").each(function(i, mul){
+          if(runNo3 == 0){
+        	  ctCodeText += $(mul).text();
+          }else{
+        	  ctCodeText += "," + $(mul).text();
+          }
+
+          runNo3 += 1;
+          });
       }
 
       var dscCode = "";
       if ($("#branch").val() != '' && $("#branch").val() != null) {
         dscCode = $("#branch  option:selected").text();
-        whereSql += "AND ae.AS_BRNCH_ID = " + $("#branch").val() + " ";
+        whereSql += "AND ae.AS_BRNCH_ID IN ( " + $("#branch").val() + ") ";
+      }
+
+      var dscCodeText = "";
+      if ($("#branch").val() != '' && $("#branch").val() != null) {
+          var runNo4 = 0;
+          $("#branch  option:selected").each(function(i, mul){
+          if(runNo4 == 0){
+              dscCodeText += $(mul).text();
+          }else{
+              dscCodeText += "," + $(mul).text();
+          }
+
+          runNo4 += 1;
+          });
       }
 
       var appointDateFrom = "";
@@ -165,12 +202,7 @@
             + $("#reqDtTo").val() + "', 'DD/MM/YYYY') ";
       }
 
-      /* var asStus = "";
-      if($("#asStatus").val() != '' && $("#asStatus").val() != null){
-      asStus = $("#asStatus  option:selected").text();
-      whereSql +=   "AND ae.AS_STUS_ID IN (" + $("#asStatus").val() + ")";
-      }
-       */
+
       if ($("#asStatus1 :selected").val() != ''
           && $("#asStatus1 :selected").val() != null) {
         whereSql += " AND ae.AS_STUS_ID IN (" + asStus + ") ";
@@ -201,7 +233,12 @@
       // SP_CR_AS_SUM_LIST
       $("#reportFormAS #reportFileName").val('/homecare/hcASSummaryList.rpt');
       $("#reportFormAS #reportDownFileName").val("ASSummaryList_" + day + month + date.getFullYear());
-      $("#reportFormAS #viewType").val("PDF");
+      if(type == 'PDF'){
+          $("#reportFormAS #viewType").val("PDF");
+      }
+      else {
+          $("#reportFormAS #viewType").val("EXCEL");
+      }
       $("#reportFormAS #V_SELECTSQL").val();
       $("#reportFormAS #V_WHERESQL").val(whereSql);
       $("#reportFormAS #V_GROUPBYSQL").val();
@@ -210,8 +247,8 @@
       $("#reportFormAS #V_ASNOTO").val(asNoTo);
       $("#reportFormAS #V_ASRNOFROM").val(asRnoFrom);
       $("#reportFormAS #V_ASRNOTO").val(asRnoTo);
-      $("#reportFormAS #V_CTCODE").val(ctCode);
-      $("#reportFormAS #V_DSCCODE").val(dscCode);
+      $("#reportFormAS #V_CTCODE").val(ctCodeText);
+      $("#reportFormAS #V_DSCCODE").val(dscCodeText);
       $("#reportFormAS #V_REQUESTDATEFROM").val(requestDateFrom);
       $("#reportFormAS #V_REQUESTDATETO").val(requestDateTo);
       $("#reportFormAS #V_APPOINDATEFROM").val(appointDateFrom);
@@ -236,6 +273,42 @@
     var branchCd = $("#branch").val();
     doGetCombo('/services/as/report/selectMemberCodeList2.do', branchCd, '', 'CTCode', 'S', '');
   }
+
+  function fn_multiCombo() {
+	    $(function() {
+	        $('#branch').change(function() {
+	            //console.log('1');
+
+	            if ($('#branch').val() != null && $('#branch').val() != "" ){
+	            	var brnchCdparam = "";
+	                var branchCd = $("#branch").val();
+	                for (var i = 0 ; i < branchCd.length ; i++){
+                        if (brnchCdparam == ""){
+                        	brnchCdparam = branchCd[i];
+                        }else{
+                        	brnchCdparam = brnchCdparam +"∈"+branchCd[i];
+                        }
+                    }
+	                var param = {groupCode:brnchCdparam}
+	                doGetComboObj('/services/as/report/selectMemberCodeList2.do', param, '', 'CTCode', 'M', 'fn_multiComboType');
+	                console.log($('#branch').val());
+	              }
+	        })
+	         .multipleSelect({
+	            selectAll : true
+	        });
+	    });
+  }
+
+  function fn_multiComboType() {
+	    $(function() {
+	        $('#CTCode').change(function() {
+	        	console.log($('#CTCode').val());
+	        }).multipleSelect({
+	            selectAll : true
+	        });
+	    });
+	}
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -374,13 +447,18 @@
       </tr>
       <tr>
        <th scope="row">HDC Code</th>
-       <td><select id="branch" class="w100p"  onchange="fn_changeCT()">
+       <td><select class="multy_select w100p" multiple="multiple" id="branch">
+         <c:forEach var="list" items="${branch}" varStatus="status">
+           <option value="${list.codeId}" selected>${list.codeName}</option>
+         </c:forEach>
        </select></td>
         <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
-       <select id="CTCode" class="w100p">
-        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-       </select></td>
+       <select class="multy_select w100p" multiple="multiple" id="CTCode">
+<%--         <c:forEach var="list" items="${CTCode}" varStatus="status">
+          <option value="${list.codeId}" selected>${list.codeId}</option>
+       </c:forEach> --%>
+ </select></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.CTGroup' /></th>
@@ -407,8 +485,11 @@
   </section>
   <!-- search_table end -->
   <ul class="center_btns">
+     <li><p class="btn_blue2 big">
+     <a href="#none" onclick="javascript:fn_openGenerate('EXCEL')"><spring:message code='sys.btn.excel' /></a>
+    </p></li>
    <li><p class="btn_blue2 big">
-     <a href="#none" onclick="javascript:fn_openGenerate()"><spring:message code='service.btn.Generate' /></a>
+     <a href="#none" onclick="javascript:fn_openGenerate('PDF')"><spring:message code='service.btn.Generate' /></a>
     </p></li>
    <li><p class="btn_blue2 big">
      <a href="#none" onclick="javascript:$('#reportFormAS').clearForm();"><spring:message code='service.btn.Clear' /></a>
