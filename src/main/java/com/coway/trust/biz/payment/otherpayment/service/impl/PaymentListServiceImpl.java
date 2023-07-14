@@ -711,12 +711,55 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		if(appvLineCnt == appvLinePrcssCnt + 1) {
 			paymentListMapper.updateLastAppvLine(params);
 			paymentListMapper.updateStatusRefundD(params);
-			returnMap.put("msg", "Refund Request has been successfully approved. <br>*Forward to Finance AR for refund process.");
+			/*returnMap.put("msg", "Refund Request has been successfully approved. <br>*Forward to Finance AR for refund process.");*/ //comment due to last approver is not fixed
+			returnMap.put("msg", "Refund Request has been successfully approved.");
 		}
 
 		LOGGER.debug("params =====================================>>  " + params);
 		returnMap.put("success", "success");
 		return returnMap;
+	}
+
+	@Override
+	public void rejectRefund(Map<String, Object> params) {
+		LOGGER.debug("params =====================================>>  " + params);
+
+		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
+		params.put("reqNo", reqNo);
+		EgovMap data = paymentListMapper.selectReqRefundInfo(params);
+
+		String appvPrcssNo = data.get("appvPrcssNo").toString();
+		int appvLineCnt = paymentListMapper.selectAppvLineCnt(appvPrcssNo);
+		int appvLinePrcssCnt = paymentListMapper.selectAppvLinePrcssCnt(appvPrcssNo);
+
+		params.put("appvStus", "J");
+		params.put("appvPrcssStus", "J");
+ 		params.put("appvLinePrcssCnt", appvLinePrcssCnt+1);
+ 		params.put("appvLineSeq", appvLinePrcssCnt+1);
+ 		params.put("rejctResn", params.get("remark"));
+ 		params.put("userId", params.get("userId"));
+ 		params.put("appvPrcssNo", appvPrcssNo);
+
+		paymentListMapper.updateStatusRefundM(params);
+		paymentListMapper.updateStatusRefundD(params);
+
+		Map<String, Object> ntf = new HashMap<String, Object>();
+		String refundReqId = paymentListMapper.selectRefundReqId(appvPrcssNo);
+//		ntf.put("memCode", params.get("userName"));
+//		ntf.put("refundReqId", refundReqId);
+//		ntf.put("appvLineSeq", params.get("appvLineSeq"));
+//
+//		EgovMap ntfDtls = paymentListMapper.getNtfUser(ntf);
+
+		ntf.put("code", "REF");
+		ntf.put("codeName", "Refund");
+		ntf.put("refundReqId", refundReqId);
+		ntf.put("appvStus", "J");
+		ntf.put("rejctResn", params.get("rejctResn"));
+		ntf.put("reqstUserId", data.get("userName"));
+		ntf.put("userId", params.get("userId"));
+
+		paymentListMapper.insertNotification(ntf);
 	}
 
 	/*@Override
@@ -733,12 +776,12 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
 	}*/
 
-	@Override
+	/*@Override
 	public void rejectRefund(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		List<Object> oldInfoGridList = (List<Object>) params.get("oldInfoGridList");
-		String rejctResn = (String) params.get("rejctResn");
+		List<Object> oldInfoGridList = (List<Object>)params.get("oldInfoGridList");
+		String rejctResn = (String) params.get("remark");
 		for (int i = 0; i < oldInfoGridList.size(); i++) {
 			Map<String, Object> oldInfoDet = (Map<String, Object>) oldInfoGridList.get(i);
 			String appvPrcssNo = (String) oldInfoDet.get("appvPrcssNo");
@@ -772,7 +815,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 			paymentListMapper.insertNotification(ntf);
 		}
 	}
-
+*/
 	@Override
 	public EgovMap selectAttachmentInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub

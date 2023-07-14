@@ -42,6 +42,7 @@ import com.coway.trust.biz.payment.otherpayment.service.PaymentListService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.PageAuthVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
@@ -589,17 +590,23 @@ public class PaymentListController {
 		int[] groupSeq = null;
 		String[] revStusId = null;
 		String[] ftStusId = null;
+		String[] revStusNm = null;
 
 		if(selectedOrder.size() > 0){
 			groupSeq = new int[selectedOrder.size()];
 			revStusId = new String[selectedOrder.size()];
 			ftStusId = new String[selectedOrder.size()];
+			revStusNm = new String[selectedOrder.size()];
 			for(int i = 0; selectedOrder.size() > i; i++){
 				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
 				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
 				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
 			}
 			params.put("groupSeq", groupSeq);
+			params.put("revStusId", revStusId);
+			params.put("ftStusId", ftStusId);
+			params.put("revStusNm", revStusNm);
 			params.put("type", "REF");
 
 			for(Map<String,Object> map : selectedOrder) {
@@ -620,6 +627,12 @@ public class PaymentListController {
 
 		if(invalidTypeCount > 0) {
 			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
+		}
+		else if((Arrays.asList(params.get("revStusId")).contains(1) || Arrays.asList(params.get("revStusId")).contains(5)) && (Arrays.asList(params.get("ftStusId")).contains(1) || Arrays.asList(params.get("ftStusId")).contains(5))){
+			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request Refund");
+		}
+		else if(Arrays.asList(revStusNm).contains("Refund") ){
+			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request Refund");
 		}
 		else if(invalidStatus > 0) {
 			returnMap.put("error", "Payment has Active or Completed Refund request.");
@@ -994,11 +1007,14 @@ public class PaymentListController {
 	}
 
 	@RequestMapping(value = "/selectRequestRefundList.do")
-	public ResponseEntity<List<EgovMap>> selectRequestRefundList(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectRequestRefundList(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO, PageAuthVO pageAuthVO) {
 		LOGGER.debug("params : {} ", params);
 
 		//조회.
 		params.put("memCode", sessionVO.getUserMemCode());
+		params.put("adminRole", params.get("pageAuthFuncUserDefine4"));
+		LOGGER.debug("adminRole: ", params.get("pageAuthFuncUserDefine4"));
+		//params.put("roleId", sessionVO.getRoleId());
 		List<EgovMap> resultList = paymentListService.selectRequestRefundList(params);
 
 		// 조회 결과 리턴.
@@ -1025,8 +1041,10 @@ public class PaymentListController {
 		LOGGER.debug("params : {} ", params);
 
 		String[] groupSeq = params.get("groupSeq").toString().replace("\"","").split(",");
+		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
 
 		params.put("groupSeq", groupSeq);
+		params.put("reqNo", reqNo);
 
 		//조회.
 		List<EgovMap> resultList = paymentListService.selectRequestRefundByGroupSeq(params);

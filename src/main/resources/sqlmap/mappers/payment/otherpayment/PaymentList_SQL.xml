@@ -908,8 +908,8 @@
                     #{item}
                 </foreach>
             AND (
-                <!-- To check PAY0252T should not have the same group seq with rev_stus_id equals null or 6 -->
-                <!-- this is to allow payment that has been FT before to perform DCF -->
+                <!-- To check PAY0252T should not have the same group seq with rev_stus_id equals null or 6
+                this is to allow payment that has been FT before to perform DCF -->
                 SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
 	                <foreach item="item" collection="groupSeq" index="index"
 	                    open="(" separator="," close=")">
@@ -924,7 +924,7 @@
                    open="(" separator="," close=")">
                    #{item}
                  </foreach>
-            <if test="payId == null or payId == ''">
+           <if test="payId == null or payId == ''">
 			    AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
 				    <foreach item="item" collection="groupSeq" index="index"
 	                   open="(" separator="," close=")">
@@ -952,14 +952,14 @@
                    open="(" separator="," close=")">
                    #{item}
                 </foreach>
-               AND (
+              <!--  AND (
 	                SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
 	                    <foreach item="item" collection="groupSeq" index="index"
 	                        open="(" separator="," close=")">
 	                        #{item}
 	                    </foreach>
 	                AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
-                ) = 0
+                ) = 0 -->
         )
     </select>
 
@@ -1232,7 +1232,8 @@
             A.REASON_ID,
             C.RESN_DESC AS REF_RESN_NM,
             APPR.APPV_PRCSS_STUS REF_STUS_ID,
-            B.CODE_DESC AS REF_STUS_NM,
+            <!-- B.CODE_DESC AS REF_STUS_NM, -->
+             B.NAME AS REF_STUS_NM,
             A.CRT_USER_ID,
             D.USER_NAME AS REF_CRT_USER_NM,
             A.CRT_DT REF_CRT_DT,
@@ -1243,13 +1244,38 @@
         FROM PAY0344M A
         JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
         JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
-        JOIN PAY0348D APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
+        <if test="adminRole == null or adminRole == '' ">
+        <!-- JOIN PAY0348D APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode} -->
+        JOIN (
+                    SELECT PAY0348D.*,
+                    CASE WHEN APPV_STUS = 'A' THEN 5
+                    WHEN APPV_STUS = 'J' THEN 6
+                    WHEN APPV_STUS = 'R' THEN 1
+                    END AS APPV_PRCSS_STUS
+                    FROM PAY0348D
+        ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
+        </if>
+        <if test="adminRole != null or adminRole == 'Y' ">
+        JOIN (
+                    SELECT APDT.*, CASE WHEN APDT.APPV_STUS = 'A' THEN 5
+                    WHEN APDT.APPV_STUS = 'J' THEN 6
+                    WHEN APDT.APPV_STUS = 'R' THEN 1
+                    END AS APPV_PRCSS_STUS
+                    FROM (SELECT
+                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number, PAY0348D.*
+                    FROM PAY0348D
+                    --WHERE APPV_STUS IN ('A', 'J')
+                    --ORDER BY APPV_PRCSS_NO,APPV_LINE_SEQ DESC
+                    ) APDT WHERE ROW_NUMBER = 1
+        ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
+        </if>
         LEFT JOIN PAY0252T E ON DT.GROUP_SEQ = E.GROUP_SEQ
         JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID AND DT.OR_NO = F.OR_NO
         LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
         LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]>0
         LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
-        LEFT JOIN SYS0013M B ON APPR.APPV_PRCSS_STUS = B.CODE AND B.CODE_MASTER_ID = 508
+        <!-- LEFT JOIN SYS0013M B ON APPR.APPV_PRCSS_STUS = B.CODE AND B.CODE_MASTER_ID = 508 -->
+        LEFT JOIN SYS0038M  B ON APPRDT.APPV_PRCSS_STUS = B.STUS_CODE_ID
         LEFT JOIN SYS0032M C ON A.REASON_ID = C.RESN_ID
         LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
         LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
@@ -1330,9 +1356,9 @@
             G.NAME AS REV_STUS_NM,
             A.REV_DT,
             C.PAY_ID,
-            A.TOT_AMT,
-            DET.REQ_ID
-<!--             APPVM.APPV_PRCSS_NO,
+            A.TOT_AMT
+            ,DET.REQ_ID
+           <!--  APPVM.APPV_PRCSS_NO,
             APPVD.APPV_LINE_SEQ -->
         FROM
             PAY0252T A
@@ -1343,8 +1369,8 @@
             LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
             LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
-            JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ
-<!--             JOIN PAY0347M APPVM ON DET.REQ_ID = APPVM.REQ_ID
+             JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ
+            <!--JOIN PAY0347M APPVM ON DET.REQ_ID = APPVM.REQ_ID
             JOIN PAY0348D APPVD ON APPVD.APPV_PRCSS_NO = APPVM.APPV_PRCSS_NO -->
         WHERE
             A.GROUP_SEQ IN
@@ -1353,6 +1379,18 @@
                    #{item}
             </foreach>
             AND NVL(A.FT_STUS_ID, '0') <![CDATA[ <> ]]> '5'
+            <if test="reqNo != null and reqNo != '' ">
+            AND DET.REQ_ID IN
+                <foreach item="item" collection="reqNo" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+            </if>
+
+            <if test="reqId != null and reqId != '' ">
+            AND DET.REQ_ID = #{reqId}
+            </if>
+
         GROUP BY
             A.GROUP_SEQ,
             A.LDGR_TYPE,
@@ -1371,8 +1409,8 @@
             G.NAME,
             A.REV_DT,
             C.PAY_ID,
-            A.TOT_AMT,
-            DET.REQ_ID
+            A.TOT_AMT
+           ,DET.REQ_ID
             <!-- APPVM.APPV_PRCSS_NO,
             APPVD.APPV_LINE_SEQ -->
         ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
@@ -1446,6 +1484,7 @@
             B.APPV_PRCSS_NO AS APPV_PRCSS_NO,
             B.REQST_USER_ID,
             D.USER_FULL_NAME,
+            D.USER_NAME,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') AS REF_CRT_DT
         FROM PAY0344M A
         JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID

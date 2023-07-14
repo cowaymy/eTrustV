@@ -192,7 +192,8 @@ function fn_approval(){
 
 //반려처리
 function fn_reject(){
-	if($("#appvStus").val() != "P" ){
+	console.log($("#appvStus").val());
+	if($("#appvStus").val() != "R" ){
         Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");
         return;
 	}
@@ -214,7 +215,7 @@ function fn_reject(){
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.wantToRejectDcf'/>",function (){
 	    Common.ajax("POST", "/payment/rejectRefund.do", $("#_refundSearchForm").serializeJSON(), function(result) {
-			var message = "<spring:message code='pay.alert.dcfSuccessReject'/>";
+			var message = "Refund Request has successfully rejected.";
 
     		Common.alert(message, function(){
 				searchList();

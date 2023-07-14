@@ -64,10 +64,15 @@
 	};
 
 	//Default Combo Data
-	var statusData = [
+	/* var statusData = [
 	    {"codeId": "R","codeName": "Approve In-Progress"},
 		{"codeId": "A","codeName": "Approved"},
-		{"codeId": "J","codeName": "Rejected"}];
+		{"codeId": "J","codeName": "Rejected"}]; */
+
+	var statusData = [
+	                  {"codeId": "1","codeName": "Active"},
+	                  {"codeId": "5","codeName": "Approved"},
+	                  {"codeId": "6","codeName": "Rejected"}];
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [
@@ -260,15 +265,16 @@
     	//AUIGrid.clearGridData(myGridID);
     }
 
-	/* function fn_genRefundRawPop() {
-	    doGetCombo('/common/selectCodeList.do', '392' , ''   , 'cmbReason' , 'S', '');
+	function fn_genRefundRawPop() {
+		doGetComboCodeId('/common/selectReasonCodeId.do', {typeId : 7277}, ''   , 'cmbReason' , 'S', '');
+		//doGetCombo('/common/selectCodeList.do', '392' , ''   , 'cmbReason' , 'S', '');
 	    doDefCombo(statusData, '' ,'cmbStatus', 'S', '');
 	    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','cmbBranch', 'S' , '');
 
 	    $('#popup_wrap').show();
-	} */
+	}
 
-	/* function fn_generateReport(){
+	function fn_generateReport(){
 
 	    var d1Array = $("#requestDateFr").val().split("/");
 	    var d1 = new Date(d1Array[2] + "-" + d1Array[1] + "-" + d1Array[0]);
@@ -279,40 +285,40 @@
 
 	    if(dayDiffs(d1,d2) <= 30) {
 	        if($("#requestDateFr").val() != "") {
-	            whereSQL += " AND Extent1.DCF_CRT_DT >= TO_DATE('" + $("#requestDateFr").val() + "', 'DD/MM/YYYY') ";
+	            whereSQL += " AND Extent1.CRT_DT >= TO_DATE('" + $("#requestDateFr").val() + "', 'DD/MM/YYYY') ";
 	        } else {
 	            Common.alert("Please fill in request from date.");
 	            return;
 	        }
 
 	        if($("#requestDateTo").val() != "") {
-	            whereSQL += " AND Extent1.DCF_CRT_DT < TO_DATE('" + $("#requestDateTo").val() + "', 'DD/MM/YYYY') + 1";
+	            whereSQL += " AND Extent1.CRT_DT < TO_DATE('" + $("#requestDateTo").val() + "', 'DD/MM/YYYY') + 1";
 	        } else {
 	            Common.alert("Please fill in request to date.");
 	            return;
 	        }
 
 	        if($("#cmbReason").val() != "")
-	            whereSQL += " AND Extent1.DCF_RESN = " + $("#cmbReason").val() ;
+	            whereSQL += " AND Extent1.REASON_ID = " + $("#cmbReason").val() ;
 
 	        if($("#cmbStatus").val() != "")
 	            whereSQL += " AND Extent1.DCF_STUS_ID = " + $("#cmbStatus").val() ;
 
 	        if($("#cmbBranch").val() != "")
-	            whereSQL += " AND CRTU.USER_BRNCH_ID = " + $("#cmbBranch").val() ;
+	            whereSQL += " AND B.STUS_CODE_ID = " + $("#cmbBranch").val() ;
 
 	        if($("#approvalDateFr").val() != "")
-	            whereSQL += " AND Extent1.DCF_APPV_DT >= TO_DATE('" + $("#approvalDateFr").val() + "', 'DD/MM/YYYY') ";
+	            whereSQL += " AND DT.APPV_DT >= TO_DATE('" + $("#approvalDateFr").val() + "', 'DD/MM/YYYY') ";
 
 	        if($("#approvalDateFr").val() != "")
-	            whereSQL += " AND Extent1.DCF_APPV_DT < TO_DATE('" + $("#approvalDateFr").val() + "', 'DD/MM/YYYY') + 1";
+	            whereSQL += " AND DT.APPV_DT < TO_DATE('" + $("#approvalDateFr").val() + "', 'DD/MM/YYYY') + 1";
 
 	        var date = new Date().getDate();
 	        if(date.toString().length == 1){
 	            date = "0" + date;
 	        }
 
-	        $("#reportForm #reportDownFileName").val("DCF_AdjustmentRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	        $("#reportForm #reportDownFileName").val("Refund_AdjustmentRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	        $("#reportForm #v_WhereSQL").val(whereSQL);
 	        $("#reportForm #viewType").val("EXCEL");
 	        $("#reportForm #reportFileName").val("/payment/PaymentDCFAdjustRaw.rpt");
@@ -325,7 +331,8 @@
 	    } else {
 	        Common.alert("Date range must be or equal to 30 days.");
 	    }
-	} */
+	}
+
 
 	function dayDiffs(dayFr, dayTo){
 	    return Math.floor((dayTo.getTime() - dayFr.getTime())  /(1000 * 60 * 60 * 24));
@@ -361,6 +368,7 @@
         <!-- search_table start -->
         <form id="searchForm" action="#" method="post">
             <input type="hidden" name="ordId" id="ordId" />
+            <input type="hidden" id="pageAuthFuncUserDefine4" name="pageAuthFuncUserDefine4" value="${PAGE_AUTH.funcUserDefine4}">
             <table class="type1">
                 <caption>table</caption>
                 <colgroup>
@@ -423,21 +431,28 @@
     <!-- search_table end -->
 
 	<!-- link_btns_wrap start -->
+	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 	<aside class="link_btns_wrap">
 		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 		<dl class="link_list">
 			<dt>Link</dt>
 			<dd>
-			 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
 				<ul class="btns">
+					<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 					<li><p class="link_btn"><a href="javascript:fn_confirmRefundPop();">Approval Refund</a></p></li>
+					</c:if>
+
+					<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 					<li><p class="link_btn"><a href="javascript:fn_genRefundRawPop();">Generate Refund Adjustment Raw</a></p></li>
+					</c:if>
 				</ul>
-			</c:if>
+
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
 		</dl>
 	</aside>
+	</c:if>
 	<!-- link_btns_wrap end -->
 
     <!-- search_result start -->
