@@ -942,19 +942,19 @@ function fn_clear() {
 		</form>
 	</section>
 	<ul class="right_btns">
+<%-- 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+<!-- 			<li><p class="btn_grid"> -->
+<%-- 					<a href="#" onClick="fn_viewLdg()"><spring:message --%>
+<%-- 							code="sal.btn.ledger" /> </a> --%>
+<!-- 				</p></li> -->
+<%-- 		</c:if> --%>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-			<li><p class="btn_grid">
-					<a href="#" onClick="fn_viewLdg()"><spring:message
-							code="sal.btn.ledger" /> </a>
-				</p></li>
-		</c:if>
-		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 			<li><p class="btn_grid">
 					<a href="#" onClick="fn_approveRecord()"><spring:message
 							code="pay.btn.approve" /> </a>
 				</p></li>
 		</c:if>
-		<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+		<c:if test="${PAGE_AUTH.funcUserDefine2== 'Y'}">
 			<li><p class="btn_grid">
 					<a href="#" onClick="fn_rejectRemarkPop()"><spring:message
 							code="pay.btn.failreject" /> </a>
