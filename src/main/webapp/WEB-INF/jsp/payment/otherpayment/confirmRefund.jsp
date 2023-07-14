@@ -321,7 +321,7 @@
 	        $("#reportForm #reportDownFileName").val("Refund_AdjustmentRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	        $("#reportForm #v_WhereSQL").val(whereSQL);
 	        $("#reportForm #viewType").val("EXCEL");
-	        $("#reportForm #reportFileName").val("/payment/PaymentDCFAdjustRaw.rpt");
+	        $("#reportForm #reportFileName").val("/payment/PaymentRefundAdjustRaw.rpt");
 
 	        var option = {
 	                isProcedure : true
