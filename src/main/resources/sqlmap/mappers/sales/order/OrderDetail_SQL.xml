@@ -117,6 +117,8 @@
                            , V9.MONTH || '/' || V9.YEAR AS KEY_IN_MONTH
                            , (SELECT SYS2.CODE FROM SYS0026M SYS1, SYS0013M SYS2
                                 WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND SYS1.STK_ID = V1.STOCK_ID) AS ORD_CTGRY_CD
+                           <!-- Added for ex trade product return display. By Frango, 13/07/2023 -->
+                           , V1.EX_TRADE_PR
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID

@@ -110,6 +110,11 @@
     </td>
     <th scope="row">Key-In Month</th>
     <td colspan="1">${orderDetail.basicInfo.keyInMonth}</td>
+    <th scope="row">Product Return</th>
+    <td colspan="1">
+        <c:if test="${orderDetail.basicInfo.exTradePr == 1}">Yes</c:if>
+        <c:if test="${orderDetail.basicInfo.exTradePr == null || orderDetail.basicInfo.exTradePr == 0}">No</c:if>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.SeriacNo" /></th>

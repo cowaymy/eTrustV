@@ -345,7 +345,7 @@
                 style: 'left_style'
             }, {
                 dataField : "isExtradePr",
-                headerText : "With / Without PR",
+                headerText : "Product Return",
                 width : 100,
                 editable : false,
                 style: 'left_style'
@@ -496,7 +496,19 @@
                editable : false,
                }, {
                    dataField : "isExtradePr",
-                   headerText : "With / Without PR",
+                   headerText : "Product Return",
+                   width : 100,
+                   editable : false,
+                   style: 'left_style'
+               }, {
+                   dataField : "cancellationRequestNo",
+                   headerText : "OCR No",
+                   width : 100,
+                   editable : false,
+                   style: 'left_style'
+               }, {
+                   dataField : "cancellationStatusName",
+                   headerText : "OCR Status",
                    width : 100,
                    editable : false,
                    style: 'left_style'
