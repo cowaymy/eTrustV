@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js" integrity="sha512-ZrigzIl5MysuwHc2LaGI+uOLnLDdyYUth+pA5OuJC++WEleiYrztIc7nU/iBRWeP+ufmSGepuJULdgh/K0rIAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-C0umD/l+9QFQbGjBr+aOocreHufOpoveiGOGS3VX6jPmmbaBogNKN4VuCv75p6E6qO5NDU0TNpE/YVHyHoS6lQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <aside class="title_line">
     <h2>ePurchase Requisition</h2>
@@ -159,7 +161,7 @@
     .then(resp => resp.json())
     .then(d => {
     	d.forEach((p) => {
-	    	document.querySelector("select[name=pic]").innerHTML += "<option value=" + p.memId + ">" + p.userName + "</option>"
+	    	document.querySelector("select[name=pic]").innerHTML += "<option value=" + p.memId + (p.userName == "${currName}" ? " selected" : "") + ">" + p.userName + "</option>"
     	})
     })
 

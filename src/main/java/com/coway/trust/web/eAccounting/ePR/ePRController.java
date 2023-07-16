@@ -25,11 +25,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.ePR.ePRService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.excel.ExcelReadComponent;
 import com.google.common.base.Objects;
@@ -54,9 +56,13 @@ public class ePRController {
 	 @Autowired
 	 private FileService fileService;
 
+	 @Autowired
+	 private AdaptorService adaptorService;
+
 	@RequestMapping(value="/ePR.do")
 	public String ePR(ModelMap model, SessionVO sessionVO) throws Exception {
 		model.put("curr", sessionVO.getUserId());
+		model.put("currName", sessionVO.getUserName());
 		List<EgovMap> requests = ePRService.selectRequests(model);
 		model.put("requests", new Gson().toJson(requests));
 		return "eAccounting/ePR/ePR";
@@ -252,6 +258,7 @@ public class ePRController {
 	@RequestMapping(value="/submitEPR.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> submitEPR(MultipartHttpServletRequest request, SessionVO sessionVO) throws InvalidFormatException, IOException {
 		Map<String, Object> response = new HashMap<String, Object>();
+		EmailVO email = null;
 
 		//Extract Delivery Excel data
 		List<Map<String, Cell>> result = excelReadComponent.readExcelToList(request.getFile("rciv"), 1, r -> {
@@ -312,6 +319,9 @@ public class ePRController {
 				}
 
 				//Insert or update request based on the presence of "requestId"
+				if (p.get("requestId") == null) {
+					p.put("id", ePRService.selectRequestId());
+				}
 				int res = ePRService.insertRequestDraft(p);
 				dbRes.add(res);
 
@@ -337,11 +347,17 @@ public class ePRController {
 				ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) p.get("members");
 				for(int i = 0; i < members.size(); i++) {
 					Map<String, Object> d = members.get(i);
+					if (i == 0) {
+						String addContent = "is in need of your approval.<br/><span style=\"color: red;\">Title: \"" + p.get("ePRTitle") + "\"</span>";
+						email = prepareEmail(p.get("id").toString(), addContent);
+						email.setTo(ePRService.getMemberEmail(d));
+					}
 					d.put("id", p.get("id"));
 					d.put("seq", i+1);
 					int res2 = ePRService.insertApprovalLine(d);
 					dbRes.add(res2);
 				}
+
 
 				//Update Request to submitted
 				int res3 = ePRService.updateRequest(p);
@@ -352,24 +368,67 @@ public class ePRController {
 						return n > 0;
 					}
 				}) ? 1 : 0;
-				response.put("success", ret);
-				return ResponseEntity.ok(response);
+				if (ret == 1) {
+					if (email != null) {
+						adaptorService.sendEmail(email, false);
+					}
+					response.put("success", p.get("id"));
+					return ResponseEntity.ok(response);
+				} else {
+					response.put("success", 0);
+					return ResponseEntity.ok(response);
+				}
 			} else {
 				response.put("success", 0);
-				response.put("err", "Excel has no data");
+				response.put("err", "Receiver info has no data");
 				return ResponseEntity.ok(response);
 			}
 		} else {
 			response.put("success", 0);
-			response.put("err", "Excel Format incorrect");
+			response.put("err", "Receiver info Format incorrect");
 			return ResponseEntity.ok(response);
 		}
+	}
+
+	private EmailVO prepareEmail(String ePRNo, String addContent) {
+		for (int i = ePRNo.length(); i < 5; i++) {
+			ePRNo = "0" + ePRNo;
+		}
+		EmailVO email = new EmailVO();
+		email.setHtml(true);
+		email.setSubject("ePR Approval");
+		String content = "";
+        content += "Dear Sir/Madam,<br/><br/>";
+        content += "Kindly be noted that <span style=\"color: red;\">\"PR No.: PR" + ePRNo + "\"</span> " + addContent;
+        content += "<br/><br/>May refer to : Etrust > Misc > Procurement";
+        email.setText(content);
+        return email;
 	}
 
 	@RequestMapping(value="/ePRApproval.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> ePRApproval(@RequestBody Map<String, Object> p, SessionVO sessionVO) {
 		p.put("memId", sessionVO.getMemId());
 		int res = ePRService.ePRApproval(p);
+		EgovMap curr = ePRService.getCurrApprv(p);
+		EgovMap req = ePRService.selectRequest(p);
+		if (res == 1 && (((BigDecimal) req.get("stus")).intValueExact() == 5 || ((BigDecimal) req.get("stus")).intValueExact() == 6)) {
+			String content = "Submitted on date " + req.get("submitDt");
+			if ((int) p.get("stus") == 5) {
+				content += " has been approved.";
+			} else if ((int) p.get("stus") == 6) {
+				content += " has been rejected.";
+			}
+			content += "</br><span style=\"color: red;\">Title : \"" + req.get("title") + "\"</span>";
+			EmailVO email = prepareEmail(p.get("requestId").toString(), content);
+			email.setTo((String) req.get("email"));
+			adaptorService.sendEmail(email, false);
+		} else if (res == 1 && ((BigDecimal) req.get("stus")).intValueExact() != 6) {
+			String content = "is in need of your approval.";
+			content += "</br><span style=\"color: red;\">" + req.get("title") + "</span>";
+			EmailVO email = prepareEmail(p.get("requestId").toString(), content);
+			email.setTo((String) curr.get("email"));
+			adaptorService.sendEmail(email, false);
+		}
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", res);
 		return ResponseEntity.ok(result);

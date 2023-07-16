@@ -33,4 +33,5 @@ public interface ePRMapper {
 	EgovMap getCurrApprv(Map<String, Object> p);
 	int updateRequestSPC(Map<String, Object> p);
 	List<EgovMap> getSPCMembers();
+	String getMemberEmail(Map<String, Object> p);
 }

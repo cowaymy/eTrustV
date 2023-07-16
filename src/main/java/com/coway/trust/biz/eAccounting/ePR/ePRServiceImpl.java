@@ -24,10 +24,13 @@ public class ePRServiceImpl implements ePRService {
 	}
 
 	@Override
+	public int selectRequestId() {
+		return ePRMapper.selectRequestId();
+	}
+
+	@Override
 	public int insertRequestDraft(Map<String, Object> p) {
 		if (p.get("requestId") == null) {
-			int id = ePRMapper.selectRequestId();
-			p.put("id", id);
 			return ePRMapper.insertRequestDraft(p);
 		} else {
 			p.put("id", p.get("requestId"));
@@ -134,5 +137,10 @@ public class ePRServiceImpl implements ePRService {
 	@Override
 	public List<EgovMap> getSPCMembers() {
 		return ePRMapper.getSPCMembers();
+	}
+
+	@Override
+	public String getMemberEmail(Map<String, Object> p) {
+		return ePRMapper.getMemberEmail(p);
 	}
 }

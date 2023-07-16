@@ -39,4 +39,8 @@ public interface ePRService {
 	EgovMap getCurrApprv(Map<String, Object> p);
 
 	List<EgovMap> getSPCMembers();
+
+	int selectRequestId();
+
+	String getMemberEmail(Map <String, Object> p);
 }

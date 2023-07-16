@@ -25,15 +25,21 @@
     .auto_file4.attachment_file label input[type=text]{width:345px!important; float:left}
     .auto_file4 span.label_text2{float:left;}
     .auto_file4 span.label_text2 a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
+
+    .popup_wrap.eprpop {
+        width: 90% !important;
+        left: 42%;
+    }
 </style>
 
-<div id="popup_wrap" class="popup_wrap">
+<div id="popup_wrap" class="popup_wrap eprpop">
     <header class="pop_header">
         <h1>ePR Overview</h1>
         <ul class="right_opt">
           <c:if test="${editable}">
             <li><p class="btn_blue2"><a href="#" id="editEPR">EDIT</a></p></li>
           </c:if>
+	      <li><p class="btn_blue2 hidden"><a href="#" id="btnCancelEPRPop">Cancel PR</a></p></li>
           <li><p class="btn_blue2"><a href="#" id="btnGuarViewClose">CLOSE</a></p></li>
         </ul>
     </header>
@@ -73,7 +79,9 @@
                 </tr>
                 <tr>
                     <th>ePR Status</th>
-                    <td id="ePRStus" colspan="3"></td>
+                    <td id="ePRStus"></td>
+                    <th>ePR No</th>
+                    <td id="ePRNo"></td>
                 </tr>
                 <tr>
                     <th>Approve Status</th>
@@ -185,7 +193,7 @@
                         <div id="ePRRcivFileInput" class="auto_file4" style="width: auto;"><!-- auto_file start -->
 	                       <input type="file" title="file add" accept=".xlsx" />
 	                       <label for="ePRRcivFileInput">
-	                           <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly">
+	                           <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly" placeholder="Only .xlsx file">
 	                           <span class="label_text2"><a href="#">File</a></span>
 	                       </label>
 	                       <span class="label_text2"><a id="example_download">Download CSV File</a></span>
@@ -246,6 +254,10 @@
 </div>
 
 <script>
+
+    if (window.document.querySelector("#btnCancelEPR")) window.document.querySelector("#btnCancelEPRPop").parentElement.classList.remove("hidden")
+    console.log(window.document.querySelector("#btnCancelEPR"))
+    console.log(window.document.querySelector("#btnCancelEPRPop"))
     const defaultEPR = ${request}
 
     $(".ePRTitle").text(defaultEPR.title)
@@ -254,6 +266,7 @@
     $("#costCentreCode").text(defaultEPR.costCenter)
     $("#costCentreName").text(defaultEPR.costCenterText)
     $("#ePRStus").text(defaultEPR.stusName)
+    $("#ePRNo").text("PR" + (defaultEPR.requestId.toString().padStart(5, "0")))
     $("#ePRApproval").html(
     		"<ul>" + `<li> - Request by "` + defaultEPR.reqstName + `" [` + moment(defaultEPR.submitDt).format("DD/MM/YYYY") + `]</li>` +
     		defaultEPR.approvals.sort((a, b) => a.seq - b.seq).map(a => `<li> - `+ a.stus + ` by "` + a.name + `" [` + (a.actDt ? moment(a.actDt).format("DD/MM/YYYY") : "") + `]</li>`).join("")
@@ -282,6 +295,12 @@
     		document.querySelector("#ePREditAssign").classList.add("hidden")
             document.querySelector("#ePREditDistribute").classList.remove("hidden")
     	}
+    })
+
+    $("#btnCancelEPRPop").click(() => {
+        if (defaultEPR.stusName == "Approved") {
+            Common.popupDiv("/eAccounting/ePR/cancelEPR.do?requestId=" + defaultEPR.requestId  , null, null , true , '_ePRCancelPop')
+        }
     })
 
     document.querySelectorAll(".auto_file4 label").forEach(label => {
@@ -377,6 +396,7 @@
             document.querySelector("dd[data-caro=" + e.currentTarget.id + "]").style.display = e.currentTarget.classList.contains("on") ? "block" : "none"
             AUIGrid.resize(ePRApprovalGrid, 942, 380)
         }
+    	el.click()
     })
 
     function chgTab(tab) {

@@ -42,9 +42,14 @@
     .show {
         display: block !important;
     }
+
+    .popup_wrap.eprpop {
+        width: 90% !important;
+        left: 42%;
+    }
 </style>
 
-<div class="popup_wrap">
+<div class="popup_wrap eprpop">
     <header class="pop_header">
         <h1 id="ePRHeader"></h1>
         <ul class="right_opt">
@@ -118,7 +123,7 @@
                             <div id="ePRRcivFileInput" class="auto_file4" style="width: auto;"><!-- auto_file start -->
 						      <input type="file" title="file add" accept=".xlsx" />
 					          <label for="ePRRcivFileInput">
-					              <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly">
+					              <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly" placeholder="Only .xlsx file">
 					              <span class="label_text2"><a href="#">File</a></span>
 					          </label>
 					          <span class="label_text2"><a id="example_download">Download CSV File</a></span>
@@ -129,9 +134,9 @@
                         <th scope="row">Attachment</th>
                         <td id="ePRAdd">
                             <div class="auto_file4" style="width: auto;">
-                              <input id="ePRAddFileInput" type="file" title="file add" accept=".zip,.7z,.gzip,.rar" />
+                              <input id="ePRAddFileInput" type="file" title="file add" accept=".zip,.7z,.gzip,.rar"/>
                               <label for="ePRAddFileInput">
-                                  <input id="ePRAddFile" type="text" class="input_text" readonly class="readonly">
+                                  <input id="ePRAddFile" type="text" class="input_text" readonly class="readonly" placeholder="Only zip file">
                                   <span class="label_text2"><a href="#">File</a></span>
                               </label>
                           </div>
@@ -185,6 +190,8 @@
 </div>
 
 <script>
+
+    function fn_getTotalAmount() {}
 
     const defaultEPR = ${request}
 
@@ -251,7 +258,7 @@
     	    document.getElementById("ePRInfo").classList.remove("hidden")
     	    document.getElementById("ePRDistribute").classList.add("hidden")
     	    document.getElementById("ePRDistribute").classList.remove("show")
-    	    AUIGrid.resize(itemGrid, 942, 380)
+    	    AUIGrid.resize(newGridID, 942, 380)
     	} else {
             document.getElementById("ePRDistribute").classList.remove("hidden")
             document.getElementById("ePRDistribute").classList.add("show")
@@ -261,7 +268,7 @@
     }
 
     const today = new Date()
-    document.getElementById("keyinDt").value = today.getFullYear() + "/" + (today.getMonth() + 1).toString().padStart(2, "0") + "/" + today.getDate().toString().padStart(2, "0")
+    document.getElementById("keyinDt").value = moment(today).format("DD/MM/YYYY hh:mm A")
 
     var fn_setPopCostCenter = () => {
     	document.getElementById("costCenterCode").value = document.getElementById("search_costCentr").value
@@ -278,38 +285,45 @@
 	    }
     }
 
-    const itemGrid = GridCommon.createAUIGrid("itemGrid", [
+    var newGridID = GridCommon.createAUIGrid("itemGrid", [
 	    {
 	    	dataField: 'budgetCode', headerText: 'Budget Code', editable: false, renderer: {
-	    		  type: 'TemplateRenderer'
+	    		  type: 'TemplateRenderer',
 	    	},
 	    	labelFunction: function(rowIndex, _x, value) {
 	    		return '<div class="budgetContainer"><input id="'+ 'budgetCode' + rowIndex +'" value="' + value + '" type="hidden" /><span>' + value + '</span><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.png" /></div>'
-	    	}
+	    	},
+	    	width: "25%"
 	    },
 	    {
-	    	dataField: 'budgetName', headerText: 'Budget Name', editable: false, renderer: {
+	    	dataField: 'budgetCodeName', headerText: 'Budget Name', editable: false, renderer: {
 	    	    type: 'TemplateRenderer'
 	    	},
 	        labelFunction: function(rowIndex, _x, value) {
 	            return '<div class="budgetContainer"><input id="'+ 'budgetName' + rowIndex +'" value="' + value + '" type="hidden" /><span>' + value + '</span></div>'
-	        }
+	        },
+	        width: "25%"
 	    },
 	    {dataField: 'eta', headerText: 'ETA<br/>(YYYY/MM/DD)', editRenderer: {
-	    	type: 'CalendarRenderer'
-	    }},
-	    {dataField: 'item', headerText: 'Item'},
-	    {dataField: 'specs', headerText: 'Specification'},
+	    	type: 'BTCalendarRenderer',
+	    	btOpts: {
+	    		beforeShowDay: (dt) => {
+	    			return !moment(dt).isBefore(moment())
+	    		}
+	    	}
+	    },width: "25%"},
+	    {dataField: 'item', headerText: 'Item',width: "25%"},
+	    {dataField: 'specs', headerText: 'Specification',width: "25%"},
 	    {dataField: 'quantity', headerText: 'Quantity', editRenderer: {
 	    	type: 'NumberStepRenderer',
 	    	min: 1,
 	    	max: null
-	    }},
+	    },width: "25%"},
 	    {dataField: 'uom', headerText: 'UOM', editRenderer: {
 	    	type: 'DropDownListRenderer',
 	    	list: ['pc(s)', 'unit(s)', 'set(s)'] // hard coded because need history for previous record's units
-	    }},
-	    {dataField: 'remark', headerText: 'Remark'}
+	    },width: "25%"},
+	    {dataField: 'remark', headerText: 'Remark',width: "25%"}
 	], '', {
 	    usePaging: true,
 	    pageRowCount: 20,
@@ -350,38 +364,42 @@
 		if (stus && stus != 116) return
 		$(".budgetContainer img").off("click").on("click", (event) => {
             budgetRow = $(event.target.parentElement).find("input").attr("id").split("budgetCode")[1]
-            Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",{pop:"pop"}, null, true, "budgetCodeSearchPop")
+            Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do",data = {
+                    rowIndex : budgetRow
+                    ,costCentr : $("#costCenterCode").val()
+                    ,costCentrName : $("#costCenterName").val()
+            }, null, true, "budgetCodeSearchPop")
         })
 	}
 
-	AUIGrid.setGridData(itemGrid, defaultEPR?.items ? defaultEPR.items.map(i => ({...i, budgetName: i.budgetCodeText, eta: moment(i.eta).format("YYYY/MM/DD")})) : [])
+	AUIGrid.setGridData(newGridID, defaultEPR?.items ? defaultEPR.items.map(i => ({...i, budgetCodeName: i.budgetCodeText, eta: moment(i.eta).format("YYYY/MM/DD")})) : [])
 	bindBudgetCodeEvent()
 	AUIGrid.setGridData(ePRDistributeGrid, defaultEPR?.deliveryDetails || [])
 
 
-	AUIGrid.bind(itemGrid, "addRow", () => {
+	AUIGrid.bind(newGridID, "addRow", () => {
 		bindBudgetCodeEvent()
 	})
 
-	AUIGrid.bind(itemGrid, "cellEditEnd", () => {
+	AUIGrid.bind(newGridID, "cellEditEnd", () => {
 		bindBudgetCodeEvent()
 	})
 
-	AUIGrid.bind(itemGrid, "removeRow", () => {
+	AUIGrid.bind(newGridID, "removeRow", () => {
         bindBudgetCodeEvent()
     })
 
 	function fn_setPopBudgetData() {
-    	AUIGrid.updateRow(itemGrid, {budgetCode: $("#pBudgetCode").val(), budgetName: $("#pBudgetCodeName").val()}, budgetRow)
+    	AUIGrid.updateRow(newGridID, {budgetCode: $("#pBudgetCode").val(), budgetCodeName: $("#pBudgetCodeName").val()}, budgetRow)
     	bindBudgetCodeEvent()
     }
 
 	$("#ePRAddRow").click(() => {
-		AUIGrid.addRow(itemGrid, {}, "last")
+		AUIGrid.addRow(newGridID, {}, "last")
 	})
 
 	document.getElementById("ePRDeleteRow") && (document.getElementById("ePRDeleteRow").onclick = () => {
-		AUIGrid.removeRow(itemGrid, "selectedIndex")
+		AUIGrid.removeRow(newGridID, "selectedIndex")
 	})
 
 	document.getElementById("ePRDelete") && (document.getElementById("ePRDelete").onclick = e => {
@@ -417,7 +435,7 @@
             Common.alert("Please fill in ePR remark")
             return false
         }
-		const items = AUIGrid.getGridData(itemGrid)
+		const items = AUIGrid.getGridData(newGridID)
 		if (!items || items.length == 0) {
 			Common.alert("Kindly insert ePR items")
 			return false
@@ -470,8 +488,8 @@
 		Common.showLoader()
         const [ePRTitle, keyinDt, crtUsrNm, costCenterCode, ePRRemark] = [document.getElementById("ePRTitle").value, $("#keyinDt").val(), document.querySelector("#crtUsrNm").value, $("#costCenterCode").val(), document.getElementById("ePRRemark").value]
         const data = JSON.stringify({
-            ePRTitle, keyinDt, crtUsrNm, costCenterCode, ePRRemark, requestId: defaultEPR.requestId, members,
-            items: AUIGrid.getGridData(itemGrid).map(i => {
+            ePRTitle, keyinDt: moment(keyinDt, "DD/MM/YYYY hh:mm A").format("YYYY/MM/DD"), crtUsrNm, costCenterCode, ePRRemark, requestId: defaultEPR.requestId, members,
+            items: AUIGrid.getGridData(newGridID).map(i => {
                 const {budgetCode, eta, item, specs, quantity, uom, remark} = i
                 return {budgetCode, eta, item, specs, quantity, uom, remark}
             })
@@ -489,12 +507,16 @@
         })
         .then((d) => {
             if (d.success) {
-                Common.alert("ePR submitted!", () => {
+                Common.alert("You have successfully submitted a new Purchase Request.<br/>PR No. : PR" + d.success.toString().padStart(5, "0"), () => {
                 	$(".pop_header a:contains(CLOSE)").click()
                     getRequests()
                 })
             } else {
-                Common.alert("ePR creation failed! \n Kindly copy text below and raise ticket with it:\n" + data)
+            	if (d.err) {
+            		Common.alert(d.err)
+            	} else {
+	                Common.alert("ePR creation failed! \n Kindly copy text below and raise ticket with it:\n" + data)
+            	}
             }
         })
         .finally(() => {
@@ -508,7 +530,7 @@
 		const [ePRTitle, keyinDt, crtUsrNm, costCenterCode, ePRRemark] = [document.getElementById("ePRTitle").value, $("#keyinDt").val(), document.querySelector("#crtUsrNm").value, $("#costCenterCode").val(), document.getElementById("ePRRemark").value]
 	    const data = JSON.stringify({
             ePRTitle, keyinDt, crtUsrNm, costCenterCode, ePRRemark, requestId: defaultEPR.requestId,
-            items: AUIGrid.getGridData(itemGrid).map(i => {
+            items: AUIGrid.getGridData(newGridID).map(i => {
                 const {budgetCode, eta, item, specs, quantity, uom, remark} = i
                 return {budgetCode, eta, item, specs, quantity, uom, remark}
             })
@@ -530,6 +552,8 @@
     				$(".pop_header a:contains(CLOSE)").click()
     				getRequests()
     			})
+    		} else if (d.err) {
+    			Common.alert(d.err)
     		} else {
     			Common.alert("Draft creation failed! \n Kindly copy text below and raise ticket with it:\n" + data)
     		}
@@ -592,7 +616,7 @@
     	e.preventDefault()
     	document.querySelectorAll(".popup_wrap").forEach(pop => {
             pop.classList.toggle("hidden")
-            AUIGrid.resize(itemGrid, 942, 380)
+            AUIGrid.resize(newGridID, 942, 380)
         })
     })
 </script>

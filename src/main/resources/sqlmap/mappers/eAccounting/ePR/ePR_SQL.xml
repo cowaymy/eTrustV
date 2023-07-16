@@ -211,6 +211,7 @@
         <if test="crt != null and crt != ''">
             AND C.USER_NAME = #{crt}
         </if>
+        ORDER BY A.REQUEST_ID
     </select>
 
     <resultMap type="egovMap" id="ePRRequest">
@@ -229,6 +230,8 @@
 	    <result property="assigned_user" column="assigned_user"/>
 	    <result property="stus_name" column="request_stus"/>
 	    <result property="reqst_name" column="reqst_name"/>
+	    <result property="submit_dt" column="submit_dt"/>
+	    <result property="email" column="email"/>
 	    <collection property="items" ofType="egovMap" javaType="ArrayList">
 	        <result property="request_itm_id" column="request_itm_id"/>
 	        <result property="budget_code" column="budget_code"/>
@@ -285,7 +288,9 @@
             J.REMARK APPV_REMARK,
             L.NAME APPV_STUS,
             M.NAME REQUEST_STUS,
-            N.FULL_NAME REQST_NAME
+            N.FULL_NAME REQST_NAME,
+            A.SUBMIT_DT,
+            E.USER_EMAIL EMAIL
         FROM FCM0041M A
         LEFT JOIN FCM0042D B ON A.REQUEST_ID = B.REQUEST_ID
         LEFT JOIN FCM0010M C ON B.BUDGET_CODE = C.BUDGET_CODE
@@ -331,13 +336,16 @@
     </select>
 
     <select id="getCurrApprv" resultType="egovMap" parameterType="map">
-        SELECT MEM_ID FROM (
+        SELECT A.MEM_ID, USER_EMAIL EMAIL FROM (
 		    SELECT
 		        LAG(STUS) OVER (ORDER BY SEQ) PREV_STUS,
 		        STUS,
 		        MEM_ID
 		    FROM FCM0044D WHERE REQUEST_ID = #{requestId}
-		) WHERE STUS = 44 AND (PREV_STUS IS NULL OR PREV_STUS <![CDATA[<>]]> 44)
+		) A
+		JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+		JOIN SYS0047M C ON B.MEM_CODE = C.HR_CODE
+		WHERE A.STUS = 44 AND (A.PREV_STUS IS NULL OR A.PREV_STUS <![CDATA[<>]]> 44)
     </select>
 
     <update id="updateRequestSPC" parameterType="map">
@@ -351,5 +359,10 @@
         FROM SYS0047M A
         JOIN ORG0001D B ON B.MEM_CODE = A.HR_CODE
         WHERE MEM_CODE IN ('P0018', 'P2217', 'P2098', 'P2513', 'P2135')
+    </select>
+
+    <select id="getMemberEmail" resultType="String" parameterType="map">
+        SELECT USER_EMAIL EMAIL
+        FROM SYS0047M WHERE HR_CODE = #{memCode}
     </select>
 </mapper>
