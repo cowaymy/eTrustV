@@ -1244,7 +1244,6 @@
             WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
             WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1
                     END AS APPV_STUS
-                    ,#{adminRole} AAAA
         FROM PAY0344M A
         JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
         JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
