@@ -1244,11 +1244,12 @@
             WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
             WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1
                     END AS APPV_STUS
+                    ,#{adminRole} AAAA
         FROM PAY0344M A
         JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
         JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
         <if test="adminRole == null or adminRole == '' ">
-        <!-- JOIN PAY0348D APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode} -->
+
         JOIN (
                     SELECT PAY0348D.*,
                     CASE WHEN APPV_STUS = 'A' THEN 5
@@ -1258,8 +1259,9 @@
                     FROM PAY0348D
         ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
         </if>
-        <if test="adminRole != null and adminRole == 'Y' ">
-        JOIN (
+        <if test='adminRole != null and adminRole == "Y"'>
+
+                            JOIN (
                     SELECT APDT.*, CASE WHEN APDT.APPV_STUS = 'A' THEN 5
                     WHEN APDT.APPV_STUS = 'J' THEN 6
                     WHEN APDT.APPV_STUS = 'R' THEN 1
@@ -1267,10 +1269,9 @@
                     FROM (SELECT
                       ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ) AS row_number, PAY0348D.*
                     FROM PAY0348D
-                    --WHERE APPV_STUS IN ('A', 'J')
-                    --ORDER BY APPV_PRCSS_NO,APPV_LINE_SEQ DESC
                     ) APDT WHERE ROW_NUMBER = 1
         ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
+
         </if>
         LEFT JOIN PAY0252T E ON DT.GROUP_SEQ = E.GROUP_SEQ
         JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID AND DT.OR_NO = F.OR_NO

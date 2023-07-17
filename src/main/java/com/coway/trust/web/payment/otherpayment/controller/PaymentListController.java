@@ -1012,8 +1012,8 @@ public class PaymentListController {
 
 		//조회.
 		params.put("memCode", sessionVO.getUserMemCode());
-		params.put("adminRole", params.get("pageAuthFuncUserDefine4"));
-		LOGGER.debug("adminRole: ", params.get("pageAuthFuncUserDefine4"));
+		params.put("adminRole", params.get("pageAuthFuncUserDefine4").toString());
+		//LOGGER.debug("adminRole: ", params.get("pageAuthFuncUserDefine4"));
 		//params.put("roleId", sessionVO.getRoleId());
 		List<EgovMap> resultList = paymentListService.selectRequestRefundList(params);
 
