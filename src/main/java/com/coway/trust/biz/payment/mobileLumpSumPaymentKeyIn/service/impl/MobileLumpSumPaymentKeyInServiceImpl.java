@@ -1,10 +1,26 @@
 package com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.impl;
 
+import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
+import static com.coway.trust.AppConstants.EMAIL_TEXT;
+import static com.coway.trust.AppConstants.EMAIL_TO;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -13,6 +29,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.NumberUtils;
 import org.json.JSONArray;
@@ -26,14 +44,28 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.mobileLumpSumPayment.MobileLumpSumPaymentOrderDetailsForm;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 import com.coway.trust.biz.sales.mambership.MembershipPaymentService;
 import com.coway.trust.biz.sales.mambership.impl.MembershipESvmMapper;
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController.ViewType;
 import com.coway.trust.web.sales.SalesConstants;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -60,13 +92,29 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	private MembershipPaymentService membershipPaymentService;
 	@Resource(name = "membershipESvmMapper")
 	private MembershipESvmMapper membershipESvmMapper;
+	@Autowired
+	private AdaptorService adaptorService;
 
 	@Override
 	public List<EgovMap> customerInfoSearch(Map<String, Object> params) {
 		String custCiType = params.get("custCiType").toString();
+		List<EgovMap> customerInfoSearchResult = null;
+
+		// Order search
+		if (custCiType.equals("1")) {
+			params.put("salesOrdNo", params.get("custCi").toString());
+
+			if(params.get("salesOrdNo") != null && !params.get("salesOrdNo").toString().isEmpty())
+			{
+				customerInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerInfoBySalesOrderNo(params);
+			}
+			else{
+				throw new ApplicationException(AppConstants.FAIL, "There is no order number to be search. Please Contact IT.");
+			}
+		}
 
 		// Invoice Number Type Searching
-		if (custCiType.equals("1")) {
+		if (custCiType.equals("2")) {
 			EgovMap billingInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerBillingInfoByInvoiceNo(params);
 
 			params.put("nric", billingInfoSearchResult.get("nric").toString());
@@ -75,11 +123,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		}
 
 		// Cust search by NRIC/Company IC
-		if (custCiType.equals("2")) {
+		if (custCiType.equals("3")) {
 			params.put("nric", params.get("custCi").toString());
 		}
 
-		List<EgovMap> customerInfoSearchResult = null;
 		if (params.get("nric") != null && !params.get("nric").toString().isEmpty()) {
 			String nric = params.get("nric").toString();
 			if(nric.matches("^[0-9]*$")){
@@ -955,6 +1002,79 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		return formList;
 	}
+
+    public void sendEmail(Map<String, Object> params) {
+    	//mobilePayGrpNo
+
+    	EmailVO email = new EmailVO();
+        String emailSubject = "COWAY: Mobile Bulk Payment";
+
+        List<String> emailNo = new ArrayList<String>();
+
+        //get customer name and order info
+
+        if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+          emailNo.add(CommonUtils.nvl(params.get("email1")));
+        } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+          emailNo.add(CommonUtils.nvl(params.get("email2")));
+        }
+
+        String content = "";
+        content += "Dear Sir/Madam,\n";
+        content += "Thank you for your payment.\n";
+        content += "Your payment records shall be updated within 3 working days upon verification. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
+        content += "This is a system generated email. Please do not respond to this email. \n";
+
+        params.put(EMAIL_SUBJECT, emailSubject);
+        params.put(EMAIL_TO, emailNo);
+        params.put(EMAIL_TEXT, content);
+
+        if(emailNo.size() > 0){
+		    email.setTo(emailNo);
+		    email.setHtml(true);
+		    email.setSubject(emailSubject);
+		    email.setText(content);
+		    adaptorService.sendEmail(email, false); //Normal email sending without attachments
+		}
+    }
+
+    public void sendSms(Map<String, Object> params) {
+        if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
+        	//Send Message
+    	    EgovMap custCardBankIssuer = new EgovMap();//autoDebitMapper.selectCustCardBankInformation(params);
+    	    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
+    	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
+    	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
+    	    params.put("cardEnding", cardEnding);
+    	    int userId = 0;//autoDebitMapper.getUserID(params.get("createdBy").toString());
+    	    SmsVO sms = new SmsVO(userId, 975);
+    	    String smsTemplate = ""; //autoDebitMapper.getSmsTemplate(params);
+    	    String smsNo = "";
+
+    	    params.put("smsTemplate", smsTemplate);
+
+    	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+    	        smsNo = CommonUtils.nvl(params.get("sms1"));
+    	    }
+
+            if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+                if (!"".equals(CommonUtils.nvl(smsNo))) {
+                	smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
+                } else {
+                	smsNo = CommonUtils.nvl(params.get("sms2"));
+                }
+            }
+
+    	    if (!"".equals(CommonUtils.nvl(smsNo))) {
+    	      sms.setMessage(CommonUtils.nvl(smsTemplate));
+    	      sms.setMobiles(CommonUtils.nvl(smsNo));
+    	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
+    	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
+    	      SmsResult smsResult = adaptorService.sendSMS(sms);
+    	      LOGGER.debug(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
+    	    }
+        }
+      }
 
 	private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
 		Map<Object, Boolean> map = new ConcurrentHashMap<>();
