@@ -287,7 +287,7 @@
 
     var newGridID = GridCommon.createAUIGrid("itemGrid", [
 	    {
-	    	dataField: 'budgetCode', headerText: 'Budget Code', editable: false, renderer: {
+	    	dataField: 'budgetCode', headerText: 'Budget Code', renderer: {
 	    		  type: 'TemplateRenderer',
 	    	},
 	    	labelFunction: function(rowIndex, _x, value) {
@@ -296,7 +296,7 @@
 	    	width: "25%"
 	    },
 	    {
-	    	dataField: 'budgetCodeName', headerText: 'Budget Name', editable: false, renderer: {
+	    	dataField: 'budgetCodeName', headerText: 'Budget Name', renderer: {
 	    	    type: 'TemplateRenderer'
 	    	},
 	        labelFunction: function(rowIndex, _x, value) {
@@ -445,11 +445,19 @@
 			return false
 		}
 		for (let i = 0; i < items.length; i++) {
-			const {budgetCode, eta, item, specs, quantity, uom, remark} = items[i]
+			const {budgetCode, budgetCodeName, eta, item, specs, quantity, uom, remark} = items[i]
 			if (!budgetCode || budgetCode.trim().length == 0) {
 	            Common.alert("Please fill in budget code")
 	            return false
 	        }
+			if (!budgetCode || budgetCode.trim().length == 0) {
+                Common.alert("Please fill in budget code")
+                return false
+            }
+			if (!budgetCodeName || budgetCodeName.trim().length == 0) {
+                Common.alert("Please fill in budget code name")
+                return false
+            }
 			if (!eta || eta.trim().length == 0) {
                 Common.alert("Please fill in receive eta")
                 return false
