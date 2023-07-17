@@ -1240,7 +1240,10 @@
             NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO,
             H.CODE || ' - ' || H.NAME REQST_BRNCH,
             I.USER_NAME AS REF_APPV_USER_NM
-             ,APPRDT.APPV_STUS
+             ,CASE WHEN APPR.APPV_PRCSS_STUS  = 'A' THEN 5
+            WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
+            WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1
+                    END AS APPV_STUS
         FROM PAY0344M A
         JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
         JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
@@ -1262,7 +1265,7 @@
                     WHEN APDT.APPV_STUS = 'R' THEN 1
                     END AS APPV_PRCSS_STUS
                     FROM (SELECT
-                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number, PAY0348D.*
+                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ) AS row_number, PAY0348D.*
                     FROM PAY0348D
                     --WHERE APPV_STUS IN ('A', 'J')
                     --ORDER BY APPV_PRCSS_NO,APPV_LINE_SEQ DESC

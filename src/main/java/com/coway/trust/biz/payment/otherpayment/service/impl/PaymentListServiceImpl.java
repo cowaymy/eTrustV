@@ -629,6 +629,19 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 			}
 		}
 		returnMap.put("approvalRemark", approvalRemark);
+
+		Map<String, Object> items =  new HashMap<String, Object>();
+		items.put("reqId", params.get("reqId").toString());
+		items.put("memCode", params.get("memCode").toString());
+		EgovMap selectRequestRefundAppvDetails = paymentListMapper.selectRequestRefundAppvDetails(items);
+
+		String allowAppvFlg = "N";
+		if(selectRequestRefundAppvDetails !=null && selectRequestRefundAppvDetails.get("appvStus").toString().equals("R")){
+			allowAppvFlg = "Y";
+		}
+
+		returnMap.put("allowAppvFlg", allowAppvFlg);
+
 		return returnMap;
 	}
 

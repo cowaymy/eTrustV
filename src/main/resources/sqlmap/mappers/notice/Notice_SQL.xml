@@ -184,7 +184,7 @@
         LEFT JOIN FCM0019M b
             ON SYS0092M.NTF_KEY = b.CLM_NO
         LEFT JOIN PAY0344M D
-            ON SYS0092M.NTF_KEY = D.REQ_ID
+            ON SYS0092M.NTF_KEY = TO_CHAR(D.REQ_ID)
         WHERE
         <if test="apprGrp == null or apprGrp == '' ">
            NTF_USER_ID = #{userId}

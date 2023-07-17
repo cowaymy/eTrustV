@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 var myRequestRefundGridID;
 var attachList = null;
+var allowAppvFlg = null;
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
@@ -45,30 +46,40 @@ $(document).ready(function(){
 	myRequestRefundGridID = GridCommon.createAUIGrid("grid_request_dcf_wrap", requestDcfColumnLayout,null,gridPros);
 	searchRefundList();
 
-	if($("#appvStus").val() == "A" || $("#appvStus").val() == "J" ){
-	      $("#approvalDiv").hide();
-	      $("#headerLbl").text("View Confirm Refund");
-	      $("#remark").prop("disabled", true);
-	      $("#remarkSec").hide();
+	if(allowAppvFlg != null && allowAppvFlg == 'Y'){
+		if($("#appvStus").val() == "A" || $("#appvStus").val() == "J" ){
+	          $("#approvalDiv").hide();
+	          $("#headerLbl").text("View Confirm Refund");
+	          $("#remark").prop("disabled", true);
+	          $("#remarkSec").hide();
+	    }
 	}
+	else{
+		$("#approvalDiv").hide();
+        $("#headerLbl").text("View Confirm Refund");
+        $("#remark").prop("disabled", true);
+        $("#remarkSec").hide();
+	}
+
 
 });
 
 // ajax list 조회.
 function searchRefundList(){
-	Common.ajax("POST","/payment/selectRequestRefundByGroupSeq.do",$("#_refundSearchForm").serializeJSON(), function(result){
+	Common.ajaxSync("POST","/payment/selectRequestRefundByGroupSeq.do",$("#_refundSearchForm").serializeJSON(), function(result){
 		AUIGrid.setGridData(myRequestRefundGridID, result);
 		recalculateTotalAmt();
 		searchReqRefundInfo();
  		$("#refStusId").val($("#refStusId").val()[0]);
 		console.log($("#refStusId").val());
+		console.log(allowAppvFlg);
 	});
 }
 
 // confirm 창에서는 Request 정보 (reason / remark)를 조회하여 보여준다.
 function searchReqRefundInfo(){
 	console.log("searchReqRefundInfo");
-	Common.ajax("POST","/payment/selectReqRefundInfo.do",$("#_refundSearchForm").serializeJSON(), function(result){
+	Common.ajaxSync("POST","/payment/selectReqRefundInfo.do",$("#_refundSearchForm").serializeJSON(), function(result){
 		console.log(result);
 		$("#refundType").val(result.reqRefundInfo.refundType);
 		if(result.reqRefundInfo.newPayType == "107"){
@@ -84,6 +95,7 @@ function searchReqRefundInfo(){
 		$("#crcCardNo").val(result.reqRefundInfo.cardNo);
 		$("#cardIssueBank").val(result.reqRefundInfo.issueBankName);
 		$("#apprNo").val(result.reqRefundInfo.cardApprovalNo);
+		allowAppvFlg = result.allowAppvFlg;
 
 		attachList = result.attachList;
         console.log(attachList);
