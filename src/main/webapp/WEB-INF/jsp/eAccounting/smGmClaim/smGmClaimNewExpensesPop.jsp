@@ -21,7 +21,7 @@ var clmSeq = 0;
 var atchFileGrpId;
 var attachList;
 var callType = "${callType}";
-var keyValueList = $.parseJSON('${taxCodeList}');
+//var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
 var deleteRowIdx;
 //file action list
@@ -79,11 +79,12 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "supplirName",
     headerText : '<spring:message code="crditCardNewReim.supplierBrName" />'
-}, {
+}
+/* , {
     dataField : "taxCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }
-/* , {
+, {
     dataField : "taxName",
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
 }, {
@@ -238,7 +239,8 @@ var myGridColumnLayout = [ {
 }, {
     dataField : "budgetCodeName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+}
+/* , {
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
     renderer : {
@@ -254,7 +256,8 @@ var myGridColumnLayout = [ {
     dataField : "taxRate",
     dataType: "numeric",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+} */
+, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
