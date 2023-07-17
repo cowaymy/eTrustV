@@ -1258,7 +1258,7 @@
                     FROM PAY0348D
         ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
         </if>
-        <if test="adminRole != null or adminRole == 'Y' ">
+        <if test="adminRole != null and adminRole == 'Y' ">
         JOIN (
                     SELECT APDT.*, CASE WHEN APDT.APPV_STUS = 'A' THEN 5
                     WHEN APDT.APPV_STUS = 'J' THEN 6
