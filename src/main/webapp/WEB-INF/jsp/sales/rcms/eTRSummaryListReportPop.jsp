@@ -7,8 +7,6 @@ var ynData = [{"codeId": "1","codeName": "YES"},{"codeId": "0","codeName": "NO"}
 
 $(document).ready(function() {
 
-	//Application Type
-    CommonCombo.make("_appType", "/common/selectCodeList.do", {groupCode : '10'}, '66', {id: "codeId",name:"codeName",isShowChoose: false});
     //orderStatus
     CommonCombo.make('_orderStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 27} , '4', {id: "stusCodeId",name: "codeName", isShowChoose: false});
     //rentalStatus
@@ -17,7 +15,8 @@ $(document).ready(function() {
     doDefCombo(ynData, '' ,'_etrYn', 'S', '');
     doDefCombo(ynData, '' ,'_sensitiveYn', 'S', '');
 
-    $("#_appType").prop("disabled", true);
+    $('.multy_select').on("change", function() {}).multipleSelect({});
+
 });
 
 function fn_genReport(){
@@ -26,30 +25,38 @@ function fn_genReport(){
     var runNo = 0;
 
     //Validation
+    if($("#_appType option:selected").val() == ""){
+        Common.alert('<spring:message code="sal.alert.msg.selAtLeastOnAppType" />');
+        return;
+    }else{
+        whereSql += " AND EXTENT2.APP_TYPE_ID = " + $("#_appType option:selected").val();
+    }
 
     if($("#_orderStatus option:selected").val() == ""){
     	Common.alert('<spring:message code="sal.alert.msg.selOrdStus" />');
         return;
     }else{
-    	whereSql += "AND EXTENT2.STUS_CODE_ID = " + $("#_orderStatus option:selected").val();
+    	whereSql += " AND EXTENT2.STUS_CODE_ID = " + $("#_orderStatus option:selected").val();
     }
 
-    if($("#_rentalStusType").val() == null || $("#_rentalStusType").val() == ''){
-        Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStusType" />');
-        return;
-    }else{
-        whereSql += " AND  EXTENT7.STUS_CODE_ID IN (";
-        $('#_rentalStusType :selected').each(function(i, mul){
-            if(runNo > 0){
-                whereSql += ",'"+$(mul).val()+"'";
-            }else{
-                whereSql += "'"+$(mul).val()+"'";
-            }
-            runNo += 1;
-        });
-        whereSql += ") ";
+    if($('#_appType').val() == 66){
+        if(!$("#_rentalStusType").val()){
+            Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStusType" />');
+            return;
+        }else{
+            whereSql += " AND  EXTENT7.STUS_CODE_ID IN (";
+            $('#_rentalStusType :selected').each(function(i, mul){
+                if(runNo > 0){
+                    whereSql += ",'"+$(mul).val()+"'";
+                }else{
+                    whereSql += "'"+$(mul).val()+"'";
+                }
+                runNo += 1;
+            });
+            whereSql += ") ";
 
-        runNo = 0;
+            runNo = 0;
+        }
     }
 
     if($("#_sensitiveYn option:selected").val() != ""){
@@ -60,15 +67,16 @@ function fn_genReport(){
     	whereSql += "AND RCMS.ETR_FG = " + $("#_etrYn option:selected").val() + " ";
     }
 
-    if(($("#etrStartDt").val() == null || $("#etrStartDt").val() == '') && !($("#etrEndDt").val() == null || $("#etrEndDt").val() == '')){
+    if(!$("#etrStartDt").val() && $("#etrEndDt").val()){
     	Common.alert('<spring:message code="sal.alert.msg.assignEndDt" />');
         return;
     }
-    if($("#etrEndDt").val() == null || $("#etrEndDt").val() == '' && !($("#etrStartDt").val() == null || $("#etrStartDt").val() == '')){
+    if($("#etrStartDt").val() && !$("#etrEndDt").val()){
     	Common.alert('<spring:message code="sal.alert.msg.assignStartDt" />');
         return;
     }
-    if(($("#etrStartDt").val() != null || $("#etrStartDt").val() != '') &&  ($("#etrEndDt").val() != null || $("#etrEndDt").val() != '')){
+
+    if($("#etrStartDt").val() && $("#etrEndDt").val()){
 
         var frArr = $("#etrStartDt").val().split("/");
         var toArr = $("#etrEndDt").val().split("/");
@@ -137,7 +145,9 @@ function fn_genReport(){
     <tr>
         <th scope="row"><spring:message code="sal.title.text.rcmsAppType" /><span class="must">*</span></th>
         <td>
-        <select id="_appType" name="_appType" class="w100p disabled" disabled="disabled" >
+        <select id="_appType" name="_appType" class="w100p">
+            <option value="66">Rental</option>
+            <option value="1412" >Outright Plus</option>
         </select>
         </td>
         <th scope="row"><spring:message code="sal.title.text.ordStus" /><span class="must">*</span></th>

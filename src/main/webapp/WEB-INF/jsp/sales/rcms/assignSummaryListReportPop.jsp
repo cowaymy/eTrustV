@@ -5,8 +5,6 @@
 
 $(document).ready(function() {
 
-    //App Type
-    CommonCombo.make("_appType", "/common/selectCodeList.do", {groupCode : '10'}, '66',{id: "codeId",name:"codeName",isShowChoose: false});
     //Rental Status
     CommonCombo.make('_rentalStusType', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , 'INV|!|SUS', {id: "code", name: "codeName", isShowChoose: false,isCheckAll : false,type : 'M'});
     //Agent Type
@@ -48,6 +46,13 @@ function fn_genReport(){
     var runNo = 0;
 
   //Validation
+    if($("#_appType option:selected").val() == ""){
+        Common.alert('<spring:message code="sal.alert.msg.selAtLeastOnAppType" />');
+        return;
+    }else{
+        whereSql += "AND EXTENT2.APP_TYPE_ID = " + $("#_appType option:selected").val();
+    }
+
     if($("#_customerType").val() != null || $("#_customerType").val() != ''){
     	//whereSql += " AND  EXTENT6.TYPE_ID = " + $("#_customerType").val();
     	whereSql += " AND  EXTENT6.TYPE_ID IN (";
@@ -97,7 +102,7 @@ function fn_genReport(){
         runNo = 0;
     }
 
-    if($("#_rentalStusType").val() != null){
+    if(!$("#_rentalStusType") && $('#_appType').val() == 66 ){
         whereSql += " AND  EXTENT5.ASSIGN_REN_STUS IN (";
         $('#_rentalStusType :selected').each(function(i, mul){
             if(runNo > 0){
@@ -185,7 +190,9 @@ function fn_genReport(){
     <tr>
         <th scope="row"><spring:message code="sal.title.text.rcmsAppType" /><span class="must">*</span></th>
         <td>
-        <select id="_appType" name="_appType" class="w100p disabled" disabled="disabled" >
+        <select id="_appType" name="_appType" class="w100p">
+            <option value="66" >Rental</option>
+            <option value="1412" >Outright Plus</option>
         </select>
         </td>
         <th scope="row"><spring:message code="sal.text.custType" /></th>
