@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.impl.MobileLumpSumPaymentKeyInMapper">
+	<select  id="getCustomerInfoBySalesOrderNo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.CUST_ID,s0029d.NAME, s0029d.NRIC, s0029d.EMAIL,
+		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
+		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
+		FROM SAL0001D s0001d
+		JOIN SAL0029D s0029d
+		ON s0029d.CUST_ID = s0001d.CUST_ID
+		LEFT JOIN SYS0013M s0013m1
+		ON s0029d.TYPE_ID = s0013m1.CODE_ID
+		LEFT JOIN SYS0013M s0013m2
+		ON s0029d.CORP_TYPE_ID = s0013m2.CODE_ID
+		WHERE 1=1
+		<if test='salesOrdNo != null and salesOrdNo != ""'>
+		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
+		</if>
+	</select>
+
 	<select  id="getCustomerBillingInfoByInvoiceNo" parameterType="Map" resultType="egovMap">
 		SELECT s0029d.NRIC,p0016d.ACC_BILL_CRT_DT,p0016d.ACC_BILL_GRP_ID FROM PAY0016D p0016d
 		INNER JOIN SAL0001D s0001d
@@ -715,6 +732,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 
 	<update id="updateApproveLumpSumPaymentInfo" parameterType="Map">
 		UPDATE PAY0349M SET
+		TRANSACTION_ID = #{transactionId},
 		PAY_STUS_ID = 5,
 		UPD_DT = SYSDATE,
 		UPD_BY = #{userId}
