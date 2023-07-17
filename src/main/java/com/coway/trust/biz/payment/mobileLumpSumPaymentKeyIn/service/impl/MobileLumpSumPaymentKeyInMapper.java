@@ -8,6 +8,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("mobileLumpSumPaymentKeyInMapper")
 public interface MobileLumpSumPaymentKeyInMapper {
+	List<EgovMap> getCustomerInfoBySalesOrderNo(Map<String, Object> params);
 	EgovMap getCustomerBillingInfoByInvoiceNo(Map<String, Object> params);
 	List<EgovMap> getCustomerInfo(Map<String, Object> params);
 	List<EgovMap> getCustomerOutstandingOrder(Map<String, Object> params);
