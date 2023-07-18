@@ -151,7 +151,7 @@ function recalculateTotalAmt(){
 function fn_approval(){
 
 	console.log($("#appvStus").val());
-	if($("#appvStus").val() != "P" ){
+	if($("#appvStus").val() != "1" ){
         Common.alert("Only [Approve-In-Progress] is allowed for Approval");
         return;
 	}
