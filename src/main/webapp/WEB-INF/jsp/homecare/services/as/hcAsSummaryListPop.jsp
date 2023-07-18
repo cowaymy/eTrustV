@@ -231,13 +231,14 @@
       whereSql += " AND O.BNDL_ID IS NOT NULL ";
 
       // SP_CR_AS_SUM_LIST
-      $("#reportFormAS #reportFileName").val('/homecare/hcASSummaryList.rpt');
       $("#reportFormAS #reportDownFileName").val("ASSummaryList_" + day + month + date.getFullYear());
       if(type == 'PDF'){
           $("#reportFormAS #viewType").val("PDF");
+          $("#reportFormAS #reportFileName").val('/homecare/hcASSummaryList.rpt');
       }
       else {
           $("#reportFormAS #viewType").val("EXCEL");
+          $("#reportFormAS #reportFileName").val('/homecare/hcASSummaryListExcel.rpt');
       }
       $("#reportFormAS #V_SELECTSQL").val();
       $("#reportFormAS #V_WHERESQL").val(whereSql);
