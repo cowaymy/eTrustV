@@ -26,21 +26,12 @@ $(document).ready(function(){
 
     AUIGrid.bind(myGridID, "rowCheckClick", function(event){
     	var checklist = AUIGrid.getCheckedRowItems(myGridID);
+    	console.log("check " + checklist.length);
     	if(checklist.length > 3){
     		Common.alert("Unable to select more than 3 records.");
             AUIGrid.addUncheckedRowsByValue(myGridID,"taskId", event.item.taskId);
             return false;
     	}
-    });
-
-    AUIGrid.bind(myGridID, "rowAllChkClick", function (event) {
-    	if (true == event.checked) {
-            //alert(111);
-            $("#allChk").val(event.checked);
-          } else {
-            //alert(222);
-            $("#allChk").val(event.checked);
-          }
     });
 });
 
@@ -48,7 +39,16 @@ var gridPros = {
         editable: false,
         showStateColumn: false,
         pageRowCount : 10
-        ,showRowCheckColumn : true,
+         ,showRowCheckColumn : true,
+        rowCheckDisabledFunction : function(rowIndex, isChecked, item)
+        {
+          if(item.isInvcGenrt == 1) { // Approve시 disabled
+            return false; // false 반환하면 disabled 처리됨
+          }
+
+          return true;
+        },
+        independentAllCheckBox : true,
 };
 
 var columnLayout=[
