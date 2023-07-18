@@ -242,7 +242,7 @@
 
         	var selectedData = {
                     "groupSeq" : JSON.stringify(refGroupSeq.join()),
-                    "reqId" : JSON.stringify(refReqId.join()),
+                    "reqId" : selectedItem[0].refReqId,
                     "refStusId" : JSON.stringify(refStusId.join()),
                     "salesOrdNo" : JSON.stringify(refSalesOrdNo.join()),
                     "appvStus" : appvStus,

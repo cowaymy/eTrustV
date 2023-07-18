@@ -205,7 +205,7 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 	console.log($("#appvStus").val());
-	if($("#appvStus").val() != "R" ){
+	if($("#appvStus").val() != "1" ){
         Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");
         return;
 	}
@@ -285,7 +285,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 				<input id="refStusId" name="refStusId" value="${refStusId}" type="hidden" />
 				<input id="salesOrdNo" name="salesOrdNo" value="${salesOrdNo}" type="hidden" />
 				<input id="appvStus" name="appvStus" value="${appvStus}" type="hidden" />
-				<input id="reqId" name="reqId" value="${reqNo}" type="hidden" />
+				<%-- <input id="reqId" name="reqId" value="${reqNo}" type="hidden" /> --%>
 
 				<aside class="title_line"><!-- title_line start -->
 				<h1 id="headerConfirmRefundLbl">Refund Information</h1>

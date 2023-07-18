@@ -631,7 +631,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		returnMap.put("approvalRemark", approvalRemark);
 
 		Map<String, Object> items =  new HashMap<String, Object>();
-		items.put("reqId", params.get("reqId").toString());
+		items.put("reqId", params.get("reqNo"));
 		items.put("memCode", params.get("memCode").toString());
 		EgovMap selectRequestRefundAppvDetails = paymentListMapper.selectRequestRefundAppvDetails(items);
 
@@ -668,7 +668,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		}
 
 		Map<String, Object> items =  new HashMap<String, Object>();
-		items.put("reqId", params.get("reqId").toString());
+		items.put("reqId", params.get("reqNo").toString());
 		items.put("memCode", params.get("memCode").toString());
 		EgovMap selectRequestRefundAppvDetails = paymentListMapper.selectRequestRefundAppvDetails(items);
 		String remark = (String) params.get("remark");

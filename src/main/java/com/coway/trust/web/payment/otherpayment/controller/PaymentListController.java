@@ -1029,7 +1029,7 @@ public class PaymentListController {
 		model.put("refStusId", params.get("refStusId").toString().replace("\"", ""));
 		model.put("salesOrdNo", params.get("salesOrdNo").toString().replace("\"", ""));
 		model.put("appvStus", params.get("appvStus"));
-		model.put("reqNo", params.get("reqNo"));
+		//model.put("reqNo", params.get("reqNo"));
 
 		LOGGER.debug("payment List params : {} ", params);
 
@@ -1057,10 +1057,10 @@ public class PaymentListController {
 	public ResponseEntity<EgovMap> selectReqRefundInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("params : {} ", params);
 
-		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
+		//String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
 
-		params.put("reqNo", reqNo);
-		params.put("reqId", reqNo[0]);
+		params.put("reqNo", params.get("reqNo"));
+		//params.put("reqId", reqNo[0]);
 		params.put("memCode", sessionVO.getUserMemCode());
 
 		LOGGER.debug("params : {} ", params);
