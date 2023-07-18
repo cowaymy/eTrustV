@@ -650,10 +650,10 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 				AND p0350d.SALES_ORD_NO LIKE   '%' || #{custCi} || '%'
 			</if>
 			<if test='custCiType == 2'>
-				AND s0029d.NAME LIKE   '%' || #{custCi} || '%'
+				AND s0029d.NAME LIKE   '%' || UPPER(#{custCi}) || '%'
 			</if>
 			<if test='custCiType == 3'>
-				AND s0029d.NRIC LIKE   '%' || #{custCi} || '%'
+				AND s0029d.NRIC LIKE   '%' || UPPER(#{custCi}) || '%'
 			</if>
 		</if>
         GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME
