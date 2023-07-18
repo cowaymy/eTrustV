@@ -33,6 +33,8 @@
            WHEN SOM.EX_TRADE = 1 AND som.EX_TRADE_PR IS NULL THEN 'Y'
            WHEN SOM.EX_TRADE = 1 THEN CASE WHEN som.EX_TRADE_PR= '1' THEN 'Y' ELSE 'N' END
            END IS_EXTRADE_PR
+           ,CASE WHEN SOM.EX_TRADE = 1 THEN s0020d.SO_REQ_NO ELSE '' END AS CANCELLATION_REQUEST_NO
+           ,CASE WHEN SOM.EX_TRADE = 1 THEN (SELECT NAME FROM SYS0038M WHERE STUS_CODE_ID = s0020d.SO_REQ_STUS_ID) ELSE '' END AS CANCELLATION_STATUS_NAME
            FROM SAL0001D som
            JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
            LEFT JOIN SAL0340D KEYIN ON (CAST(som.SALES_DT AS TIMESTAMP) <![CDATA[>=]]> CAST(KEYIN.KEYIN_START_DT AS TIMESTAMP))
@@ -121,7 +123,9 @@
             D1.CCP_STUS,
             D1.CCP_REMARK,
             D1.KEY_IN_MONTH,
-            D1.IS_EXTRADE_PR
+            D1.IS_EXTRADE_PR,
+            D1.CANCELLATION_REQUEST_NO,
+            D1.CANCELLATION_STATUS_NAME
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
@@ -173,7 +177,9 @@
                            END CCP_STUS,
                            F1.CCP_REMARK,
                            F1.KEY_IN_MONTH,
-                           F1.IS_EXTRADE_PR
+                           F1.IS_EXTRADE_PR,
+				           F1.CANCELLATION_REQUEST_NO,
+				           F1.CANCELLATION_STATUS_NAME
                 FROM ( SELECT E1.ORD_ID OrderID1 ,
                            E1.ORD_NO ,
                            E1.ORD_DT ,
@@ -211,7 +217,9 @@
                            E1.CCP_STUS_ID,
                            E1.CCP_REMARK,
                            E1.KEY_IN_MONTH,
-                           E1.IS_EXTRADE_PR
+                           E1.IS_EXTRADE_PR,
+            			   E1.CANCELLATION_REQUEST_NO,
+            			   E1.CANCELLATION_STATUS_NAME
                       FROM (
                       SELECT * FROM (
                       SELECT som.SALES_ORD_ID ORD_ID,
@@ -279,7 +287,9 @@
                             CCP.CCP_STUS_ID,
                             CCPRESN.RESN_DESC AS CCP_REMARK,
                             som.key_in_month,
-                            som.IS_EXTRADE_PR
+                            som.IS_EXTRADE_PR,
+                            som.CANCELLATION_REQUEST_NO,
+                            som.CANCELLATION_STATUS_NAME
                       FROM som
                             JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                             JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
