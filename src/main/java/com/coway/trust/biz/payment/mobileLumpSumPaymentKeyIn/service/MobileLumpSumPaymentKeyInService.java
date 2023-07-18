@@ -31,4 +31,6 @@ public interface MobileLumpSumPaymentKeyInService {
 	List<EgovMap> savePaymentCard(Map<String, Object> params, SessionVO sessionVO);
 
 	List<EgovMap> rejectApproval(Map<String, Object> params, SessionVO sessionVO);
+
+	List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
 }

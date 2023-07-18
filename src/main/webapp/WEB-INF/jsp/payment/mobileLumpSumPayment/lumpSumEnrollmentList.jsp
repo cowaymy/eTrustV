@@ -610,7 +610,6 @@ function saveNormalPayment() {
     		selectedRecord.allowance = allowance;
     		selectedRecord.trRefNo = trRefNo;
     		selectedRecord.trIssDt = trIssDt;
-    		debugger;
 
     		Common.ajax("POST", "/payment/mobileLumpSumPayment/saveNormalPayment.do", selectedRecord, function(result) {
 				console.log(result);

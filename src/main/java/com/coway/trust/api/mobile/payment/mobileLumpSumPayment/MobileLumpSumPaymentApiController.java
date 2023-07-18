@@ -104,6 +104,8 @@ public class MobileLumpSumPaymentApiController {
 		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
 		if(Integer.parseInt(searchResult.get("result").toString()) == 1){
 			result.setResponseCode(1);
+
+			//SEND EMAIL
 		}
 		else{
 			result.setResponseCode(0);
@@ -131,6 +133,18 @@ public class MobileLumpSumPaymentApiController {
 		LOGGER.debug(params.toString());
 
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.mobileSelectCashMatchingPayGroupList(params);
+		List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(result);
+	}
+
+	@ApiOperation(value = "getMobileLumpSumHistory", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/getMobileLumpSumHistory", method = RequestMethod.GET)
+	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getMobileLumpSumHistory(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
+		LOGGER.debug(params.toString());
+
+		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.getMobileLumpSumHistory(params);
 		List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
 
 		return ResponseEntity.ok(result);

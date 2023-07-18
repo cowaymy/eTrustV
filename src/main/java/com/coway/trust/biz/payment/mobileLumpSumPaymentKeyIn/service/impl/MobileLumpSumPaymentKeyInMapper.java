@@ -28,4 +28,5 @@ public interface MobileLumpSumPaymentKeyInMapper {
     int updateRejectLumpSumPayment(Map<String, Object> params);
     EgovMap getPay0024D(Map<String, Object> params);
     EgovMap getServiceMembershipDetail(Map<String, Object> params);
+    List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
 }

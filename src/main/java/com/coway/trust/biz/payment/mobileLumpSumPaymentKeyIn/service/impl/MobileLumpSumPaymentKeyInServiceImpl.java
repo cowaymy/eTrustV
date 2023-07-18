@@ -1076,6 +1076,19 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
         }
       }
 
+	@Override
+	public List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params) {
+		EgovMap user = new EgovMap();
+		if (params.get("userName") != null) {
+			user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
+			if (user != null) {
+				params.put("userId", user.get("userId"));
+			}
+		}
+		List<EgovMap> resultList = mobileLumpSumPaymentKeyInMapper.getMobileLumpSumHistory(params);
+		return resultList;
+	}
+
 	private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
 		Map<Object, Boolean> map = new ConcurrentHashMap<>();
 		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;

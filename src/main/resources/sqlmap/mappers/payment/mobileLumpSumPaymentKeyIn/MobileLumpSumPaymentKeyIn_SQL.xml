@@ -795,4 +795,41 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 	    ON B.CUST_ID = C.CUST_ID
 	    WHERE A.SRV_MEM_ID = #{srvMemId}
   	</select>
+
+  	<select id="getMobileLumpSumHistory" parameterType="Map" resultType="egovMap">
+		SELECT A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,LISTAGG(B.SALES_ORD_NO,',') WITHIN GROUP (ORDER BY B.SALES_ORD_NO) AS ORD_NO,
+		C.NAME,D.NAME AS PAY_STUS_NAME,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'),
+		E.CODE_NAME AS PAY_MODE_NAME
+		FROM PAY0349M A
+		JOIN PAY0350D B
+		ON A.MOB_PAY_GROUP_NO = B.MOB_PAY_GROUP_NO
+		JOIN SAL0029D C
+		ON A.CUST_ID = C.CUST_ID
+		JOIN SYS0038M D
+		ON A.PAY_STUS_ID = D.STUS_CODE_ID
+		LEFT JOIN SYS0013M E
+        ON E.CODE_ID = A.PAY_MODE
+		WHERE 1=1
+		AND A.CRT_BY = #{userId}
+		<if test='fromDate != null and fromDate != null'>
+			<if test='toDate != "" and toDate != ""'>
+				<![CDATA[
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
+				]]>
+			</if>
+		</if>
+		<if test='custCi != null and custCi != ""'>
+			<if test='custCiType == 1'>
+				AND B.SALES_ORD_NO LIKE   '%' || #{custCi} || '%'
+			</if>
+			<if test='custCiType == 2'>
+				AND C.NAME LIKE   '%' || UPPER(#{custCi}) || '%'
+			</if>
+			<if test='custCiType == 3'>
+				AND C.NRIC LIKE   '%' || UPPER(#{custCi}) || '%'
+			</if>
+		</if>
+		GROUP BY A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,C.NAME,D.NAME
+		ORDER BY A.CRT_DT DESC
+	</select>
 </mapper>
