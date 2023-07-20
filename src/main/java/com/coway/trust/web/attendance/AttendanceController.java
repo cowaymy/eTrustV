@@ -3,32 +3,47 @@
  */
 package com.coway.trust.web.attendance;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.a.a.a.g.m.n;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.attendance.AttendanceService;
@@ -51,6 +67,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.attendance.AttendanceController;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -69,6 +86,9 @@ public class AttendanceController {
 
 	    @Resource(name = "calendarService")
 		private CalendarService calendarService;
+
+		@Value("${epapan.auth}")
+		private String epapanAuth;
 
 	    @Autowired
 		private CsvReadComponent csvReadComponent;
@@ -112,13 +132,17 @@ public class AttendanceController {
 			model.put("displayMth", prefixMonth + calMonth);
 			model.put("displayYear", calYear);
 			model.put("calMemType", sessionVO.getUserTypeId());
+			model.put("migrateMonth", attendanceService.atdMigrateMonth());
 
 			return "/attendance/managerAttendanceDownloadUpload";
 
 		}
 
 	    @RequestMapping(value = "/managerAttendanceListing.do")
-		public String managerAttendanceListing(@RequestParam Map<String, Object> params, ModelMap model) {
+		public String managerAttendanceListing(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    	Integer memLvl = sessionVO.getMemberLevel();
+	    	model.put("memLvl", memLvl == null ? 0 : memLvl);
+	    	model.put("deptCode", memLvl == null ? null : memLvl == 1 ? sessionVO.getOrgCode() : memLvl == 2 ? sessionVO.getGroupCode() : sessionVO.getDeptCode());
 			return "/attendance/managerAttendanceListing";
 		}
 
@@ -293,13 +317,127 @@ public class AttendanceController {
 	    return ResponseEntity.ok(managerCodeList);
 	  }
 
+	  @RequestMapping(value="/modifyHoliday.do", method = RequestMethod.POST)
+	  public ResponseEntity<String> addHoliday(@RequestBody Map<String, Object> p) throws MalformedURLException, IOException {
+		  HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/cowayMergeHoliday").openConnection();
+			connection.setDoOutput(true);
+			Map<String, Object> d = new HashMap();
+			d.put("eventDate", p.get("date"));
+			d.put("eventCowayCode", p.get("occasion").equals("") ? "" : "A0002");
+			d.put("eventCowayDesc", p.get("occasion"));
+			byte[] inputData = new Gson().toJson(d).getBytes("utf-8");
+			connection.setRequestMethod( "PUT" );
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("Authorization", epapanAuth);
+		    connection.setRequestProperty("Content-Length", Integer.toString(inputData.length));
+		    try(OutputStream os = connection.getOutputStream()) {
+		    	os.write(inputData);
+		    }
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String input;
+			StringBuffer content = new StringBuffer();
+			while ((input = in.readLine()) != null) {
+				content.append(input);
+			}
+			in.close();
+			Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+			return ResponseEntity.ok(new Gson().toJson(res));
+	  }
+
+	  @RequestMapping(value="/getHolidays.do")
+	  public ResponseEntity<String> getHolidays(@RequestParam Map<String, Object> p) throws MalformedURLException, IOException {
+		  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/cowayMergeHoliday/" + p.get("month")).openConnection();
+          connection.setRequestProperty("Authorization", epapanAuth);
+		  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+          String input;
+          StringBuffer content = new StringBuffer();
+          while ((input = in.readLine()) != null) {
+        	  content.append(input);
+          }
+          in.close();
+          Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+          return ResponseEntity.ok(new Gson().toJson(((List<Map<String, Object>>) res.get("dataList")).stream().filter((h) -> {
+        	  return h.get("event_coway_code") != null && !h.get("event_coway_code").equals("");
+          }).collect(Collectors.toList())));
+	  }
 
 	  @RequestMapping(value = "/searchAtdManagementList.do", method = RequestMethod.GET)
-	   public ResponseEntity<List<EgovMap>> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	   public ResponseEntity<String> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws ParseException, MalformedURLException, IOException {
 		  LOGGER.debug("params =====================================>>  " + params);
-	    List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
-
-	    return ResponseEntity.ok(AtdList);
+		  if ((new SimpleDateFormat("dd/MM/yyyy").parse(attendanceService.atdMigrateMonth())).after(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))) {
+			  List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
+			  return ResponseEntity.ok(new Gson().toJson(AtdList));
+		  } else {
+			  String memCode = attendanceService.getMemCode(params);
+			  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + memCode + "/reqDate/" + new SimpleDateFormat("yyyyMM").format(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))).openConnection();
+              connection.setRequestProperty("Authorization", epapanAuth);
+			  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+              String input;
+              StringBuffer content = new StringBuffer();
+              while ((input = in.readLine()) != null) {
+            	  content.append(input);
+              }
+              in.close();
+              Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+              List<Map<String, Object>> data = ((List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList())).stream().map((d) -> {
+            	 Map<String, Object> a = new HashMap();
+            	 Date date;
+            	 try {
+					date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse((String) d.get("start"));
+            	 } catch (Exception e) {
+					date = null;
+            	 }
+            	 String type = (String) d.get("attend_type_code");
+            	 a.put("atdDate", date == null ? null : new SimpleDateFormat("yyyy/MM/dd").format(date));
+            	 a.put("atdDay", date == null ? null : new SimpleDateFormat("EEEEE").format(date).toUpperCase());
+            	 a.put("type", type);
+            	 a.put("year", date == null ? null : Integer.parseInt(new SimpleDateFormat("yyyy").format(date)));
+            	 a.put("month", date == null ? null : Integer.parseInt(new SimpleDateFormat("MM").format(date)));
+            	 a.put("managerCode", params.get("managerCode"));
+            	 a.put("infoTech", type.equals("A0001") ? 1 : 0);
+            	 a.put("eLeave", type.equals("A0002") ? 1 : 0);
+            	 a.put("publicHoliday", type.equals("A0003") ? 1 : 0);
+            	 a.put("training", type.equals("A0004") ? 1 : 0);
+            	 a.put("attendance", type.equals("A0005") ? 1 : 0);
+            	 try {
+					a.put("time", type.equals("A0001") ? (date.after(new SimpleDateFormat("yyyy/MM/dd/HH:mm:ss").parse(new SimpleDateFormat("yyyy/MM/dd").format(date) + "/09:00:01")) ? "LATE" : new SimpleDateFormat("HH:mm:ss").format(date)) : new SimpleDateFormat("HH:mm:ss").format(date));
+				} catch (Exception e) {
+					a.put("time", "-");
+				}
+            	 return a;
+              }).collect(Collectors.toList());
+              LOGGER.debug("################", data);
+              List<Map<String, Object>> fullData = Stream.iterate(1, i -> i + 1).limit(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)).map(i -> {
+            	  try {
+        			  Date attendanceDate = new SimpleDateFormat("MM/yyyy/d").parse(((String) params.get("calMonthYear")) + "/" + i.toString());
+        			  Map<String, Object> exist = data.stream().filter(a -> {
+        				  return a.get("atdDate").equals(new SimpleDateFormat("yyyy/MM/dd").format(attendanceDate));
+        			  }).findFirst().orElse(null);
+        			  if (exist != null) {
+        				  return exist;
+        			  }
+        			  Map<String, Object> empty = new HashMap();
+        			  empty.put("atdDate", new SimpleDateFormat("yyyy/MM/dd").format(attendanceDate));
+                      empty.put("atdDay", new SimpleDateFormat("EEEEE").format(attendanceDate).toUpperCase());
+                      empty.put("year", Integer.parseInt(new SimpleDateFormat("yyyy").format(attendanceDate)));
+                      empty.put("month", Integer.parseInt(new SimpleDateFormat("MM").format(attendanceDate)));
+                      empty.put("managerCode", params.get("managerCode"));
+                      empty.put("infoTech", 0);
+                      empty.put("eLeave", 0);
+                      empty.put("publicHoliday", 0);
+                      empty.put("training", 0);
+                      empty.put("attendance", 0);
+                      empty.put("time", "-");
+                      return empty;
+            	  } catch (Exception e) {
+            		  // treat as not found
+            		  e.printStackTrace();
+            	  }
+            	  return new HashMap();
+              }).collect(Collectors.toList());
+              return ResponseEntity.ok(new Gson().toJson(fullData));
+		  }
 	  }
 
 	  @RequestMapping(value = "/downloadManagerYearlyAttendance.do")
@@ -316,7 +454,174 @@ public class AttendanceController {
 	    return ResponseEntity.ok(yearList);
 	  }
 
+	  @RequestMapping("/attendanceExcelPop.do")
+	  public String attendanceExcelPop(ModelMap model, SessionVO session) {
+		  model.put("memLvl", nvl(session.getMemberLevel(), 0));
+		  model.put("orgCode", nvl(session.getOrgCode(), ""));
+		  model.put("grpCode", nvl(session.getGroupCode(), ""));
+		  model.put("deptCode", nvl(session.getDeptCode(), ""));
+		  model.put("memCode", nvl(session.getUserMemCode(), ""));
+		  return "/attendance/attendanceExcelPop";
+	  }
 
+	private Object nvl(Object a, Object b) {
+		return a != null ? a : b;
+	}
 
+	@RequestMapping("/getDownline.do")
+	public ResponseEntity<List<EgovMap>> getDownline(@RequestParam Map<String, Object> params) {
+		return ResponseEntity.ok(attendanceService.getDownline(params));
+	}
 
+	@RequestMapping("/getDownlineHP.do")
+	public ResponseEntity<List<EgovMap>> getDownlineHP(@RequestParam Map<String, Object> params) {
+		return ResponseEntity.ok(attendanceService.getDownlineHP(params));
+	}
+
+	@RequestMapping("/reportingBranch.do")
+	public String reportingBranch(SessionVO session, ModelMap model) {
+		model.put("memLvl", nvl(session.getMemberLevel(), 0));
+        model.put("orgCode", nvl(session.getOrgCode(), ""));
+        model.put("grpCode", nvl(session.getGroupCode(), ""));
+        model.put("deptCode", nvl(session.getDeptCode(), ""));
+        model.put("memCode", nvl(session.getUserMemCode(), ""));
+		return "/attendance/attendanceReportingBranch";
+	}
+
+	@RequestMapping("/getAllReporting.do")
+	public ResponseEntity<String> getAllReporting(@RequestParam Map<String, Object> p) {
+		List<EgovMap> hps = attendanceService.selectHPReporting(p);
+		hps = hps.stream().map((hp) -> {
+			try {
+				URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
+				connection.setRequestProperty("Authorization", epapanAuth);
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String input;
+				StringBuffer content = new StringBuffer();
+				while ((input = in.readLine()) != null) {
+					content.append(input);
+				}
+				in.close();
+				Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+				List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
+				hp.put("locations", data);
+			} catch (Exception e) {
+				hp.put("locations", new ArrayList());
+			}
+			return hp;
+		})
+		.filter((hp) -> hp.get("locations") != null && ((List<EgovMap>) hp.get("locations")).size() != 0)
+		.collect(Collectors.toList());
+		return ResponseEntity.ok(new Gson().toJson(hps));
+	}
+
+	@RequestMapping("/selectHPReporting.do")
+	public ResponseEntity<String> selectHPReporting(@RequestParam Map<String, Object> params) {
+		List<EgovMap> hps = attendanceService.selectHPReporting(params);
+		if (hps.size() > 0) {
+			EgovMap hp = hps.stream().findFirst().get();
+			try {
+				URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
+				connection.setRequestProperty("Authorization", epapanAuth);
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String input;
+				StringBuffer content = new StringBuffer();
+				while ((input = in.readLine()) != null) {
+					content.append(input);
+				}
+				in.close();
+				Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+				List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
+				hp.put("locations", data);
+				return ResponseEntity.ok(new Gson().toJson(hp));
+			} catch (Exception e) {
+				// fall
+			}
+		}
+		return ResponseEntity.ok(new Gson().toJson(new HashMap()));
+	}
+
+	@RequestMapping("/getReportingBranch.do")
+	public ResponseEntity<List<EgovMap>> getReportingBranch() {
+		return ResponseEntity.ok(attendanceService.getReportingBranch());
+	}
+
+	@RequestMapping(value="/addLocation.do", method = RequestMethod.POST)
+	public ResponseEntity<HashMap<String, Object>> addLocation(@RequestBody Map<String, Object> params) {
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation").openConnection();
+			connection.setDoOutput(true);
+			Map<String, Object> d = new HashMap();
+			d.put("attendAllowHpCode", params.get("code"));
+			d.put("attendAllowBranchId", params.get("id"));
+			d.put("attendAllowBranchCode", params.get("name"));
+			d.put("attendAllowUseYn", "Y");
+			byte[] inputData = new Gson().toJson(d).getBytes("utf-8");
+			connection.setRequestMethod( "POST" );
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("Authorization", epapanAuth);
+		    connection.setRequestProperty("Content-Length", Integer.toString(inputData.length));
+		    try(OutputStream os = connection.getOutputStream()) {
+		    	os.write(inputData);
+		    }
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String input;
+			StringBuffer content = new StringBuffer();
+			while ((input = in.readLine()) != null) {
+				content.append(input);
+			}
+			in.close();
+			Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+			if ((boolean) res.get("success")) {
+				HashMap<String, Object> retD = new HashMap();
+				retD.put("success", true);
+				return ResponseEntity.ok(retD);
+			}
+		} catch (Exception e) {
+			//fall
+		}
+		return ResponseEntity.ok(new HashMap());
+	}
+
+	@RequestMapping("/genAttendanceExcelData.do")
+	public ResponseEntity<String> genAttendanceExcelData(@RequestParam Map<String, Object> params, SessionVO session) throws ParseException {
+		if (!session.getDeptCode().equals(" ")) params.put("deptCode", session.getDeptCode());
+		if (!session.getGroupCode().equals(" ")) params.put("grpCode", session.getGroupCode());
+		if (!session.getOrgCode().equals(" ")) params.put("orgCode", session.getOrgCode());
+		if ((new SimpleDateFormat("dd/MM/yyyy").parse(attendanceService.atdMigrateMonth())).after(new SimpleDateFormat("yyyyMM").parse((String) params.get("calMonthYear")))) {
+			return ResponseEntity.ok(new Gson().toJson(attendanceService.selectExcelAttd(params)));
+		} else {
+			List<HashMap<String, Object>> returnData = new ArrayList();
+			List<EgovMap> memberInfo = attendanceService.getMemberInfo(params);
+			memberInfo.stream().forEach((m) -> {
+				try {
+					URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
+					connection.setRequestProperty("Authorization", epapanAuth);
+					BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+					String input;
+					StringBuffer content = new StringBuffer();
+					while ((input = in.readLine()) != null) {
+						content.append(input);
+					}
+					in.close();
+					Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+					List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
+					returnData.addAll((Collection<? extends HashMap<String, Object>>) data.stream().map((n) -> {
+						n.put("orgCode", m.get("orgCode"));
+						n.put("grpCode", m.get("grpCode"));
+						n.put("deptCode", m.get("deptCode"));
+						n.put("hpType", m.get("hpType"));
+						n.put("memCode", m.get("memCode"));
+						n.put("memLvl", m.get("memLvl"));
+						return n;
+					}).collect(Collectors.toList()));
+				} catch (Exception e) {
+					LOGGER.debug("############### {}", e);
+					LOGGER.debug("Doesn't seem like will hit due to api accepting almost any argument.");
+				}
+			});
+			return ResponseEntity.ok(new Gson().toJson(returnData));
+		}
+	}
 }

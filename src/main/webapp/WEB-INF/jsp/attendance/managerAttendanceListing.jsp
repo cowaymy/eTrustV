@@ -53,7 +53,24 @@ $(document).on("focus", ".j_date2", function(){
     showRowNumColumn : false,
   };
 
+	  const callback = () => {
+          if ("${deptCode}") {
+        	  console.log($("#rank"))
+	          $("#rank").val(${memLvl} == 1 ? '6988' : ${memLvl} == 2 ? '6989' : '6990')
+              $('#rank :not(:selected)').prop('disabled', 'disabled')
+              console.log($('#managerCode :not(:selected)'))
+              $('#managerCode :not(:selected)').prop('disabled', 'disabled')
+          }
+      }
+
   $(function() {
+// 	  if (${memLvl} == 4) {
+// 		  document.getElementById("rank").innerHTML += "<option>HP</option>"
+// 		  document.getElementById("managerCode").innerHTML += "<option>${deptCode}</option>"
+// 	  } else
+	  if ("${deptCode}") {
+          CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", {memLvl: ${memLvl}} , '${deptCode}', ItmOption);
+      } else {
 		$("#rank").change(function(){
 		    var value = $("#rank").val();
 		    var managerCode;
@@ -73,14 +90,14 @@ $(document).on("focus", ".j_date2", function(){
                     CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", managerCode , '', ItmOption);
                     break;
 			  }
-
 		});
+      }
   });
 
 
   $(document).ready(function() {
     	var rankParam = {groupCode : 527, codeIn :[6988,6989,6990]};
-        CommonCombo.make('rank', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption);
+        CommonCombo.make('rank', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption, callback);
 
         atdManagementGrid();
    });
@@ -124,28 +141,28 @@ $(document).on("focus", ".j_date2", function(){
         },
         {
           dataField : "time",
-          headerText : "Info Tech - A0001",
+          headerText : "QR - A0001",
           width : 200
         },
         {
           dataField : "eLeave",
-          headerText : "E Leave - A0002",
+          headerText : "Public Holiday - A0002",
           width : 200
         },
         {
           dataField : "publicHoliday",
-          headerText : "Public Holiday - A0003",
+          headerText : "State Holiday - A0003",
           width : 200
         },
         {
           dataField : "training",
-          headerText : "Training - A0004",
+          headerText : "RFA - A0004",
           editable : false,
           width : 200
         },
         {
             dataField : "attendance",
-            headerText : "Attendance",
+            headerText : "Waived - A0005",
             editable : false,
             width : 150
           }
@@ -174,7 +191,6 @@ $(document).on("focus", ".j_date2", function(){
         }else{
         	console.log( $("#AtdForm").serialize());
             Common.ajax("GET", "/attendance/searchAtdManagementList.do", $("#AtdForm").serialize(), function(result) {
-                console.log(result);
                 AUIGrid.setGridData(myAtdGridID, result);
             });
         }
@@ -203,7 +219,8 @@ $(document).on("focus", ".j_date2", function(){
 
   function fn_excelDown() {
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("grid_wrap_atdList", "xlsx", "Manager Attendance Listing");
+//     GridCommon.exportTo("grid_wrap_atdList", "xlsx", "Manager Attendance Listing");
+	  Common.popupDiv("/attendance/attendanceExcelPop.do", null, null, true, '');
   }
 
 

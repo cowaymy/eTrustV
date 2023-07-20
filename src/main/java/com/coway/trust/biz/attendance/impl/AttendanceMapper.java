@@ -22,6 +22,8 @@ public interface AttendanceMapper {
 
 	int deleteUploadBatch(Map<String, Object> params);
 
+	List<EgovMap> getTransferData(Map<String, Object> p);
+
 	int approveUploadBatch(Map<String, Object> params);
 
 	int selectCurrentBatchId();
@@ -42,4 +44,19 @@ public interface AttendanceMapper {
 
     int updateManagerCode(Map<String, Object> params);
 
+    List<EgovMap> getDownline(Map<String, Object> params);
+
+    List<EgovMap> getDownlineHP(Map<String, Object> params);
+
+    List<EgovMap> getMemberInfo(Map<String, Object> params);
+
+    List<EgovMap> selectExcelAttd(Map<String, Object> params);
+
+    String getMemCode(Map<String, Object> params);
+
+    List<EgovMap> selectHPReporting(Map<String, Object> p);
+
+    List<EgovMap> getReportingBranch();
+
+    String atdMigrateMonth();
 }

@@ -35,5 +35,19 @@ public interface AttendanceService {
 
 	List<EgovMap> selectYearList(Map<String, Object> params);
 
+	List<EgovMap> getDownline(Map<String, Object> params);
 
+	List<EgovMap> getDownlineHP(Map<String, Object> params);
+
+	List<EgovMap> getMemberInfo(Map<String, Object> params);
+
+	List<EgovMap> selectExcelAttd(Map<String, Object> params);
+
+	String getMemCode(Map<String, Object> params);
+
+	List<EgovMap> selectHPReporting(Map<String, Object> p);
+
+	List<EgovMap> getReportingBranch();
+
+	String atdMigrateMonth();
 }

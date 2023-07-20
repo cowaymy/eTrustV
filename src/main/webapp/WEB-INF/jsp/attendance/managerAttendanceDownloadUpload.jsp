@@ -3,6 +3,10 @@
 
 <style type="text/css">
 
+.hidden {
+    display: none !important;
+}
+
 :root .event-text {
     --cal-event-text-width: attr(width);
 }
@@ -264,9 +268,9 @@ function confirmApproval(param){
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>Attendance</h2>
     <ul class="right_btns">
-	   <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
 	      <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
-	   </c:if>
+	  </c:if>
       <li><p class="btn_blue"><a href="#" onClick="searchAtdUploadList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
       <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#calSearchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>
@@ -299,6 +303,7 @@ function confirmApproval(param){
             <li><p class="link_btn"><a href="javascript:fn_eventUploadPopup();">Upload Attendance</a></p></li>
             <li><p class="link_btn"><a href="javascript:fn_eventEditDeletePopup();">Edit / Delete Attendance</a></p></li>
             <li><p class="link_btn"><a href="javascript:fn_eventDownloadPopup();">Download Attendance</a></p></li>
+            <li><p class="link_btn"><a href="#" onclick="popHoliday()">Set Public Holiday</a></p></li>
           </ul>
           <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
@@ -312,3 +317,129 @@ function confirmApproval(param){
    </article>
   </section><!-- search_result end -->
 </section><!-- content end -->
+
+<div id="popup_wrap" class="popup_wrap hidden">
+    <header class="pop_header">
+        <h1>Set Public Holiday</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2">
+                    <a href="#" id="closeHolidayConfig">Close</a>
+                </p></li>
+        </ul>
+    </header>
+    <section class="pop_body">
+        <table class="type1" id="holidayConfig">
+            <colgroup>
+                <col style="width: 130px" />
+                <col style="width: *" />
+            </colgroup>
+            <tr><th>Date</th><td><input type="text" id="holidayMonth" name="holidayMonth" title="Month" class="j_date2 w100p" placeholder="Choose one" /></td></tr>
+        </table>
+        <div id="historicalHolidays">
+            <table class="type1">
+	            <colgroup>
+	                <col style="width: 130px" />
+	                <col style="width: *" />
+	                <col style="width: 130px" />
+                    <col style="width: *" />
+	            </colgroup>
+	        </table>
+        </div>
+    </section>
+</div>
+
+<script>
+    const holidayPop = document.querySelector("#closeHolidayConfig").parentElement.parentElement.parentElement.parentElement.parentElement
+
+    const popHoliday = () => {
+        holidayPop.classList.toggle("hidden")
+    }
+
+    $("#closeHolidayConfig").click(() => {
+    	holidayPop.classList.toggle("hidden")
+    })
+
+    const setupPage = () => {
+        if (!$("#holidayMonth").val()) {
+            Common.alert("Please keyin month")
+            return
+        }
+
+        if (moment("01/" + $("#holidayMonth").val(), "DD/MM/YYYY") < moment("${migrateMonth}", "DD/MM/YYYY")) {
+            Common.alert("Only available for dates ${migrateMonth} onwards")
+            return
+        }
+
+        Common.showLoader()
+        fetch("/attendance/getHolidays.do?month=" + $("#holidayMonth").val().split("/")[1] + $("#holidayMonth").val().split("/")[0])
+        .then(resp => resp.json())
+        .then(d => {
+            $("#historicalHolidays .gen").remove()
+            let tableContent = ""
+            if (!d.length) {
+                tableContent += "<tr class='gen'><th></th><td>No Holiday for this month</td></tr>"
+            }
+            d.forEach(i => {
+                const dt = moment(i.event_date, "YYYY-MM-DD")
+                tableContent += "<tr class='gen'><th><div><p><a style='text-decoration: underline; font-weight: bold;' href='#' onclick='removeHolidayDate(\"" + dt.format("DD/MM/YYYY") + "\")'>Remove</a></p></div></th><td>" + dt.format("DD/MM/YYYY") + "-" + i.event_coway_desc + "</td></tr>"
+            })
+            tableContent += "<tr class='gen'><th>Date</th><td><select>"
+            for (let i = 1; i <= moment().daysInMonth(); i++) {
+                if (d.map(i => {
+                    const dt = moment(i.event_date, "YYYY-MM-DD")
+                    return dt.format("DD/MM/YYYY")
+                }).includes(i.toString().padStart(2, "0") + "/" + $("#holidayMonth").val())) continue
+                tableContent += "<option>" + i.toString().padStart(2, "0") + "/" + $("#holidayMonth").val() + "</option>"
+            }
+            tableContent += "</select></td><th>Occasion</th><td><input type=text/></td></tr>"
+            $("#historicalHolidays table").html($("#historicalHolidays table").html() + tableContent)
+            $("#historicalHolidays").html($("#historicalHolidays").html() + "<div style='text-align: center;' class='gen'><p class='btn_blue2'><a href='#' onclick='setHolidayDate()'>Add</a></p></div>")
+            Common.removeLoader()
+        })
+    }
+
+    $("#holidayMonth").change(setupPage)
+
+    const setHolidayDate = () => {
+    	const occasion = $("#historicalHolidays table input").val()
+    	let dt = $("#historicalHolidays table select").val()
+    	if (!occasion || !dt) {
+    		Common.alert("Kindly choose and fill in date and occasion")
+    		return
+    	}
+    	dt = moment(dt, "DD/MM/YYYY")
+    	Common.showLoader()
+    	fetch("/attendance/modifyHoliday.do", {
+    		method: "POST",
+    		headers: {"Content-Type": "application/json"},
+    		body: JSON.stringify({date: dt.format("YYYY-MM-DD"), occasion})
+    	})
+    	.then(resp => resp.json())
+    	.then(d => {
+    		if (d.success) {
+    			Common.removeLoader()
+    			setupPage()
+    		}
+    	})
+    }
+
+    const removeHolidayDate = (dt) => {
+    	Common.confirm("Are you sure you want to remove " + dt + "'s holiday?'", () => {
+	    	const date = moment(dt, "DD/MM/YYYY")
+	    	Common.showLoader()
+	        fetch("/attendance/modifyHoliday.do", {
+	            method: "POST",
+	            headers: {"Content-Type": "application/json"},
+	            body: JSON.stringify({date: date.format("YYYY-MM-DD"), occasion: ""})
+	        })
+	        .then(resp => resp.json())
+	        .then(d => {
+	            if (d.success) {
+	                Common.removeLoader()
+	                setupPage()
+	            }
+	        })
+    	})
+    }
+
+</script>

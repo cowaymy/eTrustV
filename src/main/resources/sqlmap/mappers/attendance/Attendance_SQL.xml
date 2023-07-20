@@ -167,6 +167,19 @@
           WHERE BATCH_ID = #{batchId}
     </update>
 
+    <select id="getTransferData" parameterType="Map" resultType="egovMap">
+        SELECT
+            BATCH_ID,
+            TO_CHAR(DT_FROM, 'DD/MM/YYYY') DT_FROM,
+            TO_CHAR(DT_TO + 1, 'DD/MM/YYYY') DT_TO,
+            TO_CHAR(TIME, 'HH24:MI:SS') TIME,
+            MEM_CODE,
+            ATD_TYPE
+        FROM ATD0002D
+        WHERE BATCH_ID = #{batchId}
+        AND ATD_TYPE NOT IN ('A0001', 'A0002')
+    </select>
+
      <select id="selectManagerCode" parameterType="Map" resultType="egovMap">
 		   SELECT  DISTINCT
 	                    A.MANAGER_CODE AS CODE_ID
@@ -287,5 +300,213 @@
 		  UPDATE SET A.DEPT_CODE = SRC.DEPT_CODE,A.GRP_CODE = SRC.GRP_CODE,A.ORG_CODE = SRC.ORG_CODE, UPD_USER_ID =#{crtUserId}, UPD_DT =SYSDATE
     </update>
 
+    <select id="getDownline" parameterType="Map" resultType="egovMap">
+        SELECT
+		    A.MANAGER_CODE CODE
+		FROM ATD0005D A
+		JOIN ORG0005D B ON A.MANAGER_CODE = B.DEPT_CODE AND MEM_LVL <![CDATA[ < ]]> 4 AND MEM_LVL <![CDATA[ <> ]]> 0
+		<choose>
+		  <when test="managerCode != null and managerCode != ''">
+		      WHERE LEVEL = 2
+		      START WITH MANAGER_CODE = #{managerCode}
+		  </when>
+		  <otherwise>
+		      WHERE LEVEL = 1
+              START WITH RANK = 6988
+		  </otherwise>
+		</choose>
+		CONNECT BY PRIOR MEM_ID = MEM_UP_ID
+    </select>
 
+    <select id="getDownlineHP" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_CODE || ' - ' || B.NAME CODE
+        FROM ORG0005D A
+        JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID AND A.MEM_LVL = 4
+        LEFT JOIN ORG0011D C ON B.MEM_CODE = C.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+        WHERE A.DEPT_CODE = #{managerCode}
+        <if test="isNeo != null and isNeo != ''">
+            <choose>
+	          <when test="isNeo eq 'Y'.toString()">
+	              AND C.HP_CODE IS NOT NULL
+	          </when>
+	          <when test="isNeo eq 'N'.toString()">
+	              AND C.HP_CODE IS NULL
+	          </when>
+	        </choose>
+        </if>
+    </select>
+
+    <select id="getMemberInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ORG_CODE,
+            A.GRP_CODE,
+            A.DEPT_CODE,
+            A.MEM_CODE,
+            NVL(HP_TYPE, ' ') HP_TYPE,
+            A.MEM_LVL
+        FROM ORG1001V A
+        LEFT JOIN ORG0011D B ON A.MEM_CODE = B.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+        JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+            AND (
+                TRUNC(TRM_DT, 'MM') <![CDATA[ >= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+                OR TRUNC(RESIGN_DT, 'MM') <![CDATA[ >= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+                OR C.STUS = 1
+            )
+            AND TRUNC(C.JOIN_DT, 'MM') <![CDATA[ <= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+        WHERE 1=1
+        <if test="orgCode != null and orgCode != ''">
+            AND A.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND A.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND A.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != ''">
+            AND A.MEM_CODE = #{memCode}
+        </if>
+    </select>
+
+    <select id="selectExcelAttd" parameterType="Map" resultType="egovMap">
+        SELECT
+		    ( ATD_DATE
+		      || ' '
+		      || TO_CHAR(TIME, 'HH24:MI:SS') ) AS "START",
+		    TYPE ATTEND_TYPE_CODE,
+		    MEM_CODE,
+		    ORG_CODE,
+		    GRP_CODE,
+		    DEPT_CODE,
+		    MEM_LVL,
+		    HP_TYPE
+		FROM
+		    (
+		        WITH DAY_LIST AS (
+		            SELECT
+		                TO_CHAR(TO_DATE(ATD_DATE, 'DD/MM/YYYY'), 'YYYY/MM/DD') AS ATD_DATE
+		            FROM
+		                (
+		                    SELECT
+		                        TO_CHAR(LEVEL)
+		                        || '/'
+		                        || TO_CHAR(#{d}) AS ATD_DATE
+		                    FROM
+		                        DUAL
+		                    CONNECT BY
+		                        LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{d}, 'MM/YYYY')), 'DD')
+		                )
+		        ), ATD_LIST AS (
+		            SELECT
+		                A.BATCH_ID,
+		                B.TIME,
+		                EXTRACT(YEAR FROM TO_DATE(BATCH_MTH_YEAR, 'MM/YYYY')) YEAR,
+		                EXTRACT(MONTH FROM TO_DATE(BATCH_MTH_YEAR, 'MM/YYYY')) MONTH,
+		                B.MEM_CODE,
+		                B.ATD_TYPE,
+		                B.MANAGER_CODE,
+		                B.DT_FROM,
+		                B.DT_TO
+		            FROM
+		                     ATD0001M A
+		                JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
+		            WHERE
+		                    1 = 1
+		                AND A.BATCH_STUS_ID = 4
+		                AND NVL(B.DISAB, 0) = 0
+		                AND BATCH_MTH_YEAR = #{d}
+		        )
+		        SELECT
+		            A.ATD_DATE,
+		            B.MEM_CODE,
+		            B.ATD_TYPE TYPE,
+		            B.TIME,
+		            C.ORG_CODE,
+		            C.GRP_CODE,
+		            C.DEPT_CODE,
+		            C.MEM_LVL,
+		            NVL(HP_TYPE, ' ') HP_TYPE,
+		            ROW_NUMBER() OVER(PARTITION BY A.ATD_DATE
+		                ORDER BY
+		                    B.TIME ASC
+		            ) ROW_NUM
+		        FROM
+		                 DAY_LIST A
+		            JOIN ATD_LIST  B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM, 'YYYY/MM/DD') AND TO_CHAR(B.DT_TO, 'YYYY/MM/DD')
+		            JOIN ORG1001V  C ON C.MEM_CODE = B.MEM_CODE
+		                               <if test="orgCode != null and orgCode != ''">
+								            AND C.ORG_CODE = #{orgCode}
+								        </if>
+								        <if test="grpCode != null and grpCode != ''">
+								            AND C.GRP_CODE = #{grpCode}
+								        </if>
+								        <if test="deptCode != null and deptCode != ''">
+								            AND C.DEPT_CODE = #{deptCode}
+								        </if>
+								        <if test="memCode != null and memCode != ''">
+								            AND C.MEM_CODE = #{memCode}
+								        </if>
+		            LEFT JOIN ORG0011D  D ON C.MEM_CODE = D.HP_CODE
+		                                    AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+		                                    AND PV_MONTH = TO_CHAR(SYSDATE, 'MM')
+		                                    AND NVL(IS_NW, 0) = 0
+		        GROUP BY
+		            A.ATD_DATE,
+		            B.ATD_TYPE,
+		            B.TIME,
+		            B.MEM_CODE,
+		            C.DEPT_CODE,
+		            C.GRP_CODE,
+		            C.ORG_CODE,
+		            C.MEM_LVL,
+		            HP_TYPE
+		    )
+		WHERE
+		    ROW_NUM = 1
+		ORDER BY
+		    MEM_CODE,
+		    ATD_DATE
+    </select>
+
+    <select id="getMemCode" parameterType="Map" resultType="String">
+        SELECT MEM_CODE FROM ORG0001D A JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+        WHERE B.DEPT_CODE = #{managerCode} AND MEM_LVL <![CDATA[ <> ]]> 4
+    </select>
+
+    <select id="selectHPReporting" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_LVL RANK,
+            A.MEM_CODE,
+            A.NAME,
+            B.DEPT_CODE,
+            B.GRP_CODE,
+            B.ORG_CODE
+        FROM ORG0001D A
+        JOIN ORG1001V B ON A.MEM_ID = B.MEM_ID
+        WHERE 1=1
+        <if test="memCode != '' and memCode != null">
+	        AND A.MEM_CODE = #{memCode}
+        </if>
+        <if test="orgCode != '' and orgCode != null">
+            AND B.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != '' and grpCode != null">
+            AND B.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != '' and deptCode != null">
+            AND B.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memLvl != '' and memLvl != null">
+            AND B.MEM_LVL = #{memLvl}
+        </if>
+    </select>
+
+    <select id="getReportingBranch" resultType="egovMap">
+        SELECT MEET_POINT_ID, MEET_POINT_CODE || '_' || MEET_POINT_DESC NAME FROM SYS0089M WHERE MEET_POINT_CODE LIKE 'ABC%' OR MEET_POINT_CODE LIKE 'CBC%' ORDER BY MEET_POINT_DESC
+    </select>
+
+    <select id="atdMigrateMonth" resultType="String">
+        SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 558 AND ROWNUM = 1 ORDER BY CODE_ID
+    </select>
   </mapper>
