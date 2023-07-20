@@ -422,6 +422,7 @@
 		$("#product").val("");
     }
 
+
     function fn_failInstallation() {//active 일때만 열림
 
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -464,25 +465,40 @@
       }
 
     function fn_pdfDown(){
-    	 let installEntryNoList = AUIGrid.getGridData(myGridID).map(d => d.installEntryNo);
 
     	 const reportFormInstLst = document.getElementById("reportFormInstLst");
 
-    	 if(installEntryNoList.length){
+         let checkDetails = AUIGrid.getCheckedRowItemsAll(myGridID), installList = "";
+
+    	 if(AUIGrid.getGridData(myGridID).map(d => d.installEntryNo).length){
 
     	     document.querySelectorAll(".reportInput").forEach(e=>e.remove());
 
-    		 document.querySelectorAll("#searchForm input.forPdf").forEach(e => {
-	    			 reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="`+e.value+`" name="`+e.name+`"/>`;
-    		 });
+    	     document.querySelectorAll("#searchForm input.forPdf").forEach(e => {
+                 reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="`+e.value+`" name="`+e.name+`"/>`;
+             });
 
-    		 document.querySelectorAll("#searchForm select.forPdf").forEach(e=> {
-    				 if(e.name == "type"){
-                         reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`2"/>`;
-    				 }else{
-	 	    			 reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`"/>`;
-    				 }
-    	     });
+	         document.querySelectorAll("#searchForm select.forPdf").forEach(e=> {
+	                 if(e.name == "type"){
+	                     reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`2"/>`;
+	                 }else{
+	                     reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`"/>`;
+	                 }
+	         });
+
+    		 if(checkDetails.length>0){
+                 for(let i=0; i<checkDetails.length;i++){
+                     installList += "'"+checkDetails[i].installEntryNo+"',"
+                  }
+                  installList +="''";
+                  document.querySelectorAll(".reportInput").forEach(e=> {
+	                	  if(e.name == "installNo"){
+	                	      e.value = installList;
+	                	  }else{
+	                	      e.value="";
+	                	  }
+                   });
+    		 }
 
 	         $("#reportFormInstLst #reportFileName").val('/homecare/preInsQr.rpt');
 	         $("#reportFormInstLst #viewType").val("PDF");
