@@ -2,11 +2,12 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <!--
- DATE        BY     VERSION        REMARK
+ DATE               BY     VERSION        REMARK
  ----------------------------------------------------------------
  18/12/2019  ONGHC  1.0.0          Create AS Used Filter
  19/12/2019  ONGHC  1.0.1          Add AS Type Selection
  06/03/2020  ONGHC  1.0.2          Remove Branch Search
+ 18/07/2023  WAWA   1.0.3          Add AS Type, Error Code & Error Description
  -->
 
     <style type="text/css">
@@ -318,7 +319,27 @@
         width : 120,
         height : 30,
         editable : false
-      } ];
+      },{
+          dataField : "asType",
+          headerText : "AS Type",
+          width : 120,
+          height : 30,
+          editable : false
+        }, {
+          dataField : "errorDetails",
+          headerText : "AS Error Code",
+          width : 120,
+          height : 30,
+          editable : false
+        }, {
+          dataField : "errordesc",
+          headerText : "AS Error Description",
+          width : 120,
+          height : 30,
+          editable : false
+        }
+
+      ];
 
   var subgridpros = {
     rowIdField : "rnum",
