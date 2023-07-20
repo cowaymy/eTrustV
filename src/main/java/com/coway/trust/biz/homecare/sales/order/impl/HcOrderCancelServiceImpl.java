@@ -146,7 +146,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		params.put("userId", sessionVO.getUserId());
 		params.put("brnchId", sessionVO.getUserBranchId());
 		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
-
+		params.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));
 		// return - Matress Product
 		EgovMap rtnMat = orderListService.insertProductReturnResultSerial(params);
 		/*if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnMat.get("rtnCode")))) { // return Fail
