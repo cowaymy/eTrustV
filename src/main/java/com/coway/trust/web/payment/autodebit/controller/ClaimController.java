@@ -45,7 +45,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
-import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
@@ -3081,24 +3080,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	          String hm =  vo.getOrdNo().trim();
 	          orderList.add(hm);
 	      }
-
-/*	      Map<String, Object> csvParam = new HashMap<String, Object>();
-	      csvParam.put("voList", vos.get(0).getOrdNo());
-
-	      List<vRescueBulkUploadVO> vos2 = (List<vRescueBulkUploadVO>) csvParam.get("voList");
-
-          List<Map> orderList = vos2.stream().map(r -> {
-              Map<String, Object> map = BeanConverter.toMap(r);
-              map.put("ordNo", r.getOrdNo());
-              return map;
-          }).collect(Collectors.toList());*/
-
-/*          LOGGER.debug("Detail List >>>>>>" + detailList);
-*/
           LOGGER.debug("Order List >>>>>>" + orderList);
-
-/*          Map<String, Object> map2 = new HashMap<>();
-          map2.put("list", orderList.stream().collect(Collectors.toCollection(ArrayList::new)));*/
 
           try {
 
