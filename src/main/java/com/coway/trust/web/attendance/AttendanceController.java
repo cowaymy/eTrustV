@@ -407,7 +407,6 @@ public class AttendanceController {
 				}
             	 return a;
               }).collect(Collectors.toList());
-              LOGGER.debug("################", data);
               List<Map<String, Object>> fullData = Stream.iterate(1, i -> i + 1).limit(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)).map(i -> {
             	  try {
         			  Date attendanceDate = new SimpleDateFormat("MM/yyyy/d").parse(((String) params.get("calMonthYear")) + "/" + i.toString());
@@ -434,7 +433,8 @@ public class AttendanceController {
             		  // treat as not found
             		  e.printStackTrace();
             	  }
-            	  return new HashMap();
+            	  Map<String, Object> none = new HashMap();
+            	  return none;
               }).collect(Collectors.toList());
               return ResponseEntity.ok(new Gson().toJson(fullData));
 		  }
