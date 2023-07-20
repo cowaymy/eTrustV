@@ -1557,7 +1557,7 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
         #{item}
       </foreach>
     AND D.MODE_ID IN (130)
-    AND C.STUS_CODE_ID <![CDATA[ <> ]]> '10' )
+    AND C.STUS_CODE_ID NOT IN (4,10) )
     </select>
 
     <select id="selectUnableBulkUploadList2" parameterType="Map" resultType="egovMap">
