@@ -712,8 +712,15 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
   	}
 
     @Override
-  	public List<EgovMap> selectUnableBulkUploadList(Map<String, Object> params) {
+  	public int selectUnableBulkUploadList(List<String> params)  throws Exception {
 
-  		 return claimMapper.selectUnableBulkUploadList(params);
+  		return claimMapper.selectUnableBulkUploadList(params);
   	}
+
+    @Override
+  	public List<EgovMap> selectUnableBulkUploadList2(Map<String, Object> params) {
+
+  		 return claimMapper.selectUnableBulkUploadList2(params);
+  	}
+
 }

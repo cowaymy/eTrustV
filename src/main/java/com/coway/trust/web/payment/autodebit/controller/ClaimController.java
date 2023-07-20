@@ -45,6 +45,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
@@ -3051,7 +3052,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 	  @RequestMapping(value = "/csvVRescueBulkUpload", method = RequestMethod.POST)
 	  public ResponseEntity readFile(MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
-	       ReturnMessage message = new ReturnMessage();
+
+		  int cnt = 0;
+		  ReturnMessage message = new ReturnMessage();
 	      Map<String, MultipartFile> fileMap = request.getFileMap();
 	      MultipartFile multipartFile = fileMap.get("csvFile");
 	      List<vRescueBulkUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, true, vRescueBulkUploadVO::create);
@@ -3060,31 +3063,67 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	      for (vRescueBulkUploadVO vo : vos) {
 
 	          HashMap<String, Object> hm = new HashMap<String, Object>();
-
-
 	          hm.put("ordNo", vo.getOrdNo().trim());
 	          hm.put("remark", vo.getRemark().trim());
 	          hm.put("crtUserId", sessionVO.getUserId());
 	          hm.put("updUserId", sessionVO.getUserId());
-
 	          detailList.add(hm);
 	      }
 
 	      Map<String, Object> master = new HashMap<String, Object>();
-
 	      master.put("crtUserId", sessionVO.getUserId());
 	      master.put("updUserId", sessionVO.getUserId());
 	      master.put("totItem", vos.size());
 
-	      Map<String, Object> result = claimService.saveCsvVRescueBulkUpload(master, detailList);
-	      if(result.get("batchId") != null){
-	          message.setMessage("vRescue Bulk Upload File successfully uploaded.<br />Batch ID : "+result.get("batchId") +"<br />Batch No : "+result.get("batchNo"));
-	          message.setCode(AppConstants.SUCCESS);
-	      }else{
-	          message.setMessage("Failed to upload vRescue Bulk Upload File. Please try again later.");
-	          message.setCode(AppConstants.FAIL);
+	      List<String> orderList = new ArrayList<String>();
+	      for (vRescueBulkUploadVO vo : vos) {
+
+	          String hm =  vo.getOrdNo().trim();
+	          orderList.add(hm);
 	      }
 
+/*	      Map<String, Object> csvParam = new HashMap<String, Object>();
+	      csvParam.put("voList", vos.get(0).getOrdNo());
+
+	      List<vRescueBulkUploadVO> vos2 = (List<vRescueBulkUploadVO>) csvParam.get("voList");
+
+          List<Map> orderList = vos2.stream().map(r -> {
+              Map<String, Object> map = BeanConverter.toMap(r);
+              map.put("ordNo", r.getOrdNo());
+              return map;
+          }).collect(Collectors.toList());*/
+
+/*          LOGGER.debug("Detail List >>>>>>" + detailList);
+*/
+          LOGGER.debug("Order List >>>>>>" + orderList);
+
+/*          Map<String, Object> map2 = new HashMap<>();
+          map2.put("list", orderList.stream().collect(Collectors.toCollection(ArrayList::new)));*/
+
+          try {
+
+			cnt = claimService.selectUnableBulkUploadList(orderList);
+
+			if (cnt > 0){
+				message.setCode(AppConstants.FAIL);
+				message.setData("");
+				message.setMessage("Kindly upload orders with REG paymode and in CAN status only");
+			}
+			else {
+				Map<String, Object> result = claimService.saveCsvVRescueBulkUpload(master, detailList);
+			      if(result.get("batchId") != null){
+			          message.setMessage("vRescue Bulk Upload File successfully uploaded.<br />Batch ID : "+result.get("batchId") +"<br />Batch No : "+result.get("batchNo"));
+			          message.setCode(AppConstants.SUCCESS);
+			      }else{
+			          message.setMessage("Failed to upload vRescue Bulk Upload File. Please try again later.");
+			          message.setCode(AppConstants.FAIL);
+			      }
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	      return ResponseEntity.ok(message);
 	  }
@@ -3097,7 +3136,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	      LOGGER.debug("params =====================================>>  " + params);
 		  ReturnMessage message = new ReturnMessage();
 
-	  	  List<EgovMap> unableUploadList = claimService.selectUnableBulkUploadList(params);
+	  	  List<EgovMap> unableUploadList = claimService.selectUnableBulkUploadList2(params);
 	  	  if(unableUploadList.size() > 0){
 				message.setCode(AppConstants.FAIL);
 				message.setData("");

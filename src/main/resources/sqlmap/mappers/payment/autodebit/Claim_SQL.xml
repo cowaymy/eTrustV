@@ -1534,7 +1534,33 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
     WHERE BATCH_ID = #{batchId}
   </update>
 
-    <select id="selectUnableBulkUploadList" parameterType="Map" resultType="egovMap">
+    <select id="selectUnableBulkUploadList" parameterType="java.util.List" resultType="int">
+    SELECT COUNT(*) FROM (
+    SELECT A.SALES_ORD_NO
+    FROM SAL0001D A
+    JOIN SAL0074D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    WHERE
+    A.SALES_ORD_NO IN
+        <foreach item="item" collection="list" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    AND B.MODE_ID NOT IN (130)
+    UNION
+    SELECT C.SALES_ORD_NO
+    FROM SAL0001D C
+    JOIN SAL0074D D ON D.SALES_ORD_ID = C.SALES_ORD_ID
+    WHERE
+    C.SALES_ORD_NO IN
+        <foreach item="item" collection="list" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    AND D.MODE_ID IN (130)
+    AND C.STUS_CODE_ID <![CDATA[ <> ]]> '10' )
+    </select>
+
+    <select id="selectUnableBulkUploadList2" parameterType="Map" resultType="egovMap">
     SELECT B.SALES_ORD_NO, C.MODE_ID, B.STUS_CODE_ID FROM SAL0348D A
     JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
     JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID

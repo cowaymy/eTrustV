@@ -265,6 +265,6 @@ public interface ClaimService {
   List<EgovMap> selectVRescueBulkDetails(Map<String, Object> param);
 
   int  saveVRescueBulkConfirm(Map<String, Object> params);
-  List<EgovMap> selectUnableBulkUploadList(Map<String, Object> params);
-
+  int selectUnableBulkUploadList(List<String> param) throws Exception;
+  List<EgovMap> selectUnableBulkUploadList2(Map<String, Object> params);
 }

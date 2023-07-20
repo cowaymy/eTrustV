@@ -304,5 +304,7 @@ public interface ClaimMapper {
   List<EgovMap> selectRentPayIdByBchId(Map<String, Object> params);
 
   String selectvRescueBatchNo(int params);
-  List<EgovMap> selectUnableBulkUploadList(Map<String, Object> params);
+  int selectUnableBulkUploadList(List<String> params) throws Exception;
+
+  List<EgovMap> selectUnableBulkUploadList2(Map<String, Object> params);
 }
