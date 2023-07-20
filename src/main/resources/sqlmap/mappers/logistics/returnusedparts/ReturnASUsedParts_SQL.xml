@@ -81,7 +81,10 @@
              TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
              CASE WHEN T1.AS_SETL_DT IS NOT NULL THEN
                           MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T1.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS AS_AGING
+                          0 END AS AS_AGING,
+            t1.ERROR_DETAILS,
+            t1.errorDesc,
+            t1.AS_TYPE
             FROM
             (
 			      SELECT
@@ -123,7 +126,10 @@
 			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
 			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
 			            J.DEFECT_DESC  AS DEFTYP,
-			            K.DEFECT_DESC  AS DEFCDE
+			            K.DEFECT_DESC  AS DEFCDE,
+			            NVL(O.DEFECT_DESC , '-') ERROR_DETAILS,
+                        NVL(P.DEFECT_DESC , '-') errordesc,
+                        q.CODE_DESC AS_TYPE
 			      FROM LOG0103M A
 			      JOIN SVC0001D B ON B.AS_NO = A.SVC_ORD_ID
 			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
@@ -136,6 +142,9 @@
 			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
 			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
 			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+			      LEFT JOIN SYS0100M O ON O.DEFECT_TYP = 'EC' AND O.DEFECT_ID = B.AS_MALFUNC_ID AND O.DEFECT_STATUS = 1
+                  LEFT JOIN SYS0100M P ON P.DEFECT_TYP = 'ED' AND P.DEFECT_GRP = B.AS_MALFUNC_ID AND P.DEFECT_ID = B.AS_MALFUNC_RESN_ID AND P.DEFECT_STATUS = 1
+                  JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
 			      WHERE 1 = 1
 			      AND A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
 			      <if test="searchOder != null and searchOder !=''">
@@ -252,7 +261,10 @@
              TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
              CASE WHEN T2.AS_SETL_DT IS NOT NULL THEN
                           MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T2.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS AS_AGING
+                          0 END AS AS_AGING,
+              t2.ERROR_DETAILS,
+              t2.errordesc,
+              t2.AS_TYPE
     FROM
     (
 			      SELECT
@@ -294,7 +306,10 @@
 			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
 			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
 			            J.DEFECT_DESC AS DEFTYP,
-			            K.DEFECT_DESC AS DEFCDE
+			            K.DEFECT_DESC AS DEFCDE,
+			            NVL(O.DEFECT_DESC , '-') ERROR_DETAILS,
+                        NVL(P.DEFECT_DESC , '-') errordesc,
+                        q.CODE_DESC AS_TYPE
 			      FROM LOG0103M A
 			      JOIN SVC0108D B ON B.AS_NO = A.SVC_ORD_ID
 			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
@@ -307,6 +322,9 @@
 			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
 			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
 			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+			      LEFT JOIN SYS0100M O ON O.DEFECT_TYP = 'EC' AND O.DEFECT_ID = B.AS_MALFUNC_ID AND O.DEFECT_STATUS = 1
+                  LEFT JOIN SYS0100M P ON P.DEFECT_TYP = 'ED' AND P.DEFECT_GRP = B.AS_MALFUNC_ID AND P.DEFECT_ID = B.AS_MALFUNC_RESN_ID AND P.DEFECT_STATUS = 1
+                  JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
 			      WHERE 1 = 1
 			      AND  A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
 			      <if test="searchOder != null and searchOder !=''">
