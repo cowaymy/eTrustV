@@ -92,7 +92,7 @@ var custNricOri;
                 	$('#svmDuration').val("");
                 }
                 $('#svmCreateDate').val(result.orderOutstandingView[0].srvmemcreated);
-                $('#svmTotalOutstanding').val($.number(result.orderOutstandingView[0].srvcontracttotalamount, 2));
+                $('#svmTotalOutstanding').val($.number(result.orderOutstandingView[0].outsvmoutstndtotal, 2));
 
                 //(REN) SVM
                 if(Number(result.orderOutstandingView[0].srvcontractpackageamount) == 0 && Number(result.orderOutstandingView[0].srvcontractid) == 0){
