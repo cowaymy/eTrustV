@@ -82,7 +82,7 @@
         	visible:false
         },{
         	dataField : "refReqId",
-        	headerText : "<spring:message code='pay.head.refRequestNo'/>",
+        	headerText : "<spring:message code='pay.head.refundRequestNo'/>",
         	width : 200 ,
         	editable : false
         },{

@@ -129,7 +129,7 @@ function validateSave(refMode, reasonCd){
 	        Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
 	        return validFlg = false;
 	    }
-		else if( Number($("#newAmt").val() > newAmt)){
+		else if( Number($("#newAmt").val()) > Number(newAmt)){
 			Common.alert("Key-in Amount cannot be greater than Total Amount. ");
 			return validFlg = false;
 		}

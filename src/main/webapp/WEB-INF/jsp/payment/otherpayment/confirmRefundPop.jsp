@@ -17,6 +17,7 @@ var allowAppvFlg = null;
 	        softRemoveRowMode:false
 
 	};
+var oldTotalAmt = 0;
 // AUIGrid 칼럼 설정
 var requestDcfColumnLayout = [
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 100 , editable : false, visible : false},
@@ -143,8 +144,7 @@ function recalculateTotalAmt(){
         }
     }
 
-	$("#totalAmt").val(totalAmt);
-    $("#totalAmtTxt").val($.number(totalAmt,2));
+    oldTotalAmt = totalAmt;
 }
 
 //승인처리
@@ -170,6 +170,11 @@ function fn_approval(){
 		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
 		return;
 	}
+
+	if( Number($("#refundAmt").val()) > Number(oldTotalAmt)){
+        Common.alert("Refund Amount cannot be greater than Total Amount. Please reject this request.");
+        return;
+    }
 
 	//저장처리
 	Common.confirm("Are you sure you want to confirm the Refund Request ? ",function (){

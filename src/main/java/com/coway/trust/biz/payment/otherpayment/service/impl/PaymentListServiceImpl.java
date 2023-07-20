@@ -737,8 +737,8 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	public void rejectRefund(Map<String, Object> params) {
 		LOGGER.debug("params =====================================>>  " + params);
 
-		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
-		params.put("reqNo", reqNo);
+//		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
+//		params.put("reqNo", reqNo);
 		EgovMap data = paymentListMapper.selectReqRefundInfo(params);
 
 		String appvPrcssNo = data.get("appvPrcssNo").toString();

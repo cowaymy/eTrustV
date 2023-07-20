@@ -1459,7 +1459,10 @@
             A.ISSUE_BANK,
             BK.NAME ISSUE_BANK_NAME,
             A.TRX_DATE,
-            A.CARD_NO,
+            <!-- A.CARD_NO, -->
+            CASE WHEN LENGTH(A.CARD_NO) >= 13 THEN SUBSTR(A.CARD_NO,0,6) || '******' || SUBSTR(A.CARD_NO,13,LENGTH(A.CARD_NO))
+            ELSE ''
+            END AS CARD_NO,
             A.CARD_TYPE,
             A.CARD_BRAND,
             A.CARD_APPROVAL_NO,
