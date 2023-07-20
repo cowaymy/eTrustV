@@ -86,31 +86,64 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
 
   @Override
   public List<EgovMap> selectProductList() {
-	return ASReportMapper.selectProductList();
+    return ASReportMapper.selectProductList();
   }
 
   @Override
   public List<EgovMap> selectDefectTypeList() {
-	return ASReportMapper.selectDefectTypeList();
+    return ASReportMapper.selectDefectTypeList();
   }
 
   @Override
   public List<EgovMap> selectDefectRmkList() {
-	return ASReportMapper.selectDefectRmkList();
+    return ASReportMapper.selectDefectRmkList();
   }
 
   @Override
   public List<EgovMap> selectDefectDescList() {
-	return ASReportMapper.selectDefectDescList();
+    return ASReportMapper.selectDefectDescList();
   }
 
   @Override
   public List<EgovMap> selectDefectDescSymptomList() {
-	return ASReportMapper.selectDefectDescSymptomList();
+    return ASReportMapper.selectDefectDescSymptomList();
   }
 
   @Override
   public List<EgovMap> selectProductTypeList() {
-	return ASReportMapper.selectProductTypeList();
+    return ASReportMapper.selectProductTypeList();
+  }
+
+  @Override
+  public List<EgovMap> selectHCDefectDescSymptomList() {
+    return ASReportMapper.selectHCDefectDescSymptomList();
+  }
+
+  @Override
+  public List<EgovMap> selectHCProductList() {
+    return ASReportMapper.selectHCProductList();
+  }
+
+  @Override
+  public List<EgovMap> selectHCProductCategory() {
+    return ASReportMapper.selectHCProductCategory();
+  }
+
+  @Override
+  public List<EgovMap> selectHCDefectTypeList() {
+    // TODO Auto-generated method stub
+    return ASReportMapper.selectHCDefectTypeList();
+  }
+
+  @Override
+  public List<EgovMap> selectHCDefectRmkList() {
+    // TODO Auto-generated method stub
+    return ASReportMapper.selectHCDefectRmkList();
+  }
+
+  @Override
+  public List<EgovMap> selectHCDefectDescList() {
+    // TODO Auto-generated method stub
+    return ASReportMapper.selectHCDefectDescList();
   }
 }

@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.homecare.services.as.HcASManagementListService;
@@ -110,5 +113,47 @@ public class HcASReportController {
       // 호출될 화면
       return "homecare/services/as/hcAsLedgerPop";
     }
+
+  @RequestMapping(value = "/selectHCProductList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCProductCodeList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCproductList = ASReportService.selectHCProductList();
+    return ResponseEntity.ok(HCproductList);
+  }
+
+  @RequestMapping(value = "/selectHCProductCategory.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCProductCategory(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCproductCategoryList = ASReportService.selectHCProductCategory();
+    return ResponseEntity.ok(HCproductCategoryList);
+  }
+
+  @RequestMapping(value = "/selectHCDefectTypeList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCDefectTypeList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCdefectTypeList = ASReportService.selectHCDefectTypeList();
+    return ResponseEntity.ok(HCdefectTypeList);
+  }
+
+  @RequestMapping(value = "/selectHCDefectRmkList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCDefectRmkList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCdefectRmkList = ASReportService.selectHCDefectRmkList();
+    return ResponseEntity.ok(HCdefectRmkList);
+  }
+
+  @RequestMapping(value = "/selectHCDefectDescList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCDefectDescList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCdefectDescList = ASReportService.selectHCDefectDescList();
+    return ResponseEntity.ok(HCdefectDescList);
+  }
+
+  @RequestMapping(value = "/selectHCDefectDescSymptomList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHCDefectDescSymptomList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> HCdefectDescSymptomList = ASReportService.selectHCDefectDescSymptomList();
+    return ResponseEntity.ok(HCdefectDescSymptomList);
+  }
 
 }

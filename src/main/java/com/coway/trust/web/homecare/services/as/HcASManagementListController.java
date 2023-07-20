@@ -542,6 +542,7 @@ public class HcASManagementListController {
     model.put("prodCde", params.get("prodCde"));
     model.put("ddCde", params.get("ddCde"));
     model.put("dtCde", params.get("dtCde"));
+    model.put("matchMatDefCode", params.get("matchMatDefCode"));
     //logger.debug("== params - hcDftTypPop : " + params.toString());
     return "homecare/services/as/hcDftTypPop";
   }

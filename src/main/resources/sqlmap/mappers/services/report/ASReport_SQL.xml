@@ -345,4 +345,90 @@
     ORDER BY CODE_ID
   </select>
 
+  <select id="selectHCProductCategory" resultType="egovMap">
+
+  SELECT UPPER(AA.CODE_NAME) CODE_ID
+  , AA.CODE_NAME CODE_NAME FROM SYS0013M AA, SYS0094M BB
+  WHERE AA.CODE = BB.CODE
+  AND AA.CODE_MASTER_ID = 11
+  AND AA.DISAB = 0
+  AND BB.IND = 'HOMECARE'
+  ORDER BY CODE_ID
+</select>
+
+  <select id="selectHCProductList" resultType="egovMap">
+    SELECT T1.STK_CODE CODE_ID,
+    T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME
+    FROM SYS0026M T1
+    WHERE 1=1
+    AND T1.STK_TYPE_ID = 61
+    -- AND T1.STUS_CODE_ID = 1
+    AND EXISTS (SELECT M1.STK_CTGRY_ID
+    FROM SYS0026M M1
+    WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+    WHERE AA.CODE = BB.CODE
+    AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+    AND M1.STK_CTGRY_ID = T1.STK_CTGRY_ID
+    )
+    ORDER BY T1.STK_CODE
+  </select>
+
+  <select id="selectHCDefectTypeList" resultType="egovMap">
+  SELECT
+  DEFECT_DESC CODE_ID
+  , DEFECT_DESC CODE_NAME
+  FROM (
+  SELECT
+  UPPER(DEFECT_DESC) DEFECT_DESC
+  FROM SYS0100M
+  WHERE DEFECT_TYP = 'HDT'
+  AND DEFECT_STATUS = 1)
+  ORDER BY CODE_ID
+</select>
+
+  <select id="selectHCDefectRmkList" resultType="egovMap">
+    SELECT
+    DEFECT_RMK CODE_ID
+    , DEFECT_RMK CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_RMK) DEFECT_RMK
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'DP'
+    AND DEFECT_STATUS = 1
+    AND PROD_CAT NOT IN ('WP','AP','BT','BB','JP','POE')
+    )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectHCDefectDescList" resultType="egovMap">
+    SELECT
+    DEFECT_DESC CODE_ID
+    , DEFECT_DESC CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_DESC) DEFECT_DESC
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'DP'
+    AND DEFECT_STATUS = 1
+    AND PROD_CAT NOT IN ('WP','AP','BT','BB','JP','POE')
+    )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectHCDefectDescSymptomList" resultType="egovMap">
+    SELECT
+    DEFECT_DESC CODE_ID
+    , DEFECT_DESC CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_DESC) DEFECT_DESC
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'HDD'
+    AND DEFECT_STATUS = 1
+
+    )
+    ORDER BY CODE_ID
+  </select>
+
 </mapper>

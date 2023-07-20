@@ -50,4 +50,16 @@ public interface ASReportMapper {
   List<EgovMap> selectDefectDescSymptomList();
 
   List<EgovMap> selectProductTypeList();
+
+  List<EgovMap> selectHCProductList();
+
+  List<EgovMap> selectHCDefectDescSymptomList();
+
+  List<EgovMap> selectHCProductCategory();
+
+  List<EgovMap> selectHCDefectTypeList();
+
+  List<EgovMap> selectHCDefectRmkList();
+
+  List<EgovMap> selectHCDefectDescList();
 }

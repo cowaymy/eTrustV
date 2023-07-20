@@ -39,6 +39,8 @@ public interface ASReportService {
 
   List<EgovMap> selectProductList();
 
+  List<EgovMap> selectHCProductList();
+
   List<EgovMap> selectDefectTypeList();
 
   List<EgovMap> selectDefectRmkList();
@@ -47,6 +49,15 @@ public interface ASReportService {
 
   List<EgovMap> selectDefectDescSymptomList();
 
+  List<EgovMap> selectHCDefectDescSymptomList();
+
   List<EgovMap> selectProductTypeList();
 
+  List<EgovMap> selectHCProductCategory();
+
+  List<EgovMap> selectHCDefectTypeList();
+
+  List<EgovMap> selectHCDefectRmkList();
+
+  List<EgovMap> selectHCDefectDescList();
 }

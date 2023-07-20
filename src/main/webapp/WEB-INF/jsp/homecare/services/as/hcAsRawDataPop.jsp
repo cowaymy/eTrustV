@@ -16,63 +16,209 @@
 
 <script type="text/javaScript">
   $(document).ready(function() {
-
+      $("#m5").hide(); //hide mandatory indicator (*) for Settle Date
+      fn_populateComboOption();
   });
+
+  function fn_toggleAdditionalFilter(selVal) {
+      if(selVal == '3') {
+          $("#reportForm1 .tr_toggle_display").show();
+          $("#m2").hide(); //hide mandatory indicator (*) for Request Date
+          $("#m3").hide(); //hide mandatory indicator (*) for Date Option
+          $("#m5").show(); //show mandatory indicator (*) for Settle Date
+      } else {
+          $("#reportForm1 .tr_toggle_display").hide();
+          $("#m2").show();
+          $("#m3").show();
+          $("#m5").hide();
+      }
+  }
+
+  function fn_populateComboOption() {
+	  doGetCombo('/homecare/services/as/report/selectHCProductCategory.do', '', '', 'cmbProductCategory', 'M', 'f_multiCombo');
+      /* doGetCombo('/services/as/report/selectProductTypeList.do', '', '', 'cmbProductType', 'M', 'f_multiCombo'); */
+      doGetCombo('/homecare/services/as/report/selectHCProductList.do', '', '', 'cmbProductCode', 'M', 'f_multiCombo');
+      doGetCombo('/homecare/services/as/report/selectHCDefectTypeList.do', '', '', 'cmbDefectType', 'M', 'f_multiCombo');
+      doGetCombo('/homecare/services/as/report/selectHCDefectRmkList.do', '', '', 'cmbDefectRmk', 'M', 'f_multiCombo');
+      doGetCombo('/homecare/services/as/report/selectHCDefectDescList.do', '', '', 'cmbDefectDesc', 'M', 'f_multiCombo');
+      doGetCombo('/homecare/services/as/report/selectHCDefectDescSymptomList.do', '', '', 'cmbDefectDescSym', 'M', 'f_multiCombo');
+      fn_createAsAgingCombo();
+  }
+
+  function fn_createAsAgingCombo() {
+      var selectAsAging = document.getElementById("cmbAsAging");
+      for(var i = 0; i < 201; i++) {
+          var elOption = document.createElement("option");
+          elOption.textContent = i;
+          elOption.value = i;
+          selectAsAging.appendChild(elOption);
+      }
+  }
+
+  function f_multiCombo(){
+      $(function() {
+
+         $('#cmbAsStatus').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbProductCategory').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbProductCode').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbAsAging').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbDefectType').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbDefectRmk').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbDefectDesc').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+          $('#cmbDefectDescSym').change(function() {
+
+          }).multipleSelect({
+              selectAll: false,
+              width: '80%'
+          });
+
+      });
+  }
 
   function fn_validation() {
 
-    if ($("#reportType").val() == '') {
-      Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
-      return false;
-    }
-    if ($("#dateType").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
-        return false;
-      }
-    if ($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') {
-      Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
-      return false;
-    }
-
-    var dtRange = 0;
-
-    if ($("#ind").val() == 1) {
-      dtRange = 31;
-    } else {
-      dtRange = 7;
-    }
-
-    // VALIDATE DATE RANGE OF 7 DAYS OR 31 DAYS
-    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6' || $("#reportType").val() == '7') {
-      if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
-        var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
-                          + $("#reqstDateFr").val().substring(0, 2) + "/"
-                          + $("#reqstDateFr").val().substring(6, 10);
-
-        var keyInDateTo = $("#reqstDateTo").val().substring(3, 5) + "/"
-                        + $("#reqstDateTo").val().substring(0, 2) + "/"
-                        + $("#reqstDateTo").val().substring(6, 10);
-
-        var date1 = new Date(keyInDateFrom);
-        var date2 = new Date(keyInDateTo);
-
-        var diff_in_time = date2.getTime() - date1.getTime();
-
-        var diff_in_days = diff_in_time / (1000 * 3600 * 24);
-
-        if (diff_in_days > dtRange) {
-          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+        if ($("#reportType").val() == '') {
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
           return false;
         }
-      }
-    }
+        if ($("#dateType").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
+            return false;
+          }
+        if (($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') && $("#reportType").val() != '3') {
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
+          return false;
+        }
 
-    return true;
-  }
+        if (($("#settleDateFr").val() == '' || $("#settleDateTo").val() == '') && $("#reportType").val() == '3') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From & To)' htmlEscape='false'/>");
+            return false;
+        }
+
+        if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (To)' htmlEscape='false'/>");
+            return false;
+        }
+        if ($("#settleDateFr").val() == '' && $("#settleDateTo").val() != '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From)' htmlEscape='false'/>");
+            return false;
+        }
+
+        var dtRange = 0;
+
+        if ($("#ind").val() == 1) {
+          dtRange = 31;
+        } else {
+          dtRange = 7;
+        }
+
+        // VALIDATE DATE RANGE OF 7 DAYS OR 31 DAYS
+        if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6' || $("#reportType").val() == '7') {
+          if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
+            var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
+                              + $("#reqstDateFr").val().substring(0, 2) + "/"
+                              + $("#reqstDateFr").val().substring(6, 10);
+
+            var keyInDateTo = $("#reqstDateTo").val().substring(3, 5) + "/"
+                            + $("#reqstDateTo").val().substring(0, 2) + "/"
+                            + $("#reqstDateTo").val().substring(6, 10);
+
+            var date1 = new Date(keyInDateFrom);
+            var date2 = new Date(keyInDateTo);
+
+            var diff_in_time = date2.getTime() - date1.getTime();
+
+            var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+
+            if (diff_in_days > dtRange) {
+              Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+              return false;
+            }
+          }
+
+          // VALIDATE SETTLE DATE ONLY FOR AS RAW (PQC)
+          if ($("#reportType").val() == '3' ) {
+              if ($("#settleDateFr").val() != '' || $("#reqstDateTo").val() != '') {
+                  var keyInDateFrom = $("#settleDateFr").val().substring(3, 5) + "/"
+                                + $("#settleDateFr").val().substring(0, 2) + "/"
+                                + $("#settleDateFr").val().substring(6, 10);
+
+                  var keyInDateTo = $("#settleDateTo").val().substring(3, 5) + "/"
+                              + $("#settleDateTo").val().substring(0, 2) + "/"
+                              + $("#settleDateTo").val().substring(6, 10);
+
+                  var date1 = new Date(keyInDateFrom);
+                  var date2 = new Date(keyInDateTo);
+
+                  var diff_in_time = date2.getTime() - date1.getTime();
+
+                  var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+
+                  if (diff_in_days > dtRange) {
+                        Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+                        return false;
+                  }
+              }
+          }
+        }
+
+        // VALIDATE AS STATUS ONLY FOR AS RAW (PQC)
+        if ($("#reportType").val() == '3') {
+            if ($("#cmbAsStatus").val() == '' || $("#cmbAsStatus").val() == null) {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS Status' htmlEscape='false'/>");
+                return false;
+            }
+        }
+
+        return true;
+      }
 
   function fn_openGenerate() {
     if (fn_validation()) {
       var whereSql = "";
+      var whereSql2 = "";
       var whereSql2LeftJoin = " LEFT ";
 
       var keyInDateFrom = $("#reqstDateFr").val().substring(6, 10) + "-"
@@ -98,6 +244,20 @@
         } else {
           whereSql += " AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
         }
+      }
+
+      var settleDateFrom = $("#settleDateFr").val().substring(6, 10) + "-"
+      + $("#settleDateFr").val().substring(3, 5) + "-"
+      + $("#settleDateFr").val().substring(0, 2);
+
+      var settleDateTo = $("#settleDateTo").val().substring(6, 10) + "-"
+      + $("#settleDateTo").val().substring(3, 5) + "-"
+      + $("#settleDateTo").val().substring(0, 2);
+
+      if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
+          && $("#settleDateFr").val() != null
+          && $("#settleDateTo").val() != null) {
+          whereSql2 = " AND G.AS_SETL_DT between to_Date('" + settleDateFrom + "','YYYY-MM-DD') AND to_Date('" + settleDateTo + "','YYYY-MM-DD')+1";
       }
 
       if ($("#reportType").val() == '1') {
@@ -138,23 +298,69 @@
         if (date.getDate() < 10) {
           day = "0" + date.getDate();
         }
+
+        var whereSql3 = "";
+
+        if ($("#cmbAsStatus").val() != '' && $("#cmbAsStatus").val() != null) {
+            var whereAsStatus = " AND AS_STATUS IN ('" + $("#cmbAsStatus").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereAsStatus;
+        }
+
+        if ($("#cmbProductCategory").val() != '' && $("#cmbProductCategory").val() != null) {
+            var wherePrdCat = " AND STKCAT IN ('" + $("#cmbProductCategory").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += wherePrdCat;
+        }
+
+
+        if ($("#cmbProductCode").val() != '' && $("#cmbProductCode").val() != null) {
+            var wherePrdCode = " AND STK_CODE IN ('" + $("#cmbProductCode").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += wherePrdCode;
+        }
+
+        if ($("#cmbAsAging").val() != '' && $("#cmbAsAging").val() != null) {
+            var whereAsAging = " AND AS_AGING IN ('" + $("#cmbAsAging").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereAsAging;
+        }
+
+        if ($("#cmbDefectType").val() != '' && $("#cmbDefectType").val() != null) {
+            var whereDefType = " AND AS_SOLUTION_LARGE IN ('" + $("#cmbDefectType").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereDefType;
+        }
+
+        if ($("#cmbDefectRmk").val() != '' && $("#cmbDefectRmk").val() != null) {
+            var whereDefRmk = " AND AS_DEFECT_PART_LARGE IN ('" + $("#cmbDefectRmk").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereDefRmk;
+        }
+
+        if ($("#cmbDefectDesc").val() != '' && $("#cmbDefectDesc").val() != null) {
+            var whereDefDesc = " AND DEFECTPART_DESC IN ('" + $("#cmbDefectDesc").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereDefDesc;
+        }
+
+        if ($("#cmbDefectDescSym").val() != '' && $("#cmbDefectDescSym").val() != null) {
+            var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE IN ('" + $("#cmbDefectDescSym").val().toString().replace(/,/g, "','") + "') ";
+            whereSql3 += whereDefDescSym;
+        }
+
+        // sp_cr_gen_as_raw_in_excel_new
         $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DEPT" name="V_DEPT" /> ');
 
-        // homecare add
         whereSql += " AND B.BNDL_ID IS NOT NULL";
 
-        // sp_cr_gen_as_raw_in_excel_new
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
         $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
+        $("#reportForm1 #V_WHERESQL3").val(whereSql3);
         $("#reportForm1 #reportFileName").val('/homecare/hcASRawPQC.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("hcASRawPQCData_" + day + month + date.getFullYear());
@@ -212,7 +418,7 @@
 
         //whereSql += " AND A.AS_TYPE_ID = 339 ";
         whereSql += " AND EXISTS ( SELECT 1 "
-        	                  + "   FROM SAL0001D C "
+                              + "   FROM SAL0001D C "
                               + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
                               + "    AND C.BNDL_ID IS NOT NULL ) ";
 
@@ -334,7 +540,7 @@
     }
   }
 
-  $.fn.clearForm = function() {
+  /*$.fn.clearForm = function() {
     return this.each(function() {
       var type = this.type, tag = this.tagName.toLowerCase();
       if (tag === 'form') {
@@ -350,7 +556,26 @@
       }
 
     });
-  };
+  };*/
+  $.fn.clearForm = function() {
+        return this.each(function() {
+          var type = this.type, tag = this.tagName.toLowerCase(); identifier = this.id;
+          if (tag === 'form') {
+            return $(':input', this).clearForm();
+          }
+          if (type === 'text' || type === 'password' || type === 'hidden'
+              || tag === 'textarea') {
+            this.value = '';
+          } else if (type === 'checkbox' || type === 'radio') {
+            this.checked = false;
+          } else if (tag === 'select' && identifier === 'reportType') {
+            this.selectedIndex = 0;
+          }
+
+          $("#reportForm1 .tr_toggle_display").hide();
+
+        });
+      };
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -395,7 +620,7 @@
      <tbody>
       <tr>
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
-       <td><select id="reportType" class="w100p" >
+       <td><select id="reportType" class="w100p" onchange="javascript : fn_toggleAdditionalFilter(this.value)">
 <!--          <option value="1">After Service (AS) Raw Data</option> -->
          <option value="5" selected>After Service (AS) Raw Data [New]</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
@@ -412,7 +637,7 @@
       </tr>
       <tr>
       <th scope="row">Request Date<span id='m2' name='m2' class='must'> *</span></th>
-       <td colspan='3'>
+       <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
@@ -427,6 +652,55 @@
         </div>
         <!-- date_set end -->
        </td>
+       <th scope="row">Settle Date<span id='m5' name='m5' class='must'> *</span></th>
+       <td>
+        <div class="date_set">
+         <!-- date_set start -->
+         <p>
+          <input type="text" title="Settle start Date"
+           placeholder="DD/MM/YYYY" class="j_date" id="settleDateFr" />
+         </p>
+         <span>To</span>
+         <p>
+          <input type="text" title="Settle end Date"
+           placeholder="DD/MM/YYYY" class="j_date" id="settleDateTo" />
+         </p>
+        </div>
+        <!-- date_set end -->
+       </td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">AS Status<span id='m4' name='m4' class='must'> *</span></th>
+        <td><select id="cmbAsStatus" class="multy_select w100p" multiple="multiple">
+          <option value="ACT">Active</option>
+          <option value="CAN">Cancelled</option>
+          <option value="COM">Completed</option>
+          <option value="RCL">Recall</option>
+        </select></td>
+        <th scope="row">Product Category</th>
+        <td><select id="cmbProductCategory" class="multy_select w100p" multiple="multiple"></select></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <!-- <th scope="row">Product Type</th>
+        <td><select id="cmbProductType" class="multy_select w100p" multiple="multiple"></select></td> -->
+        <th scope="row">Product Code</th>
+        <td><select id="cmbProductCode" class="multy_select w100p" multiple="multiple"></select></td>
+        <th scope="row">AS Aging</th>
+        <td><select id="cmbAsAging" class="multy_select w100p" multiple="multiple"></select></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+
+        <th scope="row">AS Solution Large</th>
+        <td><select id="cmbDefectType" class="multy_select w100p" multiple="multiple"></select></td>
+        <th scope="row">AS Defect Part Large</th>
+        <td><select id="cmbDefectRmk" class="multy_select w100p" multiple="multiple"></select></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+
+        <th scope="row">AS Defect Part Small</th>
+        <td><select id="cmbDefectDesc" class="multy_select w100p" multiple="multiple"></select></td>
+        <th scope="row">AS Problem Symptom Large</th>
+        <td><select id="cmbDefectDescSym" class="multy_select w100p" multiple="multiple"></select></td>
       </tr>
      </tbody>
     </table>
