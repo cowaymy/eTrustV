@@ -114,11 +114,20 @@ function fn_displaySection(selectedRefMode) {
 //clear 처리
 function fn_RefundClear(){
 	//form.reset 함수는 쓰지 않는다. groupSeq 때문임.
+	newAmt = 0;
+	calculateOldAmt();
 	$("#newRemark").val('');
 	$("#newReason").val('');
-	$("#newCustNm").val('');
-	$("#newOrdNo").val('');
-	AUIGrid.clearGridData(myRequestRefundFinalGridID);
+	$("#bankAccNo").val('');
+	$("#beneficiaryName").val('');
+	$("#refundMode").val('');
+	$("#issueBank").val('');
+	$("#keyInCardNo1").val('');
+	$("#keyInCardNo2").val('');
+	$("#keyInCardNo3").val('');
+	$("#keyInCardNo4").val('');
+	$("#apprNo").val('');
+	//AUIGrid.clearGridData(myRequestRefundFinalGridID);
 }
 
 function validateSave(refMode, reasonCd){
