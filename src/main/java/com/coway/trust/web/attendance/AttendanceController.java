@@ -592,7 +592,7 @@ public class AttendanceController {
 		if ((new SimpleDateFormat("dd/MM/yyyy").parse(attendanceService.atdMigrateMonth())).after(new SimpleDateFormat("yyyyMM").parse((String) params.get("calMonthYear")))) {
 			return ResponseEntity.ok(new Gson().toJson(attendanceService.selectExcelAttd(params)));
 		} else {
-			List<HashMap<String, Object>> returnData = new ArrayList();
+			List<Map<String, Object>> returnData = new ArrayList();
 			List<EgovMap> memberInfo = attendanceService.getMemberInfo(params);
 			memberInfo.stream().forEach((m) -> {
 				try {
@@ -607,7 +607,7 @@ public class AttendanceController {
 					in.close();
 					Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
 					List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
-					returnData.addAll((Collection<? extends HashMap<String, Object>>) data.stream().map((n) -> {
+					returnData.addAll(data.stream().map((n) -> {
 						n.put("orgCode", m.get("orgCode"));
 						n.put("grpCode", m.get("grpCode"));
 						n.put("deptCode", m.get("deptCode"));
