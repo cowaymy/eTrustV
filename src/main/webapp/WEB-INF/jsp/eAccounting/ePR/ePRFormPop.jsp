@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js" integrity="sha512-ZrigzIl5MysuwHc2LaGI+uOLnLDdyYUth+pA5OuJC++WEleiYrztIc7nU/iBRWeP+ufmSGepuJULdgh/K0rIAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-C0umD/l+9QFQbGjBr+aOocreHufOpoveiGOGS3VX6jPmmbaBogNKN4VuCv75p6E6qO5NDU0TNpE/YVHyHoS6lQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
     .budgetContainer {
@@ -126,7 +127,7 @@
 					              <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly" placeholder="Only .xlsx file">
 					              <span class="label_text2"><a href="#">File</a></span>
 					          </label>
-					          <span class="label_text2"><a id="example_download">Download CSV File</a></span>
+					          <span class="label_text2"><a id="example_download">Download Template</a></span>
 						  </div>
                         </td>
                     </tr>

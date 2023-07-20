@@ -120,6 +120,10 @@ public class ePRController {
 			}
 			List<EgovMap> spcMembers = ePRService.getSPCMembers();
 			if (finalApprv.get("memId").equals(new BigDecimal(sessionVO.getMemId()))) {
+				EgovMap lastSPC = ((List<EgovMap>) request.get("approvals")).stream().filter((a) -> {
+					return a.get("seq").equals(new BigDecimal((((List<EgovMap>) request.get("approvals")).size() - 1)));
+				}).findFirst().get();
+				model.put("spcMem", lastSPC.get("memCode"));
 				model.put("spcMembers", spcMembers);
 			}
 			if (request.get("stus").equals(new BigDecimal(5)) && spcMembers.stream().filter(spcMem -> spcMem.get("memId").equals(new BigDecimal(sessionVO.getMemId()))).count() > 0) {
@@ -308,79 +312,92 @@ public class ePRController {
 			//Get other form data
 			Map<String, Object> p = new Gson().fromJson(request.getParameter("data"), HashMap.class);
 
-			if (excelData.size() > 0) {
+			ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) p.get("members");
 
-				//Upload files and get key
-				int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-				p.put("rciv", fileGroupKey);
-				if (request.getFile("add") != null) {
-					int fileGroupKeyAdd = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("add"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-					p.put("add", fileGroupKeyAdd);
-				}
+			Map<String, Object> tentativeSPC = members.get(members.size() - 2);
 
-				//Insert or update request based on the presence of "requestId"
-				if (p.get("requestId") == null) {
-					p.put("id", ePRService.selectRequestId());
-				}
-				int res = ePRService.insertRequestDraft(p);
-				dbRes.add(res);
+			boolean includeSPC = ePRService.getSPCMembers().stream().anyMatch((m) -> {
+				return m.get("memCode").equals(tentativeSPC.get("memCode"));
+			});
 
-				//Insert Delivery data
-				for(Map<String, Object> d : excelData) {
-					d.put("id", p.get("id"));
-					int res2 = ePRService.insertDeliverDet(d);
-					dbRes.add(res2);
-				}
-
-				//Delete Request items and re-insert
-				if (p.get("requestId") != null) {
-					ePRService.deleteRequestItems(p);
-				}
-				ArrayList<Map<String, Object>> details = (ArrayList<Map<String, Object>>) p.get("items");
-				for(Map<String, Object> d : details) {
-					d.put("id", p.get("id"));
-					int res2 = ePRService.insertRequestItems(d);
-					dbRes.add(res2);
-				}
-
-				//To-do add approval line
-				ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) p.get("members");
-				for(int i = 0; i < members.size(); i++) {
-					Map<String, Object> d = members.get(i);
-					if (i == 0) {
-						String addContent = "is in need of your approval.<br/><span style=\"color: red;\">Title: \"" + p.get("ePRTitle") + "\"</span>";
-						email = prepareEmail(p.get("id").toString(), addContent);
-						email.setTo(ePRService.getMemberEmail(d));
+			if (includeSPC) {
+				if (excelData.size() > 0) {
+					//Upload files and get key
+					int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+					p.put("rciv", fileGroupKey);
+					if (request.getFile("add") != null) {
+						int fileGroupKeyAdd = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("add"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+						p.put("add", fileGroupKeyAdd);
 					}
-					d.put("id", p.get("id"));
-					d.put("seq", i+1);
-					int res2 = ePRService.insertApprovalLine(d);
-					dbRes.add(res2);
-				}
 
-
-				//Update Request to submitted
-				int res3 = ePRService.updateRequest(p);
-				dbRes.add(res3);
-
-				int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
-					public boolean test(Integer n) {
-						return n > 0;
+					//Insert or update request based on the presence of "requestId"
+					if (p.get("requestId") == null) {
+						p.put("id", ePRService.selectRequestId());
 					}
-				}) ? 1 : 0;
-				if (ret == 1) {
-					if (email != null) {
-						adaptorService.sendEmail(email, false);
+					int res = ePRService.insertRequestDraft(p);
+					dbRes.add(res);
+
+					//Insert Delivery data
+					for(Map<String, Object> d : excelData) {
+						d.put("id", p.get("id"));
+						int res2 = ePRService.insertDeliverDet(d);
+						dbRes.add(res2);
 					}
-					response.put("success", p.get("id"));
-					return ResponseEntity.ok(response);
+
+					//Delete Request items and re-insert
+					if (p.get("requestId") != null) {
+						ePRService.deleteRequestItems(p);
+					}
+					ArrayList<Map<String, Object>> details = (ArrayList<Map<String, Object>>) p.get("items");
+					for(Map<String, Object> d : details) {
+						d.put("id", p.get("id"));
+						int res2 = ePRService.insertRequestItems(d);
+						dbRes.add(res2);
+					}
+
+					//To-do add approval line
+					for(int i = 0; i < members.size(); i++) {
+						Map<String, Object> d = members.get(i);
+						if (i == 0) {
+							String addContent = "is in need of your approval.<br/><span style=\"color: red;\">Title: \"" + p.get("ePRTitle") + "\"</span>";
+							email = prepareEmail(p.get("id").toString(), addContent);
+							email.setTo(ePRService.getMemberEmail(d));
+						}
+						d.put("id", p.get("id"));
+						d.put("seq", i+1);
+						int res2 = ePRService.insertApprovalLine(d);
+						dbRes.add(res2);
+					}
+
+
+					//Update Request to submitted
+					int res3 = ePRService.updateRequest(p);
+					dbRes.add(res3);
+
+					int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
+						public boolean test(Integer n) {
+							return n > 0;
+						}
+					}) ? 1 : 0;
+					if (ret == 1) {
+						if (email != null) {
+							adaptorService.sendEmail(email, false);
+						}
+						response.put("success", p.get("id"));
+						return ResponseEntity.ok(response);
+					} else {
+						response.put("success", 0);
+						return ResponseEntity.ok(response);
+					}
 				} else {
 					response.put("success", 0);
+					response.put("err", "Receiver info has no data");
 					return ResponseEntity.ok(response);
 				}
+
 			} else {
 				response.put("success", 0);
-				response.put("err", "Receiver info has no data");
+				response.put("err", "Approval must contain SPC member as second last approver");
 				return ResponseEntity.ok(response);
 			}
 		} else {

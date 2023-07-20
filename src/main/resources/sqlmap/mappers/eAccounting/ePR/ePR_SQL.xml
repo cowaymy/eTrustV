@@ -355,7 +355,7 @@
     </update>
 
     <select id="getSPCMembers" resultType="egovMap">
-        SELECT MEM_ID, USER_NAME
+        SELECT MEM_ID, USER_NAME, MEM_CODE
         FROM SYS0047M A
         JOIN ORG0001D B ON B.MEM_CODE = A.HR_CODE
         WHERE MEM_CODE IN ('P0018', 'P2217', 'P2098', 'P2513', 'P2135')

@@ -196,7 +196,7 @@
 	                           <input id="ePRRcivFile" type="text" class="input_text" readonly class="readonly" placeholder="Only .xlsx file">
 	                           <span class="label_text2"><a href="#">File</a></span>
 	                       </label>
-	                       <span class="label_text2"><a id="example_download">Download CSV File</a></span>
+	                       <span class="label_text2"><a id="example_download">Download Template</a></span>
 	                   </div>
 	                   <textarea name="remark"></textarea>
                     </form>
@@ -224,7 +224,12 @@
                         <td>
                             <select name="assignMemId">
                                 <c:forEach items="${spcMembers}" var="p">
-                                    <option value="${p.memId}">${p.userName}</option>
+                                    <c:if test="${spcMem == p.memCode}">
+                                        <option selected value="${p.memId}">${p.userName}</option>
+                                    </c:if>
+                                    <c:if test="${spcMem != p.memCode}">
+	                                    <option value="${p.memId}">${p.userName}</option>
+                                    </c:if>
                                 </c:forEach>
                             </select>
                         </td>
