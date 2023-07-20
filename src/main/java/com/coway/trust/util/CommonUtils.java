@@ -198,6 +198,26 @@ public final class CommonUtils {
 		return rtnValue;
 	}
 
+	/**
+	 * @param number of Day, format
+	 * @author HQIT-HUIDING
+	 * Jul 14, 2023
+	 */
+	public static String getCalDate(int d, String format) {
+		String rtnValue = "";
+
+		String dfFormat = nvl2(format, "yyyyMMdd");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, d);
+		Date date = calendar.getTime();
+
+		SimpleDateFormat df = new SimpleDateFormat(dfFormat, Locale.getDefault(Locale.Category.FORMAT));
+		rtnValue = df.format(date);
+
+		return rtnValue;
+	}
+
 	public static String getCalMonth(int d) {
 		String rtnValue = "";
 
