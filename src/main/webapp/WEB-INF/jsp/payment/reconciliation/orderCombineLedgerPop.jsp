@@ -60,14 +60,14 @@ var custNricOri;
                 }
 
                 if(Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0 && Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0){
-                    $('#svmQuotFilterAmount').val("");
+                    $('#svmQuotTotalAmount').val("");
                 }else{
                     $('#svmQuotTotalAmount').val($.number(result.orderOutstandingView[0].srvmemquottotalamount, 2));
                 }
 
                 $('#svmQuotNo').val(result.orderOutstandingView[0].srvmemquotno);
                 $('#svmQuotStatus').val(result.orderOutstandingView[0].srvmemquotstatus);
-                $('#svmCreateDate').val(result.orderOutstandingView[0].srvmemquotcreated);
+                $('#svmQuotCreateDate').val(result.orderOutstandingView[0].srvmemquotcreated);
 
                 //SVM
                 if(Number(result.orderOutstandingView[0].srvmempackageamount) == 0 && Number(result.orderOutstandingView[0].srvmemid) == 0){
@@ -156,7 +156,6 @@ var custNricOri;
 
                 $('#memBankAcc').val(result.orderOutstandingView[0].bankaccno);
                 $('#memIssueBank').val(result.orderOutstandingView[0].bankname);
-                console.log('masuk woi', result.orderOutstandingView[0].outsvmoutstndtotal);
                 $('#svmTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].outsvmoutstndtotal, 2));
                 $('#srvContractTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].rensvmoutstndtotal,2));
             }else{
@@ -549,7 +548,7 @@ var custNricOri;
 					    </td>
 					    <th scope="row">Create Date</th>
 					    <td>
-					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotCreateDate" name="svmQuotCreateDate"/>
 					    </td>
 					</tr>
 				</tbody>
