@@ -46,7 +46,7 @@
 
     .popup_wrap.eprpop {
         width: 90% !important;
-        left: 42%;
+        left: 33vw;
     }
 </style>
 
