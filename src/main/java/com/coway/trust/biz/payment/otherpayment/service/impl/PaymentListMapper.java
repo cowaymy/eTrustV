@@ -235,5 +235,6 @@ public interface PaymentListMapper {
 	void processNormalPayment(Map<String, Object> params);
 	List<EgovMap> selectProcessPaymentResult(Map<String, Object> params);
     int checkBankStateMapStus(Map<String, Object> params);
+    void updateDcfBatchStatus(Map<String, Object> params);
     /* [END] BOI DCF*/
 }

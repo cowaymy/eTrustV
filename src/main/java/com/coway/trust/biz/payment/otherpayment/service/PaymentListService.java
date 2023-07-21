@@ -162,6 +162,7 @@ public interface PaymentListService
     EgovMap selectReqDcfNewInfo(Map<String, Object> params);
     List<EgovMap> selectReqDcfNewAppv(Map<String, Object> params);
     List<EgovMap> selectRequestNewDCFByGroupSeq(Map<String, Object> params);
+    EgovMap selectDcfInfo(Map<String, Object> params);
     void rejectNewDCF(Map<String, Object> params);
     Map<String, Object> approvalNewDCF(Map<String, Object> params);
     void insertRequestDcfAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);

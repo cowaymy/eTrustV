@@ -282,6 +282,7 @@ public class PaymentListController {
 		//조회.
 		params.put("memCode", sessionVO.getUserMemCode());
 		params.put("memUserId", sessionVO.getUserId());
+		params.put("adminRole", params.get("pageAuthFuncUserDefine4").toString());
 		List<EgovMap> resultList = paymentListService.selectRequestDCFList(params);
 
 		// 조회 결과 리턴.
@@ -1187,16 +1188,19 @@ public class PaymentListController {
 		int[] groupSeq = null;
 		String[] revStusId = null;
 		String[] ftStusId = null;
+		String[] revStusNm = null;
 
 		if(selectedOrder.size() > 0){
 			groupSeq = new int[selectedOrder.size()];
 			revStusId = new String[selectedOrder.size()];
 			ftStusId = new String[selectedOrder.size()];
+			revStusNm = new String[selectedOrder.size()];
 
 			for(int i = 0; selectedOrder.size() > i; i++){
 				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
 				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
 				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
 			}
 			params.put("groupSeq", groupSeq);
 			params.put("type", "DCF");
@@ -1216,7 +1220,12 @@ public class PaymentListController {
 
 		if (invalidTypeCount > 0) {
 			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
-		} else  if (invalidStatus > 0) {
+		} else if((Arrays.asList(revStusId).contains(1) || Arrays.asList(revStusId).contains(5)) &&
+				(Arrays.asList(ftStusId).contains(1) || Arrays.asList(ftStusId).contains(5)) ){
+			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
+		}else if(Arrays.asList(revStusNm).contains("Refund")){
+			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request DCF.");
+		}else  if (invalidStatus > 0) {
 			returnMap.put("error", "Payment has Active or Completed reverse request.");
 		} else {
 			String allowFlgYN = validateAction(selectedOrder);
@@ -1252,7 +1261,7 @@ public class PaymentListController {
 			String appvNm = appvInfo.get("appvLineUserName").toString();
 			String appvRem = appvInfo.containsKey("appvRem") ? appvInfo.get("appvRem").toString() : "";
 
-			if(appvStus.equals("R")){
+			if(appvStus.equals("R") || appvStus.equals("T")){
 				remark += "Pending by:" + appvNm + "\n";
 			}else if(appvStus.equals("A")){
 				remark += "[" + appvDt + "], [Approved by:" + appvNm + "]: " + appvRem + "\n";
@@ -1262,6 +1271,18 @@ public class PaymentListController {
 		}
 
 		resultMap.put("remark", remark);
+
+		EgovMap selectReqDcfAppvDetails = paymentListService.selectDcfInfo(params);
+
+		String allowAppvFlg = "N";
+		if(selectReqDcfAppvDetails !=null){
+			if(selectReqDcfAppvDetails.get("appvLineUserId").toString().equals(sessionVO.getUserMemCode().toString())){
+				allowAppvFlg = "Y";
+			}
+		}
+
+
+		resultMap.put("allowAppvFlg", allowAppvFlg);
 
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultMap);
@@ -1330,521 +1351,568 @@ public class PaymentListController {
     	String[] groupSeqList = dcfInfoResult.get("groupSeq").toString().split(",");
 		params.put("groupSeq", groupSeqList);
 
+		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("oldRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
+		String[] revStusId = null;
+		String[] ftStusId = null;
+		String[] revStusNm = null;
+
+		if(selectedOrder.size() > 0){
+			revStusId = new String[selectedOrder.size()];
+			ftStusId = new String[selectedOrder.size()];
+			revStusNm = new String[selectedOrder.size()];
+
+			for(int i = 0; selectedOrder.size() > i; i++){
+				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
+				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
+			}
+			params.put("type", "DCF");
+
+			for(Map<String,Object> map : selectedOrder) {
+			    Map<String,Object> tempMap = new LinkedHashMap<String,Object>(map);
+			    map.clear();
+			    map.put("type","DCF");
+			    map.putAll(tempMap);
+			}
+		}
+
+		// Start validation
 		if (paymentListService.invalidDCF(params) > 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+
+		}  else if((Arrays.asList(revStusId).contains(1) || Arrays.asList(revStusId).contains(5)) &&
+				(Arrays.asList(ftStusId).contains(1) || Arrays.asList(ftStusId).contains(5)) ){
+			message.setCode(AppConstants.FAIL);
+			message.setData(params);
+			message.setMessage("Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
+
+		}else if(Arrays.asList(revStusNm).contains("Refund")){
+			message.setCode(AppConstants.FAIL);
+			message.setData(params);
+			message.setMessage("Payment Group Number has already been Refunded. Please reselect before Request DCF.");
+
 		} else if (paymentListService.invalidStatus(params) > 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("Payment has Active or Completed reverse request.");
 		} else {
-    		// DCF Info Validation
-    		if(dcfInfoResult.get("reason").toString().isEmpty() && dcfInfoResult.get("reason").equals("")){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("* No Reason Selected");
-    			return message;
-    		}
 
-    		if(dcfInfoResult.get("attachmentFileTxt").toString().isEmpty() && dcfInfoResult.get("attachmentFileTxt").equals("")){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("Attachment is required");
-    			return message;
-    		}
+			String allowFlgYN = validateAction(selectedOrder);
+			if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("N")){
+				message.setCode(AppConstants.FAIL);
+				message.setData(params);
+				message.setMessage("Not Allow to proceed with DCF. Please reselect. ");
+			}else{
 
-    		if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) <= 0.00){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("* Total amount is less than zero");
-    			return message;
-    		}
+        		// DCF Info Validation
+        		if(dcfInfoResult.get("reason").toString().isEmpty() && dcfInfoResult.get("reason").equals("")){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("* No Reason Selected");
+        			return message;
+        		}
 
-    		if(dcfInfoResult.get("remark").toString().isEmpty() && dcfInfoResult.get("remark").equals("")){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("Input Remark");
-    			return message;
-    		}
+        		if(dcfInfoResult.get("attachmentFileTxt").toString().isEmpty() && dcfInfoResult.get("attachmentFileTxt").equals("")){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("Attachment is required");
+        			return message;
+        		}
 
-    		if(dcfInfoResult.get("remark").toString().length() > 3000){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("* Please input the Remark below or less than 3000 bytes.");
-    			return message;
-    		}
+        		if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) <= 0.00){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("* Total amount is less than zero");
+        			return message;
+        		}
 
-    		List<Map<String, Object>> oldRequestDcfGridResult = mapper.readValue(params.get("oldRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
-    		if(oldRequestDcfGridResult.size() <= 0 ){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("Please select order to perform request DCF");
-    			return message;
-    		}
+        		if(dcfInfoResult.get("remark").toString().isEmpty() && dcfInfoResult.get("remark").equals("")){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("Input Remark");
+        			return message;
+        		}
 
-    		if(dcfInfoResult.get("rekeyStus").toString().isEmpty() && dcfInfoResult.get("rekeyStus").equals("")){
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("Please select Rekey-in status");
-    			return message;
+        		if(dcfInfoResult.get("remark").toString().length() > 3000){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("* Please input the Remark below or less than 3000 bytes.");
+        			return message;
+        		}
 
-    		} else if (dcfInfoResult.get("rekeyStus").toString().equals("1")) {
-    			 //	 New DCF Order
-    	 	     if(Double.parseDouble(((String)dcfInfoResult.get("newTotalAmtTxt"))) <= 0.00){
-    	 	    	message.setCode(AppConstants.FAIL);
-    				message.setData(params);
-    				message.setMessage("* Total amount is less than zero");
-    				return message;
-    	 	     }
+        		List<Map<String, Object>> oldRequestDcfGridResult = mapper.readValue(params.get("oldRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
+        		if(oldRequestDcfGridResult.size() <= 0 ){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("Please select order to perform request DCF");
+        			return message;
+        		}
 
-    	 	    List<Map<String, Object>> newRequestDcfGridResult = mapper.readValue(params.get("newRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
-    	 	    if(newRequestDcfGridResult.size() <= 0){
-    	 	    	message.setCode(AppConstants.FAIL);
-    				message.setData(params);
-    				message.setMessage("Please select Order for new DCF request");
-    	 	    	return message;
-    	 	    }
+        		if(dcfInfoResult.get("rekeyStus").toString().isEmpty() && dcfInfoResult.get("rekeyStus").equals("")){
+        			message.setCode(AppConstants.FAIL);
+        			message.setData(params);
+        			message.setMessage("Please select Rekey-in status");
+        			return message;
 
-    	 	    // DCF Payment Info Validation
-    	 	    String dcfPayType = dcfInfoResult.get("payType").toString();
-    	 	    if(dcfPayType.isEmpty() && dcfPayType.equals("")){
-    	 	    	message.setCode(AppConstants.FAIL);
-    				message.setData(params);
-    				message.setMessage("Please select Payment Type");
-    				return message;
+        		} else if (dcfInfoResult.get("rekeyStus").toString().equals("1")) {
+        			 //	 New DCF Order
+        	 	     if(Double.parseDouble(((String)dcfInfoResult.get("newTotalAmtTxt"))) <= 0.00){
+        	 	    	message.setCode(AppConstants.FAIL);
+        				message.setData(params);
+        				message.setMessage("* Total amount is less than zero");
+        				return message;
+        	 	     }
 
-    	 	    }else if(dcfPayType.equals("105")){ // Cash
+        	 	    List<Map<String, Object>> newRequestDcfGridResult = mapper.readValue(params.get("newRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
+        	 	    if(newRequestDcfGridResult.size() <= 0){
+        	 	    	message.setCode(AppConstants.FAIL);
+        				message.setData(params);
+        				message.setMessage("Please select Order for new DCF request");
+        	 	    	return message;
+        	 	    }
 
-    	 	    	Map<String, Object> cashPayInfoFormResult = mapper.readValue(params.get("cashPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+        	 	    // DCF Payment Info Validation
+        	 	    String dcfPayType = dcfInfoResult.get("payType").toString();
+        	 	    if(dcfPayType.isEmpty() && dcfPayType.equals("")){
+        	 	    	message.setCode(AppConstants.FAIL);
+        				message.setData(params);
+        				message.setMessage("Please select Payment Type");
+        				return message;
 
-    	 	    	if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) <= 0.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Amount");
-    					return message;
-    	 	    	}else if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) > 200000.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Amount exceed RM 200000");
-    					return message;
-    	 	    	}
+        	 	    }else if(dcfPayType.equals("105")){ // Cash
 
-    	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt")))){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Old amount and new amount are not the same");
-    					return message;
-    	 	    	}
+        	 	    	Map<String, Object> cashPayInfoFormResult = mapper.readValue(params.get("cashPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
 
-    	 	    	if(cashPayInfoFormResult.get("cashBankType").toString().isEmpty() && cashPayInfoFormResult.get("cashBankType").equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Bank Type");
-    					return message;
-    	 	    	}else if(cashPayInfoFormResult.get("cashBankType").toString().equals("2730")){
-    	 	    		if(cashPayInfoFormResult.get("cashVAAcc").toString().isEmpty() && cashPayInfoFormResult.get("cashVAAcc").toString().equals("")){
-    	 	    			message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* No VA Account");
-    						return message;
-    	 	    		}
-    	 	    	}else {
-    	 	    		if(cashPayInfoFormResult.get("cashBankAcc").toString().isEmpty() && cashPayInfoFormResult.get("cashBankAcc").toString().equals("")){
-    	 	    			message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* No Bank Account Selected");
-    						return message;
-    	 	    		}
-    	 	    	}
-
-    	 	    	if(cashPayInfoFormResult.get("cashTrxDate").toString().isEmpty() && cashPayInfoFormResult.get("cashTrxDate").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* Transaction Date is empty");
-    					return message;
-    	 	    	}
-
-    	 	    	if(cashPayInfoFormResult.get("cashSlipNo").toString().isEmpty() && cashPayInfoFormResult.get("cashSlipNo").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Slip No");
-    					return message;
-    	 	    	}
-
-    	 	    	if(!cashPayInfoFormResult.get("cashTrxId").toString().isEmpty()){
-    	 	    		Map<String, Object> data = new HashMap<>();
-    	 	    		data.put("trxId", cashPayInfoFormResult.get("cashTrxId"));
-
-    	 	    		String result = checkBankStateMapStus(data).toString();
-
-    	 	    		if(result.equals("4")){
-    	 	    			message.setCode(AppConstants.FAIL);
+        	 	    	if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) <= 0.00){
+        	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
-        					message.setMessage("This item has already been confirmed payment.");
+        					message.setMessage("* No Amount");
         					return message;
-    	 	    		}
-    	 	    	}
-
-    	 	    } else if(dcfPayType.equals("106")){ // Cheque
-
-    	 	    	Map<String, Object> chequePayInfoFormResult = mapper.readValue(params.get("chequePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
-
-    	 	    	if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) <= 0.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Amount");
-    					return message;
-    	 	    	}else if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) > 200000.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Amount exceed RM 200000");
-    					return message;
-    	 	    	}
-
-    	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt")))){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Old amount and new amount are not the same");
-    					return message;
-    	 	    	}
-
-    	 	    	if(chequePayInfoFormResult.get("chequeBankType").toString().isEmpty() && chequePayInfoFormResult.get("chequeBankType").equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Bank Type");
-    					return message;
-    	 	    	} else if(chequePayInfoFormResult.get("chequeBankType").toString().equals("2730")){
-    	 	    		if(chequePayInfoFormResult.get("chequeVAAcc").toString().isEmpty() && chequePayInfoFormResult.get("chequeVAAcc").toString().equals("")){
-    	 	    			message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* No VA Account");
-    						return message;
-    	 	    		}
-    	 	    	}else {
-    	 	    		if(chequePayInfoFormResult.get("chequeBankAcc").toString().isEmpty() && chequePayInfoFormResult.get("chequeBankAcc").toString().equals("")){
-    	 	    			message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* No Bank Account Selected");
-    						return message;
-    	 	    		}
-    	 	    	}
-
-    	 	    	if(chequePayInfoFormResult.get("chequeTrxDate").toString().isEmpty() && chequePayInfoFormResult.get("chequeTrxDate").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* Transaction Date is empty");
-    					return message;
-    	 	    	}
-
-    	 	    	if(chequePayInfoFormResult.get("chequeSlipNo").toString().isEmpty() && chequePayInfoFormResult.get("chequeSlipNo").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Slip No");
-    					return message;
-    	 	    	}
-
-    	 	     	if(!chequePayInfoFormResult.get("chequeTrxId").toString().isEmpty()){
-    	 	    		Map<String, Object> data = new HashMap<>();
-    	 	    		data.put("trxId", chequePayInfoFormResult.get("chequeTrxId"));
-
-    	 	    		String result = checkBankStateMapStus(data).toString();
-
-    	 	    		if(result.equals("4")){
-    	 	    			message.setCode(AppConstants.FAIL);
+        	 	    	}else if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) > 200000.00){
+        	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
-        					message.setMessage("This item has already been confirmed payment.");
+        					message.setMessage("Amount exceed RM 200000");
         					return message;
-    	 	    		}
-    	 	    	}
+        	 	    	}
 
-    	 	    }else if(dcfPayType.equals("107")){ // Credit Card
-
-    	 	    	Map<String, Object> creditPayInfoFormResult = mapper.readValue(params.get("creditPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
-
-    	 	    	if(creditPayInfoFormResult.get("creditCardType").toString().isEmpty() && creditPayInfoFormResult.get("creditCardType").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Card Type");
-    					return message;
-    	 	    	}
-
-    	 	    	if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) <= 0.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Amount");
-    					return message;
-    	 	    	}else if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) > 200000.00){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Amount exceed RM 200000");
-    					return message;
-    	 	    	}
-
-    	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt")))){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Old amount and new amount are not the same");
-    					return message;
-    	 	    	}
-    	 	    	if(creditPayInfoFormResult.get("creditCardMode").toString().isEmpty() && creditPayInfoFormResult.get("creditCardMode").toString().equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No CRC Mode");
-    					return message;
-
-    	 	    	}
-
-    	 	    	// Credit card brand
-    	 	    	if(creditPayInfoFormResult.get("creditCardBrand").toString().isEmpty() && creditPayInfoFormResult.get("creditCardBrand").equals("")){
-    	 	    		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No CRC Brand");
-    					return message;
-
-    	             }else{
-
-    	 	 	        // Card No
-    	 	 	   	    if(creditPayInfoFormResult.get("creditCardNo1").equals("") ||
-    	         	 	   	creditPayInfoFormResult.get("creditCardNo2").equals("") ||
-    	                     creditPayInfoFormResult.get("creditCardNo3").equals("")  ||
-    	                     creditPayInfoFormResult.get("creditCardNo4").equals("")){
-    	     	 	   	    message.setCode(AppConstants.FAIL);
-    	     				message.setData(params);
-    	     				message.setMessage("* No CRC No");
-    	     				return message;
-
-    	 	 	   	    }else{
-    	 	 	   	      int cardNo1Size = creditPayInfoFormResult.get("creditCardNo1").toString().length();
-    	 	 	   	      int cardNo2Size = creditPayInfoFormResult.get("creditCardNo2").toString().length();
-    	 	 	   	      int cardNo3Size = creditPayInfoFormResult.get("creditCardNo3").toString().length();
-    	 	 	   	      int cardNo4Size = creditPayInfoFormResult.get("creditCardNo4").toString().length();
-    	 	 	   	      int cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size + cardNo4Size;
-
-    	 	 	   	      if(cardNoAllSize != 16){
-    	 	 	   	    	message.setCode(AppConstants.FAIL);
-    	 					message.setData(params);
-    	 					message.setMessage("* Invalid CRC No.");
-    	 					return message;
-    	 	 	   	      }
-    	 	 	   	    }
-
-    	 	    	    int crcType = Integer.parseInt(creditPayInfoFormResult.get("creditCardBrand").toString());
-    	 	    	    int cardNo1st1Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,1));
-    	 	    	    int cardNo1st2Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,2));
-    	 	    	    int cardNo1st4Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,4));
-
-    	 	    	    if(cardNo1st1Val == 4){
-    	 	    	    	if(crcType !=112){
-    	 	    	    		message.setCode(AppConstants.FAIL);
-    	 	    	    		message.setData(params);
-    	 	    	    		message.setMessage("* Invalid credit card type");
-    	 	    	    		return message;
-    	 	    	    	}
-    	 	    	    }
-
-    	 	    	    if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){
-    	 	    	    	if(crcType != 111){
-    	 	    	    		message.setCode(AppConstants.FAIL);
-    	     					message.setData(params);
-    	     					message.setMessage("* Invalid credit card type");
-    	     					return message;
-    	                     }
-    	                 }
-    	             }
-
-    	 	   	      // Approval No
-    	 	          if(creditPayInfoFormResult.get("creditApprNo").toString().isEmpty() && creditPayInfoFormResult.get("creditApprNo").equals("")){
-    	 	        	  message.setCode(AppConstants.FAIL);
-    	 	        	  message.setData(params);
-    	 	        	  message.setMessage("* No Approval Number");
-    	 	        	  return message;
-    	 	          }else{
-
-    	 	              int appValSize = creditPayInfoFormResult.get("creditApprNo").toString().length();
-    	 	              if(appValSize != 6){
-    	 	            	  message.setCode(AppConstants.FAIL);
-    	 	            	  message.setData(params);
-    	 	            	  message.setMessage("* Invalid approval No length");
-    	 	            	  return message;
-    	 	              }
-    	 	          }
-
-    	 	          //Issue Bank 체크
-    	 	          if(creditPayInfoFormResult.get("creditIssueBank").toString().isEmpty() && creditPayInfoFormResult.get("creditIssueBank").equals("")){
-    	 	        	 message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* No Issue Bank Selected");
-    						return message;
-    	 	          }
-
-
-    	 	         // Expiry date
-    	 	       	 if(creditPayInfoFormResult.get("creditExpiryMonth").equals("") || creditPayInfoFormResult.get("creditExpiryYear").equals("")){
-    	 	       		message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No CRC Expiry Date");
-    					return message;
-    	 		     }else{
-    	 		         int expiry1Size = creditPayInfoFormResult.get("creditExpiryMonth").toString().length();
-    	 		         int expiry2Size = creditPayInfoFormResult.get("creditExpiryYear").toString().length();
-
-    	 		         int expiryAllSize = expiry1Size  + expiry2Size;
-
-    	 		         if(expiryAllSize != 4){
-    	 		        	message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* Invalid CRC Expiry Date");
-    						return message;
-    	 		         }
-
-    	 		         if(Integer.parseInt(creditPayInfoFormResult.get("creditExpiryMonth").toString()) > 12){
-    	 		        	message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("* Invalid CRC Expiry Date");
-    						return message;
-    	 		         }
-    	 		     }
-
-    	 		    //Merchant Bank 체크
-    	 		    if(creditPayInfoFormResult.get("creditMerchantBank").toString().isEmpty() && creditPayInfoFormResult.get("creditMerchantBank").equals("")){
-    	 		    	message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Merchant Bank Selected");
-    					return message;
-    	 		    }
-
-    	 		    //Transaction Date 체크
-    	 		    if(creditPayInfoFormResult.get("creditTrxDate").toString().isEmpty() && creditPayInfoFormResult.get("creditTrxDate").equals("")){
-    	 		    	message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* Transaction Date is empty");
-    					return message;
-    	 		    }
-
-    	 		    Map<String,Object> data = new HashMap<>();
-    	 		    data.put("keyInApprovalNo", creditPayInfoFormResult.get("creditApprNo"));
-    	 		    data.put("keyInAmount", creditPayInfoFormResult.get("creditTotalAmtTxt"));
-    	 		    data.put("keyInTrDate", creditPayInfoFormResult.get("creditTrxDate"));
-    	 		    data.put("keyInMerchantBank", creditPayInfoFormResult.get("creditMerchantBank"));
-    	 		    data.put("keyInCardNo1", creditPayInfoFormResult.get("creditCardNo1"));
-    	 		    data.put("keyInCardNo2", creditPayInfoFormResult.get("creditCardNo2"));
-    	 		    data.put("keyInCardNo4", creditPayInfoFormResult.get("creditCardNo4"));
-
-    	 		    EgovMap result = commonPaymentService.checkBatchPaymentExist(data);
-    	 		    if(result != null){
-    	 		    	message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Payment has been uploaded.");
-    					return message;
-    	 		    }
-
-    	 	    }else if(dcfPayType.equals("108")){    //Online
-
-    	 	    	Map<String, Object> onlinePayInfoFormResult = mapper.readValue(params.get("onlinePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
-
-    	 	    	String onlineBankType = onlinePayInfoFormResult.get("onlineBankType").toString();
-    	 	        String onlineVAAccount = onlinePayInfoFormResult.get("onlineVAAcc").toString();
-    	 	        String onlineBankAcc = onlinePayInfoFormResult.get("onlineBankAcc").toString();
-
-    	 	        if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) <= 0.00 ){
-    	 	            message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("* No Amount");
-    					return message;
-    	 	        } else if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) > 200000.00 ){
-    	 	        	message.setCode(AppConstants.FAIL);
-    					message.setData(params);
-    					message.setMessage("Amount exceed RM 200000");
-    					return message;
-    	 	        }
-
-    	 	       if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)onlinePayInfoFormResult.get("onlineTotalAmtTxt")))){
-       	 	    		message.setCode(AppConstants.FAIL);
-       					message.setData(params);
-       					message.setMessage("Old amount and new amount are not the same");
-       					return message;
-       	 	    	}
-
-    	 	       	//BankCharge Amount는 Billing 금액의 5%를 초과할수 없다
-    	 	        double bcAmt4Limit = 0.00;
-    	 	        double payAmt4Limit = 0.00;
-
-    	 	        if(!onlinePayInfoFormResult.get("onlineBankChgAmt").toString().isEmpty() && !onlinePayInfoFormResult.get("onlineBankChgAmt").equals("")) {
-    	 	            bcAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineBankChgAmt").toString());
-    	 	            payAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString());
-
-    	 	            if ((payAmt4Limit * 0.05 ) < bcAmt4Limit) {
-    	 	                message.setCode(AppConstants.FAIL);
-    						message.setData(params);
-    						message.setMessage("Bank Charge Amount can not exceed 5% of Amount.");
-    						return message;
-    	 	            }
-    	 	        }
-
-    	 	        if(onlinePayInfoFormResult.get("onlineTrxDate").toString().isEmpty() && onlinePayInfoFormResult.get("onlineTrxDate").equals("")){
-    	                 message.setCode(AppConstants.FAIL);
-    	                 message.setData(params);
-    	                 message.setMessage("* Transaction Date is empty");
-    	                 return message;
-    	             }
-
-    	 	        if(onlineBankType.equals("2730")){
-    	 	             if(onlineVAAccount.equals("")){
-    	 	                 message.setCode(AppConstants.FAIL);
-    	 	                 message.setData(params);
-    	 	                 message.setMessage("* No VA Account");
-    	 	                 return message;
-    	 	             }
-
-    	 	         }else{
-    	 	             if(onlinePayInfoFormResult.get("onlineBankAcc").toString().isEmpty() && onlinePayInfoFormResult.get("onlineBankAcc").equals("")){
-    	 	                 message.setCode(AppConstants.FAIL);
-    	 	                 message.setData(params);
-    	 	                 message.setMessage("* No Bank Account Selected");
-    	 	                 return message;
-    	 	             }
-
-    	 	             if(onlineBankType.equals("2728")) {
-    	 	                 if(onlinePayInfoFormResult.get("onlineEFT").toString().isEmpty() && onlinePayInfoFormResult.get("onlineEFT").equals("")) {
-    	 	                     message.setCode(AppConstants.FAIL);
-    	 	                     message.setData(params);
-    	 	                     message.setMessage("* No EFT/JomPayRef");
-    	 	                     return message;
-    	 	                 }
-    	 	             }
-    	 	         }
-
-    	 	     	if(!onlinePayInfoFormResult.get("onlineTrxId").toString().isEmpty()){
-    	 	    		Map<String, Object> data = new HashMap<>();
-    	 	    		data.put("trxId", onlinePayInfoFormResult.get("onlineTrxId"));
-
-    	 	    		String result = checkBankStateMapStus(data).toString();
-
-    	 	    		if(result.equals("4")){
-    	 	    			message.setCode(AppConstants.FAIL);
+        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt")))){
+        	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
-        					message.setMessage("This item has already been confirmed payment.");
+        					message.setMessage("Old amount and new amount are not the same");
         					return message;
-    	 	    		}
-    	 	    	}
-    	 	    }
-    		}
+        	 	    	}
 
-    		// Approval Validation
-    		List<Map<String, Object>> apprGridListResult = mapper.readValue(params.get("apprGridList").toString(), new TypeReference<List<Map<String, Object>>>(){});
-    		if(apprGridListResult.size() > 0) {
-    			if(!apprGridListResult.get(0).containsKey("memCode")){
+        	 	    	if(cashPayInfoFormResult.get("cashBankType").toString().isEmpty() && cashPayInfoFormResult.get("cashBankType").equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Bank Type");
+        					return message;
+        	 	    	}else if(cashPayInfoFormResult.get("cashBankType").toString().equals("2730")){
+        	 	    		if(cashPayInfoFormResult.get("cashVAAcc").toString().isEmpty() && cashPayInfoFormResult.get("cashVAAcc").toString().equals("")){
+        	 	    			message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* No VA Account");
+        						return message;
+        	 	    		}
+        	 	    	}else {
+        	 	    		if(cashPayInfoFormResult.get("cashBankAcc").toString().isEmpty() && cashPayInfoFormResult.get("cashBankAcc").toString().equals("")){
+        	 	    			message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* No Bank Account Selected");
+        						return message;
+        	 	    		}
+        	 	    	}
+
+        	 	    	if(cashPayInfoFormResult.get("cashTrxDate").toString().isEmpty() && cashPayInfoFormResult.get("cashTrxDate").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* Transaction Date is empty");
+        					return message;
+        	 	    	}
+
+        	 	    	if(cashPayInfoFormResult.get("cashSlipNo").toString().isEmpty() && cashPayInfoFormResult.get("cashSlipNo").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Slip No");
+        					return message;
+        	 	    	}
+
+        	 	    	if(!cashPayInfoFormResult.get("cashTrxId").toString().isEmpty()){
+        	 	    		Map<String, Object> data = new HashMap<>();
+        	 	    		data.put("trxId", cashPayInfoFormResult.get("cashTrxId"));
+
+        	 	    		String result = checkBankStateMapStus(data).toString();
+
+        	 	    		if(result.equals("4")){
+        	 	    			message.setCode(AppConstants.FAIL);
+            					message.setData(params);
+            					message.setMessage("This item has already been confirmed payment.");
+            					return message;
+        	 	    		}
+        	 	    	}
+
+        	 	    } else if(dcfPayType.equals("106")){ // Cheque
+
+        	 	    	Map<String, Object> chequePayInfoFormResult = mapper.readValue(params.get("chequePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+
+        	 	    	if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) <= 0.00){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Amount");
+        					return message;
+        	 	    	}else if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) > 200000.00){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Amount exceed RM 200000");
+        					return message;
+        	 	    	}
+
+        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt")))){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Old amount and new amount are not the same");
+        					return message;
+        	 	    	}
+
+        	 	    	if(chequePayInfoFormResult.get("chequeBankType").toString().isEmpty() && chequePayInfoFormResult.get("chequeBankType").equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Bank Type");
+        					return message;
+        	 	    	} else if(chequePayInfoFormResult.get("chequeBankType").toString().equals("2730")){
+        	 	    		if(chequePayInfoFormResult.get("chequeVAAcc").toString().isEmpty() && chequePayInfoFormResult.get("chequeVAAcc").toString().equals("")){
+        	 	    			message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* No VA Account");
+        						return message;
+        	 	    		}
+        	 	    	}else {
+        	 	    		if(chequePayInfoFormResult.get("chequeBankAcc").toString().isEmpty() && chequePayInfoFormResult.get("chequeBankAcc").toString().equals("")){
+        	 	    			message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* No Bank Account Selected");
+        						return message;
+        	 	    		}
+        	 	    	}
+
+        	 	    	if(chequePayInfoFormResult.get("chequeTrxDate").toString().isEmpty() && chequePayInfoFormResult.get("chequeTrxDate").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* Transaction Date is empty");
+        					return message;
+        	 	    	}
+
+        	 	    	if(chequePayInfoFormResult.get("chequeSlipNo").toString().isEmpty() && chequePayInfoFormResult.get("chequeSlipNo").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Slip No");
+        					return message;
+        	 	    	}
+
+        	 	     	if(!chequePayInfoFormResult.get("chequeTrxId").toString().isEmpty()){
+        	 	    		Map<String, Object> data = new HashMap<>();
+        	 	    		data.put("trxId", chequePayInfoFormResult.get("chequeTrxId"));
+
+        	 	    		String result = checkBankStateMapStus(data).toString();
+
+        	 	    		if(result.equals("4")){
+        	 	    			message.setCode(AppConstants.FAIL);
+            					message.setData(params);
+            					message.setMessage("This item has already been confirmed payment.");
+            					return message;
+        	 	    		}
+        	 	    	}
+
+        	 	    }else if(dcfPayType.equals("107")){ // Credit Card
+
+        	 	    	Map<String, Object> creditPayInfoFormResult = mapper.readValue(params.get("creditPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+
+        	 	    	if(creditPayInfoFormResult.get("creditCardType").toString().isEmpty() && creditPayInfoFormResult.get("creditCardType").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Card Type");
+        					return message;
+        	 	    	}
+
+        	 	    	if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) <= 0.00){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Amount");
+        					return message;
+        	 	    	}else if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) > 200000.00){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Amount exceed RM 200000");
+        					return message;
+        	 	    	}
+
+        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt")))){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Old amount and new amount are not the same");
+        					return message;
+        	 	    	}
+        	 	    	if(creditPayInfoFormResult.get("creditCardMode").toString().isEmpty() && creditPayInfoFormResult.get("creditCardMode").toString().equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No CRC Mode");
+        					return message;
+
+        	 	    	}
+
+        	 	    	// Credit card brand
+        	 	    	if(creditPayInfoFormResult.get("creditCardBrand").toString().isEmpty() && creditPayInfoFormResult.get("creditCardBrand").equals("")){
+        	 	    		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No CRC Brand");
+        					return message;
+
+        	             }else{
+
+        	 	 	        // Card No
+        	 	 	   	    if(creditPayInfoFormResult.get("creditCardNo1").equals("") ||
+        	         	 	   	creditPayInfoFormResult.get("creditCardNo2").equals("") ||
+        	                     creditPayInfoFormResult.get("creditCardNo3").equals("")  ||
+        	                     creditPayInfoFormResult.get("creditCardNo4").equals("")){
+        	     	 	   	    message.setCode(AppConstants.FAIL);
+        	     				message.setData(params);
+        	     				message.setMessage("* No CRC No");
+        	     				return message;
+
+        	 	 	   	    }else{
+        	 	 	   	      int cardNo1Size = creditPayInfoFormResult.get("creditCardNo1").toString().length();
+        	 	 	   	      int cardNo2Size = creditPayInfoFormResult.get("creditCardNo2").toString().length();
+        	 	 	   	      int cardNo3Size = creditPayInfoFormResult.get("creditCardNo3").toString().length();
+        	 	 	   	      int cardNo4Size = creditPayInfoFormResult.get("creditCardNo4").toString().length();
+        	 	 	   	      int cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size + cardNo4Size;
+
+        	 	 	   	      if(cardNoAllSize != 16){
+        	 	 	   	    	message.setCode(AppConstants.FAIL);
+        	 					message.setData(params);
+        	 					message.setMessage("* Invalid CRC No.");
+        	 					return message;
+        	 	 	   	      }
+        	 	 	   	    }
+
+        	 	    	    int crcType = Integer.parseInt(creditPayInfoFormResult.get("creditCardBrand").toString());
+        	 	    	    int cardNo1st1Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,1));
+        	 	    	    int cardNo1st2Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,2));
+        	 	    	    int cardNo1st4Val = Integer.parseInt((creditPayInfoFormResult.get("creditCardNo1").toString()).substring(0,4));
+
+        	 	    	    if(cardNo1st1Val == 4){
+        	 	    	    	if(crcType !=112){
+        	 	    	    		message.setCode(AppConstants.FAIL);
+        	 	    	    		message.setData(params);
+        	 	    	    		message.setMessage("* Invalid credit card type");
+        	 	    	    		return message;
+        	 	    	    	}
+        	 	    	    }
+
+        	 	    	    if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){
+        	 	    	    	if(crcType != 111){
+        	 	    	    		message.setCode(AppConstants.FAIL);
+        	     					message.setData(params);
+        	     					message.setMessage("* Invalid credit card type");
+        	     					return message;
+        	                     }
+        	                 }
+        	             }
+
+        	 	   	      // Approval No
+        	 	          if(creditPayInfoFormResult.get("creditApprNo").toString().isEmpty() && creditPayInfoFormResult.get("creditApprNo").equals("")){
+        	 	        	  message.setCode(AppConstants.FAIL);
+        	 	        	  message.setData(params);
+        	 	        	  message.setMessage("* No Approval Number");
+        	 	        	  return message;
+        	 	          }else{
+
+        	 	              int appValSize = creditPayInfoFormResult.get("creditApprNo").toString().length();
+        	 	              if(appValSize != 6){
+        	 	            	  message.setCode(AppConstants.FAIL);
+        	 	            	  message.setData(params);
+        	 	            	  message.setMessage("* Invalid approval No length");
+        	 	            	  return message;
+        	 	              }
+        	 	          }
+
+        	 	          //Issue Bank 체크
+        	 	          if(creditPayInfoFormResult.get("creditIssueBank").toString().isEmpty() && creditPayInfoFormResult.get("creditIssueBank").equals("")){
+        	 	        	 message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* No Issue Bank Selected");
+        						return message;
+        	 	          }
+
+
+        	 	         // Expiry date
+        	 	       	 if(creditPayInfoFormResult.get("creditExpiryMonth").equals("") || creditPayInfoFormResult.get("creditExpiryYear").equals("")){
+        	 	       		message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No CRC Expiry Date");
+        					return message;
+        	 		     }else{
+        	 		         int expiry1Size = creditPayInfoFormResult.get("creditExpiryMonth").toString().length();
+        	 		         int expiry2Size = creditPayInfoFormResult.get("creditExpiryYear").toString().length();
+
+        	 		         int expiryAllSize = expiry1Size  + expiry2Size;
+
+        	 		         if(expiryAllSize != 4){
+        	 		        	message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* Invalid CRC Expiry Date");
+        						return message;
+        	 		         }
+
+        	 		         if(Integer.parseInt(creditPayInfoFormResult.get("creditExpiryMonth").toString()) > 12){
+        	 		        	message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("* Invalid CRC Expiry Date");
+        						return message;
+        	 		         }
+        	 		     }
+
+        	 		    //Merchant Bank 체크
+        	 		    if(creditPayInfoFormResult.get("creditMerchantBank").toString().isEmpty() && creditPayInfoFormResult.get("creditMerchantBank").equals("")){
+        	 		    	message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Merchant Bank Selected");
+        					return message;
+        	 		    }
+
+        	 		    //Transaction Date 체크
+        	 		    if(creditPayInfoFormResult.get("creditTrxDate").toString().isEmpty() && creditPayInfoFormResult.get("creditTrxDate").equals("")){
+        	 		    	message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* Transaction Date is empty");
+        					return message;
+        	 		    }
+
+        	 		    Map<String,Object> data = new HashMap<>();
+        	 		    data.put("keyInApprovalNo", creditPayInfoFormResult.get("creditApprNo"));
+        	 		    data.put("keyInAmount", creditPayInfoFormResult.get("creditTotalAmtTxt"));
+        	 		    data.put("keyInTrDate", creditPayInfoFormResult.get("creditTrxDate"));
+        	 		    data.put("keyInMerchantBank", creditPayInfoFormResult.get("creditMerchantBank"));
+        	 		    data.put("keyInCardNo1", creditPayInfoFormResult.get("creditCardNo1"));
+        	 		    data.put("keyInCardNo2", creditPayInfoFormResult.get("creditCardNo2"));
+        	 		    data.put("keyInCardNo4", creditPayInfoFormResult.get("creditCardNo4"));
+
+        	 		    EgovMap result = commonPaymentService.checkBatchPaymentExist(data);
+        	 		    if(result != null){
+        	 		    	message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Payment has been uploaded.");
+        					return message;
+        	 		    }
+
+        	 	    }else if(dcfPayType.equals("108")){    //Online
+
+        	 	    	Map<String, Object> onlinePayInfoFormResult = mapper.readValue(params.get("onlinePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+
+        	 	    	String onlineBankType = onlinePayInfoFormResult.get("onlineBankType").toString();
+        	 	        String onlineVAAccount = onlinePayInfoFormResult.get("onlineVAAcc").toString();
+        	 	        String onlineBankAcc = onlinePayInfoFormResult.get("onlineBankAcc").toString();
+
+        	 	        if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) <= 0.00 ){
+        	 	            message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("* No Amount");
+        					return message;
+        	 	        } else if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) > 200000.00 ){
+        	 	        	message.setCode(AppConstants.FAIL);
+        					message.setData(params);
+        					message.setMessage("Amount exceed RM 200000");
+        					return message;
+        	 	        }
+
+        	 	       if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)onlinePayInfoFormResult.get("onlineTotalAmtTxt")))){
+           	 	    		message.setCode(AppConstants.FAIL);
+           					message.setData(params);
+           					message.setMessage("Old amount and new amount are not the same");
+           					return message;
+           	 	    	}
+
+        	 	       	//BankCharge Amount는 Billing 금액의 5%를 초과할수 없다
+        	 	        double bcAmt4Limit = 0.00;
+        	 	        double payAmt4Limit = 0.00;
+
+        	 	        if(!onlinePayInfoFormResult.get("onlineBankChgAmt").toString().isEmpty() && !onlinePayInfoFormResult.get("onlineBankChgAmt").equals("")) {
+        	 	            bcAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineBankChgAmt").toString());
+        	 	            payAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString());
+
+        	 	            if ((payAmt4Limit * 0.05 ) < bcAmt4Limit) {
+        	 	                message.setCode(AppConstants.FAIL);
+        						message.setData(params);
+        						message.setMessage("Bank Charge Amount can not exceed 5% of Amount.");
+        						return message;
+        	 	            }
+        	 	        }
+
+        	 	        if(onlinePayInfoFormResult.get("onlineTrxDate").toString().isEmpty() && onlinePayInfoFormResult.get("onlineTrxDate").equals("")){
+        	                 message.setCode(AppConstants.FAIL);
+        	                 message.setData(params);
+        	                 message.setMessage("* Transaction Date is empty");
+        	                 return message;
+        	             }
+
+        	 	        if(onlineBankType.equals("2730")){
+        	 	             if(onlineVAAccount.equals("")){
+        	 	                 message.setCode(AppConstants.FAIL);
+        	 	                 message.setData(params);
+        	 	                 message.setMessage("* No VA Account");
+        	 	                 return message;
+        	 	             }
+
+        	 	         }else{
+        	 	             if(onlinePayInfoFormResult.get("onlineBankAcc").toString().isEmpty() && onlinePayInfoFormResult.get("onlineBankAcc").equals("")){
+        	 	                 message.setCode(AppConstants.FAIL);
+        	 	                 message.setData(params);
+        	 	                 message.setMessage("* No Bank Account Selected");
+        	 	                 return message;
+        	 	             }
+
+        	 	             if(onlineBankType.equals("2728")) {
+        	 	                 if(onlinePayInfoFormResult.get("onlineEFT").toString().isEmpty() && onlinePayInfoFormResult.get("onlineEFT").equals("")) {
+        	 	                     message.setCode(AppConstants.FAIL);
+        	 	                     message.setData(params);
+        	 	                     message.setMessage("* No EFT/JomPayRef");
+        	 	                     return message;
+        	 	                 }
+        	 	             }
+        	 	         }
+
+        	 	     	if(!onlinePayInfoFormResult.get("onlineTrxId").toString().isEmpty()){
+        	 	    		Map<String, Object> data = new HashMap<>();
+        	 	    		data.put("trxId", onlinePayInfoFormResult.get("onlineTrxId"));
+
+        	 	    		String result = checkBankStateMapStus(data).toString();
+
+        	 	    		if(result.equals("4")){
+        	 	    			message.setCode(AppConstants.FAIL);
+            					message.setData(params);
+            					message.setMessage("This item has already been confirmed payment.");
+            					return message;
+        	 	    		}
+        	 	    	}
+        	 	    }
+        		}
+
+        		// Approval Validation
+        		List<Map<String, Object>> apprGridListResult = mapper.readValue(params.get("apprGridList").toString(), new TypeReference<List<Map<String, Object>>>(){});
+        		if(apprGridListResult.size() > 0) {
+        			if(!apprGridListResult.get(0).containsKey("memCode")){
+            			message.setCode(AppConstants.FAIL);
+            			message.setData(params);
+            			message.setMessage("Please enter the User ID of Line");
+            			return message;
+        			}
+        		}else {
         			message.setCode(AppConstants.FAIL);
         			message.setData(params);
         			message.setMessage("Please enter the User ID of Line");
         			return message;
-    			}
-    		}else {
-    			message.setCode(AppConstants.FAIL);
-    			message.setData(params);
-    			message.setMessage("Please enter the User ID of Line");
-    			return message;
+        		}
     		}
 		}
 
@@ -1889,7 +1957,7 @@ public class PaymentListController {
 		params.put("groupSeq", groupSeq);
 
 		Map<String, Object> result = paymentListService.approvalNewDCF(params);
-
+		LOGGER.debug("result : {} ", result);
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1899,6 +1967,8 @@ public class PaymentListController {
 				returnMap.put("nextAppv", result.get("nextAppv"));
 			}else if(result.containsKey("error")){
 				returnMap.put("error", result.get("error"));
+			}else if(result.containsKey("useBatch")){
+				returnMap.put("useBatch", result.get("useBatch"));
 			}else {
 
 				String resultList = null;
@@ -1911,7 +1981,7 @@ public class PaymentListController {
 				if (result.containsKey("worList")) {
 					resultList += "<b>WOR:</b>" + result.get("worList").toString();
 				}else {
-					resultList = "<b>WOR:</b> No WOR is generated.</br>";
+					resultList += "<b>WOR:</b> No WOR is generated.</br>";
 				}
 
 				// 프로시저 결과 Map

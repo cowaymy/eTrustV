@@ -258,6 +258,7 @@
         <!-- search_table start -->
         <form id="searchForm" action="#" method="post">
             <input type="hidden" name="ordId" id="ordId" />
+            <input type="hidden" id="pageAuthFuncUserDefine4" name="pageAuthFuncUserDefine4" value="${PAGE_AUTH.funcUserDefine4}">
             <table class="type1">
                 <caption>table</caption>
                 <colgroup>
@@ -320,21 +321,27 @@
     <!-- search_table end -->
 
 	<!-- link_btns_wrap start -->
-	<aside class="link_btns_wrap">
-		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		<dl class="link_list">
-			<dt>Link</dt>
-			<dd>
-			 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_confirmDCFPop();"><spring:message code='pay.btn.link.approvalDCF'/></a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_genDCFRawPop();">Generate DCF Adjustment Raw</a></p></li>
-				</ul>
-			</c:if>
-				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			</dd>
-		</dl>
-	</aside>
+	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+		<aside class="link_btns_wrap">
+			<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+			<dl class="link_list">
+				<dt>Link</dt>
+				<dd>
+
+					<ul class="btns">
+					   <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+						  <li><p class="link_btn"><a href="javascript:fn_confirmDCFPop();"><spring:message code='pay.btn.link.approvalDCF'/></a></p></li>
+					   </c:if>
+					   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+						  <li><p class="link_btn"><a href="javascript:fn_genDCFRawPop();">Generate DCF Adjustment Raw</a></p></li>
+				        </c:if>
+					</ul>
+
+					<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+				</dd>
+			</dl>
+		</aside>
+	</c:if>
 	<!-- link_btns_wrap end -->
 
     <!-- search_result start -->

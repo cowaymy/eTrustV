@@ -12,6 +12,7 @@ var myRequestNewDCFGridID;
 
 var issueBank;
 var merchantBank;
+var allowAppvFlg = null;
 
 
 //Grid Properties 설정
@@ -120,6 +121,8 @@ function searchReqDCFNewInfo(){
         $("#attachTd").html("");
         $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' id='atchImg' name='1'/></div>");
         $("#atchImg[name='1']").val(result.atchFileName);
+
+        allowAppvFlg = result.allowAppvFlg;
 
         if(result.atchFileGrpId != null && result.atchFileId != null){
 	        $("#atchImg").dblclick(function() {
@@ -274,11 +277,22 @@ function searchReqDCFNewInfo(){
             }
         }
 
-        if($("#dcfStusId").val() != "R"){
-            $("#remark").prop("disabled", true);
-            $("#btn_appv").hide();
-            $("#btn_reject").hide();
-        }
+          if(allowAppvFlg != null && allowAppvFlg == 'Y'){
+              if($("#dcfStusId").val() == "A" || $("#dcfStusId").val() == "J" ){
+                     $("#btn_appv").hide();
+                     $("#btn_reject").hide();
+                     $("#headerLbl").text("View Confirm DCF");
+                     $("#remark").prop("disabled", true);
+                     $("#remField").hide();
+               }
+           }
+           else{
+               $("#btn_appv").hide();
+               $("#btn_reject").hide();
+               $("#headerLbl").text("View Confirm DCF");
+               $("#remark").prop("disabled", true);
+               $("#remField").hide();
+           }
     });
 }
 
@@ -306,7 +320,7 @@ function recalculateTotalAmt(){
 //승인처리
 function fn_approval(){
 
-    if($("#dcfStusId").val() != "R" ){
+    if($("#dcfStusId").val() != "P" ){
         Common.alert("<spring:message code='pay.alert.approvalOnlyActive'/>");
         return;
     }
@@ -343,7 +357,9 @@ function fn_approval(){
             	var message = result.error;
             }else if(result.nextAppv != null){
             		var message = result.nextAppv;
-           	}else{
+           	}else if(result.useBatch != null){
+                    var message = result.useBatch;
+            }else{
            	    var message = "DCF has fail to approval due to payment has been reversed\nKindly reject it."
            	}
 
@@ -358,7 +374,7 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 
-    if($("#dcfStusId").val() != "R" ){
+    if($("#dcfStusId").val() != "P" ){
         Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");
         return;
     }
@@ -400,7 +416,7 @@ function fn_reject(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Confirm DCF</h1>
+        <h1 id="headerLbl">Confirm DCF</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
         </ul>
@@ -467,7 +483,7 @@ function fn_reject(){
                                 <textarea id="ReqRemark" name="ReqRemark"  cols="15" rows="3" placeholder="" class="readonly" readonly></textarea>
                             </td>
                         </tr>
-                        <tr>
+                        <tr id="remField">
                             <th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
                             <td colspan="3">
                                 <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>

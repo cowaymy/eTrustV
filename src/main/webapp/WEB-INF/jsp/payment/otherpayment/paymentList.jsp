@@ -119,8 +119,8 @@
     // ajax list 조회.
     function searchList(){
 
-    	if(FormUtil.checkReqValue($("#ordNo")) && FormUtil.checkReqValue($("#orNo"))){
-    		Common.alert("Please key in the order number OR OR No.");
+    	if(FormUtil.checkReqValue($("#ordNo")) && FormUtil.checkReqValue($("#orNo"))  && FormUtil.checkReqValue($("#trxId"))){
+    		Common.alert("Please key in the order number OR OR No OR transaction ID.");
     		return;
     	}
 
