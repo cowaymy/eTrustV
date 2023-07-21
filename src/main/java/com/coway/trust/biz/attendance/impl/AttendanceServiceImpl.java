@@ -201,7 +201,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 								data.put("attendBranchName", "");
 								data.put("attendBranchId", "");
 								data.put("attendTypeCode", a.get("atdType"));
-								data.put("attendTypeDesc", "");
+								data.put("attendTypeDesc", "Upload from batch " + params.get("batchId"));
 								completeData.add(data);
 							}
 						} catch (Exception e) {
