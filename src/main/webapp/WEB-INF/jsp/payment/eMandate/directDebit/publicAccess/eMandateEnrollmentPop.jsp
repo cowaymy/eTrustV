@@ -7,10 +7,6 @@
 
 $(document).ready(function() {
 
-	if(Common.checkPlatformType() == "mobile") {
-
-	}
-
 	$("#name").val('ZULHILMI BIN MOHD JAAFAR');
 	$("#nric").val('940118075631');
 	$("#orderNo").val('3137788');
@@ -64,9 +60,9 @@ function fn_submit() {
 }
 
 #line{padding-left:20px; padding-right:20px;}
-.enrolPage{font-family:Avenir;background-color:#9dbcd0;color:#FFFFFF; display: block ;text-align: center; padding-bottom:30px;}
-#info{height: -webkit-calc(90vh - 70px);height: -moz-calc(90vh - 70px);height: calc(90vh - 70px); overflow-y:auto;font-family:Avenir;background-color:#9dbcd0;color:#FFFFFF!important;
-        }
+.enrolPage{font-family:Avenir;background-color:#9dbcd0;color:#FFFFFF; display: block ;text-align: center; padding-bottom:30px;height:-webkit-fill-available}
+#info{height: -webkit-calc(90vh - 70px) overflow-y:auto;font-family:Avenir;background-color:#9dbcd0;color:#FFFFFF!important;
+        overflow: hidden;}
 #logo{display: block;  margin-left: auto;  margin-right: auto;margin-top:20px;font-size:20px; font-weight:bold; font-family:Avenir;color:#FFFFFF;}
 .title1{font-size:14px;padding-bottom:15px; font-family:Avenir;color:#FFFFFF;}
 .btn {
@@ -85,8 +81,9 @@ function fn_submit() {
     margin-left: 10;
     margin-right: 10;
 }
-table#enrolTable tbody tr td {font-size:15px; text-align: left; color:#FFFFFF; min-width:100px;}
-table#enrolTable tbody tr td input{font-size:13px ; text-align: center; padding:8px;text-align: center;border:0px solid #90a9b7; border-radius:12px;background-color:#FFFFFF; height:38px; min-width:200px;}
+table#enrolTable tbody tr td {font-size:small; text-align: left; color:#FFFFFF; min-width:100px;}
+table#enrolTable tbody tr td input{font-size:small ; text-align: center; padding:8px;border:0px solid #90a9b7; border-radius:12px;background-color:#FFFFFF; height:38px; max-width:200px;overflow-y:auto}
+table#enrolTable tbody tr td input:read-only {background: #d2d2d2}
 table {width:100%;margin-left:auto; margin-right:auto; display:block;}
 /* .container{
     margin: 0 0;
@@ -98,7 +95,7 @@ table {width:100%;margin-left:auto; margin-right:auto; display:block;}
     padding-top: 1%;
 }
 #disclaimer{
-    width: calc(90vh - 70px);
+    max-width: 450px;
     padding-bottom: 1%;
     padding-top: 1%;
     font-size: 1.5vh;
@@ -106,6 +103,7 @@ table {width:100%;margin-left:auto; margin-right:auto; display:block;}
     color:#FFFFFF;
 
 }
+
 </style>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
