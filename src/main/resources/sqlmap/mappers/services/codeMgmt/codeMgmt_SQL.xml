@@ -45,9 +45,13 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         #{svcCode},
         #{svcCodeDesc},
         #{defectCode},
+        #{updator},
+        SYSDATE,
+        '1',
         #{creator},
         SYSDATE,
-        '1'
+        TO_DATE('1900/01/01',　'YYYY/MM/DD'),
+        TO_DATE('9999/12/31',　'YYYY/MM/DD')
     )
 </insert>
 
@@ -71,9 +75,9 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 <insert id="addDefectCodes" parameterType="Map">
     INSERT INTO SYS0100M
     VALUES (
-        (SELECT CODE FROM SYS0013 WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
+        (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
         #{defectCode},
-        '0', --defect_GRP
+        '0',
         SYS0100M_DEFECT_ID_SEQ.NEXTVAL,
         #{svcCode},
         #{svcCodeDesc},
@@ -191,8 +195,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    A.UPD_DT
 	FROM SYS0032M A
 	JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND TO_CHAR(A.RESN_TYPE_ID) = B.CODE
-	JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
-	JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+	LEFT　JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+	LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
@@ -228,8 +232,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         0 AS DEFECT_GRP,
         B.CODE_ID AS DEFECT_ID,
         B.CODE AS DEFECT_CODE,
-        B.CODE_DESC AS CODE_DESC,
-        '-' AS CODE_REMARK,
+        B.CODE_NAME AS CODE_DESC,
+        B.CODE_DESC AS CODE_REMARK,
         B.DISAB AS STUS_ID,
         CASE WHEN B.DISAB = 0 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
 
@@ -304,8 +308,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    A.UPD_DT
 	FROM SYS0026M A
 	LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND B.CODE_ID = 7326
-	JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
-	JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+	LEFT　JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+	LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
@@ -467,8 +471,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         A.UPD_DT
     FROM SYS0032M A
     JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND TO_CHAR(A.RESN_TYPE_ID) = B.CODE
-    JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
-    JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+    LEFT　JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
     <if test='arrCodeCat != null and arrCodeCat != ""'>
@@ -506,8 +510,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         0 AS DEFECT_GRP,
         B.CODE_ID AS DEFECT_ID,
         B.CODE AS DEFECT_CODE,
-        B.CODE_DESC AS CODE_DESC,
-        '-' AS CODE_REMARK,
+        B.CODE_NAME AS CODE_DESC,
+        B.CODE_DESC AS CODE_REMARK,
         B.DISAB AS STUS_ID,
         CASE WHEN B.DISAB = 0 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
 
@@ -585,7 +589,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     FROM SYS0026M A
     LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND B.CODE_ID = 7326
     JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
-    JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+    LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
     <if test='arrCodeCat != null and arrCodeCat != ""'>
@@ -616,4 +620,41 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         AND A.STK_ID = #{stkId}
     </if>
 </select>
+
+<insert id="updateASReasons" parameterType="Map">
+    UPDATE SYS0032M
+    SET
+        CODE　= #{svcCode},
+        RESN_DESC　= #{svcCodeDesc},
+        UPD_USER_ID = #{updator},
+        UPD_DT　= SYSDATE
+    WHERE
+        RESN_ID　= #{hidDefectId}
+</insert>
+
+<insert id="updateSYS0013M" parameterType="Map">
+    UPDATE　SYS0013M
+    SET
+        CODE = #{svcCode},
+        CODE_NAME　= #{svcCodeDesc},
+        CODE_DESC = #{svcCodeRmk},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID =  #{updator}
+    WHERE
+        CODE_ID　= #{hidDefectId}　AND CODE_MASTER_ID = #{type}
+</insert>
+
+<insert id="updateDefectCodes" parameterType="Map">
+    UPDATE SYS0100M
+    SET
+        PROD_CAT　= (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  　#{productCtgry}),
+        DEFECT_TYP　＝　(SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID =  #{codeCtgry}),
+        DEFECT_CODE = #{svcCode},
+        DEFECT_DESC = #{svcCodeDesc},
+        DEFECT_RMK = #{svcCodeRmk},
+        UPD_DT = SYSDATE,
+        UPD_USR = #{updator}
+    WHERE
+        DEFECT_ID　= #{hidDefectId}　AND DEFECT_TYP = #{hidCodeCatName}
+</insert>
 </mapper>

@@ -55,12 +55,15 @@ function  fn_viewType(type){
     $("#codeCtgry").val('${codeMgmtMap.codeCatId}');
     $("#svcCode").val('${codeMgmtMap.defectCode}');
     $("#svcCodeDesc").val('${codeMgmtMap.codeDesc}');
-    $("#svcCodeRmk").val('${codeMgmtMap.codeRmk}');
+    $("#svcCodeRmk").val('${codeMgmtMap.codeRemark}');
 
     $("#productCode").val('${codeMgmtMap.prodCode}');
     $("#prdLaunchDt").val('${codeMgmtMap.prodLaunchDt}');
     $("#ctComm").val('${codeMgmtMap.ctComm}');
     $("#asCost").val('${codeMgmtMap.asCost}');
+
+    $("#hidCodeCatName").val('${codeMgmtMap.codeCatName}');
+    $("#hidDefectId").val('${codeMgmtMap.defectId}');
 
     if (type == 2 || type == 1){ //Edit and New
         $('#btn_save').show();
@@ -98,6 +101,7 @@ function fn_toggle(selVal) {
 function fn_save(){
 
     var flag = false;
+    var type = "${viewType}";
 
     if(fn_validate()){
         if(msg != "") {
@@ -106,24 +110,26 @@ function fn_save(){
         }
     }
 
-    if($("#codeCtgry").val() == '7326') {
-    	 if(fn_chkProductAvail()){
-    	        flag = true;
-    	        return;
-    	    }
-    }else{
-    	//SYS0032M
-    	if($("#codeCtgry").val() == '7311' || $("#codeCtgry").val() == '7312' || $("#codeCtgry").val() == '7313' || $("#codeCtgry").val() == '7314'){
-    		if(fn_chkDupReasons()){
-    	        flag = true;
-    	        return;
-    	    }
-    	}else{ //SYS0100M
-    		if(fn_chkDupDefectCode()){
-    	        flag = true;
-    	        return;
-    	    }
-    	}
+    if (type == 1){ // New
+    	if($("#codeCtgry").val() == '7326') {
+            if(fn_chkProductAvail()){
+                   flag = true;
+                   return;
+               }
+       }else{
+           //SYS0032M
+           if($("#codeCtgry").val() == '7311' || $("#codeCtgry").val() == '7312' || $("#codeCtgry").val() == '7313' || $("#codeCtgry").val() == '7314'){
+               if(fn_chkDupReasons()){
+                   flag = true;
+                   return;
+               }
+           }else{ //SYS0100M
+               if(fn_chkDupDefectCode()){
+                   flag = true;
+                   return;
+               }
+           }
+       }
     }
 
     if(!flag){
@@ -147,6 +153,9 @@ function fn_chkProductAvail(){
 
 function fn_chkDupReasons(){
     var rtnVAL = false;
+
+    console.log("111===")
+    console.log($("#codeCtgry").val());
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupReasons.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
@@ -188,7 +197,7 @@ function fn_validate(){
             msg += "* Please enter material code <br>";
         }
 
-    	if($("#prdLaunchDt").val() == ""){
+    	/* if($("#prdLaunchDt").val() == ""){
             msg += "* Please select product launch date <br>";
         }
 
@@ -198,7 +207,7 @@ function fn_validate(){
 
     	if($("#asCost").val() == ""){
             msg += "* Please enter product as cost price <br>";
-        }
+        } */
     } else {
 
     	if($("#type").val() == ""){
@@ -209,9 +218,9 @@ function fn_validate(){
             msg += "* Please select a business category <br>";
         }
 
-    	if($("#productCtgry").val() == ""){
+    	/* if($("#productCtgry").val() == ""){
             msg += "* Please select a product category <br>";
-        }
+        } */
 
     	if($("#codeCtgry").val() == ""){
             msg += "* Please select a code category <br>";
@@ -234,15 +243,32 @@ function fn_validate(){
 }
 
 function fn_saveNewCode(){
+        var newCodeM = {
+            viewType : '${viewType}',
+
+            busiCat : $("#busiCat").val(),
+            type : $("#type").val(),
+            productCtgry : $("#productCtgry").val(),
+            codeCtgry : $("#codeCtgry").val(),
+            svcCode : $("#svcCode").val(),
+            svcCodeDesc : $("#svcCodeDesc").val(),
+            svcCodeRmk : $("#svcCodeRmk").val(),
+            productCode : $("#productCode").val(),
+            prdLaunchDt : $("#prdLaunchDt").val(),
+            ctComm : $("#ctComm").val(),
+            asCost : $("#asCost").val(),
+            hidCodeCatName : $("#hidCodeCatName").val(),
+            hidDefectId : $("#hidDefectId").val()
+        }
 
         var saveForm = {
-            "sForm" :  $("#sForm").serializeJSON()
+            "newCodeM" :  newCodeM
         }
 
         Common.ajax("POST", "/services/codeMgmt/saveNewCode.do", saveForm, function(result) {
            Common.alert(result.message, fn_saveclose);
            $("#popup_wrap").remove();
-           //fn_selectListAjax();
+           fn_selectCodeMgmtList();
         });
 }
 
@@ -269,8 +295,9 @@ function fn_saveclose() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post"  id='collForm' name ='collForm'>
          <div style="display: none">
-            <input type="text" name="hidVal" id="hidVal"/>
-            <input type="text" name="hidDup" id="hidDup"/>
+            <input type="text" name="hidTypeId" id="hidTypeId"/>
+            <input type="text" name="hidCodeCatName" id="hidCodeCatName"/>
+            <input type="text" name="hidDefectId" id="hidDefectId"/>
            </div>
         <table class="type1"><!-- table start -->
         <caption>table</caption>

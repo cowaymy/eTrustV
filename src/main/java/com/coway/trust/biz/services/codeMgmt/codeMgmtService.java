@@ -27,4 +27,6 @@ public interface codeMgmtService {
 
 	EgovMap selectCodeMgmtInfo(Map<String, Object> params);
 
+	ReturnMessage updateSvcCode(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
 }

@@ -37,5 +37,11 @@ public interface codeMgmtMapper {
 
 	EgovMap selectCodeMgmtInfo(Map<String, Object> params);
 
+	void updateASReasons(Map<String, Object> params);
+
+	void updateSYS0013M(Map<String, Object> params);
+
+	void updateDefectCodes(Map<String, Object> params);
+
 
 }

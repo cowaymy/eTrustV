@@ -80,19 +80,48 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 
 		    logger.debug("aaaaa====" + saveParam.toString());
 
-		    if (saveParam.get("codeCtgry").toString() == "7296") { //product setting　SYS0026M
+		    if (saveParam.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
 		    	codeMgmtMapper.updateProductSetting(params);
 		    }else {
 		    	typeCode = codeMgmtMapper.getTypeCode(saveParam.get("codeCtgry").toString());
 		    	saveParam.put("defectCode", typeCode.toString());
 
-		    	if (saveParam.get("codeCtgry").toString() != "7311" || saveParam.get("codeCtgry").toString() != "7312"
-		    		|| saveParam.get("codeCtgry").toString() != "7313" || saveParam.get("codeCtgry").toString() != "7314"){ //SYS0032M
+		    	if (saveParam.get("codeCtgry").toString().equals("7311") || saveParam.get("codeCtgry").toString().equals("7312")
+		    		|| saveParam.get("codeCtgry").toString().equals("7313") || saveParam.get("codeCtgry").toString().equals("7314")){ //SYS0032M
 			    	codeMgmtMapper.addASReasons(params); //sequence for sys0032m
-			    }else if (saveParam.get("codeCtgry").toString() != "7319" || saveParam.get("codeCtgry").toString() != "7320"){ //SYS0013M
-			    	codeMgmtMapper.addSYS0013M(params); //sequence for sys0032m
+			    }else if (saveParam.get("codeCtgry").toString().equals("7319") || saveParam.get("codeCtgry").toString().equals("7320")){ //SYS0013M
+			    	codeMgmtMapper.addSYS0013M(params); //sequence for sys0013m
 			    }else{ //SYS0100M
 			    	codeMgmtMapper.addDefectCodes(params); //sequence for sys0100m
+			    }
+		    }
+
+		 return message;
+	 }
+
+	 @Override
+	  public ReturnMessage updateSvcCode(Map<String, Object> params, SessionVO sessionVO)
+	      throws ParseException {
+		 Map<String, Object> resultValue = new HashMap<String, Object>();
+		    ReturnMessage message = new ReturnMessage();
+
+		    //get Type Code
+		    EgovMap typeCode;
+		    logger.debug("aaaaa====" + params.toString());
+
+		    if (params.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
+		    	codeMgmtMapper.updateProductSetting(params);
+		    }else {
+		    	typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
+		    	params.put("defectCode", typeCode.toString());
+
+		    	if (params.get("codeCtgry").toString().equals("7311") || params.get("codeCtgry").toString().equals("7312")
+		    		|| params.get("codeCtgry").toString().equals("7313") || params.get("codeCtgry").toString().equals("7314")){ //SYS0032M
+			    	codeMgmtMapper.updateASReasons(params); //sequence for sys0032m
+			    }else if (params.get("codeCtgry").toString().equals("7319") || params.get("codeCtgry").toString().equals("7320")){ //SYS0013M
+			    	codeMgmtMapper.updateSYS0013M(params); //sequence for sys0013m
+			    }else{ //SYS0100M
+			    	codeMgmtMapper.updateDefectCodes(params); //sequence for sys0100m
 			    }
 		    }
 
