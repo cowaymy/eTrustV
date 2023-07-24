@@ -149,10 +149,10 @@ function validateSave(refMode, reasonCd){
 			Common.alert("Credit Card No. incomplete. Please enter a valid credit card number. ");
 			return validFlg = false;
 		}
-        if($("#apprNo").val() == "" || $("#apprNo").val() == null){
+       /*  if($("#apprNo").val() == "" || $("#apprNo").val() == null){
         	Common.alert("Please key in Appr No.");
             return validFlg = false;
-        }
+        } */
 	}else if(refMode != null && refMode != "" && refMode != "0" && refMode == "108"){
 		if($("#bankAccNo").val() == "" || $("#bankAccNo").val() == null){
 			Common.alert("Please key in Bank Account No.");

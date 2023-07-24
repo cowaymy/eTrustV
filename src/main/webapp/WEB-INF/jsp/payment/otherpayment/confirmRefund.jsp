@@ -270,6 +270,7 @@
 		//doGetCombo('/common/selectCodeList.do', '392' , ''   , 'cmbReason' , 'S', '');
 	    doDefCombo(statusData, '' ,'cmbStatus', 'S', '');
 	    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','cmbBranch', 'S' , '');
+	    CommonCombo.make("cmbRefundMode", "/payment/selectCodeList.do", null, "", {id: "code", name: "codeName", type:"S"});
 
 	    $('#popup_wrap').show();
 	}
@@ -302,10 +303,13 @@
 	            whereSQL += " AND Extent1.REASON_ID = " + $("#cmbReason").val() ;
 
 	        if($("#cmbStatus").val() != "")
-	            whereSQL += " AND Extent1.DCF_STUS_ID = " + $("#cmbStatus").val() ;
+	            whereSQL += " AND B.STUS_CODE_ID = " + $("#cmbStatus").val() ;
+
+	        if($("#cmbRefundMode").val() != "")
+                whereSQL += " AND Extent1.NEW_PAY_TYPE = " + $("#cmbRefundMode").val() ;
 
 	        if($("#cmbBranch").val() != "")
-	            whereSQL += " AND B.STUS_CODE_ID = " + $("#cmbBranch").val() ;
+	            whereSQL += " AND Extent1.KEY_IN_BRNCH = " + $("#cmbBranch").val() ;
 
 	        if($("#approvalDateFr").val() != "")
 	            whereSQL += " AND DT.APPV_DT >= TO_DATE('" + $("#approvalDateFr").val() + "', 'DD/MM/YYYY') ";
@@ -522,8 +526,8 @@
             <p><input type="text" id="approvalDateTo" name="approvalDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly/></p>
         </div>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Refund Mode</th>
+    <td><select class="w100p" id="cmbRefundMode" name="cmbRefundMode"></select></td>
 </tr>
 
 </tbody>
