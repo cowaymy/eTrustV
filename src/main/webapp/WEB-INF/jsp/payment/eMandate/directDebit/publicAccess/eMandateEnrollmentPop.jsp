@@ -23,9 +23,9 @@ $(document).ready(function() {
    }
 
 	// to get client ip address
-     $.getJSON("http://jsonip.com", function(data) {
+     $.getJSON("https://jsonip.com", function(data) {
     	$("#clientIp").val(data.ip);
-      //  console.log(data.ip);
+        console.log(data.ip);
     })
 
 });
@@ -63,7 +63,7 @@ function fn_submit() {
 
 @font-face {
   font-family: Avenir;
-  src: url(../../resources/font/Avenir.ttc);
+  src: url(/resources/font/Avenir.ttc);
 }
 
 #line{padding-left:20px; padding-right:20px;}

@@ -88,10 +88,18 @@ public class EMandateEnrollmentController {
     public String ddRespond(@RequestParam Map<String, Object> params, Model model,
     	      SessionVO sessionVO) {
 
+		Map<String, Object> result = null;
+
 		logger.debug("==================== ddRespond.do ====================");
 
-		String nric = ((String) params.get("nric"));
-		String name = ((String) params.get("name"));
+		try {
+			result = eMandateEnrollmentService.enrollRespond(params);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		model.addAttribute("data", result);
 
 		return "/payment/eMandate/directDebit/publicAccess/eMandateRespond";
 	}

@@ -102,20 +102,23 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  String effectiveDate = CommonUtils.getCalDate(1, "ddMMyy");
 		  String param7 = EMandateConstants.Maximum_DD_RECURR + "|" + EMandateConstants.FREQ_MODE_MONTHLY + "|"  + effectiveDate;
 
+		  // Configure respond URL
+		  String approvedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
+		  String unApprovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_UNAPPROVE;
+
 		  // Configure HashValue
 		  /**Hash Key = Password + ServiceID + PaymentID + MerchantReturnURL + MerchantApprovalURL + MerchantUnApprovalURL +
 		   * MerchantCallBackURL + Amount + CurrencyCode + CustIP + PageTimeout + CardNo + Token + RecurringCriteria*/
-		  String hashKey = password + serviceId + paymentID + EMandateConstants.RESPOND_URL +
-				  					EMandateConstants.RESPOND_URL + EMandateConstants.MAXIMUM_DD_AMOUNT +
+		  String hashKey = password + serviceId + paymentID + approvedURL + unApprovedURL + EMandateConstants.MAXIMUM_DD_AMOUNT +
 				  					EMandateConstants.CURRENCY_CODE + clientIp + EMandateConstants.PAGE_TIME_OUT;
 
 		  LOGGER.debug("========Hash Key==========: "+ hashKey);
 		  String hashValue = DigestUtils.sha256Hex(hashKey);
 		  LOGGER.debug("========Hash Value==========: "+ hashValue);
-		  
-		  
-		  // insert request into table 
-		  
+
+
+		  // insert request into table
+
 
 
 		  String respTm = null;
@@ -233,4 +236,31 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 
 	      commonApiMapper.insertApiAccessLog(params);
 	  }
+
+	/**
+	 * Process enrollment respond from eGHL
+	 * params: payId, enrolRespond
+	 * @author HQIT-HUIDING
+	 * Jul 24, 2023
+	 */
+	 public Map<String, Object> enrollRespond (Map<String, Object> params) throws Exception{
+		 Map<String,Object> returnParams = new HashMap<String, Object>();
+
+		 LOGGER.info("=======respondParams======: " + params.toString());
+
+		 if (params == null || params.isEmpty()){
+			 throw new Exception("E003. Fail. Empty respond params");
+		 }
+
+		 String payId = (String) params.get("payId");
+		 String status = (String) params.get("status");
+
+		 if (!CommonUtils.nvl(status).equals("")){
+			returnParams.put("status", status);
+			returnParams.put("payId", payId);
+		 }
+
+		 return returnParams;
+
+	 }
 }

@@ -22,5 +22,11 @@ public interface EMandateEnrollmentService {
 	 */
 	void rtnRespMsg(Map<String, Object> param);
 
-
+	/**
+	 *
+	 *
+	 * @author HQIT-HUIDING
+	 * Jul 24, 2023
+	 */
+	Map<String, Object> enrollRespond (Map<String, Object> params) throws Exception;
 }
