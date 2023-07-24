@@ -112,6 +112,10 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  LOGGER.debug("========Hash Key==========: "+ hashKey);
 		  String hashValue = DigestUtils.sha256Hex(hashKey);
 		  LOGGER.debug("========Hash Value==========: "+ hashValue);
+		  
+		  
+		  // insert request into table 
+		  
 
 
 		  String respTm = null;

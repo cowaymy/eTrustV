@@ -2,13 +2,16 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/common.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/util.js"></script>
 <script type="text/javaScript">
 
 $(document).ready(function() {
 
-	$("#name").val('ZULHILMI BIN MOHD JAAFAR');
-	$("#nric").val('940118075631');
+	$("#name").val("${preName}");
+	$("#nric").val("${preNric}");
 	$("#orderNo").val('3137788');
 
 	if($("#name").val() == "") {
@@ -22,10 +25,14 @@ $(document).ready(function() {
 	// to get client ip address
      $.getJSON("http://jsonip.com", function(data) {
     	$("#clientIp").val(data.ip);
-        console.log(data.ip);
+      //  console.log(data.ip);
     })
 
 });
+
+function getContextPath() {
+    return "${pageContext.request.contextPath}";
+ }
 
 function fn_reset() {
 	$("#orderNo").val('');

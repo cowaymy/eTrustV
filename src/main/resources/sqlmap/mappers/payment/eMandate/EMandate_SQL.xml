@@ -17,4 +17,34 @@
               FROM DUAL
     </select>
 
+    <insert id="insertDDRequest" parameterType="Map">
+        INSERT INTO PAY0353M(
+            PAYMENT_ID,
+            PAYMENT_MODE,
+            CUST_ID,
+            SALES_ORD_ID,
+            REQ_STUS_ID,
+            CRT_DT,
+            CRT_USER_ID,
+            AMT,
+            EFFECTIVE_DT,
+            RESPOND_REQ_ID,
+            RESPOND_DT
+        ) values (
+            #{paymentId}
+            ,#{paymentMode}
+            ,#{custId}
+            ,#{salesOrdId}
+            ,#{stus}
+            ,sysdate
+            ,#{userId}
+            ,#{amt}
+            ,#{effectDate}
+            ,#{apiId}
+            ,#{resDate}
+        )
+
+
+    </insert>
+
   </mapper>

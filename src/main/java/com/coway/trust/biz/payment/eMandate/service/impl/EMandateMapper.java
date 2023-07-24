@@ -15,4 +15,5 @@ public interface EMandateMapper {
 
 	int checkOrderWithConditions(Map<String, Object> params);
 	EgovMap getNextPaymentId(Map<String, Object> params);
+	int insertDDRequest (Map<String, Object> params);
 }
