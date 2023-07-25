@@ -54,6 +54,7 @@ function  fn_viewType(type){
     $("#productCtgry").val('${codeMgmtMap.prodCatId}');
     $("#codeCtgry").val('${codeMgmtMap.codeCatId}');
     $("#svcCode").val('${codeMgmtMap.defectCode}');
+    $("#svcLargeCode").val('${codeMgmtMap.defectGrpCode}');
     $("#svcCodeDesc").val('${codeMgmtMap.codeDesc}');
     $("#svcCodeRmk").val('${codeMgmtMap.codeRemark}');
 
@@ -64,6 +65,7 @@ function  fn_viewType(type){
 
     $("#hidCodeCatName").val('${codeMgmtMap.codeCatName}');
     $("#hidDefectId").val('${codeMgmtMap.defectId}');
+    $("#hidDefectGrp").val('${codeMgmtMap.defectGrp}');
 
     if (type == 2 || type == 1){ //Edit and New
         $('#btn_save').show();
@@ -76,6 +78,7 @@ function  fn_viewType(type){
     	$("#productCtgry").prop("disabled", true);
     	$("#codeCtgry").prop("disabled", true);
     	$("#svcCode").prop("disabled", true);
+    	$("#svcLargeCode").prop("disabled", true);
     	$("#svcCodeDesc").prop("disabled", true);
     	$("#svcCodeRmk").prop("disabled", true);
 
@@ -93,6 +96,11 @@ function fn_toggle(selVal) {
         $(".tr_toggle_display").show();
         $(".tr_toggle_code").hide();
     } else {
+    	if(selVal == '7301' || selVal == '7305' || selVal == '7303' || selVal == '7307'){
+    		$(".tr2_toggle_display").show();
+    	}else{
+    		$(".tr2_toggle_display").hide();
+    	}
         $(".tr_toggle_display").hide();
         $(".tr_toggle_code").show();
     }
@@ -251,14 +259,18 @@ function fn_saveNewCode(){
             productCtgry : $("#productCtgry").val(),
             codeCtgry : $("#codeCtgry").val(),
             svcCode : $("#svcCode").val(),
+            svcLargeCode : $("#svcLargeCode").val(),
             svcCodeDesc : $("#svcCodeDesc").val(),
             svcCodeRmk : $("#svcCodeRmk").val(),
+
             productCode : $("#productCode").val(),
             prdLaunchDt : $("#prdLaunchDt").val(),
             ctComm : $("#ctComm").val(),
             asCost : $("#asCost").val(),
+
             hidCodeCatName : $("#hidCodeCatName").val(),
-            hidDefectId : $("#hidDefectId").val()
+            hidDefectId : $("#hidDefectId").val(),
+            hidDefectGrp : $("#hidDefectGrp").val()
         }
 
         var saveForm = {
@@ -268,7 +280,7 @@ function fn_saveNewCode(){
         Common.ajax("POST", "/services/codeMgmt/saveNewCode.do", saveForm, function(result) {
            Common.alert(result.message, fn_saveclose);
            $("#popup_wrap").remove();
-           fn_selectCodeMgmtList();
+           //fn_selectCodeMgmtList();
         });
 }
 
@@ -298,6 +310,7 @@ function fn_saveclose() {
             <input type="text" name="hidTypeId" id="hidTypeId"/>
             <input type="text" name="hidCodeCatName" id="hidCodeCatName"/>
             <input type="text" name="hidDefectId" id="hidDefectId"/>
+            <input type="text" name="hidDefectGrp" id="hidDefectGrp"/>
            </div>
         <table class="type1"><!-- table start -->
         <caption>table</caption>
@@ -331,7 +344,8 @@ function fn_saveclose() {
         <tr class="tr_toggle_code">
             <th scope="row">Code</th>
             <td><input type="text" title=""  class="w100p"  id="svcCode"  name="svcCode" /></td>
-            <th></th><td></td>
+            <th scope="row" class="tr2_toggle_display">Large Code</th>
+            <td><input type="text" title=""  class="w100p tr2_toggle_display"  id="svcLargeCode"  name="svcLargeCode" /></td>
         </tr>
         <tr class="tr_toggle_code">
             <th scope="row">Code Desc</th>

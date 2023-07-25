@@ -17,6 +17,14 @@ WHERE STK_CODE = #{prodCode}
 SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID = #{codeCtgry}
 </select>
 
+<select id="getDefectId" parameterType="String" resultType="egovMap">
+SELECT SYS0100M_DEFECT_ID_SEQ.NEXTVAL AS DEFECT_ID FROM DUAL
+</select>
+
+<select id="getDefectIdParent" parameterType="String" resultType="egovMap">
+SELECT DISTINCT DEFECT_GRP FROM SYS0100M WHERE DEFECT_CODE = #{svcLargeCode} AND DEFECT_STATUS = 1
+</select>
+
 <select id="chkProductAvail" parameterType="Map" resultType="egovMap">
 SELECT
    COUNT(*)
@@ -77,14 +85,14 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     VALUES (
         (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
         #{defectCode},
-        '0',
-        SYS0100M_DEFECT_ID_SEQ.NEXTVAL,
+        #{defectId},
+        #{defectId},
         #{svcCode},
         #{svcCodeDesc},
         #{svcCodeRmk},
         '1',
-        SYSDATE,
-        '9999/12/31',
+        TO_DATE('1900/01/01','YYYY/MM/DD'),
+        TO_DATE('9999/12/31','YYYY/MM/DD'),
         #{creator},
         SYSDATE,
         #{updator},
@@ -92,12 +100,38 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         '',
         '',
         '',
-        ''
+        '',
+        0
+    )
+</insert>
+
+<insert id="addDefectCodesSmall" parameterType="Map">
+    INSERT INTO SYS0100M
+    VALUES (
+        (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
+        #{defectCode},
+        #{defectGrp},
+        #{defectId},
+        #{svcCode},
+        #{svcCodeDesc},
+        #{svcCodeRmk},
+        '1',
+        TO_DATE('1900/01/01','YYYY/MM/DD'),
+        TO_DATE('9999/12/31','YYYY/MM/DD'),
+        #{creator},
+        SYSDATE,
+        #{updator},
+        SYSDATE,
+        '',
+        '',
+        '',
+        '',
+        0
     )
 </insert>
 
 <select id="selectCodeMgmtList" parameterType="Map" resultType="egovMap">
-	SELECT
+	SELECT DISTINCT
 	    CASE WHEN A.DEFECT_TYP IN ('HDD','HDC','HDT','HSC') THEN 'HC'
 	         WHEN A.DEFECT_TYP IN ('DD','DC','DT','SC') THEN 'HA'
 	         ELSE '-' END AS BUSI_CAT,
@@ -106,7 +140,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         B.CODE CODE_CAT_NAME,
 	    B.CODE_NAME CODE_CAT,
 	    A.DEFECT_TYP,
-	    A.DEFECT_GRP,
+	    G.DEFECT_ID AS DEFECT_GRP,
+        G.DEFECT_CODE AS DEFECT_GRP_CODE,
 	    A.DEFECT_ID,
 	    A.DEFECT_CODE,
 	    A.DEFECT_DESC CODE_DESC,
@@ -132,6 +167,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
 	LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
     LEFT JOIN SYS0026M F ON F.STK_CTGRY_ID = E.CODE_ID
+    JOIN SYS0100M G ON G.DEFECT_ID = A.DEFECT_GRP
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
@@ -174,6 +210,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    B.CODE_NAME CODE_CAT,
 	     '-' AS DEFECT_TYP,
 	    A.RESN_TYPE_ID AS DEFECT_GRP,
+	    '0' AS DEFECT_GRP_CODE,
 	    A.RESN_ID AS DEFECT_ID,
 	    A.CODE AS DEFECT_CODE,
 	    A.RESN_DESC AS CODE_DESC,
@@ -230,6 +267,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         A.CODE_NAME CODE_CAT,
         '-' AS DEFECT_TYP,
         0 AS DEFECT_GRP,
+        '-' AS DEFECT_GRP_CODE,
         B.CODE_ID AS DEFECT_ID,
         B.CODE AS DEFECT_CODE,
         B.CODE_NAME AS CODE_DESC,
@@ -287,6 +325,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         B.CODE_NAME CODE_CAT,
 	    '-' AS DEFECT_TYP,
 	    0 AS DEFECT_GRP,
+	    '-' AS DEFECT_GRP_CODE,
 	    0 AS DEFECT_ID,
 	    '-' AS DEFECT_CODE,
 	    '-' AS CODE_DESC,

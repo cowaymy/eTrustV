@@ -38,7 +38,7 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 
 	@Override
 	public List<EgovMap> chkProductAvail(Map<String, Object> params) {
-	    return codeMgmtMapper.chkProductAvail(params);
+	    return codeMgmtMapper.chkProductAvail(params.get("prodCode").toString());
 	}
 
 	@Override
@@ -46,7 +46,15 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
 		params.put("reasonCodeId", typeCode.toString());
 
-	    return codeMgmtMapper.chkDupReasons(params);
+	    return codeMgmtMapper.chkDupReasons(params.get("reasonCodeId").toString());
+	}
+
+	@Override
+	public List<EgovMap> chkDupDefectCode(Map<String, Object> params) {
+		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
+		params.put("defectType", typeCode.toString());
+
+	    return codeMgmtMapper.chkDupDefectCode(params.get("defectType").toString());
 	}
 
 	@Override
@@ -56,14 +64,6 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 	    return codeMgmtMapper.selectSvcCodeInfo(params);
 	}
 
-	@Override
-	public List<EgovMap> chkDupDefectCode(Map<String, Object> params) {
-		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
-		params.put("defectType", typeCode.toString());
-
-	    return codeMgmtMapper.chkDupDefectCode(params);
-	}
-
 	 @Override
 	  public ReturnMessage saveNewCode(Map<String, Object> params, SessionVO sessionVO)
 	      throws ParseException {
@@ -71,12 +71,13 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		    ReturnMessage message = new ReturnMessage();
 
             Map<String, Object> saveParam = new HashMap<String, Object>();
-            saveParam = (Map<String, Object>) params.get("sForm");
+            saveParam = (Map<String, Object>) params.get("newCodeM");
 
             saveParam.put("updator", sessionVO.getUserId());
             saveParam.put("creator", sessionVO.getUserId());
 		    //get Type Code
 		    EgovMap typeCode;
+		    EgovMap defectId;
 
 		    logger.debug("aaaaa====" + saveParam.toString());
 
@@ -84,7 +85,9 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		    	codeMgmtMapper.updateProductSetting(params);
 		    }else {
 		    	typeCode = codeMgmtMapper.getTypeCode(saveParam.get("codeCtgry").toString());
-		    	saveParam.put("defectCode", typeCode.toString());
+		    	params.put("defectCode", typeCode.get("code").toString());
+		    	defectId = codeMgmtMapper.getDefectId();
+		    	params.put("defectId", defectId.get("defectId").toString());
 
 		    	if (saveParam.get("codeCtgry").toString().equals("7311") || saveParam.get("codeCtgry").toString().equals("7312")
 		    		|| saveParam.get("codeCtgry").toString().equals("7313") || saveParam.get("codeCtgry").toString().equals("7314")){ //SYS0032M
@@ -92,7 +95,16 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 			    }else if (saveParam.get("codeCtgry").toString().equals("7319") || saveParam.get("codeCtgry").toString().equals("7320")){ //SYS0013M
 			    	codeMgmtMapper.addSYS0013M(params); //sequence for sys0013m
 			    }else{ //SYS0100M
-			    	codeMgmtMapper.addDefectCodes(params); //sequence for sys0100m
+			    	if (saveParam.get("codeCtgry").toString().equals("7301") || saveParam.get("codeCtgry").toString().equals("7305")
+				    		|| saveParam.get("codeCtgry").toString().equals("7303") || saveParam.get("codeCtgry").toString().equals("7307")){ //SMALL
+
+			    		defectId = codeMgmtMapper.getDefectIdParent(saveParam.get("svcLargeCode").toString());
+				    	params.put("defectGrp", defectId.get("defectGrp").toString());
+				    	codeMgmtMapper.addDefectCodesSmall(params);
+			    	}else{
+				    	codeMgmtMapper.addDefectCodes(params);
+			    	}
+
 			    }
 		    }
 

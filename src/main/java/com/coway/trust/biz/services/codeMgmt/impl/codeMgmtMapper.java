@@ -15,11 +15,11 @@ public interface codeMgmtMapper {
 
 	void addASReasons(Map<String, Object> params);
 
-	List<EgovMap> chkProductAvail(Map<String, Object> params);
+	List<EgovMap> chkProductAvail(String string);
 
-	List<EgovMap> chkDupReasons(Map<String, Object> params);
+	List<EgovMap> chkDupReasons(String string);
 
-	List<EgovMap> chkDupDefectCode(Map<String, Object> params);
+	List<EgovMap> chkDupDefectCode(String string);
 
 	void addSYS0013M(Map<String, Object> params);
 
@@ -42,6 +42,12 @@ public interface codeMgmtMapper {
 	void updateSYS0013M(Map<String, Object> params);
 
 	void updateDefectCodes(Map<String, Object> params);
+
+	void addDefectCodesSmall(Map<String, Object> params);
+
+	EgovMap getDefectId();
+
+	EgovMap getDefectIdParent(String string);
 
 
 }

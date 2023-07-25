@@ -88,7 +88,6 @@ public class codeMgmtController {
 		if(arrCodeCat    != null && !CommonUtils.containsEmpty(arrCodeCat))    params.put("arrCodeCat",arrCodeCat);
 		if(arrCodeStus      != null && !CommonUtils.containsEmpty(arrCodeStus))      params.put("arrCodeStus", arrCodeStus);
 
-		//{type=7296, productCtgry=54, busiCtgry=6665, codeCat=7311, codeStatus=1}
 		logger.debug(params.toString());
 		List<EgovMap> codeMgmtList =null;
 		codeMgmtList = codeMgmtService.selectCodeMgmtList(params);
@@ -126,7 +125,47 @@ public class codeMgmtController {
 	    logger.debug("==========================/saveNewCode.do=================================");
 	    logger.debug("params : {}", params);
 
-	    message = codeMgmtService.saveNewCode(params, sessionVO);
+	    Map<?, ?> newCodeMap = (Map<?, ?>) params.get("newCodeM");
+	    logger.debug("==newCodeMap " + newCodeMap.toString());
+
+	    params.put("viewType",newCodeMap.get("viewType"));
+
+	    params.put("busiCat",newCodeMap.get("busiCat"));
+	    params.put("type",newCodeMap.get("type"));
+	    params.put("productCtgry",newCodeMap.get("productCtgry"));
+	    params.put("codeCtgry",newCodeMap.get("codeCtgry"));
+	    params.put("svcCode",newCodeMap.get("svcCode"));
+	    params.put("svcCodeDesc",newCodeMap.get("svcCodeDesc"));
+	    params.put("svcCodeRmk",newCodeMap.get("svcCodeRmk"));
+	    params.put("productCode",newCodeMap.get("productCode"));
+	    params.put("prdLaunchDt",newCodeMap.get("prdLaunchDt"));
+	    params.put("ctComm",newCodeMap.get("ctComm"));
+	    params.put("asCost",newCodeMap.get("asCost"));
+	    params.put("hidCodeCatName",newCodeMap.get("hidCodeCatName"));
+	    params.put("hidDefectId",newCodeMap.get("hidDefectId"));
+
+	    params.put("creator", sessionVO.getUserId());
+	    params.put("updator", sessionVO.getUserId());
+
+	    if(params.get("viewType").equals("1"))//NEW
+	    {
+	    	params.put("stus","1");
+	    	message = codeMgmtService.saveNewCode(params, sessionVO);
+	    	 if (params.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
+	 	    	message.setMessage("Successfully configured product " + newCodeMap.get("productCode"));
+	    	 }else{
+	 	    	message.setMessage("Successfully configured code " + newCodeMap.get("svcCode") + "-" + newCodeMap.get("svcCodeDesc"));
+	    	 }
+	    }
+	    else //viewtype ==2 Edit, ==3 View
+	    {
+	    	message = codeMgmtService.updateSvcCode(params, sessionVO);
+	    	 if (params.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
+	 	    	message.setMessage("Successfully update product " + newCodeMap.get("productCode"));
+	    	 }else{
+	 	    	message.setMessage("Successfully update code " + newCodeMap.get("svcCode") + "-" + newCodeMap.get("svcCodeDesc"));
+	    	 }
+	    }
 
 	    logger.debug("==========================/saveNewCode.do=================================");
 
@@ -147,7 +186,7 @@ public class codeMgmtController {
 
 	  @RequestMapping(value = "/chkDupReasons.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> chkDupReasons(@RequestParam Map<String, Object> params, ModelMap model) {
-	    logger.debug("checkDefPart.do : {}", params);
+	    logger.debug("chkDupReasons ===", params);
 
 		List<EgovMap> dupReasons = codeMgmtService.chkDupReasons(params);
 

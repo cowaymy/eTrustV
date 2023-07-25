@@ -103,6 +103,7 @@ function createLargeAUIGrid() {
 	  { dataField : "codeCatName", headerText : "codeCatName", width : "15%",visible: false},
       { dataField : "codeCat", headerText : "Code Category", width : "15%"},
       { dataField : "defectGrp", headerText : "DefectGrp", width : "15%",visible: false},
+      { dataField : "defectGrpCode", headerText : "DefectGrp", width : "15%",visible: false},
       { dataField : "defectId", headerText : "DefectId", width : "15%",visible: false},
       { dataField : "defectTyp", headerText : "defectTyp", width : "15%",visible: false},
       { dataField : "defectCode", headerText : "Defect Code", width : "15%"},
