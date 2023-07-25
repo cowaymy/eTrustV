@@ -332,6 +332,7 @@ public class LoginController {
 		model.put("popType", params.get("popType"));
 		model.put("popAck1", params.get("popAck1"));
 		model.put("popAck2", params.get("popAck2"));
+		model.put("popAck3", params.get("popAck3"));
 		model.put("popRejectFlg", params.get("popRejectFlg"));
 		model.put("verName", params.get("verName"));
 		model.put("verNRIC", params.get("verNRIC"));
@@ -459,6 +460,7 @@ public class LoginController {
 							cMth = 2;
 						}
 
+						//popType B - Short Term Extension Agreement for HM, SM and GM
 						try {
 							janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
 							julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
@@ -466,20 +468,20 @@ public class LoginController {
 
 							switch (cMth) {
 							case 1:
-//								if (cnfmDate.compareTo(janRe) < 0) { // SCR REQUEST TO DISABLE MANAGER AGREEMENT RENEWAL POP OUT JAN
-//									params.put("roleId", item1.get("roleType"));
-//									params.put("popType", "A");
-//								} else {
+								if (cnfmDate.compareTo(janRe) < 0) {
+									params.put("roleId", item1.get("roleType"));
+									params.put("popType", "B");
+								} else {
 									params.put("popType", "M");
-//								}
+								}
 								break;
 							case 2:
-//								if (cnfmDate.compareTo(julRe) < 0) { // SCR REQUEST TO DISABLE MANAGER AGREEMENT RENEWAL POP OUT JULY
-//									params.put("roleId", item1.get("roleType"));
-//									params.put("popType", "A");
-//								} else {
+								if (cnfmDate.compareTo(julRe) < 0) {
+									params.put("roleId", item1.get("roleType"));
+									params.put("popType", "B");
+								} else {
 									params.put("popType", "M");
-//								}
+								}
 								break;
 							default:
 								params.put("popType", "M");
@@ -667,7 +669,7 @@ public class LoginController {
 		}
 		*/
 
-		EgovMap item2 = new EgovMap();
+ 		EgovMap item2 = new EgovMap();
 		item2 = (EgovMap) loginService.getPopDtls(params);
 
 		// Get Pop up configuration
@@ -683,6 +685,7 @@ public class LoginController {
 				popInfo.put("popAck1", item2.get("popAck1"));
 				popInfo.put("popAck2", item2.get("popAck2"));
 				popInfo.put("popAck3", item2.get("popAck3"));
+				LOGGER.debug("============ popInfo =============" + popInfo);
 			} else {
 				popInfo.put("popFlName", "-");
 				popInfo.put("popExceptionMemroleCnt", "0");

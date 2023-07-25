@@ -370,6 +370,7 @@
 	                                    $("#popType").val(aResult.popType);
 	                                    $("#popAck1").val(aResult.popAck1);
 	                                    $("#popAck2").val(aResult.popAck2);
+	                                    $("#popAck3").val(aResult.popAck3);
 	                                    $("#popRejectFlg").val(aResult.popRejectFlg);
 	                                    $("#surveyStus").val(aResult.verifySurveyStus);
 	                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
@@ -623,6 +624,7 @@
             <input type="hidden" id="popType" name="popType" value=""/>
             <input type="hidden" id="popAck1" name="popAck1" value=""/>
             <input type="hidden" id="popAck2" name="popAck2" value=""/>
+            <input type="hidden" id="popAck3" name="popAck3" value=""/>
             <input type="hidden" id="popRejectFlg" name="popRejectFlg" value=""/>
             <input type="hidden" id="surveyStus" name="surveyStus" value=""/>
             <input type="hidden" id="surveyTypeId" name="surveyTypeId" value=""/>

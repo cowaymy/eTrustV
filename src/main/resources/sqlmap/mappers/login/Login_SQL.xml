@@ -363,7 +363,7 @@
         WHERE 1=1
         <if test='popType != "N" and popType != "C" '>
             AND SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
-            <if test='userTypeId != "0004" and popType == "A" '>
+            <if test='userTypeId != "0004" and (popType == "A" or popType == "B" ) '>
                 <if test='roleId != null and roleId != "" '>
                     AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
                 </if>

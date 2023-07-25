@@ -31,9 +31,11 @@ console.log("loginPop.jsp");
     $("#PDF").attr("hidden", false);
 
     $("#agreementLogoutBtn").attr("hidden", true);
+    $("#hmAboveNewA").attr("hidden", true);
 
     // Memo or Notice
     if("${popType}" == "M" || "${popType}" == "N") {
+    	console.log("memo notice");
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
         $("#popButton").attr("hidden", true);
@@ -43,7 +45,24 @@ console.log("loginPop.jsp");
         $("#PDF").css("height", "600px");
     }
     // Organization's Agreement
-    if("${popType}" == "A") {
+    if("${popType}" == "B") {
+    	console.log("agreement B");
+        $("#agreementButton").attr("hidden", false);
+        $("#memoButton").attr("hidden", true);
+        $("#popButton").attr("hidden", true);
+        $("#acknowledgement").attr("hidden", false);
+        $("#popAcknowledgement").attr("hidden", true);
+        $("#hmAboveNewA").attr("hidden", false);
+
+
+        if("${popRejectFlg}" == "X") {
+            $("#agreementRejectBtn").attr("hidden", false);
+        } else {
+            $("#agreementRejectBtn").attr("hidden", true);
+        }
+    }else
+    	if("${popType}" == "A") {
+    	console.log("agreement A");
         $("#agreementButton").attr("hidden", false);
         $("#memoButton").attr("hidden", true);
         $("#popButton").attr("hidden", true);
@@ -70,7 +89,8 @@ console.log("loginPop.jsp");
     }
 
     // Consent Letter/Additional Pop Up type
-    if("${popType}" != "A" && "${popType}" != "M" && "${popType}" != "N") {
+    if("${popType}" != "A" && "${popType}" != "M" && "${popType}" != "B" && "${popType}" != "N") {
+    	console.log("letter");
         $("#agreementButton").attr("hidden", true);
         $("#memoButton").attr("hidden", true);
         $("#popButton").attr("hidden", false);
@@ -102,6 +122,11 @@ function fn_AcceptAgreement() {
 
     if($("#ack2Checkbox").is(":checked")  == false) {
         Common.alert("* Please agree the personal data protection.");
+        return false;
+    }
+
+    if($("#popType").val() == 'B' && $("#ack3Checkbox").is(":checked")  == false){
+    	Common.alert("* Please agree the personal data protection.");
         return false;
     }
 
@@ -270,6 +295,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
     <input type="hidden" title="PASSWORD" placeholder="PASSWORD" id="password" name="password" value="${password}"/>
 
     <input type="hidden" id="consentFlg" name="consentFlg" value="${consentFlg}"/>
+    <input type="hidden" id="pdfName" name="pdfName" value="${pdfNm}"/>
 </form>
 
 <form id="popForm" style="width: 100%">
@@ -300,6 +326,9 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
                     <td style="padding-bottom:0.6%"><b>Commision's Bank-In Account No : </b></td>
                     <td colspan="3">${verBankAccNo} ( ${verBankName} )</td>
                 </tr>
+                <tr id="hmAboveNewA">
+                    <td colspan="4">By clicking the Accept button, I acknowledge and declare that:</td>
+                </tr>
                 <tr>
                     <td>
                         <input type="checkbox" id="ack1Checkbox" name="ack1Checkbox" value="1" />
@@ -311,6 +340,12 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
                         <input type="checkbox" id="ack2Checkbox" name="ack2Checkbox" value="1" />
                     </td>
                     <td colspan="4" style="padding-top:0.6%; padding-bottom:0.6%;">${popAck2}</td>
+                </tr>
+                <tr id="hmAboveNewA">
+                    <td>
+                        <input type="checkbox" id="ack3Checkbox" name="ack3Checkbox" value="1" />
+                    </td>
+                    <td colspan="4" style="padding-top:0.6%; padding-bottom:0.6%;">${popAck3}</td>
                 </tr>
             </tbody>
         </table>
