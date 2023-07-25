@@ -39,113 +39,156 @@
   </insert>
 
   <select id="returnPartsList" parameterType="Map" resultType="egovMap">
-    SELECT * FROM (
+    SELECT
+    z.RNUM,
+    z.SEQ,
+    z.SERVICE_ORDER,
+    z.ASR_NO,
+    z.ORDER_NO,
+    z.CUSTOMER,
+    z.CUSTOMER_NAME,
+    z.SERVICE_DATE,
+    z.MATERIAL_CODE,
+    z.MATERIAL_CODE_ACTUAL,
+    z.MATERIAL_NAME,
+    z.STK_ID,
+    z.PRODUCT_CODE,
+    z.PRODUCT_NAME,
+    z.PRODUCT_CAT,
+    z.SERIAL_NUMBER,
+    z.SERIAL,
+    z.QTY,
+    z.TEXT,
+    z.RETURN_COMPLETE,
+    z.RETURN_COMPLETE_DATE,
+    z.NO_PARTS_RETURN,
+    z.CRT_DT,
+    z.CRT_USER_ID,
+    z.UPD_DT,
+    z.UPD_USER_ID,
+    z.SERIAL_CHK,
+    z.STK_TYPE_ID,
+    z.STK_ID_NEW,
+    z.BRNCH,
+    z.MEM_CODE,
+    z.NAME,
+    z.CODE,
+    z.BRNCH_NAME,
+    z.DEFTYP,
+    z.DEFCDE,
+    z.INSTALL_DT,
+    z.AS_AGING,
+    z.as_type,
+    nvl(o.defect_desc, '-') error_details,
+    nvl(p.defect_desc,'-') errordesc
+    FROM (
         <if test="asTyp != 'ihr'">
         SELECT
-            T1.RNUM  ,
-            T1.SEQ,
-            T1.SERVICE_ORDER,
-            T1.ASR_NO,
-            T1.ORDER_NO,
-            T1.CUSTOMER,
-            T1.CUSTOMER_NAME,
-            T1.SERVICE_DATE,
-            T1.MATERIAL_CODE,
-            T1.MATERIAL_CODE_ACTUAL,
-            T1.MATERIAL_NAME,
-            T1.STK_ID,
-            T1.PRODUCT_CODE,
-            T1.PRODUCT_NAME,
-             T1.PRODUCT_CAT,
-             T1.SERIAL_NUMBER,
-             T1.SERIAL,
-             T1.QTY,
-             T1.TEXT,
-             T1.RETURN_COMPLETE,
-             T1.RETURN_COMPLETE_DATE,
-             T1.NO_PARTS_RETURN,
-             T1.CRT_DT,
-             T1.CRT_USER_ID,
-             T1.UPD_DT,
-             T1.UPD_USER_ID,
-             T1.SERIAL_CHK,
-             T1.STK_TYPE_ID,
-             T1.STK_ID_NEW,
-             T1.BRNCH,
-             T1.MEM_CODE,
-             T1.NAME,
-             T1.CODE,
-             T1.BRNCH_NAME,
-             T1.DEFTYP,
-             T1.DEFCDE,
-             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
-             CASE WHEN T1.AS_SETL_DT IS NOT NULL THEN
-                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T1.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS AS_AGING,
-            t1.ERROR_DETAILS,
-            t1.errorDesc,
+            t1.rnum,
+            t1.seq,
+            t1.service_order,
+            t1.asr_no,
+            t1.order_no,
+            t1.customer,
+            t1.customer_name,
+            t1.service_date,
+            t1.material_code,
+            t1.material_code_actual,
+            t1.material_name,
+            t1.stk_id,
+            t1.product_code,
+            t1.product_name,
+            t1.product_cat,
+            t1.serial_number,
+            t1.serial,
+            t1.qty,
+            t1.text,
+            t1.return_complete,
+            t1.return_complete_date,
+            t1.no_parts_return,
+            t1.crt_dt,
+            t1.crt_user_id,
+            t1.upd_dt,
+            t1.upd_user_id,
+            t1.serial_chk,
+            t1.stk_type_id,
+            t1.stk_id_new,
+            t1.brnch,
+            t1.mem_code,
+            t1.name,
+            t1.code,
+            t1.brnch_name,
+            t1.deftyp,
+            t1.defcde,
+            TO_CHAR(p.install_dt,'YYYY/MM/DD') install_dt,
+            CASE WHEN t1.as_setl_dt IS NOT NULL THEN months_between(fn_get_first_day_month(t1.as_setl_dt),fn_get_first_day_month(p.install_dt))ELSE 0 END
+            AS as_aging,
+            t1.as_malfunc_id,
+            t1.as_malfunc_resn_id,
             t1.AS_TYPE
-            FROM
+        FROM
             (
-			      SELECT
-			            ROWNUM  RNUM,
-			            A.SEQ  AS SEQ,
-			            A.RESULT_ID,
-			            C.SALES_ORD_ID,
-			            G.AS_SETL_DT,
-			            A.SVC_ORD_ID  AS SERVICE_ORDER,
-			            G.AS_RESULT_NO AS ASR_NO,
-			            C.SALES_ORD_NO AS ORDER_NO,
-			            C.CUST_ID AS CUSTOMER,
-			            D.NAME AS CUSTOMER_NAME,
-			            TO_CHAR(G.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
-			            (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS MATERIAL_CODE,
-			            E.STK_CODE   AS MATERIAL_CODE_ACTUAL,
-			            E.STK_DESC   AS MATERIAL_NAME,
-			            A.STK_ID,
-			            M.STK_CODE    AS PRODUCT_CODE,
-			            M.STK_DESC    AS PRODUCT_NAME,
-			            N.CODE_DESC  AS PRODUCT_CAT,
-			            A.OLD_SERIAL  AS SERIAL_NUMBER,
-			            A.NEW_SERIAL  AS SERIAL,
-			            A.QTY   AS QTY,
-			            A.COMMENTS  AS TEXT,
-			            A.CMPLT_YN  AS RETURN_COMPLETE,
-			            TO_CHAR(A.CMPLT_DT, 'YYYY/MM/DD')  RETURN_COMPLETE_DATE,
-			            A.RESN_CODE  NO_PARTS_RETURN,
-			            A.CRT_DT,
-			            A.CRT_USER_ID,
-			            A.UPD_DT,
-			            A.UPD_USER_ID,
-			            E.SERIAL_CHK,
-			            E.STK_TYPE_ID,
-			            A.STK_ID_NEW,
-			            F.BRNCH,
-			            F.MEM_CODE,
-			            F.NAME,
-			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
-			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
-			            J.DEFECT_DESC  AS DEFTYP,
-			            K.DEFECT_DESC  AS DEFCDE,
-			            NVL(O.DEFECT_DESC , '-') ERROR_DETAILS,
-                        NVL(P.DEFECT_DESC , '-') errordesc,
-                        q.CODE_DESC AS_TYPE
-			      FROM LOG0103M A
-			      JOIN SVC0001D B ON B.AS_NO = A.SVC_ORD_ID
-			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
-			      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
-			      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
-			      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
-			      JOIN SVC0004D G ON A.RESULT_ID = G.AS_RESULT_ID
-			      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
-			      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
-			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
-			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
-			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
-			      LEFT JOIN SYS0100M O ON O.DEFECT_TYP = 'EC' AND O.DEFECT_ID = B.AS_MALFUNC_ID AND O.DEFECT_STATUS = 1
-                  LEFT JOIN SYS0100M P ON P.DEFECT_TYP = 'ED' AND P.DEFECT_GRP = B.AS_MALFUNC_ID AND P.DEFECT_ID = B.AS_MALFUNC_RESN_ID AND P.DEFECT_STATUS = 1
-                  JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
-			      WHERE 1 = 1
+                SELECT
+                    ROWNUM rnum,
+                    a.seq AS seq,
+                    a.result_id,
+                    c.sales_ord_id,
+                    g.as_setl_dt,
+                    a.svc_ord_id AS service_order,
+                    g.as_result_no AS asr_no,
+                    c.sales_ord_no AS order_no,
+                    c.cust_id AS customer,
+                    d.name AS customer_name,
+                    TO_CHAR(g.as_setl_dt,'YYYY/MM/DD') AS service_date,
+                    (SELECT stk_code FROM sys0026m WHERE stk_id = a.stk_id ) AS material_code,
+                    e.stk_code AS material_code_actual,
+                    e.stk_desc AS material_name,
+                    a.stk_id,
+                    m.stk_code AS product_code,
+                    m.stk_desc AS product_name,
+                    n.code_desc AS product_cat,
+                    a.old_serial AS serial_number,
+                    a.new_serial AS serial,
+                    a.qty AS qty,
+                    a.comments AS text,
+                    a.cmplt_yn AS return_complete,
+                    TO_CHAR( a.cmplt_dt,'YYYY/MM/DD') return_complete_date,
+                    a.resn_code no_parts_return,
+                    a.crt_dt,
+                    a.crt_user_id,
+                    a.upd_dt,
+                    a.upd_user_id,
+                    e.serial_chk,
+                    e.stk_type_id,
+                    a.stk_id_new,
+                    f.brnch,
+                    f.mem_code,
+                    f.name,
+                    (SELECT code FROM sys0005m WHERE brnch_id = f.brnch ) code,
+                    (SELECT name FROM sys0005m WHERE brnch_id = f.brnch) brnch_name,
+                    j.defect_desc AS deftyp,
+                    k.defect_desc AS defcde,
+                    b.as_malfunc_id,
+                    b.as_malfunc_resn_id,
+                    q.CODE_DESC AS_TYPE
+                FROM
+                    log0103m a
+                    JOIN svc0001d b ON b.as_no = a.svc_ord_id
+                    JOIN sal0001d c ON b.as_so_id = c.sales_ord_id
+                    JOIN sal0029d d ON c.cust_id = d.cust_id
+                    JOIN sys0026m e ON a.stk_id = e.stk_id
+                    JOIN org0001d f ON a.mem_id = f.mem_id
+                    JOIN svc0004d g ON a.result_id = g.as_result_id
+                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
+                        AND j.defect_typ = 'DT'
+                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
+                        AND k.defect_typ = 'DC'
+                    JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
+                    JOIN sys0026m m ON m.stk_id = l.itm_stk_id
+                    JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
+                    JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
+                WHERE
+                        1 = 1
 			      AND A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
 			      <if test="searchOder != null and searchOder !=''">
 			        AND A.SVC_ORD_ID = #{searchOder}
@@ -214,118 +257,120 @@
             GROUP BY SAL0046D.SALES_ORD_ID)  AND O.SALES_ORD_ID = T1.SALES_ORD_ID
         JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
 	</if>
-
-
     <if test="asTyp != 'as' and asTyp != 'ihr'">
       UNION
     </if>
-
     <if test="asTyp != 'as'">
         SELECT
-             T2.RNUM,
-             T2.SEQ,
-             T2.SERVICE_ORDER,
-             T2.ASR_NO,
-             T2.ORDER_NO,
-             T2.CUSTOMER,
-             T2.CUSTOMER_NAME,
-             T2.SERVICE_DATE,
-             T2.MATERIAL_CODE,
-             T2.MATERIAL_CODE_ACTUAL,
-             T2.MATERIAL_NAME,
-             T2.STK_ID,
-             T2.PRODUCT_CODE,
-             T2.PRODUCT_NAME,
-             T2.PRODUCT_CAT,
-             T2.SERIAL_NUMBER,
-             T2.SERIAL,
-             T2.QTY,
-             T2.TEXT,
-             T2.RETURN_COMPLETE,
-             T2.RETURN_COMPLETE_DATE,
-             T2.NO_PARTS_RETURN,
-             T2.CRT_DT,
-             T2.CRT_USER_ID,
-             T2.UPD_DT,
-             T2.UPD_USER_ID,
-             T2.SERIAL_CHK,
-             T2.STK_TYPE_ID,
-             T2.STK_ID_NEW,
-             T2.BRNCH,
-             T2.MEM_CODE,
-             T2.NAME,
-             T2.CODE,
-             T2.BRNCH_NAME,
-             T2.DEFTYP,
-             T2.DEFCDE,
-             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
-             CASE WHEN T2.AS_SETL_DT IS NOT NULL THEN
-                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T2.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS AS_AGING,
-              t2.ERROR_DETAILS,
-              t2.errordesc,
-              t2.AS_TYPE
-    FROM
-    (
-			      SELECT
-			            ROWNUM  RNUM,
-			            A.SEQ   AS SEQ,
-			            A.RESULT_ID,
-			            C.SALES_ORD_ID,
-			            G.AS_SETL_DT,
-			            A.SVC_ORD_ID AS SERVICE_ORDER,
-			            G.AS_RESULT_NO AS ASR_NO,
-			            C.SALES_ORD_NO AS ORDER_NO,
-			            C.CUST_ID AS CUSTOMER,
-			            D.NAME AS CUSTOMER_NAME,
-			            TO_CHAR(G.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
-			            (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS MATERIAL_CODE,
-			            E.STK_CODE AS MATERIAL_CODE_ACTUAL,
-			            E.STK_DESC AS MATERIAL_NAME,
-			            A.STK_ID,
-			            M.STK_CODE AS PRODUCT_CODE,
-			            M.STK_DESC AS PRODUCT_NAME,
-			            N.CODE_DESC AS PRODUCT_CAT,
-			            A.OLD_SERIAL  AS SERIAL_NUMBER,
-			            A.NEW_SERIAL  AS SERIAL,
-			            A.QTY AS QTY,
-			            A.COMMENTS AS TEXT,
-			            A.CMPLT_YN AS RETURN_COMPLETE,
-			            TO_CHAR(A.CMPLT_DT, 'YYYY/MM/DD')  RETURN_COMPLETE_DATE,
-			            A.RESN_CODE NO_PARTS_RETURN,
-			            A.CRT_DT,
-			            A.CRT_USER_ID,
-			            A.UPD_DT,
-			            A.UPD_USER_ID,
-			            E.SERIAL_CHK,
-			            E.STK_TYPE_ID,
-			            A.STK_ID_NEW,
-			            F.BRNCH,
-			            F.MEM_CODE,
-			            F.NAME,
-			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
-			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
-			            J.DEFECT_DESC AS DEFTYP,
-			            K.DEFECT_DESC AS DEFCDE,
-			            NVL(O.DEFECT_DESC , '-') ERROR_DETAILS,
-                        NVL(P.DEFECT_DESC , '-') errordesc,
-                        q.CODE_DESC AS_TYPE
-			      FROM LOG0103M A
-			      JOIN SVC0108D B ON B.AS_NO = A.SVC_ORD_ID
-			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
-			      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
-			      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
-			      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
-			      JOIN SVC0109D G ON A.RESULT_ID = G.AS_RESULT_ID
-			      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
-			      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
-			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
-			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
-			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
-			      LEFT JOIN SYS0100M O ON O.DEFECT_TYP = 'EC' AND O.DEFECT_ID = B.AS_MALFUNC_ID AND O.DEFECT_STATUS = 1
-                  LEFT JOIN SYS0100M P ON P.DEFECT_TYP = 'ED' AND P.DEFECT_GRP = B.AS_MALFUNC_ID AND P.DEFECT_ID = B.AS_MALFUNC_RESN_ID AND P.DEFECT_STATUS = 1
-                  JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
-			      WHERE 1 = 1
+            t2.rnum,
+            t2.seq,
+            t2.service_order,
+            t2.asr_no,
+            t2.order_no,
+            t2.customer,
+            t2.customer_name,
+            t2.service_date,
+            t2.material_code,
+            t2.material_code_actual,
+            t2.material_name,
+            t2.stk_id,
+            t2.product_code,
+            t2.product_name,
+            t2.product_cat,
+            t2.serial_number,
+            t2.serial,
+            t2.qty,
+            t2.text,
+            t2.return_complete,
+            t2.return_complete_date,
+            t2.no_parts_return,
+            t2.crt_dt,
+            t2.crt_user_id,
+            t2.upd_dt,
+            t2.upd_user_id,
+            t2.serial_chk,
+            t2.stk_type_id,
+            t2.stk_id_new,
+            t2.brnch,
+            t2.mem_code,
+            t2.name,
+            t2.code,
+            t2.brnch_name,
+            t2.deftyp,
+            t2.defcde,
+            TO_CHAR( p.install_dt, 'YYYY/MM/DD' ) install_dt,
+             CASE WHEN t2.as_setl_dt IS NOT NULL THEN months_between(
+                        fn_get_first_day_month(t2.as_setl_dt),
+                        fn_get_first_day_month(p.install_dt)
+                    )
+            ELSE 0
+            END AS as_aging,
+            t2.as_malfunc_id,
+            t2.as_malfunc_resn_id,
+            t2.AS_TYPE
+        FROM
+            (
+                SELECT
+                    ROWNUM rnum,
+                    a.seq AS seq,
+                    a.result_id,
+                    c.sales_ord_id,
+                    g.as_setl_dt,
+                    a.svc_ord_id AS service_order,
+                    g.as_result_no AS asr_no,
+                    c.sales_ord_no AS order_no,
+                    c.cust_id AS customer,
+                    d.name AS customer_name,
+                    TO_CHAR(g.as_setl_dt, 'YYYY/MM/DD') AS service_date,
+                    (SELECT stk_code FROM sys0026m WHERE stk_id = a.stk_id ) AS material_code,
+                    e.stk_code AS material_code_actual,
+                    e.stk_desc AS material_name,
+                    a.stk_id,
+                    m.stk_code AS product_code,
+                    m.stk_desc AS product_name,
+                    n.code_desc AS product_cat,
+                    a.old_serial AS serial_number,
+                    a.new_serial AS serial,
+                    a.qty AS qty,
+                    a.comments AS text,
+                    a.cmplt_yn AS return_complete,
+                    TO_CHAR( a.cmplt_dt, 'YYYY/MM/DD' ) return_complete_date,
+                    a.resn_code no_parts_return,
+                    a.crt_dt,
+                    a.crt_user_id,
+                    a.upd_dt,
+                    a.upd_user_id,
+                    e.serial_chk,
+                    e.stk_type_id,
+                    a.stk_id_new,
+                    f.brnch,
+                    f.mem_code,
+                    f.name,
+                    (SELECT code FROM sys0005m WHERE brnch_id = f.brnch ) code,
+                    (SELECT name FROM sys0005m WHERE brnch_id = f.brnch ) brnch_name,
+                    j.defect_desc AS deftyp,
+                    k.defect_desc AS defcde,
+                    b.as_malfunc_id,
+                    b.as_malfunc_resn_id,
+                    q.CODE_DESC AS_TYPE
+                FROM
+                    log0103m a
+                    JOIN svc0108d b ON b.as_no = a.svc_ord_id
+                    JOIN sal0001d c ON b.as_so_id = c.sales_ord_id
+                    JOIN sal0029d d ON c.cust_id = d.cust_id
+                    JOIN sys0026m e ON a.stk_id = e.stk_id
+                    JOIN org0001d f ON a.mem_id = f.mem_id
+                    JOIN svc0109d g ON a.result_id = g.as_result_id
+                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
+                        AND j.defect_typ = 'DT'
+                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
+                        AND k.defect_typ = 'DC'
+                    JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
+                    JOIN sys0026m m ON m.stk_id = l.itm_stk_id
+                    JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
+                    JOIN SYS0013M q on q.CODE_ID = b.AS_TYPE_ID
+                WHERE
+                        1 = 1
 			      AND  A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
 			      <if test="searchOder != null and searchOder !=''">
 			        AND A.SVC_ORD_ID = #{searchOder}
@@ -385,25 +430,32 @@
 			          #{item3}
 			        </foreach>
 			      </if>
-		 ) T2
-		 JOIN (
-	        SELECT * FROM LOG0103M AA  WHERE AA.RESULT_ID = (
-	        SELECT
-	            MAX(BB.RESULT_ID)
-	        FROM LOG0103M BB
-	        WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID
-	        )
-	    ) H ON ( T2.SEQ = H.SEQ )
-	    JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (
-	        SELECT MIN(SAL0046D.INSTALL_ENTRY_ID)
-	        FROM SAL0046D
-	        WHERE SAL0046D.SALES_ORD_ID = T2.SALES_ORD_ID
-	        AND SAL0046D.STUS_CODE_ID = '4'
-	        GROUP BY SAL0046D.SALES_ORD_ID
-	    ) AND O.SALES_ORD_ID = T2.SALES_ORD_ID
-	    JOIN SAL0047D      P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
-	</if>
-    )
+		) T2
+         JOIN (
+            SELECT * FROM LOG0103M AA  WHERE AA.RESULT_ID = (
+            SELECT
+                MAX(BB.RESULT_ID)
+            FROM LOG0103M BB
+            WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID
+            )
+        ) H ON ( T2.SEQ = H.SEQ )
+        JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (
+            SELECT MIN(SAL0046D.INSTALL_ENTRY_ID)
+            FROM SAL0046D
+            WHERE SAL0046D.SALES_ORD_ID = T2.SALES_ORD_ID
+            AND SAL0046D.STUS_CODE_ID = '4'
+            GROUP BY SAL0046D.SALES_ORD_ID
+        ) AND O.SALES_ORD_ID = T2.SALES_ORD_ID
+        JOIN SAL0047D      P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
+   </if> )
+    z
+    LEFT JOIN sys0100m o ON o.defect_typ = 'EC'
+         AND o.defect_id = z.as_malfunc_id
+         AND o.defect_status = 1
+    LEFT JOIN sys0100m p ON p.defect_typ = 'ED'
+        AND p.defect_grp = z.as_malfunc_id
+        AND p.defect_id = z.as_malfunc_resn_id
+        AND p.defect_status = 1
   </select>
 
   <update id="upReturnParts" parameterType="Map">
