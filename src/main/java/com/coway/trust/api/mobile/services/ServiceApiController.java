@@ -2709,7 +2709,7 @@ public class ServiceApiController {
 
   @ApiOperation(value = "CHECK IN MILEAGE", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkInMileage", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>>  checkInMileage(@ModelAttribute ServiceMileageForm serviceMileageForm) throws Exception {
+  public ResponseEntity<List<EgovMap>> checkInMileage(@RequestBody ServiceMileageForm serviceMileageForm) throws Exception {
 
        Map<String, Object> params = serviceMileageForm.createMap(serviceMileageForm);
        List<EgovMap> checkInMileageStat = null;
