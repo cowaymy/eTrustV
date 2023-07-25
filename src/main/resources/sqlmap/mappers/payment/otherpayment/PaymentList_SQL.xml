@@ -1069,7 +1069,8 @@
                 #{payItmModeId},
                 #{userId},
                 #{totAmt},
-                TO_DATE(#{payItemRefDt}, 'YYYYMMDD'),
+                <!-- TO_DATE(#{payItemRefDt}, 'YYYYMMDD'), -->
+                #{payItmRefDt},
                 #{userId},
                 SYSDATE,
                 #{userId},
@@ -1597,6 +1598,7 @@
     <update id="updateLastAppvLine" parameterType="Map">
        UPDATE PAY0347M
        SET APPV_PRCSS_STUS = 'A'
+           ,APPV_PRCSS_DT = SYSDATE
            ,UPD_DT = SYSDATE
            ,UPD_USER_ID = #{userId}
         WHERE APPV_PRCSS_NO = #{appvPrcssNo}
@@ -1613,6 +1615,7 @@
     <update id="updateStatusRefundM" parameterType="Map">
         UPDATE PAY0347M SET
             APPV_PRCSS_STUS = #{appvPrcssStus},
+            APPV_PRCSS_DT = SYSDATE,
             APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt},
             UPD_USER_ID = #{userId},
             UPD_DT = SYSDATE
@@ -1623,6 +1626,7 @@
     <update id="updateStatusRefundD" parameterType="Map">
         UPDATE PAY0348D SET
             APPV_STUS = #{appvStus},
+            APPV_DT = SYSDATE,
             REJCT_RESN = #{remark},
             UPD_USER_ID = #{userId},
             UPD_DT = SYSDATE

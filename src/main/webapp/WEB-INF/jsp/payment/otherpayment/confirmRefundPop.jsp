@@ -230,7 +230,7 @@ function fn_reject(){
 	}
 
 	//저장처리
-	Common.confirm("<spring:message code='pay.alert.wantToRejectDcf'/>",function (){
+	Common.confirm("Are you sure you want to reject Refund ?",function (){
 	    Common.ajax("POST", "/payment/rejectRefund.do", $("#_refundSearchForm").serializeJSON(), function(result) {
 			var message = "Refund Request has successfully rejected.";
 

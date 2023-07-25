@@ -476,6 +476,27 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     				String salesOrdId = paymentListMapper.getSalesOrdId(hm.get("salesOrdNo").toString());
     				hm.put("salesOrdId", salesOrdId);
     				hm.put("refundMode", paramMap.get("refundMode"));
+
+    				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    				Date requestDate = null;
+					Timestamp timestamp = null;
+
+    				if(hm.get("payItmRefDt").toString().contains("/")){
+						try {
+							// convert string to datetime
+							requestDate = dateFormat.parse((String) hm.get("payItmRefDt"));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else{
+						//if frontend pass date value in timestamp format
+	                	timestamp = new Timestamp(Long.parseLong(hm.get("payItmRefDt").toString()));
+	                    requestDate = new Date(timestamp.getTime());
+	                }
+
+    				hm.put("payItmRefDt", requestDate);
+
     				/*if(hm.get("appType") != null){
     					String appType = hm.get("appType").toString();
 
