@@ -39,6 +39,7 @@ function fn_reset() {
 }
 
 function fn_submit() {
+	debugger;
 	var valid = false;
 	var orderno = $("#orderNo").val();
 	var name = $("#name").val();
@@ -114,7 +115,7 @@ table {width:100%;margin-left:auto; margin-right:auto; display:block;}
 </style>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
-
+<body>
 <div id="enrollment" class="enrolPage">
     <!-- content start -->
     <form action="#" method="post" id="enrollmentForm" name="form">
@@ -192,3 +193,4 @@ table {width:100%;margin-left:auto; margin-right:auto; display:block;}
 
 	</form>
 </div>
+</body>

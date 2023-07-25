@@ -86,11 +86,12 @@ public class EMandateEnrollmentController {
 
 	@RequestMapping(value = "/ddRespond.do")
     public String ddRespond(@RequestParam Map<String, Object> params, Model model,
-    	      SessionVO sessionVO) {
+    	      SessionVO sessionVO, HttpServletRequest request) {
 
 		Map<String, Object> result = null;
 
 		logger.debug("==================== ddRespond.do ====================");
+		logger.debug("====request URI: " + request.getContextPath());
 
 		try {
 			result = eMandateEnrollmentService.enrollRespond(params);

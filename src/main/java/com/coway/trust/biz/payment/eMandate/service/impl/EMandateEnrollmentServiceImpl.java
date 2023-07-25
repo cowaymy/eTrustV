@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,13 +104,17 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  String param7 = EMandateConstants.Maximum_DD_RECURR + "|" + EMandateConstants.FREQ_MODE_MONTHLY + "|"  + effectiveDate;
 
 		  // Configure respond URL
-		  String approvedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
-		  String unApprovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_UNAPPROVE;
+		  String happrovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + "&status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
+		  String hunApprovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + "&status=" + EMandateConstants.STATUS_MERCHANT_UNAPPROVE;
+
+		  // Configure respond URL to be used in hashvalue
+		  String approvedURL = happrovedURL.replaceAll("&", ";");
+		  String unApprovedURL = hunApprovedURL.replaceAll("&", ";");
 
 		  // Configure HashValue
 		  /**Hash Key = Password + ServiceID + PaymentID + MerchantReturnURL + MerchantApprovalURL + MerchantUnApprovalURL +
 		   * MerchantCallBackURL + Amount + CurrencyCode + CustIP + PageTimeout + CardNo + Token + RecurringCriteria*/
-		  String hashKey = password + serviceId + paymentID + approvedURL + unApprovedURL + EMandateConstants.MAXIMUM_DD_AMOUNT +
+		  String hashKey = password + serviceId + paymentID + unApprovedURL + approvedURL + unApprovedURL + unApprovedURL + EMandateConstants.MAXIMUM_DD_AMOUNT +
 				  					EMandateConstants.CURRENCY_CODE + clientIp + EMandateConstants.PAGE_TIME_OUT;
 
 		  LOGGER.debug("========Hash Key==========: "+ hashKey);
@@ -143,8 +148,10 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 					  .append("&CustName=").append(params.get("name").toString())
 					  .append("&CustEmail=").append(EMandateConstants.DEFAULT_EMAIL_ADDR)
 					  .append("&CustPhone=").append(EMandateConstants.DEFAULT_HP_NO)
-					  .append("&MerchantReturnURL=").append(EMandateConstants.RESPOND_URL)
-					  .append("&MerchantCallBackURL=").append(EMandateConstants.RESPOND_URL)
+					  .append("&MerchantApprovalURL=").append(approvedURL)
+					  .append("&MerchantUnApprovalURL=").append(unApprovedURL)
+					  .append("&MerchantReturnURL=").append(unApprovedURL)
+					  .append("&MerchantCallBackURL=").append(unApprovedURL)
 					  .append("&LanguageCode=").append(EMandateConstants.LANGUAGE_CODE)
 					  .append("&PageTimeout=").append(EMandateConstants.PAGE_TIME_OUT)
 					  .append("&Param6=").append(param6)
@@ -246,19 +253,21 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 	 public Map<String, Object> enrollRespond (Map<String, Object> params) throws Exception{
 		 Map<String,Object> returnParams = new HashMap<String, Object>();
 
-		 LOGGER.info("=======respondParams======: " + params.toString());
+		 LOGGER.info("=======respondParams======: " + params.toString()); //eg: {payId=CDD2307250000085;status=99}
 
 		 if (params == null || params.isEmpty()){
 			 throw new Exception("E003. Fail. Empty respond params");
 		 }
 
-		 String payId = (String) params.get("payId");
-		 String status = (String) params.get("status");
+		 String paramList = (String) params.get("payId"); //
+		 LOGGER.info("=======paramList======: " + paramList); //eg: CDD2307250000085;status=99
 
-		 if (!CommonUtils.nvl(status).equals("")){
-			returnParams.put("status", status);
-			returnParams.put("payId", payId);
-		 }
+		 String[] param = paramList.split("[;=]");
+		 returnParams.put("payId", param[0]); // eg: CDD2307250000085
+		 returnParams.put("status", param[2]);// eg: 99
+
+		 LOGGER.info("=======finalParams======: " + returnParams);// eg: {payId=CDD2307250000085, status=99}
+
 
 		 return returnParams;
 

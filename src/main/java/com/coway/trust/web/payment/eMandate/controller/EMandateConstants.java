@@ -8,7 +8,8 @@ public class EMandateConstants {
 	public static final String TRANSACTION_TYPE = "EMANDATE01";
 	public static final String PYMT_METHOD = "DD";
 	public static final String CURRENCY_CODE = "MYR";
-	public static final String RESPOND_URL = "https://etrustdev.my.coway.com/payment/enroll/ddRespond.do";
+	//public static final String RESPOND_URL = "https://etrustdev.my.coway.com/payment/enroll/ddRespond.do";
+	public static final String RESPOND_URL = "http://localhost:8080/payment/enroll/ddRespond.do";
 
 	public static final String LANGUAGE_CODE = "EN";
 	public static final int PAGE_TIME_OUT = 900; // enrollment page time out in second
