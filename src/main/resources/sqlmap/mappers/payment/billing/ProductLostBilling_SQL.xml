@@ -5,7 +5,7 @@
         SELECT Extent1.SALES_ORD_NO SALES_ORD_NO  ,
 			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 			       Extent1.SALES_DT SALES_DT  ,
-			       Extent1.SALES_PRC SALES_PRC  ,
+			       NVL(Extent1.SALES_PRC,0) SALES_PRC  ,
 			       Extent1.BILL_MONTH BILL_MONTH  ,
 			       CASE WHEN Extent1.PNALTY >= 0 THEN PNALTY ELSE 0 END PNALTY ,
 			       Extent1.CUST_NAME CUST_NAME  ,
