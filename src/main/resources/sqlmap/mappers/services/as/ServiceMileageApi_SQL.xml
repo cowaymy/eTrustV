@@ -21,11 +21,11 @@
                                      , UPD_BY
                                      , CRT_DT
                                      , UPT_DT
-   ) VALUES (  #{MIL_CLM_NO}
-                  , #{userID_ORG01}
+   ) VALUES (  TO_NUMBER(#{MIL_CLM_NO})
+                  , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
-                  , #{userID_SYS47}
-                  , #{userID_SYS47}
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
                   , SYSDATE
                   , SYSDATE
     )
@@ -53,14 +53,14 @@
                                       , UPD_DT
 
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
-                  , #{MIL_CLM_NO}
-                  , #{serviceNo}
-                  , #{userID_ORG01}
+                  , TO_NUMBER(#{MIL_CLM_NO})
+                  , TO_NUMBER(#{serviceNo})
+                  , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
-                  , #{longtitude}
-                  , #{latitude}
-                  , #{userID_SYS47}
-                  , #{userID_SYS47}
+                  , TO_NUMBER(#{longtitude})
+                  , TO_NUMBER(#{latitude})
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
                   , SYSDATE
                   , SYSDATE
     )
