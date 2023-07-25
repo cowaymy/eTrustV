@@ -54,13 +54,8 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
     // STEP 1 : VERIFY MASTER TABLE TO GET MASTER MILEAGE CLAIM NO
     EgovMap mileageClaimNo = serviceMileageApiServiceMapper.getMileageClaimNo(params);
 
-    Map<String, Object> memInfo = new HashMap<>();
-    memInfo.put("_USER_ID", params.get("userName"));
-    memInfo.put("MemCode", params.get("userName"));
-    LoginVO loginVO = loginMapper.selectLoginInfoById(memInfo);
-    params.put("userID_SYS47", loginVO.getUserId());
-    loginVO = loginMapper.getVaccineDeclarationAplcntInfo(memInfo);
-    params.put("userID_ORG01", loginVO.getUserId());
+    params.put("userID_SYS47", loginMapper.selectUserByUserName(params.get("userName").toString()));
+    params.put("userID_ORG01", loginMapper.selectOrgUserByUserName(params.get("userName").toString()));
 
     if (CommonUtils.nvl(mileageClaimNo.get("MIL_CLM_NO")).equals("")) {
       String masterMileageClaimNo = CommonUtils.nvl(serviceMileageApiServiceMapper.getMasterMileageClaimNo());
