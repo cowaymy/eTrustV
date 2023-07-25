@@ -1056,12 +1056,14 @@ SELECT A.CUST_ID AS CUST_ID
     SELECT COUNT(*) COUNT
     FROM PAY0318D
     WHERE TOKEN_ID = #{token}
+        AND STATUS = 1
   </select>
 
    <select id="checkTNA" parameterType="String" resultType="egovMap">
     SELECT COUNT(*) COUNT
     FROM PAY0318D
     WHERE TOKEN_ID = (SELECT CUST_CRC_TOKEN FROM SAL0028D WHERE CUST_CRC_ID = #{param})
+        AND STATUS = 1
   </select>
 
   <insert id="insertSAL0258D" parameterType="Map">
