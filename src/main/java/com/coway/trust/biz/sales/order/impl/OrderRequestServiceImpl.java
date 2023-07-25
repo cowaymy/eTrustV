@@ -2281,11 +2281,18 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         int tracePromoID = 600;
 
         if (CommonUtils.intNvl(view.get("ordDt")) > 20140701) {
-          if(bndlId == 1){
-            pacId = 25;
-          }else if(bndlId == 2){
-            pacId = 24;
+          switch(bndlId){
+            case 1 :
+              pacId = 25;
+              break;
+            case 2 :
+              pacId = 24;
+              break;
+            case 3 : // Frame Only orders
+              pacId = 28;
+              break;
           }
+
           // To get no promotion applied
           Map<String, Object> noPromo = new HashMap<>();
           noPromo.put("promoTypeId", "2282");
@@ -2294,6 +2301,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
           noPromo.put("promoPrcPrcnt", "0");
           noPromo.put("promoRpfDiscAmt", "0");
           noPromo.put("promoAddDiscPrc", "0");
+          if(pacId != 28)
           noPromo.put("dateBetween", "1");
           // Solve bug - Added Stock ID to retrieve promo ID precisely. Hui Ding, 13-04-2021
           if(view.get("itmStkId") != null)
@@ -2339,7 +2347,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
         if (CommonUtils.intNvl(rlMap.get("cnt")) > 0) {
           // Get Order Total Bill (Except RPF)
-          EgovMap tbMap = orderRequestMapper.selectAccRentLedger2(params);
+         /* EgovMap tbMap = orderRequestMapper.selectAccRentLedger2(params);
 
           if (CommonUtils.intNvl(tbMap.get("cnt")) > 0) {
             TotalBillAmt = (BigDecimal) tbMap.get("rentAmt");
@@ -2378,7 +2386,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
           if (CommonUtils.intNvl(cnMap2.get("cnt")) > 0) {
             TotalCNRPF = (BigDecimal) cnMap2.get("cnAmount");
-          }
+          }*/
+
 
           // Get Order Total Outstanding
           TotalOutstanding = (BigDecimal) rlMap.get("rentAmt");
@@ -2407,6 +2416,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
               CurrentBillMth = CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo"));
             }
           }
+
+          TotalBillAmt = ((BigDecimal) view.get("mthRentAmt")).multiply(BigDecimal.valueOf(CurrentBillMth));
         }
       }
     }
@@ -2544,6 +2555,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       if (appTypeId != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
         msgT = "Non-Rental Order";
         msg = "This is non-rental sales order.";
+        isInValid = "isInValid";
+      } else if(view.get("bndlId").toString().equals("3")){
+        msgT = "Frame Order";
+        msg = "Kindly use the mattress order to perform RCO";
         isInValid = "isInValid";
       } else {
         if (orderStatusID != 4) {
