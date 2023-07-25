@@ -118,15 +118,20 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 				params.put("paramOrdId", paramAnoOrdId);
 				params.put("appTypeId", paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.FRM) ? SalesConstants.APP_TYPE_CODE_ID_RENTAL : SalesConstants.APP_TYPE_CODE_ID_AUX);
 
-
 				params.put("cancellationType", "CAN");
 				EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
 
 				params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
 				params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
 				params.put("paramStockId", CommonUtils.nvl(callEntryMap.get("stockId")));
+        params.put("salesOrdId", paramAnoOrdId);
+      
+				if(params.get("callStusId") == "4" && paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.ACI)){
+	        orderCancelMapper.updateCancelSAL0349D(params);
+	     }
 
 				orderCancelService.saveCancel(params);
+
 			}
 			map.setCode(AppConstants.SUCCESS);
 			map.setMessage("Record updated successfully.");
