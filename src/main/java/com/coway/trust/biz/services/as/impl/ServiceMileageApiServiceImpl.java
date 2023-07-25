@@ -57,7 +57,7 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
     params.put("userID_SYS47", loginMapper.selectUserByUserName(params.get("userName").toString()));
     params.put("userID_ORG01", loginMapper.selectOrgUserByUserName(params.get("userName").toString()));
 
-    if (mileageClaimNo.size() == 0) {
+    if (mileageClaimNo == null) {
       String masterMileageClaimNo = CommonUtils.nvl(serviceMileageApiServiceMapper.getMasterMileageClaimNo());
       params.put("MIL_CLM_NO", masterMileageClaimNo);
 
