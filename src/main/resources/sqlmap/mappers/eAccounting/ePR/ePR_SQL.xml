@@ -76,13 +76,15 @@
             #{id},
             #{item},
             #{quantity},
-            #{code},
-            #{address},
-            #{contact},
-            #{pic},
-            #{type},
-            #{region},
+            #{uom},
+            #{usage},
             #{branch},
+            #{type},
+            #{branchCode},
+            #{region},
+            #{pic},
+            #{contact},
+            #{address},
             SYSDATE
         FROM DUAL
     </insert>

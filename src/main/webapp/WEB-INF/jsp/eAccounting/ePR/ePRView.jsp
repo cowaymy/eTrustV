@@ -28,7 +28,7 @@
 
     .popup_wrap.eprpop {
         width: 90% !important;
-        left: 42%;
+        left: 33vw;
     }
 </style>
 
@@ -289,7 +289,7 @@
     $("#ePRNo").text("PR" + ((defaultEPR.requestId + "").padStart(5, '0')))
     $("#ePREditDistribute form > input:first-child").val(moment().format("DD/MM/YYYY"))
     document.getElementById("example_download").onclick = () => {
-        window.location.href = ("${pageContext.request.contextPath}/resources/download/eAccounting/Delivery_CSV_File_Eg.xlsx")
+        window.location.href = ("${pageContext.request.contextPath}/resources/download/eAccounting/Delivery_Template.xlsx")
     }
 
     $("#ePREditType").change((e) => {
@@ -363,18 +363,22 @@
         })
     })
 
-    document.querySelector("#ePRRciv > button").innerText = defaultEPR.recivName
-    document.querySelector("#ePRRciv > button").onclick = (e) => {
-        e.preventDefault()
-        Common.showLoader()
-        $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
-              httpMethod: "POST",
-              contentType: "application/json;charset=UTF-8",
-              data: {
-                  fileId: defaultEPR.recivAtchId
-              }
-        })
-        .done(() => {Common.removeLoader()})
+    if (defaultEPR.recivName) {
+	    document.querySelector("#ePRRciv > button").innerText = defaultEPR.recivName
+	    document.querySelector("#ePRRciv > button").onclick = (e) => {
+	        e.preventDefault()
+	        Common.showLoader()
+	        $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+	              httpMethod: "POST",
+	              contentType: "application/json;charset=UTF-8",
+	              data: {
+	                  fileId: defaultEPR.recivAtchId
+	              }
+	        })
+	        .done(() => {Common.removeLoader()})
+	    }
+    } else {
+    	document.querySelector("#ePRRciv > button").remove()
     }
     if (defaultEPR.addName) {
 	    document.querySelector("#ePRAdd > button").innerText = defaultEPR.addName
@@ -399,7 +403,7 @@
             e.preventDefault()
             e.currentTarget.classList.toggle("on")
             document.querySelector("dd[data-caro=" + e.currentTarget.id + "]").style.display = e.currentTarget.classList.contains("on") ? "block" : "none"
-            AUIGrid.resize(ePRApprovalGrid, 942, 380)
+            AUIGrid.resize(ePRApprovalGrid)
         }
     	el.click()
     })
@@ -409,29 +413,27 @@
             document.getElementById("ePRInfo").classList.remove("hidden")
             document.getElementById("ePRDistribute").classList.add("hidden")
             document.getElementById("ePRDistribute").classList.remove("show")
-            AUIGrid.resize(itemGrid, 942, 380)
+            AUIGrid.resize(itemGrid)
         } else {
             document.getElementById("ePRDistribute").classList.remove("hidden")
             document.getElementById("ePRDistribute").classList.add("show")
             document.getElementById("ePRInfo").classList.add("hidden")
-            AUIGrid.resize(ePRDistributeGrid, 942, 380)
+            AUIGrid.resize(ePRDistributeGrid)
         }
     }
 
     const ePRDistributeGrid = GridCommon.createAUIGrid("ePRDistributeGrid", [
-	    {
-	        dataField: 'item', headerText: 'Item', editable: false
-	    },
-	    {
-	        dataField: 'quantity', headerText: 'Quantity', editable: false
-	    },
-	    {dataField: 'branch', headerText: 'Branch Name'},
-	    {dataField: 'type', headerText: 'Type'},
-	    {dataField: 'code', headerText: 'Code'},
-	    {dataField: 'region', headerText: 'Region'},
-	    {dataField: 'pic', headerText: 'PIC'},
-	    {dataField: 'contact', headerText: 'Contact No.'},
-	    {dataField: 'address', headerText: 'Address'},
+	    {dataField: "item", headerText: "Item"},
+        {dataField: "quantity", headerText: "Quantity"},
+        {dataField: "uom", headerText: "UOM"},
+        {dataField: "usage", headerText: "Usage Month"},
+        {dataField: "branch", headerText: "Branch Name"},
+        {dataField: "type", headerText: "Branch Type"},
+        {dataField: "code", headerText: "Branch Code"},
+        {dataField: "region", headerText: "Region"},
+        {dataField: "pic", headerText: "PIC"},
+        {dataField: "contact", headerText: "Contact No."},
+        {dataField: "address", headerText: "Address"}
 	], '', {
 	    usePaging: true,
 	    pageRowCount: 20,

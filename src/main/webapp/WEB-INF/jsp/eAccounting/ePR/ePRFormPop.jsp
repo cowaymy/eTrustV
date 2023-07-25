@@ -259,12 +259,12 @@
     	    document.getElementById("ePRInfo").classList.remove("hidden")
     	    document.getElementById("ePRDistribute").classList.add("hidden")
     	    document.getElementById("ePRDistribute").classList.remove("show")
-    	    AUIGrid.resize(newGridID, 942, 380)
+    	    AUIGrid.resize(newGridID)
     	} else {
             document.getElementById("ePRDistribute").classList.remove("hidden")
             document.getElementById("ePRDistribute").classList.add("show")
             document.getElementById("ePRInfo").classList.add("hidden")
-            AUIGrid.resize(ePRDistributeGrid, 942, 380)
+            AUIGrid.resize(ePRDistributeGrid)
     	}
     }
 
@@ -278,7 +278,7 @@
 
     if (!stus || stus == 116) {
 	    document.getElementById("example_download").onclick = () => {
-	    	window.location.href = ("${pageContext.request.contextPath}/resources/download/eAccounting/Delivery_CSV_File_Eg.xlsx")
+	    	window.location.href = ("${pageContext.request.contextPath}/resources/download/eAccounting/Delivery_Template.xlsx")
 	    }
 	    document.getElementById("search_cost_center").onclick = (e) => {
 	        e.preventDefault()
@@ -337,19 +337,17 @@
 	})
 
 	const ePRDistributeGrid = GridCommon.createAUIGrid("ePRDistributeGrid", [
-        {
-            dataField: 'item', headerText: 'Item', editable: false
-        },
-        {
-            dataField: 'quantity', headerText: 'Quantity', editable: false
-        },
-        {dataField: 'branch', headerText: 'Branch Name'},
-        {dataField: 'type', headerText: 'Type'},
-        {dataField: 'code', headerText: 'Code'},
-        {dataField: 'region', headerText: 'Region'},
-        {dataField: 'pic', headerText: 'PIC'},
-        {dataField: 'contact', headerText: 'Contact No.'},
-        {dataField: 'address', headerText: 'Address'},
+		{dataField: "item", headerText: "Item"},
+		{dataField: "quantity", headerText: "Quantity"},
+		{dataField: "uom", headerText: "UOM"},
+		{dataField: "usage", headerText: "Usage Month"},
+		{dataField: "branch", headerText: "Branch Name"},
+		{dataField: "type", headerText: "Branch Type"},
+		{dataField: "code", headerText: "Branch Code"},
+		{dataField: "region", headerText: "Region"},
+		{dataField: "pic", headerText: "PIC"},
+		{dataField: "contact", headerText: "Contact No."},
+		{dataField: "address", headerText: "Address"}
     ], '', {
         usePaging: true,
         pageRowCount: 20,
@@ -488,7 +486,7 @@
 		if (checkForm()) {
 			document.querySelectorAll(".popup_wrap").forEach(pop => {
 				pop.classList.toggle("hidden")
-				AUIGrid.resize(approvalGrid, 942, 380)
+				AUIGrid.resize(approvalGrid)
 			})
 		}
 	})
@@ -625,7 +623,7 @@
     	e.preventDefault()
     	document.querySelectorAll(".popup_wrap").forEach(pop => {
             pop.classList.toggle("hidden")
-            AUIGrid.resize(newGridID, 942, 380)
+            AUIGrid.resize(newGridID)
         })
     })
 </script>

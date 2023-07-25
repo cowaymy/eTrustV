@@ -178,17 +178,19 @@ public class ePRController {
 		} else {
 			params.put("newAssign", null);
 			//Extract Delivery Excel data
-			List<Map<String, Cell>> result = excelReadComponent.readExcelToList(request.getFile("rciv"), 1, r -> {
+			List<Map<String, Cell>> result = excelReadComponent.readExcelToList(request.getFile("rciv"), 0, r -> {
 				Map<String, Cell> result2 = new HashMap<String, Cell>();
 				result2.put("item", r.getCell(0));
 				result2.put("quantity", r.getCell(1));
-				result2.put("branch", r.getCell(2));
-				result2.put("type", r.getCell(3));
-				result2.put("code", r.getCell(4));
-				result2.put("region", r.getCell(5));
-				result2.put("pic", r.getCell(6));
-				result2.put("contact", r.getCell(7));
-				result2.put("address", r.getCell(8));
+				result2.put("uom", r.getCell(2));
+				result2.put("usage", r.getCell(3));
+				result2.put("branch", r.getCell(4));
+				result2.put("type", r.getCell(5));
+				result2.put("branchCode", r.getCell(6));
+				result2.put("region", r.getCell(7));
+				result2.put("pic", r.getCell(8));
+				result2.put("contact", r.getCell(9));
+				result2.put("address", r.getCell(10));
 				return result2;
 			});
 
@@ -196,13 +198,15 @@ public class ePRController {
 			if (Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
 				put("item", "Item");
 				put("quantity", "Quantity");
-				put("code", "Code");
-				put("address", "Address");
-				put("contact", "Contact No.");
-				put("pic", "PIC");
-				put("type", "Type");
-				put("region", "Region");
+				put("uom", "UOM");
+				put("usage", "Usage Month");
 				put("branch", "Branch Name");
+				put("type", "Branch Type");
+				put("branchCode", "Branch Code");
+				put("region", "Region");
+				put("pic", "PIC");
+				put("contact", "Contact No.");
+				put("address", "Address");
 			}}.toString())) {
 
 				//Extract data type from Cell
@@ -210,21 +214,23 @@ public class ePRController {
 					Map<String, Object> rRes = new HashMap<String, Object>();
 					rRes.put("item", r.get("item").getStringCellValue());
 					rRes.put("quantity", r.get("quantity").getNumericCellValue());
-					rRes.put("code", r.get("code").getStringCellValue());
-					rRes.put("address", r.get("address").getStringCellValue());
-					rRes.put("contact", r.get("contact").getStringCellValue());
-					rRes.put("pic", r.get("pic").getStringCellValue());
-					rRes.put("type", r.get("type").getStringCellValue());
-					rRes.put("region", r.get("region").getStringCellValue());
+					rRes.put("uom", r.get("uom").getStringCellValue());
+					rRes.put("usage", r.get("usage").getStringCellValue());
 					rRes.put("branch", r.get("branch").getStringCellValue());
+					rRes.put("type", r.get("type").getStringCellValue());
+					rRes.put("branchCode", r.get("branchCode").getStringCellValue());
+					rRes.put("region", r.get("region").getStringCellValue());
+					rRes.put("pic", r.get("pic").getStringCellValue());
+					rRes.put("contact", r.get("contact").getStringCellValue());
+					rRes.put("address", r.get("address").getStringCellValue());
 					return rRes;
 				}).collect(Collectors.toList());
 
-				if (excelData.size() > 0) {
+				//Upload files and get key
+				int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+				params.put("rciv", fileGroupKey);
 
-					//Upload files and get key
-					int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-					params.put("rciv", fileGroupKey);
+				if (excelData.size() > 0) {
 
 					//Delete Previous Delivery data
 					dbRes.add(ePRService.deleteDeliverDet(p));
@@ -237,9 +243,10 @@ public class ePRController {
 					}
 
 				} else {
-					response.put("success", 0);
-					response.put("err", "Excel has no data");
-					return ResponseEntity.ok(response);
+					dbRes.add(1);
+//					response.put("success", 0);
+//					response.put("err", "Excel has no data");
+//					return ResponseEntity.ok(response);
 				}
 			} else {
 				response.put("success", 0);
@@ -265,17 +272,19 @@ public class ePRController {
 		EmailVO email = null;
 
 		//Extract Delivery Excel data
-		List<Map<String, Cell>> result = excelReadComponent.readExcelToList(request.getFile("rciv"), 1, r -> {
+		List<Map<String, Cell>> result = excelReadComponent.readExcelToList(request.getFile("rciv"), 0, r -> {
 			Map<String, Cell> result2 = new HashMap<String, Cell>();
 			result2.put("item", r.getCell(0));
 			result2.put("quantity", r.getCell(1));
-			result2.put("branch", r.getCell(2));
-			result2.put("type", r.getCell(3));
-			result2.put("code", r.getCell(4));
-			result2.put("region", r.getCell(5));
-			result2.put("pic", r.getCell(6));
-			result2.put("contact", r.getCell(7));
-			result2.put("address", r.getCell(8));
+			result2.put("uom", r.getCell(2));
+			result2.put("usage", r.getCell(3));
+			result2.put("branch", r.getCell(4));
+			result2.put("type", r.getCell(5));
+			result2.put("branchCode", r.getCell(6));
+			result2.put("region", r.getCell(7));
+			result2.put("pic", r.getCell(8));
+			result2.put("contact", r.getCell(9));
+			result2.put("address", r.getCell(10));
 			return result2;
 		});
 
@@ -283,13 +292,15 @@ public class ePRController {
 		if (Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
 			put("item", "Item");
 			put("quantity", "Quantity");
-			put("code", "Code");
-			put("address", "Address");
-			put("contact", "Contact No.");
-			put("pic", "PIC");
-			put("type", "Type");
-			put("region", "Region");
+			put("uom", "UOM");
+			put("usage", "Usage Month");
 			put("branch", "Branch Name");
+			put("type", "Branch Type");
+			put("branchCode", "Branch Code");
+			put("region", "Region");
+			put("pic", "PIC");
+			put("contact", "Contact No.");
+			put("address", "Address");
 		}}.toString())) {
 
 			//Extract data type from Cell
@@ -297,13 +308,15 @@ public class ePRController {
 				Map<String, Object> rRes = new HashMap<String, Object>();
 				rRes.put("item", r.get("item").getStringCellValue());
 				rRes.put("quantity", r.get("quantity").getNumericCellValue());
-				rRes.put("code", r.get("code").getStringCellValue());
-				rRes.put("address", r.get("address").getStringCellValue());
-				rRes.put("contact", r.get("contact").getStringCellValue());
-				rRes.put("pic", r.get("pic").getStringCellValue());
-				rRes.put("type", r.get("type").getStringCellValue());
-				rRes.put("region", r.get("region").getStringCellValue());
+				rRes.put("uom", r.get("uom").getStringCellValue());
+				rRes.put("usage", r.get("usage").getStringCellValue());
 				rRes.put("branch", r.get("branch").getStringCellValue());
+				rRes.put("type", r.get("type").getStringCellValue());
+				rRes.put("branchCode", r.get("branchCode").getStringCellValue());
+				rRes.put("region", r.get("region").getStringCellValue());
+				rRes.put("pic", r.get("pic").getStringCellValue());
+				rRes.put("contact", r.get("contact").getStringCellValue());
+				rRes.put("address", r.get("address").getStringCellValue());
 				return rRes;
 			}).collect(Collectors.toList());
 
@@ -321,21 +334,52 @@ public class ePRController {
 			});
 
 			if (includeSPC) {
+
+				//Insert or update request based on the presence of "requestId"
+				if (p.get("requestId") == null) {
+					p.put("id", ePRService.selectRequestId());
+				}
+				int res = ePRService.insertRequestDraft(p);
+				dbRes.add(res);
+
+				//Delete Request items and re-insert
+				if (p.get("requestId") != null) {
+					ePRService.deleteRequestItems(p);
+				}
+				ArrayList<Map<String, Object>> details = (ArrayList<Map<String, Object>>) p.get("items");
+				for(Map<String, Object> d : details) {
+					d.put("id", p.get("id"));
+					int res2 = ePRService.insertRequestItems(d);
+					dbRes.add(res2);
+				}
+
+				//To-do add approval line
+				for(int i = 0; i < members.size(); i++) {
+					Map<String, Object> d = members.get(i);
+					if (i == 0) {
+						String addContent = "is in need of your approval.<br/><span style=\"color: red;\">Title: \"" + p.get("ePRTitle") + "\"</span>";
+						email = prepareEmail(p.get("id").toString(), addContent);
+						email.setTo(ePRService.getMemberEmail(d));
+					}
+					d.put("id", p.get("id"));
+					d.put("seq", i+1);
+					int res2 = ePRService.insertApprovalLine(d);
+					dbRes.add(res2);
+				}
+
+				//Update Request to submitted
+				int res3 = ePRService.updateRequest(p);
+				dbRes.add(res3);
+
+				//Upload files and get key
+				int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+				p.put("rciv", fileGroupKey);
+
 				if (excelData.size() > 0) {
-					//Upload files and get key
-					int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-					p.put("rciv", fileGroupKey);
 					if (request.getFile("add") != null) {
 						int fileGroupKeyAdd = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("add"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
 						p.put("add", fileGroupKeyAdd);
 					}
-
-					//Insert or update request based on the presence of "requestId"
-					if (p.get("requestId") == null) {
-						p.put("id", ePRService.selectRequestId());
-					}
-					int res = ePRService.insertRequestDraft(p);
-					dbRes.add(res);
 
 					//Insert Delivery data
 					for(Map<String, Object> d : excelData) {
@@ -343,61 +387,27 @@ public class ePRController {
 						int res2 = ePRService.insertDeliverDet(d);
 						dbRes.add(res2);
 					}
-
-					//Delete Request items and re-insert
-					if (p.get("requestId") != null) {
-						ePRService.deleteRequestItems(p);
-					}
-					ArrayList<Map<String, Object>> details = (ArrayList<Map<String, Object>>) p.get("items");
-					for(Map<String, Object> d : details) {
-						d.put("id", p.get("id"));
-						int res2 = ePRService.insertRequestItems(d);
-						dbRes.add(res2);
-					}
-
-					//To-do add approval line
-					for(int i = 0; i < members.size(); i++) {
-						Map<String, Object> d = members.get(i);
-						if (i == 0) {
-							String addContent = "is in need of your approval.<br/><span style=\"color: red;\">Title: \"" + p.get("ePRTitle") + "\"</span>";
-							email = prepareEmail(p.get("id").toString(), addContent);
-							email.setTo(ePRService.getMemberEmail(d));
-						}
-						d.put("id", p.get("id"));
-						d.put("seq", i+1);
-						int res2 = ePRService.insertApprovalLine(d);
-						dbRes.add(res2);
-					}
-
-
-					//Update Request to submitted
-					int res3 = ePRService.updateRequest(p);
-					dbRes.add(res3);
-
-					int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
-						public boolean test(Integer n) {
-							return n > 0;
-						}
-					}) ? 1 : 0;
-					if (ret == 1) {
-						if (email != null) {
-							adaptorService.sendEmail(email, false);
-						}
-						response.put("success", p.get("id"));
-						return ResponseEntity.ok(response);
-					} else {
-						response.put("success", 0);
-						return ResponseEntity.ok(response);
-					}
 				} else {
-					response.put("success", 0);
-					response.put("err", "Receiver info has no data");
-					return ResponseEntity.ok(response);
+					dbRes.add(1);
 				}
-
 			} else {
 				response.put("success", 0);
 				response.put("err", "Approval must contain SPC member as second last approver");
+				return ResponseEntity.ok(response);
+			}
+			int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
+				public boolean test(Integer n) {
+					return n > 0;
+				}
+			}) ? 1 : 0;
+			if (ret == 1) {
+				if (email != null) {
+					adaptorService.sendEmail(email, false);
+				}
+				response.put("success", p.get("id"));
+				return ResponseEntity.ok(response);
+			} else {
+				response.put("success", 0);
 				return ResponseEntity.ok(response);
 			}
 		} else {
