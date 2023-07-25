@@ -262,6 +262,13 @@
         AND ROWNUM = 1
     </select>
 
+    <select id="selectOrgUserByUserName" parameterType="String" resultType="egovMap">
+      SELECT MEM_ID
+      FROM ORG0001D ORG
+      WHERE MEM_CODE = #{userName}
+          AND ROWNUM = 1
+    </select>
+
     <select id="checkByPass" parameterType="Map" resultType="egovMap">
         select
             BYPASS_AREA,
