@@ -121,12 +121,17 @@ function fn_AcceptAgreement() {
     }
 
     if($("#ack2Checkbox").is(":checked")  == false) {
-        Common.alert("* Please agree the personal data protection.");
+    	if($("#popType").val() == 'B'){
+    		Common.alert("* please agree the terms and condition.");
+    	}else{
+    		Common.alert("* Please agree the personal data protection.");
+    	}
+
         return false;
     }
 
     if($("#popType").val() == 'B' && $("#ack3Checkbox").is(":checked")  == false){
-    	Common.alert("* Please agree the personal data protection.");
+    	Common.alert("* please agree the terms and condition.");
         return false;
     }
 
