@@ -249,7 +249,10 @@
             C.PAY_ID,
             A.TOT_AMT,
             E.SALES_ORD_ID,
-            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID
+            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
+            REGEXP_REPLACE(C.OR_NO, '[^A-Za-z]') OR_TYPE,
+            EXTRACT(YEAR FROM J.TRX_DT) AS PAY_DATA,
+            NVL(K.ACC_CODE,0) BANK_ACC
         FROM
             PAY0252T A
             JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
@@ -259,6 +262,8 @@
             LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
             LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            JOIN PAY0069D J ON C.TRX_ID = J.TRX_ID
+            LEFT JOIN SYS0001M K ON D.PAY_ITM_BANK_ACC_ID = K.ACC_ID
         WHERE 1=1
         <if test="groupSeq != null and groupSeq != ''">
               AND A.GROUP_SEQ IN
@@ -288,7 +293,9 @@
             C.PAY_ID,
             A.TOT_AMT,
             E.SALES_ORD_ID,
-            A.FT_STUS_ID
+            A.FT_STUS_ID,
+            J.TRX_DT,
+            K.ACC_CODE
         ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
 
     </select>
@@ -554,7 +561,7 @@
 		        , A.CRT_DT
 		        , B.SALES_ORD_NO
 		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
-		        , CASE WHEN C.APPV_PRCSS_STUS IN ('J','R') THEN E.USER_NAME
+		        , CASE WHEN C.APPV_PRCSS_STUS IN ('A','J') THEN E.USER_NAME
 		            ELSE ''
 		        END APPROVAL
 		        , C.APPV_PRCSS_STUS
@@ -1289,14 +1296,15 @@
         ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
         </if>
         <if test='adminRole != null and adminRole == "Y"'>
-         JOIN (
+         LEFT JOIN (
                     SELECT APDT.*, CASE WHEN APDT.APPV_STUS = 'A' THEN 5
                     WHEN APDT.APPV_STUS = 'J' THEN 6
                     WHEN APDT.APPV_STUS = 'R' THEN 1
                     END AS APPV_PRCSS_STUS
                     FROM (SELECT
-                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ) AS row_number, PAY0348D.*
+                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number, PAY0348D.*
                     FROM PAY0348D
+                    WHERE PAY0348D.APPV_STUS IN ('A', 'J')
                     ) APDT WHERE ROW_NUMBER = 1
         ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
 
@@ -2659,8 +2667,11 @@
         ORDER BY a.or_no
     </select>
 
-    <select id="checkBankStateMapStus" parameterType="Map" resultType="int">
-        SELECT TO_NUMBER(OTH_KEYIN_STUS_ID) FROM PAY0081D WHERE F_TRNSC_ID = #{trxId}
+    <select id="checkBankStateMapStus" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(OTH_KEYIN_STUS_ID,0) OTH_KEYIN_STUS_ID,
+            F_TRNSC_CRDIT_AMT
+        FROM PAY0081D WHERE F_TRNSC_ID = #{trxId}
     </select>
 
     <update id="updateDcfBatchStatus" parameterType="Map">

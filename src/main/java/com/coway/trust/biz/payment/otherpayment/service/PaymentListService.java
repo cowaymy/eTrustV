@@ -167,6 +167,6 @@ public interface PaymentListService
     Map<String, Object> approvalNewDCF(Map<String, Object> params);
     void insertRequestDcfAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
     EgovMap requestDCF2(Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException;
-    Integer checkBankStateMapStus(Map<String, Object> params);
+    EgovMap checkBankStateMapStus(Map<String, Object> params);
     /* [END] BOI DCF*/
 }

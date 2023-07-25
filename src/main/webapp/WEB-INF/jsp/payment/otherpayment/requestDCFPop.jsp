@@ -55,7 +55,10 @@ var requestDcfColumnLayout = [
  	{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
  	{dataField : "ftStusId",headerText : "Fund transfer Status Id",width : 110,editable : false, visible : false},
  	{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false, visible : false},
- 	{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false}
+ 	{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
+ 	{dataField : "payData",headerText : "Pay Data",width : 110,editable : false, visible : false},
+ 	{dataField : "orType",headerText : "OR Type",width : 110,editable : false, visible : false},
+ 	{dataField : "bankAcc",headerText : "Bank Acc Code",width : 110,editable : false, visible : false}
 ];
 
 var requestNewDcfColumnLayout = [
@@ -163,19 +166,19 @@ $(document).ready(function(){
 
     $('#cashTrxId').blur(function() {
         if ($('#cashTrxId').val() != null && $("#cashTrxId").val() != "") {
-            fn_checkkTrxIdMapping($('#cashTrxId').val());
+            fn_checkkTrxIdMapping($('#cashTrxId').val(), $('#cashTotalAmtTxt').val());
         }
     });
 
     $('#chequeTrxId').blur(function() {
         if ($('#chequeTrxId').val() != null && $("#chequeTrxId").val() != "") {
-            fn_checkkTrxIdMapping($('#chequeTrxId').val());
+            fn_checkkTrxIdMapping($('#chequeTrxId').val(), $('#chequeTotalAmtTxt').val());
         }
     });
 
     $('#onlineTrxId').blur(function() {
         if ($('#onlineTrxId').val() != null && $("#onlineTrxId").val() != "") {
-            fn_checkkTrxIdMapping($('#onlineTrxId').val());
+            fn_checkkTrxIdMapping($('#onlineTrxId').val(), $('#onlineTotalAmtTxt').val());
         }
     });
 
@@ -581,11 +584,6 @@ function fn_DCFRequest(){
              return;
         }
 
-        if(!(Number($("#newTotalAmtTxt").val()) === Number($("#oldTotalAmtTxt").val()))){
-            Common.alert("Old amount and new amount are not the same");
-            return;
-        }
-
 //      NEW DCF PAYMENT INFO
         var payType = $("#payType").val();
 
@@ -901,13 +899,19 @@ function fn_DCFRequest(){
     Common.popupDiv("/payment/requestApprovalLineCreatePop.do", null, '', true,'_requestApprovalLineCreatePop');
 }
 
-function fn_checkkTrxIdMapping(trxId){
-    var jsonObj = { "trxId" : trxId };
+function fn_checkkTrxIdMapping(trxId, amt){
+    var jsonObj = {
+    		"trxId" : trxId,
+    		"amt" : amt
+    };
 
     Common.ajax("GET", "/payment/checkBankStateMapStus.do", jsonObj, function(result) {
         console.log("data : " + result);
-        if (result.message == "4") {
-            Common.alert("This item has already been confirmed payment.");
+        if (result != null && result.code == "99") {
+            Common.alert(result.message);
+            $('#cashTrxId').val("");
+            $('#chequeTrxId').val("");
+            $('#onlineTrxId').val("");
             return false;
         }
 

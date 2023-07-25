@@ -1430,7 +1430,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	}
 
 	@Override
-	public Integer checkBankStateMapStus(Map<String, Object> params) {
+	public EgovMap checkBankStateMapStus(Map<String, Object> params) {
 		return paymentListMapper.checkBankStateMapStus(params);
 	}
 	/* [END] BOI DCF*/

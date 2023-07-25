@@ -110,6 +110,8 @@ public class PaymentListController {
 
 	@RequestMapping(value="/validDCF")
 	public ResponseEntity<Map<String, Object>> validDCF(@RequestParam Map<String, Object> params) {
+		params.put("groupSeq", params.get("groupSeq").toString().split(""));
+
 		int count = paymentListService.invalidDCF(params);
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 
@@ -157,6 +159,19 @@ public class PaymentListController {
         //model.put("paymentList", resultList);
 
 		return "payment/otherpayment/requestDCFPop";
+	}
+
+	@RequestMapping(value = "/initRequestDCFPopOld.do")
+	public String initRequestDCFPopOld(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.put("groupSeq", params.get("groupSeq").toString().replace("\"", ""));
+		LOGGER.debug("payment List params : {} ", params);
+
+		// 조회.
+		//List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);
+		//model.put("paymentList", resultList);
+
+		return "payment/otherpayment/requestDCFPopOld";
 	}
 
 	@RequestMapping(value= "/checkDCFPopValid.do")
@@ -1381,22 +1396,27 @@ public class PaymentListController {
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+			return message;
 
 		}  else if((Arrays.asList(revStusId).contains(1) || Arrays.asList(revStusId).contains(5)) &&
 				(Arrays.asList(ftStusId).contains(1) || Arrays.asList(ftStusId).contains(5)) ){
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
+			return message;
 
 		}else if(Arrays.asList(revStusNm).contains("Refund")){
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("Payment Group Number has already been Refunded. Please reselect before Request DCF.");
+			return message;
 
 		} else if (paymentListService.invalidStatus(params) > 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setData(params);
 			message.setMessage("Payment has Active or Completed reverse request.");
+			return message;
+
 		} else {
 
 			String allowFlgYN = validateAction(selectedOrder);
@@ -1404,6 +1424,8 @@ public class PaymentListController {
 				message.setCode(AppConstants.FAIL);
 				message.setData(params);
 				message.setMessage("Not Allow to proceed with DCF. Please reselect. ");
+				return message;
+
 			}else{
 
         		// DCF Info Validation
@@ -1497,12 +1519,6 @@ public class PaymentListController {
         					return message;
         	 	    	}
 
-        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt")))){
-        	 	    		message.setCode(AppConstants.FAIL);
-        					message.setData(params);
-        					message.setMessage("Old amount and new amount are not the same");
-        					return message;
-        	 	    	}
 
         	 	    	if(cashPayInfoFormResult.get("cashBankType").toString().isEmpty() && cashPayInfoFormResult.get("cashBankType").equals("")){
         	 	    		message.setCode(AppConstants.FAIL);
@@ -1542,14 +1558,12 @@ public class PaymentListController {
         	 	    	if(!cashPayInfoFormResult.get("cashTrxId").toString().isEmpty()){
         	 	    		Map<String, Object> data = new HashMap<>();
         	 	    		data.put("trxId", cashPayInfoFormResult.get("cashTrxId"));
+        	 	    		data.put("amt", cashPayInfoFormResult.get("cashTotalAmtTxt"));
 
-        	 	    		String result = checkBankStateMapStus(data).toString();
+        	 	    		ResponseEntity<ReturnMessage> result = checkBankStateMapStus(data);
 
-        	 	    		if(result.equals("4")){
-        	 	    			message.setCode(AppConstants.FAIL);
-            					message.setData(params);
-            					message.setMessage("This item has already been confirmed payment.");
-            					return message;
+        	 	    		if(!result.getBody().toString().equals("PASS")){
+            					return result.getBody();
         	 	    		}
         	 	    	}
 
@@ -1566,13 +1580,6 @@ public class PaymentListController {
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("Amount exceed RM 200000");
-        					return message;
-        	 	    	}
-
-        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt")))){
-        	 	    		message.setCode(AppConstants.FAIL);
-        					message.setData(params);
-        					message.setMessage("Old amount and new amount are not the same");
         					return message;
         	 	    	}
 
@@ -1614,14 +1621,12 @@ public class PaymentListController {
         	 	     	if(!chequePayInfoFormResult.get("chequeTrxId").toString().isEmpty()){
         	 	    		Map<String, Object> data = new HashMap<>();
         	 	    		data.put("trxId", chequePayInfoFormResult.get("chequeTrxId"));
+        		    		data.put("amt", chequePayInfoFormResult.get("chequeTotalAmtTxt"));
 
-        	 	    		String result = checkBankStateMapStus(data).toString();
+        	 	    		ResponseEntity<ReturnMessage> result = checkBankStateMapStus(data);
 
-        	 	    		if(result.equals("4")){
-        	 	    			message.setCode(AppConstants.FAIL);
-            					message.setData(params);
-            					message.setMessage("This item has already been confirmed payment.");
-            					return message;
+        	 	    		if(!result.getBody().toString().equals("PASS")){
+            					return result.getBody();
         	 	    		}
         	 	    	}
 
@@ -1648,12 +1653,6 @@ public class PaymentListController {
         					return message;
         	 	    	}
 
-        	 	    	if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt")))){
-        	 	    		message.setCode(AppConstants.FAIL);
-        					message.setData(params);
-        					message.setMessage("Old amount and new amount are not the same");
-        					return message;
-        	 	    	}
         	 	    	if(creditPayInfoFormResult.get("creditCardMode").toString().isEmpty() && creditPayInfoFormResult.get("creditCardMode").toString().equals("")){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
@@ -1826,13 +1825,6 @@ public class PaymentListController {
         					return message;
         	 	        }
 
-        	 	       if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) != Double.parseDouble(((String)onlinePayInfoFormResult.get("onlineTotalAmtTxt")))){
-           	 	    		message.setCode(AppConstants.FAIL);
-           					message.setData(params);
-           					message.setMessage("Old amount and new amount are not the same");
-           					return message;
-           	 	    	}
-
         	 	       	//BankCharge Amount는 Billing 금액의 5%를 초과할수 없다
         	 	        double bcAmt4Limit = 0.00;
         	 	        double payAmt4Limit = 0.00;
@@ -1885,14 +1877,12 @@ public class PaymentListController {
         	 	     	if(!onlinePayInfoFormResult.get("onlineTrxId").toString().isEmpty()){
         	 	    		Map<String, Object> data = new HashMap<>();
         	 	    		data.put("trxId", onlinePayInfoFormResult.get("onlineTrxId"));
+        		    		data.put("amt", onlinePayInfoFormResult.get("onlineTotalAmtTxt"));
 
-        	 	    		String result = checkBankStateMapStus(data).toString();
+        	 	    		ResponseEntity<ReturnMessage> result = checkBankStateMapStus(data);
 
-        	 	    		if(result.equals("4")){
-        	 	    			message.setCode(AppConstants.FAIL);
-            					message.setData(params);
-            					message.setMessage("This item has already been confirmed payment.");
-            					return message;
+        	 	    		if(!result.getBody().toString().equals("PASS")){
+            					return result.getBody();
         	 	    		}
         	 	    	}
         	 	    }
@@ -2002,12 +1992,31 @@ public class PaymentListController {
 
 	  @RequestMapping(value = "/checkBankStateMapStus.do", method = RequestMethod.GET)
 	  public ResponseEntity<ReturnMessage> checkBankStateMapStus(@RequestParam Map<String, Object> params) {
-		  String result = paymentListService.checkBankStateMapStus(params).toString();
+		  EgovMap result = paymentListService.checkBankStateMapStus(params);
 
 		  ReturnMessage message = new ReturnMessage();
-		  message.setCode(AppConstants.SUCCESS);
-		  message.setMessage(result);
 
+
+		  if(result == null){
+    		  message.setCode(AppConstants.FAIL);
+    		  message.setMessage("This item is an invalid transaction ID.");
+    		  return ResponseEntity.ok(message);
+    	  }else{
+    		  if(result.get("othKeyinStusId").toString().equals("4")){
+    			  message.setCode(AppConstants.FAIL);
+        		  message.setMessage("This item has already been confirmed payment.");
+        		  return ResponseEntity.ok(message);
+    		  }
+
+    		  if(Double.parseDouble(result.get("fTrnscCrditAmt").toString()) != Double.parseDouble(params.get("amt").toString())){
+    			  message.setCode(AppConstants.FAIL);
+        		  message.setMessage("Transaction amount and new DCF amount are not the same.");
+        		  return ResponseEntity.ok(message);
+    		  }
+    	  }
+
+		  message.setCode(AppConstants.SUCCESS);
+		  message.setMessage("PASS");
 		  return ResponseEntity.ok(message);
 	  }
 	  /** [END] BOI - DCF **/

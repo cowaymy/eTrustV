@@ -196,6 +196,52 @@
 	    }
      }
 
+	function fn_requestDCFPopOld(){
+        var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        console.log(selectedItem);
+
+        if (selectedItem[0] > -1){
+            var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
+            console.log("groupSeq");
+            console.log(groupSeq);
+            var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+            console.log("revStusId");
+            console.log(revStusId);
+            const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
+            console.log("revStusNm");
+            console.log(revStusNm);
+            let data = AUIGrid.getOrgGridData(myGridID).filter(r => r.groupSeq == groupSeq);
+            console.log("data");
+            console.log(data);
+            let ftStus = data.map(d => d.ftStusId);
+            console.log("ftStus");
+            console.log(ftStus);
+            fetch("/payment/validDCF?groupSeq=" + groupSeq)
+            .then(resp => resp.json()).then(d => {
+                if (d.error) {
+                    Common.alert(d.error)
+                } else if (d.success) {
+                    if (revStusNm == "Refund") {
+                        Common.alert("<b>This has already been refunded. </b>");
+                    } else if (revStusId == 1) {
+                        Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
+                    } else if (revStusId == 5) {
+                        Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
+                    } else {
+                        if (!(ftStus.filter(s => s == 1).length)) {
+                            Common.popupDiv('/payment/initRequestDCFPopOld.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPopOld');
+                        }else{
+                            Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
+                        }
+                    }
+                }
+            })
+        }else{
+             Common.alert('No Payment List selected.');
+        }
+    }
+
+
 
 	//Request Fund Transfer 팝업
 	function fn_requestFTPop(){
@@ -475,6 +521,8 @@
 				<ul class="btns">
 				 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
+                        <!-- Previos version of REQUEST DCF -->
+<!-- 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPopOld();" id="btnrequestDCF">Request DCF OLD</a></p></li> -->
 				</c:if>
 					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
 					<li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
