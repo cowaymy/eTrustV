@@ -13,7 +13,7 @@
     SELECT SVC0137M_SEQ.NEXTVAL FROM DUAL
   </select>
 
-  <insert id=insertMasterClaimRecord parameterType="Map">
+  <insert id="insertMasterClaimRecord" parameterType="Map">
    INSERT INTO SVC0137M( MIL_CLM_NO
                                      , MEM_ID
                                      , CLM_DT
