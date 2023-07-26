@@ -65,4 +65,44 @@
                   , SYSDATE
     )
   </insert>
+
+  <select id="getMileageClaimNo" parameterType="Map" resultType="egovMap">
+     SELECT BRNCH_ID,
+                CODE,
+                LONGTITUDE,
+                LATITUDE
+     FROM SYS0005M
+     WHERE BRNCH_ID = (SELECT BRNCH
+                                    FROM ORG0001D
+                                    WHERE MEM_ID = #{userID_ORG01});
+  </select>
+
+  <insert id="insertSubDSCMileageClaim" parameterType="Map">
+    INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
+                                      , MIL_CLM_NO
+                                      , SVC_NO
+                                      , MEM_ID
+                                      , CLM_DT
+                                      , LONGTITUDE
+                                      , LATITUDE
+                                      , MIL_REMARK
+                                      , CRT_BY
+                                      , UPD_BY
+                                      , CRT_DT
+                                      , UPD_DT
+
+    ) VALUES ( SVC0138D_SEQ.NEXTVAL
+                  , TO_NUMBER(#{MIL_CLM_NO})
+                  , '-'
+                  , TO_NUMBER(#{userID_ORG01})
+                  , TO_DATE(#{checkInDate}, 'YYYYMMDD')
+                  , TO_NUMBER(#{longtitude})
+                  , TO_NUMBER(#{latitude})
+                  , #{branchID} || ' - ' || #{branchCode}
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
+                  , SYSDATE
+                  , SYSDATE
+    )
+  </insert>
 </mapper>
