@@ -268,6 +268,18 @@ public class AfterServiceJobDto {
 
   private BigDecimal longitude;
 
+  @ApiModelProperty(value = "REWORK_PROJ")
+  private String reworkProj;
+
+  public String getReworkProj() {
+	return reworkProj;
+}
+
+public void setReworkProj(String reworkProj) {
+	this.reworkProj = reworkProj;
+}
+
+
   public String getAsUnmatchReason() {
 	return asUnmatchReason;
 }
