@@ -39,7 +39,7 @@
            JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
            LEFT JOIN SAL0340D KEYIN ON (CAST(som.SALES_DT AS TIMESTAMP) <![CDATA[>=]]> CAST(KEYIN.KEYIN_START_DT AS TIMESTAMP))
                                         AND (CAST(som.SALES_DT AS TIMESTAMP)　<![CDATA[<]]> CAST(KEYIN.KEYIN_END_DT + INTERVAL '1' DAY AS TIMESTAMP))
-           LEFT JOIN SAL0020D s0020d ON som.SALES_ORD_ID = s0020d.SO_REQ_SO_ID
+           LEFT JOIN SAL0020D s0020d ON s0020d.SO_REQ_ID = (SELECT MAX(SO_REQ_ID) FROM SAL0020D WHERE SO_REQ_SO_ID = som.SALES_ORD_ID)
            WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
 
            <if test="orgCode != null and orgCode != ''">
