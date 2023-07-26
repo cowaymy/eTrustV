@@ -36,7 +36,7 @@
     WHERE MIL_CLM_NO = #{MIL_CLM_NO}
         AND SVC_NO = #{serviceNo}
         AND MEM_ID = #{userID_ORG01}
-        AND TO_DATE(CLM_DT, 'YYYYMMDD') = #{checkInDate}
+        AND TO_CHAR(CLM_DT, 'YYYYMMDD') = #{checkInDate}
   </insert>
 
   <insert id="insertSubMileageClaim" parameterType="Map">
