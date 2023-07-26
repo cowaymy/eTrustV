@@ -17,7 +17,7 @@ public interface ServiceMileageApiServiceMapper {
 
   int updateExistingSubMileageClaim(Map<String, Object> params);
 
-  int insertSubMileageChaim(Map<String, Object> params);
+  int insertSubMileageClaim(Map<String, Object> params);
 
   List<EgovMap> checkInMileage(Map<String, Object> params);
 
