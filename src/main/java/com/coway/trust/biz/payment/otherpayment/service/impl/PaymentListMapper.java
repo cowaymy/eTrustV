@@ -201,7 +201,7 @@ public interface PaymentListMapper {
 	String getSalesOrdId(String salesOrdNo);
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 	EgovMap selectAttachmentInfo(Map<String, Object> params);
-	String selectAllowFlg (Map<String, Object> params);
+	EgovMap selectAllowFlg (Map<String, Object> params);
 	/* CELESTE 20230306 [E] */
 
 	/* BOI DCF*/

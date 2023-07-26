@@ -155,7 +155,7 @@ public interface PaymentListService
     Map<String, Object> approvalRefund(Map<String, Object> params);
     void rejectRefund(Map<String, Object> params);
     EgovMap selectAttachmentInfo(Map<String, Object> params);
-    String selectAllowFlg(Map<String, Object> params);
+    EgovMap selectAllowFlg(Map<String, Object> params);
     /* CELESTE 20230306 [E] */
 
     /* BOI DCF*/

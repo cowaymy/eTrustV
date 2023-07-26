@@ -1691,17 +1691,20 @@
           AND T1.ATCH_FILE_ID = #{atchFileId}
     </select>
 
-    <select id="selectAllowFlg" parameterType="Map" resultType="String">
+    <select id="selectAllowFlg" parameterType="Map" resultType="EgovMap">
 
             SELECT
             <if test="type != '' and type == 'DCF' ">
-                ALLOW_DCF
+                DCF_BK_CRC_STATE_FLG FLG,
+                ALLOW_DCF ALLOW
             </if>
             <if test="type != '' and type == 'FT' ">
-                ALLOW_FT
+                FT_BK_CRC_STATE_FLG FLG,
+                ALLOW_FT ALLOW
             </if>
             <if test="type != '' and type == 'REF' ">
-                ALLOW_REF
+                REF_BK_CRC_STATE_FLG FLG,
+                ALLOW_REF ALLOW
            </if>
             FROM PAY0351C
             WHERE 1=1
@@ -1710,7 +1713,7 @@
             AND BANK_CODE = #{bankAcc}
 <!--             AND REF_BK_CRC_STATE_FLG = #{bkCrcFlg} -->
 
-            <if test="type != '' and type == 'DCF' ">
+            <!-- <if test="type != '' and type == 'DCF' ">
                 AND DCF_BK_CRC_STATE_FLG = #{bkCrcFlg}
             </if>
 
@@ -1720,7 +1723,7 @@
 
             <if test="type != '' and type == 'REF' ">
                 AND REF_BK_CRC_STATE_FLG = #{bkCrcFlg}
-            </if>
+            </if> -->
     </select>
 
     <select id="selectReqDcfNewInfo" parameterType="Map" resultType="egovMap">

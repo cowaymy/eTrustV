@@ -857,7 +857,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	}
 
 	@Override
-	public String selectAllowFlg(Map<String, Object> params) {
+	public EgovMap selectAllowFlg(Map<String, Object> params) {
 		return paymentListMapper.selectAllowFlg(params);
 	}
 	/* CELESTE 20230306 [E] */

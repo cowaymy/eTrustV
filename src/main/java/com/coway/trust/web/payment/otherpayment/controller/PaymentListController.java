@@ -670,6 +670,60 @@ public class PaymentListController {
 
 		//Map<String, Object> returnMap = new HashMap<String, Object>();
 		// 20230627 - ADD IN NEW CHECKING INCLUSIVE OF OR_TYPE/MODE_ID/BANK_CODE/BANK_STATEMENT/2018[S]
+		EgovMap allowFlg = null;
+		String allowReq = null;
+		if(selectedOrder.size() > 0 ){
+			for(int i = 0; selectedOrder.size() > i; i++){
+				Map<String, Object> validationParams = new HashMap<String, Object>();
+				validationParams.put("orType", selectedOrder.get(i).get("orType"));
+				validationParams.put("payItmModeId", selectedOrder.get(i).get("payItmModeId"));
+				validationParams.put("type", selectedOrder.get(i).get("type"));
+
+				if(selectedOrder.get(i).containsKey("payData")){
+					if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) >= 2018) {
+						validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
+
+						allowFlg = paymentListService.selectAllowFlg(validationParams);
+
+						if(allowFlg != null && allowFlg.get("allow").toString().equals("Y")){
+							if(allowFlg.get("flg").toString().equals("Y")){
+								if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
+									allowReq = "Y";
+	    						}
+	    						else
+	    						{
+	    							allowReq = "N";
+	    							break;
+	    						}
+							}else{
+								allowReq = "Y";
+							}
+
+						}
+						else{
+							allowReq = "N";
+							break;
+						}
+
+					}
+					else{
+						allowReq = "Y"; //payment before 2018 no need to do validation checking, allow to proceed.
+					}
+				}
+				else{
+					allowReq = "N";
+					break;
+				}
+			}
+		}
+
+		return allowReq;
+	}
+
+	/*public String validateAction(@RequestParam List<Map<String, Object>> selectedOrder){
+
+		//Map<String, Object> returnMap = new HashMap<String, Object>();
+		// 20230627 - ADD IN NEW CHECKING INCLUSIVE OF OR_TYPE/MODE_ID/BANK_CODE/BANK_STATEMENT/2018[S]
 		String allowFlg = null;
 		if(selectedOrder.size() > 0 ){
 			for(int i = 0; selectedOrder.size() > i; i++){
@@ -678,7 +732,7 @@ public class PaymentListController {
 				validationParams.put("payItmModeId", selectedOrder.get(i).get("payItmModeId"));
 				validationParams.put("type", selectedOrder.get(i).get("type"));
 
-				/*if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) < 2018){
+				if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) < 2018){
 					validationParams.put("bankAcc", "ETC");
 					validationParams.put("bkCrcFlg", "N");
 					allowFlg = paymentListService.selectAllowFlg(validationParams);
@@ -691,14 +745,14 @@ public class PaymentListController {
 					//else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
 						//returnMap.put("success", true);
 					}
-				} */
+				}
 				if(selectedOrder.get(i).containsKey("payData")){
 					if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) >= 2018) {
 						validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
 
 						if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
 							//if((selectedOrder.get(i).get("bankStateMappingDt") != null && selectedOrder.get(i).get("bankStateMappingDt") != "") || (selectedOrder.get(i).get("crcStateMappingDt") != null && selectedOrder.get(i).get("crcStateMappingDt") != "")){
-								validationParams.put("bkCrcFlg", "Y");
+							validationParams.put("bkCrcFlg", "Y");
 //							}
 //							else{ //not allow to proceed if statement mapping date is empty but statement mapping id is not null
 //								allowFlg = "N";
@@ -730,7 +784,7 @@ public class PaymentListController {
 		}
 
 		return allowFlg;
-	}
+	}*/
 	// 20230627 - ADD IN NEW CHECKING INCLUSIVE OF OR_TYPE/MODE_ID/BANK_CODE/BANK_STATEMENT/2018[E]
 
 	/*@RequestMapping(value="/validRefund" ,  method = RequestMethod.GET)
