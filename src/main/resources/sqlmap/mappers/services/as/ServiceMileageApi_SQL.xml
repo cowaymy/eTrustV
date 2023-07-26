@@ -39,7 +39,7 @@
         AND CLM_DT = TO_DATE(#{checkInDate}, 'YYYYMMDD')
   </insert>
 
-  <insert id="insertAsFromCodyRequest" parameterType="Map">
+  <insert id="insertSubMileageClaim" parameterType="Map">
     INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
                                       , MIL_CLM_NO
                                       , SVC_NO
