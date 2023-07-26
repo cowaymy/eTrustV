@@ -78,7 +78,7 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
     int updateExistingSubMileageClaim = serviceMileageApiServiceMapper.updateExistingSubMileageClaim(params);
     logger.debug(" = checkInMileage = SUB RECORD UPDATED : " + updateExistingSubMileageClaim);
 
-    int insertSubMileageClaim = serviceMileageApiServiceMapper.insertSubMileageChaim(params);
+    int insertSubMileageClaim = serviceMileageApiServiceMapper.insertSubMileageClaim(params);
     logger.debug(" = checkInMileage = SUB RECORD INSERTED : " + insertSubMileageClaim);
 
     Map<String, Object> returnParam = new HashMap<>();
