@@ -63,7 +63,7 @@
 
     fn_checkASReceiveEntryPop();
 
-    if ('${preASInfo}' != "undefined" && '${preASInfo}' != "") {
+    if ('${preASInfo.preAsMemType}' != "" || '${preASInfo.userId}' != "") {
     	//setTimeout(function() {('#requestor').val('${preASInfo.preAsMemType}')},2000);
         $('#requestor').val('${preASInfo.preAsMemType}');
         $('#txtRequestor').val('${preASInfo.userId}');
