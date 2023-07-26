@@ -20,7 +20,7 @@
                                      , CRT_BY
                                      , UPD_BY
                                      , CRT_DT
-                                     , UPT_DT
+                                     , UPD_DT
    ) VALUES (  TO_NUMBER(#{MIL_CLM_NO})
                   , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
