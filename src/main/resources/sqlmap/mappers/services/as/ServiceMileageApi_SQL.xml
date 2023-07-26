@@ -54,7 +54,7 @@
 
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
                   , TO_NUMBER(#{MIL_CLM_NO})
-                  , TO_NUMBER(#{serviceNo})
+                  , #{serviceNo}
                   , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
                   , TO_NUMBER(#{longtitude})
