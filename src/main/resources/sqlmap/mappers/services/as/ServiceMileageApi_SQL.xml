@@ -66,7 +66,7 @@
     )
   </insert>
 
-  <select id="getMileageClaimNo" parameterType="Map" resultType="egovMap">
+  <select id="getBranchLocation" parameterType="Map" resultType="egovMap">
      SELECT BRNCH_ID,
                 CODE,
                 LONGTITUDE,
