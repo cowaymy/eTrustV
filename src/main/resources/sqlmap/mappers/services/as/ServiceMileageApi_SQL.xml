@@ -5,7 +5,7 @@
   <select id="getMileageClaimNo" parameterType="Map" resultType="egovMap">
     SELECT MIL_CLM_NO
     FROM SVC0137M
-    WHERE TO_CHAR(CLM_DT, 'YYYYMMDD') = TO_CHAR(#{checkInDate}, 'YYYYMMDD')
+    WHERE TO_CHAR(CLM_DT, 'YYYYMMDD') = #{checkInDate}
         AND MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userName})
   </select>
 
@@ -36,7 +36,7 @@
     WHERE MIL_CLM_NO = #{MIL_CLM_NO}
         AND SVC_NO = #{serviceNo}
         AND MEM_ID = #{userID_ORG01}
-        AND CLM_DT = TO_DATE(#{checkInDate}, 'YYYYMMDD')
+        AND TO_DATE(CLM_DT, 'YYYYMMDD') = #{checkInDate}
   </insert>
 
   <insert id="insertSubMileageClaim" parameterType="Map">
