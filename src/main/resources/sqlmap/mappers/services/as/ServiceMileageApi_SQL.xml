@@ -74,7 +74,7 @@
      FROM SYS0005M
      WHERE BRNCH_ID = (SELECT BRNCH
                                     FROM ORG0001D
-                                    WHERE MEM_ID = #{userID_ORG01});
+                                    WHERE MEM_ID = #{userID_ORG01})
   </select>
 
   <insert id="insertSubDSCMileageClaim" parameterType="Map">
