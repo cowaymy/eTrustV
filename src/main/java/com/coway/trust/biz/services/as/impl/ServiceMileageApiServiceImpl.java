@@ -57,6 +57,9 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
     EgovMap userID_SYS47 = loginMapper.selectUserByUserName(params.get("userName").toString());
     EgovMap userID_ORG01 =loginMapper.selectOrgUserByUserName(params.get("userName").toString());
 
+    logger.debug(" = checkInMileage = userID_SYS47 : " + userID_SYS47.toString());
+    logger.debug(" = checkInMileage = userID_ORG01 : " + userID_ORG01.toString());
+    
     params.put("userID_SYS47", userID_SYS47.get("USER_ID"));
     params.put("userID_ORG01", userID_ORG01.get("MEM_ID"));
 
