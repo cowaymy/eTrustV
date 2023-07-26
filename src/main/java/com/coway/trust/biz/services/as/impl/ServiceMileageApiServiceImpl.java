@@ -71,7 +71,7 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
       int insertMasterClaimRecord = serviceMileageApiServiceMapper.insertMasterClaimRecord(params);
       logger.debug(" = checkInMileage = MASTER RECORD INSERTED : " + insertMasterClaimRecord);
     } else {
-      params.put("MIL_CLM_NO", CommonUtils.nvl(mileageClaimNo.get("MIL_CLM_NO")));
+      params.put("MIL_CLM_NO", CommonUtils.nvl(mileageClaimNo.get("milClmNo")));
     }
 
     // STEP 2 : INSERT SUB TABLE
