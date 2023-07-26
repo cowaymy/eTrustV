@@ -644,7 +644,7 @@ public class PaymentListController {
 		if(invalidTypeCount > 0) {
 			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
 		}
-		else if((Arrays.asList(params.get("revStusId")).contains(1) || Arrays.asList(params.get("revStusId")).contains(5)) && (Arrays.asList(params.get("ftStusId")).contains(1) || Arrays.asList(params.get("ftStusId")).contains(5))){
+		else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) && (Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5"))){
 			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request Refund");
 		}
 		else if(Arrays.asList(revStusNm).contains("Refund") ){
@@ -1289,8 +1289,8 @@ public class PaymentListController {
 
 		if (invalidTypeCount > 0) {
 			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
-		} else if((Arrays.asList(revStusId).contains(1) || Arrays.asList(revStusId).contains(5)) &&
-				(Arrays.asList(ftStusId).contains(1) || Arrays.asList(ftStusId).contains(5)) ){
+		} else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) &&
+				(Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5")) ){
 			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
 		}else if(Arrays.asList(revStusNm).contains("Refund")){
 			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request DCF.");
