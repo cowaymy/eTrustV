@@ -114,16 +114,16 @@ function createLargeAUIGrid() {
 
       { dataField : "stkId", headerText : "stkId", width : "15%",visible: false},
       { dataField : "prodCode", headerText : "Product Code", width : "15%"},
-      { dataField : "prodLaunchDt", headerText : "Product Launch Date", width : "15%"},
+      { dataField : "prodLaunchDt", headerText : "Product Launch Date", dataType : "date", formatString : "dd-mm-yyyy", width : "15%"},
       { dataField : "ctComm", headerText : "CT Commission", width : "15%"},
       { dataField : "asCost", headerText : "AS Cost", width : "15%"},
 
-      { dataField : "effDt", headerText : "Effect Date", width : "15%"},
-      { dataField : "expDt", headerText : "Expire Date", width : "15%"},
+      { dataField : "effDt", headerText : "Effect Date", dataType : "date", formatString : "dd-mm-yyyy", width : "15%"},
+      { dataField : "expDt", headerText : "Expire Date", dataType : "date", formatString : "dd-mm-yyyy", width : "15%"},
       { dataField : "crtUser", headerText : "Create by", width : "15%"},
-      { dataField : "crtDt", headerText : "Create Date", width : "15%"},
+      { dataField : "crtDt", headerText : "Create Date", dataType : "date", formatString : "dd-mm-yyyy", width : "15%"},
       { dataField : "updUser", headerText : "Last Update by", width : "15%"},
-      { dataField : "updDt", headerText : "Last Update Date", width : "15%"}
+      { dataField : "updDt", headerText : "Last Update Date", dataType : "date", formatString : "dd-mm-yyyy", width : "15%"}
 	];
 
 	largeGridID = GridCommon.createAUIGrid("largeGrid", MainColumnLayout,"", options);
@@ -356,6 +356,16 @@ function fn_validate(){
 	return true;
 }
 
+function fn_excelDown() {
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    GridCommon.exportTo("largeGrid", "xlsx", "Service Code Management List" + yyyy + mm + dd);
+}
+
 </script>
 
     <section id="content">
@@ -464,6 +474,11 @@ function fn_validate(){
 		      </dd>
 		      </dl>
             </aside>
+
+            <ul class="right_btns">
+			    <li><p class="btn_grid">
+			    <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p></li>
+			 </ul>
         </form>
       </section><!-- search_table end -->
 
