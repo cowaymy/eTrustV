@@ -3190,6 +3190,7 @@
                            LPM,
                            WATER_SRC_TYPE,
                            AS_UNMATCH_REASON,
+                           REWORK_PROJ,
                            AS_TRANSFER_TO_DT
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
@@ -3251,6 +3252,7 @@
                #{AS_LPM},
                #{WATER_SRC_TYPE},
                #{AS_UNMATCH_REASON},
+               #{REWORK_PROJ},
                NVL(#{AS_TRANSFER_TO_DT},0)
     )
   </insert>
