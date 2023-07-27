@@ -32,9 +32,6 @@ var refundColumnLayout = [ {
     dataField : "ordNo",
     headerText : "<spring:message code='pay.head.orderNo'/>"
 }, {
-	dataField: "reqType",
-	headerText : "Request <br> Type"
-}, {
     dataField : "trxDt",
     headerText : "Transaction Date",
     dataType : "date",
@@ -310,8 +307,6 @@ function fn_setToDay() {
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
-    $("#appvStartDt").val(today)
-    $("#appvEndDt").val(today)
 }
 
 function fn_refundConfirmPop() {
@@ -455,14 +450,8 @@ function fn_formClear() {
     <td>
     <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode"></select>
     </td>
-    <th scope="row">Approved Date</th>
-    <td>
-    <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Approved start Date" placeholder="DD/MM/YYYY" class="j_date" id="appvStartDt" name="appvStartDt"/></p>
-    <span>To</span>
-    <p><input type="text" title="Approved end Date" placeholder="DD/MM/YYYY" class="j_date" id="appvEndDt" name="appvEndDt"/></p>
-    </div><!-- date_set end -->
-    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
