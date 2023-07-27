@@ -50,7 +50,7 @@
                 , #{item.month} month
                 , #{item.week} week
                 , TO_DATE(#{item.keyInStartDt},'dd/mm/yyyy') keyInStartDt
-                , TO_DATE(#{item.keyInEndDt},'dd/mm/yyyy') keyInEndDt
+                , TO_DATE(#{item.keyInEndDt} || ' 23:59:59','YYYY/MM/DD HH24:MI:SS') keyInEndDt
                 , #{creator} creator
                 , SYSDATE crtDt
              FROM DUAL
@@ -64,7 +64,7 @@
         MONTH               = #{month}        ,
         WEEK                = #{week}         ,
         KEYIN_START_DT      = TO_DATE(#{keyinStartDt},'yyyy/mm/dd'),
-        KEYIN_END_DT        = TO_DATE(#{keyinEndDt},'yyyy/mm/dd'),
+        KEYIN_END_DT        = TO_DATE(#{keyinEndDt} || ' 23:59:59','YYYY/MM/DD HH24:MI:SS'),
         UPD_USER_ID         = #{updator}      ,
         UPD_DT              = SYSDATE
        WHERE KEY_IN_ID  = #{keyInId}
