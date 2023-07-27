@@ -73,8 +73,8 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
       EgovMap branchLocation = serviceMileageApiServiceMapper.getBranchLocation(params);
       params.put("branchID", branchLocation.get("brnchId"));
       params.put("branchCode", branchLocation.get("code"));
-      params.put("longtitude", branchLocation.get("longtitude"));
-      params.put("latitude", branchLocation.get("latitude"));
+      params.put("dscLongtitude", branchLocation.get("longtitude"));
+      params.put("dscLatitude", branchLocation.get("latitude"));
 
       int insertSubDSCMileageClaim = serviceMileageApiServiceMapper.insertSubDSCMileageClaim(params);
       logger.debug(" = checkInMileage = SUB RECORD DSC INSERTED : " + insertSubDSCMileageClaim);
