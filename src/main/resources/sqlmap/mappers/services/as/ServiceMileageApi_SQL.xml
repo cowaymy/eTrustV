@@ -96,8 +96,8 @@
                   , '-'
                   , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
-                  , TO_NUMBER(#{longtitude})
-                  , TO_NUMBER(#{latitude})
+                  , TO_NUMBER(#{dscLongtitude})
+                  , TO_NUMBER(#{dscLatitude})
                   , #{branchID} || ' - ' || #{branchCode}
                   , TO_NUMBER(#{userID_SYS47})
                   , TO_NUMBER(#{userID_SYS47})
