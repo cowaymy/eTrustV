@@ -13,7 +13,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("eMandateMapper")
 public interface EMandateMapper {
 
-	int checkOrderWithConditions(Map<String, Object> params);
+	EgovMap getOrderByCustomer(Map<String, Object> params);
 	EgovMap getNextPaymentId(Map<String, Object> params);
 	int insertDDRequest (Map<String, Object> params);
+	int updateStatusDDRequest(Map<String, Object> params);
 }

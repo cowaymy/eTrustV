@@ -2,14 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.eMandate.service.impl.EMandateMapper">
 
-<!-- Added for DD enrollment by Hui Ding, 17/07/2023 -->
-  <select id="checkOrderWithConditions" parameterType="Map" resultType="int">
-        SELECT COUNT(1) AS VALID_ORDER FROM SAL0001D S
+  <select id="getOrderByCustomer" parameterType="Map" resultType="egovMap">
+        SELECT S.SALES_ORD_ID, C.CUST_ID FROM SAL0001D S
                 JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
         WHERE TRIM(C.NRIC) = #{nric}
         AND TRIM(UPPER(C.NAME)) = #{name}
         AND S.SALES_ORD_NO = #{orderNo}
         AND S.STUS_CODE_ID = 4
+        AND C.STUS_CODE_ID = 1
+        AND ROWNUM = 1
   </select>
 
   <select id="getNextPaymentId" parameterType="Map" resultType="egovMap">
@@ -43,8 +44,17 @@
             ,#{apiId}
             ,#{resDate}
         )
-
-
     </insert>
+
+    <update id="updateStatusDDRequest" parameterType="Map">
+        UPDATE PAY0353M SET REQ_STUS_ID = #{status}
+            , UPD_DT = sysdate
+            , UPD_USER_ID = #{userId}
+       <if test="apiId != null and apiId != '' ">
+            ,RESPOND_REQ_ID = #{apiId}
+            ,RESPOND_DT = sysdate
+       </if>
+        WHERE PAYMENT_ID = #{paymentId}
+    </update>
 
   </mapper>

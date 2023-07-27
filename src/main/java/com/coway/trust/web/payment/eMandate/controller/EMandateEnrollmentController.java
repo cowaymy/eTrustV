@@ -22,6 +22,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.eMandate.service.EMandateEnrollmentService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 
 @Controller
@@ -67,9 +68,13 @@ public class EMandateEnrollmentController {
 		ReturnMessage message = new ReturnMessage();
 
 		// To check ORDER_NO, NRIC & NAME is matched
-		int valid = eMandateEnrollmentService.checkValidCustomer(params);
+		Map<String, Object> custInfo = eMandateEnrollmentService.checkValidCustomer(params);
 
-		if (valid > 0){
+		if (custInfo != null && custInfo.size()> 0){
+
+			params.put("custId", custInfo.get("custId"));
+			params.put("salesOrdId", custInfo.get("salesOrdId"));
+			
 			// To call service for processing enrollment
 			result = eMandateEnrollmentService.enrollCustomer(params);
 

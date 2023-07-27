@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class EMandateConstants {
 
 	public static final String TRANSACTION_TYPE = "EMANDATE01";
-	public static final String PYMT_METHOD = "DD";
+	public static final String PYMT_METHOD_DD = "DD";
 	public static final String CURRENCY_CODE = "MYR";
 	public static final String RESPOND_URL = "https://etrustdev.my.coway.com/payment/enroll/ddRespond.do";
 	//public static final String RESPOND_URL = "http://localhost:8080/payment/enroll/ddRespond.do";
@@ -34,6 +34,10 @@ public class EMandateConstants {
 
 	public static final String STATUS_MERCHANT_APPROVED = "00";
 	public static final String STATUS_MERCHANT_UNAPPROVE = "99";
+	public static final String STATUS_IN_PROGRESS = "60";
+	public static final String STATUS_FAILED = "21";
+	public static final String STATUS_SUCCESS = "71";
+
 
 }
 

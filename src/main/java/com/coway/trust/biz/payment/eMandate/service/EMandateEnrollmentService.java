@@ -4,9 +4,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 public interface EMandateEnrollmentService {
 
-	int checkValidCustomer (Map<String, Object> params);
+	EgovMap checkValidCustomer (Map<String, Object> params);
 
 	/**
 	 *

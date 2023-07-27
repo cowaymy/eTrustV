@@ -64,9 +64,10 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 	 * Jul 13, 2023
 	 */
 	  @Override
-	  public int checkValidCustomer (Map<String, Object> params){
+	  public EgovMap checkValidCustomer (Map<String, Object> params){
 		  // check customer nric, name and order no
-		  return eMandateMapper.checkOrderWithConditions(params);
+		  // return cust_id, sales_ord_id
+		  return eMandateMapper.getOrderByCustomer(params);
 	  }
 
 	  @SuppressWarnings("finally")
@@ -103,13 +104,9 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  String effectiveDate = CommonUtils.getCalDate(1, "ddMMyy");
 		  String param7 = EMandateConstants.Maximum_DD_RECURR + "|" + EMandateConstants.FREQ_MODE_MONTHLY + "|"  + effectiveDate;
 
-		  // Configure respond URL
-		  String happrovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + "&status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
-		  String hunApprovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + "&status=" + EMandateConstants.STATUS_MERCHANT_UNAPPROVE;
-
 		  // Configure respond URL to be used in hashvalue
-		  String approvedURL = happrovedURL.replaceAll("&", ";");
-		  String unApprovedURL = hunApprovedURL.replaceAll("&", ";");
+		  String approvedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
+		  String unApprovedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_UNAPPROVE;
 
 		  // Configure HashValue
 		  /**Hash Key = Password + ServiceID + PaymentID + MerchantReturnURL + MerchantApprovalURL + MerchantUnApprovalURL +
@@ -122,8 +119,15 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  LOGGER.debug("========Hash Value==========: "+ hashValue);
 
 
-		  // insert request into table
+		  // insert request into request Table
+		  params.put("userId", 349);
+		  params.put("paymentId", paymentID);
+		  params.put("paymentMode", EMandateConstants.PYMT_METHOD_DD);
+		  params.put("stus", EMandateConstants.STATUS_IN_PROGRESS); // default IN Progress status
+		  params.put("amt", EMandateConstants.MAXIMUM_DD_AMOUNT);
+		  params.put("effectDate", effectiveDate);
 
+		  eMandateMapper.insertDDRequest(params);
 
 
 		  String respTm = null;
@@ -136,7 +140,7 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 			  LOGGER.error("Start Calling eGHL Enrollment API ...." + enrollUrl + "......\n");
 
 			  reqBody = new StringBuffer("TransactionType=").append(EMandateConstants.TRANSACTION_TYPE)
-					  .append("&PymtMethod=").append(EMandateConstants.PYMT_METHOD)
+					  .append("&PymtMethod=").append(EMandateConstants.PYMT_METHOD_DD)
 					  .append("&ServiceID=").append(serviceId)
 					  .append("&PaymentId=").append(paymentID)
 					  .append("&OrderNumber=").append(params.get("orderNo").toString())
@@ -267,6 +271,20 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		 returnParams.put("status", param[2]);// eg: 99
 
 		 LOGGER.info("=======finalParams======: " + returnParams);// eg: {payId=CDD2307250000085, status=99}
+
+		 // update DD request status
+		 Map<String, Object> respInfo = new HashMap<String, Object>();
+		 respInfo.put("userId", 349);
+
+		 if (CommonUtils.nvl(returnParams.get("status")) != null && returnParams.get("status").equals("00")){
+			 respInfo.put("status", EMandateConstants.STATUS_SUCCESS);
+		 } else {
+			 respInfo.put("status", EMandateConstants.STATUS_FAILED);
+		 }
+
+		 respInfo.put("paymentId", returnParams.get("payId"));
+
+		 eMandateMapper.updateStatusDDRequest(respInfo);
 
 
 		 return returnParams;

@@ -12,7 +12,7 @@ $(document).ready(function() {
 
 	$("#name").val("${preName}");
 	$("#nric").val("${preNric}");
-	$("#orderNo").val('3137788');
+	//$("#orderNo").val('3137788');
 
 	if($("#name").val() == "") {
 		 $("#name").attr("readonly", false);

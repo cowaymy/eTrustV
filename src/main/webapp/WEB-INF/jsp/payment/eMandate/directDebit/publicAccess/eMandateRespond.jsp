@@ -90,7 +90,7 @@ table {width:100%;margin-left:auto; margin-right:auto; display:block;}
             <div class="logo">
                 <h2>Direct Debit Registration</h2>
                 <br/>
-                <h2 style="color:red;">Error! Kindly Contact Administrator.</h2>
+                <h2 style="color:red;">Failed!</h2>
             </div>
             <div class="container">
                 <table id="respTable" style="border: none;">
