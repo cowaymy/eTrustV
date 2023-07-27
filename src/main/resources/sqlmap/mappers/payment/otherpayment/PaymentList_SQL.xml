@@ -112,7 +112,7 @@
 		                JOIN PAY0046D C ON C.BATCH_ID = A.BATCH_ID
 		                WHERE C.BATCH_STUS_ID IN (1, 4)
 		                UNION
-                        SELECT A.PAY_ID AS PAY_ID,
+                        <!-- SELECT A.PAY_ID AS PAY_ID,
                              CASE WHEN  C.APPV_PRCSS_STUS = 'P' THEN 1
                                     WHEN  C.APPV_PRCSS_STUS = 'A' THEN 5
                                     WHEN  C.APPV_PRCSS_STUS = 'J' THEN 6
@@ -120,8 +120,16 @@
                              C.APPV_PRCSS_DT AS DT
                          FROM PAY0252T A
                          JOIN PAY0345D B ON A.GROUP_SEQ = B.GROUP_SEQ
-<!--                           JOIN PAY0344M D ON B.REQ_ID = D.REQ_ID AND D.REQ_TYPE IN ('DCF','FT') -->
-                         JOIN PAY0347M C ON B.REQ_ID = C.REQ_ID
+                          JOIN PAY0344M D ON B.REQ_ID = D.REQ_ID AND D.REQ_TYPE IN ('DCF','FT')
+                         JOIN PAY0347M C ON B.REQ_ID = C.REQ_ID -->
+                          SELECT A.PAY_ID AS PAY_ID,
+                             CASE WHEN  B.APPV_PRCSS_STUS = 'P' THEN 1
+                                    WHEN  B.APPV_PRCSS_STUS = 'A' THEN 5
+                                    WHEN  B.APPV_PRCSS_STUS = 'J' THEN 6
+                             END  AS STUS,
+                             B.APPV_PRCSS_DT AS DT
+                         FROM PAY0345D A
+                         JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID
 		            ) K ON C.PAY_ID = K.PAY_ID
 		            LEFT JOIN SYS0038M G ON K.STUS = G.STUS_CODE_ID
 		            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
@@ -868,7 +876,8 @@
             A.TOT_AMT,
             C.PAY_DATA PAY_ITM_REF_DT,
             L.CODE_NAME AS PAY_ITM_MODE_NM,
-            L.CODE_ID AS PAY_ITM_MODE_ID
+            L.CODE_ID AS PAY_ITM_MODE_ID,
+            C.PAY_ID PAY_ID
         FROM
             PAY0252T A
             JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
@@ -1054,6 +1063,7 @@
                 CUST_ID,
                 AMT,
                 TRANS_DT,
+                PAY_ID,
                 CRT_USER_ID,
                 CRT_DT,
                 UPD_USER_ID,
@@ -1071,6 +1081,7 @@
                 #{totAmt},
                 <!-- TO_DATE(#{payItemRefDt}, 'YYYYMMDD'), -->
                 #{payItmRefDt},
+                #{payId},
                 #{userId},
                 SYSDATE,
                 #{userId},
@@ -1412,7 +1423,7 @@
             C.PAY_ID,
             A.TOT_AMT
             ,DET.REQ_ID
-           <!--  APPVM.APPV_PRCSS_NO,
+            <!-- APPVM.APPV_PRCSS_NO,
             APPVD.APPV_LINE_SEQ -->
         FROM
             PAY0252T A
@@ -1423,7 +1434,7 @@
             LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
             LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
-             JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ
+            JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ AND DET.PAY_ID = A.PAY_ID
             <!--JOIN PAY0347M APPVM ON DET.REQ_ID = APPVM.REQ_ID
             JOIN PAY0348D APPVD ON APPVD.APPV_PRCSS_NO = APPVM.APPV_PRCSS_NO -->
         WHERE
@@ -1432,7 +1443,7 @@
                    open="(" separator="," close=")">
                    #{item}
             </foreach>
-            AND NVL(A.FT_STUS_ID, '0') <![CDATA[ <> ]]> '5'
+            <!-- AND NVL(A.FT_STUS_ID, '0') <![CDATA[ <> ]]> '5' -->
             <if test="reqNo != null and reqNo != '' ">
             AND DET.REQ_ID IN
                 <foreach item="item" collection="reqNo" index="index"
@@ -1465,7 +1476,7 @@
             C.PAY_ID,
             A.TOT_AMT
            ,DET.REQ_ID
-            <!-- APPVM.APPV_PRCSS_NO,
+            <!--APPVM.APPV_PRCSS_NO,
             APPVD.APPV_LINE_SEQ -->
         ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
 

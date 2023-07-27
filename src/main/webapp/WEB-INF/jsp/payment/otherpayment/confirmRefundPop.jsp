@@ -38,8 +38,8 @@ var requestDcfColumnLayout = [
 	{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
 	{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false, visible : false},
 	{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
-	{dataField : "appvPrcssNo",headerText : "Approval Process No",width : 110,editable : false, visible : false}/* ,
-	{dataField : "appvLineSeq",headerText : "Approval Line Seq",width : 110,editable : false, visible : false} */
+	{dataField : "appvPrcssNo",headerText : "Approval Process No",width : 110,editable : false, visible : false} ,
+	{dataField : "payId",headerText : "Pay ID",width : 110,editable : false, visible : false}
 ];
 
 
