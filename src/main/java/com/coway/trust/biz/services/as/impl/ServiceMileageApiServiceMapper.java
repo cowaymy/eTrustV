@@ -21,7 +21,7 @@ public interface ServiceMileageApiServiceMapper {
 
   List<EgovMap> checkInMileage(Map<String, Object> params);
 
-  EgovMap getBranchLocation(String params);
+  EgovMap getBranchLocation(Map<String, Object> params);
 
   int insertSubDSCMileageClaim(Map<String, Object> params);
 
