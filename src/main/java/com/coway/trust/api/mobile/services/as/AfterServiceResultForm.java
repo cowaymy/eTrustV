@@ -93,9 +93,17 @@ public class AfterServiceResultForm {
 
   private String asUnmatchReason;
 
+  private String reworkProj;
 
+  public String getReworkProj() {
+	return reworkProj;
+}
 
-  public String getAsUnmatchReason() {
+public void setReworkProj(String reworkProj) {
+	this.reworkProj = reworkProj;
+}
+
+public String getAsUnmatchReason() {
 	return asUnmatchReason;
 }
 
