@@ -70,7 +70,7 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
 
       // CREATE STARTING POINT
       // 1. GET MEMBER BRANCH > LONGTITUDE & LATITUDE
-      EgovMap branchLocation = serviceMileageApiServiceMapper.getBranchLocation(params.get("userName").toString());
+      EgovMap branchLocation = serviceMileageApiServiceMapper.getBranchLocation(params);
       params.put("branchID", branchLocation.get("brnchId"));
       params.put("branchCode", branchLocation.get("code"));
       params.put("longtitude", branchLocation.get("longtitude"));
