@@ -2051,7 +2051,8 @@
                 CRT_USER_ID,
                 CRT_DT,
                 UPD_USER_ID,
-                UPD_DT
+                UPD_DT,
+                PAY_ID
             ) VALUES (
                 #{nextSeq},
                 #{seq},
@@ -2067,7 +2068,8 @@
                 #{userId},
                 SYSDATE,
                 #{userId},
-                SYSDATE
+                SYSDATE,
+                #{payId}
             )
     </insert>
 

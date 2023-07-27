@@ -1193,6 +1193,18 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 			int dcfCount = paymentListMapper.selectDcfCount(params);
 			int dcfMaxCount = paymentListMapper.getDcfMaxCount();
 
+			//Update PAY0348D
+	 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
+			params.put("appvStus", "A");
+			params.put("appvResn", params.get("remark").toString());
+			paymentListMapper.updateStatusNewDCFDet(params);
+
+			//Update final status in PAY0347M
+			params.put("dcfStusId", "A");
+	 		params.put("appvLinePrcssCnt", appvLinePrcssCnt);
+			paymentListMapper.updateStatusNewDCF(params);
+
+
 			if(dcfCount < dcfMaxCount){
     			// LAST APPROVER APPROVE AND START TO GENERATE ROR AND WOR
     			// GENERATE ROR (Rekey In = No / Yes) --  refer to previous confirm dcf process
@@ -1347,16 +1359,16 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 				}
 
 				if(!returnMap.containsKey("error")){
-					//Update PAY0348D
-			 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
-					params.put("appvStus", "A");
-					params.put("appvResn", params.get("remark").toString());
-					paymentListMapper.updateStatusNewDCFDet(params);
-
-    				//Update final status in PAY0347M
-    				params.put("dcfStusId", "A");
-    		 		params.put("appvLinePrcssCnt", appvLinePrcssCnt);
-    				paymentListMapper.updateStatusNewDCF(params);
+//					//Update PAY0348D
+//			 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
+//					params.put("appvStus", "A");
+//					params.put("appvResn", params.get("remark").toString());
+//					paymentListMapper.updateStatusNewDCFDet(params);
+//
+//    				//Update final status in PAY0347M
+//    				params.put("dcfStusId", "A");
+//    		 		params.put("appvLinePrcssCnt", appvLinePrcssCnt);
+//    				paymentListMapper.updateStatusNewDCF(params);
 
     				if(rorList.size() > 0){
         				returnMap.put("rorList", rorList);

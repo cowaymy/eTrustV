@@ -257,6 +257,7 @@ function fn_submitRefund(){
 
 	function fn_submitRequestDCF(){
 	     var formData = new FormData();
+	     formData.append("atchFileGroupId", atchFileGroupId)
 	     $.each(myFileCaches, function(n, v) {
 	         formData.append(n, v.file);
 	     });

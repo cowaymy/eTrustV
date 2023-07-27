@@ -10,6 +10,7 @@ var myRequestNewDCFGridID;
 var myFileCaches = {};
 var update = new Array();
 var remove = new Array();
+var atchFileGroupId = 0;
 var attachmentFileId = 0;
 var attachmentFileName = "";
 
@@ -56,6 +57,7 @@ var requestDcfColumnLayout = [
  	{dataField : "ftStusId",headerText : "Fund transfer Status Id",width : 110,editable : false, visible : false},
  	{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false, visible : false},
  	{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
+ 	{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false},
  	{dataField : "payData",headerText : "Pay Data",width : 110,editable : false, visible : false},
  	{dataField : "orType",headerText : "OR Type",width : 110,editable : false, visible : false},
  	{dataField : "bankAcc",headerText : "Bank Acc Code",width : 110,editable : false, visible : false}
@@ -348,9 +350,8 @@ function fn_payTypeChange(){
 //Attachments -- REMOVE button
 function fn_removeFile(name){
 	if(name == "FILE"){
-		$("#attachment").val("");
-		$(".input_text[id='attachmentTxt']").val("");
-	    $('#attachment').change();
+	    $("#attachmentFile").val("");
+	    $('#attachmentFile').change();
 	}
 }
 
@@ -523,13 +524,25 @@ function fn_DCFRequest(){
 	}
 
 //  Checking for attachment
-    var attachmentFile = $('#attachmentFile').val();
-    if(attachmentFile == null || attachmentFile== ""){
-        if(attachmentFileId == 0){
-            Common.alert('Attachment is required');
-            return;
-        }
-    }
+//     var attachmentFile = $('#attachmentFile').val();
+//     if(attachmentFile == null || attachmentFile== ""){
+//         if(attachmentFileId == 0){
+//             Common.alert('Attachment is required');
+//             return;
+//         }
+//     }
+
+	 if($("#attachmentFile").val() == "" || FormUtil.byteLength($("#attachmentFile").val().trim()) == null){
+	        Common.alert("Attachement cannot be empty.");
+	        return;
+	    }
+	    else {
+	        var str = $("#attachmentFile").val().split(".");
+	        if(str[1] != "zip"){
+	            Common.alert("Please attach zip file only.");
+	            return;
+	        }
+	    }
 
 	if( Number($("#totalAmt").val()) <= 0 ){
     	Common.alert("<spring:message code='pay.alert.amtThanZero'/>");
@@ -1009,7 +1022,7 @@ function setTargetInfo(){
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th scope="row">Reason</th>
+                            <th scope="row">Reason<span class='must'>*</span></th>
                             <td><select id="reason" name="reason" class="w100p"></select></td>
 
                             <th scope="row">Rekey-in status<span class="must">*</span></th>
@@ -1019,10 +1032,10 @@ function setTargetInfo(){
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Attachment</th>
+                            <th scope="row">Attachment<span class='must'>*</span></th>
 		                    <td id="attachTd" colspan="3" >
 	                            <div class="auto_file2">
-	                                <input type="file" title="file add" id="attachmentFile" />
+	                                <input type="file" title="file add" id="attachmentFile" accept=".zip"/>
 	                                <label style="width:100%">
 	                                    <input type='text' class='input_text' id='attachmentFileTxt' name='attachmentFileTxt' style='width: 285px !important;'/>
 	                                    <span class='label_text' id="uploadBtn"><a href='#'>Upload</a></span>

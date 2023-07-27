@@ -245,12 +245,15 @@
 
 	//Request Fund Transfer 팝업
 	function fn_requestFTPop(){
-		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+		var selectedItem = AUIGrid.getCheckedRowItems(myGridID);
 
-		if (selectedItem[0] > -1){
-			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
-			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
-			var appType = AUIGrid.getCellValue(myGridID, selectedGridValue, "appType");
+        if(selectedItem.length > 1){
+	            Common.alert("<b>Only 1 payment record is available for request Fund Transfer.</b>");
+	            return;
+        }else if (selectedItem.length = 1){
+			var groupSeq = selectedItem[0].item.groupSeq;
+			var payId = selectedItem[0].item.payId;
+			var appType = selectedItem[0].item.appType;
 
 			var appTypeId;
 			if(appType == 'RENTAL'){
@@ -275,9 +278,9 @@
 				if (d.error) {
 					Common.alert(d.error)
 				} else if (d.success) {
-					var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
-					var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
-					const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
+					var revStusId = selectedItem[0].item.revStusId;
+					var ftStusId = selectedItem[0].item.ftStusId;
+					const revStusNm = selectedItem[0].item.revStusNm;
 
 					if (revStusNm == "Refund") {
 						Common.alert("<b>This has already been refunded. </b>");
@@ -297,6 +300,58 @@
 		}else{
              Common.alert('No Payment List selected.');
         }
+// 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+// 		if (selectedItem[0] > -1){
+// 			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
+// 			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
+// 			var appType = AUIGrid.getCellValue(myGridID, selectedGridValue, "appType");
+
+// 			var appTypeId;
+// 			if(appType == 'RENTAL'){
+// 				appTypeId = 1;
+// 			}else if(appType == 'OUT') {
+// 				appTypeId = 2;
+// 			}else if(appType == 'MEMBERSHIP') {
+// 				appTypeId = 3;
+// 			}else if(appType == 'AS' || appType == 'HP') {
+// 				appTypeId = 4;
+// 			}else if(appType == 'OUT_MEM') {
+// 				appTypeId = 5;
+// 			}
+
+// 			if(appTypeId == ''){
+// 	             Common.alert('This Payment App Type is not valid.');
+// 				 return;
+// 			}
+
+// 			fetch("/payment/validFT?payId=" + payId)
+// 			.then(resp => resp.json()).then(d => {
+// 				if (d.error) {
+// 					Common.alert(d.error)
+// 				} else if (d.success) {
+// 					var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+// 					var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
+// 					const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
+
+// 					if (revStusNm == "Refund") {
+// 						Common.alert("<b>This has already been refunded. </b>");
+// 					} else if (revStusId == 0 || revStusId == 6) {
+// 						if(ftStusId == 0 || ftStusId == 6) {
+// 							Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
+// 						}else{
+// 							Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
+// 						}
+// 					} else {
+// 						Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");
+// 					}
+// 				}
+// 			})
+
+
+// 		}else{
+//              Common.alert('No Payment List selected.');
+//         }
 	}
 
     function fn_requestRefundPop(){
