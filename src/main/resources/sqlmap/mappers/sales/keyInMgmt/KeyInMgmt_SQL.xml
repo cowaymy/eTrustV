@@ -50,7 +50,7 @@
                 , #{item.month} month
                 , #{item.week} week
                 , TO_DATE(#{item.keyInStartDt},'dd/mm/yyyy') keyInStartDt
-                , TO_DATE(#{item.keyInEndDt} || ' 23:59:59','YYYY/MM/DD HH24:MI:SS') keyInEndDt
+                , TO_DATE(#{item.keyInEndDt} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS') keyInEndDt
                 , #{creator} creator
                 , SYSDATE crtDt
              FROM DUAL
