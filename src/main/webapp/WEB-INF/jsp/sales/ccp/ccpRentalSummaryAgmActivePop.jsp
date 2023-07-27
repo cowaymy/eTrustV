@@ -104,17 +104,17 @@ function fn_report(){
 
     let whereSQL = "";
 
-    if($('#orgCode').val())
-    	whereSQL += " AND EXTENT2.ORG_CODE = '" + $('#orgCode').val() + "' ";
+    if($('#agmActiveform  #orgCode').val())
+    	whereSQL += " AND EXTENT2.ORG_CODE = '" + $('#agmActiveform #orgCode').val() + "' ";
 
-    if($('#groupCode').val())
-        whereSQL += " AND EXTENT2.GRP_CODE = '" + $('#groupCode').val() + "' ";
+    if($('#agmActiveform  #groupCode').val())
+        whereSQL += " AND EXTENT2.GRP_CODE = '" + $('#agmActiveform #groupCode').val() + "' ";
 
-    if($('#deptCode').val())
-        whereSQL += " AND EXTENT2.DEPT_CODE = '" + $('#deptCode').val() + "' ";
+    if($('#agmActiveform  #deptCode').val())
+        whereSQL += " AND EXTENT2.DEPT_CODE = '" + $('#agmActiveform #deptCode').val() + "' ";
 
-    if($('#memCode').val())
-        whereSQL += " AND Extent8.MEM_CODE = '" + $('#memCode').val() + "' ";
+    if($('#agmActiveform  #memCode').val())
+        whereSQL += " AND Extent8.MEM_CODE = '" + $('#agmActiveform #memCode').val() + "' ";
 
     if($('#ddlProgress :selected').length > 0){
         let selectedProgress = "";
