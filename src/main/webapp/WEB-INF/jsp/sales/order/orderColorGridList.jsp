@@ -834,10 +834,22 @@ console.log("searchColorGrid");
             if(date.toString().length == 1){
                 date = "0" + date;
             }
-            $("#downFileName").val("CowayTermsNConditionLetter_"+orderID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            $("#downFileName").val("CowayTermsNConditionLetter_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
             fn_letter_report();
     	});
+
+    	$('#btnAirCondComboPck').click(function(){
+    		$("#dataForm1").show();
+    		 var date = new Date().getDate();
+             if(date.toString().length == 1){
+                 date = "0" + date;
+             }
+
+            $("#downFileNameAirCond").val("AirConditionerBulkPromotion_" +date+(new Date().getMonth()+1)+new Date().getFullYear());
+    		fn_report();
+    	});
+
     });
 
     function fn_letter_report() {
@@ -845,6 +857,13 @@ console.log("searchColorGrid");
             isProcedure : false
         };
         Common.report("dataForm", option);
+    }
+
+   function fn_report() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("dataForm1", option);
     }
 </script>
 
@@ -870,6 +889,12 @@ console.log("searchColorGrid");
     <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
     <!-- params -->
     <input type="hidden" id="_repSalesOrderId" name="@salesOrderId" />
+</form>
+
+<form id="dataForm1">
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/ColorGridAirConditionerBulkPromotion.rpt"/>
+    <input type="hidden" id="viewType" name="viewType" value="PDF"/>
+    <input type="hidden" id="downFileNameAirCond" name="reportDownFileName" value="" />
 </form>
 
 <section class="search_table"><!-- search_table start -->
@@ -1075,7 +1100,11 @@ console.log("searchColorGrid");
     <dd>
      <ul class="btns">
        <li><p class="link_btn"><a href="#" id="btnTermNConditionsLetter"><spring:message code='sales.btn.TermNConditionsLetter'/></a></p></li>
+       <c:if test="${PAGE_AUTH.funcUserDefine26== 'Y'}">
+         <li><p class="link_btn"><a href="#" id="btnAirCondComboPck"><spring:message code='sales.btn.AirCondComboPmt'/></a></p></li>
+       </c:if>
      </ul>
+
  <!--   <ul class="btns">
         <li><p class="link_btn"><a href="#">menu1</a></p></li>
         <li><p class="link_btn"><a href="#">menu2</a></p></li>
