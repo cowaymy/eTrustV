@@ -46,7 +46,7 @@
 	    dataField : "name",
 	    headerText : "Customer Name",
 	    editable : false,
-	    width : "15%"
+	    width : "25%"
      },
      {
         dataField : "custMonth",
@@ -82,7 +82,6 @@
              type: "TemplateRenderer"
          },
          labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-             if (!value) return "";
              return value;
          }
       },
@@ -109,31 +108,7 @@
 	  else{
 		  $("#orderDetails").hide();
 	  }
-
   }
-
-  $.fn.clearForm = function() {
-      return this.each(function() {
-          let type = this.type, tag = this.tagName.toLowerCase();
-          if (tag === 'form'){
-              return $(':input',this).clearForm();
-          }
-          if (type === 'text' || type === 'password'  || tag === 'textarea'){
-              if($("#"+this.id).hasClass("readonly")){
-
-              }else{
-                  this.value = '';
-              }
-          }else if (type === 'checkbox' || type === 'radio'){
-              this.checked = false;
-
-          }else if (tag === 'select'){
-              if($("#memType").val() != "7"){
-                   this.selectedIndex = 0;
-              }
-          }
-      });
-  };
 
   function preCcpGrid() {
       $("#grid_wrap_preCcpList .aui-grid").remove()
@@ -144,7 +119,6 @@
     		  Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: event.item.custId}, null, true, '');
     	  }
     });
-
   }
 
   function checkPreCcpResult(){
@@ -159,7 +133,7 @@
 	        	  AUIGrid.setGridData(myGridID, result);
 	              AUIGrid.setProp(myGridID, "rowStyleFunction", function() {
                        if(result.chsStatus == "GREEN"){
-                    	   displayOrder(2);
+                    	   displayOrder(1);
                     	   $("#saveCustId").val("");
                            return "my-green-style";
                        }
@@ -179,7 +153,6 @@
 	          else{
 	        	  displayOrder(2);
 	              Common.alert("1. Record Not Found <br/>"+"2. Pre-Ccp For New Customers Is Still Under Construction");
-
 	          }
 	      });
 	  }
@@ -215,12 +188,14 @@
       location.reload();
   }
 
-  function fn_preCcpRegister(){
-      Common.popupDiv("/sales/ccp/preCcpSubmissionRegister.do", {}, null, true);
-  }
-
   function fn_preCcpEditRemark(){
       Common.popupDiv("/sales/ccp/preCcpEditRemark.do", {}, null, true);
+  }
+
+  function clearForm(formId){
+      document.getElementById(formId).reset();
+      AUIGrid.clearGridData(myGridID);
+
   }
 
 </script>
@@ -232,9 +207,6 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p><h2>Pre-CCP</h2>
 
 		<ul class="right_btns">
-
-<!-- 			    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_preCcpRegister()">Create Pre-CCP Entry</a></p></li> -->
-
 			    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 			          <li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_preCcpEditRemark()">Edit Remark</a></p></li>
 			    </c:if>
@@ -259,7 +231,7 @@
 				        <tbody>
 	                         <tr>
 	                             <th scope="row">NRIC</th>
-	                             <td><input type="text" title="" placeholder="NRIC" class="w100p" id="customerNric" name="customerNric" maxlength=12/></td>
+	                             <td colspan="3"><input type="text" title="" placeholder="NRIC" class="w100p" id="customerNric" name="customerNric" maxlength=12/></td>
 	                         </tr>
                         </tbody>
 				</table>
@@ -268,7 +240,6 @@
                 <input type="hidden" id="saveCustId">
 			    <article class="grid_wrap">
 			         <div id="grid_wrap_preCcpList" style="width: 100%; margin: 0 auto;"></div>
-
 			    </article>
 		</form>
 </section>

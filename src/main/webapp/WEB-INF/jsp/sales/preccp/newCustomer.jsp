@@ -1,21 +1,43 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <style>
-.circle {
-	display: inline-block;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background-color: red;
-	text-align: center;
-	color: white;
-	font-weight: bold;
-	font-size: 16px;
-	line-height: 20px;
-	vertical-align: middle;
-}
+	.circle {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background-color: red;
+		text-align: center;
+		color: white;
+		font-weight: bold;
+		font-size: 16px;
+		line-height: 20px;
+		vertical-align: middle;
+	}
+
+	.my-yellow-style {
+	    background:#fff2ca;
+	    font-weight:bold;
+	    color:#22741C;
+	}
+
+	.my-pink-style {
+	    background:#ffc5c5;
+	    font-weight:bold;
+	    color:#22741C;
+	}
+
+	.my-green-style {
+	    background:#e2f0d9;
+	    font-weight:bold;
+	    color:#22741C;
+	}
+
+/* 	.buttonCtrl > a { */
+/* 	    background: #9ea9b4 ! important; */
+/* 	} */
 </style>
+
 <section id="content">
 
 	<ul class="path"></ul>
@@ -26,18 +48,10 @@
 		<h2>New Customer</h2>
 		</p>
 		<ul class="right_btns">
-			<li><p class="btn_blue">
-					<a id="registerCustomer">Register</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a id="sendSms">Send Consent</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a>Pre-CCP Result</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a>View History</a>
-				</p></li>
+			<li><p class="btn_blue registerCustomer"><a id="registerCustomer">Register</a></p></li>
+			<li><p class="btn_blue sendSms"><a id="sendSms">Send Consent</a></p></li>
+			<li><p class="btn_blue preCcpResult"><a id="preCcpResult">Pre-CCP Result</a></p></li>
+			<li><p class="btn_blue viewHistory"><a id="viewHistory">View History</a></p></li>
 		</ul>
 	</aside>
 
@@ -58,23 +72,19 @@
 				<tbody>
 					<tr>
 						<th>Customer NRIC</th>
-						<td><input type="text" class="w100p regCust"
-							name="customerNric" id="customerNric" maxlength=12></td>
+						<td><input type="text" class="w100p regCust" name="customerNric" id="customerNric" maxlength=12></td>
 					</tr>
 					<tr>
 						<th>Customer Name</th>
-						<td><input type="text" class="w100p regCust lockBeforeIc"
-							name="customerName" id="customerName"></td>
+						<td><input type="text" class="w100p regCust lockBeforeIc" name="customerName" id="customerName"></td>
 					</tr>
 					<tr>
 						<th>Customer Mobile No</th>
-						<td><input type="text" class="w100p regCust lockBeforeIc"
-							name="customerMobileNo" id="customerMobileNo" maxlength=11></td>
+						<td><input type="text" class="w100p regCust lockBeforeIc" name="customerMobileNo" id="customerMobileNo" maxlength=11></td>
 					</tr>
 					<tr>
 						<th>Customer Email Address</th>
-						<td><input type="text" class="w100p regCust lockBeforeIc"
-							name="customerEmailAddr" id="customerEmailAddr"></td>
+						<td><input type="text" class="w100p regCust lockBeforeIc" name="customerEmailAddr" id="customerEmailAddr"></td>
 					</tr>
 
 					<tr>
@@ -113,12 +123,111 @@
 		<div id="smsGrid" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 	</div>
 
+    <!-- Pre-CCP Result-->
+    <div id="div3">
+		    <form id="preCcpResultForm">
+		        <table class="type1">
+		            <colgroup>
+		                <col style="width: 150px;"/>
+		                <col style="width: *;"/>
+		                <col style="width: 150px;"/>
+		                <col style="width: *;"/>
+		                <col style="width: 150px;"/>
+                        <col style="width: *;"/>
+		            </colgroup>
+		            <tbody>
+		                <tr>
+		                    <th>Member Type</th>
+		                    <td><input class="w100p" type="text" name="memberType" id="memberType"/></td>
 
+                            <th>Customer Nric</th>
+                            <td><input class="w100p" type="text" name="customerNric"/></td>
+
+		                    <th>Pre-CCP Date</th>
+		                    <td colspan="3">
+		                        <div class="date_set w100p">
+		                            <p><input name="start" id="start" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+		                            <span>To</span>
+		                            <p><input name="end" id="end" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+		                        </div>
+		                    </td>
+		                </tr>
+
+		                <tr>
+		                    <th>Member Code</th>
+		                    <td><input class="w100p" type="text" name="memberCode" id="memberCode"></td>
+
+                            <th>Org Code</th>
+                            <td><input class="w100p" type="text" name="orgCode" id="orgCode"></td>
+
+                            <th>Grp Code</th>
+                            <td><input class="w100p" type="text" name="grpCode" id="grpCode"></td>
+
+                            <th>Dept Code</th>
+                            <td><input class="w100p" type="text" name="deptCode" id="deptCode"></td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </form>
+	        <ul class="right_btns">
+	            <li><p class="btn_blue"><a id="searchPreCcpResult">Search</a></p></li>
+	            <li><p class="btn_blue"><a id="clearPreCcpResult">Clear</a></p></li>
+	        </ul>
+		    <article class="grid_wrap">
+                    <div id="preCcpResultGrid" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+            </article>
+    </div>
+
+
+    <!-- View History -->
+    <div id="div4">
+            <form id="viewHistoryForm">
+                <table class="type1">
+                    <colgroup>
+                        <col style="width: 150px;"/>
+                        <col style="width: *;"/>
+                        <col style="width: 150px;"/>
+                        <col style="width: *;"/>
+                        <col style="width: 150px;"/>
+                        <col style="width: *;"/>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>Org Code</th>
+                            <td><input class="w100p checkViewHistory" type="text" name="orgCode" id="orgCode2"></td>
+
+                            <th>Grp Code</th>
+                            <td><input class="w100p checkViewHistory" type="text" name="grpCode" id="grpCode2"></td>
+
+                            <th>Dept Code</th>
+                            <td><input class="w100p checkViewHistory" type="text" name="deptCode" id="deptCode2"></td>
+                        </tr>
+                        <tr>
+                            <th>Year</th>
+                            <td><select class="w100p checkViewHistory" name="year" id="year"></select></td>
+
+                            <th>Month</th>
+                            <td><select class="w100p checkViewHistory" name="month" id="month"></select></td>
+                            <th></th>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            <ul class="right_btns">
+                <li><p class="btn_blue"><a id="searchViewHistory">Search</a></p></li>
+                <li><p class="btn_blue"><a id="clearViewHistory">Clear</a></p></li>
+            </ul>
+            <article class="grid_wrap">
+                    <div id="viewHistoryGrid" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+            </article>
+
+    </div>
 </section>
 
 
 <script>
-     let div1Open = false, div2Open = true;
+     let div1Open = true, div2Open = false, div3Open =false, div4Open =false;
 
      const reload = () => {
          location.reload();
@@ -127,11 +236,16 @@
      const refreshDisplay = () => {
          document.getElementById("div1").style.display = div1Open ? "": "none";
          document.getElementById("div2").style.display = div2Open ? "": "none";
+         document.getElementById("div3").style.display = div3Open ? "": "none";
+         document.getElementById("div4").style.display = div4Open ? "": "none";
+
+         document.querySelector(".registerCustomer a").style.backgroundColor = !div1Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+         document.querySelector(".sendSms a").style.backgroundColor = !div2Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+         document.querySelector(".preCcpResult a").style.backgroundColor = !div3Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+         document.querySelector(".viewHistory a").style.backgroundColor = !div4Open ? "#9ea9b4" : "rgb(37, 82, 124)";
      }
 
-
-     <!-- DIV 1 - Register -->
-
+     <!-- div1 - Register -->
      let customerNric = false, customerName = false, customerMobileNo = false, customerEmailAddr = false;
 
      const clearForm = (formId) => {
@@ -252,11 +366,12 @@
      refreshDisplay();
      checkFormat();
 
-
      $("#registerCustomer").click((e)=>{
     	 e.preventDefault();
          div1Open = true;
          div2Open = false;
+         div3Open = false;
+         div4Open = false;
          refreshDisplay();
     });
 
@@ -319,7 +434,7 @@
      $("#btnClear").click(()=> {clearForm("form1"); resetFlag(); refreshDisplayInput()});
 
 
-     <!-- DIV 2 - Send Consent -->
+     <!-- div2 - Send Consent -->
      let smsGrid ;
 
      const sendSms = (id,seq) => {
@@ -333,14 +448,16 @@
                  document.getElementById(id).checked = false;
                  document.getElementById(id).disabled = false;
              }
-    		 Common.alert(data.message);
+    		 Common.alert(data.message, data.code =="99"? ()=>{location.reload()} : "");
     	 })
      }
 
      $("#sendSms").click(()=>{
     	  div1Open = false;
           div2Open = true;
-          AUIGrid.resize(smsGrid, 1200, 500);
+          div3Open = false;
+          div4Open = false;
+          AUIGrid.resize(smsGrid, 1300, 500);
           refreshDisplay();
      });
 
@@ -352,13 +469,13 @@
           {headerText: 'Dept. Code', dataField: 'deptCode', editable: false, width:100},
           {headerText: 'Group Code', dataField: 'grpCode', editable: false, width:100},
           {headerText: 'Org. Code', dataField: 'orgCode', editable: false, width:100},
+          {headerText: 'Tac Number', dataField: 'tacNo', editable: false, width:100},
           {headerText: 'Send SMS', width:200,
         	renderer: {
               type: "TemplateRenderer",
            },
            labelFunction :  function (rowIndex, columnIndex, value, headerText, item){
 
-        	   console.log(item.smsConsent);
         	   let inputReturn = '<div style="display:flex;justify-content: center;height:100%;">';
 
         	   for(let i=0; i < 3 ;i++){
@@ -369,7 +486,7 @@
         		   inputReturn += item.preccpSeq;
         		   inputReturn += `)"`;
 
-        		   if(item.smsConsent ==1){
+        		   if(item.smsConsent == "Yes"){
         			   if(item.smsCount > i){
                            inputReturn +=  ` checked `;
                        }
@@ -386,7 +503,7 @@
         	   return inputReturn;
            }},
 
-          {headerText: 'Customer Respond', dataField: '' ,width:200}
+          {headerText: 'Customer Respond', dataField: 'smsConsent' ,width:200}
      ] , '',
      {
          usePaging: true,
@@ -401,19 +518,290 @@
      .then(resp => resp.json())
      .then(data => {
          data = data.map(i=>{
-        	 return {...i}
+             return {...i}
          });
          AUIGrid.setGridData(smsGrid, data);
-     })
+     });
 
+     <!--div3 Pre-CCP Result-->
+     const setOrganizationInfo = () => {
+         if("${orgCode}") $("#orgCode").val("${orgCode}".trim());
+         if("${grpCode}") $("#grpCode").val("${grpCode}".trim());
+         if("${deptCode}") $("#deptCode").val("${deptCode}".trim());
 
+         if("${orgCode}") $("#orgCode2").val("${orgCode}".trim());
+         if("${grpCode}") $("#grpCode2").val("${grpCode}".trim());
+         if("${deptCode}") $("#deptCode2").val("${deptCode}".trim());
 
+         if("${memberType}") $("#memberType").val("${memberType}".trim());
+         $("#memberType").attr("class", "w100p readonly");
+         $("#memberType").attr("readonly", "readonly");
 
+         switch("${SESSION_INFO.memberLevel}") {
+         case "4":
+             $("#orgCode").attr("class", "w100p readonly");
+             $("#orgCode").attr("readonly", "readonly");
+             $("#grpCode").attr("class", "w100p readonly");
+             $("#grpCode").attr("readonly", "readonly");
+             $("#deptCode").attr("class", "w100p readonly");
+             $("#deptCode").attr("readonly", "readonly");
 
+             $("#orgCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#orgCode2").attr("readonly", "readonly");
+             $("#grpCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#grpCode2").attr("readonly", "readonly");
+             $("#deptCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#deptCode2").attr("readonly", "readonly");
 
+             if("${memCode}") $("#memberCode").val("${memCode}".trim());
+             $("#memberCode").attr("class", "w100p readonly");
+             $("#memberCode").attr("readonly", "readonly");
+             break;
+         case "3":
+             $("#orgCode").attr("class", "w100p readonly");
+             $("#orgCode").attr("readonly", "readonly");
+             $("#grpCode").attr("class", "w100p readonly");
+             $("#grpCode").attr("readonly", "readonly");
+             $("#deptCode").attr("class", "w100p readonly");
+             $("#deptCode").attr("readonly", "readonly");
 
+             $("#orgCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#orgCode2").attr("readonly", "readonly");
+             $("#grpCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#grpCode2").attr("readonly", "readonly");
+             $("#deptCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#deptCode2").attr("readonly", "readonly");
 
+             break;
+         case "2":
+             $("#orgCode").attr("class", "w100p readonly");
+             $("#orgCode").attr("readonly", "readonly");
+             $("#grpCode").attr("class", "w100p readonly");
+             $("#grpCode").attr("readonly", "readonly");
 
+             $("#orgCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#orgCode2").attr("readonly", "readonly");
+             $("#grpCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#grpCode2").attr("readonly", "readonly");
 
+             break;
+         case "1":
+             $("#orgCode").attr("class", "w100p readonly checkViewHistory");
+             $("#orgCode").attr("readonly", "readonly");
 
+             $("#orgCode2").attr("class", "w100p readonly checkViewHistory");
+             $("#orgCode2").attr("readonly", "readonly");
+
+             break;
+         default:
+             break;
+           }
+     }
+
+     const preCcpResultGrid =   GridCommon.createAUIGrid('preCcpResultGrid',[
+		{
+		       dataField : 'custName', headerText : 'Customer Name'
+		},
+		{
+		       dataField : 'searchBy', headerText : 'Search By', width: '20%'
+		},
+		{
+		       dataField : 'deptCode', headerText : 'Dept. Code'
+		},
+		{
+		       dataField : 'grpCode', headerText : 'Group Code',
+		},
+		{
+		       dataField : 'orgCode', headerText : 'Org. Code'
+		},
+		{
+		       dataField : 'preccpDate', headerText : 'Pre-CCP Date'
+		},
+		{
+		       dataField : 'preccpResult', headerText : 'Pre-CCP Result'
+		},
+		{
+		       dataField : 'salesKeyinDate', headerText : 'Sales Key-In Date'
+		},
+		{
+		       dataField : 'ownSales', headerText : 'Own Sales'
+		}],'',
+		{
+		       usePaging: true,
+		       pageRowCount: 50,
+		       editable: false,
+		       showRowNumColumn: true,
+		       wordWrap: true,
+		       showStateColumn: false,
+		       rowStyleFunction: (i, item) => {
+		    	   switch(item.preccpResult) {
+		    	       case "YELLOW":
+		    	    	   return "my-yellow-style";
+		    	    	   break;
+
+	                    case "RED":
+	                           return "my-pink-style";
+	                           break;
+
+                        case "GREEN":
+                            return "my-green-style";
+                            break;
+
+                        default:
+                        	break;
+		    	   }
+		       }
+     });
+
+     $("#preCcpResult").click(()=>{
+         div1Open = false;
+         div2Open = false;
+         div3Open = true;
+         div4Open = false;
+         refreshDisplay();
+         AUIGrid.resize(preCcpResultGrid, 1300, 500);
+         setOrganizationInfo();
+    });
+
+     const validationPreccpResult = () => {
+    	 if(FormUtil.isEmpty($("#start").val())){
+    		 Common.alert("Please select Pre-CCP Start Date");
+    		 return;
+    	 }
+
+         if(FormUtil.isEmpty($("#end").val())){
+             Common.alert("Please select Pre-CCP End Date");
+             return;
+         }
+         return true;
+     }
+
+     const generatePreCcpResult = () => {
+         Common.showLoader();
+         fetch("/sales/ccp/selectPreCcpResult.do?" + $("#preCcpResultForm").serialize())
+         .then(resp => resp.json())
+         .then(data => {
+             Common.removeLoader();
+             data = data.map(i=>{
+                 return {...i}
+             });
+             AUIGrid.setGridData(preCcpResultGrid, data);
+         });
+     }
+
+     $("#searchPreCcpResult").click((e)=>{
+    	 e.preventDefault();
+         if(validationPreccpResult()){
+        	 generatePreCcpResult();
+         }
+     });
+
+     $("#clearPreCcpResult").click((e)=>{
+         e.preventDefault();
+         document.getElementById("preCcpResultForm").reset();
+         AUIGrid.clearGridData(preCcpResultGrid);
+         setOrganizationInfo();
+     });
+
+     <!--div4 View History-->
+     const viewHistoryGrid =   GridCommon.createAUIGrid('viewHistoryGrid',[
+        {
+               dataField : 'deptCode', headerText : 'Dept. Code'
+        },
+        {
+               dataField : 'grpCode', headerText : 'Group Code',
+        },
+        {
+               dataField : 'orgCode', headerText : 'Org. Code'
+        },
+        {
+               dataField : 'noOfSearch', headerText : 'No. of Search'
+        },
+        {
+               dataField : 'noOfSaleskeyin', headerText : 'No. of Sales Key-In'
+        },
+        {
+               dataField : 'balance', headerText : 'Quota Balance'
+        }],'',
+        {
+               usePaging: true,
+               pageRowCount: 50,
+               editable: false,
+               showRowNumColumn: true,
+               wordWrap: true,
+               showStateColumn: false
+     });
+
+     const month = document.getElementById("month"), year = document.getElementById("year");
+
+     const getYear = () =>{
+         year.innerHTML = "";
+         year.innerHTML += "<option value=''>Choose One</option>";
+         fetch("/sales/ccp/selectYearList.do")
+         .then(r=>r.json())
+         .then(data=>{
+             for(let i = 0; i < data.length; i++) {
+                 const {codeName, codeId} = data[i]
+                 year.innerHTML += "<option value='" + codeId + "'>" + codeName + "</option>"
+             }
+         })
+     }
+
+     const getMonth = () =>{
+         month.innerHTML = "";
+         month.innerHTML += "<option value=''>Choose One</option>";
+         fetch("/sales/ccp/selectMonthList.do")
+         .then(r=>r.json())
+         .then(data=>{
+             for(let i = 0; i < data.length; i++) {
+                 const {codeName, codeId} = data[i]
+                 month.innerHTML += "<option value='" + codeId + "'>" + codeName + "</option>"
+             }
+         })
+     }
+
+     const generateViewHistory = () => {
+         Common.showLoader();
+         fetch("/sales/ccp/selectViewHistory.do?" + $("#viewHistoryForm").serialize())
+         .then(resp => resp.json())
+         .then(data => {
+             Common.removeLoader();
+             AUIGrid.setGridData(viewHistoryGrid, data);
+         });
+     }
+
+     $("#viewHistory").click(()=>{
+         div1Open = false;
+         div2Open = false;
+         div3Open = false;
+         div4Open = true;
+         refreshDisplay();
+         AUIGrid.resize(viewHistoryGrid, 1300, 500);
+         setOrganizationInfo();
+         getYear();
+         getMonth();
+    });
+
+     $("#searchViewHistory").click((e)=>{
+         e.preventDefault();
+
+         let check = [...document.querySelectorAll(".checkViewHistory")].some(r=> {
+             if(r.value.trim().length){
+                 return true
+              }
+         });
+
+         if(check){
+        	 generateViewHistory();
+         }else{
+             Common.alert("Please fill in one of searching criteria.")
+         }
+     });
+
+     $("#clearViewHistory").click((e)=>{
+         e.preventDefault();
+         document.getElementById("viewHistoryForm").reset();
+         AUIGrid.clearGridData(viewHistoryGrid);
+         setOrganizationInfo();
+     });
  </script>

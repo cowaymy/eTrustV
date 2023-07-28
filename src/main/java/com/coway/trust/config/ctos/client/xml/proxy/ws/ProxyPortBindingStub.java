@@ -7,10 +7,31 @@
 
 package com.coway.trust.config.ctos.client.xml.proxy.ws;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Base64;
 
 import javax.xml.namespace.QName;
 
@@ -19,12 +40,34 @@ import org.apache.axis.client.Service;
 import org.apache.axis.client.Stub;
 import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.utils.JavaUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 	private Vector cachedSerClasses = new Vector();
 	private Vector cachedSerQNames = new Vector();
 	private Vector cachedSerFactories = new Vector();
 	private Vector cachedDeserFactories = new Vector();
+
+	//UAT PARAM
+  private static String TOKEN_URL = "https://uat-sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
+  //private static String clientId = "ctos_secure";
+  private static String clientId = "Coway2_jwt";
+  //private static String clientSecret = "6f7595da-0a6d-4d00-b9cf-adfa5d473850";
+  private static String userName = "coway_uat";
+  private static String password =  "ghuEDL481KLrh@og&g";
+  private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-private-uat_2.pem";
+  //private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-public-uat_2.pem";
+
+
+
+/*
+	private static String  = "https://sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
+	private static String clientId = "Coway_jwt";
+	private static String clientSecret = "7676613c-1e85-4693-8b9b-8ec7f860a6f3";
+	private static String userName = "b065000_xml";
+	private static String password =  "Cmsb#7143!";
+	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";*/
 
 	static org.apache.axis.description.OperationDesc[] _operations;
 
@@ -700,8 +743,159 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 
 	private void addAuthenticationHeader(Call _call) {
 		Map<String, Object> headers = new Hashtable<String, Object>();
-		headers.put("username", "b065000_xml");
-		headers.put("password", "b65k207n8");
+
+		Map<String, Object> token = new HashMap<String, Object>();
+		try {
+      		token = requestMFAToken();
+    	} catch (Exception e) {
+     		System.out.println(e);
+    }
+
+		headers.put("username", "coway_uat");
+		headers.put("password", "ghuEDL481KLrh@og&g");
+//		headers.put("username", "b065000_xml");
+//		headers.put("password", "Wo74Sm#1");
+		headers.put("Authorization", token.get("token_type") + " " + token.get("access_token"));
 		_call.setProperty(HTTPConstants.REQUEST_HEADERS, headers);
 	}
+
+  private static Map<String, Object> requestMFAToken() throws IOException, JSONException{
+
+    try {
+      URL url = new URL(TOKEN_URL);
+
+      HttpURLConnection con = (HttpURLConnection)url.openConnection();
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      con.setDoOutput(true);
+      System.out.println("con=============:" + con);
+      String urlParameters  = "grant_type=password"+
+          "&client_id=" + clientId +
+//          "&client_secret=" + clientSecret +
+          "&username=" + userName +
+          "&password=" + URLEncoder.encode(password,"UTF-8") +
+          "&client_assertion_type=" + URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8") +
+          "&client_assertion=" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8")
+          ;
+      System.out.println("urlParameters=======" + urlParameters);
+      System.out.println("test=============:" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8"));
+      System.out.println("test2=============:" + getJwtToken(clientId, privateKeyFile));
+
+      OutputStreamWriter wr= new OutputStreamWriter(con.getOutputStream());
+      wr.write(urlParameters.getBytes("UTF-8").toString());
+
+      System.out.println("wr=============:" + wr);
+
+      OutputStream os = con.getOutputStream();
+      os.write(urlParameters.getBytes("UTF-8"));
+
+      System.out.println("os=============:" + os);
+
+      os.flush();
+      os.close();
+
+      int responseCode = con.getResponseCode();
+
+      System.out.println("responseCode=============:" + responseCode);
+
+      Map<String, Object> map = new HashMap<String, Object>();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+          BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+          String inputLine;
+          StringBuffer response = new StringBuffer();
+
+          while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+          }
+
+          System.out.println("response=============:" + response);
+
+          in.close();
+
+          String sbString = response.toString();
+          JSONObject json = new JSONObject(sbString);
+
+          Iterator<?> keys = json.keys();
+
+          while( keys.hasNext() ){
+              String key = (String)keys.next();
+              String value = json.getString(key);
+              map.put(key, value);
+
+          }
+
+      }
+        System.out.println("map======================== " + map);
+      return map;
+    } catch(Exception e) {
+      System.out.println("Could not get an access token: " + e.getMessage());
+      return null;
+    }
+  }
+
+  private static String fileToString(String path) throws IOException {
+    InputStream input = new FileInputStream(new File(path));
+    String content = inputStreamToString(input);
+    input.close();
+    return content;
+  }
+
+  private static String inputStreamToString(InputStream input) throws IOException {
+    StringBuilder result = new StringBuilder();
+    byte[] buffer = new byte[1024];
+    int read = input.read(buffer);
+    while(read > 0) {
+      result.append(new String(buffer, 0, read));
+      read = input.read(buffer);
+    }
+
+    return result.toString();
+  }
+
+  private static String getJwtToken(String clientId, String privateKeyFile) throws IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, SignatureException {
+    try {
+      long now = System.currentTimeMillis();
+      long nowSeconds = now / 1000;
+      long expiry = nowSeconds + 300;
+      String tokenId = "TKN_" + now;
+
+      // Generate the header
+      String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
+      //System.out.println("Header: " + header);
+      header = Base64.getEncoder().encodeToString(header.getBytes());
+
+      // Generate the payload
+      String payload = "{\"jti\":\""+tokenId+"\",\"sub\":\""+clientId+"\",\"iss\":\""+clientId+"\",\"aud\":\""+TOKEN_URL+"\",\"exp\":"+expiry+",\"iat\":"+nowSeconds+"}";
+      //System.out.println("Payload: " + payload);
+      payload = Base64.getEncoder().encodeToString(payload.getBytes());
+
+      // Generate the signature
+      String privateKey = fileToString(privateKeyFile);
+      privateKey = privateKey.replaceAll("-----BEGIN PRIVATE KEY-----", "")
+          .replaceAll("-----END PRIVATE KEY-----", "")
+          .replaceAll("\n", "");
+      //System.out.println("Private key: " + privateKey);
+      java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(privateKey));
+      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      Signature privateSignature = Signature.getInstance("SHA256withRSA");
+      privateSignature.initSign(keyFactory.generatePrivate(spec));
+      privateSignature.update((header + "." + payload).getBytes());
+      String signature = Base64.getEncoder().encodeToString(privateSignature.sign());
+
+      String jwtToken = header + "." + payload + "." + signature;
+      //System.out.println("JWT Token: " + jwtToken);
+
+      return jwtToken;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static void main(String rgs[]) throws JSONException, IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException{
+    //System.out.println(getJwtToken(clientId, privateKeyFile));
+    System.out.println(requestMFAToken());
+  }
 }

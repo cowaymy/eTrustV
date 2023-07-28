@@ -161,5 +161,135 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 		preCcpRegisterMapper.insertSmsHistory(params);
 	}
 
+	@Override
+	public int submitConsent(Map<String, Object> params){
+		return preCcpRegisterMapper.submitConsent(params);
+	}
+
+	@Override
+	public EgovMap checkStatus(Map<String, Object> params){
+		return preCcpRegisterMapper.checkStatus(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPreCcpResult(Map<String, Object> params){
+		return preCcpRegisterMapper.selectPreCcpResult(params);
+	}
+
+	@Override
+	public List<EgovMap> selectViewHistory(Map<String, Object> params){
+		return preCcpRegisterMapper.selectViewHistory(params);
+	}
+
+	@Override
+	public int insertQuotaMaster(Map<String, Object>params){
+		return preCcpRegisterMapper.insertQuotaMaster(params);
+	}
+
+	@Override
+	public int getCurrVal(){
+		return preCcpRegisterMapper.getCurrVal();
+	}
+
+	@Override
+	public int insertQuotaDetails(Map<String, Object>params){
+		return preCcpRegisterMapper.insertQuotaDetails(params);
+	}
+
+	@Override
+	public void updateQuotaMaster(Map<String, Object> params){
+		preCcpRegisterMapper.updateQuotaMaster(params);
+	}
+
+	@Override
+	public void updateCurrentOrgCode(Map<String, Object> params){
+		preCcpRegisterMapper.updateCurrentOrgCode(params);
+	}
+
+	@Override
+	public List<EgovMap> selectQuota(Map<String, Object> params){
+		return preCcpRegisterMapper.selectQuota(params);
+	}
+
+	@Override
+	public List<EgovMap> selectQuotaDetails(Map<String, Object> params){
+		return preCcpRegisterMapper.selectQuotaDetails(params);
+	}
+
+	@Override
+	public int confirmForfeit(Map<String, Object> params){
+		return preCcpRegisterMapper.confirmForfeit(params);
+	}
+
+	@Override
+	public int updateRemark(Map<String, Object> params){
+		return preCcpRegisterMapper.updateRemark(params);
+	}
+
+	@Override
+	public EgovMap chkUpload(Map<String, Object> params){
+		return preCcpRegisterMapper.chkUpload(params);
+	}
+
+	@Override
+	public EgovMap chkPastMonth(Map<String, Object> params){
+		return preCcpRegisterMapper.chkPastMonth(params);
+	}
+
+	@Override
+	public EgovMap chkQuota(Map<String, Object> params){
+		return preCcpRegisterMapper.chkQuota(params);
+	}
+
+	@Override
+	public List<EgovMap> selectYearList(Map<String, Object> params){
+		return preCcpRegisterMapper.selectYearList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectMonthList(Map<String, Object> params){
+		return preCcpRegisterMapper.selectMonthList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectViewQuotaDetails(Map<String, Object> params){
+		return preCcpRegisterMapper.selectViewQuotaDetails(params);
+	}
+
+	@Override
+	public List<EgovMap> selectOrganizationLevel(Map<String, Object> params){
+		return preCcpRegisterMapper.selectOrganizationLevel(params);
+	}
+
+	@Override
+	public int confirmTransfer(Map<String, Object> params){
+
+		int transferOut = 0 , transferIn = 0;
+
+		for(Map<String,Object> editDetails : (List<Map<String,Object>>) params.get("editList")){
+
+			int linkId = preCcpRegisterMapper.getSeqSAL0356D();
+
+			//Transfer Out
+			Map<String, Object> editMap = new HashMap<String, Object>();
+			editMap.put("orgCode", params.get("orgCode"));
+			editMap.put("grpCode", params.get("grpCode"));
+			editMap.put("transferQuota", Integer.parseInt(editDetails.get("transferQuota").toString()) * -1);
+			editMap.put("year", params.get("year"));
+			editMap.put("month", params.get("month"));
+			editMap.put("userId", params.get("userId"));
+			editMap.put("linkId", linkId);
+			transferOut = preCcpRegisterMapper.confirmTransfer(editMap);
+
+			//Received
+			editDetails.put("year", params.get("year"));
+			editDetails.put("month", params.get("month"));
+			editDetails.put("userId", params.get("userId"));
+			editDetails.put("linkId", linkId);
+			transferIn = preCcpRegisterMapper.confirmTransfer(editDetails);
+		}
+
+		return (transferOut + transferIn);
+	}
 
 }

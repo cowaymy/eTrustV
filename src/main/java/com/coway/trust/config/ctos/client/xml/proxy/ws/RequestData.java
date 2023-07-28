@@ -7,9 +7,13 @@ public class RequestData {
 
 	public static String PrepareRequest(String batchNo, String orderNo, String customerName, String nric) {
 
-		String companyCode = "B065000";
-		String accountNo = "B065000";
-		String userId = "b065000_xml";
+		String companyCode = "COWAYUAT";
+		String accountNo = "COWAYUAT";
+		String userId = "coway_uat";
+
+//		String companyCode = "B065000";
+//		String accountNo = "B065000";
+//		String userId = "b065000_xml";
 
 		StringBuilder sb = new StringBuilder();
 
@@ -21,25 +25,25 @@ public class RequestData {
 		sb.append("<records>" + "\r\n");
 		sb.append("<type>I</type>" + "\r\n");// I-individual,C-company,B-business
 		sb.append("<ic_lc></ic_lc>" + "\r\n");// Old IC number(for individual)
-												// or local number(for company)
-												// or blank for business
+                												  // or local number(for company)
+                												  // or blank for business
 		sb.append("<nic_br>").append(nric).append("</nic_br>").append("\r\n");// New IC/Passport
-															// number for
-															// individual, blank
-															// for company,
-															// business
-															// registration
-															// number for
-															// business
+        				                  // number for
+        								  // individual, blank
+        								  // for company,
+        								  // business
+        								  // registration
+        								  // number for
+        								  // business
 		sb.append("<name>").append(customerName).append("</name>").append("\r\n");
 		sb.append("<mphone_nos>" + "\r\n");
 		sb.append("<mphone_no/>" + "\r\n");
 		sb.append("</mphone_nos>" + "\r\n");
 		sb.append("<ref_no/>" + "\r\n");// User's own reference or remark (for
 										// example, order number)
-		sb.append("<dist_code></dist_code>" + "\r\n");// User's own ditribution
-														// code(e.g. branch,
-														// department)
+		sb.append("<dist_code></dist_code>" + "\r\n");// User's own distribution
+                        							    // code(e.g. branch,
+                        							    // department)
 		sb.append(
 				"<purpose code=\"200\">Credit evaluation/account opening on subject/directors/shareholder with consent /due diligence on AMLA compliance</purpose>"
 						+ "\r\n");

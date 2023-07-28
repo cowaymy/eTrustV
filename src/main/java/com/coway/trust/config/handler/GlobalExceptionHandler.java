@@ -241,6 +241,13 @@ public class GlobalExceptionHandler {
 				redirect = AppConstants.REDIRECT_CUSTOMER_LOGIN;
 			}
 
+			if (request.getRequestURI().startsWith(AppConstants.CUSTOMER_CONSENT)) {
+				redirect = AppConstants.REDIRECT_CUSTOMER_CONSENT;
+			}
+
+			LOGGER.error("[authException]request : {}", request.getRequestURI());
+			LOGGER.error("[authException]redirect : {}", redirect);
+
 			HttpStatus httpStatus = ex.getHttpStatus();
 			if (HttpStatus.FORBIDDEN == httpStatus) {
 				redirect = AppConstants.REDIRECT_UNAUTHORIZED;

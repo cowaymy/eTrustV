@@ -53,4 +53,50 @@ public interface PreCcpRegisterMapper {
 
 	void insertSmsHistory(Map<String, Object> params);
 
+	int resetSmsConsent(Map<String, Object> params);
+
+	int submitConsent(Map<String, Object> params);
+
+	EgovMap checkStatus(Map<String, Object>params);
+
+	List<EgovMap> selectPreCcpResult(Map<String, Object> params);
+
+	List<EgovMap> selectViewHistory(Map<String, Object> params);
+
+	int insertQuotaMaster(Map<String, Object> params);
+
+	int getCurrVal();
+
+	int insertQuotaDetails(Map<String, Object> params);
+
+	void updateQuotaMaster(Map<String, Object> params);
+
+	void updateCurrentOrgCode(Map<String, Object> params);
+
+	List<EgovMap> selectQuota(Map<String, Object> params);
+
+	List<EgovMap> selectQuotaDetails(Map<String, Object> params);
+
+	int confirmForfeit(Map<String, Object> params);
+
+	int updateRemark(Map<String, Object> params);
+
+	EgovMap chkUpload(Map<String, Object> params);
+
+	EgovMap chkPastMonth(Map<String, Object> params);
+
+	EgovMap chkQuota(Map<String, Object> params);
+
+	List<EgovMap> selectMonthList(Map<String, Object> params);
+
+	List<EgovMap> selectYearList(Map<String, Object> params);
+
+	List<EgovMap> selectViewQuotaDetails(Map<String, Object> params);
+
+	List<EgovMap> selectOrganizationLevel(Map<String, Object> params);
+
+	int confirmTransfer(Map<String, Object> params);
+
+	int getSeqSAL0356D();
+
 }

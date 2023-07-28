@@ -53,7 +53,9 @@ public class AppConstants {
 	public static final String REDIRECT_MOBILE_LOGIN = "redirect:/mobileWeb/login.do";
 	public static final String REDIRECT_UNAUTHORIZED = "redirect:/common/unauthorized.do";
 	public static final String REDIRECT_CUSTOMER_LOGIN = "redirect:/enquiry/trueaddress.do";
+	public static final String REDIRECT_CUSTOMER_CONSENT = "redirect:/sales/ccp/consent";
 	public static final String CUSTOMER_WEB = "/enquiry";
+	public static final String CUSTOMER_CONSENT = "/sales/ccp/consent";
 	/**
 	 * ajax return code
 	 */
