@@ -55,7 +55,7 @@
         $("#preAsType").val('${preAsType}');
     }
 
-    $("#checkComm").prop("checkpreASInfoed", true);
+    $("#checkComm").prop("checked", true);
 
     fn_setComboBox2();
 
