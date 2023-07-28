@@ -34,9 +34,9 @@ public class EMandateConstants {
 
 	public static final String STATUS_MERCHANT_APPROVED = "00";
 	public static final String STATUS_MERCHANT_UNAPPROVE = "99";
-	public static final String STATUS_IN_PROGRESS = "60";
-	public static final String STATUS_FAILED = "21";
-	public static final String STATUS_SUCCESS = "71";
+	public static final int STATUS_IN_PROGRESS = 60;
+	public static final int STATUS_FAILED = 21;
+	public static final int STATUS_SUCCESS = 71;
 
 
 }
