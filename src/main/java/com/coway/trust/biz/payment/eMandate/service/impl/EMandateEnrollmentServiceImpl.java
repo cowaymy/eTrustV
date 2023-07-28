@@ -6,14 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,9 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  String hashValue = DigestUtils.sha256Hex(hashKey);
 		  LOGGER.debug("========Hash Value==========: "+ hashValue);
 
+		  SimpleDateFormat formatter = new SimpleDateFormat("DDMMYY", Locale.ENGLISH);
+		  Date date = formatter.parse(effectiveDate);
+
 
 		  // insert request into request Table
 		  params.put("userId", 349);
@@ -125,7 +129,7 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  params.put("paymentMode", EMandateConstants.PYMT_METHOD_DD);
 		  params.put("stus", EMandateConstants.STATUS_IN_PROGRESS); // default IN Progress status
 		  params.put("amt", EMandateConstants.MAXIMUM_DD_AMOUNT);
-		  params.put("effectDate", effectiveDate);
+		  params.put("effectDate", date);
 
 		  eMandateMapper.insertDDRequest(params);
 
