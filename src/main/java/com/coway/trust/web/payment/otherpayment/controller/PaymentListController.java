@@ -2074,4 +2074,13 @@ public class PaymentListController {
 		  return ResponseEntity.ok(message);
 	  }
 	  /** [END] BOI - DCF **/
+
+	  @RequestMapping(value = "/selectRefundCodeList.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+			LOGGER.debug("params =====================================>>  " + params);
+
+			List<EgovMap> codeList = paymentListService.selectRefundCodeList(params);
+
+			return ResponseEntity.ok(codeList);
+		}
 }

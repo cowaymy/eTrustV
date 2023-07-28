@@ -2709,4 +2709,13 @@
             UPD_DT = SYSDATE
         WHERE REQ_ID = #{reqNo}
     </update>
+
+    <select id="selectRefundCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE ,
+              CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0 AND CODE_MASTER_ID = 395
+        AND CODE IN ('107', '108')
+    </select>
 </mapper>

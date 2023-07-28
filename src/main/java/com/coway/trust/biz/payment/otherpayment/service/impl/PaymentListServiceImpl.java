@@ -1467,4 +1467,10 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		return paymentListMapper.checkBankStateMapStus(params);
 	}
 	/* [END] BOI DCF*/
+
+	@Override
+	public List<EgovMap> selectRefundCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return paymentListMapper.selectRefundCodeList(params);
+	}
 }

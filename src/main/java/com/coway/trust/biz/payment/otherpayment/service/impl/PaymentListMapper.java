@@ -237,4 +237,5 @@ public interface PaymentListMapper {
     EgovMap checkBankStateMapStus(Map<String, Object> params);
     void updateDcfBatchStatus(Map<String, Object> params);
     /* [END] BOI DCF*/
+    List<EgovMap> selectRefundCodeList(Map<String, Object> params);
 }
