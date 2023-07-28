@@ -40,8 +40,8 @@ import org.apache.axis.client.Service;
 import org.apache.axis.client.Stub;
 import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.utils.JavaUtils;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+//import org.codehaus.jettison.json.JSONException;
+//import org.codehaus.jettison.json.JSONObject;
 
 public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 	private Vector cachedSerClasses = new Vector();
@@ -746,7 +746,7 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 
 		Map<String, Object> token = new HashMap<String, Object>();
 		try {
-      		token = requestMFAToken();
+      		//token = requestMFAToken();
     	} catch (Exception e) {
      		System.out.println(e);
     }
@@ -759,143 +759,143 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 		_call.setProperty(HTTPConstants.REQUEST_HEADERS, headers);
 	}
 
-  private static Map<String, Object> requestMFAToken() throws IOException, JSONException{
+//  private static Map<String, Object> requestMFAToken() throws IOException, JSONException{
+//
+//    try {
+//      URL url = new URL(TOKEN_URL);
+//
+//      HttpURLConnection con = (HttpURLConnection)url.openConnection();
+//      con.setRequestMethod("POST");
+//      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//      con.setDoOutput(true);
+//      System.out.println("con=============:" + con);
+//      String urlParameters  = "grant_type=password"+
+//          "&client_id=" + clientId +
+////          "&client_secret=" + clientSecret +
+//          "&username=" + userName +
+//          "&password=" + URLEncoder.encode(password,"UTF-8") +
+//          "&client_assertion_type=" + URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8") +
+//          "&client_assertion=" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8")
+//          ;
+//      System.out.println("urlParameters=======" + urlParameters);
+//      System.out.println("test=============:" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8"));
+//      System.out.println("test2=============:" + getJwtToken(clientId, privateKeyFile));
+//
+//      OutputStreamWriter wr= new OutputStreamWriter(con.getOutputStream());
+//      wr.write(urlParameters.getBytes("UTF-8").toString());
+//
+//      System.out.println("wr=============:" + wr);
+//
+//      OutputStream os = con.getOutputStream();
+//      os.write(urlParameters.getBytes("UTF-8"));
+//
+//      System.out.println("os=============:" + os);
+//
+//      os.flush();
+//      os.close();
+//
+//      int responseCode = con.getResponseCode();
+//
+//      System.out.println("responseCode=============:" + responseCode);
+//
+//      Map<String, Object> map = new HashMap<String, Object>();
+//
+//        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+//          BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//          String inputLine;
+//          StringBuffer response = new StringBuffer();
+//
+//          while ((inputLine = in.readLine()) != null) {
+//            response.append(inputLine);
+//          }
+//
+//          System.out.println("response=============:" + response);
+//
+//          in.close();
+//
+//          String sbString = response.toString();
+//          JSONObject json = new JSONObject(sbString);
+//
+//          Iterator<?> keys = json.keys();
+//
+//          while( keys.hasNext() ){
+//              String key = (String)keys.next();
+//              String value = json.getString(key);
+//              map.put(key, value);
+//
+//          }
+//
+//      }
+//        System.out.println("map======================== " + map);
+//      return map;
+//    } catch(Exception e) {
+//      System.out.println("Could not get an access token: " + e.getMessage());
+//      return null;
+//    }
+//  }
 
-    try {
-      URL url = new URL(TOKEN_URL);
-
-      HttpURLConnection con = (HttpURLConnection)url.openConnection();
-      con.setRequestMethod("POST");
-      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-      con.setDoOutput(true);
-      System.out.println("con=============:" + con);
-      String urlParameters  = "grant_type=password"+
-          "&client_id=" + clientId +
-//          "&client_secret=" + clientSecret +
-          "&username=" + userName +
-          "&password=" + URLEncoder.encode(password,"UTF-8") +
-          "&client_assertion_type=" + URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8") +
-          "&client_assertion=" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8")
-          ;
-      System.out.println("urlParameters=======" + urlParameters);
-      System.out.println("test=============:" + URLEncoder.encode(getJwtToken(clientId, privateKeyFile), "UTF-8"));
-      System.out.println("test2=============:" + getJwtToken(clientId, privateKeyFile));
-
-      OutputStreamWriter wr= new OutputStreamWriter(con.getOutputStream());
-      wr.write(urlParameters.getBytes("UTF-8").toString());
-
-      System.out.println("wr=============:" + wr);
-
-      OutputStream os = con.getOutputStream();
-      os.write(urlParameters.getBytes("UTF-8"));
-
-      System.out.println("os=============:" + os);
-
-      os.flush();
-      os.close();
-
-      int responseCode = con.getResponseCode();
-
-      System.out.println("responseCode=============:" + responseCode);
-
-      Map<String, Object> map = new HashMap<String, Object>();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-          BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-          String inputLine;
-          StringBuffer response = new StringBuffer();
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-
-          System.out.println("response=============:" + response);
-
-          in.close();
-
-          String sbString = response.toString();
-          JSONObject json = new JSONObject(sbString);
-
-          Iterator<?> keys = json.keys();
-
-          while( keys.hasNext() ){
-              String key = (String)keys.next();
-              String value = json.getString(key);
-              map.put(key, value);
-
-          }
-
-      }
-        System.out.println("map======================== " + map);
-      return map;
-    } catch(Exception e) {
-      System.out.println("Could not get an access token: " + e.getMessage());
-      return null;
-    }
-  }
-
-  private static String fileToString(String path) throws IOException {
-    InputStream input = new FileInputStream(new File(path));
-    String content = inputStreamToString(input);
-    input.close();
-    return content;
-  }
-
-  private static String inputStreamToString(InputStream input) throws IOException {
-    StringBuilder result = new StringBuilder();
-    byte[] buffer = new byte[1024];
-    int read = input.read(buffer);
-    while(read > 0) {
-      result.append(new String(buffer, 0, read));
-      read = input.read(buffer);
-    }
-
-    return result.toString();
-  }
-
-  private static String getJwtToken(String clientId, String privateKeyFile) throws IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, SignatureException {
-    try {
-      long now = System.currentTimeMillis();
-      long nowSeconds = now / 1000;
-      long expiry = nowSeconds + 300;
-      String tokenId = "TKN_" + now;
-
-      // Generate the header
-      String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
-      //System.out.println("Header: " + header);
-      header = Base64.getEncoder().encodeToString(header.getBytes());
-
-      // Generate the payload
-      String payload = "{\"jti\":\""+tokenId+"\",\"sub\":\""+clientId+"\",\"iss\":\""+clientId+"\",\"aud\":\""+TOKEN_URL+"\",\"exp\":"+expiry+",\"iat\":"+nowSeconds+"}";
-      //System.out.println("Payload: " + payload);
-      payload = Base64.getEncoder().encodeToString(payload.getBytes());
-
-      // Generate the signature
-      String privateKey = fileToString(privateKeyFile);
-      privateKey = privateKey.replaceAll("-----BEGIN PRIVATE KEY-----", "")
-          .replaceAll("-----END PRIVATE KEY-----", "")
-          .replaceAll("\n", "");
-      //System.out.println("Private key: " + privateKey);
-      java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-      PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(privateKey));
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      Signature privateSignature = Signature.getInstance("SHA256withRSA");
-      privateSignature.initSign(keyFactory.generatePrivate(spec));
-      privateSignature.update((header + "." + payload).getBytes());
-      String signature = Base64.getEncoder().encodeToString(privateSignature.sign());
-
-      String jwtToken = header + "." + payload + "." + signature;
-      //System.out.println("JWT Token: " + jwtToken);
-
-      return jwtToken;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  public static void main(String rgs[]) throws JSONException, IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException{
-    //System.out.println(getJwtToken(clientId, privateKeyFile));
-    System.out.println(requestMFAToken());
-  }
+//  private static String fileToString(String path) throws IOException {
+//    InputStream input = new FileInputStream(new File(path));
+//    String content = inputStreamToString(input);
+//    input.close();
+//    return content;
+//  }
+//
+//  private static String inputStreamToString(InputStream input) throws IOException {
+//    StringBuilder result = new StringBuilder();
+//    byte[] buffer = new byte[1024];
+//    int read = input.read(buffer);
+//    while(read > 0) {
+//      result.append(new String(buffer, 0, read));
+//      read = input.read(buffer);
+//    }
+//
+//    return result.toString();
+//  }
+//
+//  private static String getJwtToken(String clientId, String privateKeyFile) throws IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, SignatureException {
+//    try {
+//      long now = System.currentTimeMillis();
+//      long nowSeconds = now / 1000;
+//      long expiry = nowSeconds + 300;
+//      String tokenId = "TKN_" + now;
+//
+//      // Generate the header
+//      String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
+//      //System.out.println("Header: " + header);
+//      header = Base64.getEncoder().encodeToString(header.getBytes());
+//
+//      // Generate the payload
+//      String payload = "{\"jti\":\""+tokenId+"\",\"sub\":\""+clientId+"\",\"iss\":\""+clientId+"\",\"aud\":\""+TOKEN_URL+"\",\"exp\":"+expiry+",\"iat\":"+nowSeconds+"}";
+//      //System.out.println("Payload: " + payload);
+//      payload = Base64.getEncoder().encodeToString(payload.getBytes());
+//
+//      // Generate the signature
+//      String privateKey = fileToString(privateKeyFile);
+//      privateKey = privateKey.replaceAll("-----BEGIN PRIVATE KEY-----", "")
+//          .replaceAll("-----END PRIVATE KEY-----", "")
+//          .replaceAll("\n", "");
+//      //System.out.println("Private key: " + privateKey);
+//      java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+//      PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(privateKey));
+//      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//      Signature privateSignature = Signature.getInstance("SHA256withRSA");
+//      privateSignature.initSign(keyFactory.generatePrivate(spec));
+//      privateSignature.update((header + "." + payload).getBytes());
+//      String signature = Base64.getEncoder().encodeToString(privateSignature.sign());
+//
+//      String jwtToken = header + "." + payload + "." + signature;
+//      //System.out.println("JWT Token: " + jwtToken);
+//
+//      return jwtToken;
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
+//
+//  public static void main(String rgs[]) throws JSONException, IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException{
+//    //System.out.println(getJwtToken(clientId, privateKeyFile));
+//    System.out.println(requestMFAToken());
+//  }
 }
