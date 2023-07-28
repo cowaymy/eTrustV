@@ -4,9 +4,15 @@
 <aside class="title_line">
     <h2>ePurchase Requisition</h2>
     <ul class="right_btns">
-        <li><p class="btn_blue"><a id="ePRSearch">Search</a></p></li>
-        <li><p class="btn_blue"><a onclick="fn_newPRPop()">New</a></p></li>
-        <li><p class="btn_blue"><a onclick="resetEPRForm()">Clear</a></p></li>
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            <li><p class="btn_blue"><a id="ePRSearch">Search</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+            <li><p class="btn_blue"><a onclick="fn_newPRPop()">New</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            <li><p class="btn_blue"><a onclick="resetEPRForm()">Clear</a></p></li>
+        </c:if>
     </ul>
 </aside>
 
@@ -67,8 +73,12 @@
 	        <dt>Link</dt>
 	        <dd>
 	            <ul class="btns">
-	                <li><p class="link_btn"><a href="#" id="btnTransEPR">PR Transcript</a></p></li>
-                    <li><p class="link_btn"><a href="#" id="btnRawEPR">PR Summary RAW</a></p></li>
+	                <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+	                   <li><p class="link_btn"><a href="#" id="btnTransEPR">PR Transcript</a></p></li>
+                    </c:if>
+                    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                        <li><p class="link_btn"><a href="#" id="btnRawEPR">PR Summary RAW</a></p></li>
+                    </c:if>
                     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		                <li><p class="link_btn"><a href="#" id="btnCancelEPR">Cancel PR</a></p></li>
                     </c:if>
