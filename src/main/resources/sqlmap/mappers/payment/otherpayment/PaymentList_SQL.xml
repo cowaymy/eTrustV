@@ -569,9 +569,12 @@
 		        , A.CRT_DT
 		        , B.SALES_ORD_NO
 		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
-		        , CASE WHEN C.APPV_PRCSS_STUS IN ('A','J') THEN E.USER_NAME
+		        <!-- , CASE WHEN C.APPV_PRCSS_STUS IN ('A','J') THEN E.USER_NAME
 		            ELSE ''
-		        END APPROVAL
+		        END APPROVAL -->
+		        , CASE WHEN D.APPV_STUS IN ('A','J') THEN E.USER_NAME
+                    ELSE ''
+                END APPROVAL
 		        , C.APPV_PRCSS_STUS
 		    FROM PAY0344M A
 		    JOIN PAY0345D B ON B.REQ_ID = A.REQ_ID
@@ -1286,7 +1289,10 @@
             NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO,
             H.CODE || ' - ' || H.NAME REQST_BRNCH,
             <!-- I.USER_NAME AS REF_APPV_USER_NM -->
-            CASE WHEN APPR.APPV_PRCSS_STUS IN ('A','J') THEN I.USER_NAME
+            <!-- CASE WHEN APPR.APPV_PRCSS_STUS IN ('A','J') THEN I.USER_NAME
+                    ELSE ''
+                END REF_APPV_USER_NM -->
+             CASE WHEN APPRDT.appv_stus IN ('A','J') THEN I.USER_NAME
                     ELSE ''
                 END REF_APPV_USER_NM
              ,CASE WHEN APPR.APPV_PRCSS_STUS  = 'A' THEN 5
