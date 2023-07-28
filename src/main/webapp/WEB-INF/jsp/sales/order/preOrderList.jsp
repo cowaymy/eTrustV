@@ -110,7 +110,7 @@ console.log("preOrderList");
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doDefCombo(actData, '' ,'_action', 'S', '');
-        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
+        doGetComboDataStatus('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
