@@ -65,6 +65,7 @@ fetch("/sales/ccp/selectAgreementProgressStatus.do")
 
 $.fn.clearForm = function() {
     return this.each(function() {
+
         let type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
             return $(':input',this).clearForm();
@@ -202,7 +203,7 @@ function fn_report(){
 
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: validRequiredField();"><spring:message code="sal.btn.generate" /></a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#agmActiveform').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" />
