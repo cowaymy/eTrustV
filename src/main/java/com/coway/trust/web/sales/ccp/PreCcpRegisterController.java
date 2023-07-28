@@ -1,9 +1,9 @@
 package com.coway.trust.web.sales.ccp;
 
-import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
-import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
-import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
-import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
+//import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
+//import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
+//import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
+//import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
 
 import java.io.File;
 import java.io.IOException;
