@@ -53,7 +53,7 @@ public class ePRServiceImpl implements ePRService {
 			results.add(ePRMapper.updateRequestFinal(p));
 		} else {
 			EgovMap currentApprv = ePRMapper.getCurrApprv(p);
-			if (ePRMapper.getSPCMembers().stream().filter(spcMem -> spcMem.get("memId") == currentApprv.get("memId")).count() > 0) {
+			if (ePRMapper.getSPCMembers().stream().filter(spcMem -> spcMem.get("memId").equals(currentApprv.get("memId"))).count() > 0) {
 				results.add(ePRMapper.updateRequestSPC(p));
 			}
 		}
