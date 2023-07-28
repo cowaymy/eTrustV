@@ -174,7 +174,7 @@ function searchReqDCFNewInfo(){
 
             	$("#cashTotalAmtTxt").val(result.newTotalAmt.toFixed(2));
             	$("#cashBankType").val(result.bankType);
-            	$("#cashBankAcc").val(result.bankAcc);
+            	$("#cashBankAcc").val(result.bankAccId);
             	$("#cashVAAcc").val(result.vaAcc);
             	$("#cashTrxDate").val(result.trxDt);
             	$("#cashSlipNo").val(result.slipNo);
@@ -185,7 +185,7 @@ function searchReqDCFNewInfo(){
 
                 $("#chequeTotalAmtTxt").val(result.newTotalAmt.toFixed(2));
                 $("#chequeBankType").val(result.bankType);
-                $("#chequeBankAcc").val(result.bankAcc);
+                $("#chequeBankAcc").val(result.bankAccId);
                 $("#chequeVAAcc").val(result.vaAcc);
                 $("#chequeTrxDate").val(result.trxDt);
                 $("#chequeSlipNo").val(result.chqNo);
@@ -268,7 +268,7 @@ function searchReqDCFNewInfo(){
                 $("#onlineTotalAmtTxt").val(result.newTotalAmt.toFixed(2));
                 $("#onlineVAAcc").val(result.vaAcc);
                 $("#onlineBankType").val(result.bankType);
-                $("#onlineBankAcc").val(result.bankAcc);
+                $("#onlineBankAcc").val(result.bankAccId);
                 $("#onlineTrxDate").val(result.trxDt);
                 $("#onlineEFT").val(result.eft);
                 $("#onlineTrxId").val(result.trxId);

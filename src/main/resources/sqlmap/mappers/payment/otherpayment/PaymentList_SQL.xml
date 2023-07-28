@@ -1768,7 +1768,7 @@
             A.NEW_PAY_TYPE,
             A.NEW_TOTAL_AMT,
             A.BANK_TYPE,
-            A.BANK_ACC,
+            A.BANK_ACC_ID,
             A.VA_ACC,
             TO_CHAR(A.TRX_DATE,'DD/MM/YYYY') AS TRX_DT,
             A.SLIP_NO,
