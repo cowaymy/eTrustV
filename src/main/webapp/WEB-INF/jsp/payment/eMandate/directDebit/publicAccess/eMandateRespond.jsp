@@ -7,7 +7,6 @@
 <script src="${pageContext.request.contextPath}/resources/js/util.js" type="text/javascript"></script>
 
 <script type="text/javaScript">
-debugger;
 $(document).ready(function(){
 
    var status= '${data.status}';
