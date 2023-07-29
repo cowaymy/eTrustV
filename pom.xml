@@ -114,6 +114,22 @@
             <systemPath>${webinf-lib}/javase-3.3.0.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.16</version>
+            <scope>system</scope>
+            <systemPath>${webinf-lib}/lombok-1.16.16.jar</systemPath>
+        </dependency>
+
+        <!-- jettison  -->
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.2</version>
+            <scope>system</scope>
+            <systemPath>${webinf-lib}/jettison-1.2.jar</systemPath>
+        </dependency>
 
 		<!-- crystal report -->
 		<dependency>

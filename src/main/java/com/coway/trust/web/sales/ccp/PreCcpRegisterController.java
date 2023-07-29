@@ -1,9 +1,9 @@
 package com.coway.trust.web.sales.ccp;
 
-//import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
-//import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
-//import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
-//import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
+import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
+import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
+import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
+import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,8 +92,8 @@ public class PreCcpRegisterController {
     @Autowired
     private SessionHandler sessionHandler;
 
-//    @Autowired
-//    private Proxy proxy;
+    @Autowired
+    private Proxy proxy;
 
 	@RequestMapping(value = "/initPreCcpRegisterList.do")
 	public String initPreCcpRegisterList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -129,49 +129,48 @@ public class PreCcpRegisterController {
     @Transactional
     public boolean ctos(Map<String, Object> params){
 
-//        try
-//    	{
-//        	params.put("preccpSeq", params.get("id").toString().substring(6, params.get("id").toString().length()));
-//        	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
-//
-//		    params.put("batchNo", "testing");
-//		    params.put("orderNo", "");
-//		    params.put("oldIc", "testing");
-//    		params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
-//    		params.put("customerName", getCustInfo.get("custName"));
-//    		params.put("customerNric", getCustInfo.get("custIc"));
-//        	preCcpRegisterService.insertNewCustomerInfo(params);
-//
-//        	List <EgovMap> resultMapList = (List<EgovMap>) params.get("b2bData");
-//            String reqPayload = RequestData.PrepareRequest(params.get("batchNo").toString(), params.get("customerName").toString(), params.get("customerNric").toString(), params.get("oldIc").toString());
-//
-//            byte[] bytes = proxy.request(reqPayload);
-//
-//            String response = new String(bytes);
-//            int ficoScore = StaxXMLReader.getFicoScore(response);
-//            String bankRupt = StaxXMLReader.getBankruptcy(response);
-//            String confirmEntity = StaxXMLReader.getConfirmEntity(response);
-//
-//            if(!confirmEntity.equals("0") && ficoScore == 0){
-//              ficoScore = 9999;
-//            }
-//
-//            ResRequestVO resRequestVO = ResRequestVO.builder().custIc(params.get("customerNric").toString()).resultRaw(response)
-//                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();
-//
-//            Map<String, Object> param = BeanConverter.toMap(resRequestVO);
-//            param.put("ccrisId", resultMapList.get(0).get("ccrisId").toString());
-//            param.put("seq", params.get("preccpSeq"));
-//        	preCcpRegisterService.updateCcrisId(param);
-//        	preCcpRegisterService.updateCcrisScre(param);
-//
-//        	return true;
-//    	}
-//        catch(Exception e){
-//        	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
-//        	return false;
-//        }
-    	return true;
+        try
+    	{
+        	params.put("preccpSeq", params.get("id").toString().substring(6, params.get("id").toString().length()));
+        	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
+
+		    params.put("batchNo", "testing");
+		    params.put("orderNo", "");
+		    params.put("oldIc", "testing");
+    		params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+    		params.put("customerName", getCustInfo.get("custName"));
+    		params.put("customerNric", getCustInfo.get("custIc"));
+        	preCcpRegisterService.insertNewCustomerInfo(params);
+
+        	List <EgovMap> resultMapList = (List<EgovMap>) params.get("b2bData");
+            String reqPayload = RequestData.PrepareRequest(params.get("batchNo").toString(), params.get("customerName").toString(), params.get("customerNric").toString(), params.get("oldIc").toString());
+
+            byte[] bytes = proxy.request(reqPayload);
+
+            String response = new String(bytes);
+            int ficoScore = StaxXMLReader.getFicoScore(response);
+            String bankRupt = StaxXMLReader.getBankruptcy(response);
+            String confirmEntity = StaxXMLReader.getConfirmEntity(response);
+
+            if(!confirmEntity.equals("0") && ficoScore == 0){
+              ficoScore = 9999;
+            }
+
+            ResRequestVO resRequestVO = ResRequestVO.builder().custIc(params.get("customerNric").toString()).resultRaw(response)
+                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();
+
+            Map<String, Object> param = BeanConverter.toMap(resRequestVO);
+            param.put("ccrisId", resultMapList.get(0).get("ccrisId").toString());
+            param.put("seq", params.get("preccpSeq"));
+        	preCcpRegisterService.updateCcrisId(param);
+        	preCcpRegisterService.updateCcrisScre(param);
+
+        	return true;
+    	}
+        catch(Exception e){
+        	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
+        	return false;
+        }
     }
 
 
