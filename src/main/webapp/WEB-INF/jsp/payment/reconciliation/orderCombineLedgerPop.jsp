@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
-var custNricOri;
+var custNricOri, bankAccOri;
 
     $(document).ready(function(){
     	$('#memInfo').hide();
@@ -60,7 +60,7 @@ var custNricOri;
                 }
 
                 if(Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0 && Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0){
-                    $('#svmQuotTotalAmount').val("");
+                    $('#svmQuotFilterAmount').val("");
                 }else{
                     $('#svmQuotTotalAmount').val($.number(result.orderOutstandingView[0].srvmemquottotalamount, 2));
                 }
@@ -154,7 +154,21 @@ var custNricOri;
                 	$('#memInfo').hide();
                 }
 
-                $('#memBankAcc').val(result.orderOutstandingView[0].bankaccno);
+                bankAccOri = result.orderOutstandingView[0].bankaccno;
+
+                maskedBankAcc = bankAccOri.substr(-4).padStart(bankAccOri.length, '*');
+                $("#spanBankAcc").html(maskedBankAcc);
+                $("#spanBankAcc").hover(function() {
+                    $("#spanBankAcc").html(bankAccOri);
+                }).mouseout(function() {
+                    $("#spanBankAcc").html(maskedBankAcc);
+                });
+                $("#imgHover2").hover(function() {
+                    $("#spanBankAcc").html(bankAccOri);
+                }).mouseout(function() {
+                    $("#spanBankAcc").html(maskedBankAcc);
+                });
+
                 $('#memIssueBank').val(result.orderOutstandingView[0].bankname);
                 $('#svmTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].outsvmoutstndtotal, 2));
                 $('#srvContractTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].rensvmoutstndtotal,2));
@@ -423,9 +437,9 @@ var custNricOri;
                             <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="memStus" name="memStus"/>
                         </td>
                         <th scope="row">Bank Acc No</th>
-                        <td>
-                            <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="memBankAcc" name="memBankAcc"/>
-                        </td>
+                        <td><a href="#" class="search_btn" id="imgHover2"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+                         <span id="spanBankAcc"></span>
+                                                 </td>
                         <th scope="row">Issue Bank</th>
                         <td colspan="3">
                             <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="memIssueBank" name="memIssueBank"/>
