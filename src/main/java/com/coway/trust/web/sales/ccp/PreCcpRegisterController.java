@@ -58,6 +58,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.EncryptionDecryptionService;
+import com.coway.trust.biz.enquiry.EnquiryService;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.config.csv.CsvReadComponent;
 
@@ -73,6 +74,9 @@ public class PreCcpRegisterController {
 
 	@Resource(name = "preCcpRegisterService")
 	private PreCcpRegisterService preCcpRegisterService;
+
+	@Resource(name = "EnquiryService")
+	private EnquiryService enquiryService;
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
@@ -312,7 +316,7 @@ public class PreCcpRegisterController {
 	   return ResponseEntity.ok(preCcpRegisterService.checkStatus(params));
     }
 
-	@Transactional
+	//@Transactional
 	@RequestMapping(value = "/submitConsent.do", method = RequestMethod.POST)
 	 public ResponseEntity<ReturnMessage> submitConsent(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
 		ReturnMessage message = new ReturnMessage();
@@ -326,8 +330,13 @@ public class PreCcpRegisterController {
     		message.setMessage(result > 0 ? messageAccessor.getMessage("preccp.successConsent") : messageAccessor.getMessage("preccp.failConsent"));
 		}
 		catch(Exception e){
-    			message.setCode(AppConstants.FAIL);
-        		message.setMessage(messageAccessor.getMessage("preccp.failConsent"));
+			  Map<String, Object> errorParam = new HashMap<>();
+			  errorParam.put("pgmPath","/preccp");
+			  errorParam.put("functionName", "submitConsent.do");
+			  errorParam.put("errorMsg",e.getMessage());
+			  enquiryService.insertErrorLog(errorParam);
+    		  message.setCode(AppConstants.FAIL);
+        	  message.setMessage(e.getMessage());
 		}
 		return ResponseEntity.ok(message);
 	}
