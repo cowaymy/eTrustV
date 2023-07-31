@@ -1661,7 +1661,7 @@
            S.WATER_SRC_TYPE,
            S.AS_UNMATCH_REASON,
            S.REWORK_PROJ,
-           S.CODE_NAME
+           S.CODE_NAME AS REWORK_PROJ_NAME
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
                   E.AS_ENTRY_ID ,
