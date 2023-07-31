@@ -80,6 +80,10 @@ public interface StockMapper {
 
 	void modifyEosEomInfo(Map<String, Object> params);
 
+	void insertSalePriceReqst(Map<String, Object> params);
+
+	void updatePriceReqstApproval(Map<String, Object> params);
+
 	/*//bom manual execution
 	List<EgovMap> selectITF180Data();
 	void insertBomMaster43M(Map<String, Object> map);

@@ -67,4 +67,9 @@ public interface StockService {
 	List<EgovMap> selectPriceInfo2(Map<String, Object> params);
 
 	List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params);
+
+	void insertSalePriceReqst(Map<String, Object> params);
+
+	void updatePriceReqstApproval(Map<String, Object> params);
+
 }

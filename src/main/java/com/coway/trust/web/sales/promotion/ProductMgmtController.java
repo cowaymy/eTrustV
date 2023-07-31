@@ -4,11 +4,13 @@
 package com.coway.trust.web.sales.promotion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,5 +119,51 @@ public class ProductMgmtController {
 
     return ResponseEntity.ok(message);
   }
+
+	@RequestMapping(value = "/priceValueApprovalList.do")
+	public String priceValueApprovalList(@RequestParam Map<String, Object> params, ModelMap model) {
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("toDay", toDay);
+
+
+		return "sales/promotion/priceValueApprovalList";
+	}
+
+	@RequestMapping(value = "/selectPriceReqstList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectPriceReqstList(@RequestParam Map<String, Object>params, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+		String[] cate = request.getParameterValues("cmbCategory");
+		String[] type = request.getParameterValues("cmbType");
+		String status = request.getParameter("status");
+		String stkNm = request.getParameter("stkNm");
+		String stkCd = request.getParameter("stkCd");
+		String createDt1 = request.getParameter("createDt1");
+		String createDt2 = request.getParameter("createDt2");
+
+		Map<String, Object> smap = new HashMap();
+		smap.put("cateList", cate);
+		smap.put("typeList", type);
+		smap.put("statList", status);
+		smap.put("stkNm", stkNm);
+		smap.put("stkCd", stkCd);
+		smap.put("createDt1", createDt1);
+		smap.put("createDt2", createDt2);
+
+	    List<EgovMap> resultList = productMgmtService.selectPriceReqstList(smap);
+
+	    return ResponseEntity.ok(resultList);
+	  }
+
+	@RequestMapping(value = "/selectPriceReqstInfo.do", method = RequestMethod.GET)
+	  public ResponseEntity<Map<String, Object>> selectPriceReqstInfo(@RequestParam Map<String, Object>params) {
+	    EgovMap info = productMgmtService.selectPriceReqstInfo(params);
+  		List<EgovMap> infoHistory = productMgmtService.selectPriceHistoryInfo2(params);
+
+  		Map<String, Object> map = new HashMap();
+  		map.put("data", info);
+  		map.put("data2", infoHistory);
+
+  		return ResponseEntity.ok(map);
+	  }
 
 }

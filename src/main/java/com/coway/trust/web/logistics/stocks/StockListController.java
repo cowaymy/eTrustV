@@ -237,10 +237,49 @@ public class StockListController {
 		map.put("stkid", params.get("stockId"));
 		map.put("appTypeId", params.get("appTypeId"));
 		map.put("msg", retMsg);
+//		stock.updateStockPriceInfo(params);
+//		stock.updatePriceInfo2(params);
 
-		stock.updateStockPriceInfo(params);
+		stock.insertSalePriceReqst(params);
+
+
 //		stock.updatePriceInfo(params);
-		stock.updatePriceInfo2(params);
+
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/confirmPriceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> confirmPriceInfo(@RequestBody Map<String, Object> params, Model model) throws Exception {
+
+		String rtnMsg = "";
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		// loginId
+		params.put("upd_user", loginId);
+
+		Map<String, Object> map = new HashMap();
+		map.put("revalue", params.get("revalue"));
+		map.put("stkid", params.get("stkId"));
+		map.put("appTypeId", params.get("appTypeId"));
+
+		stock.updatePriceReqstApproval(params);
+		if(params.get("appvStatus").equals("5")){
+				stock.updateStockPriceInfo(params);
+				stock.updatePriceInfo2(params);
+				rtnMsg = "Price request has been successfully approved";
+		}
+
+		else{
+			rtnMsg = "Price request has been successfully rejected";
+		}
+
+		map.put("msg", rtnMsg);
 
 		return ResponseEntity.ok(map);
 	}

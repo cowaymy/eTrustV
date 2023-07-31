@@ -531,4 +531,79 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		// TODO Auto-generated method stub
 		return stockMapper.selectPriceHistoryInfo2(params);
 	}
+
+	@Override
+	public void insertSalePriceReqst(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+	    logger.debug("[insertSalePriceReqst] START ===== params========" + params);
+
+		Map<String, Object> smap = new HashMap<>();
+		Map<String, Object> smap2 = new HashMap<>();
+
+		smap.put("srvpacid", params.get("srvPackageId"));
+		smap2.put("srvpacid", params.get("srvPackageId"));
+
+		smap.put("typeId", params.get("priceTypeid"));
+		smap2.put("typeId", params.get("priceTypeid"));
+
+		smap.put("crtUserId", params.get("upd_user"));
+		smap2.put("crtUserId", params.get("upd_user"));
+
+		if (params.get("priceTypeid") != null) {
+			if ("61".equals(params.get("priceTypeid").toString())){
+
+		    //outright or outright plus package
+		    smap.put("stockId", params.get("stockId"));
+		    smap.put("amt", params.get("dNormalPrice"));
+		    smap.put("appTypeId", "67");
+		    smap.put("pricecharges", 0);
+		    smap.put("pricecosting", params.get("dCost"));
+		    smap.put("pricepv", params.get("dPV"));
+		    smap.put("tradeinpv", params.get("dTradeInPV"));
+		    smap.put("srvpacid", params.get("srvPackageId"));
+		    smap.put("pricerpf", params.get("dRentalDeposit"));
+
+		    //rental package
+		    smap2.put("stockId", params.get("stockId"));
+		    smap2.put("amt", params.get("dMonthlyRental"));
+		    smap2.put("appTypeId", "66");
+		    smap2.put("pricecharges", 0);
+		    smap2.put("pricecosting", params.get("dCost"));
+		    smap2.put("pricepv", params.get("dPV"));
+		    smap2.put("tradeinpv", params.get("dTradeInPV"));
+		    smap2.put("pricerpf", params.get("dRentalDeposit"));
+		    smap2.put("srvpacid", params.get("srvPackageId"));
+
+		    if(params.get("appTypeId").toString().equals("66")){
+		    	stockMapper.insertSalePriceReqst(smap2);
+		    	}else if(params.get("appTypeId").toString().equals("67")){
+		    		stockMapper.insertSalePriceReqst(smap);
+		    		}
+
+
+		    } else {
+		        smap.put("priceTypeid", params.get("priceTypeid"));
+		        smap.put("stockId", params.get("stockId"));
+		        smap.put("amt", params.get("dNormalPrice"));
+		        smap.put("appTypeId", params.get("appTypeId"));
+		        smap.put("pricecharges", params.get("dPenaltyCharge"));
+		        smap.put("pricecosting", params.get("dCost"));
+		        stockMapper.insertSalePriceReqst(smap);
+
+		      }
+
+	    logger.debug("[insertSalePriceReqst] END ===== params========" + params);
+
+		}
+	}
+
+	@Override
+	public void updatePriceReqstApproval(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		stockMapper.updatePriceReqstApproval(params);
+
+	}
+
 }

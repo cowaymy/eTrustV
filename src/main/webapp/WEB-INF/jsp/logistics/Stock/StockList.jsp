@@ -1093,7 +1093,7 @@
  Common.ajaxSync("POST", "/stock/modifyPriceInfo.do", param,
           function(result) {
            console.log("성공." + JSON.stringify(result));
-           Common.alert("Price successfully updated!");
+           Common.alert("Price update successfully requested!");
            editYN = "N";
            fn_makeDisabled("all");
            fn_getPriceInfo();

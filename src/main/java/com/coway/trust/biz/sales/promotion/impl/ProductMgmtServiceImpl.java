@@ -90,7 +90,20 @@ public class ProductMgmtServiceImpl extends EgovAbstractServiceImpl implements P
 	}
 
 
+	@Override
+	public List<EgovMap> selectPriceReqstList(Map<String, Object> params) {
+		return productMgmtMapper.selectPriceReqstList(params);
+	}
 
+	@Override
+	public EgovMap selectPriceReqstInfo(Map<String, Object> params) {
+	   return productMgmtMapper.selectPriceReqstInfo(params);
+	}
 
+	@Override
+	public List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return productMgmtMapper.selectPriceHistoryInfo2(params);
+	}
 
 }

@@ -217,4 +217,155 @@
         WHERE PROMO_ID = #{promoId}
         AND PROMO_ITM_STK_ID = #{stkId}
     </update>
+
+    <select id="selectPriceReqstList" parameterType="Map" resultType="egovMap">
+SELECT TM.PRC_REQST_ID, TM.APP_TYPE_ID, TM.STK_ID, STK.STK_TYPE_ID, STK.STK_CODE, STK.STK_DESC,
+SP.MEM_PAC_ID,
+    CASE WHEN TM.APP_TYPE_ID = 66 THEN
+    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 66 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 367 and CODE = TO_CHAR(TM.MEM_PAC_ID))
+            WHEN TM.APP_TYPE_ID = 67 THEN
+    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 67 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 368 and CODE = TO_CHAR(TM.MEM_PAC_ID))
+            WHEN TM.APP_TYPE_ID = 1412 THEN
+    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 1412 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 370 and CODE = TO_CHAR(TM.MEM_PAC_ID))
+     ELSE NULL END AS CODE_NAME,
+( SELECT
+        code_name
+        FROM sys0013m
+        WHERE code_id = stk.stk_ctgry_id
+) CTGRY,
+( SELECT
+        code_name
+        FROM
+        sys0013m
+        WHERE code_id = stk.stk_type_id
+) TYPE,
+STUS.NAME AS APPV_STUS, APPV.USER_NAME AS APPROVER, TO_CHAR(TM.APPV_DT, 'DD/MM/YYYY') AS APPV_DT, TM.REMARK,
+CRT.USER_NAME AS CREATOR, TO_CHAR(TM.CRT_DT, 'DD/MM/YYYY') AS CRT_DT
+FROM SAL0357M TM
+JOIN SYS0026M STK ON STK.STK_ID = TM.STK_ID
+JOIN SYS0047M CRT ON CRT.USER_ID = TM.CRT_USER_ID
+LEFT JOIN SYS0047M APPV ON APPV.USER_ID = TM.APPV_USER_ID
+JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = TM.APPV_STUS
+LEFT OUTER JOIN SAL0016M SP ON (SP.APP_TYPE_ID = TM.APP_TYPE_ID)
+AND SP.STK_ID = TM.STK_ID
+AND SP.STUS_CODE_ID = 1
+AND SP.MEM_PAC_ID = TM.MEM_PAC_ID
+WHERE 1 = 1
+    <if test="cateList != null and cateList != ''">
+      AND STK.STK_CTGRY_ID in
+      <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="typeList != null and typeList != ''">
+      AND STK.STK_TYPE_ID in
+      <foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="stkNm !=null and stkNm != ''">
+      AND STK.STK_DESC like '%'|| #{stkNm} || '%'
+    </if>
+    <if test="stkCd !=null and stkCd != ''">
+      AND STK.STK_CODE like #{stkCd} || '%'
+    </if>
+     <if test="status !=null and status != ''">
+      AND TM.APPV_STUS = #{status}
+    </if>
+    <if test=" '' != createDt1 and null != createDt1">
+    AND  TM.CRT_DT >= TO_DATE(#{createDt1}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+    <if test=" '' != createDt2 and null != createDt2">
+     <![CDATA[ AND  TM.CRT_DT <= TO_DATE(#{createDt2} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') ]]>
+    </if>
+    ORDER BY STK.STK_CODE    </select>
+
+  <select id="selectPriceReqstInfo" parameterType="Map" resultType="egovMap">
+   SELECT
+   <if test="typeId !=null and typeId == '61'">
+                <if test="appTypeId !=null and appTypeId == '66'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+                    0 AMT,
+                    NVL(PRC_PV, 0) PRICEPV,
+                    NVL(AMT, 0) MRENTAL,
+                    NVL(PRC_RPF, 0) PRICERPF,
+                    0 PENALTY,
+                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                </if>
+                <if test="appTypeId !=null and appTypeId == '67'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+                    NVL(AMT, 0) AMT,
+                    NVL(PRC_PV, 0) PRICEPV,
+                    0 MRENTAL,
+                    0 PRICERPF,
+                    0 PENALTY,
+                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                </if>
+                <if test="appTypeId !=null and appTypeId == '1412'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+                    NVL(AMT, 0) AMT,
+                    NVL(PRC_PV, 0) PRICEPV,
+                    0 MRENTAL,
+                    0 PRICERPF,
+                    0 PENALTY,
+                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                </if>
+
+    </if>
+    <if test="typeId !=null and typeId != '61'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+                    NVL(AMT, 0) AMT,
+                    NVL(PRC_PV, 0) PRICEPV,
+                    0 MRENTAL,
+                    NVL(PRC_RPF, 0) PRICERPF,
+                    NVL(PRC_CHRG, 0) PENALTY,
+                    NVL(TRADE_IN_PV, 0) TRADEINPV
+    </if>
+    FROM SAL0357M
+    WHERE PRC_REQST_ID = #{reqstId}
+  </select>
+
+     <select id="selectPriceHistoryInfo2" parameterType="Map" resultType="egovMap">
+        SELECT
+        ROW_NO,
+        PRC_ID,
+        MEM_PAC_ID,
+        STK_ID,
+        UOM_ID,
+        UOM_CONV,
+        APP_TYPE_ID,
+        NVL(PRIOD, 0) PRIOD,
+        STUS_CODE_ID,
+        CRT_USER_ID,
+        TO_CHAR(CRT_DT, 'YYYY/MM/DD') CRT_DT,
+        <if test="typeId !=null and typeId == '61'">
+            NVL(PRC_COSTING, 0) PRICECOST,
+            NVL(AMT, 0) AMT,
+            NVL(PRC_PV, 0) PRICEPV,
+            NVL(AMT, 0) MRENTAL,
+            NVL(PRC_RPF, 0) PRICERPF,
+            0 PENALTY,
+            NVL(TRADE_IN_PV, 0) TRADEINPV
+        </if>
+        <if test="typeId !=null and typeId != '61'">
+            NVL(PRC_COSTING, 0) PRICECOST,
+            NVL(AMT, 0) AMT,
+            0 PRICEPV,
+            0 MRENTAL,
+            0 PRICERPF,
+            NVL(PRC_CHRG, 0) PENALTY,
+            0 TRADEINPV
+        </if>
+
+        FROM LOG0058D
+        WHERE 1=1
+        AND APP_TYPE_ID = #{appTypeId}
+        AND STK_ID = #{stkId}
+        AND MEM_PAC_ID = #{memPacId}
+        <if test="typeId !=null and typeId != '61'">
+        AND STUS_CODE_ID = 1
+        </if>
+        ORDER BY ROW_NO DESC
+
+   </select>
 </mapper>

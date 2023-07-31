@@ -24,4 +24,8 @@ public interface ProductMgmtMapper {
 	void updateProductCtrl(Map<String, Object> params);
 	void updatePromotionCtrl(Map<String, Object> params);
 
+	List<EgovMap> selectPriceReqstList(Map<String, Object> params);
+	EgovMap selectPriceReqstInfo(Map<String, Object> params);
+	List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params);
+
 }

@@ -1156,4 +1156,61 @@
 	    ORDER BY ROW_NO DESC
 
    </select>
+
+   <insert id="insertSalePriceReqst" parameterType="Map">
+            <![CDATA[
+                   INSERT INTO SAL0357M (
+                              PRC_REQST_ID
+                              ,MEM_PAC_ID
+                              ,STK_ID
+                              ,APP_TYPE_ID
+                              ,AMT
+                              ,PRC_CHRG
+                              ,PRC_COSTING
+                              ,PRC_RPF
+                              ,PRC_PV
+                              ,TRADE_IN_PV
+                              ,APPV_STUS
+                              ,APPV_USER_ID
+                              ,APPV_DT
+                              ,REMARK
+                              ,CRT_USER_ID
+                              ,CRT_DT
+                              ,UPD_USER_ID
+                              ,UPD_DT
+                      ) VALUES (
+                              (SELECT NVL(MAX(PRC_REQST_ID) + 1, 1) FROM SAL0357M)
+                              ,#{srvpacid}
+                              ,#{stockId}
+                              ,#{appTypeId}
+                              ,TO_NUMBER (replace(#{amt},',', ''))
+                              ,NVL(#{pricecharges}, 0)
+                              ,NVL(#{pricecosting}, 0)
+                              ,NVL(#{pricerpf},0)
+                              ,NVL(#{pricepv},0)
+                              ,NVL(#{tradeinpv},0)
+                              ,60
+                              ,NULL
+                              ,NULL
+                              ,NULL
+                              ,#{crtUserId}
+                              ,sysdate
+                              ,#{crtUserId}
+                              ,sysdate
+                      )
+                ]]>
+  </insert>
+
+  <update id="updatePriceReqstApproval" parameterType="Map">
+          UPDATE SAL0357M
+           SET APPV_STUS = #{appvStatus}
+             , APPV_USER_ID = #{upd_user}
+             , APPV_DT   = SYSDATE
+             , REMARK     = <if test="appvRemark != null and appvRemark != ''">#{appvRemark}</if>
+                            <if test="appvRemark == null or appvRemark == ''">NULL</if>
+             , UPD_USER_ID = #{upd_user}
+             , UPD_DT         = SYSDATE
+         WHERE PRC_REQST_ID = #{reqstId}
+  </update>
+
 </mapper>
