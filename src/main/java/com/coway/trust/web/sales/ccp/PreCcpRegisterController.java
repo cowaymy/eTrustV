@@ -130,7 +130,7 @@ public class PreCcpRegisterController {
         return ResponseEntity.ok(orderSummaryList);
     }
 
-    @Transactional
+    //@Transactional
     public boolean ctos(Map<String, Object> params){
 
         try
@@ -172,6 +172,11 @@ public class PreCcpRegisterController {
         	return true;
     	}
         catch(Exception e){
+			  Map<String, Object> errorParam = new HashMap<>();
+			  errorParam.put("pgmPath","/preccp");
+			  errorParam.put("functionName", "ctos.do");
+			  errorParam.put("errorMsg",e.getMessage());
+			  enquiryService.insertErrorLog(errorParam);
         	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
         	return false;
         }
