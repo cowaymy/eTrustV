@@ -42,8 +42,15 @@ import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.utils.JavaUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+
+
 
 public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
+
+	@Value("${ctos.private.keyFile}")
+	private static String ctosPath;
+
 	private Vector cachedSerClasses = new Vector();
 	private Vector cachedSerQNames = new Vector();
 	private Vector cachedSerFactories = new Vector();
@@ -56,7 +63,7 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
   //private static String clientSecret = "6f7595da-0a6d-4d00-b9cf-adfa5d473850";
   private static String userName = "coway_uat";
   private static String password =  "ghuEDL481KLrh@og&g";
-  private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-private-uat_2.pem";
+  private static String privateKeyFile =  ctosPath;
   //private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-public-uat_2.pem";
 
 
