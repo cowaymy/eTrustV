@@ -175,7 +175,7 @@ public class PreCcpRegisterController {
 			  Map<String, Object> errorParam = new HashMap<>();
 			  errorParam.put("pgmPath","/preccp");
 			  errorParam.put("functionName", "ctos.do");
-			  errorParam.put("errorMsg",e.getMessage());
+			  errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
 			  enquiryService.insertErrorLog(errorParam);
         	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
         	return false;
@@ -338,7 +338,7 @@ public class PreCcpRegisterController {
 			  Map<String, Object> errorParam = new HashMap<>();
 			  errorParam.put("pgmPath","/preccp");
 			  errorParam.put("functionName", "submitConsent.do");
-			  errorParam.put("errorMsg",e.getMessage());
+			  errorParam.put("errorMsg", CommonUtils.printStackTraceToString(e));
 			  enquiryService.insertErrorLog(errorParam);
     		  message.setCode(AppConstants.FAIL);
         	  message.setMessage(e.getMessage());
