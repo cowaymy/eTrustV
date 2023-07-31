@@ -28,9 +28,7 @@
             CRT_DT,
             CRT_USER_ID,
             AMT,
-            EFFECTIVE_DT,
-            RESPOND_REQ_ID,
-            RESPOND_DT
+            EFFECTIVE_DT
         ) values (
             #{paymentId}
             ,#{paymentMode}
@@ -41,8 +39,7 @@
             ,#{userId}
             ,#{amt}
             ,#{effectDate}
-            ,#{apiId}
-            ,#{resDate}
+
         )
     </insert>
 

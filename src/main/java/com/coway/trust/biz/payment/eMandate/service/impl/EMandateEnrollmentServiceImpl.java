@@ -119,17 +119,13 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  String hashValue = DigestUtils.sha256Hex(hashKey);
 		  LOGGER.debug("========Hash Value==========: "+ hashValue);
 
-		  SimpleDateFormat formatter = new SimpleDateFormat("DDMMYY", Locale.ENGLISH);
-		  Date date = formatter.parse(effectiveDate);
-
-
 		  // insert request into request Table
 		  params.put("userId", 349);
 		  params.put("paymentId", paymentID);
 		  params.put("paymentMode", EMandateConstants.PYMT_METHOD_DD);
 		  params.put("stus", EMandateConstants.STATUS_IN_PROGRESS); // default IN Progress status
 		  params.put("amt", EMandateConstants.MAXIMUM_DD_AMOUNT);
-		  params.put("effectDate", date);
+		  params.put("effectDate", effectiveDate);
 
 		  eMandateMapper.insertDDRequest(params);
 
