@@ -261,7 +261,17 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	public int mobileUpdateCashMatchingData(Map<String, Object> params) {
 		EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
 		params.put("userId", user.get("userId"));
-		mobileLumpSumPaymentKeyInMapper.mobileUpdateCashMatchingData(params);
+
+		String[] mobPayGroupNoList = params.get("mobPayGroupNo").toString().split(",");
+
+		if(mobPayGroupNoList.length > 0){
+			for(int i = 0; i<mobPayGroupNoList.length;i++){
+				String mobPayGroupNo = mobPayGroupNoList[i];
+				params.put("mobPayGroupNo", mobPayGroupNo);
+				mobileLumpSumPaymentKeyInMapper.mobileUpdateCashMatchingData(params);
+			}
+		}
+
 		return 1;
 	}
 
