@@ -12,6 +12,7 @@
 // var isBulk = "${isBulk}";
 var selectRowIdx;
 var approveLineGridID;
+var loginUser = "${loginUser}";
 var approveLineColumnLayout = [ {
     dataField : "approveNo",
     headerText : '<spring:message code="approveLine.approveNo" />',
@@ -148,6 +149,11 @@ function fn_reqstSubmit() {
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
                 Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
+                checkMemCode = false;
+            }
+
+            if(AUIGrid.getCellValue(approveLineGridID, i, "memCode") == loginUser){
+            	Common.alert("You are not allow to select yourself as part of the approval line. Please reselect. ");
                 checkMemCode = false;
             }
         }

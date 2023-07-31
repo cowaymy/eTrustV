@@ -457,8 +457,6 @@
                     "appTypeIdList" : JSON.stringify(refAppType.join())
             };
 
-            debugger;
-
             Common.ajax("POST","/payment/validRefund", {selectedOrder : JSON.stringify(AUIGrid.getCheckedRowItemsAll(myGridID))}, function(result){
             	if(result.error) {
             		Common.alert(result.error);

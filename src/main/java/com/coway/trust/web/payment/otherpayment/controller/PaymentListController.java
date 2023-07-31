@@ -607,22 +607,26 @@ public class PaymentListController {
 		String[] revStusId = null;
 		String[] ftStusId = null;
 		String[] revStusNm = null;
+		String[] payId = null;
 
 		if(selectedOrder.size() > 0){
 			groupSeq = new int[selectedOrder.size()];
 			revStusId = new String[selectedOrder.size()];
 			ftStusId = new String[selectedOrder.size()];
 			revStusNm = new String[selectedOrder.size()];
+			payId = new String[selectedOrder.size()];
 			for(int i = 0; selectedOrder.size() > i; i++){
 				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
 				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
 				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
 				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
+				payId[i] = selectedOrder.get(i).containsKey("payId") ? selectedOrder.get(i).get("payId").toString() : null;
 			}
 			params.put("groupSeq", groupSeq);
 			params.put("revStusId", revStusId);
 			params.put("ftStusId", ftStusId);
 			params.put("revStusNm", revStusNm);
+			params.put("payId", payId);
 			params.put("type", "REF");
 
 			for(Map<String,Object> map : selectedOrder) {
@@ -1029,8 +1033,8 @@ public class PaymentListController {
 	}
 
 	  @RequestMapping(value = "/requestApprovalLineCreatePop.do")
-	  public String requestApprovalLineCreatePop(@RequestParam Map<String, Object>params, ModelMap model) {
-
+	  public String requestApprovalLineCreatePop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) {
+		  model.put("loginUser", sessionVO.getUserMemCode());
 		  return "payment/otherpayment/requestApprovalLineCreatePop";
 	  }
 
