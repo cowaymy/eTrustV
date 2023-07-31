@@ -64,7 +64,7 @@ function fn_submit() {
 
 @font-face {
   font-family: Avenir;
-  src: url(/resources/font/Avenir.ttc);
+  src: url('${pageContext.request.contextPath}'/resources/font/Avenir.ttc);
 }
 
 #line{padding-left:20px; padding-right:20px;}
@@ -90,7 +90,7 @@ function fn_submit() {
     margin-right: 10;
 }
 table#enrolTable tbody tr td {font-size:small; text-align: left; color:#FFFFFF; min-width:100px;}
-table#enrolTable tbody tr td input{font-size:small ; text-align: center; padding:8px;border:0px solid #90a9b7; border-radius:12px;background-color:#FFFFFF; height:38px; max-width:200px;overflow-y:auto}
+table#enrolTable tbody tr td input{font-size:small ; text-align: center; padding:8px;border:0px solid #90a9b7; border-radius:12px;background-color:#FFFFFF; height:38px; min-width:250px;max-width:400px;overflow-y:auto}
 table#enrolTable tbody tr td input:read-only {background: #d2d2d2}
 table {width:100%;margin-left:auto; margin-right:auto; display:block;}
 /* .container{
