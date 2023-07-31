@@ -64,7 +64,7 @@ function fn_submit() {
 
 @font-face {
   font-family: Avenir;
-  src: url('${pageContext.request.contextPath}'/resources/font/Avenir.ttc);
+  src: url(/resources/font/Avenir.woff) format('woff');
 }
 
 #line{padding-left:20px; padding-right:20px;}
