@@ -48,22 +48,19 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 
-	@Value("${ctos.private.keyFile}")
-	private static String ctosPath;
+  private Vector cachedSerClasses = new Vector();
+  private Vector cachedSerQNames = new Vector();
+  private Vector cachedSerFactories = new Vector();
+  private Vector cachedDeserFactories = new Vector();
 
-	private Vector cachedSerClasses = new Vector();
-	private Vector cachedSerQNames = new Vector();
-	private Vector cachedSerFactories = new Vector();
-	private Vector cachedDeserFactories = new Vector();
-
-	//UAT PARAM
+  //UAT PARAM
   private static String TOKEN_URL = "https://uat-sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
   //private static String clientId = "ctos_secure";
   private static String clientId = "Coway2_jwt";
   //private static String clientSecret = "6f7595da-0a6d-4d00-b9cf-adfa5d473850";
   private static String userName = "coway_uat";
   private static String password =  "ghuEDL481KLrh@og&g";
-  private static String privateKeyFile =  ctosPath + "/rsa-private-uat_2.pem";
+  private static String privateKeyFile =  "/home/etrust_user/rsa-private-uat_2.pem";
   //private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-public-uat_2.pem";
 
 
