@@ -71,14 +71,25 @@ $(function(){
 
 function fn_selectCodeMgmtList()
 {
-	if(fn_validate()){
-		 AUIGrid.refreshRows();
-		 Common.ajax("GET", "/services/codeMgmt/selectCodeMgmtList.do", $("#MainForm").serialize() , function(result){
-	         console.log("성공 data : " + result);
-	         AUIGrid.setGridData(largeGridID, result);
-	         oldRowIndex = -1; // 20190911 KR-OHK Initialize Variables
-	     });
-	}
+	AUIGrid.refreshRows() ;
+
+	if ($("#prodCode").val() == '' && $("#defName").val() == '' && $("#defCode").val() == '') {
+        if ($("#cmbType").val() == null || $("#cmbType").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Service Type' htmlEscape='false'/>");
+            return false;
+        }
+
+        if ($("#cmbCodeCat").val() == null) {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Code Category' htmlEscape='false'/>");
+            return false;
+        }
+    }
+
+	Common.ajax("GET", "/services/codeMgmt/selectCodeMgmtList.do", $("#MainForm").serialize() , function(result){
+        console.log("성공 data : " + result);
+        AUIGrid.setGridData(largeGridID, result);
+        oldRowIndex = -1; // 20190911 KR-OHK Initialize Variables
+    });
 }
 
 function createLargeAUIGrid() {
@@ -156,27 +167,15 @@ function f_multiCombo(){
 }
 
 function fn_clear(){
-	 var type = this.type, tag = this.tagName.toLowerCase();
-     if (tag === 'form'){
-         return $(':input',this).clearForm();
-     }
-     if (type === 'text' || type === 'password'  || tag === 'textarea'){
-         if($("#"+this.id).hasClass("readonly")){
-
-         }else{
-             this.value = '';
-         }
-     }else if (type === 'checkbox' || type === 'radio'){
-         this.checked = false;
-
-     }else if (tag === 'select'){
-              this.selectedIndex = 0;
-     }
 
     $("#cmbProductCtgry").multipleSelect("uncheckAll");
-    //$("#cmbType").multipleSelect("uncheckAll");
+    $("#cmbType").multipleSelect("uncheckAll");
     $("#cmbBusiCtgry").multipleSelect("uncheckAll");
     $("#cmbCodeCat").multipleSelect("uncheckAll");
+    $("#codeStatus").multipleSelect("uncheckAll");
+    $("#defCode").val("");
+    $("#prodCode").val("");
+    $("#defName").val("");
 }
 
 function getBusinessCat(callBack)
@@ -335,25 +334,6 @@ function fn_UpdStatus(){
               Common.alert(result.message);
               //fn_selectListAjax();
     });
-}
-
-function fn_validate(){
-
-	if ($("#prodCode").val() == '' && $("#defName").val() == '' && $("#defCode").val() == '') {
-		if ($("#cmbType").val() == null || $("#cmbType").val() == '') {
-	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Service Type' htmlEscape='false'/>");
-	        return false;
-	    }
-
-	    if ($("#cmbCodeCat").val() == null) {
-	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Code Category' htmlEscape='false'/>");
-	        return false;
-	    }
-	}
-
-
-
-	return true;
 }
 
 function fn_excelDown() {

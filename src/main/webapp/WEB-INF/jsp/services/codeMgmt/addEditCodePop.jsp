@@ -41,13 +41,14 @@ $(document).ready(function(){
     fn_toggle('${codeMgmtMap.codeCatId}');
     fn_viewType("${viewType}");
 
+    $('#nc_close').click(function() {
+        fn_saveclose();
+    });
+
 });
 
 function  fn_viewType(type){
     type = "${viewType}";
-
-    console.log("=====")
-    console.log('${codeMgmtMap}')
 
     $("#busiCat").val(busiCat);
     $("#type").val(typeId);
@@ -161,9 +162,7 @@ function fn_chkProductAvail(){
 
 function fn_chkDupReasons(){
     var rtnVAL = false;
-
-    console.log("111===")
-    console.log($("#codeCtgry").val());
+=
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupReasons.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
