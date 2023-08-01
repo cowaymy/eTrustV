@@ -53,4 +53,5 @@ public interface SmGmClaimService {
 
     List<EgovMap> selectClaimItemGrpForAppv(Map<String, Object> params);
 
+    int checkOnceAMonth(Map<String, Object> params);
 }

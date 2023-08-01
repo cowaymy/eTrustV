@@ -138,6 +138,9 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "entAmt",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 /* , {
     dataField : "carMilagDt",
@@ -322,6 +325,9 @@ var myGridColumnLayout = [ {
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "entAmt",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
 
@@ -364,7 +370,13 @@ $(document).ready(function () {
     $("#add_btn").click(fn_addRow);
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
-    $("#request_btn").click(fn_approveLinePop);
+    //$("#request_btn").click(fn_approveLinePop);
+    $("#request_btn").click(function() {
+        var result = fn_checkClmMonthAndMemAccId();
+        if(result) {
+            fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val(), $("#newCostCenter").val());
+        }
+    });
     $("#add_row").click(fn_addMyGridRow);
     $("#remove_row").click(fn_removeMyGridRow);
     $("#smGmClose").click(fn_selectStaffClaimList);

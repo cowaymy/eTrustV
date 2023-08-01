@@ -127,6 +127,10 @@ $(document).ready(function () {
         //Common.alert('The program is under development.');
     });
 
+    $("#staffRawBtn").click(function() {
+        Common.popupDiv("/eAccounting/smGmClaim/rawDataPop.do", null, null, true);
+    });
+
     AUIGrid.bind(staffClaimGridID, "cellDoubleClick", function( event )
 	{
 	    console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -382,6 +386,30 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
+
+    var length = AUIGrid.getGridData(myGridID).length;
+    if(length > 0) {
+        for(var i = 0; i < length; i++) {
+        	if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "expTypeName"))) {
+                Common.alert('<spring:message code="webInvoice.expType.msg" />' + (i +1) + ".");
+                checkResult = false;
+                return checkResult;
+            }
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt"))) {
+                Common.alert('<spring:message code="webInvoice.amt.msg" />' + (i +1) + ".");
+                checkResult = false;
+                return checkResult;
+            }else{
+                var totAmt = AUIGrid.getCellValue(myGridID, i, "totAmt");
+
+                if(totAmt == 0){
+                    Common.alert('Total Amount must be bigger than 0 for Line ' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+            }
+        }
+    }
     /* if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#supplirName").val())) {
             Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
@@ -480,6 +508,7 @@ function fn_addRow() {
                     ,invcDt : $("#invcDt").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
+                    ,entAmt : $('#entAmt').val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
 
@@ -506,6 +535,7 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                        data.gridData.add[i].entAmt = data.entAmt;
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
                 }
@@ -527,6 +557,7 @@ function fn_addRow() {
                     ,invcDt : $("#invcDt").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
+                    ,entAmt : $('#entAmt').val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
 
@@ -558,6 +589,7 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+                        data.gridData.add[i].entAmt = data.entAmt;
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
                 }
@@ -575,6 +607,7 @@ function fn_addRow() {
                         data.gridData.update[i].invcDt = data.invcDt;
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
+                        data.gridData.update[i].entAmt = data.entAmt;
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                     }
                 }
@@ -823,33 +856,87 @@ function fn_updateStaffClaimExp(st) {
     return 1;
 }
 
-function fn_approveLinePop() {
+function fn_checkClmMonthAndMemAccId() {
+    var checkResult = true;
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
+        Common.alert('Please enter the Staff Code');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newClmMonth").val())) {
+        Common.alert('Please enter the Claim Month');
+        checkResult = false;
+        return checkResult;
+    }
+    return checkResult;
+}
+
+function fn_approveLinePop(memAccId, clmMonth, costCentre) {
     // tempSave를 하지 않고 바로 submit인 경우
-    var count = 0;
 
-    var val1 = Number($("#entAmt").val());
-    var val2 = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+    Common.ajax("POST", "/eAccounting/smGmClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"SGM", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
+    	console.log(result);
 
-    if(val1 == 0){
-        Common.alert('Kindly fill in mandatory field(s).');
-        return;
-    }
-
-    if(val1 >= val2) {
-        if(FormUtil.isEmpty(clmNo)) {
-            count = fn_insertStaffClaimExp("");
+    	if(result.data > 0) {
+            Common.alert(result.message);
         } else {
-            // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-            count =  fn_updateStaffClaimExp("");
+        	var date = new Date();
+            var numDate = date.getDate();
+            var monthYear = "";
+            monthYear = (date.getMonth() + 1).toString().padStart(2, '0') + "/" + date.getFullYear();
+
+            /* var todayDD = Number(TODAY_DD.substr(0, 2));
+            var todayYY = Number(TODAY_DD.substr(6, 4));
+
+            var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+            var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+            console.log("todayDD: " + todayDD);
+            console.log("blockDtFrom : " + blockDtFrom);
+            console.log("blockDtTo : " + blockDtTo); */
+
+             if(5 < numDate && numDate < 18) { // Block if date > 22th of the month
+                 var msg = "Claim does not meet period date (Submission start from 18th of the month to 5th of the next month)";
+                 Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                 return;
+             }
+
+	    	var count = 0;
+
+	        var val1 = Number($("#entAmt").val());
+	        var val2 = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+
+	        if(val1 == 0){
+	            Common.alert('Kindly fill in mandatory field(s).');
+	            return;
+	        }
+
+	        var amtCheckArr = AUIGrid.getColumnValues(myGridID, "totAmt", true);
+	        console.log("amtCheckArr" + amtCheckArr);
+	        for(var i = 0; i < amtCheckArr.length; i++) {
+	            if(amtCheckArr[i] == 0){
+	                Common.alert('Total Amount of line cannot be 0.');
+	                return;
+	            }
+	        }
+
+	        if(val1 >= val2) {
+	            if(FormUtil.isEmpty(clmNo)) {
+	                count = fn_insertStaffClaimExp("");
+	            } else {
+	                // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+	                count =  fn_updateStaffClaimExp("");
+	            }
+
+	        } else{
+	            Common.alert('Claim Amount is exceeded.');
+	        }
+
+	        if(count > 0 ){
+	            Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+	        }
         }
-
-    } else{
-        Common.alert('Claim Amount is exceeded.');
-    }
-
-    if(count > 0 ){
-        Common.popupDiv("/eAccounting/smGmClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
-    }
+    });
 
 }
 /* function fn_approveLinePop() {
@@ -1144,6 +1231,9 @@ function fn_RejectSubmit() {
         <ul class="btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">SM/GM Claim</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="staffRawBtn">Raw Data</a></p></li>
             </c:if>
         </ul>
         <ul class="btns">

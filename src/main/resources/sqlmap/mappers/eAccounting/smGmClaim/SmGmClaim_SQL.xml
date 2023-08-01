@@ -133,6 +133,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,BANK_CODE
         ,BANK_ACC_NO
         ,CLM_MONTH
+        ,ENT_AMT
         ,TOT_AMT
         ,APPV_PRCSS_NO
         ,CRT_DT
@@ -150,6 +151,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{bankCode}
        ,#{bankAccNo}
        ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,#{entAmt}
        ,#{allTotAmt}
        ,#{appvPrcssNo}
        ,SYSDATE
@@ -779,7 +781,7 @@ WHERE  T1.CLM_NO = #{clmNo}
 
 
     <select id="selectClaimInfoForAppv" parameterType="Map" resultType="egovMap">
-	/* staffClaimMapper.selectStaffClaimInfoForAppv */
+	/* smGmClaimMapper.selectStaffClaimInfoForAppv */
 	<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 	SELECT T1.CLM_SEQ,
 	       T3.COST_CENTR,
@@ -832,7 +834,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     </select>
 
     <select id="selectClaimItemGrpForAppv" parameterType="Map" resultType="egovMap">
-	/* staffClaimMapper.selectStaffClaimItemGrpForAppv */
+	/* smGmClaimMapper.selectStaffClaimItemGrpForAppv */
 	<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 	SELECT T1.CLM_SEQ,
 	       T1.EXP_TYPE,
@@ -868,4 +870,19 @@ WHERE  T1.CLM_NO = #{clmNo}
 	WHERE  T1.CLM_NO = #{clmNo}
     AND CLAM_UN = #{clamUn}
     </select>
+
+    <select id="checkOnceAMonth" parameterType="Map" resultType="int">
+	/* smGmClaimMapper.checkOnceAMonth */
+	SELECT COUNT(*) FROM (SELECT E.CLM_TYPE, E.CLM_MONTH,
+	       E.MEM_ACC_ID
+	FROM   FCM0046M E
+	       JOIN FCM0004M A
+	         ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+	            AND E.CLM_NO = A.APPV_REQ_KEY_NO
+	            AND E.CLM_TYPE = SUBSTR(A.APPV_REQ_KEY_NO, 0, 3)
+	WHERE  A.APPV_PRCSS_STUS != 'J') T
+	WHERE T.CLM_TYPE = #{clmType}
+	AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+	AND T.MEM_ACC_ID = #{memAccId}
+</select>
 </mapper>

@@ -375,6 +375,7 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 
 		int cnt = smGmClaimMapper.checkIsExist(paramVerify);
 		if(cnt > 0){
+			smGmClaimMapper.insertEntitlementHistory(paramVerify);
 			smGmClaimMapper.deleteEntitlementDetail(paramVerify);
 		}
 
@@ -430,5 +431,11 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 	public List<EgovMap> selectClaimItemGrpForAppv(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return smGmClaimMapper.selectClaimItemGrpForAppv(params);
+	}
+
+	@Override
+	public int checkOnceAMonth(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return smGmClaimMapper.checkOnceAMonth(params);
 	}
 }

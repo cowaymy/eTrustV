@@ -95,6 +95,11 @@ public class SmGmClaimController {
 		return "eAccounting/smGmClaim/entitlementNewPop";
 	}
 
+	@RequestMapping(value = "/rawDataPop.do")
+	public String smGmRawDataPop(ModelMap model) {
+		return "eAccounting/smGmClaim/rawDataPop";
+	}
+
 	@RequestMapping(value = "/selectSmGmClaimList.do")
 	public ResponseEntity<List<EgovMap>> selectSmGmClaimList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
@@ -633,6 +638,26 @@ public class SmGmClaimController {
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(info);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			return ResponseEntity.ok(message);
+		}
+
+	  @RequestMapping(value = "/checkOnceAMonth.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> checkOnceAMonth(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+	        LOGGER.debug("params =====================================>>  " + params);
+
+			int cnt = smGmClaimService.checkOnceAMonth(params);
+
+			ReturnMessage message = new ReturnMessage();
+
+			if(cnt > 0) {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("You can only request once a month.");
+			} else {
+				message.setCode(AppConstants.SUCCESS);
+			}
+			message.setData(cnt);
 
 			return ResponseEntity.ok(message);
 		}

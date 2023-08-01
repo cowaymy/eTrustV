@@ -68,4 +68,6 @@ public interface SmGmClaimMapper {
 	EgovMap selectClaimInfoForAppv(Map<String, Object> params);
 
 	List<EgovMap> selectClaimItemGrpForAppv(Map<String, Object> params);
+
+	int checkOnceAMonth(Map<String, Object> params);
 }
