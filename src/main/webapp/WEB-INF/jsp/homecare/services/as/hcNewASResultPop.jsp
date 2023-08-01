@@ -380,9 +380,9 @@
   }
 
   function auiAddRowHandler(event) {
-
-  }
-
+      //Added by Kyron
+     matchMatDefCode.push(event.items[0].filterID);
+ }
   function auiRemoveRowHandler(event) {
     if (event.items[0].filterType == "CHG") {
       var fChage = Number($("#txtFilterCharge").val());
@@ -395,6 +395,11 @@
         $("#txtFilterCharge").val(fChage);
         $("#txtTotalCharge").val(totchrge);
       }
+    }
+  //Added by Kyron
+    var index = matchMatDefCode.indexOf(event.items[0].filterID);
+    if (index >= 0) {
+        matchMatDefCode.splice(index,1);
     }
   }
 
