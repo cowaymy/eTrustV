@@ -77,7 +77,7 @@
 		            A.CRC_STATE_MAPPING_DT,
 		            A.BANK_STATE_MAPPING_ID,
 		            A.BANK_STATE_MAPPING_DT,
-		            <!-- NVL(A.REV_STUS_ID,0) AS REV_STUS_ID, -->
+<!-- 		            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID, -->
 		            NVL(K.STUS,0) AS REV_STUS_ID,
 		            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
 		            CASE WHEN K.STUS = 999
@@ -1798,18 +1798,18 @@
             A.TENURE
         FROM PAY0344M A
         JOIN PAY0347M D ON D.REQ_ID = A.REQ_ID
-        JOIN PAY0348D E ON E.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+<!--         JOIN PAY0348D E ON E.APPV_PRCSS_NO = D.APPV_PRCSS_NO -->
         LEFT JOIN SYS0013M F ON F.CODE_ID = A.REASON_ID
         LEFT JOIN SYS0013M G ON G.CODE = D.APPV_PRCSS_STUS AND G.CODE_MASTER_ID = 508
         LEFT JOIN SYS0047M H ON H.USER_NAME = D.REQST_USER_ID
         LEFT JOIN SYS0071D I ON A.ATCH_FILE_ID = I.ATCH_FILE_ID
         WHERE 1=1
             AND A.REQ_TYPE = 'DCF'
-            AND (D.APPV_PRCSS_STUS = 'R' OR D.APPV_PRCSS_STUS = 'P' OR D.APPV_PRCSS_STUS = 'A' or D.APPV_PRCSS_STUS = 'J')
-            AND (E.APPV_STUS = 'R' OR E.APPV_STUS = 'A' OR E.APPV_STUS = 'J')
-            <if test="memCode != null and memCode != '' ">
-                AND E.APPV_LINE_USER_ID = #{memCode}
-            </if>
+<!--             AND (D.APPV_PRCSS_STUS = 'R' OR D.APPV_PRCSS_STUS = 'P' OR D.APPV_PRCSS_STUS = 'A' or D.APPV_PRCSS_STUS = 'J') -->
+<!--             AND (E.APPV_STUS = 'R' OR E.APPV_STUS = 'A' OR E.APPV_STUS = 'J') -->
+<!--             <if test="memCode != null and memCode != '' "> -->
+<!--                 AND E.APPV_LINE_USER_ID = #{memCode} -->
+<!--             </if> -->
             AND A.REQ_ID = #{reqNo}
     </select>
 
@@ -1948,6 +1948,7 @@
                     #{item}
                   </foreach>
             </if>
+            AND REV_STUS_ID = 1
         )
     </select>
 
@@ -2391,7 +2392,8 @@
             BANK_BRNCH_ID,
             IS_COMM_CHK
         ) VALUES (
-            #{nextSeq},
+<!--             #{nextSeq}, -->
+            #{nextTmpSeq},
             TO_NUMBER(#{newPayType}),
             #{cardMode},
             #{issueBank},
@@ -2681,7 +2683,8 @@
                  WHEN SALES_ORD_NO_3 IS NULL AND SALES_ORD_NO_2 IS NULL THEN SALES_ORD_NO_1
                  ELSE SALES_ORD_NO_1
                  END AS SALES_ORD_NO ,
-                 a.GROUP_SEQ
+                 a.GROUP_SEQ,
+                 a.TOT_AMT
         FROM
             (
                 SELECT DISTINCT
@@ -2689,7 +2692,8 @@
                     c.SALES_ORD_NO SALES_ORD_NO_1,
                     d.SALES_ORD_NO SALES_ORD_NO_2,
                     e.SRV_ORD_NO SALES_ORD_NO_3,
-                    a.group_seq
+                    a.group_seq,
+                    a.TOT_AMT
                 FROM
                     pay0252t a
                     JOIN pay0064d b ON a.pay_id = b.pay_id
@@ -2719,8 +2723,8 @@
             UPD_DT = SYSDATE
         WHERE REQ_ID = #{reqNo}
     </update>
-
-    <select id="selectRefundCodeList" parameterType="Map" resultType="egovMap">
+    
+  	<select id="selectRefundCodeList" parameterType="Map" resultType="egovMap">
         SELECT
               CODE ,
               CODE_NAME
@@ -2728,7 +2732,7 @@
         WHERE DISAB = 0 AND CODE_MASTER_ID = 395
         AND CODE IN ('107', '108')
     </select>
-
+    
     <select id="selectBankListCode" resultType="egovMap">
     SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 AND IS_SAP = 1 ORDER BY NAME
     </select>

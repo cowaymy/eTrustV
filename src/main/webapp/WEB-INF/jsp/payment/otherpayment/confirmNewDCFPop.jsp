@@ -349,8 +349,7 @@ function fn_approval(){
 
     Common.confirm("<spring:message code='pay.alert.confirmDcf'/>",function (){
         Common.ajax("POST", "/payment/approvalNewDCF.do", appvData, function(result) {
-        	console.log("result");
-        	console.log(result);
+
             if (result.orNo != null) {
                 var message = "<spring:message code='pay.alert.dcfSuccessApproval'/><br>" + result.orNo + "";
             } else if(result.error != null){
@@ -362,6 +361,12 @@ function fn_approval(){
             }else{
            	    var message = "DCF has fail to approval due to payment has been reversed\nKindly reject it."
            	}
+
+//             if(result.message != null){
+//                  var message = result.message;
+//             }else{
+//                  var message = "DCF has fail to approval due to payment has been reversed\nKindly reject it."
+//              }
 
             Common.alert(message, function(){
                 searchList();
@@ -760,7 +765,7 @@ function fn_reject(){
 
                                    <th scope="row">Merchant Bank<span class='must'>*</span></th>
                                    <td>
-                                       <select id="creditMerchantBank" name="creditMerchantBank" class="w100p"></select>
+                                       <select id="creditMerchantBank" name="creditMerchantBank" class="w100p" disabled></select>
                                    </td>
                                </tr>
                                <tr>
@@ -830,7 +835,7 @@ function fn_reject(){
 	                                   <th scope="row">Transaction Date<span class='must'>*</span></th>
 	                                   <td>
 	                                        <div class="date_set w100p">
-	                                           <input type="text" id="onlineTrxDate" name="onlineTrxDate" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date w100p readonly" readonly/>
+	                                           <input type="text" id="onlineTrxDate" name="onlineTrxDate" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date w100p readonly" readonly disabled/>
 	                                        </div>
 	                                   </td>
 

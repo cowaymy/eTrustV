@@ -1501,7 +1501,7 @@ public class PaymentListController {
         			return message;
         		}
 
-        		if(Double.parseDouble(((String)dcfInfoResult.get("oldTotalAmtTxt"))) <= 0.00){
+        		if(Double.parseDouble(dcfInfoResult.get("oldTotalAmtTxt").toString().replace(",", "")) <= 0.00){
         			message.setCode(AppConstants.FAIL);
         			message.setData(params);
         			message.setMessage("* Total amount is less than zero");
@@ -1538,7 +1538,7 @@ public class PaymentListController {
 
         		} else if (dcfInfoResult.get("rekeyStus").toString().equals("1")) {
         			 //	 New DCF Order
-        	 	     if(Double.parseDouble(((String)dcfInfoResult.get("newTotalAmtTxt"))) <= 0.00){
+        	 	     if(Double.parseDouble(dcfInfoResult.get("newTotalAmtTxt").toString().replace(",", "")) <= 0.00){
         	 	    	message.setCode(AppConstants.FAIL);
         				message.setData(params);
         				message.setMessage("* Total amount is less than zero");
@@ -1565,12 +1565,12 @@ public class PaymentListController {
 
         	 	    	Map<String, Object> cashPayInfoFormResult = mapper.readValue(params.get("cashPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
 
-        	 	    	if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) <= 0.00){
+        	 	    	if(Double.parseDouble(cashPayInfoFormResult.get("cashTotalAmtTxt").toString().replace(",", "")) <= 0.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("* No Amount");
         					return message;
-        	 	    	}else if(Double.parseDouble(((String)cashPayInfoFormResult.get("cashTotalAmtTxt"))) > 200000.00){
+        	 	    	}else if(Double.parseDouble(cashPayInfoFormResult.get("cashTotalAmtTxt").toString().replace(",", "")) > 200000.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("Amount exceed RM 200000");
@@ -1629,12 +1629,12 @@ public class PaymentListController {
 
         	 	    	Map<String, Object> chequePayInfoFormResult = mapper.readValue(params.get("chequePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
 
-        	 	    	if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) <= 0.00){
+        	 	    	if(Double.parseDouble(chequePayInfoFormResult.get("chequeTotalAmtTxt").toString().replace(",", "")) <= 0.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("* No Amount");
         					return message;
-        	 	    	}else if(Double.parseDouble(((String)chequePayInfoFormResult.get("chequeTotalAmtTxt"))) > 200000.00){
+        	 	    	}else if(Double.parseDouble(chequePayInfoFormResult.get("chequeTotalAmtTxt").toString().replace(",", "")) > 200000.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("Amount exceed RM 200000");
@@ -1699,12 +1699,12 @@ public class PaymentListController {
         					return message;
         	 	    	}
 
-        	 	    	if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) <= 0.00){
+        	 	    	if(Double.parseDouble(creditPayInfoFormResult.get("creditTotalAmtTxt").toString().replace(",", "")) <= 0.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("* No Amount");
         					return message;
-        	 	    	}else if(Double.parseDouble(((String)creditPayInfoFormResult.get("creditTotalAmtTxt"))) > 200000.00){
+        	 	    	}else if(Double.parseDouble(creditPayInfoFormResult.get("creditTotalAmtTxt").toString().replace(",", "")) > 200000.00){
         	 	    		message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("Amount exceed RM 200000");
@@ -1871,12 +1871,12 @@ public class PaymentListController {
         	 	        String onlineVAAccount = onlinePayInfoFormResult.get("onlineVAAcc").toString();
         	 	        String onlineBankAcc = onlinePayInfoFormResult.get("onlineBankAcc").toString();
 
-        	 	        if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) <= 0.00 ){
+        	 	        if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString().replace(",", "")) <= 0.00 ){
         	 	            message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("* No Amount");
         					return message;
-        	 	        } else if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString()) > 200000.00 ){
+        	 	        } else if(Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString().replace(",", "")) > 200000.00 ){
         	 	        	message.setCode(AppConstants.FAIL);
         					message.setData(params);
         					message.setMessage("Amount exceed RM 200000");
@@ -1888,8 +1888,8 @@ public class PaymentListController {
         	 	        double payAmt4Limit = 0.00;
 
         	 	        if(!onlinePayInfoFormResult.get("onlineBankChgAmt").toString().isEmpty() && !onlinePayInfoFormResult.get("onlineBankChgAmt").equals("")) {
-        	 	            bcAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineBankChgAmt").toString());
-        	 	            payAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString());
+        	 	            bcAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineBankChgAmt").toString().replace(",", ""));
+        	 	            payAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString().replace(",", ""));
 
         	 	            if ((payAmt4Limit * 0.05 ) < bcAmt4Limit) {
         	 	                message.setCode(AppConstants.FAIL);
@@ -2035,6 +2035,7 @@ public class PaymentListController {
 				// 프로시저 결과 Map
 				returnMap.put("orNo", resultList);
 			}
+//			returnMap.put("message", result.get("message").toString());
 		}
 
 		return ResponseEntity.ok(returnMap);
@@ -2066,7 +2067,7 @@ public class PaymentListController {
         		  return ResponseEntity.ok(message);
     		  }
 
-    		  if(Double.parseDouble(result.get("fTrnscCrditAmt").toString()) != Double.parseDouble(params.get("amt").toString())){
+    		  if(Double.parseDouble(result.get("fTrnscCrditAmt").toString().replace(",", "")) != Double.parseDouble(params.get("amt").toString().replace(",", ""))){
     			  message.setCode(AppConstants.FAIL);
         		  message.setMessage("Transaction amount and new DCF amount are not the same.");
         		  return ResponseEntity.ok(message);
