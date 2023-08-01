@@ -170,4 +170,5 @@ public interface PaymentListService
     EgovMap checkBankStateMapStus(Map<String, Object> params);
     /* [END] BOI DCF*/
     List<EgovMap> selectRefundCodeList(Map<String, Object> params);
+    List<EgovMap> selectBankListCode();
 }

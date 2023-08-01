@@ -2728,4 +2728,8 @@
         WHERE DISAB = 0 AND CODE_MASTER_ID = 395
         AND CODE IN ('107', '108')
     </select>
+
+    <select id="selectBankListCode" resultType="egovMap">
+    SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 AND IS_SAP = 1 ORDER BY NAME
+    </select>
 </mapper>

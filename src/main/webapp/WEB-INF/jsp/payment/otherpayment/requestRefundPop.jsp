@@ -52,7 +52,7 @@ var requestRefundColumnLayout = [
 $(document).ready(function(){
 	doGetComboCodeId('/common/selectReasonCodeId.do', {typeId : 7277}, ''   , 'newReason' , 'S', '');
 	CommonCombo.make("refundMode", "/payment/selectRefundCodeList.do", null, "", {id: "code", name: "codeName", type:"S"});
-    CommonCombo.make("issueBank", "/payment/selectBankCode.do", null, "", {id: "code", name: "name", type:"S"});
+    CommonCombo.make("issueBank", "/payment/selectBankListCode.do", null, "", {id: "code", name: "name", type:"S"});
     $("#requestType").val(requestType);
 
     fn_attachmentButtonRegister();

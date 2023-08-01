@@ -1473,4 +1473,10 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		// TODO Auto-generated method stub
 		return paymentListMapper.selectRefundCodeList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectBankListCode() {
+		// TODO Auto-generated method stub
+		return paymentListMapper.selectBankListCode();
+	}
 }

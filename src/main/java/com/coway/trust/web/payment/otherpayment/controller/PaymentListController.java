@@ -2087,4 +2087,12 @@ public class PaymentListController {
 
 			return ResponseEntity.ok(codeList);
 		}
+
+	  @RequestMapping(value = "/selectBankListCode.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectBankCode(Model model) {
+
+			List<EgovMap> bankCodeList = paymentListService.selectBankListCode();
+
+			return ResponseEntity.ok(bankCodeList);
+		}
 }
