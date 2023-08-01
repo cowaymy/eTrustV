@@ -51,8 +51,18 @@ function fn_submit() {
 	}
 
 	Common.ajax("GET", "/payment/enroll/ddSubmit.do", $("#enrollmentForm").serialize(), function(result) {
-		   console.log(result.data.url);
-		   window.location.replace(result.data.url);
+
+		if (result != null){
+			if (result.code == '00' ) {
+				//console.log(result.data.url);
+		        window.location.replace(result.data.url);
+		   } else {
+			   alert(result.message);
+		   }
+
+		} else {
+			alert("Error. Please try again later.")
+		}
 
 	});
 
@@ -64,7 +74,7 @@ function fn_submit() {
 
 @font-face {
   font-family: Avenir;
-  src: url(/resources/font/Avenir.woff) format('woff');
+  src: url(/resources/font/Avenir.ttc);
 }
 
 #line{padding-left:20px; padding-right:20px;}

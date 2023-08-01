@@ -74,7 +74,7 @@ public class EMandateEnrollmentController {
 
 			params.put("custId", custInfo.get("custId"));
 			params.put("salesOrdId", custInfo.get("salesOrdId"));
-			
+
 			// To call service for processing enrollment
 			result = eMandateEnrollmentService.enrollCustomer(params);
 
@@ -82,7 +82,7 @@ public class EMandateEnrollmentController {
 			message.setData(result);
 		} else {
 			message.setCode(AppConstants.FAIL);
-			message.setMessage("E000. Fail. Please contact administrator.");
+			message.setMessage("E000. Invalid Order No.");
 		}
 
 		return ResponseEntity.ok(message);
