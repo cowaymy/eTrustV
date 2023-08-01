@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
 import com.coway.trust.biz.sales.ccpApi.PreCcpRegisterApiService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -66,6 +68,7 @@ public class PreCcpRegisterApiController {
 		  	detailsMap.put("custId", preCcpResult.get(0).get("custId"));
 		  	detailsMap.put("chsStatus", preCcpResult.get(0).get("chsStatus"));
 		  	detailsMap.put("chsRsn", preCcpResult.get(0).get("chsRsn"));
+		  	detailsMap.put("customerType", 7289);
 			int result = preCcpRegisterService.insertPreCcpSubmission(detailsMap);
 	  }
 
@@ -91,6 +94,18 @@ public class PreCcpRegisterApiController {
       }
 
       return ResponseEntity.ok(orderSummary.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "chkExistCust", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/chkExistCust", method = RequestMethod.GET)
+  public ResponseEntity <ReturnMessage> chkExistCust(@RequestParam Map<String, Object>params) {
+
+	   ReturnMessage message = new ReturnMessage();
+	   EgovMap getExistCustomer = preCcpRegisterService.getExistCustomer(params);
+	   EgovMap getRegisteredCust = preCcpRegisterService.getRegisteredCust(params);
+
+	   message.setCode((getExistCustomer == null && getRegisteredCust ==null) ? AppConstants.FAIL : AppConstants.SUCCESS);
+	   return ResponseEntity.ok(message);
   }
 
 //  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -130,7 +130,7 @@ public class PreCcpRegisterController {
         return ResponseEntity.ok(orderSummaryList);
     }
 
-    //@Transactional
+    @Transactional
     public boolean ctos(Map<String, Object> params){
 
         try
