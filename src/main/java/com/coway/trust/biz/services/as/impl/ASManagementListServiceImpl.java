@@ -4240,6 +4240,11 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   }
 
   @Override
+  public List<EgovMap> selectReworkProj() {
+    return ASManagementListMapper.selectReworkProj();
+  }
+
+  @Override
   public void insertASResultLog(String params, String reqstUrl, String asId, int userId) {
 	  Map<String, Object> p = new HashMap();
 	  p.put("params", params);

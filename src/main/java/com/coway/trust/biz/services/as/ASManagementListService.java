@@ -224,6 +224,8 @@ public interface ASManagementListService {
 
 	List<EgovMap> selectASNotMatch();
 
+	List<EgovMap> selectReworkProj();
+
 	// void sendSms(Map<String, Object> smsList);
 
 	void insertASResultLog(String params, String reqstUrl, String asId, int userId);
