@@ -444,4 +444,10 @@ public interface CommonService {
 
 	List<EgovMap> selectReasonCodeId(Map<String, Object> params);
 
+	//Department
+	List<EgovMap> selectDepartmentCode(Map<String, Object> params);
+
+	//Cody list by department
+	List<EgovMap> selectStockLocationListByDept(Map<String, Object> params);
+
 }
