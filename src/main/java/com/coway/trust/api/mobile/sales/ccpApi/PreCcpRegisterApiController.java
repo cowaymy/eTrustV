@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,7 +140,7 @@ public class PreCcpRegisterApiController {
       	return sb.toString();
     }
 
-    public Map<String, Object> triggerSms(@RequestParam Map<String, Object> params){
+   public Map<String, Object> triggerSms(@RequestParam Map<String, Object> params){
 
     	Map<String, Object> message = new HashMap<String, Object>();
 
@@ -179,7 +180,7 @@ public class PreCcpRegisterApiController {
        	return message;
     }
 
-
+    @Transactional
     @ApiOperation(value = "submitPreCcpSubmission", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/submitPreCcpSubmission", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> submitPreCcpSubmission(@RequestBody Map<String, Object> params) throws Exception {
@@ -230,14 +231,7 @@ public class PreCcpRegisterApiController {
     		preCcpRegisterService.insertPreCcpSubmission(params);
 
     		params.put("preccpSeq", preCcpRegisterService.getSeqSAL0343D());
-    		Map<String, Object> smsData = triggerSms(params);
-
-    		if(smsData.get("success").equals(0)){
-    			message.put("success", 0);
-    			message.put("msg", smsData.get("msg"));
-        		return ResponseEntity.ok(message);
-    		}
-
+    		triggerSms(params);
     		message.put("success", 1);
 			message.put("msg", "Your Pre-CCP request has been saved successfully.");
     		return ResponseEntity.ok(message);
