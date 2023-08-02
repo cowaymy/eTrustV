@@ -162,7 +162,7 @@ function fn_chkProductAvail(){
 
 function fn_chkDupReasons(){
     var rtnVAL = false;
-=
+
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupReasons.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
