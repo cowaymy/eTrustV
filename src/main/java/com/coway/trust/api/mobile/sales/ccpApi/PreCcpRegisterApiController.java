@@ -108,6 +108,18 @@ public class PreCcpRegisterApiController {
 	   return ResponseEntity.ok(message);
   }
 
+
+    @ApiOperation(value = "submitPreCcpSubmission", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/submitPreCcpSubmission", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> submitPreCcpSubmission(@RequestBody PreCcpRegisterApiForm param) throws Exception {
+
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	params.put("customerType", 7290);
+		params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+
+    	return ResponseEntity.ok(params);
+    }
+
 //  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
 //  public ResponseEntity<PreCcpRegisterApiForm> savePreCcp(@RequestBody PreCcpRegisterApiForm param) throws Exception {
