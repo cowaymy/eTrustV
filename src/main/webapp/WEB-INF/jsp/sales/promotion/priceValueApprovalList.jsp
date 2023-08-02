@@ -266,59 +266,81 @@
    }
 
   function fn_save() {
-        Common
-            .confirm(
-                "Do you want to proceed to save this request approval?",
-                function() {
-                var reqstId = AUIGrid.getCellValue(myGridID,
-                      selectedGridValue, "prcReqstId");
 
-                var typeId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-                "stkTypeId");
+      var isValid = true, msg = "";
 
-                var appTypeId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-                "appTypeId");
+      if(FormUtil.isEmpty($('#appvStatus').val())) {
+          isValid = false;
+          msg += "Please choose a status";
+      }
+     if(FormUtil.isEmpty($('#appvRemark').val()) && $("#appvStatus").val() == '6') {
+          isValid = false;
+          msg += "Please enter remark";
+      }
 
-                var srvPacName = AUIGrid.getCellValue(myGridID, selectedGridValue,
-                "codeName");
+      if(!isValid) {
+          Common.alert("Price & Value Approval" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+          return false;
+      }
 
-                var stkId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-                "stkId");
+      else {
+    	   Common
+           .confirm(
+               "Do you want to proceed to save this request approval?",
+               function() {
+               var reqstId = AUIGrid.getCellValue(myGridID,
+                     selectedGridValue, "prcReqstId");
 
-                var srvPacId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-                "memPacId");
+               var typeId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+               "stkTypeId");
 
-                 var param = {
-                		  reqstId : reqstId,
-                		  appvStatus : $("#appvStatus").val(),
-                		  appvRemark : $("#appvRemark").val(),
-                          stockId : stkId,
-                          srvPackageId: srvPacId,
-                          appTypeId : appTypeId,
-                          priceTypeid : typeId,
-                          typeId : typeId,
-                          dCost : $("#exCost").val(),
-                          dPV : $("#exPV").val(),
-                          dRentalDeposit : $("#exRentalDeposit").val(),
-                          dTradeInPV : $("#exTradePv").val(),
-                          dMonthlyRental : $("#exPrice").val(),
-                          dNormalPrice : $("#exNormalPrice").val(),
-                          dPenaltyCharge  : $("#exPenalty").val()
-                  };
+               var appTypeId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+               "appTypeId");
 
-                 console.log("priceTypeId: " + typeId);
-                 console.log(param);
-                 Common.ajaxSync("POST", "/stock/confirmPriceInfo.do", param,
-                    function(result) {
-                   console.log(result);
-                   Common.alert(result.msg)
-                        $("#editForm")[0].reset();
-                        hideNewPopup('#editPrice_popup');
-                        fn_getSearchList();
-                    });
+               var srvPacName = AUIGrid.getCellValue(myGridID, selectedGridValue,
+               "codeName");
+
+               var stkId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+               "stkId");
+
+               var srvPacId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+               "memPacId");
+
+                var param = {
+                         reqstId : reqstId,
+                         appvStatus : $("#appvStatus").val(),
+                         appvRemark : $("#appvRemark").val(),
+                         stockId : stkId,
+                         srvPackageId: srvPacId,
+                         appTypeId : appTypeId,
+                         priceTypeid : typeId,
+                         typeId : typeId,
+                         dCost : $("#exCost").val(),
+                         dPV : $("#exPV").val(),
+                         dRentalDeposit : $("#exRentalDeposit").val(),
+                         dTradeInPV : $("#exTradePv").val(),
+                         dMonthlyRental : $("#exPrice").val(),
+                         dNormalPrice : $("#exNormalPrice").val(),
+                         dPenaltyCharge  : $("#exPenalty").val()
+                 };
+
+                console.log("priceTypeId: " + typeId);
+                console.log(param);
+                Common.ajaxSync("POST", "/stock/confirmPriceInfo.do", param,
+                   function(result) {
+                  console.log(result);
+                  Common.alert(result.msg)
+                       $("#editForm")[0].reset();
+                       hideNewPopup('#editPrice_popup');
+                       fn_getSearchList();
+                   });
 
 
-                });
+               });
+
+      }
+
+
       }
 
 </script>
