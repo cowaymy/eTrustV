@@ -136,6 +136,9 @@ public class ASManagementListController {
     List<EgovMap> asNotMatch = ASManagementListService.selectASNotMatch();
     model.addAttribute("asNotMatch", asNotMatch);
 
+    List<EgovMap> reworkProj = ASManagementListService.selectReworkProj();
+    model.addAttribute("reworkProj", reworkProj);
+
     return "services/as/inc_asResultEditPop";
   }
 
@@ -429,6 +432,9 @@ public class ASManagementListController {
     List<EgovMap> asNotMatch = ASManagementListService.selectASNotMatch();
     model.addAttribute("waterSrcType", waterSrcType);
     model.addAttribute("asNotMatch", asNotMatch);
+
+    List<EgovMap> reworkProj = ASManagementListService.selectReworkProj();
+    model.addAttribute("reworkProj", reworkProj);
 
     return "services/as/newASResultPop";
   }
