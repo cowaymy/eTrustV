@@ -1912,6 +1912,38 @@
          ORDER BY WH_LOC_GB , CODE_NAME
     </select>
 
+    <select id="selectStockLocationListByDept" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                WH_LOC_CODE CODE ,
+                WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+         FROM SYS0028M S28M
+         LEFT JOIN ORG1001V ORV ON s28m.WH_LOC_CODE = ORV.MEM_CODE
+         WHERE 1 = 1
+            AND S28M.WH_LOC_STUS_ID = 1
+            <if test="locgb != null and locgb != ''">
+              <choose>
+                  <when test='locgb !=null and locgb == "01"'>
+                      AND S28M.WH_LOC_GB in ('01','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "010205"'>
+                      AND S28M.WH_LOC_GB in ('01','02','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
+                      AND S28M.WH_LOC_GB in ('03','04','09','10')
+                  </when>
+                  <otherwise>
+                      AND S28M.WH_LOC_GB = #{locgb}
+                  </otherwise>
+              </choose>
+           </if>
+           <if test="searchBranch != null and searchBranch !=''">
+            AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+        </if>
+        AND ORV.DEPT_CODE = #{deptCode}
+     </select>
+
+
      <select id="selectStockLocationList4" parameterType="Map" resultType="egovMap">
         SELECT
                 WH_LOC_ID CODE_ID,
@@ -2136,4 +2168,15 @@
              ) TT ORDER BY CODE_ID
     </select>
 
+    <select id="selectDepartmentCode" resultType="egovMap">
+           SELECT
+                 DEPT_CODE CODE,
+                 DEPT_CODE CODE_NAME
+           FROM ORG1001V A
+           JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+           WHERE 1=1
+           AND B.BRNCH = #{brnchId}
+           AND B.MEM_TYPE = '2'
+           AND A.MEM_LVL = '3'
+    </select>
 </mapper>
