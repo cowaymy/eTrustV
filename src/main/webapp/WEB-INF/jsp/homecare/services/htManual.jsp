@@ -1292,11 +1292,10 @@ var TODAY_DD      = "${toDay}";
        <a href="#" onclick="javascript:fn_getHSAddListAjax();"
         id="addResult">Add CS Result</a>
       </p></li>
-     <li><p class="btn_blue">
-       <a id="hSConfiguration" >Create CS
-        Order</a>
-      </p></li>
-      </c:if>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+     <li><p class="btn_blue"><a id="hSConfiguration" >Create CS Order</a></p></li>
+    </c:if>
            <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
         class="search"></span>
@@ -1390,7 +1389,8 @@ var TODAY_DD      = "${toDay}";
         <option value="66">Rental</option>
         <option value="67">Outright</option>
         <option value="68">Installment</option>
-         <option value="142">Sponsor</option>
+        <option value="142">Sponsor</option>
+        <option value="144">Education</option>
       </select></td>
       <th scope="row">Complete Date</th>
       <td>
