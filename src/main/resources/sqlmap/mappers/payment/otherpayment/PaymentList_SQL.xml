@@ -1049,7 +1049,8 @@
                 #{newRemark},
                 #{oldAmt},
                 #{refundMode},
-                #{newAmt},
+                <!-- #{newAmt}, -->
+                REGEXP_REPLACE(#{newAmt}, '[^0-9.]+', NULL),
                 #{bankAccNo},
                 #{keyInCardNo1} || #{keyInCardNo2} || #{keyInCardNo3} || #{keyInCardNo4},
                 #{apprNo},
@@ -1123,9 +1124,12 @@
                 #{ldgrType},
                 #{salesOrdId},
                 #{salesOrdNo},
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                <!-- #{totalAmt},
                 #{totalAmt},
-                #{totalAmt},
-                #{totalAmt},
+                #{totalAmt}, -->
                 #{custNm},
                 #{userId},
                 SYSDATE,
@@ -2723,7 +2727,7 @@
             UPD_DT = SYSDATE
         WHERE REQ_ID = #{reqNo}
     </update>
-    
+
   	<select id="selectRefundCodeList" parameterType="Map" resultType="egovMap">
         SELECT
               CODE ,
@@ -2732,7 +2736,7 @@
         WHERE DISAB = 0 AND CODE_MASTER_ID = 395
         AND CODE IN ('107', '108')
     </select>
-    
+
     <select id="selectBankListCode" resultType="egovMap">
     SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 AND IS_SAP = 1 ORDER BY NAME
     </select>
