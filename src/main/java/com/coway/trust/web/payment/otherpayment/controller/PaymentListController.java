@@ -2011,31 +2011,7 @@ public class PaymentListController {
 		message.setCode(AppConstants.SUCCESS);
 
 		if (result != null && result.size() > 0) {
-			if(result.containsKey("nextAppv")){
-				returnMap.put("nextAppv", result.get("nextAppv"));
-			}else if(result.containsKey("error")){
-				returnMap.put("error", result.get("error"));
-			}else if(result.containsKey("useBatch")){
-				returnMap.put("useBatch", result.get("useBatch"));
-			}else {
-
-				String resultList = null;
-				if (result.containsKey("rorList")) {
-					resultList = "<b>ROR:</b>" + result.get("rorList").toString() + "</br>";
-				}else {
-					resultList = "<b>ROR:</b> No ROR is generated.</br>";
-				}
-
-				if (result.containsKey("worList")) {
-					resultList += "<b>WOR:</b>" + result.get("worList").toString();
-				}else {
-					resultList += "<b>WOR:</b> No WOR is generated.</br>";
-				}
-
-				// 프로시저 결과 Map
-				returnMap.put("orNo", resultList);
-			}
-//			returnMap.put("message", result.get("message").toString());
+			returnMap.put("message", result.get("message").toString());
 		}
 
 		return ResponseEntity.ok(returnMap);
