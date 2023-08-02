@@ -554,4 +554,24 @@ public class CommonController {
 		List<EgovMap> codeList = commonService.selectStatusCategoryCodeList(params);
 		return ResponseEntity.ok(codeList);
 	}
+
+	@RequestMapping(value = "/selectDepartmentCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDepartmentCode(@RequestParam Map<String, Object> params) {
+
+
+		LOGGER.debug("departmentCode : {}", params);
+
+		List<EgovMap> codeList = commonService.selectDepartmentCode(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+	@RequestMapping(value = "/selectStockLocationListByDept.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockLocationListByDept(@RequestParam Map<String, Object> params) {
+
+
+		LOGGER.debug("departmentCode : {}", params);
+
+		List<EgovMap> codeList = commonService.selectStockLocationListByDept(params);
+		return ResponseEntity.ok(codeList);
+	}
 }
