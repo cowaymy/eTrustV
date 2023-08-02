@@ -46,4 +46,6 @@ public interface HSReportMapper {
 
   List<EgovMap> selectEVoucherList();
 
+List<EgovMap> selectRegion();
+
 }
