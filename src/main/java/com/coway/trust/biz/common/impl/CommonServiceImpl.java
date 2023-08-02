@@ -1840,4 +1840,11 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> selectReasonCodeId(Map<String, Object> params) {
 		return commonMapper.selectReasonCodeId(params);
 	}
+	@Override
+	public List<EgovMap> selectDepartmentCode(Map<String, Object> params) {
+		return commonMapper.selectDepartmentCode(params);
+	}
+	public List<EgovMap> selectStockLocationListByDept(Map<String, Object> params) {
+		return commonMapper.selectStockLocationListByDept(params);
+	}
 }
