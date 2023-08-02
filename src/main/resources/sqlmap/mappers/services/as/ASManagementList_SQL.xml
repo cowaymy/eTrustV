@@ -5067,6 +5067,14 @@
       WHERE CODE_MASTER_ID = 510
   </select>
 
+   <select id="selectReworkProj" parameterType="Map" resultType="egovMap">
+      SELECT Extent1.CODE_ID
+           , Extent1.CODE 
+           , Extent1.CODE_NAME
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = 561
+  </select>
+
   <insert id="insertASResultLog" parameterType="Map">
         INSERT INTO SVC0135H (
             PARAMS,
