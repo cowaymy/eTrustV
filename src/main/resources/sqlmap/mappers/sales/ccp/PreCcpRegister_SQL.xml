@@ -737,6 +737,10 @@
                SYSDATE,
                #{orgCode}
        FROM DUAL
-</insert>
+    </insert>
+
+   <select id="currentUser" resultType="egovMap">
+            SELECT * FROM SYS0047M WHERE USER_NAME = #{regId}
+   </select>
 
 </mapper>

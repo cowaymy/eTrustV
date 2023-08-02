@@ -94,4 +94,8 @@ public interface PreCcpRegisterService {
 
 	int confirmTransfer(Map<String, Object> params) ;
 
+	EgovMap currentUser(Map<String, Object> params);
+
+	int getSeqSAL0343D();
+
 }

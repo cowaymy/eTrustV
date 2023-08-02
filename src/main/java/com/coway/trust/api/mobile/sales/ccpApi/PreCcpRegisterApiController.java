@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,9 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
 import com.coway.trust.biz.sales.ccpApi.PreCcpRegisterApiService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -54,6 +62,15 @@ public class PreCcpRegisterApiController {
 
   @Resource(name = "preCcpRegisterService")
   private PreCcpRegisterService preCcpRegisterService;
+
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
+
+  @Autowired
+  private AdaptorService adaptorService;
+
+  @Value("${etrust.base.url}")
+  private String etrustBaseUrl;
 
   @ApiOperation(value = "checkPreCcpResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkPreCcpResult", method = RequestMethod.GET)
@@ -109,16 +126,143 @@ public class PreCcpRegisterApiController {
   }
 
 
+  public String getRandomNumber(int a){
+      	Random random = new Random();
+      	char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();
+      	StringBuilder sb = new StringBuilder();
+
+      	for(int i=0; i<a; i++){
+      		int num = random.nextInt(a);
+      		sb.append(chars[num]);
+      	}
+
+      	return sb.toString();
+    }
+
+    public Map<String, Object> triggerSms(@RequestParam Map<String, Object> params){
+
+    	Map<String, Object> message = new HashMap<String, Object>();
+
+    	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
+
+    	if(getCustInfo == null){
+    	    message.put("success", 0);
+           	message.put("msg", "Fail to send SMS. Kindly contact system administrator or respective department.");
+           	return message;
+    	}
+
+    	String smsMessage ="";
+		smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+		smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
+		smsMessage += ", check the box and submit. Thank you.";
+
+   	    SmsVO sms = new SmsVO(349 , 7327);
+   	    sms.setMessage(smsMessage);
+   	    sms.setMobiles(getCustInfo.get("custMobileno").toString());
+
+	    SmsResult smsResult = adaptorService.sendSMS2(sms);
+
+   	    params.put("smsId", smsResult.getSmsId());
+   	    params.put("statusId", smsResult.getSmsStatus());
+   	    params.put("failRsn", smsResult.getFailReason().toString());
+   	    params.put("smsId", smsResult.getSmsId());
+   	    params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+
+   		preCcpRegisterService.insertSmsHistory(params);
+
+	    if(smsResult.getSmsStatus() == 4){
+	   		preCcpRegisterService.updateSmsCount(params);
+	    }
+
+	    message.put("success",smsResult.getSmsStatus() == 4 ? 1 : 0);
+       	message.put("msg", smsResult.getSmsStatus() == 4 ? "The SMS Consent is successfully sent to customer." : "Fail to send SMS. Kindly contact system administrator or respective department.");
+       	return message;
+    }
+
+
     @ApiOperation(value = "submitPreCcpSubmission", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/submitPreCcpSubmission", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> submitPreCcpSubmission(@RequestBody PreCcpRegisterApiForm param) throws Exception {
+    public ResponseEntity<Map<String, Object>> submitPreCcpSubmission(@RequestBody Map<String, Object> params) throws Exception {
 
-    	Map<String, Object> params = new HashMap<String, Object>();
-    	params.put("customerType", 7290);
-		params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+    	Map<String, Object> message = new HashMap<String, Object>();
 
-    	return ResponseEntity.ok(params);
+		try {
+			EgovMap currentUser = preCcpRegisterService.currentUser(params);
+
+			if(currentUser == null){
+				message.put("success", 0);
+        		message.put("msg", "Requestor is not existed. Not allow to proceed Pre-CCP check");
+        		return ResponseEntity.ok(message);
+			}
+
+			params.put("userId", currentUser.get("userId"));
+        	EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+
+        	if(currentUser == null){
+    			message.put("success", 0);
+        		message.put("msg", "Only organization group member are allow to register Pre-CCP.");
+        		return ResponseEntity.ok(message);
+        	}
+
+    		Integer memType = Integer.parseInt(getUserInfo.get("memType").toString());
+
+      		if( memType != 1 && memType != 2 && memType != 7){
+    			message.put("success", 0);
+        		message.put("msg", "Only organization group member are allow to register Pre-CCP.");
+        		return ResponseEntity.ok(message);
+    		}
+
+        	params.put("customerType", 7290);
+    		params.put("userId", getUserInfo.get("userId"));
+    		params.put("orgCode", getUserInfo.get("orgCode"));
+    		params.put("grpCode", getUserInfo.get("grpCode"));
+    		params.put("deptCode", getUserInfo.get("deptCode"));
+
+    		EgovMap chkQuota = preCcpRegisterService.chkQuota(params);
+
+    		if(chkQuota == null || chkQuota.get("chkQuota").toString().equals("0")){
+    			message.put("success", 0);
+    			message.put("msg", "Not enough quota to proceed do Pre-CCP Register.");
+        		return ResponseEntity.ok(message);
+    		}
+
+    		params.put("tacNo", getRandomNumber(6));
+    		preCcpRegisterService.insertPreCcpSubmission(params);
+
+    		params.put("preccpSeq", preCcpRegisterService.getSeqSAL0343D());
+    		Map<String, Object> smsData = triggerSms(params);
+
+    		if(smsData.get("success").equals(0)){
+    			message.put("success", 0);
+    			message.put("msg", smsData.get("msg"));
+        		return ResponseEntity.ok(message);
+    		}
+
+    		message.put("success", 1);
+			message.put("msg", "Your Pre-CCP request has been saved successfully.");
+    		return ResponseEntity.ok(message);
+
+		}
+		catch (BizException bizException) {
+			throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
+		}
     }
+
+
+//    @ApiOperation(value = "sendSms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @RequestMapping(value = "/sendSms", method = RequestMethod.POST)
+//    public ResponseEntity<Map<String, Object>> sendSms(@RequestBody PreCcpRegisterApiForm param) throws Exception {
+//
+//    	Map<String, Object> message = new HashMap<String, Object>();
+//    	Map<String, Object> params = new HashMap<String, Object>();
+//
+//    	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
+//
+//    	String smsMessage ="";
+//		smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+//		smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
+//		smsMessage += ", check the box and submit. Thank you.";
+//    }
 
 //  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)

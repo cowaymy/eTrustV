@@ -99,4 +99,5 @@ public interface PreCcpRegisterMapper {
 
 	int getSeqSAL0356D();
 
+	EgovMap currentUser(Map<String, Object> params);
 }

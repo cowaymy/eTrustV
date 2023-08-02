@@ -292,4 +292,14 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 		return (transferOut + transferIn);
 	}
 
+	@Override
+	public EgovMap currentUser(Map<String, Object> params){
+		return preCcpRegisterMapper.currentUser(params);
+	}
+
+	@Override
+	public int getSeqSAL0343D(){
+		return preCcpRegisterMapper.getSeqSAL0343D();
+	}
+
 }
