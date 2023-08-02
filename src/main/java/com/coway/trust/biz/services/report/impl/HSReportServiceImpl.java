@@ -118,4 +118,11 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
 	  // TODO Auto-generated method stub
     return HSReportMapper.selectEVoucherList();
   }
+
+@Override
+public List<EgovMap> selectRegion(Map<String, Object> params) {
+	// TODO Auto-generated method stub
+	return HSReportMapper.selectRegion();
+}
+
 }
