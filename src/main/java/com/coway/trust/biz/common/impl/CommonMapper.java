@@ -278,4 +278,8 @@ public interface CommonMapper {
 
 	List<EgovMap> selectReasonCodeId(Map<String, Object> params);
 
+	List<EgovMap> selectDepartmentCode(Map<String, Object> params);
+
+	List<EgovMap> selectStockLocationListByDept(Map<String, Object> params);
+
 }
