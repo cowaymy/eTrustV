@@ -42,4 +42,6 @@ public interface HSReportService {
   List<EgovMap> safetyLevelQtyList(Map<String, Object> params);
 
   List<EgovMap> selectEVoucherList();
+
+List<EgovMap> selectRegion(Map<String, Object> params);
 }
