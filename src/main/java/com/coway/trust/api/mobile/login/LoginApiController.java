@@ -80,9 +80,11 @@ public class LoginApiController {
       throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Invalid ID or password.");
     } else {
       if (loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 7) {
-        if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
-          LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
-          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please accept e-Agreement via eTRUST web application.");
+        if (loginVO.getMemberLevel() != 3) { // TEMP ALLOW MANAGER LEVEL ACCESS MOBILE
+          if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
+            LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
+            throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please accept e-Agreement via eTRUST web application.");
+          }
         }
       }
 
