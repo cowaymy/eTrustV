@@ -4,13 +4,13 @@
 <script type="text/javascript">
 var userBranchID = '${SESSION_INFO.userBranchId}';
 $(document).ready(function() {
-	var userBranchID = '${SESSION_INFO.userBranchId}';
-	//doGetComboData('/logistics/returnusedparts/selectBranchCodeList.do',$("#cmbBranchCode").val(), 'userBranchID', 'cmbBranchCode', 'S','');
+    var userBranchID = '${SESSION_INFO.userBranchId}';
+    //doGetComboData('/logistics/returnusedparts/selectBranchCodeList.do',$("#cmbBranchCode").val(), 'userBranchID', 'cmbBranchCode', 'S','');
 
-	doGetCombo('/logistics/returnusedparts/selectBranchCodeList.do', '',userBranchID, 'cmbBranchCode', 'S','fn_setBranchCodeClass');
-	CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: userBranchID} , '');
+    doGetCombo('/logistics/returnusedparts/selectBranchCodeList.do', '',userBranchID, 'cmbBranchCode', 'S','fn_setBranchCodeClass');
+    CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: userBranchID} , '');
 
-	//CommonCombo.make('searchBranch', '/logistics/returnusedparts/selectBranchList.do', '' , '');
+    //CommonCombo.make('searchBranch', '/logistics/returnusedparts/selectBranchList.do', '' , '');
 });
 
 /* 멀티셀렉트 플러그인 start */
@@ -66,12 +66,18 @@ function validRequiredField(){
         message += 'Please select HS Settle Date';
     }
 
-    if($("#cmbListingType").val() == 2 ){
-    	if($("#cmbCodyCode").val() == null || $("#cmbCodyCode").val().length == 0){
-    		 valid = false;
-    	     message += 'Please select Cody Code';
-    	}
+
+    if($("#chkType").val() == "1" && ($("#cmbCodyCode").val() == null || $("#cmbCodyCode").val().length == 0)){
+    	   valid = false;
+           message += 'Please select Cody Code';
     }
+
+//     if($("#cmbListingType").val() == 2 ){
+//         if($("#cmbCodyCode").val() == null || $("#cmbCodyCode").val().length == 0){
+//              valid = false;
+//              message += 'Please select Cody Code';
+//         }
+//     }
 
     if($("#cmbDepartmentCode").val() == null || $("#cmbDepartmentCode").val().length == 0){
         valid = false;
@@ -87,17 +93,21 @@ function validRequiredField(){
 }
 
 function cmbDepartmentCode_SelectedIndexChanged(){
-	CommonCombo.make('cmbCodyCode', '/logistics/returnusedparts/getCodyCodeList', {memLvl : 4, memType : 2, upperLineMemberID : $("#cmbDepartmentCode").val()}, '');
+    CommonCombo.make('cmbCodyCode', '/logistics/returnusedparts/getCodyCodeList', {memLvl : 4, memType : 2, upperLineMemberID : $("#cmbDepartmentCode").val()}, '');
 
 }
 
 function cmbBranchCode_SelectedIndexChanged(){
-	CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: $("#cmbBranchCode").val()} , '');
+    CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: $("#cmbBranchCode").val()} , '');
 
 }
 
 
-function btnGeneratePDF_Click(){
+function btnGeneratePDF_Click(type){
+
+
+	$("#chkType").val(type);
+
     if(validRequiredField() == true){
 
         var listingType = "";
@@ -166,7 +176,7 @@ function btnGeneratePDF_Click(){
             deptCode = $("#cmbDepartmentCode :selected").text();
         }
 
-        if($("#cmbCodyCode :selected").val() > 0){
+        if(type==1 && $("#cmbCodyCode :selected").val() > 0){
 
             whereSQL += " AND l82.MEM_ID = '"+$("#cmbCodyCode").val()+"'";
             codyCode = $("#cmbCodyCode :selected").text();
@@ -180,9 +190,9 @@ function btnGeneratePDF_Click(){
 
         $("#form #viewType").val("PDF");
         if($("#cmbListingType :selected").val() == 1){
-        	$("#form #reportFileName").val("/logistics/HSUsedFilterListing_PDF.rpt");
-        	$("#reportDownFileName").val("HSUsedFilterListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        	orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
+            $("#form #reportFileName").val("/logistics/HSUsedFilterListing_PDF.rpt");
+            $("#reportDownFileName").val("HSUsedFilterListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
 
         }
         if($("#cmbListingType :selected").val() == 2){
@@ -288,9 +298,10 @@ function btnGeneratePDF_Click(){
 
 </tbody>
 </table><!-- table end -->
-
+<input type="hidden" id="chkType">
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()">Generate</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click(1)">Generate</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click(2)">Bulk Generate</a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
