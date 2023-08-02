@@ -209,15 +209,16 @@
      SELECT Project1.BRNCH_ID CODE_ID  ,
                 Project1.C1 CODE_NAME
      FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
-                           Extent1.CODE || '-' || Extent1.NAME C1
+                           Extent1.CODE || '-' || Extent1.NAME C1,
+                           EXTENT1.REGN_ID
                 FROM SYS0005M Extent1
                 WHERE  ( 1 = Extent1.STUS_ID )
                      AND ( 42 = Extent1.TYPE_ID )
-
+                     AND EXTENT1.REGN_ID = #{groupCode}
                 UNION ALL
-
                 SELECT 0 BRNCH_ID  ,
-                           'All Cody Branches(NationWide)'
+                           'All Cody Branches(NationWide)',
+                           'Region'
                 FROM DUAL ) Project1
      ORDER BY Project1.BRNCH_ID ASC
   </select>
@@ -665,6 +666,16 @@
 FROM sys0013m
 WHERE CODE_MASTER_ID = '471' --AND DISAB = '0'
 ORDER BY CODE_ID
+  </select>
+
+    <select id="selectRegion" resultType="egovMap">
+        SELECT Extent1.CODE_ID CODE_ID ,
+        Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+        Extent1.CODE_NAME CODE_NAME
+        FROM SYS0013M Extent1
+        WHERE ( 0 = Extent1.DISAB )
+        AND ( Extent1.CODE_MASTER_ID = 49 )
+        ORDER BY Extent1.CODE_NAME ASC
   </select>
 
 </mapper>
