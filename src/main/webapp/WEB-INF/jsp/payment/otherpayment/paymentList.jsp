@@ -578,7 +578,9 @@
 <!-- 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPopOld();" id="btnrequestDCF">Request DCF OLD</a></p></li> -->
 				</c:if>
 					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
+					<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+					   <li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
+					</c:if>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
