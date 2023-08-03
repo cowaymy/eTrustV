@@ -846,7 +846,7 @@ console.log("searchColorGrid");
                  date = "0" + date;
              }
 
-            $("#downFileNameAirCond").val("AirConditionerBulkPromotion_" +date+(new Date().getMonth()+1)+new Date().getFullYear());
+            $("#downFileNameAirCond").val("ComboPromotionReport_" +date+(new Date().getMonth()+1)+new Date().getFullYear());
     		fn_report();
     	});
 
@@ -893,7 +893,7 @@ console.log("searchColorGrid");
 
 <form id="dataForm1">
     <input type="hidden" id="fileName" name="reportFileName" value="/sales/ColorGridAirConditionerBulkPromotion.rpt"/>
-    <input type="hidden" id="viewType" name="viewType" value="PDF"/>
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL"/>
     <input type="hidden" id="downFileNameAirCond" name="reportDownFileName" value="" />
 </form>
 
