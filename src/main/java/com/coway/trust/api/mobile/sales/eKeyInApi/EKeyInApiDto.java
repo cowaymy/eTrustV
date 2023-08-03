@@ -248,6 +248,7 @@ public class EKeyInApiDto {
   private String acBrnch;
   private int acBrnchId;
   private int custCrcTokenIdStus;
+  private int Is3rdParty;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1944,5 +1945,13 @@ public int getCustCrcTokenIdStus() {
   public void setCustCrcTokenIdStus(int custCrcTokenIdStus) {
     this.custCrcTokenIdStus = custCrcTokenIdStus;
   }
+
+  public int getIs3rdParty() {
+    return Is3rdParty;
+  }
+
+  public void setIs3rdParty(int Is3rdParty) {
+	    this.Is3rdParty = Is3rdParty;
+	  }
 
 }
