@@ -1099,7 +1099,9 @@ console.log("searchColorGrid");
     <dt>Link</dt>
     <dd>
      <ul class="btns">
+     <c:if test="${PAGE_AUTH.funcUserDefine27== 'Y'}">
        <li><p class="link_btn"><a href="#" id="btnTermNConditionsLetter"><spring:message code='sales.btn.TermNConditionsLetter'/></a></p></li>
+       </c:if>
        <c:if test="${PAGE_AUTH.funcUserDefine26== 'Y'}">
          <li><p class="link_btn"><a href="#" id="btnAirCondComboPck"><spring:message code='sales.btn.AirCondComboPmt'/></a></p></li>
        </c:if>
