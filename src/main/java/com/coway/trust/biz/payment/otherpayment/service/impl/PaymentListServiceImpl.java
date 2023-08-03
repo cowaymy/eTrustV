@@ -420,6 +420,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		paramMap.put("payId", payId);
 		paramMap.put("appTypeId", appTypeId);
 		paramMap.put("ind", "REF");
+		paramMap.put("type", "REF");
 
 		String userId = paramMap.get("userId").toString();
 		String userName = paramMap.get("userName").toString();
