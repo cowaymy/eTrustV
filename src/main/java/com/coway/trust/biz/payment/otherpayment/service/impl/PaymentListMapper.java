@@ -239,4 +239,5 @@ public interface PaymentListMapper {
     /* [END] BOI DCF*/
     List<EgovMap> selectRefundCodeList(Map<String, Object> params);
     List<EgovMap> selectBankListCode();
+    void insertErrorRem(String message);
 }
