@@ -28,6 +28,7 @@
         , D1.MTH_RENT_AMT
         , D1.SALES_ORD_ID
         , D1.INS_AREA
+        , D1.UN_BILL_AMT
             FROM (
 
             WITH L38 AS
@@ -78,6 +79,7 @@
             , D.MTH_RENT_AMT
             , D.SALES_ORD_ID
             , B.AREA INS_AREA
+            , r10.UN_BILL_AMT
             FROM SAL0029D C
             JOIN SAL0001D D ON D.CUST_ID = C.CUST_ID
             JOIN SAL0002D E ON E.SALES_ORD_ID = D.SALES_ORD_ID
@@ -99,6 +101,7 @@
             LEFT JOIN SAL0275M ROT ON ROT.ROT_ORD_NO = D.SALES_ORD_NO AND ROT.ROT_STUS = '5'
             LEFT JOIN L38 on  L38.SALES_ORD_ID = D.SALES_ORD_ID
             LEFT JOIN SAL0070D s70 on s70.SALES_ORD_ID = d.SALES_ORD_ID AND EXTRACT(MONTH FROM S70.RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE) AND EXTRACT(YEAR FROM S70.RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
+            LEFT JOIN REP0010S r10 on r10.ORD_NO = D.sales_ord_no
     	    WHERE 1=1
 
     		<if test="custId != null and custId != ''">
@@ -174,6 +177,7 @@
             AND RENT_AMT <![CDATA[ > ]]> 0
             AND RENT_DOC_TYPE_ID != 160
     </select>
+
 
     <select id="getMemType" parameterType="Map"  resultType="String">
         SELECT
