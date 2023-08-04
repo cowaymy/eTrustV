@@ -1684,6 +1684,8 @@
                    #{item}
             </foreach>
             )
+         AND PAY_ID IN (SELECT PAY_ID FROM PAY0345D WHERE REQ_ID = #{reqNo}
+         )
     </select>
 
     <resultMap id="resultRefundMap" type="egovMap" />
