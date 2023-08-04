@@ -148,6 +148,7 @@ var custNricOri, bankAccOri;
                 $('#advDisc').val(result.orderOutstandingView[0].advancediscount);
                 $('#memStus').val(result.orderOutstandingView[0].memstatus);
 
+
                 if($('#memStus').val() != null){
                     $('#memInfo').show();
                 } else{
@@ -155,19 +156,24 @@ var custNricOri, bankAccOri;
                 }
 
                 bankAccOri = result.orderOutstandingView[0].bankaccno;
-
-                maskedBankAcc = bankAccOri.substr(-4).padStart(bankAccOri.length, '*');
-                $("#spanBankAcc").html(maskedBankAcc);
-                $("#spanBankAcc").hover(function() {
-                    $("#spanBankAcc").html(bankAccOri);
-                }).mouseout(function() {
+                if(bankAccOri != null && bankAccOri != ''){
+                    maskedBankAcc = bankAccOri.substr(-4).padStart(bankAccOri.length, '*');
                     $("#spanBankAcc").html(maskedBankAcc);
-                });
-                $("#imgHover2").hover(function() {
+                    $("#spanBankAcc").hover(function() {
+                        $("#spanBankAcc").html(bankAccOri);
+                    }).mouseout(function() {
+                        $("#spanBankAcc").html(maskedBankAcc);
+                    });
+                    $("#imgHover2").hover(function() {
+                        $("#spanBankAcc").html(bankAccOri);
+                    }).mouseout(function() {
+                        $("#spanBankAcc").html(maskedBankAcc);
+                    });
+                }
+                else {
+                    maskedBankAcc = bankAccOri;
                     $("#spanBankAcc").html(bankAccOri);
-                }).mouseout(function() {
-                    $("#spanBankAcc").html(maskedBankAcc);
-                });
+                }
 
                 $('#memIssueBank').val(result.orderOutstandingView[0].bankname);
                 $('#svmTotalOutstandingAmt').val($.number(result.orderOutstandingView[0].outsvmoutstndtotal, 2));
@@ -292,6 +298,11 @@ var custNricOri, bankAccOri;
     function fn_clear(){
     	$("#orderForm")[0].reset();
     	$("#ledgerForm")[0].reset();
+    	bankAccOri = null;
+    	custNricOri = null;
+
+    	$("#spanBankAcc").html(bankAccOri);
+    	$("#spanNric").html(custNricOri);
     }
 
 </script>
