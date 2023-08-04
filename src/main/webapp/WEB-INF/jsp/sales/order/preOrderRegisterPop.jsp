@@ -2155,7 +2155,14 @@
                     $('#rentPayMode').val('131');
                     $('#rentPayMode').change();
                //     $('#rentPayMode').prop("disabled", true);
-                    $('#thrdParty').prop("disabled", true);
+
+                    console.log('custTypeNm For Third Party: '+$('#custTypeNm').val());
+                    if($('#custTypeNm').val() == 'Company'){
+                        $('#thrdParty').prop("disabled", false);
+                    } else {
+                        $('#thrdParty').prop("disabled", true);
+                    }
+
                 }
 
                 $('[name="grpOpt"]').prop("disabled", true);
