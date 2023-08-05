@@ -40,6 +40,8 @@ public interface AttendanceMapper {
 
     List<EgovMap> selectManagerCode(Map<String, Object> params);
 
+    int checkIfHp(Map<String, Object> p);
+
     Map<String, Object> atdRateCalculation (Map<String, Object> param);
 
     int updateManagerCode(Map<String, Object> params);

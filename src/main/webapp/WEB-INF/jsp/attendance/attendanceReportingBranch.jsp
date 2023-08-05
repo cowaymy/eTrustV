@@ -118,7 +118,6 @@
 				<col style="width: 130px" />
 				<col style="width: *" />
 				<col style="width: 130px" />
-				<col style="width: *" />
 			</colgroup>
 		</table>
 		<p class="btn_blue2">
@@ -197,12 +196,36 @@
     	$("#reportBranchConfig .add").remove()
     	if (ls.length) {
 	    	ls.forEach((l, i) => {
-	            $("#reportBranchConfig").html($("#reportBranchConfig").html() + "<tr class='add'><th>Branch " + (i + 1) + "</th>" + "<td colspan='3'>" + l.attend_allow_branch_code + "</td></tr>")
+	            $("#reportBranchConfig").html($("#reportBranchConfig").html() + "<tr class='add'><th>Branch " + (i + 1) + "</th>" + "<td>" + l.attend_allow_branch_code + "</td><td><p class='btn_blue2' style='margin-right: 0;'><a href='#' onclick='removeBranch(`"+ l.attend_allow_branch_code + "`)'>Remove Branch</a></p></td></tr>")
 	        })
     	} else {
     		$("#reportBranchConfig").html("<tr class='add'><th>Branches</th><td colspan='3'>All branches allowed</td></tr>")
     	}
     	listLocations(ls)
+    }
+
+    const removeBranch = (brnch) => {
+    	Common.showLoader()
+    	fetch("/attendance/removeLocation.do", {
+    		method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({attendAllowBranchCode: brnch, memCode: $("#hpCode").text()})
+    	})
+    	.then(resp => resp.json())
+    	.then(d => {
+    		if (d.success) {
+    			fetch("/attendance/selectHPReporting.do?memCode=" + $("#hpCode").text())
+                .then(resp => resp.json())
+                .then(d => {
+                    genLoc(d.locations)
+                })
+                .finally(() => {
+                    Common.removeLoader()
+                })
+    		} else {
+    			Common.removeLoader()
+    		}
+    	})
     }
 
     const listLocations = (ls) => {

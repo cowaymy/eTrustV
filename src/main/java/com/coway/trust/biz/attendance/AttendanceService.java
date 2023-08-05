@@ -33,6 +33,8 @@ public interface AttendanceService {
 
 	List<EgovMap> selectManagerCode(Map<String, Object> params);
 
+	int checkIfHp(Map<String, Object> p);
+
 	List<EgovMap> selectYearList(Map<String, Object> params);
 
 	List<EgovMap> getDownline(Map<String, Object> params);

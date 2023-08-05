@@ -259,6 +259,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 }
 
 	 @Override
+	 public int checkIfHp(Map<String, Object> p) {
+		 return attendanceMapper.checkIfHp(p);
+	 }
+
+	 @Override
 	  public List<EgovMap> searchAtdManagementList(Map<String, Object> params) {
 	    return attendanceMapper.searchAtdManagementList(params);
 	  }

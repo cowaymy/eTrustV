@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -317,6 +318,69 @@ public class AttendanceController {
 	    return ResponseEntity.ok(managerCodeList);
 	  }
 
+	  @RequestMapping(value="/getAttendanceResetHist.do", method=RequestMethod.GET)
+	  public ResponseEntity<String> getAttendanceResetHist(@RequestParam Map<String, Object> p) throws MalformedURLException, IOException {
+		  Map<String, Object> ret = new HashMap();
+		  if (attendanceService.checkIfHp(p) > 0) {
+			  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendTokenHist/" + p.get("memCode")).openConnection();
+              connection.setRequestProperty("Authorization", epapanAuth);
+			  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+              String input;
+              StringBuffer content = new StringBuffer();
+              while ((input = in.readLine()) != null) {
+            	  content.append(input);
+              }
+              in.close();
+              Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+              ret.put("success", 1);
+              ret.put("data", res);
+		  } else {
+			  ret.put("success", 0);
+		  	  ret.put("message", "HP does not exists");
+		  }
+		  return ResponseEntity.ok(new Gson().toJson(ret));
+	  }
+
+	  @RequestMapping(value="/resetAttendance.do", method=RequestMethod.POST)
+	  public ResponseEntity<String> resetAttendance(@RequestBody Map<String, Object> p, SessionVO session) throws MalformedURLException, IOException {
+		  	Map<String, Object> ret = new HashMap();
+		  	if (attendanceService.checkIfHp(p) > 0) {
+		  		HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendToken").openConnection();
+		  		connection.setDoOutput(true);
+		  		Map<String, Object> d = new HashMap();
+		  		d.put("userName", p.get("memCode"));
+		  		d.put("updUser", session.getUserName());
+		  		byte[] inputData = new Gson().toJson(d).getBytes("utf-8");
+		  		connection.setRequestMethod( "PUT" );
+		  		connection.setRequestProperty("Content-Type", "application/json");
+		  		connection.setRequestProperty("charset", "utf-8");
+		  		connection.setRequestProperty("Authorization", epapanAuth);
+		  		connection.setRequestProperty("Content-Length", Integer.toString(inputData.length));
+		  		try(OutputStream os = connection.getOutputStream()) {
+		  			os.write(inputData);
+		  		}
+		  		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		  		String input;
+		  		StringBuffer content = new StringBuffer();
+		  		while ((input = in.readLine()) != null) {
+		  			content.append(input);
+		  		}
+		  		in.close();
+		  		Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+		  		if ((Boolean) res.get("success")) {
+		  			ret.put("success", 1);
+			  		ret.put("message", "Attendance Device reseted");
+		  		} else {
+		  			ret.put("success", 0);
+			  		ret.put("message", "Unexpected error happened");
+		  		}
+		  	} else {
+		  		ret.put("success", 0);
+		  		ret.put("message", "HP does not exists");
+		  	}
+		  	return ResponseEntity.ok(new Gson().toJson(ret));
+	  }
+
 	  @RequestMapping(value="/modifyHoliday.do", method = RequestMethod.POST)
 	  public ResponseEntity<String> addHoliday(@RequestBody Map<String, Object> p) throws MalformedURLException, IOException {
 		  HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/cowayMergeHoliday").openConnection();
@@ -546,6 +610,35 @@ public class AttendanceController {
 		return ResponseEntity.ok(attendanceService.getReportingBranch());
 	}
 
+	@RequestMapping(value="/removeLocation.do", method=RequestMethod.POST)
+	public ResponseEntity<String> removeLocation(@RequestBody Map<String, Object> p) throws MalformedURLException, IOException, ProtocolException {
+		HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation").openConnection();
+		connection.setDoOutput(true);
+		Map<String, Object> d = new HashMap();
+		d.put("attendDate", "undefi");
+		d.put("attendAllowBranchCode", p.get("attendAllowBranchCode"));
+		d.put("attendAllowHpCode", p.get("memCode"));
+		d.put("attendAllowUseYn", "N");
+		byte[] inputData = new Gson().toJson(d).getBytes("utf-8");
+		connection.setRequestMethod( "PUT" );
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setRequestProperty("charset", "utf-8");
+		connection.setRequestProperty("Authorization", epapanAuth);
+	    connection.setRequestProperty("Content-Length", Integer.toString(inputData.length));
+	    try(OutputStream os = connection.getOutputStream()) {
+	    	os.write(inputData);
+	    }
+		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		String input;
+		StringBuffer content = new StringBuffer();
+		while ((input = in.readLine()) != null) {
+			content.append(input);
+		}
+		in.close();
+		Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+		return ResponseEntity.ok(new Gson().toJson(res));
+	}
+
 	@RequestMapping(value="/addLocation.do", method = RequestMethod.POST)
 	public ResponseEntity<HashMap<String, Object>> addLocation(@RequestBody Map<String, Object> params) {
 		try {
@@ -579,7 +672,7 @@ public class AttendanceController {
 				return ResponseEntity.ok(retD);
 			}
 		} catch (Exception e) {
-			//fall
+			e.printStackTrace();
 		}
 		return ResponseEntity.ok(new HashMap());
 	}

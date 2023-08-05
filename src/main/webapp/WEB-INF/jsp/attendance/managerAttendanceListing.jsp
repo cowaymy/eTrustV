@@ -1,6 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
 <script type="text/javaScript">
 
 var nowYear = new Date().getFullYear();
@@ -278,8 +284,62 @@ $(document).on("focus", ".j_date2", function(){
         Common.popupDiv("/attendance/downloadManagerYearlyAttendance.do", {ind: ind}, null, true, '');
       }
 
+   const toggleReset = () => {
+	    clearGrid()
+	    document.querySelector(".deviceResetPop")?.classList.toggle("hidden")
+   }
 
+   const resetAttendToken = () => {
+	   const attendMemCode = $("#attendMemCode").val().trim()
+	   if (attendMemCode) {
+		   Common.showLoader()
+		   fetch("/attendance/resetAttendance.do", {
+               method: "POST",
+               headers: {"Content-Type": "application/json"},
+               body: JSON.stringify({memCode: attendMemCode})
+           })
+           .then(r => r.json())
+           .then(d => {
+        	    Common.alert(d.message)
+           })
+           .finally(() => {
+        	   Common.removeLoader()
+           })
+	   }
+   }
 
+   const getHist = () => {
+	   const attendMemCode = $("#attendMemCode").val().trim()
+       if (attendMemCode) {
+           Common.showLoader()
+           fetch("/attendance/getAttendanceResetHist.do?memCode=" + attendMemCode)
+           .then(r => r.json())
+           .then(d => {
+        	   if (d.success) {
+	        	   clearGrid()
+	        	   AUIGrid.create("#tokenResetList", [
+	        	       {dataField: "upd_user", headerText: "Upd By"},
+	        	       {dataField: "dt", headerText: "Date"}
+	        	   ], {
+	        		   editable: false,
+	        		   usePaging: true
+	        	   })
+	        	   AUIGrid.setGridData("#tokenResetList", d.data.dataList.map(d => {
+	        		   return {...d, dt: moment(d.dt.replace("Z", "")).format("YYYY/MM/DD HH:mm:ss")}
+	        	   }))
+        	   } else {
+        		   Common.alert(d.message)
+        	   }
+           })
+           .finally(() => {
+               Common.removeLoader()
+           })
+       }
+   }
+
+   const clearGrid = () => {
+	   document.querySelector("#tokenResetList").innerHTML = ""
+   }
 
 
 </script>
@@ -373,6 +433,12 @@ $(document).on("focus", ".j_date2", function(){
            <a href="#" onclick="fn_asRawData(1)">Download Manager Yearly Attendance</a>
           </p>
          </li>
+        </c:if><c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}">
+         <li>
+          <p class="link_btn type2">
+           <a href="#" onclick="toggleReset()">Reset Attendance Device</a>
+          </p>
+         </li>
         </c:if>
       </ul>
       <p class="hide_btn">
@@ -402,3 +468,35 @@ $(document).on("focus", ".j_date2", function(){
  <!-- search_table end -->
 </section>
 <!-- content end -->
+
+<div class="popup_wrap size_mid deviceResetPop hidden"><!-- popup_wrap start -->
+    <header class="pop_header">
+        <h1>Reset Attendance Device</h1>
+	    <ul class="right_opt">
+	        <li><p class="btn_blue2"><a href="#" onclick="toggleReset()">Close</a></p></li>
+	    </ul>
+    </header>
+    <section class="pop_body"><!-- pop_body start -->
+        <table class="type1">
+            <colgroup>
+                <col style="width: 130px;"/>
+                <col style="width: *;"/>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th>Mem Code</th>
+                    <td><input type="text" id="attendMemCode"/></td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big">
+                <a href="#" onclick="resetAttendToken()">Reset</a>
+            </p></li>
+            <li><p class="btn_blue2 big">
+                <a href="#" onclick="getHist()">Search History</a>
+            </p></li>
+        </ul>
+        <div id="tokenResetList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    </section>
+</div>
