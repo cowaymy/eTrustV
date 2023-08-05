@@ -152,7 +152,7 @@
 	          }
 	          else{
 	        	  displayOrder(2);
-	              Common.alert("1. Record Not Found <br/>"+"2. Pre-Ccp For New Customers Is Still Under Construction");
+	              Common.alert("Record Not Found. Please proceed to check Pre-CCP in New Customer module.");
 	          }
 	      });
 	  }

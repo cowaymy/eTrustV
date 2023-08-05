@@ -638,7 +638,13 @@ public class PreCcpRegisterController {
 	    int transferResult = 0;
 	    ReturnMessage message = new ReturnMessage();
 	    try{
+
 	    	transferResult = preCcpRegisterService.confirmTransfer(params);
+	    	if(transferResult == -99){
+		    	message.setCode(AppConstants.FAIL);
+		   	    message.setMessage("No enough quota to be transferred.");
+			    return ResponseEntity.ok(message);
+	    	}
 	    	message.setCode(transferResult > 1 ? AppConstants.SUCCESS : AppConstants.FAIL);
 	   	    message.setMessage(transferResult > 1 ? "Success to transfer." : "Fail to transfer.");
 		    return ResponseEntity.ok(message);

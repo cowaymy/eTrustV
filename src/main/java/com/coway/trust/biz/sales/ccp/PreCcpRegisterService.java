@@ -102,4 +102,5 @@ public interface PreCcpRegisterService {
 
 	EgovMap checkNewCustomerResult(Map<String, Object> params);
 
+	EgovMap chkAvailableQuota(Map<String, Object> params);
 }

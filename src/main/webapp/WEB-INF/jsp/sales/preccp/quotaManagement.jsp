@@ -214,8 +214,12 @@
         document.getElementById("div1").style.display = div1Open ? "": "none";
         document.getElementById("div2").style.display = div2Open ? "": "none";
 
-        document.querySelector(".btnUploadQuota a").style.backgroundColor = !div1Open ? "#9ea9b4" : "rgb(37, 82, 124)";
-        document.querySelector(".btnViewQuota a").style.backgroundColor = !div2Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+        if(document.querySelector(".chkAccess").value == "2"){
+            document.querySelector(".btnViewQuota a").style.backgroundColor = !div2Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+        }else{
+            document.querySelector(".btnUploadQuota a").style.backgroundColor = !div1Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+            document.querySelector(".btnViewQuota a").style.backgroundColor = !div2Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+        }
 
         if(div1Open) {
             $("#btnSearch").show();
@@ -261,6 +265,12 @@
 			      {
 			          dataField : 'batchStatus', headerText : 'Batch Status', width: "10%"
 			      },
+	              {
+                      dataField : 'year', headerText : 'Batch Year', width: "10%"
+                  },
+                  {
+                      dataField : 'month', headerText : 'Batch Month', width: "10%"
+                  },
 			      {
 			          dataField : 'total', headerText : 'No. of Quota', width: "10%"
 			      },
@@ -288,7 +298,14 @@
 		                  type: "TemplateRenderer"
 		              },
 		              labelFunction: function(r, c, v, h, item) {
-		            	  return "<button " + `style="border: 1px solid #aaaaaa;display: inline-block;padding: 4px 2em;" ` + (item.batchStatus == "Forfeited" ? "disabled" : "") + " onclick='((no) => Common.popupDiv(`/sales/ccp/forfeitQuota.do`, {batchId: no}, null, true , null))(" + item.batchNo + ")'>Forfeit</button>"
+		            	  let flag = false;
+		            	  if(!moment(item.year + '-' + item.month).isSameOrAfter(moment().format('YYYY-MM'))){
+		            		  flag = true;
+		            	  }
+		            	  if(item.batchStatus == "Forfeited"){
+		            		  flag = true;
+		            	  }
+		            	  return "<button " + `style="border: 1px solid #aaaaaa;display: inline-block;padding: 4px 2em;" ` + (flag? "disabled" : "") + " onclick='((no) => Common.popupDiv(`/sales/ccp/forfeitQuota.do`, {batchId: no}, null, true , null))(" + item.batchNo + ")'>Forfeit</button>"
 		              }
 		      }],'',
 		     {
@@ -317,6 +334,7 @@
 
 		    $("#btnSearch").click((e)=>{
 		        e.preventDefault();
+		        AUIGrid.resize(quotaManagementGrid, 1300, 400);
 		        generateGrid();
 		    });
 
@@ -356,10 +374,10 @@
          dataField : 'forfeitQuota', headerText : 'Forfeit', width: "10%"
      },
      {
-         dataField : 'month', headerText : 'Quota Month', width: "10%"
+         dataField : 'year', headerText : 'Quota Year', width: "10%"
      },
      {
-         dataField : 'year', headerText : 'Quota Year', width: "10%"
+         dataField : 'month', headerText : 'Quota Month', width: "10%"
      },
      {
          dataField: "btnText",
@@ -370,7 +388,14 @@
              type: "TemplateRenderer"
          },
          labelFunction: function(r, c, v, h, item) {
-             return "<button " + `style="border: 1px solid #aaaaaa;display: inline-block;padding: 4px 2em;" ` + (item.deptCode? "disabled" : "") + " onclick='((no, no2,no3, no4) => Common.popupDiv(`/sales/ccp/transferQuota.do`, {orgCode: no, grpCode: no2, year: no3, month: no4}, null, true , null))(" + `"` + item.orgCode  + `",` + `"`+ item.grpCode +`",` + `"` + item.year + `",` + `"` + item.month + `"`+ ")'>Transfer</button>"
+             let flag = false;
+             if(!moment(item.year + '-' + item.month).isSameOrAfter(moment().format('YYYY-MM'))){
+                 flag = true;
+             }
+             if(item.deptCode){
+                 flag = true;
+             }
+             return "<button " + `style="border: 1px solid #aaaaaa;display: inline-block;padding: 4px 2em;" ` + (flag? "disabled" : "") + " onclick='((no, no2,no3, no4) => Common.popupDiv(`/sales/ccp/transferQuota.do`, {orgCode: no, grpCode: no2, year: no3, month: no4}, null, true , null))(" + `"` + item.orgCode  + `",` + `"`+ item.grpCode +`",` + `"` + item.year + `",` + `"` + item.month + `"`+ ")'>Transfer</button>"
          }
 	 }],'',
 	{

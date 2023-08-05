@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.xml.transform.Transformer;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -266,10 +268,17 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 
 		int transferOut = 0 , transferIn = 0;
 
+		List<Map<String,Object>> chkList = (List<Map<String, Object>>) params.get("editList");
+		int sum = chkList.stream().map(d -> Integer.parseInt(d.get("transferQuota").toString())).collect(Collectors.summingInt(Integer::intValue));
+		params.put("chkQuota", sum);
+		EgovMap chkAvailableQuota = preCcpRegisterMapper.chkAvailableQuota(params);
+		if(chkAvailableQuota.get("balance").toString().equals("0")){
+			return -99;
+		}
+
 		for(Map<String,Object> editDetails : (List<Map<String,Object>>) params.get("editList")){
 
 			int linkId = preCcpRegisterMapper.getSeqSAL0356D();
-
 			//Transfer Out
 			Map<String, Object> editMap = new HashMap<String, Object>();
 			editMap.put("orgCode", params.get("orgCode"));
@@ -310,6 +319,11 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public EgovMap checkNewCustomerResult(Map<String, Object> params){
 		return preCcpRegisterMapper.checkNewCustomerResult(params);
+	}
+
+	@Override
+	public EgovMap chkAvailableQuota(Map<String, Object> params){
+		return preCcpRegisterMapper.chkAvailableQuota(params);
 	}
 
 }

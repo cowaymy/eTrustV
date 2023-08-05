@@ -52,7 +52,11 @@
 	     dataField : 'name', headerText : 'Name', width: "40%", editable: false
 	 },
 	 {
-	     dataField : 'transferQuota', headerText : 'Transfer Quota', width: "35%", editable: true
+	     dataField : 'transferQuota', headerText : 'Transfer Quota', width: "35%", editable: true, editRenderer: {
+	            type: 'NumberStepRenderer',
+	            min: 10,
+	            max: null
+	      }
 	 }],'',
 	{
 	     usePaging: true,
@@ -75,27 +79,12 @@
               return false;
        }
 
-	   if(!editList.every((e)=> {
-	           if(isNaN(e.transferQuota)) return false;
-	       return true;
-	    })){
-	       Common.alert("Please fill in Transfer Quota in number format.");
-	       return;
-	    }
-
-	   editList = editList.filter(e =>{
-		   if(e.transferQuota.trim()){
-			   return true;
-		   }
-	   });
-
 	   if(editList){
            Common.showLoader();
            let orgCode = "${requestFrom.orgCode}";
            let grpCode = "${requestFrom.grpCode}";
            let year = "${requestFrom.year}";
            let month = "${requestFrom.month}";
-           console.log("${requestFrom}");
            let params = {orgCode, grpCode ,year, month, editList};
            fetch("/sales/ccp/updateTransferQuota.do",{
                method : "POST",
