@@ -2,6 +2,7 @@ package com.coway.trust.api.mobile.sales.ccpApi;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -78,26 +79,40 @@ public class PreCcpRegisterApiController {
   @RequestMapping(value = "/checkPreCcpResult", method = RequestMethod.GET)
   public ResponseEntity<List<PreCcpRegisterApiDto>> checkPreCcpResult(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
 
-	  List<EgovMap> preCcpResult = preCcpRegisterApiService.checkPreCcpResult(param);
+	  try{
+		  List<EgovMap> preCcpResult = preCcpRegisterApiService.checkPreCcpResult(param);
 
-	  if(preCcpResult != null){
-		  	Map<String, Object> detailsMap = new HashMap<String, Object>();
-		  	detailsMap.put("customerNric", param.getSelectKeyword());
-		  	detailsMap.put("userId", preCcpResult.get(0).get("userId"));
-		  	detailsMap.put("custId", preCcpResult.get(0).get("custId"));
-		  	detailsMap.put("chsStatus", preCcpResult.get(0).get("chsStatus"));
-		  	detailsMap.put("chsRsn", preCcpResult.get(0).get("chsRsn"));
-		  	detailsMap.put("customerType", 7289);
-			int result = preCcpRegisterService.insertPreCcpSubmission(detailsMap);
+		  if(preCcpResult == null){
+			  List<EgovMap> errorMsgReturn = new ArrayList<>();
+			  EgovMap errorMsg = new EgovMap();
+			  errorMsg.put("success", 0);
+			  errorMsg.put("msg", "Record Not Found. Please proceed to check Pre-CCP in New Customer module.");
+			  errorMsgReturn.add(errorMsg);
+			  return ResponseEntity.ok(errorMsgReturn.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+		  }
+
+		  if(preCcpResult != null){
+			  	Map<String, Object> detailsMap = new HashMap<String, Object>();
+			  	detailsMap.put("customerNric", param.getSelectKeyword());
+			  	detailsMap.put("userId", preCcpResult.get(0).get("userId"));
+			  	detailsMap.put("custId", preCcpResult.get(0).get("custId"));
+			  	detailsMap.put("chsStatus", preCcpResult.get(0).get("chsStatus"));
+			  	detailsMap.put("chsRsn", preCcpResult.get(0).get("chsRsn"));
+			  	detailsMap.put("customerType", 7289);
+				int result = preCcpRegisterService.insertPreCcpSubmission(detailsMap);
+		  }
+	      return ResponseEntity.ok(preCcpResult.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+	  }catch(Exception e){
+    		  List<EgovMap> errorMsgReturn = new ArrayList<>();
+    		  EgovMap errorMsg = new EgovMap();
+    		  errorMsg.put("success", 0);
+    		  errorMsg.put("msg", "Record Not Found. Please proceed to check Pre-CCP in New Customer module.");
+    		  errorMsgReturn.add(errorMsg);
+    		  return ResponseEntity.ok(errorMsgReturn.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
 	  }
 
-      if (LOGGER.isDebugEnabled()) {
-          for (int i = 0; i < preCcpResult.size(); i++) {
-            LOGGER.debug("preCcpResult    값 : {}", preCcpResult.get(i));
-          }
-      }
 
-      return ResponseEntity.ok(preCcpResult.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+
   }
 
   @ApiOperation(value = "searchOrderSummaryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

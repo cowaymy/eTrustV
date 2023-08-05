@@ -44,6 +44,9 @@ public class PreCcpRegisterApiDto {
 		params.put("outstandingAmt", vo.getOutstandingAmt());
 		params.put("unbillAmt", vo.getUnbillAmt());
 
+		params.put("success", vo.getSuccess());
+		params.put("msg", vo.getMsg());
+
 		return params;
 	}
 
@@ -65,6 +68,22 @@ public class PreCcpRegisterApiDto {
 	private String unbillAmt;
 	private String paymentMode;
 
+	private int success;
+	private String msg;
+
+    public int getSuccess() {
+        return success;
+    }
+    public void setSuccess(int success) {
+        this.success = success;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public int getCustId() {
         return custId;
