@@ -98,4 +98,8 @@ public interface PreCcpRegisterService {
 
 	int getSeqSAL0343D();
 
+	EgovMap chkSmsResult(Map<String, Object> params);
+
+	EgovMap checkNewCustomerResult(Map<String, Object> params);
+
 }

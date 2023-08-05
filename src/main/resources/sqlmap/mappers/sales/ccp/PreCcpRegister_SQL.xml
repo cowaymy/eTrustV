@@ -224,6 +224,7 @@
 			JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
 			LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR = TO_CHAR(A.CRT_DT, 'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM')
 			WHERE A.TYPE_ID = 7290
+			AND NVL(A.DISAB,0) = 0
 			AND A.CRT_ID = #{userId}
 			ORDER BY 1 DESC
 	</select>
@@ -742,5 +743,37 @@
    <select id="currentUser" resultType="egovMap">
             SELECT * FROM SYS0047M WHERE USER_NAME = #{regId}
    </select>
+
+   <select id="chkSmsResult" resultType="egovMap">
+            SELECT
+				    A.CUST_NAME,
+				    A.PRECCP_SEQ,
+				    NVL(A.SMS_COUNT,0) SMS_COUNT,
+				    CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'YES' ELSE 'NO' END SMS_CONSENT
+			FROM SAL0343D A
+			JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+			WHERE TYPE_ID = 7290
+			AND NVL(A.DISAB,0) = 0
+			AND A.CUST_IC = #{selectKeyword}
+			AND B.USER_NAME = #{regId}
+			AND ROWNUM = 1
+   </select>
+
+    <select id="checkNewCustomerResult" resultType="egovMap">
+		    SELECT
+				    A.CUST_NAME,
+				    NVL(C.CODE,'-') STATUS,
+				    CASE WHEN NVL(A.SMS_CONSENT,0) = 0 THEN 'Pending Customer Response'
+				         ELSE NVL(C.CODE_DESC,'-')
+				    END REASON
+			 FROM SAL0343D A
+			 JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+			 LEFT JOIN SYS0013M C ON A.SCORE_IND = C.CODE_ID AND C.CODE_MASTER_ID = 559
+			 WHERE A.TYPE_ID = 7290
+			 AND NVL(A.DISAB,0) = 0
+			 AND A.CUST_IC = #{selectKeyword}
+			 AND B.USER_NAME = #{regId}
+			 AND ROWNUM = 1
+    </select>
 
 </mapper>

@@ -100,4 +100,9 @@ public interface PreCcpRegisterMapper {
 	int getSeqSAL0356D();
 
 	EgovMap currentUser(Map<String, Object> params);
+
+	EgovMap chkSmsResult(Map<String, Object> params);
+
+	EgovMap checkNewCustomerResult(Map<String, Object> params);
+
 }

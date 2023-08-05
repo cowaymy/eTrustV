@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.sales.ccpApi;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -144,43 +145,73 @@ public class PreCcpRegisterApiController {
 
     	Map<String, Object> message = new HashMap<String, Object>();
 
-    	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
+    	try{
 
-    	if(getCustInfo == null){
-    	    message.put("success", 0);
-           	message.put("msg", "Fail to send SMS. Kindly contact system administrator or respective department.");
-           	return message;
+    	   	EgovMap chkTime = preCcpRegisterService.chkSendSmsValidTime(params);
+    	    BigDecimal defaultValidTime = new BigDecimal("5"), latestSendSmsTime =new BigDecimal(chkTime.get("chkTime").toString());;
+    	    Integer compareResult = latestSendSmsTime.compareTo(defaultValidTime);
+
+    	    EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
+
+        	if(getCustInfo == null){
+            	    message.put("success", 0);
+                   	message.put("msg", "Fail to send SMS. Kindly contact system administrator or respective department.");
+                   	return message;
+        	}
+
+    		if(getCustInfo.get("smsConsent").toString().equals("1")){
+        			message.put("success", 0);
+        			message.put("msg", "Customer has confirmed the consent. No need try to send SMS again. Kindly refresh the page to get updated customer response.");
+        			return message;
+    	    }
+
+    		if(getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)){
+        	    	String smsMessage ="";
+        			smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+        			smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
+        			smsMessage += ", check the box and submit. Thank you.";
+
+        	   	    SmsVO sms = new SmsVO(349 , 7327);
+        	   	    sms.setMessage(smsMessage);
+        	   	    sms.setMobiles(getCustInfo.get("custMobileno").toString());
+
+        		    SmsResult smsResult = adaptorService.sendSMS2(sms);
+
+        	   	    params.put("smsId", smsResult.getSmsId());
+        	   	    params.put("statusId", smsResult.getSmsStatus());
+        	   	    params.put("failRsn", smsResult.getFailReason().toString());
+        	   	    params.put("smsId", smsResult.getSmsId());
+        	   	    params.put("userId", params.get("userId"));
+
+        	   		preCcpRegisterService.insertSmsHistory(params);
+
+        		    if(smsResult.getSmsStatus() == 4){
+        		   		preCcpRegisterService.updateSmsCount(params);
+        		    }
+
+        		    message.put("success",smsResult.getSmsStatus() == 4 ? 1 : 0);
+        	       	message.put("msg", smsResult.getSmsStatus() == 4 ? "The SMS Consent is successfully sent to customer." : "Fail to send SMS. Kindly contact system administrator or respective department.");
+        	       	return message;
+    		}
+    	 	return message;
     	}
-
-    	String smsMessage ="";
-		smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
-		smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
-		smsMessage += ", check the box and submit. Thank you.";
-
-   	    SmsVO sms = new SmsVO(349 , 7327);
-   	    sms.setMessage(smsMessage);
-   	    sms.setMobiles(getCustInfo.get("custMobileno").toString());
-
-	    SmsResult smsResult = adaptorService.sendSMS2(sms);
-
-   	    params.put("smsId", smsResult.getSmsId());
-   	    params.put("statusId", smsResult.getSmsStatus());
-   	    params.put("failRsn", smsResult.getFailReason().toString());
-   	    params.put("smsId", smsResult.getSmsId());
-   	    params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
-
-   		preCcpRegisterService.insertSmsHistory(params);
-
-	    if(smsResult.getSmsStatus() == 4){
-	   		preCcpRegisterService.updateSmsCount(params);
-	    }
-
-	    message.put("success",smsResult.getSmsStatus() == 4 ? 1 : 0);
-       	message.put("msg", smsResult.getSmsStatus() == 4 ? "The SMS Consent is successfully sent to customer." : "Fail to send SMS. Kindly contact system administrator or respective department.");
-       	return message;
+    	catch(Exception e){
+    		 message.put("success", 0);
+             message.put("msg", "Fail to send SMS. Kindly contact system administrator or respective department.");
+             return message;
+    	}
     }
 
-    @Transactional
+   @ApiOperation(value = "sendSms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   @RequestMapping(value = "/sendSms", method = RequestMethod.POST)
+   public ResponseEntity<Map<String, Object>>  sendSms(@RequestBody Map<String, Object> params) throws Exception {
+	    Map<String, Object> message = new HashMap<String, Object>();
+		EgovMap currentUser = preCcpRegisterService.currentUser(params);
+		params.put("userId", currentUser.get("userId"));
+		message = triggerSms(params);
+      	return ResponseEntity.ok(message);
+   }
+
     @ApiOperation(value = "submitPreCcpSubmission", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/submitPreCcpSubmission", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> submitPreCcpSubmission(@RequestBody Map<String, Object> params) throws Exception {
@@ -235,7 +266,6 @@ public class PreCcpRegisterApiController {
     		message.put("success", 1);
 			message.put("msg", "Your Pre-CCP request has been saved successfully.");
     		return ResponseEntity.ok(message);
-
 		}
 		catch (BizException bizException) {
 			throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
@@ -243,26 +273,65 @@ public class PreCcpRegisterApiController {
     }
 
 
-//    @ApiOperation(value = "sendSms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @RequestMapping(value = "/sendSms", method = RequestMethod.POST)
-//    public ResponseEntity<Map<String, Object>> sendSms(@RequestBody PreCcpRegisterApiForm param) throws Exception {
-//
-//    	Map<String, Object> message = new HashMap<String, Object>();
-//    	Map<String, Object> params = new HashMap<String, Object>();
-//
-//    	EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
-//
-//    	String smsMessage ="";
-//		smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
-//		smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
-//		smsMessage += ", check the box and submit. Thank you.";
-//    }
+    @ApiOperation(value = "chkDuplicated", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chkDuplicated", method = RequestMethod.GET)
+    public ResponseEntity <ReturnMessage> chkDuplicated(@RequestParam Map<String, Object>params) {
+ 	   ReturnMessage message = new ReturnMessage();
+ 	   message.setData(preCcpRegisterService.chkDuplicated(params));
+ 	   return ResponseEntity.ok(message);
+    }
 
-//  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
-//  public ResponseEntity<PreCcpRegisterApiForm> savePreCcp(@RequestBody PreCcpRegisterApiForm param) throws Exception {
-//    return ResponseEntity.ok(preCcpRegisterApiService.savePreCcp(param));
-//  }
+    @ApiOperation(value = "chkSmsResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chkSmsResult", method = RequestMethod.GET)
+    public ResponseEntity <Map<String, Object>> chkSmsResult(@RequestParam Map<String, Object>params) {
 
+    	Map<String, Object> message = new HashMap<String, Object>();
+
+    	try{
+        		EgovMap chkSmsResult = preCcpRegisterService.chkSmsResult(params);
+
+        		if(chkSmsResult == null){
+            		message.put("success", 0);
+            		message.put("msg", "No result.");
+            	}else{
+            		message.put("success", 1);
+            		message.put("name", chkSmsResult.get("custName").toString());
+            		message.put("smsCount", Integer.parseInt(chkSmsResult.get("smsCount").toString()));
+            		message.put("smsConsent", chkSmsResult.get("smsConsent").toString());
+            		message.put("preccpId", Integer.parseInt(chkSmsResult.get("preccpSeq").toString()));
+            	}
+    	}
+    	catch(Exception e){
+        		message.put("success", 0);
+        		message.put("msg", "Failed to check this customer. Kindly please raise ticket to TrustDesk team.");
+    	}
+ 	   return ResponseEntity.ok(message);
+    }
+
+    @ApiOperation(value = "checkNewCustomerResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/checkNewCustomerResult", method = RequestMethod.GET)
+    public ResponseEntity <Map<String, Object>> checkNewCustomerResult(@RequestParam Map<String, Object>params) {
+
+       Map<String, Object> message = new HashMap<String, Object>();
+
+  	   try{
+      		 EgovMap checkNewCustomerResult = preCcpRegisterService.checkNewCustomerResult(params);
+
+      		 if(checkNewCustomerResult == null){
+        		message.put("success", 0);
+        		message.put("msg", "No result.");
+     		 }
+      		 else{
+     			message.put("success", 1);
+        		message.put("custName", checkNewCustomerResult.get("custName").toString());
+        		message.put("status", checkNewCustomerResult.get("status").toString());
+        		message.put("reason", checkNewCustomerResult.get("reason").toString());
+     		 }
+  	   }catch(Exception e){
+      		message.put("success", 0);
+    		message.put("msg", "Failed to check this customer. Kindly please raise ticket to TrustDesk team.");
+  	   }
+  	   return ResponseEntity.ok(message);
+    }
 
 }

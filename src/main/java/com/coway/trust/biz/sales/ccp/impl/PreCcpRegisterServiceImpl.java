@@ -302,4 +302,14 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 		return preCcpRegisterMapper.getSeqSAL0343D();
 	}
 
+	@Override
+	public EgovMap chkSmsResult(Map<String, Object> params){
+		return preCcpRegisterMapper.chkSmsResult(params);
+	}
+
+	@Override
+	public EgovMap checkNewCustomerResult(Map<String, Object> params){
+		return preCcpRegisterMapper.checkNewCustomerResult(params);
+	}
+
 }
