@@ -292,19 +292,21 @@ $(document).on("focus", ".j_date2", function(){
    const resetAttendToken = () => {
 	   const attendMemCode = $("#attendMemCode").val().trim()
 	   if (attendMemCode) {
-		   Common.showLoader()
-		   fetch("/attendance/resetAttendance.do", {
-               method: "POST",
-               headers: {"Content-Type": "application/json"},
-               body: JSON.stringify({memCode: attendMemCode})
-           })
-           .then(r => r.json())
-           .then(d => {
-        	    Common.alert(d.message)
-           })
-           .finally(() => {
-        	   Common.removeLoader()
-           })
+		   Common.confirm("Are you sure to reset this attendance device? HP: " + attendMemCode, () => {
+			   Common.showLoader()
+			   fetch("/attendance/resetAttendance.do", {
+	               method: "POST",
+	               headers: {"Content-Type": "application/json"},
+	               body: JSON.stringify({memCode: attendMemCode})
+	           })
+	           .then(r => r.json())
+	           .then(d => {
+	        	    Common.alert(d.message)
+	           })
+	           .finally(() => {
+	        	   Common.removeLoader()
+	           })
+		   })
 	   }
    }
 
