@@ -172,22 +172,10 @@ public class PreCcpRegisterController {
         	return true;
     	}
         catch(Exception e){
-			  Map<String, Object> errorParam = new HashMap<>();
-			  errorParam.put("pgmPath","/preccp");
-			  errorParam.put("functionName", "ctos.do");
-			  errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
-			  enquiryService.insertErrorLog(errorParam);
         	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
         	return false;
         }
     }
-
-
-//	@RequestMapping(value = "/preCcpSubmissionRegister.do")
-//	public String preCcpSubmissionRegister(@RequestParam Map<String, Object> params, ModelMap model) {
-//		return "sales/ccp/preCcpSubmissionRegister";
-//	}
-
 
    @Transactional
    @RequestMapping(value = "/submitPreCcpSubmission.do", method = RequestMethod.POST)
@@ -335,13 +323,8 @@ public class PreCcpRegisterController {
     		message.setMessage(result > 0 ? messageAccessor.getMessage("preccp.successConsent") : messageAccessor.getMessage("preccp.failConsent"));
 		}
 		catch(Exception e){
-			  Map<String, Object> errorParam = new HashMap<>();
-			  errorParam.put("pgmPath","/preccp");
-			  errorParam.put("functionName", "submitConsent.do");
-			  errorParam.put("errorMsg", CommonUtils.printStackTraceToString(e));
-			  enquiryService.insertErrorLog(errorParam);
-    		  message.setCode(AppConstants.FAIL);
-        	  message.setMessage(e.getMessage());
+    		message.setCode(AppConstants.FAIL);
+        	message.setMessage(e.getMessage());
 		}
 		return ResponseEntity.ok(message);
 	}

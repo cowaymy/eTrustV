@@ -69,7 +69,11 @@
       </div>
    </div>
 </div>
-
+<div id="loading" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0,0,0,0.1); display: none; justify-content: center; align-items: center;">
+	<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+	  <span class="sr-only">Loading...</span>
+	</div>
+</div>
 <div class="login-box" id="completeConsent" style="display:none;">
   <div class="container">
     <div class="row">
@@ -178,6 +182,7 @@
     const submitForm = () => {
     	let chkConsent = document.querySelector("#chkConsent").checked;
     	if(chkConsent){
+    		document.querySelector("#loading").style.display ="flex";
     		fetch("/sales/ccp/submitConsent.do",{
                 method : "POST",
                 headers : {
@@ -187,7 +192,7 @@
     		})
     		.then(r=>r.json())
     		.then(data => {
-    			console.log(data)
+    			document.querySelector("#loading").style.display ="none";
    				document.getElementById("MsgAlert").innerHTML =  "<span style='line-height:2'>" + data.message + "</span>";
    				$("#alertModalClick").click();
     		})
