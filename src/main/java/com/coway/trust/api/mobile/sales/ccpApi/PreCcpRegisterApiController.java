@@ -165,6 +165,12 @@ public class PreCcpRegisterApiController {
         			return message;
     	    }
 
+    		if(getCustInfo.get("smsCount").toString().equals("3")){
+    			message.put("success", 0);
+    			message.put("msg", "You no longer have enough sms quota. Please try again on next day.");
+    			return message;
+	        }
+
     		if(getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)){
         	    	String smsMessage ="";
         			smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
