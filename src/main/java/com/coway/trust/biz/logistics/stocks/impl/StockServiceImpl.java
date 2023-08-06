@@ -488,9 +488,9 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 			}
         }
 
-		if(params.get("appTypeId").equals("66")){
+		if(params.get("appTypeId").toString().equals("66")){
 			stockMapper.insertSalePriceInfoHistory(smap2);
-		}else if(params.get("appTypeId").equals("67")){
+		}else if(params.get("appTypeId").toString().equals("67")){
 			stockMapper.insertSalePriceInfoHistory(smap);
 		}
 
@@ -530,6 +530,11 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 	public List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMapper.selectPriceHistoryInfo2(params);
+	}
+
+	@Override
+	public int countInPrgrsPrcApproval(Map<String, Object> params) {
+		return stockMapper.countInPrgrsPrcApproval(params);
 	}
 
 	@Override

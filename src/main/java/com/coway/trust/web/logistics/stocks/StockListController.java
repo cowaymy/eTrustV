@@ -219,7 +219,8 @@ public class StockListController {
 	public ResponseEntity<Map> modifyPriceInfo(@RequestBody Map<String, Object> params, Model model) throws Exception {
 
 		// sampleService.saveTransaction(params);
-		String retMsg = AppConstants.MSG_SUCCESS;
+		String retMsg = "Price update successfully requested!";
+		String retMsg2 = "There are price request pending for approval";
 
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
@@ -236,11 +237,20 @@ public class StockListController {
 		map.put("revalue", params.get("revalue"));
 		map.put("stkid", params.get("stockId"));
 		map.put("appTypeId", params.get("appTypeId"));
-		map.put("msg", retMsg);
+
 //		stock.updateStockPriceInfo(params);
 //		stock.updatePriceInfo2(params);
 
-		stock.insertSalePriceReqst(params);
+		int cnt = stock.countInPrgrsPrcApproval(params);
+
+		if (cnt < 1){
+			stock.insertSalePriceReqst(params);
+			map.put("msg", retMsg);
+		}
+
+		else {
+			map.put("msg", retMsg2);
+		}
 
 
 //		stock.updatePriceInfo(params);

@@ -1213,4 +1213,12 @@
          WHERE PRC_REQST_ID = #{reqstId}
   </update>
 
+  <select id="countInPrgrsPrcApproval" parameterType="Map" resultType="int">
+  SELECT COUNT(*) FROM SAL0357M
+  WHERE STK_ID = #{stockId}
+  AND MEM_PAC_ID = #{srvPackageId}
+  AND APP_TYPE_ID = #{appTypeId}
+  AND APPV_STUS = 60
+  </select>
+
 </mapper>

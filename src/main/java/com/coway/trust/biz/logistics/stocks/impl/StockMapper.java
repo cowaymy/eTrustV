@@ -82,6 +82,8 @@ public interface StockMapper {
 
 	void insertSalePriceReqst(Map<String, Object> params);
 
+	int countInPrgrsPrcApproval(Map<String, Object> params);
+
 	void updatePriceReqstApproval(Map<String, Object> params);
 
 	/*//bom manual execution
