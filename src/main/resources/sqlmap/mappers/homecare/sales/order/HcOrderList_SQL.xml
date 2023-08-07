@@ -156,16 +156,16 @@
 	                                    AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 	                                    </if>
 	                                    <if test='memId != null and memId != ""'>
-	                                    AND (V.MEM_ID = #{memId} OR C.TYPE_ID = 965)
+	                                    AND V.MEM_ID = #{memId}
 	                                    </if>
 	                                    <if test='deptCode != null and deptCode != ""'>
-	                                    AND (V.DEPT_CODE = #{deptCode} OR C.TYPE_ID = 965)
+	                                    AND V.DEPT_CODE = #{deptCode}
 	                                    </if>
 	                                    <if test='grpCode != null and grpCode != ""'>
-	                                    AND (V.GRP_CODE = #{grpCode}  OR C.TYPE_ID = 965)
+	                                    AND V.GRP_CODE = #{grpCode}
 	                                    </if>
 	                                    <if test='orgCode != null and orgCode != ""'>
-	                                    AND (V.ORG_CODE = #{orgCode} OR C.TYPE_ID = 965)
+	                                    AND V.ORG_CODE = #{orgCode}
 	                                    </if>
 	                                    <if test='custId != null and custId != ""'>
 			                            AND C.CUST_ID = #{custId}
@@ -255,7 +255,7 @@
                              </foreach>
                         </if>
                         <if test='salesmanCode != null and salesmanCode != ""'>
-                            AND V1.SALESMAN_CODE = UPPER(#{salesmanCode})
+                            AND V1.SALESMAN_CODE = #{salesmanCode}
                         </if>
                         <if test='arrRentStus != null and arrRentStus != ""'>
                             AND V1.RENT_STUS IN
@@ -451,11 +451,13 @@
          , T2.ITM_STK_ID
          , T3.REN_SCH_ID
          , NVL(T3.STUS_CODE_ID, '') STUS_CODE_ID1
-         , CASE WHEN T4.MAT_ORD_NO > 0 AND T4.FRA_ORD_NO > 0 THEN 2
-                WHEN T4.MAT_ORD_NO > 0 THEN 1
+         , CASE WHEN T4.FRA_ORD_NO = T1.SALES_ORD_NO         THEN 3
+                WHEN T4.MAT_ORD_NO > 0 AND T4.FRA_ORD_NO > 0 THEN 2
+                WHEN T4.MAT_ORD_NO > 0                       THEN 1
                 ELSE 0 END BNDL_ID
          , NVL(T4.FRA_ORD_NO,'0') FRA_ORD_NO
          , NVL(T5.SALES_ORD_ID,'0') FRA_ORD_ID
+         , T1.MTH_RENT_AMT
     FROM SAL0001D T1
     JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
     LEFT JOIN SAL0071D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID AND 66 = T1.APP_TYPE_ID
