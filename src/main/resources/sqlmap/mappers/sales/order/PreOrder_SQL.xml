@@ -195,13 +195,16 @@
 		     , T1.SALES_ORD_ID_OLD
 		     , T1.RELATED_NO
 		     , T2.STK_CTGRY_ID
-		     , (SELECT sys3.IND FROM SYS0013M SYS2,SYS0094M SYS3
-                   WHERE  sys2.cODE_MASTER_ID
-                   = 11 AND SYS2.CODE = SYS3.CODE(+) AND T2.STK_CTGRY_ID = SYS2.CODE_ID)
+		     , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
+                   WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
+                   = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T3.ITM_STK_ID)
                    BUS_TYPE
              ,  T1.EX_TRADE_PR IS_EXTRADE_PR
           FROM SAL0213M T1
           JOIN SYS0026M T2 ON T2.STK_ID = T1.ITM_STK_ID
+          LEFT JOIN (
+          select a.sales_ord_id,b.ITM_STK_ID from sal0001d a left join sal0002d b  on b.sales_ord_id = a.sales_ord_id-- where a.sales_ord_id = T1.sales_ord_id_old
+          ) T3 on t1.sales_ord_id_old = t3.sales_ord_id
 		 WHERE T1.PRE_ORD_ID = #{preOrdId}
     </select>
 
