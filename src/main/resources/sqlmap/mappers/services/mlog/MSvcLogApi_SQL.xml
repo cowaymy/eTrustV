@@ -4953,7 +4953,8 @@ SELECT MST.*
                                   A.YEAR AS plan_Year,
                                   A.MONTH AS plan_Month,
                                   C.SRV_ORD_ID,
-                                  C.SRV_ORD_NO AS sales_Order_No,
+                                  CASE WHEN SAL.SALES_ORD_NO IS NOT NULL THEN SAL.SALES_ORD_NO ELSE C.SRV_ORD_NO END AS sales_Order_No,
+                                  /*C.SRV_ORD_NO AS sales_Order_No,*/
                                   C.SRV_ORD_ID AS sales_Order_Id,
                                   C.APP_TYPE_ID AS app_Type,
                                   T.PROMO_DESC AS sales_Promotion,

@@ -648,7 +648,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,CASE WHEN SRT.CODE IS NOT NULL THEN SRT.CODE ELSE TYPE.STK_CTGRY END AS SRV_TYPE
+                              ,CASE WHEN SRT.CODE IS NOT NULL THEN SRT.CODE_NAME ELSE TYPE.STK_CTGRY END AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                               ,ag.CURR_MTH_AGING agingMth
@@ -744,7 +744,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,CASE WHEN SRT.CODE IS NOT NULL THEN SRT.CODE ELSE TYPE.STK_CTGRY END AS SRV_TYPE
+                              ,CASE WHEN SRT.CODE IS NOT NULL THEN SRT.CODE_NAME ELSE TYPE.STK_CTGRY END AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                               ,ag.CURR_MTH_AGING agingMth
