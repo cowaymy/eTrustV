@@ -212,17 +212,17 @@ public class ePRController {
 				//Extract data type from Cell
 				List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
 					Map<String, Object> rRes = new HashMap<String, Object>();
-					rRes.put("item", r.get("item").getStringCellValue());
-					rRes.put("quantity", r.get("quantity").getNumericCellValue());
-					rRes.put("uom", r.get("uom").getStringCellValue());
-					rRes.put("usage", r.get("usage").getStringCellValue());
-					rRes.put("branch", r.get("branch").getStringCellValue());
-					rRes.put("type", r.get("type").getStringCellValue());
-					rRes.put("branchCode", r.get("branchCode").getStringCellValue());
-					rRes.put("region", r.get("region").getStringCellValue());
-					rRes.put("pic", r.get("pic").getStringCellValue());
-					rRes.put("contact", r.get("contact").getStringCellValue());
-					rRes.put("address", r.get("address").getStringCellValue());
+					rRes.put("item", nvl(r.get("item"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("quantity", nvl(r.get("quantity"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("uom", nvl(r.get("uom"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("usage", nvl(r.get("usage"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("branch", nvl(r.get("branch"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("type", nvl(r.get("type"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("branchCode", nvl(r.get("branchCode"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("region", nvl(r.get("region"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("pic", nvl(r.get("pic"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("contact", nvl(r.get("contact"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("address", nvl(r.get("address"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
 					return rRes;
 				}).collect(Collectors.toList());
 
@@ -306,17 +306,17 @@ public class ePRController {
 			//Extract data type from Cell
 			List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
 				Map<String, Object> rRes = new HashMap<String, Object>();
-				rRes.put("item", r.get("item").getStringCellValue());
-				rRes.put("quantity", r.get("quantity").getNumericCellValue());
-				rRes.put("uom", r.get("uom").getStringCellValue());
-				rRes.put("usage", r.get("usage").getStringCellValue());
-				rRes.put("branch", r.get("branch").getStringCellValue());
-				rRes.put("type", r.get("type").getStringCellValue());
-				rRes.put("branchCode", r.get("branchCode").getStringCellValue());
-				rRes.put("region", r.get("region").getStringCellValue());
-				rRes.put("pic", r.get("pic").getStringCellValue());
-				rRes.put("contact", r.get("contact").getStringCellValue());
-				rRes.put("address", r.get("address").getStringCellValue());
+				rRes.put("item", nvl(r.get("item"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("quantity", nvl(r.get("quantity"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("uom", nvl(r.get("uom"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("usage", nvl(r.get("usage"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("branch", nvl(r.get("branch"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("type", nvl(r.get("type"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("branchCode", nvl(r.get("branchCode"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("region", nvl(r.get("region"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("pic", nvl(r.get("pic"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("contact", nvl(r.get("contact"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("address", nvl(r.get("address"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
 				return rRes;
 			}).collect(Collectors.toList());
 
@@ -417,6 +417,18 @@ public class ePRController {
 		}
 	}
 
+	private interface NvlCallback {
+		public Object func(Cell a);
+	}
+
+	private Object nvl(Cell i, NvlCallback f) {
+		if (i == null) {
+			return null;
+		} else {
+			return f.func(i);
+		}
+	}
+
 	private EmailVO prepareEmail(String ePRNo, String addContent) {
 		for (int i = ePRNo.length(); i < 5; i++) {
 			ePRNo = "0" + ePRNo;
@@ -475,13 +487,8 @@ public class ePRController {
     		int res2 = ePRService.insertRequestItems(d);
     		results.add(res2);
 		}
-		int ret = results.stream().allMatch(new Predicate<Integer>() {
-			public boolean test(Integer n) {
-				return n == 1;
-			}
-		}) ? 1 : 0;
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", ret);
+		result.put("success", 1);
 		return ResponseEntity.ok(result);
 	}
 }

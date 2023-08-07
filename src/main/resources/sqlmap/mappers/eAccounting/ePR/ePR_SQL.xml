@@ -318,6 +318,8 @@
         SELECT
             ITEM,
             QUANTITY,
+            UOM,
+            USAGE,
             CODE,
             ADDRESS,
             CONTACT,
