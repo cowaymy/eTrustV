@@ -1,6 +1,7 @@
 package com.coway.trust.web.homecare.sales.order;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -171,7 +172,11 @@ public class HcPreOrderController {
 	public String hcPreOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
 		// Search code List
         model.put("codeList_19", commonService.selectCodeList("19", "CODE_NAME"));
-        model.put("codeList_325", commonService.selectCodeList("325"));
+        Map<String, Object> extradeParam = new HashMap();
+        extradeParam.put("notlike", "2");
+        extradeParam.put("groupCode", "325");
+        //model.put("codeList_325", commonService.selectCodeList("325"));
+        model.put("codeList_325", commonService.selectCodeList(extradeParam));
         model.put("codeList_415", commonService.selectCodeList("415", "CODE_ID"));
         model.put("codeList_416", commonService.selectCodeList("416", "CODE_ID"));
         // Search BranchCodeList

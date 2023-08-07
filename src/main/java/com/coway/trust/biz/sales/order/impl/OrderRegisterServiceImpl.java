@@ -2389,4 +2389,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	  EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
 	  return exTradeConfig;
   }
+
+  @Override
+  public EgovMap getCtgryCode(Map<String, Object> params){
+	  EgovMap stkMap = orderRegisterMapper.getCtgryCode(Integer.parseInt(params.get("stkId").toString()));
+	  String catCode = CommonUtils.nvl(stkMap.get("stkCatCode"));
+	  EgovMap catCodeMap = new EgovMap();
+	  catCodeMap.put("catCode", catCode);
+	  return catCodeMap;
+  }
 }

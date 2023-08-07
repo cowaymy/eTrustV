@@ -47,7 +47,8 @@ var userType = '${SESSION_INFO.userTypeId}';
     doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
     doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'keyinBrnchId', 'S', ''); //Branch Code
     doGetComboData('/common/selectCodeList.do', {
-      groupCode : '325'
+      groupCode : '325',
+      notlike:'2'
     }, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
     doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID', '', 'corpCustType', 'S', ''); //Common Code
     doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID', '', 'agreementType', 'S', ''); //Common Code
@@ -788,6 +789,11 @@ var userType = '${SESSION_INFO.userTypeId}';
 
   $('#exTrade').change(function() {
 
+	  $('#ordPromo1 option').remove();
+      $('#ordPromo2 option').remove();
+      fn_clearAddCpnt();
+      $('#relatedNo').val("");
+
           if($('#exTrade').val()=='1'){
               var todayDD = Number(TODAY_DD.substr(0, 2));
               var todayYY = Number(TODAY_DD.substr(6, 4));
@@ -804,8 +810,23 @@ var userType = '${SESSION_INFO.userTypeId}';
                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                    return;
                }
+
+         }else {
+             //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+             $('#relatedNo').val('');
+             $('#btnRltdNoEKeyIn').addClass("blind");
          }
+         $('#isReturnExtrade').attr("disabled",true);
+         //$('#ordProduct1').val('');
+         //$('#ordProduct2').val('');
+         $('#ordProduct1 option').remove();
+         $('#ordProduct2 option').remove();
+         $('#speclInstct').val('');
   });
+
+  function fn_clearAddCpnt() {
+      $('#compType option').remove();
+    }
 
   function fn_loadBankAccountPop(bankAccId) {
     fn_clearRentPaySetDD();
@@ -1080,6 +1101,13 @@ var userType = '${SESSION_INFO.userTypeId}';
       }
     }
 
+    if(exTrade == '1' || exTrade == '2') {
+        if(FormUtil.checkReqValue($('#relatedNo'))) {
+            isValid = false;
+            msg += "* Please select old order no.<br>";
+        }
+    }
+
     if (FormUtil.checkReqValue($('#salesmanCd')) && FormUtil.checkReqValue($('#salesmanNm'))) {
       if (appTypeIdx > 0 && appTypeVal != 143) {
         isValid = false;
@@ -1181,6 +1209,14 @@ var userType = '${SESSION_INFO.userTypeId}';
     var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
     var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
     var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
+    var vIsReturnExtrade = "";
+    if($('#exTrade').val() == 1){
+        if($('#isReturnExtrade').is(":checked")) {
+            vIsReturnExtrade = 1;
+        }else{
+            vIsReturnExtrade = 0;
+        }
+    }
 
     var orderVO = {
       preOrdId1 : $('#frmPreOrdReg #hiddenPreOrdId1').val().trim(),
@@ -1247,6 +1283,9 @@ var userType = '${SESSION_INFO.userTypeId}';
       agreementType : $('#agreementType').val(),
       rcdTms1 : $('#hiddenRcdTms1').val(),
       rcdTms2 : $('#hiddenRcdTms2').val(),
+      salesOrdIdOld          : $('#txtOldOrderID').val(),
+      relatedNo               : $('#relatedNo').val(),
+      isExtradePR         : vIsReturnExtrade,
       receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
     };
 
@@ -1561,6 +1600,9 @@ var userType = '${SESSION_INFO.userTypeId}';
     $('#ordRentalFees1').val('');
     $('#compType1').addClass("blind");
 
+    $('#isReturnExtrade').prop("checked", true);
+    $('#isReturnExtrade').attr("disabled",true);
+
     $('#ordProduct2').val('');
     $('#ordPromo2').val('');
     $('#ordPrice2').val('');
@@ -1853,6 +1895,12 @@ var userType = '${SESSION_INFO.userTypeId}';
     $('#poNo').val('${preOrderInfo.custPoNo}');
     $('#refereNo').val('${preOrderInfo.sofNo}');
 
+    $('#relatedNo').val('${preOrderInfo.relatedNo}');
+    $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+    if('${preOrderInfo.isExtradePr}' == 1){
+        $("#isReturnExtrade").prop("checked", true);
+    }
+
     $('#ordPromo1, #ordPromo2').removeAttr("disabled");
     console.log($('#ordProduct1').val());
     // Set Mattress Promotion
@@ -1868,6 +1916,28 @@ var userType = '${SESSION_INFO.userTypeId}';
         promoId : '${preMatOrderInfo.promoId}',
         isSrvPac:('${preMatOrderInfo.appTypeId}' == 66 ? 'Y' : '')
       }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
+
+
+      /*if (appTypeVal != 66) { // No Rental
+          doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {
+            appTypeId : appTypeVal,
+            stkId : stkId,
+            empChk : empChk,
+            promoCustType : custTypeVal,
+            exTrade : exTrade,
+            srvPacId : $('#srvPacId').val(),
+            isSrvPac : 'Y'
+          }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
+        } else { // AppType : Rental
+          doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
+            appTypeId : appTypeVal,
+            stkId : stkId,
+            empChk : empChk,
+            promoCustType : custTypeVal,
+            exTrade : exTrade,
+            srvPacId : $('#srvPacId').val()
+          }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
+        } */
 
       $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
       $('#promoDiscPeriodTp1').val('${preMatOrderInfo.promoDiscPeriodTp}');
@@ -2813,6 +2883,8 @@ var userType = '${SESSION_INFO.userTypeId}';
                   <td>
                     <p><select id="exTrade" name="exTrade" class="w100p"></select></p>
                     <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+                    <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+                    <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
                   </td>
                 </tr>
                 <tr>

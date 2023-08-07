@@ -171,7 +171,22 @@
     $(function(){
 
     	$('#btnRltdNoEKeyIn').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+    		var catCode = "";
+    		if($("#ordProduct1").val() != null && $("#ordProduct1").val() != ''){
+	            Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:$("#ordProduct1").val()},function(data){
+	                catCode = data.catCode;
+	                if(catCode == 'MC' || catCode == 'MAT'){
+	                    //isHomeCare A - means all HA and HC product also can see, special for massage chair able to extrade HA/HC product
+	                    console.log("HA n hc");
+	                    Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
+	                }else{
+	                    Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+	                }
+	            });
+    		}else{
+                Common.alert('<spring:message code="sal.alert.msg.plzSelProd" />');
+                return;
+            }
       });
 
         $('#btnConfirm').click(function() {
@@ -471,6 +486,24 @@
                 stockIdVal = $("#ordProduct"+_tagNum).val();
                 if(!FormUtil.isEmpty(stockIdVal)){
                 	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
+
+                	var catCode = "";
+                    Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:stockIdVal},function(data){
+                        catCode = data.catCode;
+                        if(catCode == 'MC' || catCode == 'MAT'){
+                            console.log("massage chair");
+                            $("#exTrade").removeAttr("disabled");
+                        }else{
+                            $("#exTrade").val(0);
+                            $('#txtOldOrderID').val('');
+                            $('#txtBusType').val('');
+                           $('#relatedNo').val('');
+                           $('#btnRltdNo').addClass("blind");
+                           $('#isReturnExtrade').prop("checked", false);
+                            $("#exTrade").prop("disabled", true);
+                        }
+                    });
+
                 }
             }
 
@@ -940,6 +973,7 @@
         var appTypeIdx = $("#appType option:selected").index();
         var appTypeVal = $("#appType").val();
         var custType = $("#hiddenTypeId").val();
+        var exTrade = $("#exTrade").val();
 
         if(appTypeIdx <= 0) {
             isValid = false;
@@ -991,6 +1025,13 @@
                     isValid = false;
                     msg += "* Please select frame promotion code.<br>";
                 }
+            }
+        }
+
+        if(exTrade == '1' || exTrade == '2') {
+            if(FormUtil.checkReqValue($('#relatedNo'))) {
+                isValid = false;
+                msg += "* Please select old order no.<br>";
             }
         }
 
@@ -1168,6 +1209,14 @@
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId    = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vBusType = $('#txtBusType').val();
+        var vIsReturnExtrade = "";
+        if($('#exTrade').val() == 1){
+            if($('#isReturnExtrade').is(":checked")) {
+                vIsReturnExtrade = 1;
+            }else{
+                vIsReturnExtrade = 0;
+            }
+        }
 
         var orderVO = {
             sofNo                      : $('#sofNo').val().trim(),
@@ -1232,6 +1281,7 @@
             receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             salesOrdIdOld          : $('#txtOldOrderID').val(),
             relatedNo               : $('#relatedNo').val(),
+            isExtradePR         : vIsReturnExtrade,
             busType                  : vBusType
         };
 
@@ -1401,7 +1451,7 @@
 
         doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 
-        /* if(appTypeVal !=66){
+        /*  if(appTypeVal !=66){
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:'Y'}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
@@ -1484,6 +1534,7 @@
     function fn_clearSales() {
         $('#installDur').val('');
         $('#relatedNo').val('');
+        $('#isReturnExtrade').attr("disabled",true);
 
         $('#ordProduct1').val('');
         $('#ordPromo1').val('');
@@ -2014,9 +2065,17 @@
 
     $('#exTrade').change(function() {
 
+    	$('#ordPromo1 option').remove();
+        $('#ordPromo2 option').remove();
         fn_clearAddCpnt();
+        $('#isReturnExtrade').prop("checked", false);
+        $('#relatedNo').val("");
+
             if($('#exTrade').val()=='1'){
+            	$('#isReturnExtrade').prop("checked", true);
             	$('#btnRltdNoEKeyIn').removeClass("blind");
+
+            	$('#ordProduct1').change();
 
                 var todayDD = Number(TODAY_DD.substr(0, 2));
                 var todayYY = Number(TODAY_DD.substr(6, 4));
@@ -2038,7 +2097,9 @@
                $('#txtBusType').val('');
         	   $('#relatedNo').val('');
                $('#btnRltdNoEKeyIn').addClass("blind");
+
            }
+            $('#isReturnExtrade').attr("disabled",true);
             $('#ordProduct1').val('');
             $('#ordProduct2').val('');
 
@@ -2430,9 +2491,10 @@
 	<tbody>
 		<tr>
 		    <th scope="row">Ex-Trade/Related No</th>
-		    <td><p><select id="exTrade" name="exTrade" class="w100p" disabled></select></p><!-- extrade disabled as homecare not allow extrade currently -->
+		    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
 		        <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+                <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+                <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a></td>
                 <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
                 <input id="txtBusType"  name="txtBusType" type="hidden" />
 		</tr>

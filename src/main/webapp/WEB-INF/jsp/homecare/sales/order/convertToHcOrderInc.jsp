@@ -116,6 +116,11 @@
                 $('#installDur').val('${preOrderInfo.instPriod}');
                 $('#poNo').val('${preOrderInfo.custPoNo}');
                 $('#refereNo').val('${preOrderInfo.sofNo}');
+                if('${preOrderInfo.isExtradePr}' == 1){
+                    $("#isReturnExtrade").prop("checked", true);
+                }else{
+                    $("#isReturnExtrade").prop("checked", false);
+                }
 
                 // Set Mattress Promotion
                 if($("#ordProduct1 option:selected").index() > 0) {

@@ -589,7 +589,24 @@
 
     $(function() {
         $('#btnRltdNo').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+        	var catCode = "";
+        	if($("#ordProduct1").val() != null && $("#ordProduct1").val() != ''){
+        		Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:$("#ordProduct1").val()},function(data){
+                    catCode = data.catCode;
+
+                    if(catCode == 'MC' || catCode == 'MAT'){
+                        //isHomeCare A - means only can see AP product, special for massage chair/mattress able to extrade AP product
+                        console.log("HA n hc");
+                        Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
+                    }else{
+                        Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+                    }
+                });
+        	}else{
+        		Common.alert('<spring:message code="sal.alert.msg.plzSelProd" />');
+                return;
+        	}
+
         });
 
         $('#custBtn').click(function() {
@@ -1100,6 +1117,7 @@
 
         // Product Change Event
         $('#ordProduct1, #ordProduct2').change(function(event) {
+        	//debugger;
             var _tagObj = $(event.target);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
@@ -1122,6 +1140,25 @@
                 //
                 if(!FormUtil.isEmpty(stockIdVal)){
                 	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
+
+                	//debugger;
+                	var catCode = "";
+                    Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:stockIdVal},function(data){
+                        catCode = data.catCode;
+                        if(catCode == 'MC' || catCode == 'MAT'){
+                            console.log("massage chair");
+                            $("#exTrade").removeAttr("disabled");
+                        }else{
+                            $("#exTrade").val(0);
+                            $('#txtOldOrderID').val('');
+                            $('#txtBusType').val('');
+                           $('#relatedNo').val('');
+                           $('#btnRltdNo').addClass("blind");
+                           $('#isReturnExtrade').prop("checked", false);
+                            $("#exTrade").prop("disabled", true);
+                        }
+                    });
+
                 }
             }
 
@@ -1219,14 +1256,19 @@
 
         $('#exTrade').change(function() {
 
-            $('#ordPromo option').remove();
+        	$('#ordPromo1 option').remove();
+            $('#ordPromo2 option').remove();
             fn_clearAddCpnt();
+
+            $('#isReturnExtrade').prop("checked", false);
+            $('#isReturnExtrade').attr("disabled",true);
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNo').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
+                	$('#isReturnExtrade').prop("checked", true);
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -1251,7 +1293,11 @@
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#btnRltdNo').addClass("blind");
+                $('#isReturnExtrade').prop("checked", false);
+                $('#ordProduct1').val('');
+                $('#ordProduct2').val('');
             }
+            $('#isReturnExtrade').attr("disabled",true);
             $('#ordProduct1').val('');
             $('#ordProduct2').val('');
         });
@@ -1630,6 +1676,14 @@
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
+        var vIsReturnExtrade = "";
+        if($('#exTrade').val() == 1){
+            if($('#isReturnExtrade').is(":checked")) {
+                vIsReturnExtrade = 1;
+            }else{
+                vIsReturnExtrade = 0;
+            }
+        }
 
         //----------------------------------------------------------------------
         // rentPaySetVO
@@ -1688,6 +1742,7 @@
                 srvPacId                 : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
                 busType                  : vBusType,
+                isExtradePR             : vIsReturnExtrade,
                 cnvrSchemeId          : vCnvrSchemeId,
                 custAddId               : $('#hiddenBillAddId').val().trim(),
                 custBillId                : vCustBillId,
@@ -1729,7 +1784,7 @@
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),
                 appTypeId              : $('#appType').val(),
                 srvPacId                  : $('#srvPacId').val(),
-                bindingNo               : vBindingNo,
+                //bindingNo               : vBindingNo,
                 cnvrSchemeId          : vCnvrSchemeId,
                 custAddId                : $('#hiddenBillAddId').val().trim(),
                 custBillId                 : vCustBillId,
@@ -1749,12 +1804,12 @@
                 rem                         : $('#ordRem').val().trim(),
                 salesGmId                : $('#orgMemId').val().trim(),
                 salesHmId                : $('#departMemId').val().trim(),
-                salesOrdIdOld           : $('#txtOldOrderID').val(),
+                //salesOrdIdOld           : $('#txtOldOrderID').val(),
                 salesSmId                 : $('#grpMemId').val().trim(),
                 totAmt                     : $('#ordPrice2').val().trim(),
                 totPv                       : $('#ordPv2').val().trim(),
                 empChk                   : $('#empChk').val(),
-                exTrade                   : $('#exTrade').val(),
+                //exTrade                   : $('#exTrade').val(),
                 ecash                      : vECash,
                 promoDiscPeriodTp   : $('#promoDiscPeriodTp2').val(),
                 promoDiscPeriod      : $('#promoDiscPeriod2').val().trim(),
@@ -3155,9 +3210,10 @@
     </td>
     <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
     <td>
-        <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p" disabled></select></span><!-- extrade disabled as homecare not allow extrade currently -->
+        <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p"></select></span>
         <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" placeholder="Related Number" class="w100p readonly" readonly /></span>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
     </td>
 </tr>
 <tr>

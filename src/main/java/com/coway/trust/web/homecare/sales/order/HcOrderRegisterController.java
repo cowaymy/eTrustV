@@ -283,53 +283,55 @@ public class HcOrderRegisterController {
 		// Registe Homecare Order
 		hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
 
-		String openExTrade = "N"; //set 'N' as currently not open extrade for homecare
+		//String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR().toString();
+		String isExtradePR = CommonUtils.isEmpty(orderVO.getSalesOrderMVO1().getIsExtradePR()) == true ? "" : orderVO.getSalesOrderMVO1().getIsExtradePR().toString();
+
 		// Ex-Trade : 1
-		if(openExTrade.equals("Y")){
-			if (orderVO.getSalesOrderMVO().getExTrade() == 1 && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
-				//logger.debug("@#### Order Cancel START");
-				String nowDate = "";
-				Date date = new Date();
-		        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
-		        nowDate = df.format(date);
+    	if (isExtradePR.equals("1") && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO1().getBindingNo())
+    			) {
+    		//logger.debug("@#### Order Cancel START");
+    		String nowDate = "";
+    		Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
+            nowDate = df.format(date);
 
-				//logger.debug("@#### nowDate:" + nowDate);
+    		//logger.debug("@#### nowDate:" + nowDate);
 
-				Map<String, Object> cParam = new HashMap();
-				boolean isHc = String.valueOf(orderVO.getSalesOrderMVO1().getBusType()).equals("HOMECARE") ? true : false;
+    		Map<String, Object> cParam = new HashMap();
+    		boolean isHc = String.valueOf(orderVO.getSalesOrderMVO1().getBusType()).equals("HOMECARE") ? true : false;
 
-				cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+    		cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
 
-				EgovMap rMap = null;
-				if(isHc){
-					Map<String, Object> hcParam = new HashMap();
-					hcParam.put("ordNo", orderVO.getSalesOrderMVO().getBindingNo());
-					rMap = hcOrderListService.selectHcOrderInfo(hcParam);
-					cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
-					cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
-					cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
-				}else{
-					rMap = orderRegisterService.selectOldOrderId(cParam);
-					cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
-				}
+    		EgovMap rMap = null;
+    		if(isHc){
+    			Map<String, Object> hcParam = new HashMap();
+    			hcParam.put("ordNo", orderVO.getSalesOrderMVO().getBindingNo());
+    			rMap = hcOrderListService.selectHcOrderInfo(hcParam);
+    			cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
+    			cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
+    			cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+    		}else{
+    			rMap = orderRegisterService.selectOldOrderId(cParam);
+    			cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+    		}
 
-//				cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
-//				cParam.put("salesAnoOrdId", String.valueOf(rMap.get("salesOrdId")));
-//				cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("salesOrdId")));
-				cParam.put("cmbRequestor", "527");
-				cParam.put("dpCallLogDate", nowDate);
-				cParam.put("cmbReason", "1993");
-				cParam.put("txtRemark", "Auto Cancellation for Ex-Trade");
-				cParam.put("txtTotalAmount", "0");
-				cParam.put("txtPenaltyCharge", "0");
-				cParam.put("txtObPeriod", "0");
-				cParam.put("txtCurrentOutstanding", "0");
-				cParam.put("txtTotalUseMth", "0");
-				cParam.put("txtPenaltyAdj", "0");
+    //				cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+    //				cParam.put("salesAnoOrdId", String.valueOf(rMap.get("salesOrdId")));
+    //				cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("salesOrdId")));
+    		cParam.put("cmbRequestor", "527");
+    		cParam.put("dpCallLogDate", nowDate);
+    		cParam.put("cmbReason", "1993");
+    		cParam.put("txtRemark", "Auto Cancellation for Ex-Trade");
+    		cParam.put("txtTotalAmount", "0");
+    		cParam.put("txtPenaltyCharge", "0");
+    		cParam.put("txtObPeriod", "0");
+    		cParam.put("txtCurrentOutstanding", "0");
+    		cParam.put("txtTotalUseMth", "0");
+    		cParam.put("txtPenaltyAdj", "0");
 
-				hcOrderRequestService.hcRequestCancelOrder(cParam, sessionVO);
-			}
-		}
+    		hcOrderRequestService.hcRequestCancelOrder(cParam, sessionVO);
+    	}
+
 		String msg = "";
 		HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
 

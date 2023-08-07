@@ -608,7 +608,8 @@ public class OrderRegisterController {
   public String prevOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
     model.put("custId", params.get("custId"));
-    model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
+    //model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
+    model.put("isHomecare", params.get("isHomecare") != null ? params.get("isHomecare").equals("A") ? '2' : '1' : '0');
 //    model.put("prodId", params.get("prod") != null ? params.get("prod") : ""); // Used for exTrade Neo to NeoPlus
 
     return "sales/order/prevOrderNoPop";
@@ -861,6 +862,12 @@ public class OrderRegisterController {
   @RequestMapping(value = "/getExTradeConfig.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getExTradeConfig() {
       EgovMap result = orderRegisterService.getExTradeConfig();
+      return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/getCtgryCode.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getCtgryCode(@RequestParam Map<String, Object> params) {
+      EgovMap result = orderRegisterService.getCtgryCode(params);
       return ResponseEntity.ok(result);
   }
 }

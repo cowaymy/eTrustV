@@ -2483,6 +2483,9 @@
                                                           WHERE AA.CODE = BB.CODE
                                                               AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
 		      </when>
+		      <when test='isHomecare == "2" '>
+              and T3.STK_CTGRY_ID = '55'
+              </when>
 		      <otherwise>
 		       <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
 		      AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
