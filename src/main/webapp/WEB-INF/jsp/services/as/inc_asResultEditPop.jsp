@@ -333,6 +333,7 @@
     currentStatus = result[0].asResultStusId; // SET BEFORE STATUS
     asRslt = result[0]; // SET 1ST IMAGE VALUE SET FOR LATER USE
 
+    $("#reworkProj").val(result[0].reworkProjName);
     $("#ddlStatus").val(result[0].asResultStusId);
 
     $("#creator").val(result[0].c28); // CREATOR
@@ -2565,6 +2566,12 @@
                     </c:forEach></td>
                 </select></td>
            </tr>
+           <tr>
+              <th scope="row">Rework Project<span id='m100' name='m100' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="Rework Project" class="disabled w100p" disabled="disabled" id='reworkProj' name='reworkProj' /></td>
+              <th></th>
+              <td></td>
+            </tr>
             <tr>
               <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>
