@@ -88,104 +88,121 @@
   </select>
 
   <select  id="selectAutoDebitEnrollmentList" parameterType="Map" resultType="egovMap">
-		SELECT p0333m.PAD_ID, p0333m.PAD_NO, TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS KEY_IN_DATE, TO_CHAR(p0333m.CRT_DT,'HH12:MI:SS AM') AS KEY_IN_TIMESTAMP,
-		s0038m.NAME AS STATUS_DESC, p0333m.SALES_ORD_NO, s0029d.NAME AS CUST_NAME, s0032m.CODE || '-' || s0032m.RESN_DESC AS RESN_DESC, p0333m.REMARKS,
-		s0047m1.USER_NAME AS CREATOR, s0005m.CODE ||' '|| s0005m.NAME AS USER_BRANCH, TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH12:MI:SS AM') ||','|| (s0047m2.USER_NAME) AS LAST_UPDATED_DATE, p0333m.CUST_CRC_ID,
-		TO_CHAR(s0028d.CUST_CRC_CRT_DT,'DD/MM/YYYY') AS CRC_APPLY_DATE
-		FROM PAY0333M p0333m
-		LEFT JOIN SAL0029D s0029d
-		ON p0333m.CUST_ID = s0029d.CUST_ID
-		LEFT JOIN SYS0038M s0038m
-		ON p0333m.STUS_CODE_ID = s0038m.STUS_CODE_ID
-		LEFT JOIN SYS0047M s0047m1
-		ON p0333m.CRT_BY = s0047m1.USER_ID
-		LEFT JOIN SYS0047M s0047m2
-		ON p0333m.UPT_BY = s0047m2.USER_ID
-		LEFT JOIN SYS0005M s0005m
-		ON p0333m.USER_BRANCH = s0005m.BRNCH_ID
-		LEFT JOIN ORG0001D o0001d
-		ON s0047m1.USER_NAME = o0001d.MEM_CODE
-		LEFT JOIN ORG0005D o0005d
-		ON o0005d.MEM_ID = o0001d.MEM_ID
-		LEFT JOIN SYS0032M s0032m
-		ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
-		LEFT JOIN SAL0028D s0028d
-		ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
-		WHERE 1=1
-		<if test='padNo != null and padNo != ""'>
-			AND p0333m.PAD_NO = TRIM(#{padNo})
-		</if>
-		<if test='orderNo != null and orderNo != ""'>
-			AND p0333m.SALES_ORD_NO = TRIM(#{orderNo})
-		</if>
-		<if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != ""'>
-			<if test='requestTimeFrom == null or requestTimeFrom == "" or requestTimeTo == null or requestTimeTo == ""'>
-				AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{requestDateTo},'DD/MM/YYYY')
-			</if>
-		</if>
-		<if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != "" and requestTimeFrom != null and requestTimeFrom != "" and requestTimeTo != null and requestTimeTo != ""'>
-			AND p0333m.CRT_DT BETWEEN TO_DATE(#{requestDateFrom} || #{requestTimeFrom}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{requestDateTo} || #{requestTimeTo}, 'dd/mm/yyyy hh24:mi')
-		</if>
-		<if test='crcRequestDateFrom != null and crcRequestDateFrom != "" and crcRequestDateTo != null and crcRequestDateTo != ""'>
-			AND TO_DATE(TO_CHAR(s0028d.CUST_CRC_CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{crcRequestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{crcRequestDateTo},'DD/MM/YYYY')
-		</if>
-		<if test='custName != null and custName != ""'>
-			AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
-		</if>
-		<if test='nricCompanyNo != null and nricCompanyNo != ""'>
-			AND s0029d.NRIC = TRIM(#{nricCompanyNo})
-		</if>
-		<if test='orgCode != null and orgCode != ""'>
-			AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
-		</if>
-		<if test='grpCode != null and grpCode != ""'>
-			AND o0005d.LAST_GRP_CODE = TRIM(#{grpCode})
-		</if>
-		<if test='deptCode != null and deptCode != ""'>
-			AND o0005d.LAST_DEPT_CODE = TRIM(#{deptCode})
-		</if>
-		<if test="statusIdList != null and statusIdList != ''">
-		      AND p0333m.STUS_CODE_ID in
-		      <foreach item="item" collection="statusIdList" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
-		</if>
-		<if test="custTypeIdList != null and custTypeIdList != ''">
-		      AND s0029d.TYPE_ID in
-		      <foreach item="item" collection="custTypeIdList" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
-		</if>
-		<if test="branchIdList != null and branchIdList != ''">
-		      AND s0005m.BRNCH_ID in
-		      <foreach item="item" collection="branchIdList" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
-		</if>
-		<if test="regionIdList != null and regionIdList != ''">
-		      AND s0005m.REGN_ID in
-		      <foreach item="item" collection="regionIdList" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
-		</if>
-		<if test="cardTypeIdList != null and cardTypeIdList != ''">
-		     	AND s0028d.CARD_TYPE_ID in
-		      <foreach item="item" collection="cardTypeIdList" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
-		</if>
-		<if test='memId != null and memId != ""'>
-			AND o0001d.MEM_ID = TRIM(#{memId})
-		</if>
-		<if test='memCode != null and memCode != ""'>
-			AND o0001d.MEM_CODE = TRIM(#{memCode})
-		</if>
-		ORDER BY p0333m.CRT_DT DESC
+    SELECT p0333m.PAD_ID,
+               p0333m.PAD_NO,
+               TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS KEY_IN_DATE,
+               TO_CHAR(p0333m.CRT_DT,'HH12:MI:SS AM') AS KEY_IN_TIMESTAMP,
+               s0038m.NAME AS STATUS_DESC,
+               p0333m.SALES_ORD_NO, s0029d.NAME AS CUST_NAME,
+               s0032m.CODE || '-' || s0032m.RESN_DESC AS RESN_DESC,
+               p0333m.REMARKS,
+               s0047m1.USER_NAME AS CREATOR,
+               s0005m.CODE ||' '|| s0005m.NAME AS USER_BRANCH,
+               TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH12:MI:SS AM') ||','|| (s0047m2.USER_NAME) AS LAST_UPDATED_DATE,
+               p0333m.CUST_CRC_ID,
+               TO_CHAR(s0028d.CUST_CRC_CRT_DT,'DD/MM/YYYY') AS CRC_APPLY_DATE
+    FROM PAY0333M p0333m
+    LEFT JOIN SAL0029D s0029d ON p0333m.CUST_ID = s0029d.CUST_ID
+    LEFT JOIN SYS0038M s0038m ON p0333m.STUS_CODE_ID = s0038m.STUS_CODE_ID
+    LEFT JOIN SYS0047M s0047m1 ON p0333m.CRT_BY = s0047m1.USER_ID
+    LEFT JOIN SYS0047M s0047m2 ON p0333m.UPT_BY = s0047m2.USER_ID
+    LEFT JOIN SYS0005M s0005m ON p0333m.USER_BRANCH = s0005m.BRNCH_ID
+    LEFT JOIN ORG0001D o0001d ON s0047m1.USER_NAME = o0001d.MEM_CODE
+    LEFT JOIN ORG0005D o0005d ON o0005d.MEM_ID = o0001d.MEM_ID
+    LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
+    LEFT JOIN SAL0028D s0028d ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
+    WHERE 1=1
+
+    <if test='padNo != null and padNo != ""'>
+      AND p0333m.PAD_NO = TRIM(#{padNo})
+    </if>
+
+    <if test='orderNo != null and orderNo != ""'>
+      AND p0333m.SALES_ORD_NO = TRIM(#{orderNo})
+    </if>
+
+    <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != ""'>
+      <if test='requestTimeFrom == null or requestTimeFrom == "" or requestTimeTo == null or requestTimeTo == ""'>
+        AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{requestDateTo},'DD/MM/YYYY')
+      </if>
+    </if>
+
+    <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != "" and requestTimeFrom != null and requestTimeFrom != "" and requestTimeTo != null and requestTimeTo != ""'>
+      AND p0333m.CRT_DT BETWEEN TO_DATE(#{requestDateFrom} || #{requestTimeFrom}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{requestDateTo} || #{requestTimeTo}, 'dd/mm/yyyy hh24:mi')
+    </if>
+
+    <if test='crcRequestDateFrom != null and crcRequestDateFrom != "" and crcRequestDateTo != null and crcRequestDateTo != ""'>
+      AND TO_DATE(TO_CHAR(s0028d.CUST_CRC_CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{crcRequestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{crcRequestDateTo},'DD/MM/YYYY')
+    </if>
+
+    <if test='custName != null and custName != ""'>
+      AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
+    </if>
+
+    <if test='nricCompanyNo != null and nricCompanyNo != ""'>
+      AND s0029d.NRIC = TRIM(#{nricCompanyNo})
+    </if>
+
+    <if test='orgCode != null and orgCode != ""'>
+      AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
+    </if>
+
+    <if test='grpCode != null and grpCode != ""'>
+      AND o0005d.LAST_GRP_CODE = TRIM(#{grpCode})
+    </if>
+
+    <if test='deptCode != null and deptCode != ""'>
+      AND o0005d.LAST_DEPT_CODE = TRIM(#{deptCode})
+    </if>
+
+    <if test="statusIdList != null and statusIdList != ''">
+      AND p0333m.STUS_CODE_ID in
+        <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+
+    <if test="custTypeIdList != null and custTypeIdList != ''">
+      AND s0029d.TYPE_ID in
+      <foreach item="item" collection="custTypeIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="branchIdList != null and branchIdList != ''">
+      AND s0005m.BRNCH_ID in
+      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="regionIdList != null and regionIdList != ''">
+      AND s0005m.REGN_ID in
+      <foreach item="item" collection="regionIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="cardTypeIdList != null and cardTypeIdList != ''">
+     	AND s0028d.CARD_TYPE_ID in
+      <foreach item="item" collection="cardTypeIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+      </if>
+
+    <if test='memId != null and memId != ""'>
+      AND o0001d.MEM_ID = TRIM(#{memId})
+    </if>
+
+    <if test='memCode != null and memCode != ""'>
+      AND o0001d.MEM_CODE = TRIM(#{memCode})
+    </if>
+
+    <if test='memTyp != null and memTyp != ""'>
+      AND s0047m1.USER_NAME LIKE '%'||UPPER(#{memTyp})||'%'
+    </if>
+
+    ORDER BY p0333m.CRT_DT DESC
   </select>
 
 	<select id="selectAutoDebitDetailInfo" parameterType="Map" resultType="egovMap">
