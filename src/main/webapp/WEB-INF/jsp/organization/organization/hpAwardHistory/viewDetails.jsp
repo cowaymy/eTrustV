@@ -42,8 +42,8 @@
                         <th scope="row">Total Item</th>
                         <td><input type="text"  class="w100p" id="viewTotal" disabled></td>
 
-                        <th scope="row">Total Valid / Invalid</th>
-                        <td><input type="text"  class="w100p" id="viewValid" disabled></td>
+                        <th></th>
+                        <td></td>
                 </tr>
 		    </tbody>
 		</table>
@@ -118,7 +118,7 @@
                           AUIGrid.setCellValue(hpAwardViewGrid, rowIndex, "stusCodeId", item.stusCodeId==1? 8 :1);
                           AUIGrid.setCellValue(hpAwardViewGrid, rowIndex, "btnText", item.stusCodeId==1? "Remove" : "Unremove");
                           recalculate();
-                  },
+            	  },
               }
           },
           {
@@ -162,20 +162,12 @@
           }
     });
 
-   AUIGrid.setGridData(hpAwardViewGrid, request[0].details.map(e => ({...e, btnText: e.stusCodeId == 8 ? "Unremove" : "Remove"})));
+   if(!(request[0].details.length == 1  && request[0].details[0].detailId == 0)){
+	   AUIGrid.setGridData(hpAwardViewGrid, request[0].details.map(e => ({...e, btnText: e.stusCodeId == 8 ? "Unremove" : "Remove"})));
+   }
 
    const recalculate = () => {
-	   let total = 0, totalValid = 0;
-	   let getData = AUIGrid.getGridData(hpAwardViewGrid);
-	   total = getData.length;
-	   getData.forEach(data => {
-	       if(data.stusCodeId==1){
-	           totalValid +=1;
-	       }
-	   });
-
-	   $("#viewTotal").val(total);
-	   $("#viewValid").val(totalValid+ ' / ' + (total - totalValid));
+	   $("#viewTotal").val(AUIGrid.getGridData(hpAwardViewGrid).length);
    }
 
    recalculate();
@@ -275,7 +267,7 @@
        }
 
        Common.showLoader();
-       saveData("Sucess to submit.", "Fail to submit.", 117);
+       saveData("Sucess to submit.", "Fail to submit.", 121);
    });
 
    $("#btnDraft").click((e) => {
@@ -284,6 +276,11 @@
        if (AUIGrid.getAddedRowItems(hpAwardViewGrid).length == 0 && AUIGrid.getEditedRowItems(hpAwardViewGrid).length == 0) {
               Common.alert("<spring:message code='sys.common.alert.noChange'/>");
               return false;
+       }
+
+       if(!AUIGrid.getGridData(hpAwardViewGrid).length){
+           Common.alert("Cannot save with empty records.");
+           return false;
        }
 
        if(!AUIGrid.getGridData(hpAwardViewGrid).every((e)=> {
@@ -295,7 +292,7 @@
 	       return;
 	    }
         Common.showLoader();
-        saveData("Success to save as draft.", "Fail to save as draft.", 116);
+        saveData("Success to save as draft.", "Fail to save as draft.", 120);
    });
 
 </script>

@@ -5,7 +5,7 @@
         INSERT INTO ORG0048M
 		VALUES(
 		    ORG0048M_BATCH_ID.NEXTVAL,
-		    116,
+		    120,
 		    #{userId},
 		    SYSDATE,
 		    #{userId},
@@ -21,7 +21,6 @@
 			    1,
 			    #{incentiveCode},
 			    #{hpCode},
-<!-- 			    #{description}, -->
 			    #{destination},
 			    #{remark},
 			    #{month},
@@ -37,7 +36,7 @@
 		SELECT
 			      A.BATCH_ID BATCH_NO
 			    , B.NAME AS BATCH_STATUS
-			    , (SELECT COUNT(BATCH_ID) FROM ORG0049D WHERE ORG0049D.BATCH_ID = A.BATCH_ID) TOTAL
+			    , (SELECT COUNT(BATCH_ID) FROM ORG0049D WHERE ORG0049D.BATCH_ID = A.BATCH_ID AND ORG0049D.STUS_CODE_ID NOT IN (8)) TOTAL
 			    , A.CRT_DT BATCH_UPLOAD_DATE
 			    , C.USER_NAME CREATOR
 			    , CASE WHEN A.STUS_CODE_ID = 5 THEN D.USER_NAME END APPROVER
@@ -88,8 +87,8 @@
 
     <select id="selectHpAwardHistoryDetails" resultType="Map" resultMap="hpAwardDetails">
         SELECT
-			      A.BATCH_ID
-			    , A.DETAIL_ID
+			      #{batchNo} BATCH_ID
+			    , NVL(A.DETAIL_ID,0) DETAIL_ID
 			    , A.STUS_CODE_ID
 			    , A.INCENTIVE_CODE
 			    , A.HP_CODE
@@ -103,13 +102,13 @@
                 , D.USER_NAME UPDATOR
                 , TO_CHAR(B.UPD_DT,'YYYY-MM-DD HH:MI:SS') UPD_DT
                 , E.NAME STATUS
-		FROM ORG0049D A
-		JOIN ORG0048M B ON A.BATCH_ID = B.BATCH_ID
+        FROM ORG0048M B
+        LEFT JOIN ORG0049D A ON A.BATCH_ID = B.BATCH_ID AND A.STUS_CODE_ID NOT IN (8)
         JOIN SYS0047M C ON B.CRT_USER_ID = C.USER_ID
         LEFT JOIN SYS0047M D ON B.UPD_USER_ID = D.USER_ID
         JOIN SYS0038M E ON B.STUS_CODE_ID = E.STUS_CODE_ID
         LEFT JOIN ORG0050D F ON F.INCENTIVE_CODE = A.INCENTIVE_CODE AND F.STUS_CODE_ID = 1
-		WHERE A.BATCH_ID = #{batchNo}
+		WHERE B.BATCH_ID = #{batchNo}
     </select>
 
     <update id="updateHpAwardHistoryStatus" parameterType="Map">
@@ -206,11 +205,13 @@
 			    TO_CHAR(TO_DATE(A.MONTH,'MM'),'MONTH') MONTH,
 			    A.YEAR,
 			    C.INCENTIVE_DESCRIPTION DESCRIPTION,
-			    A.DESTINATION
+			    A.DESTINATION,
+                A.REMARK
 		FROM ORG0049D A
 		JOIN ORG0048M B ON A.BATCH_ID = B.BATCH_ID AND B.STUS_CODE_ID = 5
 		JOIN ORG0050D C ON A.INCENTIVE_CODE = C.INCENTIVE_CODE AND C.STUS_CODE_ID = 1
 		WHERE A.HP_CODE = #{memCode}
+		AND A.STUS_CODE_ID NOT IN (8)
 		ORDER BY A.YEAR , A.MONTH
     </select>
 

@@ -1950,6 +1950,9 @@ const hpAwardHistoryGrid =   GridCommon.createAUIGrid('grid_wrap_awardHistory',[
       },
       {
           dataField : 'destination', headerText : 'Destination'
+      },
+      {
+          dataField : 'remark', headerText : 'Remark'
       }],'',
 	{
 	      usePaging: true,

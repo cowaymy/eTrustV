@@ -42,8 +42,8 @@
                     <td>
                         <select class="w100p" name="hpAwardStus">
 	                        <option value="">Choose One</option>
-	                        <option value="116">Draft</option>
-	                        <option value="117">Submitted</option>
+	                        <option value="120">Draft</option>
+	                        <option value="121">Submitted</option>
 	                        <option value="5">Approved</option>
 	                        <option value="6">Rejected</option>
 	                        <option value="10">Cancelled</option>
@@ -132,12 +132,6 @@
           batchNo = checkedItem.batchNo
           status = checkedItem.batchStatus
      });
-
-    AUIGrid.bind(hpAwardGrid, "cellDoubleClick", (event) => {
-//         checkedItem = event.item;
-//         batchNo = checkedItem.batchNo
-//         status = checkedItem.batchStatus
-   });
 
     $("#btnSearch").click((e)=>{
     	e.preventDefault();

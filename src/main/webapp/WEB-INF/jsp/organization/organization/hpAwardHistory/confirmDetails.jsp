@@ -42,8 +42,8 @@
                         <th scope="row">Total Item</th>
                         <td><input type="text"  class="w100p" id="confirmDetailsTotal" disabled></td>
 
-                        <th scope="row">Total Valid / Invalid</th>
-                        <td><input type="text"  class="w100p" id="confirmDetailsValid" disabled></td>
+                        <th></th>
+                        <td></td>
                 </tr>
             </tbody>
         </table>
@@ -54,6 +54,7 @@
                 <ul class="center_btns">
                      <li><p class="btn_blue2 big"><a id="btnApprove">Approve</a></p></li>
                      <li><p class="btn_blue2 big"><a id="btnReject">Reject</a></p></li>
+                     <li><p class="btn_blue2 big"><a id="btnDeactivateSubmitted">Deactivate</a></p></li>
                 </ul>
         </article>
  </section>
@@ -116,17 +117,7 @@
        AUIGrid.setGridData(hpAwardVerifyGrid, verifyData[0].details.map(e => ({...e, btnText: e.stusCodeId == 8 ? "Unremove" : "Remove"})));
 
        const recalculateItem = () => {
-           let total = 0, totalValid = 0;
-           let getData = AUIGrid.getGridData(hpAwardVerifyGrid);
-           total = getData.length;
-           getData.forEach(data => {
-               if(data.stusCodeId==1){
-                   totalValid +=1;
-               }
-           });
-
-           $("#confirmDetailsTotal").val(total);
-           $("#confirmDetailsValid").val(totalValid+ ' / ' + (total - totalValid));
+           $("#confirmDetailsTotal").val(AUIGrid.getGridData(hpAwardVerifyGrid).length);
        }
 
        recalculateItem();
@@ -177,6 +168,23 @@
                .then(r=>r.json())
                .then(response => {
             	   Common.removeLoader();
+                   Common.alert(response.msg , response.success==1 ? ()=>{location.reload()} : '');
+               })
+           });
+       });
+
+       $("#btnDeactivateSubmitted").click((e)=>{
+           e.preventDefault();
+           Common.alert("Are you confirm to deactivate Batch No : " + verifyData[0].batchId + "?", ()=>{
+               Common.showLoader();
+               fetch("/organization/updateHpAwardHistoryStatus.do",{
+                   method : "POST",
+                   headers : {"Content-Type" : "application/json"},
+                   body :JSON.stringify({batchId : verifyData[0].batchId, type: "deactivate", status : 10 })
+               })
+               .then(r=>r.json())
+               .then(response => {
+                   Common.removeLoader();
                    Common.alert(response.msg , response.success==1 ? ()=>{location.reload()} : '');
                })
            });
