@@ -252,7 +252,7 @@ public class HcOrderRegisterController {
     message.setCode(Integer.toString(qtyCmbOrd));
     return ResponseEntity.ok(message);
   }
-  
+
   @RequestMapping(value = "/selectHcAcCmbOrderDtlList", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectHcAcCmbOrderDtlList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
@@ -300,12 +300,12 @@ public class HcOrderRegisterController {
     		Map<String, Object> cParam = new HashMap();
     		boolean isHc = String.valueOf(orderVO.getSalesOrderMVO1().getBusType()).equals("HOMECARE") ? true : false;
 
-    		cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+    		cParam.put("salesOrdNo", orderVO.getSalesOrderMVO1().getBindingNo());
 
     		EgovMap rMap = null;
     		if(isHc){
     			Map<String, Object> hcParam = new HashMap();
-    			hcParam.put("ordNo", orderVO.getSalesOrderMVO().getBindingNo());
+    			hcParam.put("ordNo", orderVO.getSalesOrderMVO1().getBindingNo());
     			rMap = hcOrderListService.selectHcOrderInfo(hcParam);
     			cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
     			cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
