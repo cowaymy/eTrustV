@@ -381,7 +381,7 @@
        </div>
       </td>
       <th scope="row"><spring:message code='service.title.InstallStatus' /> <span name="m3" id="m3" class="must">*</span></th>
-      <td><select id="instalStatus" name="instalStatus" class="multy_select w100p">
+      <td><select id="instalStatus" multiple="multiple" name="instalStatus" class="multy_select w100p">
         <c:forEach var="list" items="${installStatus }" varStatus="status">
          <c:choose>
           <c:when test="${list.codeId=='1'}">
