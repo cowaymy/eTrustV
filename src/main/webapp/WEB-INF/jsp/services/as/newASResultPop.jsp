@@ -1221,6 +1221,7 @@
 		$("#ddSrvFilterLastSerial").attr("disabled", false);
 		$("#txtFilterRemark").attr("disabled", false);
 		$("#asNotMatch").attr("disabled", false);
+		$("#reworkProj").attr("disabled", false);
 		fn_clearPanelField_ASChargesFees();
 
 		//$("#ddlFilterQty").val("1");
@@ -1245,6 +1246,8 @@
 			$("#lpmRcd").attr("disabled", false);
 			$("#m18").show();
             $("#waterSrcType").attr("disabled", false);
+            $("#m19").show();
+            $("#reworkProj").attr("disabled", false);
 		} else {
 			$("#m15").hide();
 			$("#psiRcd").attr("disabled", true);
@@ -1252,8 +1255,15 @@
 			$("#lpmRcd").attr("disabled", true);
 			$("#m18").hide();
             $("#waterSrcType").attr("disabled", true);
+            $("#m19").show();
+            $("#reworkProj").attr("disabled", false);
 		}
 
+		 if ($('#PROD_CDE').val() == "112098") { //112098 VILLAEM 1
+			 $("#reworkProj").attr("disabled", false);
+			}else{
+			  $("#reworkProj").attr("disabled", true);
+			}
 	}
 
 	function fn_openField_Cancel() {
@@ -1273,6 +1283,7 @@
 		$("#m15").hide();
 		$("#m16").hide();
 		$("#m18").hide();
+		$("#m19").hide();
 
 		$("#iscommission").attr("disabled", false);
 
@@ -1284,7 +1295,7 @@
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
 		$('#waterSrcType').attr("disabled", "disabled");
-		$('#asNotMatch').attr("disabled", "disabled");
+		$('#reworkProj').attr("disabled", "disabled");
 
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
@@ -1318,6 +1329,7 @@
 		$("#m15").hide();
 		$("#m16").hide();
 		$("#m18").hide();
+		$("#m19").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1328,6 +1340,7 @@
 		$('#lpmRcd').attr("disabled", "disabled");
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#asNotMatch').attr("disabled", "disabled");
+		$('#reworkProj').attr("disabled", "disabled");
 
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
@@ -1520,6 +1533,7 @@
 			AS_LPM : $('#lpmRcd').val(),
 			WATER_SRC_TYPE : $('#waterSrcType').val(),
 			AS_UNMATCH_REASON : $('#asNotMatch').val(),
+			REWORK_PROJ : $('#reworkProj').val(),
 
 			// AS RECALL ENTRY
 			AS_APP_DT : $("#appDate").val(),
@@ -2899,6 +2913,16 @@
                                         <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />"
                                             class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
                                     </tr>
+                                <tr>
+                                    <th scope="row">Rework Project<span id='m19' name='m19' class="must" style="display: none"></span></th>
+                                        <td><select class="w100p" id="reworkProj" name="reworkProj"  disabled="disabled">
+                                                    <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                                                    <c:forEach var="list" items="${reworkProj}" varStatus="status">
+                                                    <option value="${list.codeId}">${list.codeName}</option>
+                                                    </c:forEach></td>
+                                    <th></th>
+                                        <td></td>
+                                </tr>
                                     <tr>
 							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
 							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled">
