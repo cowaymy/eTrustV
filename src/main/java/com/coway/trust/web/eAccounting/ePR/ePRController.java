@@ -159,18 +159,6 @@ public class ePRController {
 		return ResponseEntity.ok(result);
 	}
 
-	private interface NvlCallback {
-		public Object func(Cell a);
-	}
-
-	private Object nvl(Cell i, NvlCallback f) {
-		if (i == null) {
-			return null;
-		} else {
-			return f.func(i);
-		}
-	}
-
 	@RequestMapping(value="/editEPR.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> editEPR(MultipartHttpServletRequest request, SessionVO sessionVO) throws InvalidFormatException, IOException {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -224,17 +212,17 @@ public class ePRController {
 				//Extract data type from Cell
 				List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
 					Map<String, Object> rRes = new HashMap<String, Object>();
-					rRes.put("item", nvl(r.get("item"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("quantity", nvl(r.get("quantity"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("uom", nvl(r.get("uom"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("usage", nvl(r.get("usage"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("branch", nvl(r.get("branch"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("type", nvl(r.get("type"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("branchCode", nvl(r.get("branchCode"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("region", nvl(r.get("region"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("pic", nvl(r.get("pic"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("contact", nvl(r.get("contact"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-					rRes.put("address", nvl(r.get("address"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+					rRes.put("item", r.get("item") == null ? null : r.get("item").getStringCellValue());
+					rRes.put("quantity", r.get("quantity") == null ? null : r.get("quantity").getStringCellValue());
+					rRes.put("uom", r.get("uom") == null ? null : r.get("uom").getStringCellValue());
+					rRes.put("usage", r.get("usage") == null ? null : r.get("usage").getStringCellValue());
+					rRes.put("branch", r.get("branch") == null ? null : r.get("branch").getStringCellValue());
+					rRes.put("type", r.get("type") == null ? null : r.get("type").getStringCellValue());
+					rRes.put("branchCode", r.get("branchCode") == null ? null : r.get("branchCode").getStringCellValue());
+					rRes.put("region", r.get("region") == null ? null : r.get("region").getStringCellValue());
+					rRes.put("pic", r.get("pic") == null ? null : r.get("pic").getStringCellValue());
+					rRes.put("contact", r.get("contact") == null ? null : r.get("contact").getStringCellValue());
+					rRes.put("address", r.get("address") == null ? null : r.get("address").getStringCellValue());
 					return rRes;
 				}).collect(Collectors.toList());
 
@@ -318,17 +306,17 @@ public class ePRController {
 			//Extract data type from Cell
 			List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
 				Map<String, Object> rRes = new HashMap<String, Object>();
-				rRes.put("item", nvl(r.get("item"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("quantity", nvl(r.get("quantity"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("uom", nvl(r.get("uom"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("usage", nvl(r.get("usage"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("branch", nvl(r.get("branch"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("type", nvl(r.get("type"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("branchCode", nvl(r.get("branchCode"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("region", nvl(r.get("region"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("pic", nvl(r.get("pic"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("contact", nvl(r.get("contact"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
-				rRes.put("address", nvl(r.get("address"), (NvlCallback) (i) -> {return i.getStringCellValue();}));
+				rRes.put("item", r.get("item") == null ? null : r.get("item").getStringCellValue());
+				rRes.put("quantity", r.get("quantity") == null ? null : r.get("quantity").getStringCellValue());
+				rRes.put("uom", r.get("uom") == null ? null : r.get("uom").getStringCellValue());
+				rRes.put("usage", r.get("usage") == null ? null : r.get("usage").getStringCellValue());
+				rRes.put("branch", r.get("branch") == null ? null : r.get("branch").getStringCellValue());
+				rRes.put("type", r.get("type") == null ? null : r.get("type").getStringCellValue());
+				rRes.put("branchCode", r.get("branchCode") == null ? null : r.get("branchCode").getStringCellValue());
+				rRes.put("region", r.get("region") == null ? null : r.get("region").getStringCellValue());
+				rRes.put("pic", r.get("pic") == null ? null : r.get("pic").getStringCellValue());
+				rRes.put("contact", r.get("contact") == null ? null : r.get("contact").getStringCellValue());
+				rRes.put("address", r.get("address") == null ? null : r.get("address").getStringCellValue());
 				return rRes;
 			}).collect(Collectors.toList());
 
