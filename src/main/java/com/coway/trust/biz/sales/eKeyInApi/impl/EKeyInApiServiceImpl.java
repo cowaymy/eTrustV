@@ -2112,7 +2112,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("custCrcId", param.getCustCrcId());
     sal0213M.put("bankId", param.getBankId());
     // sal0213M.put("custAccId", 0);
-    // sal0213M.put("is3rdParty", 0);
+    sal0213M.put("is3rdParty", param.getIs3rdParty());
     // sal0213M.put("rentPayCustId", param.getRentPayCustId());
     sal0213M.put("rentPayModeId", param.getRentPayModeId());
     // sal0213M.put("custBillId", 0);
