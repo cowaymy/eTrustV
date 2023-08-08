@@ -188,6 +188,7 @@ SELECT A.CUST_ID AS CUST_ID
                , UPPER(S.COUNTRY) AS COUNTRY_BILLING
 
      --PAYMENT-----------------------------------------------------------------------
+               , A.IS_3RD_PARTY AS IS_3RD_PARTY
                , A.RENT_PAY_MODE_ID AS RENT_PAY_MODE_ID
                , N.CUST_ORI_CRC_NO AS CUST_ORI_CRC_NO
                , N.CUST_CRC_TYPE_ID AS CUST_CRC_TYPE_ID
