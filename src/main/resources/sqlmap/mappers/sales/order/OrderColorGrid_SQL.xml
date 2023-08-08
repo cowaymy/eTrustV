@@ -178,8 +178,8 @@
                            F1.CCP_REMARK,
                            F1.KEY_IN_MONTH,
                            F1.IS_EXTRADE_PR,
-				           F1.CANCELLATION_REQUEST_NO,
-				           F1.CANCELLATION_STATUS_NAME
+                           F1.CANCELLATION_REQUEST_NO,
+                           F1.CANCELLATION_STATUS_NAME
                 FROM ( SELECT E1.ORD_ID OrderID1 ,
                            E1.ORD_NO ,
                            E1.ORD_DT ,
@@ -218,8 +218,8 @@
                            E1.CCP_REMARK,
                            E1.KEY_IN_MONTH,
                            E1.IS_EXTRADE_PR,
-            			   E1.CANCELLATION_REQUEST_NO,
-            			   E1.CANCELLATION_STATUS_NAME
+                           E1.CANCELLATION_REQUEST_NO,
+                           E1.CANCELLATION_STATUS_NAME
                       FROM (
                       SELECT * FROM (
                       SELECT som.SALES_ORD_ID ORD_ID,
@@ -412,6 +412,7 @@
                                 </foreach>
                               </if>
                               <if test="matPack != null and matPack != ''">
+                                    AND STK.STK_CTGRY_ID IN (5706)
                                     AND EXISTS   (
                                         SELECT 1 FROM HMC0011D WHERE ORD_SEQ_NO = SOM.BNDL_ID
                                     <if test="matPack == 'set' ">
