@@ -9,7 +9,7 @@
 	        editable : false,                 // 편집 가능 여부 (기본값 : false)
 	        showStateColumn : false,     // 상태 칼럼 사용
 	        showRowNumColumn : false,
-	        usePaging : false
+	        usePaging : true
 	};
 
 	var gridPros = {
@@ -18,6 +18,8 @@
 	};
 
 	var myGridID,subGridID;
+
+	var _totalRowCount;
 
     $(document).ready(function(){
 
@@ -97,17 +99,17 @@
         Common.ajax("GET", "/payment/selectOrderList", $("#masterForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result.resultList);
 
-            //전체건수 세팅
+/*             //전체건수 세팅
             _totalRowCount = result.totalRowCount;
 
             //페이징 처리를 위한 옵션 설정
             var pagingPros = {
                     // 1페이지에서 보여줄 행의 수
                     rowCount : $("#rowCount").val()
-            };
+            }; */
 
-            GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
-        });
+/*             GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+ */        });
     }
 
     //마스터 그리드 페이지 이동
