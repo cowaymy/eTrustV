@@ -5516,7 +5516,7 @@ SELECT MST.*
                     AND B.RESULT_IS_CURR(+) = 1
 
                     AND TO_CHAR(C.SRV_ORD_ID) = Y.REM_STATUS(+)
-                    AND SAL.SALES_ORD_ID = Z.SALES_ORD_ID(+)
+                    AND Y.SALES_ORD_ID = Z.SALES_ORD_ID(+)
                     AND Z.SALES_ORD_ID = AA.SALES_ORD_ID(+)
                     AND AA.ITM_STK_ID = AB.STK_ID(+)
                     AND AB.STK_CTGRY_ID = AC.CODE_ID(+)
