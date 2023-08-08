@@ -1600,7 +1600,7 @@ var userType = '${SESSION_INFO.userTypeId}';
     $('#ordRentalFees1').val('');
     $('#compType1').addClass("blind");
 
-    $('#isReturnExtrade').prop("checked", true);
+    //$('#isReturnExtrade').prop("checked", true);--no product return
     $('#isReturnExtrade').attr("disabled",true);
 
     $('#ordProduct2').val('');

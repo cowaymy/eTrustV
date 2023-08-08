@@ -2072,7 +2072,7 @@
         $('#relatedNo').val("");
 
             if($('#exTrade').val()=='1'){
-            	$('#isReturnExtrade').prop("checked", true);
+            	//$('#isReturnExtrade').prop("checked", true); --no product return
             	$('#btnRltdNoEKeyIn').removeClass("blind");
 
             	$('#ordProduct1').change();

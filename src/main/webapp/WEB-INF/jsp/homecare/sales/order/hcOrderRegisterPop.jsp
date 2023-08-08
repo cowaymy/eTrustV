@@ -1268,7 +1268,7 @@
                 $('#btnRltdNo').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
-                	$('#isReturnExtrade').prop("checked", true);
+                	//$('#isReturnExtrade').prop("checked", true); --no product return
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
