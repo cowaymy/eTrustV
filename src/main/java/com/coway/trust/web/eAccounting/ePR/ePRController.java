@@ -195,19 +195,19 @@ public class ePRController {
 			});
 
 			//Check Delivery Excel format
-			if (Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
-				put("item", "Item");
-				put("quantity", "Quantity");
-				put("uom", "UOM");
-				put("usage", "Usage Month");
-				put("branch", "Branch Name");
-				put("type", "Branch Type");
-				put("branchCode", "Branch Code");
-				put("region", "Region");
-				put("pic", "PIC");
-				put("contact", "Contact No.");
-				put("address", "Address");
-			}}.toString())) {
+			HashMap<String, String> x = new HashMap();
+			x.put("item", "Item");
+			x.put("quantity", "Quantity");
+			x.put("uom", "UOM");
+			x.put("usage", "Usage Month");
+			x.put("branch", "Branch Name");
+			x.put("type", "Branch Type");
+			x.put("branchCode", "Branch Code");
+			x.put("region", "Region");
+			x.put("pic", "PIC");
+			x.put("contact", "Contact No.");
+			x.put("address", "Address");
+			if (Objects.equal(result.get(0).toString(), x.toString())) {
 
 				//Extract data type from Cell
 				List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
@@ -289,19 +289,19 @@ public class ePRController {
 		});
 
 		//Check Delivery Excel format
-		if (Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
-			put("item", "Item");
-			put("quantity", "Quantity");
-			put("uom", "UOM");
-			put("usage", "Usage Month");
-			put("branch", "Branch Name");
-			put("type", "Branch Type");
-			put("branchCode", "Branch Code");
-			put("region", "Region");
-			put("pic", "PIC");
-			put("contact", "Contact No.");
-			put("address", "Address");
-		}}.toString())) {
+		HashMap<String, String> x = new HashMap();
+		x.put("item", "Item");
+		x.put("quantity", "Quantity");
+		x.put("uom", "UOM");
+		x.put("usage", "Usage Month");
+		x.put("branch", "Branch Name");
+		x.put("type", "Branch Type");
+		x.put("branchCode", "Branch Code");
+		x.put("region", "Region");
+		x.put("pic", "PIC");
+		x.put("contact", "Contact No.");
+		x.put("address", "Address");
+		if (Objects.equal(result.get(0).toString(), x.toString())) {
 
 			//Extract data type from Cell
 			List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
