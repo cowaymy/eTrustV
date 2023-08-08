@@ -159,6 +159,18 @@ public class ePRController {
 		return ResponseEntity.ok(result);
 	}
 
+	private interface NvlCallback {
+		public Object func(Cell a);
+	}
+
+	private Object nvl(Cell i, NvlCallback f) {
+		if (i == null) {
+			return null;
+		} else {
+			return f.func(i);
+		}
+	}
+
 	@RequestMapping(value="/editEPR.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> editEPR(MultipartHttpServletRequest request, SessionVO sessionVO) throws InvalidFormatException, IOException {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -414,18 +426,6 @@ public class ePRController {
 			response.put("success", 0);
 			response.put("err", "Receiver info Format incorrect");
 			return ResponseEntity.ok(response);
-		}
-	}
-
-	private interface NvlCallback {
-		public Object func(Cell a);
-	}
-
-	private Object nvl(Cell i, NvlCallback f) {
-		if (i == null) {
-			return null;
-		} else {
-			return f.func(i);
 		}
 	}
 
