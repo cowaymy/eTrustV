@@ -10,7 +10,7 @@ SET
     STK_AS_COST_PRICE = #{asCost},
     UPD_DT　= SYSDATE,
     UPD_USER_ID　= #{updator}
-WHERE STK_CODE = #{prodCode}
+WHERE STK_CODE = #{productCode}
 </update>
 
 <select id="getTypeCode" parameterType="String" resultType="egovMap">
@@ -21,27 +21,31 @@ SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID = #{codeCtgry}
 SELECT SYS0100M_DEFECT_ID_SEQ.NEXTVAL AS DEFECT_ID FROM DUAL
 </select>
 
-<select id="getDefectIdParent" parameterType="String" resultType="egovMap">
-SELECT DISTINCT DEFECT_GRP FROM SYS0100M WHERE DEFECT_CODE = #{svcLargeCode} AND DEFECT_STATUS = 1
+<select id="getDefectIdParent" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT DEFECT_GRP
+FROM SYS0100M
+WHERE DEFECT_CODE = #{svcLargeCode}
+AND DEFECT_STATUS = 1　
+AND PROD_CAT　＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry})
 </select>
 
 <select id="chkProductAvail" parameterType="Map" resultType="egovMap">
 SELECT
-   COUNT(*)
+   COUNT(*) AS COUNT
 FROM SYS0026M
 WHERE STK_CODE = #{prodCode} AND STUS_CODE_ID = 1
 </select>
 
 <select id="chkDupReasons" parameterType="Map" resultType="egovMap">
 SELECT
-   COUNT(*)
+   COUNT(*) AS COUNT
 FROM SYS0032M
 WHERE RESN_TYPE_ID = #{reasonCodeId} AND CODE = #{svcCode}
 </select>
 
 <select id="chkDupDefectCode" parameterType="Map" resultType="egovMap">
 SELECT
-   COUNT(*)
+   COUNT(*) AS COUNT
 FROM SYS0100M
 WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 </select>

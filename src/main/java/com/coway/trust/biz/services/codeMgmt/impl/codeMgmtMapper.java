@@ -19,7 +19,7 @@ public interface codeMgmtMapper {
 
 	List<EgovMap> chkDupReasons(String string);
 
-	List<EgovMap> chkDupDefectCode(String string);
+	List<EgovMap> chkDupDefectCode(Map<String, Object> params);
 
 	void addSYS0013M(Map<String, Object> params);
 
@@ -47,7 +47,7 @@ public interface codeMgmtMapper {
 
 	EgovMap getDefectId();
 
-	EgovMap getDefectIdParent(String string);
+	EgovMap getDefectIdParent(Map<String, Object> saveParam);
 
 
 }

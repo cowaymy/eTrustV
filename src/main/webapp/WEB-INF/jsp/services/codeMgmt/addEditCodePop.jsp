@@ -151,7 +151,7 @@ function fn_chkProductAvail(){
 	Common.ajaxSync("GET", "/services/codeMgmt/chkProductAvail.do", {"prodCode" : $("#productCode").val()}, function(result) {
 	    //$("#hidVal").val(result.length);
 
-	    if(result.length == 0 ){
+	    if(result[0].count < 1 ){
 	        rtnVAL = true;
 	        Common.alert( $("#productCode").val() + " this material code is not available <br>");
 	        return true;
@@ -166,9 +166,9 @@ function fn_chkDupReasons(){
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupReasons.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
-        if(result.length == 0 ){
+        if(result[0].count > 1 ){
             rtnVAL = true;
-            Common.alert($("#svcCode").val() + " this reason code is not available <br>");
+            Common.alert($("#svcCode").val() + " this reason code is already in system <br>");
             return true;
         }
     });
@@ -181,9 +181,10 @@ function fn_chkDupDefectCode(){
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupDefectCode.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
-        if(result.length == 0 ){
+        console.log(result[0].count);
+        if(result[0].count > 1 ){
             rtnVAL = true;
-            Common.alert( $("#svcCode").val() + " this defect code is not available <br>");
+            Common.alert( $("#svcCode").val() + " this defect code is already in system <br>");
             return true;
         }
     });

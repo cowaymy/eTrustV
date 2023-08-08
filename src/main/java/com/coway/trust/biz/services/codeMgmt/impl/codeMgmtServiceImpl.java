@@ -52,9 +52,10 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 	@Override
 	public List<EgovMap> chkDupDefectCode(Map<String, Object> params) {
 		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
-		params.put("defectType", typeCode.toString());
+		params.put("defectType", typeCode.get("code").toString());
+		logger.debug("aaaaa1====" + typeCode.get("code").toString());
 
-	    return codeMgmtMapper.chkDupDefectCode(params.get("defectType").toString());
+	    return codeMgmtMapper.chkDupDefectCode(params);
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 			    	if (saveParam.get("codeCtgry").toString().equals("7301") || saveParam.get("codeCtgry").toString().equals("7305")
 				    		|| saveParam.get("codeCtgry").toString().equals("7303") || saveParam.get("codeCtgry").toString().equals("7307")){ //SMALL
 
-			    		defectId = codeMgmtMapper.getDefectIdParent(saveParam.get("svcLargeCode").toString());
+			    		defectId = codeMgmtMapper.getDefectIdParent(saveParam);
 				    	params.put("defectGrp", defectId.get("defectGrp").toString());
 				    	codeMgmtMapper.addDefectCodesSmall(params);
 			    	}else{

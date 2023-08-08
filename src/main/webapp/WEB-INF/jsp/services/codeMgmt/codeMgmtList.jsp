@@ -95,14 +95,11 @@ function fn_selectCodeMgmtList()
 function createLargeAUIGrid() {
 	var options = {
 		 usePaging : true,
-		 useGroupingPanel : false,
-		 showRowNumColumn : false,
-		 enableCellMerge : true,
-		 editBeginMode : "click",
-		 selectionMode : "multipleRows",
-		 rowSelectionWithMerge : true,
-		 softRemovePolicy : "exceptNew",
-		 editable : false
+		 pageRowCount: 20,
+         editable: false,
+         fixedColumnCount : 1,
+         headerHeight     : 30,
+         showRowNumColumn : true
 	};
 
     var MainColumnLayout =
