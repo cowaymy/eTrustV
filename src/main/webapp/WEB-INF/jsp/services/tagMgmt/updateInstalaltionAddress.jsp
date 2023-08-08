@@ -77,7 +77,7 @@
       }, {
         dataField : "address",
         headerText : "Req Address",
-        width : 500
+        width : 600
       }, {
         dataField : "source",
         headerText : "Source",
@@ -90,6 +90,16 @@
           dataField : "remark",
           headerText : "Remark",
           width : 300
+      }, {
+          dataField : "updator",
+          headerText : "Approver",
+          width : 150,
+          visible: true
+      }, {
+          dataField : "updDt",
+          headerText : "Updated Date",
+          width : 150,
+          visible: true
       }];
 
     var gridPros = {
