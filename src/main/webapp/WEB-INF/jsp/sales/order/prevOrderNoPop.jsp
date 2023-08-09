@@ -33,15 +33,17 @@
                 console.log("buss type" + AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType"));
                 busType = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType");
                 console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
-
+debugger;
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
-                if(RESULT.extrOptFlag == '1'){
-                    $('#isReturnExtrade').attr("disabled",false);
-                }else{
-                    $('#isReturnExtrade').attr("disabled",true);
-                    $('#isReturnExtrade').prop("checked", true);
-                }
+               if($('#isHomecare').val() != '2'){ --no product return
+            	   if(RESULT.extrOptFlag == '1'){
+                       $('#isReturnExtrade').attr("disabled",false);
+                   }else{
+                       $('#isReturnExtrade').attr("disabled",true);
+                       $('#isReturnExtrade').prop("checked", true);
+                   }
+               }
 
                 if(RESULT.rootState == 'ROOT_1') {
                     //$('#rwOldOrder').clearForm();
@@ -196,6 +198,7 @@
 <input type="hidden" id="custId" name="custId" value="${custId}"/>
 <%-- <input type="hidden" id="prodId" name="prodId" value="${prodId}"/> --%> <!-- Used for extrade Neo to Neo Plus -->
 <input type="hidden" id="exTrade" name="exTrade" value="${exTrade}"/>
+<input type="hidden" id="isHomecare" name="exTrade" value="${isHomecare}"/>
 
 <ul class="left_btns mb10">
     <li><p><span id="lblOldOrderNo" class="red_text"></span></p></li>
