@@ -6,6 +6,7 @@
         SELECT
             A.MEM_CODE memCode,
             H.CODE_NAME memType,
+            B.MEM_LVL memLvl,
             D.MEM_ORG_DESC orgDesc,
             A.FULL_NAME name,
             A.NRIC nric,

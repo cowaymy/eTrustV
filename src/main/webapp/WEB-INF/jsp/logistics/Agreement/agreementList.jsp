@@ -112,7 +112,7 @@ $(document).ready(function() {
         Common.ajax("GET", "/logistics/agreement/getMemberInfo", {code : "${memCode}", memTypeCom : memType}, function(result) {
 
             console.log(result);
-
+debugger;
             $("#name").val(result.name);
             $("#icNum").val(result.nric);
             $("#deptCode").val(result.deptCode);
@@ -133,6 +133,9 @@ $(document).ready(function() {
 
                 if(result.memLvl == 4) {
                     $("#startDt").attr("disabled", true);
+                }else{
+                	$("#startDt").val('01/07/2023');
+                	$("#endDt").val('31/12/2023');
                 }
             }
         });
@@ -1031,6 +1034,7 @@ function fn_consentRawDownload() {
                                 </c:forEach>
                         </select>
                         </td>
+                     </tr>
                         <th scope="row" id="contractPeriodLbl">Contract Period</th>
                         <td>
                             <div class="date_set w100p">
@@ -1050,7 +1054,7 @@ function fn_consentRawDownload() {
                         </td>
                         <th></th>
                         <td></td>
-                    </tr>
+
                 </tbody>
             </table>
             <!-- table end -->
