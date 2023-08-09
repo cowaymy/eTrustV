@@ -284,7 +284,8 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	            EgovMap qryCurrentBillMonth = orderRequestMapper.selectRentalInst2(params);
 
 	            if (qryCurrentBillMonth != null) {
-	              CurrentBillMth = CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo"));
+
+	              CurrentBillMth = CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo")) == 0 ? 1 : CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo"));
 	            }
 	          }
 

@@ -2414,7 +2414,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             EgovMap qryCurrentBillMonth = orderRequestMapper.selectRentalInst2(params);
 
             if (qryCurrentBillMonth != null) {
-              CurrentBillMth = CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo"));
+              CurrentBillMth = CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo")) == 0 ? 1 : CommonUtils.intNvl(qryCurrentBillMonth.get("rentInstNo"));
             }
           }
 
