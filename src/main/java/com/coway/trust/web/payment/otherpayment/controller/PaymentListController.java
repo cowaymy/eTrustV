@@ -1515,10 +1515,10 @@ public class PaymentListController {
         			return message;
         		}
 
-        		if(dcfInfoResult.get("remark").toString().length() > 3000){
+        		if(dcfInfoResult.get("remark").toString().length() > 400){
         			message.setCode(AppConstants.FAIL);
         			message.setData(params);
-        			message.setMessage("* Please input the Remark below or less than 3000 bytes.");
+        			message.setMessage("* Please input the Remark below or less than 400 bytes.");
         			return message;
         		}
 

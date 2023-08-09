@@ -331,8 +331,8 @@ function fn_approval(){
             return;
         }
 
-        if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-            Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+        if( FormUtil.byteLength($("#remark").val()) > 400 ){
+            Common.alert("* Please input the Remark below or less than 400 bytes.");
             return;
         }
     } else {
@@ -377,8 +377,8 @@ function fn_reject(){
             return;
         }
 
-        if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-            Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+        if( FormUtil.byteLength($("#remark").val()) > 400 ){
+            Common.alert("* Please input the Remark below or less than 400 bytes.");
             return;
         }
     } else {
@@ -479,7 +479,7 @@ function fn_reject(){
                         <tr id="remField">
                             <th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
                             <td colspan="3">
-                                <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
+                                <textarea id="remark" name="remark"  cols="15" rows="3" placeholder="" maxlength = "400"></textarea>
                             </td>
                         </tr>
                     </tbody>

@@ -176,8 +176,8 @@ function validateSave(refMode, reasonCd){
         Common.alert("Please select an Issue Bank.");
         return validFlg = false;
     }
-    if($("#newRemark").val() == null || $("#newRemark").val() == "" || FormUtil.byteLength($("#newRemark").val()) > 3000 ){
-        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+    if($("#newRemark").val() == null || $("#newRemark").val() == "" || FormUtil.byteLength($("#newRemark").val()) > 400 ){
+        Common.alert("* Please input the Remark below or less than 400 bytes.");
         return validFlg = false;
     }
     if($("#newAttach").val() == "" || FormUtil.byteLength($("#newAttach").val().trim()) == null){
@@ -432,7 +432,7 @@ function closeApproveLine(){
 						<tr>
                             <th scope="row">Remark<span class="must">*</span></th>
                             <td colspan="7">
-                                <textarea id="newRemark" name="newRemark"  cols="15" rows="2" placeholder=""></textarea>
+                                <textarea id="newRemark" name="newRemark"  cols="15" rows="2" placeholder="" maxlength = "400"></textarea>
                             </td>
                         </tr>
                         <tr>
