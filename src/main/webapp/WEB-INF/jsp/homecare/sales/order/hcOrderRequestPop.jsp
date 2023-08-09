@@ -1997,7 +1997,29 @@
     }
 
     function fn_doSaveReqAexc() {
-        Common.ajax("POST", "/sales/order/requestAppExch.do", $('#frmReqAppExc').serializeJSON(), function(result) {
+
+    	let formData = new FormData();
+        $.each(myFileCaches, function(n, v) {
+            formData.append(n, v.file);
+        });
+
+          Common.ajaxFile("/sales/order/attachmentFileUpload.do", formData, function(result) {
+              if(result != 0 && result.code == 00){
+
+                  let jsonObj =  $('#frmReqAppExc').serializeJSON();
+                  jsonObj.soExchgAtchGrpId = result.data.fileGroupKey;
+
+                  Common.ajax("POST","/sales/order/requestAppExch.do", jsonObj, function(result) {
+                      Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+ result.message + "</b>",fn_selfClose);
+                  }, function(jqXHR, textStatus, errorThrown) {
+                      try {
+                      Common.alert('<spring:message code="sal.msg.dataPrepFail" />'+ DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+                      } catch (e) {
+                      }
+                  });
+              }
+          });
+          /*Common.ajax("POST", "/sales/order/requestAppExch.do", $('#frmReqAppExc').serializeJSON(), function(result) {
             Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
         }, function(jqXHR, textStatus, errorThrown) {
             try {
@@ -2005,7 +2027,7 @@
             } catch(e) {
                 console.log(e);
             }
-        });
+        }); */
     }
 
     function fn_doSaveReqSchm() {
@@ -2430,6 +2452,10 @@
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.pvRequired" />';
         }
+        if($('#attchmentFileAexc')[0].files.length == 0){
+            isValid = false;
+            msg += '* Please upload attachment.<br/>';
+          }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -2625,7 +2651,41 @@
             }
             console.log(myFileCaches);
         });
+
+
+        $('#attchmentFileAexc').change(function(evt) {
+            let fileAexc = evt.target.files[0];
+
+            if(fileAexc == null && myFileCaches[1] != null){
+                delete myFileCaches[0];
+            }else if(fileAexc != null){
+                myFileCaches[1] = {file:fileAexc};
+            }
+            let msg = '';
+            if(fileAexc.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            let fileType = fileAexc.type.split('/');
+
+            if(fileType[1] != 'zip' && fileType[1] != 'rar' && fileType[1] != '7zip' && fileType[1] != 'x-zip-compressed'){
+                msg += "*Only allow zip file (ZIP, RAR, 7ZIP).<br>";
+            }
+            if(fileAexc.size > 2000000){
+                msg += "*Only allow file with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[1].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[1].file['checkFileValid'] = true;
+            }
+
+            return msg;
         });
+
+    });
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -3091,6 +3151,16 @@
     <td><p><select id="promoDiscPeriodTpAexc" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriodAexc" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFeesAexc" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
+</tr>
+    <th scope="row">Attachment<span class="must">*</span></th>
+    <td ><div class="auto_file2">
+         <input type="file" title="file add" id="attchmentFileAexc"  accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"/>
+         <label>
+         <input type='text' class='input_text' readonly='readonly'"/>
+         <span class='label_text'><a href='#'>Upload</a></span>
+         </label>
+     </div>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>

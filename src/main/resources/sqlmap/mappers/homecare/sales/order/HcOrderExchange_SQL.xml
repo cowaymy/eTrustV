@@ -86,7 +86,8 @@
                    CASE WHEN ( Filter1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Filter1.SO_EXCHG_FORM_NO
                         ELSE '-' END SO_EXCHG_FORM_NO ,
                    Filter1.STK_CTGRY_ID,
-                   Filter1.BNDL_NO
+                   Filter1.BNDL_NO,
+                   Filter1.ATCH_FILE_GRP_ID
 
          FROM (
             SELECT Extent1.SO_EXCHG_ID ,
@@ -162,7 +163,8 @@
                        Extent15.PROMO_DESC PROMODESC2  ,
                        Extent16.NAME NAME8 ,
                        Extent11.STK_CTGRY_ID,
-                       Extent17.BNDL_NO
+                       Extent17.BNDL_NO,
+                       Extent1.ATCH_FILE_GRP_ID
 
               FROM SAL0004D Extent1
                 JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID

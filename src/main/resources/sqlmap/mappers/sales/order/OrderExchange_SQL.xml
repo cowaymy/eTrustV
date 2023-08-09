@@ -85,7 +85,8 @@
 			            ELSE '-' END SO_EXCHG_FORM_NO ,
                    Filter1.STK_CTGRY_ID,
                    Filter1.RESULT_REP_EMAIL_NO,
-                   Filter1.EMAIL_SENT_COUNT
+                   Filter1.EMAIL_SENT_COUNT,
+                   Filter1.ATCH_FILE_GRP_ID
 
 			FROM ( SELECT Extent1.SO_EXCHG_ID ,
 					              Extent1.SO_ID ,
@@ -162,7 +163,8 @@
 					              Extent11.STK_CTGRY_ID,
 
 					              CASE WHEN Extent18.RESULT_RPT_EMAIL_NO IS NOT NULL THEN Extent18.RESULT_RPT_EMAIL_NO ELSE Extent3.EMAIL END AS RESULT_REP_EMAIL_NO,
-					              Extent1.EMAIL_SENT_COUNT
+					              Extent1.EMAIL_SENT_COUNT,
+                                  Extent1.ATCH_FILE_GRP_ID
 
 			             FROM SAL0004D Extent1
 				              JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID

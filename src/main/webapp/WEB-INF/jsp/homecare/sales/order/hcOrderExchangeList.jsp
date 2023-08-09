@@ -105,6 +105,22 @@
            {
                dataField : "soId",
                visible : false
+           },{
+               dataField : "atchFileGrpId",
+               headerText : "RCO Attachment",
+               width : 150,
+               renderer : {
+                   type : "ButtonRenderer",
+                   labelText : "View",
+                   onclick : function(rowIndex, columnIndex, value, item) {
+
+                     if(value)
+                        return fn_loadAttachment(value);
+
+                     Common.alert("No Attachment uploaded");
+                   }
+               },
+                editable : false
            }];
 
         // 그리드 속성 설정
@@ -191,6 +207,23 @@
             }
         });
     };
+
+    function fn_loadAttachment(atchFileGrpId){
+        Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+
+          let data = result[0];
+
+          Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", { atchFileGrpId : data.atchFileGrpId, atchFileId : data.atchFileId }, function(result) {
+              let fileSubPath = result.fileSubPath.replace('\', '/'');
+
+              if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+                  window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+              } else {
+                  window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+              }
+          });
+        });
+    }
 </script>
 
 <!-- content start -->

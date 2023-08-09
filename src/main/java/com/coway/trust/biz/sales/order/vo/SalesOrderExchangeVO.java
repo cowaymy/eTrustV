@@ -54,8 +54,9 @@ public class SalesOrderExchangeVO implements Serializable {
 	private String soExchgFormNo;
 	private int PTRStusId;
 	private String PTRNo;
+	private int soExchgAtchGrpId;
 
-	public int getSoExchgId() {
+  public int getSoExchgId() {
 		return soExchgId;
 	}
 	public void setSoExchgId(int soExchgId) {
@@ -294,5 +295,11 @@ public class SalesOrderExchangeVO implements Serializable {
 	}
 	public void setSoExchgFormNo(String soExchgFormNo) {
 		this.soExchgFormNo = soExchgFormNo;
+	}
+	public int getSoExchgAtchGrpId() {
+	  return soExchgAtchGrpId;
+	}
+	public void setSoExchgAtchGrpId(int soExchgAtchGrpId) {
+	  this.soExchgAtchGrpId = soExchgAtchGrpId;
 	}
 }

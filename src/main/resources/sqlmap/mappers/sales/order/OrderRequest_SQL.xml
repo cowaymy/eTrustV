@@ -508,6 +508,7 @@
     , SO_EXCHG_OLD_CUST_ID
     , SO_EXCHG_NW_CUST_ID
     , SO_EXCHG_FORM_NO
+    , ATCH_FILE_GRP_ID
     )
     VALUES
     ( #{soExchgId}
@@ -548,6 +549,7 @@
     , #{soExchgOldCustId}
     , #{soExchgNwCustId}
     , #{soExchgFormNo}
+    , #{soExchgAtchGrpId}
     )
   </insert>
 
