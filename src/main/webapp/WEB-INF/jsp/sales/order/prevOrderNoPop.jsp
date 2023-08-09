@@ -33,10 +33,10 @@
                 console.log("buss type" + AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType"));
                 busType = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType");
                 console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
-debugger;
+
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
-               if($('#isHomecare').val() != '2'){ --no product return
+               if($('#isHomecare').val() != '2'){ //no product return
             	   if(RESULT.extrOptFlag == '1'){
                        $('#isReturnExtrade').attr("disabled",false);
                    }else{
