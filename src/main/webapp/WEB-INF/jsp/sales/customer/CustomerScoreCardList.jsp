@@ -60,7 +60,7 @@
             width : 100
         }, {
             headerText : "<spring:message code='sales.cust.unbillAmt'/>",
-            dataField : "unbillAmt",
+            dataField : "unBillAmt",
             editable : false,
             width : 100
         }, {
