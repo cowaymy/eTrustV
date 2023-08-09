@@ -58,7 +58,7 @@ function fnScmTotalPeriod() {
 			, ""
 			, function(result) {
 				console.log(result);
-				
+
 				planYear	= result.selectScmTotalPeriod[0].scmYear;
 				planMonth	= result.selectScmTotalPeriod[0].scmMonth;
 				planWeek	= result.selectScmTotalPeriod[0].scmWeek;
@@ -74,9 +74,9 @@ function fnScmYearCbBox() {
 	var fnScmWeekCbBoxCallback	= function() {
 		$("#scmYearCbBox").on("change", function() {
 			var $this	= $(this);
-			
+
 			CommonCombo.initById("scmWeekCbBox");
-			
+
 			if ( FormUtil.isNotEmpty($this.val()) ) {
 				CommonCombo.make("scmWeekCbBox"
 						, "/scm/selectScmWeek.do"
@@ -441,7 +441,18 @@ var poApprTargetGridLayout =
 					return	"my-columnCenter";
 				}
 			}
-		}
+		}, {
+            dataField : "userName",
+            headerText : "User Name",
+            editable : false,
+            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                if ( 5 == item.poItemStusId ) {
+                    return  "my-columnCenter2";
+                } else {
+                    return  "my-columnCenter";
+                }
+            }
+        }
 	 ];
 
 //	footer
@@ -529,7 +540,7 @@ function fnSummaryGridCreate() {
 	if ( AUIGrid.isCreated(myGridID) ) {
 		AUIGrid.destroy(myGridID);
 	}
-	
+
 	var poSummaryGridLayoutOptions	= {
 		showFooter : true,
 		usePaging : false,
@@ -541,7 +552,7 @@ function fnSummaryGridCreate() {
 		editable : false,
 		headerHeight : 35
 	};
-	
+
 	myGridID	= GridCommon.createAUIGrid("SummaryGrid_DIV", poSummaryGridLayout,"", poSummaryGridLayoutOptions);
 	AUIGrid.setFooter(myGridID, poSummaryGridFooterLayout);
 }
@@ -550,7 +561,7 @@ function fnMainGridCreate() {
 	if ( AUIGrid.isCreated(myGridID2) ) {
 		AUIGrid.destroy(myGridID2);
 	}
-	
+
 	var poApprTargetGridLayoutOptions	= {
 		usePaging : false,
 		useGroupingPanel : false,
@@ -573,7 +584,7 @@ function fnMainGridCreate() {
 			return	true;
 		}
 	};
-	
+
 	myGridID2	= GridCommon.createAUIGrid("MainGrid_DIV", poApprTargetGridLayout,"", poApprTargetGridLayoutOptions);
 	AUIGrid.bind(myGridID2, "rowAllChkClick", function(event) {
 		if ( event.checked ) {
@@ -595,20 +606,20 @@ function fnSearch() {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='Week' htmlEscape='false'/>");
 		return	false;
 	}
-	
+
 	var params	= {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
 		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
 	};
-	
+
 	params	= $.extend($("#MainForm").serializeJSON(), params);
-	
+
 	Common.ajax("POST"
 			, "/scm/selectPoSummary.do"
 			, params
 			, function(result) {
 				console.log(result);
-				
+
 				AUIGrid.setGridData(myGridID, result.selectPoSummary);
 				AUIGrid.setGridData(myGridID2, result.selectPoApprList);
 				fnCircleControl(result.selectPoStatus);
@@ -616,16 +627,16 @@ function fnSearch() {
 }
 function fnApprove(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
-	
+
 	var data	= {};
 	var chkList	= AUIGrid.getCheckedRowItemsAll(myGridID2);
-	
+
 	if ( 0 > chkList ) {
 		Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
 		return	false;
 	}
 	data.checked	= chkList;
-	
+
 	Common.ajax("POST"
 			, "/scm/approvePo.do"
 			, data
@@ -706,7 +717,7 @@ function fnExcel(obj, fileName) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
 		return	false;
 	}
-	
+
 	GridCommon.exportTo("#MainGrid_DIV", "xlsx", fileName + "_" + getTimeStamp());
 }
 
@@ -715,7 +726,7 @@ function getTimeStamp() {
 	function fnLeadingZeros(n, digits) {
 		var zero	= "";
 		n	= n.toString();
-		
+
 		if ( n.length < digits ) {
 			for (var i = 0 ; i < digits - n.length ; i++ ) {
 				zero	+= "0";
@@ -723,11 +734,11 @@ function getTimeStamp() {
 		}
 		return	zero + n;
 	}
-	
+
 	var d	= new Date();
 	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
 	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
-	
+
 	return	date + "_" + time;
 }
 
@@ -743,7 +754,7 @@ function addUncheckedRowsByValue(val) {
 /****************************  Form Ready ******************************************/
 var myGridID;
 var myGridID2;
- 
+
 $(document).ready(function() {
 	fnSummaryGridCreate();
 	fnMainGridCreate();
@@ -756,7 +767,7 @@ $(document).ready(function() {
 		<li>Sales</li>
 		<li>Order list</li>
 	</ul>
-	
+
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 		<h2>PO Approval</h2>
@@ -764,7 +775,7 @@ $(document).ready(function() {
 			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
-	
+
 	<section class="search_table"><!-- search_table start -->
 		<form id="MainForm" method="post" action="">
 			<table class="type1"><!-- table start -->
@@ -805,7 +816,7 @@ $(document).ready(function() {
 					</tr>
 				</tbody>
 			</table><!-- table end -->
-			
+
 			<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 				<p class="show_btn">
 				<%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
@@ -839,7 +850,7 @@ $(document).ready(function() {
 			</aside><!-- link_btns_wrap end -->
 		</form>
 	</section><!-- search_table end -->
-	
+
 	<section class="search_result"><!-- search_result start -->
 		<article class="grid_wrap mt10"><!-- grid_wrap start -->
 			<!-- 그리드 영역 1-->
@@ -848,7 +859,7 @@ $(document).ready(function() {
 		<ul class="right_btns">
 			<li><p class="btn_grid"><a onclick="fnExcel(this, 'PO Approval');">EXCEL</a></p></li>
 		</ul>
-		
+
 		<article class="grid_wrap"><!-- grid_wrap start -->
 			<!-- 그리드 영역 2-->
 			<div id="MainGrid_DIV" style="height:353px;"></div>
