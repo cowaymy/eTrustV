@@ -120,24 +120,27 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
 		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
 
-		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
-		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
+/*		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+*/
 
 		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
 
 		promotionMapper.insertSalesPromoM(salesPromoMVO);
 
-		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
+		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
 
 		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
+
 			promotionMapper.insertSalesPromoD(salesPromoDVO);
 		}
 
-		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+/*		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 
 		for(SalesPromoFreeGiftVO salesPromoFreeGiftVO : addSalesPromoFreeGiftVOList) {
 			promotionMapper.insertSalesPromoFreeGift(salesPromoFreeGiftVO);
-		}
+		}*/
+
 	}
 
 	@Override
@@ -148,37 +151,48 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
 
 		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
-		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
-
-		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
-		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
-		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
-		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+/*		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
+*/
+/*		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+*/		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
+/*		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
+*//*		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
 		List<SalesPromoFreeGiftVO> udtSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getUpdate();
-		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();
+		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();*/
+
 
 		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
 
 		promotionMapper.updateSalesPromoM(salesPromoMVO);
 
-		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
-		this.preprocSalesPromotionDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
-		this.preprocSalesPromotionDetail(delSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
-
-		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
+/*		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
+*/		this.preprocSalesPromotionDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
+/*		this.preprocSalesPromotionDetail(delSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
+*/
+/*		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
 			promotionMapper.insertSalesPromoD(addVO);
-		}
+		}*/
 
 		for(SalesPromoDVO udtVO : udtSalesPromoDVOList) {
-			promotionMapper.updateSalesPromoD(udtVO);
+			if (udtVO.getActionTab().equalsIgnoreCase("UPDATE")){
+				promotionMapper.updateSalesPromoD(udtVO);
+			}
+			else if(udtVO.getActionTab().equalsIgnoreCase("DELETE")){
+				udtVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
+				promotionMapper.updateSalesPromoD(udtVO);
+			}
+			else{
+				promotionMapper.insertSalesPromoD(udtVO);
+			}
+
 		}
 
-		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
+/*		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
 			delVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
 			promotionMapper.updateSalesPromoD(delVO);
-		}
+		}*/
 
-		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+/*		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 		this.preprocSalesPromoFreeGift(udtSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 		this.preprocSalesPromoFreeGift(delSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 
@@ -193,7 +207,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		for(SalesPromoFreeGiftVO delVO : delSalesPromoFreeGiftVOList) {
 			delVO.setPromoFreeGiftStusId(SalesConstants.STATUS_INACTIVE);
 			promotionMapper.updateSalesPromoFreeGift(delVO);
-		}
+		}*/
 	}
 
 	private void preprocSalesPromotionMaster(SalesPromoMVO salesPromoMVO, SessionVO sessionVO) {
@@ -210,6 +224,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		salesPromoMVO.setCrtUserId(sessionVO.getUserId());
 		salesPromoMVO.setUpdUserId(sessionVO.getUserId());
 		salesPromoMVO.setIsNew(1);
+
 	}
 
 	private void preprocSalesPromotionDetail(List<SalesPromoDVO> salesPromoDVOList, int promoId, SessionVO sessionVO) {
@@ -222,6 +237,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 				addVo.setPromoItmUpdUserId(sessionVO.getUserId());
 				addVo.setCrtUserId(sessionVO.getUserId());
 				addVo.setUpdUserId(sessionVO.getUserId());
+
 			}
 		}
 	}
@@ -236,6 +252,115 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			}
 		}
 	}
+
+	private void preprocPromoReqstMaster(SalesPromoMVO salesPromoMVO, String actionTab, SessionVO sessionVO) {
+
+		String promoDtFrom = (String)salesPromoMVO.getPromoDtFrom();
+		String promoDtEnd  = (String)salesPromoMVO.getPromoDtEnd();
+
+		salesPromoMVO.setPromoMtchId(0);
+		salesPromoMVO.setPromoDtFrom(CommonUtils.changeFormat(promoDtFrom, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+		salesPromoMVO.setPromoDtEnd(CommonUtils.changeFormat(promoDtEnd,  SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
+		salesPromoMVO.setPromoUpdUserId(sessionVO.getUserId());
+		salesPromoMVO.setPromoIsTrialCnvr(0);
+		salesPromoMVO.setActionTab(actionTab);
+		salesPromoMVO.setCrtUserId(sessionVO.getUserId());
+		salesPromoMVO.setUpdUserId(sessionVO.getUserId());
+		salesPromoMVO.setIsNew(1);
+
+		if(actionTab.equalsIgnoreCase("NEW")){
+			salesPromoMVO.setPromoId(0);
+		}
+	}
+
+	private void preprocPromoReqstDetail(List<SalesPromoDVO> salesPromoDVOList, int promoId, int promoReqstId, String actionTab, SessionVO sessionVO) {
+
+		if(salesPromoDVOList != null) {
+			for(SalesPromoDVO addVo : salesPromoDVOList) {
+				addVo.setPromoId(promoId);
+				addVo.setPromoReqstId(promoReqstId);
+				addVo.setPromoItmCurId(0);
+				addVo.setPromoItmStusId(SalesConstants.STATUS_ACTIVE);
+				addVo.setPromoItmUpdUserId(sessionVO.getUserId());
+				addVo.setActionTab(actionTab);
+				addVo.setCrtUserId(sessionVO.getUserId());
+				addVo.setUpdUserId(sessionVO.getUserId());
+
+				if(actionTab.equalsIgnoreCase("NEW")){
+					addVo.setPromoItmId(0);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void registerPromoReqst(PromotionVO promotionVO, SessionVO sessionVO) {
+
+		logger.info("!@###### PromotionServiceImpl.registerPromoReqst");
+
+		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
+		String actionTab = "NEW";
+
+		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
+
+		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+
+		this.preprocPromoReqstMaster(salesPromoMVO, actionTab, sessionVO);
+		promotionMapper.insertPromoReqstM(salesPromoMVO);
+		this.preprocPromoReqstDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(), salesPromoMVO.getPromoReqstId(), actionTab, sessionVO);
+
+		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
+			promotionMapper.insertPromoReqstD(salesPromoDVO);
+		}
+	}
+
+	@Override
+	public void updatePromoReqst(PromotionVO promotionVO, SessionVO sessionVO) {
+
+		logger.info("!@###### PromotionServiceImpl.updatePromoReqst");
+
+		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
+		String actionTabM = "MODIFY";
+		String actionTabDAdd = "ADD";
+		String actionTabDUpd = "UPDATE";
+		String actionTabDDel = "DELETE";
+
+		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
+
+		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
+		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
+		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+		List<SalesPromoFreeGiftVO> udtSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getUpdate();
+		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();
+
+		this.preprocPromoReqstMaster(salesPromoMVO, actionTabM, sessionVO);
+
+		promotionMapper.insertPromoReqstM(salesPromoMVO);
+
+		this.preprocPromoReqstDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(), salesPromoMVO.getPromoReqstId(), actionTabDAdd, sessionVO);
+		this.preprocPromoReqstDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(), salesPromoMVO.getPromoReqstId(), actionTabDUpd, sessionVO);
+		this.preprocPromoReqstDetail(delSalesPromoDVOList, salesPromoMVO.getPromoId(), salesPromoMVO.getPromoReqstId(), actionTabDDel, sessionVO);
+
+		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
+			promotionMapper.insertPromoReqstD(addVO);
+		}
+
+		for(SalesPromoDVO udtVO : udtSalesPromoDVOList) {
+			promotionMapper.insertPromoReqstD(udtVO);
+		}
+
+		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
+			delVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
+			promotionMapper.insertPromoReqstD(delVO);
+		}
+
+	}
+
 
 	@Override
 	public List<EgovMap> selectMembershipPkg(Map<String, Object> params) {
@@ -379,5 +504,28 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	@Override
 	public List<EgovMap> selectProductCategoryList() {
 		return promotionMapper.selectProductCategoryList();
+	}
+
+	@Override
+	public List<EgovMap> selectPromotionApprovalList(Map<String, Object> params) {
+		return promotionMapper.selectPromotionApprovalList(params);
+	}
+
+	@Override
+	public EgovMap selectPromoReqstInfo(Map<String, Object> params) {
+		return promotionMapper.selectPromoReqstInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPromoReqstPrdList(Map<String, Object> params) {
+		return promotionMapper.selectPromoReqstPrdList(params);
+	}
+
+	@Override
+	public void updatePromoReqstApproval(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		promotionMapper.updatePromoReqstApproval(params);
+
 	}
 }

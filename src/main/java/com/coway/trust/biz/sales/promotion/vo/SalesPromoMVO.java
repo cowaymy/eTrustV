@@ -17,6 +17,8 @@ public class SalesPromoMVO implements Serializable {
 
 	private int promoId;
 
+	private int promoReqstId;
+
 	private int promoMtchId;
 
 	private String promoCode;
@@ -83,13 +85,29 @@ public class SalesPromoMVO implements Serializable {
 
 	private int promoESales;
 
+	private String actionTab;
+
+	private int appvStus;
+
+	private String appvRemark;
+
 	public int getPromoId() {
 		return promoId;
 	}
 
+	public int getPromoReqstId() {
+		return promoReqstId;
+	}
+
+
 	public void setPromoId(int promoId) {
 		this.promoId = promoId;
 	}
+
+	public void setPromoReqstId(int promoReqstId) {
+		this.promoReqstId = promoReqstId;
+	}
+
 
 	public int getPromoMtchId() {
 		return promoMtchId;
@@ -354,5 +372,29 @@ public class SalesPromoMVO implements Serializable {
 	public void setPromoESales(int promoESales) {
 	  this.promoESales = promoESales;
 	}
+
+	public String getActionTab() {
+		return actionTab;
+	}
+
+	  public void setActionTab(String actionTab) {
+		    this.actionTab = actionTab;
+    }
+
+	  public int getAppvStus() {
+			return appvStus;
+		}
+
+		public void setAppvStus(int appvStus) {
+			this.appvStus = appvStus;
+		}
+
+		public String getAppvRemark() {
+		    return appvRemark;
+		  }
+
+		  public void setAppvRemark(String appvRemark) {
+		    this.appvRemark = appvRemark;
+		  }
 
 }

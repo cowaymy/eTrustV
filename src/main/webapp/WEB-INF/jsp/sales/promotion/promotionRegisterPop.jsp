@@ -120,7 +120,7 @@
         };
 
         Common.ajax("POST", "/sales/promotion/registerPromotion.do", promotionVO, function(result) {
-            Common.alert("<spring:message code='sales.promo.msg5'/>" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("New Promotion Request" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
 
             fn_selectPromoListAjax();
 

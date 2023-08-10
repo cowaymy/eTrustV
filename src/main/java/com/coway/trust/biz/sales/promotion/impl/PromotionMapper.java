@@ -14,19 +14,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PromotionMapper {
 
 	List<EgovMap> selectPromotionList(Map<String, Object> params);
-	
+
 	void updatePromoStatus(SalesPromoMVO salesPromoMVO);
-	
+
 	List<EgovMap> selectMembershipPkg(Map<String, Object> params);
-	
+
 	EgovMap selectPriceInfo(Map<String, Object> params);
-	
+
 	EgovMap selectRentMemPriceInfo(Map<String, Object> params);
-	
+
 	EgovMap selectOutMemPriceInfo(Map<String, Object> params);
-	
+
 	EgovMap selectFilterPriceInfo(Map<String, Object> params);
-	
+
 	void insertSalesPromoM(SalesPromoMVO salesPromoMVO);
 
 	void insertSalesPromoD(SalesPromoDVO salesPromoDVO);
@@ -36,15 +36,15 @@ public interface PromotionMapper {
 	EgovMap selectPromotionDetail(Map<String, Object> params);
 
 	List<EgovMap> selectPromotionPrdList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectPromotionPrdWithPriceList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectRentMemPromotionPrdWithPriceList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectOutMemPromotionPrdWithPriceList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectFilterPromotionPrdWithPriceList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params);
 
 	void updateSalesPromoM(SalesPromoMVO salesPromoMVO);
@@ -58,5 +58,16 @@ public interface PromotionMapper {
 	List<EgovMap> selectFreeGiftCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectProductCategoryList();
+
+	void insertPromoReqstM(SalesPromoMVO salesPromoMVO);
+
+	void insertPromoReqstD(SalesPromoDVO salesPromoDVO);
+
+	List<EgovMap> selectPromotionApprovalList(Map<String, Object> params);
+	EgovMap selectPromoReqstInfo(Map<String, Object> params);
+
+	List<EgovMap> selectPromoReqstPrdList(Map<String, Object> params);
+
+	void updatePromoReqstApproval(Map<String, Object> params);
 
 }

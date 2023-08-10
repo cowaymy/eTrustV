@@ -18,6 +18,10 @@ public class SalesPromoDVO implements Serializable {
 
 	private int promoItmId;
 
+	private int promoReqstItmId;
+
+	private int promoReqstId;
+
 	private int promoId;
 
 	private int promoItmStkId;//
@@ -58,12 +62,30 @@ public class SalesPromoDVO implements Serializable {
 
 	private BigDecimal stkCtgryId;
 
+	private String actionTab;
+
 	public int getPromoItmId() {
 		return promoItmId;
 	}
 
+	public int getPromoReqstItmId() {
+		return promoReqstItmId;
+	}
+
+	public int getPromoReqstId() {
+		return promoReqstId;
+	}
+
+	public void setPromoReqstId(int promoReqstId) {
+		this.promoReqstId = promoReqstId;
+	}
+
 	public void setPromoItmId(int promoItmId) {
 		this.promoItmId = promoItmId;
+	}
+
+	public void setPromoReqstItmId(int promoReqstItmId) {
+		this.promoReqstItmId = promoReqstItmId;
 	}
 
 	public int getPromoId() {
@@ -225,5 +247,14 @@ public class SalesPromoDVO implements Serializable {
 	public void setStkCtgryId(BigDecimal stkCtgryId) {
 		this.stkCtgryId = stkCtgryId;
 	}
+
+	public String getActionTab() {
+		return actionTab;
+	}
+
+	  public void setActionTab(String actionTab) {
+		    this.actionTab = actionTab;
+    }
+
 
 }

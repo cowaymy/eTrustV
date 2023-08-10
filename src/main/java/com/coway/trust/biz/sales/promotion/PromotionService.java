@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.promotion;
 
@@ -42,4 +42,17 @@ public interface PromotionService {
 	List<EgovMap> selectProductCategoryList();
 
 	List<EgovMap> selectFreeGiftCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectPromotionApprovalList(Map<String, Object> params);
+
+	EgovMap selectPromoReqstInfo(Map<String, Object> params);
+
+	List<EgovMap> selectPromoReqstPrdList(Map<String, Object> params);
+
+	void updatePromoReqst(PromotionVO promotionVO, SessionVO sessionVO);
+
+	void registerPromoReqst(PromotionVO promotionVO, SessionVO sessionVO);
+
+	void updatePromoReqstApproval(Map<String, Object> params);
+
 }

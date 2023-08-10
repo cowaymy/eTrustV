@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PromotionVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private SalesPromoMVO salesPromoMVO; //SALES PROMOTION MASTER
@@ -52,5 +52,5 @@ public class PromotionVO implements Serializable {
 	public void setSalesPromoMGridDataSetList(GridDataSet<SalesPromoMVO> salesPromoMGridDataSetList) {
 		this.salesPromoMGridDataSetList = salesPromoMGridDataSetList;
 	}
-	
+
 }

@@ -150,8 +150,8 @@
                 promoId                 : '${promoInfo.promoId}',
 //              promoCode               : $('#promoCode').val().trim(),
                 promoDesc               : $('#promoDesc').val().trim(),
-//              promoTypeId             : $('#promoTypeId').val(),
-//              promoAppTypeId          : $('#promoAppTypeId').val(),
+                promoTypeId             : $('#promoTypeId').val(),
+                promoAppTypeId          : $('#promoAppTypeId').val(),
                 promoSrvMemPacId        : $('#promoSrvMemPacId').val(),
                 promoDtFrom             : $('#promoDtFrom').val().trim(),
                 promoDtEnd              : $('#promoDtEnd').val().trim(),
@@ -177,7 +177,7 @@
 
         Common.ajax("POST", "/sales/promotion/updatePromotion.do", promotionVO, function(result) {
 
-            Common.alert("Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("Update Promotion Request" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
 
 //          fn_chgPageMode('VIEW');
 
