@@ -439,7 +439,14 @@
       }; //Condition
       CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '', optionCity);
     }
+  }
 
+  function fn_searchLocation(){
+    var location = [{"lattitude": $('#lblViewLatitude').text(), "longtitude": $('#lblViewLongtitude').text()}];
+
+    var prm = { "coordinate" : JSON.stringify(location),
+                     "callFunc" : "1"};
+    Common.popupDiv("/common/mapPop.do", prm , null, true, '_searchDiv');
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -609,20 +616,24 @@
         <!-- table start -->
         <caption>table</caption>
         <colgroup>
-          <col style="width: 140px" />
+          <col style="width: 110px" />
           <col style="width: *" />
-          <col style="width: 140px" />
+          <col style="width: 110px" />
           <col style="width: *" />
+          <col style="width: 60px" />
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code='txtLongtitude' /></th>
-            <td>
-              <span><c:out value="${branchDetail.longtitude}" /></span>
-            </td>
             <th scope="row"><spring:message code='txtLatitude' /></th>
             <td>
-              <span><c:out value="${branchDetail.latitude}" /></span>
+              <span id='lblViewLatitude'><c:out value="${branchDetail.latitude}" /></span>
+            </td>
+            <th scope="row"><spring:message code='txtLongtitude' /></th>
+            <td>
+              <span id='lblViewLongtitude'><c:out value="${branchDetail.longtitude}" /></span>
+            </td>
+            <td>
+              <a href="#" onclick="fn_searchLocation()" class=""><img src="${pageContext.request.contextPath}/resources/images/common/normal_Location.gif" alt="Location" width="40px" height='40px'/></a>
             </td>
           </tr>
         </tbody>
