@@ -93,7 +93,7 @@
 <div id="requestsGrid"></div>
 
 <form id="eprRaw">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/visualcut/eprRaw.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/misc/eprRaw.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="ePRRaw" />
 
@@ -101,7 +101,7 @@
 </form>
 
 <form id="eprTranscript">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/visualcut/eprTranscript.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/misc/eprTranscript.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="ePRTranscript" />
 
