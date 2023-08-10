@@ -169,7 +169,7 @@
 	                        console.log('monthDiff:'+monthDiff);
 
 	                        console.log('framNo111:'+ $('#txtOrderNoFrame').val());
-	                        if(monthDiff >= 1) {
+	                        if(monthDiff >= 1 && result.lastbillmth > 1) {
 	                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
 	                        }
 	                        else {
@@ -184,7 +184,6 @@
 	                        $('#hiddenTotalBillRPF').val(result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
 	                        $('#hiddenLastBillMth').val(result.lastbillmth);
 	                        $('#hiddenDiffInstallMonth').val(monthDiff);
-
 	                        $('#txtOutrightPrice').val(result.outrightprice);
                             $('#txtTotalBillAmtMat').val(totalBillAmt);
                             $('#txtCurrentBillMthMat').val(result.currentbillmth);
@@ -199,7 +198,7 @@
 
                             //FRAME
                             if(result.fraOrdNo != '0'){
-                            	if(monthDiff >= 1) {
+                            	if(monthDiff >= 1 && result.lastbillmth > 1) {
                             	    totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbill - result.totalcnbill);
                                 }
                                 else {
@@ -324,11 +323,10 @@
                 adjFixAmt = -1 * adjFixAmt;
             }
         }
-
         $('#hiddenAdjFixInd').val($('#cmbFixAmountInd').val());
         $('#hiddenAdjFixAmt').val(adjFixAmt);
 
-        if (monthDiff >= 1) { //Formula 2
+        if (monthDiff >= 1 && Number($('#hiddenLastBillMth').val()) > 1) { //Formula 2
             conversionAmt = (OutrightPrice + adjPercentAmt + adjFixAmt) - ((totalBillMat + totalBillFrame)/ 2);
         }
         else { // Formula 1

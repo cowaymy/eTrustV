@@ -142,7 +142,7 @@
 
                         console.log('monthDiff:'+monthDiff);
 
-                        if(monthDiff >= 1) {
+                        if(monthDiff >= 1 ) {
                             totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
                         }
                         else {
@@ -259,7 +259,7 @@
         $('#hiddenAdjFixInd').val($('#cmbFixAmountInd').val());
         $('#hiddenAdjFixAmt').val(adjFixAmt);
 
-        if (monthDiff >= 1) { //Formula 2
+        if (monthDiff >= 1 && Number($('#hiddenLastBillMth').val()) > 1) { //Formula 2
             conversionAmt = (OutrightPrice + adjPercentAmt + adjFixAmt) - (totalBill / 2);
         }
         else { // Formula 1

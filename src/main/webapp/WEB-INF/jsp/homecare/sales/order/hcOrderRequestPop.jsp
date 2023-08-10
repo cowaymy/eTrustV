@@ -1235,7 +1235,7 @@
                     var totalRPF = result.totalbillrpf + result.totaldnrpf - result.totalcnrpf;
                     var totalBillAmount = result.totalbillamt + result.totaldnbill - result.totalcnbill;
 
-                    if(monthDiff >= 1) {
+                    if(monthDiff >= 1 && result.lastbillmth > 1) {
                         totalAmount = parseFloat(PromoItemPrice) - (totalBillAmount / 2);
                     } else {
                         totalAmount = parseFloat(PromoItemPrice) - (totalRPF + totalBillAmount);

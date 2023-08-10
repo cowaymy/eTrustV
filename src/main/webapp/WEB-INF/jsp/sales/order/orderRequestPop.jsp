@@ -252,72 +252,37 @@
                   .index();
               var selVal = $("#srvPacIdAexc").val();
 
-              if ($("#cmbAppTypeAexc").val() == 67
-                  || $("#cmbAppTypeAexc").val() == 68) {
+              if ($("#cmbAppTypeAexc").val() == 67 || $("#cmbAppTypeAexc").val() == 68) {
                 SRV_PAC_ID = 0;
               } else {
                 SRV_PAC_ID = $("#srvPacIdAexc").val();
               }
 
               if (idx > 0) {
-                var stkType = $("#cmbAppTypeAexc").val() == '66' ? '1'
-                    : '2';
+            	  var stkType = $("#cmbAppTypeAexc").val() == '66' ? '1' : '2';
 
-                Common
-                    .ajax(
-                        "GET",
-                        "/sales/order/selectProductCodeList.do",
-                        {
-                          stkType : stkType,
-                          srvPacId : selVal
-                        },
-                        function(result) {
+                Common.ajax("GET", "/sales/order/selectProductCodeList.do", { stkType : stkType,srvPacId : selVal }, function(result) {
+                	if (result != null && result.length > 0) {
+                		var isExist = false;
+                		for (var i = 0; i < result.length; i++) {
+                			if (result[i].stkId == STOCK_ID) {
+                				isExist = true;
+                				break;
+                				}
+                			}
+                		}
 
-                          if (result != null
-                              && result.length > 0) {
-                            var isExist = false;
 
-                            for (var i = 0; i < result.length; i++) {
-                              if (result[i].stkId == STOCK_ID) {
-                                isExist = true;
-                                break;
-                              }
+                	if (!isExist) {
+                		Common.alert('<spring:message code="sal.msg.subtypeSelected" />'+ DEFAULT_DELIMITER + '<spring:message code="sal.msg.notSubtypeSuit" />');
+                		$('#srvPacIdAexc').val('');
+                		} else {
+                			if ($('#cmbAppTypeAexc option:selected').index() == 0) {
+                				fn_loadProductPriceAexc(APP_TYPE_ID,STOCK_ID,SRV_PAC_ID);
+                			} else {
+                				fn_loadProductPriceAexc($("#cmbAppTypeAexc").val(),STOCK_ID,SRV_PAC_ID);
                             }
-                          }
-
-                          if (!isExist) {
-                            Common
-                                .alert('<spring:message code="sal.msg.subtypeSelected" />'
-                                    + DEFAULT_DELIMITER
-                                    + '<spring:message code="sal.msg.notSubtypeSuit" />');
-                            $('#srvPacIdAexc').val(
-                                '');
-                          } else {
-                            if ($(
-                                '#cmbAppTypeAexc option:selected')
-                                .index() == 0) {
-                              fn_loadProductPriceAexc(
-                                  APP_TYPE_ID,
-                                  STOCK_ID,
-                                  SRV_PAC_ID);
-                            } else {
-                              fn_loadProductPriceAexc(
-                                  $(
-                                      "#cmbAppTypeAexc")
-                                      .val(),
-                                  STOCK_ID,
-                                  SRV_PAC_ID);
-                            }
-                            fn_loadProductPromotionAexc(
-                                $(
-                                    '#cmbAppTypeAexc')
-                                    .val(),
-                                STOCK_ID,
-                                EMP_CHK,
-                                CUST_TYPE_ID,
-                                $(
-                                    "#exTradeAexc")
-                                    .val());
+                            fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID,EMP_CHK,CUST_TYPE_ID,$("#exTradeAexc").val());
 
                             if (GST_CHK == '1') {
                               fn_excludeGstAmtAexc();
@@ -325,16 +290,9 @@
                             Common.showLoader();
                             setTimeout(
                                 function() {
-                                  fn_loadPromotionPriceAexc(
-                                      $(
-                                          '#cmbPromotionAexc')
-                                          .val(),
-                                      STOCK_ID,
-                                      SRV_PAC_ID)
-                                  Common
-                                      .removeLoader();
-                                }, 200);
-
+                                  fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(),STOCK_ID,SRV_PAC_ID)
+                                  Common.removeLoader();}
+                                , 200);
                           }
                         });
               }
@@ -1299,55 +1257,24 @@
     var totalAmount = 0;
 
     if ("${orderDetail.basicInfo.appTypeId}" == "66") {
-      Common
-          .ajaxSync(
-              "GET",
-              "/sales/order/selectOrderSimulatorViewByOrderNo.do",
-              {
-                salesOrdNo : ORD_NO
-              },
-              function(result) {
+      Common.ajaxSync("GET","/sales/order/selectOrderSimulatorViewByOrderNo.do",{ salesOrdNo : ORD_NO}, function(result) {
 
-                if (result != null) {
-                  isNull2 = false;
-                }
+                if (result != null) isNull2 = false;
 
                 if (fn_validateOrderAexc2(ORD_NO) == true) {
 
                   var installdate = result.installdate;
                   var today = '${toDay}';
-                  //var today = Number(todayYMD.substr(0, 4)) * 12;
 
-                  var monthDiff = ((Number(today.substr(6, 4)) * 12) + Number(today.substr(3, 2)))
-                      - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
+                  var monthDiff = ((Number(today.substr(6, 4)) * 12) + Number(today.substr(3, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
 
-                  /*
-                  var totalBillAmt;
-
-                  console.log('monthDiff:'+monthDiff);
-
-                  if(monthDiff >= 1) {
-                      totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
-                  }
-                  else {
-                      totalBillAmt = (result.TotalBillAmt + result.TotalDNBill - result.TotalCNBill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
-                  }
-                   */
-                  var totalRPF = result.totalbillrpf
-                      + result.totaldnrpf
-                      - result.totalcnrpf;
-                  var totalBillAmount = result.totalbillamt
-                      + result.totaldnbill
-                      - result.totalcnbill;
-
-                  if (monthDiff >= 1) {
-                    //                      totalAmount = pd.PromoItemPrice.ToString() - (totalBillAmount / 2);
-                    totalAmount = parseFloat(PromoItemPrice)
-                        - (totalBillAmount / 2);
+                  var totalRPF = result.totalbillrpf + result.totaldnrpf - result.totalcnrpf;
+                  var totalBillAmount = result.totalbillamt + result.totaldnbill - result.totalcnbill;
+console.log("result.lastbillmth;"+result.lastbillmth);
+                  if (monthDiff >= 1 && result.lastbillmth > 1) {
+                    totalAmount = parseFloat(PromoItemPrice)  - (totalBillAmount / 2);
                   } else {
-                    //                      totalAmount = pd.PromoItemPrice.ToString()) - (totalRPF + totalBillAmount);
-                    totalAmount = parseFloat(PromoItemPrice)
-                        - (totalRPF + totalBillAmount);
+                    totalAmount = parseFloat(PromoItemPrice) - (totalRPF + totalBillAmount);
                   }
                 }
               });
