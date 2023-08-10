@@ -485,12 +485,12 @@ public class PreCcpRegisterController {
 				return result2;
 			});
 
-			if (!Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
-				put("managerCode", "Manager Code");
-				put("year", "Year");
-				put("month", "Month");
-				put("quota", "Quota");
-			}}.toString())){
+			Map<String, Object> x = new HashMap<String, Object>();
+			x.put("managerCode", "Manager Code");
+			x.put("year", "Year");
+			x.put("month", "Month");
+			x.put("quota", "Quota");
+			if (!Objects.equal(result.get(0).toString(),  x.toString())){
 				response.put("success", 0);
 				response.put("msg", messageAccessor.getMessage("preccp.uploadFormatIncorrect"));
 				return ResponseEntity.ok(response);
