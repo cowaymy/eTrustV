@@ -117,14 +117,14 @@ public class HpAwardHistoryController {
 				return result2;
 			});
 
-			if (!Objects.equal(result.get(0).toString(), new HashMap<String, Object>() {{
-				put("incentiveCode", "Incentive Code");
-				put("hpCode", "HP Code");
-				put("destination", "Destination");
-				put("remark", "Remark");
-				put("month", "Month");
-				put("year", "Year");
-			}}.toString())){
+			Map<String, Object> x = new HashMap<String, Object>();
+			x.put("incentiveCode", "Incentive Code");
+			x.put("hpCode", "HP Code");
+			x.put("destination", "Destination");
+			x.put("remark", "Remark");
+			x.put("month", "Month");
+			x.put("year", "Year");
+			if (!Objects.equal(result.get(0).toString(),  x.toString())){
 				response.put("success", 0);
 				response.put("msg", messageAccessor.getMessage("hpawardFormat.incorrect"));
 				return ResponseEntity.ok(response);
