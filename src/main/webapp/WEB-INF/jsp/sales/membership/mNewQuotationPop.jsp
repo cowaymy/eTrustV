@@ -783,7 +783,7 @@ $(document).ready(function(){
 
 	function fn_LoadMembershipPromotion() {
 
-		$("#cPromo").val("");
+// 		$("#cPromo").val("");
 		if ($("#HiddenIsCharge").val() != "0") {
 			$("#cPromo").prop("disabled", false);
 			$("#cPromo").attr("class", "");
