@@ -427,13 +427,18 @@ public class AttendanceController {
 	  }
 
 	  @RequestMapping(value = "/searchAtdManagementList.do", method = RequestMethod.GET)
-	   public ResponseEntity<String> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws ParseException, MalformedURLException, IOException {
+	   public ResponseEntity<String> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
 		  LOGGER.debug("params =====================================>>  " + params);
 		  if ((new SimpleDateFormat("dd/MM/yyyy").parse(attendanceService.atdMigrateMonth())).after(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))) {
+
+			  if(params.get("hpCode") != null){
+				  throw new Exception ("HP Data no available before epapan migration.");
+			  }
+
 			  List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
 			  return ResponseEntity.ok(new Gson().toJson(AtdList));
 		  } else {
-			  String memCode = attendanceService.getMemCode(params);
+			  String memCode = params.get("hpCode") != null ? params.get("hpCode").toString() : attendanceService.getMemCode(params);
 			  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + memCode + "/reqDate/" + new SimpleDateFormat("yyyyMM").format(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))).openConnection();
               connection.setRequestProperty("Authorization", epapanAuth);
 			  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));

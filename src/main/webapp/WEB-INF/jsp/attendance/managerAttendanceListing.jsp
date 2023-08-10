@@ -9,29 +9,29 @@
 
 <script type="text/javaScript">
 
-var nowYear = new Date().getFullYear();
-var monthOptions = {//년월달력 세팅
-    pattern: 'mm/yyyy',
-    selectedYear: nowYear,
-    selectedMonth: '10',
-    startYear: 2022,
-    finalYear: 2027,
-    disabledMonths: nowYear == 2022 ? [1,2,3,4,5,6,7,8,9] : []
-};
+  var nowYear = new Date().getFullYear();
+  var monthOptions = {//년월달력 세팅
+	    pattern: 'mm/yyyy',
+	    selectedYear: nowYear,
+	    selectedMonth: '10',
+	    startYear: 2022,
+	    finalYear: 2027,
+	    disabledMonths: nowYear == 2022 ? [1,2,3,4,5,6,7,8,9] : []
+  };
 
-function setMonthPicker(monthOptions) {
-    $('.j_date2').monthpicker(monthOptions).bind('monthpicker-change-year', (e, year) => {
-        if (year == 2022) {
-            $(e.target).monthpicker('disableMonths', [1,2,3,4,5,6,7,8,9]);
-        } else {
-            $(e.target).monthpicker('disableMonths', []);
-        }
-    })
-}
+ function setMonthPicker(monthOptions) {
+	    $('.j_date2').monthpicker(monthOptions).bind('monthpicker-change-year', (e, year) => {
+	        if (year == 2022) {
+	            $(e.target).monthpicker('disableMonths', [1,2,3,4,5,6,7,8,9]);
+	        } else {
+	            $(e.target).monthpicker('disableMonths', []);
+	        }
+	    })
+  }
 
-$(document).on("focus", ".j_date2", function(){
-      setMonthPicker(monthOptions);
-});
+  $(document).on("focus", ".j_date2", function(){
+	      setMonthPicker(monthOptions);
+  });
 
   var option = {
     width : "1200px",
@@ -59,77 +59,64 @@ $(document).on("focus", ".j_date2", function(){
     showRowNumColumn : false,
   };
 
-	  const callback = () => {
-          if ("${deptCode}") {
-        	  console.log($("#rank"))
-	          $("#rank").val(${memLvl} == 1 ? '6988' : ${memLvl} == 2 ? '6989' : '6990')
-              $('#rank :not(:selected)').prop('disabled', 'disabled')
-              console.log($('#managerCode :not(:selected)'))
-              $('#managerCode :not(:selected)').prop('disabled', 'disabled')
-          }
+  const changeRank = () =>{
+      switch($("#rank").val()) {
+        case "6988":
+            CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", {memLvl : 1} , '${deptCode}', ItmOption, callback);
+         break;
+
+        case "6989":
+            CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", {memLvl : 2} , '${deptCode}', ItmOption, callback);
+            break;
+
+        case "6990":
+            CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", {memLvl : 3} , '${deptCode}', ItmOption, callback);
+            break;
       }
+}
+
+  const changeCode = () => {
+	  document.querySelector("#managerCodeHeader").innerText = "";
+	  document.querySelector("#managerCodeDetails").innerHTML = "";
+	  if ($("#rank").val() == "6991" || "${memLvl}" == "4") {
+		  document.querySelector("#managerCodeHeader").innerText = "HP Code";
+		  document.querySelector("#managerCodeDetails").innerHTML = `<input class="w100p" type="text" name="hpCode" id="hpCode"/>`;
+		  if("${memLvl}" == "4"){
+			 $("#hpCode").val("${SESSION_INFO.userName}");
+             $("#hpCode").attr("readonly", "readonly");
+             document.querySelector("#hpCode").style.background = "#ede9e9";
+		   }
+	  }else{
+		  document.querySelector("#managerCodeHeader").innerText = "Manager Code";
+		  document.querySelector("#managerCodeDetails").innerHTML = `<select class="w100p" id="managerCode" name="managerCode"></select>`;
+		  changeRank();
+	  }
+  }
+
+
+
+  const callback = () => {
+        if ("${deptCode}") {
+         $("#rank").val(${memLvl} == 1 ? '6988' : ${memLvl} == 2 ? '6989' : ${memLvl} == 3 ? '6990' : '6991')
+            $('#rank :not(:selected)').prop('disabled', 'disabled')
+            $('#managerCode :not(:selected)').prop('disabled', 'disabled')
+        }
+   }
 
   $(function() {
-// 	  if (${memLvl} == 4) {
-// 		  document.getElementById("rank").innerHTML += "<option>HP</option>"
-// 		  document.getElementById("managerCode").innerHTML += "<option>${deptCode}</option>"
-// 	  } else
-	  if ("${deptCode}") {
-          CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", {memLvl: ${memLvl}} , '${deptCode}', ItmOption);
-      } else {
-		$("#rank").change(function(){
-		    var value = $("#rank").val();
-		    var managerCode;
-			  switch(value) {
-		        case "6988":
-		        	managerCode= {memLvl : 1};
-		        	CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", managerCode , '', ItmOption);
-		         break;
-
-		        case "6989":
-		        	managerCode= {memLvl : 2};
-	                CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", managerCode , '', ItmOption);
-	                break;
-
-		        case "6990":
-		        	managerCode= {memLvl : 3};
-                    CommonCombo.make('managerCode', "/attendance/selectManagerCode.do", managerCode , '', ItmOption);
-                    break;
-			  }
-		});
-      }
+  	     $("#rank").change(function(){
+  	            changeCode();
+  	     });
   });
 
 
   $(document).ready(function() {
-    	var rankParam = {groupCode : 527, codeIn :[6988,6989,6990]};
-        CommonCombo.make('rank', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption, callback);
-
+	    let rankParam = {groupCode : 527, codeIn :[6988,6989,6990,6991]};
+	    CommonCombo.make('rank', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption, callback);
         atdManagementGrid();
+        callback();
+        changeCode();
    });
-
-  /* By KV - AS Mobile Failure Listing*/
-  function fn_ASMobileFailureListing(){
-      var date = new Date();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-
-      if (date.getDate() < 10) {
-        day = "0" + date.getDate();
-      }
-
-      $("#reportFormASLst #reportFileName").val('/services/AS_Mobile_Fail_excel.rpt');
-      $("#reportFormASLst #viewType").val("EXCEL");
-      $("#reportFormASLst #V_TEMP").val("");
-      $("#reportFormASLst #reportDownFileName").val(
-          "ASMobileFailureListing_" + day + month + date.getFullYear());
-
-      var option = {
-                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-              };
-
-    Common.report("reportFormASLst", option);
-  }
 
   function atdManagementGrid() {
     var columnLayout = [
@@ -187,15 +174,7 @@ $(document).on("focus", ".j_date2", function(){
   }
 
   function fn_searchAtdManagement() {
-
-        var isVal = true;
-
-        isVal = fn_chkItemVal();
-
-        if(isVal == false){
-            return;
-        }else{
-        	console.log( $("#AtdForm").serialize());
+        if(fn_chkItemVal()){
             Common.ajax("GET", "/attendance/searchAtdManagementList.do", $("#AtdForm").serialize(), function(result) {
                 AUIGrid.setGridData(myAtdGridID, result);
             });
@@ -203,22 +182,34 @@ $(document).on("focus", ".j_date2", function(){
   }
 
   function fn_chkItemVal(){
-	    var isVal = true;
 
-	    if(FormUtil.isEmpty($('#rank').val())) {
-	        Common.alert("Please choose the Rank.");
-	        return false;
-	     }
+        if($("#rank").val() == "6991" || "${memLvl}" == "4"){
+            if(FormUtil.isEmpty($('#hpCode').val())) {
+                Common.alert("Please key in HP Code");
+                return false;
+             }
 
-	    if(FormUtil.isEmpty($('#managerCode').val())) {
-	        Common.alert("Please choose the Manager Code.");
-	        return false;
-	     }
+            if(FormUtil.isEmpty($('#calMonthYear').val())) {
+                Common.alert("Please choose the Month");
+                return false;
+             }
+        }else{
+            if(FormUtil.isEmpty($('#rank').val())) {
+                Common.alert("Please choose the Rank.");
+                return false;
+             }
 
-	    if(FormUtil.isEmpty($('#calMonthYear').val())) {
-	        Common.alert("Please choose the Month");
-	        return false;
-	     }
+            if(FormUtil.isEmpty($('#managerCode').val())) {
+                Common.alert("Please choose the Manager Code.");
+                return false;
+             }
+
+            if(FormUtil.isEmpty($('#calMonthYear').val())) {
+                Common.alert("Please choose the Month");
+                return false;
+             }
+        }
+        return true;
 	}
 
 
@@ -270,7 +261,7 @@ $(document).on("focus", ".j_date2", function(){
               this.checked = false;
 
           }else if (tag === 'select'){
-              if($("#memType").val() != "7"){ //check not HT level
+              if($("#memType").val() != "7"){
                    this.selectedIndex = 0;
               }
           }
@@ -278,11 +269,9 @@ $(document).on("focus", ".j_date2", function(){
       });
   };
 
-
    function fn_asRawData(ind) {
-
         Common.popupDiv("/attendance/downloadManagerYearlyAttendance.do", {ind: ind}, null, true, '');
-      }
+   }
 
    const toggleReset = () => {
 	    clearGrid()
@@ -347,11 +336,7 @@ $(document).on("focus", ".j_date2", function(){
 </script>
 <section id="content">
  <!-- content start -->
- <ul class="path">
-  <!-- <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-  <li>Sales</li>
-  <li>Order list</li> -->
- </ul>
+ <ul class="path"></ul>
  <aside class="title_line">
   <!-- title_line start -->
   <p class="fav">
@@ -397,10 +382,18 @@ $(document).on("focus", ".j_date2", function(){
     <tbody>
      <tr>
      <th scope="row">Rank</th>
-     <td colspan="3"><select class="w100p" id="rank"  name="rank"></select></td>
+     <td colspan="3">
+	     <select class="w100p" id="rank" name="rank">
+		     <option value="">Choose One</option>
+		     <option value="6988">GM</option>
+		     <option value="6989">SM</option>
+		     <option value="6990">HM</option>
+		     <option value="6991">HP</option>
+	     </select>
+     </td>
 
-      <th scope="row">Manager Code</th>
-      <td colspan='3'><select class="w100p" id="managerCode"  name="managerCode"></td>
+      <th scope="row" id="managerCodeHeader"></th>
+      <td colspan='3' id="managerCodeDetails"></td>
 
      </tr>
      <tr>
