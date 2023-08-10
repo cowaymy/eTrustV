@@ -388,6 +388,7 @@ public class ePRController {
 				response.put("err", "Approval must contain SPC member as second last approver");
 				return ResponseEntity.ok(response);
 			}
+			//comment of sadness
 			int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
 				public boolean test(Integer n) {
 					return n > 0;
