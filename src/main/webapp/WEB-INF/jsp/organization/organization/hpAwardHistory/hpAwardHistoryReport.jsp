@@ -38,7 +38,7 @@
                     <td><input class="w100p checkViewHistory" type="text" name="deptCode" id="deptCode"/></td>
 
                      <th>Member Code</th>
-                    <td><input class="w100p checkViewHistory" type="text" name="memCode"/></td>
+                    <td><input class="w100p checkViewHistory" type="text" name="memCode" id="memCode"/></td>
                 </tr>
 
                 <tr>
@@ -215,10 +215,18 @@
 
            if(check){
                Common.showLoader();
+
+               if(document.querySelector("#memCode").value == "${SESSION_INFO.userName}"){
+                   $("#orgCode").val("");
+                   $("#grpCode").val("");
+                   $("#deptCode").val("");
+               }
+
                fetch("/organization/selectHpAwardHistoryReport.do?" + $("#hpAwardHistoryReportForm").serialize())
                .then(r=>r.json())
                .then(data => {
                    Common.removeLoader();
+                   setOrganizationInfo();
                    AUIGrid.setGridData(hpAwardHistoryReportGrid, data);
                });
            }else{
