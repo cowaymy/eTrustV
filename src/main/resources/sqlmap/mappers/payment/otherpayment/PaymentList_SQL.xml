@@ -2744,11 +2744,9 @@
     SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 AND IS_SAP = 1 ORDER BY NAME
     </select>
 
-    <insert id="insertErrorRem" parameterType="Map">
-        INSERT INTO PAY0344M (
-            REM
-        ) VALUES (
-            #{message}
-        )
-    </insert>
+    <update id="insertErrorRem" parameterType="Map">
+        UPDATE PAY0344M
+        SET REM = #{message}
+        WHERE REQ_ID = #{reqId}
+    </update>
 </mapper>

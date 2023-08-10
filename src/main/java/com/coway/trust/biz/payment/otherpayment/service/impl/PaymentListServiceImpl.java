@@ -1202,6 +1202,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 				List<String> worList = new ArrayList<>();
 				double worAmt = 0.00;
 				boolean isApprove = true;
+				Map<String, String> error = new HashMap<String, String>();
 
 				paymentListMapper.approvalNewDCF(params);
 
@@ -1219,7 +1220,9 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     				if(rorList.size() == 0){
     					isApprove = false;
     					returnMsg = "ROR is not generated. This request will be reject. Please contact FAR for further action.";
-                        paymentListMapper.insertErrorRem("ROR is not generated. This request will be reject. Please contact FAR for further action.");
+    					error.put("message", returnMsg);
+    					error.put("reqId", params.get("reqNo").toString());
+                        paymentListMapper.insertErrorRem(error);
 
     				}else {
 
@@ -1284,14 +1287,19 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
         		    				if(worList.size() == 0){
             	    					returnMsg += "</br> No WOR is generated. Please proceed to key-in at corresponding page manually.";
-            	    					paymentListMapper.insertErrorRem("No WOR is generated. Please proceed to key-in at corresponding page manually.");
+
+            	    					error.put("message", returnMsg);
+            	    					error.put("reqId", params.get("reqNo").toString());
+            	                        paymentListMapper.insertErrorRem(error);
 
             	    				}else{
 
             	    					returnMsg += "</br><b>WOR: </b>" + worList;
             	    					if(worAmt != Double.parseDouble(payInfo.get("newTotalAmt").toString())){
             	    						returnMsg += "</br> WOR amount is not generated as expected. Please contact FAR for further action.";
-            	    						paymentListMapper.insertErrorRem("WOR amount is not generated as expected. Please contact FAR for further action.");
+            	    						error.put("message", returnMsg);
+            	        					error.put("reqId", params.get("reqNo").toString());
+            	                            paymentListMapper.insertErrorRem(error);
             	    					}
 
             	    				}
@@ -1377,13 +1385,17 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
            		    				if(worList.size() == 0){
                	    					returnMsg += "</br> No WOR is generated. Please proceed to key-in at corresponding page manually.";
-               	    					paymentListMapper.insertErrorRem("No WOR is generated. Please proceed to key-in at corresponding page manually.");
+               	    					error.put("message", returnMsg);
+               	    					error.put("reqId", params.get("reqNo").toString());
+               	                        paymentListMapper.insertErrorRem(error);
                	    				}else{
 
                	    					returnMsg += "</br><b>WOR: </b>" + worList.toString();
                	    					if(worAmt != Double.parseDouble(payInfo.get("newTotalAmt").toString())){
                	    						returnMsg += "</br> WOR amount is not generated as expected. Please contact FAR for further action.";
-               	    						paymentListMapper.insertErrorRem("WOR amount is not generated as expected. Please contact FAR for further action.");
+               	    						error.put("message", returnMsg);
+                   	     					error.put("reqId", params.get("reqNo").toString());
+                   	                        paymentListMapper.insertErrorRem(error);
                	    					}
 
                	    				}
@@ -1393,7 +1405,9 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     					}else{
     						// ROR is not generate same amount of request DCF
     						returnMsg += "</br> ROR is not generated as expected. Please contact FAR for further action.";
-    						paymentListMapper.insertErrorRem("ROR is not generated as expected. Please contact FAR for further action.");
+    						error.put("message", returnMsg);
+        					error.put("reqId", params.get("reqNo").toString());
+                            paymentListMapper.insertErrorRem(error);
     					}
     				}
 				}
@@ -1426,6 +1440,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 					//Update PAY0348D
 			 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
 					params.put("appvStus", "J");
+					params.put("rejctResn", returnMsg);
 					params.put("appvResn", params.get("remark").toString());
 					paymentListMapper.updateStatusNewDCFDet(params);
 
