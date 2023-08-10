@@ -2179,4 +2179,13 @@
            AND B.MEM_TYPE = '2'
            AND A.MEM_LVL = '3'
     </select>
+
+  <select id="getMapProp" resultType="egovMap">
+    SELECT PARAM_CODE,
+               PARAM_VAL
+    FROM SYS0098M
+    WHERE MODULE = 'GEN'
+        AND SUB_MODULE = 'GPS'
+        AND DISB = 0
+  </select>
 </mapper>
