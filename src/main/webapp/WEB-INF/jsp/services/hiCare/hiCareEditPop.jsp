@@ -16,7 +16,7 @@
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
     var BranchId = '${SESSION_INFO.userBranchId}';
     var returnStatusOption = [{"codeId": "494","codeName": "Stock Return"},{"codeId": "495","codeName": "Condition Update"}];
-    var returnConditionOption = [{"codeId": "111","codeName": "Used"},{"codeId": "112","codeName": "Defect"}];
+    var returnConditionOption = [{"codeId": "111","codeName": "Used"},{"codeId": "112","codeName": "Defect"},{"codeId": "113","codeName": "Repair"}];
 
     $(document).ready(function(){
 
