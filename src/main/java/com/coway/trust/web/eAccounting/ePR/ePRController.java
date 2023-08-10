@@ -106,13 +106,13 @@ public class ePRController {
 		model.put("request", new Gson().toJson(request));
 		EgovMap finalApprv = ePRService.getFinalApprv();
 		model.put("f", finalApprv);
-		if (request.get("stus") != null && !((BigDecimal) request.get("stus")).equals(new BigDecimal(116))) {
+		if (request.get("stus") != null && !((BigDecimal) request.get("stus")).equals(new BigDecimal(120))) {
 			EgovMap currentApprover = ePRService.getCurrApprv(p);
 			if (
 					currentApprover != null &&
 					currentApprover.get("memId").equals(sessionVO.getMemId()) &&
 					(
-							((BigDecimal) request.get("stus")).equals(new BigDecimal(117)) ||
+							((BigDecimal) request.get("stus")).equals(new BigDecimal(121)) ||
 							((BigDecimal) request.get("stus")).equals(new BigDecimal(44))
 					)
 			) {
@@ -335,12 +335,25 @@ public class ePRController {
 
 			if (includeSPC) {
 
-				//Insert or update request based on the presence of "requestId"
-				if (p.get("requestId") == null) {
-					p.put("id", ePRService.selectRequestId());
+				//Upload files and get key
+				int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+				p.put("rciv", fileGroupKey);
+
+				if (request.getFile("add") != null) {
+					int fileGroupKeyAdd = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("add"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
+					p.put("add", fileGroupKeyAdd);
 				}
+
+				//Insert or update request based on the presence of "requestId"
 				int res = ePRService.insertRequestDraft(p);
 				dbRes.add(res);
+
+				//Insert Delivery data
+				for(Map<String, Object> d : excelData) {
+					d.put("id", p.get("id"));
+					int res2 = ePRService.insertDeliverDet(d);
+					dbRes.add(res2);
+				}
 
 				//Delete Request items and re-insert
 				if (p.get("requestId") != null) {
@@ -370,26 +383,6 @@ public class ePRController {
 				//Update Request to submitted
 				int res3 = ePRService.updateRequest(p);
 				dbRes.add(res3);
-
-				//Upload files and get key
-				int fileGroupKey = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("rciv"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-				p.put("rciv", fileGroupKey);
-
-				if (excelData.size() > 0) {
-					if (request.getFile("add") != null) {
-						int fileGroupKeyAdd = fileService.insertFiles(FileVO.createList(EgovFileUploadUtil.getUploadExcelFilesRVO(request.getFile("add"), uploadDir, File.separator + "procurement" + File.separator + "ePR")), FileType.WEB_DIRECT_RESOURCE, sessionVO.getUserId());
-						p.put("add", fileGroupKeyAdd);
-					}
-
-					//Insert Delivery data
-					for(Map<String, Object> d : excelData) {
-						d.put("id", p.get("id"));
-						int res2 = ePRService.insertDeliverDet(d);
-						dbRes.add(res2);
-					}
-				} else {
-					dbRes.add(1);
-				}
 			} else {
 				response.put("success", 0);
 				response.put("err", "Approval must contain SPC member as second last approver");

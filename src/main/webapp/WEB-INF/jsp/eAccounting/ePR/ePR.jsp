@@ -32,8 +32,8 @@
 	            <td>
 	                <select name="ePRStus">
 	                    <option value="">Choose One</option>
-	                    <option value="116">Draft</option>
-	                    <option value="117">Submitted</option>
+	                    <option value="120">Draft</option>
+	                    <option value="121">Submitted</option>
 	                    <option value="44">Pending for Approval</option>
 	                    <option value="5">Approved</option>
 	                    <option value="6">Rejected</option>

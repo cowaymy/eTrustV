@@ -210,7 +210,7 @@
     }
     if (!stus) {
     	deleteFunctionButton(document.getElementById("ePRDelete"))
-    } else if (stus != 116) {
+    } else if (stus != 120) {
     	deleteFunctionButton(document.getElementById("ePRDelete"))
     	deleteFunctionButton(document.getElementById("ePRDraft"))
     	deleteFunctionButton(document.getElementById("ePRSubmit"))
@@ -252,7 +252,7 @@
     	}
     })
 
-    $("#ePRHeader").text((stus == null || stus == 116) ? "New Purchase Requisition" : "Purchase Requisition")
+    $("#ePRHeader").text((stus == null || stus == 120) ? "New Purchase Requisition" : "Purchase Requisition")
 
     function chgTab(tab) {
     	if (tab == "info") {
@@ -276,7 +276,7 @@
     	document.getElementById("costCenterName").value = document.getElementById("search_costCentrName").value
     }
 
-    if (!stus || stus == 116) {
+    if (!stus || stus == 120) {
 	    document.getElementById("example_download").onclick = () => {
 	    	window.location.href = ("${pageContext.request.contextPath}/resources/download/eAccounting/Delivery_Template.xlsx")
 	    }
@@ -328,7 +328,7 @@
 	], '', {
 	    usePaging: true,
 	    pageRowCount: 20,
-	    editable: !stus || stus == 116 ? true : false,
+	    editable: !stus || stus == 120 ? true : false,
 	    headerHeight: 60,
 	    showRowNumColumn: true,
 	    wordWrap: true,
@@ -360,7 +360,7 @@
     })
 
 	const bindBudgetCodeEvent = () => {
-		if (stus && stus != 116) return
+		if (stus && stus != 120) return
 		$(".budgetContainer img").off("click").on("click", (event) => {
             budgetRow = $(event.target.parentElement).find("input").attr("id").split("budgetCode")[1]
             Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do",data = {
