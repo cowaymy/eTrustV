@@ -221,13 +221,9 @@
         areaValue : areaValue
       };
       Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-
         $("#areaId").val(result.areaId);
-
       });
-
     }
-
   }
 
   function fn_selectCity(selVal) {
@@ -362,6 +358,21 @@
   function isDecimal(inputValue) {
     const decimalPattern = /^\d+(\.\d+)?$/;
     return decimalPattern.test(inputValue);
+  }
+
+  function fn_searchLocation(){
+    var location = [{"lattitude": $('#txtLatitude').val(), "longtitude": $('#txtLongtitude').val()}];
+
+    var prm = { "coordinate" : JSON.stringify(location),
+                      "callFunc" : "1",
+                      "callBack" : "callBackMap" };
+
+    Common.popupDiv("/common/mapPop.do", prm , null, true, '_searchDiv');
+  }
+
+  function callBackMap(rtn) {
+    $('#txtLatitude').val(rtn.params.latitude);
+    $('#txtLongtitude').val(rtn.params.longitude);
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -517,6 +528,7 @@
           <col style="width: *" />
           <col style="width: 140px" />
           <col style="width: *" />
+          <col style="width: 20px" />
         </colgroup>
         <tbody>
           <tr>
@@ -539,20 +551,24 @@
         <!-- table start -->
         <caption>table</caption>
         <colgroup>
-          <col style="width: 140px" />
+          <col style="width: 110px" />
           <col style="width: *" />
-          <col style="width: 140px" />
+          <col style="width: 110px" />
           <col style="width: *" />
+          <col style="width: 60px" />
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code='txtLongtitude' /></th>
-            <td>
-              <input type="text" title="<spring:message code='txtLongtitude' />" placeholder="<spring:message code='txtLongtitude' />" class="w100p" id="txtLongtitude" name="txtLongtitude" value="${branchDetail.longtitude}" />
-            </td>
             <th scope="row"><spring:message code='txtLatitude' /></th>
             <td>
-              <input type="text" title="<spring:message code='txtLatitude' />" placeholder="<spring:message code='txtLatitude' />" id="txtLatitude" name="txtLatitude" class="w100p" value="${branchDetail.latitude}" />
+              <input type="text" title="<spring:message code='txtLatitude' />" placeholder="<spring:message code='txtLatitude' />" id="txtLatitude" name="txtLatitude" class="" value="${branchDetail.latitude}" />
+            </td>
+            <th scope="row"><spring:message code='txtLongtitude' /></th>
+            <td style='text-align: center;'>
+              <input type="text" title="<spring:message code='txtLongtitude' />" placeholder="<spring:message code='txtLongtitude' />" class="w100p" id="txtLongtitude" name="txtLongtitude" value="${branchDetail.longtitude}" />
+            </td>
+            <td>
+              <a href="#" onclick="fn_searchLocation()" class=""><img src="${pageContext.request.contextPath}/resources/images/common/normal_Location.gif" alt="Location" width="40px" height='40px'/></a>
             </td>
           </tr>
         </tbody>
