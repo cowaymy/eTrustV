@@ -243,7 +243,8 @@
                         CASE WHEN E.MEM_ID IS NOT NULL THEN E.DEPT_CODE ELSE D.DEPT_CODE END DEPT_CODE,
                         C.INCENTIVE_CODE,
                         C.INCENTIVE_DESCRIPTION DESCRIPTION,
-                        A.DESTINATION
+                        A.DESTINATION,
+                        A.REMARK
                  FROM ORG0049D A
                  JOIN ORG0048M B ON A.BATCH_ID = B.BATCH_ID
                  JOIN ORG0050D C ON A.INCENTIVE_CODE = C.INCENTIVE_CODE
@@ -253,15 +254,24 @@
                  WHERE A.STUS_CODE_ID = 1 AND B.STUS_CODE_ID = 5
              )
              WHERE 1=1
-             <if test="orgCode !=null and orgCode !=''">
-                AND ORG_CODE = #{orgCode}
-             </if>
-             <if test="grpCode !=null and grpCode !=''">
-                AND GRP_CODE = #{grpCode}
-             </if>
-             <if test="deptCode !=null and deptCode !=''">
-                AND DEPT_CODE = #{deptCode}
-             </if>
+	            <if test="orgCode != null and orgCode != ''" >
+	               <if test="memLvl == 1 or memLvl == null or memLvl == ''">
+	                  AND  ORG_CODE = #{orgCode}
+	               </if>
+	           </if>
+
+	           <if test="grpCode != null and grpCode != ''">
+	                <if test="memLvl == 1 or memLvl ==2 or memLvl == null or memLvl == ''">
+	                   AND GRP_CODE = #{grpCode}
+	                </if>
+	           </if>
+
+	           <if test="deptCode != null and deptCode != ''">
+	                <if test="memLvl != 4 or memLvl == null or memLvl == ''">
+	                   AND DEPT_CODE = #{deptCode}
+	                </if>
+	           </if>
+
              <if test="memCode !=null and memCode !=''">
                 AND MEM_CODE = #{memCode}
              </if>

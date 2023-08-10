@@ -27,27 +27,29 @@
             <tbody>
                 <tr>
                     <th>Org Code</th>
-                    <td><input class="w100p" type="text" name="orgCode" id="orgCode"/></td>
+                    <td><input class="w100p checkViewHistory" type="text" name="orgCode" id="orgCode"/>
+                           <input type="hidden" name="memLvl" id="memLvl"/>
+                    </td>
 
                     <th>Grp Code</th>
-                    <td><input class="w100p" type="text" name="grpCode" id="grpCode"/></td>
+                    <td><input class="w100p checkViewHistory" type="text" name="grpCode" id="grpCode"/></td>
 
                     <th>Dept Code</th>
-                    <td><input class="w100p" type="text" name="deptCode" id="deptCode"/></td>
+                    <td><input class="w100p checkViewHistory" type="text" name="deptCode" id="deptCode"/></td>
 
                      <th>Member Code</th>
-                    <td><input class="w100p" type="text" name="memCode"/></td>
+                    <td><input class="w100p checkViewHistory" type="text" name="memCode"/></td>
                 </tr>
 
                 <tr>
                     <th>Incentive Type</th>
-                    <td><select class="w100p" multiple="multiple" name="incentiveType" id="incentiveType"></select></td>
+                    <td><select class="w100p checkViewHistory" multiple="multiple" name="incentiveType" id="incentiveType"></select></td>
 
                     <th>Year</th>
-                    <td><select class="w100p" name="year" id="year"></select></td>
+                    <td><select class="w100p checkViewHistory" name="year" id="year"></select></td>
 
                     <th>Month</th>
-                    <td><select class="w100p" multiple="multiple" name="month" id="month"></select></td>
+                    <td><select class="w100p checkViewHistory" multiple="multiple" name="month" id="month"></select></td>
 
                     <th></th>
                     <td></td>
@@ -69,6 +71,7 @@
        const month = document.getElementById("month");
        const year = document.getElementById("year");
        const incentiveType = document.getElementById("incentiveType");
+       $("#memLvl").val("${SESSION_INFO.memberLevel}");
        let reportType;
 
        const getMonth = () =>{
@@ -147,7 +150,10 @@
 	   },
 	   {
 	          dataField : 'destination', headerText : 'Destination'
-	   }],'',
+	   },
+	   {
+              dataField : 'remark', headerText : 'Remark'
+       }],'',
 	   {
 	          usePaging: true,
 	          pageRowCount: 20,
@@ -163,30 +169,30 @@
        }
 
        const setOrganizationInfo = () => {
-           $("#orgCode").val("${orgCode}");
-           $("#grpCode").val("${grpCode}");
-           $("#deptCode").val("${deptCode}");
+           if("${orgCode}") $("#orgCode").val("${orgCode}".trim());
+           if("${grpCode}") $("#grpCode").val("${grpCode}".trim());
+           if("${deptCode}") $("#deptCode").val("${deptCode}".trim());
 
            switch("${SESSION_INFO.memberLevel}") {
            case "3":
                reportType = "HM";
-               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("class", "w100p readonly checkViewHistory");
                $("#orgCode").attr("readonly", "readonly");
-               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("class", "w100p readonly checkViewHistory");
                $("#grpCode").attr("readonly", "readonly");
-               $("#deptCode").attr("class", "w100p readonly");
+               $("#deptCode").attr("class", "w100p readonly checkViewHistory");
                $("#deptCode").attr("readonly", "readonly");
                break;
            case "2":
                reportType = "SM";
-               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("class", "w100p readonly checkViewHistory");
                $("#orgCode").attr("readonly", "readonly");
-               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("class", "w100p readonly checkViewHistory");
                $("#grpCode").attr("readonly", "readonly");
                break;
            case "1":
                reportType = "GM";
-               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("class", "w100p readonly checkViewHistory");
                $("#orgCode").attr("readonly", "readonly");
                break;
            default:
@@ -199,13 +205,25 @@
 
        $("#btnSearch").click((e)=>{
            e.preventDefault();
-           Common.showLoader();
-           fetch("/organization/selectHpAwardHistoryReport.do?" + $("#hpAwardHistoryReportForm").serialize())
-           .then(r=>r.json())
-           .then(data => {
-               Common.removeLoader();
-               AUIGrid.setGridData(hpAwardHistoryReportGrid, data);
+
+           let check = [...document.querySelectorAll(".checkViewHistory")].some(r=>
+           {
+               if(r.value?.trim()){
+                   return true;
+                }
            });
+
+           if(check){
+               Common.showLoader();
+               fetch("/organization/selectHpAwardHistoryReport.do?" + $("#hpAwardHistoryReportForm").serialize())
+               .then(r=>r.json())
+               .then(data => {
+                   Common.removeLoader();
+                   AUIGrid.setGridData(hpAwardHistoryReportGrid, data);
+               });
+           }else{
+               Common.alert("Please fill in one of searching criteria.")
+           }
        });
 
        $("#btnClear").click((e)=>{
