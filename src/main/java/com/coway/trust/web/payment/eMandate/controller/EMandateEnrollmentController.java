@@ -75,6 +75,22 @@ public class EMandateEnrollmentController {
 			params.put("custId", custInfo.get("custId"));
 			params.put("salesOrdId", custInfo.get("salesOrdId"));
 
+			if (custInfo.get("mthRentAmt") != null) {
+				int amt = Integer.valueOf(custInfo.get("mthRentAmt").toString()).compareTo(0) > 0 ? Integer.valueOf(custInfo.get("mthRentAmt").toString()) : 0;
+
+				if (amt > 0)
+					params.put("mthRentAmt", amt);
+				else {
+					message.setCode(AppConstants.FAIL);
+					message.setMessage("E004. Invalid Rental Amount.");
+					return ResponseEntity.ok(message);
+				}
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("E003. Invalid Rental Amount.");
+				return ResponseEntity.ok(message);
+			}
+
 			// To call service for processing enrollment
 			result = eMandateEnrollmentService.enrollCustomer(params);
 

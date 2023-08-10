@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.payment.eMandate.service.impl.EMandateMapper">
 
   <select id="getOrderByCustomer" parameterType="Map" resultType="egovMap">
-        SELECT S.SALES_ORD_ID, C.CUST_ID FROM SAL0001D S
+        SELECT S.SALES_ORD_ID, C.CUST_ID, S.MTH_RENT_AMT FROM SAL0001D S
                 JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
         WHERE TRIM(C.NRIC) = #{nric}
         AND TRIM(UPPER(C.NAME)) = #{name}
@@ -28,7 +28,8 @@
             CRT_DT,
             CRT_USER_ID,
             AMT,
-            EFFECTIVE_DT
+            EFFECTIVE_DT,
+            HASH_KEY
         ) values (
             #{paymentId}
             ,#{paymentMode}
@@ -39,7 +40,7 @@
             ,#{userId}
             ,#{amt}
             ,#{effectDate}
-
+            ,UTL_RAW.CAST_TO_RAW(#{hashKey})
         )
     </insert>
 

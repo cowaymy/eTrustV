@@ -30,7 +30,7 @@ public class EMandateConstants {
 	public static final String PAYMENT_DESC = "Rental Payment";
 
 	public static final String MAXIMUM_DD_AMOUNT = "999.00"; // must be in 2 decimal places
-	public static final String Maximum_DD_RECURR = "15";
+	public static final String Maximum_DD_RECURR = "2";
 
 	public static final String STATUS_MERCHANT_APPROVED = "00";
 	public static final String STATUS_MERCHANT_UNAPPROVE = "99";

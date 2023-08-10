@@ -97,13 +97,16 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 			  throw new Exception("[E002] Fail to obtain IP Address. Please contact Administrator");
 		  }
 
+		  // rental amount
+		  String rentalAmount = params.get("mthRentAmt")+ ".00"; // must be in 2 decimal places
+
 		  // Configure param6 - ID type | ID
 		  // ID Type - 1(New IC) - 2(Old IC) - 3(Passport Number) - 4(Business Registration) - 5(Others)
 		  String param6 = EMandateConstants.ID_TYPE_NEW_IC + "|" + params.get("nric").toString();
 
 		  // Configure param7 - max recurring times | frequency | effective date
 		  String effectiveDate = CommonUtils.getCalDate(1, "ddMMyy");
-		  String param7 = EMandateConstants.Maximum_DD_RECURR + "|" + EMandateConstants.FREQ_MODE_MONTHLY + "|"  + effectiveDate;
+		  String param7 = EMandateConstants.Maximum_DD_RECURR + "|" + EMandateConstants.FREQ_MODE_WEEKLY + "|"  + effectiveDate;
 
 		  // Configure respond URL to be used in hashvalue
 		  String approvedURL = EMandateConstants.RESPOND_URL + "?payId=" +  paymentID + ";status=" + EMandateConstants.STATUS_MERCHANT_APPROVED;
@@ -112,7 +115,7 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  // Configure HashValue
 		  /**Hash Key = Password + ServiceID + PaymentID + MerchantReturnURL + MerchantApprovalURL + MerchantUnApprovalURL +
 		   * MerchantCallBackURL + Amount + CurrencyCode + CustIP + PageTimeout + CardNo + Token + RecurringCriteria*/
-		  String hashKey = password + serviceId + paymentID + unApprovedURL + approvedURL + unApprovedURL + unApprovedURL + EMandateConstants.MAXIMUM_DD_AMOUNT +
+		  String hashKey = password + serviceId + paymentID + unApprovedURL + approvedURL + unApprovedURL + unApprovedURL + rentalAmount +
 				  					EMandateConstants.CURRENCY_CODE + clientIp + EMandateConstants.PAGE_TIME_OUT;
 
 		  LOGGER.debug("========Hash Key==========: "+ hashKey);
@@ -124,7 +127,8 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  params.put("paymentId", paymentID);
 		  params.put("paymentMode", EMandateConstants.PYMT_METHOD_DD);
 		  params.put("stus", EMandateConstants.STATUS_IN_PROGRESS); // default IN Progress status
-		  params.put("amt", EMandateConstants.MAXIMUM_DD_AMOUNT);
+		  params.put("amt", rentalAmount);
+		  params.put("hashKey", hashKey);
 		  params.put("effectDate", effectiveDate);
 
 		  eMandateMapper.insertDDRequest(params);
@@ -145,7 +149,7 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 					  .append("&PaymentId=").append(paymentID)
 					  .append("&OrderNumber=").append(params.get("orderNo").toString())
 					  .append("&PaymentDesc=").append(EMandateConstants.PAYMENT_DESC)
-					  .append("&Amount=").append(EMandateConstants.MAXIMUM_DD_AMOUNT)
+					  .append("&Amount=").append(rentalAmount)
 					  .append("&CurrencyCode=").append(EMandateConstants.CURRENCY_CODE)
 					  .append("&HashValue=").append(hashValue)
 					  .append("&CustIP=").append(clientIp)
