@@ -1259,7 +1259,7 @@
             $("#reworkProj").attr("disabled", false);
 		}
 
-		 if ($('#PROD_CDE').val() == "112098") { //112098 VILLAEM 1
+		 if ($('#PROD_CDE').val() == "112098" || $('#PROD_CDE').val() == "112237" || $('#PROD_CDE').val() == "112763" || $('#PROD_CDE').val() == "112789" || $('#PROD_CDE').val() == "113050") { //112098 VILLAEM 1
 			 $("#reworkProj").attr("disabled", false);
 			}else{
 			  $("#reworkProj").attr("disabled", true);
