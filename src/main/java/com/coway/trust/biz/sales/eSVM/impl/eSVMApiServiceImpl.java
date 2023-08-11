@@ -130,7 +130,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         // membershipQuotationController.mActiveQuoOrder
         EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
         if (Integer.parseInt(hasActiveQuot.get("cnt").toString()) > 0) {
-          throw new ApplicationException(AppConstants.FAIL, "This order already has " + hasActiveQuot.get("cnt").toString() + "active quotation.");
+          throw new ApplicationException(AppConstants.FAIL, "This order already has " + hasActiveQuot.get("cnt").toString() + " active quotation. New quotation not allowed.");
         }
 
         // getMaxPeriodEarlyBirdPromo
@@ -154,6 +154,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         billParam.put("rentalStus", rtn.getRentalStus());
         String checkRentalBillMonth = this.checkRentalBillMonth(billParam);
 
+        logger.debug(" >>>>>>>>>>>>>>>>>>>>>>>>>>> :: " + checkRentalBillMonth);
         if (!checkRentalBillMonth.isEmpty()) {
           throw new ApplicationException(AppConstants.FAIL, "Order has outstanding, membership purchase not allowed.");
         }
@@ -481,6 +482,11 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
     logger.debug("param :: {}" + param);
+
+    EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
+    if (Integer.parseInt(hasActiveQuot.get("cnt").toString()) > 0) {
+      throw new ApplicationException(AppConstants.FAIL, "This order already has " + hasActiveQuot.get("cnt").toString() + " active quotation. New quotation not allowed.");
+    }
 
     eSVMApiDto rtn = new eSVMApiDto();
     Map<String, Object> preInsMap = new HashMap<String, Object>();
