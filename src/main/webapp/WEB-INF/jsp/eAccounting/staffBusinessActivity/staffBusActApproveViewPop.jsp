@@ -12,9 +12,9 @@
 }
 </style>
 <script type="text/javascript">
-    console.log("staffBusActApproveViewPop");
+
     var myGridID;
-    var myGridData = $.parseJSON('${appvInfoAndItems}');
+    var myGridData = ${appvInfoAndItems};
     var attachList = null;
     var myColumnLayout = [ {
         dataField : "clmUn",
@@ -208,7 +208,6 @@
 
             if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J"){
 	            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-	                console.log(result);
 
 	                $("#finApprAct").show();
 	                $("#viewFinAppr").text(result.finalAppr);
@@ -261,18 +260,15 @@
             };
 
             Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                console.log(result);
+
                 if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
                     // TODO View
                     var fileSubPath = result.fileSubPath;
                     fileSubPath = fileSubPath.replace('\', '/'');
-                    console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                     window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                 } else {
                     var fileSubPath = result.fileSubPath;
                     fileSubPath = fileSubPath.replace('\', '/'');
-                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                     window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                         + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 }
@@ -306,7 +302,6 @@
             $("#finApprAct").show();
 
             Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-                console.log(result);
 
                 $("#viewFinAppr").text(result.finalAppr);
                 $("#viewRejctResn").text(result.rejctResn);
@@ -339,18 +334,15 @@
                 atchFileId : fileId
         };
         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-            console.log(result);
+
             if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
                 // TODO View
                 var fileSubPath = result.fileSubPath;
                 fileSubPath = fileSubPath.replace('\', '/'');
-                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                 window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
             } else {
                 var fileSubPath = result.fileSubPath;
                 fileSubPath = fileSubPath.replace('\', '/'');
-                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                     + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
             }
