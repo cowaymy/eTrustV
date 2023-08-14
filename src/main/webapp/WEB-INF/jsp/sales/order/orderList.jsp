@@ -434,9 +434,11 @@
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
+            //var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "homecare");
 
-            if(prodCat == '5706' || prodCat == '5707')
+            if(prodCat ==  1)
+           // if(prodCat == '5706' || prodCat == '5707')
             {
                 Common.alert('* Please proceed to HC Module for this action');
             }
@@ -453,8 +455,11 @@
     function fn_orderRequestPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
-        	if(prodCat == '5706' || prodCat == '5707')
+            //var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "homecare");
+
+            if(prodCat == 1)
+        	//if(prodCat == '5706' || prodCat == '5707')
         	{
                 Common.alert('* Please proceed to HC Module for this action');
         	}
@@ -473,8 +478,11 @@
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
-        	if(prodCat == '5706' || prodCat == '5707')
+            //var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
+        	//if(prodCat == '5706' || prodCat == '5707')
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "homecare");
+
+            if(prodCat ==  1)
             {
                 Common.alert('* Please proceed to HC Module for this action');
             }
