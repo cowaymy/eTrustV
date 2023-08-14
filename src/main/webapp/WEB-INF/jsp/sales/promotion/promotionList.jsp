@@ -119,6 +119,7 @@
                   keyField   : "stusCodeId", // key 에 해당되는 필드명
                   valueField : "codeName" // value 에 해당되는 필드명
               }}
+          , { headerText : "Approval Status",         dataField : "appvStus",       editable : false,   width : 100 }
           , { headerText : "promoId",        dataField : "promoId",        visible : false}
           , { headerText : "promoAppTypeId", dataField : "promoAppTypeId", visible : false}
           ];

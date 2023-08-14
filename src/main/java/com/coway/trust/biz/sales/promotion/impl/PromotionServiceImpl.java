@@ -528,4 +528,10 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		promotionMapper.updatePromoReqstApproval(params);
 
 	}
+
+	@Override
+	public int cntInPrgrsPromoReqst(int promoId) {
+		return promotionMapper.cntInPrgrsPromoReqst(promoId);
+	}
+
 }

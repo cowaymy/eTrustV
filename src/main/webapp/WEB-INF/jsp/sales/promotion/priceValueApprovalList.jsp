@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
   //AUIGrid
-  var myGridID, viewGridId, priceHistoryGrid;
+  var myGridID, viewGridId, priceHistoryGrid, priceHistoryGridV;
 
   //Grid에서 선택된 RowID
   var selectedGridValue;
@@ -23,7 +23,30 @@
                        {dataField:    "crtUserId"   ,headerText:    "Create User"     ,width:    "10%"    , visible : true}
                    ];
 
+  var pricehiscolumn2V=[
+                       {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},
+                       {dataField:    "amt"   ,headerText:    "Price (RM)"        ,width:    "10%"    , visible : true},
+                       {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "15%"    , visible : true},
+                       {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "15%"    , visible : true},
+                       {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "18%"    , visible : true},
+                       {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "10%"    , visible : true},
+                       {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "18%"    , visible : true},
+                       {dataField:    "crtDt"   ,headerText:    "Create Date"     ,width:    "10%"    , visible : true},
+                       {dataField:    "crtUserId"   ,headerText:    "Create User"     ,width:    "10%"    , visible : true}
+                   ];
+
   var subgridpros2 = {
+          // 페이지 설정
+          usePaging : true,
+          pageRowCount : 10,
+          editable : false,
+          noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+          enableSorting : true,
+          softRemoveRowMode:false,
+          reverseRowNum : true
+          };
+
+  var subgridpros2V = {
           // 페이지 설정
           usePaging : true,
           pageRowCount : 10,
@@ -66,6 +89,11 @@
             // Master Grid
             AUIGrid.bind(myGridID, "cellClick", function(event) {
               selectedGridValue = event.rowIndex;
+            });
+
+
+            AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+            	fn_openDivPop('VIEW');
             });
 
           });
@@ -184,9 +212,17 @@
       });
   }
 
-  function fn_close(){
-      $("#editForm")[0].reset();
-      $("#editPrice_popup").hide();
+  function fn_close(val){
+
+	  if(val == 'APPV'){
+	      $("#editForm")[0].reset();
+	      $("#editPrice_popup").hide();
+	  }
+	  else {
+	      $("#viewForm")[0].reset();
+	      $("#viewPrice_popup").hide();
+	  }
+
       AUIGrid.destroy(priceHistoryGrid);
   }
 
@@ -203,15 +239,16 @@
 
           if (selectedItem[0] > -1) {
 
-        	  if(AUIGrid.getCellValue(myGridID, selectedGridValue,
-              "appvStus") != "In Progress"){
+        	  if(val == 'APPV' && AUIGrid.getCellValue(myGridID, selectedGridValue, "appvStus") != "In Progress"){
                   Common.alert("Only In Progress request are allowed to do approval");
         	  }
 
         	  else{
 
               AUIGrid.destroy(priceHistoryGrid);
+              AUIGrid.destroy(priceHistoryGridV);
               priceHistoryGrid = AUIGrid.create("#priceInfo_grid_wrap", pricehiscolumn2, subgridpros2);
+              priceHistoryGridV = AUIGrid.create("#view_priceInfo_grid_wrap", pricehiscolumn2V, subgridpros2V);
 
               var priceReqstId = AUIGrid.getCellValue(myGridID, selectedGridValue,
                 "prcReqstId");
@@ -239,18 +276,36 @@
                   "stkId" : stkId
                 }, function(result) {
                     console.log(result);
-                  $("#editPrice_popup").show();
-                  $("#srvPackage").val(srvPacName);
-                  $("#exPrice").val(result.data.mrental);
-                  $("#exPV").val(result.data.pricepv);
-                  $("#exRentalDeposit").val(result.data.pricerpf);
-                  $("#exPenalty").val(result.data.penalty);
-                  $("#exCost").val(result.data.pricecost);
-                  $("#exTradePv").val(result.data.tradeinpv);
-                  $("#exNormalPrice").val(result.data.amt);
+                    console.log(val);
 
-                  AUIGrid.setGridData(priceHistoryGrid, result.data2);
-                  AUIGrid.resize(priceHistoryGrid,950, 280);
+                  if(val == 'VIEW'){
+                	  $("#viewPrice_popup").show();
+                      $("#srvPackageV").val(srvPacName);
+                      $("#exPriceV").val(result.data.mrental);
+                      $("#exPVV").val(result.data.pricepv);
+                      $("#exRentalDepositV").val(result.data.pricerpf);
+                      $("#exPenaltyV").val(result.data.penalty);
+                      $("#exCostV").val(result.data.pricecost);
+                      $("#exTradePvV").val(result.data.tradeinpv);
+                      $("#exNormalPriceV").val(result.data.amt);
+                      $("#appvStatusV").val(result.data.appvStus);
+                      $("#appvRemarkV").val(result.data.remark);
+                      AUIGrid.setGridData(priceHistoryGridV, result.data2);
+                      AUIGrid.resize(priceHistoryGridV,950, 280);
+                  }
+                  else{
+                	  $("#editPrice_popup").show();
+                      $("#srvPackage").val(srvPacName);
+                      $("#exPrice").val(result.data.mrental);
+                      $("#exPV").val(result.data.pricepv);
+                      $("#exRentalDeposit").val(result.data.pricerpf);
+                      $("#exPenalty").val(result.data.penalty);
+                      $("#exCost").val(result.data.pricecost);
+                      $("#exTradePv").val(result.data.tradeinpv);
+                      $("#exNormalPrice").val(result.data.amt);
+                      AUIGrid.setGridData(priceHistoryGrid, result.data2);
+                      AUIGrid.resize(priceHistoryGrid,950, 280);
+                  }
                 });
         	  }
 
@@ -466,7 +521,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>Price & Value Information</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id = "fclose" onclick="javascript:fn_close();"><spring:message code="expense.CLOSE" /></a></p></li>
+            <li><p class="btn_blue2"><a id = "fclose" onclick="javascript:fn_close('APPV');"><spring:message code="expense.CLOSE" /></a></p></li>
         </ul>
     </header><!-- pop_header end -->
 
@@ -524,6 +579,7 @@
                                 <input type="text" id = "exPenalty" name="exPenalty" disabled = "disabled"/>
                             </td>
                         </tr>
+
                         <tr>
                             <th scope="row">Normal Price (RM)</th>
                             <td>
@@ -537,12 +593,12 @@
                                 </select></td>
                         </tr>
                        <tr>
-    <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
-    <td colspan="3">
-        <textarea type="text" title="" placeholder="" class="w100p" id="appvRemark" name="appvRemark" maxlength="100"></textarea>
-        <span id="characterCount">0 of 100 max characters</span>
-    </td>
-</tr>
+                           <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+                           <td colspan="3">
+                           <textarea type="text" title="" placeholder="" class="w100p" id="appvRemark" name="appvRemark" maxlength="100"></textarea>
+                           <span id="characterCount">0 of 100 max characters</span>
+                           </td>
+                       </tr>
                     </tbody>
                 </table><!-- table end -->
             </form>
@@ -556,7 +612,7 @@
 
         </section><!-- search_result end -->
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-      <ul class="center_btns">
+     <ul class="center_btns">
         <li><p class="btn_blue2 big">
             <a href="#" onclick="javascript:fn_save();"><spring:message code="expense.SAVE" /></a>
           </p></li>
@@ -565,6 +621,106 @@
           </p></li>
       </ul>
     </c:if>
+  </section><!-- pop_body end -->
+
+</div>
+<!-- ---------------------------------------------------------------------------------
+    POP-UP (VIEW )
+-------------------------------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div id="viewPrice_popup" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Price & Value Information</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a id = "fclose" onclick="javascript:fn_close('VIEW');"><spring:message code="expense.CLOSE" /></a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+
+    <section class="pop_body" style="min-height: auto"><!-- pop_body start -->
+    <aside class="title_line"><!-- title_line start -->
+        <h4>Price & Value Configuration</h3>
+        </aside><!-- title_line end -->
+        <section class="search_table"><!-- search_table start -->
+            <form action="#" method="post" id="viewForm" name="viewForm">
+                <input type="hidden" name="srvPackageId" id="srvPackageId" value=""/>
+                <input type="hidden" name="appTypeId" id="appTypeId"/>
+                <table class="type1"><!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                    </colgroup>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">Package</th>
+                            <td>
+                               <input type="text" id = "srvPackageV" name="srvPackageV" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Monthly Rental</th>
+                            <td>
+                               <input type="text" id = "exPriceV" name="exPriceV" disabled = "disabled"/>
+                            </td>
+                             <th scope="row">Cost (RM)</th>
+                            <td>
+                                <input type="text" id = "exCostV" name="exCostV" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Point of Value (PV)</th>
+                            <td>
+                                <input type="text" id = "exPVV" name="exPVV" disabled = "disabled"/>
+                            </td>
+                              <th scope="row">Trade In PV</th>
+                            <td>
+                                <input type="text" id = "exTradePvV" name="exTradePvV" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rental Deposit (RM)</th>
+                            <td>
+                                <input type="text" id = "exRentalDepositV" name="exRentalDepositV" disabled = "disabled"/>
+                            </td>
+                            <th scope="row">Penalty Charges (RM)</th>
+                            <td>
+                                <input type="text" id = "exPenaltyV" name="exPenaltyV" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Normal Price (RM)</th>
+                            <td>
+                                <input type="text" id = "exNormalPriceV" name="exNormalPriceV" disabled = "disabled"/>
+                            </td>
+                            <th scope="row">Approval Status<span style="color:red">*</span></th>
+                                <td ><select id="appvStatusV" name="appvStatusV" class="w100p" disabled = "disabled">
+                                <option value="" selected>Choose One</option>
+                                <option value=5>Approve</option>
+                                <option value=6>Reject</option>
+                                </select></td>
+                        </tr>
+                       <tr>
+    <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+    <td colspan="3">
+        <textarea type="text" title="" placeholder="" class="w100p" id="appvRemarkV" name="appvRemarkV" maxlength="100"  disabled = "disabled"></textarea>
+        <span id="characterCount">0 of 100 max characters</span>
+    </td>
+</tr>
+                    </tbody>
+                </table><!-- table end -->
+            </form>
+        </section><!-- search_table end -->
+        <section class="search_result"><!-- search_result start -->
+    <aside class="title_line"><!-- title_line start -->
+            <h4>Price & Value History</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" id="view_priceInfo_grid_wrap"><!-- grid_wrap start -->
+        </article><!-- grid_wrap end -->
+
+        </section><!-- search_result end -->
   </section><!-- pop_body end -->
 
 </div>

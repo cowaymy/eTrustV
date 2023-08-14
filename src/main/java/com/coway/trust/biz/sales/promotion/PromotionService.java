@@ -55,4 +55,6 @@ public interface PromotionService {
 
 	void updatePromoReqstApproval(Map<String, Object> params);
 
+	int cntInPrgrsPromoReqst(int promoId);
+
 }

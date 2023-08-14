@@ -189,13 +189,22 @@ public class PromotionController {
 	@RequestMapping(value = "/updatePromotion.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePromotion(@RequestBody PromotionVO promotionVO, HttpServletRequest request, Model model, SessionVO sessionVO) {
 
-		promotionService.updatePromoReqst(promotionVO, sessionVO);;
 
-		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage("Update promotion request saved");
+
+		int cnt = promotionService.cntInPrgrsPromoReqst(promotionVO.getSalesPromoMVO().getPromoId());
+		if(cnt < 1) {
+			promotionService.updatePromoReqst(promotionVO, sessionVO);
+			message.setCode(AppConstants.SUCCESS);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setMessage("Update promotion request saved");
+		}
+		else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("There are request pending for approval on this promotion");
+		}
+		// 결과 만들기
+
 
 		return ResponseEntity.ok(message);
 	}

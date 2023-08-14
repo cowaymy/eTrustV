@@ -281,48 +281,48 @@ WHERE 1 = 1
     ORDER BY STK.STK_CODE    </select>
 
   <select id="selectPriceReqstInfo" parameterType="Map" resultType="egovMap">
-   SELECT
+   SELECT A.APPV_STUS, A.REMARK,
    <if test="typeId !=null and typeId == '61'">
                 <if test="appTypeId !=null and appTypeId == '66'">
-                    NVL(PRC_COSTING, 0) PRICECOST,
+                    NVL(A.PRC_COSTING, 0) PRICECOST,
                     0 AMT,
-                    NVL(PRC_PV, 0) PRICEPV,
-                    NVL(AMT, 0) MRENTAL,
-                    NVL(PRC_RPF, 0) PRICERPF,
+                    NVL(A.PRC_PV, 0) PRICEPV,
+                    NVL(A.AMT, 0) MRENTAL,
+                    NVL(A.PRC_RPF, 0) PRICERPF,
                     0 PENALTY,
-                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                    NVL(A.TRADE_IN_PV, 0) TRADEINPV
                 </if>
                 <if test="appTypeId !=null and appTypeId == '67'">
-                    NVL(PRC_COSTING, 0) PRICECOST,
-                    NVL(AMT, 0) AMT,
-                    NVL(PRC_PV, 0) PRICEPV,
+                    NVL(A.PRC_COSTING, 0) PRICECOST,
+                    NVL(A.AMT, 0) AMT,
+                    NVL(A.PRC_PV, 0) PRICEPV,
                     0 MRENTAL,
                     0 PRICERPF,
                     0 PENALTY,
-                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                    NVL(A.TRADE_IN_PV, 0) TRADEINPV
                 </if>
                 <if test="appTypeId !=null and appTypeId == '1412'">
-                    NVL(PRC_COSTING, 0) PRICECOST,
-                    NVL(AMT, 0) AMT,
-                    NVL(PRC_PV, 0) PRICEPV,
+                    NVL(A.PRC_COSTING, 0) PRICECOST,
+                    NVL(A.AMT, 0) AMT,
+                    NVL(A.PRC_PV, 0) PRICEPV,
                     0 MRENTAL,
                     0 PRICERPF,
                     0 PENALTY,
-                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                    NVL(A.TRADE_IN_PV, 0) TRADEINPV
                 </if>
 
     </if>
     <if test="typeId !=null and typeId != '61'">
-                    NVL(PRC_COSTING, 0) PRICECOST,
-                    NVL(AMT, 0) AMT,
-                    NVL(PRC_PV, 0) PRICEPV,
+                    NVL(A.PRC_COSTING, 0) PRICECOST,
+                    NVL(A.AMT, 0) AMT,
+                    NVL(A.PRC_PV, 0) PRICEPV,
                     0 MRENTAL,
-                    NVL(PRC_RPF, 0) PRICERPF,
-                    NVL(PRC_CHRG, 0) PENALTY,
-                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                    NVL(A.PRC_RPF, 0) PRICERPF,
+                    NVL(A.PRC_CHRG, 0) PENALTY,
+                    NVL(A.TRADE_IN_PV, 0) TRADEINPV
     </if>
-    FROM SAL0357M
-    WHERE PRC_REQST_ID = #{reqstId}
+    FROM SAL0357M A
+    WHERE A.PRC_REQST_ID = #{reqstId}
   </select>
 
      <select id="selectPriceHistoryInfo2" parameterType="Map" resultType="egovMap">

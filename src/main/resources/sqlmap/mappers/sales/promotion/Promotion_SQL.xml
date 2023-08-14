@@ -33,6 +33,7 @@
              , T4.NAME STATUS
              , T1.STK_SIZE STK_SIZE
              , T1.CHS
+             , T6.NAME AS APPV_STUS
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -44,6 +45,8 @@
            AND T3.CODE_MASTER_ID = '76'
            LEFT OUTER JOIN SYS0038M T4
            ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+          LEFT JOIN SAL0358M T5 ON T5.PROMO_ID = T1.PROMO_ID and T5.PROMO_REQST_ID = (SELECT MAX(PROMO_REQST_ID) FROM SAL0358M where PROMO_ID = T1.PROMO_ID)
+          LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T5.APPV_STUS
          WHERE 1 = 1
          <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
            AND T1.PROMO_APP_TYPE_ID IN
@@ -1079,5 +1082,11 @@
              , UPD_DT         = SYSDATE
          WHERE PROMO_REQST_ID = #{reqstId}
   </update>
+
+  <select id="cntInPrgrsPromoReqst" parameterType="Map" resultType="int">
+  SELECT COUNT(*) FROM SAL0358M
+  WHERE PROMO_ID = #{promoId}
+  AND APPV_STUS = 60
+  </select>
 
 </mapper>
