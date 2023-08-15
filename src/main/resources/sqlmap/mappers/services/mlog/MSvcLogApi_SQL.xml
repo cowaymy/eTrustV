@@ -4637,7 +4637,7 @@ SELECT MST.*
                        AND HS.ACTN_MEM_ID = AC.MEM_ID(+)
                        AND MG.CODY_BRNCH_CODE = BR.CODE(+)
                ) Project2
-      WHERE SALES_ORD_NO = #{salesOrderNo}
+      WHERE (SAL_ORD_NO　= #{salesOrderNo} OR SALES_ORD_NO = #{salesOrderNo})
           AND NO = #{serviceNo}
   </select>
 
