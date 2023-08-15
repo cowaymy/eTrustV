@@ -15,6 +15,7 @@
 }
 </style>
 <script type="text/javaScript">
+
 //AUIGrid 그리드 객체
 var myGridID;
 var batchInfoGridID;
@@ -613,21 +614,21 @@ var batchInfoLayout = [
             Common.alert("<spring:message code='pay.alert.selectPayMode'/>");
             return;
         }
+        if(fn_validation()){  // Ticket - 23026832 Wawa 15/08/2023 open validation for all type of payment
+            if($("#advance").is(":checked")) {
 
-        if($("#advance").is(":checked")) {
-
-        	if(fn_validation()){
+            	//if(fn_validation()){
         		formData.append("advance","1");
         		confirmMsg = "<spring:message code='pay.alert.uploadAdvBatachPayment'/>";
 
-        	}
+        //    }
         }
         else {
 
         	formData.append("advance","");
         	confirmMsg = "<spring:message code='pay.alert.uploadBatachPayment'/>";
         }
-
+        }
 
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("payModeId", payModeId);
