@@ -37,6 +37,7 @@
 	var prdCtrlGridId;
 	var chsCtrlGridId;
 	var scoreRangeGridId;
+    var keyValueList = [];
 
 	var prdCtrlGridOptions = {
 		editable : true,
@@ -73,18 +74,10 @@
 
 	var gridDetailDataLength=0;
 
-	let prdCtrlColumnLayout = setPrdCtrlColumnLayout();
-	let chsColumnLayout     = setChsColumnLayout();
-	let scoreRangeColumnLayout= setScoreRangeColumnLayout();
-
-	$(document).ready(
-			function() {
-				prdCtrlGridId = AUIGrid.create("#prdCtrl_grid",prdCtrlColumnLayout, prdCtrlGridOptions);
-				chsCtrlGridId = AUIGrid.create("#chsCtrl_grid",chsColumnLayout, chsCtrlGridOptions);
-				scoreRangeGridId = AUIGrid.create("#scoreRange_grid",scoreRangeColumnLayout, scoreRangeGridOptions);
-
-				chgTab();
-			});
+	$(document).ready(function() {
+	    ccpFeedbackCode();
+		chgTab();
+	});
 
 	function setPrdCtrlColumnLayout() {
 		return [
@@ -178,19 +171,20 @@
                 },
                 {
                     dataField : "chsRsn",
+                    style : "my-column-left",
                     headerText : "<spring:message code='sal.text.reason'/>",
                     width : '10%'
                 },
                 {
                     dataField : "isAuto",
                     headerText : "Auto Score<br/><input type='checkbox' id='isAutoCb' style='width:15px;height:15px;''>",
-                    width : '10%',
+                    width : '7%',
                     renderer : checkBoxOptions
                 },
                 {
                     dataField : "ccpRem",
                     headerText : "<spring:message code='sal.title.text.ccpRem'/>",
-                    width : '80%',
+                    width : '60%',
                     style : "my-column-left",
                     renderer : {
                         type : "TemplateRenderer",
@@ -204,8 +198,37 @@
                         showEditorBtnOver: true
                     },
                 },
+                {
+                	dataField : "ccpResnId",
+                	headerText : "<spring:message code='sal.title.text.ccpFeedbackCode' />",
+                	width : '17%',
+                	style : "my-column-left",
+                	editable : true,
+                	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+                		   let retStr = "";
+                		   let selectedValue = value;
+                		   $.each(keyValueList, function(index, value) {
+                			   if(selectedValue == value.codeId){
+                				   retStr = value.codeName;
+                				   }
+                			   });
+                		   return retStr == "" ? value : retStr;
+                    },
+                	editRenderer : {
+                	    type       : "DropDownListRenderer",
+                        list       : keyValueList,
+                        keyField   : "codeId",
+                        valueField : "codeName"
+                    }
+                },
+                {
+                    dataField : "isHold",
+                    headerText : "On Hold<br/><input type='checkbox' id='isHoldCb' style='width:15px;height:15px;''>",
+                    width : '7%',
+                    renderer : checkBoxOptions
+                },
 
-                ];
+              ];
     }
 
 	function setScoreRangeColumnLayout() {
@@ -240,6 +263,11 @@
     }
 
 	function searchPrdCtrlAjax() {
+
+		if(prdCtrlGridId != null ) AUIGrid.destroy(prdCtrlGridId);
+
+		prdCtrlGridId = AUIGrid.create("#prdCtrl_grid",setPrdCtrlColumnLayout(), prdCtrlGridOptions);
+
 		Common.ajax("GET", "/sales/ccp/selectProductControlList.do", "", function(data) {
 
 			AUIGrid.bind(prdCtrlGridId, "headerClick", headerClickHandler);
@@ -250,6 +278,11 @@
 	}
 
 	function searchChsCtrlAjax() {
+
+		if(chsCtrlGridId != null ) AUIGrid.destroy(chsCtrlGridId);
+
+		chsCtrlGridId = AUIGrid.create("#chsCtrl_grid",setChsColumnLayout(), chsCtrlGridOptions);
+
         Common.ajax("GET", "/sales/ccp/selectChsControlList.do", "", function(data) {
 
         	AUIGrid.bind(chsCtrlGridId, "headerClick", headerClickHandler);
@@ -281,6 +314,10 @@
     }
 
 	function searchScoreRangeCtrlAjax() {
+		if(scoreRangeGridId != null ) AUIGrid.destroy(scoreRangeGridId);
+
+	    scoreRangeGridId = AUIGrid.create("#scoreRange_grid",setScoreRangeColumnLayout(), scoreRangeGridOptions);
+
 		Common.ajax("GET", "/sales/ccp/selectScoreRangeControlList.do", "", function(data) {
 			AUIGrid.setGridData(scoreRangeGridId, data);
 		});
@@ -406,6 +443,12 @@
     	}
     }
 
+    async function ccpFeedbackCode(){
+        const result = await fetch("/sales/ccp/selectReasonCodeFbList");
+        keyValueList = await result.json();
+        keyValueList[0] = {codeId:0,codeName :"Choose one"};
+    };
+
 </script>
 <section id="content">
     <ul class="path">
@@ -423,16 +466,7 @@
         <h2>
             <spring:message code='sales.title.ccpApprovalControl' />
         </h2>
-        <ul class="right_btns">
-            <li><p class="btn_blue">
-                    <a id="btnSrch" href="#"><span class="search"></span>
-                    <spring:message code='sales.btn.search' /></a>
-                </p></li>
-            <li><p class="btn_blue">
-                    <a id="btnClear" href="#"><span class="clear"></span>
-                    <spring:message code='sales.btn.clear' /></a>
-                </p></li>
-        </ul>
+        <ul class="right_btns"><li/></ul>
         <section class="tap_wrap">
             <!-- tap_wrap start -->
             <ul class="tap_type1">

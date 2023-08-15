@@ -90,7 +90,7 @@
 </resultMap>
 <select id="selectChsControlList" parameterType="Map" resultType="egovMap" resultMap="chsControlListClobMap">
   SELECT
-    REMARK_ID, CHS_RSN, UPD_ID, UPD_DT, IS_AUTO, CCP_REM
+    REMARK_ID, CHS_RSN, UPD_ID, UPD_DT, IS_AUTO, CCP_REM, CCP_RESN_ID, IS_HOLD
   FROM SAL0344D
   WHERE
   CHS_RSN
@@ -112,7 +112,7 @@
 
 <update id="updateChsControl" parameterType="Map">
     UPDATE SAL0344D
-        SET UPD_ID = #{userId}, UPD_DT = SYSDATE, IS_AUTO = #{isAuto}, CCP_REM = #{ccpRem}
+        SET UPD_ID = #{userId}, UPD_DT = SYSDATE, IS_AUTO = #{isAuto}, CCP_REM = #{ccpRem}, CCP_RESN_ID = #{ccpResnId}, IS_HOLD = #{isHold}
     WHERE CHS_RSN = #{chsRsn}
 </update>
 
