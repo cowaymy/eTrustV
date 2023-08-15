@@ -47,7 +47,7 @@ public class ePRServiceImpl implements ePRService {
 
 	@Override
 	public int ePRApproval(Map<String, Object> p) {
-		List results = new ArrayList();
+		List<Integer> results = new ArrayList();
 		results.add(ePRMapper.ePRApproval(p));
 		if ((int) p.get("stus") == 6 || ePRMapper.getFinalApprv().get("memId").equals((new BigDecimal((String) p.get("memId"))))) {
 			results.add(ePRMapper.updateRequestFinal(p));
@@ -57,11 +57,7 @@ public class ePRServiceImpl implements ePRService {
 				results.add(ePRMapper.updateRequestSPC(p));
 			}
 		}
-		return results.stream().allMatch(new Predicate<Integer>() {
-			public boolean test(Integer n) {
-				return n == 1;
-			}
-		}) ? 1 : 0;
+		return results.stream().allMatch((i) -> i > 0) ? 1 : 0;
 	}
 
 	@Override

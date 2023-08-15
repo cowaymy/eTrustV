@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -159,11 +160,12 @@ public class ePRController {
 		return ResponseEntity.ok(result);
 	}
 
+	@Transactional
 	@RequestMapping(value="/editEPR.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> editEPR(MultipartHttpServletRequest request, SessionVO sessionVO) throws InvalidFormatException, IOException {
 		Map<String, Object> response = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
-		List dbRes = new ArrayList();
+		List<Integer> dbRes = new ArrayList();
 
 		//Get other form data
 		Map<String, Object> p = new Gson().fromJson(request.getParameter("data"), HashMap.class);
@@ -257,15 +259,12 @@ public class ePRController {
 
 		dbRes.add(ePRService.insertEditHistory(params));
 
-		int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
-			public boolean test(Integer n) {
-				return n > 0;
-			}
-		}) ? 1 : 0;
+		int ret = dbRes.stream().allMatch((i) -> i > 0) ? 1 : 0;
 		response.put("success", ret);
 		return ResponseEntity.ok(response);
 	}
 
+	@Transactional
 	@RequestMapping(value="/submitEPR.do", method=RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> submitEPR(MultipartHttpServletRequest request, SessionVO sessionVO) throws InvalidFormatException, IOException {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -320,7 +319,7 @@ public class ePRController {
 				return rRes;
 			}).collect(Collectors.toList());
 
-			List dbRes = new ArrayList();
+			List<Integer> dbRes = new ArrayList();
 
 			//Get other form data
 			Map<String, Object> p = new Gson().fromJson(request.getParameter("data"), HashMap.class);
@@ -388,12 +387,7 @@ public class ePRController {
 				response.put("err", "Approval must contain SPC member as second last approver");
 				return ResponseEntity.ok(response);
 			}
-			//comment of sadness
-			int ret = dbRes.stream().allMatch(new Predicate<Integer>() {
-				public boolean test(Integer n) {
-					return n > 0;
-				}
-			}) ? 1 : 0;
+			int ret = dbRes.stream().allMatch((i) -> i > 0) ? 1 : 0;
 			if (ret == 1) {
 				if (email != null) {
 					adaptorService.sendEmail(email, false);
