@@ -30,8 +30,8 @@
         return false;
       }
     }
-    if ($("#settleDtFr").val() != '' || $("#settleDtTo").val() != '') {
-      if ($("#settleDtFr").val() == '' || $("#settleDtTo").val() == '') {
+    if ($("#settleDtFr").val() != '' || $("#settleDtTo1").val() != '') {
+      if ($("#settleDtFr").val() == '' || $("#settleDtTo1").val() == '') {
         var text = "<spring:message code='service.grid.SettleDate' />";
         Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
@@ -66,15 +66,15 @@
         nonYS = 1;
       }
 
-      if ($("#settleDtFr").val() != '' && $("#settleDtTo").val() != ''
+      if ($("#settleDtFr").val() != '' && $("#settleDtTo1").val() != ''
           && $("#settleDtFr").val() != null
-          && $("#settleDtTo").val() != null) {
+          && $("#settleDtTo1").val() != null) {
         setDateFrom = $("#settleDtFr").val().substring(6, 10) + "-"
             + $("#settleDtFr").val().substring(3, 5) + "-"
             + $("#settleDtFr").val().substring(0, 2);
-        setDateTo = $("#settleDtTo").val().substring(6, 10) + "-"
-            + $("#settleDtTo").val().substring(3, 5) + "-"
-            + $("#settleDtTo").val().substring(0, 2);
+        setDateTo = $("#settleDtTo1").val().substring(6, 10) + "-"
+            + $("#settleDtTo1").val().substring(3, 5) + "-"
+            + $("#settleDtTo1").val().substring(0, 2);
       }
       if ($("#reqDtFr").val() != '' && $("#reqDtTo").val() != ''
           && $("#reqDtFr").val() != null
@@ -139,15 +139,15 @@
         nonYS = 1;
       }
 
-      if ($("#settleDtFr").val() != '' && $("#settleDtTo").val() != ''
+      if ($("#settleDtFr").val() != '' && $("#settleDtTo1").val() != ''
           && $("#settleDtFr").val() != null
-          && $("#settleDtTo").val() != null) {
+          && $("#settleDtTo1").val() != null) {
         setDateFrom = $("#settleDtFr").val().substring(6, 10) + "-"
             + $("#settleDtFr").val().substring(3, 5) + "-"
             + $("#settleDtFr").val().substring(0, 2);
-        setDateTo = $("#settleDtTo").val().substring(6, 10) + "-"
-            + $("#settleDtTo").val().substring(3, 5) + "-"
-            + $("#settleDtTo").val().substring(0, 2);
+        setDateTo = $("#settleDtTo1").val().substring(6, 10) + "-"
+            + $("#settleDtTo1").val().substring(3, 5) + "-"
+            + $("#settleDtTo1").val().substring(0, 2);
       }
       if ($("#reqDtFr").val() != '' && $("#reqDtTo").val() != ''
           && $("#reqDtFr").val() != null
@@ -273,8 +273,8 @@
          <span>To</span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_dateHc" id="settleDtTo"
-           name="settleDtTo" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="settleDtTo1"
+           name="settleDtTo1" />
          </p>
         </div>
         <!-- date_set end -->
