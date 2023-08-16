@@ -681,7 +681,6 @@
            AND T4.MEM_PAC_ID = #{srvPacId}
            AND T4.STUS_CODE_ID = 1
            AND ROWNUM = 1
-                      AND TO_DATE(SYSDATE, 'DD/MM/YYYY') <![CDATA[ >= ]]>TO_DATE(T4.START_DT, 'DD/MM/YYYY') AND TO_DATE(SYSDATE, 'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE(T4.END_DT, 'DD/MM/YYYY')
     </select>
 
     <select id="selectProductPromotionPriceByPromoAnoStockIDNew" parameterType="Map" resultType="egovMap">
