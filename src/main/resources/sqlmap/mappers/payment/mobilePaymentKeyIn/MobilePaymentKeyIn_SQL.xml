@@ -4,7 +4,7 @@
 
   <select id="selectMobilePaymentKeyInList" parameterType="Map" resultType="egovMap">
     SELECT A.*,
-               B.S AS CRNT_LDG
+               (SELECT SUM(RENT_AMT) AS S FROM PAY0022D WHERE RENT_SO_ID =  A.ORD_ID GROUP BY RENT_SO_ID) AS CRNT_LDG
     FROM ( SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectMobilePaymentKeyInList] 20191021 - KR HAN */
                             Extent5.MOB_TICKET_NO MOB_TICKET_NO,
                             Extent1.MOB_PAY_NO MOB_PAY_NO,
@@ -153,10 +153,10 @@
 
                <where>
                  <if test="_reqstStartDt != null and _reqstStartDt != '' ">
-                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                   AND Extent1.CRT_DT <![CDATA[>= ]]> TO_DATE (#{_reqstStartDt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
                  </if>
                  <if test="_reqstEndDt != null and _reqstEndDt != '' ">
-                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                   AND Extent1.CRT_DT <![CDATA[<= ]]> TO_DATE (#{_reqstEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
                  </if>
                  <if test="ticketNo != null and ticketNo != '' ">
                    AND Extent5.MOB_TICKET_NO = #{ticketNo}
@@ -211,16 +211,14 @@
                    AND Extent1.APPROVAL_NO = #{apprvNo}
                  </if>
 
-
                </where>
-
-    ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
+    ) A
     <if test="(hidOrgCode != null and hidOrgCode != '' ) or (hidGrpCode != null and hidGrpCode != '' ) or (hidDeptCode != null and hidDeptCode != '' )">
     LEFT JOIN ORG0001D C ON A.CRT_USER_NM = C.MEM_CODE
     LEFT JOIN ORG1001V D ON C.MEM_ID = D.MEM_ID
       <where>
         <if test="hidOrgCode != null and hidOrgCode != '' ">
-          AND D.ORG_CODE = TO_CHAR(#{hidOrgCode})
+          AND D.ORG_CODE = #{hidOrgCode}
         </if>
         <if test="hidGrpCode != null and hidGrpCode != '' ">
           AND D.GRP_CODE = #{hidGrpCode}
