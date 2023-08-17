@@ -23,7 +23,12 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
-            Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") });
+        	if(AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") != null && AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") != ''){
+                Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") });
+        	}
+        	else {
+        		Common.alert("This item is pending approval");
+        	}
         });
 
         // 셀 클릭 이벤트 바인딩
