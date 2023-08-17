@@ -1245,6 +1245,7 @@ SELECT T1.PROMO_REQST_ITM_ID
          WHERE
          T1.PROMO_ID = #{promoId}
            AND T3.PROMO_ITM_STUS_ID = 1
+           AND T4.APPV_STUS = '5'
            ORDER BY T1.PROMO_REQST_ID DESC
 
     </select>
