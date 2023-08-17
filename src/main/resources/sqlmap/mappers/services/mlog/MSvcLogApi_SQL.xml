@@ -5406,7 +5406,7 @@ SELECT MST.*
                                    C.SRV_TYPE,
                                    Q.LATITUDE,
                                    Q.LONGITUDE,
-                                   L.STK_CTGRY_ID AS PROD_CAT
+                                   AD.CODE AS PROD_CAT
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -5491,7 +5491,8 @@ SELECT MST.*
                  SAL0001D Z,
                  SAL0002D AA,
                  SYS0026M AB,
-                 (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC
+                 (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC,
+                 SYS0013M AD
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SRV_ORD_ID
@@ -5528,7 +5529,7 @@ SELECT MST.*
                     AND Z.SALES_ORD_ID = AA.SALES_ORD_ID(+)
                     AND AA.ITM_STK_ID = AB.STK_ID(+)
                     AND AB.STK_CTGRY_ID = AC.CODE_ID(+)
-
+                    AND L.STK_CTGRY_ID = AD.CODE_ID(+)
                     ) t
                        JOIN (
                         SELECT
