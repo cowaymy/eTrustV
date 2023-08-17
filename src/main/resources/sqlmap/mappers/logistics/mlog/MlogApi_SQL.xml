@@ -1496,13 +1496,8 @@
         </if>
 
         <if test="searchFromDate !=null and searchFromDate !=''">
-          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]>
-                 TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'YYYYMMDD')
-        </if>
-
-        <if test="searchToDate !=null and searchToDate !=''">
-          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]>
-                 TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD')
+          AND LG47M.REQST_REQUIRE_DT BETWEEN TO_DATE(#{searchFromDate} || ' 00:00:00', 'YYYY/MM/DD HH24:MI:SS')
+            AND TO_DATE(#{searchToDate} || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS')
         </if>
   </select>
 
