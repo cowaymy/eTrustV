@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
   //AUIGrid
-  var listGridId, viewGridId, stckGridID, giftGridID;
+  var listGridId, viewGridId, stckGridID, giftGridID, priceHistoryGrid, histGridID;
 
   //Grid에서 선택된 RowID
   var selectedGridValue;
@@ -14,6 +14,38 @@
   var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
                      {"codeId": "QUEEN" ,"codeName": "QUEEN"},
                      {"codeId": "SINGLE","codeName": "SINGLE"}];
+
+  var pricehiscolumn2=[{dataField:    "promoReqstId"   ,headerText:    "Seq"     ,width:    "10%"    , visible : true},
+                       {dataField:    "promoCode"   ,headerText:    "Promo Code"     ,width:    "10%"    , visible : true},
+                       {dataField:    "promoDesc"   ,headerText:    "Promo Name"        ,width:    "10%"    , visible : true},
+                       {dataField:    "promoDtFrom"  ,headerText:    "From"        ,width:    "15%"    , visible : true},
+                       {dataField:    "promoDtEnd"   ,headerText:    "To"       ,width:    "15%"    , visible : true},
+                       {dataField:    "custType" ,headerText:"Customer Type"         ,width:    "18%"    , visible : true},
+                       {dataField:    "extrade",headerText :"Ex-Trade"                   ,width:  "10%"    , visible : true},
+                       {dataField:    "employee"   ,headerText:    "Employee"     ,width:    "18%"    , visible : true},
+                       {dataField:    "discType"   ,headerText:    "Discount Type"     ,width:    "18%"    , visible : true},
+                       {dataField:    "prcnt"   ,headerText:    "Discount Value"     ,width:    "18%"    , visible : true},
+                       {dataField:    "rpf"   ,headerText:    "RPF Discount"     ,width:    "18%"    , visible : true},
+                       {dataField:    "periodType"   ,headerText:    "Period type"     ,width:    "18%"    , visible : true},
+                       {dataField:    "discPeriod"   ,headerText:    "Discount Period"     ,width:    "18%"    , visible : true},
+                       {dataField:    "addDiscPrc"   ,headerText:    "Additional Discount(RM)"     ,width:    "18%"    , visible : true},
+                       {dataField:    "addDiscPv"   ,headerText:    "Additional Discount(PV)"     ,width:    "18%"    , visible : true},
+                       {dataField:    "megaDeal"   ,headerText:    "Mega Deal"     ,width:    "10%"    , visible : true},
+                       {dataField:    "applyTo"   ,headerText:    "Apply To"     ,width:    "18%"    , visible : true},
+                       {dataField:    "advDisc"   ,headerText:    "Advance Discount"     ,width:    "10%"    , visible : true},
+                       {dataField:    "stkSize"   ,headerText:    "Mattress Size"     ,width:    "18%"    , visible : true}
+                   ];
+
+  var subgridpros2 = {
+          // 페이지 설정
+          usePaging : true,
+          pageRowCount : 10,
+          editable : false,
+          noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+          enableSorting : true,
+          softRemoveRowMode:false,
+          reverseRowNum : true
+          };
 
   $(document)
       .ready(
@@ -32,6 +64,10 @@
               // Master Grid
               AUIGrid.bind(listGridId, "cellClick", function(event) {
                 selectedGridValue = event.rowIndex;
+              });
+
+              AUIGrid.bind(listGridId, "cellDoubleClick", function(event) {
+                  fn_openDivPop('VIEW');
               });
 
           });
@@ -151,15 +187,6 @@
         , {dataField: "stkCtgryId", visible: false}
         ];
 
-      //AUIGrid 칼럼 설정
-      var columnLayout2 = [
-          { headerText : "<spring:message code='sales.prodCd'/>", dataField : "itmcd",              editable : false, width : 100 }
-        , { headerText : "<spring:message code='sales.prodNm'/>", dataField : "itmname",            editable : false              }
-        , { headerText : "<spring:message code='sales.prdQty'/>", dataField : "promoFreeGiftQty",   editable : true, width : 120 }
-        , { headerText : "itmid",         dataField : "promoFreeGiftStkId", editable    : true,  width : 120 }
-        , { headerText : "promoItmId",    dataField : "promoItmId",         editable    : true,  width : 80  }
-        ];
-
       //그리드 속성 설정
       var gridPros = {
           usePaging           : true,         //페이징 사용
@@ -182,8 +209,7 @@
       };
 
       stckGridID = GridCommon.createAUIGrid("pop_stck_grid_wrap", columnLayout1, "", gridPros);
-/*       giftGridID = GridCommon.createAUIGrid("pop_gift_grid_wrap", columnLayout2, "", gridPros);
- */
+
       //Cell Edit - Promo Amount field is not allowed to edit if it is not a new item.
       AUIGrid.bind(stckGridID, ["cellEditBegin"], function(event) {
           if(event.dataField == "promoAmt" ) {
@@ -194,15 +220,138 @@
       });
   }
 
+  function createAUIGridStkView() {
+
+      //AUIGrid 칼럼 설정
+      var columnLayout2 = [
+          { headerText : "<spring:message code='sales.prodCd'/>", dataField  : "itmcd",   editable : false,   width : 100 }
+        , { headerText : "<spring:message code='sales.prodNm'/>", dataField  : "itmname", editable : false                  }
+        , { headerText : "<spring:message code='sales.normal'/>"
+          , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",    editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf", editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",  editable : false, width : 100 }]}
+        , { headerText : "<spring:message code='sales.title.Promotion'/>"
+          , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
+                        , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
+        , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
+        , { headerText : "promoReqstItmId",    dataField   : "promoReqstItmId",       visible  : false, width : 80 }
+        , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
+        , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
+        , {dataField: "stkCtgryId", visible: false}
+        ];
+
+
+      //그리드 속성 설정
+      var v_gridPros = {
+          usePaging           : true,         //페이징 사용
+          pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+          editable            : false,
+          fixedColumnCount    : 1,
+          showStateColumn     : false,
+          displayTreeOpen     : false,
+        //selectionMode       : "singleRow",  //"multipleCells",
+          showRowCheckColumn  : false,
+          showEditedCellMarker: false,
+          softRemoveRowMode   : false,
+          headerHeight        : 30,
+          useGroupingPanel    : false,        //그룹핑 패널 사용
+          skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+          wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+          showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+          noDataMessage       : "No order found.",
+          groupingMessage     : "Here groupping"
+      };
+
+      viewGridID = GridCommon.createAUIGrid("v_pop_stck_grid_wrap", columnLayout2, "", v_gridPros);
+
+      //Cell Edit - Promo Amount field is not allowed to edit if it is not a new item.
+      AUIGrid.bind(viewGridID, ["cellEditBegin"], function(event) {
+          if(event.dataField == "promoAmt" ) {
+              if(event.item.newItm != "NEW") {
+                  return false;
+              }
+          }
+      });
+  }
+
+
+  function createAUIGridStkHist() {
+
+      //AUIGrid 칼럼 설정
+      var columnLayout3 = [
+          { headerText : "Seq", dataField  : "promoReqstId",   editable : false,   width : 100 }
+        ,  { headerText : "<spring:message code='sales.prodCd'/>", dataField  : "itmcd",   editable : false,   width : 100 }
+        , { headerText : "<spring:message code='sales.prodNm'/>", dataField  : "itmname", editable : false                  }
+        , { headerText : "<spring:message code='sales.normal'/>"
+          , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",    editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf", editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",  editable : false, width : 100 }]}
+        , { headerText : "<spring:message code='sales.title.Promotion'/>"
+          , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
+                        , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
+        , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
+        , { headerText : "promoReqstItmId",    dataField   : "promoReqstItmId",       visible  : false, width : 80 }
+        , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
+        , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
+        , {dataField: "stkCtgryId", visible: false}
+        ];
+
+
+      //그리드 속성 설정
+      var histGridPros = {
+          usePaging           : true,         //페이징 사용
+          pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+          editable            : false,
+          fixedColumnCount    : 1,
+          showStateColumn     : false,
+          displayTreeOpen     : false,
+        //selectionMode       : "singleRow",  //"multipleCells",
+          showRowCheckColumn  : false,
+          showEditedCellMarker: false,
+          softRemoveRowMode   : false,
+          headerHeight        : 30,
+          useGroupingPanel    : false,        //그룹핑 패널 사용
+          skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+          wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+          showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+          reverseRowNum : true,
+
+          noDataMessage       : "No order found.",
+          groupingMessage     : "Here groupping"
+      };
+
+      histGridID = GridCommon.createAUIGrid("hist_stck_grid_wrap", columnLayout3, "", histGridPros);
+
+      //Cell Edit - Promo Amount field is not allowed to edit if it is not a new item.
+      AUIGrid.bind(histGridID, ["cellEditBegin"], function(event) {
+          if(event.dataField == "promoAmt" ) {
+              if(event.item.newItm != "NEW") {
+                  return false;
+              }
+          }
+      });
+  }
+
   function fn_addOption() {
       $("#promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+      $("#v_promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+
   }
 
   function fn_close(){
       $("#editForm")[0].reset();
       $("#modifyForm")[0].reset();
+      $("#v_editForm")[0].reset();
+      $("#viewForm")[0].reset();
       $("#editPrice_popup").hide();
+      $("#viewPrice_popup").hide();
+
       AUIGrid.destroy(stckGridID);
+      AUIGrid.destroy(viewGridID);
+      AUIGrid.destroy(priceHistoryGrid);
+      AUIGrid.destroy(histGridID);
   }
 
   function fn_clear() {
@@ -222,7 +371,7 @@
           if (selectedItem[0] > -1) {
 
               if(AUIGrid.getCellValue(listGridId, selectedGridValue,
-              "status") != "In Progress"){
+              "status") != "In Progress" && val == 'APPV'){
                   Common.alert("Only In Progress request are allowed to do approval");
               }
 
@@ -230,77 +379,154 @@
 
               var promoReqstId = AUIGrid.getCellValue(listGridId, selectedGridValue,"promoReqstId");
 
+              var promoId = AUIGrid.getCellValue(listGridId, selectedGridValue,"promoId");
+
               Common.ajax("GET", "/sales/promotion/selectPromoReqstInfo.do", {
                   "promoReqstId" : promoReqstId
                 }, function(promoInfo) {
                     console.log(promoInfo);
-                  $("#editPrice_popup").show();
-                  $("#promoReqstId").val(promoReqstId);
-                  $("#promoId").val(promoInfo.promoId);
-                  $("#promoDesc").val(promoInfo.promoDesc);
-                  $("#promoCode").val(promoInfo.promoCode);
-                  $("#promoDtFrom").val(promoInfo.promoDtFrom);
-                  $("#promoDtEnd").val(promoInfo.promoDtEnd);
-                  $("#promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
-                  $("#promoAddDiscPv").val(promoInfo.promoAddDiscPv);
-                  $("#promoDiscPeriod").val(promoInfo.promoDiscPeriod);
-                  $("#promoDiscPeriodTp").val(promoInfo.promoDiscPeriodTp);
-                  $("#promoFreesvcPeriodTp").val(promoInfo.promoFreesvcPeriodTp);
-                  $("#promoIsTrialCnvr").val(promoInfo.promoIsTrialCnvr);
-                  $("#promoPrcPrcnt").val(promoInfo.promoPrcPrcnt);
-                  $("#promoRpfDiscAmt").val(promoInfo.promoRpfDiscAmt);
-                  $("#promoSrvMemPacId").val(promoInfo.promoSrvMemPacId);
-                  $("#promoTypeId").val(promoInfo.promoTypeId);
-                  $("#stkSize").val(promoInfo.stkSize);
-                  $("#empChk").val(promoInfo.empChk);
-                  $("#exTrade").val(promoInfo.exTrade);
-                  $("#promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
-                  $("#promoAddDiscPv").val(promoInfo.promoAddDiscPv);
-                  $("#promoAppTypeId").val(promoInfo.promoAppTypeId);
-                  $("#promoCustType").val(promoInfo.promoCustType);
-                  $("#actionTab").val(promoInfo.actionTab);
 
-                  doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'promoAppTypeId', 'S'); //Promo Application
-                  doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'promoTypeId',       'S'); //Promo Type
-                  doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
-                  doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'promoDiscPeriodTp', 'S'); //Discount period
-                  doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, promoInfo.exTrade,              'exTrade',              'S'); //EX_Trade
-                  doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, promoInfo.empChk,               'empChk',               'S'); //EMP_CHK
-                  doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'promoDiscType',        'S'); //Discount Type
-                //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
-                  doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, promoInfo.eSales,        'eSales',        'S'); //Discount Type
+                  if(val == 'APPV'){
+                      $("#editPrice_popup").show();
+                      $("#promoReqstId").val(promoReqstId);
+                      $("#promoId").val(promoInfo.promoId);
+                      $("#promoDesc").val(promoInfo.promoDesc);
+                      $("#promoCode").val(promoInfo.promoCode);
+                      $("#promoDtFrom").val(promoInfo.promoDtFrom);
+                      $("#promoDtEnd").val(promoInfo.promoDtEnd);
+                      $("#promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
+                      $("#promoAddDiscPv").val(promoInfo.promoAddDiscPv);
+                      $("#promoDiscPeriod").val(promoInfo.promoDiscPeriod);
+                      $("#promoDiscPeriodTp").val(promoInfo.promoDiscPeriodTp);
+                      $("#promoFreesvcPeriodTp").val(promoInfo.promoFreesvcPeriodTp);
+                      $("#promoIsTrialCnvr").val(promoInfo.promoIsTrialCnvr);
+                      $("#promoPrcPrcnt").val(promoInfo.promoPrcPrcnt);
+                      $("#promoRpfDiscAmt").val(promoInfo.promoRpfDiscAmt);
+                      $("#promoSrvMemPacId").val(promoInfo.promoSrvMemPacId);
+                      $("#promoTypeId").val(promoInfo.promoTypeId);
+                      $("#stkSize").val(promoInfo.stkSize);
+                      $("#empChk").val(promoInfo.empChk);
+                      $("#exTrade").val(promoInfo.exTrade);
+                      $("#promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
+                      $("#promoAddDiscPv").val(promoInfo.promoAddDiscPv);
+                      $("#promoAppTypeId").val(promoInfo.promoAppTypeId);
+                      $("#promoCustType").val(promoInfo.promoCustType);
+                      $("#actionTab").val(promoInfo.actionTab);
 
-                //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
-                  doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'promoSrvMemPacId', 'S'); //Common Code
+                      doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'promoAppTypeId', 'S'); //Promo Application
+                      doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'promoTypeId',       'S'); //Promo Type
+                      doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
+                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'promoDiscPeriodTp', 'S'); //Discount period
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, promoInfo.exTrade,              'exTrade',              'S'); //EX_Trade
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, promoInfo.empChk,               'empChk',               'S'); //EMP_CHK
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'promoDiscType',        'S'); //Discount Type
+                    //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, promoInfo.eSales,        'eSales',        'S'); //Discount Type
 
-                  doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
+                    //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
+                      doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'promoSrvMemPacId', 'S'); //Common Code
 
-                  if(promoInfo.megaDeal == '1') {
-                      $('#megaDealY').prop("checked", true);
+                      doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
+
+                      if(promoInfo.megaDeal == '1') {
+                          $('#megaDealY').prop("checked", true);
+                      }
+                      else {
+                          $('#megaDealN').prop("checked", true);
+                      }
+
+                      if(promoInfo.advDisc == '1') {
+                          $('#advDiscY').prop("checked", true);
+                      }
+                      else {
+                          $('#advDiscN').prop("checked", true);
+                      }
+
+                      $('#modifyForm').find(':input').prop("disabled", true);
+
+                      fn_selectPromotionPrdListAjax(promoReqstId, val);
+
+                      createAUIGridStk();
+
+                  } else {
+
+                	  AUIGrid.destroy(histGridID);
+
+                      $("#viewPrice_popup").show();
+                      $("#v_promoReqstId").val(promoReqstId);
+                      $("#v_promoId").val(promoInfo.promoId);
+                      $("#v_promoDesc").val(promoInfo.promoDesc);
+                      $("#v_promoCode").val(promoInfo.promoCode);
+                      $("#v_promoDtFrom").val(promoInfo.promoDtFrom);
+                      $("#v_promoDtEnd").val(promoInfo.promoDtEnd);
+                      $("#v_promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
+                      $("#v_promoAddDiscPv").val(promoInfo.promoAddDiscPv);
+                      $("#v_promoDiscPeriod").val(promoInfo.promoDiscPeriod);
+                      $("#v_promoDiscPeriodTp").val(promoInfo.promoDiscPeriodTp);
+                      $("#v_promoFreesvcPeriodTp").val(promoInfo.promoFreesvcPeriodTp);
+                      $("#v_promoIsTrialCnvr").val(promoInfo.promoIsTrialCnvr);
+                      $("#v_promoPrcPrcnt").val(promoInfo.promoPrcPrcnt);
+                      $("#v_promoRpfDiscAmt").val(promoInfo.promoRpfDiscAmt);
+                      $("#v_promoSrvMemPacId").val(promoInfo.promoSrvMemPacId);
+                      $("#v_promoTypeId").val(promoInfo.promoTypeId);
+                      $("#v_stkSize").val(promoInfo.stkSize);
+                      $("#v_empChk").val(promoInfo.empChk);
+                      $("#v_exTrade").val(promoInfo.exTrade);
+                      $("#v_promoAddDiscPrc").val(promoInfo.promoAddDiscPrc);
+                      $("#v_promoAddDiscPv").val(promoInfo.promoAddDiscPv);
+                      $("#v_promoAppTypeId").val(promoInfo.promoAppTypeId);
+                      $("#v_promoCustType").val(promoInfo.promoCustType);
+                      $("#v_actionTab").val(promoInfo.actionTab);
+                      $("#v_appvRemark").val(promoInfo.appvRemark);
+                      $("#v_appvStatus").val(promoInfo.appvStatus);
+
+                      doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'v_promoAppTypeId', 'S'); //Promo Application
+                      doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'v_promoTypeId',       'S'); //Promo Type
+                      doGetCombo('/common/selectCodeList.do', '8',   '',     'v_promoCustType',     'S', 'fn_addOption'); //Customer Type
+                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'v_promoDiscPeriodTp', 'S'); //Discount period
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, promoInfo.exTrade,              'v_exTrade',              'S'); //EX_Trade
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, promoInfo.empChk,               'v_empChk',               'S'); //EMP_CHK
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'v_promoDiscType',        'S'); //Discount Type
+                    //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, promoInfo.eSales,        'v_eSales',        'S'); //Discount Type
+
+                    //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
+                      doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'v_promoSrvMemPacId', 'S'); //Common Code
+
+                      doDefCombo(stkSizeData, promoInfo.stkSize ,'v_stkSize', 'S', '');
+
+                      if(promoInfo.megaDeal == '1') {
+                          $('#v_megaDealY').prop("checked", true);
+                      }
+                      else {
+                          $('#v_megaDealN').prop("checked", true);
+                      }
+
+                      if(promoInfo.advDisc == '1') {
+                          $('#v_advDiscY').prop("checked", true);
+                      }
+                      else {
+                          $('#v_advDiscN').prop("checked", true);
+                      }
+
+                      $('#viewForm').find(':input').prop("disabled", true);
+                      $('#v_editForm').find(':input').prop("disabled", true);
+
+                      fn_selectPromotionPrdListAjax(promoReqstId, val);
+
+                      createAUIGridStkView();
+
+                      fn_selectPromoHistList(promoId);
+
+                      priceHistoryGrid = AUIGrid.create("#histList_grid_wrap", pricehiscolumn2, subgridpros2);
+
+                      createAUIGridStkHist();
+                      fn_selectPromotionPrdHistListAjax(promoId);
+
                   }
-                  else {
-                      $('#megaDealN').prop("checked", true);
-                  }
 
-                  if(promoInfo.advDisc == '1') {
-                      $('#advDiscY').prop("checked", true);
-                  }
-                  else {
-                      $('#advDiscN').prop("checked", true);
-                  }
 
-                  fn_selectPromotionPrdListAjax(promoReqstId);
 
-                  createAUIGridStk();
-                  //Product List Search
-
-                  //Free Gift List Search
-/*                   fn_selectPromotionFreeGiftListAjax('${promoInfo.promoId}');
- */
-                  $('#modifyForm').find(':input').prop("disabled", true);
-
-/*                   AUIGrid.setProp(stckGridID, "editable" , false);
- */
                 });
               }
 
@@ -310,12 +536,126 @@
 
   }
 
-  function fn_selectPromotionPrdListAjax(promoReqstId) {
+  function fn_selectPromoHistList(promoId){
+	  Common.ajax("GET", "/sales/promotion/selectPromoHistList.do", { promoId : promoId }, function(result) {
+		  AUIGrid.setGridData(priceHistoryGrid, result);
+
+	  });
+  }
+
+  function fn_selectPromotionPrdListAjax(promoReqstId, opt) {
       console.log('fn_selectPromotionPrdListAjax START');
       Common.ajax("GET", "/sales/promotion/selectPromoReqstPrdList.do", { promoReqstId : promoReqstId }, function(result) {
-          AUIGrid.setGridData(stckGridID, result);
 
-           fn_getPrdPriceInfo();
+
+          if(opt == 'APPV'){
+
+        	  AUIGrid.setGridData(stckGridID, result);
+              fn_getPrdPriceInfo();
+          }
+          else {
+              AUIGrid.setGridData(viewGridID, result);
+              fn_getPrdPriceInfoView();
+          }
+      });
+  }
+
+  function fn_selectPromotionPrdHistListAjax(promoId, opt) {
+      Common.ajax("GET", "/sales/promotion/selectPromoReqstPrdHistList.do", { promoId : promoId }, function(result) {
+
+    	  console.log(result);
+           AUIGrid.setGridData(histGridID, result);
+
+           for(var i = 0; i < result.length; i++) {
+               for(var j = 0; j < AUIGrid.getRowCount(histGridID) ; j++) {
+                   var stkId = AUIGrid.getCellValue(histGridID, j, "promoItmStkId");
+                   if(stkId == result[i].promoItmStkId) {
+                       AUIGrid.setCellValue(histGridID, j, "amt",    result[i].amt);
+                       AUIGrid.setCellValue(histGridID, j, "prcRpf", result[i].prcRpf);
+                       AUIGrid.setCellValue(histGridID, j, "prcPv",  result[i].prcPv);
+                       AUIGrid.setCellValue(histGridID, j, "stkCtgryId",  result[i].stkCtgryId);
+
+                       var orgPrcVal = AUIGrid.getCellValue(histGridID, j, "amt");
+                       var promoDiscType = AUIGrid.getCellValue(histGridID, j, "promoDiscType");
+                       var appType = AUIGrid.getCellValue(histGridID, j, "promoAppTypeId");
+                       var dscPrcVal = AUIGrid.getCellValue(histGridID, j, "promoPrcPrcnt");
+                       var addPrcVal = AUIGrid.getCellValue(histGridID, j, "promoAddDiscPrc");
+                       var newPrcVal = 0;
+
+                       if(promoDiscType == '0') {//%
+                           newPrcVal = orgPrcVal - (orgPrcVal * (dscPrcVal / 100)) - addPrcVal;
+                       }
+                       else {
+                           newPrcVal = orgPrcVal - dscPrcVal - addPrcVal;
+                       }
+
+                       newPrcVal = Math.floor(newPrcVal);
+
+                       if(newPrcVal < 0) newPrcVal = 0;
+                       if((!(AUIGrid.getCellValue(histGridID, j, "stkCtgryId") == 7177) || dscPrcVal != 0) && appType == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
+
+                       AUIGrid.setCellValue(histGridID, j, "promoAmt", newPrcVal);
+
+                       var orgRpfVal = 0;
+                       var dscRpfVal = AUIGrid.getCellValue(histGridID, j, "promoRpfDiscAmt");
+                       var newRpfVal = 0;
+                       var extrade = AUIGrid.getCellValue(histGridID, j, "exTrade");
+
+                       orgRpfVal = AUIGrid.getCellValue(histGridID, j, "prcRpf");
+
+                           if(appType != 2284 || extrade == '1') {
+                               newRpfVal = 0;
+                           }
+                           else {
+                               newRpfVal = orgRpfVal - dscRpfVal;
+                           }
+
+                           if(newRpfVal < 0) newRpfVal = 0;
+
+                           AUIGrid.setCellValue(histGridID, j, "promoPrcRpf", newRpfVal);
+
+                           var orgPvVal = 0;
+                           var dscPvVal = 0;
+                           var addPvVal = AUIGrid.getCellValue(histGridID, j, "promoAddDiscPv");
+                           var newPvVal = 0;
+                           var gstPvVal = 0;
+                           var savedPvYn;
+
+                               savedPvYn = AUIGrid.getCellValue(histGridID, j, "savedPvYn");
+
+                               if(savedPvYn == "Y") {
+                                   continue;
+                               }
+
+                               orgPvVal  = AUIGrid.getCellValue(histGridID, j, "prcPv");
+
+                               if($('#exTrade').val() == '1') {
+                                   orgPvVal = orgPvVal * (70/100);
+                               }
+
+                               if(appType == '2284') {
+                                   dscPvVal = dscRpfVal;
+                               }
+                               else if(appType == '2285' || appType == '2287'){
+                                   dscPvVal = AUIGrid.getCellValue(histGridID, j, "amt") - AUIGrid.getCellValue(histGridID, j, "promoAmt");
+                               }
+
+                               newPvVal = fn_calcPvVal(orgPvVal - dscPvVal - addPvVal);
+                               gstPvVal = fn_calcPvVal(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+
+                               console.log('dscPvVal   :'+dscPvVal);
+                               console.log('dscPvValGST:'+Math.floor(dscPvVal*(1/1.06)));
+
+                               if(newPvVal < 0) newPvVal = 0;
+                               if(gstPvVal < 0) gstPvVal = 0;
+
+                               AUIGrid.setCellValue(histGridID, i, "promoItmPv", newPvVal);
+                               AUIGrid.setCellValue(histGridID, i, "promoItmPvGst", gstPvVal);
+
+                   }
+               }
+           }
+
       });
   }
 
@@ -356,7 +696,7 @@
   function fn_calcDiscountPrice() {
 
       var orgPrcVal = 0;
-      var dscPrcVal = FormUtil.isEmpty($('#promoDiscValue').val())  ? 0 : $('#promoDiscValue').val().trim();
+      var dscPrcVal = FormUtil.isEmpty($('#promoPrcPrcnt').val())  ? 0 : $('#promoPrcPrcnt').val().trim();
       var addPrcVal = FormUtil.isEmpty($('#promoAddDiscPrc').val()) ? 0 : $('#promoAddDiscPrc').val().trim();
       var newPrcVal = 0;
 
@@ -446,6 +786,135 @@
           AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
       }
   }
+
+  function fn_getPrdPriceInfoView() {
+
+      var promotionVO = {
+          salesPromoMVO : {
+              promoAppTypeId         : $('#v_promoAppTypeId').val(),
+              promoSrvMemPacId       : $('#v_promoSrvMemPacId').val()
+          },
+          salesPromoDGridDataSetList : GridCommon.getGridData(viewGridID)
+      };
+
+      Common.ajax("POST", "/sales/promotion/selectPriceInfo.do", promotionVO, function(result) {
+
+          var arrGridData = AUIGrid.getGridData(viewGridID);
+
+          for(var i = 0; i < result.length; i++) {
+              for(var j = 0; j < AUIGrid.getRowCount(viewGridID) ; j++) {
+                  var stkId = AUIGrid.getCellValue(viewGridID, j, "promoItmStkId");
+                  if(stkId == result[i].promoItmStkId) {
+                      AUIGrid.setCellValue(viewGridID, j, "amt",    result[i].amt);
+                      AUIGrid.setCellValue(viewGridID, j, "prcRpf", result[i].prcRpf);
+                      AUIGrid.setCellValue(viewGridID, j, "prcPv",  result[i].prcPv);
+                      AUIGrid.setCellValue(viewGridID, j, "stkCtgryId",  result[i].stkCtgryId);
+                  }
+              }
+          }
+
+          fn_calcDiscountPriceView();
+
+          fn_calcDiscountRPFView();
+
+          fn_calcDiscountPVView();
+      });
+  }
+
+  function fn_calcDiscountPriceView() {
+
+      var orgPrcVal = 0;
+      var dscPrcVal = FormUtil.isEmpty($('#v_promoPrcPrcnt').val())  ? 0 : $('#v_promoPrcPrcnt').val().trim();
+      var addPrcVal = FormUtil.isEmpty($('#v_promoAddDiscPrc').val()) ? 0 : $('#v_promoAddDiscPrc').val().trim();
+      var newPrcVal = 0;
+
+      for(var i = 0; i < AUIGrid.getRowCount(viewGridID) ; i++) {
+
+          orgPrcVal = AUIGrid.getCellValue(viewGridID, i, "amt");
+
+          if($('#v_promoDiscType').val() == '0') {//%
+              newPrcVal = orgPrcVal - (orgPrcVal * (dscPrcVal / 100)) - addPrcVal;
+          }
+          else {
+              newPrcVal = orgPrcVal - dscPrcVal - addPrcVal;
+          }
+
+          newPrcVal = Math.floor(newPrcVal);
+
+          if(newPrcVal < 0) newPrcVal = 0;
+          if((!(AUIGrid.getCellValue(viewGridID, i, "stkCtgryId") == 7177) || dscPrcVal != 0) && $('#v_promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
+
+          AUIGrid.setCellValue(viewGridID, i, "promoAmt", newPrcVal);
+      }
+  }
+
+  function fn_calcDiscountRPFView() {
+
+      var orgRpfVal = 0;
+      var dscRpfVal = FormUtil.isEmpty($('#v_promoRpfDiscAmt').val()) ? 0 : $('#v_promoRpfDiscAmt').val().trim();
+      var newRpfVal = 0;
+
+      for(var i = 0; i < AUIGrid.getRowCount(viewGridID) ; i++) {
+
+          orgRpfVal = AUIGrid.getCellValue(viewGridID, i, "prcRpf");
+
+          if($('#v_promoAppTypeId').val() != 2284 || $('#v_exTrade').val() == '1') {
+              newRpfVal = 0;
+          }
+          else {
+              newRpfVal = orgRpfVal - dscRpfVal;
+          }
+
+          if(newRpfVal < 0) newRpfVal = 0;
+
+          AUIGrid.setCellValue(viewGridID, i, "promoPrcRpf", newRpfVal);
+      }
+  }
+
+  function fn_calcDiscountPVView() {
+      console.log('fn_calcDiscountPV() START');
+      var orgPvVal = 0;
+      var dscPvVal = 0;
+      var addPvVal = FormUtil.isEmpty($('#v_promoAddDiscPv').val()) ? 0 : $('#v_promoAddDiscPv').val().trim();
+      var newPvVal = 0;
+      var gstPvVal = 0;
+      var savedPvYn;
+
+      for(var i = 0; i < AUIGrid.getRowCount(viewGridID) ; i++) {
+
+          savedPvYn = AUIGrid.getCellValue(viewGridID, i, "savedPvYn");
+
+          if(savedPvYn == "Y") {
+              continue;
+          }
+
+          orgPvVal  = AUIGrid.getCellValue(viewGridID, i, "prcPv");
+
+          if($('#v_exTrade').val() == '1') {
+              orgPvVal = orgPvVal * (70/100);
+          }
+
+          if($('#v_promoAppTypeId').val() == '2284') {
+              dscPvVal = FormUtil.isEmpty($('#v_promoRpfDiscAmt').val()) ? 0 : $('#v_promoRpfDiscAmt').val().trim();
+          }
+          else if($('#v_promoAppTypeId').val() == '2285' || $('#v_promoAppTypeId').val() == '2287'){
+              dscPvVal = AUIGrid.getCellValue(viewGridID, i, "amt") - AUIGrid.getCellValue(viewGridID, i, "promoAmt");
+          }
+
+          newPvVal = fn_calcPvVal(orgPvVal - dscPvVal - addPvVal);
+          gstPvVal = fn_calcPvVal(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+
+          console.log('dscPvVal   :'+dscPvVal);
+          console.log('dscPvValGST:'+Math.floor(dscPvVal*(1/1.06)));
+
+          if(newPvVal < 0) newPvVal = 0;
+          if(gstPvVal < 0) gstPvVal = 0;
+
+          AUIGrid.setCellValue(viewGridID, i, "promoItmPv", newPvVal);
+          AUIGrid.setCellValue(viewGridID, i, "promoItmPvGst", gstPvVal);
+      }
+  }
+
 
   hideNewPopup = function(val) {
 
@@ -941,27 +1410,243 @@
 <h2><spring:message code='sales.title.sub.promo.prodList'/></h2>
 </aside><!-- title_line end -->
 
-<%-- <ul class="right_btns">
-    <li id="liProductDel" class="blind"><p class="btn_grid"><a id="btnProductDel" href="#"><spring:message code='sys.btn.del'/></a></p></li>
-    <li id="liProductAdd" class="blind"><p class="btn_grid"><a id="btnProductAdd" href="#"><spring:message code='sys.btn.add'/></a></p></li>
-</ul> --%>
-
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="pop_stck_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<%-- <aside class="title_line"><!-- title_line start -->
-<h2><spring:message code='sales.title.sub.promo.giftList'/></h2>
+<!-- grid_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div>
+
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (VIEW )
+-------------------------------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div id="viewPrice_popup" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Promotion Approval Information</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a id = "fclose" onclick="javascript:fn_close();"><spring:message code="expense.CLOSE" /></a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2><spring:message code='sales.title.sub.promo.promoInfo'/></h2>
+</aside><!-- title_line end -->
+<form id="viewForm" name="viewForm">
+<input type="hidden" name="promoReqstId" id="promoReqstId" value=""/>
+<input type="hidden" name="promoId" id="promoId"/>
+<input type="hidden" name="actionTab" id="actionTab"/>
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.promoApp'/><span class="must">*</span></th>
+    <td>
+    <select id="v_promoAppTypeId" name="v_promoAppTypeId" class="w100p"></select>
+    </td>
+    <th scope="row"><spring:message code='sales.promo.promoType'/><span class="must">*</span></th>
+    <td>
+    <select id="v_promoTypeId" name="v_promoTypeId" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.period'/><span class="must">*</span></th>
+    <td colspan="3">
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input id="v_promoDtFrom" name="v_promoDtFrom" value="${promoInfo.promoDtFrom}" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <span>To</span>
+    <p><input id="v_promoDtEnd" name="v_promoDtEnd" value="${promoInfo.promoDtEnd}" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    </div><!-- date_set end -->
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.promoNm'/></th>
+    <td><input id="v_promoDesc" name="v_promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
+    <td><input id="v_promoCode" name="v_promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2><spring:message code='sales.title.sub.promo.custInfo'/></h2>
 </aside><!-- title_line end -->
 
-<ul class="right_btns">
-    <li id="liFreeGiftDel" class="blind"><p class="btn_grid"><a id="btnFreeGiftDel" href="#"><spring:message code='sys.btn.del'/></a></p></li>
-    <li id="liFreeGiftAdd" class="blind"><p class="btn_grid"><a id="btnFreeGiftAdd" href="#"><spring:message code='sys.btn.add'/></a></p></li>
-</ul>
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:110px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
+    <td>
+    <select id="v_promoCustType" name="v_promoCustType" class="w100p"></select>
+    </td>
+    <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
+    <td>
+    <select id="v_exTrade" name="v_exTrade" class="w100p" disabled></select>
+    </td>
+    <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
+    <td>
+    <select id="v_empChk" name="v_empChk" class="w100p" disabled></select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<section id="sctPromoDetailV">
+<aside class="title_line"><!-- title_line start -->
+<h2><spring:message code='sales.title.sub.promo.dtl'/></h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.discTypeVal'/><span class="must">*</span></th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p>
+    <select id="v_promoDiscType" name="v_promoDiscType" class="w100p"></select>
+    </p>
+    <p>
+    <input id="v_promoPrcPrcnt" name="v_promoPrcPrcnt" value="${promoInfo.promoPrcPrcnt}" type="text" title="" placeholder="" class="w100p" />
+    </p>
+    </div>
+    </td>
+    <th scope="row"><spring:message code='sales.promo.rpfDisc'/><span class="must">*</span></th>
+    <td>
+    <input id="v_promoRpfDiscAmt" name="v_promoRpfDiscAmt" value="${promoInfo.promoRpfDiscAmt}" type="text" title="" placeholder="" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.discPeriod'/><span class="must">*</span></th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p>
+    <select id="v_promoDiscPeriodTp" name="v_promoDiscPeriodTp" class="w100p"></select>
+    </p>
+    <p>
+    <input id="v_promoDiscPeriod" name="v_promoDiscPeriod" value="${promoInfo.promoDiscPeriod}" type="text" title="" placeholder=""  class="w100p" />
+    </p>
+    </div>
+    </td>
+
+    <th scope="row"><spring:message code='sales.promo.svcPack'/><span class="must">*</span></th>
+    <td>
+    <select id="v_promoSrvMemPacId" name="v_promoSrvMemPacId" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.promo.addDisc'/></th>
+    <td><input id="v_promoAddDiscPrc" name="v_promoAddDiscPrc" value="${promoInfo.promoAddDiscPrc}" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row"><spring:message code='sales.promo.addDiscPV'/></th>
+    <td><input id="v_promoAddDiscPv" name="v_promoAddDiscPv" value="${promoInfo.promoAddDiscPv}" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Mega Deal</th>
+    <td>
+        <input id="v_megaDealY" name="megaDeal" type="radio" value="1" /><span>Yes</span>
+        <input id="v_megaDealN" name="megaDeal" type="radio" value="0" /><span>No</span>
+    </td>
+    <th scope="row"><spring:message code='sales.promo.eSales'/><span class="must">*</span></th>
+    <td>
+        <select id="v_eSales" name="v_eSales" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Advance Discount</th>
+    <td>
+        <input id="v_advDiscY" name="v_advDisc" type="radio" value="1" /><span>Yes</span>
+        <input id="v_advDiscN" name="v_advDisc" type="radio" value="0" /><span>No</span>
+    </td>
+    <th scope="row">Mattress Size</th>
+    <td>
+        <select id="v_stkSize" name="v_stkSize" class="w100p"></select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section>
+
+<section id="appvPromoDetailV">
+<aside class="title_line"><!-- title_line start -->
+<h2>Approval Detail</h2>
+</aside><!-- title_line end -->
+<form action="#" method="post" id="v_editForm" name="v_editForm">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+<th scope="row">Approval Status<span style="color:red">*</span></th>
+<td ><select id="v_appvStatus" name="v_appvStatus" class="w100p">
+<option value="" selected>Choose One</option>
+<option value=5>Approve</option>
+<option value=6>Reject</option>
+</select></td>
+ <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+    <td colspan="3">
+        <textarea type="text" title="" placeholder="" class="w100p" id="v_appvRemark" name="v_appvRemark" maxlength="100"></textarea>
+        <span id="characterCount">0 of 100 max characters</span>
+    </td>
+</tr>
+</tbody>
+</table>
+</form>
+<aside class="title_line"><!-- title_line start -->
+<h2><spring:message code='sales.title.sub.promo.prodList'/></h2>
+</aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="pop_gift_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
-</article> --%>
+<div id="v_pop_stck_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+        <section class="search_result"><!-- search_result start -->
+    <aside class="title_line"><!-- title_line start -->
+            <h4>Promotion Information History</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" id="histList_grid_wrap"><!-- grid_wrap start -->
+        </article><!-- grid_wrap end -->
+
+        </section><!-- search_result end -->
+        <section class="search_result"><!-- search_result start -->
+    <aside class="title_line"><!-- title_line start -->
+            <h4>Product List History</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" id="hist_stck_grid_wrap"><!-- grid_wrap start -->
+        </article><!-- grid_wrap end -->
+
+        </section><!-- search_result end -->
 <!-- grid_wrap end -->
 
 </section><!-- pop_body end -->

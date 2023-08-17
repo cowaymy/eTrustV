@@ -62,6 +62,7 @@ public interface PromotionMapper {
 	void insertPromoReqstM(SalesPromoMVO salesPromoMVO);
 
 	void insertPromoReqstD(SalesPromoDVO salesPromoDVO);
+	void updatePromoReqstItmId(SalesPromoDVO salesPromoDVO);
 
 	List<EgovMap> selectPromotionApprovalList(Map<String, Object> params);
 	EgovMap selectPromoReqstInfo(Map<String, Object> params);
@@ -71,4 +72,10 @@ public interface PromotionMapper {
 	void updatePromoReqstApproval(Map<String, Object> params);
 
 	int cntInPrgrsPromoReqst(int promoId);
+
+	void updateReqstPromoId(SalesPromoMVO salesPromoMVO);
+
+	List<EgovMap> selectPromoHistList(Map<String, Object> params);
+	List<EgovMap> selectPromoReqstPrdHistList(Map<String, Object> params);
+
 }

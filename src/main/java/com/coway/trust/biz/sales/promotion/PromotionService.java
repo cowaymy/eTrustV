@@ -57,4 +57,8 @@ public interface PromotionService {
 
 	int cntInPrgrsPromoReqst(int promoId);
 
+	List<EgovMap> selectPromoHistList(Map<String, Object> params);
+
+	List<EgovMap> selectPromoReqstPrdHistList(Map<String, Object> params);
+
 }

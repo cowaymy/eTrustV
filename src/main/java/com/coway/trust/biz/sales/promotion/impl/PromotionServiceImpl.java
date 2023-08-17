@@ -133,7 +133,10 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
 
 			promotionMapper.insertSalesPromoD(salesPromoDVO);
+			promotionMapper.updatePromoReqstItmId(salesPromoDVO);
 		}
+
+		promotionMapper.updateReqstPromoId(salesPromoMVO);
 
 /*		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 
@@ -534,4 +537,13 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		return promotionMapper.cntInPrgrsPromoReqst(promoId);
 	}
 
+	@Override
+	public List<EgovMap> selectPromoHistList(Map<String, Object> params) {
+		return promotionMapper.selectPromoHistList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPromoReqstPrdHistList(Map<String, Object> params) {
+		return promotionMapper.selectPromoReqstPrdHistList(params);
+	}
 }

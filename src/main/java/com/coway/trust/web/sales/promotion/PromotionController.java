@@ -378,7 +378,7 @@ public class PromotionController {
 		message.setCode(AppConstants.SUCCESS);
 
 		if(promotionVO.getSalesPromoMVO().getAppvStus() == 5){
-			promotionService.updatePromotion(promotionVO, sessionVO);;
+			promotionService.updatePromotion(promotionVO, sessionVO);
 			message.setMessage("Promo request has been successfully approved");
 		}
 
@@ -388,6 +388,23 @@ public class PromotionController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/selectPromoHistList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromoHistList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		List<EgovMap> resultList = promotionService.selectPromoHistList(params);
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/selectPromoReqstPrdHistList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromoReqstPrdHistList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		List<EgovMap> resultList = promotionService.selectPromoReqstPrdHistList(params);
+
+		return ResponseEntity.ok(resultList);
+	}
+
 
 
 }

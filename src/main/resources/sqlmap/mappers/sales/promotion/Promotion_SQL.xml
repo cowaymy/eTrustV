@@ -1041,6 +1041,8 @@
              , T1.ADV_DISC
              , T1.STK_SIZE
              , T1.ACTION_TAB
+             , T1.APPV_STUS AS APPV_STATUS
+             , T1.REMARK AS APPV_REMARK
           FROM SAL0358M T1
           LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
          WHERE T1.PROMO_REQST_ID = #{promoReqstId}
@@ -1088,5 +1090,93 @@
   WHERE PROMO_ID = #{promoId}
   AND APPV_STUS = 60
   </select>
+
+        <update id="updateReqstPromoId" parameterType="salesPromoMVO">
+          UPDATE SAL0358M
+           SET PROMO_ID = #{promoId}
+         WHERE PROMO_REQST_ID = #{promoReqstId}
+  </update>
+
+          <update id="updatePromoReqstItmId" parameterType="salesPromoDVO">
+          UPDATE SAL0359D
+           SET PROMO_ID = #{promoId}
+           , PROMO_ITM_ID = #{promoItmId}
+         WHERE PROMO_REQST_ITM_ID = #{promoReqstItmId}
+  </update>
+
+      <select id="selectPromoHistList" parameterType="Map" resultType="egovMap">
+SELECT A.PROMO_REQST_ID, B.PROMO_ID, B.PROMO_CODE, A.PROMO_DESC
+             , TO_CHAR(A.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(A.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , DECODE(C.CODE_DESC, NULL, 'ALL', C.CODE_DESC) AS CUST_TYPE
+             , DECODE(A.EX_TRADE, 1, 'YES', 'NO') AS EXTRADE
+             , DECODE(A.EMP_CHK, 1, 'YES', 'NO') AS EMPLOYEE
+             , DECODE(A.MEGA_DEAL, 1, 'YES', 'NO') AS MEGA_DEAL
+             , DECODE(A.ADV_DISC, 1, 'YES', 'NO') AS ADV_DISC
+             , D.CODE_DESC AS DISC_TYPE
+             , A.PROMO_PRC_PRCNT AS PRCNT
+             , A.PROMO_RPF_DISC_AMT AS RPF
+             , E.CODE_DESC AS PERIOD_TYPE
+             , A.PROMO_DISC_PERIOD AS DISC_PERIOD
+             , A.PROMO_ADD_DISC_PRC AS ADD_DISC_PRC
+             , A.PROMO_ADD_DISC_PV AS ADD_DISC_PV
+             , F.CODE_DESC AS APPLY_TO
+             , A.STK_SIZE
+FROM SAL0358M A
+JOIN SAL0017D B ON B.PROMO_ID = A.PROMO_ID
+LEFT JOIN SYS0013M C ON C.CODE_ID = A.PROMO_CUST_TYPE AND C.CODE_MASTER_ID = 8
+LEFT JOIN SYS0013M D ON D.CODE = A.PROMO_DISC_TYPE AND D.CODE_MASTER_ID = 323
+LEFT JOIN SYS0013M E ON E.CODE_ID = A.PROMO_DISC_PERIOD_TP AND E.CODE_MASTER_ID = 322
+LEFT JOIN SYS0013M F ON F.CODE = A.E_SALES AND F.CODE_MASTER_ID = 451
+WHERE A.APPV_STUS = '5'
+AND B.PROMO_ID = #{promoId}
+ORDER BY A.PROMO_REQST_ID DESC
+    </select>
+
+    <select id="selectPromoReqstPrdHistList" parameterType="Map" resultType="egovMap">
+SELECT T1.PROMO_REQST_ITM_ID
+             , T1.PROMO_REQST_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.ACTION_TAB
+             , T5.AMT
+             , T5.PRC_PV
+             , T5.PRC_RPF
+             , T2.STK_CTGRY_ID
+             , T4.PROMO_DISC_TYPE
+             , T4.PROMO_PRC_PRCNT
+             , T4.PROMO_APP_TYPE_ID
+             , T4.PROMO_SRV_MEM_PAC_ID
+             , T4.PROMO_ADD_DISC_PRC
+             , T4.PROMO_ADD_DISC_PV
+             , T4.EX_TRADE
+             , T4.PROMO_RPF_DISC_AMT
+          FROM SAL0359D T1
+          JOIN SAL0358M T4 ON T4.PROMO_REQST_ID = T1.PROMO_REQST_ID
+          JOIN SAL0018D T3 ON T3.PROMO_ITM_ID = T1.PROMO_ITM_ID
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT JOIN SAL0016M T5 ON T5.STK_ID = T2.STK_ID
+          AND T5.MEM_PAC_ID = T4.PROMO_SRV_MEM_PAC_ID
+          AND T5.STUS_CODE_ID = 1
+         WHERE
+         T1.PROMO_ID = #{promoId}
+           AND T3.PROMO_ITM_STUS_ID = 1
+           ORDER BY T1.PROMO_REQST_ID DESC
+
+    </select>
 
 </mapper>
