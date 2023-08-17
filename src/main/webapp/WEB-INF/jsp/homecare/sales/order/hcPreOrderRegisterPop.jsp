@@ -171,7 +171,8 @@
     $(function(){
 
     	$('#btnRltdNoEKeyIn').click(function() {
-    		var catCode = "";
+    		Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+    		/* var catCode = "";
     		if($("#ordProduct1").val() != null && $("#ordProduct1").val() != ''){
 	            Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:$("#ordProduct1").val()},function(data){
 	                catCode = data.catCode;
@@ -186,7 +187,7 @@
     		}else{
                 Common.alert('<spring:message code="sal.alert.msg.plzSelProd" />');
                 return;
-            }
+            } */
       });
 
         $('#btnConfirm').click(function() {
