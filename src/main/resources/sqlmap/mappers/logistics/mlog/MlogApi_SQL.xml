@@ -1466,7 +1466,7 @@
         </if>
 
         <if test="reqStatus eq 'MROL'.toString() ">
-           AND LG47M.RCIV_CDC_RDC = SY28M.WH_LOC_ID
+           AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
         </if>
 
         AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
@@ -1496,13 +1496,8 @@
         </if>
 
         <if test="searchFromDate !=null and searchFromDate !=''">
-          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]>
-                 TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'YYYYMMDD')
-        </if>
-
-        <if test="searchToDate !=null and searchToDate !=''">
-          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]>
-                 TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD')
+          AND LG47M.REQST_REQUIRE_DT BETWEEN TO_DATE(#{searchFromDate} || ' 00:00:00', 'YYYYMMDD HH24:MI:SS')
+            AND TO_DATE(#{searchToDate} || ' 23:59:59', 'YYYYMMDD HH24:MI:SS')
         </if>
   </select>
 
