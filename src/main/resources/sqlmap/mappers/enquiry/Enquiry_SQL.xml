@@ -63,7 +63,7 @@
 		        join sal0002d sod on som.ord_id = sod.sales_ord_id
 		        JOIN SYS0026M pd ON sod.ITM_STK_ID = pd.STK_ID
 		        LEFT JOIN SAL0090D config on config.srv_so_id = som.ORD_ID
-                LEFT JOIN SAL0088D srv on config.SRV_CONFIG_ID = srv.SRV_CONFIG_ID  AND  AND TRUNC(SYSDATE) BETWEEN TRUNC(srv.SRV_PRD_START_DT) AND TRUNC(srv.SRV_PRD_EXPR_DT)
+                LEFT JOIN SAL0088D srv on config.SRV_CONFIG_ID = srv.SRV_CONFIG_ID  AND TRUNC(SYSDATE) BETWEEN TRUNC(srv.SRV_PRD_START_DT) AND TRUNC(srv.SRV_PRD_EXPR_DT)
                 LEFT JOIN SAL0071D rs on rs.SALES_ORD_ID = som.ORD_ID
 		    WHERE som.STUS_CODE_ID = 4
             AND som.CUST_ID = #{custId}
