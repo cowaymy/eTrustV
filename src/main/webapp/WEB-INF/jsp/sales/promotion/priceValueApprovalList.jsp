@@ -83,7 +83,7 @@
                     groupingMessage : "Here groupping"
             };
 
-            myGridID = GridCommon.createAUIGrid("grid_wrap",
+            myGridID = GridCommon.createAUIGrid("list_grid_wrap",
                 columnLayout, null, gridPros);
 
             // Master Grid
@@ -320,6 +320,20 @@
         $(val).hide();
    }
 
+  function fn_export() {
+
+      var grdLength = "0";
+      grdLength = AUIGrid.getGridData(myGridID).length;
+
+      if(Number(grdLength) > 0){
+          GridCommon.exportTo("#list_grid_wrap", "xlsx", "PriceValueApprovalList");
+
+      }else{
+          Common.alert('* <spring:message code="sal.alert.msg.noExport" />');
+      }
+
+  }
+
   function fn_save() {
 
       var isValid = true, msg = "";
@@ -488,6 +502,7 @@
         <li><p class="link_btn">
           <a href="javascript:fn_openDivPop('APPV');">Approval</a>
          </p></li>
+        <li><p class="link_btn"><a href="javascript:fn_export();" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
        </ul>
        <p class="hide_btn">
         <a href="#"><img
@@ -505,7 +520,7 @@
  <section class="search_result">
   <!-- grid_wrap start -->
   <article class="grid_wrap" id="grid_wrap_id">
-  <div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;">
+  <div id="list_grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;">
 </article>
   <!-- grid_wrap end -->
  </section>

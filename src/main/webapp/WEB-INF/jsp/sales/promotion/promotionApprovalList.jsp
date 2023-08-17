@@ -340,6 +340,20 @@
 
   }
 
+  function fn_export() {
+
+      var grdLength = "0";
+      grdLength = AUIGrid.getGridData(listGridId).length;
+
+      if(Number(grdLength) > 0){
+          GridCommon.exportTo("#list_promo_grid_wrap", "xlsx", "PromotionApprovalList");
+
+      }else{
+          Common.alert('* <spring:message code="sal.alert.msg.noExport" />');
+      }
+
+  }
+
   function fn_close(){
       $("#editForm")[0].reset();
       $("#modifyForm")[0].reset();
@@ -1173,6 +1187,8 @@
         <li><p class="link_btn">
           <a href="javascript:fn_openDivPop('APPV');">Approval</a>
          </p></li>
+         <li><p class="link_btn"><a href="javascript:fn_export();" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
+
        </ul>
        <p class="hide_btn">
         <a href="#"><img
