@@ -80,6 +80,7 @@
   <insert id="insertSubDSCMileageClaim" parameterType="Map">
     INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
                                       , MIL_CLM_NO
+                                      , SALES_ORD_ID
                                       , SVC_NO
                                       , MEM_ID
                                       , CLM_DT
@@ -93,7 +94,8 @@
 
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
                   , TO_NUMBER(#{MIL_CLM_NO})
-                  , '-'
+                  , '0'
+                  , 'S'
                   , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
                   , TO_NUMBER(#{dscLongtitude})
