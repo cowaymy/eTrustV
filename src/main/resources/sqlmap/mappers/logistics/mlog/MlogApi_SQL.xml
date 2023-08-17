@@ -1462,7 +1462,7 @@
         AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
 
         <if test="reqStatus eq 'MRRL'.toString() ">
-          AND LG47M.REQST_CDC_RDC = SY28M.WH_LOC_ID
+          AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
         </if>
 
         <if test="reqStatus eq 'MROL'.toString() ">
@@ -1496,8 +1496,8 @@
         </if>
 
         <if test="searchFromDate !=null and searchFromDate !=''">
-          AND LG47M.REQST_REQUIRE_DT BETWEEN TO_DATE(#{searchFromDate} || ' 00:00:00', 'YYYYMMDD HH24:MI:SS')
-            AND TO_DATE(#{searchToDate} || ' 23:59:59', 'YYYYMMDD HH24:MI:SS')
+          AND LG47M.REQST_REQUIRE_DT BETWEEN TO_DATE(#{searchFromDate} || ' 00:00:00', 'YYYY/MM/DD HH24:MI:SS')
+            AND TO_DATE(#{searchToDate} || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS')
         </if>
   </select>
 
