@@ -5247,7 +5247,8 @@ SELECT MST.*
            TO_CHAR (A.DISINF_SRV) AS DISINFEC_SERV,
            A.SRV_TYPE,
            A.LATITUDE,
-           A.LONGITUDE
+           A.LONGITUDE,
+           A.PROD_CAT
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -5315,7 +5316,8 @@ SELECT MST.*
                   DISINF_SRV,
                   SRV_TYPE,
                   LATITUDE,
-                  LONGITUDE
+                  LONGITUDE,
+                  PROD_CAT
            FROM (
 
              SELECT
@@ -5403,7 +5405,8 @@ SELECT MST.*
                                    SAL.SRV_PAC_ID,
                                    C.SRV_TYPE,
                                    Q.LATITUDE,
-                                   Q.LONGITUDE
+                                   Q.LONGITUDE,
+                                   L.STK_CTGRY_ID AS PROD_CAT
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
