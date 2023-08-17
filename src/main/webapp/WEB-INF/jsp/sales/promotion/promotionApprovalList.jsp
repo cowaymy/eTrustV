@@ -1165,9 +1165,9 @@
         <th scope="row">Approval Status</th>
      <td>
                     <select class="w100p" id="promoStusId" name="promoStusId">
-                    <option value="" selected>Choose One</option>
+                    <option value="">Choose One</option>
                     <option value="5">Approved</option>
-                    <option value="60">In Progress</option>
+                    <option value="60" selected>In Progress</option>
                     <option value="6">Rejected</option>
                     </select>    </td>
 </tr>
@@ -1413,6 +1413,8 @@
 <option value=5>Approve</option>
 <option value=6>Reject</option>
 </select></td>
+</tr>
+<tr>
  <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
     <td colspan="3">
         <textarea type="text" title="" placeholder="" class="w100p" id="appvRemark" name="appvRemark" maxlength="100"></textarea>
@@ -1631,6 +1633,8 @@
 <option value=5>Approve</option>
 <option value=6>Reject</option>
 </select></td>
+</tr>
+<tr>
  <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
     <td colspan="3">
         <textarea type="text" title="" placeholder="" class="w100p" id="v_appvRemark" name="v_appvRemark" maxlength="100"></textarea>
