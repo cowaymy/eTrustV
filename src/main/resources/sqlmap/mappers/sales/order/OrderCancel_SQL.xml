@@ -744,7 +744,7 @@
            LEFT JOIN ORG0001D Extent5 ON Extent5.MEM_ID = Extent1.CT_ID
            LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CRT_USER_ID
            LEFT JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent1.UPD_USER_ID
-           LEFT JOIN LOG0047M Extent8 ON ( extent8.REF_DOC_NO = extent1.RETN_NO )
+           LEFT JOIN LOG0047M Extent8 ON ( extent8.REF_DOC_NO = extent1.RETN_NO ) and NVL(Extent8.REQST_DEL,'N') = 'N'
            <![CDATA[
              WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
            ]]>
