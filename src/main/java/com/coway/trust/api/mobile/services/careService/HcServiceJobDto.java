@@ -231,6 +231,8 @@ public class HcServiceJobDto {
 
   private BigDecimal longitude;
 
+  private String prodCat;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -860,4 +862,12 @@ public class HcServiceJobDto {
   public void setLongitude(BigDecimal longitude){
      this.longitude = longitude;
   }
+
+  public String getProdCat() {
+	    return prodCat;
+}
+
+public void setProdCat(String prodCat) {
+	    this.prodCat = prodCat;
+}
 }
