@@ -35,7 +35,8 @@
         }, {
           dataField : "ind",
           headerText : "",
-          width : 10
+          width : 10,
+          visible : false,
         }, {
           dataField : "clmNo",
           headerText : "Claim No",
@@ -63,8 +64,7 @@
         }, {
           dataField : "jobLatt",
           headerText : "Job Latitude",
-          width : 180,
-
+          width : 180
         }, {
           dataField : "jobLongt",
           headerText : "Job Longtitude",
@@ -203,7 +203,7 @@
         AUIGrid.setGridData(myGridID, result);
 
         AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
-          if(item.ttlAmt > 0) {
+          if(item.ind == "M") {
             return "master-style";
           }
 
