@@ -64,7 +64,7 @@ function submit(){
 
     <section class="pop_body">
 		<section class="search_table">
-            <form action="#" method="post" id="allowanceLimitForm" name=""allowanceLimitForm"">
+            <form action="#" method="post" id="allowanceLimitForm" name="allowanceLimitForm">
         		<input type="hidden" id="creditCardSeq" name="creditCardSeq" value="${cardHolder.crditCardSeq}">
                 <section class="search_table">
                 <table class="type1">
