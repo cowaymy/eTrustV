@@ -1232,6 +1232,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     						// If amount of generated ROR is same as amount of selected old DCF, only will proceed to generate WOR
             				//GET DATA FROM PAY0344M
             				EgovMap payInfo = paymentListMapper.getPayInfo(params);
+            				payInfo.put("itemRem",params.get("remark").toString());
             				int isRekeyIn = Integer.parseInt(payInfo.get("isRekeyIn").toString());
 
             				// GENERATE WOR (Rekey In = Yes)
