@@ -33,4 +33,6 @@ public interface MobileLumpSumPaymentKeyInService {
 	List<EgovMap> rejectApproval(Map<String, Object> params, SessionVO sessionVO);
 
 	List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
+
+	List<EgovMap> checkBatchPaymentExist(Map<String, Object> params);
 }

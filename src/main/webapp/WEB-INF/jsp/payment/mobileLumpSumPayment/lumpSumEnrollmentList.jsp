@@ -1,786 +1,1035 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style>
 </style>
 <script type="text/javaScript">
-var myGridID;
-var option = {
-	width: "1200px", // 창 가로 크기
-	height: "500px" // 창 세로 크기
-};
-var basicAuth = false;
-$(document).ready(function() {
-	var selectedRecord;
-	var memLevel = "${memLevel}";
-
-    if (memLevel == 4) {
-      $("#searchForm #memberCode").val("${memCode}");
-      $("#searchForm #memberCode").prop("readonly", true);
-    } else {
-      $("#searchForm #memberCode").val("");
-      $("#searchForm #memberCode").prop("readonly", false);
-    }
-
-    createAUIGrid();
-
-    $('#_listSearchBtn').click(function(){
-		selectList();
-    })
-});
-
-function selectList(){
-    Common.ajax("GET","/payment/mobileLumpSumPayment/getlumpSumEnrollmentList.do",$("#searchForm").serialize(), function(result){
-        AUIGrid.setGridData(myGridID, result);
-    });
-}
-
-function createAUIGrid() {
-	var columnLayout = [{
-        dataField : "checkId",
-        headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-        cellMerge : true ,
-        mergeRef : "mobPayGroupNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-        mergePolicy : "restrict",
-        width : 50,
-        renderer : {
-        	type : "CheckBoxEditRenderer",
-            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-            checkValue : "Y", // true, false 인 경우가 기본
-            unCheckValue : "N",
-            disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-            	if(item.payStusId == 1){
-                    return false;
-            	}
-            	return true;
-            }
-      }
-    },{
-		dataField: "mobPayGroupNo",
-		headerText: '<spring:message code="pay.title.ticketNo" />',
-		width: 100,
-		cellMerge: true
-	}, {
-		dataField: "crtDt",
-		headerText: '<spring:message code="pay.grid.requestDate" />',
-		width: 140,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "payStusName",
-		width: 100,
-		headerText: '<spring:message code="pay.grid.status" />',
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "crtUserName",
-		headerText: '<spring:message code="pay.head.memberCode" />',
-		width: 160,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "payModeName",
-		width: 160,
-		headerText: '<spring:message code="sal.text.payMode" />',
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "salesOrdNo",
-		headerText: '<spring:message code="pay.title.orderNo" />',
-		width: 120,
-		editable: false
-	}, {
-		dataField: "payType",
-		headerText: 'Pay Type',
-		width: 130,
-		editable: false
-	}, {
-		dataField: "oriOutAmt",
-		headerText: '<spring:message code="pay.head.outstandingAmount" />',
-		width: 130,
-		editable: false
-	}, {
-		dataField: "payAmt",
-		headerText: '<spring:message code="pay.head.paymentAmount" />',
-		width: 130,
-		editable: false
-	}, {
-		dataField: "custName",
-		headerText: '<spring:message code="pay.head.customerName" />',
-		width: 200,
-		editable: false,
-		style: "aui-grid-user-custom-left",
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "totOriOutAmt",
-		headerText: 'Total Outstanding Amt',
-		width: 100,
-		editable: false,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "totPayAmt",
-		headerText: 'Total Payment Amt',
-		width: 100,
-		dataType: "numeric",
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	}, {
-		dataField: "slipNo",
-		headerText: 'Slip No',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},
-	{
-		dataField: "chequeNo",
-		headerText: 'Cheque No',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "chequeDate",
-		headerText: 'Cheque Date',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "issueBankName",
-		headerText: 'Issue Bank',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "chequeNo",
-		headerText: 'Cheque no',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "chequeDate",
-		headerText: 'Cheque Date',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "cardNo",
-		headerText: 'Card No',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "expiryDate",
-		headerText: 'Expiry Date',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "approvalNo",
-		headerText: 'Approval No',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "crcName",
-		headerText: 'CRC Name',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "transactionDate",
-		headerText: 'TRX Date',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "cardModeDesc",
-		headerText: 'Card Mode',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "merchantBankDesc",
-		headerText: 'Merchant Bank',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "cardBrandDesc",
-		headerText: 'Card Brand',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict"
-	},{
-		dataField: "attchImgUrl1",
-		headerText: 'Transaction Slip',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict",
-		 renderer : {
-	            type : "ImageRenderer",
-	            width : 20,
-	            height : 20,
-	            imgTableRef : {
-	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-	            }
-	          }
-	},{
-		dataField: "attchImgUrl2",
-		headerText: 'Submission Checklist',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict",
-		 renderer : {
-	            type : "ImageRenderer",
-	            width : 20,
-	            height : 20,
-	            imgTableRef : {
-	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-	            }
-	          }
-	},{
-		dataField: "attchImgUrl3",
-		headerText: 'Other/Cheque Image',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict",
-		 renderer : {
-	            type : "ImageRenderer",
-	            width : 20,
-	            height : 20,
-	            imgTableRef : {
-	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-	            }
-	          }
-	},{
-		dataField: "attchImgUrl4",
-		headerText: 'Other 2',
-		width: 100,
-		cellMerge: true,
-		mergeRef: "mobPayGroupNo",
-		mergePolicy: "restrict",
-		 renderer : {
-	            type : "ImageRenderer",
-	            width : 20,
-	            height : 20,
-	            imgTableRef : {
-	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-	            }
-	          }
-	},{
-		dataField: "issueBank",
-		visible: false
-	},{
-		dataField: "cardMode",
-		visible: false
-	}, {
-		dataField: "merchantBank",
-		visible: false
-	},{
-		dataField: "cardBrand",
-		visible: false
-	},{
-		dataField: "payStusId",
-		visible: false
-	}, {
-		dataField: "mobPayDetailId",
-		visible: false
-	}, {
-		dataField: "ordId",
-		visible: false
-	}, {
-		dataField: "payMode",
-		visible: false
-	}];
-	var gridPros = {
-		enableCellMerge : true,
-		cellMergePolicy: "withNull",
-        usePaging : false,
-        editable :false,
-   		headerHeight: 30,
-		wordWrap:true
+	var myGridID;
+	var option = {
+		width : "1200px", // 창 가로 크기
+		height : "500px" // 창 세로 크기
 	};
-	myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-    AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
+	var basicAuth = false;
+	$(document).ready(function() {
 
-    AUIGrid.bind(myGridID, "cellClick", function(event) {
-        if (event.dataField == "attchImgUrl1") {
-          if (FormUtil.isEmpty(event.value) == false) {
-            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
-            if (FormUtil.isEmpty(rowVal.atchFileName1) == false && FormUtil.isEmpty(rowVal.physiclFileName1) == false) {
-              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath1 + "&fileName=" + rowVal.physiclFileName1 + "&orignlFileNm=" + rowVal.atchFileName1);
-            }
-          }
-        } else if (event.dataField == "attchImgUrl2") {
-          if (FormUtil.isEmpty(event.value) == false) {
-            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
-            if (FormUtil.isEmpty(rowVal.atchFileName2) == false && FormUtil.isEmpty(rowVal.physiclFileName2) == false) {
-              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath2 + "&fileName=" + rowVal.physiclFileName2 + "&orignlFileNm=" + rowVal.atchFileName2);
-            }
-          }
-        } else if (event.dataField == "attchImgUrl3") {
-          if (FormUtil.isEmpty(event.value) == false) {
-            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
-            if (FormUtil.isEmpty(rowVal.atchFileName3) == false && FormUtil.isEmpty(rowVal.physiclFileName3) == false) {
-              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath3 + "&fileName=" + rowVal.physiclFileName3 + "&orignlFileNm=" + rowVal.atchFileName3);
-            }
-          }
-        } else if (event.dataField == "attchImgUrl4") {
-         if (FormUtil.isEmpty(event.value) == false) {
-             var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
-             if (FormUtil.isEmpty(rowVal.atchFileName4) == false && FormUtil.isEmpty(rowVal.physiclFileName4) == false) {
-               window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath4 + "&fileName=" + rowVal.physiclFileName4 + "&orignlFileNm=" + rowVal.atchFileName4);
-             }
-           }
-         }
+		$("#trIssDt").on('focus', function(e) {
+			$(this).attr('autocomplete', 'off');
+		});
+		$("#trIssDt2").on('focus', function(e) {
+			$(this).attr('autocomplete', 'off');
+		});
 
-        if(event.dataField == "checkId"){
-    		var isChecked = AUIGrid.getCellValue(myGridID, event.rowIndex, "checkId");
-    		var mobPayGroupNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "mobPayGroupNo");
-    		var rows = AUIGrid.getRowsByValue(myGridID, "mobPayGroupNo", mobPayGroupNo);
-    		var items = [];
-    		for(var i = 0 ; i < rows.length; i++){
-        		var rowIndex = AUIGrid.getRowIndexesByValue(myGridID, "mobPayDetailId", rows[i].mobPayDetailId);
-    			AUIGrid.setCellValue(myGridID, rowIndex, "checkId",isChecked);
-    		}
+		var selectedRecord;
+		var memLevel = "${memLevel}";
+
+		if (memLevel == 4) {
+			$("#searchForm #memberCode").val("${memCode}");
+			$("#searchForm #memberCode").prop("readonly", true);
+		} else {
+			$("#searchForm #memberCode").val("");
+			$("#searchForm #memberCode").prop("readonly", false);
 		}
-      });
-}
 
-function loadComboBox() {
-	doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'L', ''); // Pay Mode
-	doGetCombo('/common/selectCodeList.do', '49', '', 'cmbRegion', 'L', 'f_multiCombo'); //region
-}
+		createAUIGrid();
 
-function f_multiCombo() {
-	$(function() {
-		$('#cmbRegion').change(function() {}).multipleSelect({
-			selectAll: true,
-			width: '80%'
-		});
-		$('#ticketStatus').change(function() {}).multipleSelect({
-			selectAll: true,
-			width: '80%'
-		});
+		$('#_listSearchBtn').click(function() {
+			selectList();
+		})
 	});
-}
 
-function fn_clear() {
-	$('#grpTicketNo').val('');
-	$('#requestStartDate').val('');
-	$('#requestEndDate').val('');
-	$('#orderNo').val('');
-	$('#ticketStatus').val('');
-	$('#branchCode').val('');
-	$('#cmbRegion').val('');
-	$('#payMode').val('');
-	$('#serialNo').val('');
-	$('#memberCode').val('');
-	$('#cardNoA').val('');
-	$('#cardNoB').val('');
-	$('#orgCode').val('');
-	$('#grpCode').val('');
-	$('#deptCode').val('');
-}
+	function selectList() {
+		Common.ajax("GET",
+				"/payment/mobileLumpSumPayment/getlumpSumEnrollmentList.do", $(
+						"#searchForm").serialize(), function(result) {
+					AUIGrid.setGridData(myGridID, result);
+				});
+	}
 
-//그리드 헤더 클릭 핸들러
-function headerClickHandler(event) {
-    // isActive 칼럼 클릭 한 경우
-    if(event.dataField == "checkId") {
-        if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
-            var  isChecked = document.getElementById("allCheckbox").checked;
+	function createAUIGrid() {
+		var columnLayout = [
+				{
+					dataField : "checkId",
+					headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+					mergePolicy : "restrict",
+					width : 50,
+					renderer : {
+						type : "CheckBoxEditRenderer",
+						showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+						editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+						checkValue : "Y", // true, false 인 경우가 기본
+						unCheckValue : "N",
+						disabledFunction : function(rowIndex, columnIndex,
+								value, isChecked, item, dataField) {
+							if (item.payStusId == 1) {
+								return false;
+							}
+							return true;
+						}
+					}
+				},
+				{
+					dataField : "mobPayGroupNo",
+					headerText : '<spring:message code="pay.title.ticketNo" />',
+					width : 100,
+					cellMerge : true
+				},
+				{
+					dataField : "crtDt",
+					headerText : '<spring:message code="pay.grid.requestDate" />',
+					width : 140,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "payStusName",
+					width : 100,
+					headerText : '<spring:message code="pay.grid.status" />',
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "crtUserName",
+					headerText : '<spring:message code="pay.head.memberCode" />',
+					width : 160,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "payModeName",
+					width : 160,
+					headerText : '<spring:message code="sal.text.payMode" />',
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "salesOrdNo",
+					headerText : '<spring:message code="pay.title.orderNo" />',
+					width : 120,
+					editable : false
+				},
+				{
+					dataField : "payType",
+					headerText : 'Pay Type',
+					width : 130,
+					editable : false
+				},
+				{
+					dataField : "oriOutAmt",
+					headerText : '<spring:message code="pay.head.outstandingAmount" />',
+					width : 130,
+					editable : false
+				},
+				{
+					dataField : "payAmt",
+					headerText : '<spring:message code="pay.head.paymentAmount" />',
+					width : 130,
+					editable : false
+				},
+				{
+					dataField : "custName",
+					headerText : '<spring:message code="pay.head.customerName" />',
+					width : 200,
+					editable : false,
+					style : "aui-grid-user-custom-left",
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "totOriOutAmt",
+					headerText : 'Total Outstanding Amt',
+					width : 100,
+					editable : false,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "totPayAmt",
+					headerText : 'Total Payment Amt',
+					width : 100,
+					dataType : "numeric",
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "slipNo",
+					headerText : 'Slip No',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "chequeNo",
+					headerText : 'Cheque No',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "chequeDate",
+					headerText : 'Cheque Date',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "issueBankName",
+					headerText : 'Issue Bank',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "chequeNo",
+					headerText : 'Cheque no',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "chequeDate",
+					headerText : 'Cheque Date',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "cardNo",
+					headerText : 'Card No',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "expiryDate",
+					headerText : 'Expiry Date',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "approvalNo",
+					headerText : 'Approval No',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "crcName",
+					headerText : 'CRC Name',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "transactionDate",
+					headerText : 'TRX Date',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "cardModeDesc",
+					headerText : 'Card Mode',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "merchantBankDesc",
+					headerText : 'Merchant Bank',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "cardBrandDesc",
+					headerText : 'Card Brand',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "attchImgUrl1",
+					headerText : 'Transaction Slip',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict",
+					renderer : {
+						type : "ImageRenderer",
+						width : 20,
+						height : 20,
+						imgTableRef : {
+							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+						}
+					}
+				},
+				{
+					dataField : "attchImgUrl2",
+					headerText : 'Submission Checklist',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict",
+					renderer : {
+						type : "ImageRenderer",
+						width : 20,
+						height : 20,
+						imgTableRef : {
+							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+						}
+					}
+				},
+				{
+					dataField : "attchImgUrl3",
+					headerText : 'Other/Cheque Image',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict",
+					renderer : {
+						type : "ImageRenderer",
+						width : 20,
+						height : 20,
+						imgTableRef : {
+							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+						}
+					}
+				},
+				{
+					dataField : "attchImgUrl4",
+					headerText : 'Other 2',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict",
+					renderer : {
+						type : "ImageRenderer",
+						width : 20,
+						height : 20,
+						imgTableRef : {
+							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+						}
+					}
+				}, {
+					dataField : "issueBank",
+					visible : false
+				}, {
+					dataField : "cardMode",
+					visible : false
+				}, {
+					dataField : "merchantBank",
+					visible : false
+				}, {
+					dataField : "cardBrand",
+					visible : false
+				}, {
+					dataField : "payStusId",
+					visible : false
+				}, {
+					dataField : "mobPayDetailId",
+					visible : false
+				}, {
+					dataField : "ordId",
+					visible : false
+				}, {
+					dataField : "payMode",
+					visible : false
+				} ];
+		var gridPros = {
+			enableCellMerge : true,
+			cellMergePolicy : "withNull",
+			usePaging : false,
+			editable : false,
+			headerHeight : 30,
+			wordWrap : true
+		};
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+		AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
 
-            checkAll(isChecked);
-        }
-        return false;
-    }
-}
+		AUIGrid
+				.bind(
+						myGridID,
+						"cellClick",
+						function(event) {
+							if (event.dataField == "attchImgUrl1") {
+								if (FormUtil.isEmpty(event.value) == false) {
+									var rowVal = AUIGrid.getItemByRowIndex(
+											myGridID, event.rowIndex);
+									if (FormUtil.isEmpty(rowVal.atchFileName1) == false
+											&& FormUtil
+													.isEmpty(rowVal.physiclFileName1) == false) {
+										window
+												.open("/file/fileDownWasMobile.do?subPath="
+														+ rowVal.fileSubPath1
+														+ "&fileName="
+														+ rowVal.physiclFileName1
+														+ "&orignlFileNm="
+														+ rowVal.atchFileName1);
+									}
+								}
+							} else if (event.dataField == "attchImgUrl2") {
+								if (FormUtil.isEmpty(event.value) == false) {
+									var rowVal = AUIGrid.getItemByRowIndex(
+											myGridID, event.rowIndex);
+									if (FormUtil.isEmpty(rowVal.atchFileName2) == false
+											&& FormUtil
+													.isEmpty(rowVal.physiclFileName2) == false) {
+										window
+												.open("/file/fileDownWasMobile.do?subPath="
+														+ rowVal.fileSubPath2
+														+ "&fileName="
+														+ rowVal.physiclFileName2
+														+ "&orignlFileNm="
+														+ rowVal.atchFileName2);
+									}
+								}
+							} else if (event.dataField == "attchImgUrl3") {
+								if (FormUtil.isEmpty(event.value) == false) {
+									var rowVal = AUIGrid.getItemByRowIndex(
+											myGridID, event.rowIndex);
+									if (FormUtil.isEmpty(rowVal.atchFileName3) == false
+											&& FormUtil
+													.isEmpty(rowVal.physiclFileName3) == false) {
+										window
+												.open("/file/fileDownWasMobile.do?subPath="
+														+ rowVal.fileSubPath3
+														+ "&fileName="
+														+ rowVal.physiclFileName3
+														+ "&orignlFileNm="
+														+ rowVal.atchFileName3);
+									}
+								}
+							} else if (event.dataField == "attchImgUrl4") {
+								if (FormUtil.isEmpty(event.value) == false) {
+									var rowVal = AUIGrid.getItemByRowIndex(
+											myGridID, event.rowIndex);
+									if (FormUtil.isEmpty(rowVal.atchFileName4) == false
+											&& FormUtil
+													.isEmpty(rowVal.physiclFileName4) == false) {
+										window
+												.open("/file/fileDownWasMobile.do?subPath="
+														+ rowVal.fileSubPath4
+														+ "&fileName="
+														+ rowVal.physiclFileName4
+														+ "&orignlFileNm="
+														+ rowVal.atchFileName4);
+									}
+								}
+							}
 
-//전체 체크 설정, 전체 체크 해제 하기
-function checkAll(isChecked) {
-	 var idx = AUIGrid.getRowCount(myGridID);
+							if (event.dataField == "checkId") {
+								var isChecked = AUIGrid.getCellValue(myGridID,
+										event.rowIndex, "checkId");
+								var mobPayGroupNo = AUIGrid.getCellValue(
+										myGridID, event.rowIndex,
+										"mobPayGroupNo");
+								var rows = AUIGrid.getRowsByValue(myGridID,
+										"mobPayGroupNo", mobPayGroupNo);
+								var items = [];
+								for (var i = 0; i < rows.length; i++) {
+									var rowIndex = AUIGrid
+											.getRowIndexesByValue(myGridID,
+													"mobPayDetailId",
+													rows[i].mobPayDetailId);
+									AUIGrid.setCellValue(myGridID, rowIndex,
+											"checkId", isChecked);
+								}
+							}
+						});
+	}
 
-    if(isChecked) {
-    	for(var i = 0; i < idx; i++){
-            if(AUIGrid.getCellValue(myGridID, i, "payStusName") == 'Active'){
-                AUIGrid.setCellValue(myGridID, i, "checkId", "Y")
-            }
-        }
-    } else {
-        AUIGrid.updateAllToValue(myGridID, "checkId", "N");
-    }
+	function loadComboBox() {
+		doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'L', ''); // Pay Mode
+		doGetCombo('/common/selectCodeList.do', '49', '', 'cmbRegion', 'L',
+				'f_multiCombo'); //region
+	}
 
-    // 헤더 체크 박스 일치시킴.
-    document.getElementById("allCheckbox").checked = isChecked;
-}
+	function f_multiCombo() {
+		$(function() {
+			$('#cmbRegion').change(function() {
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			});
+			$('#ticketStatus').change(function() {
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			});
+		});
+	}
 
-function fn_approveRecord(){
-	selectedRecord = null;
+	function fn_clear() {
+		$('#grpTicketNo').val('');
+		$('#requestStartDate').val('');
+		$('#requestEndDate').val('');
+		$('#orderNo').val('');
+		$('#ticketStatus').val('');
+		$('#branchCode').val('');
+		$('#cmbRegion').val('');
+		$('#payMode').val('');
+		$('#serialNo').val('');
+		$('#memberCode').val('');
+		$('#cardNoA').val('');
+		$('#cardNoB').val('');
+		$('#orgCode').val('');
+		$('#grpCode').val('');
+		$('#deptCode').val('');
+	}
 
-    var selectedItems = AUIGrid.getItemsByValue(myGridID, "checkId", "Y");
-    selectedItems = selectedItems.reduce(function (acc, cur) {
-        return acc.filter(function (obj) {
-            return obj.mobPayGroupNo !== cur.mobPayGroupNo
-        }).concat([cur])
-    }, []);
+	//그리드 헤더 클릭 핸들러
+	function headerClickHandler(event) {
+		// isActive 칼럼 클릭 한 경우
+		if (event.dataField == "checkId") {
+			if (event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+				var isChecked = document.getElementById("allCheckbox").checked;
 
-    if (selectedItems.length == 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd' />");
-      return false;
-    }
-    if (selectedItems.length > 1) {
-        Common.alert("Only 1 Record is allowed per approval.");
-        return false;
-    }
-    fn_clearPopDetails();
-    //card
-    if(selectedItems[0].payMode == '5696'){
-    	selectedRecord = selectedItems[0];
-    	var totPayAmt = 0;
+				checkAll(isChecked);
+			}
+			return false;
+		}
+	}
 
-        var approvalNo = "";
-        var crcName = "";
+	//전체 체크 설정, 전체 체크 해제 하기
+	function checkAll(isChecked) {
+		var idx = AUIGrid.getRowCount(myGridID);
 
-        var expiryDate = "";
-        var expiryDateRaw = "";
-        var transactionDate = "";
-        var transactionDateRaw = "";
+		if (isChecked) {
+			for (var i = 0; i < idx; i++) {
+				if (AUIGrid.getCellValue(myGridID, i, "payStusName") == 'Active') {
+					AUIGrid.setCellValue(myGridID, i, "checkId", "Y")
+				}
+			}
+		} else {
+			AUIGrid.updateAllToValue(myGridID, "checkId", "N");
+		}
 
-        var cardNo = "";
-        var cardNoRaw = "";
+		// 헤더 체크 박스 일치시킴.
+		document.getElementById("allCheckbox").checked = isChecked;
+	}
 
-        var cardMode = "";
-        var cardModeRaw = "";
-        var cardBrand = "";
-        var cardBrandRaw = "";
-        var issuBankId = "";
-        var bankNm = "";
-        var merchantBank = "";
-        var merchantBankRaw = "";
+	function fn_approveRecord() {
+		var isCardTransaction = false;
+		selectedRecord = null;
 
-        totPayAmt = selectedRecord.totPayAmt;
-        approvalNo = selectedRecord.approvalNo;
-        crcName = selectedRecord.crcName;
-        cardNoRaw = selectedRecord.cardNo;
+		/*
+		 * General Validation Starts
+		 */
+		var selectedItems = AUIGrid.getItemsByValue(myGridID, "checkId", "Y");
+		selectedItems = selectedItems.reduce(function(acc, cur) {
+			return acc.filter(function(obj) {
+				return obj.mobPayGroupNo !== cur.mobPayGroupNo
+			}).concat([ cur ])
+		}, []);
 
-        expiryDateRaw = selectedRecord.expiryDate;
-        transactionDate = selectedRecord.transactionDate;
+		if (selectedItems.length == 0) {
+			Common.alert("<spring:message code='service.msg.NoRcd' />");
+			return false;
+		}
 
-        cardModeRaw = selectedRecord.cardMode;
-        cardBrandRaw = selectedRecord.cardBrand;
-        issuBankId = selectedRecord.issueBank;
-        merchantBankRaw = selectedRecord.merchantBank;
+		var distinctPayMode = selectedItems.reduce(function(acc, cur) {
+			return acc.filter(function(obj) {
+				return obj !== cur.payMode
+			}).concat([ cur.payMode ])
+		}, []);
 
-        var cardNo1st1Val = cardNoRaw.substr(0, 1);
-        var cardNo1st2Val = cardNoRaw.substr(0, 2);
-        var cardNo1st4Val = cardNoRaw.substr(0, 4);
+		var cardPayMode = distinctPayMode.filter(function(obj) {
+			return obj == 5696
+		});
 
-        if (cardNo1st1Val == 4) {
-            if (cardBrandRaw != 112) {
-              Common.alert("Card No. is not compatible with Card Type. System Recommend to Reject.");
-              return;
-            }
-          }
+		if (cardPayMode.includes(5696)) {
+			isCardTransaction = true;
+		}
 
-          if ((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)) {
-            if (cardBrandRaw != 111) {
-            	Common.alert("Card No. is not compatible with Card Type. System Recommend to Reject.");
-              return;
-            }
-          }
+		if (distinctPayMode.length > 1) {
+			if (cardPayMode.length > 0) {
+				Common
+						.alert("Mixture of card payment with other payment type is not allowed.");
+				return false;
+			} else {
+				Common
+						.alert("Pay mode must be the same for multiple approval.");
+				return false;
+			}
+		}
 
-         if (totPayAmt == null || totPayAmt <= 0) {
-              Common.alert("Pay amount is not fulfill requirement. System Recommend to Reject.");
-              return;
-         }
+		for (var i = 0; i < selectedItems.length; i++) {
+			var status = selectedItems[i].payStusId;
 
-          if (totPayAmt > 200000) {
-              Common.alert("Pay amount is not fulfill requirement. System Recommend to Reject.");
-              return;
-        }
+			if (status != 1 && status != 104) {
+				Common.alert("Selected records consist of completed records.");
+				return false;
+			}
+		}
+		/*
+		 * General Validation Ends
+		 */
 
-        $("#keyInApprovalNo").val(approvalNo)
-        $("#keyInHolderNm").val(crcName)
-        $("#keyInCardNo1").val(cardNoRaw.substr(0, 4))
-        $("#keyInCardNo2").val(cardNoRaw.substr(4, 4))
-        $("#keyInCardNo3").val(cardNoRaw.substr(8, 4))
-        $("#keyInCardNo4").val(cardNoRaw.substr(12, 4))
+		fn_clearPopDetails();
+		selectedRecord = selectedItems;
 
-        $("#keyInCardMode").val(cardModeRaw)
-        $("#keyInCrcType").val(cardBrandRaw)
-        $("#keyInIssueBank").val(issuBankId)
-        $("#keyInMerchantBank").val(merchantBankRaw)
+		//card payment
+		if (isCardTransaction) {
+			for (var i = 0; i < selectedRecord.length; i++) {
+				var totPayAmt = 0;
 
-        $("#keyInTrDate").val(transactionDate)
-        $("#keyInExpiryMonth").val(expiryDateRaw.substr(0, 2))
-        $("#keyInExpiryYear").val(expiryDateRaw.substr(2, 2))
+				var approvalNo = "";
+				var crcName = "";
 
-        $("#keyInAmount").val(totPayAmt)
-    	$("#PopUp2_wrap").show();
-    	$("#PopUp1_wrap").hide();
-    }
-    else{
-    	selectedRecord = selectedItems[0];
-    	$("#PopUp1_wrap").show();
-    	$("#PopUp2_wrap").hide();
-    }
-}
+				var expiryDate = "";
+				var expiryDateRaw = "";
+				var transactionDate = "";
+				var transactionDateRaw = "";
 
-function fn_clearPopDetails() {
-    $("#keyCrcCardType").val("");
-    $("#keyInCrcType").val("");
-    $("#keyInCardNo1").val("");
-    $("#keyInCardNo2").val("");
-    $("#keyInCardNo3").val("");
-    $("#keyInCardNo4").val("");
-    $("#keyInHolderNm").val("");
-    $("#keyInExpiryMonth").val("");
-    $("#keyInExpiryYear").val("");
+				var cardNo = "";
+				var cardNoRaw = "";
 
-    $('#transactionId').val("");
-    $('#trRefNo').val("");
-    $('#trIssDt').val("");
-  }
+				var cardMode = "";
+				var cardModeRaw = "";
+				var cardBrand = "";
+				var cardBrandRaw = "";
+				var issuBankId = "";
+				var bankNm = "";
+				var merchantBank = "";
+				var merchantBankRaw = "";
 
-//cash,cheque,bank-in slip
-function saveNormalPayment() {
-	 var data = {};
-	 var msg = "";
-	 if ($("#transactionId").val() == "") {
-	      msg += "* <spring:message code='sys.msg.necessary' arguments='Transaction ID' htmlEscape='false'/><br/>";
-	    }
+				totPayAmt = selectedRecord[i].totPayAmt;
+				approvalNo = selectedRecord[i].approvalNo;
+				crcName = selectedRecord[i].crcName;
+				cardNoRaw = selectedRecord[i].cardNo;
 
-	    if ($("#trRefNo").val() != "") {
-	      if ($("#trIssDt").val() == "") {
-	        msg += "* <spring:message code='sys.msg.necessary' arguments='TR Issued Date' htmlEscape='false'/><br/>";
-	      }
-	    }
+				expiryDateRaw = selectedRecord[i].expiryDate;
+				transactionDate = selectedRecord[i].transactionDate;
 
-	    if ($("#trIssDt").val() != "") {
-	      if ($("#trRefNo").val() == "") {
-	        msg += "* <spring:message code='sys.msg.necessary' arguments='TR Ref No.' htmlEscape='false'/><br/>";
-	      }
-	    }
+				cardModeRaw = selectedRecord[i].cardMode;
+				cardBrandRaw = selectedRecord[i].cardBrand;
+				issuBankId = selectedRecord[i].issueBank;
+				merchantBankRaw = selectedRecord[i].merchantBank;
 
-	    if (msg != "") {
-	      Common.alert(msg);
-	      return false;
-	    }
+				var cardNo1st1Val = cardNoRaw.substr(0, 1);
+				var cardNo1st2Val = cardNoRaw.substr(0, 2);
+				var cardNo1st4Val = cardNoRaw.substr(0, 4);
 
-	    var payMode = selectedRecord.payMode;
-	    var status = selectedRecord.payStusId;
+				if (cardNo1st1Val == 4) {
+					if (cardBrandRaw != 112) {
+						Common
+								.alert("Card No. is not compatible with Card Type. System Recommend to Reject.");
+						return false;
+					}
+				}
 
-	    if (status != "1") {
-	       return false;
-    	} else {
-    		var transactionId = $("#transactionId").val();
-    		var allowance = $("#allowance").val();
-    		var trRefNo = $("#trRefNo").val();
-    		var trIssDt = $("#trIssDt").val();
-    		selectedRecord.transactionId = transactionId;
-    		selectedRecord.allowance = allowance;
-    		selectedRecord.trRefNo = trRefNo;
-    		selectedRecord.trIssDt = trIssDt;
+				if ((cardNo1st2Val >= 51 && cardNo1st2Val <= 55)
+						|| (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)) {
+					if (cardBrandRaw != 111) {
+						Common
+								.alert("Card No. is not compatible with Card Type. System Recommend to Reject.");
+						return false;
+					}
+				}
 
-    		Common.ajax("POST", "/payment/mobileLumpSumPayment/saveNormalPayment.do", selectedRecord, function(result) {
-				console.log(result);
+				if (totPayAmt == null || totPayAmt <= 0) {
+					Common
+							.alert("Pay amount is not fulfill requirement. System Recommend to Reject.");
+					return false;
+				}
 
-				fn_clearPopDetails();
+				if (totPayAmt > 200000) {
+					Common
+							.alert("Pay amount is not fulfill requirement. System Recommend to Reject.");
+					return false;
+				}
 
-				if (result.p1 == 99) {
-			        Common.alert("<spring:message code='pay.alert.bankstmt.mapped'/>", function() {
-						selectList();
-			        });
-			      }else if (result.appType == "CARE_SRVC") {
-			          Common.ajax("GET", "/payment/common/selectProcessCSPaymentResult.do", {
-			              seq : result.seq
-			            }, function(resultInfo) {
-			              var message = "<spring:message code='pay.alert.successProc'/>";
+				selectedRecord[i].keyInApprovalNo = approvalNo;
+				selectedRecord[i].keyInHolderNm = crcName;
+				selectedRecord[i].keyInCardNo1 = cardNoRaw.substr(0, 4);
+				selectedRecord[i].keyInCardNo2 = cardNoRaw.substr(4, 4);
+				selectedRecord[i].keyInCardNo3 = cardNoRaw.substr(8, 4);
+				selectedRecord[i].keyInCardNo4 = cardNoRaw.substr(12, 4);
 
-			              if (resultInfo != null && resultInfo.length > 0) {
-			                for (i = 0; i < resultInfo.length; i++) {
-			                  message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo + ")</font><br>";
-			                }
-			              }
+				selectedRecord[i].keyInCardMode = cardModeRaw;
+				selectedRecord[i].keyInCrcType = cardBrandRaw;
+				selectedRecord[i].keyInIssueBank = issuBankId;
+				selectedRecord[i].keyInMerchantBank = merchantBankRaw;
 
-			              Common.alert(message, function() {
-								selectList();
-			              });
-			            });
-			       }
-			      else{
-			    	  Common.ajax("GET", "/payment/common/selectProcessPaymentResult.do", {
-			              seq : result.seq
-			            }, function(resultInfo) {
-			              var message = "<spring:message code='pay.alert.successProc'/>";
+				selectedRecord[i].keyInTrDate = transactionDate;
+				selectedRecord[i].keyInExpiryMonth = expiryDateRaw.substr(0, 2);
+				selectedRecord[i].keyInExpiryYear = expiryDateRaw.substr(2, 2);
+				selectedRecord[i].keyInAmount = totPayAmt;
+			}
+			$("#PopUp2_wrap").show();
+			$("#PopUp1_wrap").hide();
+		} else {
+			$("#PopUp1_wrap").show();
+			$("#PopUp2_wrap").hide();
+		}
+	}
 
-			              if (resultInfo != null && resultInfo.length > 0) {
-			                for (i = 0; i < resultInfo.length; i++) {
-			                  message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo + ")</font><br>";
-			                }
-			              }
+	function fn_clearPopDetails() {
+		//unused for card
+		$("#keyCrcCardType").val("");
+// 		$("#keyInCrcType").val("");
+// 		$("#keyInCardNo1").val("");
+// 		$("#keyInCardNo2").val("");
+// 		$("#keyInCardNo3").val("");
+// 		$("#keyInCardNo4").val("");
+// 		$("#keyInHolderNm").val("");
+// 		$("#keyInExpiryMonth").val("");
+// 		$("#keyInExpiryYear").val("");
 
-			              Common.alert(message, function() {
-								selectList();
-						    	$("#PopUp1_wrap").hide();
-						    	$("#PopUp2_wrap").hide();
-			              });
-			           });
-		          }
-    		});
-    	}
-}
+		$('#transactionId').val("");
+		$('#trRefNo').val("");
+		$('#trIssDt').val("");
 
-//credit card
-function saveCreditCardPayment(){
-	var keyCrcCardType = $("#keyCrcCardType").val();
-		if(keyCrcCardType == null || keyCrcCardType == ""){
-	        Common.alert("Please choose a card type");
-	        return;
+		$('#trRefNo2').val("");
+		$('#trIssDt2').val("");
+	}
+
+	//cash,cheque,bank-in slip
+	function saveNormalPayment() {
+		var msg = "";
+		if ($("#transactionId").val() == "") {
+			msg += "* <spring:message code='sys.msg.necessary' arguments='Transaction ID' htmlEscape='false'/><br/>";
+		}
+
+		if ($("#trRefNo").val() != "") {
+			if ($("#trIssDt").val() == "") {
+				msg += "* <spring:message code='sys.msg.necessary' arguments='TR Issued Date' htmlEscape='false'/><br/>";
+			}
+		}
+
+		if ($("#trIssDt").val() != "") {
+			if ($("#trRefNo").val() == "") {
+				msg += "* <spring:message code='sys.msg.necessary' arguments='TR Ref No.' htmlEscape='false'/><br/>";
+			}
+		}
+
+		if (msg != "") {
+			Common.alert(msg);
+			return false;
+		}
+
+		for (var i = 0; i < selectedRecord.length; i++) {
+			var status = selectedRecord[i].payStusId;
+
+			if (status != 1 && status != 104) {
+				Common.alert("Selected records consist of completed records.");
+				return false;
+			}
+		}
+
+		/*Checking Ends Proceed to data construct*/
+		var requestData = {
+			all : selectedRecord,
+			form : $('#paymentForm1').serializeArray()
+		}
+		// 		var transactionId = $("#transactionId").val();
+		// 		var allowance = $("#allowance").val();
+		// 		var trRefNo = $("#trRefNo").val();
+		// 		var trIssDt = $("#trIssDt").val();
+		// 		selectedRecord.transactionId = transactionId;
+		// 		selectedRecord.allowance = allowance;
+		// 		selectedRecord.trRefNo = trRefNo;
+		// 		selectedRecord.trIssDt = trIssDt;
+
+		Common
+				.ajax(
+						"POST",
+						"/payment/mobileLumpSumPayment/saveNormalPayment.do",
+						requestData,
+						function(result) {
+							console.log(result);
+
+							fn_clearPopDetails();
+
+							if (result.p1 == 99) {
+								Common
+										.alert(
+												"<spring:message code='pay.alert.bankstmt.mapped'/>",
+												function() {
+													selectList();
+												});
+							} else if (result.appType == "CARE_SRVC") {
+								Common
+										.ajax(
+												"GET",
+												"/payment/common/selectProcessCSPaymentResult.do",
+												{
+													seq : result.seq
+												},
+												function(resultInfo) {
+													var message = "<spring:message code='pay.alert.successProc'/>";
+
+													if (resultInfo != null
+															&& resultInfo.length > 0) {
+														for (i = 0; i < resultInfo.length; i++) {
+															message += "<font color='red'>"
+																	+ resultInfo[i].orNo
+																	+ " (Order No: "
+																	+ resultInfo[i].salesOrdNo
+																	+ ")</font><br>";
+														}
+													}
+
+													Common.alert(message,
+															function() {
+																selectList();
+															});
+												});
+							} else {
+								Common
+										.ajax(
+												"GET",
+												"/payment/common/selectProcessPaymentResult.do",
+												{
+													seq : result.seq
+												},
+												function(resultInfo) {
+													var message = "<spring:message code='pay.alert.successProc'/>";
+
+													if (resultInfo != null
+															&& resultInfo.length > 0) {
+														for (i = 0; i < resultInfo.length; i++) {
+															message += "<font color='red'>"
+																	+ resultInfo[i].orNo
+																	+ " (Order No: "
+																	+ resultInfo[i].salesOrdNo
+																	+ ")</font><br>";
+														}
+													}
+
+													Common
+															.alert(
+																	message,
+																	function() {
+																		selectList();
+																		$(
+																				"#PopUp1_wrap")
+																				.hide();
+																		$(
+																				"#PopUp2_wrap")
+																				.hide();
+																	});
+												});
+							}
+						});
+	}
+
+	//credit card
+	function saveCreditCardPayment() {
+		var keyCrcCardType = $("#keyCrcCardType").val();
+		if (keyCrcCardType == null || keyCrcCardType == "") {
+			Common.alert("Please choose a card type");
+			return false;
 		}
 
 		if ($("#trRefNo2").val() != "") {
-	    	if ($("#trIssDt2").val() == "") {
-	        Common.alert("<spring:message code='sys.msg.necessary' arguments='TR Issued Date' htmlEscape='false'/>");
-	        return;
-	      	}
-	    }
+			if ($("#trIssDt2").val() == "") {
+				Common
+						.alert("<spring:message code='sys.msg.necessary' arguments='TR Issued Date' htmlEscape='false'/>");
+				return false;
+			}
+		}
 
-	    if ($("#trIssDt2").val() != "") {
-	      if ($("#trRefNo2").val() == "") {
-	        Common.alert("<spring:message code='sys.msg.necessary' arguments='TR Ref No.' htmlEscape='false'/>");
-	        return;
-	      }
-	    }
+		if ($("#trIssDt2").val() != "") {
+			if ($("#trRefNo2").val() == "") {
+				Common
+						.alert("<spring:message code='sys.msg.necessary' arguments='TR Ref No.' htmlEscape='false'/>");
+				return false;
+			}
+		}
 
-	    var data = selectedRecord;
+		for (var i = 0; i < selectedRecord.length; i++) {
+			var status = selectedRecord[i].payStusId;
 
-	    var payMode = selectedRecord.payMode;
-	    var status = selectedRecord.payStusId;
+			if (status != 1 && status != 104) {
+				Common.alert("Selected records consist of completed records.");
+				return false;
+			}
+		}
 
-	    var formList = $("#paymentForm").serializeArray();
-	    if (formList.length > 0)
-	        data.form = formList;
-	    else
-	        data.form = [];
+		var requestData = {
+			all : selectedRecord
+		}
+		var formList = $("#paymentForm").serializeArray();
+		if (formList.length > 0)
+			requestData.form = formList;
+		else
+			requestData.form = [];
 
-	    if (status != "1") {
-	       return false;
-    	} else {
-    		Common.ajaxSync("GET", "/payment/common/checkBatchPaymentExist.do", data.form, function(result) {
-                 if(result != null){
-                     Common.alert("Payment has been uploaded.");
-                     return;
-                 }else{
-                    Common.ajax("POST", "/payment/mobileLumpSumPayment/saveCardPayment.do", data, function(result) {
-                    	if(result.code == 00){
-                    		var message = "<spring:message code='pay.alert.successProc'/>";
+		var checkBatchPaymentDataForm = [];
+		for (var i = 0; i < selectedRecord.length; i++) {
+			var formData = {
+					keyInApprovalNo: selectedRecord[i].keyInApprovalNo,
+					keyInHolderNm: selectedRecord[i].keyInHolderNm,
+					keyInCardNo1: selectedRecord[i].keyInCardNo1,
+					keyInCardNo2: selectedRecord[i].keyInCardNo2,
+					keyInCardNo3: selectedRecord[i].keyInCardNo3,
+					keyInCardNo4: selectedRecord[i].keyInCardNo4,
+					keyInCardMode: selectedRecord[i].keyInCardMode,
+					keyInCrcType: selectedRecord[i].keyInCrcType,
+					keyInIssueBank: selectedRecord[i].keyInIssueBank,
+					keyInMerchantBank: selectedRecord[i].keyInMerchantBank,
+					keyInTrDate: selectedRecord[i].keyInTrDate,
+					keyInExpiryMonth: selectedRecord[i].keyInExpiryMonth,
+					keyInExpiryYear: selectedRecord[i].keyInExpiryYear,
+					keyInAmount: selectedRecord[i].keyInAmount
+			};
 
-                            if (result != null && result.length > 0) {
-                              for (i = 0; i < result.length; i++) {
-                                message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo + ")</font><br>";
-                              }
-                            }
-        					fn_clearPopDetails();
+// 			for(var j=0; j<formList.length; j++){
+// 				formData[formList[j].name] = formList[j].value;
+// 			}
 
-                            Common.alert(message, function() {
-            			    	$("#PopUp1_wrap").hide();
-            			    	$("#PopUp2_wrap").hide();
-            					selectList();
-                             });
-        				}
-        				else{
-        				}
-                    });
-                }
-             });
-    	}
-}
+			checkBatchPaymentDataForm.push(formData);
+		}
 
-function fn_rejectRemarkPop(){
-	$('#rejctResn1').val('');
-	$('#reject_pop').show();
-}
+		Common
+				.ajaxSync(
+						"POST",
+						"/payment/mobileLumpSumPayment/checkBatchPaymentExist.do",
+						{all : checkBatchPaymentDataForm},
+						function(result) {
+							if (result.code == 99) {
+								var message = "";
 
-function fn_rejectRecord(value){
-	if(value == 'C'){
-		$('#reject_pop').hide();
-		return false;
+								if (result != null
+										&& result.length > 0) {
+									for (i = 0; i < result.length; i++) {
+										message += "<font color='red'>"
+												+ result[i].payItmAppvNo
+												+ " approval no has been uploaded before"
+												+"</font><br>";
+									}
+								}
+								return false;
+							} else {
+								Common
+										.ajax(
+												"POST",
+												"/payment/mobileLumpSumPayment/saveCardPayment.do",
+												requestData,
+												function(result) {
+													if (result.code == 00) {
+														var message = "<spring:message code='pay.alert.successProc'/>";
+
+														if (result != null
+																&& result.length > 0) {
+															for (i = 0; i < result.length; i++) {
+																message += "<font color='red'>"
+																		+ result[i].orNo
+																		+ " (Order No: "
+																		+ result[i].salesOrdNo
+																		+ ")</font><br>";
+															}
+														}
+														fn_clearPopDetails();
+
+														Common
+																.alert(
+																		message,
+																		function() {
+																			$(
+																					"#PopUp1_wrap")
+																					.hide();
+																			$(
+																					"#PopUp2_wrap")
+																					.hide();
+																			selectList();
+																		});
+													} else {
+													}
+												});
+							}
+						});
 	}
 
-	selectedRecord = null;
+	function fn_rejectRemarkPop() {
+		$('#rejctResn1').val('');
+		$('#reject_pop').show();
+	}
 
-    var selectedItems = AUIGrid.getItemsByValue(myGridID, "checkId", "Y");
-    selectedItems = selectedItems.reduce(function (acc, cur) {
-        return acc.filter(function (obj) {
-            return obj.mobPayGroupNo !== cur.mobPayGroupNo
-        }).concat([cur])
-    }, []);
-
-    if (selectedItems.length == 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd' />");
-      return false;
-    }
-
-    var info = [];
-    for(var i =0; i < selectedItems.length; i++){
-    	info.push(selectedItems[i].mobPayGroupNo);
-    }
-
-    Common.ajax("POST", "/payment/mobileLumpSumPayment/rejectApproval.do", {data: info.join(","),remark:$('#rejctResn1').val()}, function(result) {
-    	if(result.code == 00){
-    		var message = "Payment Reject Success.";
-
-            if (result.data != null && result.data.length > 0) {
-              for (i = 0; i < result.data.length; i++) {
-                message += "<font color='red'>" + " (Ticket No: " + result.data[i].mobPayGroupNo + ")</font><br>";
-              }
-            }
-            Common.alert(message, function() {
-				selectList();
-            });
+	function fn_rejectRecord(value) {
+		if (value == 'C') {
+			$('#reject_pop').hide();
+			return false;
 		}
-    	else{
-    		Common.alert("Error on rejecting ticket", function() {
-				selectList();
-            });
-    	}
-		$('#reject_pop').hide();
-    });
-}
 
-function fn_clear() {
-    $("#searchForm")[0].reset();
-}
+		selectedRecord = null;
+
+		var selectedItems = AUIGrid.getItemsByValue(myGridID, "checkId", "Y");
+		selectedItems = selectedItems.reduce(function(acc, cur) {
+			return acc.filter(function(obj) {
+				return obj.mobPayGroupNo !== cur.mobPayGroupNo
+			}).concat([ cur ])
+		}, []);
+
+		if (selectedItems.length == 0) {
+			Common.alert("<spring:message code='service.msg.NoRcd' />");
+			return false;
+		}
+
+		var info = [];
+		for (var i = 0; i < selectedItems.length; i++) {
+			info.push(selectedItems[i].mobPayGroupNo);
+		}
+
+		Common.ajax("POST", "/payment/mobileLumpSumPayment/rejectApproval.do",
+				{
+					data : info.join(","),
+					remark : $('#rejctResn1').val()
+				}, function(result) {
+					if (result.code == 00) {
+						var message = "Payment Reject Success.";
+
+						if (result.data != null && result.data.length > 0) {
+							for (i = 0; i < result.data.length; i++) {
+								message += "<font color='red'>"
+										+ " (Ticket No: "
+										+ result.data[i].mobPayGroupNo
+										+ ")</font><br>";
+							}
+						}
+						Common.alert(message, function() {
+							selectList();
+						});
+					} else {
+						Common.alert("Error on rejecting ticket", function() {
+							selectList();
+						});
+					}
+					$('#reject_pop').hide();
+				});
+	}
+
+	function fn_clear() {
+		$("#searchForm")[0].reset();
+	}
 </script>
 <!-- html content -->
 <section id="content">
@@ -941,12 +1190,12 @@ function fn_clear() {
 		</form>
 	</section>
 	<ul class="right_btns">
-<%-- 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
-<!-- 			<li><p class="btn_grid"> -->
-<%-- 					<a href="#" onClick="fn_viewLdg()"><spring:message --%>
-<%-- 							code="sal.btn.ledger" /> </a> --%>
-<!-- 				</p></li> -->
-<%-- 		</c:if> --%>
+		<%-- 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+		<!-- 			<li><p class="btn_grid"> -->
+		<%-- 					<a href="#" onClick="fn_viewLdg()"><spring:message --%>
+		<%-- 							code="sal.btn.ledger" /> </a> --%>
+		<!-- 				</p></li> -->
+		<%-- 		</c:if> --%>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 			<li><p class="btn_grid">
 					<a href="#" onClick="fn_approveRecord()"><spring:message
@@ -979,300 +1228,355 @@ function fn_clear() {
 	<!-- search_result end -->
 
 	<!--  Pop Up 1 -->
-	 <div id="PopUp1_wrap" class="popup_wrap" style="display: none;">
-        <!-- popup_wrap start -->
-        <header class="pop_header">
-          <!-- pop_header start -->
-          <h1>Update [ Cash, Cheque, Bank-In Slip ] Key-in</h1>
-          <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close' /></a></p></li>
-          </ul>
-        </header>
-        <section style="max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
-          <!-- pop_body start -->
-          <form id="paymentForm1" name="paymentForm1">
-            <input type="hidden" id="payType" name="payType" /> <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" /> <input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" />
-            <table class="type1">
-              <!-- table start -->
-              <caption>table</caption>
-              <colgroup>
-                <col style="width: 160px" />
-                <col style="width: *" />
-                <col style="width: 160px" />
-                <col style="width: *" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <th scope="row">Transaction ID <span class="must">*</span></th>
-                  <td colspan="3">
-                    <div>
-                      <!-- auto_file start -->
-                      <input type="text" id="transactionId" name="transactionId" placeholder="Transaction ID" value="" /> <input id="allowance" type="checkbox" name="allowance" value="1" checked><label for="allowance"> Allow commission for this payment</label>
-                    </div>
-                    <!-- auto_file end -->
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">TR Ref No.</th>
-                  <td>
-                    <input type="text" id="trRefNo" name="trRefNo" value="" placeholder="TR Ref.No." />
-                  </td>
-                  <th scope="row">TR Issued Date</th>
-                  <td>
-                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="trIssDt" name="trIssDt" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- table end -->
-          </form>
-          <ul class="center_btns">
-            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-              <li><p class="btn_blue2 big"><a id="savePayment1" href="javascript:saveNormalPayment();"><spring:message code='sys.btn.save' /></a></p></li>
-            </c:if>
-          </ul>
-          </div>
+	<div id="PopUp1_wrap" class="popup_wrap" style="display: none;">
+		<!-- popup_wrap start -->
+		<header class="pop_header">
+			<!-- pop_header start -->
+			<h1>Update [ Cash, Cheque, Bank-In Slip ] Key-in</h1>
+			<ul class="right_opt">
+				<li><p class="btn_blue2">
+						<a href="#"><spring:message code='sys.btn.close' /></a>
+					</p></li>
+			</ul>
+		</header>
+		<section
+			style="max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
+			<!-- pop_body start -->
+			<form id="paymentForm1" name="paymentForm1">
+				<input type="hidden" id="payType" name="payType" /> <input
+					type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
+				<input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" />
+				<table class="type1">
+					<!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+						<col style="width: 160px" />
+						<col style="width: *" />
+						<col style="width: 160px" />
+						<col style="width: *" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row">Transaction ID <span class="must">*</span></th>
+							<td colspan="3">
+								<div>
+									<!-- auto_file start -->
+									<input type="text" id="transactionId" name="transactionId"
+										placeholder="Transaction ID" value="" /> <input
+										id="allowance" type="checkbox" name="allowance" value="1"
+										checked><label for="allowance"> Allow
+										commission for this payment</label>
+								</div> <!-- auto_file end -->
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">TR Ref No.</th>
+							<td><input type="text" id="trRefNo" name="trRefNo" value=""
+								placeholder="TR Ref.No." /></td>
+							<th scope="row">TR Issued Date</th>
+							<td><input type="text" title="" autocomplete="off"
+								placeholder="DD/MM/YYYY" class="j_date" id="trIssDt"
+								name="trIssDt" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- table end -->
+			</form>
+			<ul class="center_btns">
+				<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+					<li><p class="btn_blue2 big">
+							<a id="savePayment1" href="javascript:saveNormalPayment();"><spring:message
+									code='sys.btn.save' /></a>
+						</p></li>
+				</c:if>
+			</ul>
+	</div>
 	<!--  Pop Up 1 -->
 
 	<!--  Pop Up 2 -->
-        <div id="PopUp2_wrap" class="popup_wrap win_popup" style="display: none;">
-        <!-- popup_wrap start -->
-        <header class="pop_header">
-          <!-- pop_header start -->
-          <h1>Update [ Card ] Key-in</h1>
-          <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close' /></a></p></li>
-          </ul>
-        </header>
-        <!-- search_table start -->
-        <section style="max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
-          <!-- search_table start -->
-          <form id="paymentForm" action="#" method="post">
-            <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
-            <input type="hidden" name="keyInScrn" id="keyInScrn" value="CRC" />
-            <input type="hidden" name="keyInPayType" id="keyInPayType" value="107" />
-            <table class="type1">
-              <caption>table</caption>
-              <colgroup>
-                <col style="width: 180px" />
-                <col style="width: *" />
-                <col style="width: 180px" />
-                <col style="width: *" />
-              </colgroup>
-              <tbody>
+	<div id="PopUp2_wrap" class="popup_wrap win_popup"
+		style="display: none;">
+		<!-- popup_wrap start -->
+		<header class="pop_header">
+			<!-- pop_header start -->
+			<h1>Update [ Card ] Key-in</h1>
+			<ul class="right_opt">
+				<li><p class="btn_blue2">
+						<a href="#"><spring:message code='sys.btn.close' /></a>
+					</p></li>
+			</ul>
+		</header>
+		<!-- search_table start -->
+		<section
+			style="max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
+			<!-- search_table start -->
+			<form id="paymentForm" action="#" method="post">
+				<input type="hidden" name="keyInPayRoute" id="keyInPayRoute"
+					value="WEB" /> <input type="hidden" name="keyInScrn"
+					id="keyInScrn" value="CRC" /> <input type="hidden"
+					name="keyInPayType" id="keyInPayType" value="107" />
+				<table class="type1">
+					<caption>table</caption>
+					<colgroup>
+						<col style="width: 180px" />
+						<col style="width: *" />
+						<col style="width: 180px" />
+						<col style="width: *" />
+					</colgroup>
+					<tbody>
 
-                 <!-- <input  type="hidden"  id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly" /> -->
-                <input  type="hidden"  id="keyInAmount" name="keyInAmount" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInCardMode" name="keyInCardMode" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInCrcType" name="keyInCrcType" class="w100p" readonly="readonly" />
+						<!-- <input  type="hidden"  id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInAmount" name="keyInAmount" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInCardMode" name="keyInCardMode" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInCrcType" name="keyInCrcType" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
 
-                <input  type="hidden"  id="keyInCardNo1" name="keyInCardNo1" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInCardNo2" name="keyInCardNo2" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInCardNo3" name="keyInCardNo3" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInCardNo4" name="keyInCardNo4" class="w100p" readonly="readonly" />
+<!-- 						<input type="hidden" id="keyInCardNo1" name="keyInCardNo1" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInCardNo2" name="keyInCardNo2" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInCardNo3" name="keyInCardNo3" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInCardNo4" name="keyInCardNo4" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
 
-                <input  type="hidden"  id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" readonly="readonly" />
-                <input  type="hidden"  id="keyInHolderNm" name="keyInHolderNm" class="w100p" readonly="readonly" />
+<!-- 						<input type="hidden" id="keyInApprovalNo" name="keyInApprovalNo" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInHolderNm" name="keyInHolderNm" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
 
-                 <input  type="hidden"  id="keyInIssueBank" name="keyInIssueBank" class="w100p" readonly="readonly" />
-                 <input  type="hidden"  id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" readonly="readonly" />
+<!-- 						<input type="hidden" id="keyInIssueBank" name="keyInIssueBank" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInMerchantBank" -->
+<!-- 							name="keyInMerchantBank" class="w100p" readonly="readonly" /> -->
 
-                 <input  type="hidden"  id="keyInExpiryMonth" name="keyInExpiryMonth" class="w100p" readonly="readonly" />
-                 <input  type="hidden"  id="keyInExpiryYear" name="keyInExpiryYear" class="w100p" readonly="readonly" />
+<!-- 						<input type="hidden" id="keyInExpiryMonth" name="keyInExpiryMonth" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
+<!-- 						<input type="hidden" id="keyInExpiryYear" name="keyInExpiryYear" -->
+<!-- 							class="w100p" readonly="readonly" /> -->
 
-                 <input  type="hidden" id="keyInTrDate" name="keyInTrDate" />
+<!-- 						<input type="hidden" id="keyInTrDate" name="keyInTrDate" /> -->
 
 
-                <tr>
-                  <th scope="row">Card Type<span class="must">*</span></th>
-                  <td>
-                     <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly">
-                      <option value="1241">Credit Card</option>
-                      <option value="1240">Debit Card</option>
-                    </select>
+						<tr>
+							<th scope="row">Card Type<span class="must">*</span></th>
+							<td><select id="keyCrcCardType" name="keyCrcCardType"
+								class="w100p" readonly="readonly">
+									<option value="1241">Credit Card</option>
+									<option value="1240">Debit Card</option>
+							</select></td>
+							<td></td>
+						</tr>
+						<tr>
+							<th scope="row">TR Ref No.</th>
+							<td><input type="text" id="trRefNo2" name="trRefNo2"
+								value="" /></td>
+							<th scope="row">TR Issued Date</th>
+							<td><input type="text" title="" autocomplete="off"
+								placeholder="DD/MM/YYYY" class="j_date" id="trIssDt2"
+								name="trIssDt2" /></td>
+						</tr>
 
-                  </td>
-                   <td>
-                   </td>
-                </tr>
-                <tr>
-                  <th scope="row">TR Ref No.</th>
-                  <td>
-                    <input type="text" id="trRefNo2" name="trRefNo2" value="" />
-                  </td>
-                  <th scope="row">TR Issued Date</th>
-                  <td>
-                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="trIssDt2" name="trIssDt2" />
-                  </td>
-                </tr>
+						<tr>
+							<td colspan="4">
+								<div>
+									<input id="allowance2" type="checkbox" name="allowance"
+										value="1" checked><label for="allowance2">
+										Allow commission for this payment</label>
+								</div>
+							</td>
+						</tr>
 
-                <tr>
-                  <td colspan="4">
-                    <div>
-                      <input id="allowance2" type="checkbox" name="allowance" value="1" checked><label for="allowance2"> Allow commission for this payment</label>
-                    </div>
-                  </td>
-                </tr>
+					</tbody>
+				</table>
+				<!-- table end -->
+			</form>
+			<ul class="center_btns">
+				<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+					<li><p class="btn_blue2 big">
+							<a id="cardSave" href="javascript:saveCreditCardPayment();"><spring:message
+									code='sys.btn.save' /></a>
+						</p></li>
+				</c:if>
+			</ul>
+			<form id="frmLedger" name="frmLedger" action="#" method="post">
+				<input id="ordId" name="ordId" type="hidden" value="" />
+			</form>
+			<!-- search_table end -->
+	</div>
+	<!-- popup_wrap end -->
 
-              </tbody>
-            </table>
-            <!-- table end -->
-          </form>
-          <ul class="center_btns">
-            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-              <li><p class="btn_blue2 big"><a id="cardSave" href="javascript:saveCreditCardPayment();"><spring:message code='sys.btn.save' /></a></p></li>
-            </c:if>
-          </ul>
-        <form id="frmLedger" name="frmLedger" action="#" method="post">
-          <input id="ordId" name="ordId" type="hidden" value="" />
-        </form>
-        <!-- search_table end -->
-      </div>
-      <!-- popup_wrap end -->
+	<!-- popup_wrap start -->
+	<div class="popup_wrap size_small" id="updFail_wrap"
+		style="display: none;">
+		<!-- pop_header start -->
+		<header class="pop_header" id="updFail_pop_header">
+			<h1>Update Status</h1>
+			<ul class="right_opt">
+				<li><p class="btn_blue2">
+						<a href="#" onclick="fn_close()">CLOSE</a>
+					</p></li>
+			</ul>
+		</header>
+		<!-- pop_header end -->
 
-<!-- popup_wrap start -->
-<div class="popup_wrap size_small" id="updFail_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="updFail_pop_header">
-        <h1>Update Status</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
+		<!-- pop_body start -->
+		<form name="updFailForm" id="updFailForm" method="post">
+			<section class="pop_body">
+				<!-- search_table start -->
+				<section class="search_table">
+					<!-- table start -->
+					<table class="type1">
+						<caption>table</caption>
+						<colgroup>
+							<col style="width: 175px" />
+							<col style="width: *" />
+						</colgroup>
 
-    <!-- pop_body start -->
-    <form name="updFailForm" id="updFailForm"  method="post">
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:175px" />
-                    <col style="width:*" />
-                </colgroup>
+						<tbody>
+							<tr>
+								<th scope="row">Action<span class="must">*</span></th>
+								<td><select id="_action" name="_action"></select></td>
+							</tr>
 
-                <tbody>
-                <tr>
-                     <th scope="row">Action<span class="must">*</span></th>
-                     <td><select id="_action" name="_action"></select></td>
-                 </tr>
+							<tr id="fail_reason" style="display: none;">
+								<th scope="row">Fail reason code<span class="must">*</span></th>
+								<td><select id="failReason" name="failReason" class="w50p"></select></td>
+							</tr>
+							<tr id="reject_reason" style="display: none;">
+								<th scope="row">Reject reason code<span class="must">*</span></th>
+								<td><select id="rejectReason" name="rejectReason"
+									class="w50p"></select></td>
+							</tr>
+							<tr id="rem">
+								<th scope="row"><spring:message code="pay.head.remark" /></th>
+								<td><textarea cols="20" rows="2" id="etc" name="etc"
+										placeholder="Remark"></textarea></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
 
-                 <tr id="fail_reason" style="display: none;">
-                     <th scope="row">Fail reason code<span class="must">*</span></th>
-                        <td><select id="failReason" name="failReason" class="w50p"></select></td>
-                 </tr>
-                 <tr id="reject_reason" style="display: none;">
-                     <th scope="row">Reject reason code<span class="must">*</span></th>
-                        <td><select id="rejectReason" name="rejectReason" class="w50p"></select></td>
-                 </tr>
-                 <tr id="rem">
-                     <th scope="row"><spring:message code="pay.head.remark" /></th>
-                         <td>
-                             <textarea cols="20" rows="2" id="etc" name="etc" placeholder="Remark"></textarea>
-                         </td>
-                 </tr>
-                </tbody>
-            </table>
-        </section>
+				<ul class="center_btns">
+					<li><p class="btn_blue2">
+							<a href="#" onClick="fn_updateFailStatus()">Save</a>
+						</p></li>
+				</ul>
+			</section>
+		</form>
+		<!-- pop_body end -->
+	</div>
 
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="#" onClick="fn_updateFailStatus()">Save</a></p></li>
-        </ul>
-    </section>
-    </form>
-    <!-- pop_body end -->
-</div>
+	<!-- popup_wrap start -->
+	<div class="popup_wrap size_mid" id="errSum_wrap"
+		style="display: none;">
+		<!-- pop_header start -->
+		<header class="pop_header" id="updFail_pop_header">
+			<h1>Cody Keyin Error Summary</h1>
+			<ul class="right_opt">
+				<li><p class="btn_blue2">
+						<a href="#" onclick="fn_close()">CLOSE</a>
+					</p></li>
+			</ul>
+		</header>
+		<!-- pop_header end -->
 
-<!-- popup_wrap start -->
-<div class="popup_wrap size_mid" id="errSum_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="updFail_pop_header">
-        <h1>Cody Keyin Error Summary</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
+		<!-- pop_body start -->
+		<form name="errorSummaryReport" id="errorSummaryReport" method="post">
+			<input type="hidden" id="reportFileName" name="reportFileName"
+				value="" /> <input type="hidden" id="viewType" name="viewType" />
+			<input type="hidden" id="reportDownFileName"
+				name="reportDownFileName" /> <input type="hidden" id="V_WHERESQL"
+				name="V_WHERESQL" />
 
-    <!-- pop_body start -->
-    <form name="errorSummaryReport" id="errorSummaryReport"  method="post">
-	<input type="hidden" id="reportFileName" name="reportFileName" value="" />
-	<input type="hidden" id="viewType" name="viewType" />
-	<input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
-    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+			<section class="pop_body">
+				<!-- search_table start -->
+				<section class="search_table">
+					<!-- table start -->
+					<table class="type1">
+						<caption>table</caption>
+						<colgroup>
+							<col style="width: 175px" />
+							<col style="width: *" />
+						</colgroup>
 
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:175px" />
-                    <col style="width:*" />
-                </colgroup>
+						<tbody>
+							<tr>
+								<th scope="row"><spring:message code='pay.head.requestDate' /></th>
+								<td>
+									<div class="date_set w100p">
+										<p>
+											<input id="startDt" name="startDt" type="text" value=""
+												title="Request start date" placeholder="DD/MM/YYYY"
+												class="j_date" />
+										</p>
+										<span>To</span>
+										<p>
+											<input id="endDt" name="endDt" type="text" value=""
+												title="Request end date" placeholder="DD/MM/YYYY"
+												class="j_date" />
+										</p>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><spring:message
+										code='sal.title.text.region' /></th>
+								<td><select id="_region" name="_region" class="w100p"></select></td>
+							</tr>
+							<tr>
+								<th scope="row"><spring:message code='pay.head.branch' /></th>
+								<td><select class="multy_select w100p" id="_branch"
+									name="_branch" multiple="multiple" disabled>
+										<c:forEach var="list" items="${userBranch}" varStatus="status">
+											<option value="${list.branchid}">${list.c1}</option>
+										</c:forEach>
+								</select></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
 
-                <tbody>
-                <tr>
-                    <th scope="row"><spring:message code='pay.head.requestDate'/></th>
-                    <td>
-					    <div class="date_set w100p">
-					    <p><input id="startDt" name="startDt" type="text" value="" title="Request start date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-					    <span>To</span>
-					    <p><input id="endDt" name="endDt" type="text" value="" title="Request end date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-					    </div>
-				    </td>
-				 </tr>
-                 <tr>
-                     <th scope="row"><spring:message code='sal.title.text.region'/></th>
-                        <td><select id="_region" name="_region" class="w100p"></select></td>
-                 </tr>
-                 <tr>
-                     <th scope="row"><spring:message code='pay.head.branch'/></th>
-                        <td>
-                        <select class="multy_select w100p" id="_branch" name="_branch" multiple="multiple" disabled>
-				                <c:forEach var="list" items="${userBranch}" varStatus="status">
-				                  <option value="${list.branchid}">${list.c1}</option>
-				                </c:forEach>
-				              </select>
-                        </td>
-                 </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="#" onClick="fn_generate()">Save</a></p></li>
-        </ul>
-    </section>
-    </form>
-    <!-- pop_body end -->
-</div>
+				<ul class="center_btns">
+					<li><p class="btn_blue2">
+							<a href="#" onClick="fn_generate()">Save</a>
+						</p></li>
+				</ul>
+			</section>
+		</form>
+		<!-- pop_body end -->
+	</div>
 </section>
-	<!--  Pop Up 2 -->
+<!--  Pop Up 2 -->
 
-	<div id="reject_pop" class="popup_wrap msg_box"  style="display:none;">
-    <header class="pop_header">
-        <h1>Reject Reason</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
-        </ul>
-    </header>
+<div id="reject_pop" class="popup_wrap msg_box" style="display: none;">
+	<header class="pop_header">
+		<h1>Reject Reason</h1>
+		<ul class="right_opt">
+			<li><p class="btn_blue2">
+					<a href="#"><spring:message code="expense.CLOSE" /></a>
+				</p></li>
+		</ul>
+	</header>
 
-    <section class="pop_body">
-        <p class="msg_txt">
-            <spring:message code="rejectionWebInvoiceMsg.registMsg" />
-            <textarea cols="20" rows="5" id="rejctResn1" placeholder="Reject reason max 400 characters"></textarea>
-        </p>
+	<section class="pop_body">
+		<p class="msg_txt">
+			<spring:message code="rejectionWebInvoiceMsg.registMsg" />
+			<textarea cols="20" rows="5" id="rejctResn1"
+				placeholder="Reject reason max 400 characters"></textarea>
+		</p>
 
-        <ul class="center_btns">
-            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_rejectRecord('P');">Proceed</a></p></li>
-            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_rejectRecord('C')">Cancel</a></p></li>
-        </ul>
-    </section>
+		<ul class="center_btns">
+			<li><p class="btn_blue">
+					<a href="#" onclick="javascript:fn_rejectRecord('P');">Proceed</a>
+				</p></li>
+			<li><p class="btn_blue">
+					<a href="#" onclick="javascript:fn_rejectRecord('C')">Cancel</a>
+				</p></li>
+		</ul>
+	</section>
 </div>
 </section>
 <!-- html content -->

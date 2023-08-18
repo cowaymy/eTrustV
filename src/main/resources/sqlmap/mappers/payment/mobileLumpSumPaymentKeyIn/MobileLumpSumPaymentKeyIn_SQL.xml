@@ -345,6 +345,10 @@
         SELECT PAY0349M_MOB_PAY_GROUP_NO_SEQ.NEXTVAL atchFileId FROM DUAL
     </select>
 
+    <select id="selectNextMatchingId" resultType="int">
+        SELECT PAY0349M_MATCHING_ID_SEQ.NEXTVAL id FROM DUAL
+    </select>
+
     <select id="selectUser" parameterType="String" resultType="egovMap">
        	SELECT s0047m.USER_ID
        	FROM SYS0047M s0047m
@@ -389,7 +393,7 @@
 		(
 		PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL,
 		#{mobilePayGrpNo},
-		1,
+		#{status},
 		#{paymentMethodId},
 		#{totalPayableAmount},
 		#{totalOriginalOutstandingAmount},
@@ -462,6 +466,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		p0349m.TOT_PAY_AMT,p0349m.TOT_ORI_OUT_AMT,p0349m.CRT_BY,s0047m1.USER_NAME AS CRT_USER_NAME,p0349m.UPD_BY,s0047m2.USER_NAME AS UPD_USER_NAME,
 		p0350d.SALES_ORD_ID,p0350d.SALES_ORD_NO,p0350d.ORD_PAY_TYPE_ID,p0350d.PAY_TYPE,p0350d.PAY_AMT,p0350d.ORI_OUT_AMT,s0029d.NAME AS CUST_NAME,
 		p0349m.SLIP_NO,p0350d.MOB_PAY_DETAIL_ID,
+
         p0349m.UPLOAD_IMG1,
         CASE WHEN p0349m.UPLOAD_IMG1 IS NOT NULL
           THEN 'DOWN'
@@ -661,23 +666,29 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 	</select>
 
 	<update id="mobileUpdateCashMatchingData" parameterType="Map">
-		UPDATE PAY0349M
-		SET
-		PAY_STUS_ID = 104 <!-- 	Processing Stage -->
-		SLIP_NO = #{slipNo},
-		UPLOAD_IMG1 = #{uploadImg1},
-		UPLOAD_IMG2 = #{uploadImg2},
-		UPLOAD_IMG3 = #{uploadImg3},
-		UPD_DT = SYSDATE,
-		UPD_BY = #{userId}
-		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+		<if test="mobPayGroupNo != null and mobPayGroupNo != ''">
+			UPDATE PAY0349M
+				SET
+				PAY_STUS_ID = #{status}
+				SLIP_NO = #{slipNo},
+				UPLOAD_IMG1 = #{uploadImg1},
+				UPLOAD_IMG2 = #{uploadImg2},
+				UPLOAD_IMG3 = #{uploadImg3},
+				MATCHING_ID = #{matchingId},
+				UPD_DT = SYSDATE,
+				UPD_BY = #{userId}
+				WHERE MOB_PAY_GROUP_NO IN
+	        <foreach item="item" collection="mobPayGroupNo" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+         </if>
 	</update>
 
 	<select id="selectLumpSumPaymentDetail" parameterType="Map" resultType="egovMap">
 		SELECT p0349m.MOB_PAY_GROUP_NO,p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
         p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
         s0029d.NAME, s0047m.USER_NAME AS CRT_MEM_CODE,
-        p0349m.SLIP_NO,p0349m.CHEQUE_NO
+        p0349m.SLIP_NO,p0349m.CHEQUE_NO,NVL(p0349m.MATCHING_ID,0) AS MATCHING_ID
         FROM PAY0349M p0349m
 		JOIN PAY0350D p0350d
 		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
@@ -690,8 +701,8 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         LEFT JOIN SYS0047M s0047m
         ON p0349m.CRT_BY = s0047m.USER_ID
         WHERE 1=1
-		AND A.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
-        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME
+		AND p0349m.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME,s0047m.USER_NAME,p0349m.SLIP_NO,p0349m.CHEQUE_NO,p0349m.MATCHING_ID
         ORDER BY p0349m.CRT_DT DESC
 	</select>
 
@@ -742,12 +753,18 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 	</select>
 
 	<update id="updateApproveLumpSumPaymentInfo" parameterType="Map">
+		<if test="mobPayGroupNoArr != null and mobPayGroupNoArr != ''">
 		UPDATE PAY0349M SET
 		TRANSACTION_ID = #{transactionId},
 		PAY_STUS_ID = 5,
 		UPD_DT = SYSDATE,
 		UPD_BY = #{userId}
-		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+		WHERE 1=1
+		AND MOB_PAY_GROUP_NO IN
+	 	<foreach item="item" collection="mobPayGroupNoArr" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+		</if>
 	</update>
 
 	<update  id="updateRejectLumpSumPayment" parameterType="Map">

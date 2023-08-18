@@ -46,6 +46,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.mobileLumpSumPayment.MobileLumpSumPaymentOrderDetailsForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
+import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 import com.coway.trust.biz.sales.mambership.MembershipPaymentService;
 import com.coway.trust.biz.sales.mambership.impl.MembershipESvmMapper;
@@ -94,6 +95,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	private MembershipESvmMapper membershipESvmMapper;
 	@Autowired
 	private AdaptorService adaptorService;
+	@Resource(name = "commonPaymentMapper")
+	private CommonPaymentMapper commonPaymentMapper;
 
 	@Override
 	public List<EgovMap> customerInfoSearch(Map<String, Object> params) {
@@ -104,12 +107,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		if (custCiType.equals("1")) {
 			params.put("salesOrdNo", params.get("custCi").toString());
 
-			if(params.get("salesOrdNo") != null && !params.get("salesOrdNo").toString().isEmpty())
-			{
+			if (params.get("salesOrdNo") != null && !params.get("salesOrdNo").toString().isEmpty()) {
 				customerInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerInfoBySalesOrderNo(params);
-			}
-			else{
-				throw new ApplicationException(AppConstants.FAIL, "There is no order number to be search. Please Contact IT.");
+			} else {
+				throw new ApplicationException(AppConstants.FAIL,
+						"There is no order number to be search. Please Contact IT.");
 			}
 		}
 
@@ -129,7 +131,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		if (params.get("nric") != null && !params.get("nric").toString().isEmpty()) {
 			String nric = params.get("nric").toString();
-			if(nric.matches("^[0-9]*$")){
+			if (nric.matches("^[0-9]*$")) {
 				params.put("custId", params.get("custCi").toString());
 			}
 			customerInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerInfo(params);
@@ -166,16 +168,16 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	}
 
 	@Override
-	public List<EgovMap> rejectApproval(Map<String, Object> params, SessionVO sessionVO){
+	public List<EgovMap> rejectApproval(Map<String, Object> params, SessionVO sessionVO) {
 		String[] mobPayGroupNo = params.get("data").toString().split(",");
 		params.put("mobPayGroupNo", mobPayGroupNo);
 		params.put("userId", sessionVO.getUserId());
 
 		int updateResult = mobileLumpSumPaymentKeyInMapper.updateRejectLumpSumPayment(params);
 
-		if(updateResult > 0){
+		if (updateResult > 0) {
 			List<EgovMap> result = new ArrayList();
-			for(String mobPayGNo : mobPayGroupNo){
+			for (String mobPayGNo : mobPayGroupNo) {
 				EgovMap info = new EgovMap();
 				info.put("mobPayGroupNo", mobPayGNo);
 				result.add(info);
@@ -222,6 +224,13 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			params.put("cardBrand", null);
 		}
 
+		if (Integer.parseInt(params.get("paymentMethodId").toString()) == 5698
+				|| Integer.parseInt(params.get("paymentMethodId").toString()) == 5697) {// cash or cheque
+			params.put("status", 1);
+		} else {
+			params.put("status", 104); // Processing Status
+		}
+
 		mobileLumpSumPaymentKeyInMapper.insertPaymentMasterInfo(params);
 
 		List<Map<String, Object>> orderDetails = (List<Map<String, Object>>) params.get("orderDetailList");
@@ -231,9 +240,9 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
 			}
 			result.put("result", 1);
-		}
-		else{
-			throw new ApplicationException(AppConstants.FAIL, "There is no orders being submit for payment. Please Contact IT.");
+		} else {
+			throw new ApplicationException(AppConstants.FAIL,
+					"There is no orders being submit for payment. Please Contact IT.");
 		}
 		return result;
 	}
@@ -264,12 +273,12 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		String[] mobPayGroupNoList = params.get("mobPayGroupNo").toString().split(",");
 
-		if(mobPayGroupNoList.length > 0){
-			for(int i = 0; i<mobPayGroupNoList.length;i++){
-				String mobPayGroupNo = mobPayGroupNoList[i];
-				params.put("mobPayGroupNo", mobPayGroupNo);
-				mobileLumpSumPaymentKeyInMapper.mobileUpdateCashMatchingData(params);
-			}
+		if (mobPayGroupNoList.length > 0) {
+			int nextVal = mobileLumpSumPaymentKeyInMapper.selectNextMatchingId();
+			params.put("matchingId", nextVal);
+			params.put("status", 104); // Processing Status
+			params.put("mobPayGroupNo", mobPayGroupNoList);
+			mobileLumpSumPaymentKeyInMapper.mobileUpdateCashMatchingData(params);
 		}
 
 		return 1;
@@ -277,39 +286,60 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public Map<String, Object> saveNormalPayment(Map<String, Object> params, SessionVO sessionVO) {
-		EgovMap detail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentDetail(params);
-		List<EgovMap> subDetail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentSubDetail(params);
-		params.put("memCode", Integer.parseInt(detail.get("crtMemCode").toString()));
+		List<Object> gridDataList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
+		List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // FORM OBJECT DATA IMPORT
 
-		List<Object> formList = new ArrayList<Object>();
 		int iProcSeq = 1;
 		String allowance = "0";
 		String trRefNo = "";
 		String trIssDt = "";
 
+		BigDecimal totPayAmount = BigDecimal.ZERO;
+		String slipNo = "";
+		String chequeNo = "";
+		String keyInPayDate = "";
+		String crtMemCode = "";
+		int cashMatchingID = 0;
+
+		LOGGER.debug("==================================================================");
+		LOGGER.debug("= GRID LIST DATA : " + gridDataList.toString());
+		LOGGER.debug("= GRID LIST FORM : " + gridFormList.toString());
+		LOGGER.debug("==================================================================");
+
+		Map<String, Object> formInfo = null;
+		formInfo = new HashMap<String, Object>();
+		if (gridFormList.size() > 0) {
+			for (Object obj : gridFormList) {
+				Map<String, Object> map = (Map<String, Object>) obj;
+				formInfo.put((String) map.get("name"), map.get("value"));
+			}
+		}
+		/*
+		 * Form Data Checking START
+		 */
 		// ALLOWANCE
-		if (!"".equals(CommonUtils.nvl(params.get("allowance")))) {
+		if (!"".equals(CommonUtils.nvl(formInfo.get("allowance")))) {
 			allowance = "1";
 		} else {
 			allowance = "0";
 		}
 
 		// TR REF NO.
-		if (!"".equals(CommonUtils.nvl(params.get("trRefNo")))) {
-			trRefNo = params.get("trRefNo").toString();
+		if (!"".equals(CommonUtils.nvl(formInfo.get("trRefNo")))) {
+			trRefNo = formInfo.get("trRefNo").toString();
 		} else {
 			trRefNo = "";
 		}
 
 		// TR ISSED DATE.
-		if (!"".equals(CommonUtils.nvl(params.get("trIssDt")))) {
-			trIssDt = params.get("trIssDt").toString();
+		if (!"".equals(CommonUtils.nvl(formInfo.get("trIssDt")))) {
+			trIssDt = formInfo.get("trIssDt").toString();
 		} else {
 			trIssDt = "";
 		}
 
 		// VERIFY TRX ID AMOUNT VS SELECTED AMOUNT
-		String key = (String) params.get("transactionId"); // BANK STATEMENT ID
+		String key = (String) formInfo.get("transactionId"); // BANK STATEMENT ID
 		if (!patternInteger.matcher(key).matches()) {
 			throw new ApplicationException(AppConstants.FAIL, "Entered transaction ID must be in number format.");
 		}
@@ -331,14 +361,6 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			transactionCredit = new BigDecimal(String.valueOf(selectBankStatementInfo.get("crdit")));
 		}
 
-		BigDecimal totPayAmount = (BigDecimal) detail.get("totPayAmt");
-		if (transactionCredit.compareTo(totPayAmount) != 0) {
-			throw new ApplicationException(AppConstants.FAIL,
-					"Total selected payment amount of " + totPayAmount.toPlainString()
-							+ " does not match with transaction ID's amount of " + transactionCredit.toPlainString()
-							+ ".");
-		}
-
 		// TRANSACTION TYPE
 		String paymentMode = (String) selectBankStatementInfo.get("type");
 		String payType = "";
@@ -352,35 +374,88 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			payType = "105";
 		}
 
-		String payMode = "";
+		List<EgovMap> detailList = new ArrayList<EgovMap>();
+		List<EgovMap> subDetailList = new ArrayList<EgovMap>();
+		List<String> mobPayGroupNoList = new ArrayList();
+		// Get all detail record
+		for (int i = 0; i < gridDataList.size(); i++) {
+			String payMode = "";
+			Map<String, Object> data = new HashMap();
+			data = (Map<String, Object>) gridDataList.get(i);
 
-		if ("5697".equals(String.valueOf(params.get("payMode")))) {
-			payMode = "CHQ";
-		} else {
-			if ("ONL".equals(paymentMode)) {
-				payMode = "ONL";
+			mobPayGroupNoList.add(data.get("mobPayGroupNo").toString());
+
+			EgovMap detail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentDetail(data);
+
+			totPayAmount = totPayAmount.add((BigDecimal) detail.get("totPayAmt"));
+			String createdMem = detail.get("crtMemCode").toString();
+			if (crtMemCode.isEmpty()) {
+				crtMemCode = createdMem;
+				formInfo.put("memCode", createdMem);
 			} else {
-				payMode = "CSH";
+				if (!crtMemCode.equals(createdMem)) {
+					throw new ApplicationException(AppConstants.FAIL,
+							"Selected record is not created by the same Member Code");
+				}
 			}
+
+			if ("5697".equals(String.valueOf(detail.get("payMode")))) {
+				payMode = "CHQ";
+			} else {
+				if ("ONL".equals(paymentMode)) {
+					payMode = "ONL";
+				} else {
+					payMode = "CSH";
+				}
+			}
+
+			// PAYMENT MODE CHECKING between bank statement and selected record
+			if (!paymentMode.equals(payMode)) {
+				throw new ApplicationException(AppConstants.FAIL,
+						"Selected payment type does not match with entered transaction ID's payment type");
+			}
+
+			if (cashMatchingID == 0) {
+				cashMatchingID = Integer.parseInt(detail.get("matchingId").toString());
+			} else {
+				if (cashMatchingID != Integer.parseInt(detail.get("matchingId").toString())) {
+					throw new ApplicationException(AppConstants.FAIL,
+							"The matching attachment is different. Please ensure that matching is same to proceed.");
+				}
+			}
+
+			slipNo = detail.get("slipNo") == null ? "" : detail.get("slipNo").toString();
+			chequeNo = detail.get("chequeNo") == null ? "" : detail.get("chequeNo").toString();
+			keyInPayDate = detail.get("crtDt") == null ? "" : detail.get("crtDt").toString();
+
+			List<EgovMap> subDetails = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentSubDetail(data);
+			subDetailList.addAll(subDetails);
+			detailList.add(detail);
 		}
 
-		// PAYMENT MODE CHECKING between bank statement and selected record
-		if (!paymentMode.equals(payMode)) {
+		if (transactionCredit.compareTo(totPayAmount) != 0) {
 			throw new ApplicationException(AppConstants.FAIL,
-					"Selected payment type does not match with entered transaction ID's payment type");
+					"Total selected payment amount of " + totPayAmount.toPlainString()
+							+ " does not match with transaction ID's amount of " + transactionCredit.toPlainString()
+							+ ".");
 		}
 
+		/*
+		 * Form Data Checking END
+		 */
+		List<Object> dataList = new ArrayList<Object>();
 		// EACH ORDER LOOP
-		if (subDetail.size() > 0) {
-			for (int i = 0; i < subDetail.size(); i++) {
-				EgovMap orderDetail = subDetail.get(i);
+		if (subDetailList.size() > 0) {
+			for (int i = 0; i < subDetailList.size(); i++) {
+				int currFormSize = dataList.size();
+				EgovMap orderDetail = subDetailList.get(i);
 
 				String salesOrdNo = new BigDecimal(orderDetail.get("salesOrdNo").toString()).toPlainString();
 				String salesOrdId = new BigDecimal(orderDetail.get("salesOrdId").toString()).toPlainString();
 
 				Map<String, Object> subInfoParam = new HashMap();
 				subInfoParam.put("salesOrdNo", salesOrdNo);
-				subInfoParam.put("salesOrderId", salesOrdId);
+				subInfoParam.put("salesOrdId", salesOrdId);
 				subInfoParam.put("orderId", salesOrdId);
 
 				EgovMap orderDetailInfo = mobileLumpSumPaymentKeyInMapper.selectOrderDetailInfo(subInfoParam);
@@ -389,65 +464,81 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 					String paymentType = orderDetail.get("payType").toString();
 
-					if (paymentType == "RENTAL PAYMENT") {
-						formList = rentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
+					if (paymentType.equals("RENTAL PAYMENT")) {
+						dataList = rentalPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo,
+								trIssDt, iProcSeq, dataList);
 					}
 					// need to know if is HT/HA
-					if (paymentType == "OUTRIGHT PAYMENT" || paymentType == "INSTALLMENT PAYMENT") {
-						formList = nonRentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
+					if (paymentType.equals("OUTRIGHT PAYMENT") || paymentType.equals("INSTALLMENT PAYMENT")) {
+						dataList = nonRentalPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo,
+								trIssDt, iProcSeq, dataList);
 					}
 
-					if (paymentType == "OUTRIGHT MEMBERSHIP") {
-						formList = outrightMembershipPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
+					if (paymentType.equals("OUTRIGHT MEMBERSHIP")) {
+						if (orderDetail.get("srvMemId") != null) {
+							subInfoParam.put("srvMemId", orderDetail.get("srvMemId").toString());
+						}
+						dataList = outrightMembershipPaymentCollection(formInfo, orderDetail, subInfoParam, allowance,
+								trRefNo, trIssDt, iProcSeq, dataList);
 					}
 
-					if (paymentType == "AS PAYMENT") {
-						formList = asPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
+					if (paymentType.equals("AS PAYMENT")) {
+						dataList = asPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo, trIssDt,
+								iProcSeq, dataList);
 					}
 				}
 				iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
+
+				int afterFormSize = dataList.size();
+				//This is to check if every order has generated formList out or not
+				if (currFormSize == afterFormSize) {
+					throw new ApplicationException(AppConstants.FAIL,
+							"Error generating receipt for MobPayGroupNo: " + orderDetail.get("mobPayGroupNo").toString()
+									+ " due to no payment found for Order No:" + salesOrdNo);
+				}
 			} // End For Loop
-			BigDecimal totPayAmt = new BigDecimal(String.valueOf(detail.get("totPayAmt")));
 
-			if (params.get("chargeAmount") == null || params.get("chargeAmount").equals("")) {
-				params.put("chargeAmount", 0);
+			if (formInfo.get("chargeAmount") == null || formInfo.get("chargeAmount").equals("")) {
+				formInfo.put("chargeAmount", 0);
 			}
 
-			if (params.get("bankAcc") == null || params.get("bankAcc").equals("")) {
-				params.put("bankAcc", 0);
+			if (formInfo.get("bankAcc") == null || formInfo.get("bankAcc").equals("")) {
+				formInfo.put("bankAcc", 0);
 			}
 
-			params.put("payItemIsLock", false);
-			params.put("payItemIsThirdParty", false);
-			params.put("payItemStatusId", 1);
-			params.put("isFundTransfer", false);
-			params.put("skipRecon", false);
-			params.put("payItemCardTypeId", 0);
+			formInfo.put("payItemIsLock", false);
+			formInfo.put("payItemIsThirdParty", false);
+			formInfo.put("payItemStatusId", 1);
+			formInfo.put("isFundTransfer", false);
+			formInfo.put("skipRecon", false);
+			formInfo.put("payItemCardTypeId", 0);
 
-			params.put("keyInPayRoute", "WEB");
-			params.put("keyInScrn", "NOR");
-			params.put("amount", totPayAmt);
-			params.put("slipNo", detail.get("slipNo"));
-			params.put("chqNo", detail.get("chequeNo")); // ADD TO SET CHEQUE NO.
-			params.put("bankType", "2729");
-			params.put("keyInPayDate", detail.get("crtDt"));
+			formInfo.put("keyInPayRoute", "WEB");
+			formInfo.put("keyInScrn", "NOR");
+			formInfo.put("amount", totPayAmount);
+			formInfo.put("slipNo", slipNo);
+			formInfo.put("chqNo", chequeNo); // ADD TO SET CHEQUE NO.
+			formInfo.put("bankType", "2729");
+			formInfo.put("keyInPayDate", keyInPayDate);
 
-			params.put("bankAcc", selectBankStatementInfo.get("bankAccId"));
-			params.put("trDate", selectBankStatementInfo.get("trnscDt"));
+			formInfo.put("bankAcc", selectBankStatementInfo.get("bankAccId"));
+			formInfo.put("trDate", selectBankStatementInfo.get("trnscDt"));
 
 			// ONGHC - ADD FOR ONL PAYMENT TYPE
-			params.put("payType", payType);
-			params.put("userid", sessionVO.getUserId());
+			formInfo.put("payType", payType);
+			formInfo.put("userid", sessionVO.getUserId());
 
-			/**
+			/*
+			 * update mobPayGroupNo status
+			 */
+			String[] mobPayGroupNoArr = mobPayGroupNoList.toArray(new String[0]);
+			formInfo.put("mobPayGroupNoArr", mobPayGroupNoArr);
+			mobileLumpSumPaymentKeyInMapper.updateApproveLumpSumPaymentInfo(formInfo);
+
+			/*
 			 * onwards is update pay0349m status && INSERT TO PAY0240T AND PAY0241T
 			 */
-			mobileLumpSumPaymentKeyInMapper.updateApproveLumpSumPaymentInfo(params);
-			Map<String, Object> resultList = commonPaymentService.saveNormalPayment(params, formList,
+			Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, dataList,
 					Integer.parseInt(key));
 			return resultList;
 		}
@@ -456,118 +547,166 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public List<EgovMap> savePaymentCard(Map<String, Object> params, SessionVO sessionVO) {
-	    List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM);
-	    Map<String, Object> formInfo = null;
-	    formInfo = new HashMap<String, Object>();
-	    if (gridFormList.size() > 0) {
-	      for (Object obj : gridFormList) {
-	        Map<String, Object> map = (Map<String, Object>) obj;
-	        formInfo.put((String) map.get("name"), map.get("value"));
-	      }
-	    }
+		List<Object> gridDataList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
+		List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // FORM OBJECT DATA IMPORT
 
-		EgovMap detail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentDetail(params);
-		List<EgovMap> subDetail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentSubDetail(params);
-		params.put("memCode", Integer.parseInt(detail.get("crtMemCode").toString()));
-
-		List<Object> formList = new ArrayList<Object>();
-		int iProcSeq = 1;
+		List<EgovMap> resultList = null;
 		String allowance = "0";
 		String trRefNo = "";
 		String trIssDt = "";
+		String crtMemCode = "";
+
+		Map<String, Object> formInfo = null;
+		formInfo = new HashMap<String, Object>();
+		if (gridFormList.size() > 0) {
+			for (Object obj : gridFormList) {
+				Map<String, Object> map = (Map<String, Object>) obj;
+				formInfo.put((String) map.get("name"), map.get("value"));
+			}
+		}
 
 		// ALLOWANCE
 		if (formInfo.get("allowance") != null) {
-		      allowance = "1";
+			allowance = "1";
 		} else {
-		      allowance = "0";
+			allowance = "0";
 		}
 
 		// TR REF NO.
-	    if (formInfo.get("trRefNo2") != null) {
-	        trRefNo = formInfo.get("trRefNo2").toString();
-	      } else {
-	        trRefNo = "";
-	      }
+		if (formInfo.get("trRefNo2") != null) {
+			trRefNo = formInfo.get("trRefNo2").toString();
+		} else {
+			trRefNo = "";
+		}
 
 		// TR ISSED DATE.
-	    if (formInfo.get("trIssDt2") != null) {
-	        trIssDt = formInfo.get("trIssDt2").toString();
-	      } else {
-	        trIssDt = "";
-	      }
-
-		// EACH ORDER LOOP
-		if (subDetail.size() > 0) {
-			for (int i = 0; i < subDetail.size(); i++) {
-				EgovMap orderDetail = subDetail.get(i);
-
-				String salesOrdNo = new BigDecimal(orderDetail.get("salesOrdNo").toString()).toPlainString();
-				String salesOrdId = new BigDecimal(orderDetail.get("salesOrdId").toString()).toPlainString();
-
-				Map<String, Object> subInfoParam = new HashMap();
-				subInfoParam.put("salesOrdNo", salesOrdNo);
-				subInfoParam.put("salesOrderId", salesOrdId);
-				subInfoParam.put("orderId", salesOrdId);
-
-				EgovMap orderDetailInfo = mobileLumpSumPaymentKeyInMapper.selectOrderDetailInfo(subInfoParam);
-				if (orderDetailInfo != null) {
-					subInfoParam.put("appTypeId", Integer.parseInt(orderDetailInfo.get("appTypeId").toString()));
-
-					// Need to do status check to know whether is an outright/membership/AS order
-					String paymentType = orderDetail.get("payType").toString();
-					// RENTAL PAYMENT, OUTRIGHT PAYMENT, INSTALLMENT PAYMENT, AS PAYMENT
-					// RENTAL MEMBERSHIP,OUTRIGHT MEMBERSHIP
-
-					if (paymentType == "RENTAL PAYMENT") {
-						formList = rentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
-					}
-					// need to know if is HT/HA
-					if (paymentType == "OUTRIGHT PAYMENT" || paymentType == "INSTALLMENT PAYMENT") {
-						formList = nonRentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
-					}
-
-					if (paymentType == "OUTRIGHT MEMBERSHIP") {
-						formList = outrightMembershipPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
-					}
-
-					if (paymentType == "AS PAYMENT") {
-						formList = asPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
-								trIssDt, iProcSeq, formList);
-					}
-				}
-				iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
-			} // End For Loop
-
-			 // CREDIT CARD일때
-		      if ("107".equals(String.valueOf(formInfo.get("keyInPayType")))) {
-		        formInfo.put("keyInIsOnline", "1299".equals(String.valueOf(formInfo.get("keyInCardMode"))) ? 0 : 1);
-		        formInfo.put("keyInIsLock", 0);
-		        formInfo.put("keyInIsThirdParty", 0);
-		        formInfo.put("keyInStatusId", 1);
-		        formInfo.put("keyInIsFundTransfer", 0);
-		        formInfo.put("keyInSkipRecon", 0);
-		        formInfo.put("keyInPayItmCardType", formInfo.get("keyCrcCardType"));
-		        formInfo.put("keyInPayItmCardMode", formInfo.get("keyInCardMode"));
-		        formInfo.put("keyInPayType", "107");
-		        formInfo.put("keyInPayDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1)); // 임시
-		      }
-
-		      formInfo.put("userId", sessionVO.getUserId());
-
-			/**
-			 * onwards is update pay0349m status && INSERT TO PAY0240T AND PAY0241T
-			 */
-			mobileLumpSumPaymentKeyInMapper.updateApproveLumpSumPaymentInfo(params);
-			List<EgovMap> resultList = null;
-			// INSERT TO PAY0240T AND PAY0241T AND LATER EXECUTE SP_INST_NORMAL_PAYMENT
-			resultList = commonPaymentService.savePayment(formInfo, formList);
-			return resultList;
+		if (formInfo.get("trIssDt2") != null) {
+			trIssDt = formInfo.get("trIssDt2").toString();
+		} else {
+			trIssDt = "";
 		}
-		return null;
+
+		// Get all detail record of MobPayGroupNo
+		for (int i = 0; i < gridDataList.size(); i++) {
+			List<EgovMap> resultReceiptList = null;
+			int iProcSeq = 1;
+			List<String> mobPayGroupNoList = new ArrayList();
+			String payMode = "";
+			Map<String, Object> data = new HashMap();
+			data = (Map<String, Object>) gridDataList.get(i);
+
+			mobPayGroupNoList.add(data.get("mobPayGroupNo").toString());
+			EgovMap detail = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentDetail(data);
+			String createdMem = detail.get("crtMemCode").toString();
+			if (crtMemCode.isEmpty()) {
+				crtMemCode = createdMem;
+				formInfo.put("memCode", createdMem);
+			} else {
+				if (!crtMemCode.equals(createdMem)) {
+					throw new ApplicationException(AppConstants.FAIL,
+							"Selected record is not created by the same Member Code");
+				}
+			}
+
+			List<EgovMap> subDetails = mobileLumpSumPaymentKeyInMapper.selectLumpSumPaymentSubDetail(data);
+			List<Object> formList = new ArrayList<Object>();
+			if (subDetails.size() > 0) {
+				for (int j = 0; j < subDetails.size(); j++) {
+					int currFormSize = formList.size();
+					EgovMap orderDetail = subDetails.get(j);
+
+					String salesOrdNo = new BigDecimal(orderDetail.get("salesOrdNo").toString()).toPlainString();
+					String salesOrdId = new BigDecimal(orderDetail.get("salesOrdId").toString()).toPlainString();
+					Map<String, Object> subInfoParam = new HashMap();
+					subInfoParam.put("salesOrdNo", salesOrdNo);
+					subInfoParam.put("salesOrdId", salesOrdId);
+					subInfoParam.put("orderId", salesOrdId);
+
+					EgovMap orderDetailInfo = mobileLumpSumPaymentKeyInMapper.selectOrderDetailInfo(subInfoParam);
+					if (orderDetailInfo != null) {
+						subInfoParam.put("appTypeId", Integer.parseInt(orderDetailInfo.get("appTypeId").toString()));
+
+						// Need to do status check to know whether is an outright/membership/AS order
+						String paymentType = orderDetail.get("payType").toString();
+						// RENTAL PAYMENT, OUTRIGHT PAYMENT, INSTALLMENT PAYMENT, AS PAYMENT
+						// RENTAL MEMBERSHIP,OUTRIGHT MEMBERSHIP
+
+						if (paymentType.equals("RENTAL PAYMENT")) {
+							formList = rentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+									trIssDt, iProcSeq, formList);
+						}
+						// need to know if is HT/HA
+						if (paymentType.equals("OUTRIGHT PAYMENT") || paymentType.equals("INSTALLMENT PAYMENT")) {
+							formList = nonRentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+									trIssDt, iProcSeq, formList);
+						}
+
+						if (paymentType.equals("OUTRIGHT MEMBERSHIP")) {
+							formList = outrightMembershipPaymentCollection(params, orderDetail, subInfoParam, allowance,
+									trRefNo, trIssDt, iProcSeq, formList);
+						}
+
+						if (paymentType.equals("AS PAYMENT")) {
+							formList = asPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+									trIssDt, iProcSeq, formList);
+						}
+					}
+					iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
+
+					int afterFormSize = formList.size();
+					//This is to check if every order has generated formList out or not
+					if (currFormSize == afterFormSize) {
+						throw new ApplicationException(AppConstants.FAIL,
+								"Error generating receipt for MobPayGroupNo: " + orderDetail.get("mobPayGroupNo").toString()
+										+ " due to no payment found for Order No:" + salesOrdNo);
+					}
+				} // END LOOP
+
+				// APPEND CREDIT CARD INFO PER DETAIL INTO FORMINFO
+				formInfo.put("keyInApprovalNo", data.get("keyInApprovalNo"));
+				formInfo.put("keyInHolderNm", data.get("keyInHolderNm"));
+				formInfo.put("keyInCardNo1", data.get("keyInCardNo1"));
+				formInfo.put("keyInCardNo2", data.get("keyInCardNo2"));
+				formInfo.put("keyInCardNo3", data.get("keyInCardNo3"));
+				formInfo.put("keyInCardNo4", data.get("keyInCardNo4"));
+				formInfo.put("keyInCardMode", data.get("keyInCardMode"));
+				formInfo.put("keyInCrcType", data.get("keyInCrcType"));
+				formInfo.put("keyInIssueBank", data.get("keyInIssueBank"));
+				formInfo.put("keyInMerchantBank", data.get("keyInMerchantBank"));
+				formInfo.put("keyInTrDate", data.get("keyInTrDate"));
+				formInfo.put("keyInExpiryMonth", data.get("keyInExpiryMonth"));
+				formInfo.put("keyInExpiryYear", data.get("keyInExpiryYear"));
+				formInfo.put("keyInAmount", data.get("keyInAmount"));
+
+				// CREDIT CARD일때
+				if ("107".equals(String.valueOf(formInfo.get("keyInPayType")))) {
+					formInfo.put("keyInIsOnline", "1299".equals(String.valueOf(formInfo.get("keyInCardMode"))) ? 0 : 1);
+					formInfo.put("keyInIsLock", 0);
+					formInfo.put("keyInIsThirdParty", 0);
+					formInfo.put("keyInStatusId", 1);
+					formInfo.put("keyInIsFundTransfer", 0);
+					formInfo.put("keyInSkipRecon", 0);
+					formInfo.put("keyInPayItmCardType", formInfo.get("keyCrcCardType"));
+					formInfo.put("keyInPayItmCardMode", formInfo.get("keyInCardMode"));
+					formInfo.put("keyInPayType", "107");
+					formInfo.put("keyInPayDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1)); // 임시
+				}
+				formInfo.put("userId", sessionVO.getUserId());
+				// INSERT TO PAY0240T AND PAY0241T AND LATER EXECUTE SP_INST_NORMAL_PAYMENT
+				resultReceiptList.addAll(commonPaymentService.savePayment(formInfo, formList));
+
+				String[] mobPayGroupNoArr = mobPayGroupNoList.toArray(new String[0]);
+				if (resultReceiptList.size() > 0) {
+					formInfo.put("mobPayGroupNoArr", mobPayGroupNoArr);
+					mobileLumpSumPaymentKeyInMapper.updateApproveLumpSumPaymentInfo(formInfo);
+					resultList.addAll(resultReceiptList);
+				} else {
+					throw new ApplicationException(AppConstants.FAIL,
+							"Error generating receipt for MobPayGroupNo: " + String.join(",", mobPayGroupNoList));
+				}
+			}
+		}
+		return resultList;
 	}
 
 	private List<Object> rentalPaymentCollection(Map<String, Object> params, EgovMap orderDetail,
@@ -609,7 +748,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		List<EgovMap> billInfoRentalList = commonPaymentService.selectBillInfoRental(subInfoParam);
 
 		subInfoParam.put("COLL_MEM_CODE", params.get("memCode"));
-		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(params);
+		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
 
 		if (paymentCollectorConfirm.get(0) == null) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for payment collection's member.");
@@ -731,8 +870,6 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 							formMap.put("allowComm", allowance);
 
 							formList.add(formMap);
-
-							//totRemainAmt = totRemainAmt.subtract(targetAmt);
 						}
 					} else {
 						break;
@@ -761,7 +898,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		}
 
 		subInfoParam.put("COLL_MEM_CODE", params.get("memCode"));
-		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(params);
+		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
 
 		if (paymentCollectorConfirm.get(0) == null) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for payment collection's member.");
@@ -813,16 +950,16 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		String salesOrdNo = subInfoParam.get("salesOrdNo").toString();
 		String salesOrdId = subInfoParam.get("salesOrdId").toString();
 
-		int srvMemId = Integer.parseInt("".equals(CommonUtils.nvl(String.valueOf(orderDetail.get("srvMemId")))) ? "0" :
-			String.valueOf(orderDetail.get("srvMemId")));
+		int srvMemId = Integer.parseInt("".equals(CommonUtils.nvl(String.valueOf(orderDetail.get("srvMemId")))) ? "0"
+				: String.valueOf(orderDetail.get("srvMemId")));
 		BigDecimal totRemainAmt = new BigDecimal("".equals(CommonUtils.nvl(String.valueOf(orderDetail.get("payAmt"))))
 				? "0" : String.valueOf(orderDetail.get("payAmt")));
 
-		EgovMap svmInfo = mobileLumpSumPaymentKeyInMapper.getServiceMembershipDetail(params);
-		EgovMap psmPay24Info = mobileLumpSumPaymentKeyInMapper.getPay0024D(params);
+		EgovMap svmInfo = mobileLumpSumPaymentKeyInMapper.getServiceMembershipDetail(subInfoParam);
+		EgovMap psmPay24Info = mobileLumpSumPaymentKeyInMapper.getPay0024D(subInfoParam);
 
 		subInfoParam.put("COLL_MEM_CODE", params.get("memCode"));
-		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(params);
+		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
 
 		if (paymentCollectorConfirm.get(0) == null) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for payment collection's member.");
@@ -865,7 +1002,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
 				formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
 				formMap.put("allowComm", allowance);
-				//formMap.put("allowComm", psmPayInfo.get("allowComm"));
+				// formMap.put("allowComm", psmPayInfo.get("allowComm"));
 
 				formList.add(formMap);
 
@@ -880,50 +1017,49 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		 * srvMemBsAmt = total package + filter
 		 */
 		if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
-		 if(new BigDecimal(String.valueOf(svmInfo.get("srvMemBsAmt"))).compareTo(BigDecimal.ZERO) > 0) {
-			 BigDecimal filterAmt = new BigDecimal(
+			if (new BigDecimal(String.valueOf(svmInfo.get("srvMemBsAmt"))).compareTo(BigDecimal.ZERO) > 0) {
+				BigDecimal filterAmt = new BigDecimal(
 						"".equals(CommonUtils.nvl(String.valueOf(psmPay24Info.get("filterAmt")))) ? "0"
 								: String.valueOf(psmPay24Info.get("filterAmt")));
-    			 if(totRemainAmt.compareTo(filterAmt)>= 0){
-    	            formMap = new HashMap<String, Object>();
+				if (totRemainAmt.compareTo(filterAmt) >= 0) {
+					formMap = new HashMap<String, Object>();
 
-    	            formMap.put("procSeq","1");
-    	            formMap.put("appType","OUT_MEM");
-    	            formMap.put("advMonth","0");
-    	            formMap.put("billGrpId","0");
-    	            formMap.put("billId","0");
-    	            formMap.put("ordId",salesOrdId);
-    	            formMap.put("mstRpf","0");
-    	            formMap.put("mstRpfPaid","0");
-    				formMap.put("billNo", "0");
-    				formMap.put("ordNo", salesOrdNo);
-    	            formMap.put("billTypeId","542");
-    	            formMap.put("billTypeNm","Filter (1st BS)");
-    	            formMap.put("installment","0");
-    	            formMap.put("billAmt",psmPay24Info.get("filterCharge"));
-    	            formMap.put("paidAmt",psmPay24Info.get("filterPaid"));
-    	            formMap.put("targetAmt",psmPay24Info.get("filterAmt"));
-    	            formMap.put("billDt","1900-01-01");
-    	            formMap.put("assignAmt","0");
-    	            formMap.put("billStatus","");
-    	            formMap.put("custNm",svmInfo.get("name"));
-    	            formMap.put("srvcContractID","0");
-    	            formMap.put("billAsId","0");
-    	            formMap.put("discountAmt","0");
-    	            formMap.put("srvMemId",srvMemId);
-    				formMap.put("trNo", trRefNo);
-    				formMap.put("trDt", trIssDt);
-    				formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-    				formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-    				formMap.put("allowComm", allowance);
+					formMap.put("procSeq", "1");
+					formMap.put("appType", "OUT_MEM");
+					formMap.put("advMonth", "0");
+					formMap.put("billGrpId", "0");
+					formMap.put("billId", "0");
+					formMap.put("ordId", salesOrdId);
+					formMap.put("mstRpf", "0");
+					formMap.put("mstRpfPaid", "0");
+					formMap.put("billNo", "0");
+					formMap.put("ordNo", salesOrdNo);
+					formMap.put("billTypeId", "542");
+					formMap.put("billTypeNm", "Filter (1st BS)");
+					formMap.put("installment", "0");
+					formMap.put("billAmt", psmPay24Info.get("filterCharge"));
+					formMap.put("paidAmt", psmPay24Info.get("filterPaid"));
+					formMap.put("targetAmt", psmPay24Info.get("filterAmt"));
+					formMap.put("billDt", "1900-01-01");
+					formMap.put("assignAmt", "0");
+					formMap.put("billStatus", "");
+					formMap.put("custNm", svmInfo.get("name"));
+					formMap.put("srvcContractID", "0");
+					formMap.put("billAsId", "0");
+					formMap.put("discountAmt", "0");
+					formMap.put("srvMemId", srvMemId);
+					formMap.put("trNo", trRefNo);
+					formMap.put("trDt", trIssDt);
+					formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+					formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+					formMap.put("allowComm", allowance);
 
-    	            formList.add(formMap);
-    			 }
-				else {
+					formList.add(formMap);
+				} else {
 					throw new ApplicationException(AppConstants.FAIL,
 							"Payment Amount for membership filter is not enough for order no :" + salesOrdNo);
 				}
-	        }
+			}
 		}
 
 		return formList;
@@ -938,35 +1074,33 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				? "0" : String.valueOf(orderDetail.get("payAmt")));
 
 		subInfoParam.put("COLL_MEM_CODE", params.get("memCode"));
-		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(params);
+		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
 
 		if (paymentCollectorConfirm.get(0) == null) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for payment collection's member.");
 		}
 		EgovMap paymentColleConfirmMap = paymentCollectorConfirm.get(0);
 
-		Map<String,Object> asBillParam = new HashMap();
+		Map<String, Object> asBillParam = new HashMap();
 		asBillParam.put("billSearchTxt", salesOrdNo);
 		asBillParam.put("billType", "1");
 		List<EgovMap> asBillResult = commonPaymentService.selectOrderInfoBillPayment(asBillParam);
 
-
-		if(asBillResult.size() == 0){
+		if (asBillResult.size() == 0) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for AS Payment of order " + salesOrdNo);
-		}
-		else{
+		} else {
 			/*
 			 * Will have multiple AS Bill in 1 order
 			 */
-			for(int i =0;i< asBillResult.size();i++){
+			for (int i = 0; i < asBillResult.size(); i++) {
 				EgovMap asDetail = asBillResult.get(i);
 
-				if(asDetail.get("billIsPaid").toString().toUpperCase() == "FALSE"){
+				if (asDetail.get("billIsPaid").toString().toUpperCase() == "FALSE") {
 					BigDecimal billAmt = new BigDecimal(
 							"".equals(CommonUtils.nvl(String.valueOf(asDetail.get("billAmt")))) ? "0"
 									: String.valueOf(asDetail.get("billAmt")));
 
-					if(totRemainAmt.compareTo(billAmt) >= 0){
+					if (totRemainAmt.compareTo(billAmt) >= 0) {
 						Map<String, Object> formMap = new HashMap<String, Object>();
 						formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
 						formMap.put("appType", "AS");
@@ -1001,8 +1135,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 						formList.add(formMap);
 
 						totRemainAmt = billAmt.subtract(billAmt);
-					}
-					else{
+					} else {
 						throw new ApplicationException(AppConstants.FAIL,
 								"Payment Amount for AS Bill is not enough for order no :" + salesOrdNo);
 					}
@@ -1013,78 +1146,78 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		return formList;
 	}
 
-    public void sendEmail(Map<String, Object> params) {
-    	//mobilePayGrpNo
+	public void sendEmail(Map<String, Object> params) {
+		// mobilePayGrpNo
 
-    	EmailVO email = new EmailVO();
-        String emailSubject = "COWAY: Mobile Bulk Payment";
+		EmailVO email = new EmailVO();
+		String emailSubject = "COWAY: Mobile Bulk Payment";
 
-        List<String> emailNo = new ArrayList<String>();
+		List<String> emailNo = new ArrayList<String>();
 
-        //get customer name and order info
+		// get customer name and order info
 
-        if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
-          emailNo.add(CommonUtils.nvl(params.get("email1")));
-        } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
-          emailNo.add(CommonUtils.nvl(params.get("email2")));
-        }
-
-        String content = "";
-        content += "Dear Sir/Madam,\n";
-        content += "Thank you for your payment.\n";
-        content += "Your payment records shall be updated within 3 working days upon verification. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
-        content += "This is a system generated email. Please do not respond to this email. \n";
-
-        params.put(EMAIL_SUBJECT, emailSubject);
-        params.put(EMAIL_TO, emailNo);
-        params.put(EMAIL_TEXT, content);
-
-        if(emailNo.size() > 0){
-		    email.setTo(emailNo);
-		    email.setHtml(true);
-		    email.setSubject(emailSubject);
-		    email.setText(content);
-		    adaptorService.sendEmail(email, false); //Normal email sending without attachments
+		if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+			emailNo.add(CommonUtils.nvl(params.get("email1")));
+		} else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+			emailNo.add(CommonUtils.nvl(params.get("email2")));
 		}
-    }
 
-    public void sendSms(Map<String, Object> params) {
-        if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
-        	//Send Message
-    	    EgovMap custCardBankIssuer = new EgovMap();//autoDebitMapper.selectCustCardBankInformation(params);
-    	    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
-    	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
-    	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
-    	    params.put("cardEnding", cardEnding);
-    	    int userId = 0;//autoDebitMapper.getUserID(params.get("createdBy").toString());
-    	    SmsVO sms = new SmsVO(userId, 975);
-    	    String smsTemplate = ""; //autoDebitMapper.getSmsTemplate(params);
-    	    String smsNo = "";
+		String content = "";
+		content += "Dear Sir/Madam,\n";
+		content += "Thank you for your payment.\n";
+		content += "Your payment records shall be updated within 3 working days upon verification. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
+		content += "This is a system generated email. Please do not respond to this email. \n";
 
-    	    params.put("smsTemplate", smsTemplate);
+		params.put(EMAIL_SUBJECT, emailSubject);
+		params.put(EMAIL_TO, emailNo);
+		params.put(EMAIL_TEXT, content);
 
-    	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
-    	        smsNo = CommonUtils.nvl(params.get("sms1"));
-    	    }
+		if (emailNo.size() > 0) {
+			email.setTo(emailNo);
+			email.setHtml(true);
+			email.setSubject(emailSubject);
+			email.setText(content);
+			adaptorService.sendEmail(email, false); // Normal email sending without attachments
+		}
+	}
 
-            if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
-                if (!"".equals(CommonUtils.nvl(smsNo))) {
-                	smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
-                } else {
-                	smsNo = CommonUtils.nvl(params.get("sms2"));
-                }
-            }
+	public void sendSms(Map<String, Object> params) {
+		if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
+			// Send Message
+			EgovMap custCardBankIssuer = new EgovMap();// autoDebitMapper.selectCustCardBankInformation(params);
+			String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
+			String cardEnding = custCardNo.substring(custCardNo.length() - 4);
+			params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
+			params.put("cardEnding", cardEnding);
+			int userId = 0;// autoDebitMapper.getUserID(params.get("createdBy").toString());
+			SmsVO sms = new SmsVO(userId, 975);
+			String smsTemplate = ""; // autoDebitMapper.getSmsTemplate(params);
+			String smsNo = "";
 
-    	    if (!"".equals(CommonUtils.nvl(smsNo))) {
-    	      sms.setMessage(CommonUtils.nvl(smsTemplate));
-    	      sms.setMobiles(CommonUtils.nvl(smsNo));
-    	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
-    	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
-    	      SmsResult smsResult = adaptorService.sendSMS(sms);
-    	      LOGGER.debug(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
-    	    }
-        }
-      }
+			params.put("smsTemplate", smsTemplate);
+
+			if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+				smsNo = CommonUtils.nvl(params.get("sms1"));
+			}
+
+			if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+				if (!"".equals(CommonUtils.nvl(smsNo))) {
+					smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
+				} else {
+					smsNo = CommonUtils.nvl(params.get("sms2"));
+				}
+			}
+
+			if (!"".equals(CommonUtils.nvl(smsNo))) {
+				sms.setMessage(CommonUtils.nvl(smsTemplate));
+				sms.setMobiles(CommonUtils.nvl(smsNo));
+				sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
+				sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
+				SmsResult smsResult = adaptorService.sendSMS(sms);
+				LOGGER.debug(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
+			}
+		}
+	}
 
 	@Override
 	public List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params) {
@@ -1096,6 +1229,22 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			}
 		}
 		List<EgovMap> resultList = mobileLumpSumPaymentKeyInMapper.getMobileLumpSumHistory(params);
+		return resultList;
+	}
+
+	@Override
+	public List<EgovMap> checkBatchPaymentExist(Map<String, Object> params) {
+		List<Object> gridDataList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
+		for (int i = 0; i < gridDataList.size(); i++) {
+			Map<String, Object> data = new HashMap();
+			data = (Map<String, Object>) gridDataList.get(i);
+			EgovMap result = commonPaymentMapper.checkBatchPaymentExist(data);
+
+			if (result != null) {
+				resultList.add(result);
+			}
+		}
 		return resultList;
 	}
 

@@ -19,7 +19,6 @@ public interface MobileLumpSumPaymentKeyInMapper {
     int insertPaymentDetailInfo(Map<String, Object> params);
     List<EgovMap> getLumpSumEnrollmentList(Map<String, Object> params);
     List<EgovMap> mobileSelectCashMatchingPayGroupList(Map<String, Object> params);
-    int mobileUpdateCashMatchingData(Map<String, Object> params);
     EgovMap selectLumpSumPaymentDetail(Map<String, Object> params);
     EgovMap selectBankStatementInfo(Map<String, Object> params);
     List<EgovMap> selectLumpSumPaymentSubDetail(Map<String, Object> params);
@@ -29,4 +28,6 @@ public interface MobileLumpSumPaymentKeyInMapper {
     EgovMap getPay0024D(Map<String, Object> params);
     EgovMap getServiceMembershipDetail(Map<String, Object> params);
     List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
+    int selectNextMatchingId();
+    int mobileUpdateCashMatchingData(Map<String, Object> params);
 }
