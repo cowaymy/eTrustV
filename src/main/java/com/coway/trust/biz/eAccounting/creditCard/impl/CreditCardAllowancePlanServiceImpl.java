@@ -29,7 +29,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("creditCardAllowancePlanService")
 public class CreditCardAllowancePlanServiceImpl  implements CreditCardAllowancePlanService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreditCardAllowancePlanServiceImpl.class);
 
 	@Value("${app.name}")
 	private String appName;
