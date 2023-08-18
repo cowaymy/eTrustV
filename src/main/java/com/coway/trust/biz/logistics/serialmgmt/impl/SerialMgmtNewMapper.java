@@ -68,4 +68,7 @@ public interface SerialMgmtNewMapper{
 	public int deleteSerialInfoBulk(Map<String, Object> obj) throws Exception;
 	public int deleteTempSerialMasterBulk(Map<String, Object> obj) throws Exception;
 	public int copySerialMasterHistoryBulk(Map<String, Object> obj) throws Exception;
+
+	//Serial Prefix Conversion checking. By Tommy 17-08-2023
+	public String selectSerialPrefixConversion(Map<String, Object> obj) throws Exception;
 }
