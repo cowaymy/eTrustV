@@ -669,7 +669,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		<if test="mobPayGroupNo != null and mobPayGroupNo != ''">
 			UPDATE PAY0349M
 				SET
-				PAY_STUS_ID = #{status}
+				PAY_STUS_ID = #{status},
 				SLIP_NO = #{slipNo},
 				UPLOAD_IMG1 = #{uploadImg1},
 				UPLOAD_IMG2 = #{uploadImg2},
