@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.miles.impl.MilesMeasMapper">
+  <select id="getMilesMeasList" parameterType="Map" resultType="egovMap">
+    SELECT 'M' AS IND,
+               A.MIL_CLM_NO AS CLM_NO,
+               TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS CLM_DT,
+               B.MEM_CODE AS MEM_CDE,
+               '' AS SALES_ORD_NO,
+               C.CODE AS BR_CDE,
+               '' AS SRV_NO,
+               '' AS JOB_LATT,
+               '' AS JOB_LONGT,
+               '' AS INST_LATT,
+               '' AS INST_LONGT,
+               T_MIL AS TTL_MIL,
+               T_TRV_DIST AS TTL_TRV_DIST,
+               TO_CHAR(T_AMT, '999,999,999,999.99') AS TTL_AMT,
+               MIL_REMARK AS RMK
+    FROM SVC0137M A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    JOIN SYS0005M C ON B.BRNCH = C.BRNCH_ID
+    WHERE A.DISB = 0
+
+    <if test=" startDt  != null  and startDt !=''  ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{startDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="endDt != null   and endDt != '' ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{endDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="claimID != null and claimID != '' ">
+      AND A.MIL_CLM_NO = #{claimID}
+    </if>
+
+    <if test="memCode != null and memCode != '' ">
+      AND B.MEM_CODE = #{memCode}
+    </if>
+
+    <if test="branchIdList != null and branchIdList != ''">
+      AND B.BRNCH IN
+      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    ORDER BY A.MIL_CLM_NO, A.CRT_DT
+  </select>
+
+  <select id="getMilesMeasDetailList" parameterType="Map" resultType="egovMap">
+    SELECT 'S' AS IND,
+               B.MIL_CLM_SUB_NO AS CLM_NO,
+               TO_CHAR(B.CLM_DT, 'DD/MM/YYYY') AS CLM_DT,
+               C.MEM_CODE AS MEM_CDE,
+               D.SALES_ORD_NO AS SALES_ORD_NO,
+               F.CODE AS BR_CDE,
+               B.SVC_NO AS SRV_NO,
+               B.LONGTITUDE AS JOB_LATT,
+               B.LATITUDE AS JOB_LONGT,
+               E.LATITUDE AS INST_LATT,
+               E.LONGITUDE AS INST_LONGT,
+               B.MIL AS TTL_MIL,
+               B.TRV_DIST AS TTL_TRV_DIST,
+               '' AS TTL_AMT,
+               B.MIL_REMARK AS RMK
+    FROM SVC0137M A
+    JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
+    JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    LEFT JOIN SAL0023D E ON D.CUST_ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
+    WHERE A.MIL_CLM_NO = #{clmNo}
+    ORDER BY B.MIL_CLM_NO, B.CRT_DT, B.MIL_CLM_SUB_NO
+  </select>
+
+</mapper>
