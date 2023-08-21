@@ -427,11 +427,12 @@
      code='pay.text.myMenu' /></a>
   </p>
   <h2>Price & Value Approval</h2>
+     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
   <ul class="right_btns">
-<%--   <li><p class="btn_blue"><a href="#" onClick="javascript:fn_openDivPop('NEW');"><spring:message code="sal.btn.new" /></a></p></li>
- --%>  <li><p class="btn_blue"><a href="javascript:fn_getSearchList();"><span class="search"></span> <spring:message code='sys.btn.search' /></a></p></li>
+  <li><p class="btn_blue"><a href="javascript:fn_getSearchList();"><span class="search"></span> <spring:message code='sys.btn.search' /></a></p></li>
   <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span> <spring:message code='sys.btn.clear' /></a></p></li>
   </ul>
+  </c:if>
  </aside>
  <!-- title_line end -->
  <!-- search_table start -->
@@ -499,10 +500,14 @@
       <dt>Link</dt>
       <dd>
        <ul class="btns">
+       <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
         <li><p class="link_btn">
           <a href="javascript:fn_openDivPop('APPV');">Approval</a>
          </p></li>
+         </c:if>
+         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
         <li><p class="link_btn"><a href="javascript:fn_export();" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
+        </c:if>
        </ul>
        <p class="hide_btn">
         <a href="#"><img
