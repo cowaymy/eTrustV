@@ -4711,7 +4711,8 @@ SELECT MST.*
             AND G.STK_ID = H.ITM_STK_ID
             AND G.STK_CODE = BOM_DTL.MATRL_NO(+)
             AND B.SALES_ORD_ID = H.AS_SO_ID
-            AND A.SRV_ORD_NO = #{salesOrderNo}
+            AND (A.SRV_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO =　#{salesOrderNo})
+                OR A.SRV_ORD_NO = #{salesOrderNo})
             AND ROWNUM <![CDATA[ < ]]> 4)
 
     UNION ALL
@@ -4782,7 +4783,8 @@ SELECT MST.*
             AND H.ITM_STK_ID = G.STK_ID(+)
             AND G.STK_CODE = BOM_DTL.MATRL_NO(+)
             AND B.SALES_ORD_ID = I.AS_SO_ID(+)
-            AND c.SRV_ord_no = #{salesOrderNo}
+            AND (C.SRV_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO =　#{salesOrderNo})
+                OR C.SRV_ORD_NO = #{salesOrderNo})
     ORDER BY SETL_DT DESC) x
     WHERE 1 = 1 AND ROWNUM <![CDATA[ < ]]> 4
   </select>
