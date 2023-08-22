@@ -120,9 +120,11 @@
           }
         }];
 
-    var columnLayoutMaster = [{ dataField : "clmNo",
-                                              headerText : "Claim No",
-                                              width : 100
+    var columnLayoutMaster = [{
+                                              dataField : "memId",
+                                              headerText : "Member ID",
+                                              width : 120,
+                                              visible : false
                                            },{
                                               dataField : "memCde",
                                               headerText : "Member Code",
@@ -280,8 +282,8 @@
       AUIGrid.setGridData(myMasterGridID, result);
 
       AUIGrid.bind(myMasterGridID, "cellDoubleClick", function(event) {
-        var clmNo = AUIGrid.getCellValue(myMasterGridID, event.rowIndex, "clmNo");
-        $("#hidClmNo").val(clmNo);
+        var memCde = AUIGrid.getCellValue(myMasterGridID, event.rowIndex, "memId");
+        $("#hidClmNo").val(memCde);
 
         AUIGrid.setProp(myMasterGridID, "rowStyleFunction", function(rowIndex, item) {
           if(rowIndex == event.rowIndex) {
