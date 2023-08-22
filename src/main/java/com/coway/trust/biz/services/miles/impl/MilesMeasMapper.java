@@ -14,6 +14,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("milesMeasMapper")
 public interface MilesMeasMapper {
+  List<EgovMap> getMilesMeasMasterList(Map<String, Object> params);
+
   List<EgovMap> getMilesMeasList(Map<String, Object> params);
 
   List<EgovMap> getMilesMeasDetailList(Map<String, Object> params);
