@@ -1307,7 +1307,7 @@
     <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
     <td>
     <select id="promoCustType" name="promoCustType" class="w100p">
-            <option value="" selected>Choose One</option>
+<option value="0" selected>ALL</option>
 <option value=964>Individual</option>
 <option value=965>Company</option>
     </select>
@@ -1531,7 +1531,7 @@
     <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
     <td>
     <select id="v_promoCustType" name="v_promoCustType" class="w100p">
-            <option value="" selected>Choose One</option>
+<option value="0" selected>ALL</option>
 <option value=964>Individual</option>
 <option value=965>Company</option>
     </select>
