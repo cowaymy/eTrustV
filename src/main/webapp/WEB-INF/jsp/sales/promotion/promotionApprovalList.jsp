@@ -334,10 +334,14 @@
       });
   }
 
-  function fn_addOption() {
+  function fn_addOption(x) {
       $("#promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+      $("#promoCustType").val(x);
       $("#v_promoCustType option:eq(0)").replaceWith("<option value='0'>ALL</option>");
+      $("#v_promoCustType").val(x);
 
+      console.log($("#promoCustType").val());
+      console.log($("#v_promoCustType").val());
   }
 
   function fn_export() {
@@ -429,8 +433,8 @@
 
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'promoTypeId',       'S'); //Promo Type
-                      doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
-                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'promoDiscPeriodTp', 'S'); //Discount period
+/*                       doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption()'); //Customer Type
+ */                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'promoDiscPeriodTp', 'S'); //Discount period
                       doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, promoInfo.exTrade,              'exTrade',              'S'); //EX_Trade
                       doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, promoInfo.empChk,               'empChk',               'S'); //EMP_CHK
                       doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'promoDiscType',        'S'); //Discount Type
@@ -496,8 +500,8 @@
 
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'v_promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'v_promoTypeId',       'S'); //Promo Type
-                      doGetCombo('/common/selectCodeList.do', '8',   '',     'v_promoCustType',     'S', 'fn_addOption'); //Customer Type
-                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'v_promoDiscPeriodTp', 'S'); //Discount period
+/*                       doGetCombo('/common/selectCodeList.do', '8',   '',     'v_promoCustType',     'S', 'fn_addOption'); //Customer Type
+ */                      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', promoInfo.promoDiscPeriodTp, 'v_promoDiscPeriodTp', 'S'); //Discount period
                       doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, promoInfo.exTrade,              'v_exTrade',              'S'); //EX_Trade
                       doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, promoInfo.empChk,               'v_empChk',               'S'); //EMP_CHK
                       doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'v_promoDiscType',        'S'); //Discount Type
@@ -1302,7 +1306,11 @@
 <tr>
     <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
     <td>
-    <select id="promoCustType" name="promoCustType" class="w100p"></select>
+    <select id="promoCustType" name="promoCustType" class="w100p">
+            <option value="" selected>Choose One</option>
+<option value=964>Individual</option>
+<option value=965>Company</option>
+    </select>
     </td>
     <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
     <td>
@@ -1522,7 +1530,12 @@
 <tr>
     <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
     <td>
-    <select id="v_promoCustType" name="v_promoCustType" class="w100p"></select>
+    <select id="v_promoCustType" name="v_promoCustType" class="w100p">
+            <option value="" selected>Choose One</option>
+<option value=964>Individual</option>
+<option value=965>Company</option>
+    </select>
+
     </td>
     <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
     <td>
