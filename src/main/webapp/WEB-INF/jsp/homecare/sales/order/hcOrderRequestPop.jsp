@@ -2566,10 +2566,26 @@
     }
 
     function fn_loadListOwnt() {
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChkOwnt',  'S'); //EMP_CHK
+    	console.log('STOCK_ID == ' + STOCK_ID);
+
+    	Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: STOCK_ID}, function(result) {
+    		if(result != null)
+            {
+              if(result.data){
+                  doGetComboSepa ('/homecare/selectAcBranchList.do', '',  ' - ', "${orderDetail.installationInfo.dscId}", 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
+              }
+              else{
+            	  doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', "${orderDetail.installationInfo.dscId}", 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
+              }
+            }
+    	},  function(jqXHR, textStatus, errorThrown) {
+            alert("Fail to check Air Conditioner. Please contact IT");
+        });
+
+    	doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChkOwnt',  'S'); //EMP_CHK
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'cmbRentPaymodeOwnt', 'S', ''); //Common Code
         //doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', "${orderDetail.installationInfo.dscId}", 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
-        doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', "${orderDetail.installationInfo.dscId}", 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
+
     }
 
     function fn_tabOnOffSetOwnt(tabNm, opt) {
@@ -2726,7 +2742,7 @@
 <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
 <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
