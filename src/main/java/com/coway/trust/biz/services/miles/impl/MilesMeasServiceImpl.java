@@ -31,6 +31,11 @@ public class MilesMeasServiceImpl implements MilesMeasService {
   private MilesMeasMapper milesMeasMapper;
 
   @Override
+  public List<EgovMap> getMilesMeasMasterList(Map<String, Object> params) {
+    return milesMeasMapper.getMilesMeasMasterList(params);
+  }
+
+  @Override
   public List<EgovMap> getMilesMeasList(Map<String, Object> params) {
     return milesMeasMapper.getMilesMeasList(params);
   }
