@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.services.miles.impl.MilesMeasMapper">
 
   <select id="getMilesMeasMasterList" parameterType="Map" resultType="egovMap">
-    SELECT A.MIL_CLM_NO AS CLM_NO,
+    SELECT A.MEM_ID AS MEM_ID,
                B.MEM_CODE AS MEM_CDE,
                B.NAME AS MEM_NM,
                C.CODE AS BR_CDE,
@@ -38,7 +38,7 @@
         #{item}
       </foreach>
     </if>
-    GROUP BY A.MIL_CLM_NO, B.MEM_CODE, B.NAME, C.CODE, C.NAME
+    GROUP BY A.MEM_ID, B.MEM_CODE, B.NAME, C.CODE, C.NAME
   </select>
 
 
@@ -72,7 +72,7 @@
     </if>
 
     <if test="hidClmNo != null and hidClmNo != '' ">
-      AND A.MIL_CLM_NO = #{hidClmNo}
+      AND A.MEM_ID = #{hidClmNo}
     </if>
 
     ORDER BY A.MIL_CLM_NO, A.CRT_DT
