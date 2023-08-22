@@ -671,7 +671,7 @@
 
     <select id="selectSerialPrefixConversion" parameterType="Map" resultType="String">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialPrefixConversion] - MY TOMMY */
-		SELECT MAX(PREFIX_CONV_STK_ID) AS PREFIX_CONV_STK_ID
+		SELECT MAX(B.HMC_GR_NO_DTL_NO) AS HMC_GR_NO_DTL_NO
 		  FROM LOG0205M A
           JOIN HMC0010D B ON A.PREFIX_STK_ID = B.STOCK_ID AND B.HMC_GR_NO = #{docNo}
 		 WHERE
