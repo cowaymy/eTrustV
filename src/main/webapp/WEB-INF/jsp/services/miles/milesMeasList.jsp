@@ -20,10 +20,21 @@
     font-weight:bold;
     color:#22741C;
 }
+.master-selected-style {
+    background:#FFFF00;
+    font-weight:bold;
+    color:#22741C;
+}
+.master-nonselected-style {
+    background:#FFFFFF;
+    font-weight:normal;
+    color:#22741C;
+}
 </style>
 
 <script type="text/javaScript" language="javascript">
   var myGridID;
+  var myMasterGridID;
   var gridValue;
 
   function createAUIGrid() {
@@ -109,14 +120,83 @@
           }
         }];
 
+    var columnLayoutMaster = [{ dataField : "clmNo",
+                                              headerText : "Claim No",
+                                              width : 100
+                                           },{
+                                              dataField : "memCde",
+                                              headerText : "Member Code",
+                                              width : 120
+                                           }, {
+                                             dataField : "memNm",
+                                             headerText : "Member Name",
+                                             width : 300
+                                          }, {
+                                            dataField : "brCde",
+                                            headerText : "Branch Code",
+                                            width : 120
+                                         }, {
+                                              dataField : "brNm",
+                                              headerText : "Branch Name",
+                                              width : 300
+                                           }, {
+                                              dataField : "ttlMil",
+                                              headerText : "Total Mileage",
+                                              width : 200
+                                           }, {
+                                              dataField : "ttlTrvDist",
+                                              headerText : "Total Travel Distance",
+                                              width : 200
+                                           }, {
+                                              dataField : "ttlAmt",
+                                              headerText : "Total Amount",
+                                              width : 200
+                                           }];
+
+    var footerLayout = [{ labelText: "∑",
+                                   positionField: "#base",
+                                   style: "aui-grid-my-column"
+                                 }, {
+                                   dataField: "ttlMil",
+                                   positionField: "ttlMil",
+                                   operation: "SUM",
+                                   formatString: "#,##0.00"
+                                 }, {
+                                   dataField: "ttlTrvDist",
+                                   positionField: "ttlTrvDist",
+                                   operation: "SUM",
+                                   formatString: "#,##0.00"
+                                 }, {
+                                   dataField: "ttlAmt",
+                                   positionField: "ttlAmt",
+                                   operation: "SUM",
+                                   formatString: "#,##0.00"
+                                 }];
+
     var gridPros = {
       treeLazyMode : true,
       selectionMode : "singleRow",
-      displayTreeOpen : false,
+      displayTreeOpen : true,
       flat2tree : true
     };
 
+    var gridProsMaster = {
+      usePaging : true,
+      pageRowCount : 20,
+      //editable : true,
+      showStateColumn : false,
+      //displayTreeOpen : true,
+      headerHeight : 30,
+      skipReadonlyColumns : true,
+      wrapSelectionMove : true,
+      showRowNumColumn : true,
+      showFooter : true
+    };
+
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+
+    myMasterGridID = AUIGrid.create("#grid_wrapMaster", columnLayoutMaster, gridProsMaster);
+    AUIGrid.setFooter(myMasterGridID, footerLayout);
 
     AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
       var item = event.item;
@@ -133,7 +213,7 @@
   $(document).ready(function() {
     doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'branchId', 'M', 'f_multiCombo');
 
-    a();
+    date();
 
     createAUIGrid();
     AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -163,29 +243,23 @@
     });
   }
 
-  function a() {
+  function date() {
     var today = new Date();
-    //var dd = today.getDate();
     var mm = today.getMonth();
     var yyyy = today.getFullYear();
 
-    //if(dd<10) { dd='0'+dd; }
-
     if(mm<10) { mm='0'+mm; }
 
-    $("#startDt").val('20' + '/' + mm + '/' + yyyy);
+    $("#startDt").val('21' + '/' + mm + '/' + yyyy);
 
     var today2 = new Date();
     today2.setDate(today2.getDate());
-    //var dd2 = today2.getDate();
     var mm2 = today2.getMonth() + 1;
     var yyyy2 = today2.getFullYear();
 
-    //if(dd2 < 10) { dd2 = '0' + dd2; }
-
     if(mm2 < 10) { mm2 ='0' + mm2; }
 
-    $("#endDt").val('21' + '/' + mm2 + '/' + yyyy2);
+    $("#endDt").val('20' + '/' + mm2 + '/' + yyyy2);
   }
 
   function fn_getMilesMeasList() {
@@ -199,25 +273,53 @@
       return;
     }
 
-    Common.ajax("GET", "/services/miles/getMilesMeasList.do", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
+    Common.ajax("GET", "/services/miles/getMilesMeasMasterList.do", $("#searchForm").serialize(), function(result) {
+      AUIGrid.clearGridData(myMasterGridID);
+      AUIGrid.clearGridData(myGridID);
 
-        AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
-          if(item.ind == "M") {
-            return "master-style";
-          }
+      AUIGrid.setGridData(myMasterGridID, result);
 
-          if(item.srvNo == "S") {
-            return "sub-start-style";
-          }
+      AUIGrid.bind(myMasterGridID, "cellDoubleClick", function(event) {
+        var clmNo = AUIGrid.getCellValue(myMasterGridID, event.rowIndex, "clmNo");
+        $("#hidClmNo").val(clmNo);
 
-          if(item.srvNo == "E") {
-            return "sub-start-style";
+        AUIGrid.setProp(myMasterGridID, "rowStyleFunction", function(rowIndex, item) {
+          if(rowIndex == event.rowIndex) {
+            return "master-selected-style";
+          } else {
+            return "master-nonselected-style";
           }
        });
 
-       AUIGrid.update(myGridID);
+        Common.ajax("GET", "/services/miles/getMilesMeasList.do", $("#searchForm").serialize(), function(result) {
+          AUIGrid.setGridData(myGridID, result);
+
+          AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
+            if(item.ind == "M") {
+              return "master-style";
+            }
+
+            if(item.srvNo == "S") {
+              return "sub-start-style";
+            }
+
+            if(item.srvNo == "E") {
+              return "sub-start-style";
+            }
+         });
+
+        });
+        AUIGrid.update(myMasterGridID);
+      });
     });
+  }
+
+  function fn_excelDown(indicator) {
+    GridCommon.exportTo(indicator, "xlsx", "Mileage Measurement");
+  }
+
+  function fn_expand(indicator) {
+    AUIGrid.expandAll(myGridID);
   }
 
 </script>
@@ -232,13 +334,16 @@
   <aside class="title_line">
     <h2>Mileage Measurement</h2>
     <ul class="right_btns">
-      <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getMilesMeasList();"><span class="search"></span>Search</a></p></li>
-      <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getMilesMeasList();"><span class="search"></span>Search</a></p></li>
+      </c:if>
+      <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
     </ul>
   </aside>
 
   <section class="search_table">
     <form id="searchForm" action="#" method="post">
+      <input id="hidClmNo" name="hidClmNo" type="hidden"/>
       <table class="type1">
         <caption>table</caption>
         <colgroup>
@@ -290,12 +395,47 @@
     </form>
   </section>
 
+  <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_grid">
+      <a href="#" onClick="fn_excelDown('grid_wrapMaster')"><spring:message
+        code='service.btn.Generate' /></a>
+     </p></li>
+   </c:if>
+  </ul>
+
+  <br/>
+
+    <section class="search_resultMaster">
+    <section class="">
+      <article>
+        <div id="grid_wrapMaster" style="width: 100%; height: 300px;"></div>
+      </article>
+    </section>
+  </section>
+
+  <br/>
+
+  <ul class="right_btns">
+   <!-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+    <li><p class="btn_grid">
+      <a href="#" onClick="fn_expand('grid_wrap')">Expand All</a>
+     </p></li>
+   </c:if>-->
+   <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_grid">
+      <a href="#" onClick="fn_excelDown('grid_wrap')"><spring:message
+        code='service.btn.Generate' /></a>
+     </p></li>
+   </c:if>
+  </ul>
+
   <br/>
 
   <section class="search_result">
     <section class="">
       <article>
-        <div id="grid_wrap" style="width: 100%; height: 650px;"></div>
+        <div id="grid_wrap" style="width: 100%; height: 450px;"></div>
       </article>
     </section>
   </section>
