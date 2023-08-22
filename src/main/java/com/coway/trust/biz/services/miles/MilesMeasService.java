@@ -12,6 +12,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *********************************************************************************************/
 
 public interface MilesMeasService {
+
+  List<EgovMap> getMilesMeasMasterList(Map<String, Object> params);
+
   List<EgovMap> getMilesMeasList(Map<String, Object> params);
 
   List<EgovMap> getMilesMeasDetailList(Map<String, Object> params);
