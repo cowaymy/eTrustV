@@ -40,6 +40,16 @@ public class MilesMeasController {
     return "services/miles/milesMeasList";
   }
 
+  @RequestMapping(value = "/getMilesMeasMasterList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getMilesMeasMasterList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+    String[] branchIdList = request.getParameterValues("branchId");
+    params.put("branchIdList",branchIdList);
+
+    List<EgovMap> rtnList = milesMeasService.getMilesMeasMasterList(params);
+
+    return ResponseEntity.ok(rtnList);
+  }
+
   @RequestMapping(value = "/getMilesMeasList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getMilesMeasList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
     String[] branchIdList = request.getParameterValues("branchId");
