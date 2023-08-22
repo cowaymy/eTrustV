@@ -274,7 +274,7 @@
 						               FROM LOG0099D
 						            ) Z1
 						     WHERE Z1.REQST_NO = Z.ING_GR_NO
-						       AND Z1.ITM_CODE = Z.STOCK_CODE
+						       <!-- AND Z1.ITM_CODE = Z.STOCK_CODE -->
 						       AND Z1.RN = 1
 						   )
 			      END AS RCIPT_TM_QTY
