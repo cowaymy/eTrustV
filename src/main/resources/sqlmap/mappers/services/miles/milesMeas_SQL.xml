@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.miles.impl.MilesMeasMapper">
+
+  <select id="getMilesMeasMasterList" parameterType="Map" resultType="egovMap">
+    SELECT A.MIL_CLM_NO AS CLM_NO,
+               B.MEM_CODE AS MEM_CDE,
+               B.NAME AS MEM_NM,
+               C.CODE AS BR_CDE,
+               C.NAME AS BR_NM,
+               SUM(T_MIL) AS TTL_MIL,
+               SUM(T_TRV_DIST) AS TTL_TRV_DIST,
+               TO_CHAR(SUM(T_AMT), '999,999,999,999.99') AS TTL_AMT
+    FROM SVC0137M A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    JOIN SYS0005M C ON B.BRNCH = C.BRNCH_ID
+    WHERE A.DISB = 0
+
+    <if test=" startDt  != null  and startDt !=''  ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{startDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="endDt != null   and endDt != '' ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{endDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="claimID != null and claimID != '' ">
+      AND A.MIL_CLM_NO = #{claimID}
+    </if>
+
+    <if test="memCode != null and memCode != '' ">
+      AND B.MEM_CODE = #{memCode}
+    </if>
+
+    <if test="branchIdList != null and branchIdList != ''">
+      AND B.BRNCH IN
+      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    GROUP BY A.MIL_CLM_NO, B.MEM_CODE, B.NAME, C.CODE, C.NAME
+  </select>
+
+
   <select id="getMilesMeasList" parameterType="Map" resultType="egovMap">
     SELECT 'M' AS IND,
                A.MIL_CLM_NO AS CLM_NO,
@@ -30,19 +71,8 @@
       <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{endDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
     </if>
 
-    <if test="claimID != null and claimID != '' ">
-      AND A.MIL_CLM_NO = #{claimID}
-    </if>
-
-    <if test="memCode != null and memCode != '' ">
-      AND B.MEM_CODE = #{memCode}
-    </if>
-
-    <if test="branchIdList != null and branchIdList != ''">
-      AND B.BRNCH IN
-      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
-        #{item}
-      </foreach>
+    <if test="hidClmNo != null and hidClmNo != '' ">
+      AND A.MIL_CLM_NO = #{hidClmNo}
     </if>
 
     ORDER BY A.MIL_CLM_NO, A.CRT_DT
