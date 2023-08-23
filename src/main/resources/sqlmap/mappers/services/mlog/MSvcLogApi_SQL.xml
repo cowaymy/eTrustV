@@ -1598,6 +1598,7 @@
            ,TO_CHAR(NVL(S07A.FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            ,TO_CHAR(NVL(S07A.FILTER_SRL_UNMATCH_RSN,'')) filter_Serial_Unmatch_Reason /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            ,TO_CHAR(NVL(S07A.OLD_FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No_OLD /*  Hui Ding - Added previous used filter serial 2021-11-24 */
+           ,TO_CHAR(NVL(S07A.sys_Filter_Barcd_Serial_No_Old,'')) sys_Filter_Barcd_Serial_No_Old /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            <!--   20220914 CELESTE [S] Edit Customer Contact Info -->
            ,CUSTDT.OLD_HP_NO
            ,CUSTDT.OLD_HOME_NO
