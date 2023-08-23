@@ -3,7 +3,7 @@
 
 
 <script type="text/javascript">
-
+document.querySelector("#date").innerText = "Order Date";
 var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;
@@ -40,8 +40,9 @@ $.fn.clearForm = function() {
 };
 
 function cmbType_SelectedIndexChanged(){
+	document.querySelector("#date").innerText = "Order Date";
 
-	if($("#cmbType :selected").val() == "1"){
+	 if($("#cmbType :selected").val() == "1"){
 		$("#cmbType").prop('disabled', true);
 		$("#cmbType").addClass("disabled");
 		$("#txtOrderNumberFrom").prop('disabled', true);
@@ -136,6 +137,22 @@ function cmbType_SelectedIndexChanged(){
         $("#cmbRegion").addClass("disabled");
         $("#cmbbranch").prop('disabled', true);
         $("#cmbbranch").addClass("disabled");
+
+    }else if($("#cmbType :selected").val() == "7"){
+        $("#txtOrderNumberFrom").prop('disabled', true);
+        $("#txtOrderNumberFrom").addClass("disabled");
+        $("#txtOrderNumberTo").prop('disabled', true);
+        $("#txtOrderNumberTo").addClass("disabled");
+        $("#dpDateFr").prop('disabled', false);
+        $("#dpDateTo").prop('disabled', false);
+        $("#tpTimeFr").prop('disabled', true);
+        $("#tpTimeTo").prop('disabled', true);
+        $("#cmbRegion").prop('disabled', true);
+        $("#cmbRegion").addClass("disabled");
+        $("#cmbbranch").prop('disabled', true);
+        $("#cmbbranch").addClass("disabled");
+        document.querySelector("#date").innerText = "";
+        document.querySelector("#date").innerText = "Pre-CCP Created Date";
     }
 
 }
@@ -153,7 +170,11 @@ function validRequiredField(){
 
 	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
 		valid = false;
-		message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
+		 if($("#cmbType :selected").val() == "7"){
+			 message += '* Please key in Pre-CCP Created Date';
+		 }else{
+			message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
+		 }
 	}
 
 	if(valid == true){
@@ -333,6 +354,16 @@ function fn_report(){
         $("#reportDownFileName").val("CCPRawExtradeSales_Excel_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPRawExtradeSales_Excel.rpt");
 
+    }else if($("#cmbType :selected").val() == "7"){
+
+   		whereSQL += " AND TRUNC(A.CRT_DT) BETWEEN ";
+   		whereSQL += " TO_DATE('" + moment($("#dpDateFr").val(), "DD/MM/YYYY").format("YYYY/MM/DD") + "','YYYY/MM/DD')";
+   		whereSQL += " AND ";
+   		whereSQL += " TO_DATE('" + moment($("#dpDateTo").val(), "DD/MM/YYYY").format("YYYY/MM/DD") + "','YYYY/MM/DD')";
+        $("#V_WHERESQL").val(whereSQL);
+        $("#reportDownFileName").val("Pre-Check CCP Raw_"+ moment().format("YYYYMMDD"));
+        $("#reportFileName").val("/sales/preccpRawData.rpt");
+
     }
 
 
@@ -391,6 +422,7 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
         <option value="4"><spring:message code="sal.combo.text.ccpCcpAssignB2BRawData" /></option>
         <option value="5"><spring:message code="sal.combo.text.ccpCcpAssignRawData" /></option>
         <option value="6"><spring:message code="sal.combo.text.ccpCcpExtradeSalesRawData" /></option>
+        <option value="7"><spring:message code="preccp.rawData" /></option>
     </select>
     </td>
 </tr>
@@ -405,7 +437,7 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
+    <th scope="row" id="date"></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>

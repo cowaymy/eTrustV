@@ -2051,6 +2051,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       if (ccpDecisionMVO != null && ccpDecisionMVO.getCcpStusId() > 0) {
         ccpDecisionMVO.setCcpSalesOrdId(salesOrdId);
         orderRegisterMapper.insertCcpDecisionM(ccpDecisionMVO);
+        orderRegisterMapper.updatePreccpScore(ccpDecisionMVO);
       }
 
       // SALES ORDER CONTRACT
@@ -2066,6 +2067,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       if (ccpDecisionMVO != null && ccpDecisionMVO.getCcpStusId() > 0) {
         ccpDecisionMVO.setCcpSalesOrdId(salesOrdId);
         orderRegisterMapper.insertCcpDecisionM(ccpDecisionMVO);
+        orderRegisterMapper.updatePreccpScore(ccpDecisionMVO);
       }
     }
 

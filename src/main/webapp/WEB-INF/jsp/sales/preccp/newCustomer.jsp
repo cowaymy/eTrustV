@@ -227,7 +227,7 @@
 
 
 <script>
-     let div1Open = true, div2Open = false, div3Open =false, div4Open =false;
+     let div1Open = false, div2Open = true, div3Open =false, div4Open =false;
 
      const reload = () => {
          location.reload();
@@ -292,7 +292,7 @@
          }
 
   	     customerName = !FormUtil.isEmpty($("#customerName").val()) ? true : false;
-         customerMobileNo = !FormUtil.isEmpty($("#customerMobileNo").val()) ? true : false;
+         customerMobileNo = !FormUtil.isEmpty($("#customerMobileNo").val()) &&  $("#customerMobileNo").val().length >=10 ? true : false;
          customerEmailAddr = !FormUtil.isEmpty($("#customerEmailAddr"))?checkEmail($("#customerEmailAddr").val()) : false;
 
          document.getElementById("customerNric").style.borderColor  = customerNric ? "green": "red";
@@ -461,57 +461,56 @@
           refreshDisplay();
      });
 
-     smsGrid =  AUIGrid.create("smsGrid",
+     smsGrid =  GridCommon.createAUIGrid("smsGrid",
      [
+          {headerText: 'Pre-CCP ID', dataField: 'preccpId' ,width:150},
           {headerText: 'Customer Name', dataField: 'custName', editable: false, width:250},
-          {headerText: 'Pre-CCP Created Date' , dataField: 'crtDt', editable: false, width:200},
+          {headerText: 'Send SMS', width:100,
+              renderer: {
+                type: "TemplateRenderer",
+             },
+             labelFunction :  function (rowIndex, columnIndex, value, headerText, item){
+
+                 let inputReturn = '<div style="display:flex;justify-content: center;height:100%;">';
+
+                 for(let i=0; i < 3 ;i++){
+
+                     inputReturn += `<input id="smsConsent_` + item.preccpSeq +   `_`+ i +`"`;
+                     inputReturn += `type="checkbox" class="smsConsent" onclick="sendSms(`;
+                     inputReturn += `'smsConsent_` + item.preccpSeq +   `_`+ i +`',`;
+                     inputReturn += item.preccpSeq;
+                     inputReturn += `)"`;
+
+                     if(item.smsConsent == "Yes"){
+                         if(item.smsCount > i){
+                             inputReturn +=  ` checked `;
+                         }
+                         inputReturn +=  ` disabled `;
+                     }else{
+                         if(item.smsCount > i){
+                             inputReturn +=  ` checked disabled `;
+                         }
+                     }
+                     inputReturn +=`/>`;
+                 }
+
+                 inputReturn +='  </div>';
+                 return inputReturn;
+           }},
+          {headerText: 'Customer Respond', dataField: 'smsConsent' ,width:150},
+          {headerText: 'Respond Time', dataField: 'updDt' ,width:150},
+          {headerText: 'Pre-CCP Created Date' , dataField: 'crtDt', editable: false, width:150},
           {headerText: 'Member Code', dataField: 'memCode', editable: false, width:150},
           {headerText: 'Dept. Code', dataField: 'deptCode', editable: false, width:100},
           {headerText: 'Group Code', dataField: 'grpCode', editable: false, width:100},
           {headerText: 'Org. Code', dataField: 'orgCode', editable: false, width:100},
-          {headerText: 'Tac Number', dataField: 'tacNo', editable: false, width:100},
-          {headerText: 'Send SMS', width:200,
-        	renderer: {
-              type: "TemplateRenderer",
-           },
-           labelFunction :  function (rowIndex, columnIndex, value, headerText, item){
-
-        	   let inputReturn = '<div style="display:flex;justify-content: center;height:100%;">';
-
-        	   for(let i=0; i < 3 ;i++){
-
-        		   inputReturn += `<input id="smsConsent_` + item.preccpSeq +   `_`+ i +`"`;
-        		   inputReturn += `type="checkbox" class="smsConsent" onclick="sendSms(`;
-        		   inputReturn += `'smsConsent_` + item.preccpSeq +   `_`+ i +`',`;
-        		   inputReturn += item.preccpSeq;
-        		   inputReturn += `)"`;
-
-        		   if(item.smsConsent == "Yes"){
-        			   if(item.smsCount > i){
-                           inputReturn +=  ` checked `;
-                       }
-        			   inputReturn +=  ` disabled `;
-                   }else{
-                       if(item.smsCount > i){
-                           inputReturn +=  ` checked disabled `;
-                       }
-                   }
-        		   inputReturn +=`/>`;
-        	   }
-
-        	   inputReturn +='  </div>';
-        	   return inputReturn;
-           }},
-
-          {headerText: 'Customer Respond', dataField: 'smsConsent' ,width:200}
+          {headerText: 'Tac Number', dataField: 'tacNo', editable: false, width:100, visible: false},
      ] , '',
      {
-         usePaging: true,
-         pageRowCount: 50,
-         editable: false,
-         showRowNumColumn: true,
-         wordWrap: true,
-         showStateColumn: false
+    	 usePaging : true,
+         pageRowCount : 20,
+         editable : false,
+         wordWrap: false,
      });
 
      fetch("/sales/ccp/selectSmsConsentHistory.do")

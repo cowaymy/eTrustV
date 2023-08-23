@@ -122,6 +122,8 @@ public interface OrderRegisterMapper {
 
   void insertCcpDecisionM(CcpDecisionMVO ccpDecisionMVO);
 
+  void updatePreccpScore(CcpDecisionMVO ccpDecisionMVO);
+
   void insertDocSubmission(DocSubmissionVO docSubmissionVO);
 
   void insertSrvMembershipSales(SrvMembershipSalesVO srvMembershipSalesVO);
