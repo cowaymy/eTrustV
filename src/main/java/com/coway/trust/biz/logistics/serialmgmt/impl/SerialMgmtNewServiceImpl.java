@@ -210,12 +210,13 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		    mainMap.put("docNoItm", serialMgmtNewMapper.selectHPDeliveryGRInfo(mainMap));
 		    if(StringUtils.isBlank((String)mainMap.get("docNoItm"))){
 		    	// Check serial prefix conversion configuration setting - LOG0205M
-		    	String serialPrefixChk = serialMgmtNewMapper.selectSerialPrefixConversion(mainMap);
-		    	logger.info("serialPrefixChk: " + serialPrefixChk);
+		    	String serialPrefixChk = serialMgmtNewMapper.selectSerialPrefixConversion(mainMap);		    	
 		    	if(StringUtils.isEmpty(serialPrefixChk)){
 		    	mainMap.put("stockName", "Serial No. (Invalid stock)");
 				mainMap.put("status", 0);
 				continue;
+		    	}else{
+		    		mainMap.put("docNoItm", serialPrefixChk);
 		    	}
 		    }
 
