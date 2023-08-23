@@ -900,6 +900,10 @@ public class CustomerController {
       LOGGER.info("Bank추가 : {}", addBankList.toString());
     }
 
+    Map<String, Object> updatePreccpData = new HashMap();
+    updatePreccpData.put("custId", customerId);
+    customerService.updatePreccpData(updatePreccpData);
+
     /*
      * ReturnMessage message = new ReturnMessage();
      * message.setCode(AppConstants.SUCCESS);

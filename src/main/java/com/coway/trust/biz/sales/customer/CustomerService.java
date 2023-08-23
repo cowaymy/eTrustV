@@ -605,4 +605,6 @@ public interface CustomerService {
 
   boolean getAutoDebitUserId(Map<String, Object> params)throws Exception;
 
+  void updatePreccpData(Map<String, Object> params);
+
 }

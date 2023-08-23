@@ -3188,4 +3188,24 @@
     AND C.USER_ID = #{userId}
   </select>
 
+  <update id="updatePreccpData" parameterType="Map">
+    MERGE INTO SAL0029D A
+	USING(
+		    SELECT
+		        B.CUST_ID, C.CREDIT_SCRE, C.CCRIS_DT
+		    FROM SAL0343D A
+		    JOIN SAL0029D B ON A.CUST_IC = B.NRIC
+		    JOIN SAL0345D C ON A.CCRIS_ID = C.CCRIS_ID
+		    WHERE A.TYPE_ID = 7290
+		    AND NVL(A.CCRIS_ID,0) <![CDATA[<>]]> 0
+		    AND C.STUS_CODE_ID = 4
+		    AND NVL(A.DISAB,0) = 0
+		    AND B.CUST_ID = #{custId}
+	)SRC ON (A.CUST_ID = SRC.CUST_ID)
+	WHEN MATCHED THEN
+	UPDATE SET
+	        A.FICO_SCRE = SRC.CREDIT_SCRE,
+	        A.CTOS_DT = SRC.CCRIS_DT
+  </update>
+
 </mapper>

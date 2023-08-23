@@ -1040,4 +1040,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
   }
 
+  @Override
+  public void updatePreccpData(Map<String, Object> params) {
+	  customerMapper.updatePreccpData(params);
+  }
+
 }
