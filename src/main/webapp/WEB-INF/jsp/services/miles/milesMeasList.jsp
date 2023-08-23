@@ -93,15 +93,18 @@
         }, {
           dataField : "ttlMil",
           headerText : "Total Mileage",
-          width : 120
+          width : 120,
+          formatString: "#,##0.00"
         }, {
           dataField : "ttlTrvDist",
-          headerText : "Total Travel Distance",
-          width : 120
+          headerText : "Total Travel Time",
+          width : 120,
+          formatString: "#,##0.00"
         }, {
           dataField : "ttlAmt",
           headerText : "Total Amount",
-          width : 120
+          width : 120,
+          formatString: "#,##0.00"
         }, {
           dataField : "rmk",
           headerText : "Remark",
@@ -144,15 +147,18 @@
                                            }, {
                                               dataField : "ttlMil",
                                               headerText : "Total Mileage",
-                                              width : 200
+                                              width : 200,
+                                              formatString: "#,##0.00"
                                            }, {
                                               dataField : "ttlTrvDist",
-                                              headerText : "Total Travel Distance",
-                                              width : 200
+                                              headerText : "Total Travel Time",
+                                              width : 200,
+                                              formatString: "#,##0.00"
                                            }, {
                                               dataField : "ttlAmt",
                                               headerText : "Total Amount",
-                                              width : 200
+                                              width : 200,
+                                              formatString: "#,##0.00"
                                            }];
 
     var footerLayout = [{ labelText: "∑",
