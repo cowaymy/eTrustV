@@ -776,11 +776,11 @@ function fn_downloadAgreement() {
 
                 if(memLvl == "4") {
                     console.log("memLvl up :: " + memLvl);
-                    $("#reportFileName").val("/organization/agreement/HTAgreement_2020v1.rpt");
+                    $("#reportFileName").val("/organization/agreement/HTAgreement_2022v1.rpt");
                     $("#reportDownFileName").val("HTAgreement_" + code);
                 } else {
                     console.log("memLvl down :: " +memLvl);
-                    $("#reportFileName").val("/organization/agreement/HTMAgreement_2020v1.rpt");
+                    $("#reportFileName").val("/organization/agreement/HTMAgreement_2022v1.rpt");
                     $("#reportDownFileName").val("HTMAgreement_" + code);
                 }
 
