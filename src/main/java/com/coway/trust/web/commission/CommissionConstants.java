@@ -11,9 +11,11 @@ public class CommissionConstants {
 	public static final String COMIS_CD_GRCD = "2";			//CD common code
 	public static final String COMIS_CT_GRCD = "3";			//CT common code
 	public static final String COMIS_HP_GRCD = "1";			//HP common code
+	public static final String COMIS_HT_GRCD = "7";			//HP common code
 	public static final String COMIS_CD_CD = "301";			//Commission CD main code
 	public static final String COMIS_CT_CD = "302";				//Commission CT main code
 	public static final String COMIS_HP_CD = "303";				//Commission HP main code
+	public static final String COMIS_HT_CD = "305";				//Commission HT main code
 	public static final String COMIS_ITEM_CD = "304";			//Commission Item code
 	public static final String COMIS_PRO_CD_A = "311";			//Commission Procedure code actual
 	public static final String COMIS_PRO_CD_S = "354";			//Commission Procedure code simulation
@@ -57,6 +59,7 @@ public class CommissionConstants {
 
 
 	// Added for HT Commission by Hui Ding, 08-12-2020
+	public static final String COMIS_HT_HTS_LEV = "2";
 	public static final String COMIS_HT_HTM_LEV = "3";
 	public static final String COMIS_HT_HTN_LEV = "4";
 
@@ -80,6 +83,10 @@ public class CommissionConstants {
 	public static final String COMIS_CT_CTN_CD = "CTN";
 	public static final String COMIS_CT_CTR_CD = "CTR";
 	public static final String COMIS_CT_CTE_CD = "CTE";
+
+	public static final String COMIS_HT_SHM_CD = "SHM";
+	public static final String COMIS_HT_HTM_CD = "HTM";
+	public static final String COMIS_HT_HTN_CD = "HTN";
 
 	public static final String COMIS_CD_CDN_BIZTYPE = "1375";					//CD-N
 	public static final String COMIS_CD_CDC_BIZTYPE = "1376";					//CD-C
@@ -165,6 +172,8 @@ public class CommissionConstants {
 	public static final String COMIS_HTX_P02	 = "HTX-P02";						//7002HT
 	public static final String COMIS_HTM_P01	 = "HTM-P01";					//7001HTM
 	public static final String COMIS_HTM_P02	 = "HTM-P02";					//7002HTM
+	public static final String COMIS_HTS_P01	 = "HTS-P01";					//7001SHM
+	public static final String COMIS_HTS_P02	 = "HTS-P02";					//7002SHM
 
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
 

@@ -632,6 +632,10 @@ public class CommissionCalculationController {
 			popName = "calculationData7001HTM_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P02)) {
 			popName = "calculationData7002HTM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTS_P01)) {
+			popName = "calculationData7001HTS_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTS_P02)) {
+			popName = "calculationData7002HTS_Pop";
 		}
 
 
@@ -1064,6 +1068,9 @@ public class CommissionCalculationController {
 		}
 		if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTM_LEV);
+
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTS_P02))
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTS_LEV);
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
 

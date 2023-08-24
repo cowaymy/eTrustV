@@ -154,7 +154,13 @@
                     }
                	} */
 
-                if(memLvl == '3')
+                if(memLvl == '2')
+                {
+                    reportFileName = "/commission/SHMCommission_PDF.rpt"; //reportFileName
+                    reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
+                    reportViewType = "PDF"; //viewType
+                }
+                else if(memLvl == '3')
                 {
                     reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
                     reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name

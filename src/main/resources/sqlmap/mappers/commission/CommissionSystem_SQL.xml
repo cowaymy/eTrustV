@@ -24,7 +24,7 @@
 		 ]]>
 		<if test="mstId != null and mstId != ''">
 			AND T1.CODE_MASTER_ID = #{mstId}
-			AND T2.CODE_ID IN (1,2,3)
+			AND T2.CODE_ID IN (1,2,3,7)
 		</if>
 		 <![CDATA[
 		ORDER BY T2.CODE

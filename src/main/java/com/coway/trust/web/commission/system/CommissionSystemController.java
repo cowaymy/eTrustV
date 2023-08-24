@@ -124,6 +124,8 @@ public class CommissionSystemController {
 			mstId = CommissionConstants.COMIS_CT_CD;
 		} else if (orgRg.equals(CommissionConstants.COMIS_HP_GRCD)) {
 			mstId = CommissionConstants.COMIS_HP_CD;
+		} else if(orgRg.equals(CommissionConstants.COMIS_HT_GRCD)) {
+			mstId = CommissionConstants.COMIS_HT_CD;
 		}
 
 		params.put("mstId", mstId);
