@@ -134,7 +134,11 @@ console.log(year);
 			}
 			else
 			{
-	            if(year >= 2022 && month >=02 || year > 2022)
+	            if(year >= 2023 && month >=08 || year > 2023)
+	            {
+	            	reportFileName = "/commission/CodyComm_PDF_202308.rpt"; //reportFileName
+	            }
+	            else if(year >= 2022 && month >=02 || year > 2022)
 	            {
 	            	reportFileName = "/commission/CodyComm_PDF_202203.rpt"; //reportFileName
 	            }
