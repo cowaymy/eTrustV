@@ -1020,7 +1020,7 @@
     </insert>
 
      <select id="selectAdjDetailPopMaster" parameterType="Map" resultType="egovMap">
-       SELECT
+       SELECT DISTINCT
         mst.MEMO_ADJ_ID ,
         mst.MEMO_ADJ_REF_NO ,
         mst.MEMO_ADJ_RPT_NO ,
@@ -1092,17 +1092,18 @@
         mst.ATCH_FILE_GRP_ID
     FROM
         PAY0011D mst
-        /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
-        LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO
-        LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO
-        LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO
-        LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID
-        LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID
-        LEFT JOIN SYS0032M rsn ON mst.MEMO_ADJ_RESN_ID = rsn.RESN_ID
-        LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID
-        LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID
-        LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
-        LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
+	    LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID
+	    LEFT JOIN PAY0030D det on det.INVC_ITM_ID = sub.MEMO_ITM_INVC_ITM_ID
+	    LEFT JOIN PAY0029D company ON det.TAX_INVC_ID = company.TAX_INVC_ID
+	    LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO
+	    LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO
+	    LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID
+	    LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID
+	    LEFT JOIN SYS0032M rsn ON mst.MEMO_ADJ_RESN_ID = rsn.RESN_ID
+	    LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID
+	    LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID
+	    LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
+	    LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
     WHERE mst.MEMO_ADJ_ID = #{adjId}
     </select>
 
