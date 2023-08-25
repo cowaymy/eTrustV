@@ -1181,10 +1181,12 @@
                ( select WH_LOC_ID
                  from sys0028m
                  where WH_LOC_CODE= s28m.rdc_code) rdc_code
+                 ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
     FROM sys0028m s28m,
             LOG0056M L56 ,
             SYS0026M S26 ,
             LOG0063D L63
+            ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
     WHERE 1 =1
         AND L56.STK_CODE = L63.MATNR(+)
         AND L56.LOC_ID = L63.LOC_ID(+)
@@ -1192,6 +1194,7 @@
         AND L56.STK_TYPE_ID in (62,63,64)
         AND L56.QTY > 0
         AND L56.LOC_ID=s28m.WH_LOC_ID
+        and s26.stk_ctgry_id = s13h.code_id(+)
 
         <if test="searchType == 1 ">
           AND l56.STK_CODE=#{searchKeyword}
@@ -1218,10 +1221,12 @@
                ( select WH_LOC_ID
                  from sys0028m
                  where WH_LOC_CODE= s28m.rdc_code) rdc_code
+                 ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
     FROM sys0028m s28m,
              LOG0056M L56 ,
              SYS0026M S26 ,
              LOG0100M LG100M
+             ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
     WHERE 1 =1
         AND L56.STK_CODE = LG100M.ITM_CODE(+)
         AND L56.LOC_ID = LG100M.LAST_LOC_ID(+)
@@ -1229,6 +1234,7 @@
         AND L56.STK_TYPE_ID in (62,63,64)
         AND L56.QTY > 0
         AND L56.LOC_ID=s28m.WH_LOC_ID
+        and s26.stk_ctgry_id = s13h.code_id(+)
         AND (LG100M.STUS_CODE(+) IS NULL OR LG100M.STUS_CODE(+) = 'I')
 
         <if test="searchType == 1 ">
