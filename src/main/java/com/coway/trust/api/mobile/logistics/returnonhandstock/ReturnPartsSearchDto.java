@@ -30,6 +30,9 @@ public class ReturnPartsSearchDto {
 	@ApiModelProperty(value = "Location ID")
 	private int rdcCode;
 
+	@ApiModelProperty(value = "제품 등급")
+	private String stkCatgry;
+
 	public static ReturnPartsSearchDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, ReturnPartsSearchDto.class);
 	}
@@ -88,6 +91,14 @@ public class ReturnPartsSearchDto {
 
 	public void setRdcCode(int rdcCode) {
 		this.rdcCode = rdcCode;
+	}
+
+	public String getStkCatgry() {
+		return stkCatgry;
+	}
+
+	public void setStkCatgry(String stkCatgry) {
+		this.stkCatgry = stkCatgry;
 	}
 
 }
