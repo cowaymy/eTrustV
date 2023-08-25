@@ -14,7 +14,7 @@
 <script type="text/javascript">
 console.log("webInvoiceApproveViewPop");
 var myGridID;
-var myGridData = $.parseJSON('${appvInfoAndItems}');
+var myGridData = ${appvInfoAndItems};
 var attachList = null;
 var myColumnLayout = [ {
     dataField : "clamUn",
