@@ -163,6 +163,8 @@ public class SalesOrderMVO implements Serializable {
 
   private String isExtradePR;
 
+  private String voucherCode;
+
   public String getSalesProdSz() {
 	return salesProdSz;
 }
@@ -757,6 +759,14 @@ public String getIsExtradePR() {
 
 public void setIsExtradePR(String isExtradePR) {
 	this.isExtradePR = isExtradePR;
+}
+
+public String getVoucherCode() {
+	return voucherCode;
+}
+
+public void setVoucherCode(String voucherCode) {
+	this.voucherCode = voucherCode;
 }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderModifyService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
@@ -55,6 +56,9 @@ public class HcOrderModifyController {
 
 	@Resource(name = "orderModifyService")
 	private OrderModifyService orderModifyService;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
 
 	/**
 	 * Call - Homecare Order Modify Popup
@@ -105,6 +109,7 @@ public class HcOrderModifyController {
         model.put("modFraOrdNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
         model.put("modBndlId", CommonUtils.nvl(hcOrder.get("ordSeqNo")));
         model.put("stkId", basicInfo.get("stockId"));
+        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
         return "homecare/sales/order/hcOrderModifyPop";
   	}

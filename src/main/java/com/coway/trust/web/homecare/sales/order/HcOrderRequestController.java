@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.application.impl.FileApplicationImpl;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
@@ -66,6 +67,9 @@ public class HcOrderRequestController {
 
 	@Resource(name = "hcOrderListService")
 	private HcOrderListService hcOrderListService;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
 
 	@Autowired
 	private OrderReqApplication orderReqApplication;
@@ -121,6 +125,7 @@ public class HcOrderRequestController {
 		model.put("toDay", toDay);
 		model.put("callCenterYn", callCenterYn);
 		model.put("userId", sessionVO.getUserId());
+	    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
 		return "homecare/sales/order/hcOrderRequestPop";
 	}

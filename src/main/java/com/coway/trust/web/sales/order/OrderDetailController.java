@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.sales.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.misc.voucher.VoucherService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -46,6 +48,9 @@ public class OrderDetailController {
 
   @Resource(name = "hsManualService")
   private HsManualService hsManualService;
+
+  @Resource(name = "voucherService")
+  private VoucherService voucherService;
 
   @RequestMapping(value = "/orderDetailPop.do")
   public String getOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
@@ -78,6 +83,17 @@ public class OrderDetailController {
     logger.debug("!@##############################################################################");
 
     EgovMap basicInfo = orderDetailService.selectBasicInfo(params);
+
+    if(basicInfo.get("voucherCode") != null
+    		&& basicInfo.get("voucherCode").toString().length() > 0){
+        Map<String,Object> voucherParam = new HashMap();
+        voucherParam.put("voucherCode", basicInfo.get("voucherCode").toString());
+        EgovMap voucherInfo = voucherService.getVoucherInfo(voucherParam);
+
+        if(voucherInfo != null){
+        	basicInfo.put("voucherInfo", voucherInfo);
+        }
+    };
 
     // 데이터 리턴.
     return ResponseEntity.ok(basicInfo);

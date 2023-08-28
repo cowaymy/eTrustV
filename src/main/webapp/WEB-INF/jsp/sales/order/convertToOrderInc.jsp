@@ -376,4 +376,21 @@
 				  Common.alert("Customer recently has returned product, please obtain RFD/RFA from GM/GCM and re-submit the order");
 		});
 	}
+
+	function voucherAppliedDisplay(){
+		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
+
+		if(voucherCode != null && voucherCode != ''){
+			$('.voucherSection').show();
+
+			var voucherEmail = '${preOrderInfo.voucherInfo.custEmail}';
+			var platformId = '${preOrderInfo.voucherInfo.platformId}';
+			$('#voucherCode').val(voucherCode);
+			$('#voucherEmail').val(voucherEmail);
+			$('#voucherType').val(platformId);
+		   	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+	    	$('#voucherMsg').show();
+	    	$('#btnVoucherApply').hide();
+		}
+	}
 </script>

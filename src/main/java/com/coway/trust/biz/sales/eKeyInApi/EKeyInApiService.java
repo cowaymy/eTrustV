@@ -95,4 +95,6 @@ public interface EKeyInApiService {
   EKeyInApiDto checkIfIsAcInstallationProductCategoryCode(EKeyInApiForm param);
 
   EgovMap checkTNA(String param) throws Exception;
+
+List<EgovMap> selectVoucherPlatformCodeList() throws Exception;
 }

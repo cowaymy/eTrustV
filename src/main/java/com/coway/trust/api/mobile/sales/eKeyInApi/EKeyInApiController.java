@@ -434,4 +434,11 @@ public class EKeyInApiController {
     LOGGER.debug("checkTNA    값 : {}", param);
     return ResponseEntity.ok(eKeyInApiService.checkTNA(param));
   }
+
+  @ApiOperation(value = "selectVoucherPlatformSelection", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectVoucherPlatformSelection", method = RequestMethod.GET)
+  public ResponseEntity<List<EKeyInApiDto>> selectVoucherPlatformSelection(@ModelAttribute EKeyInApiForm param) throws Exception {
+	    List<EgovMap> selectVoucherPlatformCodeList = eKeyInApiService.selectVoucherPlatformCodeList();
+	    return ResponseEntity.ok(selectVoucherPlatformCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+  }
 }

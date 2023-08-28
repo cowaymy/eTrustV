@@ -2451,4 +2451,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   public EgovMap checkTNA(String param) {
     return eKeyInApiMapper.checkTNA(param);
   }
+
+  @Override
+  public List<EgovMap> selectVoucherPlatformCodeList() throws Exception {
+    return eKeyInApiMapper.selectVoucherPlatformCodeList();
+  }
 }

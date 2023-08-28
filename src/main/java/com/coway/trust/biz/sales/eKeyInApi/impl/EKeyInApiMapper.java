@@ -146,4 +146,6 @@ public interface EKeyInApiMapper {
   int checkCreditCardValidity(String token);
 
   EgovMap checkTNA(String param);
+
+  List<EgovMap> selectVoucherPlatformCodeList();
 }

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderReqApplication;
@@ -59,7 +60,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/sales/order")
 public class OrderRequestController {
- 
+
   private static Logger logger = LoggerFactory.getLogger(OrderRequestController.class);
 
   @Resource(name = "orderRequestService")
@@ -70,6 +71,9 @@ public class OrderRequestController {
 
   @Resource(name = "orderLedgerService")
   private OrderLedgerService orderLedgerService;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -103,6 +107,7 @@ public class OrderRequestController {
 
     model.put("toDay", toDay);
     model.put("callCenterYn", callCenterYn);
+    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
     return "sales/order/orderRequestPop";
   }

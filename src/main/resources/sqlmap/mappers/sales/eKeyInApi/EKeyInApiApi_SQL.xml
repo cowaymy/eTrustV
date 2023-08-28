@@ -1658,4 +1658,18 @@ SELECT A.CUST_ID AS CUST_ID
      WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
        AND REF_NO = #{refNo}
   </update>
+
+    <select id="selectVoucherPlatformCodeList" resultType="egovMap">
+    <![CDATA[
+		SELECT A.CODE_MASTER_ID AS CODE_MASTER_ID
+               , A.CODE_ID AS CODE_ID
+               , A.CODE AS CODE
+               , UPPER(A.CODE_NAME) AS CODE_NAME
+               , UPPER(A.CODE_DESC) AS CODE_DESC
+      FROM SYS0013M A
+      WHERE A.CODE_MASTER_ID = '562'
+          AND A.DISAB = 0
+      ORDER BY CODE_NAME ASC
+    ]]>
+  </select>
 </mapper>

@@ -60,4 +60,6 @@ public interface PreOrderMapper {
 	void updateKeyinSOF(Map<String, Object> params);
 
 	EgovMap checkExtradeSchedule();
+
+	String selectExistingSalesVoucherCode(PreOrderVO preOrderVO);
 }

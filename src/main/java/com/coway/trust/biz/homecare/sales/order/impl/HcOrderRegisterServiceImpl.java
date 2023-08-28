@@ -2,6 +2,7 @@ package com.coway.trust.biz.homecare.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterServiceImpl;
@@ -48,6 +50,9 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
   	@Resource(name = "orderRegisterService")
   	private OrderRegisterService orderRegisterService;
+
+  	@Resource(name = "voucherMapper")
+  	private VoucherMapper voucherMapper;
 
   	/**
   	 * Select Homacare Product List
@@ -95,6 +100,21 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		if(matStkId+fraStkId <= 0) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
 		}
+
+		/*
+	     * Voucher checking before creating order as HC PRE-ORDER does not consume voucher usage
+	     */
+	    if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+	        Map<String, Object> voucherInfo = new HashMap<String, Object>();
+	        voucherInfo.put("voucherCode", salesOrderMVO1.getVoucherCode());
+	        int validVoucher = voucherMapper.isVoucherValidToApply(voucherInfo);
+
+	        if(validVoucher == 0)
+	        {
+	        	throw new ApplicationException(AppConstants.FAIL,
+						"Voucher applied is either used or not a valid voucher : " + salesOrderMVO1.getVoucherCode() + ". Please recheck.");
+	        }
+	    }
 
 		// has order frame
 		if(matStkId > 0 && fraStkId > 0) {
@@ -151,6 +171,17 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			matOrdId =  CommonUtils.intNvl(orderVO.getSalesOrderMVO().getSalesOrdId());
 			if("".equals(matOrdNo)) { // not insert - Mattress order
 				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Mattress");
+			}
+
+			/*
+			 * If got voucher, updated voucher to use state
+			 */
+			if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+				Map<String,Object> voucherParam = new HashMap();
+				voucherParam.put("voucherCode", salesOrderMVO1.getVoucherCode());
+				voucherParam.put("salesOrdNo", matOrdNo);
+				voucherParam.put("isUsed", 1);
+				voucherMapper.updateVoucherCodeUseStatus(voucherParam);
 			}
 		}
 

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.callcenter.common.FileDto;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
@@ -73,6 +74,9 @@ public class OrderModifyController {
   @Resource(name = "orderModifyMapper")
   private OrderModifyMapper orderModifyMapper;
 
+  @Resource(name = "commonService")
+  private CommonService commonService;
+
   @Autowired
   private FileService fileService;
 
@@ -113,6 +117,8 @@ public class OrderModifyController {
     model.put("ordPvYear", basicInfo.get("ordPvYear"));
     model.put("typeId", basicInfo.get("typeId"));
     model.put("eKeyinYn", !CommonUtils.nvl(basicInfo.get("ekeyCrtUser")).equals("") ? "Y" : "N");
+
+    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
     logger.debug("!@##############################################################################");
     logger.debug("!@###### salesOrderId : " + model.get("salesOrderId"));

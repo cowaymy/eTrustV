@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
@@ -55,6 +56,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
   @Resource(name = "ccpCalculateMapper")
   private CcpCalculateMapper ccpCalculateMapper;
+
+  @Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;
 
   // @Autowired
   // private MessageSourceAccessor messageSourceAccessor;
@@ -151,6 +155,17 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     if (orderCfgInfo != null)
       this.loadConfigInfo(orderCfgInfo);
     // if(gstCertInfo != null) this.loadGstCertInfo(gstCertInfo);
+
+    if(basicInfo.get("voucherCode") != null
+    		&& basicInfo.get("voucherCode").toString().length() > 0){
+        Map<String,Object> voucherParam = new HashMap();
+        voucherParam.put("voucherCode", basicInfo.get("voucherCode").toString());
+        EgovMap voucherInfo = voucherMapper.getVoucherInfo(voucherParam);
+
+        if(voucherInfo != null){
+        	basicInfo.put("voucherInfo", voucherInfo);
+        }
+    }
 
     orderDetail.put("basicInfo", basicInfo);
     orderDetail.put("logView", logView);

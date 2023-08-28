@@ -139,6 +139,7 @@ public class HcOrderRegisterController {
       model.put("codeList_17", codeList_17);
       model.put("codeList_19", codeList_19);
       model.put("codeList_322", codeList_322);
+      model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 		  model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "homecare/sales/order/hcOrderRegisterPop";

@@ -136,7 +136,7 @@ public class PreOrderController {
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 		model.put("userType", sessionVO.getUserTypeId());
-
+        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
 		return "sales/order/preOrderModifyPop";
 	}
@@ -190,6 +190,7 @@ public class PreOrderController {
         model.put("codeList_325", commonService.selectCodeList("325"));
         model.put("codeList_415", commonService.selectCodeList("415", "CODE_ID"));
         model.put("codeList_416", commonService.selectCodeList("416", "CODE_ID"));
+        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
         // Search BranchCodeList
         model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
         model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
@@ -378,6 +379,7 @@ public class PreOrderController {
 		model.put("CONV_TO_ORD_YN", "Y");
 		model.put("preOrdId", params.get("preOrdId"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
 		return "sales/order/orderRegisterPop";
 	}

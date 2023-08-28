@@ -8,7 +8,8 @@ public enum EmailTemplateType {
 	OVERDUE_PAYMENT_4("/template/mail/overduePayment_4.html"),
 	OVERDUE_PAYMENT_5_6("/template/mail/overduePayment_5_6.html"),
 	E_TEMPORARY_RECEIPT("/template/mail/eTemporaryReceipt.html"),
-    E_SVM_RECEIPT("/template/mail/eSvmReceipt.html");
+    E_SVM_RECEIPT("/template/mail/eSvmReceipt.html"),
+    E_VOUCHER_RECEIPT("/template/mail/eVoucherReceipt.html");
 
 	private String fileName = "";
 
