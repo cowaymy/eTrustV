@@ -50,8 +50,10 @@
                                       , LATITUDE
                                       , CRT_BY
                                       , UPD_BY
-                                      , CRT_DT
-                                      , UPD_DT
+                                      <if test="crtDt != null and crtDt != ''">
+                                        , CRT_DT
+                                        , UPD_DT
+                                      </if>
 
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
                   , TO_NUMBER(#{MIL_CLM_NO})
@@ -66,10 +68,6 @@
                   <if test="crtDt != null and crtDt != ''">
                     , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
                     , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
-                  </if>
-                  <if test="crtDt == null and crtDt == ''">
-                    , SYSDATE
-                    , SYSDATE
                   </if>
     )
   </insert>
@@ -97,9 +95,10 @@
                                       , MIL_REMARK
                                       , CRT_BY
                                       , UPD_BY
-                                      , CRT_DT
-                                      , UPD_DT
-
+                                      <if test="crtDt != null and crtDt != ''">
+                                        , CRT_DT
+                                        , UPD_DT
+                                      </if>
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
                   , TO_NUMBER(#{MIL_CLM_NO})
                   , '0'
@@ -114,10 +113,6 @@
                   <if test="crtDt != null and crtDt != ''">
                     , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
                     , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
-                  </if>
-                  <if test="crtDt == null and crtDt == ''">
-                    , SYSDATE
-                    , SYSDATE
                   </if>
     )
   </insert>
