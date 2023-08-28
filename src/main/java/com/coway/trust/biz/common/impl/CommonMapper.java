@@ -319,4 +319,9 @@ public interface CommonMapper {
   List<EgovMap> selectStockLocationListByDept(Map<String, Object> params);
 
   List<EgovMap> getMapProp(Map<String, Object> params);
+
+  EgovMap getGeneralInstInfo(Map<String, Object> params);
+
+  List<EgovMap> selectTimePick();
+
 }
