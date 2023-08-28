@@ -1698,4 +1698,15 @@ public class CommonServiceImpl implements CommonService {
   public List<EgovMap> getMapProp(Map<String, Object> params) {
     return commonMapper.getMapProp(params);
   }
+
+  @Override
+  public EgovMap getGeneralInstInfo(Map<String, Object> params) {
+    return commonMapper.getGeneralInstInfo(params);
+  }
+
+  @Override
+  public List<EgovMap> selectTimePick() {
+    return commonMapper.selectTimePick();
+  }
+
 }
