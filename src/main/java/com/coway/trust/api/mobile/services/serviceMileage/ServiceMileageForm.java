@@ -12,6 +12,9 @@ public class ServiceMileageForm {
   @ApiModelProperty(value = "serviceNo")
   private String serviceNo;
 
+  @ApiModelProperty(value = "ordNo")
+  private String ordNo;
+
   @ApiModelProperty(value = "userName")
   private String userName;
 
@@ -30,6 +33,14 @@ public class ServiceMileageForm {
 
   public void setServiceNo(String serviceNo) {
     this.serviceNo = serviceNo;
+  }
+
+  public String getOrdNo() {
+    return ordNo;
+  }
+
+  public void setOrdNo(String ordNo) {
+    this.ordNo = ordNo;
   }
 
   public String getUserName() {
@@ -68,6 +79,7 @@ public class ServiceMileageForm {
     Map<String, Object> params = new HashMap<>();
 
     params.put("serviceNo", serviceMileageForm.getServiceNo());
+    params.put("ordNo", serviceMileageForm.getOrdNo());
     params.put("userName", serviceMileageForm.getUserName());
     params.put("checkInDate", serviceMileageForm.getCheckInDate());
     params.put("longtitude", serviceMileageForm.getLongtitude());
