@@ -42,6 +42,7 @@
   <insert id="insertSubMileageClaim" parameterType="Map">
     INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
                                       , MIL_CLM_NO
+                                      , SALES_ORD_ID
                                       , SVC_NO
                                       , MEM_ID
                                       , CLM_DT
@@ -54,6 +55,7 @@
 
     ) VALUES ( SVC0138D_SEQ.NEXTVAL
                   , TO_NUMBER(#{MIL_CLM_NO})
+                  , (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
                   , #{serviceNo}
                   , TO_NUMBER(#{userID_ORG01})
                   , TO_DATE(#{checkInDate}, 'YYYYMMDD')
@@ -61,8 +63,14 @@
                   , TO_NUMBER(#{latitude})
                   , TO_NUMBER(#{userID_SYS47})
                   , TO_NUMBER(#{userID_SYS47})
-                  , SYSDATE
-                  , SYSDATE
+                  <if test="crtDt != null and crtDt != ''">
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                  </if>
+                  <if test="crtDt == null and crtDt == ''">
+                    , SYSDATE
+                    , SYSDATE
+                  </if>
     )
   </insert>
 
@@ -103,8 +111,14 @@
                   , #{branchID} || ' - ' || #{branchCode}
                   , TO_NUMBER(#{userID_SYS47})
                   , TO_NUMBER(#{userID_SYS47})
-                  , SYSDATE
-                  , SYSDATE
+                  <if test="crtDt != null and crtDt != ''">
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                  </if>
+                  <if test="crtDt == null and crtDt == ''">
+                    , SYSDATE
+                    , SYSDATE
+                  </if>
     )
   </insert>
 </mapper>
