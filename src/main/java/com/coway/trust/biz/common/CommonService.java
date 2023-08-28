@@ -478,4 +478,8 @@ public interface CommonService {
 
   List<EgovMap> getMapProp(Map<String, Object> params);
 
+  EgovMap getGeneralInstInfo(Map<String, Object> params);
+
+  List<EgovMap> selectTimePick();
+
 }
