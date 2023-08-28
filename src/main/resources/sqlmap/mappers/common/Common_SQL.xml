@@ -2188,4 +2188,32 @@
         AND SUB_MODULE = 'GPS'
         AND DISB = 0
   </select>
+
+  <select id="getGeneralInstInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.INSTALL_ENTRY_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE
+    FROM SAL0046D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.INSTALL_ENTRY_ID = #{key}
+  </select>
+
+  <select id="selectTimePick"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'TIME_PICK'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
 </mapper>
