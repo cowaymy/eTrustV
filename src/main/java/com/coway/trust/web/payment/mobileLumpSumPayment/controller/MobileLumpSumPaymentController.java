@@ -122,4 +122,23 @@ public class MobileLumpSumPaymentController {
 		}
 	    return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/checkBatchPaymentExist.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> checkBatchPaymentExist(@RequestBody Map<String, Object> params, ModelMap model)
+	      throws Exception {
+		List<EgovMap> result = mobileLumpSumPaymentKeyInService.checkBatchPaymentExist(params);
+	    ReturnMessage message = new ReturnMessage();
+
+		if(result != null && result.size()> 0){
+		    message.setCode(AppConstants.FAIL);
+		    message.setData(result);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		else{
+		    message.setCode(AppConstants.SUCCESS);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+
+	    return ResponseEntity.ok(message);
+	  }
 }
