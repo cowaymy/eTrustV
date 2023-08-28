@@ -148,4 +148,8 @@ public interface EKeyInApiMapper {
   EgovMap checkTNA(String param);
 
   List<EgovMap> selectVoucherPlatformCodeList();
+
+  int isVoucherValidToApply(Map<String, Object> param);
+
+  int isVoucherValidToApplyIneKeyIn(Map<String, Object> param);
 }

@@ -441,4 +441,10 @@ public class EKeyInApiController {
 	    List<EgovMap> selectVoucherPlatformCodeList = eKeyInApiService.selectVoucherPlatformCodeList();
 	    return ResponseEntity.ok(selectVoucherPlatformCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
+
+  @ApiOperation(value = "voucherApplyCheck", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/voucherApplyCheck", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> voucherApplyCheck(@ModelAttribute EKeyInApiForm param) throws Exception {
+	    return ResponseEntity.ok(eKeyInApiService.isVoucherValidToApply(param));
+  }
 }

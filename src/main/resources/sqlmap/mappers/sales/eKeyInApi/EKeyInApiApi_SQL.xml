@@ -1672,4 +1672,28 @@ SELECT A.CUST_ID AS CUST_ID
       ORDER BY CODE_NAME ASC
     ]]>
   </select>
+
+  	<select id="isVoucherValidToApply" parameterType="Map" resultType="int">
+		SELECT CASE WHEN COUNT(A.DETAIL_ID) > 0 THEN 1 ELSE 0 END AS VALID FROM MSC0057D A
+		JOIN MSC0056M B
+		ON A.ID = B.ID
+		WHERE
+		A.VOUCHER_CODE = #{voucherCode}
+		<if test='custEmail != null and custEmail != ""'>
+		AND A.CUST_EMAIL = #{custEmail}
+		</if>
+		<if test='platform != null and platform != ""'>
+		AND B.PLATFORM = #{platform}
+		</if>
+		AND A.STUS_CODE_ID = 1
+		AND A.USED = 0
+	</select>
+
+	<select id="isVoucherValidToApplyIneKeyIn" parameterType="Map"  resultType="int">
+		SELECT CASE WHEN COUNT(PRE_ORD_ID) > 0 THEN 0 ELSE 1 END AS VALID
+		FROM SAL0213M
+		WHERE 1=1
+		AND VOUCHER_CODE = #{voucherCode}
+		AND STUS_ID NOT IN (10)
+	</select>
 </mapper>

@@ -2456,4 +2456,23 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   public List<EgovMap> selectVoucherPlatformCodeList() throws Exception {
     return eKeyInApiMapper.selectVoucherPlatformCodeList();
   }
+
+  @Override
+  public EKeyInApiDto isVoucherValidToApply(EKeyInApiForm param) throws Exception {
+	    EKeyInApiDto rtnDto = new EKeyInApiDto();
+	  Map<String, Object> params = new HashMap<String, Object>();
+	  params.put("voucherType", param.getVoucherType());
+	  params.put("voucherCode", param.getVoucherCode());
+	  params.put("voucherEmail", param.getVoucherEmail());
+	  int valid = 1;
+	  int validVoucherResult = eKeyInApiMapper.isVoucherValidToApply(params);
+	  int ekeyInValidResult = eKeyInApiMapper.isVoucherValidToApplyIneKeyIn(params);
+
+	  if(validVoucherResult == 0 || ekeyInValidResult == 0){
+		  valid = 0;
+	  }
+
+	  rtnDto.setVoucherValid(valid);
+	  return rtnDto;
+  }
 }

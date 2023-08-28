@@ -249,6 +249,7 @@ public class EKeyInApiDto {
   private int acBrnchId;
   private int custCrcTokenIdStus;
   private int Is3rdParty;
+  private int voucherValid;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1953,5 +1954,13 @@ public int getCustCrcTokenIdStus() {
   public void setIs3rdParty(int Is3rdParty) {
 	    this.Is3rdParty = Is3rdParty;
 	  }
+
+public int getVoucherValid() {
+	return voucherValid;
+}
+
+public void setVoucherValid(int voucherValid) {
+	this.voucherValid = voucherValid;
+}
 
 }

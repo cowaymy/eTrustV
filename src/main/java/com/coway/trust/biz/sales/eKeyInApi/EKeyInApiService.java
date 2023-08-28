@@ -96,5 +96,7 @@ public interface EKeyInApiService {
 
   EgovMap checkTNA(String param) throws Exception;
 
+EKeyInApiDto isVoucherValidToApply(EKeyInApiForm param) throws Exception;
+
 List<EgovMap> selectVoucherPlatformCodeList() throws Exception;
 }
