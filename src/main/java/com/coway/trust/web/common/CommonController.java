@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +39,11 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.biz.homecare.po.HcPurchasePriceService;
+import com.coway.trust.biz.services.as.ServiceMileageApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.PageAuthVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.DatabaseDrivenMessageSource;
 import com.coway.trust.config.handler.SessionHandler;
@@ -55,6 +64,9 @@ public class CommonController {
 
   @Resource(name = "hcPurchasePriceService")
   private HcPurchasePriceService hcPurchasePriceService;
+
+  @Resource(name = "serviceMileageApiService")
+  private ServiceMileageApiService serviceMileageApiService;
 
   @Autowired
   private DatabaseDrivenMessageSource dbMessageSource;
@@ -582,4 +594,51 @@ public class CommonController {
     model.addAttribute("params", params);
     return "common/mapPop";
   }
+
+  @RequestMapping(value = "/mileageInfoUpdatePop.do")
+  public String mileageInfoUpdatePop(@RequestParam Map<String, Object> params, ModelMap model) {
+    LOGGER.debug("params : {}", params.toString());
+    EgovMap info =  null;
+
+    if (params.get("indicator").equals("INST")) {
+      info = commonService.getGeneralInstInfo(params);
+    }
+
+    info.put("path", params.get("path"));
+
+    List<EgovMap> timePick = commonService.selectTimePick();
+    model.addAttribute("timePick", timePick);
+
+    model.addAttribute("params", info);
+    return "common/mileageInfoUpdatePop";
+  }
+
+  @RequestMapping(value = "/updateOnBehalfMileage.do", method = RequestMethod.POST)
+  public ResponseEntity<List<EgovMap>> updateOnBehalfMileage(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+    LOGGER.debug("params : {}", params.toString());
+    List<EgovMap> checkInMileageStat = null;
+    try {
+      // CONVERT DATE AND TIME INTO SINGLE DATE-TIME FORMAT
+      SimpleDateFormat combinedFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+      Date combinedDateTime = combinedFormat.parse(params.get("date").toString() + " " + params.get("time").toString());
+      SimpleDateFormat oracleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+      String oracleDateStr = oracleDateFormat.format(combinedDateTime);
+      params.put("crtDt", oracleDateStr);
+
+      SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+      SimpleDateFormat outputFormat = new SimpleDateFormat("yyyyMMdd");
+      Date date = inputFormat.parse(params.get("date").toString());
+
+      params.put("checkInDate", outputFormat.format(date));
+
+      LOGGER.debug("params : " + oracleDateStr);
+
+      checkInMileageStat = serviceMileageApiService.checkInMileage(params);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    LOGGER.debug("checkInMileageStat : " + checkInMileageStat.toString());
+    return ResponseEntity.ok(checkInMileageStat);
+  }
+
 }
