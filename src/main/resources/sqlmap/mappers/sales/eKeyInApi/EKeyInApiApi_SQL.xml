@@ -1697,7 +1697,7 @@ SELECT A.CUST_ID AS CUST_ID
 		AND STUS_ID NOT IN (10)
 	</select>
 
-	<select id="getVoucherUsagePromotionId" resultType="int">
+	<select id="getVoucherUsagePromotionId" parameterType="Map" resultType="Map">
  		 SELECT B.PROMO_ID AS CODE FROM MSC0057D A
          JOIN MSC0058D B
          ON A.ID = B.ID
