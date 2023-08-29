@@ -98,7 +98,8 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
       logger.debug(" = returnParam  : " + returnParam.toString());
     }
 
-    List<EgovMap> returnPrm = new ArrayList<>(returnParam.entrySet());
+    List<EgovMap> returnPrm = new ArrayList<>();
+    returnPrm.add(returnParam);
 
     return returnPrm;
   }
