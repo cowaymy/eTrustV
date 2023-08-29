@@ -1372,10 +1372,37 @@ FROM(
                 CTOS_DT IS NOT NULL
           AND
                RESULT_RAW IS NOT NULL
+
+          UNION ALL
+
+          SELECT
+                0 BATCH_ID,
+                C.SALES_ORD_NO ORD_NO,
+                A.CUST_IC,
+                B.NAME CUST_NAME,
+                1 PRCSS,
+                A.CREDIT_SCRE FICO_SCRE,
+                '0' BATCH_NO,
+                A.RESULT_RAW,
+                A.CCRIS_DT CTOS_DT,
+                A.UPD_USER_ID,
+                A.CREDIT_BANKRUPT CTOS_BANKRUPT,
+                C.SALES_ORD_ID ORD_ID,
+                B.CUST_ID,
+                NULL MEM_ID,
+                ROW_NUMBER() OVER (PARTITION BY A.CUST_IC ORDER BY A.CCRIS_DT DESC) CNT
+          FROM
+                SAL0402D A
+          JOIN SAL0029D B ON A.CUST_IC = B.NRIC
+          JOIN SAL0001D C ON B.CUST_ID = C.CUST_ID
+          WHERE A.STUS_CODE_ID = 4
+          AND A.CCRIS_DT IS NOT NULL
+          AND A.RESULT_RAW IS NOT NULL
         ) T1
 WHERE
       T1.CUST_IC = #{nric}
 AND T1.CNT = 1
+AND ROWNUM=1
 </select>
 
 <select id="getResultRowForEXPERIANDisplayForCCPCalculation" parameterType="Map" resultMap="resultRowMap">

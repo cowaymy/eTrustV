@@ -7,13 +7,13 @@ public class RequestData {
 
 	public static String PrepareRequest(String batchNo, String orderNo, String customerName, String nric) {
 
-		String companyCode = "COWAYUAT";
-		String accountNo = "COWAYUAT";
-		String userId = "coway_uat";
+//		String companyCode = "COWAYUAT";
+//		String accountNo = "COWAYUAT";
+//		String userId = "coway_uat";
 
-//		String companyCode = "B065000";
-//		String accountNo = "B065000";
-//		String userId = "b065000_xml";
+		String companyCode = "B065000";
+		String accountNo = "B065000";
+		String userId = "b065000_xml";
 
 		StringBuilder sb = new StringBuilder();
 
@@ -57,7 +57,7 @@ public class RequestData {
 		sb.append("<include_fico>1</include_fico>" + "\r\n");
 		sb.append("<include_ssm>0</include_ssm>" + "\r\n");
 
-		sb.append("<confirm_entity>90007</confirm_entity>" + "\r\n");
+		sb.append("<confirm_entity>0</confirm_entity>" + "\r\n");
 		sb.append("</records>" + "\r\n");
 		sb.append("</batch>");
 

@@ -391,7 +391,7 @@
 		</if>
 		<if test="end !=null and end !=''">
 			AND A.CRT_DT <![CDATA[ <= ]]>
-			to_date(#{end} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			to_date(#{end} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 		</if>
 		)
 		WHERE 1=1
@@ -529,7 +529,7 @@
 		</if>
 		<if test="end !=null and end !=''">
 			AND A.CRT_DT <![CDATA[ <= ]]>
-			to_date(#{end} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			to_date(#{end} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 		</if>
 		<if test="creator !=null and creator !=''">
 			AND C.USER_NAME = #{creator}
