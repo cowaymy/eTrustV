@@ -12,6 +12,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class ResRequestVO {
+
 	private String custIc;
 	private String batchNo;
 	private int ficoScore;
@@ -19,4 +20,5 @@ public class ResRequestVO {
 	private Date ctosDate;
 	private String bankRupt;
 	private String confirmEntity;
+
 }

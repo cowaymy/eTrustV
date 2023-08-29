@@ -325,5 +325,4 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	public EgovMap chkAvailableQuota(Map<String, Object> params){
 		return preCcpRegisterMapper.chkAvailableQuota(params);
 	}
-
 }

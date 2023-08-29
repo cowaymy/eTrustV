@@ -6,14 +6,14 @@ public class RequestData {
 	}
 
 	public static String PrepareRequest(String batchNo, String orderNo, String customerName, String nric) {
+//
+//		String companyCode = "COWAYUAT";
+//		String accountNo = "COWAYUAT";
+//		String userId = "coway_uat";
 
-		String companyCode = "COWAYUAT";
-		String accountNo = "COWAYUAT";
-		String userId = "coway_uat";
-
-//		String companyCode = "B065000";
-//		String accountNo = "B065000";
-//		String userId = "b065000_xml";
+		String companyCode = "B065000";
+		String accountNo = "B065000";
+		String userId = "b065000_xml";
 
 		StringBuilder sb = new StringBuilder();
 

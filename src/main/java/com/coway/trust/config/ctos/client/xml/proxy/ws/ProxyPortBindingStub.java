@@ -53,25 +53,13 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
   private Vector cachedSerFactories = new Vector();
   private Vector cachedDeserFactories = new Vector();
 
-  //UAT PARAM
-  private static String TOKEN_URL = "https://uat-sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
-  //private static String clientId = "ctos_secure";
-  private static String clientId = "Coway2_jwt";
-  //private static String clientSecret = "6f7595da-0a6d-4d00-b9cf-adfa5d473850";
-  private static String userName = "coway_uat";
-  private static String password =  "ghuEDL481KLrh@og&g";
-  private static String privateKeyFile =  "/home/etrust_user/rsa-private-uat_2.pem";
-  //private static String privateKeyFile =  "C:/Users/HQ-RYNNIE/Desktop/PreCcpBatch/rsa-public-uat_2.pem";
 
-
-
-/*
-	private static String  = "https://sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
+	private static String TOKEN_URL = "https://sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
 	private static String clientId = "Coway_jwt";
 	private static String clientSecret = "7676613c-1e85-4693-8b9b-8ec7f860a6f3";
 	private static String userName = "b065000_xml";
 	private static String password =  "Cmsb#7143!";
-	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";*/
+	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";
 
 	static org.apache.axis.description.OperationDesc[] _operations;
 
@@ -755,10 +743,8 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
      		System.out.println(e);
     }
 
-		headers.put("username", "coway_uat");
-		headers.put("password", "ghuEDL481KLrh@og&g");
-//		headers.put("username", "b065000_xml");
-//		headers.put("password", "Wo74Sm#1");
+	    headers.put("username", "b065000_xml");
+		headers.put("password", "Wo74Sm#1");
 		headers.put("Authorization", token.get("token_type") + " " + token.get("access_token"));
 		_call.setProperty(HTTPConstants.REQUEST_HEADERS, headers);
 	}
@@ -899,7 +885,6 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
   }
 
   public static void main(String rgs[]) throws JSONException, IOException, InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException{
-    //System.out.println(getJwtToken(clientId, privateKeyFile));
     System.out.println(requestMFAToken());
   }
 }

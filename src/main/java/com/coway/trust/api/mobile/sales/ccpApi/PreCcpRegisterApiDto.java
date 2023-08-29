@@ -189,5 +189,4 @@ public class PreCcpRegisterApiDto {
     public void setPaymentMode(String paymentMode) {
         this.paymentMode = paymentMode;
     }
-
 }

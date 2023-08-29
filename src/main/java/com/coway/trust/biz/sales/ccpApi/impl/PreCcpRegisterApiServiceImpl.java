@@ -88,7 +88,6 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
-
         return preCcpRegisterApiMapper.searchOrderSummaryList(PreCcpRegisterApiForm.createMap(param));
   }
 

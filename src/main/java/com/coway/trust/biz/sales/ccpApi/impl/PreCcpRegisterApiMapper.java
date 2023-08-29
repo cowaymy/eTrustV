@@ -22,7 +22,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PreCcpRegisterApiMapper {
 
   List<EgovMap> checkPreCcpResult(Map<String, Object> params);
-
   List<EgovMap> searchOrderSummaryList(Map<String, Object> params);
 
 }

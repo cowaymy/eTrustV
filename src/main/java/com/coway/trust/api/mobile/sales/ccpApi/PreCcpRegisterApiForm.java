@@ -257,6 +257,7 @@ public class PreCcpRegisterApiForm {
     public String getPaymentMode() {
         return paymentMode;
     }
+
     public void setPaymentMode(String paymentMode) {
         this.paymentMode = paymentMode;
     }

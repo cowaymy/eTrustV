@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 <div class="popup_wrap">
     <header class="pop_header">
         <h1>Forfeit Monthly Data</h1>

@@ -19,7 +19,6 @@
         line-height:2;
     }
 </style>
-
 <body>
 <div class="login-box" id="customerLogin" style="display:none;">
   <div class="container">

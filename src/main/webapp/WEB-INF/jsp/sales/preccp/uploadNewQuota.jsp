@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 <style>
     .auto_file4{position:relative; width:237px; padding-right:62px; height:20px;}
     .auto_file4{float:none!important; width:490px; padding-right:0; margin-top:5px;}

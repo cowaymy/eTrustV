@@ -63,5 +63,4 @@
               LEFT JOIN PAY0286D T1 ON C.SALES_ORD_ID = T1.ORD_ID
               WHERE C.CUST_ID = #{custId}
 </select>
-
 </mapper>

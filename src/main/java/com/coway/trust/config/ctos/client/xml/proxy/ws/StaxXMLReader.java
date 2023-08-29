@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
 public class StaxXMLReader {
-
     private static final String FICO_INDEX_ELEMENT = "fico_index";
     private static final String BANK_RUPTCY_ELEMENT = "bankruptcy";
     private static final String CONFIRM_ENTITY_ELEMENT = "confirm_entity";

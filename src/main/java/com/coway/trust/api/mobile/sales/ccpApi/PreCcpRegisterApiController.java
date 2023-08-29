@@ -297,6 +297,22 @@ public class PreCcpRegisterApiController {
     @ApiOperation(value = "chkDuplicated", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/chkDuplicated", method = RequestMethod.GET)
     public ResponseEntity <ReturnMessage> chkDuplicated(@RequestParam Map<String, Object>params) {
+
+ 	   String  chkDate = preCcpRegisterService.chkSmsResetFlag().get("chkDate").toString(),
+			     chkResetSmsFlag =preCcpRegisterService.chkSmsResetFlag().get("resetFlag").toString();
+
+	   if(chkResetSmsFlag.equals("1") && chkResetSmsFlag.equals("1")){
+		   params.put("flag",0);
+		   preCcpRegisterService.updateResetFlag(params);
+	   }
+
+	   if(chkResetSmsFlag.equals("0")){
+		   if(preCcpRegisterService.resetSmsConsent() >=1){
+			   params.put("flag",1);
+			   preCcpRegisterService.updateResetFlag(params);
+		   }
+	   }
+
  	   ReturnMessage message = new ReturnMessage();
  	   message.setData(preCcpRegisterService.chkDuplicated(params));
  	   return ResponseEntity.ok(message);
@@ -354,5 +370,4 @@ public class PreCcpRegisterApiController {
   	   }
   	   return ResponseEntity.ok(message);
     }
-
 }

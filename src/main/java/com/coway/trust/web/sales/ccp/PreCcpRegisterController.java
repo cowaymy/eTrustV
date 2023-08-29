@@ -403,15 +403,6 @@ public class PreCcpRegisterController {
 	   return ResponseEntity.ok(preCcpRegisterService.selectViewHistory(params));
    }
 
-
-//   @RequestMapping(value = "/preCcpSubmissionRegisterResult.do")
-//	public String preCcpSubmissionRegisterResult(@RequestParam Map<String, Object> params, ModelMap model) {
-//		model.put("preccpResult", params);
-//		return "sales/ccp/preCcpSubmissionRegisterResult";
-//  }
-
-
-
    @RequestMapping(value = "/preCcpEditRemark.do")
 	public String preCcpEditRemark(@RequestParam Map<String, Object> params, ModelMap model) {
 	    int result = preCcpRegisterService.insertRemarkRequest(params);
@@ -637,5 +628,4 @@ public class PreCcpRegisterController {
 		    return ResponseEntity.ok(message);
 	    }
    }
-
 }

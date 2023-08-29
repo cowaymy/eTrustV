@@ -861,5 +861,4 @@
 		AND K.ORG_CODE = #{orgCode}
 		GROUP BY K.MANAGER_CODE, K.ORG_CODE, J.YEAR, J.MONTH
 	</select>
-
 </mapper>

@@ -227,7 +227,7 @@
 
 
 <script>
-     let div1Open = false, div2Open = true, div3Open =false, div4Open =false;
+     let div1Open = true, div2Open = false, div3Open =false, div4Open =false;
 
      const reload = () => {
          location.reload();
