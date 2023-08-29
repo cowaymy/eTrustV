@@ -885,7 +885,7 @@
             #{bankList} BANK,
             #{bankAccHolder} BANK_ACC_HOLDER,
             #{bankAccNo} BANK_ACC_NO,
-            #{branch} BANK_BRANCH,
+            #{bankBranch} BANK_BRANCH,
             #{swiftCode} SWIFT_CODE,
             #{designation} CONTACT_DESIGNATION,
             #{vendorName} CONTACT_NAME,
