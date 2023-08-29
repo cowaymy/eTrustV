@@ -99,4 +99,6 @@ public interface EKeyInApiService {
 EKeyInApiDto isVoucherValidToApply(EKeyInApiForm param) throws Exception;
 
 List<EgovMap> selectVoucherPlatformCodeList() throws Exception;
+
+EKeyInApiDto getVoucherUsagePromotionId(EKeyInApiForm param) throws Exception;
 }

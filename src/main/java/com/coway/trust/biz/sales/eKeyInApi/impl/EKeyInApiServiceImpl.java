@@ -2475,4 +2475,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 	  rtnDto.setVoucherValid(valid);
 	  return rtnDto;
   }
+
+  @Override
+  public EKeyInApiDto getVoucherUsagePromotionId(EKeyInApiForm param) throws Exception {
+    EKeyInApiDto rtn = new EKeyInApiDto();
+    List<EgovMap> selectCodeList = eKeyInApiMapper.getVoucherUsagePromotionId(EKeyInApiForm.createMap(param));
+    List<EKeyInApiDto> codeList = selectCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
+    rtn.setCodeList(codeList);
+    return rtn;
+  }
 }

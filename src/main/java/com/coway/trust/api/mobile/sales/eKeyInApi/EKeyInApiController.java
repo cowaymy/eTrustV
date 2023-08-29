@@ -447,4 +447,10 @@ public class EKeyInApiController {
   public ResponseEntity<EKeyInApiDto> voucherApplyCheck(@ModelAttribute EKeyInApiForm param) throws Exception {
 	    return ResponseEntity.ok(eKeyInApiService.isVoucherValidToApply(param));
   }
+
+  @ApiOperation(value = "getVoucherUsagePromotionId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getVoucherUsagePromotionId", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> getVoucherUsagePromotionId(@ModelAttribute EKeyInApiForm param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.getVoucherUsagePromotionId(param));
+  }
 }

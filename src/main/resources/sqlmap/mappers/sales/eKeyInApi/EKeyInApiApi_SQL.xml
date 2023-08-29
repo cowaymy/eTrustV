@@ -1696,4 +1696,15 @@ SELECT A.CUST_ID AS CUST_ID
 		AND VOUCHER_CODE = #{voucherCode}
 		AND STUS_ID NOT IN (10)
 	</select>
+
+	<select id="getVoucherUsagePromotionId" resultType="int">
+ 		 SELECT B.PROMO_ID AS CODE FROM MSC0057D A
+         JOIN MSC0058D B
+         ON A.ID = B.ID
+         WHERE 1=1
+         AND A.VOUCHER_CODE = #{voucherCode}
+         <if test='custEmail != null and custEmail !=""'>
+         	AND A.CUST_EMAIL = #{custEmail}
+		</if>
+	</select>
 </mapper>
