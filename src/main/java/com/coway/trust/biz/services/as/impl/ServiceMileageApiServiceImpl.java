@@ -92,11 +92,13 @@ public class ServiceMileageApiServiceImpl extends EgovAbstractServiceImpl implem
     EgovMap returnParam = new EgovMap();
     if (insertSubMileageClaim > 0) {
       returnParam.put("status", true);
+      logger.debug(" = returnParam  : " + returnParam.toString());
     } else {
       returnParam.put("status", false);
+      logger.debug(" = returnParam  : " + returnParam.toString());
     }
 
-    List<EgovMap> returnPrm = new ArrayList<>(returnParam.keySet());
+    List<EgovMap> returnPrm = new ArrayList<>(returnParam.entrySet());
 
     return returnPrm;
   }
