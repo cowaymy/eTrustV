@@ -750,8 +750,10 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
      		System.out.println(e);
     }
 
-	    headers.put("username", "b065000_xml");
-		headers.put("password", "Wo74Sm#1");
+//	    headers.put("username", "b065000_xml");
+//		headers.put("password", "Wo74Sm#1");
+		headers.put("username", "coway_uat");
+		headers.put("password", "ghuEDL481KLrh@og&g");
 		headers.put("Authorization", token.get("token_type") + " " + token.get("access_token"));
 		_call.setProperty(HTTPConstants.REQUEST_HEADERS, headers);
 	}
