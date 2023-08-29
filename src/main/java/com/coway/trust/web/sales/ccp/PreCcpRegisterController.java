@@ -172,6 +172,11 @@ public class PreCcpRegisterController {
         	return true;
     	}
         catch(Exception e){
+        	 Map<String, Object> errorParam = new HashMap<>();
+			  errorParam.put("pgmPath","/preccp");
+			  errorParam.put("functionName", "ctos.do");
+			  errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
+			  enquiryService.insertErrorLog(errorParam);
         	LOGGER.debug("selectCustomerScoring e{}" + CommonUtils.printStackTraceToString(e));
         	return false;
         }
