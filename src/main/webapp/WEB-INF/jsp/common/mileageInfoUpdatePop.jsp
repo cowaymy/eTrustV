@@ -71,6 +71,8 @@
       function(result) {
         //$("#popup_wrap").remove();
         //fn_installationListSearch();
+        console.log(JSON.stringify(result));
+        console.log(JSON.stringify(result[0].status));
         if (JSON.stringify(result[0].status)) {
           $("#_commonMileageDiv").remove();
           Common.popupDiv('${params.path}' , "", null, "false", '${params.popId}' );
