@@ -251,6 +251,8 @@ public class EKeyInApiDto {
   private int Is3rdParty;
   private int voucherValid;
   private String voucherCode;
+  private int voucherType;
+  private String voucherEmail;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1970,6 +1972,22 @@ public String getVoucherCode() {
 
 public void setVoucherCode(String voucherCode) {
 	this.voucherCode = voucherCode;
+}
+
+public int getVoucherType() {
+	return voucherType;
+}
+
+public void setVoucherType(int voucherType) {
+	this.voucherType = voucherType;
+}
+
+public String getVoucherEmail() {
+	return voucherEmail;
+}
+
+public void setVoucherEmail(String voucherEmail) {
+	this.voucherEmail = voucherEmail;
 }
 
 }

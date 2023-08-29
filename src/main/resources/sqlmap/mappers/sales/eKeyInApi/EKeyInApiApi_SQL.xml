@@ -155,6 +155,8 @@ SELECT A.CUST_ID AS CUST_ID
                , A.TOT_PV_GST AS TOT_PV_GST
                , TO_CHAR(A.CPNT_ID) AS CPNT_CODE
                , A.VOUCHER_CODE
+               , U.CUST_EMAIL AS VOUCHER_EMAIL
+               , V.PLATFORM AS VOUCHER_TYPE
 
      --INSTALLATION------------------------------------------------------------------
                , UPPER(I.ADDR_DTL) AS ADDR_DTL
@@ -227,6 +229,8 @@ SELECT A.CUST_ID AS CUST_ID
       INNER JOIN SAL0023D R ON  A.CUST_BILL_ADD_ID = R.CUST_ADD_ID
       INNER JOIN SYS0064M S  ON R.AREA_ID = S.AREA_ID
       INNER JOIN SYS0013M T ON O.STK_CTGRY_ID = T.CODE_ID
+      LEFT JOIN MSC0057D U ON U.VOUCHER_CODE = A.VOUCHER_CODE
+      LEFT JOIN MSC0056M V ON V.ID = U.ID
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
