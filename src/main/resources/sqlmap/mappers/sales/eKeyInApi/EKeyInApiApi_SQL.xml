@@ -154,6 +154,7 @@ SELECT A.CUST_ID AS CUST_ID
                , A.PRC_ID AS PRC_ID
                , A.TOT_PV_GST AS TOT_PV_GST
                , TO_CHAR(A.CPNT_ID) AS CPNT_CODE
+               , A.VOUCHER_CODE
 
      --INSTALLATION------------------------------------------------------------------
                , UPPER(I.ADDR_DTL) AS ADDR_DTL
@@ -1410,6 +1411,7 @@ SELECT A.CUST_ID AS CUST_ID
                                       , CORP_CUST_TYPE
                                       , AGREEMENT_TYPE
                                       , BNDL_ID
+                                      , VOUCHER_CODE
     ) VALUES ( #{preOrdId}
                   , SYSDATE
                   , #{chnnl}
@@ -1477,6 +1479,7 @@ SELECT A.CUST_ID AS CUST_ID
                   , #{corpCustType}
                   , #{agreementType}
                   , #{bndlId}
+                  , #{voucherCode}
     )
   </insert>
 
@@ -1556,6 +1559,7 @@ SELECT A.CUST_ID AS CUST_ID
         , A.UPD_USER_ID = #{updUserId}
         , A.UPD_DT = SYSDATE
         , A.CPNT_ID = #{cpntId}
+        , A.VOUCHER_CODE = #{voucherCode}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
