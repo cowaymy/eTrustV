@@ -231,7 +231,7 @@
         SELECT T1.PRC_ID
              , T1.MEM_PAC_ID
              , T1.STK_ID
-             , T1.AMT
+             , NVL(T1.AMT,0) AMT
              , T1.UOM_ID
              , T1.UOM_CONV
              , T1.START_DT
@@ -239,15 +239,15 @@
              , T1.CNTY_ID
              , T1.APP_TYPE_ID
              , T1.PRIOD
-             , T1.PRC_RPF
-             , T1.PRC_PV
-             , T1.TRADE_IN_PV
+             , NVL(T1.PRC_RPF, 0) PRC_RPF
+             , NVL(T1.PRC_PV, 0) PRC_PV
+             , NVL(T1.TRADE_IN_PV, 0) TRADE_IN_PV
              , T1.CRT_USER_ID
              , T1.CRT_DT
              , T1.UPD_USER_ID
              , T1.UPD_DT
-             , T1.PRC_CHRG
-             , T1.PRC_COSTING
+             , NVL(T1.PRC_CHRG, 0) PRC_CHRG
+             , NVL(T1.PRC_COSTING, 0) PRC_COSTING
              , T1.STUS_CODE_ID
              , T2.STK_CTGRY_ID
           FROM SAL0016M T1
