@@ -53,13 +53,20 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
   private Vector cachedSerFactories = new Vector();
   private Vector cachedDeserFactories = new Vector();
 
+  private static String TOKEN_URL = "https://uat-sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
+  private static String clientId = "Coway2_jwt";
+  private static String userName = "coway_uat";
+  private static String password =  "ghuEDL481KLrh@og&g";
+  private static String privateKeyFile =  "/home/etrust_user/rsa-private-uat_2.pem";
 
-	private static String TOKEN_URL = "https://sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
-	private static String clientId = "Coway_jwt";
-	private static String clientSecret = "7676613c-1e85-4693-8b9b-8ec7f860a6f3";
-	private static String userName = "b065000_xml";
-	private static String password =  "Cmsb#7143!";
-	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";
+
+
+//	private static String TOKEN_URL = "https://sso.ctos.com.my/auth/realms/CTOSNET/protocol/openid-connect/token";
+//	private static String clientId = "Coway_jwt";
+//	private static String clientSecret = "7676613c-1e85-4693-8b9b-8ec7f860a6f3";
+//	private static String userName = "b065000_xml";
+//	private static String password =  "Cmsb#7143!";
+//	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";
 
 	static org.apache.axis.description.OperationDesc[] _operations;
 

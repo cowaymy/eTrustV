@@ -51,23 +51,19 @@
 		SELECT SAL0343D_PRECCP_SEQ.CURRVAL FROM DUAL
 	</select>
 
-	<select id="getExistCustomer" parameterType="Map" resultType="egovMap"
-		resultMap="getPreccpResultMap">
+	<select id="getExistCustomer" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
 		SELECT
-		A.CUST_ID
+		  A.CUST_ID
 		, NVL(B.CHS_STUS,'-') CHS_STATUS
-		, CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-' ELSE
-		B.CHS_RSN END CHS_RSN
+		, CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-'
+		           ELSE B.CHS_RSN END CHS_RSN
 		, A.NAME
-		, CASE WHEN B.CHS_STUS = 'GREEN' THEN D.APPV_REQ ELSE C.APPV_REQ END
-		APPV_REQ
+		, CASE WHEN B.CHS_STUS = 'GREEN' THEN D.APPV_REQ ELSE C.APPV_REQ END APPV_REQ
 		, TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
 		FROM SAL0029D A
-		LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR =
-		TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
+		LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
 		LEFT JOIN SAL0344D C ON B.CHS_STUS = C.CHS_STUS AND B.CHS_RSN = C.CHS_RSN
-		LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS =
-		'GREEN'
+		LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS = 'GREEN'
 		WHERE A.NRIC = #{customerNric} AND ROWNUM = 1
 	</select>
 
@@ -89,16 +85,13 @@
 		) WHERE RN = 1
 		)
 		SELECT
-		C.SALES_ORD_ID
+		  C.SALES_ORD_ID
 		, C.SALES_ORD_NO
 		, C.APP_TYPE_ID
 		, G.CODE PAYMENT_MODE
 		, E.STUS_CODE_ID RENT_STUS
-		, CASE WHEN C.APP_TYPE_ID = 66 THEN A.RENT_AMT ELSE D.TRADE_AMT END
-		OUTSTANDING_AMT
-		, CASE WHEN C.APP_TYPE_ID = 66 THEN (NVL(B.RENT_INST_NO,60) -
-		A.RENT_INST_NO) * (C.MTH_RENT_AMT- T1.REBATE_AMT_PER_INSTLMT) END
-		UNBILL_AMT
+		, CASE WHEN C.APP_TYPE_ID = 66 THEN A.RENT_AMT ELSE D.TRADE_AMT END OUTSTANDING_AMT
+		, CASE WHEN C.APP_TYPE_ID = 66 THEN (NVL(B.RENT_INST_NO,60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT- T1.REBATE_AMT_PER_INSTLMT) END UNBILL_AMT
 		FROM SAL0001D C
 		LEFT JOIN RENTAL A ON C.SALES_ORD_ID = A.RENT_SO_ID
 		LEFT JOIN OUTRIGHT D ON C.SALES_ORD_ID = D.TRADE_SO_ID
@@ -114,10 +107,8 @@
 	<select id="insertNewCustomerInfo" parameterType="Map"
 		statementType="CALLABLE">
 		{
-		call SP_PRECCP_INST_CCRIS_DATA(#{customerName}, #{customerNric}, #{userId}
-		, #{b2bData, mode=OUT, jdbcType=CURSOR, javaType=Resultset,
-		resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER,
-		javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT,
+		call SP_PRECCP_INST_CCRIS_DATA(#{customerName}, #{customerNric}, #{userId}, #{b2bData, mode=OUT, jdbcType=CURSOR, javaType=Resultset,
+		resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT,
 		jdbcType=VARCHAR, javaType=String, resultMap=custMap})
 		}
 	</select>
@@ -126,10 +117,8 @@
 	<resultMap id="ccrisMap" type="egovMap"></resultMap>
 	<select id="updateCcrisScre" parameterType="Map" statementType="CALLABLE">
 		{
-		call SP_PRECCP_UPD_CCRIS_SCRE(#{seq}, #{ccrisId}, #{custIc}, #{ficoScore},
-		#{resultRaw}, #{ctosDate}, #{bankRupt}, #{confirmEntity},
-		#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int,
-		resultMap=ccrisMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR,
+		call SP_PRECCP_UPD_CCRIS_SCRE(#{seq}, #{ccrisId}, #{custIc}, #{ficoScore},#{resultRaw}, #{ctosDate}, #{bankRupt}, #{confirmEntity},
+		#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=ccrisMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR,
 		javaType=String, resultMap=ccrisMap})
 		}
 	</select>
@@ -141,45 +130,37 @@
 	<select id="insertNewCustomerDetails" parameterType="Map"
 		statementType="CALLABLE">
 		{
-		call SP_PRECCP_INST_DATA(#{customerName}, #{customerNric},
-		#{customerMobileNo} , #{customerEmailAddr}, #{userId}, #{customerType}
-		, #{preccpData, mode=OUT, jdbcType=CURSOR, javaType=Resultset,
-		resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER,
-		javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT,
-		jdbcType=VARCHAR, javaType=String, resultMap=custMap})
+		call SP_PRECCP_INST_DATA(#{customerName}, #{customerNric}, #{customerMobileNo} , #{customerEmailAddr}, #{userId}, #{customerType}
+		, #{preccpData, mode=OUT, jdbcType=CURSOR, javaType=Resultset, resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER,
+		javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
 		}
 	</select>
 
 
 	<select id="getPreccpResult" parameterType="Map" resultType="egovMap">
 		SELECT
-		A.CUST_NAME
-		, '-' CUST_ID
-		, B.CREDIT_SCRE
-		, B.CREDIT_BANKRUPT
-		, CASE
-		WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 1 THEN 'Advanced
-		Payment'
-		WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 0 THEN 'Entitle 1'
-		WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 1'
-		WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 2'
-		ELSE '' END RESULT
+		      A.CUST_NAME
+			, '-' CUST_ID
+			, B.CREDIT_SCRE
+			, B.CREDIT_BANKRUPT
+			, CASE WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 1 THEN 'Advanced Payment'
+			  WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 0 THEN 'Entitle 1'
+			  WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 1'
+			  WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 2'
+			  ELSE '' END RESULT
 		FROM SAL0343D A
-		JOIN SAL0345D B ON A.CCRIS_ID = B.CCRIS_ID
+		JOIN SAL0402D B ON A.CCRIS_ID = B.CCRIS_ID
 		WHERE A.PRECCP_SEQ = #{seq}
 	</select>
 
 
 	<resultMap type="egovMap" id="getPreccpResultMap">
-		<result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB"
-			javaType="java.lang.String" />
+		<result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB" javaType="java.lang.String" />
 	</resultMap>
 
-
-	<select id="getPreCcpRemark" parameterType="Map" resultType="egovMap"
-		resultMap="getPreccpResultMap">
+	<select id="getPreCcpRemark" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
 		SELECT
-		A.REMARK_ID
+		  A.REMARK_ID
 		, A.CHS_STUS
 		, A.CHS_RSN
 		, A.APPV_REQ
@@ -224,10 +205,9 @@
 
 	<select id="chkDuplicated" parameterType="Map" resultType="egovMap">
 		SELECT
-		COUNT(*) AS chk_Duplicated
+		      COUNT(*) AS chk_Duplicated
 		FROM SAL0343D
-		WHERE (CUST_MOBILENO = #{customerMobileNo} OR CUST_EMAIL =
-		#{customerEmailAddr})
+		WHERE (CUST_MOBILENO = #{customerMobileNo} OR CUST_EMAIL = #{customerEmailAddr})
 	</select>
 
 	<select id="getRegisteredCust" parameterType="Map" resultType="egovMap">
@@ -239,31 +219,24 @@
 
 	<select id="selectSmsConsentHistory" resultType="egovMap">
 		SELECT
-		A.PRECCP_SEQ
-		, A.TAC_NO || A.PRECCP_SEQ PRECCP_ID
-		, A.CUST_NAME
-		, A.SMS_COUNT
-		, CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'Yes'
-		ELSE 'No'
-		END SMS_CONSENT
-		, TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
-		, CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN TO_CHAR(A.UPD_DT,'YYYY/MM/DD
-		HH24:MI:SS')
-		ELSE '' END UPD_DT
-		, CASE WHEN F.MEM_ID IS NULL THEN D.MEM_CODE ELSE F.MEM_CODE END
-		MEM_CODE
-		, CASE WHEN F.MEM_ID IS NULL THEN E.DEPT_CODE ELSE F.DEPT_CODE END
-		DEPT_CODE
-		, CASE WHEN F.MEM_ID IS NULL THEN E.GRP_CODE ELSE F.GRP_CODE END
-		GRP_CODE
-		, CASE WHEN F.MEM_ID IS NULL THEN E.ORG_CODE ELSE F.ORG_CODE END
-		ORG_CODE
+			  A.PRECCP_SEQ
+			, A.TAC_NO || A.PRECCP_SEQ PRECCP_ID
+			, A.CUST_NAME
+			, A.SMS_COUNT
+			, CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'Yes'
+			  ELSE 'No'
+			  END SMS_CONSENT
+			, TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
+			, CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN TO_CHAR(A.UPD_DT,'YYYY/MM/DD HH24:MI:SS') ELSE '' END UPD_DT
+			, CASE WHEN F.MEM_ID IS NULL THEN D.MEM_CODE ELSE F.MEM_CODE END MEM_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.DEPT_CODE ELSE F.DEPT_CODE END DEPT_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.GRP_CODE ELSE F.GRP_CODE END GRP_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.ORG_CODE ELSE F.ORG_CODE END ORG_CODE
 		FROM SAL0343D A
 		JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
 		JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
 		JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
-		LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR =
-		TO_CHAR(A.CRT_DT, 'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM')
+		LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR = TO_CHAR(A.CRT_DT, 'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM')
 		WHERE A.TYPE_ID = 7290
 		AND NVL(A.DISAB,0) = 0
 		AND A.CRT_ID = #{userId}
@@ -274,25 +247,25 @@
 		UPDATE
 		SAL0343D
 		SET
-		SMS_COUNT = NVL(SMS_COUNT,0) +1
-		, UPD_ID = #{userId}
-		, UPD_DT = SYSDATE
+			  SMS_COUNT = NVL(SMS_COUNT,0) +1
+			, UPD_ID = #{userId}
+			, UPD_DT = SYSDATE
 		WHERE PRECCP_SEQ = #{preccpSeq}
 	</update>
 
 	<select id="chkSendSmsValidTime" parameterType="Map" resultType="egovMap">
 		SELECT
-		ROUND((SYSDATE - UPD_DT)* 1440) AS chk_Time
+		      ROUND((SYSDATE - UPD_DT)* 1440) AS chk_Time
 		FROM SAL0343D
 		WHERE PRECCP_SEQ = #{preccpSeq}
 	</select>
 
 	<update id="resetSmsConsent">
 		UPDATE
-		SAL0343D
+		      SAL0343D
 		SET
-		SMS_COUNT = 0
-		, UPD_DT = SYSDATE
+			  SMS_COUNT = 0
+			, UPD_DT = SYSDATE
 		WHERE
 		TYPE_ID = 7290
 		AND NVL(SMS_CONSENT,0) = 0
@@ -302,26 +275,26 @@
 
 	<select id="chkSmsResetFlag" resultType="egovMap">
 		SELECT
-		CODE RESET_FLAG
-		, CASE WHEN TRUNC(SYSDATE) > TRUNC(UPD_DT) THEN 1 ELSE 0 END CHK_DATE
+		      CODE RESET_FLAG
+		    , CASE WHEN TRUNC(SYSDATE) > TRUNC(UPD_DT) THEN 1 ELSE 0 END CHK_DATE
 		FROM SYS0094M
 		WHERE IND ='PRECCP_IND'
 	</select>
 
 	<update id="updateResetFlag">
 		UPDATE
-		SYS0094M
+		      SYS0094M
 		SET
-		CODE = #{flag}
-		, UPD_DT = SYSDATE
+		      CODE = #{flag}
+		    , UPD_DT = SYSDATE
 		WHERE IND ='PRECCP_IND'
 	</update>
 
 	<select id="getCustInfo" resultType="egovMap">
 		SELECT
-		NVL(A.SMS_COUNT,0) SMS_COUNT,
-		NVL(A.SMS_CONSENT,0) SMS_CONSENT,
-		A.*
+			NVL(A.SMS_COUNT,0) SMS_COUNT,
+			NVL(A.SMS_CONSENT,0) SMS_CONSENT,
+			A.*
 		FROM SAL0343D A
 		WHERE PRECCP_SEQ = #{preccpSeq}
 	</select>
@@ -349,9 +322,9 @@
 
 	<update id="submitConsent" parameterType="Map">
 		UPDATE
-		SAL0343D
+		      SAL0343D
 		SET
-		SMS_CONSENT =1
+		      SMS_CONSENT =1
 		WHERE
 		TAC_NO || PRECCP_SEQ = #{id}
 		AND DISAB = 0
@@ -360,7 +333,7 @@
 
 	<select id="checkStatus" resultType="egovMap">
 		SELECT
-		NVL(SMS_CONSENT,0) CHK_STATUS
+		      NVL(SMS_CONSENT,0) CHK_STATUS
 		FROM SAL0343D
 		WHERE TAC_NO || PRECCP_SEQ = #{id}
 	</select>
@@ -369,22 +342,22 @@
 		SELECT * FROM
 		(
 		WITH SALES AS (
-		SELECT * FROM
-		(
-		SELECT
-		BB.NRIC,
-		AA.SALES_DT,
-		AA.MEM_ID,
-		ROW_NUMBER() OVER(PARTITION BY AA.CUST_ID ORDER BY AA.SALES_ORD_ID ASC) rowNo
-		FROM SAL0001D AA
-		JOIN SAL0029D BB ON AA.CUST_ID = BB.CUST_ID
-		JOIN SAL0343D CC ON BB.NRIC = CC.CUST_IC AND NVL(CC.DISAB,0) = 0
-		AND CC.TYPE_ID = 7290 AND NVL(CC.CCRIS_ID,0)!= 0
-		AND NVL(CC.SMS_CONSENT,0) = 1
-		) WHERE rowNo=1
+				SELECT * FROM
+				(
+				SELECT
+				BB.NRIC,
+				AA.SALES_DT,
+				AA.MEM_ID,
+				ROW_NUMBER() OVER(PARTITION BY AA.CUST_ID ORDER BY AA.SALES_ORD_ID ASC) rowNo
+				FROM SAL0001D AA
+				JOIN SAL0029D BB ON AA.CUST_ID = BB.CUST_ID
+				JOIN SAL0343D CC ON BB.NRIC = CC.CUST_IC AND NVL(CC.DISAB,0) = 0
+				AND CC.TYPE_ID = 7290 AND NVL(CC.CCRIS_ID,0)!= 0
+				AND NVL(CC.SMS_CONSENT,0) = 1
+				) WHERE rowNo=1
 		)
 		SELECT
-		A.PRECCP_SEQ
+		  A.PRECCP_SEQ
 		, A.CUST_NAME
 		, D.MEM_CODE || ' ' || D.FULL_NAME SEARCH_BY
 		, TO_CHAR(A.CRT_DT,'YYYY/MM/DD HH:MI:SS') PRECCP_DATE
@@ -401,14 +374,10 @@
 		JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
 		JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
 		JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
-		<!-- LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR = TO_CHAR(A.CRT_DT,
-			'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM') -->
-		LEFT JOIN SYS0013M G ON G.CODE_ID = A.SCORE_IND AND G.CODE_MASTER_ID =
-		559
+		LEFT JOIN SYS0013M G ON G.CODE_ID = A.SCORE_IND AND G.CODE_MASTER_ID = 559
 		LEFT JOIN SALES H on H.NRIC = A.CUST_IC
 		WHERE A.TYPE_ID = 7290
-		AND NVL(CCRIS_ID,0) <![CDATA[ <> ]]>
-		0
+		AND NVL(CCRIS_ID,0) <![CDATA[ <> ]]> 0
 		AND NVL(SMS_CONSENT,0) = 1
 		<if test="memberCode !=null and memberCode !=''">
 			AND D.MEM_CODE = #{memberCode}
@@ -525,29 +494,27 @@
 	<update id="updateCurrentOrgCode" parameterType="Map">
 		MERGE INTO SAL0356D A
 		USING(
-		SELECT
-		DISTINCT A.MANAGER_CODE, B.ORG_CODE
-		FROM SAL0356D A
-		LEFT JOIN ORG1001V B ON A.MANAGER_CODE = B.GRP_CODE AND B.MEM_LVL = 2
-		WHERE A.TYPE_ID = 7371 AND A.BATCH_ID = #{id}
-		) SRC ON (A.BATCH_ID = #{id} AND A.TYPE_ID = 7371 AND A.MANAGER_CODE =
-		SRC.MANAGER_CODE)
+			SELECT
+			DISTINCT A.MANAGER_CODE, B.ORG_CODE
+			FROM SAL0356D A
+			LEFT JOIN ORG1001V B ON A.MANAGER_CODE = B.GRP_CODE AND B.MEM_LVL = 2
+			WHERE A.TYPE_ID = 7371 AND A.BATCH_ID = #{id}
+		) SRC ON (A.BATCH_ID = #{id} AND A.TYPE_ID = 7371 AND A.MANAGER_CODE = SRC.MANAGER_CODE)
 		WHEN MATCHED THEN UPDATE SET A.ORG_CODE = SRC.ORG_CODE
 	</update>
 
 	<select id="selectQuota" resultType="egovMap">
 		SELECT
-		A.BATCH_ID BATCH_NO
-		, B.NAME AS BATCH_STATUS
-		, A.YEAR
-		, TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM') MONTH
-		, (SELECT SUM(QUOTA) FROM SAL0356D WHERE SAL0356D.BATCH_ID = A.BATCH_ID
-		AND TYPE_ID = 7371) TOTAL
-		, TO_CHAR(A.CRT_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPLOAD_DATE
-		, C.USER_NAME CREATOR
-		, TO_CHAR(A.UPD_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPDATE_DATE
-		, D.USER_NAME UPDATOR
-		, A.REMARK
+			  A.BATCH_ID BATCH_NO
+			, B.NAME AS BATCH_STATUS
+			, A.YEAR
+			, TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM') MONTH
+			, (SELECT SUM(QUOTA) FROM SAL0356D WHERE SAL0356D.BATCH_ID = A.BATCH_ID AND TYPE_ID = 7371) TOTAL
+			, TO_CHAR(A.CRT_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPLOAD_DATE
+			, C.USER_NAME CREATOR
+			, TO_CHAR(A.UPD_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPDATE_DATE
+			, D.USER_NAME UPDATOR
+			, A.REMARK
 		FROM SAL0355M A
 		LEFT JOIN SYS0038M B ON A.STUS_CODE_ID = B.STUS_CODE_ID
 		LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
@@ -576,10 +543,10 @@
 
 	<select id="selectQuotaDetails" resultType="egovMap">
 		SELECT
-		A.*
-		, (SELECT COUNT(*) FROM SAL0356D WHERE BATCH_ID = #{batchId}) TOTAL
-		, B.USER_NAME UPDATOR
-		, C.CODE_DESC TYPE
+			  A.*
+			, (SELECT COUNT(*) FROM SAL0356D WHERE BATCH_ID = #{batchId}) TOTAL
+			, B.USER_NAME UPDATOR
+			, C.CODE_DESC TYPE
 		FROM SAL0356D A
 		LEFT JOIN SYS0047M B ON A.UPD_USER_ID = B.USER_ID
 		LEFT JOIN SYS0013M C ON C.CODE_MASTER_ID = 560 AND C.CODE_ID = A.TYPE_ID
@@ -632,7 +599,7 @@
 
 	<select id="chkUpload" resultType="egovMap">
 		SELECT
-		BATCH_ID
+		      BATCH_ID
 		FROM SAL0355M
 		WHERE 1=1
 		AND YEAR = #{year}
@@ -642,36 +609,36 @@
 
 	<select id="chkPastMonth" resultType="egovMap">
 		SELECT
-		CASE WHEN TO_CHAR(SYSDATE,'YYYYMM') >=
-		TO_CHAR(TO_DATE(#{year}||#{month},'YYYYMM'),'YYYYMM') THEN 0 ELSE 1
-		END CHK_PAST
+		      CASE WHEN TO_CHAR(SYSDATE,'YYYYMM') >= TO_CHAR(TO_DATE(#{year}||#{month},'YYYYMM'),'YYYYMM') THEN 0 ELSE 1 END CHK_PAST
 		FROM DUAL
 	</select>
 
 	<select id="chkQuota" resultType="egovMap">
 		SELECT
-		MANAGER_CODE,
-		YEAR,
-		MONTH,
-		CASE WHEN SUM(C) > 0 THEN 1 ELSE 0 END CHK_QUOTA
+			MANAGER_CODE,
+			YEAR,
+			MONTH,
+			CASE WHEN SUM(C) > 0 THEN 1 ELSE 0 END CHK_QUOTA
 		FROM
 		(
-		SELECT
-		SUM(QUOTA) C, MANAGER_CODE, YEAR, MONTH
-		FROM SAL0356D
-		WHERE YEAR = EXTRACT(YEAR FROM SYSDATE)
-		AND MONTH = EXTRACT(MONTH FROM SYSDATE)
-		AND MANAGER_CODE = #{grpCode}
-		GROUP BY MANAGER_CODE, YEAR, MONTH
-		UNION ALL
-		SELECT
-		-(COUNT(PRECCP_SEQ)) C, GRP_CODE, EXTRACT(YEAR FROM SYSDATE) , EXTRACT(MONTH FROM SYSDATE)
-		FROM SAL0343D
-		WHERE TO_CHAR(CRT_DT, 'YYYYMM') = TO_CHAR(SYSDATE,'YYYYMM')
-		AND TYPE_ID = 7290
-		AND NVL(DISAB,0) = 0
-		AND GRP_CODE = #{grpCode}
-		GROUP BY GRP_CODE, EXTRACT(YEAR FROM SYSDATE), EXTRACT(MONTH FROM SYSDATE)
+			SELECT
+			     SUM(QUOTA) C, MANAGER_CODE, YEAR, MONTH
+			FROM SAL0356D
+			WHERE YEAR = EXTRACT(YEAR FROM SYSDATE)
+			AND MONTH = EXTRACT(MONTH FROM SYSDATE)
+			AND MANAGER_CODE = #{grpCode}
+			GROUP BY MANAGER_CODE, YEAR, MONTH
+
+			UNION ALL
+
+			SELECT
+			     -(COUNT(PRECCP_SEQ)) C, GRP_CODE, EXTRACT(YEAR FROM SYSDATE) , EXTRACT(MONTH FROM SYSDATE)
+			FROM SAL0343D
+			WHERE TO_CHAR(CRT_DT, 'YYYYMM') = TO_CHAR(SYSDATE,'YYYYMM')
+			AND TYPE_ID = 7290
+			AND NVL(DISAB,0) = 0
+			AND GRP_CODE = #{grpCode}
+			GROUP BY GRP_CODE, EXTRACT(YEAR FROM SYSDATE), EXTRACT(MONTH FROM SYSDATE)
 		)
 		GROUP BY MANAGER_CODE, YEAR, MONTH
 	</select>
@@ -690,94 +657,93 @@
       ]]>
 	</select>
 
-	<select id="selectViewQuotaDetails" parameterType="Map"
-		resultType="egovMap">
+	<select id="selectViewQuotaDetails" parameterType="Map" resultType="egovMap">
 		SELECT
-		DEPT_CODE,
-		GRP_CODE,
-		ORG_CODE,
-		YEAR,
-		TO_CHAR(TO_DATE(MONTH,'MM'),'MM') MONTH,
-		NVL(NEW_QUOTA,0) NEW_QUOTA,
-		NVL(-FORFEIT_QUOTA,0) FORFEIT_QUOTA,
-		NVL(USAGE_QUOTA,0) USAGE_QUOTA,
-		CASE
-		WHEN NVL(DEPT_CODE,'0')  <![CDATA[ <> ]]>
-		'0' THEN 0
-		ELSE (NVL(NEW_QUOTA,0) + NVL(FORFEIT_QUOTA,0) - NVL(USAGE_QUOTA,0))
-		END BALANCE_QUOTA
+			DEPT_CODE,
+			GRP_CODE,
+			ORG_CODE,
+			YEAR,
+			TO_CHAR(TO_DATE(MONTH,'MM'),'MM') MONTH,
+			NVL(NEW_QUOTA,0) NEW_QUOTA,
+			NVL(-FORFEIT_QUOTA,0) FORFEIT_QUOTA,
+			NVL(USAGE_QUOTA,0) USAGE_QUOTA,
+			CASE
+			WHEN NVL(DEPT_CODE,'0')  <![CDATA[ <> ]]>
+			'0' THEN 0
+			ELSE (NVL(NEW_QUOTA,0) + NVL(FORFEIT_QUOTA,0) - NVL(USAGE_QUOTA,0))
+			END BALANCE_QUOTA
 		FROM
 		(
-		SELECT
-		'' DEPT_CODE,
-		A.MANAGER_CODE GRP_CODE,
-		A.ORG_CODE,
-		A.YEAR,
-		A.MONTH,
-		SUM(CASE WHEN TYPE_ID IN (7371,7373) THEN QUOTA ELSE 0 END) AS NEW_QUOTA,
-		SUM(CASE WHEN TYPE_ID = 7372 THEN QUOTA ELSE 0 END) AS FORFEIT_QUOTA,
-		(
-		SELECT
-		COUNT(PRECCP_SEQ)
-		FROM SAL0343D TBL1
-		WHERE A.MANAGER_CODE = TBL1.GRP_CODE
-		AND A.ORG_CODE = TBL1.ORG_CODE
-		AND A.YEAR = EXTRACT(YEAR FROM TBL1.CRT_DT)
-		AND A.MONTH = EXTRACT(MONTH FROM TBL1.CRT_DT)
-		) AS USAGE_QUOTA
-		FROM SAL0356D A
-		WHERE 1=1
-		<if test="grpCode !=null and grpCode !=''">
-			AND A.MANAGER_CODE = #{grpCode}
-		</if>
-		<if test="orgCode !=null and orgCode !=''">
-			AND A.ORG_CODE = #{orgCode}
-		</if>
-		<if test="year !=null and year !=''">
-			AND A.YEAR = #{year}
-		</if>
-		<if test="month !=null and month !=''">
-			AND A.MONTH = #{month}
-		</if>
-		GROUP BY A.YEAR, A.MONTH, A.MANAGER_CODE , A.ORG_CODE
+			SELECT
+				'' DEPT_CODE,
+				A.MANAGER_CODE GRP_CODE,
+				A.ORG_CODE,
+				A.YEAR,
+				A.MONTH,
+				SUM(CASE WHEN TYPE_ID IN (7371,7373) THEN QUOTA ELSE 0 END) AS NEW_QUOTA,
+				SUM(CASE WHEN TYPE_ID = 7372 THEN QUOTA ELSE 0 END) AS FORFEIT_QUOTA,
+				(
+				SELECT
+				    COUNT(PRECCP_SEQ)
+				FROM SAL0343D TBL1
+				WHERE A.MANAGER_CODE = TBL1.GRP_CODE
+				AND A.ORG_CODE = TBL1.ORG_CODE
+				AND A.YEAR = EXTRACT(YEAR FROM TBL1.CRT_DT)
+				AND A.MONTH = EXTRACT(MONTH FROM TBL1.CRT_DT)
+				) AS USAGE_QUOTA
+			FROM SAL0356D A
+			WHERE 1=1
+			<if test="grpCode !=null and grpCode !=''">
+				AND A.MANAGER_CODE = #{grpCode}
+			</if>
+			<if test="orgCode !=null and orgCode !=''">
+				AND A.ORG_CODE = #{orgCode}
+			</if>
+			<if test="year !=null and year !=''">
+				AND A.YEAR = #{year}
+			</if>
+			<if test="month !=null and month !=''">
+				AND A.MONTH = #{month}
+			</if>
+			GROUP BY A.YEAR, A.MONTH, A.MANAGER_CODE , A.ORG_CODE
 
-		UNION
+			UNION
 
-		SELECT
-		DEPT_CODE,
-		GRP_CODE,
-		ORG_CODE,
-		EXTRACT(YEAR FROM TBL1.CRT_DT),
-		EXTRACT(MONTH FROM TBL1.CRT_DT),
-		0,
-		0,
-		COUNT(PRECCP_SEQ)
-		FROM SAL0343D TBL1
-		WHERE 1=1
-		<if test="deptCode !=null and deptCode !=''">
-			AND TBL1.DEPT_CODE = #{deptCode}
-		</if>
-		<if test="grpCode !=null and grpCode !=''">
-			AND TBL1.GRP_CODE = #{grpCode}
-		</if>
-		<if test="orgCode !=null and orgCode !=''">
-			AND TBL1.ORG_CODE = #{orgCode}
-		</if>
-		<if test="year !=null and year !=''">
-			AND EXTRACT(YEAR FROM TBL1.CRT_DT) = #{year}
-		</if>
-		<if test="month !=null and month !=''">
-			AND EXTRACT(MONTH FROM TBL1.CRT_DT) = #{month}
-		</if>
-		GROUP BY EXTRACT(YEAR FROM TBL1.CRT_DT) , EXTRACT(MONTH FROM
-		TBL1.CRT_DT), TBL1.DEPT_CODE, TBL1.GRP_CODE, TBL1.ORG_CODE
+			SELECT
+				DEPT_CODE,
+				GRP_CODE,
+				ORG_CODE,
+				EXTRACT(YEAR FROM TBL1.CRT_DT),
+				EXTRACT(MONTH FROM TBL1.CRT_DT),
+				0,
+				0,
+				COUNT(PRECCP_SEQ)
+				FROM SAL0343D TBL1
+			WHERE 1=1
+			<if test="deptCode !=null and deptCode !=''">
+				AND TBL1.DEPT_CODE = #{deptCode}
+			</if>
+			<if test="grpCode !=null and grpCode !=''">
+				AND TBL1.GRP_CODE = #{grpCode}
+			</if>
+			<if test="orgCode !=null and orgCode !=''">
+				AND TBL1.ORG_CODE = #{orgCode}
+			</if>
+			<if test="year !=null and year !=''">
+				AND EXTRACT(YEAR FROM TBL1.CRT_DT) = #{year}
+			</if>
+			<if test="month !=null and month !=''">
+				AND EXTRACT(MONTH FROM TBL1.CRT_DT) = #{month}
+			</if>
+			GROUP BY EXTRACT(YEAR FROM TBL1.CRT_DT) , EXTRACT(MONTH FROM
+			TBL1.CRT_DT), TBL1.DEPT_CODE, TBL1.GRP_CODE, TBL1.ORG_CODE
 		)
 	</select>
 
 	<select id="selectOrganizationLevel" parameterType="Map"
 		resultType="egovMap">
 		SELECT
-		DISTINCT ORG_CODE , GRP_CODE, B.FULL_NAME NAME
+		      DISTINCT ORG_CODE , GRP_CODE, B.FULL_NAME NAME
 		FROM ORG1001V A
 		JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
 		WHERE 1=1
@@ -814,10 +780,10 @@
 
 	<select id="chkSmsResult" resultType="egovMap">
 		SELECT
-		A.CUST_NAME,
-		A.PRECCP_SEQ,
-		NVL(A.SMS_COUNT,0) SMS_COUNT,
-		CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'YES' ELSE 'NO' END SMS_CONSENT
+				A.CUST_NAME,
+				A.PRECCP_SEQ,
+				NVL(A.SMS_COUNT,0) SMS_COUNT,
+				CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'YES' ELSE 'NO' END SMS_CONSENT
 		FROM SAL0343D A
 		JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
 		WHERE TYPE_ID = 7290
@@ -829,11 +795,9 @@
 
 	<select id="checkNewCustomerResult" resultType="egovMap">
 		SELECT
-		A.CUST_NAME,
-		NVL(C.CODE,'-') STATUS,
-		CASE WHEN NVL(A.SMS_CONSENT,0) = 0 THEN 'Pending Customer Response'
-		ELSE NVL(C.CODE_DESC,'-')
-		END REASON
+				A.CUST_NAME,
+				NVL(C.CODE,'-') STATUS,
+				CASE WHEN NVL(A.SMS_CONSENT,0) = 0 THEN 'Pending Customer Response' ELSE NVL(C.CODE_DESC,'-') END REASON
 		FROM SAL0343D A
 		JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
 		LEFT JOIN SYS0013M C ON A.SCORE_IND = C.CODE_ID AND C.CODE_MASTER_ID = 559
@@ -846,14 +810,12 @@
 
 	<select id="chkAvailableQuota" resultType="egovMap">
 		SELECT
-		CASE WHEN (NVL(SUM(DISTINCT QUOTA) - COUNT(DISTINCT A.PRECCP_SEQ),0) -
-		#{chkQuota}) >= 0 THEN 1 ELSE 0 END BALANCE
-		, K.MANAGER_CODE
-		, K.ORG_CODE
+			  CASE WHEN (NVL(SUM(DISTINCT QUOTA) - COUNT(DISTINCT A.PRECCP_SEQ),0) - #{chkQuota}) >= 0 THEN 1 ELSE 0 END BALANCE
+			, K.MANAGER_CODE
+			, K.ORG_CODE
 		FROM SAL0355M J
 		JOIN SAL0356D K ON K.YEAR = J.YEAR AND K.MONTH = J.MONTH
-		LEFT JOIN SAL0343D A on A.TYPE_ID = 7290 AND EXTRACT (YEAR FROM A.UPD_DT)
-		= #{year} AND EXTRACT (MONTH FROM A.UPD_DT) = #{month}
+		LEFT JOIN SAL0343D A on A.TYPE_ID = 7290 AND EXTRACT (YEAR FROM A.UPD_DT)= #{year} AND EXTRACT (MONTH FROM A.UPD_DT) = #{month}
 		WHERE J.YEAR = #{year}
 		AND J.MONTH = #{month}
 		AND J.STUS_CODE_ID = 4
