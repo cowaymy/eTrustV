@@ -63,16 +63,13 @@
       //  CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
      //   doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
-        doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
+        doGetCombo('/common/selectCodeList.do', '8', '','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '1' ,'_cmbNation_' , 'S');        // Nationality Combo Box
         doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box
         doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
     //    doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
     //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
        // getAddrRelay('mstate' , '1' , 'state', '');
-
-    console.log("testing 1 :" + $("#_cmbTypeId_").val());
-    console.log("testing 2 :" + $("#cmbTypeId").val());
 
         //temp for individual only
         /********************************************************/
@@ -322,6 +319,7 @@
     }
     // Customer Type 선택시 Company Type 변경 (Basic Info)
    function onChangeCompanyType(val){
+	   console.log("in4444===" + $("#_cmbTypeId_").val());
 
         if($("#_cmbTypeId_").val() == '965'){ // Company
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
@@ -346,6 +344,7 @@
 
 
         }else if($("#_cmbTypeId_").val() == '964'){ // individual
+        	console.log("in5555===");
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -353,6 +352,16 @@
             /* $("select[name=cmbNation]").removeClass("w100p disabled");
             $("select[name=cmbNation]").addClass("w100p");
             $("select[name=cmbNation]").removeAttr("disabled"); */
+            if($("#_nric_").val().length != 12){
+            	console.log("in6666====");
+            	$("#_cmbNation_").val('');
+                $("select[name=cmbNation]").removeAttr("disabled");
+                $("select[name=cmbNation]").removeClass("w100p disabled");
+                $("select[name=cmbNation]").addClass("w100p");
+                $("#_pasSportExpr_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+                $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+            }
+
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
@@ -973,7 +982,7 @@
         //2. Digit
         if(inputVal.length != 12){
             console.log("Length is : " + inputVal.length);
-          //$("#_cmbTypeId_").val('965');
+            $("#_cmbTypeId_").val('');
             return;
         }
 
