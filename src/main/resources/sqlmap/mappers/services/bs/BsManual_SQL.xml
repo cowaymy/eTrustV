@@ -4117,7 +4117,7 @@
     <update id="updateQryFilter_rev" parameterType="Map">
         update SAL0087D
         set
-        SRV_FILTER_PRV_CHG_DT = to_date(#{SettleDate},'DD/MM/YYYY')
+        SRV_FILTER_PRV_CHG_DT = to_date(NVL(#{SettleDate},'01/01/1900'),'DD/MM/YYYY')
         ,SRV_FILTER_UPD_DT = sysdate
         ,SRV_FILTER_UPD_USER_ID = #{ResultCreator}
         ,SRV_FILTER_LAST_SERIAL=
