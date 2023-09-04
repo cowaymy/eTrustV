@@ -75,9 +75,25 @@ public class VoucherController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/editVoucherCampaignStatus.do")
+	public ResponseEntity<ReturnMessage> editVoucherCampaignStatus(@RequestBody Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		message = voucherService.editVoucherCampaignStatus(params, sessionVO);
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/getVoucherCampaignList.do")
 	public ResponseEntity<List<EgovMap>> getVoucherCampaignList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		String[] moduleArr   = request.getParameterValues("moduleSearch");
+		String[] platformArr   = request.getParameterValues("platformSearch");
+		String[] statusArr = request.getParameterValues("statusSearch");
+
+		if(moduleArr      != null && !CommonUtils.containsEmpty(moduleArr))      params.put("moduleArr", moduleArr);
+		if(platformArr    != null && !CommonUtils.containsEmpty(platformArr))    params.put("platformArr", platformArr);
+		if(statusArr != null && !CommonUtils.containsEmpty(statusArr)) params.put("statusArr", statusArr);
+
 		List<EgovMap> result = voucherService.getVoucherCampaignList(params);
 		return ResponseEntity.ok(result);
 	}

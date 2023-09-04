@@ -70,6 +70,11 @@
 			function() {
 				voucherCampaignGridID = AUIGrid.create("#voucher_campaign_grid_wrap",
 						voucherCampaignColumnLayout, voucherCampaignGridPros);
+
+				doGetComboOrder('/common/selectCodeList.do', '562', 'CODE_NAME',
+						'', 'platformSearch', 'M', 'fn_multiCombo');
+				doGetComboOrder('/common/selectCodeList.do', '563', 'CODE_NAME',
+						'', 'moduleSearch', 'M', 'fn_multiCombo');
 			});
 
 	function fn_voucherCampaignCreatePop() {
@@ -78,7 +83,7 @@
 	}
 
 	function fn_getVoucherCampaignList() {
-		Common.ajax("GET", "/misc/voucher/getVoucherCampaignList.do", null,
+		Common.ajax("GET", "/misc/voucher/getVoucherCampaignList.do", $('#searchForm').serialize(),
 				function(result) {
 					AUIGrid.setGridData(voucherCampaignGridID, result);
 				});
@@ -107,6 +112,61 @@
 			Common.alert("Please select a record.");
 		}
 	}
+
+	function fn_activateCampaign(){
+		var selectedItem = AUIGrid.getSelectedItems(voucherCampaignGridID);
+		if(selectedItem.length == 0){
+			Common.alert("No record selected");
+			return false;
+		}
+
+		Common.ajax("POST", "/misc/voucher/editVoucherCampaignStatus.do", {
+			campaignId : selectedItem[0].item.id,
+			status : 1
+		}, function(result) {
+			fn_getVoucherCampaignList();
+		});
+	}
+
+	function fn_deactivateCampaign(){
+		var selectedItem = AUIGrid.getSelectedItems(voucherCampaignGridID);
+		if(selectedItem.length == 0){
+			Common.alert("No record selected");
+			return false;
+		}
+
+		Common.ajax("POST", "/misc/voucher/editVoucherCampaignStatus.do", {
+			campaignId : selectedItem[0].item.id,
+			status : 8
+		}, function(result) {
+			fn_getVoucherCampaignList();
+		});
+	}
+
+    function fn_multiCombo(){
+        $('#platformSearch').change(function() {
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#platformSearch').multipleSelect("checkAll");
+
+
+        $('#moduleSearch').change(function() {
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#moduleSearch').multipleSelect("checkAll");
+
+
+        $('#statusSearch').change(function() {
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#statusSearch').multipleSelect("checkAll");
+    }
 </script>
 
 <div>
@@ -134,7 +194,6 @@
 				<%-- </c:if> --%>
 			</ul>
 		</aside>
-
 		<!-- 	Filter Table -->
 		<div>
 			<table>
@@ -143,13 +202,82 @@
 				</caption>
 			</table>
 		</div>
+		<section class="search_table">
+			<form id="searchForm" name="searchForm" action="#" method="post">
+				<table class="type1">
+					<caption>table</caption>
+					<colgroup>
+						<col style="width: 140px" />
+						<col style="width: *" />
+						<col style="width: 130px" />
+						<col style="width: *" />
+						<col style="width: 170px" />
+						<col style="width: *" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row"><span>ID</span></th>
+							<td><input type="text" title="ID"
+								id="campaignIdSearch" name="campaignIdSearch" placeholder="Campaign ID"
+								class="w100p" /></td>
+							<th scope="row">Title</th>
+							<td><input type="text" title="Title" id="titleSearch"
+								name="titleSearch" placeholder="Title" class="w100p" /></td>
 
+							<th scope="row">Master Code</th>
+							<td><input type="text" title="masterCode" id="masterCodeSearch"
+								name="masterCodeSearch" placeholder="Master Code" class="w100p" /></td>
+						</tr>
+						<tr>
+							<th scope="row">Status</th>
+							<td><select id="statusSearch" name="statusSearch"
+								class="multy_select w100p" multiple="multiple">
+									<option value="1">Active</option>
+									<option value="8">Inactive</option>
+							</select></td>
+							<th scope="row">Start/End Date</th>
+							<td>
+								<div class="date_set w100p">
+									<!-- date_set start -->
+									<p>
+										<input id="requestStartDate" name="requestStartDate"
+											type="text" title="Create start Date" placeholder="DD/MM/YYYY"
+											class="j_date" value="" />
+									</p>
+									<span>To</span>
+									<p>
+										<input id="requestEndDate" name="requestEndDate" type="text"
+											title="Create end Date" placeholder="DD/MM/YYYY"
+											class="j_date" value="" />
+									</p>
+								</div> <!-- date_set end -->
+							</td>
+							<th></th>
+							<td></td>
+						</tr>
+						<tr>
+							<th scope="row">Module</th>
+							<td><select id="moduleSearch" name="moduleSearch"
+								class="multy_select w100p" multiple="multiple">
+							</select></td>
+							<th scope="row">Platform</th>
+							<td><select id="platformSearch" name="platformSearch"
+								class="multy_select w100p" multiple="multiple">
+							</select></td>
+							<th></th>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</section>
 		<section class="search_result">
 			<ul class="right_btns">
 				<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 				<li><p class="btn_grid">
 
-
+						<a href="#" onclick="javascript:fn_activateCampaign()">Activate</a>
+						<a href="#" onclick="javascript:fn_deactivateCampaign()">Inactive</a>
 						<a href="javascript:fn_editCampaignPop();">Edit Campaign</a> <a
 							href="javascript:fn_voucherViewPop();">View Voucher</a> <a
 							href="#" onclick="javascript:fn_voucherCampaignCreatePop()"

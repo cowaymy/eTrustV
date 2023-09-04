@@ -1694,6 +1694,7 @@ SELECT A.CUST_ID AS CUST_ID
 		AND B.PLATFORM = #{platform}
 		</if>
 		AND A.STUS_CODE_ID = 1
+		AND B.STUS_CODE_ID = 1
 		AND A.USED = 0
 	</select>
 

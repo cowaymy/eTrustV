@@ -36,4 +36,5 @@ public interface VoucherMapper {
 	 EgovMap getVoucherEmailAdditionalInfo(Map<String, Object> params);
 	 List<EgovMap> getBatchEmailVoucherInfo();
 	 int updateVoucherCodeEmailStatus(Map<String, Object> params);
+	 int editVoucherCampaignStatus(Map<String, Object> params);
 }

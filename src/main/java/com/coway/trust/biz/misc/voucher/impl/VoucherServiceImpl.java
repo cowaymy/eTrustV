@@ -108,6 +108,18 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
+	public ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		params.put("userId", sessionVO.getUserId());
+		voucherMapper.editVoucherCampaignStatus(params);
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageSourceAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return message;
+	}
+
+	@Override
 	public List<EgovMap> getVoucherCampaignList(Map<String, Object> params) {
 		return voucherMapper.getVoucherCampaignList(params);
 	}

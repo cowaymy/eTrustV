@@ -212,10 +212,6 @@
 	}
 
 	function submit() {
-		console.log($('#startDate').val());
-		console.log($('#endDate').val());
-		console.log($('#platform').val());
-		console.log($('#module').val());
 		if ($('#startDate').val() == "" || $('#endDate').val() == ""
 				|| $('#platform').val() == "" || $('#module').val() == ""
 				|| $('#title').val() == "" || $('#masterCode').val() == "") {

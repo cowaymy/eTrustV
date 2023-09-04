@@ -50,4 +50,6 @@ public interface VoucherService {
 
 	List<EgovMap> getVoucherListForExcel(Map<String, Object> params);
 
+	ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO);
+
 }
