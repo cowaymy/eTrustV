@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +29,8 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -45,6 +48,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/sales/order")
 public class HcOrderCancelController {
+
+	private static Logger logger = LoggerFactory.getLogger(HcOrderCancelController.class);
 
 	@Resource(name = "orderCancelService")
 	private OrderCancelService orderCancelService;
@@ -86,11 +91,14 @@ public class HcOrderCancelController {
 
 	    List<EgovMap> rsoStatusList = orderCancelService.rsoStatus(params);
 
+	    List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
+
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 		model.addAttribute("dscBranchList", dscBranchList);
 	    model.addAttribute("productRetReasonList", productRetReasonList);
 		model.addAttribute("rsoStatusList", rsoStatusList);
+		model.addAttribute("productList_1", productList_1);
 
 		return "homecare/sales/order/hcOrderCancelList";
 	}
@@ -114,6 +122,7 @@ public class HcOrderCancelController {
 		String[] dscBranchId = request.getParameterValues("cmbDscBranchId");
 		String[] productRetReasonId = request.getParameterValues("cmbproductRetReasonId");
 		String[] rsoStatusId = request.getParameterValues("cmbrsoStatusId");
+		String[] arrProdId     = request.getParameterValues("productId");
 
 		params.put("typeIdList", appTypeId);
 		params.put("stusIdList", callStusId);
@@ -121,6 +130,7 @@ public class HcOrderCancelController {
 		params.put("branchList", dscBranchId);
 		params.put("productRetReasonList", productRetReasonId);
 		params.put("rsoStatusList", rsoStatusId);
+		params.put("arrProd", arrProdId);
 
 		List<EgovMap> orderCancelList = hcOrderCancelService.hcOrderCancellationList(params);
 
@@ -372,7 +382,15 @@ public class HcOrderCancelController {
 	 */
 	@RequestMapping(value = "/orderCancelDTSearchPop.do")
 	public String orderCancelDTSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("dtMemType", HomecareConstants.MEM_TYPE.DT);
+		logger.debug("params ===========> " + params);
+		String stkId = CommonUtils.nvl(params.get("stockId"));
+		if(stkId != null && (stkId.equals("2187") || stkId.equals("2188"))){
+			model.addAttribute("dtMemType", HomecareConstants.MEM_TYPE.CT);
+		}
+
+		else {
+			model.addAttribute("dtMemType", HomecareConstants.MEM_TYPE.DT);
+		}
 
 		return "homecare/sales/order/orderCancelDTSearchPop";
 	}
