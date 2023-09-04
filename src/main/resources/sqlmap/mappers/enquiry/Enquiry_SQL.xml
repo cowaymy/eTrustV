@@ -4,7 +4,7 @@
 
     <select id="getCustomerLoginInfo"  parameterType="Map" resultType="egovMap">
            SELECT
-                    A.CUST_ID, A.NAME
+                    A.CUST_ID, A.NAME, A.TYPE_ID
 		   FROM SAL0029D A
 		   JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
 		   WHERE A.STUS_CODE_ID = 1

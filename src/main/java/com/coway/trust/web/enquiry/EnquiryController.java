@@ -145,6 +145,12 @@ public class EnquiryController {
     			    	return ResponseEntity.ok(message);
     			  }
 
+    			  if(!result.get("typeId").toString().equals("964")){
+      				    message.setCode(AppConstants.FAIL);
+      			    	message.setMessage("Only Individual Customer Type is allowed to login.");
+      			    	return ResponseEntity.ok(message);
+    			  }
+
     			  if(flag == 0){
 
     				    CustomerLoginVO custmoerLoginVO = enquiryService.getCustomerInfo(params);
