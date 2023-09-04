@@ -6,14 +6,22 @@
     var basicAuth = false;
     var rcdTms;
 
+    var productList = [];
+    <c:forEach var="obj" items="${productList_1}">
+    productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
     $(document).ready(function() {
 	    // AUIGrid 그리드를 생성합니다.
 	    createAUIGrid();
 
 	    // DT Branch CodeList 조회
-	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '', 'listDscBranchId', 'M', 'fn_multiCombo'); //Branch Code
+/* 	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '', 'listDscBranchId', 'M', 'fn_multiCombo'); //Branch Code
+ */	    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '',   'listDscBranchId', 'M', 'fn_multiCombo');
 	    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
 	    doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M', 'f_multiCombo'); // Application Type Combo Box
+
+        doDefCombo(productList, '' ,'listProductId', 'M', 'fn_multiCombo');
 
 	    // 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -73,6 +81,14 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
+
+        $('#listProductId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $("#listProductId").multipleSelect("checkAll");
     }
 
     function createAUIGrid() {
@@ -578,8 +594,8 @@
                     <option value="${list.stusCodeId }">${list.name }</option>
                     </c:forEach>
                     </select></td>
-                    <th scope="row"></th>
-                     <td></td>
+                    <th scope="row"><spring:message code='sales.prod' /></th>
+                        <td><select id="listProductId" name="productId" class="w100p"></select></td>
                      <th scope="row"></th>
                       <td></td>
                     </tr>

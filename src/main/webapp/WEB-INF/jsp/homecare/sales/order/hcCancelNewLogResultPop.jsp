@@ -162,7 +162,7 @@
         } */
 
         //Common.popupDiv("/homecare/services/install/hcAllocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
-        Common.popupDiv("/homecare/services/install/hcAllocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'RTN'}, null, true, '_doAllactionDiv');
+        Common.popupDiv("/homecare/services/install/hcAllocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'RTN' , PROD_CAT : '${hcOrder.anoOrdCtgryCd}'}, null, true, '_doAllactionDiv');
     }
 
     function fn_allactionFun(obj){

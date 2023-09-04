@@ -257,6 +257,8 @@
     <input id="docId" name="docId" type="hidden" value="${paramDocId}">
     <input id="typeId" name="typeId" type="hidden" value="${paramTypeId}">
     <input id="refId" name="refId" type="hidden" value="${paramRefId}">
+    <input id="stockId" name="stockId" type="hidden" value="${cancelReqInfo.stockId}">
+
 </form>
 <section class="pop_body"><!-- pop_body start -->
 
