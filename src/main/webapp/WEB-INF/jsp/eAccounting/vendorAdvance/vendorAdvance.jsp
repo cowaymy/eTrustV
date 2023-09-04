@@ -34,8 +34,11 @@
         dataField : "advType",
         visible : false
     }, {
+        dataField : "payee",
+        headerText : "Payee Code"
+    },{
         dataField : "payeeName",
-        headerText : "Payee"
+        headerText : "Payee Name"
     }, {
         dataField : "costCenter",
         headerText : "Cost Center Code"
@@ -365,6 +368,18 @@
     $(document).ready(function () {
         console.log("vendorAdvance.jsp");
 
+        $("#advType").multipleSelect("setSelects", [5]);
+        $("#_vendorAdvBtn").click(function() {
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(advGridId);
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No Record Selected. ");
+                return;
+            }
+            var claimno = gridObj[0].item.clmNo;
+            fn_report(advGridAdvType);
+        });
+
         // Vendor Advance Request Grid
         advGridId = GridCommon.createAUIGrid("#grid_wrap", advanceColumnLayout, null, advanceGridPros);
         // Vendor Advance Settlement Grid
@@ -383,7 +398,17 @@
         //$("#settlementUpd_btn").click(fn_settlementUpdate); // Manual update settlement status - Finance use only
         $("#settlementUpd_btn").click(fn_settlementConfirm); // Manual update settlement status - Finance use only
         $("#request_btn").click(fn_advReqPop);
-        $("#advList_btn").click(fn_searchAdv);
+
+        $("#advList_btn").click(function() {
+            //Validation
+            //advType
+            if(null == $("#advType").val()){
+                Common.alert('*Please select the advance type');
+                return;
+            }
+            fn_searchAdv();
+        });
+
         $("#refund_btn").click(fn_repaymentPop);
 
         $("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -812,6 +837,20 @@
         }
 
         $("#advReqPop").show();
+    }
+
+    function fn_report(advGridAdvType) {
+         if (advGridAdvType == '5') {
+             $("#dataForm #reportFileName").val('/e-accounting/vendorReq.rpt');
+          }
+         else{
+             $("#dataForm #reportFileName").val('/e-accounting/vendorRefund.rpt');
+         }
+
+          var option = {
+                  isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+          Common.report("dataForm", option);
     }
 
     function fn_repaymentPop() {
@@ -2139,6 +2178,22 @@
 *************************************************
  -->
 
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+</form>
+
+ <form id="dataForm">
+    <!--<input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/staffTravelReq.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+</form>
+
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -2256,6 +2311,7 @@
             <dt>Link</dt>
         <dd>
             <ul class="btns">
+                <li><p class="link_btn"><a href="#" id="_vendorAdvBtn">Vendor Advance</a></p></li>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
             </ul>
             <ul class="btns">

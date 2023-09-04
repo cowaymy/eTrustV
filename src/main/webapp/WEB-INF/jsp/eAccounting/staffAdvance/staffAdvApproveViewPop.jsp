@@ -277,7 +277,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Travel Period</th>
-                            <td>
+                            <td colspan="2">
                                 <span id="viewTrvPeriod"></span>
                             </td>
                         </tr>
@@ -422,7 +422,13 @@
                     </tr>
                     <tr id="rejectReasonRow">
                         <th scope="row">Reject Reason</th>
-                        <td colspan="3">${rejctResn}</td>
+                        <td colspan="2">${rejctResn}</td>
+                    </tr>
+                    <tr id="finApprRow">
+                        <th scope="row">Final Approver</th>
+                        <td colspan="2">
+                            <span id="viewFinAppr"></span>
+                        </td>
                     </tr>
                 </table>
             </form>

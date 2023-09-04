@@ -27,9 +27,12 @@
     }, {
         dataField : "advType",
         visible : false
-    }, {
+    },  {
+        dataField : "payee",
+        headerText : "Payee Code"
+    },{
         dataField : "payeeName",
-        headerText : "Payee"
+        headerText : "Payee Name"
     }, {
         dataField : "costCenter",
         headerText : "Cost Center Code"
@@ -305,10 +308,30 @@ var myGridPros = {
         approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
         $("#advType").multipleSelect("setSelects", [3]);
+        $("#_staffBusinessAdvBtn").click(function() {
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(busActGridId);
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No Record Selected. ");
+                return;
+            }
+            var claimno = gridObj[0].item.clmNo;
+            fn_report(advType);
+        });
 
         $("#settlementUpd_btn").click(fn_settlementConfirm); // Manual update settlement status - Finance use only
         $("#request_btn").click(fn_busActReqPop);
-        $("#advList_btn").click(fn_searchAdv);
+
+        $("#advList_btn").click(function() {
+            //Validation
+            //advType
+            if(null == $("#advType").val()){
+                Common.alert('*Please select the advance type');
+                return;
+            }
+            fn_searchAdv();
+        });
+
         $("#refund_btn").click(fn_repaymentPop);
 
         $("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -677,6 +700,20 @@ var myGridPros = {
              });
          }
 
+     }
+
+     function fn_report(advType) {
+          if (advType == '3') {
+              $("#dataForm #reportFileName").val('/e-accounting/staffBusinessReq.rpt');
+           }
+          else{
+              $("#dataForm #reportFileName").val('/e-accounting/staffBusinessRefund.rpt');
+          }
+
+           var option = {
+                   isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+           };
+           Common.report("dataForm", option);
      }
 
      /************************************************
@@ -2212,6 +2249,13 @@ var myGridPros = {
 		value="" /> <input type="hidden" id="_clmNo" name="V_CLMNO" />
 </form>
 
+<form id="dataForm">
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+</form>
+
 <section id="content">
 	<ul class="path">
 		<li><img
@@ -2360,6 +2404,7 @@ var myGridPros = {
             <dt>Link</dt>
         <dd>
             <ul class="btns">
+                <li><p class="link_btn"><a href="#" id="_staffBusinessAdvBtn">Staff Business Advance</a></p></li>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
             </ul>
             <ul class="btns">
@@ -2373,7 +2418,7 @@ var myGridPros = {
 			style="width: 100%;"></article>
 	</section> -->
 	<section class="search_result"><!-- search_result start -->
-        <article class="grid_wrap" id="grid_wrap"></article><!-- grid_wrap end -->
+        <article class="grid_wrap" id="grid_wrap"  style="height:500px"></article><!-- grid_wrap end -->
     </section>
 
 </section>

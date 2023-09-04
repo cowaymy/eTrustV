@@ -23,8 +23,11 @@
         visible : false
     }, {
         dataField : "payee",
-        headerText : "Payee"
+        headerText : "Payee Code"
     }, {
+        dataField : "payeeName",
+        headerText : "Payee Name"
+    },{
         dataField : "costCenter",
         headerText : "Cost Center Code"
     }, {
@@ -146,11 +149,32 @@
     $(document).ready(function () {
         console.log("staffAdvance :: ready");
 
+        $("#advType").multipleSelect("setSelects", [1]);
+        $("#_staffTravelAdvBtn").click(function() {
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(advGridId);
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No Record Selected. ");
+                return;
+            }
+            var claimno = gridObj[0].item.clmNo;
+            fn_report(advType);
+        });
+
         advGridId = AUIGrid.create("#grid_wrap", advanceColumnLayout, advanceGridPros);
         approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
         $("#request_btn").click(fn_advReqPop);
-        $("#advList_btn").click(fn_searchAdv);
+        $("#advList_btn").click(function() {
+            //Validation
+            //advType
+            if(null == $("#advType").val()){
+                Common.alert('*Please select the advance type');
+                return;
+            }
+            fn_searchAdv();
+        });
+
         $("#refund_btn").click(fn_repaymentPop);
 
         $("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -249,6 +273,20 @@
 
     function fn_setCostCenter() {
         $("#listCostCenter").val($("#search_costCentr").val());
+    }
+
+    function fn_report(advType) {
+    	 if (advType == '1') {
+             $("#dataForm #reportFileName").val('/e-accounting/staffTravelReq.rpt');
+          }
+    	 else{
+    	     $("#dataForm #reportFileName").val('/e-accounting/staffTravelRefund.rpt');
+    	 }
+
+    	  var option = {
+                  isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+          Common.report("dataForm", option);
     }
 
     /******************************************
@@ -793,7 +831,6 @@
                 if(mm < 10) {
                     mm = "0" + mm;
                 }
-
                 $("#refdDate").val(dd + "/" + mm + "/" + yyyy);
             }
         }
@@ -960,9 +997,9 @@
                 }
             }
 
-        } else if(type == 3) {
+        } /* else if(type == 3) {
 
-        }
+        } */
         return true;
     }
 
@@ -1338,6 +1375,13 @@
     <input type="hidden" id="_clmNo" name="V_CLMNO" />
 </form>
 
+<form id="dataForm">
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+</form>
+
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -1448,9 +1492,26 @@
             </table>
         </form>
     </section>
+</form>
+
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <li><p class="link_btn"><a href="#" id="_staffTravelAdvBtn" >Staff Travel Advance</a></p></li>
+            <%-- </c:if> --%>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
 
     <section class="search_result">
-        <article id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></article>
+        <article class="grid_wrap" id="grid_wrap"  style="height:500px"></article>
     </section>
 
 </section><!-- content end -->
