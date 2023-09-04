@@ -95,6 +95,12 @@ public class AdaptorServiceImpl implements AdaptorService {
 	@Value("${sms.mvgate.country.code}")
 	private String mvgateCountryCode;
 
+	@Value("${sms.preccp.gensuite.client.id}")
+	private String preccpGensuiteClientId;
+
+	@Value("${sms.preccp.gensuite.password}")
+	private String preccpGensuitePassword;
+
 	@Autowired
 	private JavaMailSender mailSender;
 
@@ -486,4 +492,79 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 		return (int) params.get("smsId");
 	}
+
+
+	@Override
+    public SmsResult sendSMS3(SmsVO smsVO) {
+        return this.sendSMS3(smsVO, null, null);
+    }
+
+    @Override
+    public SmsResult sendSMS3(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
+
+        if (smsVO.getMobiles().size() == 0) {
+            throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+        }
+
+        Map<String, String> reason = new HashMap<>();
+        SmsResult result = new SmsResult();
+        result.setReqCount(smsVO.getMobiles().size());
+
+        if (templateType != null) {
+            smsVO.setMessage(getSmsTextByTemplate(templateType, templateParams));
+        }
+
+        String msgId = UUIDGenerator.get();
+        result.setMsgId(msgId);
+        int vendorId = 2;
+        smsVO.getMobiles().forEach(mobileNo -> {
+            String smsUrl;
+            try {
+                smsUrl = "https://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + preccpGensuiteClientId + "&Username="
+                        + gensuiteUserName + "&Password=" + preccpGensuitePassword + "&Type=" + gensuiteType + "&Message="
+                        + URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
+                        + "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo
+                        + "&Concatenated=1&MsgID=" + msgId;
+            } catch (UnsupportedEncodingException e) {
+                throw new ApplicationException(e, AppConstants.FAIL);
+            }
+
+            Client client = Client.create();
+            WebResource webResource = client.resource(smsUrl);
+            ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+            String output = response.getEntity(String.class);
+
+            int statusId;
+            String body;
+
+            if (response.getStatus() == 200) {
+                body = output;
+
+                if (GENSUITE_SUCCESS.equals(body)) {
+                    statusId = 4;
+                    result.setSuccessCount(result.getSuccessCount() + 1);
+                } else {
+                    statusId = 21;
+                    result.setFailCount(result.getFailCount() + 1);
+                    reason.clear();
+                    reason.put(mobileNo, body);
+                    result.addFailReason(reason);
+                }
+
+            } else {
+                statusId = 1;
+                body = output;
+                result.setErrorCount(result.getErrorCount() + 1);
+            }
+
+            int smsId = insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
+                    smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
+
+            result.setSmsStatus(statusId);
+            result.setSmsId(smsId);
+        });
+
+        return result;
+    }
+
 }

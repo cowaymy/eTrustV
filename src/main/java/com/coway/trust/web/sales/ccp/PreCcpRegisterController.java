@@ -364,7 +364,7 @@ public class PreCcpRegisterController {
            	    sms.setMessage(smsMessage);
            	    sms.setMobiles(getCustInfo.get("custMobileno").toString());
 
-           	    SmsResult smsResult = adaptorService.sendSMS2(sms);
+           	    SmsResult smsResult = adaptorService.sendSMS3(sms);
 
            	    params.put("smsId", smsResult.getSmsId());
            	    params.put("statusId", smsResult.getSmsStatus());

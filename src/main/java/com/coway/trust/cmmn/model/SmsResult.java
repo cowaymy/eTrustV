@@ -81,4 +81,5 @@ public class SmsResult {
 	public int getSmsStatus() {
 	    return status;
 	}
+
 }

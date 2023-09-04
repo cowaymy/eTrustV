@@ -87,4 +87,8 @@ public interface AdaptorService {
 	 * @return
 	 */
 	String getSmsTextByTemplate(SMSTemplateType templateType, Map<String, Object> params);
+
+	SmsResult sendSMS3(SmsVO smsVO);
+
+	SmsResult sendSMS3(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
 }
