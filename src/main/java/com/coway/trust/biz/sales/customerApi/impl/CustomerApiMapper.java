@@ -3,6 +3,7 @@ package com.coway.trust.biz.sales.customerApi.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.sales.customerApi.CustomerTierCatListApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerTierOrderListApiDto;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -51,4 +52,6 @@ public interface CustomerApiMapper {
   List<CustomerTierOrderListApiDto> selectCustomerTierOrderList(Map<String, Object> params);
 
   List<EgovMap> selectCustomerTierOtherDet(Map<String, Object> params);
+
+  List<EgovMap> selectCustomerTierCatgryList(Map<String, Object> params);
 }

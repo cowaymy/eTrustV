@@ -429,9 +429,18 @@
   <select id="selectCustomerTierMaster" parameterType="Map" resultType="egovMap">
 
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
+    WITH REN_PRC AS (
+		SELECT AA.CUST_ID,SUM(BB.ORD_MTH_RENTAL) ORD_MTH_RENTAL FROM SAL0330D AA
+		JOIN SAL1006V BB ON AA.SALES_ORD_ID = BB.ORD_ID
+		WHERE AA.CUST_ID = #{custId}
+		AND BB.APP_TYPE_ID = 66
+		GROUP BY AA.CUST_ID
+		)
     select
 	a.CUST_ID, cd.code cust_tier, a.TIER_SCORE, a.TOT_SALES_CNT,a.TIER_COLC_SCORE, a.TIER_REWD_SCORE
 	,nvl(b.cur_point,0) t_cur_point, nvl(b.onhold_point,0) t_onhold_point, nvl(b.exping_point,0) t_expiring_point, nvl(b.expired_point,0) t_expired_point
+	, (newcd.min_next_point - a.TIER_SCORE) pt_to_ach_nx_lvl
+    , round((newcd.min_next_point - a.TIER_SCORE)/REN_PRC.ORD_MTH_RENTAL) mth_to_ach_nx_lvl
 	from
 	SAL0333M a
 	left join sys0013m cd on cd.code_id = a.TIER_RANK
@@ -462,6 +471,16 @@
                 )
                 where cust_id = #{custId}
     ) b on b.cust_id = a.cust_id
+    left join (select code
+    ,code_id
+    ,case when code_id = 7204 then 800
+    when code_id = 7205 then 1800
+    when code_id = 7206 then 3800
+    when code_id = 7207 then 6800
+    when code_id = 7208 then 10800
+    end min_next_point
+    from sys0013m where CODE_MASTER_ID = 538) newcd on newcd.code_id = a.TIER_RANK+1
+    LEFT JOIN REN_PRC ON REN_PRC.CUST_ID = A.CUST_ID
 	where
 	a.CUST_ID = #{custId}
 
@@ -501,4 +520,41 @@
     ]]>
   </select>
 
+<select id="selectCustomerTierCatgryList" parameterType="Map" resultType="egovMap">
+
+ /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierCatgryList] 20221205 - MY HLTANG */
+       select 1 CODE_ID, 'Orders' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+		union
+		select 2 CODE_ID, 'Care Service' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+		union
+		select CODE_id,category_Name,sum(Total_POINT),point_status from (
+        SELECT B.CODE_id,'Birthday' category_Name , sum(A.REWRD_POINT) Total_POINT,'Active' point_status
+                FROM SAL0332D A
+                JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+                WHERE A.CUST_ID = #{custId}
+                AND A.FORFEIT = 0
+                and REWRD_TYPE in ('7202','7198')
+                group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+
+                union
+                select 7198 CODE_ID, 'Birthday' category_Name, 0 Total_POINT, 'Active' POINT_STATUS from dual
+                )group by CODE_id,category_Name,point_status
+
+        union
+        select CODE_id,category_Name,sum(Total_POINT),point_status from (
+        SELECT B.CODE_id, 'Others Points' category_Name , sum(A.REWRD_POINT) Total_POINT,'Active' point_status
+                FROM SAL0332D A
+                JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+                WHERE A.CUST_ID = #{custId}
+                AND A.FORFEIT = 0
+                and REWRD_TYPE in ('7199')
+                group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+                union
+                select 7199 CODE_ID, 'Others Points' category_Name, 0 Total_POINT, 'Active' POINT_STATUS from dual
+                )group by CODE_id,category_Name,point_status
+		union
+		select 9999 CODE_ID, 'Survey Points' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+
+
+  </select>
 </mapper>

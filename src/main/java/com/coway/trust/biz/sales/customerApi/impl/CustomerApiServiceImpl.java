@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.customerApi.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerTierCatListApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerTierOrderListApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerTierPointApiDto;
 import com.coway.trust.biz.api.CommonApiService;
@@ -451,23 +453,24 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
 			  }
 
 			  EgovMap tierMaster = customerApiMapper.selectCustomerTierMaster(CustomerApiForm.createMap(param));
-			  List<CustomerTierOrderListApiDto> orderListDetails = customerApiMapper.selectCustomerTierOrderList(CustomerApiForm.createMap(param));
-			  List<EgovMap> tierOtherDetails = customerApiMapper.selectCustomerTierOtherDet(CustomerApiForm.createMap(param));
-
 			  tierFullDetails = tierMaster;
-			  tierFullDetails.put("orderList", orderListDetails);
-			  if(tierOtherDetails != null){
-				  for(int i = 0 ; i < tierOtherDetails.size() ; i++){
-		    		if(tierOtherDetails.get(i).get("codeId").toString().equals("7198")){
-		    			tierFullDetails.put("tBdayPoint", tierOtherDetails.get(i).get("tBdayPoint").toString());
-		    			tierFullDetails.put("bdayPointStatus", tierOtherDetails.get(i).get("bdayPointStatus").toString());
-		    		}
-		    		if(tierOtherDetails.get(i).get("codeId").toString().equals("7199")){
-		    			tierFullDetails.put("tOtherPoint", tierOtherDetails.get(i).get("tOtherPoint").toString());
-		    			tierFullDetails.put("otherPointStatus", tierOtherDetails.get(i).get("otherPointStatus").toString());
-		    		}
-		    	}
+
+			  List<EgovMap> mapListCatgryList = new ArrayList<>();
+
+			  List<EgovMap> catgryList = customerApiMapper.selectCustomerTierCatgryList(CustomerApiForm.createMap(param));
+			  mapListCatgryList = catgryList;
+
+			  List<CustomerTierCatListApiDto> catlist = new ArrayList<>();
+			  for(EgovMap alist : catgryList){
+				  if(alist.get("codeId").toString().equals("1")){
+					  List<CustomerTierOrderListApiDto> orderListDetails = customerApiMapper.selectCustomerTierOrderList(CustomerApiForm.createMap(param));
+					  alist.put("orderList", orderListDetails);
+				  }
+				  CustomerTierCatListApiDto catDto = CustomerTierCatListApiDto.create(alist);
+				  catlist.add(catDto);
 			  }
+			  tierFullDetails.put("categoryList", catlist);
+
 			  CustomerTierPointApiDto custTierDto = CustomerTierPointApiDto.create(tierFullDetails);
 
 			  ObjectMapper oMapper = new ObjectMapper();

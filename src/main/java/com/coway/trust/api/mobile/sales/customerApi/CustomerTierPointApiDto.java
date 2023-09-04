@@ -24,43 +24,23 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "CustomerApiDto", description = "CustomerApiDto")
 public class CustomerTierPointApiDto {
 
-
-
 	@SuppressWarnings("unchecked")
 	public static CustomerTierPointApiDto create(Map<String, Object> egvoMap) {
 		return BeanConverter.toBean(egvoMap, CustomerTierPointApiDto.class);
 	}
-//
-//
-//
-//	public static Map<String, Object> createMap(CustomerTierPointApiDto vo){
-//		Map<String, Object> params = new HashMap<>();
-//		params.put("custId", vo.getCustId());
-//		params.put("name", vo.getName());
-//		params.put("addrDtl", vo.getAddrDtl());
-//		params.put("addr", vo.getAddr());
-//		params.put("typeIdName", vo.getTypeIdName());
-//        params.put("custAddId", vo.getCustAddId());
-//        params.put("postcode", vo.getPostcode());
-//        params.put("custVaNo", vo.getCustVaNo());
-//        params.put("nationName", vo.getNationName());
-//        params.put("raceIdName", vo.getRaceIdName());
-//        params.put("telM1", vo.getTelM1());
-//        params.put("telO", vo.getTelO());
-//        params.put("telR", vo.getTelR());
-//        params.put("email", vo.getEmail());
-//        params.put("custCntcId", vo.getCustCntcId());
-//        params.put("typeId", vo.getTypeId());
-//        params.put("salesOrdId", vo.getSalesOrdId());
-//        params.put("salesOrdNo", vo.getSalesOrdNo());
-//        params.put("salesDt", vo.getSalesDt());
-//        params.put("stusCodeIdName", vo.getStusCodeIdName());
-//        params.put("appTypeIdName", vo.getAppTypeIdName());
-//        params.put("stkDescName", vo.getStkDescName());
-//		return params;
-//	}
 
-
+	public static Map<String, Object> createMap(CustomerTierPointApiDto vo){
+		Map<String, Object> params = new HashMap<>();
+		params.put("custId", vo.getCustId());
+		params.put("custTier", vo.getCustTier());
+		params.put("tCurPoint", vo.gettCurPoint());
+		params.put("tExpiredPoint", vo.gettExpiredPoint());
+		params.put("tOnholdPoint", vo.gettOnholdPoint());
+        params.put("tExpiringPoint", vo.gettExpiringPoint());
+        params.put("ptToAchNxLvl", vo.getPtToAchNxLvl());
+        params.put("mthToAchNxLvl", vo.getMthToAchNxLvl());
+		return params;
+	}
 
 	private int custId;
 	private String custTier;
@@ -69,15 +49,10 @@ public class CustomerTierPointApiDto {
 	private int tOnholdPoint;
 	private int tExpiringPoint;
 
-	//OrderList:
-	private List<CustomerTierOrderListApiDto> orderList;
+	private List<CustomerTierCatListApiDto> categoryList;
 
-	private int tBdayPoint;
-	private String bdayPointStatus;
-	private int tMcsPoint;
-	private String mcsPointStatus;
-	private int tOtherPoint;
-	private String otherPointStatus;
+	private int ptToAchNxLvl;
+	private int mthToAchNxLvl;
 
 	public int getCustId() {
 		return custId;
@@ -115,47 +90,23 @@ public class CustomerTierPointApiDto {
 	public void settExpiringPoint(int tExpiringPoint) {
 		this.tExpiringPoint = tExpiringPoint;
 	}
-	public List<CustomerTierOrderListApiDto> getOrderList() {
-		return orderList;
+	public List<CustomerTierCatListApiDto> getCategoryList() {
+		return categoryList;
 	}
-	public void setOrderList(List<CustomerTierOrderListApiDto> orderList) {
-		this.orderList = orderList;
+	public void setCategoryList(List<CustomerTierCatListApiDto> categoryList) {
+		this.categoryList = categoryList;
 	}
-	public int gettBdayPoint() {
-		return tBdayPoint;
+	public int getPtToAchNxLvl() {
+		return ptToAchNxLvl;
 	}
-	public void settBdayPoint(int tBdayPoint) {
-		this.tBdayPoint = tBdayPoint;
+	public void setPtToAchNxLvl(int ptToAchNxLvl) {
+		this.ptToAchNxLvl = ptToAchNxLvl;
 	}
-	public String getBdayPointStatus() {
-		return bdayPointStatus;
+	public int getMthToAchNxLvl() {
+		return mthToAchNxLvl;
 	}
-	public void setBdayPointStatus(String bdayPointStatus) {
-		this.bdayPointStatus = bdayPointStatus;
-	}
-	public int gettMcsPoint() {
-		return tMcsPoint;
-	}
-	public void settMcsPoint(int tMcsPoint) {
-		this.tMcsPoint = tMcsPoint;
-	}
-	public String getMcsPointStatus() {
-		return mcsPointStatus;
-	}
-	public void setMcsPointStatus(String mcsPointStatus) {
-		this.mcsPointStatus = mcsPointStatus;
-	}
-	public int gettOtherPoint() {
-		return tOtherPoint;
-	}
-	public void settOtherPoint(int tOtherPoint) {
-		this.tOtherPoint = tOtherPoint;
-	}
-	public String getOtherPointStatus() {
-		return otherPointStatus;
-	}
-	public void setOtherPointStatus(String otherPointStatus) {
-		this.otherPointStatus = otherPointStatus;
+	public void setMthToAchNxLvl(int mthToAchNxLvl) {
+		this.mthToAchNxLvl = mthToAchNxLvl;
 	}
 
 
