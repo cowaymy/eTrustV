@@ -25,6 +25,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
  * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
+ * 2023. 09. 05    MY-ONGHC         ADD E-TAG FEATURE
  * </pre>
  */
 @Service("UserProfileApiService")
@@ -64,4 +65,21 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
     }
     return rtn;
   }
+
+  @Override
+  public UserProfileApiDto selectProfileImg(UserProfileApiForm param) throws Exception {
+    if (null == param) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+    }
+    if (CommonUtils.isEmpty(param.getImgGrpId())) {
+      throw new ApplicationException(AppConstants.FAIL, "Image Group ID value does not exist.");
+    }
+    EgovMap selectProfileImg = userProfileApiMapper.selectProfileImg(UserProfileApiForm.createMap(param));
+    UserProfileApiDto rtn = new UserProfileApiDto();
+    if (MapUtils.isNotEmpty(selectProfileImg)) {
+      return rtn.create(selectProfileImg);
+    }
+    return rtn;
+  }
+
 }
