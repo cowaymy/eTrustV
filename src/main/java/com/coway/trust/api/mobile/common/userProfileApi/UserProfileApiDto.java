@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiModel;
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
  * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
+ * 2023. 09. 05    MY-ONGHC         ADD TAG-ID FEATURE
  * </pre>
  */
 @ApiModel(value = "UserProfileApiDto", description = "UserProfileApiDto")
@@ -43,6 +44,9 @@ public class UserProfileApiDto {
     params.put("brnchAddr", vo.getBrnchAddr());
     params.put("userRole", vo.getUserRole());
     params.put("agExprDt", vo.getAgExprDt());
+    params.put("imgGrpId", vo.getImgGrpId());
+    params.put("imgId", vo.getImgId());
+
     return params;
   }
 
@@ -62,6 +66,8 @@ public class UserProfileApiDto {
   private String brnchAddr;
   private String userRole;
   private String agExprDt;
+  private String imgGrpId;
+  private String imgId;
 
   public String getMemCode() {
     return memCode;
@@ -190,4 +196,21 @@ public class UserProfileApiDto {
   public void setAgExprDt(String agExprDt) {
     this.agExprDt = agExprDt;
   }
+
+  public String getImgGrpId() {
+    return imgGrpId;
+  }
+
+  public void setImgGrpId(String imgGrpId) {
+    this.imgGrpId = imgGrpId;
+  }
+
+  public String getImgId() {
+    return imgId;
+  }
+
+  public void setImgId(String imgId) {
+    this.imgId = imgId;
+  }
+
 }
