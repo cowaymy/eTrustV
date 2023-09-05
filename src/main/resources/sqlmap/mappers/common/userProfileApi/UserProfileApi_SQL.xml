@@ -59,7 +59,7 @@
   </select>
 
   <select id="selectProfileImg" parameterType="Map" resultType="egovMap">
-    SELECT B.ATCH_FILE_ID
+    SELECT B.ATCH_FILE_ID AS IMG_ID
     FROM SYS0070M A
     JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
     WHERE A.ATCH_FILE_GRP_ID = #{imgGrpId}
