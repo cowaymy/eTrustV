@@ -27,6 +27,7 @@
                , B.TEL_MOBILE AS MEM_HPNO
                , B.EMAIL AS MEM_EMAIL
                , UPPER(E.ADDR1 || ' ' || E.ADDR2 || ' ' || E.ADDR3 || ' ' || E.ADDR4) AS BRNCH_ADDR
+               , B.ATCH_FILE_GRP_ID AS IMG_GRP_ID
       FROM SYS0047M A
       INNER JOIN ORG0001D B ON A.HR_CODE = B.MEM_CODE
       LEFT JOIN ORG0002D B2 ON B.MEM_ID = B2.MEM_ID
@@ -56,4 +57,13 @@
                                      FROM SYS0094M
                                      WHERE IND = 'ACI_ROLE')
   </select>
+
+  <select id="selectProfileImg" parameterType="Map" resultType="egovMap">
+    SELECT B.ATCH_FILE_ID
+    FROM SYS0070M A
+    JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+    WHERE A.ATCH_FILE_GRP_ID = #{imgGrpId}
+        AND B.FILE_KEY_SEQ = 6
+  </select>
+
 </mapper>
