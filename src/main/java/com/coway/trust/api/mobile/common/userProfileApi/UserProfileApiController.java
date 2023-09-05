@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
  * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
+ * 2023. 09. 05    MY-ONGHC         ADD E-TAG FEATURE
  * </pre>
  */
 @Api(value = "UserProfileApiController", description = "UserProfileApiController")
@@ -45,5 +46,11 @@ public class UserProfileApiController {
   @RequestMapping(value = "/selectUserRole", method = RequestMethod.GET)
   public ResponseEntity<UserProfileApiDto> selectUserRole(@ModelAttribute UserProfileApiForm param) throws Exception {
     return ResponseEntity.ok(userProfileApiService.selectUserRole(param));
+  }
+
+  @ApiOperation(value = "selectProfileImg", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectProfileImg", method = RequestMethod.GET)
+  public ResponseEntity<UserProfileApiDto> selectProfileImg(@ModelAttribute UserProfileApiForm param) throws Exception {
+    return ResponseEntity.ok(userProfileApiService.selectProfileImg(param));
   }
 }
