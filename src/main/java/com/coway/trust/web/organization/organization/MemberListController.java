@@ -908,8 +908,11 @@ public class MemberListController {
     	     	ssoLoginService.ssoCreateUser(ssoParams);
     			//message.setMessage((String)resultValue.get("memCode"));
 
-    			trInfo.put("memCode", (String)resultValue.get("memCode"));
-    		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
+    	     	trInfo = resultValue;
+//    			trInfo.put("memCode", (String)resultValue.get("memCode"));
+//    		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
+    		    message.setCode(AppConstants.SUCCESS);
+    			trInfo.put("message", message);
     		}
 
 
