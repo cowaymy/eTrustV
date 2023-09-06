@@ -65,7 +65,7 @@
 						unCheckValue : "N",
 						disabledFunction : function(rowIndex, columnIndex,
 								value, isChecked, item, dataField) {
-							if (item.payStusId == 1) {
+							if (item.payStusId == 1 || item.payStusId == 104) {
 								return false;
 							}
 							return true;
