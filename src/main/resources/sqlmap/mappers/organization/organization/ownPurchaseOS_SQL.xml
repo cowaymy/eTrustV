@@ -23,9 +23,24 @@
             A.SALES_ORD_NO,
             C.MEM_CODE,
             C.NAME MEM_NAME,
-            ROUND(NVL(F.OS, 0), 2) OS,
+            NVL((
+                SELECT
+                    ROUND(SUM(RENT_AMT),2) OS
+                    FROM PAY0022D
+                 WHERE
+                    RENT_SO_ID = A.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID
+            ),0) OS,
             ROUND(NVL(I.UN_BILL_AMT,0),2) UNBILL,
-            ROUND(NVL(H.TOT_CHRG,0),2) PENALTY,
+            NVL((
+                SELECT
+                    ROUND(SUM(RENT_AMT),2) OS
+                    FROM PAY0022D
+                 WHERE
+                        RENT_SO_ID = A.SALES_ORD_ID
+                    AND RENT_DOC_TYPE_ID = 162
+                    GROUP BY RENT_SO_ID
+            ),0) PENALTY,
             D.LAST_ORG_CODE ORG_CODE,
             D.LAST_GRP_CODE GRP_CODE,
             D.LAST_DEPT_CODE DEPT_CODE,
@@ -47,24 +62,23 @@
         LEFT JOIN SYS0038M L ON L.STUS_CODE_ID = A.STUS_CODE_ID
         LEFT JOIN SAL0074D M ON M.SALES_ORD_ID = A.SALES_ORD_ID AND M.SVC_CNTRCT_ID = 0
         LEFT JOIN SYS0013M N ON N.CODE_ID = M.MODE_ID
-        LEFT JOIN (
+<!--         LEFT JOIN (
             SELECT
                 RENT_SO_ID,
                 SUM(RENT_AMT) OS
             FROM PAY0022D
             GROUP BY RENT_SO_ID
-        ) F　ON A.SALES_ORD_ID = F.RENT_SO_ID
-        JOIN SAL0071D G ON A.SALES_ORD_ID = G.SALES_ORD_ID AND g.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
-        LEFT JOIN (
+        ) F　ON A.SALES_ORD_ID = F.RENT_SO_ID -->
+        JOIN SAL0071D G ON A.SALES_ORD_ID = G.SALES_ORD_ID AND G.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
+<!--        LEFT JOIN (
             SELECT
                 RENT_SO_ID,
                 SUM(RENT_AMT) TOT_CHRG
             FROM PAY0022D
             WHERE RENT_DOC_TYPE_ID = 162
             GROUP BY RENT_SO_ID
-        ) H　ON A.SALES_ORD_ID = H.RENT_SO_ID　
+        ) H　ON A.SALES_ORD_ID = H.RENT_SO_ID　 -->
         LEFT JOIN SAL0149D I on I.SALES_ORD_ID = A.SALES_ORD_ID
-        LEFT JOIN ORG0001D J ON J.NRIC = C.NRIC AND J.STUS = 3
         WHERE 1=1
         AND A.APP_TYPE_ID = 66
         <if test="staffOwnPurch == 'false'">
@@ -79,14 +93,16 @@
         <if test="memCode != null and memCode != ''">
             AND C.MEM_CODE = #{memCode}
         </if>
+        <if test="keyinMemTypeId != null ">
         <choose>
-	        <when test="keyinMemTypeId != null and keyinMemTypeId != 7284">
-	          AND C.MEM_TYPE = #{keyinMemTypeId}
-	        </when>
-	        <when test="keyinMemTypeId == 7284">
-	          AND J.TRM_REJOIN = 1
-	        </when>
-	     </choose>
+            <when test="keyinMemTypeId == 7284">
+              AND EXISTS (SELECT * FROM ORG0001D J WHERE J.NRIC = C.NRIC AND J.STUS = 3 AND J.TRM_REJOIN = 1)
+            </when>
+            <otherwise>
+              AND C.MEM_TYPE = #{keyinMemTypeId}
+            </otherwise>
+         </choose>
+        </if>
         <if test="keyinOrdStusId != null and keyinOrdStusId != ''">
             AND A.STUS_CODE_ID = #{keyinOrdStusId}
         </if>
