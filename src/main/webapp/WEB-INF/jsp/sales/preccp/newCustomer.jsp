@@ -33,9 +33,16 @@
 	    color:#22741C;
 	}
 
-/* 	.buttonCtrl > a { */
-/* 	    background: #9ea9b4 ! important; */
-/* 	} */
+	.borderIndicator{
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    height: 30px;
+	    flex: 1;
+	    border-radius: 10px;
+	    margin: 0 5px;
+	}
+
 </style>
 
 <section id="content">
@@ -173,6 +180,12 @@
 	            <li><p class="btn_blue"><a id="searchPreCcpResult">Search</a></p></li>
 	            <li><p class="btn_blue"><a id="clearPreCcpResult">Clear</a></p></li>
 	        </ul>
+	        <p>&nbsp;&nbsp;Pre-CCP Result Indicator</p>
+	        <div style="display:flex;">
+	           <div class="my-green-style borderIndicator">Allowed more than 2 units</div>
+	           <div class="my-yellow-style borderIndicator">Limit to 1 unit only</div>
+	           <div class="my-pink-style borderIndicator">Require Minimum 1 year Advance Payment</div>
+	        </div>
 		    <article class="grid_wrap">
                     <div id="preCcpResultGrid" style="width: 100%; height: 500px; margin: 0 auto;"></div>
             </article>
