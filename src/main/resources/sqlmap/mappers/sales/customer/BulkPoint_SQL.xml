@@ -19,7 +19,8 @@
         TIER_UPLOAD_CRT_USER_ID,
         TIER_UPLOAD_CRT_DT,
         TIER_UPLOAD_UPD_USER_ID,
-        TIER_UPLOAD_UDT_DT
+        TIER_UPLOAD_UDT_DT,
+        UPLOAD_REM
         ) VALUES
         (
         #{tierId},
@@ -28,7 +29,8 @@
         #{creator},
         SYSDATE,
         #{updater},
-        SYSDATE
+        SYSDATE,
+        #{remark}
         )
     </insert>
 
@@ -52,7 +54,7 @@
         #{item.detId},
         #{item.tierId},
         #{item.custNRIC},
-        (SELECT CODE_ID FROM sys0013M where CODE = UPPER(#{item.rewardType})),
+        (SELECT CODE_ID FROM SYS0013M where CODE = UPPER(#{item.rewardType})),
         #{item.remark},
         #{item.rewardPoint},
         #{item.stusId},
@@ -69,14 +71,20 @@
           A.TIER_UPLOAD_ID,
           A.TIER_TOTAL_RECORD,
           B.NAME,
-          C.USER_FULL_NAME,
+          C1.USER_FULL_NAME AS CREATOR,
           TO_CHAR(A.TIER_UPLOAD_CRT_DT,'DD-MM-YYYY') TIER_UPLOAD_CRT_DT,
-          A.TIER_UPLOAD_STUS_ID
+          A.TIER_UPLOAD_STUS_ID,
+          A.UPLOAD_REM,
+          A.APP_REM,
+          C2.USER_FULL_NAME AS APPROVER,
+          TO_CHAR(A.TIER_UPLOAD_APP_DT,'DD-MM-YYYY') TIER_UPLOAD_APP_DT
       FROM SAL0400M A
-          JOIN SYS0038M B
+          LEFT JOIN SYS0038M B
               ON A.TIER_UPLOAD_STUS_ID = B.STUS_CODE_ID
-          JOIN SYS0047M C
-              ON C.USER_ID = A.TIER_UPLOAD_CRT_USER_ID
+          LEFT JOIN SYS0047M C1
+              ON C1.USER_ID = A.TIER_UPLOAD_CRT_USER_ID
+          LEFT JOIN SYS0047M C2
+              ON C2.USER_ID = A.TIER_UPLOAD_APP_USER_ID
        WHERE 1 = 1
        <if test="searchTierId != null and searchTierId !=''">
                  AND  ( A.TIER_UPLOAD_ID = #{searchTierId})
@@ -111,13 +119,13 @@
           TO_CHAR(A.TIER_UPLOAD_CRT_DT,'DD-MM-YYYY') TIER_UPLOAD_CRT_DT,
           A.TIER_DET_STUS_ID
         FROM SAL0401D A
-          JOIN SYS0013M B ON A.REW_TYPE = B.CODE_ID
-          JOIN SYS0038M C ON A.TIER_DET_STUS_ID = C.STUS_CODE_ID
-          JOIN SYS0047M D ON A.TIER_UPLOAD_CRT_USER_ID = D.USER_ID
+          LEFT JOIN SYS0013M B ON A.REW_TYPE = B.CODE_ID
+          LEFT JOIN SYS0038M C ON A.TIER_DET_STUS_ID = C.STUS_CODE_ID
+          LEFT JOIN SYS0047M D ON A.TIER_UPLOAD_CRT_USER_ID = D.USER_ID
         WHERE
             1 = 1
         <if test="pointUploadId != null and pointUploadId !=''">
-             AND  ( A.TIER_UPLOAD_ID = #{pointUploadId})
+             AND   A.TIER_UPLOAD_ID = #{pointUploadId}
         </if>
         ORDER BY A.TIER_UPLOAD_DET_ID ASC
     </select>
@@ -129,9 +137,12 @@
     <update id="confirmRewardBulkPointMaster" parameterType="Map">
           UPDATE SAL0400M
           SET
-          TIER_UPLOAD_STUS_ID = 5,
+          TIER_UPLOAD_STUS_ID = #{status},
           TIER_UPLOAD_APP_USER_ID = #{userId},
-          TIER_UPLOAD_APP_DT = SYSDATE
+          TIER_UPLOAD_APP_DT = SYSDATE,
+          TIER_UPLOAD_UPD_USER_ID = #{userId},
+          TIER_UPLOAD_UDT_DT = SYSDATE,
+          APP_REM = #{reason}
           WHERE 1 = 1
           <if test='tierUploadId != null and tierUploadId != ""'>
                  AND TIER_UPLOAD_ID IN
@@ -144,7 +155,9 @@
     <update id="confirmRewardBulkPointDetail" parameterType="Map">
           UPDATE SAL0401D
           SET
-          TIER_DET_STUS_ID = 5
+          TIER_DET_STUS_ID = #{status},
+          TIER_UPLOAD_UPD_USER_ID = #{userId},
+          TIER_UPLOAD_UDT_DT = SYSDATE
           WHERE 1 = 1
           <if test='tierUploadId != null and tierUploadId != ""'>
                  AND TIER_UPLOAD_ID IN
