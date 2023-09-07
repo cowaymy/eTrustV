@@ -18,7 +18,5 @@ public interface RewardPointService {
 
 	List<EgovMap> selectRewardBulkPointItem(Map<String, Object> params);
 
-	int confirmRewardBulkPointMaster(Map<String, Object> params);
-
-	int confirmRewardBulkPointDetail(Map<String, Object> params);
+	int approvalRewardBulkPoint(Map<String, Object> params);
 }
