@@ -766,7 +766,6 @@
 
 
         <select id="selectOrgChartCdList" parameterType="Map" resultType="egovMap">
-        <![CDATA[
                     SELECT Project1.MEM_ID MEM_ID  ,
                            Project1.MEM_UP_ID MEM_UP_ID  ,
                            Project1.MEM_LVL MEM_LVL  ,
@@ -910,44 +909,43 @@
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                                     LEFT JOIN (SELECT *
                                                     FROM ORG0007D C
-                             ]]>
+                                                    WHERE 1=1
                                                     <choose>
                                                      <when test="searchDt != null and searchDt != '' ">
-                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+                                                        AND TO_CHAR(C.EVT_APPLY_DT, 'MM/YYYY') <![CDATA[ <=  ]]> #{searchDt}
                                                       </when>
                                                       <otherwise>
-                            <![CDATA[
-                                                        WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
-                                                      /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY')*/
-                                                       ]]>
+                                                        AND TRUNC(c.evt_apply_dt,'MM') <![CDATA[ <= ]]> TRUNC(sysdate,'MM')
                                                       </otherwise>
                                                     </choose>
-                                                    ) Extent3
-                                    ON Extent1.MEM_ID = Extent3.MEM_ID
+                                    ) Extent3 ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
 <![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
                                        AND ( 1 = Extent2.STUS )
                                        AND ( Extent2.MEM_TYPE = #{memType})
                                        <choose>
                                         <when test="memLvl == 11">
-                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = '1' )
-<![CDATA[                                 OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = '1' ) ]]>
-                                               OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = '1' )
+                                            AND (
+                                                ( Extent3.PROMO_TYPE_ID     IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = '1' )
+                                             OR ( Extent3.PROMO_TYPE_ID     IN (747, 748, 749) AND Extent3.STUS_ID <![CDATA[ <> 4  ]]> AND Extent1.MEM_LVL = '1' )
+                                             OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL )
+                                           AND Extent1.MEM_LVL = '1' )
                                         </when>
                                         <otherwise>
-                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = #{memLvl})
-<![CDATA[                                 OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = #{memLvl} ) ]]>
-                                               OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
+                                            AND (
+                                                ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = #{memLvl})
+                                             OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <![CDATA[ <> 4  ]]> AND Extent1.MEM_LVL = #{memLvl} )
+                                             OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
                                         </otherwise>
                                        </choose>
-                                       AND ( Extent2.STUS IN ( 1,8 ) )
+                                       AND Extent2.STUS IN ( 1,8 )
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
                                       </if>
                                       <if test="groupCode != null and groupCode != ''">
-<![CDATA[                              AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{groupCode})
-                                            OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_UP_ID = #{groupCode} )
-                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{groupCode} ) ]]>
+                                           AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{groupCode})
+                                            OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <![CDATA[ <> ]]> 4 AND Extent1.MEM_UP_ID = #{groupCode} )
+                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{groupCode} )
                                       </if>
                                       <if test="groupCode == null or groupCode == ''">
 			                            <choose>
@@ -965,20 +963,21 @@
 			                                    </when>
 			                            </choose>
 			                            </if>
-			                          AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
-                                                                                  FROM ORG0007D C
-                                                                                  <choose>
-                                                                                    <when test="searchDt != null and searchDt != '' ">
-<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
-                                                                                    </when>
-                                                                                    <otherwise>
-<![CDATA[
-WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
-/*BY KV - WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY')*/
- ]]>
-                                                                                    </otherwise>
-                                                                                  </choose>
-                                                                                  GROUP BY C.MEM_ID)
+			                          AND ( Extent3.PROMO_ID IN
+                                            (SELECT
+                                                MAX(C.PROMO_ID)
+                                             FROM ORG0007D C
+                                             WHERE 1 = 1
+                                             <choose>
+                                                <when test="searchDt != null and searchDt != '' ">
+                                                    AND TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <![CDATA[ <=  ]]> #{searchDt}
+                                                </when>
+                                                <otherwise>
+                                                    AND TRUNC(c.evt_apply_dt,'MM') <![CDATA[ <= ]]> TRUNC(sysdate,'MM')
+                                                </otherwise>
+                                             </choose>
+                                             AND C.MEM_ID = EXTENT1.MEM_ID
+                                         GROUP BY C.MEM_ID)
                                                 OR Extent3.PROMO_ID      IS NULL )
 <![CDATA[                         AND ( (Extent3.PROMO_TYPE_ID NOT IN (757, 758) OR Extent3.PROMO_TYPE_ID IS NULL)
                                              OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) ]]>
