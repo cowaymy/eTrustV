@@ -35,6 +35,9 @@ public class RewardPointServiceImpl implements RewardPointService {
 		masterList.put("tierId", masterSeq);
 
 		int mResult = rewardPointMapper.saveRewardBulkPointMaster(masterList);
+		int dResult = 0;
+
+		logger.debug("============= mResult  ", mResult);
 
 		if (mResult > 0 && detailList.size() > 0) {
 			List records = new ArrayList();
@@ -63,23 +66,17 @@ public class RewardPointServiceImpl implements RewardPointService {
 			    Map<String, Object> batchMasterList = new HashMap<>(masterList);
 			    batchMasterList.put("list", batchDetailList);
 
-			    rewardPointMapper.saveRewardBulkPointDetail(batchMasterList);
+			    dResult = rewardPointMapper.saveRewardBulkPointDetail(batchMasterList);
 
-			  //CALL PROCEDURE
-			    rewardPointMapper.callRewardBulkPointValidateDet(batchMasterList);
-//                masterList.put("list", records);
-//    			rewardPointMapper.saveRewardBulkPointDetail(masterList);
+			    if(dResult > 0) {
+			    	//CALL PROCEDURE
+			    	rewardPointMapper.callRewardBulkPointValidateDet(batchMasterList);
+			    }
             }
-
-//			masterList.put("list", records);
-//			rewardPointMapper.saveRewardBulkPointDetail(masterList);
-
-
-
 		}
-
-		return masterSeq;
-
+		if(mResult > 0 && dResult > 0)
+			return masterSeq;
+		else return 0;
 	}
 
 	@Override
@@ -94,13 +91,13 @@ public class RewardPointServiceImpl implements RewardPointService {
 	}
 
 	@Override
-	public int confirmRewardBulkPointMaster(Map<String, Object> params) {
-		return rewardPointMapper.confirmRewardBulkPointMaster(params);
-	}
+	public int approvalRewardBulkPoint(Map<String, Object> params) {
+		int confirmMaster = 0, confirmDetail = 0;
+		confirmMaster	= rewardPointMapper.confirmRewardBulkPointMaster(params);
 
-	@Override
-	public int confirmRewardBulkPointDetail(Map<String, Object> params) {
-		return rewardPointMapper.confirmRewardBulkPointDetail(params);
+		if(confirmMaster > 0) {
+			confirmDetail = rewardPointMapper.confirmRewardBulkPointDetail(params);
+		}
+		return confirmDetail;
 	}
-
 }
