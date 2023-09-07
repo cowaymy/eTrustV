@@ -1094,14 +1094,32 @@
 	            LEFT JOIN ORG0001D Extent6   ON Extent6.MEM_ID = Extent1.UPD_USER_ID
 	            LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID
 	            LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
+                JOIN (
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    WHERE p1.bill_no = #{billSearchTxt}
+                UNION
+                    SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN sal0001d p2 ON p2.sales_ord_id = p1.bill_so_id
+                    WHERE p2.sales_ord_no = #{billSearchTxt}
+                UNION
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN org0001d p3 ON p3.mem_id = p1.bill_mem_id
+                    WHERE p3.mem_code = #{billSearchTxt}
+                ) extent9 ON extent9.bill_id = extent1.bill_id
             WHERE
                 /*Extent1.STUS_ID = 1*/
                 Extent1.BILL_TYPE_ID = 222
-                AND (
+                <!-- AND (
                     Extent1.BILL_NO = #{billSearchTxt}
                     OR Extent7.SALES_ORD_NO = #{billSearchTxt}
                     OR Extent2.MEM_CODE = #{billSearchTxt}
-                )
+                ) -->
             )
         WHERE
             BILL_AMT <![CDATA[ > ]]> PAID_AMT
@@ -1177,14 +1195,32 @@
                 LEFT JOIN ORG0001D Extent6   ON Extent6.MEM_ID = Extent1.UPD_USER_ID
                 LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID
                 LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
+                JOIN (
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    WHERE p1.bill_no = #{billSearchTxt}
+                UNION
+                    SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN sal0001d p2 ON p2.sales_ord_id = p1.bill_so_id
+                    WHERE p2.sales_ord_no = #{billSearchTxt}
+                UNION
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN org0001d p3 ON p3.mem_id = p1.bill_mem_id
+                    WHERE p3.mem_code = #{billSearchTxt}
+                ) extent9 ON extent1.bill_id = extent9.bill_id
             WHERE
                 /*Extent1.STUS_ID = 1*/
                 Extent1.BILL_TYPE_ID = 569
-                AND (
+                <!-- AND (
                     Extent1.BILL_NO = #{billSearchTxt}
                     OR Extent7.SALES_ORD_NO = #{billSearchTxt}
                     OR Extent2.MEM_CODE = #{billSearchTxt}
-                )
+                ) -->
             )
         WHERE
             BILL_AMT <![CDATA[ > ]]> PAID_AMT
