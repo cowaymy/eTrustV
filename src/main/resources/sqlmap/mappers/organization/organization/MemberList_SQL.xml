@@ -5460,6 +5460,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="emergencyCntcRelationship != null and emergencyCntcRelationship != '' ">
           , EMRGCY_CNTC_RLTSHP = #{emergencyCntcRelationship}
         </if>
+        <if test="businessType != null and businessType != '' ">
+          , BIZ_TYPE = #{businessType}
+        </if>
         WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
     </update>
 

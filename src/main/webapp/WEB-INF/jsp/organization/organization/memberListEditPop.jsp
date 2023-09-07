@@ -112,6 +112,7 @@ function fn_memberSave(){
                     $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
                     $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
                     $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
+                    $.extend(jsonObj, {'businessType' : $("#businessType").val()});
 
 				    console.log(JSON.stringify(jsonObj));
 				    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -160,10 +161,11 @@ function fn_memberSave(){
 	                  $.extend(jsonObj, {'Birth' :$("#Birth").val() });
 	                  $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 	                  $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
-	                    $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
-	                    $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
-	                    $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
-	                    $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
+                      $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
+                      $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
+                      $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
+                      $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
+                      $.extend(jsonObj, {'businessType' : $("#businessType").val()});
 
 	                  console.log(JSON.stringify(jsonObj));
 	                  Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -219,6 +221,7 @@ function fn_memberSave(){
 		            $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
 		            $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
 		            $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
+		            $.extend(jsonObj, {'businessType' : $("#businessType").val()});
 
 		            console.log(JSON.stringify(jsonObj));
 		            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -271,6 +274,7 @@ function fn_memberSave(){
             $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
             $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
             $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
+            $.extend(jsonObj, {'businessType' : $("#businessType").val()});
 
 	        console.log(JSON.stringify(jsonObj));
 	        Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
