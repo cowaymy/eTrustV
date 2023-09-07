@@ -65,7 +65,7 @@ public class RewardBulkPointController {
 	}
 
 	@RequestMapping(value = "/uploadRewardBulkPoint.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> uploadRewardBulkPoint(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+    public ResponseEntity<ReturnMessage> uploadRewardBulkPoint(@RequestParam Map<String, Object>params, MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
 		ReturnMessage message = new ReturnMessage();
 
 		logger.debug(" ================ csvFileUpload ===================   "  );
@@ -88,6 +88,7 @@ public class RewardBulkPointController {
 
 		Map<String, Object> masterList = new HashMap<String, Object>();
 		masterList.put("tierStatusID", 1);
+		masterList.put("remark", params.get("remark"));
 		masterList.put("creator", sessionVO.getUserId());
 		masterList.put("updater", sessionVO.getUserId());
 		masterList.put("totalRecord", vos2.size());
@@ -100,7 +101,7 @@ public class RewardBulkPointController {
 
 			map.put("custNRIC", vo.getCustNRIC());
 			map.put("rewardType", vo.getRewardType());
-			map.put("remark", vo.getRemark());
+			map.put("remark", vo.getRemark().trim());
 			map.put("rewardPoint", vo.getRewardPoint());
 			map.put("stusId", 1);
 			map.put("creator", sessionVO.getUserId());
@@ -152,9 +153,10 @@ public class RewardBulkPointController {
 		return ResponseEntity.ok(map);
 	}
 
-	@RequestMapping(value = "/confirmRewardBulkPoint.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> confirmRewardBulkPoint(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/approvalRewardBulkPoint.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> approvalRewardBulkPoint(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 		String[] arrTierUploadId   = request.getParameterValues("tierUploadId");
+		String status = "";
 
 		Map<String, Object> map = new HashMap<>();
 
@@ -165,23 +167,32 @@ public class RewardBulkPointController {
         	params.put("tierUploadId", arrTierUploadId);
         }
 
-        int result = rewardPointService.confirmRewardBulkPointMaster(params);
-        int result2 = rewardPointService.confirmRewardBulkPointDetail(params);
-        logger.debug(" ================ result ===================   " + result);
-        logger.debug(" ================ result ===================   " + result2);
+        if(params.get("status").toString().equals("approve")) {
+        	params.put("status", 5);
+        	status = "approved";
+        }
+        else {
+        	params.put("status", 6);
+        	status = "rejected";
+        	params.put("reason", params.get("reason").toString().trim());
+        }
 
-	    logger.debug(" ================ params ===================   " + arrTierUploadId);
+        int result = rewardPointService.approvalRewardBulkPoint(params);
+
+//	    logger.debug(" ================ params ===================   " + arrTierUploadId);
 
 	    ReturnMessage message = new ReturnMessage();
-	    if(result > 0 && result2 > 0){
-			message.setMessage("Reward bulk point has been confirmed.");
-			message.setCode(AppConstants.SUCCESS);
+	    if(result > 0){
+			message.setMessage("Reward bulk point has been " + status + ".");
 		}else{
-			message.setMessage("Failed to confirm this reward bulk point. Please try again later.");
-			message.setCode(AppConstants.FAIL);
+			message.setMessage("Failed to " + params.get("status").toString() + " this reward bulk point. Please try again later.");
 		}
 	    map.put("message", message);
-
 	    return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/rejectMsgPop.do")
+	public String rejectMsgPop(ModelMap model) {
+		return "sales/customer/rejectionOfRewardBulkPointMsgPop";
 	}
 }
