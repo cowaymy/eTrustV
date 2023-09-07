@@ -210,7 +210,7 @@ function fn_close4(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Shipping Fee</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="javascript:void(0);" onclick="javascript:fn_close()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:void(0);">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

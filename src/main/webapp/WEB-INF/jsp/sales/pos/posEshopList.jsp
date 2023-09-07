@@ -43,7 +43,6 @@ var optionSystem = {
         isShowChoose: false
 };
 
-
 var columnLayout = [
                     {dataField: "esnNo",headerText :"Ref No.",width: 180    ,height:30 , visible:true, editable : false},
                     {dataField: "posNo",headerText :"POS No.",width:220   ,height:30 , visible:true, editable : false},
@@ -57,7 +56,6 @@ var columnLayout = [
                     {dataField: "waybillNo",headerText :"Waybill No",width:120   ,height:30 , visible:true,editable : false},
 ];
 
-
 function createAUIGrid(){
 
 	  var auiGridProps = {
@@ -67,7 +65,6 @@ function createAUIGrid(){
 		        fixedColumnCount    : 1,
 		        showStateColumn     : false,
 		        displayTreeOpen     : false,
-		      //selectionMode       : "singleRow",  //"multipleCells",
 		        headerHeight        : 30,
 		        useGroupingPanel    : false,        //그룹핑 패널 사용
 		        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -78,22 +75,11 @@ function createAUIGrid(){
 		 };
 
         mstGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "", auiGridProps);
-
-//         var whBrnchParam = {branchId :  '${branchId}'};
-//         if('${branchId}' !='' && '${branchId}' !=null){
-//               //branch List
-//              doGetCombo('/sales/posstock/selectEshopWhBrnchList.do?branchId=' + '${branchId}', '', '', 'branch', 'S', 'fn_selectEshopList');
-//         }
-//         else{
-//               //branch List
-             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do' , '', '', 'branch', 'S', 'fn_selectedBranch');
-//         }
-
-
+        doGetCombo('/sales/posstock/selectEshopWhBrnchList.do' , '', '', 'branch', 'S', 'fn_selectedBranch');
 }
 
 function fn_selectedBranch(){
-    if('${branchId}' !='' && '${branchId}' !=null){
+    if('${branchId}'){
         $("#branch").val("${branchId}".trim());
         $("#branch").attr("class", "w100p");
      }
@@ -283,6 +269,9 @@ $(function(){
 	         Common.popupDiv("/sales/posstock/posEshopRawDataPop.do", '', null, null, true);
 	    });
 
+       $("#btnStock").click(function() {
+           Common.popupDiv("/sales/posstock/posEshopStockPop.do", '', null, null, true);
+      });
 });
 
 function fn_rejectedEshop(){
@@ -466,8 +455,6 @@ function fn_insTransactionLog(posNo, posTypeId){
     transacMap.rptParamtrValu = "@PosRefNo," + posNo  + ";@PosTypeId," + posTypeId;
     transacMap.rptRem = "";
 
-    console.log("transacMap " + transacMap);
-
     Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
         if(result == null){
             Common.alert('<spring:message code="sal.alert.msg.failToSaveLog" />');
@@ -498,12 +485,6 @@ $.fn.clearForm = function() {
         }
     });
 };
-
-
-
-
-
-
 </script>
 
 <section id="content"><!-- content start -->
@@ -518,12 +499,30 @@ $.fn.clearForm = function() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>e-Shop</h2>
     <ul class="right_btns">
-       <li><p class="btn_blue"><a id="btnOrder" ><span class="add"></span>ORDER</a></p></li>
-       <li><p class="btn_blue"><a id="btnReceived"><span class="edit"></span> RECEIVED</a></p></li>
-       <li><p class="btn_blue"><a id="btnApproval"><span class="edit"></span>APPROVAL</a></p></li>
-       <li><p class="btn_blue"><a id="btnRejected"><span class="edit"></span>REJECT</a></p></li>
-       <li><p class="btn_blue"><a id="btnSearch"><span class="search"   ></span>Search</a></p></li>
-       <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
+
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                    <li><p class="btn_blue"><a id="btnOrder" ><span class="add"></span>ORDER</a></p></li>
+            </c:if>
+
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                    <li><p class="btn_blue"><a id="btnReceived"><span class="edit"></span> RECEIVED</a></p></li>
+            </c:if>
+
+	        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+	               <li><p class="btn_blue"><a id="btnApproval"><span class="edit"></span>APPROVAL</a></p></li>
+	        </c:if>
+
+	        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+	               <li><p class="btn_blue"><a id="btnRejected"><span class="edit"></span>REJECT</a></p></li>
+	        </c:if>
+
+	        <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+	               <li><p class="btn_blue"><a id="btnSearch"><span class="search"   ></span>Search</a></p></li>
+	        </c:if>
+
+	        <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+	               <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
+	        </c:if>
     </ul>
 </aside><!-- title_line end -->
  <form name="reportPDFForm" id="reportPDFForm"  method="post">
@@ -617,17 +616,18 @@ $.fn.clearForm = function() {
      <dt>Link</dt>
      <dd>
       <ul class="btns">
-        <li><p class="link_btn type2"><a id="btnAddItem" href="#">Add Item</a></p></li>
-        <li><p class="link_btn type2"><a id="btnEditItem" href="#">Edit Item</a></p></li>
-        <li><p class="link_btn type2"><a id="btnShipping" href="#">Shipping</a></p></li>
-        <li><p class="link_btn type2"><a id="btnInvoiceGenerate" href="#">Invoice</a></p></li>
-        <li><p class="link_btn type2"><a id="btnReceiptGenerate" href="#">Receipt</a></p></li>
-        <li><p class="link_btn type2"><a id="btnGenerateRawData">Raw Data</a></p></li>
+              <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
+			        <li><p class="link_btn type2"><a id="btnAddItem" href="#">Add Item</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnEditItem" href="#">Edit Item</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnShipping" href="#">Shipping</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnInvoiceGenerate" href="#">Invoice</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnReceiptGenerate" href="#">Receipt</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnGenerateRawData">Raw Data</a></p></li>
+			        <li><p class="link_btn type2"><a id="btnStock">Stock</a></p></li>
+              </c:if>
       </ul>
       <p class="hide_btn">
-       <a href="#"><img
-        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
-        alt="hide" /></a>
+        <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a>
       </p>
      </dd>
     </dl>

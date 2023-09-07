@@ -3617,44 +3617,44 @@
                     POS_ID = #{posFlexiId}
     </update>
 
-    <select id="selectWhSOBrnchList" resultType="egovMap">
+    <select id="selectWhSOBrnchList" parameterType="Map" resultType="egovMap">
        SELECT * FROM (
-           SELECT
-                S5.BRNCH_ID CODE_ID,
-                S5.CODE || '-' || S5.NAME CODE_NAME,
-                S5.NAME ,
-                S5.CODE ,
-           <!-- S28.WH_LOC_ID ,
-                S28.WH_LOC_CODE ,
-                S28.WH_LOC_DESC ,
-                S28.WH_LOC_GB ,
-                -->
-                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
-            FROM
-                SYS0005M S5 ,SYS0028M S28
-            WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
-            AND S28.WH_LOC_STK_GRAD = 'A'
-            AND S28.WH_LOC_GB IN ('08','02','09')
+	           SELECT
+		                S5.BRNCH_ID CODE_ID,
+		                S5.CODE || '-' || S5.NAME CODE_NAME,
+		                S5.NAME ,
+		                S5.CODE ,
+		                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+	            FROM
+	                SYS0005M S5 ,SYS0028M S28
+	            WHERE
+	                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+	            AND S28.WH_LOC_STK_GRAD = 'A'
+	            AND S5.STUS_ID = 1
+	            AND S28.WH_LOC_STUS_ID = 1
+	            AND S28.WH_LOC_GB IN ('08','02','09')
 
-            UNION
-                      SELECT
-                S5.BRNCH_ID CODE_ID,
-                S5.CODE || '-' || S5.NAME CODE_NAME,
-                S5.NAME ,
-                S5.CODE ,
-                <!-- S28.WH_LOC_ID ,
-                S28.WH_LOC_CODE ,
-                S28.WH_LOC_DESC ,
-                S28.WH_LOC_GB , -->
-                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
-            FROM
-                SYS0005M S5 ,SYS0028M S28
-            WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
-            AND S28.WH_LOC_STK_GRAD = 'A'
-            AND S5.BRNCH_ID = 250
-            ) ORDER BY CODE
+	            UNION
+
+	            SELECT
+		                S5.BRNCH_ID CODE_ID,
+		                S5.CODE || '-' || S5.NAME CODE_NAME,
+		                S5.NAME ,
+		                S5.CODE ,
+		                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+	            FROM
+	                SYS0005M S5 ,SYS0028M S28
+	            WHERE
+	                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+	            AND S28.WH_LOC_STK_GRAD = 'A'
+	            AND S5.STUS_ID = 1
+	            AND S28.WH_LOC_STUS_ID = 1
+	            AND S5.BRNCH_ID = 250
+      ) WHERE 1=1
+      <if test="code != null and code != ''">
+      AND CODE LIKE '%' || #{code} || '%'
+      </if>
+      ORDER BY CODE
    </select>
 
 <select id="selectPOSFlexiItem" parameterType="Map" resultType="egovMap">

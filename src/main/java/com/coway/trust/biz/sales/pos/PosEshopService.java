@@ -77,7 +77,15 @@ public interface PosEshopService {
 
 	List<EgovMap> selectWhSOBrnchItemList() throws Exception;
 
+	List<EgovMap> selectEshopStockList(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectPaymentInfo(Map<String, Object> params);
 
+	int confirmPayment(Map<String, Object> params);
 
+	void deactivatePaymentAndEsn(Map<String, Object> params);
+
+	void revertFloatingStockLOG0106M(Map<String, Object> params);
+
+	List<EgovMap> checkValidationEsn(Map<String, Object> params);
 }

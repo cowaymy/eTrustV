@@ -12,6 +12,7 @@
 }
 
 </style>
+
 <script type="text/javascript">
 
 var columnLayout = [
@@ -25,9 +26,7 @@ var columnLayout = [
                     {dataField: "itemReqQty",headerText :"Request Quantity"                ,width:140   ,height:30 , visible:true, editable : false ,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemRecvQty",headerText :"Received Quantity"                ,width:140   ,height:30 , visible:true, editable : false ,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemRtnQty",headerText :"Return Quantity"                ,width:140   ,height:30 , visible:true, editable : false ,dataType : "numeric", formatString : "#,##0"},
-
  ];
-
 
 //그리드 속성 설정
 var gridProsPOS = {
@@ -39,14 +38,7 @@ var gridProsPOS = {
 
 var myViewGridIDPOS;
 
-
-
 $(document).ready(function () {
-
-
-    //CommonCombo.make('fromBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-    //CommonCombo.make('toBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-
 
     myViewGridIDPOS = AUIGrid.create("#grid_wrapPOS", columnLayout, gridProsPOS);
 
@@ -57,56 +49,43 @@ $(document).ready(function () {
         fn_setRowInfo( event.item);
     });
 
-
 });
-
-
-
-
 
 //리스트 조회.
 function fn_getViewDataListAjax  () {
+	  Common.ajax("GET", "/sales/posstock/selectPosStockMgmtViewInfo.do?scnNo="+'${scnNo}', null, function(result) {
+		  console.log(result);
 
-  Common.ajax("GET", "/sales/posstock/selectPosStockMgmtViewInfo.do?scnNo="+'${scnNo}', null, function(result) {
-     console.log("성공.");
-     console.log("data : " + result);
-     console.log(result);
-
-     AUIGrid.setGridData(myViewGridIDPOS, result.dataList);
-
-
-     $("#viewScnMoveType").val(result.dataInfo.scnMoveTypeCode);
-     $("#viewScnMoveStat").val(result.dataInfo.scnMoveStatCode);
-     $("#viewScnFromLocDesc").val(result.dataInfo.scnFromLocDesc);
-     $("#viewScnToLocDesc").val(result.dataInfo.scnToLocDesc);
-     //$("#viewItemPurhOrdNo").val(result.dataInfo.itemPurhOrdNo);
-     $("#viewScnMoveDate").val(result.dataInfo.scnMoveDate);
-
- });
+		  AUIGrid.setGridData(myViewGridIDPOS, result.dataList);
+		     $("#viewScnMoveType").val(result.dataInfo.scnMoveTypeCode);
+		     $("#viewScnMoveStat").val(result.dataInfo.scnMoveStatCode);
+		     $("#viewScnFromLocDesc").val(result.dataInfo.scnFromLocDesc);
+		     $("#viewScnToLocDesc").val(result.dataInfo.scnToLocDesc);
+		     $("#viewScnMoveDate").val(result.dataInfo.scnMoveDate);
+	  });
 }
-
-
 
 function fn_close(){
     $("#popup_wrap").remove();
 }
 
-
-
-
 function fn_setRowInfo(obj){
 
-    //console.log(obj);
-    //$("#viewScnFromLocDesc").val(result.dataInfo.scnFromLocDesc);
     $("#itemCtgryDesc").val(obj.itemCtgryDesc);
     $("#itemDesc").val(obj.itemDesc);
-    $("#itemRtnReason").val(obj.itemRtnReason);
     $("#itemCode").val(obj.itemCode);
+
+    let reason = FormUtil.isEmpty(obj.itemReason) ? obj.itemRtnReason : obj.itemReason;
+    $("#itemRtnReason").val(reason);
+
+    let condition = obj.itemCond =="N" ? "New" : obj.itemCond =="R" ? "Replacement" : "";
+    $("#itemCond").val(condition);
 
     $("#itemReqQty").val(obj.itemReqQty);
     $("#itemRecvQty").val(obj.itemRecvQty);
     $("#itemRtnQty").val(obj.itemRtnQty);
     $("#itemStatusDesc").val(obj.itemStatusDesc);
+    $("#itemRemark").val(obj.itemRejRemark);
 
 
     if(obj.itemRejAttchGrpId  !="" && obj.itemRejAttchGrpId !=undefined ){
@@ -115,18 +94,15 @@ function fn_setRowInfo(obj){
     }
 
 }
+
 function fn_viewAtachPop(){
     window.open("<c:url value='/file/fileDown.do?fileId="+  $("#itemRejAttchGrpId").val()+ "'/>");
-
 }
 
-
 function fn_gridExport(){
-
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap", "xlsx", "Movement Information");
 }
-
 
 </script>
 
@@ -265,7 +241,7 @@ function fn_gridExport(){
 <tr>
     <th scope="row">Received Quantity</th>
     <td>
-               <input type="text" title="" placeholder="" class="w100p disabled"  id="itemRecvQty"  name="itemRecvQty" disabled="disabled" />
+            <input type="text" title="" placeholder="" class="w100p disabled"  id="itemRecvQty"  name="itemRecvQty" disabled="disabled" />
     </td>
     <th scope="row">Return Quantity</th>
     <td>
@@ -273,26 +249,30 @@ function fn_gridExport(){
     </td>
 </tr>
 
-
-
 <tr>
     <th scope="row">Attachment</th>
     <td colspan="3">
-
         <ul class="right_btns">
             <input type="hidden" title="" placeholder="" class="w100p disabled"  id="itemRejAttchGrpId"  name="itemRejAttchGrpId" disabled="disabled" />
             <li><p class="btn_grid"  id="itemAttachmentBt"  style="display:none"><a id="itemAttachment" onclick="fn_viewAtachPop();" >View</a></p></li>
         </ul>
-
     </td>
+</tr>
 
+<tr>
+    <th scope="row">Conditions</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p disabled"  id="itemCond"  name="itemCond" disabled="disabled" /></td>
+</tr>
+
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p disabled"  id="itemRemark"  name="itemRemark" disabled="disabled" /></td>
 </tr>
 
 
 
 </tbody>
 </table><!-- table end -->
-
 </form>
 </section><!-- search_table end -->
 

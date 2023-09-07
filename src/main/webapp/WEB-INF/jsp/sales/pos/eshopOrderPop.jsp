@@ -476,7 +476,7 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
                $("#imgItem").html("");
                $("#orderQty_addToCart").val("");
-               $("#totalPrice_addToCart").val("");
+               document.getElementById("totalPrice_addToCart").innerHTML = `&nbsp;<b style="font-size: 15px;"> RM 0.00</b>`;
                document.getElementById("imgItem").appendChild(elem);
 
                $("#item_addToCart").val(result[0].stkCode);
@@ -543,7 +543,8 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
     	 $("#orderQty_addToCart").change(function(e){
                  var totalPrice = $("#orderQty_addToCart").val() *  $("#price_addToCart").val();
-                 $("#totalPrice_addToCart").val(totalPrice);
+                 document.getElementById("totalPrice_addToCart").innerHTML = "";
+                 document.getElementById("totalPrice_addToCart").innerHTML = `&nbsp;<b style="font-size: 18px;">  RM ` + totalPrice.toFixed(2) + "</b>";
     	 });
 
     	 $("#scnFromLocId").change(function(e){
@@ -551,38 +552,38 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
     		 $("#esnFromLocId").val(esnFromLocId);
     	 });
 
-        $("#attachmentPaySlip").change(function(evt){
+//         $("#attachmentPaySlip").change(function(evt){
 
-        	var file = evt.target.files[0];
+//         	var file = evt.target.files[0];
 
-            if(file == null && myFileCaches[0] != null){
-                delete myFileCaches[0];
-            }else if(file != null){
-                myFileCaches[0] = {file:file};
-            }
+//             if(file == null && myFileCaches[0] != null){
+//                 delete myFileCaches[0];
+//             }else if(file != null){
+//                 myFileCaches[0] = {file:file};
+//             }
 
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
+//             var msg = '';
+//             if(file.name.length > 30){
+//                 msg += "*File name wording should be not more than 30 alphabet.<br>";
+//             }
 
-            var fileType = file.type.split('/');
-            if(fileType[0] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
+//             var fileType = file.type.split('/');
+//             if(fileType[0] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+//                 msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+//             }
 
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[0].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[0].file['checkFileValid'] = true;
-            }
+//             if(file.size > 2000000){
+//                 msg += "*Only allow picture with less than 2MB.<br>";
+//             }
+//             if(msg != null && msg != ''){
+//                 myFileCaches[0].file['checkFileValid'] = false;
+//                 Common.alert(msg);
+//             }
+//             else{
+//                 myFileCaches[0].file['checkFileValid'] = true;
+//             }
 
-        });
+//         });
 
     });
 
@@ -712,11 +713,6 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
             return false;
         }
 
-        if($("#attachmentPaySlip").val() == ''){
-            Common.alert('Please upload payslip in Attachment');
-            return false;
-        }
-
         if($("#totalOrdering").val() == ''){
             Common.alert('Cart cannot be empty. Please add item into cart.');
             return false;
@@ -771,18 +767,19 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
                 formData.append(n, v.file);
             });
 
-            Common.ajaxFile("/sales/posstock/attachFileUpload.do", formData, function(result) {
-                if(result != 0 && result.code == 00){
-                     $("#hiddenAttachmentPaySlip").val(result.data.fileGroupKey);
+//             Common.ajaxFile("/sales/posstock/attachFileUpload.do", formData, function(result) {
+//                 if(result != 0 && result.code == 00){
+//                      $("#hiddenAttachmentPaySlip").val(result.data.fileGroupKey);
 
                      Common.ajax("GET", "/sales/posstock/checkAvailableQtyStock", $("#eshopForm").serializeJSON() , function(result) {
-                    	 console.log(result);
                          if(result.code == "99"){
                         	 Common.alert('Item(s) : '+result.message+" currently do not have enough stock. Kindly please check with Sales Support Department.",reloadList);
                          }
                          else{
                           Common.ajax("POST", "/sales/posstock/insertPosEshop.do", $("#eshopForm").serializeJSON(), function(result) {
-                          Common.confirm('ESN Number is : '+result.data,reloadList);
+//                         	  Common.confirm('ESN Number is : '+result.data,reloadList);
+                        	  Common.popupDiv("/sales/posstock/posEshopPaymentConfirmationPop.do", {esnNo: result.data}, null, null, true);
+
                          }, function(jqXHR, textStatus, errorThrown) {
                              try {
                                  console.log("status : " + jqXHR.status);
@@ -796,12 +793,12 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
                          });
                          }
                      });
-                }else{
-                    Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                }
-            },function(result){
-                Common.alert("Upload Failed. Please check with System Administrator.");
-            });
+//                 }else{
+//                     Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+//                 }
+//             },function(result){
+//                 Common.alert("Upload Failed. Please check with System Administrator.");
+//             });
         }
     }
 
@@ -827,20 +824,15 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 			<li><p class="btn_blue2"><a href="#" id="btnOrdRegClose"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 	</header>
-	<!-- pop_header end -->
+
     <form id="eshopForm" name="eshopForm" action="#" method="post">
 	<section class="pop_body">
-		<!-- pop_body start -->
-
 		<section class="tap_wrap">
-			<!-- tap_wrap start -->
-
 			<ul class="tap_type1">
 				<li><a href="#" class="on">Delivery Info</a></li>
 				<li><a href="#">Catalog</a></li>
 				<li><a href="#">Shopping Carts</a></li>
 			</ul>
-
 
 <!------------------------------------------------------------------------------
                                             Delivery Info
@@ -852,12 +844,8 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 		</aside>
 
 		<section>
-
-<!-- 			<form id="instCntcForm" name="instCntcForm" action="#" method="post"> -->
 				<input id="hiddenInstCntcId" name="instCntcId" type="hidden" />
-
 				<table class="type1">
-					<!-- table start -->
 					<caption>table</caption>
 					<colgroup>
 						<col style="width: 120px" />
@@ -877,8 +865,6 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 						</tr>
 					</tbody>
 				</table>
-				<!-- table end -->
-<!-- 			</form> -->
 		</section>
 
 
@@ -886,18 +872,12 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 			<aside class="title_line">
 				<h3>Shipping Address Info</h3>
 			</aside>
-			<!-- title_line end -->
-
-<!-- 			<form id="insAddressForm" name="insAddressForm" method="POST"> -->
 				<input type="hidden" id="areaId" name="areaId"> <input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId">
 				<input type="hidden" name="addrCustAddId" value="${detailaddr.custAddId}" id="addrCustAddId">
-				<!-- Temp Address Id -->
 				<input type="hidden" name="tempAddrId" id="tempAddrId">
 				<input type="hidden" name="tempAreaId" id="tempAreaId">
-				<!-- Page Param -->
 				<input type="hidden" name="callParam" id="_callParam" value="${callParam}">
 				<table class="type1">
-					<!-- table start -->
 					<caption>table</caption>
 					<colgroup>
 						<col style="width: 40%" />
@@ -940,140 +920,132 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 						</tr>
 					</tbody>
 				</table>
-				<!-- table end -->
-<!-- 			</form> -->
 			<ul class="center_btns">
 				<li><p class="btn_blue"><a href="#" onclick="fn_saveConfirm()"><spring:message code="sal.btn.save" /></a></p></li>
 			</ul>
-
 		</section>
-		<!-- search_table end -->
 	</article>
-	<!-- tap_area end -->
 
 
 <!--****************************************************************************
                                                            Catalog
 *****************************************************************************-->
 	<article class="tap_area">
-		<!-- tap_area start -->
-
 		<section class="search_table">
 
 			<aside class=""><!-- title_line start -->
 	            <ul class="right_btns">
 	                <li><p class="btn_grid"><a id="btnSearchCatalog" onclick="javascript:selectCatalogList();"  ><span class="search"></span>Search</a></p></li>
 	            </ul>
-	        </aside><!-- title_line end -->
+	        </aside>
 
-			<!-- search_table start -->
+			<table class="type1">
+				<!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+					<col style="width: 200px" />
+					<col style="width: *" />
+					<col style="width: 170px" />
+					<col style="width: *" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">Branch / Warehouse</th>
+						<td colspan="3"><select class="w100p" id="scnFromLocId" name="scnFromLocId"></select></td>
+						<input type="hidden" id="esnFromLocId" name="esnFromLocId"/>
+					</tr>
 
-<!-- 			<form id="catalogForm" name="catalogForm" action="#" method="post"> -->
-
-				<table class="type1">
-					<!-- table start -->
-					<caption>table</caption>
-					<colgroup>
-						<col style="width: 200px" />
-						<col style="width: *" />
-						<col style="width: 170px" />
-						<col style="width: *" />
-					</colgroup>
-					<tbody>
-						<tr>
-							<th scope="row">Branch / Warehouse</th>
-							<td colspan="3"><select class="w100p" id="scnFromLocId" name="scnFromLocId"></select></td>
-							<input type="hidden" id="esnFromLocId" name="esnFromLocId"/>
-						</tr>
-
-						<tr>
-						      <th scope="row">Selling Type</th>
-                              <td colspan="3"><select class="w100p" id="sellingType"  name="sellingType"></select></td>
-                        </tr>
-					</tbody>
-				</table>
-				<!-- table end -->
-
-<!-- 			</form> -->
+					<tr>
+					      <th scope="row">Selling Type</th>
+                             <td colspan="3"><select class="w100p" id="sellingType"  name="sellingType"></select></td>
+                       </tr>
+				</tbody>
+			</table>
 		</section>
-		<!-- search_table end -->
 
-		<section class="search_table" id="table_addToCart" style="display:none;"><!-- search_table start -->
-<!-- 		<form action="#" method="post" id="form_addToCart"> -->
+
+		<section class="search_table" id="table_addToCart" style="display:none;">
 		<input type="hidden" id="cartGrpId" name="cartGrpId"/>
 		<input type="hidden" id="cartEshopItemId" name="cartEshopItemId"/>
 		<input type="hidden" id="cartItemLocId" name="cartItemLocId"/>
 
-		<!-- title_line start -->
-		<aside class="title_line"><h2>Detail</h2></aside>
-		<!-- title_line end -->
-        <div id="imgItem" ></div>
-		<table class="type1 mt20"><!-- table start -->
+		<div id="imgBox" style="display:flex;justify-content:space-between;align-items: end;">
+		        <div id="imgItem" style="padding: 10px; margin: 10px; box-shadow:-5px 8px 5px 0px rgba(0,0,0,0.19)"></div>
+		        <div>
+		              <div>
+				        <table class="type1 mt20">
+	                      <caption>table</caption>
+					      <colgroup>
+					            <col style="width:200px" />
+					            <col style="width:*" />
+					            <col style="width:150px" />
+					            <col style="width:*" />
+					      </colgroup>
+				          <tbody>
+					            <tr>
+				                    <th scope="row">Quantity Available </th>
+				                    <td colspan="2"><input type="text"  class="w100p readonly" id="qtyAvailable_addToCart"  name="weight_addToCart"/></td>
+			                        <td style="font-size: 10px; font-weight: bold; font-style: italic;">Cartons</td>
+			                    </tr>
+					            <tr>
+					                <th scope="row">Ordering Quantity</th>
+					                <td colspan="2"><input type="text"  class="w100p" id="orderQty_addToCart"  name="orderQty_addToCart"/></td>
+					                <td style="font-size: 10px; font-weight: bold; font-style: italic;">Cartons</td>
+					            </tr>
+				          </tbody>
+				        </table>
+			        </div>
+		        </div>
+		</div>
+		<input class="w100p readonly" disabled/>
+		<div style="display:flex;justify-content: end; align-items: baseline; margin-top: 10px;">
+	          <div><b>Total Amount : </b></div>
+	          <div id="totalPrice_addToCart" style="font-size: 18px;"></div>
+		</div>
+		<ul class="right_btns" style="margin-top: 10px;">
+		      <li><p class="btn_blue"><a id="btnAdd" style="border:1px solid grey; background: rgba(239, 239, 239, 0.3) !important;color: #25527c !important;" onclick="fn_addToCart()"><spring:message code="sal.btn.add" /></a></p></li>
+		</ul>
+
+
+        <aside class="title_line"><h2>Detail</h2></aside>
+		<table class="type1 mt20">
 		<caption>table</caption>
 		<colgroup>
 		    <col style="width:200px" />
 		    <col style="width:*" />
 		    <col style="width:150px" />
 		    <col style="width:*" />
+		    <col style="width:200px" />
+            <col style="width:*" />
+            <col style="width:150px" />
+            <col style="width:*" />
 		</colgroup>
 		<tbody>
 		   <tr>
 		            <th scope="row">Item</th>
-		            <td colspan="3"><input type="text"  class="w100p readonly" id="item_addToCart"  name="item_addToCart"/></td>
+		            <td colspan="8"><input type="text" style="background: white;" class="w100p readonly" id="item_addToCart"  name="item_addToCart" disabled/></td>
 		    </tr>
 		    <tr>
                     <th scope="row">Size</th>
-                    <td colspan="3"><input type="text"  class="w100p readonly" id="size_addToCart"  name="size_addToCart"/></td>
+                    <td colspan="3"><input type="text"  style="background: white;" class="w100p readonly" id="size_addToCart"  name="size_addToCart" disabled/></td>
+
+                    <th scope="row">Weight Per Carton</th>
+                    <td colspan="4"><input type="text"  style="background: white;" class="w100p readonly" id="weight_addToCart"  name="weight_addToCart" disabled/></td>
             </tr>
+
             <tr>
                     <th scope="row">Quantity Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p readonly"  id="qty_addToCart"  name="qty_addToCart"/></td>
-            </tr>
-            <tr>
+                    <td colspan="3"><input type="text"  style="background: white;" class="w100p readonly"  id="qty_addToCart"  name="qty_addToCart" disabled/></td>
+
                     <th scope="row">Price Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p readonly" id="price_addToCart"  name="price_addToCart"/></td>
-            </tr>
-            <tr>
-                    <th scope="row">Weight Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p readonly" id="weight_addToCart"  name="weight_addToCart"/></td>
-            </tr>
-             <tr>
-                    <th scope="row">Quantity Available (Carton)</th>
-                    <td colspan="3"><input type="text"  class="w100p readonly" id="qtyAvailable_addToCart"  name="weight_addToCart"/></td>
+                    <td colspan="4"><input type="text"  style="background: white;" class="w100p readonly" id="price_addToCart"  name="price_addToCart" disabled/></td>
             </tr>
 		</tbody>
 		</table>
 
-		  <!-- title_line start -->
-        <aside class="title_line"><h2>Purchase</h2></aside>
-        <!-- title_line end -->
-
-        <table class="type1"><!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-            <col style="width:200px" />
-            <col style="width:*" />
-            <col style="width:150px" />
-            <col style="width:*" />
-        </colgroup>
-        <tbody>
-           <tr>
-                    <th scope="row">Ordering Quantity (Carton)</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="orderQty_addToCart"  name="orderQty_addToCart"/></td>
-            </tr>
-            <tr>
-                    <th scope="row">Total Price</th>
-                   <td colspan="3"><input type="text"  class="w100p readonly" id="totalPrice_addToCart"  name="totalPrice_addToCart"/></td>
-            </tr>
-        </tbody>
-        </table>
-
         <ul class="center_btns">
-            <li><p class="btn_blue"><a id="btnAdd" onclick="fn_addToCart()"><spring:message code="sal.btn.add" /></a></p></li>
-            <li><p class="btn_blue"><a onclick="selectCatalogList()"><spring:message code="sys.btn.cancel" /></a></p></li>
+                <li><p class="btn_blue"><a onclick="selectCatalogList()">Back</a></p></li>
         </ul>
-
-<!-- 		</form> -->
 		</section>
 
 		 <!-- title_line start -->
@@ -1136,21 +1108,11 @@ $fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
                                 <th scope="row">Grand Total Price (RM)</th>
                                 <td><input type="text" id="totalPrice" name="totalPrice" /></td>
                             </tr>
-                              <tr>
-                                <th scope="row" >Attachment<span class="must">*</span></th>
-							    <td>
-							    <div class="auto_file">
-							            <input type="file" id="attachmentPaySlip" name="attachmentPaySlip" title="file add" />
-							    </div>
-							    </td>
-                            </tr>
-
-
 						</tbody>
 					</table>
-                    <input type="hidden" id="hiddenAttachmentPaySlip" name="hiddenAttachmentPaySlip"/>
+
 					<ul class="center_btns">
-                <li><p class="btn_blue"><a href="#" onclick="fn_saveConfirm()"><spring:message code="sal.btn.save" /></a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="fn_saveConfirm()">Checkout</a></p></li>
             </ul>
 
         </section>

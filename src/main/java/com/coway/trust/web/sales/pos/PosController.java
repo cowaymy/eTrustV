@@ -811,14 +811,9 @@ public class PosController {
   }
 
   @RequestMapping(value = "/selectWhSOBrnchList")
-  public ResponseEntity<List<EgovMap>> selectWhSOBrnchList() throws Exception {
-
-    List<EgovMap> codeList = null;
-
-    codeList = posService.selectWhSOBrnchList();
-
-    return ResponseEntity.ok(codeList);
-
+  public ResponseEntity<List<EgovMap>> selectWhSOBrnchList(@RequestParam Map<String, Object> params) throws Exception {
+        List<EgovMap> codeList = posService.selectWhSOBrnchList(params);
+        return ResponseEntity.ok(codeList);
   }
 
   @RequestMapping(value = "/posFlexiRawDataPop.do")

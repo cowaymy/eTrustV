@@ -2,97 +2,78 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
 <style type="text/css">
+	/* 커스텀 칼럼 스타일 정의 */
+	.aui-grid-user-custom-left {
+	    text-align:left;
+	}
+	.aui-grid-user-custom-right {
+	    text-align:right;
+	}
 
-/* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-left {
-    text-align:left;
-}
-.aui-grid-user-custom-right {
-    text-align:right;
-}
+	/* 커스컴 disable 스타일*/
+	.mycustom-disable-color {
+	    color : #cccccc;
+	}
 
-/* 커스컴 disable 스타일*/
-.mycustom-disable-color {
-    color : #cccccc;
-}
-
-/* 그리드 오버 시 행 선택자 만들기 */
-.aui-grid-body-panel table tr:hover {
-    background:#D9E5FF;
-    color:#000;
-}
-.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
-    background:#D9E5FF;
-    color:#000;
-}
-
+	/* 그리드 오버 시 행 선택자 만들기 */
+	.aui-grid-body-panel table tr:hover {
+	    background:#D9E5FF;
+	    color:#000;
+	}
+	.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
+	    background:#D9E5FF;
+	    color:#000;
+	}
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
-
-
-
 //AUIGrid  ID
 var mstGridID;
 var myGridID;
+let selVal = '${branchId}';
 
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap_excel", "xlsx", "Movement Raw Data_Stock Card");
 }
 
-
 $(document).ready(function(){
-
-     var selVal = '${branchId}';
-    CommonCombo.make('scnFromLocId', "/sales/pos/selectWhSOBrnchList", '' ,selVal, '');
-    CommonCombo.make('scnToLocId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-
 
     var stockMoveTypecomboData = [ {"codeId": "T","codeName": "Stock Transfer"} ,{"codeId": "I","codeName": "Stock In"} ,{"codeId": "A","codeName": "Adjustment"},{"codeId": "R","codeName": "Retrun"}   ];
     doDefCombo(stockMoveTypecomboData, '' ,'scnMoveType', 'S', '');
-
 
     var stockgradecomboData = [ {"codeId": "A","codeName": "ACT"} ,{"codeId": "C","codeName": "COM"} ,{"codeId": "R","codeName": "REJECT"}  ];
     doDefCombo(stockgradecomboData, '' ,'scnMoveStat', 'S', '');
 
     createAUIGrid(columnLayout);
-
     createAUIGridExcel(excelLayout);
 
 });
-
-
 
 var groupList = [" ", "A", "B", "C" ];
 var groupYnList = ["Y", "N" ];
 
 var columnLayout = [
-                    {dataField: "scnNo",headerText :"SCN No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnMoveTypeCode",headerText :"MovementType"       ,width: 180    ,height:30 , visible:true, editable : false},
-                    {dataField: "scnFromLocDesc",headerText :"From"          ,width:220   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnToLocDesc",headerText :"TO"          ,width:220   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnMoveStatCode",headerText :"Status"          ,width:120   ,height:30 , visible:true, editable : false},
-                    {dataField: "crtDt",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "crdName",headerText :"Create By"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "updDate",headerText :"Update Date"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "updName",headerText :"Update By"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "scnMoveStat",headerText :"scnMoveStat"          ,width:120   ,height:30 , visible:false ,editable : false},
-                    {dataField: "scnMoveType",headerText :"scnMoveType"          ,width:120   ,height:30 , visible:false,editable : false},
-
-
-
-
+                    {dataField: "scnNo",headerText :"SCN No." ,width:  180   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveTypeCode",headerText :"MovementType" ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "scnFromLocDesc",headerText :"From",width:220 ,height:30 , visible:true, editable : false},
+                    {dataField: "scnToLocDesc",headerText :"TO" ,width:220 ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveStatCode",headerText :"Status",width:120   ,height:30 , visible:true, editable : false},
+                    {dataField: "crtDt",headerText : "Create Date" , width:140,height:30 , visible:true ,editable : false},
+                    {dataField: "crdName",headerText :"Create By" , width:140 ,height:30 , visible:true ,editable : false},
+                    {dataField: "updDate",headerText :"Update Date", width:120,height:30 , visible:true,editable : false},
+                    {dataField: "updName",headerText :"Update By" , width:120 ,height:30 , visible:true,editable : false},
+                    {dataField: "scnMoveStat",headerText :"scnMoveStat", width:120 ,height:30 , visible:false ,editable : false},
+                    {dataField: "scnMoveType",headerText :"scnMoveType", width:120 ,height:30 , visible:false,editable : false},
            ];
 
 var excelLayout = [
-//                     {dataField: "no",headerText :"No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnNo",headerText :"SCN No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnMoveTypeCode",headerText :"Movement Type"       ,width: 180    ,height:30 , visible:true, editable : false},
-                    {dataField: "scnMoveStatCode",headerText :"Movement Status"       ,width: 180    ,height:30 , visible:true, editable : false},
-                    {dataField: "codeName",headerText :"Category"       ,width: 180    ,height:30 , visible:true, editable : false},
-                    {dataField: "itemType",headerText :"Item Type"          ,width:120   ,height:30 , visible:true,editable : false},
+                    {dataField: "scnNo",headerText :"SCN No." ,width:  180   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveTypeCode",headerText :"Movement Type" ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveStatCode",headerText :"Movement Status" ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "codeName",headerText :"Category",width: 180 ,height:30 , visible:true, editable : false},
+                    {dataField: "itemType",headerText :"Item Type",width:120 ,height:30 , visible:true,editable : false},
                     {dataField: "itemDesc",headerText :"Item"          ,width:250   ,height:30 , visible:true,editable : false},
                     {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:true,editable : false},
                     {dataField: "scnFromLocDesc",headerText :"From Location"          ,width:250   ,height:30 , visible:true, editable : false},
@@ -106,37 +87,24 @@ var excelLayout = [
                     {dataField: "itemRejRemark",headerText :"Remark"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "scnMoveDate",headerText :"Move Date"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "keyInBranch",headerText :"Key In Branch"          ,width:250   ,height:30 , visible:true ,editable : false},
-
-
+                    {dataField: "itemPurhOrdNo",headerText :"Purchase Order No"          ,width:250   ,height:30 , visible:true ,editable : false},
+                    {dataField: "itemCond",headerText :"Condition"          ,width:250   ,height:30 , visible:true ,editable : false},
            ];
 
-
 createAUIGrid =function(columnLayout ){
-
-
     var auiGridProps = {
-
             selectionMode : "multipleCells",
-
             showRowNumColumn : true,
-
             showRowCheckColumn : false,
-
             showStateColumn : true,
-
             enableColumnResize : false,
-
             enableMovingColumn : false
         };
 
-    // 실제로 #grid_wrap 에 그리드 생성
-    mstGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+        // 실제로 #grid_wrap 에 그리드 생성
+        mstGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
 
-
-
-      //  mstGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,auiGridProps);
-
-      // 에디팅 시작 이벤트 바인딩
+        // 에디팅 시작 이벤트 바인딩
         AUIGrid.bind(mstGridID, "cellEditBegin", auiCellEditingHandler);
 
         // 에디팅 정상 종료 이벤트 바인딩
@@ -145,38 +113,23 @@ createAUIGrid =function(columnLayout ){
         // 에디팅 취소 이벤트 바인딩
         AUIGrid.bind(mstGridID, "cellEditCancel", auiCellEditingHandler);
 
-
         // cellClick event.
         AUIGrid.bind(mstGridID, "cellDoubleClick", function( event ) {
             fn_selectPosStockMgmtViewPop( event.item.scnNo);
         });
-
-
 }
 
 createAUIGridExcel =function(excelLayout ){
     var auiGridPropsExcel = {
-
             selectionMode : "multipleCells",
-
             showRowNumColumn : true,
-
             showRowCheckColumn : false,
-
             showStateColumn : true,
-
             enableColumnResize : false,
-
             enableMovingColumn : false
         };
-
       myGrid = AUIGrid.create("#grid_wrap_excel", excelLayout, auiGridPropsExcel);
-
 }
-
-
-
-
 
 auiCellEditingHandler= function(event)    {
         if(event.type == "cellEditBegin") {
@@ -188,19 +141,10 @@ auiCellEditingHandler= function(event)    {
         }
 }
 
-
-
-
-
 // 리스트 조회.
 fn_getDataListAjax  = function () {
-
      Common.ajax("GET", "/sales/posstock/selectPosStockMgmtList.do", $("#searchForm").serialize(), function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
-       // console.log(result);
         AUIGrid.setGridData(mstGridID, result);
-
     });
 
      Common.ajax("GET", "/sales/posstock/selectPosStockMgmtDetailsList.do", $("#searchForm").serialize(), function(result) {
@@ -208,18 +152,13 @@ fn_getDataListAjax  = function () {
      });
 }
 
-
 fn_selectPosStockMgmtViewPop =function (scnNo){
     Common.popupDiv("/sales/posstock/selectPosStockMgmtViewList.do?mode=view&scnNo="+scnNo, null, null , true , "_insDiv");
 }
 
-
 fn_selectPosStockMgmtAddPop =function (){
     Common.popupDiv("/sales/posstock/selectPosStockMgmtAddList.do", '' , null , true , "_insDiv");
 }
-
-
-
 
 fn_selectPosStockMgmtRetrunPop =function (){
     Common.popupDiv("/sales/posstock/selectPosStockMgmtReturnList.do", '' , null , true , "_insDiv");
@@ -228,12 +167,9 @@ fn_selectPosStockMgmtRetrunPop =function (){
 
 fn_selectPosStockMgmtAdjPop =function (){
 
-
      var selectedItems = AUIGrid.getSelectedItems(mstGridID);
      if(selectedItems.length <= 0) return;
 
-
-     console.log(selectedItems.item);
      if(selectedItems[0].item.scnMoveStatCode !="R"  && selectedItems[0].item.scnMoveStatCode !="A"){
          Common.alert('* Please check the Movement type \n "Return & Adjust"  is available only' );
          return ;
@@ -241,21 +177,16 @@ fn_selectPosStockMgmtAdjPop =function (){
 
      var scnNo = selectedItems[0].item.scnNo;
      Common.popupDiv("/sales/posstock/selectPosStockMgmtAdjList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
-
 }
 
-
-
-
-fn_selectPosStockMgmtNewAdjPop =function (){
+fn_selectPosStockMgmtNewAdjPop = function (){
      Common.popupDiv("/sales/posstock/selectPosStockMgmtNewAdjList.do", '' , null , true , "_insDiv");
 }
 
 
-fn_selectPosStockMgmtTransPop =function (){
+fn_selectPosStockMgmtTransPop = function (){
     Common.popupDiv("/sales/posstock/selectPosStockMgmtTransList.do", '' , null , true , "_insDiv");
 }
-
 
 
 fn_selectPosStockMgmtApprovalPop =function (){
@@ -263,20 +194,15 @@ fn_selectPosStockMgmtApprovalPop =function (){
     var selectedItems = AUIGrid.getSelectedItems(mstGridID);
     if(selectedItems.length <= 0) return;
 
-
-
     if(selectedItems[0].item.scnMoveType  !="R"){
         Common.alert('* Please check the Movement Type\n "Return"  Movement Type  is available only');
         return ;
     }
 
-
-
     if(selectedItems[0].item.scnMoveStat  !="A"){
         Common.alert('* Please check the status \n "ACT" status is only available');
         return ;
     }
-
 
     var scnNo = selectedItems[0].item.scnNo;
     Common.popupDiv("/sales/posstock/selectPosStockMgmtApprovalList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
@@ -288,15 +214,10 @@ fn_selectPosStockMgmtReceivedPop=function (){
      var selectedItems = AUIGrid.getSelectedItems(mstGridID);
      if(selectedItems.length <= 0) return;
 
-     console.log(selectedItems[0].item);
-
-
      if(selectedItems[0].item.scnMoveType  =="R"){
          Common.alert('* Please  Using the approval button. ');
          return ;
      }
-
-
      if(selectedItems[0].item.scnMoveStat  !="A"){
          Common.alert('* Please check the status \n "ACT" status is only available');
          return ;
@@ -311,6 +232,25 @@ fn_stockCard = function (){
 }
 
 </script>
+
+ <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+     <script>
+	      CommonCombo.make('scnFromLocId', "/sales/pos/selectWhSOBrnchList", null ,selVal, '');
+     </script>
+ </c:if>
+
+
+ <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+     <script>
+          CommonCombo.make('scnFromLocId', "/sales/pos/selectWhSOBrnchList", {code: "SO"} ,selVal, '');
+     </script>
+ </c:if>
+
+ <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
+     <script>
+          CommonCombo.make('scnFromLocId', "/sales/pos/selectWhSOBrnchList", {code: "CDB"} ,selVal, '');
+     </script>
+ </c:if>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -339,13 +279,13 @@ fn_stockCard = function (){
        <li><p class="btn_blue"><a id="addItemBtn"  onclick="javascript:fn_selectPosStockMgmtAddPop();" ><span class="add"></span>ADD</a></p></li>
        <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span> ADJUST</a></p></li>
 </c:if>
-      
+
        <!--   <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li> -->
        <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETRUN</a></p></li>
        <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
        <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APPROVAL</a></p></li>
-</c:if>       
+</c:if>
        <li><p class="btn_blue"><a id="search" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
        <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
@@ -383,10 +323,6 @@ fn_stockCard = function (){
                    <th scope="row">Branch / Warehouse</th>
                    <td>
                      <select class="w100p" id="scnFromLocId" name="scnFromLocId"  ></select>
-                   </td>
-                   <th scope="row" style="display:none;">To Location</th>
-                   <td  style="display:none;">
-                        <select class="w100p" id="scnToLocId"name="scnToLocId" ></select>
                    </td>
                     <th scope="row">Movement Date</th>
                     <td >
@@ -433,7 +369,7 @@ fn_stockCard = function (){
      </dd>
     </dl>
    </aside>
-   
+
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
 

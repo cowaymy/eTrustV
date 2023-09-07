@@ -13,10 +13,7 @@
 
 </style>
 <script type="text/javascript">
-
-
 var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"D", "value":"Defect/Damage"}, {"code":"B", "value":"Broken"}, {"code":"OTH", "value":"Others"}];
-
 
 var columnLayout = [
                     {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:false, editable : false},
@@ -57,18 +54,11 @@ var columnLayout = [
                     ,{dataField: "physiclFileName",headerText :"Reject physiclFileName"      ,width:120   ,height:30 , visible:false}
                     ,{dataField: "atchFileId",headerText :"atchFileId"      ,width:120   ,height:30 , visible:false}
                     ,{dataField: "fileSubPath",headerText :"fileSubPath"      ,width:120   ,height:30 , visible:false}
-
-
-
-
  ];
 
 function deleteAttachUpLoad(rowIndex, columnIndex, value, item){
-
-   // if (AUIGrid.getCellValue(myRecivedGridIDPOS, rowIndex, "itemStatus") == "R" ){
-           attchIndex = rowIndex;
-            $("#uploadfile").click();
-   // }
+    attchIndex = rowIndex;
+    $("#uploadfile").click();
 }
 
 //그리드 속성 설정
@@ -78,8 +68,6 @@ var gridProsPOS = {
 };
 
 var myGridIDPOS;
-
-
 
 //Init Option
 var ComboOption = {
@@ -93,91 +81,52 @@ var ItmOption = {
         isCheckAll: false
 };
 
-
-
 $(document).ready(function () {
-
-
-
-    CommonCombo.make('fromAddBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '',initCallback);
-
-    //Itm List
-    var itmType = {itemType : 1346 , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
-
+	document.querySelector("#fromAddBrnchId").innerHTML = document.querySelector("#scnFromLocId").getInnerHTML();
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", {itemType : 1346 , posItm : 1} , '', ItmOption);
     myGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
-
 });
 
 function initCallback(){
-
-
     $('#fromAddBrnchId').val('${branchId}');
-
 }
 
 var attchIndex =0;
 
 $(function() {
+        $("#uploadfile").change(function(e){
 
-         $("#uploadfile").change(function(e){
+           var formData = Common.getFormData("fileUploadForm");
+           formData.append("param01", $("#param01").val());
 
-      //  alert($('input[type=file]')[0].files[0].name); //파일이름
-     //       alert($("#m_file")[0].files[0].type); // 파일 타임
-     //      alert($("#m_file")[0].files[0].size); // 파일 크기
-     //  $('input[type=file]')[0].files[0].name;
-     //  $("#imgUpload")[0].files[0].type;
-     //  $("#imgUpload")[0].files[0].size;
-
-
-            var formData = Common.getFormData("fileUploadForm");
-            formData.append("param01", $("#param01").val());
-
-            Common.ajaxFile("/sales/posstock/rejectFilleUpload.do", formData, function(result) {
-                        console.log(result);
-
-                        $("#uploadfile").val("");
-                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "atchFileName",result.files[0].atchFileName);
-                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "physiclFileName",result.files[0].physiclFileName);
-                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "itemRejAttchGrpId",result.atchFileGrpId);
-                        Common.alert(result.message);
-                        attchIndex=0;           });
-
-          });
-    });
-
+           Common.ajaxFile("/sales/posstock/rejectFilleUpload.do", formData, function(result) {
+                       $("#uploadfile").val("");
+                       AUIGrid.setCellValue(myGridIDPOS, attchIndex, "atchFileName",result.files[0].atchFileName);
+                       AUIGrid.setCellValue(myGridIDPOS, attchIndex, "physiclFileName",result.files[0].physiclFileName);
+                       AUIGrid.setCellValue(myGridIDPOS, attchIndex, "itemRejAttchGrpId",result.atchFileGrpId);
+                       Common.alert(result.message);
+                       attchIndex=0;
+           });
+       });
+});
 
 
 function itemCategoryChange(){
-	var val = $("#category").val();
-	var itmType = {itemType : val , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList",  {itemType : $("#category").val() , posItm : 1} , '', ItmOption);
 }
-
 
 function itemCodeChange(){
-	//$("#poOrdNo").val("");
 	selectInventoryQty();
 }
-
-
-
 
 function selectInventoryQty(){
 
       //it is going to get  inventory qty
 
       $("#itemInvtQty").val(0);
-
-
       var param ={ "itemCode" : $("#purcItems").val() , "locId" : $("#fromAddBrnchId").val()  };
 
         Common.ajax("POST", "/sales/posstock/selectItemInvtQty.do",param, function(result) {
-
-
-         console.log(result);
 
          if(result.dataInfo != null){
              $("#itemInvtQty").val(result.dataInfo.itemInvQty);
@@ -215,11 +164,11 @@ function addRow() {
         Common.alert("Please Check inventory.");
         return false;
     }
+
     if($("#purcItems").val() == ""   || $("#fromAddBrnchId").val() =="" || $("#itemAddQty").val() =="") {
         Common.alert("Branch/Item/Inventory  is required.");
         return false;
     }
-
 
     if( AUIGrid.isUniqueValue (myGridIDPOS,"itemCode" ,item.itemCode )){
         AUIGrid.addRow(myGridIDPOS, item, "last");
@@ -228,23 +177,18 @@ function addRow() {
         Common.alert("<b>"+ item.itemDesc +"  is existing. </br>");
         return ;
     }
-
 }
-
 
 function removeRow(){
     AUIGrid.removeRow(myGridIDPOS, "selectedIndex");
     AUIGrid.removeSoftRows(myGridIDPOS);
 }
 
-
 function auiRemoveRowHandler(){}
-
 
 function fn_close(){
     $("#popup_wrap").remove();
 }
-
 
 function transFromBrnchChange(){
 
@@ -258,16 +202,9 @@ function transFromBrnchChange(){
 
 
 function fn_saveGrid(){
-
-
     var checkList = GridCommon.getGridData(myGridIDPOS);
-
-
     for(var i = 0 ; i < checkList.all.length ; i++){
         var itemRtnReason  = checkList.all[i].itemRtnReason;
-
-
-        console.log(checkList.all[i])
         if( checkList.all[i].itemRtnReason ==""
         		|| checkList.all[i].itemRtnReason ==null
         		||checkList.all[i].atchFileName ==""
@@ -280,32 +217,25 @@ function fn_saveGrid(){
     }
 
 
-
     Common.ajax("POST", "/sales/posstock/insertRetrunPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
-        //resetUpdatedItems(); // 초기화
-        console.log( result);
         Common.alert('SCN Number is : '+result.data);
-
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
             console.log("code : " + jqXHR.responseJSON.code);
             console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-
+            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         } catch (e) {
             console.log(e);
         }
-
-
-
-       // fn_getSampleListAjax();
     });
 }
 
-
 </script>
+
+
+
+
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 

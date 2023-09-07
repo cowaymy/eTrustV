@@ -34,7 +34,6 @@ $(document).ready(function () {
 	setInputFile();
 	selectItemList();
 
-
     //Itm List
     var itmType = {itemType : 1346 , posItm : 1};
     CommonCombo.make('purcItems_addItem', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
@@ -235,12 +234,23 @@ function fn_saveGrid(){
             data.remove = editArr.remove;
     }
 
-    console.log(data);
-
     //Save
     Common.ajax("POST", "/sales/posstock/insertPosEshopItemList.do", data, function(result){
-          Common.alert(result.message);
-          fn_close();
+    	if(result.code == "99"){
+    		Common.alert("Fail to add Item. Please raise ticket to Truskdesk for further checking.",fn_close)
+    	}else{
+    		Common.alert(result.message,fn_close);
+    	}
+    },function(jqXHR, textStatus, errorThrown) {
+        try {
+            console.log("status : " + jqXHR.status);
+            console.log("code : " + jqXHR.responseJSON.code);
+            console.log("message : " + jqXHR.responseJSON.message);
+            console.log("detailMessage : "+ jqXHR.responseJSON.detailMessage);
+        } catch (e) {
+            console.log(e);
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
 }
 
@@ -257,8 +267,12 @@ $(function() {
           });
      });
 
-    $("#btnDel_addItem").click(function() {
-        AUIGrid.removeCheckedRows(myGridIDItem);
+    $("#qtyPerCarton_addItem").unbind().bind("change keyup", function(e) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g,"").trim());
+    });
+
+    $("#unitWeight_addItem").unbind().bind("change keyup", function(e) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g,"").trim());
     });
 
 });
@@ -460,11 +474,6 @@ function fn_chkItemVal(){
 <aside class="title_line"><!-- title_line start -->
 <h2>Item List</h2>
 </aside><!-- title_line end -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a id="btnDel_addItem"><spring:message code="sal.btn.del" /></a></p></li>
-</ul>
-
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>

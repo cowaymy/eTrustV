@@ -58,6 +58,7 @@
 		        ,ITEM_RTN_REASON
 		        ,ITEM_REJ_ATTCH_GRP_ID
 		        ,ITEM_RTN_QTY
+		        ,ITEM_REJ_REMARK
 		)VALUES (
 		         #{scnNo}
 		        ,#{itemCode}
@@ -78,6 +79,7 @@
 		        ,#{itemRtnReason}
 		        ,#{itemRejAttchGrpId}
 		        ,#{itemRtnQty}
+		        ,#{itemRejRemark}
 		)
 
  </insert>
@@ -85,76 +87,60 @@
 
    <select id="selectPosStockMgmtList" parameterType="Map" resultType="egovMap">
 			SELECT DISTINCT
-			  SCN_NO,
-			  SCN_MOVE_TYPE_CODE,
-			  SCN_MOVE_STAT_CODE,
-<!-- 			  CODE_NAME, -->
-			  SCN_MOVE_TYPE,
-<!-- 			  ITEM_DESC, -->
-<!-- 			  ITEM_INVT_QTY, -->
-			  SCN_FROM_LOC_DESC,
-			  SCN_TO_LOC_DESC,
-			  CRT_DT,
-			  CRT_USER_ID,
-			  UPD_DATE,
-			  UPD_USER_ID,
-<!--			  ITEM_REASON, -->
-<!--			  ITEM_REJ_REMARK, -->
-			  SCN_MOVE_DATE,
-			  SCN_FROM_LOC_ID,
-			  SCN_TO_LOC_ID,
-			  SCN_MOVE_STAT,
-			  KEY_IN_BRANCH,
-			  UPD_NAME,
-            CRD_NAME
+				  SCN_NO,
+				  SCN_MOVE_TYPE_CODE,
+				  SCN_MOVE_STAT_CODE,
+				  SCN_MOVE_TYPE,
+				  SCN_FROM_LOC_DESC,
+				  SCN_TO_LOC_DESC,
+				  CRT_DT,
+				  CRT_USER_ID,
+				  UPD_DATE,
+				  UPD_USER_ID,
+				  SCN_MOVE_DATE,
+				  SCN_FROM_LOC_ID,
+				  SCN_TO_LOC_ID,
+				  SCN_MOVE_STAT,
+				  KEY_IN_BRANCH,
+				  UPD_NAME,
+	              CRD_NAME,
+	              ITEM_REJ_REMARK
 			FROM
 			  (
 			    SELECT
-			      S.STK_CODE,
-			      A.SCN_NO,
-			      B.ITEM_CODE,
-			      B.ITEM_DESC,
-			      DECODE (
-			        A.SCN_MOVE_TYPE, 'I', 'STOCK IN',
-			        'T', 'STOCK TRANSFER', 'A', 'ADJUSTMENT',
-			        'R', 'RETURN'
-			      ) AS SCN_MOVE_TYPE_CODE,
-			      A.SCN_FROM_LOC_ID,
-			      (
-			        SELECT
-			          CODE || '-' || NAME
-			        FROM
-			          SYS0005M
-			        WHERE
-			          BRNCH_ID = A.SCN_FROM_LOC_ID
-			      ) AS SCN_FROM_LOC_DESC,
-			      A.SCN_TO_LOC_ID,
-			      (
-			        SELECT
-			          CODE || '-' || NAME
-			        FROM
-			          SYS0005M
-			        WHERE
-			          BRNCH_ID = A.SCN_TO_LOC_ID
-			      ) AS SCN_TO_LOC_DESC,
-			      DECODE (
-			        A.SCN_MOVE_STAT, 'A', 'ACT', 'C', 'COM',
-			        'R', 'REJECT'
-			      ) AS SCN_MOVE_STAT_CODE,
-			      TO_CHAR(A.SCN_MOVE_DATE, 'dd-mm-yyyy') AS SCN_MOVE_DATE,
-			      TO_CHAR(A.UPD_DT, 'dd-mm-yyyy') AS UPD_DATE,
-			       U.USER_NAME AS UPD_NAME ,
-                   C.USER_NAME AS CRD_NAME,
-			      A.UPD_USER_ID,
-			      A.SCN_MOVE_TYPE,
-			      A.SCN_MOVE_STAT,
-			      T.CODE_NAME,
-			      ITEM_INVT_QTY,
-			      TO_CHAR(A.CRT_DT, 'dd-mm-yyyy') AS CRT_DT,
-			      A.CRT_USER_ID,
-			      B.ITEM_REASON,
-			      B.ITEM_REJ_REMARK,
-			      V.CODE AS KEY_IN_BRANCH
+				      S.STK_CODE,
+				      A.SCN_NO,
+				      B.ITEM_CODE,
+				      B.ITEM_DESC,
+				      DECODE (A.SCN_MOVE_TYPE,
+				        'I', 'STOCK IN',
+				        'T', 'STOCK TRANSFER',
+				        'A', 'ADJUSTMENT',
+				        'R', 'RETURN'
+				      ) AS SCN_MOVE_TYPE_CODE,
+				      A.SCN_FROM_LOC_ID,
+				      (SELECT CODE || '-' || NAME FROM SYS0005M WHERE BRNCH_ID = A.SCN_FROM_LOC_ID) AS SCN_FROM_LOC_DESC,
+				      A.SCN_TO_LOC_ID,
+				      (SELECT CODE || '-' || NAME FROM SYS0005M WHERE BRNCH_ID = A.SCN_TO_LOC_ID) AS SCN_TO_LOC_DESC,
+				      DECODE (A.SCN_MOVE_STAT,
+					        'A', 'ACT',
+					        'C', 'COM',
+					        'R', 'REJECT'
+				      ) AS SCN_MOVE_STAT_CODE,
+				      TO_CHAR(A.SCN_MOVE_DATE, 'dd-mm-yyyy') AS SCN_MOVE_DATE,
+				      TO_CHAR(A.UPD_DT, 'dd-mm-yyyy') AS UPD_DATE,
+				       U.USER_NAME AS UPD_NAME ,
+	                   C.USER_NAME AS CRD_NAME,
+				      A.UPD_USER_ID,
+				      A.SCN_MOVE_TYPE,
+				      A.SCN_MOVE_STAT,
+				      T.CODE_NAME,
+				      ITEM_INVT_QTY,
+				      TO_CHAR(A.CRT_DT, 'dd-mm-yyyy') AS CRT_DT,
+				      A.CRT_USER_ID,
+				      B.ITEM_REASON,
+				      B.ITEM_REJ_REMARK,
+				      V.CODE AS KEY_IN_BRANCH
 			    FROM
 			      SAL0293M A,
 			      SAL0294D B,
@@ -250,7 +236,9 @@
                 KEY_IN_BRANCH,
                 UPD_NAME,
                 CRD_NAME,
-                'Item Bank' ITEM_TYPE
+                'Item Bank' ITEM_TYPE,
+                ITEM_PURH_ORD_NO,
+                ITEM_COND
             FROM
               (
                 SELECT
@@ -304,7 +292,12 @@
                   A.CRT_USER_ID,
                   B.ITEM_REASON,
                   B.ITEM_REJ_REMARK,
-                  V.CODE || '-' || V.NAME AS KEY_IN_BRANCH
+                  V.CODE || '-' || V.NAME AS KEY_IN_BRANCH,
+                  B.ITEM_PURH_ORD_NO,
+                  DECODE (B.ITEM_COND,
+                    'N', 'New',
+                    'R', 'Replacement'
+                  ) AS ITEM_COND
                 FROM
                   SAL0293M A,
                   SAL0294D B,
@@ -372,7 +365,9 @@
               ITEM_REASON,
               ITEM_REJ_REMARK,
               KEY_IN_BRANCH,
-              SCN_MOVE_QTY
+              SCN_MOVE_QTY,
+              ITEM_PURH_ORD_NO,
+              ITEM_COND
               ORDER BY SCN_NO DESC
 </select>
 
@@ -713,7 +708,11 @@ MERGE INTO LOG0106M C
 					B.ITEM_VARI_QTY,
 					B.ITEM_ADJ_QTY,
 					B.ITEM_RTN_QTY,
-					B.ITEM_REASON,
+					DECODE (B.ITEM_REASON,
+                        'IDR', 'Internal Dept. Request',
+                        'EVU', 'Events use',
+                        'OTH', 'Others'
+                    ) AS ITEM_REASON,
 					B.ITEM_STATUS,
 					B.CRT_USER_ID,
 					B.CRT_DT,

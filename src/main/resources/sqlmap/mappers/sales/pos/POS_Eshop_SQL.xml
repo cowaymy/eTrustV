@@ -474,7 +474,7 @@
 					, CRT_DT
             )VALUES (
                       #{esnNo}
-				    , 1
+				    , 44
 				    , #{userId}
 				    , #{contactNo}
 				    , #{addrDtl}
@@ -1166,6 +1166,89 @@
         ]]>
    </select>
 
+   <select id="selectEshopStockList" resultType="egovMap">
+            SELECT DISTINCT
+                E.CODE || ' ' || E.NAME WAREHOUSE,
+                C.CODE_NAME SELLING_TYPE,
+                A.STK_CODE ITEM_CODE,
+                A.STK_DESC ITEM_DESC,
+                A.STK_CODE || '-' || A.STK_DESC ITEM_FULL_DESC,
+                NVL(D.ITEM_INV_QTY,0) STOCK_BAL
+            FROM SAL0321D B
+            LEFT JOIN LOG0106M D ON D.ITEM_CODE = B.ITEM_ID
+            LEFT JOIN SYS0026M A ON A.STK_ID = D.ITEM_CODE
+            LEFT JOIN SYS0013M C ON B.SELLING_TYPE = C.CODE_ID AND C.CODE_MASTER_ID = 507
+            LEFT JOIN SYS0005M E ON D.LOC_ID = E.BRNCH_ID
+            WHERE NVL(B.DISAB,0) = 0
+            AND E.STUS_ID = 1
+            <if test="stockBranch != null and stockBranch != '' ">
+            AND D.LOC_ID = #{stockBranch}
+            </if>
+            <if test="stockType != null and stockType != '' ">
+            AND B.SELLING_TYPE = #{stockType}
+            </if>
+            <if test="stockCategory != null and stockCategory != '' ">
+            AND B.ITEM_CTGRY_ID = #{stockCategory}
+            </if>
+            <if test="stockItem != null and stockItem != '' ">
+            AND D.ITEM_CODE = #{stockItem}
+            </if>
+   </select>
+
+   <select id="selectPaymentInfo" resultType="egovMap">
+		   SELECT
+			    B.ESN_NO,
+			    A.SHIPPING_FEE,
+			    SUM(B.TOTAL_ORD_PRICE) AS TOTAL_PRICE
+			FROM SAL0325M A
+			JOIN SAL0326D B ON A.ESN_NO = B.ESN_NO
+			WHERE B.ESN_NO = #{esnNo}
+			GROUP BY B.ESN_NO, A.SHIPPING_FEE
+   </select>
+
+   <select id="checkValidationEsn" resultType="egovMap">
+            SELECT
+                    ESN_STATUS,
+                    COUNT(PAY_ATTACH_ID) CHECK_FILE
+			FROM SAL0325M
+			WHERE ESN_NO = #{esnNo}
+			GROUP BY ESN_STATUS
+   </select>
+
+   <update id="confirmPayment"  parameterType="Map">
+             UPDATE SAL0325M
+             SET PAY_ATTACH_ID = #{fileId},
+                   ESN_STATUS =1 ,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE
+             WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="deactivatePaymentAndEsn"  parameterType="Map">
+             UPDATE SAL0325M
+             SET ESN_STATUS = 8 ,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE
+             WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="revertFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+                 SELECT
+                         B.ITEM_CODE, B.ITEM_ORD_QTY * B.ITEM_QTY AS ITEM_ORD_QTY, A.ESN_LOC_ID
+                  FROM SAL0325M A
+                  JOIN SAL0326D B on A.ESN_NO = b.ESN_NO
+                  WHERE A.ESN_NO = #{esnNo}
+             ) N
+            ON ( C.LOC_ID = N.ESN_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+                SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) + (N.ITEM_ORD_QTY)
+                    , C.UPD_USER_ID  = #{userId}
+                    , C.UPD_DT       = SYSDATE
+     </update>
 
 
 </mapper>

@@ -270,6 +270,14 @@ $(function() {
               $("#attachGrpId_editItem").val(result.atchFileGrpId);
           });
      });
+
+    $("#qtyPerCarton_editItem").unbind().bind("change keyup", function(e) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g,"").trim());
+    });
+
+    $("#unitWeight_editItem").unbind().bind("change keyup", function(e) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g,"").trim());
+    });
 });
 
 

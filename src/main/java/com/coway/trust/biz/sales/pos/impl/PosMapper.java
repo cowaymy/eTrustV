@@ -99,7 +99,7 @@ public interface PosMapper {
 	List<EgovMap> getOldDetailList(Map<String, Object> params);
 
 	void insertPosReversalDetail(EgovMap params);
-	
+
 	void updateLOG0106MDetail(EgovMap params);
 
 	EgovMap getBillInfo(Map<String, Object> params);
@@ -245,7 +245,7 @@ public interface PosMapper {
 
 	void updatePosFlexiStatus(Map<String, Object> params);
 
-	List<EgovMap> selectWhSOBrnchList();
+	List<EgovMap> selectWhSOBrnchList(Map<String, Object> params);
 
 	List<EgovMap> selectPOSFlexiItem(Map<String, Object> params);
 

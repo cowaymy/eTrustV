@@ -14,7 +14,6 @@
 </style>
 <script type="text/javascript">
 
-
 var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"IDR", "value":"Internal Dept. Request"}, {"code":"EVU", "value":"Events use"}, {"code":"OTH", "value":"Others"}];
 
 var columnLayout = [
@@ -46,10 +45,7 @@ var columnLayout = [
                     },
 
                    {dataField: "itemRejRemark",headerText :"Remark"      ,width: 180    ,height:30 , visible:true, editable : true},
-
  ];
-
-
 
 //그리드 속성 설정
 var gridProsPOS = {
@@ -58,8 +54,6 @@ var gridProsPOS = {
 };
 
 var myNewAjGridIDPOS;
-
-
 
 //Init Option
 var ComboOption = {
@@ -73,35 +67,19 @@ var ItmOption = {
         isCheckAll: false
 };
 
-
-
 $(document).ready(function () {
-
-
-
-    CommonCombo.make('fromNewAddBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-
-
-    //Itm List
-    var itmType = {itemType : 1346 , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
-
+	document.querySelector("#fromNewAddBrnchId").innerHTML = document.querySelector("#scnFromLocId").getInnerHTML();
+    $('#fromNewAddBrnchId').val("");
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", {itemType : 1346 , posItm : 1} , '', ItmOption);
     myNewAjGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
-
     AUIGrid.bind(myNewAjGridIDPOS, ["cellEditEnd", "cellEditCancel"], auiNewAdjCellEditingHandler);
-
-
 });
-
-
 
 
 function itemCategoryChange(){
 	var val = $("#category").val();
 	var itmType = {itemType : val , posItm : 1};
     CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
 }
 
 
@@ -109,8 +87,6 @@ function itemCodeChange(){
 	$("#itemInvtQty").val("");
 	selectInventoryQty();
 }
-
-
 
 
 function newAdjFromBrnchChange(){
@@ -129,23 +105,17 @@ function selectInventoryQty(){
       var param ={ "itemCode" : $("#purcItems").val() , "locId" : $("#fromNewAddBrnchId").val()  };
 
         Common.ajax("POST", "/sales/posstock/selectItemInvtQty.do",param, function(result) {
-
-
-         console.log(result);
-
-         if(result.dataInfo != null){
-             $("#itemInvtQty").val(result.dataInfo.itemInvQty);
-         }else{
-             $("#itemInvtQty").val(0);
-         }
-
+	         if(result.dataInfo != null){
+	             $("#itemInvtQty").val(result.dataInfo.itemInvQty);
+	         }else{
+	             $("#itemInvtQty").val(0);
+	         }
         },  function(jqXHR, textStatus, errorThrown) {
-            try {s
+            try {
                 console.log("status : " + jqXHR.status);
                 console.log("code : " + jqXHR.responseJSON.code);
                 console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : "
-                        + jqXHR.responseJSON.detailMessage);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
             } catch (e) {
                 console.log(e);
             }
@@ -158,12 +128,10 @@ function selectInventoryQty(){
 
 function addRow() {
 
-
-    if($("#purcItems").val() == ""
-        || $("#fromNewAddBrnchId").val() =="") {
-      Common.alert("Transfer to branch/Item/ is required.");
-      return ;
-  }
+    if($("#purcItems").val() == "" || $("#fromNewAddBrnchId").val() =="") {
+	      Common.alert("Transfer to branch/Item/ is required.");
+	      return ;
+    }
 
     var item = new Object();
     item.itemCode           = $("#purcItems").val() ,
@@ -175,29 +143,17 @@ function addRow() {
     item.itemType          = $("#itemType").val(),
     item.stkCode          = $("#purcItems").val() ;
 
-    /*
-    if($("#purcItems").val() == ""
-    	  || $("#fromNewAddBrnchId").val() =="" || $("#itemInvtQty").val() =="") {
-        Common.alert("Branch/Item/Inventory  is required.");
-        return false;
-    }
-  */
-
     if( AUIGrid.isUniqueValue (myNewAjGridIDPOS,"itemCode" ,item.itemCode )){
         AUIGrid.addRow(myNewAjGridIDPOS, item, "last");
-
     }else{
         Common.alert("<b>"+ item.itemDesc +"  is existing. </br>");
         return ;
     }
-
 }
 
 
 
 function auiNewAdjCellEditingHandler(event) {
-
-    console.log(event)
 
     if(event.type == "cellEditBegin") {
      //   document.getElementById("editBeginDesc").innerHTML = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
@@ -208,9 +164,6 @@ function auiNewAdjCellEditingHandler(event) {
             if(event.value>0){
                 var reqQty =event.item.itemInvtQty;
                 AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 4, event.value -reqQty );
-                //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 8,""  );
-                //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 6, "A");
-                //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 7, "A");
             }
          }
 
@@ -237,24 +190,17 @@ function removeRow(){
     AUIGrid.removeSoftRows(myNewAjGridIDPOS);
 }
 
-
 function auiRemoveRowHandler(){}
-
 
 function fn_close(){
     $("#popup_wrap").remove();
 }
-
-
 
 function fn_saveGrid(){
 
 
 	var checkList = GridCommon.getGridData(myNewAjGridIDPOS);
 
-    console.log(checkList);
-
-   // if ($("#itemStatus").val() !="R"){
       for(var i = 0 ; i < checkList.all.length ; i++){
           var itemReqQty  = checkList.all[i].itemReason;
 
@@ -263,30 +209,21 @@ function fn_saveGrid(){
               return ;
           }
       }
-   // }
+
 
 
 
     Common.ajax("POST", "/sales/posstock/insertNewAdjPosStock.do", GridCommon.getEditData(myNewAjGridIDPOS), function(result) {
-        //resetUpdatedItems(); // 초기화
-        console.log( result);
         Common.alert('SCN Number is : '+result.data);
-
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
             console.log("code : " + jqXHR.responseJSON.code);
             console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-
+            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         } catch (e) {
             console.log(e);
         }
-
-
-
-       // fn_getSampleListAjax();
     });
 }
 

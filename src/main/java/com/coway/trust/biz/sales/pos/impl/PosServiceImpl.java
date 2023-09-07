@@ -3887,14 +3887,12 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
   }
 
   @Override
-  public List<EgovMap> selectWhSOBrnchList() throws Exception {
-
-    return posMapper.selectWhSOBrnchList();
+  public List<EgovMap> selectWhSOBrnchList(Map<String, Object> params) throws Exception {
+    return posMapper.selectWhSOBrnchList(params);
   }
 
   @Override
   public List<EgovMap> selectPOSFlexiItem(Map<String, Object> params) {
-
     return posMapper.selectPOSFlexiItem(params);
   }
 

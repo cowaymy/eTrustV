@@ -10,8 +10,8 @@
 .aui-grid-user-custom-right {
     text-align:right;
 }
-
 </style>
+
 <script type="text/javascript">
 
 var columnLayout = [
@@ -23,10 +23,6 @@ var columnLayout = [
                     {dataField: "itemPurhOrdNo" ,headerText :"itemPoOrdNo"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "scnFromLocId" ,headerText :"itemFromBrnchId"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemCtgryId" ,headerText :"itemCategory"                ,width:120   ,height:30 , visible:false, editable : false},
-
-
-
-
  ];
 
 
@@ -37,8 +33,6 @@ var gridProsPOS = {
 };
 
 var myGridIDPOS;
-
-
 
 //Init Option
 var ComboOption = {
@@ -52,32 +46,18 @@ var ItmOption = {
         isCheckAll: false
 };
 
-
-
 $(document).ready(function () {
-
-
-
-    CommonCombo.make('fromAddBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-
-
-    //Itm List
-    var itmType = {itemType : 1346 , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
-
+	document.querySelector("#fromAddBrnchId").innerHTML = document.querySelector("#scnFromLocId").getInnerHTML();
+	$('#fromAddBrnchId').val("");
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", {itemType : 1346 , posItm : 1} , '', ItmOption);
     myGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
-
 });
-
-
 
 
 function itemCategoryChange(){
 	var val = $("#category").val();
 	var itmType = {itemType : val , posItm : 1};
     CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-
 }
 
 
@@ -86,39 +66,27 @@ function itemCodeChange(){
 	selectInventoryQty();
 }
 
-
-
-
 function selectInventoryQty(){
 
       //it is going to get  inventory qty
-             $("#itemInvtQty").val(0);
-
-
+      $("#itemInvtQty").val(0);
       var param ={ "itemCode" : $("#purcItems").val() , "locId" : $("#fromAddBrnchId").val()  };
 
         Common.ajax("POST", "/sales/posstock/selectItemInvtQty.do",param, function(result) {
-
-
-         console.log(result);
-
-         if(result.dataInfo != null){
-             $("#itemInvtQty").val(result.dataInfo.itemInvQty);
-         }
-
+	         if(result.dataInfo != null){
+	             $("#itemInvtQty").val(result.dataInfo.itemInvQty);
+	         }
         },  function(jqXHR, textStatus, errorThrown) {
-            try {s
+            try {
                 console.log("status : " + jqXHR.status);
                 console.log("code : " + jqXHR.responseJSON.code);
                 console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : "
-                        + jqXHR.responseJSON.detailMessage);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
             } catch (e) {
                 console.log(e);
             }
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
-
 }
 
 function addRow() {
@@ -126,44 +94,37 @@ function addRow() {
     var item = new Object();
     item.itemCode           = $("#purcItems").val() ,
     item.itemDesc           = $( "#purcItems option:selected" ).text(),
-    item.itemReqQty       = $("#itemAddQty").val(),
+    item.itemReqQty        = $("#itemAddQty").val(),
     item.itemPurhOrdNo   = $("#poOrdNo").val(),
     item.scnFromLocId    = $("#fromAddBrnchId").val(),
     item.itemCtgryId       = $("#category").val(),
     item.itemType          = $("#itemType").val();
     item.itemInvtQty      = $("#itemInvtQty").val();
 
-
     if($("#purcItems").val() == ""   || $("#fromAddBrnchId").val() =="" || $("#itemAddQty").val() =="" ||$("#poOrdNo").val() == "") {
         Common.alert("Branch/Item/Inventory/purchase order no  is required.");
         return false;
     }
 
-
     if( AUIGrid.isUniqueValue (myGridIDPOS,"itemCode" ,item.itemCode )){
         AUIGrid.addRow(myGridIDPOS, item, "last");
-
-    }else{
+    }
+    else{
         Common.alert("<b>"+ item.itemDesc +"  is existing. </br>");
         return ;
     }
-
 }
-
 
 function removeRow(){
     AUIGrid.removeRow(myGridIDPOS, "selectedIndex");
     AUIGrid.removeSoftRows(myGridIDPOS);
 }
 
-
 function auiRemoveRowHandler(){}
-
 
 function fn_close(){
     $("#popup_wrap").remove();
 }
-
 
 function transFromBrnchChange(){
 
@@ -177,32 +138,17 @@ function transFromBrnchChange(){
 
 
 function fn_saveGrid(){
-
-
-
-
     Common.ajax("POST", "/sales/posstock/insertPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
-        //resetUpdatedItems(); // 초기화
-        console.log( result);
-        Common.alert('SCN Number is : '+result.data);
-
-        fn_close();
-
+        Common.alert('SCN Number is : '+result.data, fn_close);
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
             console.log("code : " + jqXHR.responseJSON.code);
             console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-
+            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         } catch (e) {
             console.log(e);
         }
-
-
-
-       // fn_getSampleListAjax();
     });
 }
 

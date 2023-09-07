@@ -69,16 +69,19 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 			if(addList != null && addList.size() > 0){
 
-
 				for (int idx = 0; idx < addList.size(); idx++) {
 
 					Map<String, Object> insMap = (Map<String, Object>)addList.get(idx);
 
-					seq=posMapper.getSeqSAL0321D();
-
 					Map<String, Object> heardMap = new HashMap<String, Object>();
+					heardMap.put("purcItems_addItem", insMap.get("purcItems_addItem"));
 
-			  		heardMap.put("id", seq);
+					List<EgovMap> itemList = posMapper.checkDuplicatedStock(heardMap);
+					if(itemList.size() !=0){
+						 throw new Exception("Same item is not allow duplicated to be added.");
+					}
+
+			  		heardMap.put("id", posMapper.getSeqSAL0321D());
 			  		heardMap.put("posType", insMap.get("posType_addItem"));
 			  		heardMap.put("sellingType", insMap.get("sellingType_addItem"));
 			  		heardMap.put("itemId", insMap.get("purcItems_addItem"));
@@ -746,6 +749,36 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	 @Override
 	  public List<EgovMap> selectWhSOBrnchItemList() throws Exception {
 	    return posMapper.selectWhSOBrnchItemList();
+	  }
+
+	 @Override
+	  public List<EgovMap> selectEshopStockList(Map<String, Object> params) throws Exception {
+	    return posMapper.selectEshopStockList(params);
+	  }
+
+	 @Override
+	  public List<EgovMap> selectPaymentInfo(Map<String, Object> params){
+		 	return posMapper.selectPaymentInfo(params);
+	  }
+
+	 @Override
+	 public int confirmPayment(Map<String, Object> params) {
+			return posMapper.confirmPayment(params);
+	 }
+
+	 @Override
+	 public void deactivatePaymentAndEsn(Map<String, Object> params) {
+			 posMapper.deactivatePaymentAndEsn(params);
+	 }
+
+	 @Override
+	 public void revertFloatingStockLOG0106M(Map<String, Object> params) {
+			 posMapper.revertFloatingStockLOG0106M(params);
+	 }
+
+	 @Override
+	  public List<EgovMap> checkValidationEsn(Map<String, Object> params){
+	    return posMapper.checkValidationEsn(params);
 	  }
 
 }

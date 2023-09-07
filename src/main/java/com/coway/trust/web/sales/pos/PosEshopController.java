@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -46,6 +47,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -157,7 +159,6 @@ public class PosEshopController {
     return ResponseEntity.ok(rInfo);
   }
 
-  @Transactional
   @RequestMapping(value = "/insertPosEshopItemList.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> insertPosEshopItemList(@RequestBody Map<String, Object> params) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -165,21 +166,23 @@ public class PosEshopController {
     params.put("userDeptId", sessionVO.getUserDeptId());
     params.put("userName", sessionVO.getUserName());
 
-
-    Map<String, Object> retunMap = null;
-
-    LOGGER.debug(" params insertPosEshopItemList==dd=>"+params.toString());
-
-    int result = posEshopService.insertPosEshopItemList(params);
-
     ReturnMessage message = new ReturnMessage();
 
-    if(result > 0){
-    	 message.setCode(AppConstants.SUCCESS);
-    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    }else{
-    	message.setCode(AppConstants.FAIL);
-   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+    try{
+
+        int result = posEshopService.insertPosEshopItemList(params);
+
+        if(result > 0){
+           	 message.setCode(AppConstants.SUCCESS);
+           	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+       }else{
+           	 message.setCode(AppConstants.FAIL);
+          	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+       }
+
+    }catch(Exception e){
+        	message.setCode(AppConstants.FAIL);
+         	message.setMessage(e.toString());
     }
 
     return ResponseEntity.ok(message);
@@ -543,7 +546,7 @@ public class PosEshopController {
 				     seqs.add(key);
 				 }
 
-			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles3(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles3(request, uploadDirWeb, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
 			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
@@ -551,7 +554,8 @@ public class PosEshopController {
 
 			params.put("attachFiles", list);
 			code = AppConstants.SUCCESS;
-			}catch(ApplicationException e){
+			}
+			catch(ApplicationException e){
 				err = e.getMessage();
 				code = AppConstants.FAIL;
 			}
@@ -836,6 +840,81 @@ public class PosEshopController {
 	    return "sales/pos/posEshopRawDataPop";
 	  }
 
+	  @RequestMapping(value = "/posEshopStockPop.do")
+	  public String posEshopStockPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    	    model.put("bfDay", bfDay);
+    	    model.put("toDay", toDay);
+    	    return "sales/pos/posEshopStockPop";
+	  }
+
+	  @RequestMapping(value = "/posEshopPaymentConfirmationPop.do")
+	  public String posEshopPaymentConfirmationPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	    model.put("paymentInfo", new Gson().toJson(posEshopService.selectPaymentInfo(params).get(0)));
+    	    return "sales/pos/posEshopPaymentConfirmationPop";
+	  }
+
+	  @RequestMapping(value = "/checkValidationEsn")
+	  public ResponseEntity<String> checkValidationEsn(@RequestParam Map<String, Object> params) throws Exception {
+	    return ResponseEntity.ok(new Gson().toJson(posEshopService.checkValidationEsn(params).get(0)));
+	  }
+
+	   public void deactivate(Map<String, Object> params){
+		   posEshopService.deactivatePaymentAndEsn(params);
+		   posEshopService.revertFloatingStockLOG0106M(params);
+	   }
+
+	   @Transactional
+	   @RequestMapping(value = "/deactivatePayment.do", method = RequestMethod.POST)
+	   public ResponseEntity<ReturnMessage> deactivatePayment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+		    ReturnMessage message = new ReturnMessage();
+			params.put("userId", sessionVO.getUserId());
+
+			deactivate(params);
+
+			message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage("This ESN has been cancelled");
+			message.setData(params);
+			return ResponseEntity.ok(message);
+	   }
+
+	  @Transactional
+	  @RequestMapping(value = "/confirmPayment.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> confirmPayment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+		  ReturnMessage message = new ReturnMessage();
+			params.put("userId", sessionVO.getUserId());
+			int result = 0;
+
+			try{
+				 result = posEshopService.confirmPayment(params);
+
+				 if(result > 0){
+			    	 message.setCode(AppConstants.SUCCESS);
+			    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			     }else{
+			    	deactivate(params);
+			    	message.setCode(AppConstants.FAIL);
+			   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			    }
+			}
+			catch(Exception e){
+				deactivate(params);
+				message.setCode(AppConstants.FAIL);
+		   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+			 message.setData(params);
+			 return ResponseEntity.ok(message);
+	  }
+
+	  @RequestMapping(value = "/selectEshopStockList")
+	  public ResponseEntity<List<EgovMap>> selectEshopStockList(@RequestParam Map<String, Object> params) throws Exception {
+	    LOGGER.debug("===========> {} " + params);
+		  return ResponseEntity.ok(posEshopService.selectEshopStockList(params));
+	  }
+
+
+
 
 	  @RequestMapping(value = "/selectEshopWhSOBrnchList")
 	  public ResponseEntity<List<EgovMap>> selectEshopWhSOBrnchList() throws Exception {
@@ -859,7 +938,4 @@ public class PosEshopController {
 	    return ResponseEntity.ok(codeList);
 
 	  }
-
-
-
 }
