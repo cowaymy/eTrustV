@@ -34,6 +34,12 @@
     font-weight:bold;
     color:#22741C;
 }
+
+.my-row-style-pending {
+    background:#F29339;
+    font-weight:bold;
+    color:#22741C;
+}
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -51,31 +57,49 @@
     }, {
         dataField : "tierTotalRecord",
         headerText : "<spring:message code='pay.head.totalRecords'/>",
-        width : "10%",
+        width : "7%",
         height : 30,
         visible : true
     }, {
         dataField : "name",
         headerText : "<spring:message code='sales.Status'/>",
-        width : "20%",
+        width : "8%",
         height : 30,
         visible : true
     }, {
-        dataField : "userFullName",
+        dataField : "creator",
         headerText : "<spring:message code='sal.text.creator'/>",
+        width : "15%",
+        height : 30,
+        visible : true
+    }, {
+        dataField : "tierUploadCrtDt",
+        headerText : "<spring:message code='sales.CreateDate'/>",
+        width : "8%",
+        height : 30,
+        visible : true
+    }, {
+        dataField : "uploadRem",
+        headerText : "<spring:message code='sales.Remark'/>",
         width : "20%",
         height : 30,
         visible : true
     }, {
-        dataField : "tierUploadCrtDt",
-        headerText : "<spring:message code='sales.CreateDate'/>",
-        width : "25%",
+        dataField : "appRem",
+        headerText : "Approval Remark",
+        width : "20%",
         height : 30,
         visible : true
     }, {
-        dataField : "tierUploadCrtDt",
-        headerText : "<spring:message code='sales.CreateDate'/>",
-        width : "13%",
+        dataField : "approver",
+        headerText : "Approver/Rejecter",
+        width : "15%",
+        height : 30,
+        visible : true
+    }, {
+        dataField : "tierUploadAppDt",
+        headerText : "Approved/Rejected Date",
+        width : "8%",
         height : 30,
         visible : true
     } ];
@@ -201,7 +225,8 @@
         // row Styling 함수
         rowStyleFunction : function(rowIndex, item) {
         	//failed status
-            if(item.tierDetStusId == 21 || item.tierUploadStusId == 21) {
+            if((item.tierDetStusId == 21 || item.tierUploadStusId == 21) ||
+            		item.tierDetStusId == 6 || item.tierUploadStusId == 6) {
                 return "my-row-style";
             }
             //completed status
@@ -210,8 +235,9 @@
             }
             else {
             	//if status is  "Wait for Approve"
-            	if(item.tierUploadStusId == 59){
-            		   enabledRowIDs.push(item.tierUploadId);
+            	if(item.tierDetStusId == 59 || item.tierUploadStusId == 59){
+            		enabledRowIDs.push(item.tierUploadId);
+            		return "my-row-style-pending";
             	}
                 return "";
             }
@@ -461,6 +487,74 @@
 		});
 	}
 
+	 function fn_serialize(id, status) {
+         var data = "";
+         for (var i = 0; i < id.length; i++) {
+             data += "tierUploadId=" + id[i];
+
+           if (i !== id.length - 1) {
+               data += "&";
+           }
+         }
+         data += "&status=" + status;
+
+         return data;
+     }
+
+	 function fn_validateRows() {
+		 enabledRowIDs = [];
+	        var items = AUIGrid.getCheckedRowItems(myGridID);
+
+	        if(items.length < 1){
+	            Common.alert("Please, select a row.");
+	            return false;
+	        }
+
+	        var isValid = true;
+	        $.each(items, function(idx, row){
+	            if(Number(row.item.tierUploadStusId) != 59){
+	                isValid = false;
+	                return;
+	            }
+	            enabledRowIDs.push(row.item.tierUploadId);
+	        });
+	        if(!isValid){
+	            Common.alert("Please, check the status.");
+	            return false;
+	        }
+	        return true;
+	 }
+
+	function fn_approval(status) {
+        if(fn_validateRows()) {
+
+          var data = fn_serialize(enabledRowIDs, status);
+          console.log(data);
+          console.log(enabledRowIDs);
+          if(status == "approve") {
+              Common.confirm("Are you sure want to " + status + " this?", function(){
+                  Common.ajax("GET","/sales/customer/approvalRewardBulkPoint.do", data, function(result){
+                      Common.alert(result.message.message);
+                      $("#search").click();
+                   });
+              });
+         }
+          else {
+          	Common.popupDiv("/sales/customer/rejectMsgPop.do", null, null, true, "rejectMsgPop");
+          }
+        }
+    }
+
+	function fn_submitReject(rejectReason, status) {
+		var data = fn_serialize(enabledRowIDs, status);
+		data += "&reason=" + rejectReason;
+		console.log(data);
+        Common.ajax("GET","/sales/customer/approvalRewardBulkPoint.do", data, function(result){
+            Common.alert(result.message.message);
+            $("#search").click();
+        });
+	}
+
 	$(function() {
 		$("#search").click(function() {
 			getBulkPointListAjax();
@@ -471,27 +565,10 @@
 			AUIGrid.resize(uploadGrid);
 		});
 
-		$("#bulkPointConfirm").click(function() {
-			enabledRowIDs = [];
-            var items = AUIGrid.getCheckedRowItems(myGridID);
+	/*	$("#bulkPointConfirm").click(function() {
 
-            if(items.length < 1){
-                Common.alert("Please, select a row.");
-                return false;
-            }
+			validateSelectedRows();
 
-            var isValid = true;
-            $.each(items, function(idx, row){
-                if(Number(row.item.tierUploadStusId) != 59){
-                    isValid = false;
-                    return;
-                }
-                enabledRowIDs.push(row.item.tierUploadId);
-            });
-            if(!isValid){
-                Common.alert("Please, check the status.");
-                return false;
-            }
             Common.confirm("Are you sure want to confirm this?",
                     function(){
             	console.log(enabledRowIDs);
@@ -516,6 +593,35 @@
                          });
                   	});
         });
+
+		$("#bulkPointReject").click(function() {
+
+			validateSelectedRows();
+
+            Common.confirm("Are you sure want to reject this?",
+                    function(){
+                console.log(enabledRowIDs);
+                var tierUploadId = "";
+
+                for (var i = 0; i < enabledRowIDs.length; i++) {
+                    tierUploadId += "tierUploadId=" + enabledRowIDs[i];
+
+                  if (i !== enabledRowIDs.length - 1) {
+                      tierUploadId += "&";
+                  }
+                }
+
+                console.log(tierUploadId);
+                        Common.ajax("GET","/sales/customer/rejectRewardBulkPoint.do", tierUploadId, function(result){
+                            console.log(result.message);
+                            Common.alert(result.message.message);
+
+
+
+                            $("#search").click();
+                         });
+                    });
+        });*/
 	});
 
 	function getBulkPointListAjax() {
@@ -541,6 +647,7 @@
 
 		var formData = new FormData();
 		formData.append("csvFile", $("input[name=fileSelector]")[0].files[0]);
+		formData.append("remark", $("#txtRemark").val());
 		if(!fn_validation()){
 			return;
 		}
@@ -669,6 +776,7 @@
                   <option value="4">Completed</option>
                   <option value="5">Approved</option>
                   <option value="59">Wait For Approve</option>
+                  <option value="6">Rejected</option>
                   <option value="8">Inactive</option>
                   <option value="21">Failed</option>
               </select></td>
@@ -706,7 +814,10 @@
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="btn_grid">
-            <a id="bulkPointConfirm">Confirm Bulk Point</a>
+            <a id="bulkPointConfirm" onclick="fn_approval('approve')">Approve</a>
+          </p></li>
+          <li><p class="btn_grid">
+            <a id="bulkPointReject" onclick="fn_approval('reject')">Reject</a>
           </p></li>
         </c:if>
 
@@ -812,6 +923,13 @@
                       <input type="file" id="fileSelector" name="fileSelector" title="file add" accept=".csv" />
                     </div> <!-- auto_file end -->
                   </td>
+                  <td>
+                  </td>
+                  <td>
+                </tr>
+                <tr>
+                  <th scope="row"><spring:message code='service.title.Remark' /></th>
+                  <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
                 </tr>
               </tbody>
             </table>
