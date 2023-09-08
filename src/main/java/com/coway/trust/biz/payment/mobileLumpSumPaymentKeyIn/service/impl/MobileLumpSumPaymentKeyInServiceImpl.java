@@ -257,7 +257,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				orderDetails.get(i).put("mobilePayGrpNo", nextGroupID);
 				mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
 			}
-			result.put("mobilePayGroupNo", nextGroupID);
+			result.put("mobPayGroupNo", nextGroupID);
 			result.put("userId", params.get("userId"));
 			result.put("totPayAmt", params.get("totalPayableAmount"));
 			result.put("result", 1);
