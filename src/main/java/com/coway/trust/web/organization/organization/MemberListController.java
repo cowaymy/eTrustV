@@ -1072,6 +1072,8 @@ public class MemberListController {
         formMap.put("emergencyCntcNm", params.get("emergencyCntcNmUpd"));
         formMap.put("emergencyCntcNo", params.get("emergencyCntcNoUpd"));
         formMap.put("emergencyCntcRelationship", params.get("emergencyCntcRelationshipUpd"));
+        formMap.put("businessType", params.get("businessType"));
+        //logger.debug("businessType : {}", params.get("businessType"));
         // LaiKW - Comment ends here
 
         String memCode = "";
