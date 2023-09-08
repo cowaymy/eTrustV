@@ -105,8 +105,8 @@ public class MobileLumpSumPaymentApiController {
 			result.setResponseCode(1);
 			params.putAll(searchResult);
 
-			mobileLumpSumPaymentKeyInService.sendEmail(params);
 			mobileLumpSumPaymentKeyInService.sendSms(params);
+			mobileLumpSumPaymentKeyInService.sendEmail(params);
 		}
 		else{
 			result.setResponseCode(0);

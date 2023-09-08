@@ -1231,9 +1231,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public void sendSms(Map<String, Object> params) {
+		LOGGER.debug("Mobile SMS LS : " + params);
 		if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
 			// Send Message
 
+			LOGGER.debug("Mobile SMS 1 : " + params);
 	    	String baseUrl = etrustBaseUrl;
 	    	String mobPayGroupNo =  params.get("mobPayGroupNo").toString();
 	    	String encryptedString = "";
