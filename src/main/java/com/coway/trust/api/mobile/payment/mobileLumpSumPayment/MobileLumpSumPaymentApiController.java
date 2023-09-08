@@ -100,13 +100,13 @@ public class MobileLumpSumPaymentApiController {
 		LOGGER.debug(params.toString());
 
 		Map<String, Object> searchResult = mobileLumpSumPaymentKeyInService.submissionSave(params);
-
 		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
 		if(Integer.parseInt(searchResult.get("result").toString()) == 1){
 			result.setResponseCode(1);
+			params.putAll(searchResult);
 
-			mobileLumpSumPaymentKeyInService.sendEmail(searchResult);
-			mobileLumpSumPaymentKeyInService.sendSms(searchResult);
+			mobileLumpSumPaymentKeyInService.sendEmail(params);
+			mobileLumpSumPaymentKeyInService.sendSms(params);
 		}
 		else{
 			result.setResponseCode(0);
