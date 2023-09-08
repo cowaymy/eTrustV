@@ -35,4 +35,10 @@ public interface MobileLumpSumPaymentKeyInService {
 	List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
 
 	List<EgovMap> checkBatchPaymentExist(Map<String, Object> params);
+
+	void sendEmail(Map<String, Object> params);
+
+	void sendSms(Map<String, Object> params);
+
+	EgovMap getLumpSumReceiptInfo(Map<String, Object> params);
 }

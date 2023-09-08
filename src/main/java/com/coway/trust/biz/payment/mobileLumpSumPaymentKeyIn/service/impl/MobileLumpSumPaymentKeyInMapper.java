@@ -30,4 +30,7 @@ public interface MobileLumpSumPaymentKeyInMapper {
     List<EgovMap> getMobileLumpSumHistory(Map<String, Object> params);
     int selectNextMatchingId();
     int mobileUpdateCashMatchingData(Map<String, Object> params);
+    EgovMap getAdditionalEmailDetailInfo(Map<String, Object> params);
+    List<EgovMap> getAdditionalEmailDetailOrderInfo(Map<String, Object> params);
+    String getSmsTemplate(Map<String, Object> params);
 }

@@ -105,7 +105,8 @@ public class MobileLumpSumPaymentApiController {
 		if(Integer.parseInt(searchResult.get("result").toString()) == 1){
 			result.setResponseCode(1);
 
-			//SEND EMAIL
+			mobileLumpSumPaymentKeyInService.sendEmail(searchResult);
+			mobileLumpSumPaymentKeyInService.sendSms(searchResult);
 		}
 		else{
 			result.setResponseCode(0);

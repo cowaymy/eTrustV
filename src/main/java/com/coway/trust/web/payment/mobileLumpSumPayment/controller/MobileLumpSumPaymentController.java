@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -141,4 +142,12 @@ public class MobileLumpSumPaymentController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+	@RequestMapping(value = "/lumpSumReceiptPublic.do")
+	public String lumpSumReceiptPublic(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		params.put("mobPayGroupNo", 87);
+		EgovMap result = mobileLumpSumPaymentKeyInService.getLumpSumReceiptInfo(params);
+		model.put("info", result);
+		return "payment/mobileLumpSumPayment/lumpSumReceiptPublic";
+	}
 }

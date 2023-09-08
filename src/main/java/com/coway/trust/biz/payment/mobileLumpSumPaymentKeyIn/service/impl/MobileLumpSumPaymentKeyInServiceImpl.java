@@ -39,12 +39,15 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.mobileLumpSumPayment.MobileLumpSumPaymentOrderDetailsForm;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.EncryptionDecryptionService;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
@@ -97,6 +100,21 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	private AdaptorService adaptorService;
 	@Resource(name = "commonPaymentMapper")
 	private CommonPaymentMapper commonPaymentMapper;
+
+	@Resource(name = "encryptionDecryptionService")
+	private EncryptionDecryptionService encryptionDecryptionService;
+
+	@Value("${tiny.api.url}")
+	private String tinyUrlApi;
+
+	@Value("${tiny.api.token}")
+	private String tinyUrlToken;
+
+	@Value("${tiny.api.sub.domain}")
+	private String tinyUrlSubDomain;
+
+	@Value("${etrust.base.url}")
+	private String etrustBaseUrl;
 
 	@Override
 	public List<EgovMap> customerInfoSearch(Map<String, Object> params) {
@@ -239,6 +257,9 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				orderDetails.get(i).put("mobilePayGrpNo", nextGroupID);
 				mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
 			}
+			result.put("mobilePayGroupNo", nextGroupID);
+			result.put("userId", params.get("userId"));
+			result.put("totPayAmt", params.get("totalPayableAmount"));
 			result.put("result", 1);
 		} else {
 			throw new ApplicationException(AppConstants.FAIL,
@@ -1146,15 +1167,50 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		return formList;
 	}
 
-	public void sendEmail(Map<String, Object> params) {
-		// mobilePayGrpNo
+	@Override
+	public EgovMap getLumpSumReceiptInfo(Map<String, Object> params){
+		EgovMap result = new EgovMap();
 
+		 EgovMap additionalParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailInfo(params);
+		 result.putAll(additionalParam);
+
+
+		 List<EgovMap> additionalOrderInfoParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailOrderInfo(params);
+		    if(additionalOrderInfoParam.size() > 0){
+		    	String table ="";
+		    	for(int i = 0; i< additionalOrderInfoParam.size(); i++){
+			    	table += "<tr><td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("salesOrdNo").toString() + "</td>";
+			    	table += "<td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("stkDesc").toString() + "</td>";
+			    	table += "<td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("payType").toString() + "</td>";
+			    	table += "<td style='border:1px solid;text-align:center;'>" + additionalOrderInfoParam.get(i).get("payAmt").toString() + "</td></tr>";
+		    	}
+		    	result.put("orderListTableInfo", table);
+		    }
+		 return result;
+	}
+
+	@Override
+	public void sendEmail(Map<String, Object> params) {
 		EmailVO email = new EmailVO();
 		String emailSubject = "COWAY: Mobile Bulk Payment";
 
 		List<String> emailNo = new ArrayList<String>();
 
-		// get customer name and order info
+	    Map<String, Object> additionalParam = (Map<String, Object>) mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailInfo(params);
+	    params.putAll(additionalParam);
+
+	    List<EgovMap> additionalOrderInfoParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailOrderInfo(params);
+
+	    if(additionalOrderInfoParam.size() > 0){
+	    	String table ="";
+	    	for(int i = 0; i< additionalOrderInfoParam.size(); i++){
+		    	table += "<tr><td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("salesOrdNo").toString() + "</td>";
+		    	table += "<td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("stkDesc").toString() + "</td>";
+		    	table += "<td style='border:1px solid;padding-left:10px;text-align:left'>" + additionalOrderInfoParam.get(i).get("payType").toString() + "</td>";
+		    	table += "<td style='border:1px solid;text-align:center;'>" + additionalOrderInfoParam.get(i).get("payAmt").toString() + "</td></tr>";
+    	}
+	    	params.put("orderListTableInfo", table);
+	    }
 
 		if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
 			emailNo.add(CommonUtils.nvl(params.get("email1")));
@@ -1162,60 +1218,122 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			emailNo.add(CommonUtils.nvl(params.get("email2")));
 		}
 
-		String content = "";
-		content += "Dear Sir/Madam,\n";
-		content += "Thank you for your payment.\n";
-		content += "Your payment records shall be updated within 3 working days upon verification. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
-		content += "This is a system generated email. Please do not respond to this email. \n";
-
 		params.put(EMAIL_SUBJECT, emailSubject);
 		params.put(EMAIL_TO, emailNo);
-		params.put(EMAIL_TEXT, content);
 
 		if (emailNo.size() > 0) {
 			email.setTo(emailNo);
 			email.setHtml(true);
 			email.setSubject(emailSubject);
-			email.setText(content);
-			adaptorService.sendEmail(email, false); // Normal email sending without attachments
+		    email.setHasInlineImage(true);
+			adaptorService.sendEmail(email, false, EmailTemplateType.E_LUMP_SUM_RECEIPT, params);
 		}
 	}
 
+	@Override
 	public void sendSms(Map<String, Object> params) {
 		if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
 			// Send Message
-			EgovMap custCardBankIssuer = new EgovMap();// autoDebitMapper.selectCustCardBankInformation(params);
-			String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
-			String cardEnding = custCardNo.substring(custCardNo.length() - 4);
-			params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
-			params.put("cardEnding", cardEnding);
-			int userId = 0;// autoDebitMapper.getUserID(params.get("createdBy").toString());
-			SmsVO sms = new SmsVO(userId, 975);
-			String smsTemplate = ""; // autoDebitMapper.getSmsTemplate(params);
-			String smsNo = "";
 
-			params.put("smsTemplate", smsTemplate);
+	    	String baseUrl = etrustBaseUrl;
+	    	String mobPayGroupNo =  params.get("mobPayGroupNo").toString();
+	    	String encryptedString = "";
 
-			if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
-				smsNo = CommonUtils.nvl(params.get("sms1"));
-			}
+	    	//creating encryption string for url
+	    	try {
+	    		encryptedString = encryptionDecryptionService.encrypt(mobPayGroupNo,"lumpsum");
 
-			if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
-				if (!"".equals(CommonUtils.nvl(smsNo))) {
-					smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
-				} else {
-					smsNo = CommonUtils.nvl(params.get("sms2"));
-				}
-			}
+	    	} catch (Exception e) {
+	    		// TODO Auto-generated catch block
+	    		LOGGER.error("lumpsum sms  encryptedString: =====================>> " + e.toString());
+	    		e.printStackTrace();
+	    	}
+	    	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
 
-			if (!"".equals(CommonUtils.nvl(smsNo))) {
-				sms.setMessage(CommonUtils.nvl(smsTemplate));
-				sms.setMobiles(CommonUtils.nvl(smsNo));
-				sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
-				sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
-				SmsResult smsResult = adaptorService.sendSMS(sms);
-				LOGGER.debug(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
-			}
+
+			//get tinyUrl link
+	    	try{
+	    		Map<String,Object> returnParams = new HashMap<String, Object>();
+	    		String output1 = "";
+
+	    		URL url = new URL(tinyUrlApi + "/create");
+	            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	            conn.disconnect();
+	            conn.setDoOutput(true);
+	            conn.setRequestMethod("POST");
+	            conn.setRequestProperty("Content-Type", "application/json");
+	            conn.setRequestProperty("Authorization", "Bearer " + tinyUrlToken);
+	            conn.connect();
+
+	            DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+	            String jsonString = "{\"url\":\"" + params.get("destinationLink") + "\",\"domain\": \"" + tinyUrlSubDomain + "\"}";
+	            out.write(jsonString.getBytes());
+	            out.flush();
+	            out.close();
+
+	            InputStream inputStream;
+	            if (conn.getResponseCode() == 200) {
+	                inputStream = conn.getInputStream();
+	                returnParams.put("status", AppConstants.SUCCESS);
+	                returnParams.put("msg", "");
+	            } else {
+	                inputStream = conn.getErrorStream();
+	                returnParams.put("status", AppConstants.FAIL);
+	            }
+
+	            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+	            	BufferedReader br = new BufferedReader(new InputStreamReader(
+	    	                (conn.getInputStream())));
+
+	            	String output = "";
+	    	        LOGGER.debug("Output from Server .... \n");
+	    	        while ((output = br.readLine()) != null) {
+	    	        	output1 = output;
+	    	        	LOGGER.debug(output);
+	    	        	returnParams.put("msg", output);
+	    	        }
+
+	    	        JSONObject obj = new JSONObject(output1);
+	            	String tinyUrl = obj.getJSONObject("data").getString("tiny_url");
+	            	params.put("tinyUrl", tinyUrl);
+	            }
+
+	    		conn.disconnect();
+	    	} catch (Exception e) {
+	    		// TODO Auto-generated catch block
+	    		LOGGER.error("lumpsum sms  encryptedString error: =====================>> " + e.toString());
+	    		e.printStackTrace();
+	    	} finally {
+	    		//Send Message
+	    		int userId = Integer.parseInt(params.get("userId").toString());
+	    	    SmsVO sms = new SmsVO(userId, 975);
+	    	    //totPayAmt
+	    	    String smsTemplate = mobileLumpSumPaymentKeyInMapper.getSmsTemplate(params);
+	    	    String smsNo = "";
+
+	    	    params.put("smsTemplate", smsTemplate);
+
+	    	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+	    	        smsNo = CommonUtils.nvl(params.get("sms1"));
+	    	    }
+
+	            if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+	                if (!"".equals(CommonUtils.nvl(smsNo))) {
+	                	smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
+	                } else {
+	                	smsNo = CommonUtils.nvl(params.get("sms2"));
+	                }
+	            }
+
+	    	    if (!"".equals(CommonUtils.nvl(smsNo))) {
+	    	      sms.setMessage(CommonUtils.nvl(smsTemplate));
+	    	      sms.setMobiles(CommonUtils.nvl(smsNo));
+	    	      sms.setRemark("SMS LUMP SUM VIA MOBILE APPS");
+	    	      sms.setRefNo(CommonUtils.nvl(params.get("mobPayGroupNo")));
+	    	      SmsResult smsResult = adaptorService.sendSMS(sms);
+	    	      LOGGER.debug(" lumpsum sms  smsResult : {}", smsResult.getFailReason().toString());
+	    	    }
+	    	}
 		}
 	}
 

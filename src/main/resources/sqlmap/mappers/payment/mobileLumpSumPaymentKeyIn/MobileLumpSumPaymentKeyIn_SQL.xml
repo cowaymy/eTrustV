@@ -849,4 +849,30 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		GROUP BY A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,C.NAME,D.NAME,A.CRT_DT,E.CODE_NAME
 		ORDER BY A.CRT_DT DESC
 	</select>
+
+	<select id="getAdditionalEmailDetailInfo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.NAME AS CUST_NAME, p0349m.TOT_PAY_AMT, p0349m.EMAIL_1 AS EMAIL,
+		s0047m.USER_ID AS CRT_USER_ID, s0047m.USER_NAME AS CRT_USER_NAME, s0047m.USER_FULL_NAME AS CRT_USER_FULL_NAME, TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT
+		FROM PAY0349M p0349m
+		LEFT JOIN SAL0029D s0029d
+        ON s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0047M s0047m
+        ON s0047m.USER_ID = p0349m.CRT_BY
+		WHERE p0349m.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	<select id="getAdditionalEmailDetailOrderInfo" parameterType="Map" resultType="egovMap">
+		SELECT p0350d.SALES_ORD_NO, p0350d.PAY_AMT, p0350d.PAY_TYPE, s0026m.STK_DESC
+		FROM PAY0350D p0350d
+		LEFT JOIN SAL0002D s0002d
+		ON p0350d.SALES_ORD_ID = s0002d.SALES_ORD_ID
+		LEFT JOIN SYS0026M s0026m
+		ON s0002d.ITM_STK_ID = s0026m.STK_ID
+		WHERE p0350d.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	<select id="getSmsTemplate" parameterType="Map" resultType="String">
+        SELECT REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smsLumpSum'),'{1}', #{totPayAmt}), '{2}', #{tinyUrl})
+		FROM DUAL
+	</select>
 </mapper>
