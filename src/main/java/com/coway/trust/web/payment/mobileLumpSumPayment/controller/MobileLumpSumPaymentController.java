@@ -2,6 +2,8 @@ package com.coway.trust.web.payment.mobileLumpSumPayment.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.EncryptionDecryptionService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
@@ -45,15 +48,18 @@ public class MobileLumpSumPaymentController {
 	private SessionHandler sessionHandler;
 
 
-	  @Resource(name = "memberListService")
-	  private MemberListService memberListService;
+      @Resource(name = "memberListService")
+      private MemberListService memberListService;
 
-	  @Resource(name = "mobileLumpSumPaymentKeyInService")
-	  private MobileLumpSumPaymentKeyInService mobileLumpSumPaymentKeyInService;
+      @Resource(name = "mobileLumpSumPaymentKeyInService")
+      private MobileLumpSumPaymentKeyInService mobileLumpSumPaymentKeyInService;
 
 
-	  @Resource(name = "mobilePaymentKeyInService")
-	  private MobilePaymentKeyInService mobilePaymentKeyInService;
+      @Resource(name = "mobilePaymentKeyInService")
+      private MobilePaymentKeyInService mobilePaymentKeyInService;
+
+    @Resource(name = "encryptionDecryptionService")
+    private EncryptionDecryptionService encryptionDecryptionService;
 
 	@RequestMapping(value = "/lumpSumEnrollmentList.do")
 	public String lumpSumEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
@@ -145,9 +151,22 @@ public class MobileLumpSumPaymentController {
 
 	@RequestMapping(value = "/lumpSumReceiptPublic.do")
 	public String lumpSumReceiptPublic(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		params.put("mobPayGroupNo", 87);
-		EgovMap result = mobileLumpSumPaymentKeyInService.getLumpSumReceiptInfo(params);
-		model.put("info", result);
+		Map<String, Object> result = new HashMap<String,Object>();
+		String encryptedString = params.get("key").toString().replaceAll(" ", "+");
+		String decryptedString = "";
+		List<String> splitStringArr = new ArrayList<String>();
+		try {
+			decryptedString = encryptionDecryptionService.decrypt(encryptedString,"lumpsum");
+			LOGGER.debug("decryptedLumpSumId: =====================>> " + decryptedString);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+    		params.put("mobPayGroupNo", decryptedString);
+    		EgovMap info = mobileLumpSumPaymentKeyInService.getLumpSumReceiptInfo(params);
+    		model.put("info", info);
+		}
 		return "payment/mobileLumpSumPayment/lumpSumReceiptPublic";
 	}
 }

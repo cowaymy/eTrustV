@@ -1174,7 +1174,6 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		 EgovMap additionalParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailInfo(params);
 		 result.putAll(additionalParam);
 
-
 		 List<EgovMap> additionalOrderInfoParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailOrderInfo(params);
 		    if(additionalOrderInfoParam.size() > 0){
 		    	String table ="";
@@ -1248,8 +1247,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	    		LOGGER.error("lumpsum sms  encryptedString: =====================>> " + e.toString());
 	    		e.printStackTrace();
 	    	}
-	    	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
-
+	    	params.put("destinationLink", baseUrl + "/payment/mobileLumpSumPayment/lumpSumReceiptPublic.do?key=" + encryptedString);
 
 			//get tinyUrl link
 	    	try{

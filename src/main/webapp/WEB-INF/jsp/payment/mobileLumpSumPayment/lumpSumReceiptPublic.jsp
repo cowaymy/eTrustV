@@ -66,7 +66,8 @@ function getData(){
             </tr>
 			${info.orderListTableInfo}
             <tr>
-                <td colspan="3" style="border:1px solid:text-align:right">Total Amount</td>
+                <td colspan="2" style="border:1px solid;">&nbsp;</td>
+                <td style="border:1px solid;padding-right:10px;text-align:right;">Total Amount</td>
                 <td style="border:1px solid;text-align:center">${info.totPayAmt}</td>
             </tr>
         </table>
