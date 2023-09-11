@@ -43,8 +43,8 @@ import org.apache.axis.utils.JavaUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-
-
+import com.coway.trust.util.CommonUtils;
+import ucar.nc2.stream.NcStreamProto.Header;
 
 public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 
@@ -642,6 +642,9 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 		_call.setOperationName(new QName("http://ws.proxy.xml.ctos.com.my/", "request"));
 
 		addAuthenticationHeader(_call);
+		if (((Map<String, Object>) _call.getProperty(HTTPConstants.REQUEST_HEADERS)).containsKey("error")) {
+			throw new java.rmi.RemoteException((String) ((Map<String, Object>) _call.getProperty(HTTPConstants.REQUEST_HEADERS)).get("error"));
+		}
 		setRequestHeaders(_call);
 		setAttachments(_call);
 		try {
@@ -741,7 +744,9 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
     	} catch (Exception e) {
      		System.out.println(e);
     }
-
+		if (token.containsKey("error")) {
+			headers.put("error", token.get("error"));
+		}
 	    headers.put("username", "b065000_xml");
 		headers.put("password", "Wo74Sm#1");
 //		headers.put("password", "	Cmsb#7143!");
@@ -754,7 +759,7 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 	}
 
   private static Map<String, Object> requestMFAToken() throws IOException, JSONException{
-
+	  Map<String, Object> map = new HashMap<String, Object>();
     try {
       URL url = new URL(TOKEN_URL);
 
@@ -765,7 +770,7 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
       System.out.println("con=============:" + con);
       String urlParameters  = "grant_type=password"+
           "&client_id=" + clientId +
-//          "&client_secret=" + clientSecret +
+          "&client_secret=" + clientSecret +
           "&username=" + userName +
           "&password=" + URLEncoder.encode(password,"UTF-8") +
           "&client_assertion_type=" + URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8") +
@@ -792,8 +797,6 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 
       System.out.println("responseCode=============:" + responseCode);
 
-      Map<String, Object> map = new HashMap<String, Object>();
-
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
           BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
           String inputLine;
@@ -816,15 +819,14 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
               String key = (String)keys.next();
               String value = json.getString(key);
               map.put(key, value);
-
           }
 
       }
-        System.out.println("map======================== " + map);
-      return map;
+       return map;
     } catch(Exception e) {
       System.out.println("Could not get an access token: " + e.getMessage());
-      return null;
+      map.put("error", CommonUtils.printStackTraceToString(e));
+      return map;
     }
   }
 

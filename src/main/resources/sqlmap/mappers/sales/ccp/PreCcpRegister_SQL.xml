@@ -809,18 +809,26 @@
 	</select>
 
 	<select id="chkAvailableQuota" resultType="egovMap">
-		SELECT
-			  CASE WHEN (NVL(SUM(DISTINCT QUOTA) - COUNT(DISTINCT A.PRECCP_SEQ),0) - #{chkQuota}) >= 0 THEN 1 ELSE 0 END BALANCE
-			, K.MANAGER_CODE
-			, K.ORG_CODE
-		FROM SAL0355M J
-		JOIN SAL0356D K ON K.YEAR = J.YEAR AND K.MONTH = J.MONTH
-		LEFT JOIN SAL0343D A on A.TYPE_ID = 7290 AND EXTRACT (YEAR FROM A.UPD_DT)= #{year} AND EXTRACT (MONTH FROM A.UPD_DT) = #{month}
-		WHERE J.YEAR = #{year}
-		AND J.MONTH = #{month}
-		AND J.STUS_CODE_ID = 4
-		AND K.MANAGER_CODE = #{grpCode}
-		AND K.ORG_CODE = #{orgCode}
-		GROUP BY K.MANAGER_CODE, K.ORG_CODE, J.YEAR, J.MONTH
+		SELECT CASE WHEN NVL(SUM(Q),0) - #{chkQuota} >= 0 THEN 1 ELSE 0 END BALANCE, MANAGER_CODE, ORG_CODE FROM (
+		        SELECT
+		        SUM(QUOTA) q
+		            , K.MANAGER_CODE
+		            , K.ORG_CODE
+		        FROM SAL0355M J
+		        JOIN SAL0356D K ON K.YEAR = J.YEAR AND K.MONTH = J.MONTH
+		        WHERE J.YEAR = #{year}
+		        AND J.MONTH = #{month}
+		        AND J.STUS_CODE_ID = 4
+		        AND K.MANAGER_CODE = #{grpCode}
+		        AND K.ORG_CODE = #{orgCode}
+		        GROUP BY K.MANAGER_CODE, K.ORG_CODE, J.YEAR, J.MONTH
+                UNION
+		        SELECT -COUNT(*), A.GRP_CODE, A.ORG_CODE FROM
+		        SAL0343D A WHERE A.TYPE_ID = 7290 AND EXTRACT (YEAR FROM A.CRT_DT)= #{year} AND EXTRACT (MONTH FROM A.CRT_DT) = #{month}
+		        AND A.GRP_CODE = #{grpCode}
+		        AND A.ORG_CODE = #{orgCode}
+		        AND NVL(A.DISAB,0) = 0
+		        GROUP BY A.GRP_CODE, A.ORG_CODE, EXTRACT (YEAR FROM A.CRT_DT), EXTRACT (MONTH FROM A.CRT_DT)
+        ) GROUP BY MANAGER_CODE, ORG_CODE
 	</select>
 </mapper>
