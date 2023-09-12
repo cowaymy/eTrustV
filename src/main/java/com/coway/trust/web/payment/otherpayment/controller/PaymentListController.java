@@ -594,7 +594,9 @@ public class PaymentListController {
 	@RequestMapping(value="/validRefund" ,  method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> validRefund(@RequestBody Map<String, Object> params) throws IOException {
 
+
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		try{
 		LOGGER.error("PaymentAA params Parameters: " + params);
 
 		/*List<Object> selectedGridList = (List<Object>)params.get("data");*/
@@ -667,8 +669,12 @@ public class PaymentListController {
 			}
 		}
 		LOGGER.error("PaymentAA complete: " + groupSeq);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 
 		return ResponseEntity.ok(returnMap);
+
 	}
 
 	public String validateAction(@RequestParam List<Map<String, Object>> selectedOrder){
