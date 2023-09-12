@@ -1258,12 +1258,15 @@ public class PaymentListController {
 //		return ResponseEntity.ok(returnMap);
 //	}
 
-	@RequestMapping(value="/validDCF2", method = RequestMethod.POST)
+	@RequestMapping(value="/validDCF2")
 	public ResponseEntity<Map<String, Object>> validDCF2(@RequestBody Map<String, Object> params) throws IOException{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 
+//		String  testval = params.get("selectedOrder").toString();
 		ObjectMapper mapper = new ObjectMapper();
-		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
+        String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("selectedOrder"));
+
+		List<Map<String, Object>> selectedOrder = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
 
 		int[] groupSeq = null;
 		String[] revStusId = null;
