@@ -142,7 +142,7 @@
 		height : 30,
 		visible : true
 	}, {
-		dataField : "userName",
+		dataField : "userFullName",
 		headerText : "<spring:message code='sal.text.creator'/>",
 		width : "10%",
 		height : 30,
@@ -336,7 +336,7 @@
                                                 $(
                                                         "#view_crtUsr")
                                                         .text(
-                                                                result.mst.userFullName);
+                                                                result.mst.creator);
                                                 $("#view_crtDt")
                                                         .text(
                                                                 result.mst.tierUploadCrtDt);
