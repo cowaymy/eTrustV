@@ -2558,7 +2558,7 @@
          and l47.reqst_no   =  rd.reqst_no
          and l54.delvry_no  = rd.delvry_no
          AND L54.CRT_USER_ID = S47.user_id(+)
-         and L47.REQST_CDC_RDC = s28q.wh_loc_id
+         and L47.REQST_CDC_RDC = to_char(s28q.wh_loc_id)
          AND l47.trnsc_type = 'UM'
          AND NVL (L54.DEL_FLAG, 'N') <![CDATA[ <> ]]> 'Y'
          AND NVL (L54.DELVRY_GI_CMPLT, 'N')  <![CDATA[ <> ]]> 'N'
