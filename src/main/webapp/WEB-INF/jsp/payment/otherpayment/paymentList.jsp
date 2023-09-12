@@ -484,8 +484,9 @@
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-           </c:if>
+
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
+           </c:if>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -572,13 +573,15 @@
 			<dt>Link</dt>
 			<dd>
 				<ul class="btns">
-				 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
-                        <!-- Previos version of REQUEST DCF -->
-<!-- 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPopOld();" id="btnrequestDCF">Request DCF OLD</a></p></li> -->
-				</c:if>
-					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
-					<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+					 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+						<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
+	                        <!-- Previos version of REQUEST DCF -->
+	<!-- 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPopOld();" id="btnrequestDCF">Request DCF OLD</a></p></li> -->
+					</c:if>
+				    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+					       <li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
+					</c:if>
+					<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 					   <li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
 					</c:if>
 				</ul>
