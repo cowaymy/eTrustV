@@ -1319,7 +1319,7 @@
         <if test="adminRole == null or adminRole == '' ">
 
         JOIN (
-                    SELECT PAY0348D.*,
+                    SELECT PAY0348D.*
                     <!-- CASE WHEN APPV_STUS = 'A' THEN 5
                     WHEN APPV_STUS = 'J' THEN 6
                     WHEN APPV_STUS = 'R' THEN 1
