@@ -1052,14 +1052,16 @@ var serialGubun = "1";
          <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </td>
      </tr>
-     <tr class="frmS1" style="display:none;">
+     <tr>
        <th scope="row">Mobile</th>
        <td>
          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
        </td>
+       <div class="frmS1" style="display:none;">
        <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
-       <td>
+       <td></td></tr>
+       </div>
      <tr>
       <th class="dtPair1" scope="row">DT Pair</th>
       <td class="dtPair2"><select class="w100p" id="dtPairCode" name="dtPairCode">
