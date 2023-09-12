@@ -742,7 +742,10 @@ SELECT   T.CLM_NO
 <select id="selectApproveList" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectApproveList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.APPV_PRCSS_NO
+SELECT * FROM
+(SELECT
+      ROW_NUMBER() OVER(PARTITION BY T.APPV_PRCSS_NO ORDER BY  T.APPV_PRCSS_DT DESC) ROWNO
+      ,T.APPV_PRCSS_NO
 	  ,T.APPV_LINE_PRCSS_CNT
       ,MAX(T.APPV_LINE_SEQ) AS APPV_LINE_SEQ
       ,T.CLM_NO
@@ -926,6 +929,7 @@ SELECT T.APPV_PRCSS_NO
 		,T.APPV_AMT,T.APPV_PRCSS_STUS	,T.APPV_PRCSS_STUS_CODE,T.CLAM_UN	,T.APPV_PRCSS_DT
 		,T.COST_CENTR,T.COST_CENTR_NAME,T.INVC_TYPE	,T.INVC_DT
         ORDER BY T.APPV_PRCSS_NO, T.REQST_DT
+        ) WHERE ROWNO=1
 </select>
 
 <select id="selectVendorApproveList" parameterType="Map" resultType="egovMap">
