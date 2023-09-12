@@ -184,7 +184,12 @@
 
 //            Common.ajax("GET","/payment/validDCF2", selectedOrder, function(result){
 //            Common.ajax("POST","/payment/validDCF2", {selectedOrder : JSON.stringify(selectedItem)}, function(result){
-           Common.ajax("POST","/payment/validDCF2", {selectedOrder : JSON.parse(JSON.stringify(selectedItem))}, function(result){
+
+		var obj = {
+				selectedOrder : selectedItem
+		}
+		console.log(obj);
+           Common.ajax("POST","/payment/validDCF2", obj, function(result){
                 if(result.error){
                 	Common.alert(result.error);
                 }else if(result.success){
