@@ -115,7 +115,7 @@
           A.REMARK,
           A.REW_POINT,
           C.NAME,
-          D.USER_NAME,
+          D.USER_FULL_NAME,
           TO_CHAR(A.TIER_UPLOAD_CRT_DT,'DD-MM-YYYY') TIER_UPLOAD_CRT_DT,
           A.TIER_DET_STUS_ID
         FROM SAL0401D A
