@@ -595,13 +595,13 @@ public class PaymentListController {
 	public ResponseEntity<Map<String, Object>> validRefund(@RequestBody Map<String, Object> params) throws IOException {
 
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		LOGGER.debug("params Parameters: " + params);
+		LOGGER.error("PaymentAA params Parameters: " + params);
 
 		/*List<Object> selectedGridList = (List<Object>)params.get("data");*/
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
 
-		LOGGER.debug("selectedGridList Parameters: " + selectedOrder);
+		LOGGER.error("PaymentAA selectedGridList Parameters: " + selectedOrder);
 
 		int[] groupSeq = null;
 		String[] revStusId = null;
@@ -637,9 +637,9 @@ public class PaymentListController {
 			}
 		}
 
-		LOGGER.debug("selectedGridList: " + selectedOrder);
-		LOGGER.debug("params: " + params);
-		LOGGER.debug("groupSeq: " + groupSeq);
+		LOGGER.error("PaymentAA selectedGridList: " + selectedOrder);
+		LOGGER.error("PaymentAA params: " + params);
+		LOGGER.error("PaymentAA groupSeq: " + groupSeq);
 
 		int invalidTypeCount = paymentListService.invalidRefund(params);
 		int invalidStatus = paymentListService.invalidStatus(params);
@@ -666,6 +666,7 @@ public class PaymentListController {
 				returnMap.put("success", true);
 			}
 		}
+		LOGGER.error("PaymentAA complete: " + groupSeq);
 
 		return ResponseEntity.ok(returnMap);
 	}
