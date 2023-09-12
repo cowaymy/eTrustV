@@ -224,7 +224,7 @@ function fn_reject(){
 						<tr>
 							<th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
 							<td colspan="3">
-					            <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
+					            <textarea id="remark" name="remark"  cols="15" rows="3" placeholder="" disabled></textarea>
 							</td>
 						</tr>
 					</tbody>
@@ -232,9 +232,9 @@ function fn_reject(){
 			</form>
 		</section>
 
-		<ul class="center_btns">
-			<li><p class="btn_blue"><a href="javascript:fn_approval();"><spring:message code='pay.btn.approval'/></a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_reject();"><spring:message code='pay.btn.reject'/></a></p></li>
-		</ul>
+<!-- 		<ul class="center_btns"> -->
+<%-- 			<li><p class="btn_blue"><a href="javascript:fn_approval();"><spring:message code='pay.btn.approval'/></a></p></li> --%>
+<%-- 			<li><p class="btn_blue"><a href="javascript:fn_reject();"><spring:message code='pay.btn.reject'/></a></p></li> --%>
+<!-- 		</ul> -->
 	</section>
 </div>
