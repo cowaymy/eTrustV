@@ -603,7 +603,11 @@ public class PaymentListController {
 		ObjectMapper mapper = new ObjectMapper();
 
 		LOGGER.error("PaymentAAA params Parameters 2: " + params.get("selectedOrder").toString());
-		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
+
+		List<Map<String, Object>> selectedOrder = Arrays.asList(mapper.readValue(params.get("selectedOrder").toString(),Map[].class));
+		LOGGER.error("PaymentAAAA params Parameters 3: " + selectedOrder);
+
+//		List<Map<String, Object>> selectedOrder2 = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
 
 		LOGGER.error("PaymentAA selectedGridList Parameters: " + selectedOrder);
 
