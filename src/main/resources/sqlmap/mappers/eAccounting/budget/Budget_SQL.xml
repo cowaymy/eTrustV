@@ -608,18 +608,38 @@ WHERE 1=1
                         AND A.COST_CENTR         = B.COST_CENTR
                         AND A.BUDGET_CODE       = B.BUDGET_CODE
                         AND A.GL_ACC_CODE       = B.GL_ACC_CODE
-                 LEFT OUTER JOIN (SELECT A.COST_CENTR
-                               ,A.BUDGET_CODE
-                               ,A.GL_ACC_CODE
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
-                               ,SUM(A.NET_AMT ) APP_AMT_TOTAL
-                               ,MAX(A.CRT_DT) AS INVC_DT
-                       FROM FCM0015D A, FCM0004M B
-                     WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
-                         AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
-                         AND TO_CHAR(A.CRT_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
-                     GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
+                 LEFT OUTER JOIN (
+
+                   SELECT COST_CENTR,BUDGET_CODE, GL_ACC_CODE, SUM(PEND_APPV_AMT) PEND_APPV_AMT, SUM(CONSUM_APPV_AMT) CONSUM_APPV_AMT, SUM(APP_AMT_TOTAL) APP_AMT_TOTAL, MAX(INVC_DT) INVC_DT FROM
+                    (
+	                      SELECT
+	                             A.COST_CENTR
+	                           , A.BUDGET_CODE
+	                           , A.GL_ACC_CODE
+	                           , CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END  AS PEND_APPV_AMT
+	                           , CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END  AS CONSUM_APPV_AMT
+	                           , A.NET_AMT  APP_AMT_TOTAL
+	                           , A.CRT_DT AS INVC_DT
+	                      FROM FCM0015D A, FCM0004M B
+	                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+	                       AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+	                       AND TO_CHAR(A.CRT_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
+
+	                      UNION ALL
+
+	                      SELECT
+	                              A.COST_CENTER
+	                            , A.BUDGET_CODE
+	                            , A.GL_ACC_NO
+	                            , CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.AMT ELSE 0 END  AS PEND_APPV_AMT
+	                            , CASE WHEN B.APPV_PRCSS_STUS = 'A' THEN A.AMT ELSE 0 END  AS CONSUM_APPV_AMT
+	                            , A.AMT
+	                            , A.CRT_DT
+	                     FROM FCM0026D A
+	                     JOIN FCM0004M B ON TO_CHAR(A.BATCH_ID) = B.APPV_REQ_KEY_NO
+	                     AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+	                     AND TO_CHAR(A.CRT_DT, 'YYYYMM') = #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
+                    ) GROUP BY COST_CENTR, BUDGET_CODE, GL_ACC_CODE
                  )   C
                         ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY')
                         AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM')
@@ -679,45 +699,90 @@ WHERE 1=1
 
   <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
     SELECT * FROM (
-    SELECT
-    SUBSTR(a.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,
-    A.APPV_REQ_KEY_NO
-    ,B.COST_CENTR_NAME
-    ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
-    ,A.CRT_USER_ID
-    ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
-    ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
-    ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
-    ,B.MEM_ACC_ID
-    ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
-    ,TO_CHAR(NVL(B.NET_AMT, 0), '9,999,999.99') NET_AMT
-    ,ROUND(B.NET_AMT, 2) NET_AMT1
-    ,B.EXP_DESC
-    FROM FCM0004M A, FCM0015D B
-    WHERE A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
-    <if test='type == "Pending" '>
-      AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
-    </if>
-    <if test='type == "Consumed" '>
-      AND A.APPV_PRCSS_STUS = 'A'
-    </if>
-    <choose>
-      <when test="stDate != null and stDate !='' ">
-        <if test="edDate != null and edDate != '' ">
-          AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
-        </if>
-        <if test="edDate == null or edDate == '' ">
-          AND TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
-        </if>
-      </when>
-      <otherwise>
-        AND TO_CHAR(B.CRT_DT, 'yyyy') = #{budgetPlanYear}
-        AND TO_CHAR(B.CRT_DT, 'mm') = TO_CHAR(#{budgetPlanMonth}, 'FM00')
-      </otherwise>
-    </choose>
-    AND B.COST_CENTR = #{costCentr}
-    AND B.BUDGET_CODE = #{budgetCode}
-    AND B.GL_ACC_CODE = #{glAccCode}
+	    SELECT
+		      SUBSTR(a.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,
+		      A.APPV_REQ_KEY_NO
+		    , B.COST_CENTR_NAME
+		    , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
+		    , A.CRT_USER_ID
+		    , TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
+		    , TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
+		    , TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
+		    , B.MEM_ACC_ID
+		    , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
+		    , TO_CHAR(NVL(B.NET_AMT, 0), '9,999,999.99') NET_AMT
+		    , ROUND(B.NET_AMT, 2) NET_AMT1
+		    , B.EXP_DESC
+	    FROM FCM0004M A, FCM0015D B
+	    WHERE A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+	    <if test='type == "Pending" '>
+	      AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
+	    </if>
+	    <if test='type == "Consumed" '>
+	      AND A.APPV_PRCSS_STUS = 'A'
+	    </if>
+	    <choose>
+	      <when test="stDate != null and stDate !='' ">
+	        <if test="edDate != null and edDate != '' ">
+	          AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+	        </if>
+	        <if test="edDate == null or edDate == '' ">
+	          AND TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+	        </if>
+	      </when>
+	      <otherwise>
+	        AND TO_CHAR(B.CRT_DT, 'yyyy') = #{budgetPlanYear}
+	        AND TO_CHAR(B.CRT_DT, 'mm') = TO_CHAR(#{budgetPlanMonth}, 'FM00')
+	      </otherwise>
+	    </choose>
+	    AND B.COST_CENTR = #{costCentr}
+	    AND B.BUDGET_CODE = #{budgetCode}
+	    AND B.GL_ACC_CODE = #{glAccCode}
+
+	    UNION ALL
+
+	    SELECT
+	        SUBSTR(a.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,
+	        A.APPV_REQ_KEY_NO
+	    ,   B.COST_CENTER_NAME
+	    ,   (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
+	    ,   A.CRT_USER_ID
+	    ,   TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
+	    ,   TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
+	    ,   TO_CHAR(B.PAY_DT, 'dd/mm/yyyy') PAY_DUE_DT
+	    ,   B.SUPPLIER
+	    ,   (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.SUPPLIER) AS MEM_ACC_NAME
+	    ,   TO_CHAR(NVL(B.AMT, 0), '9,999,999.99') NET_AMT
+	    ,   ROUND(B.AMT, 2) NET_AMT1
+	    ,   B.EXP_DESC
+	    FROM FCM0004M A
+	    JOIN FCM0026D B ON TO_CHAR(B.BATCH_ID) = A.APPV_REQ_KEY_NO
+	    WHERE 1=1
+	    <if test='type == "Pending" '>
+	      AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
+	    </if>
+	    <if test='type == "Consumed" '>
+	      AND A.APPV_PRCSS_STUS = 'A'
+	    </if>
+	    <choose>
+	      <when test="stDate != null and stDate !='' ">
+	        <if test="edDate != null and edDate != '' ">
+	          AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+	        </if>
+	        <if test="edDate == null or edDate == '' ">
+	          AND TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+	        </if>
+	      </when>
+	      <otherwise>
+	        AND TO_CHAR(B.CRT_DT, 'yyyy') = #{budgetPlanYear}
+	        AND TO_CHAR(B.CRT_DT, 'mm') = TO_CHAR(#{budgetPlanMonth}, 'FM00')
+	      </otherwise>
+	    </choose>
+
+	    AND B.COST_CENTER = #{costCentr}
+	    AND B.BUDGET_CODE = #{budgetCode}
+	    AND B.GL_ACC_NO = #{glAccCode}
+
     )
     <if test="clmType != null and clmType != ''">
       WHERE CLM_TYPE IN
@@ -1243,29 +1308,50 @@ WHERE 1=1
     AND A.BUDGET_CODE = B.BUDGET_CODE
     AND A.GL_ACC_CODE = B.GL_ACC_CODE
     LEFT OUTER JOIN (
-    SELECT
-    A.COST_CENTR,
-    A.BUDGET_CODE,
-    A.GL_ACC_CODE,
-    SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT,
-    SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A' THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT,
-    SUM(A.NET_AMT ) APP_AMT_TOTAL,
-    MAX(A.CRT_DT) AS INVC_DT
-    FROM FCM0015D A,
-    FCM0004M B
-    WHERE A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
-    AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
-    <if test="stYearMonth != null and stYearMonth != '' ">
-      <if test="edYearMonth != null and edYearMonth != '' ">
-        AND TO_CHAR(A.CRT_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
-      </if>
-      <if test="edYearMonth == null or edYearMonth == '' ">
-        AND TO_CHAR(A.CRT_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
-      </if>
-    </if>
-    GROUP BY A.COST_CENTR,
-    A.BUDGET_CODE,
-    A.GL_ACC_CODE
+                SELECT COST_CENTR,BUDGET_CODE, GL_ACC_CODE, SUM(PEND_APPV_AMT) PEND_APPV_AMT, SUM(CONSUM_APPV_AMT) CONSUM_APPV_AMT, SUM(APP_AMT_TOTAL) APP_AMT_TOTAL, MAX(INVC_DT) INVC_DT FROM
+                 (
+                   SELECT
+                          A.COST_CENTR
+                        , A.BUDGET_CODE
+                        , A.GL_ACC_CODE
+                        , CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END  AS PEND_APPV_AMT
+                        , CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END  AS CONSUM_APPV_AMT
+                        , A.NET_AMT  APP_AMT_TOTAL
+                        , A.CRT_DT AS INVC_DT
+                    FROM FCM0015D A, FCM0004M B
+                    WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+                    AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+                    <if test="stYearMonth != null and stYearMonth != '' ">
+                           <if test="edYearMonth != null and edYearMonth != '' ">
+                             AND TO_CHAR(A.CRT_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                           </if>
+                           <if test="edYearMonth == null or edYearMonth == '' ">
+                             AND TO_CHAR(A.CRT_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                           </if>
+                     </if>
+
+                    UNION ALL
+
+                    SELECT
+                           A.COST_CENTER
+                         , A.BUDGET_CODE
+                         , A.GL_ACC_NO
+                         , CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.AMT ELSE 0 END  AS PEND_APPV_AMT
+                         , CASE WHEN B.APPV_PRCSS_STUS = 'A' THEN A.AMT ELSE 0 END  AS CONSUM_APPV_AMT
+                         , A.AMT
+                         , A.CRT_DT
+                    FROM FCM0026D A
+                    JOIN FCM0004M B ON TO_CHAR(A.BATCH_ID) = B.APPV_REQ_KEY_NO
+                    AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+                    <if test="stYearMonth != null and stYearMonth != '' ">
+                           <if test="edYearMonth != null and edYearMonth != '' ">
+                             AND TO_CHAR(A.CRT_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                           </if>
+                           <if test="edYearMonth == null or edYearMonth == '' ">
+                             AND TO_CHAR(A.CRT_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                           </if>
+                     </if>
+               ) GROUP BY COST_CENTR, BUDGET_CODE, GL_ACC_CODE
     ) C
     ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY')
     AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM')
