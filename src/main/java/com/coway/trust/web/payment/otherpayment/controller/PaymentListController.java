@@ -1271,6 +1271,7 @@ public class PaymentListController {
     		LOGGER.error("VALIDDCF2 params Parameters IN STRING: " + value);
     		List<Map<String, Object>> selectedOrder = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
 
+    		LOGGER.error("VALIDDCF2 params Parameters IN LIST OBJECT: " + selectedOrder.toString());
     		int[] groupSeq = null;
     		String[] revStusId = null;
     		String[] ftStusId = null;
@@ -1325,6 +1326,7 @@ public class PaymentListController {
 
     		} catch (Exception e){
     			e.printStackTrace();
+        		LOGGER.error("VALIDDCF2 EXCEPTION HANDLER: " + e.toString());
     		}
 		return ResponseEntity.ok(returnMap);
 	}
