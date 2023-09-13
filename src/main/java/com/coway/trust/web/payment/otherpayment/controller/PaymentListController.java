@@ -601,6 +601,8 @@ public class PaymentListController {
 
 		/*List<Object> selectedGridList = (List<Object>)params.get("data");*/
 		ObjectMapper mapper = new ObjectMapper();
+
+		LOGGER.error("PaymentAAA params Parameters 2: " + params.get("selectedOrder").toString());
 		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
 
 		LOGGER.error("PaymentAA selectedGridList Parameters: " + selectedOrder);
@@ -671,6 +673,7 @@ public class PaymentListController {
 		LOGGER.error("PaymentAA complete: " + groupSeq);
 		} catch (Exception e){
 			e.printStackTrace();
+			LOGGER.error("PaymentAA EXCEPTION HANDLER: " + e.toString());
 		}
 
 		return ResponseEntity.ok(returnMap);
