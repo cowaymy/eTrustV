@@ -166,8 +166,8 @@
                     f.name,
                     (SELECT code FROM sys0005m WHERE brnch_id = f.brnch ) code,
                     (SELECT name FROM sys0005m WHERE brnch_id = f.brnch) brnch_name,
-                    j.defect_desc AS deftyp,
-                    k.defect_desc AS defcde,
+                    DECODE(j.defect_desc, NULL, r.defect_desc, j.defect_desc) AS deftyp,
+                    DECODE(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
                     b.as_malfunc_id,
                     b.as_malfunc_resn_id,
                     q.CODE_DESC AS_TYPE
@@ -179,10 +179,24 @@
                     JOIN sys0026m e ON a.stk_id = e.stk_id
                     JOIN org0001d f ON a.mem_id = f.mem_id
                     JOIN svc0004d g ON a.result_id = g.as_result_id
-                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
-                        AND j.defect_typ = 'DT'
-                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
-                        AND k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m j ON
+                        g.as_defect_type_id = j.defect_id
+                    AND
+                        j.defect_typ = 'DT'
+
+                    LEFT JOIN sys0100m k ON
+                        g.as_defect_id = k.defect_id
+                    AND
+                        k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m r ON
+                        g.as_defect_type_id = r.defect_id
+                    AND
+                        r.defect_typ = 'HDT'
+
+                    LEFT JOIN sys0100m s ON
+                        g.as_defect_id = s.defect_id
+                    AND
+                        s.defect_typ = 'HDC'
                     JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
                     JOIN sys0026m m ON m.stk_id = l.itm_stk_id
                     JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
@@ -348,8 +362,8 @@
                     f.name,
                     (SELECT code FROM sys0005m WHERE brnch_id = f.brnch ) code,
                     (SELECT name FROM sys0005m WHERE brnch_id = f.brnch ) brnch_name,
-                    j.defect_desc AS deftyp,
-                    k.defect_desc AS defcde,
+                    DECODE(j.defect_desc, NULL, r.defect_desc, j.defect_desc) AS deftyp,
+                    DECODE(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
                     b.as_malfunc_id,
                     b.as_malfunc_resn_id,
                     q.CODE_DESC AS_TYPE
@@ -361,10 +375,24 @@
                     JOIN sys0026m e ON a.stk_id = e.stk_id
                     JOIN org0001d f ON a.mem_id = f.mem_id
                     JOIN svc0109d g ON a.result_id = g.as_result_id
-                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
-                        AND j.defect_typ = 'DT'
-                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
-                        AND k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m j ON
+                        g.as_defect_type_id = j.defect_id
+                    AND
+                        j.defect_typ = 'DT'
+
+                    LEFT JOIN sys0100m k ON
+                        g.as_defect_id = k.defect_id
+                    AND
+                        k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m r ON
+                        g.as_defect_type_id = r.defect_id
+                    AND
+                        r.defect_typ = 'HDT'
+
+                    LEFT JOIN sys0100m s ON
+                        g.as_defect_id = s.defect_id
+                    AND
+                        s.defect_typ = 'HDC'
                     JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
                     JOIN sys0026m m ON m.stk_id = l.itm_stk_id
                     JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
