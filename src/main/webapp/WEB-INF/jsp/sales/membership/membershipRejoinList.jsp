@@ -151,7 +151,8 @@ $(document).ready(function(){
     }
 
     function fn_clear(){
-        $("#searchForm")[0].reset();
+        //$("#searchForm")[0].reset();
+        $("#memCode").val('');
     }
 
     function fn_excelDown() {
@@ -197,8 +198,10 @@ $(document).ready(function(){
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Membership Rejoin</h2>
         <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
+        </c:if>
         </ul>
     </aside>
     <!-- title_line end -->
