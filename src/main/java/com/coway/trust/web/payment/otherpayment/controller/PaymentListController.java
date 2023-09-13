@@ -1259,67 +1259,73 @@ public class PaymentListController {
 //	}
 
 	@RequestMapping(value="/validDCF2")
-	public ResponseEntity<Map<String, Object>> validDCF2(@RequestBody Map<String, Object> params) throws IOException{
+	public ResponseEntity<Map<String, Object>> validDCF2(@RequestBody Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 
-//		String  testval = params.get("selectedOrder").toString();
-		ObjectMapper mapper = new ObjectMapper();
-        String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("selectedOrder"));
+		try{
+    		LOGGER.error("VALIDDCF2 params Parameters: " + params);
 
-		List<Map<String, Object>> selectedOrder = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
+    		ObjectMapper mapper = new ObjectMapper();
+            String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("selectedOrder"));
 
-		int[] groupSeq = null;
-		String[] revStusId = null;
-		String[] ftStusId = null;
-		String[] revStusNm = null;
+    		LOGGER.error("VALIDDCF2 params Parameters IN STRING: " + value);
+    		List<Map<String, Object>> selectedOrder = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
 
-		if(selectedOrder.size() > 0){
-			groupSeq = new int[selectedOrder.size()];
-			revStusId = new String[selectedOrder.size()];
-			ftStusId = new String[selectedOrder.size()];
-			revStusNm = new String[selectedOrder.size()];
+    		int[] groupSeq = null;
+    		String[] revStusId = null;
+    		String[] ftStusId = null;
+    		String[] revStusNm = null;
 
-			for(int i = 0; selectedOrder.size() > i; i++){
-				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
-				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
-				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
-				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
-			}
-			params.put("groupSeq", groupSeq);
-			params.put("type", "DCF");
+    		if(selectedOrder.size() > 0){
+    			groupSeq = new int[selectedOrder.size()];
+    			revStusId = new String[selectedOrder.size()];
+    			ftStusId = new String[selectedOrder.size()];
+    			revStusNm = new String[selectedOrder.size()];
 
-			for(Map<String,Object> map : selectedOrder) {
-			    Map<String,Object> tempMap = new LinkedHashMap<String,Object>(map);
-			    map.clear();
-			    map.put("type","DCF");
-			    map.putAll(tempMap);
-			}
-		}
+    			for(int i = 0; selectedOrder.size() > i; i++){
+    				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
+    				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
+    				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+    				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
+    			}
+    			params.put("groupSeq", groupSeq);
+    			params.put("type", "DCF");
 
-		//CHECK OR NO TYPE - ONLY WOR, OR, BOR ALLOW TO PERFORM DCF
-		int invalidTypeCount = paymentListService.invalidDCF(params);
-		//CHECK RESERVE STATUS - BLOCK WHN STATUS = 1 AND 5
-		int invalidStatus = paymentListService.invalidStatus(params);
+    			for(Map<String,Object> map : selectedOrder) {
+    			    Map<String,Object> tempMap = new LinkedHashMap<String,Object>(map);
+    			    map.clear();
+    			    map.put("type","DCF");
+    			    map.putAll(tempMap);
+    			}
+    		}
 
-		if (invalidTypeCount > 0) {
-			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
-		} else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) &&
-				(Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5")) ){
-			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
-		}else if(Arrays.asList(revStusNm).contains("Refund")){
-			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request DCF.");
-		}else  if (invalidStatus > 0) {
-			returnMap.put("error", "Payment has Active or Completed reverse request.");
-		} else {
-			String allowFlgYN = validateAction(selectedOrder);
-			if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("N")){
-				returnMap.put("error", "Not Allow to proceed with DCF. Please reselect. ");
-			}
-			else if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("Y")){
-				returnMap.put("success", true);
-			}
-		}
+    		//CHECK OR NO TYPE - ONLY WOR, OR, BOR ALLOW TO PERFORM DCF
+    		int invalidTypeCount = paymentListService.invalidDCF(params);
+    		//CHECK RESERVE STATUS - BLOCK WHN STATUS = 1 AND 5
+    		int invalidStatus = paymentListService.invalidStatus(params);
 
+    		if (invalidTypeCount > 0) {
+    			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+    		} else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) &&
+    				(Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5")) ){
+    			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");
+    		}else if(Arrays.asList(revStusNm).contains("Refund")){
+    			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request DCF.");
+    		}else  if (invalidStatus > 0) {
+    			returnMap.put("error", "Payment has Active or Completed reverse request.");
+    		} else {
+    			String allowFlgYN = validateAction(selectedOrder);
+    			if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("N")){
+    				returnMap.put("error", "Not Allow to proceed with DCF. Please reselect. ");
+    			}
+    			else if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("Y")){
+    				returnMap.put("success", true);
+    			}
+    		}
+
+    		} catch (Exception e){
+    			e.printStackTrace();
+    		}
 		return ResponseEntity.ok(returnMap);
 	}
 
