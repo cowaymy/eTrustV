@@ -129,7 +129,10 @@ $(document).ready(function(){
     }
 
     function fn_clear(){
-        $("#searchForm")[0].reset();
+        //$("#searchForm")[0].reset();
+        $("#installState").val('');
+        $("#installArea").val('');
+        $("#memCode").val('');
     }
 
     function fn_excelDown() {
