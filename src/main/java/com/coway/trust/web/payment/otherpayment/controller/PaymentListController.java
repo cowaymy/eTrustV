@@ -591,8 +591,98 @@ public class PaymentListController {
 
 	/* ********** 20230306 CELESTE - REQUEST REFUND [S] ********** */
 
+
 	@RequestMapping(value="/validRefund" ,  method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> validRefund(@RequestBody Map<String, Object> params) throws IOException {
+
+
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		try{
+		LOGGER.error("PaymentAA params Parameters: " + params);
+
+		/*List<Object> selectedGridList = (List<Object>)params.get("data");*/
+		ObjectMapper mapper = new ObjectMapper();
+
+		LOGGER.error("PaymentAAA params Parameters 2: " + params.get("selectedOrder").toString());
+
+		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
+		LOGGER.error("PaymentAAAA params Parameters 3: " + selectedOrder);
+
+		int[] groupSeq = null;
+		String[] revStusId = null;
+		String[] ftStusId = null;
+		String[] revStusNm = null;
+		String[] payId = null;
+
+		if(selectedOrder.size() > 0){
+			groupSeq = new int[selectedOrder.size()];
+			revStusId = new String[selectedOrder.size()];
+			ftStusId = new String[selectedOrder.size()];
+			revStusNm = new String[selectedOrder.size()];
+			payId = new String[selectedOrder.size()];
+			for(int i = 0; selectedOrder.size() > i; i++){
+				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
+				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
+				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+				revStusNm[i] = selectedOrder.get(i).containsKey("revStusNm") ? selectedOrder.get(i).get("revStusNm").toString() : null;
+				payId[i] = selectedOrder.get(i).containsKey("payId") ? selectedOrder.get(i).get("payId").toString() : null;
+			}
+			params.put("groupSeq", groupSeq);
+			params.put("revStusId", revStusId);
+			params.put("ftStusId", ftStusId);
+			params.put("revStusNm", revStusNm);
+			params.put("payId", payId);
+			params.put("type", "REF");
+
+			for(Map<String,Object> map : selectedOrder) {
+			    Map<String,Object> tempMap = new LinkedHashMap<String,Object>(map);
+			    map.clear();
+			    map.put("type","REF");
+			    map.putAll(tempMap);
+			}
+		}
+
+		LOGGER.error("PaymentAA selectedGridList: " + selectedOrder);
+		LOGGER.error("PaymentAA params: " + params);
+		LOGGER.error("PaymentAA groupSeq: " + groupSeq);
+
+		int invalidTypeCount = paymentListService.invalidRefund(params);
+		int invalidStatus = paymentListService.invalidStatus(params);
+		List<EgovMap> invalidTypeList = paymentListService.selectInvalidORType(params);
+
+		if(invalidTypeCount > 0) {
+			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
+		}
+		else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) && (Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5"))){
+			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request Refund");
+		}
+		else if(Arrays.asList(revStusNm).contains("Refund") ){
+			returnMap.put("error", "Payment Group Number has already been Refunded. Please reselect before Request Refund");
+		}
+		else if(invalidStatus > 0) {
+			returnMap.put("error", "Payment has Active or Completed Refund request.");
+		}
+		else {
+			String allowFlgYN = validateAction(selectedOrder);
+			if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("N")){
+				returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
+			}
+			else if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("Y")){
+				returnMap.put("success", true);
+			}
+		}
+		LOGGER.error("PaymentAA complete: " + groupSeq);
+		} catch (Exception e){
+			e.printStackTrace();
+			LOGGER.error("PaymentAA EXCEPTION HANDLER: " + e.toString());
+		}
+
+		return ResponseEntity.ok(returnMap);
+
+	}
+
+	@RequestMapping(value="/validRefund1" ,  method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> validRefund1(@RequestBody Map<String, Object> params) throws IOException {
 
 
 		Map<String, Object> returnMap = new HashMap<String, Object>();
@@ -1265,7 +1355,7 @@ public class PaymentListController {
 //		return ResponseEntity.ok(returnMap);
 //	}
 
-	@RequestMapping(value="/validDCF2")
+	@RequestMapping(value="/validDCF2", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> validDCF2(@RequestBody Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 
@@ -1273,10 +1363,8 @@ public class PaymentListController {
     		LOGGER.error("VALIDDCF2 params Parameters: " + params);
 
     		ObjectMapper mapper = new ObjectMapper();
-            String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("selectedOrder"));
 
-    		LOGGER.error("VALIDDCF2 params Parameters IN STRING: " + value);
-    		List<Map<String, Object>> selectedOrder = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
+    		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
 
     		LOGGER.error("VALIDDCF2 params Parameters IN LIST OBJECT: " + selectedOrder.toString());
     		int[] groupSeq = null;
