@@ -319,7 +319,6 @@
     }
     // Customer Type 선택시 Company Type 변경 (Basic Info)
    function onChangeCompanyType(val){
-	   console.log("in4444===" + $("#_cmbTypeId_").val());
 
         if($("#_cmbTypeId_").val() == '965'){ // Company
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
@@ -344,7 +343,6 @@
 
 
         }else if($("#_cmbTypeId_").val() == '964'){ // individual
-        	console.log("in5555===");
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -353,13 +351,12 @@
             $("select[name=cmbNation]").addClass("w100p");
             $("select[name=cmbNation]").removeAttr("disabled"); */
             if($("#_nric_").val().length != 12){
-            	console.log("in6666====");
             	$("#_cmbNation_").val('');
                 $("select[name=cmbNation]").removeAttr("disabled");
                 $("select[name=cmbNation]").removeClass("w100p disabled");
                 $("select[name=cmbNation]").addClass("w100p");
-                $("#_pasSportExpr_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
-                $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+                $("#_pasSportExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
+                $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
             }
 
             $("select[name=cmbRace]").removeClass("w100p disabled");
@@ -686,7 +683,23 @@
             return false;
         } */
 
-        console.log("11.  cust name check");
+        console.log("11. foreigner check");//aaaaaaaaaaaaaaaaaa
+        if($("#_cmbNation_").val() != "1" ){
+            if($("#_pasSportExpr_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinPassportExp" />');
+                   return false;
+            }
+            if($("#_visaExpr_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinVisaExp" />');
+                   return false;
+            }
+            if(!$('input[name=gender]:checked').val()){
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinGender" />');
+                return false;
+            }
+        }
+
+        console.log("12.  cust name check");
         if($("#_asCustName_").val() == ''){
             $("#_contactTab").click();
 
@@ -751,7 +764,7 @@
                    }
                } */
         }
-        console.log("12.  contact check");
+        console.log("13.  contact check");
 /*         if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
             Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
@@ -760,7 +773,11 @@
 //      if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
 //        }
-        console.log("13.  email check");
+
+
+
+
+        console.log("14.  email check");
         if($("#_email_").val() == ""){
 
             Common.alert('<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />');
@@ -775,6 +792,8 @@
                 }
             }
         }
+
+
 
         return true;
     }
