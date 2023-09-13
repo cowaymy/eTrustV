@@ -581,7 +581,7 @@
 		    JOIN PAY0345D B ON B.REQ_ID = A.REQ_ID
 		    JOIN PAY0347M C ON C.REQ_ID = A.REQ_ID
 <!-- 		    JOIN PAY0348D D ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO -->
-			<if test='adminRole != null and adminRole == "N" '>
+			<if test="adminRole == null or adminRole == '' ">
 			     JOIN PAY0348D D ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
 			</if>
             <if test='adminRole != null and adminRole == "Y" '>
@@ -599,7 +599,7 @@
 		    LEFT JOIN SYS0013M I ON I.CODE = C.APPV_PRCSS_STUS AND I.CODE_MASTER_ID = 508
 		    WHERE 1=1
 		    AND A.REQ_TYPE = 'DCF'
-		    <if test='adminRole != null and adminRole == "N" '>
+		    <if test="adminRole == null or adminRole == '' ">
 			    AND (C.APPV_PRCSS_STUS = 'R' OR C.APPV_PRCSS_STUS = 'P' OR C.APPV_PRCSS_STUS = 'A' or C.APPV_PRCSS_STUS = 'J')
 			    AND (D.APPV_STUS = 'R' OR D.APPV_STUS = 'A' OR D.APPV_STUS = 'J')
 	            <if test="memCode != null and memCode != '' ">
