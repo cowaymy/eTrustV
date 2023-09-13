@@ -3752,14 +3752,22 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
-	    switch (viewType) {
+
+	    /*switch (viewType) {
 	      case MAIL_PDF:
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
 	          break;
 
 	      default:
 	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
-	    }
+	    }*/
+
+		if(viewType == ViewType.MAIL_PDF){
+			  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+		}
+		else{
+			throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+		}
 	  }
 
 
