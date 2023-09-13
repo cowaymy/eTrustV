@@ -44,12 +44,12 @@ public interface VoucherService {
 
 	EgovMap getVoucherInfo(Map<String, Object> params);
 
-	List<EgovMap> getBatchEmailVoucherInfo();
-
 	void sendEmail(Map<String, Object> params);
 
 	List<EgovMap> getVoucherListForExcel(Map<String, Object> params);
 
 	ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO);
+
+	List<EgovMap> getUnsendBatchEmailVoucherInfo();
 
 }

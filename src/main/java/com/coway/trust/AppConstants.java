@@ -203,4 +203,10 @@ public class AppConstants {
 	public static final String DESC_SUCCESS = "Success";
 	public static final String DESC_FAILED = "Failed";
 
+	//batch email
+	public static final int EMAIL_TYPE_TEMPLATE = 1;
+	public static final int EMAIL_TYPE_NORMAL = 2;
+
+	//etrust batch template path
+	public static final String E_VOUCHER_RECEIPT_BATCH_TEMPLATE = "template/html/eVoucherReceipt.html";
 }

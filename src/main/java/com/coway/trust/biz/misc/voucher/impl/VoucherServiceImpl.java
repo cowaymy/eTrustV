@@ -282,13 +282,39 @@ public class VoucherServiceImpl implements VoucherService {
 //		}
 
 		for (int i = 0; i < params.size(); i++) {
+			int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
+
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("campaignId", campaignId);
 			data.put("userId", userId);
 			data.put("voucherCode", params.get(i).get("voucherCode"));
 			data.put("custEmail", params.get(i).get("custEmail"));
 			data.put("ordId", params.get(i).get("orderId"));
+			data.put("mailId", mailIDNextVal);
 			voucherMapper.updateVoucherCustomerInfo(data);
+
+			/*
+			 * Email Batch Sender Insertion
+			 */
+			EgovMap emailParam = new EgovMap();
+			emailParam.put("voucherCode", params.get(i).get("voucherCode"));
+			emailParam.put("custEmail", params.get(i).get("custEmail"));
+			emailParam.put("ordId", params.get(i).get("orderId"));
+			emailParam.putAll(voucherMapper.getVoucherEmailAdditionalInfo(params.get(i)));
+
+			String test = emailParam.toString();
+			EgovMap masterEmailDet = new EgovMap();
+			masterEmailDet.put("mailId", mailIDNextVal);
+			masterEmailDet.put("emailType",AppConstants.EMAIL_TYPE_TEMPLATE);
+			masterEmailDet.put("templateName", AppConstants.E_VOUCHER_RECEIPT_BATCH_TEMPLATE);
+			masterEmailDet.put("emailParams", emailParam.toString());
+			masterEmailDet.put("email", params.get(i).get("custEmail"));
+			masterEmailDet.put("emailSentStus", 1);
+			masterEmailDet.put("name", "");
+			masterEmailDet.put("userId", userId);
+			masterEmailDet.put("emailSubject", "[COWAY] E-VOUCHER VERIFICATION CODE");
+
+			voucherMapper.insertBatchEmailSender(masterEmailDet);
 		}
 
 		message.setCode(AppConstants.SUCCESS);
@@ -341,8 +367,8 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
-	public List<EgovMap> getBatchEmailVoucherInfo(){
-		return voucherMapper.getBatchEmailVoucherInfo();
+	public List<EgovMap> getUnsendBatchEmailVoucherInfo(){
+		return voucherMapper.getUnsendBatchEmailVoucherInfo();
 	}
 
 	@Override
@@ -367,13 +393,12 @@ public class VoucherServiceImpl implements VoucherService {
 		    email.setHasInlineImage(true);
 
 		    boolean isResult = false;
-		    // TODO
-		    // EmailTemplateType.E_TEMPORARY_RECEIPT
 		    isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_VOUCHER_RECEIPT, params);
 
 		    if(isResult){
-		    	params.put("emailSent", 1);
-		    	voucherMapper.updateVoucherCodeEmailStatus(params);
+		    	params.put("mailId", params.get("mailId"));
+		    	params.put("userId", params.get("userId"));
+		    	voucherMapper.updateBatchEmailSuccess(params);
 		    }
 	    }
 	}

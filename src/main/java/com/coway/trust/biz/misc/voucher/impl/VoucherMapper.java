@@ -34,7 +34,9 @@ public interface VoucherMapper {
 	 EgovMap getVoucherInfo(Map<String, Object> params);
 	 int isVoucherValidToApplyIneKeyIn(Map<String, Object> params);
 	 EgovMap getVoucherEmailAdditionalInfo(Map<String, Object> params);
-	 List<EgovMap> getBatchEmailVoucherInfo();
-	 int updateVoucherCodeEmailStatus(Map<String, Object> params);
+	 List<EgovMap> getUnsendBatchEmailVoucherInfo();
+	 int updateBatchEmailSuccess(Map<String, Object> params);
 	 int editVoucherCampaignStatus(Map<String, Object> params);
+	 int getBatchEmailNextVal();
+	 int insertBatchEmailSender(Map<String, Object> params);
 }

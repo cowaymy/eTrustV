@@ -274,12 +274,13 @@ public class VoucherController {
 	public ResponseEntity<ReturnMessage> sendVoucherEmailNotification(@RequestParam Map<String, Object> params,
 			ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		List<EgovMap> voucherEmailInfo = voucherService.getBatchEmailVoucherInfo();
+		List<EgovMap> voucherEmailInfo = voucherService.getUnsendBatchEmailVoucherInfo();
 
 		if(voucherEmailInfo.size() > 0){
 			for(int i =0;i<voucherEmailInfo.size();i++)
 			{
 				EgovMap info = voucherEmailInfo.get(i);
+				info.put("userId", sessionVO.getUserId());
 				voucherService.sendEmail(info);
 			}
 		}

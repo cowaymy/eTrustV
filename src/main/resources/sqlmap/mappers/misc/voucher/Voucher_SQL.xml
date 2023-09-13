@@ -412,6 +412,7 @@
 		SET
 		CUST_EMAIL = #{custEmail}
 		,ORD_ID = #{ordId}
+		,MAIL_ID = #{mailId}
 		,UPD_BY = #{userId}
 		,UPD_DT = SYSDATE
 		WHERE
@@ -477,7 +478,9 @@
 	</select>
 
 	<select id="getVoucherEmailAdditionalInfo" parameterType="Map" resultType="egovMap">
-		SELECT A.VOUCHER_CODE,A.CUST_EMAIL,A.ORD_ID,
+		SELECT
+		/* A.VOUCHER_CODE,A.CUST_EMAIL,*/
+		A.ORD_ID,
 		LISTAGG(B.PROMO_ID,';') WITHIN GROUP(ORDER BY B.PROMO_ID) AS PROMO_ID,
 		LISTAGG(C.PROMO_CODE || C.PROMO_DESC,';') WITHIN GROUP(ORDER BY C.PROMO_CODE) AS VARIATION
 		FROM MSC0057D A
@@ -490,21 +493,64 @@
 		GROUP BY A.VOUCHER_CODE,A.CUST_EMAIL,A.ORD_ID
 	</select>
 
-	<select id="getBatchEmailVoucherInfo" resultType="egovMap">
-		SELECT A.VOUCHER_CODE,A.CUST_EMAIL FROM MSC0057D A
+	<select id="getUnsendBatchEmailVoucherInfo" resultType="egovMap">
+		SELECT A.VOUCHER_CODE,A.CUST_EMAIL, C.MAIL_ID
+		FROM MSC0057D A
         JOIN MSC0056M B
         ON A.ID = B.ID
+        LEFT JOIN MSC0059D C
+        ON A.MAIL_ID = C.MAIL_ID
         WHERE A.STUS_CODE_ID = 1
         AND B.STUS_CODE_ID = 1
-        AND USED = 1
-        AND EMAIL_SENT = 0
+        AND A.USED = 1
+        AND A.MAIL_ID IS NOT NULL
+        AND C.EMAIL_SENT_STUS IS NULL OR C.EMAIL_SENT_STUS = 1
 	</select>
 
-	<update id="updateVoucherCodeEmailStatus" parameterType="Map">
-		UPDATE MSC0057D
+	<update id="updateBatchEmailSuccess" parameterType="Map">
+		UPDATE MSC0059D
 		SET
-		EMAIL_SENT = #{emailSent}
+		EMAIL_SENT_STUS = 4
+		,UPD_DT = SYSDATE
+		,UPD_BY = #{userId}
 		WHERE 1=1
-		AND VOUCHER_CODE = #{voucherCode}
+		AND MAIL_ID = #{mailId}
 	</update>
+
+	<select
+		id="getBatchEmailNextVal"
+		resultType="Integer">
+		SELECT MSC0059D_MAIL_ID_SEQ.NEXTVAL FROM DUAL
+	</select>
+
+		<insert
+		id="insertBatchEmailSender"
+		parameterType="Map">
+		INSERT INTO MSC0059D
+		(
+		MAIL_ID,
+		EMAIL_TYPE,
+		EMAIL_SUBJECT,
+		EMAIL_PARAMS,
+		TEMPLATE_NAME,
+		EMAIL,
+		NAME,
+		EMAIL_SENT_STUS,
+		CRT_DT,
+		CRT_BY
+		)
+		VALUES
+		(
+		#{mailId},
+		#{emailType},
+		#{emailSubject},
+		#{emailParams},
+		#{templateName},
+		#{email},
+		#{name},
+		#{emailSentStus},
+		SYSDATE,
+		#{userId}
+		)
+	</insert>
 </mapper>
