@@ -200,8 +200,8 @@ function fn_bulkApprovalLineSubmission(){
 	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
 
         var obj = {
-                apprGridList : apprGridList,
-        		adjGridList : adjGridList
+                apprGridList : JSON.stringify(apprGridList),
+        		adjGridList : JSON.stringify(adjGridList)
         };
 
         Common.ajax("POST", "/eAccounting/creditCard/submitBulkAdjustmentWithApprovalLine.do", obj, function(result) {

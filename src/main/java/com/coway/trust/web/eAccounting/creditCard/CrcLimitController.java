@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -560,7 +561,7 @@ public class CrcLimitController {
 	        return ResponseEntity.ok(message);
 	    }
 
-	    @RequestMapping(value = "/submitBulkAdjustmentWithApprovalLine.do")
+	    @RequestMapping(value = "/submitBulkAdjustmentWithApprovalLine.do", method = RequestMethod.POST)
 	    public ResponseEntity<ReturnMessage> submitBulkAdjustmentWithApprovalLine(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
 	        LOGGER.debug("========== editRequest ==========");
 	        LOGGER.debug("params ========== :: " + params);
@@ -568,9 +569,9 @@ public class CrcLimitController {
 
  	        ObjectMapper mapper = new ObjectMapper();
 
-	        String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("adjGridList"));
-	        List<Map<String, Object>> adjustmentGridList = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
-	        //Map<String,Object> adjustmentGridList = mapper.readValue(value, Map.class);
+	        //String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("adjGridList"));
+	        List<Map<String, Object>> adjustmentGridList = Arrays.asList(mapper.readValue(params.get("adjGridList").toString(),Map[].class));
+	        //List<Map<String, Object>> adjustmentGridList = mapper.readValue(params.get("adjGridList").toString(), new TypeReference<List<Map<String, Object>>>(){});
 
 	    	List<String> documentNumberList = new ArrayList<String>();
 	        if(adjustmentGridList.size() > 0){
@@ -582,7 +583,7 @@ public class CrcLimitController {
 
 	    	if (documentNumberList.size() > 0) {
 	    		params.put("documentNumberList", documentNumberList);
-		        crcLimitService.saveApprovalLineBulk(params, sessionVO);
+		        //;;crcLimitService.saveApprovalLineBulk(params, sessionVO);
 	    	}
 	        if(documentNumberList.size() > 0) {
 	            message.setCode(AppConstants.SUCCESS);
