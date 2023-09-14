@@ -180,6 +180,49 @@
                                           AND #{contactNo} IN (cp2.TEL_M1, cp2.TEL_O, cp2.TEL_R)
                                         </if>
 					              )
+					              UNION
+					              SELECT S.SALES_ORD_ID
+								  FROM SAL0001D S
+								  JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
+								  JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+								  LEFT JOIN SAL0027D cp2 ON C.CUST_ID = cp2.CUST_ID
+								  WHERE 1=1
+                                   <if test='ordId != null and ordId != ""'>
+                                   AND S.SALES_ORD_ID = #{ordId}
+                                   </if>
+                                   <if test='ordNo != null and ordNo != ""'>
+                                   AND S.SALES_ORD_NO = #{ordNo}
+                                   </if>
+                                   <if test='ordDt == null || ordDt == ""'>
+                                   AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                                   </if>
+                                   <if test='ordDt != null and ordDt != ""'>
+                                   AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                                   </if>
+                                   <if test='memId != null and memId != ""'>
+                                   AND V.MEM_ID = #{memId}
+                                   </if>
+                                   <if test='deptCode != null and deptCode != ""'>
+                                   AND V.DEPT_CODE = #{deptCode}
+                                   </if>
+                                   <if test='grpCode != null and grpCode != ""'>
+                                   AND V.GRP_CODE = #{grpCode}
+                                   </if>
+                                   <if test='orgCode != null and orgCode != ""'>
+                                   AND V.ORG_CODE = #{orgCode}
+                                   </if>
+                                   <if test='custId != null and custId != ""'>
+                                   AND C.CUST_ID = #{custId}
+                                   </if>
+                                   <if test='custName != null and custName != ""'>
+                                   AND C.NAME LIKE '%'||UPPER(#{custName})||'%'
+                                   </if>
+                                   <if test='custIc != null and custIc != ""'>
+                                   AND C.NRIC = #{custIc}
+                                   </if>
+                                   <if test='contactNo != null and contactNo != ""'>
+                                   AND #{contactNo} IN (cp2.TEL_M1, cp2.TEL_O, cp2.TEL_R)
+                                   </if>
 					            ) SVC
 					            ON V1.ORD_ID = SVC.SALES_ORD_ID
 					   </when>
