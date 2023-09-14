@@ -163,9 +163,12 @@ public class MobileLumpSumPaymentController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-    		params.put("mobPayGroupNo", decryptedString);
-    		EgovMap info = mobileLumpSumPaymentKeyInService.getLumpSumReceiptInfo(params);
-    		model.put("info", info);
+			decryptedString ="87";
+			if(decryptedString != null && decryptedString != ""){
+	    		params.put("mobPayGroupNo", decryptedString);
+	    		EgovMap info = mobileLumpSumPaymentKeyInService.getLumpSumReceiptInfo(params);
+	    		model.put("info", info);
+			}
 		}
 		return "payment/mobileLumpSumPayment/lumpSumReceiptPublic";
 	}
