@@ -147,7 +147,7 @@ public class PreCcpRegisterController {
         	preCcpRegisterService.insertNewCustomerInfo(params);
 
         	List <EgovMap> resultMapList = (List<EgovMap>) params.get("b2bData");
-            String reqPayload = RequestData.PrepareRequest(params.get("batchNo").toString(),  params.get("orderNo").toString(), params.get("customerName").toString(), params.get("customerNric").toString());
+            String reqPayload = RequestData.PrepareRequest(params.get("batchNo").toString(),  params.get("orderNo").toString(), params.get("customerName").toString(), params.get("customerNric").toString(), params.get("oldIc").toString());
 
             byte[] bytes = proxy.request(reqPayload);
 

@@ -60,6 +60,7 @@ public class ProxyPortBindingStub extends Stub implements Proxy_PortType {
 	private static String password =  "Cmsb#7143!";
 	private static String privateKeyFile =  "/home/etrust_user/rsa-private-ctos-jwt-prd.pem";
 
+
 	static org.apache.axis.description.OperationDesc[] _operations;
 
 	static {

@@ -2,7 +2,6 @@ package com.coway.trust.config.ctos.client.xml.proxy.ws;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
 import com.coway.trust.util.CommonUtils;
 
 import javax.xml.namespace.QName;

@@ -5,7 +5,7 @@ public class RequestData {
 	private RequestData() {
 	}
 
-	public static String PrepareRequest(String batchNo, String orderNo, String customerName, String nric) {
+	public static String PrepareRequest(String batchNo, String orderNo, String customerName, String nric, String oldic) {
 
 //		String companyCode = "COWAYUAT";
 //		String accountNo = "COWAYUAT";
@@ -24,7 +24,7 @@ public class RequestData {
 		sb.append("<record_total>1</record_total>" + "\r\n");
 		sb.append("<records>" + "\r\n");
 		sb.append("<type>I</type>" + "\r\n");// I-individual,C-company,B-business
-		sb.append("<ic_lc></ic_lc>" + "\r\n");// Old IC number(for individual)
+		sb.append("<ic_lc>" + oldic + "</ic_lc>" + "\r\n");// Old IC number(for individual)
                 												  // or local number(for company)
                 												  // or blank for business
 		sb.append("<nic_br>").append(nric).append("</nic_br>").append("\r\n");// New IC/Passport
