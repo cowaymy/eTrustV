@@ -900,6 +900,10 @@ function fn_DCFRequest(){
                          Common.alert("* No EFT/JomPayRef");
                          return;
                      }
+                     if( FormUtil.byteLength($("#onlineEFT").val()) > 100 ){
+                         Common.alert("* Please input the EFT No. below or less than 100 bytes.");
+                         return;
+                     }
                  }
              }
 
@@ -1418,7 +1422,7 @@ function setTargetInfo(){
 
                                    <th scope="row" d="onlineEftLbl">EFT<span class='must'>*</span></th>
                                    <td>
-                                       <input type="text" id="onlineEFT" name="onlineEFT" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
+                                       <input type="text" id="onlineEFT" name="onlineEFT" class="w100p" />
                                    </td>
                                </tr>
                                <tr>
