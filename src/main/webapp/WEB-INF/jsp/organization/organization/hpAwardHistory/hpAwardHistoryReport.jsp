@@ -174,6 +174,18 @@
            if("${deptCode}") $("#deptCode").val("${deptCode}".trim());
 
            switch("${SESSION_INFO.memberLevel}") {
+           case "4":
+               reportType = "HP";
+               $("#orgCode").attr("class", "w100p readonly checkViewHistory");
+               $("#orgCode").attr("readonly", "readonly");
+               $("#grpCode").attr("class", "w100p readonly checkViewHistory");
+               $("#grpCode").attr("readonly", "readonly");
+               $("#deptCode").attr("class", "w100p readonly checkViewHistory");
+               $("#deptCode").attr("readonly", "readonly");
+               $("#memCode").attr("class", "w100p readonly checkViewHistory");
+               $("#memCode").attr("readonly", "readonly");
+               if("${SESSION_INFO.userName}") $("#memCode").val("${SESSION_INFO.userName}");
+               break;
            case "3":
                reportType = "HM";
                $("#orgCode").attr("class", "w100p readonly checkViewHistory");
