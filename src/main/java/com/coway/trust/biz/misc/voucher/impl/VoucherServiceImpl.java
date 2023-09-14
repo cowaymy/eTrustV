@@ -303,7 +303,7 @@ public class VoucherServiceImpl implements VoucherService {
 			emailParam.putAll(voucherMapper.getVoucherEmailAdditionalInfo(params.get(i)));
 
 			String test = emailParam.toString();
-			EgovMap masterEmailDet = new EgovMap();
+			Map<String,Object> masterEmailDet = new HashMap<String, Object>();
 			masterEmailDet.put("mailId", mailIDNextVal);
 			masterEmailDet.put("emailType",AppConstants.EMAIL_TYPE_TEMPLATE);
 			masterEmailDet.put("templateName", AppConstants.E_VOUCHER_RECEIPT_BATCH_TEMPLATE);
