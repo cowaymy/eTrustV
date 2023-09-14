@@ -144,6 +144,20 @@ $(document).ready(function(){
 
     // ajax list 조회.
     function searchList(){
+    	if("${SESSION_INFO.memberLevel}" =="1" && $("#orgCode").val() == ""){
+            Common.alert("Please Key in Org code.");
+            return false;
+        }else if("${SESSION_INFO.memberLevel}" =="2" && $("#grpCode").val() == ""){
+            Common.alert("Please Key in Group code.");
+            return false;
+        }else if("${SESSION_INFO.memberLevel}" =="3" && $("#deptCode").val() == ""){
+            Common.alert("Please Key in Dept code.");
+            return false;
+        }else if("${SESSION_INFO.memberLevel}" =="4" && $("#deptCode").val() == ""){
+            Common.alert("Please Key in Dept code.");
+            return false;
+        }
+
     	   Common.ajax("GET","/sales/membership/selectRejoinList",$("#searchForm").serialize(), function(result){
     		   console.log(result);
     		AUIGrid.setGridData(myGridID, result);
@@ -151,8 +165,11 @@ $(document).ready(function(){
     }
 
     function fn_clear(){
-        //$("#searchForm")[0].reset();
-        $("#memCode").val('');
+        if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
+        	$("#memCode").val('');
+        }else{
+        	$("#searchForm")[0].reset();
+        }
     }
 
     function fn_excelDown() {
