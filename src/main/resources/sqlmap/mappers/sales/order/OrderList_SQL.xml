@@ -327,13 +327,13 @@
                 <if test='memId != null and memId != ""'>
                 AND (V.MEM_ID = #{memId})
                 </if>
-                <if test='deptCode != null and deptCode != ""'>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
                 AND (V.DEPT_CODE = #{deptCode})
                 </if>
-                <if test='grpCode != null and grpCode != ""'>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
                 AND (V.GRP_CODE = #{grpCode})
                 </if>
-                <if test='orgCode != null and orgCode != ""'>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
                 AND (V.ORG_CODE = #{orgCode})
                 </if>
                 UNION
@@ -356,13 +356,13 @@
                 <if test='memId != null and memId != ""'>
                 AND (V.MEM_ID = #{memId})
                 </if>
-                <if test='deptCode != null and deptCode != ""'>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
                 AND (V.DEPT_CODE = #{deptCode})
                 </if>
-                <if test='grpCode != null and grpCode != ""'>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
                 AND (V.GRP_CODE = #{grpCode})
                 </if>
-                <if test='orgCode != null and orgCode != ""'>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
                 AND (V.ORG_CODE = #{orgCode})
                 </if>
             ) SVC
@@ -377,13 +377,13 @@
                 <if test='memId != null and memId != ""'>
                 AND (V.MEM_ID = #{memId})
                 </if>
-                <if test='deptCode != null and deptCode != ""'>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
                 AND (V.DEPT_CODE = #{deptCode})
                 </if>
-                <if test='grpCode != null and grpCode != ""'>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
                 AND (V.GRP_CODE = #{grpCode})
                 </if>
-                <if test='orgCode != null and orgCode != ""'>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
                 AND (V.ORG_CODE = #{orgCode})
                 </if>
                  ) SVC

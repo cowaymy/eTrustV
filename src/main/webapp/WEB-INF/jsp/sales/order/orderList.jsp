@@ -750,7 +750,7 @@
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
-    <input id="memId" name="memId" type="hidden" value="${memId}"/>
+<%--     <input id="memId" name="memId" type="hidden" value="${memId}"/> --%>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -882,11 +882,11 @@
 </tr>
 <tr>
     <th scope="row">Org Code</th>
-    <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase().trim();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
+    <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
     <th scope="row">Grp Code</th>
-    <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase().trim();" placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
+    <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
     <th scope="row">Dept Code</th>
-    <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase().trim();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
+    <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='sales.isEKeyin'/></th>
