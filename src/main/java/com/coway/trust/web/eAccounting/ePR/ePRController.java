@@ -306,7 +306,11 @@ public class ePRController {
 			List<Map<String, Object>> excelData = result.subList(1, result.size()).stream().filter(r -> r.get("item") != null).map(r -> {
 				Map<String, Object> rRes = new HashMap<String, Object>();
 				rRes.put("item", r.get("item") == null ? null : r.get("item").getStringCellValue());
-				rRes.put("quantity", r.get("quantity") == null ? null : r.get("quantity").getStringCellValue());
+				try {
+					rRes.put("quantity", r.get("quantity") == null ? null : r.get("quantity").getStringCellValue());
+				} catch (IllegalStateException e) {
+					rRes.put("quantity", r.get("quantity") == null ? null : r.get("quantity").getNumericCellValue());
+				}
 				rRes.put("uom", r.get("uom") == null ? null : r.get("uom").getStringCellValue());
 				rRes.put("usage", r.get("usage") == null ? null : r.get("usage").getStringCellValue());
 				rRes.put("branch", r.get("branch") == null ? null : r.get("branch").getStringCellValue());
