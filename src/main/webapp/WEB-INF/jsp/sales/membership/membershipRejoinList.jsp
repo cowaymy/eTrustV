@@ -28,9 +28,9 @@ $(document).ready(function(){
 
     if("${SESSION_INFO.memberLevel}" =="1"){
 
-        /* $("#orgCode").val("${orgCode}");
+        $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
-        $("#orgCode").attr("readonly", "readonly"); */
+        $("#orgCode").attr("readonly", "readonly");
 
     }else if("${SESSION_INFO.memberLevel}" =="2"){
 
@@ -165,10 +165,68 @@ $(document).ready(function(){
     }
 
     function fn_clear(){
-        if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
-        	$("#memCode").val('');
-        }else{
-        	$("#searchForm")[0].reset();
+        $("#searchForm")[0].reset();
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+            $("#V_ORGCODE").val("${orgCode}");
+            $("#V_ORGCODE").attr("class", "w100p readonly");
+            $("#V_ORGCODE").attr("readonly", "readonly");
+            $("#V_GRPCODE").val("${grpCode}");
+            $("#V_GRPCODE").attr("class", "w100p readonly");
+            $("#V_GRPCODE").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+            $("#V_ORGCODE").val("${orgCode}");
+            $("#V_ORGCODE").attr("class", "w100p readonly");
+            $("#V_ORGCODE").attr("readonly", "readonly");
+            $("#V_GRPCODE").val("${grpCode}");
+            $("#V_GRPCODE").attr("class", "w100p readonly");
+            $("#V_GRPCODE").attr("readonly", "readonly");
+            $("#V_DEPTCODE").val("${deptCode}");
+            $("#V_DEPTCODE").attr("class", "w100p readonly");
+            $("#V_DEPTCODE").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+            $("#memLvl").attr("class", "w100p readonly");
+            $("#memLvl").attr("readonly", "readonly");
+            $("#V_ORGCODE").val("${orgCode}");
+            $("#V_ORGCODE").attr("class", "w100p readonly");
+            $("#V_ORGCODE").attr("readonly", "readonly");
+            $("#V_GRPCODE").val("${grpCode}");
+            $("#V_GRPCODE").attr("class", "w100p readonly");
+            $("#V_GRPCODE").attr("readonly", "readonly");
+            $("#V_DEPTCODE").val("${deptCode}");
+            $("#V_DEPTCODE").attr("class", "w100p readonly");
+            $("#V_DEPTCODE").attr("readonly", "readonly");
         }
     }
 

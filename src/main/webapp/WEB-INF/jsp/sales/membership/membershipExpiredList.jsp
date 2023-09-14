@@ -144,12 +144,51 @@ $(document).ready(function(){
     }
 
     function fn_clear(){
+        $("#searchForm")[0].reset();
+
+        doGetCombo('/common/selectCodeList.do', '8', '',  'custType', 'S');
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo');
+        doDefCombo(expiredPeriodData, '' ,'expiredPeriod', 'M', 'fn_multiCombo');
+        CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11, codeIn : 'WP,AP,BT,BB,MAT,FRM,POE'}, '' , {type: 'M'});
+        doGetComboOrder('/callCenter/selectProductList.do', '', 'CODE_ID', '', 'cmbProduct', 'M', 'fn_multiCombo'); //Common Code
+
         if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
-        	$("#installState").val('');
-            $("#installArea").val('');
-            $("#memCode").val('');
-        }else{
-        	$("#searchForm")[0].reset();
+            $("#table1").show();
+        }
+        if("${SESSION_INFO.memberLevel}" =="1"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
         }
     }
 
