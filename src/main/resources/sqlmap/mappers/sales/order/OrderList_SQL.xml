@@ -437,8 +437,7 @@
              AND V1.BILLING_GRP_ID = #{billGroupNo}
            </if>
     ) T
-     WHERE 1=1
-
+     WHERE 1=1 AND NVL(T.BNDL_ID,0) = 0
            <if test='ordNo != null and ordNo != ""'>
              AND T.ORD_NO = #{ordNo}
            </if>
