@@ -338,18 +338,17 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 		    }
 		  }
 
-	  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
+	  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
 		      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 		      throws ReportSDKExceptionBase, IOException {
 
-		    switch (viewType) {
-		      case MAIL_PDF:
-		    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
-		          break;
-
-		      default:
-		        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
-		    }
+		  	//Tested with switch case, apparently switch case unable to handle viewtype and return error 505 so use if/else
+			if(viewType == ViewType.MAIL_PDF){
+				  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+			}
+			else{
+				throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+			}
 		  }
 
 	@SuppressWarnings("unchecked")
