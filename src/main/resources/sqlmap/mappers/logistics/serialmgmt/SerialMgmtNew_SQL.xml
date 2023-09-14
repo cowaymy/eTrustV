@@ -461,6 +461,16 @@
             LAST_REQST_NO = #{reqstNo}
         </if>
         AND ITM_CODE = #{itmCode}
+        AND SERIAL_NO IN (
+	        SELECT SERIAL_NO FROM LOG0099D WHERE
+	        <if test="delvryNo !=null and delvryNo !=''">
+	            last_DELVRY_NO = #{delvryNo}
+	        </if>
+	        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+	            LAST_REQST_NO = #{reqstNo}
+	        </if>
+	        AND SCAN_STUS_CODE = 'C'
+        )
     </update>
 
     <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
