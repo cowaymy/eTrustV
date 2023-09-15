@@ -9,15 +9,260 @@ var myDetailGridData = null;
   var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
 
   // AUIGrid 생성 후 반환 ID
-
+  var myDetailGridID;
   var myDetailGridID2;
-
+  var myDetailGridID3;
+  var unmatchRsnList = [];
+  var unmatchRsnObj = {};
+  <c:forEach var="obj" items="${unmatchRsnList}">
+  unmatchRsnList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", codeNames:"("+"${obj.code}"+")"+"${obj.codeName}"});
+  unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
+  </c:forEach>
 
   var option = {
     width : "1000px", // 창 가로 크기
     height : "600px" // 창 세로 크기
   };
 
+  function createAUIGrid(){
+	    // AUIGrid 칼럼 설정
+	    var columnLayout = [ {
+	                           dataField:"stkCode",
+	                           headerText:"Filter Code",
+	                           width:140,
+	                           height:30
+	                         }, {
+	                           dataField : "stkId",
+	                           headerText : "Filter id",
+	                           width : 240,
+	                           visible:false
+	                         }, {
+	                           dataField : "stkDesc",
+	                           headerText : "Filter Name",
+	                           width : 240
+	                         }, {
+	                           dataField : "bsResultItmId",
+	                           headerText : "Filter Name",
+	                           width : 240    ,
+	                           visible:false
+	                         }, {
+	                           dataField : "name",
+	                           headerText : "Filter Quantity",
+	                           width : 120,
+	                           dataType : "numeric",
+	                           /* editRenderer : {
+	                                                type : "NumberStepRenderer",
+	                                                min : 0,
+	                                                max : 50,
+	                                                step : 1,
+	                                                textEditable : true
+	                           }  */
+	                         }, {
+	                             dataField : "serialNo",
+	                             headerText : "Serial No",
+	                             width : 240
+	                             <c:if test="${orderDetail.codyInfo.serialRequireChkYn == 'Y' }">
+		                         , renderer : {
+		                              type : "IconRenderer",
+		                              iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+		                              iconHeight : 24,
+		                              iconPosition : "aisleRight",
+		                              iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+		                                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" //
+		                              },
+		                              onclick : function(rowIndex, columnIndex, value, item)
+		                              {
+		                                  gSelMainRowIdx = rowIndex;
+		                                  gSelMainColIdx = columnIndex;
+
+		                                  fn_serialSearchPop(item);
+		                              }
+		                           }
+		                        </c:if>
+	                         }, {
+	                             dataField : "sSerialNo",
+	                             headerText : "System Serial No",
+	                             width : 100
+	                             ,visible:false
+	                         }, {
+	                             dataField : "serialChk",
+	                             headerText : "Serial Check",
+	                             width : 100,
+	                             visible:false
+	                         }, {
+	                             dataField : "isReturn",
+	                             headerText : "Has Return",
+	                             width : 100,
+	                             renderer : {
+	                                        type : "CheckBoxEditRenderer",
+	                                        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	                                        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	                                        checkValue : "1", // true, false 인 경우가 기본
+	                                        unCheckValue : "0"
+	                             }
+	                         }, {
+	                             dataField : "oldSerialNo",
+	                             headerText : "Old Serial No",
+	                             width : 160
+	                           }, {
+	                               dataField : "filterSerialUnmatchReason",
+	                               headerText : "Unmatched Reason",
+	                               width : 150,
+	                               editRenderer : {
+	                                   type : "DropDownListRenderer",
+	                                   //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+	                                   list : unmatchRsnList,
+	                                   keyField : "codeId",        // key 에 해당되는 필드명
+	                                   valueField : "codeNames"    // value 에 해당되는 필드명
+	                              }
+	                             }, {
+	                                 dataField : "sOldSerialNo",
+	                                 headerText : "System Old Serial No",
+	                                 width : 100,
+	                                 visible:false
+	                             }
+	                         ];
+
+	    // 그리드 속성 설정
+	    var gridPros = {  // 페이징 사용
+	                  	  //usePaging : true,
+	                 	  // 한 화면에 출력되는 행 개수 20(기본값:20)
+	                	  //pageRowCount : 20,
+	                	  editable : true,
+	                	  //showStateColumn : true,
+	                	  //displayTreeOpen : true,
+		                  headerHeight : 30,
+		                  // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+		                  skipReadonlyColumns : true,
+		                  // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+		                  wrapSelectionMove : true,
+		                  // 줄번호 칼럼 렌더러 출력
+		                  showRowNumColumn : true,
+		                  // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
+		                  showEditedCellMarker : false
+	           	       };
+
+	    myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
+
+	    AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
+		  if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 9 || event.columnIndex == 10){
+	        if ($("#cmbStatusType2").val() == 4) {    // Completed
+	          return true;
+	        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+	          return false;
+	        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+	          return false;
+	        } else {
+	          return false;
+	        }
+	      }
+	    });
+
+	    // 에디팅 정상 종료 이벤트 바인딩
+	    AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event) {
+	      console.log("createAUIGrid :: event :: " + event.columnIndex);
+
+	     //가용재고 체크 하기
+	     if(event.columnIndex == 4) {
+	       //마스터 그리드
+	        var selectedItem = AUIGrid.getItemByRowIndex(myGridID, '${ROW}');
+	        console.log("createAUIGrid :: selectedItem :: " + selectedItem);
+
+	  	    var ct = selectedItem.c5;
+	        var sk = event.item.stkId;
+
+	        var  availQty = isstckOk(ct ,sk);
+
+	        if(availQty == 0) {
+	          Common.alert('*<b> There are no available stocks.</b>');
+	          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+	        } else {
+	          if  ( availQty  <  Number(event.value) ){
+	        	  // temporary allow WP CORE product to by pass qty checking by Hui Ding, 15-10-2020. (Temporary)
+	        	  var productId = $("#hidStockCode").val(); //basicInfo.stockId
+	        	  console.log("hidStockCode: " + productId);
+	        	  if (sk == 295 && productId == 112194){
+	        		  //by pass. lets go through
+	        	  } else {
+		            Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+		            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+	        	  }
+		       }
+	        }
+
+	        // KR-OHK Serial Check add
+	        var serialChk = event.item.serialChk;
+	        var serialNo = event.item.serialNo;
+
+	        if($("#hidSerialRequireChkYn").val()  == 'Y' && serialChk == 'Y' && Number(event.value) > 1) {
+	            Common.alert("For serial check items, only quantity 1 can be entered.");
+	            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "1");
+	            return false;
+	        }
+
+	        // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
+	        if(sk == 1428){
+	          Common.alert('*<b> This Filter not allow to edit.</b>');
+	          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+	        }
+	      }
+
+	      /*if (event.columnIndex == 7) {
+	        console.log("createAUIGrid :: event.item.stkId :: " + event.item.stkId);
+	        if((event.item.stkId) == 1428){
+	          Common.alert('* <b>' + event.item.stkDesc + '<br>is not allow to edit.</b>');
+	          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
+	        }
+	      }*/
+
+	      if (event.columnIndex == 5) {
+	          console.log("event.item.name :: " + event.item.name);
+	          if(event.item.name > 1){
+	              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+	              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+	          }else{
+	        	  if(event.item.serialNo != ""){
+	        		  console.log("event.item.serialNo :: " + event.item.serialNo);
+	        		  var  codyLoc= ['${orderDetail.codyInfo.ctWhLocId}'];
+	        		  var codyFilterStatus = ['I'];
+	        		  Common.ajax("POST", "/logistics/SerialMgmt/serialSearchDataList.do", {searchSerialNo:event.item.serialNo,locCode:codyLoc,searchItemCodeOrName:event.item.stkCode,searchStatus:codyFilterStatus}, function (result) {
+	        	            if(result.data.length == 0){
+	        	            	Common.alert('* This Serial Not belongs to this cody.');
+	        	                AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+	        	            }
+	        	        });
+	        	  }
+
+	          }
+	      }
+
+	      if (event.columnIndex == 9) { //7-old serial number
+
+	          console.log("event.item.name :: " + event.item.name);
+	          if(event.item.name > 1){
+	              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+	              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+	          }else{
+	              var sOldSerialNo = '';
+	              if(event.item.sOldSerialNo != undefined){
+	                  sOldSerialNo = event.item.sOldSerialNo;
+	              }
+	              if(sOldSerialNo != event.item.oldSerialNo){
+	                  Common.alert('* Old Serial Number for <b>' + event.item.stkDesc + '<br>is not same as previous.</b>');
+	                  AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+	              }
+	          }
+	      }
+
+	      if (event.columnIndex == 10) {
+	          console.log("event.item.name :: " + event.item.name);
+	          if(event.item.name > 1){
+	              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+	              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "filterSerialUnmatchReason", "");
+	          }
+	      }
+	    });
+	  }
 
   function createAUIGrid2(){
     // AUIGrid 칼럼 설정
@@ -116,6 +361,62 @@ var myDetailGridData = null;
     myDetailGridID2 = GridCommon.createAUIGrid("hsResult_grid_wrap", resultColumnLayout,'', gridPros);
   }
 
+  function createAUIGrid3(){
+      // AUIGrid 칼럼 설정
+      var fitercolumnLayout = [ {
+                  dataField:"no",
+                  headerText:"BSR No",
+                  width:200,
+                  height:30
+              }, {
+                  dataField : "stkDesc",
+                  headerText : "Filter",
+                  width : 140
+              }, {
+                  dataField : "bsResultPartQty",
+                  headerText : "Qty",
+                  width : 90
+              }, {
+                  dataField : "bsResultFilterClm",
+                  headerText : "Claim",
+                  width : 240    ,
+                  visible:false
+             }, {
+                  dataField : "resultCrtDt",
+                  headerText : "Key At",
+                  width : 240        ,
+                  visible:false
+             }, {
+                  dataField : "userName",
+                  headerText : "Key By",
+                  width : 240       ,
+                  visible:false
+
+          }];
+          // 그리드 속성 설정
+          var gridPros = {
+              // 페이징 사용
+              //usePaging : true,
+              // 한 화면에 출력되는 행 개수 20(기본값:20)
+              //pageRowCount : 20,
+
+              editable : false,
+
+              headerHeight : 30,
+
+              // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+              skipReadonlyColumns : true,
+
+              // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+              wrapSelectionMove : true,
+
+              // 줄번호 칼럼 렌더러 출력
+              showRowNumColumn : true
+
+          };
+
+          myDetailGridID3 = GridCommon.createAUIGrid("fiter_grid_wrap", fitercolumnLayout, '',gridPros);
+  }
 
   $(document).ready(function() {
 
@@ -129,8 +430,16 @@ var myDetailGridData = null;
     hidHsno = $("#hidHsno").val(); // TypeId
     hrResultId = $("#hrResultId").val(); // TypeId
 
+    createAUIGrid();
     createAUIGrid2();
+    createAUIGrid3();
 
+    fn_getHsViewfilterInfoAjax();
+//     if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
+//     	if ("${serialEditBtnAccess}" == "Y") {
+//     		$("#btnSerialEdit").attr("style", "");
+//     	}
+//     }
 
     var statusCd = "${basicinfo.stusCodeId}";
     $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
@@ -207,6 +516,38 @@ var myDetailGridData = null;
      });
   });
 
+  function fn_getHsViewfilterInfoAjax(){
+ 	 Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
+          console.log("성공 fn_getHsViewfilterInfoAjax.");
+          console.log("data : " + result);
+
+          AUIGrid.setGridData(myDetailGridID, result);
+
+          // Grid 안의 값이 음수인 경우 0으로 출력
+          var cnt = result.length;
+          for (var i=0; i<cnt; i++) {
+              var minusCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
+              if (minusCheck < 0) {
+                  AUIGrid.updateRow(myDetailGridID, { name : "0" }, i, false);
+              }
+          }
+
+          myDetailGridData = result;
+      });
+
+      Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
+         console.log("성공 selectHistoryHSResult.");
+         console.log("data : " + result);
+         AUIGrid.setGridData(myDetailGridID2, result);
+     });
+
+
+      Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
+         console.log("성공 selectFilterTransaction.");
+         console.log("data : " + result);
+         AUIGrid.setGridData(myDetailGridID3, result);
+     });
+ }
 
     Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
       console.log("성공 selectHistoryHSResult.");
@@ -250,6 +591,11 @@ var myDetailGridData = null;
       }
 
     }
+
+    /*
+    * There is Serial checking for filter here, refer to hsEditPop.jsp(BS) folder
+    * Currently not implemented due to not needed
+    */
     Common.ajax("POST", "/homecare/services/UpdateHsResult2.do", $("#editHSResultForm").serializeJSON(), function(result) {
 
       Common.alert(result.message, fn_parentReload);
@@ -348,12 +694,12 @@ var myDetailGridData = null;
              <div id="hsResult_grid_wrap" style="width:100%; height:210px; margin:0 auto;"></div>
         </article><!-- grid_wrap end -->
     </dd>
-    <!-- <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID3)">Filter Transaction</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID3)">Filter Transaction</a></dt>
     <dd>
-        <article class="grid_wrap">grid_wrap start
+        <article class="grid_wrap">
          <div id="fiter_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-        </article>grid_wrap end
-    </dd> -->
+        </article>
+    </dd>
 </dl>
 </article><!-- acodi_wrap end -->
 
@@ -435,6 +781,12 @@ var myDetailGridData = null;
 </tbody>
 </table><!-- table end -->
 
+<aside class="title_line"><!-- title_line start -->
+<h2>Filter Information</h2>
+</aside><!-- title_line end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+</article><!-- grid_wrap end -->
 <ul class="center_btns">
 
 </ul>
@@ -456,6 +808,8 @@ var myDetailGridData = null;
  <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
  <input type="text" value="<c:out value="${basicinfo.instct}"/> "  id="Instruction" name="Instruction"/>
  <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType1"/>
+
+ <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
 
  </div>
 </form>

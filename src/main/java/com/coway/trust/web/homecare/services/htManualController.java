@@ -438,6 +438,8 @@ public class htManualController {
     model.addAttribute("MOD", params.get("MOD"));
     // model.addAttribute("serMemList", serMemList);
     model.addAttribute("ROW", params.get("ROW"));
+    params.put("groupCode", "511");
+    model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
 
     return "homecare/services/htEditPop";
 
