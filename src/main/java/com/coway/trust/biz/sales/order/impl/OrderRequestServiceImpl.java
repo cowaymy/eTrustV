@@ -1196,7 +1196,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       orderExchangeMasterVO.setSoExchgOldDefRentAmt((BigDecimal) somMap.get("defRentAmt"));
       orderExchangeMasterVO.setSoExchgOldCustId(CommonUtils.intNvl(somMap.get("custId")));
       orderExchangeMasterVO.setSoExchgNwCustId(CommonUtils.intNvl(somMap.get("custId")));
-      //orderExchangeMasterVO.setSoExchgAtchGrpId(Integer.parseInt(CommonUtils.nvl(params.get("soExchgAtchGrpId"))));
+      orderExchangeMasterVO.setSoExchgAtchGrpId(Integer.parseInt(CommonUtils.nvl(params.get("soExchgAtchGrpId"))));
 
       orderRequestMapper.insertSalesOrderExchange(orderExchangeMasterVO);
 
