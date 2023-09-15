@@ -311,7 +311,7 @@
                 JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
                 JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
                 LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
-                WHERE 1=1
+                WHERE 1=1 AND NVL(S.BNDL_ID,0) = 0
                 <if test='ordId != null and ordId != ""'>
                 AND S.SALES_ORD_ID = #{ordId}
                 </if>
@@ -340,7 +340,7 @@
                 SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
                 FROM SAL0001D S
                 JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
-                WHERE 1=1
+                WHERE 1=1 AND NVL(S.BNDL_ID,0) = 0
                 <if test='ordId != null and ordId != ""'>
                 AND S.SALES_ORD_ID = #{ordId}
                 </if>
@@ -437,7 +437,7 @@
              AND V1.BILLING_GRP_ID = #{billGroupNo}
            </if>
     ) T
-     WHERE 1=1 AND NVL(T.BNDL_ID,0) = 0
+     WHERE 1=1
            <if test='ordNo != null and ordNo != ""'>
              AND T.ORD_NO = #{ordNo}
            </if>
