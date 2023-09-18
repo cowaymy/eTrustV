@@ -461,30 +461,31 @@
     </insert>
 
     <update id="updateGroupPaymentRevStatus" parameterType="Map">
-        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId}
-        WHERE
-         <if test="groupSeq != null and groupSeq != ''">
+        <if test="groupSeq != null and groupSeq != ''">
+	        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId},
+            REV_DT = SYSDATE
+	        WHERE
               GROUP_SEQ IN
-              <foreach item="item" collection="groupSeq" index="index"
-                open="(" separator="," close=")">
-                #{item}
-              </foreach>
-              AND
+	              <foreach item="item" collection="groupSeq" index="index"
+	                open="(" separator="," close=")">
+	                #{item}
+	              </foreach>
+              AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
         </if>
-         (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
     </update>
 
     <update id="rejectGroupPaymentRevStatus" parameterType="Map">
-        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId}
-        WHERE 1=1
         <if test="groupSeq != null and groupSeq != ''">
-              AND GROUP_SEQ IN
-              <foreach item="item" collection="groupSeq" index="index"
-                open="(" separator="," close=")">
-                #{item}
-              </foreach>
+	        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId},
+	        REV_DT = SYSDATE
+	        WHERE 1=1
+	              AND GROUP_SEQ IN
+	              <foreach item="item" collection="groupSeq" index="index"
+	                open="(" separator="," close=")">
+	                #{item}
+	              </foreach>
+	        AND REV_STUS_ID = 1
         </if>
-        AND REV_STUS_ID = 1
     </update>
 
     <select id="selectRequestDCFList" parameterType="Map" resultType="egovMap">
@@ -1944,18 +1945,19 @@
     </select>
 
     <select id="dcfDuplicates2" parameterType="Map" resultType="int">
-        SELECT COUNT(*) FROM PAY0064D
-        WHERE MTCH_ID IN (
-            SELECT PAY_ID FROM PAY0252T WHERE 1=1
-             <if test="groupSeq != null and groupSeq != ''">
-                  AND GROUP_SEQ IN
-                  <foreach item="item" collection="groupSeq" index="index"
-                    open="(" separator="," close=")">
-                    #{item}
-                  </foreach>
-            </if>
-            AND REV_STUS_ID = 1
-        )
+      <if test="groupSeq != null and groupSeq != ''">
+	        SELECT COUNT(*) FROM PAY0064D
+	        WHERE MTCH_ID IN (
+	            SELECT PAY_ID FROM PAY0252T
+	            WHERE 1=1
+                AND GROUP_SEQ IN
+	                 <foreach item="item" collection="groupSeq" index="index"
+	                   open="(" separator="," close=")">
+	                   #{item}
+	                 </foreach>
+	            AND REV_STUS_ID = 1
+	        )
+        </if>
     </select>
 
     <resultMap id="resultNewDCFMap" type="egovMap" ></resultMap>

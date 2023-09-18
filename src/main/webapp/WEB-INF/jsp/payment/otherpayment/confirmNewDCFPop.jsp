@@ -389,7 +389,8 @@ function fn_reject(){
     //저장처리
     var rejectData  = {
     		remark : $("#remark").val(),
-    		reqNo : $("#dcfReqNo").val()
+    		reqNo : $("#dcfReqNo").val(),
+    		groupSeq : $("#groupSeq").val()
     };
 
     Common.confirm("<spring:message code='pay.alert.wantToRejectDcf'/>",function (){

@@ -2089,6 +2089,9 @@ public class PaymentListController {
 
 		LOGGER.debug("params : {} ", params);
 		// 저장
+		String[] groupSeqList = params.get("groupSeq").toString().replace("\"","").split(",");
+		params.put("groupSeq", groupSeqList);
+
 		params.put("userId", sessionVO.getUserId());
 		params.put("userMemCode", sessionVO.getUserMemCode());
 		paymentListService.rejectNewDCF(params);
