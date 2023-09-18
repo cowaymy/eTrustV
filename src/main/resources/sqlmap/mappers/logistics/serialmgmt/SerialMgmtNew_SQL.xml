@@ -684,8 +684,13 @@
 		SELECT MAX(B.HMC_GR_NO_DTL_NO) AS HMC_GR_NO_DTL_NO
 		  FROM LOG0205M A
           JOIN HMC0010D B ON A.PREFIX_STK_ID = B.STOCK_ID AND B.HMC_GR_NO = #{docNo}
-		 WHERE
-		   A.PREFIX_CONV_STK_ID = #{stockId}
+		 WHERE 1=1
+		 <if test="preConStockId !=null and preConStockId !=''">
+		   AND A.PREFIX_CONV_STK_ID = #{preConStockId}
+		   </if>
+		    <if test="preStockId !=null and preStockId !=''">
+		    AND A.PREFIX_STK_ID = #{preStockId}
+		    </if>
 		   AND A.USE_YN = 'Y'
     </select>
 </mapper>
