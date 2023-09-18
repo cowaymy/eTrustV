@@ -635,7 +635,9 @@
             Extent8.STK_DESC,
             Extent1.CUST_ID,
             Extent4.NAME CUST_NM,
-            Extent4.NRIC,
+             CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,
             Extent1.APP_TYPE_ID,
             Extent2.CODE_NAME APP_TYPE_NM,
             Extent1.PV_YEAR,
