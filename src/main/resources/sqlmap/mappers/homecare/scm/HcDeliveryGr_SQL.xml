@@ -374,7 +374,9 @@
 		        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
 		          FROM LOG0099D
 		         WHERE REQST_NO = #{hmcGrNo}
+		         <if test="prefixChk != 1">
                    AND ITM_CODE = #{stockCode}
+                   </if>
 		       )
 		 WHERE RN = 1
     </select>
@@ -569,7 +571,9 @@
         ,SCAN_NO
         FROM LOG0099D
         WHERE REQST_NO = #{hmcGrNo}
+        <if test="prefixChk != 1">
         AND ITM_CODE = #{stockCode}
+        </if>
         )x where x.rn =1
         )
     </update>
@@ -578,7 +582,9 @@
     /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrMain] - Huiling */
         update LOG0100m set stus_code = 'I'
         WHERE last_REQST_NO = #{hmcGrNo}
+        <if test="prefixChk != 1">
         AND ITM_CODE = #{stockCode}
+        </if>
     </update>
 
     <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
@@ -589,7 +595,9 @@
         ,SEQ
         FROM LOG0101h
         WHERE last_REQST_NO = #{hmcGrNo}
+        <if test="prefixChk != 1">
         AND ITM_CODE = #{stockCode}
+        </if>
         )x where RN =1
     </select>
 
