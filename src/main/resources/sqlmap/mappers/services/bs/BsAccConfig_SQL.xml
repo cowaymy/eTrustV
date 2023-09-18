@@ -656,8 +656,8 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                        UPDATE SAL0090D
                            SET SRV_CODY_ID = #{memCode},
                                SRV_REM = #{remark},
-                               SRV_UPD_USER_ID = #{updUserId},
-                               SRV_UPD_DT = SYSDATE
+                               TGT_UPD_USER_ID = #{updUserId},
+                               TGT_UPD_DT = SYSDATE
                          WHERE   SRV_STUS_ID = 1
                          AND SRV_SO_ID IN
                          <foreach item="item" collection="salesOrdListSp" index="index" open="(" separator="," close=")">
@@ -765,9 +765,8 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , d47.install_dt
                               , SO.PV_MONTH
                               , SO.PV_YEAR
-                              , CASE WHEN hs.TGT_UPD_DT IS NULL THEN hs.UPD_DT ELSE hs.TGT_UPD_DT END AS TGT_UPD_DT
-                              , CASE WHEN hs.TGT_UPD_USER_ID IS NULL THEN USR2.MEM_CODE ELSE USR3.USER_NAME END AS TGT_UPD_USER
-
+                              , CASE WHEN sal09.TGT_UPD_DT IS NULL THEN hs.UPD_DT ELSE sal09.TGT_UPD_DT END AS TGT_UPD_DT
+                              , CASE WHEN sal09.TGT_UPD_USER_ID IS NULL THEN USR2.MEM_CODE ELSE USR3.USER_NAME END AS TGT_UPD_USER
                 FROM SAL0001D sal01
                 INNER JOIN SAL0090D sal09 ON sal09.SRV_SO_ID = sal01.SALES_ORD_ID
                 LEFT JOIN SVC0008D hs ON hs.SALES_ORD_ID = sal09.SRV_SO_ID
@@ -791,7 +790,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN sal0047d ir2  ON ir2.entry_id = eimax.install_entry_id and ir2.result_id = eimax.INSTALL_RESULT_ID AND ir2.stus_code_id = 4 -->
                 LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
-                LEFT JOIN SYS0047M USR3 ON HS.TGT_UPD_USER_ID = USR.USER_ID
+                LEFT JOIN SYS0047M USR3 ON sal09.TGT_UPD_USER_ID = USR3.USER_ID
                 WHERE 1=1
 
                 AND sal09.SRV_STUS_ID  <![CDATA[ <> ]]>  8
