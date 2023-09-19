@@ -1,5 +1,9 @@
 package com.coway.trust.biz.test.impl;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +22,8 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.staffClaim.impl.StaffClaimMapper;
 import com.coway.trust.biz.test.TestService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.ibm.icu.impl.duration.Period;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -316,5 +322,39 @@ public class TestServiceImpl extends EgovAbstractServiceImpl implements TestServ
     @Override
     public void updateNtfStus(Map<String, Object> params) {
         testMapper.updateNtfStus(params);
+    }
+
+    @Override
+    public EgovMap verifyUserAccount(Map<String, Object> params) {
+      return testMapper.verifyUserAccount(params);
+    }
+
+    @Override
+    public void insertOtpRecord(Map<String, Object> params) {
+      testMapper.insertOtpRecord(params);
+    }
+
+    @Override
+    public boolean verifyOTPNumber(Map<String, Object> params) throws ParseException {
+
+      EgovMap data = testMapper.verifyOTPNumber(params);
+      boolean valid = false;
+
+      if(data != null){
+        String isKeyed = data.get("isKeyed").toString();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date crtDt = formatter.parse(data.get("crtDt").toString());
+        Date now = new Date();
+
+        long diff = now.getTime() - crtDt.getTime() / 1000; // different in seconds
+
+        if(isKeyed.equals("0") || diff <= 60){
+          testMapper.updateOtpRecord(params);
+          valid = true;
+        }
+      }
+
+      return valid;
     }
 }

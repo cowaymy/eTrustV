@@ -1,5 +1,6 @@
 package com.coway.trust.biz.test;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -62,4 +63,12 @@ public interface TestService {
     List<EgovMap> selectNtfList(Map<String, Object> params);
 
     void updateNtfStus(Map<String, Object> params);
+
+    EgovMap verifyUserAccount(Map<String, Object> params);
+
+    void insertOtpRecord(Map<String, Object> params);
+
+    boolean verifyOTPNumber(Map<String, Object> params) throws ParseException;
+
+
 }

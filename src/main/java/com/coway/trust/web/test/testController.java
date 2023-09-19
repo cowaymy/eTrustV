@@ -1,6 +1,9 @@
 package com.coway.trust.web.test;
 
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -411,5 +414,64 @@ public class testController {
         logger.debug("updateNtf.do :: end");
 
         return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/sampleOTP.do")
+    public String sampleOTP(@RequestParam Map<String, Object> params) {
+        return "test/sampleOTP";
+    }
+
+    @RequestMapping(value = "/requestOTP.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> requestOTP(@RequestParam Map<String, Object> params) {
+
+      String otpString = "";
+      ReturnMessage message = new ReturnMessage();
+
+      try {
+
+        EgovMap isExisted = testService.verifyUserAccount(params);
+
+        if(isExisted != null){
+          SecureRandom number = SecureRandom.getInstanceStrong();
+          for (int i = 0; i < 6; i++) {
+            otpString += String.valueOf(number.nextInt(10));
+          }
+
+          params.put("otpNumber", otpString);
+          params.put("userId", isExisted.get("userId").toString());
+
+          testService.insertOtpRecord(params);
+
+          message.setData(otpString);
+          message.setCode(AppConstants.SUCCESS);
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        }else{
+
+          message.setCode(AppConstants.FAIL);
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+      } catch (NoSuchAlgorithmException nsae) {
+      }
+
+      return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/confirmOTP.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> confirmOTP(@RequestParam Map<String, Object> params) throws ParseException {
+
+      ReturnMessage message = new ReturnMessage();
+
+      if(testService.verifyOTPNumber(params)){
+        message.setCode(AppConstants.SUCCESS);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+      }else{
+        message.setCode(AppConstants.FAIL);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+      }
+
+
+      return ResponseEntity.ok(message);
     }
 }

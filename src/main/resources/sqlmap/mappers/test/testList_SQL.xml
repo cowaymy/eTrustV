@@ -496,4 +496,52 @@
         WHERE NTF_ID = #{ntfId}
         AND NTF_KEY = #{ntfKey}
     </update>
+
+    <select id="verifyUserAccount" parameterType="Map" resultType="egovMap">
+        SELECT
+            USER_ID
+        FROM SYS0047M
+        WHERE USER_NAME = #{userName}
+        AND USER_EMAIL = #{email}
+    </select>
+
+    <insert id="insertOtpRecord" parameterType="Map">
+        MERGE INTO SYS0112M D
+        USING (
+            SELECT
+              #{userId} USER_ID
+              , #{userName} USER_NAME
+              , #{email} USER_EMAIL
+              , #{otpNumber} OTP_NUMBER
+              , 0 IS_KEYED
+              , SYSDATE CRT_DT
+              , SYSDATE UPD_DT
+            FROM DUAL
+        ) S ON (S.USER_ID = D.USER_ID)
+        WHEN MATCHED THEN UPDATE SET
+                               D.USER_NAME  = S.USER_NAME
+                             , D.USER_EMAIL = S.USER_EMAIL
+                             , D.OTP_NUMBER = S.OTP_NUMBER
+                             , D.IS_KEYED   = S.IS_KEYED
+                             , D.CRT_DT    = S.CRT_DT
+                             , D.UPD_DT    = S.UPD_DT
+        WHEN NOT MATCHED THEN INSERT (USER_ID   , USER_NAME  , USER_EMAIL , OTP_NUMBER  , IS_KEYED , CRT_DT  , UPD_DT  )
+                              VALUES (#{userId} , #{userName}, #{email}   , #{otpNumber}, 0        , SYSDATE , SYSDATE )
+    </insert>
+
+    <update id="updateOtpRecord" parameterType="Map">
+        UPDATE SYS0112M SET
+            IS_KEYED = 1, UPD_DT = SYSDATE
+        WHERE USER_NAME = #{userName} AND USER_EMAIL = #{email} AND OTP_NUMBER = #{otpNumber}
+    </update>
+
+    <select id="verifyOTPNumber" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM SYS0112M
+        WHERE USER_NAME = #{userName}
+        AND USER_EMAIL = #{email}
+        AND OTP_NUMBER = #{otpNumber}
+    </select>
+
 </mapper>

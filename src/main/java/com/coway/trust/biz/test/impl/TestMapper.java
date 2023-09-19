@@ -62,4 +62,12 @@ public interface TestMapper {
     List<EgovMap> selectNtfList(Map<String, Object> params);
 
     void updateNtfStus(Map<String, Object> params);
+
+    EgovMap verifyUserAccount(Map<String, Object> params);
+
+    void insertOtpRecord(Map<String,Object> params);
+
+    void updateOtpRecord(Map<String,Object> params);
+
+    EgovMap verifyOTPNumber(Map<String, Object> params);
 }
