@@ -944,6 +944,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
 		formMap.put("allowComm", allowance);
 
+		formList.add(formMap);
+
 		return formList;
 	}
 
