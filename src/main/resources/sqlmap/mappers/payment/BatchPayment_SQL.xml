@@ -452,6 +452,7 @@
 		BATCH_PAY_REM,
 		BATCH_PAY_CUST_TYPE
         ,BATCH_IS_ADV
+        ,BATCH_IS_EMANDATE
 		) VALUES
 	    (
 		#{batchId},
@@ -470,6 +471,7 @@
 		#{paymentRemark},
 		#{paymentCustType}
         , #{advance}
+        , #{eMandate}
 		)
     </insert>
 

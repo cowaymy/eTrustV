@@ -357,6 +357,7 @@ public class BatchPaymentController {
 		master.put("paymentCustType", 1368);
 		master.put("jomPay", request.getParameter("jomPay"));
 		master.put("advance", request.getParameter("advance"));
+		master.put("eMandate", request.getParameter("eMandate"));
 
 
 

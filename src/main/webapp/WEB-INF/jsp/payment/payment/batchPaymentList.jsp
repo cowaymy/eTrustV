@@ -114,6 +114,16 @@ $(document).ready(function(){
 
     });
 
+	$('#advance').change(function(){
+		if(this.checked){
+			$('#eMandateDisplay').show();
+		}
+		else{
+			$('#eMandateDisplay').hide();
+			$('#eMandate').attr('checked',false);
+		}
+	});
+
 });
 
 // AUIGrid 칼럼 설정
@@ -615,19 +625,29 @@ var batchInfoLayout = [
             return;
         }
         if(fn_validation()){  // Ticket - 23026832 Wawa 15/08/2023 open validation for all type of payment
+        	if($("#eMandate").is(":checked") && !$("#advance").is(":checked")){
+                Common.alert("Please check 'Advance' before checking 'eMandate'");
+                return;
+        	}
+
             if($("#advance").is(":checked")) {
-
-            	//if(fn_validation()){
         		formData.append("advance","1");
+
+        		if($("#eMandate").is(":checked")){
+            		formData.append("eMandate","1");
+        		}
+        		else{
+            		formData.append("eMandate","0");
+        		}
+
         		confirmMsg = "<spring:message code='pay.alert.uploadAdvBatachPayment'/>";
+	        }
+	        else {
 
-        //    }
-        }
-        else {
-
-        	formData.append("advance","");
-        	confirmMsg = "<spring:message code='pay.alert.uploadBatachPayment'/>";
-        }
+	        	formData.append("advance","0");
+	        	formData.append("eMandate","0");
+	        	confirmMsg = "<spring:message code='pay.alert.uploadBatachPayment'/>";
+        	}
         }
 
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
@@ -1277,6 +1297,12 @@ var batchInfoLayout = [
 					    </td>
             <th scope="row">Advance</th>
             <td><input type='checkbox' id='advance' name='advance' value='1'></td>
+          </tr>
+          <tr id="eMandateDisplay" style="display:none;">
+          	<th></th>
+          	<td></td>
+          	<th scope="row">eMandate</th>
+          	<td><input type='checkbox' id='eMandate' name='eMandate' value='1'></td>
           </tr>
 				</tbody>
 			</table><!-- table end -->
