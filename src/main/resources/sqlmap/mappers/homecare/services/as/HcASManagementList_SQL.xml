@@ -266,7 +266,7 @@
 	                         CASE WHEN Extent7.AS_CMMS IS NULL THEN Extent1.AS_ALLOW_COMM
 	                         ELSE Extent7.AS_CMMS END AS CMS,
 	                         Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
-	                         Extent7.INST_CITY,
+	                         NVL(ma1.CITY, '-') AS INST_CITY,
                              Extent15.DEFECT_DESC,
                              HMC.BNDL_NO
 	                  FROM SVC0001D Extent1
@@ -289,8 +289,7 @@
 	                                     AS_RESULT_CRT_DT,
 	                                     AS_CMMS,
 	                                     NVL(USER_NAME, '-') as USER_NAME,
-	                                     AS_FAIL_RESN_ID,
-	                                     INST_CITY
+	                                     AS_FAIL_RESN_ID
 	                              FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
 	                                             AS_RESULT_ID,
 	                                             AS_RESULT_NO,
@@ -304,14 +303,9 @@
 	                                             AS_RESULT_CRT_DT,
 	                                             AS_CMMS,
 	                                             B.USER_NAME,
-	                                             AS_FAIL_RESN_ID,
-	                                             NVL(ma1.CITY, '-') AS INST_CITY
+	                                             AS_FAIL_RESN_ID
 	                                     FROM SVC0004D A
 	                                     LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
-	                                     JOIN sal0001d som on som.SALES_ORD_ID = A.AS_SO_ID
-                                         JOIN sal0045d SAL ON SAL.sales_ord_id = som.sales_ord_id
-                                         LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
-                                         LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
 	                                     WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
 	                  ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 	                               AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
@@ -328,6 +322,9 @@
                      left join SYS0026M STK ON STK.STK_ID =  sod.ITM_STK_ID
                      LEFT JOIN ORG1001V V ON V.MEM_ID = Extent8.MEM_ID
                      LEFT JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = Extent4.BNDL_ID
+                     JOIN sal0045d SAL ON SAL.sales_ord_id = Extent4.sales_ord_id
+                     LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
+                     LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                       AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
                                                            WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC'))
