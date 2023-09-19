@@ -430,6 +430,9 @@ public class htManualController {
     List<EgovMap> failReasonList = htManualService.failReasonList(params);
     // List<EgovMap> serMemList = htManualService.serMemList(params);
 
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    model.put("toDay", toDay);
+
     model.addAttribute("basicinfo", basicinfo);
     logger.debug("basicinfo : {}", basicinfo);
     model.addAttribute("orderDetail", orderDetail);
@@ -599,15 +602,18 @@ public class htManualController {
     boolean success = false;
     Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
     List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+    List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
     logger.debug("UpdateHsResult2=============> in ");
     logger.debug("[" + params.toString() + "]");
     logger.debug("UpdateHsResult2=============> in");
 
-    resultValue = htManualService.UpdateHsResult2(params, insList, sessionVO);
+    resultValue = htManualService.UpdateHsResult2(formMap, insList, sessionVO);
 
-    message.setMessage("Complete to Update a HS Result : " + params.get("hidHsno"));
+    message.setMessage("Complete to Update a HS Result : " + formMap.get("hidHsno"));
 
     return ResponseEntity.ok(message);
   }

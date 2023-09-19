@@ -68,8 +68,8 @@
        V1.UPD_USER_ID,
        V1.CUST_ID2,
        V1.CUST_IC2,
-       V1.CUST_NAME2
-
+       V1.CUST_NAME2,
+	   V1.PROD_CAT
        FROM (
        SELECT DISTINCT
                 cd.CODE APP_TYPE_CODE,
@@ -155,8 +155,8 @@
                   u2.USER_NAME UPD_USER_ID,
                   so.cust_id CUST_ID2,
                   cust.NRIC CUST_IC2,
-                  cust.NAME CUST_NAME2
-
+                  cust.NAME CUST_NAME2,
+				E.CODE AS PROD_CAT
            FROM SAL0225D som
                 JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
                 LEFT JOIN SAL0001D SO ON SO.SALES_ORD_ID = som.SRV_ORD_ID
@@ -176,6 +176,9 @@
                 LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
                 LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
                 LEFT JOIN SYS0013M MT ON MT.CODE_ID = MEM.MEM_TYPE
+                LEFT JOIN SAL0002D SO2 ON SO2.SALES_ORD_ID = som.SRV_ORD_ID
+                LEFT JOIN SYS0026M D ON D.STK_ID =  SO2.ITM_STK_ID
+                LEFT JOIN SYS0013M E ON E.CODE_ID = D.STK_CTGRY_ID
        ) V1
 
        WHERE  1= 1
@@ -692,6 +695,9 @@
              , T9.MEM_CODE MEM_CODE3
              , T9.NAME NAME3
              , T9.TEL_MOBILE TEL_MOBILE3
+             , T10.SERIAL_REQUIRE_CHK_YN
+             , T10.WH_LOC_GB
+             , T10.WH_LOC_ID CT_WH_LOC_ID
           FROM SAL0225D T1
           JOIN SAL0090D T2 ON T2.SRV_SO_ID = T1.SRV_ORD_ID
           JOIN ORG0001D T3 ON T3.MEM_ID = T2.SRV_CODY_ID
@@ -750,6 +756,7 @@
             ON T8.MEM_ID = T6.MEM_UP_ID
           LEFT JOIN ORG0001D T9
             ON T9.MEM_ID = T8.MEM_UP_ID
+      	LEFT JOIN SYS0028M T10 ON T3.MEM_CODE = T10.WH_LOC_CODE
          WHERE T1.SRV_ORD_ID = #{salesOrderId} AND ROWNUM <= 1
     ]]>
     </select>

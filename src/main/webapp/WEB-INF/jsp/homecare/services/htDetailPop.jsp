@@ -10,6 +10,7 @@ var myDetailGridID;
 var myDetailGridID;
 var unmatchRsnList = [];
 var unmatchRsnObj = {};
+var productCategory ='${orderDetail.basicInfo.prodCat}';
 <c:forEach var="obj" items="${unmatchRsnList}">
 unmatchRsnList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", codeNames:"("+"${obj.code}"+")"+"${obj.codeName}"});
 unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
@@ -321,12 +322,21 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
   }
 
   function fn_getHsFilterListAjax(){
-	    Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
-	      console.log("성공.");
-	      console.log("fn_getHsFilterListAjax data :: " + result);
-	      AUIGrid.setGridData(myDetailGridID, result);
-	    });
-	  }
+	  	/*
+	  	* Currently only load filter for Air Cond orders, other will be ignore
+	  	*/
+		if(productCategory == "ACI" || productCategory == "ACO"){
+			$('#filter_grid_display').show();
+		    Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
+			      console.log("성공.");
+			      console.log("fn_getHsFilterListAjax data :: " + result);
+			      AUIGrid.setGridData(myDetailGridID, result);
+			});
+		}
+		else{
+			$('#filter_grid_display').hide();
+		}
+	}
 
   function fn_saveHsResult(){
     /* var dat =  GridCommon.getEditData(myGridID);
@@ -614,12 +624,14 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
 </table>
 <!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Filter Information</h2>
-</aside><!-- title_line end -->
-<article class="grid_wrap"><!-- grid_wrap start -->
-	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
+<div id="filter_grid_display">
+	<aside class="title_line"><!-- title_line start -->
+	<h2>Filter Information</h2>
+	</aside><!-- title_line end -->
+	<article class="grid_wrap"><!-- grid_wrap start -->
+		 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+	</article><!-- grid_wrap end -->
+</div>
 
 
 </section><!-- pop_body end -->

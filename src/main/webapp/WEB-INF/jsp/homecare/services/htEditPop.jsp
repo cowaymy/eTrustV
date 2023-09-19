@@ -14,6 +14,7 @@ var myDetailGridData = null;
   var myDetailGridID3;
   var unmatchRsnList = [];
   var unmatchRsnObj = {};
+  var productCategory ='${orderDetail.basicInfo.prodCat}';
   <c:forEach var="obj" items="${unmatchRsnList}">
   unmatchRsnList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", codeNames:"("+"${obj.code}"+")"+"${obj.codeName}"});
   unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
@@ -193,7 +194,6 @@ var myDetailGridData = null;
 	        // KR-OHK Serial Check add
 	        var serialChk = event.item.serialChk;
 	        var serialNo = event.item.serialNo;
-
 	        if($("#hidSerialRequireChkYn").val()  == 'Y' && serialChk == 'Y' && Number(event.value) > 1) {
 	            Common.alert("For serial check items, only quantity 1 can be entered.");
 	            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "1");
@@ -363,36 +363,35 @@ var myDetailGridData = null;
 
   function createAUIGrid3(){
       // AUIGrid 칼럼 설정
-      var fitercolumnLayout = [ {
-                  dataField:"no",
-                  headerText:"BSR No",
-                  width:200,
-                  height:30
-              }, {
-                  dataField : "stkDesc",
-                  headerText : "Filter",
-                  width : 140
-              }, {
-                  dataField : "bsResultPartQty",
-                  headerText : "Qty",
-                  width : 90
-              }, {
-                  dataField : "bsResultFilterClm",
-                  headerText : "Claim",
-                  width : 240    ,
-                  visible:false
-             }, {
-                  dataField : "resultCrtDt",
-                  headerText : "Key At",
-                  width : 240        ,
-                  visible:false
-             }, {
-                  dataField : "userName",
-                  headerText : "Key By",
-                  width : 240       ,
-                  visible:false
+    var fitercolumnLayout = [ {
+                               dataField:"no",
+                               headerText:"BSR No",
+                               width:200,
+                               height:30
+                              }, {
+		                       dataField : "stkDesc",
+		                       headerText : "Filter",
+		                       width : 140
+		                      }, {
+		                       dataField : "bsResultPartQty",
+		                       headerText : "Qty",
+		                       width : 90
+		                      }, {
+		                       dataField : "bsResultFilterClm",
+		                       headerText : "Claim",
+		                       width : 240
+		                      }, {
+		                       dataField : "resultCrtDt",
+		                       headerText : "Key At",
+		                       width : 240 ,
+		                       dataType : "date",
+		                       formatString : "dd/mm/yyyy"
+		                      }, {
+		                       dataField : "userName",
+		                       headerText : "Key By",
+		                       width : 240
 
-          }];
+                           }];
           // 그리드 속성 설정
           var gridPros = {
               // 페이징 사용
@@ -458,7 +457,7 @@ var myDetailGridData = null;
 
     var renColctCd = "${basicinfo.renColctId}";
 
-    $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
+    //$("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
     if ($("#_openGb").val() == "view"){
       $("#btnSave").hide();
     }
@@ -471,10 +470,9 @@ var myDetailGridData = null;
 
       if ($("#stusCode").val()==4) {
         $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",false);
-        $('#cmbCollectType').removeAttr('disabled');
+        //$('#cmbCollectType').removeAttr('disabled');
       }
     }
-
     // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
     if ($("#cmbStatusType2").val() == 4) {    // Completed
       $("input[name='settleDt']").attr('disabled', false);
@@ -497,6 +495,7 @@ var myDetailGridData = null;
 
 
        if ($("#cmbStatusType2").val() == 4) {    // Completed
+    	   	  $('#settleDt').val('${toDay}');
          $("input[name='settleDt']").attr('disabled', false);
          $("select[name='failReason'] option").remove();
 
@@ -541,12 +540,20 @@ var myDetailGridData = null;
          AUIGrid.setGridData(myDetailGridID2, result);
      });
 
-
-      Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
-         console.log("성공 selectFilterTransaction.");
-         console.log("data : " + result);
-         AUIGrid.setGridData(myDetailGridID3, result);
-     });
+	  	/*
+	  	* Currently only load filter for Air Cond orders, other will be ignore
+	  	*/
+      if(productCategory == "ACI" || productCategory == "ACO"){
+			$('#filter_grid_display').show();
+	      Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
+	         console.log("성공 selectFilterTransaction.");
+	         console.log("data : " + result);
+	         AUIGrid.setGridData(myDetailGridID3, result);
+	     });
+      }
+      else{
+			$('#filter_grid_display').hide();
+      }
  }
 
     Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
@@ -592,15 +599,74 @@ var myDetailGridData = null;
 
     }
 
-    /*
-    * There is Serial checking for filter here, refer to hsEditPop.jsp(BS) folder
-    * Currently not implemented due to not needed
-    */
-    Common.ajax("POST", "/homecare/services/UpdateHsResult2.do", $("#editHSResultForm").serializeJSON(), function(result) {
+    var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+    var serialChkCode = new Array();
+    var serialChkName = new Array();
+    var j = 0;
+    for (var i = 0; i < editedRowItems.length; i++) {
+      if (parseInt(editedRowItems[i]["name"]) > 0 && (editedRowItems[i]["serialChk"] == "Y" && $("#hidSerialRequireChkYn").val() == 'Y') && (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
+        serialChkCode[j] = editedRowItems[i]["stkCode"];
+        serialChkName[j] = editedRowItems[i]["stkDesc"];
+        j++;
+      }
+    }
 
+    var serialChkList = "";
+    if (serialChkCode.length > 0) {
+      for (var i = 0; i < serialChkCode.length; i++) {
+        serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
+      }
+      Common.alert("Please insert 'Serial No' for" + serialChkList);
+      return false;
+    }
+
+    //USE FOR EDIT/NEW
+     var resultList = new Array();
+    //$("#cmbCollectType1").val(editHSResultForm.cmbCollectType.value);
+    var jsonObj =  GridCommon.getEditData(myDetailGridID);
+    var gridDataList = AUIGrid.getGridData(myDetailGridID);
+    //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
+    //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
+    console.log("fn_UpdateHsResult :: gridDataList ::" + gridDataList);
+    for(var i = 0; i < gridDataList.length; i++) {
+      var item = gridDataList[i];
+      if(item.name > 0) {
+        resultList.push(gridDataList[i]);
+      }
+    }
+    jsonObj.add = resultList;
+
+ // add by jgkim
+    var cmbStatusType2 = $("#cmbStatusType2").val();
+    $("input[name='settleDt']").removeAttr('disabled');
+    //$("select[name=cmbCollectType]").removeAttr('disabled');
+    var form = $("#editHSResultForm").serializeJSON();
+    //$("input[name='settleDt']").attr('disabled', true);
+    //$("select[name=cmbCollectType]").attr('disabled', true);
+    form.cmbStatusType2 = cmbStatusType2;
+
+    jsonObj.form = form;
+    console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
+
+    // KR-MIN Serial Check add
+    var url = "";
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+    	Common.alert("HC currently does not support serial checking");
+        //url = "/services/bs/UpdateHsResult2Serial.do";
+    } else{
+    	url = "/homecare/services/UpdateHsResult2.do";
+    }
+
+    Common.ajax("POST", url, jsonObj, function(result) {
       Common.alert(result.message, fn_parentReload);
       $("#popClose").click();
     });
+
+//     Common.ajax("POST", "/homecare/services/UpdateHsResult2.do", $("#editHSResultForm").serializeJSON(), function(result) {
+
+//       Common.alert(result.message, fn_parentReload);
+//       $("#popClose").click();
+//     });
   }
 
   function fn_parentReload() {
@@ -725,7 +791,7 @@ var myDetailGridData = null;
     <th scope="row" style="width: 186px; ">Settle Date</th>
     <td>
         <%-- <span><c:out value="${basicinfo.setlDt}"/></span> --%>
-        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" readonly="true"/>
+        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
@@ -781,14 +847,16 @@ var myDetailGridData = null;
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Filter Information</h2>
-</aside><!-- title_line end -->
-<article class="grid_wrap"><!-- grid_wrap start -->
-	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
-<ul class="center_btns">
+<div id="filter_grid_display">
+	<aside class="title_line"><!-- title_line start -->
+	<h2>Filter Information</h2>
+	</aside><!-- title_line end -->
+	<article class="grid_wrap"><!-- grid_wrap start -->
+		 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+	</article><!-- grid_wrap end -->
+</div>
 
+<ul class="center_btns">
 </ul>
 
  <div  style="display:none">

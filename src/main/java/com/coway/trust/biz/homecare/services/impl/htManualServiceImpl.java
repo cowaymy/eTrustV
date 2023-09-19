@@ -1105,17 +1105,44 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 	logger.debug("params : "+params);
     Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    List<Map<String, Object>> bsResultDet = new ArrayList<Map<String, Object>>();
+
+    if(docType != null){
+        for (int i = 0; i < docType.size(); i++) {
+          Map<String, Object> bsd = new HashMap<String, Object>();
+          Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
+          logger.debug("docSub{} : " + docSub);
+
+          // bsd.put("BSResultItemID",0 );
+          bsd.put("BSResultID", String.valueOf(params.get("hidschdulId")));
+          bsd.put("BSResultPartID", String.valueOf(docSub.get("stkId")));
+          bsd.put("BSResultPartDesc", String.valueOf(docSub.get("stkDesc")));
+          bsd.put("BSResultPartQty", String.valueOf(docSub.get("name")));
+          bsd.put("BSResultPartIsRtrn", String.valueOf(docSub.get("isReturn")));
+          bsd.put("BSResultRemark", "");
+          // bsd.put("BSResultCreateAt",0 );
+          bsd.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
+          bsd.put("BSResultFilterClaim", String.valueOf(1));
+          bsd.put("SerialNo", docSub.get("serialNo") != null ? String.valueOf(docSub.get("serialNo")) : "");
+
+          bsResultDet.add(bsd);
+        }
+    }
+
     Map<String, Object> bsResultMas = new HashMap<String, Object>();
 
     bsResultMas.put("No", "");
     bsResultMas.put("TypeID", String.valueOf(306));
     bsResultMas.put("ScheduleID", String.valueOf(params.get("hidschdulId")));
     bsResultMas.put("SalesOrderId", String.valueOf(params.get("hidSalesOrdId")));
+
     if (params.get("cmbServiceMem") == null || params.get("cmbServiceMem") == "") {
       bsResultMas.put("CodyID", String.valueOf(sessionVO.getUserId()));
     } else {
       bsResultMas.put("CodyID", String.valueOf(params.get("cmbServiceMem")));
     }
+
+
 
     if (params.get("settleDt") != null || params.get("settleDt") != "") {
       bsResultMas.put("SettleDate", String.valueOf(params.get("settleDt")));
@@ -1128,40 +1155,434 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     } else {
       bsResultMas.put("ResultStatusCodeID", String.valueOf(params.get("cmbStatusType2")));
     }
+
     if (params.get("failReason") == null || params.get("failReason") == "") {
       bsResultMas.put("FailReasonID", String.valueOf("0"));
     } else {
       bsResultMas.put("FailReasonID", String.valueOf(params.get("failReason")));
     }
+
+//    if (params.get("cmbCollectType") == null || params.get("cmbCollectType") == "") {
+//    	bsResultMas.put("RenCollectionID", String.valueOf("0"));
+//    } else {
+//    	bsResultMas.put("RenCollectionID", String.valueOf(params.get("cmbCollectType")));
+//    }
+
+
     bsResultMas.put("ResultRemark", String.valueOf(params.get("txtRemark")));
     // [19-09-2018] ADD HS INSTRUCTION REMARK FOR MAPPER USE
     bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
     // bsResultMas.put("ResultCreated", sysdate);
+
+
+
+
+
+
+
+
+
+
     bsResultMas.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
     // bsResultMas.put("ResultUpdated", sysdate);
     bsResultMas.put("RenCollectionID", String.valueOf("0"));
     bsResultMas.put("ResultIsSync", String.valueOf(1));
     bsResultMas.put("ResultIsEdit", String.valueOf(1));
-    bsResultMas.put("ResultStockUse", String.valueOf(0));
+
+    if (bsResultDet.size() > 0) {
+        bsResultMas.put("ResultStockUse", String.valueOf(1));
+    } else {
+        bsResultMas.put("ResultStockUse", String.valueOf(0));
+    }
     bsResultMas.put("ResultIsCurrent", String.valueOf(1));
     bsResultMas.put("ResultMatchID", String.valueOf(0));
     bsResultMas.put("ResultIsAdjust", String.valueOf(1));
     bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
 
-    if(bsResultMas.get("settleDate") == null || bsResultMas.get("settleDate") == "" ){
-    	bsResultMas.put("SettleDate", "01/01/1900");
+    Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
+
+
+    String ResultNo_Rev = "";
+    int BS_RESULT = 11;
+    String docNo = null;
+
+    bsResultMas_Rev.put("DOCNO", BS_RESULT);
+    EgovMap eMap = htManualMapper.getHsResultDocNo(bsResultMas_Rev);
+    docNo = String.valueOf(eMap.get("hsrno")).trim();
+    bsResultMas_Rev.put("docNo", docNo);
+    logger.info("###HSRNO: " + docNo);
+
+    EgovMap qryBS_Rev = null;
+    qryBS_Rev = htManualMapper.selectQryBS_Rev(bsResultMas);
+    logger.debug("qryBS_Rev : {}" + qryBS_Rev);
+
+    if (qryBS_Rev != null) {
+    	 int BSResultM_resultID = htManualMapper.getBSResultM_resultID();
+         bsResultMas_Rev.put("ResultID", BSResultM_resultID); // sequence
+         bsResultMas_Rev.put("No", String.valueOf(docNo));
+         bsResultMas_Rev.put("TypeID", String.valueOf("307"));
+         bsResultMas_Rev.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
+         bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
+         bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
+         bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
+         bsResultMas_Rev.put("ResultStatusCodeID", String.valueOf(qryBS_Rev.get("resultStusCodeId")));// RESULT_STUS_CODE_ID
+         bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
+         bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
+         bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
+         bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem")));// RESULT_REM
+         // bsResultMas_Rev.put("ResultCreated", "sysdate");
+         bsResultMas_Rev.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+         bsResultMas_Rev.put("ResultIsSync", String.valueOf(1));
+         bsResultMas_Rev.put("ResultIsEdit", String.valueOf(0));
+         bsResultMas_Rev.put("ResultStockUse", String.valueOf(qryBS_Rev.get("resultStockUse")));// RESULT_STOCK_USE
+         bsResultMas_Rev.put("ResultIsCurrent", String.valueOf(1));
+         bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));// RESULT_ID
+         bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
+
+//         if(qryBS_Rev.get("instChklstCheckBox") != null) {
+//             bsResultMas_Rev.put("instChklstCheckBox", qryBS_Rev.get("instChklstCheckBox"));
+//          } else {
+//        	 bsResultMas_Rev.put("instChklstCheckBox", params.get("instChklstCheckBox"));
+//          }
+
+         int count = htManualMapper.selectTotalFilter(bsResultMas_Rev);
+         logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
+         List<EgovMap> qryResultDet = htManualMapper.selectQryResultDet(bsResultMas_Rev);
+         List<EgovMap> qryUsedFilter;
+         if (count == 0) {
+           qryUsedFilter = htManualMapper.selectQryUsedFilterNew(bsResultMas_Rev);
+
+         } else {
+           qryUsedFilter = htManualMapper.selectQryUsedFilter(bsResultMas_Rev);
+
+         }
+         logger.debug("qryResultDet : {}" + qryResultDet);
+         logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
+
+         int checkInt = 0;
+
+         // bsResultDet
+         Map<String, Object> bsResultDet_Rev = null;
+         Map<String, Object> usedFilter_Rev = null;
+         for (int i = 0; i < qryResultDet.size(); i++) {
+
+             bsResultDet_Rev = new HashMap<String, Object>();
+             usedFilter_Rev = new HashMap<String, Object>();
+             // bsResultDet_Rev.put("BSResultItemID", 0);
+             bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
+             bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));// BS_RESULT_PART_ID
+             bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));// BS_RESULT_PART_DESC
+             if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
+               bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
+               logger.debug("jinmu {}" + String.valueOf(qryBS_Rev.get("resultId")));
+             } else {
+               bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")));
+               logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
+             }
+             bsResultDet_Rev.put("BSResultRemark", CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem")));// BS_RESULT_REM
+             bsResultDet_Rev.put("BSResultCreateAt", "sysdate");// BS_RESULT_REM
+             bsResultDet_Rev.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
+             bsResultDet_Rev.put("BSResultFilterClaim", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultFilterClm")));// BS_RESULT_FILTER_CLM
+
+             usedFilter_Rev.put("HSNo", String.valueOf(qryUsedFilter.get(i).get("no")));
+             usedFilter_Rev.put("CustId", CommonUtils.intNvl(qryUsedFilter.get(i).get("custId")));
+             usedFilter_Rev.put("CreatedDt", String.valueOf(qryUsedFilter.get(i).get("resultCrtDt")));
+             usedFilter_Rev.put("PartId", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartId")));
+             if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
+               usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
+               // logger.debug("jinmu {}" +
+               // String.valueOf(qryBS_Rev.get("resultId")));
+             } else {
+               usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")));
+               // logger.debug("jinmu111 {}" +
+               // String.valueOf(qryBS_Rev.get("resultId")));
+             }
+             usedFilter_Rev.put("SerialNo", String.valueOf(qryUsedFilter.get(i).get("serialNo")));
+             usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
+             usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
+             if (CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) > 0) {
+               htManualMapper.addbsResultDet_Rev(bsResultDet_Rev); // insert svc
+                                                                   // 0007d c
+               htManualMapper.addusedFilter_Rev(usedFilter_Rev); // insert log0082m
+
+               checkInt++;
+               if (i == (qryResultDet.size() - 1)) { // 마지막일때 넘기기
+
+               }
+             }
+         }
+
+         if (checkInt > 0) {
+             htManualMapper.addbsResultMas_Rev(bsResultMas_Rev); // svc 0006d B
+                                                                 // insert
+             logger.debug("reverse JM" + String.valueOf(bsResultDet_Rev.get("BSResultID")));
+             // 물류 프로시져 호출
+             Map<String, Object> logPram = null;
+             logPram = new HashMap<String, Object>();
+             logPram.put("ORD_ID", String.valueOf(bsResultDet_Rev.get("BSResultID")));
+             logPram.put("RETYPE", "RETYPE");
+             logPram.put("P_TYPE", "OD06");
+             logPram.put("P_PRGNM", "HSCEN");
+             logPram.put("USERID", String.valueOf(sessionVO.getUserId()));
+
+             Map SRMap = new HashMap();
+             logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>" + logPram.toString());
+             servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);
+             logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" + logPram.toString());
+         }
+
+         EgovMap qry_stkReqM = null;
+         qry_stkReqM = htManualMapper.selectQry_stkReqM(bsResultMas_Rev);
+
+         if (qry_stkReqM != null) {
+        	 String PDONo = null;
+             int PDO_REQUEST = 26;
+             bsResultMas_Rev.put("docType", PDO_REQUEST);
+             PDONo = htManualMapper.GetDocNo(bsResultMas_Rev);
+             bsResultMas_Rev.put("PDONo", PDONo);
+
+             String PDO_REQUEST_PDO = "PDO";
+
+             String nextDocNo_PDO = getNextDocNo(PDO_REQUEST_PDO, PDONo);
+
+             bsResultMas_Rev.put("ID_New", PDO_REQUEST);
+             bsResultMas_Rev.put("nextDocNo_New", nextDocNo_PDO);
+             htManualMapper.updateQry_New(bsResultMas_Rev);
+
+             Map<String, Object> stkReqM_Rev = new HashMap<String, Object>();
+             // stkReqM_Rev.put("StkReqID", 0);
+             stkReqM_Rev.put("StkReqNo", String.valueOf(PDONo));
+             stkReqM_Rev.put("StkReqLocFromID", String.valueOf(qry_stkReqM.get("stkReqLocFromId")));// STK_REQ_LOC_FROM_ID
+             stkReqM_Rev.put("StkReqLocToID", String.valueOf(qry_stkReqM.get("stkReqLocToId")));// STK_REQ_LOC_TO_ID
+             stkReqM_Rev.put("StkReqRemark", String.valueOf(qry_stkReqM.get("stkReqRem")));// STK_REQ_REM
+             stkReqM_Rev.put("StkReqCreateAt", "sysdate");// STK_REQ_REM
+             stkReqM_Rev.put("StkReqCreateBy", String.valueOf(sessionVO.getUserId()));// STK_REQ_REM
+
+             htManualMapper.addstkReqM_Rev(stkReqM_Rev);
+
+             int LocationID_Rev = 0;
+             if (Integer.parseInt(qryBS_Rev.get("codyId").toString()) != 0) {
+               LocationID_Rev = htManualMapper.getMobileWarehouseByMemID(qryBS_Rev);
+             }
+
+             int stkReqM_StkReqID = htManualMapper.getStkReqM_StkReqID();
+
+             EgovMap qryBS = null;
+             qryBS = htManualMapper.selectQryBS(bsResultMas);
+             // bsResultMas_Rev.put("ResultMatchID
+             EgovMap qry_stkReqD_Rev = null;
+             qry_stkReqD_Rev = htManualMapper.qry_stkReqD_Rev(bsResultMas_Rev);
+             int stkCrdCounter_Rev = 1;
+             for (int i = 0; i < qry_stkReqD_Rev.size(); i++) {
+                 Map<String, Object> stkReqD_Rev = new HashMap<String, Object>();
+                 // stkReqD_Rev.put("ReqItemID", 0);//sequence
+                 stkReqD_Rev.put("ReqID", String.valueOf(stkReqM_StkReqID));//
+                 stkReqD_Rev.put("ReqItemTypeID", String.valueOf("464"));//
+                 stkReqD_Rev.put("ReqItemRefID", String.valueOf(BSResultM_resultID));// BSResultM_resultID
+                 stkReqD_Rev.put("ReqItemStkID", String.valueOf(qryBS.get("bsResultPartId")));// BS_RESULT_PART_ID
+                 stkReqD_Rev.put("ReqItemStkDesc", String.valueOf(qryBS.get("bsResultPartDesc")));//
+                 stkReqD_Rev.put("ReqItemQty", Integer.parseInt(qryBS.get("bsResultPartQty").toString()) * -1);//
+                 stkReqD_Rev.put("ReqItemStatusID", String.valueOf(1));//
+                 stkReqD_Rev.put("ReqItemRemark", "");// BS_RESULT_REM
+
+                 htManualMapper.addStkReqD_Rev(stkReqD_Rev);
+
+                 Map<String, Object> stkCrd_Rev = new HashMap<String, Object>();
+                 stkCrd_Rev.put("LocationID", LocationID_Rev);
+                 stkCrd_Rev.put("StockID", qry_stkReqD_Rev.get("bsResultPartId"));// BS_RESULT_PART_ID
+                 stkCrd_Rev.put("EntryDate", "sysdate");//
+                 stkCrd_Rev.put("TypeID", String.valueOf("464"));//
+                 stkCrd_Rev.put("RefNo", qryBS.get("no"));
+                 stkCrd_Rev.put("SalesOrderId", qryBS.get("salesOrdId"));// SALES_ORD_ID
+                 stkCrd_Rev.put("SourceID", String.valueOf(477));
+                 stkCrd_Rev.put("ProjectID", String.valueOf(0));
+                 stkCrd_Rev.put("BatchNo", String.valueOf(0));
+                 stkCrd_Rev.put("Qty", String.valueOf(qry_stkReqD_Rev.get("bsResultPartQty")));// BS_RESULT_PART_QTY
+                 stkCrd_Rev.put("CurrID", String.valueOf(479));
+                 stkCrd_Rev.put("CurrRate", String.valueOf(1));
+                 stkCrd_Rev.put("Cost", String.valueOf(0));
+                 stkCrd_Rev.put("Price", String.valueOf(0));
+                 stkCrd_Rev.put("Remark", "");
+                 stkCrd_Rev.put("SerialNo", "");
+                 stkCrd_Rev.put("InstallNo", qryBS_Rev.get("no"));
+                 stkCrd_Rev.put("CostDate", "sysdate");
+                 stkCrd_Rev.put("AppTypeID", String.valueOf("0"));
+                 stkCrd_Rev.put("StkGrade", "A");
+                 stkCrd_Rev.put("InstallFail", String.valueOf(1));
+                 stkCrd_Rev.put("IsSynch", String.valueOf(1));
+                 stkCrd_Rev.put("EntryMethodID", String.valueOf(764));
+                 stkCrd_Rev.put("Origin", "1");
+                 stkCrd_Rev.put("ItemNo", stkCrdCounter_Rev);
+
+                 hsManualMapper.addStkCrd_Rev(stkCrd_Rev);
+
+                 stkCrdCounter_Rev = stkCrdCounter_Rev + 1;
+               }
+         }
+
+         Map<String, Object> qry_CurBS = new HashMap<String, Object>();
+         qry_CurBS.put("ScheduleID", String.valueOf(bsResultMas.get("ScheduleID")));
+         qry_CurBS.put("SalesOrderId", String.valueOf(bsResultMas.get("SalesOrderId")));
+         qry_CurBS.put("userId", sessionVO.getUserId());
+
+         htManualMapper.updateQry_CurBS(qry_CurBS); // 업데이트 svc0006d
+
+         String ResultNo_New = null;
+         BS_RESULT = 11;
+         bsResultMas_Rev.put("DOCNO", String.valueOf(BS_RESULT));
+
+         eMap = htManualMapper.getHsResultDocNo(bsResultMas_Rev);
+         ResultNo_New = String.valueOf(eMap.get("hsrno")).trim();
+         logger.info("###ResultNo_New: " + ResultNo_New);
+
+         int BSResultM_resultID2 = htManualMapper.getBSResultM_resultID();
+         bsResultMas.put("No", ResultNo_New);
+         bsResultMas.put("ResultId", BSResultM_resultID2);
+         bsResultMas.put("CodyId", String.valueOf(bsResultMas_Rev.get("codyId")));
+
+
+         int cnt = 0;
+         for (int i = 0; i < bsResultDet.size(); i++) {
+             Map<String, Object> row = bsResultDet.get(i);
+
+             row.put("BSResultID", BSResultM_resultID2);
+
+             Map<String, Object> usedFilter = bsResultDet.get(i);
+             usedFilter.put("HSNo", String.valueOf(qryUsedFilter.get(0).get("no")));
+             usedFilter.put("CustId", String.valueOf(qryUsedFilter.get(0).get("custId")));
+             // usedFilter.put("CreatedDt",
+             // String.valueOf(qryUsedFilter_2.get(i).get("resultCrtDt")));
+             // usedFilter.put("PartId",
+             // String.valueOf(bsResultDet.get(i).get("bsResultPartId")));
+             // usedFilter.put("PartQty",
+             // CommonUtils.intNvl(bsResultDet.get(i).get("bsResultPartQty")));
+             // usedFilter.put("SerialNo",
+             // String.valueOf(bsResultDet.get(i).get("serialNo")));
+             usedFilter.put("CodyId", String.valueOf(qryUsedFilter.get(0).get("codyId")));
+             usedFilter.put("ResultId", BSResultM_resultID2);
+
+             if (row.get("BSResultPartQty") != null && !row.get("BSResultPartQty").toString().equals("0")) {
+               htManualMapper.addbsResultDet_Rev(row); // 인서트 svc 0007d
+               htManualMapper.addusedFilter(usedFilter);
+               cnt++;
+               if (i == (bsResultDet.size() - 1)) {
+                 logger.debug("request JM" + i + String.valueOf(row.get("BSResultID")));
+
+               }
+
+             }
+           }
+
+         if (cnt != 0) { // 0이 아닐 경우 인서트
+             htManualMapper.addbsResultMas(bsResultMas); // insert 1건 svc0006d
+           } else if (cnt == 0) { // 0일 경우 업데이트
+             if (bsResultMas.get("SettleDate") != null || bsResultMas.get("SettleDate") != "") {
+               bsResultMas.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+             } else {
+               bsResultMas.put("SettleDate", "01/01/1900");
+             }
+             logger.debug(">>>>>>>>>>bsResultMas : {}", bsResultMas);
+             htManualMapper.updatebsResultMas(bsResultMas); // UPDATE 1건 svc0006d
+           }
+
+         htManualMapper.updateQry_CurBSZero(qry_CurBS);// 최신거 업데이트
+
+         htManualMapper.updateQrySchedule(bsResultMas);// 업데이트 00008d
+
+         Map<String, Object> qrySchedule = new HashMap<String, Object>();
+         qrySchedule = htManualMapper.selectQrySchedule(bsResultMas);
+
+         ////////////////////// 물류호출/////////////////////
+         Map<String, Object> logPram2 = new HashMap<String, Object>();
+         logPram2.put("ORD_ID", String.valueOf(qrySchedule.get("no")));
+         logPram2.put("RETYPE", "COMPLET");
+         logPram2.put("P_TYPE", "OD05");
+         logPram2.put("P_PRGNM", "HSCOM");
+         logPram2.put("USERID", sessionVO.getUserId());
+
+         logger.debug("HSCOM 물류 호출 PRAM ===>" + logPram2.toString());
+         servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram2);
+         logger.debug("HSCOMCALL 물류 호출 결과 ===> {}", logPram2);
+
+         htManualMapper.updateQryConfig(bsResultMas);
+         Map<String, Object> qryConfig = new HashMap<String, Object>();
+         qryConfig = htManualMapper.selectQryConfig(bsResultMas);
+
+         if (Integer.parseInt(bsResultMas.get("ResultStatusCodeID").toString()) == 4) {
+             htManualMapper.updateQryConfig4(bsResultMas);
+         } else {
+             htManualMapper.updateQryConfig(bsResultMas);
+         }
+
+         if (bsResultDet.size() > 0) {
+             int ItemNo = 1;
+
+             for (int i = 0; i < bsResultDet.size(); i++) {
+               bsResultDet.get(i).put("BSResultID", BSResultM_resultID);
+
+               int LocationID = 0;
+
+               LocationID = htManualMapper.selectLocationID(bsResultMas);
+
+               if (LocationID != 0) {
+                 Map<String, Object> stkCrd_new = new HashMap<String, Object>();
+                 // stkCrd_new.put("SRCardID", 0); sequence
+                 stkCrd_new.put("LocationID", String.valueOf(LocationID));
+                 stkCrd_new.put("StockID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+                 stkCrd_new.put("EntryDate", "sysdate");
+                 stkCrd_new.put("TypeID", String.valueOf(462));
+                 stkCrd_new.put("RefNo", qrySchedule.get("no"));
+                 stkCrd_new.put("SalesOrderId", String.valueOf(bsResultMas.get("SalesOrderId")));
+                 stkCrd_new.put("ItemNo", String.valueOf(ItemNo));
+                 stkCrd_new.put("SourceID", String.valueOf(477));
+                 stkCrd_new.put("ProjectID", String.valueOf(0));
+                 stkCrd_new.put("BatchNo", String.valueOf(0));
+                 stkCrd_new.put("Qty", Integer.parseInt(bsResultDet.get(i).get("BSResultPartQty").toString()) * -1);
+                 stkCrd_new.put("CurrID", String.valueOf(479));
+                 stkCrd_new.put("CurrRate", String.valueOf(1));
+                 stkCrd_new.put("Cost", String.valueOf(0));
+                 stkCrd_new.put("Price", String.valueOf(0));
+                 stkCrd_new.put("Remark", "");
+                 stkCrd_new.put("SerialNo", "");
+                 stkCrd_new.put("InstallNo", bsResultMas.get("No"));
+                 stkCrd_new.put("CostDate", "1900-01-01");
+                 stkCrd_new.put("AppTypeID", String.valueOf(0));
+                 stkCrd_new.put("StkGrade", "A");
+                 stkCrd_new.put("InstallFail", String.valueOf(1));
+                 stkCrd_new.put("IsSynch", String.valueOf(1));
+                 stkCrd_new.put("EntryMethodID", String.valueOf(764));
+                 stkCrd_new.put("Origin", "1");
+
+                 htManualMapper.addStkCrd_new(stkCrd_new);
+               }
+               Map<String, Object> qryFilter_param = new HashMap<String, Object>();
+               // qryFilter_param.put("SrvConfigID",
+               // String.valueOf(qryConfig.get("SrvConfigID")));
+               qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId"))); // edit
+                                                                                                 // hgham
+                                                                                                 // 25-12
+                                                                                                 // -2017
+               qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+               qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
+               qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+               qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+               htManualMapper.updateQryFilter(qryFilter_param);
+
+               ItemNo = ItemNo + 1;
+             }
+           }
     }
 
-    logger.debug("bsResultMas : "+ bsResultMas);
-    htManualMapper.updatebsResultMas(bsResultMas); // UPDATE SVC0006D
-
-    htManualMapper.updateQrySchedule(bsResultMas); // UPDATE SVC0008D
-
-    if (Integer.parseInt(bsResultMas.get("ResultStatusCodeID").toString()) == 4) {
-    	htManualMapper.updateQryConfig4(bsResultMas); // UPDATE SAL0090D
-      } else {
-    	  htManualMapper.updateQryConfig(bsResultMas);
-      }
+//    logger.debug("bsResultMas : "+ bsResultMas);
+//    htManualMapper.updatebsResultMas(bsResultMas); // UPDATE SVC0006D
+//
+//    htManualMapper.updateQrySchedule(bsResultMas); // UPDATE SVC0008D
+//
+//    if (Integer.parseInt(bsResultMas.get("ResultStatusCodeID").toString()) == 4) {
+//    	htManualMapper.updateQryConfig4(bsResultMas); // UPDATE SAL0090D
+//      } else {
+//    	  htManualMapper.updateQryConfig(bsResultMas);
+//      }
 
     return resultValue;
   }

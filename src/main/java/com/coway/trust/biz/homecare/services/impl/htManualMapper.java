@@ -344,4 +344,5 @@ public interface htManualMapper {
 
 	EgovMap checkMatOrFra(Map<String, Object> params);
 
+	EgovMap getHsResultDocNo(Map<String, Object> params);
 }
