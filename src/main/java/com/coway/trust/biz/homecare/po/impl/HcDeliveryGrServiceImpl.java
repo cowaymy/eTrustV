@@ -128,13 +128,6 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 			mainMap = (Map<String, Object>) obj;
 			mainMap.put("crtUserId", sessionVO.getUserId());
 			mainMap.put("updUserId", sessionVO.getUserId());
-		  mainMap.put("docNo", mainMap.get("hmcGrNo"));
-		  mainMap.put("preStockId", mainMap.get("stockId"));
-		  String serialPrefixChk = serialMgmtNewMapper.selectSerialPrefixConversion(mainMap);
-
-		  if(!StringUtils.isEmpty(serialPrefixChk)){
-		    mainMap.put("prefixChk", 1);
-		  }
 
 			//hui ling add
 			hcDeliveryGrMapper.updateDeliveryGrDetail(mainMap);//log0099m
