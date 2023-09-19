@@ -134,11 +134,11 @@ function validateSave(refMode, reasonCd){
 	var validFlg = true;
 
 	if(reasonCd != "3519" && reasonCd != "3520") { //reasonCd that is not allow for partial refund
-		if( Number($("#newAmt").val()) <= 0 ){
+		if( Number($("#newAmt").val().replace(/,/gi, "")) <= 0 ){
 	        Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
 	        return validFlg = false;
 	    }
-		else if( Number($("#newAmt").val()) > Number(newAmt)){
+		else if( Number($("#newAmt").val().replace(/,/gi, "")) > Number(newAmt.replace(/,/gi, ""))){
 			Common.alert("Key-in Amount cannot be greater than Total Amount. ");
 			return validFlg = false;
 		}
