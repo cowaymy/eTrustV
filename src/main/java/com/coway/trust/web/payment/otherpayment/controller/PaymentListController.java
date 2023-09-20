@@ -2002,7 +2002,7 @@ public class PaymentListController {
 
         	 	        if(!onlinePayInfoFormResult.get("onlineBankChgAmt").toString().isEmpty() && !onlinePayInfoFormResult.get("onlineBankChgAmt").equals("")) {
         	 	            bcAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineBankChgAmt").toString().replace(",", ""));
-        	 	            payAmt4Limit = Double.parseDouble(onlinePayInfoFormResult.get("onlineTotalAmtTxt").toString().replace(",", ""));
+        	 	            payAmt4Limit = Double.parseDouble(dcfInfoResult.get("newTotalAmtTxt").toString().replace(",", ""));
 
         	 	            if ((payAmt4Limit * 0.05 ) < bcAmt4Limit) {
         	 	                message.setCode(AppConstants.FAIL);

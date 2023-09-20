@@ -265,14 +265,16 @@ function searchReqDCFNewInfo(){
             }else if(result.newPayType == "108"){
             	$("#onlinePayInfo").show();
 
-                $("#onlineTotalAmtTxt").val(result.newTotalAmt.toFixed(2));
+            	var tot = Number(result.newTotalAmt) - Number(result.bankChrgAmt);
+
+                $("#onlineTotalAmtTxt").val(tot.toFixed(2));
                 $("#onlineVAAcc").val(result.vaAcc);
                 $("#onlineBankType").val(result.bankType);
                 $("#onlineBankAcc").val(result.bankAccId);
                 $("#onlineTrxDate").val(result.trxDt);
                 $("#onlineEFT").val(result.eft);
                 $("#onlineTrxId").val(result.trxId);
-                $("#onlineBankChgAmt").val(result.bankChrgAmt);
+                $("#onlineBankChgAmt").val(result.bankChrgAmt.toFixed(2));
 
             }
         }

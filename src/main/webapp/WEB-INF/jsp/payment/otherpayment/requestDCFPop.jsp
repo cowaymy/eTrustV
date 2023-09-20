@@ -184,6 +184,34 @@ $(document).ready(function(){
         }
     });
 
+    $("#onlineBankChgAmt").blur(function(){
+	     //BankCharge Amount는 Billing 금액의 5%를 초과할수 없다
+	     var bcAmt4Limit = 0;
+         var payAmt4Limit = 0;
+         var bcLimit = 0;
+
+         if(!FormUtil.isEmpty($("#onlineBankChgAmt").val())) {
+             bcAmt4Limit = Number($("#onlineBankChgAmt").val());
+             payAmt4Limit = Number($("#onlineTotalAmtTxt").val());
+
+             bcAmt4Limit = Number($.number(bcAmt4Limit,2,'.',''));
+             payAmt4Limit = Number($.number(payAmt4Limit,2,'.',''));
+             bcLimit = Number($.number(payAmt4Limit * 0.05,2,'.',''));
+
+             if (bcLimit < bcAmt4Limit) {
+                 Common.alert("Bank Charge Amount can not exceed 5% of Amount.");
+                 return;
+
+             }else{
+            	 var tot = payAmt4Limit - bcAmt4Limit;
+            	 $("#onlineTotalAmtTxt").val(tot.toFixed(2));
+             }
+
+         }else{
+        	 $("#onlineTotalAmtTxt").val($("#newTotalAmtTxt").val());
+         }
+    });
+
 });
 
 // ajax list 조회.
@@ -866,7 +894,7 @@ function fn_DCFRequest(){
 
             if(!FormUtil.isEmpty($("#onlineBankChgAmt").val())) {
                 bcAmt4Limit = Number($("#onlineBankChgAmt").val());
-                payAmt4Limit = Number($("#onlineTotalAmtTxt").val());
+                payAmt4Limit = Number($("#newTotalAmtTxt").val());
 
                 bcAmt4Limit = Number($.number(bcAmt4Limit,2,'.',''));
                 payAmt4Limit = Number($.number(payAmt4Limit,2,'.',''));

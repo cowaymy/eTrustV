@@ -1109,7 +1109,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     	dcfNoti.put("appvStus", "R"); // keyStus
     	dcfNoti.put("rejctResn", dcfInfoResult.get("remark")); // rem
 		dcfNoti.put("reqstUserId", userIdNoti.get("userName")); // userNameNoti
-		dcfNoti.put("userId", userIdNoti.get("userId")); // userIdNoti
+		dcfNoti.put("userId", userId); // userIdNoti
 
 		paymentListMapper.insertNotification(dcfNoti);
 
@@ -1163,7 +1163,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     	dcfNoti.put("appvStus", "J"); // keyStus
     	dcfNoti.put("rejctResn", params.get("remark").toString()); // rem
 		dcfNoti.put("reqstUserId", data.get("reqUserName")); // userNameNoti
-		dcfNoti.put("userId", data.get("reqUserId")); // userIdNoti
+		dcfNoti.put("userId", params.get("userId").toString()); // userIdNoti
 
 		paymentListMapper.insertNotification(dcfNoti);
 
@@ -1434,7 +1434,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     				reqNoti.put("appvStus", "R"); // keyStus
     				reqNoti.put("rejctResn", params.get("remark").toString()); // rem
     				reqNoti.put("reqstUserId", data.get("reqUserName")); // userNameNoti
-    				reqNoti.put("userId", data.get("reqUserId")); // userIdNoti
+    				reqNoti.put("userId", params.get("userId")); // userIdNoti
     				paymentListMapper.insertNotification(reqNoti);
 
 				}else{
@@ -1459,7 +1459,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     				reqNoti.put("appvStus", "J"); // keyStus
     				reqNoti.put("rejctResn", params.get("remark").toString()); // rem
     				reqNoti.put("reqstUserId", data.get("reqUserName")); // userNameNoti
-    				reqNoti.put("userId", data.get("reqUserId")); // userIdNoti
+    				reqNoti.put("userId", params.get("userId")); // userIdNoti
     				paymentListMapper.insertNotification(reqNoti);
 				}
 
@@ -1524,7 +1524,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	    	dcfNoti.put("appvStus", "R"); // keyStus
 	    	dcfNoti.put("rejctResn", dcfNoti.get("rem")); // rem
 			dcfNoti.put("reqstUserId", userIdNoti.get("userName")); // userNameNoti
-			dcfNoti.put("userId", userIdNoti.get("userId")); // userIdNoti
+			dcfNoti.put("userId", params.get("userId")); // userIdNoti
 			paymentListMapper.insertNotification(dcfNoti);
 
 			returnMsg = "Approved Successfully </br> Notification has been set to next Approver.";

@@ -1792,7 +1792,7 @@
             A.CHQ_NO,
             A.TRX_ID,
             A.EFT,
-            A.BANK_CHRG_AMT,
+            NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT,
             A.CARD_TYPE,
             A.CARD_MODE,
             A.CARD_BRAND,
