@@ -171,7 +171,7 @@ function fn_approval(){
 		return;
 	}
 
-	if( Number($("#refundAmt").val().replace(/,/gi, "")) > Number(oldTotalAmt.replace(/,/gi, ""))){
+	if( Number($("#refundAmt").val().replace(/,/gi, "")) > Number(oldTotalAmt)){
         Common.alert("Refund Amount cannot be greater than Total Amount. Please reject this request.");
         return;
     }
