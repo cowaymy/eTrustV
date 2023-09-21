@@ -84,6 +84,9 @@
 		A.PREFIX_CONFIG_ID
 		FROM LOG0205M A
 		WHERE 1=1
+		<if test='useYn != null and useYn != ""'>
+			AND A.USE_YN = #{useYn}
+		</if>
 		<if test='prefixProdId != null and prefixProdId != ""'>
 			AND A.PREFIX_STK_ID = #{prefixProdId}
 		</if>
