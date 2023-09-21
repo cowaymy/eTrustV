@@ -7,135 +7,101 @@
   text-align: right;
   margin-top: -20px;
 }
+
+.l0-style {
+    background:#92BCCA;
+    font-weight:bold;
+}
+
+.l1-style {
+    background:#96D2E6;
+    font-weight:bold;
+}
+
+.l2-style {
+    background:#C4DEE6;
+    font-weight:bold;
+}
+
+.l3-style {
+    background:#ADD8E6;
+    font-weight:bold;
+}
+
+</style>
+
 </style>
 <script type="text/javaScript">
-  var myGridID2;
+  var myGridID2,excelGridID;
   var memCode;
   var today = "${today}";
   var userDefine1 = "${PAGE_AUTH.funcUserDefine1}";
   var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
-  $(document)
-      .ready(
-          function() {
+  $(document).ready( function() {
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID2, "singleRow");
 
-            console.log("session Type TESTING111::" + userDefine1);
-            console.log("session Type TESTING222::" + userDefine2);
-
-            if ("${SESSION_INFO.userTypeId}" != 1
-                && "${SESSION_INFO.userTypeId}" != 2) {
+            if ("${SESSION_INFO.userTypeId}" != 1 && "${SESSION_INFO.userTypeId}" != 2) {
               $("#typeCode").prop("disabled", false);
             }
 
-            $("#search")
-                .click(
-                    function() {
+            $("#search").click(function() {
                       var valid = $("#memCode").val();
-                      console.log(valid);
                       if (valid == null || valid == "") {
-                        //Common.alert("Please select the member code");
-                        Common
-                            .setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
+                        Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
                         $("#teamCode").val("");
                         $("#level").val("");
                       } else {
-                        $("#typeCode").prop("disabled",
-                            false);
-                        Common
-                            .ajax(
-                                "GET",
-                                "/commission/report/commSHIMemSearch",
-                                $("#myForm")
-                                    .serializeJSON(),
-                                function(result) {
+                        $("#typeCode").prop("disabled",false);
+                        Common.ajax("GET","/commission/report/commSHIMemSearch",$("#myForm").serializeJSON(),function(result) {
                                   if (result != null) {
-                                    $(
-                                        "#teamCode")
-                                        .val(
-                                            result.DEPT_CODE);
-                                    $(
-                                        "#level")
-                                        .val(
-                                            result.MEM_LVL);
+                                    $("#teamCode").val(result.DEPT_CODE);
+                                    $("#level").val(result.MEM_LVL);
 
-                                    Common
-                                        .ajax(
-                                            "GET",
-                                            "/commission/report/commSPCRgenrawSHIIndex",
-                                            $(
-                                                "#myForm")
-                                                .serializeJSON(),
-                                            function(
-                                                result) {
-                                              console
-                                                  .log('>>');
-                                              $(
-                                                  "#typeCode")
-                                                  .prop(
-                                                      "disabled",
-                                                      true);
-                                              AUIGrid
-                                                  .setGridData(
-                                                      myGridID2,
-                                                      result);
+                                    Common.ajaxSync("GET","/commission/report/commSPCRgenrawSHIIndex",$("#myForm").serializeJSON(),function(result) {
+                                              $("#typeCode").prop("disabled",true);
+
+                                              AUIGrid.setProp(myGridID2, "rowStyleFunction", function(rowIndex, item){
+                                                  if (item.topOrgCode)
+                                                      return "l0-style";
+                                                  if (item.orgCode)
+                                                      return "l1-style";
+                                                  if (item.grpCode)
+                                                      return "l2-style";
+                                                  if (item.deptCode)
+                                                      return "l3-style";
+                                              });
+
+                                              AUIGrid.setGridData(myGridID2,result);
+                                              AUIGrid.setGridData(excelGridID,result);
                                             });
                                   } else {
-                                    //Common.alert("No member record found");
-                                    Common
-                                        .setMsg("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
+                                    Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
                                     if (userDefine2 == "Y") {
-                                      $(
-                                          "#memCode")
-                                          .val(
-                                              "");
-                                      $(
-                                          "#teamCode")
-                                          .val(
-                                              "");
-                                      $(
-                                          "#level")
-                                          .val(
-                                              "");
+                                      $("#memCode").val("");
+                                      $("#teamCode").val("");
+                                      $("#level").val("");
                                     }
                                   }
                                 });
                       }
                     });
 
+
             $('#memBtn').click(
                 function() {
-                  //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
-                  Common.popupDiv("/common/memberPop.do", $(
-                      "#myForm").serializeJSON(), null,
-                      true);
+                  Common.popupDiv("/common/memberPop.do", $("#myForm").serializeJSON(), null,true);
                 });
 
-            AUIGrid
-                .bind(
-                    myGridID2,
-                    "cellClick",
-                    function(event) {
+            AUIGrid.bind(myGridID2,"cellClick",function(event) {
                       memCode = null;
-                      if (AUIGrid.getCellValue(myGridID2,
-                          event.rowIndex, "memCode") != null
-                          && AUIGrid.getCellValue(
-                              myGridID2,
-                              event.rowIndex,
-                              "memCode") != "") {
-                        memCode = AUIGrid.getCellValue(
-                            myGridID2,
-                            event.rowIndex,
-                            "memCode");
+                      if (AUIGrid.getCellValue(myGridID2, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID2,event.rowIndex,"memCode") != "") {
+                        memCode = AUIGrid.getCellValue(myGridID2,event.rowIndex,"memCode");
                         var date = {
                           "memCode" : memCode,
-                          "searchDt" : $("#shiDate")
-                              .val()
+                          "searchDt" : $("#shiDate").val()
                         };
-                        Common
-                            .popupDiv(
-                                "/commission/report/commSHIIndexViewDetailsPop.do",
-                                date);
+                        Common.popupDiv("/commission/report/commSHIIndexViewDetailsPop.do",date);
                       }
                     });
 
@@ -143,8 +109,7 @@
               document.myForm.reset();
             });
 
-            $("#generate")
-                .click(
+            $("#generate").click(
                     function() {
                       var valid = $("#memCode").val();
 
@@ -165,10 +130,6 @@
                         var level = $("#level").val();
 
                         var custType = $("#custType").val();
-                        if(custType == 1) {
-                            custType = "'964', '965'";
-                        }
-
                         var catType = $("#catType").val();
 
                         var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
@@ -196,6 +157,11 @@
                             option);
                       }
                     });
+
+                $('#excelDown').click(function() {
+                    AUIGrid.exportToXlsx(excelGridID);
+                });
+
           });
 
   function createAUIGrid() {
@@ -235,6 +201,7 @@
           dataField : "targetatmt",
           headerText : "<spring:message code='commission.text.grid.target'/>",
           style : "right-column",
+          dataType: "numeric",
           formatString : "#,##0.00",
           editable : false
         },
@@ -242,6 +209,7 @@
           dataField : "collectamt",
           headerText : "<spring:message code='commission.text.grid.currentCollection'/>",
           style : "right-column",
+          dataType: "numeric",
           formatString : "#,##0.00",
           editable : false
         },
@@ -249,37 +217,41 @@
           dataField : "collectrate",
           headerText : "<spring:message code='commission.text.grid.collectionRate'/>",
           style : "right-column",
+          dataType: "numeric",
           formatString : "#,##0.00",
           editable : false
         } ];
     // 그리드 속성 설정
     var gridPros = {
 
-      // 페이징 사용
-      usePaging : true,
-
-      // 한 화면에 출력되는 행 개수 20(기본값:20)
-      pageRowCount : 20,
-
-      // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
       skipReadonlyColumns : true,
-
-      // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
       wrapSelectionMove : true,
-
-      // 줄번호 칼럼 렌더러 출력
       showRowNumColumn : true,
-
       headerHeight : 40
+
     };
+
     myGridID2 = AUIGrid.create("#grid_wrap", columnLayout3, gridPros);
+
+    var excelGridPros = {
+            enterKeyColumnBase : true,
+            useContextMenu : true,
+            enableFilter : true,
+            showStateColumn : true,
+            displayTreeOpen : true,
+            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+            groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+            exportURL : "/common/exportGrid.do"
+        };
+
+    excelGridID = AUIGrid.create("#excel_list_grid_wrap", columnLayout3, excelGridPros);
   }
 
   function fn_loadOrderSalesman(memId, memCode) {
     $("#memCode").val(memCode);
-    console.log(' memId:' + memId);
-    console.log(' memCd:' + memCode);
   }
+
+
 </script>
 <section id="content">
     <!-- content start -->
@@ -377,7 +349,7 @@
                         <th scope="row">Customer Type</th>
                         <td>
                             <select class="w100p" id="custType" name="custType">
-                                <option value="1">All</option>
+                                <option value="964,965">All</option>
                                 <option value="964">Individual</option>
                                 <option value="965">Company</option>
                             </select>
@@ -387,7 +359,7 @@
                         <th scope="row">* <spring:message code='sal.title.text.category' /></th>
                         <td>
                             <select class="w100p" id="catType" name="catType">
-                                <option value="ALL">All</option>
+                                <option value="">All</option>
                                 <option value="HA">HA - Home Appliances</option>
                                 <option value="HC">HC - Homecare</option>
                             </select>
@@ -460,11 +432,13 @@
         <ul class="right_btns">
             <li>
                 <p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate' /></a></p>
+                <!-- <p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p> -->
             </li>
         </ul>
         <article class="grid_wrap">
         <!-- grid_wrap start -->
             <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+            <div id="excel_list_grid_wrap" style="display: none;"></div>
         </article>
         <!-- grid_wrap end -->
     </section>

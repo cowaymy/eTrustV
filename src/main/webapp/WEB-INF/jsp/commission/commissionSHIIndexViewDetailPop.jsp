@@ -8,33 +8,33 @@
 <script type="text/javaScript">
 	var detailGridID;
 	var today = "${today}";
-	
+
 	$(document).ready(function() {
 		createAUIGrid();
-		
+
 		$("#searchD").click(function(){
 			Common.ajax("GET", "/commission/report/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
 				AUIGrid.setGridData(detailGridID, result);
 			});
 		});
-		
+
 		$("#excel").click(function(){
 			var date =$("#searchDtD").val();
             var month = Number(date.substring(0, 2));
             var year = Number(date.substring(3));
             var memCd = $("#memberCd").val();
-            
+
             var reportFileName = "/commission/SHIIndexExcelRawByMember.rpt"; //reportFileName
-            var reportDownFileName = "SHIIndexExcelFile_" + today; //report name     
+            var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
             var reportViewType = "EXCEL"; //viewType
-            
+
             $("#reportForm2 #memberCode").val(memCd);
             $("#reportForm2 #pvMonth").val(month);
             $("#reportForm2 #pvYear").val(year);
             $("#reportForm2 #reportFileName").val(reportFileName);
             $("#reportForm2 #reportDownFileName").val(reportDownFileName);
             $("#reportForm2 #viewType").val(reportViewType);
-            
+
         //  report 호출
             var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -42,7 +42,7 @@
             Common.report("reportForm2", option);
 		});
 	});
-	
+
 	function createAUIGrid() {
         var columnLayout = [ {
             dataField : "accdebtyear",
@@ -88,8 +88,8 @@
         }];
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
@@ -99,9 +99,9 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true
-            
+
         };
-        
+
         detailGridID = AUIGrid.create("#grid_wrap2", columnLayout,gridPros);
    }
 </script>
@@ -114,13 +114,13 @@
             <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
-    
+
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
           <h2> <spring:message code='commission.title.pop.body.SHI'/><br>
           </h2>
         </aside><!-- title_line end -->
-        
+
         <form name="reportForm2" id="reportForm2">
            <input type="hidden" name="V_MEMCODE" id="memberCode"/>
            <input type="hidden" name="V_PVMTH" id="pvMonth"/>
@@ -130,12 +130,12 @@
            <input type="hidden" name="viewType" id="viewType"/>
        </form>
         <form id="detailFrom">
-           
+
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="searchD"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
               <li><p class="btn_blue"><a href="#" id="excel"><spring:message code='commission.button.generate'/></a></p></li>
             </ul>
-    
+
             <table class="type1 mt10"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -143,6 +143,16 @@
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='sal.title.custType'/></th>
+                        <td>
+                            <select class="w50p" id="_custType" name="_custType">
+                                <option value="964，965">All</option>
+                                <option value="964">Individual</option>
+                                <option value="965">Company</option>
+                            </select>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row"><spring:message code='commission.text.search.memCode'/></th>
                         <td>
@@ -158,11 +168,11 @@
                 </tbody>
             </table><!-- table end -->
         </form>
-    
+
         <article class="grid_wrap3">
             <!-- grid_wrap start -->
             <div id="grid_wrap2" style="width: 100%; height: 334px; margin: 0 auto;"></div>
         </article><!-- grid_wrap end -->
     </section>
-    
+
 </div>
