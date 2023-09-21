@@ -529,7 +529,7 @@
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          ORDER BY T2.FILE_KEY_SEQ
+          ORDER BY T2.FILE_KEY_SEQ, T1.UPD_DT
     </select>
 
     <select id="selectNextFileId" resultType="int">
