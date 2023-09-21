@@ -182,22 +182,7 @@
     $(function(){
 
     	$('#btnRltdNoEKeyIn').click(function() {
-    		var catCode = "";
-    		if($("#ordProduct1").val() != null && $("#ordProduct1").val() != ''){
-	            Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:$("#ordProduct1").val()},function(data){
-	                catCode = data.catCode;
-	                if(catCode == 'MC' || catCode == 'MAT'){
-	                    //isHomeCare A - means all HA and HC product also can see, special for massage chair able to extrade HA/HC product
-	                    console.log("HA n hc");
-	                    Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
-	                }else{
-	                    Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
-	                }
-	            });
-    		}else{
-                Common.alert('<spring:message code="sal.alert.msg.plzSelProd" />');
-                return;
-            }
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
       });
 
         $('#btnConfirm').click(function() {
@@ -497,24 +482,6 @@
                 stockIdVal = $("#ordProduct"+_tagNum).val();
                 if(!FormUtil.isEmpty(stockIdVal)){
                 	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
-
-                	var catCode = "";
-                    Common.ajax("GET","/sales/order/getCtgryCode.do",{stkId:stockIdVal},function(data){
-                        catCode = data.catCode;
-                        if(catCode == 'MC' || catCode == 'MAT'){
-                            console.log("massage chair");
-                            $("#exTrade").removeAttr("disabled");
-                        }else{
-                            $("#exTrade").val(0);
-                            $('#txtOldOrderID').val('');
-                            $('#txtBusType').val('');
-                           $('#relatedNo').val('');
-                           $('#btnRltdNo').addClass("blind");
-                           $('#isReturnExtrade').prop("checked", false);
-                            $("#exTrade").prop("disabled", true);
-                        }
-                    });
-
                 }
             }
 

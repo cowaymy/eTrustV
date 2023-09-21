@@ -394,119 +394,120 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
 
             if(!"Y".equals(GetExpDate.get("extradeAllowFlg").toString())) {
+            	//svm expired within one month, just able to do extrade, else block.
                 logger.debug("@####:InValid");
                 isInValid = "InValid";
-
+                ROOT_STATE = "ROOT_3";
             } else {
                 logger.debug("@####:not InValid");
-            }
 
-            EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
+                EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
 
-            // Renatal
-            if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer
-                .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
+                // Renatal
+                if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer
+                    .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
 
-              if (this.isVerifyOldSalesOrderRentalScheme(getOldOrderID, 0)) { // chia
-                                                                              // chia
-                                                                              // --18/01/2016
-                                                                              // --ex-trade
-                                                                              // only
-                                                                              // allow
-                                                                              // rental
-                                                                              // status
-                                                                              // REG
-                                                                              // ||
-                                                                              // INV
-                                                                              // ||
-                                                                              // SUS
+                  if (this.isVerifyOldSalesOrderRentalScheme(getOldOrderID, 0)) { // chia
+                                                                                  // chia
+                                                                                  // --18/01/2016
+                                                                                  // --ex-trade
+                                                                                  // only
+                                                                                  // allow
+                                                                                  // rental
+                                                                                  // status
+                                                                                  // REG
+                                                                                  // ||
+                                                                                  // INV
+                                                                                  // ||
+                                                                                  // SUS
 
-                BigDecimal valiOutStanding = (BigDecimal) orderRegisterMapper.selectRentAmt(getOldOrderID);
-                valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal valiOutStanding = (BigDecimal) orderRegisterMapper.selectRentAmt(getOldOrderID);
+                    valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-                if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
-                  msg = msg + " -With Outstanding payment not allowed for Ex-Trade promo. <br/>";
-                  isInValid = "InValid";
-                }
+                    if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+                      msg = msg + " -With Outstanding payment not allowed for Ex-Trade promo. <br/>";
+                      isInValid = "InValid";
+                    }
 
-                EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
+                    EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
 
-                EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
-                int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
+                    EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
+                    int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
 
-            	//** Start exTrade Neo to Neo Plus **//
-//                if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
-//                	(params.get("stkId").toString()).equals(exTradeConfig.get("exTradeNeoId").toString())){
-//                	if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < exTrade_dur){
-//                		  msg = msg + " -Below "+ exTrade_dur +" months not allowed to entitle Ex-Trade Promo. <br/>";
+                	//** Start exTrade Neo to Neo Plus **//
+//                    if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
+//                    	(params.get("stkId").toString()).equals(exTradeConfig.get("exTradeNeoId").toString())){
+//                    	if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < exTrade_dur){
+//                    		  msg = msg + " -Below "+ exTrade_dur +" months not allowed to entitle Ex-Trade Promo. <br/>";
+//                              isInValid = "InValid";
+//                    	}
+//                    } else{
+//                        if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 57) { // Ex-Trade
+//                                                                                                       // can
+//                                                                                                       // be
+//                                                                                                       // done
+//                                                                                                       // 4
+//                                                                                                       // month
+//                                                                                                       // early
+//                          msg = msg + " -Below 57th months not allowed to entitle Ex-Trade Promo. <br/>";
 //                          isInValid = "InValid";
-//                	}
-//                } else{
-//                    if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 57) { // Ex-Trade
-//                                                                                                   // can
-//                                                                                                   // be
-//                                                                                                   // done
-//                                                                                                   // 4
-//                                                                                                   // month
-//                                                                                                   // early
-//                      msg = msg + " -Below 57th months not allowed to entitle Ex-Trade Promo. <br/>";
-//                      isInValid = "InValid";
+//                        }
 //                    }
-//                }
-            	//** End exTrade Neo to Neo Plus **//
+                	//** End exTrade Neo to Neo Plus **//
 
-                EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
-                int rentalPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
+                    EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
+                    int rentalPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
 
-                int allowToExTrade = rentalPeriod - exTrade_mth;
+                    int allowToExTrade = rentalPeriod - exTrade_mth;
 
-                if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
-                	   msg = msg + " -Not allow early ex-trade 5 months and above advance before end of contract. <br/>";
-                       isInValid = "InValid";
+                    if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
+                    	   msg = msg + " -Not allow early ex-trade 5 months and above advance before end of contract. <br/>";
+                           isInValid = "InValid";
+                    }
+
+                    if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
+                      msg = msg + " -Different Customer is not allowed.";
+                      isInValid = "InValid";
+                    }
+
+                    //special - extrade whether need product return
+                    //old order which fall under rental type, 60-66 months after starter package and AP type.
+                    extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
+
+                    ROOT_STATE = "ROOT_4";
+
+                    txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
+                        + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                        + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
+                  } else {
+                    ROOT_STATE = "ROOT_5";
+                  }
+                } else if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer
+                    .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                    || SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer
+                        .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment
+
+                		msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>"
+                            + (String) GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
+
+                        if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
+                          msg = msg + " -Different Customer is not allowed.";
+                          isInValid = "InValid";
+                        }
+
+                        ROOT_STATE = "ROOT_6";
+
+                        txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
+                                + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                                + " , SVM expired : " + (String) GetExpDate.get("srvPrdExprDtMmyy");
+                } else {
+                  ROOT_STATE = "ROOT_7";
+
+                  txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
+                      + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                      + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
+
                 }
-
-                if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
-                  msg = msg + " -Different Customer is not allowed.";
-                  isInValid = "InValid";
-                }
-
-                //special - extrade whether need product return
-                //old order which fall under rental type, 60-66 months after starter package and AP type.
-                extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
-
-                ROOT_STATE = "ROOT_4";
-
-                txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                    + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
-                    + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
-              } else {
-                ROOT_STATE = "ROOT_5";
-              }
-            } else if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer
-                .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
-                || SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer
-                    .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment
-
-              msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>"
-                  + (String) GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
-
-              if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
-                msg = msg + " -Different Customer is not allowed.";
-                isInValid = "InValid";
-              }
-
-              ROOT_STATE = "ROOT_6";
-
-              txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                  + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
-                  + " , SVM expired : " + (String) GetExpDate.get("srvPrdExprDtMmyy");
-            } else {
-              ROOT_STATE = "ROOT_7";
-
-              txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                  + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
-                  + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
-
             }
           }
         }

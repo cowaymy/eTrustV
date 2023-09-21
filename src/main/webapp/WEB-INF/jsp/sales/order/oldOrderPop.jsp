@@ -104,10 +104,11 @@
 	    console.log('isInValid :'+isInValid);
 
 	    if(isInValid == 'InValid') {
+	    	console.log('InValid');
 	        //2017.11.19 ����Ȯ�� �˾� �ּ�ó��. Confirm�޼����� ��ü
-            //Common.popupDiv("/sales/order/orderApprovalPop.do");
-            var msg = "Report For Decision (RFD) is require for those Ex-trade sales key-in that does not meet the 3 conditions <br>";
-            msg += "(outstanding fees, early ex-trade 5 months and above advance before end of contract(Rental) and different customer).";
+            //Common.popupDiv("/sales/order/orderApprovalPop.do")
+            /* var msg = "Report For Decision (RFD) is require for those Ex-trade sales key-in that does not meet the 3 conditions <br>";
+            msg += "(outstanding fees, early ex-trade 5 months and above advance before end of contract(Rental) and different customer)."; */
 
             Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_popOrderDetail);
 	    }
