@@ -580,7 +580,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     			ntf.put("appvStus", "R");
     			ntf.put("rejctResn", "Pending Approval.");
     			ntf.put("reqstUserId", ntfDtls.get("userName"));
-    			ntf.put("userId", ntfDtls.get("userId"));
+    			ntf.put("userId", userId);
 
     			LOGGER.debug("ntf =====================================>>  " + ntf);
     			paymentListMapper.insertNotification(ntf);
@@ -733,7 +733,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 			ntf.put("appvStus", "R");
             ntf.put("rejctResn", "Pending Approval.");
 			ntf.put("reqstUserId", ntfDtls.get("userName"));
-			ntf.put("userId", ntfDtls.get("userId"));
+			ntf.put("userId", params.get("userId"));
 			paymentListMapper.insertNotification(ntf);
 
             LOGGER.debug("ntf =====================================>>  " + ntf);
