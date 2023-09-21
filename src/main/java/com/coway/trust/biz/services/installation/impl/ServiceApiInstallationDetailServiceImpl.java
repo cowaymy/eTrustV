@@ -792,7 +792,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
             }
 
-            /*Map<String, Object> smsResultValue = new HashMap<String, Object>();
+            Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
             try{
               	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
@@ -807,7 +807,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   	      	}catch (Exception e){
   	      		logger.info("===smsResultValue===" + smsResultValue.toString());
   	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-  	      	}*/
+  	      	}
           }
         } catch (Exception e) {
           String procTransactionId = transactionId;
