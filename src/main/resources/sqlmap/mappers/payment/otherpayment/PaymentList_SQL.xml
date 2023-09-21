@@ -1792,7 +1792,8 @@
             A.CHQ_NO,
             A.TRX_ID,
             A.EFT,
-            NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT,
+            A.BANK_CHRG_AMT,
+<!--             NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT, -->
             A.CARD_TYPE,
             A.CARD_MODE,
             A.CARD_BRAND,
@@ -1823,7 +1824,7 @@
     <select id="selectReqDcfNewAppv" parameterType="Map" resultType="egovMap">
         SELECT
             B.APPV_LINE_SEQ,
-            D.USER_FULL_NAME AS APPV_LINE_USER_NAME,
+            D.FULL_NAME AS APPV_LINE_USER_NAME,
             TO_CHAR(B.APPV_DT,'DD/MM/YYYY') AS APPV_DT,
             B.APPV_STUS,
             CASE WHEN B.APPV_STUS = 'A' THEN B.APPR_REMARK
@@ -1832,7 +1833,7 @@
         FROM PAY0347M A
         JOIN PAY0348D B ON B.APPV_PRCSS_NO = A.APPV_PRCSS_NO
         LEFT JOIN SYS0013M C ON C.CODE = A.APPV_PRCSS_STUS AND C.CODE_MASTER_ID = 508
-        LEFT JOIN SYS0047M D ON D.HR_CODE = B.APPV_LINE_USER_ID
+        LEFT JOIN ORG0001D D  ON B.APPV_LINE_USER_ID = D.MEM_CODE
         WHERE 1=1
             AND A.APPV_PRCSS_NO = #{appvNo}
 <!--             AND B.APPV_STUS <![CDATA[  <> ]]> 'T' -->
