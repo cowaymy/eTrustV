@@ -66,6 +66,10 @@
 	function fn_close() {
 		$("#popup_wrap").remove();
 	}
+
+	function fn_setOptGrpClass() {
+	    $("optgroup").attr("class" , "optgroup_text")
+	}
 </script>
 
 
