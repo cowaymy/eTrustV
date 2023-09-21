@@ -59,11 +59,14 @@
   </select>
 
   <select id="selectProfileImg" parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(B.ATCH_FILE_ID) AS IMG_ID
-    FROM SYS0070M A
-    JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
-    WHERE A.ATCH_FILE_GRP_ID = #{imgGrpId}
-        AND B.FILE_KEY_SEQ = 6
+    SELECT IMG_ID FROM (
+      SELECT TO_CHAR(B.ATCH_FILE_ID) AS IMG_ID,
+                 ROW_NUMBER() OVER (PARTITION BY A.ATCH_FILE_GRP_ID ORDER BY A.UPD_DT DESC) LATEST
+      FROM SYS0070M A
+      JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+      WHERE A.ATCH_FILE_GRP_ID = #{imgGrpId}
+          AND B.FILE_KEY_SEQ = 6
+      ) WHERE LATEST = 1
   </select>
 
 </mapper>
