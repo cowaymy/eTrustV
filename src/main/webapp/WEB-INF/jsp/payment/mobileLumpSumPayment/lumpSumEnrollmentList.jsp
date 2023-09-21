@@ -768,75 +768,85 @@
 
 							fn_clearPopDetails();
 
-							if (result.p1 == 99) {
+							if(result.code == 99){
 								Common
-										.alert(
-												"<spring:message code='pay.alert.bankstmt.mapped'/>",
-												function() {
-													selectList();
-												});
-							} else if (result.appType == "CARE_SRVC") {
-								Common
-										.ajax(
-												"GET",
-												"/payment/common/selectProcessCSPaymentResult.do",
-												{
-													seq : result.seq
-												},
-												function(resultInfo) {
-													var message = "<spring:message code='pay.alert.successProc'/>";
+								.alert(
+										"Record unable to be submitted. Please try again.",
+										function() {
+											selectList();
+										});
+							}
+							else{
+								if (result.data.p1 == 99) {
+									Common
+											.alert(
+													"<spring:message code='pay.alert.bankstmt.mapped'/>",
+													function() {
+														selectList();
+													});
+								} else if (result.data.appType == "CARE_SRVC") {
+									Common
+											.ajax(
+													"GET",
+													"/payment/common/selectProcessCSPaymentResult.do",
+													{
+														seq : result.data.seq
+													},
+													function(resultInfo) {
+														var message = "<spring:message code='pay.alert.successProc'/>";
 
-													if (resultInfo != null
-															&& resultInfo.length > 0) {
-														for (i = 0; i < resultInfo.length; i++) {
-															message += "<font color='red'>"
-																	+ resultInfo[i].orNo
-																	+ " (Order No: "
-																	+ resultInfo[i].salesOrdNo
-																	+ ")</font><br>";
+														if (resultInfo != null
+																&& resultInfo.length > 0) {
+															for (i = 0; i < resultInfo.length; i++) {
+																message += "<font color='red'>"
+																		+ resultInfo[i].orNo
+																		+ " (Order No: "
+																		+ resultInfo[i].salesOrdNo
+																		+ ")</font><br>";
+															}
 														}
-													}
 
-													Common.alert(message,
-															function() {
-																selectList();
-															});
-												});
-							} else {
-								Common
-										.ajax(
-												"GET",
-												"/payment/common/selectProcessPaymentResult.do",
-												{
-													seq : result.seq
-												},
-												function(resultInfo) {
-													var message = "<spring:message code='pay.alert.successProc'/>";
+														Common.alert(message,
+																function() {
+																	selectList();
+																});
+													});
+								} else {
+									Common
+											.ajax(
+													"GET",
+													"/payment/common/selectProcessPaymentResult.do",
+													{
+														seq : result.data.seq
+													},
+													function(resultInfo) {
+														var message = "<spring:message code='pay.alert.successProc'/>";
 
-													if (resultInfo != null
-															&& resultInfo.length > 0) {
-														for (i = 0; i < resultInfo.length; i++) {
-															message += "<font color='red'>"
-																	+ resultInfo[i].orNo
-																	+ " (Order No: "
-																	+ resultInfo[i].salesOrdNo
-																	+ ")</font><br>";
+														if (resultInfo != null
+																&& resultInfo.length > 0) {
+															for (i = 0; i < resultInfo.length; i++) {
+																message += "<font color='red'>"
+																		+ resultInfo[i].orNo
+																		+ " (Order No: "
+																		+ resultInfo[i].salesOrdNo
+																		+ ")</font><br>";
+															}
 														}
-													}
 
-													Common
-															.alert(
-																	message,
-																	function() {
-																		selectList();
-																		$(
-																				"#PopUp1_wrap")
-																				.hide();
-																		$(
-																				"#PopUp2_wrap")
-																				.hide();
-																	});
-												});
+														Common
+																.alert(
+																		message,
+																		function() {
+																			selectList();
+																			$(
+																					"#PopUp1_wrap")
+																					.hide();
+																			$(
+																					"#PopUp2_wrap")
+																					.hide();
+																		});
+													});
+								}
 							}
 						});
 	}

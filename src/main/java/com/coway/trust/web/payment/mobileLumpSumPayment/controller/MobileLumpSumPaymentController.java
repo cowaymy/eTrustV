@@ -89,10 +89,12 @@ public class MobileLumpSumPaymentController {
 		if(result != null){
 		    message.setCode(AppConstants.SUCCESS);
 		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		    message.setData(result);
 		}
 		else{
 		    message.setCode(AppConstants.FAIL);
 		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		    message.setData(result);
 		}
 	    return ResponseEntity.ok(message);
 	}
