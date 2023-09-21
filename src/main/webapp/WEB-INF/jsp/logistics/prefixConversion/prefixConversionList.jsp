@@ -131,6 +131,10 @@
 					AUIGrid.setGridData(myGridID, result);
 				});
 	}
+
+	function fn_setOptGrpClass() {
+	    $("optgroup").attr("class" , "optgroup_text")
+	}
 </script>
 
 <form action="#" id="searchForm" name="searchForm">
