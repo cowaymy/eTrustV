@@ -2517,7 +2517,7 @@
                     WHERE
                    A.RENT_INST_TYPE_ID = 159
                    AND B.CUST_ID = #{custId}
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 0 AND 6
+                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6
             )
               </when>
 		      <otherwise>
@@ -3282,6 +3282,6 @@ WHERE
                     WHERE
                    A.RENT_INST_TYPE_ID = 159
                    AND A.SALES_ORD_ID = #{value}
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 0 AND 6
+                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6
   </select>
 </mapper>
