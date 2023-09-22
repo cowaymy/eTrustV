@@ -957,7 +957,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     		     dcfInfoResult.put("bankAcc", onlinePayInfoFormResult.get("onlineBankAcc") != null ? onlinePayInfoFormResult.get("onlineBankAcc") : 0);
     		     dcfInfoResult.put("vaAcc", onlinePayInfoFormResult.get("onlineVAAcc"));
     		     dcfInfoResult.put("trxDate", onlinePayInfoFormResult.get("onlineTrxDate"));
-     			dcfInfoResult.put("eft", onlinePayInfoFormResult.get("onlineEFT"));
+     			 dcfInfoResult.put("eft", onlinePayInfoFormResult.get("onlineEFT"));
     		     dcfInfoResult.put("trxId", onlinePayInfoFormResult.get("onlineTrxId"));
     		     dcfInfoResult.put("payItemIsLock", false);
     		     dcfInfoResult.put("payItemIsThirdParty", false);
@@ -1316,6 +1316,14 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
             						    String bankStateId = payInfo.get("trxId").toString();
 
+            						    double newAmt = Double.parseDouble(payInfo.get("newTotalAmt").toString());
+            						    if("108".equals(String.valueOf(payInfo.get("newPayType")))){
+               				    		     if(payInfo.get("bankChrgAmt") != null){
+               				    		    	 newAmt = Double.parseDouble(payInfo.get("newTotalAmt").toString()) - Double.parseDouble(payInfo.get("bankChrgAmt").toString());
+               				    		     }
+            						    }
+            						    payInfo.put("newAmt", newAmt);
+
             					    	paymentListMapper.insertTmpNormalPaymentInfo(payInfo);
 
             					    	if(newDcfInfo.size() > 0){
@@ -1352,6 +1360,13 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
             					    		paymentListMapper.insertTmpPaymentNoTrxIdInfo(payInfo);
 
             					    	}else if("108".equals(String.valueOf(payInfo.get("newPayType")))){
+
+                						    double newAmt = Double.parseDouble(payInfo.get("newTotalAmt").toString());
+              				    		     if(payInfo.get("bankChrgAmt") != null){
+              				    		    	 newAmt = Double.parseDouble(payInfo.get("newTotalAmt").toString()) - Double.parseDouble(payInfo.get("bankChrgAmt").toString());
+              				    		     }
+              				    		     payInfo.put("newAmt", newAmt);
+
             					    		paymentListMapper.insertTmpPaymentOnlineInfo(payInfo);
             					    	}
 

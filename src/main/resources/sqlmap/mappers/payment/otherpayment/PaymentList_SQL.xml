@@ -1792,8 +1792,8 @@
             A.CHQ_NO,
             A.TRX_ID,
             A.EFT,
-            A.BANK_CHRG_AMT,
-<!--             NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT, -->
+<!--             A.BANK_CHRG_AMT, -->
+            NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT,
             A.CARD_TYPE,
             A.CARD_MODE,
             A.CARD_BRAND,
@@ -2476,7 +2476,7 @@
         (
             #{nextTmpSeq},
             TO_NUMBER(#{newPayType}),
-            #{newTotalAmt},
+            #{newAmt},<!-- #{newTotalAmt}, -->
             #{bankChrgAmt},
             #{slipNo},
             #{chqNo},
@@ -2580,7 +2580,7 @@
             #{nextTmpSeq},
             TO_NUMBER(#{newPayType}),
             TO_DATE(#{trxDate},'DD/MM/YYYY'),
-            #{newTotalAmt},
+            #{newAmt}, <!-- #{newTotalAmt}, -->
             #{bankAccId},
             #{bankChrgAmt},
             #{eft},
