@@ -461,7 +461,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     int allowToExTrade = rentalPeriod - exTrade_mth;
 
                     if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
-                    	   msg = msg + " -Not allow early ex-trade 5 months and above advance before end of contract. <br/>";
+                    	   msg = msg + " -Not allow early ex-trade before end of contract. <br/>";
                            isInValid = "InValid";
                     }
 
