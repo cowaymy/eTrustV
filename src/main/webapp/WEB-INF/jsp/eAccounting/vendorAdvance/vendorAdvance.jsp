@@ -377,6 +377,8 @@
                 return;
             }
             var claimno = gridObj[0].item.clmNo;
+            $("#_clmNo").val(claimno);
+
             fn_report(advGridAdvType);
         });
 
@@ -2178,16 +2180,8 @@
 *************************************************
  -->
 
-<form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
-    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
-    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-
-    <input type="hidden" id="_clmNo" name="V_CLMNO" />
-</form>
-
  <form id="dataForm">
-    <!--<input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/staffTravelReq.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value=" " />
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 

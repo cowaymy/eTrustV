@@ -14,7 +14,7 @@
             AMT,
             APPV_PRCSS_NO,
             APPV_DT,
-            RQST_DT,
+            ADV_REFD_DT,
             APPV_PRCSS_STUS,
             CASE WHEN APPV_PRCSS_STUS = 'A' THEN 'Approved'
                  WHEN APPV_PRCSS_STUS = 'J' THEN 'Rejected'
@@ -39,10 +39,10 @@
                 A.COST_CENTER,
                 A.COST_CENTER_NM,
                 A.TOT_AMT AMT,
-                B.REQST_USER_ID PAYEE_NAME,
+                E.MEM_ACC_NAME PAYEE_NAME,
                 B.APPV_PRCSS_NO,
                 B.APPV_PRCSS_DT APPV_DT,
-                B.REQST_DT RQST_DT,
+                TO_CHAR(A.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
                 NVL(B.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
                 CASE WHEN A.ADV_TYPE = '1' THEN (
                     CASE WHEN A.APPV_PRCSS_NO IS NOT NULL THEN (
@@ -83,6 +83,7 @@
                 ON A.ADV_REFD_NO = C.CLM_NO
             LEFT JOIN FCM0004M D
                 ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+            LEFT JOIN FCM0006M E ON E.MEM_ACC_ID = A.MEM_ACC_ID
             WHERE 1=1
             <if test="advType != null and advType != ''">
                 AND A.ADV_TYPE IN
@@ -294,7 +295,8 @@
             A.TOT_AMT,
             E.NAME BANK_NAME,
             B.BANK_ACC_NO,
-            D.NAME CRT_USER_NM
+            D.NAME CRT_USER_NM,
+            TO_CHAR(A.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT
         FROM FCM0027M A
         INNER JOIN ORG0001D B
             ON A.MEM_ACC_ID = B.MEM_CODE

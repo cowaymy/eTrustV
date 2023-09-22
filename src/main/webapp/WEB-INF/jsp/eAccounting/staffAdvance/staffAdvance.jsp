@@ -49,8 +49,8 @@
         formatString : "dd/mm/yyyy",
         width : 100
     }, {
-        dataField : "rqstDt",
-        headerText : "Submission Date",
+        dataField : "advRefdDt",
+        headerText : "Repayment Due Date",
         dataType : "date",
         formatString : "dd/mm/yyyy",
         width : 100
@@ -158,6 +158,8 @@
                 return;
             }
             var claimno = gridObj[0].item.clmNo;
+            $("#_clmNo").val(claimno);
+
             fn_report(advType);
         });
 
@@ -545,6 +547,7 @@
                 $("#refBankName").val(result.bankName);
                 $("#refBankAccNo").val(result.bankAccNo);
                 $("#trvAdvRepayAmt").val(result.totAmt.toFixed(2));
+                $("#trvAdvRepayDate").val(result.advRefdDt);
             });
 
         } else if(clmType == "A1") {
@@ -1368,14 +1371,7 @@
 <!-- ************************************************************************************************************************************* -->
 
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
-    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
-    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-
-    <input type="hidden" id="_clmNo" name="V_CLMNO" />
-</form>
-
-<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value=" " />
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
@@ -1870,7 +1866,7 @@
                     <tr>
                         <th scope="row">Repayment Due Date</th>
                         <td colspan="2">
-                            <input type="text" title="Repayment Date" placeholder="Repayment Date" id="trvAdvRepayDate" name="trvAdvRepayDate" class="j_date" style="200px" />
+                            <input type="text" title="Repayment Date" placeholder="Repayment Date" id="trvAdvRepayDate" name="trvAdvRepayDate" class="w100p readonly" style="200px" readonly/>
                         </td>
                     </tr>
                     <!--
