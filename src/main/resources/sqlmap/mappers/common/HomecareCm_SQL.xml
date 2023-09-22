@@ -32,7 +32,13 @@
 
          FROM SYS0005M
         WHERE STUS_ID = 1
-            AND TYPE_ID = #{brnchType}
+            <if test="branchTypeList != null and branchTypeList != ''">
+              AND TYPE_ID IN
+            <foreach item="item" collection="branchTypeList" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            </if>
             <if test="brnchTypeDsc != null and brnchTypeDsc != ''">
                 OR TYPE_ID = #{brnchTypeDsc}
             </if>
