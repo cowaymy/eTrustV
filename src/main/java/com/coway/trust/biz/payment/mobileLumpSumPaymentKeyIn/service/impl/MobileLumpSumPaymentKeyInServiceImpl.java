@@ -796,7 +796,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 					formMap.put("mstRpfPaid", mstRpfPaid);
 					formMap.put("assignAmt", 0);
 					formMap.put("billAmt", mstRpf);
-					formMap.put("billDt", "1900-01-01");
+		            formMap.put("billDt", "1900-01-01");
 					formMap.put("billGrpId", mstCustBillId);
 					formMap.put("billId", 0);
 					formMap.put("billNo", "0");
@@ -919,7 +919,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		formMap.put("mstRpfPaid", 0);
 
 		formMap.put("billAmt", nonRentalOrderInfo.get("balance"));
-		formMap.put("billDt", "01/01/1900");
+        formMap.put("billDt", "1900-01-01");
 		formMap.put("billGrpId", 0);
 		formMap.put("billId", nonRentalOrderInfo.get("custBillId"));
 		formMap.put("billNo", "0");
@@ -995,7 +995,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				formMap.put("billAmt", psmPay24Info.get("packageCharge"));
 				formMap.put("paidAmt", psmPay24Info.get("packagePaid"));
 				formMap.put("targetAmt", packageAmt);
-				formMap.put("billDt", "1900-01-01");
+	            formMap.put("billDt", "1900-01-01");
 				formMap.put("assignAmt", "0");
 				formMap.put("billStatus", "");
 				formMap.put("custNm", svmInfo.get("name"));
@@ -1046,7 +1046,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 					formMap.put("billAmt", psmPay24Info.get("filterCharge"));
 					formMap.put("paidAmt", psmPay24Info.get("filterPaid"));
 					formMap.put("targetAmt", psmPay24Info.get("filterAmt"));
-					formMap.put("billDt", "1900-01-01");
+		            formMap.put("billDt", "1900-01-01");
 					formMap.put("assignAmt", "0");
 					formMap.put("billStatus", "");
 					formMap.put("custNm", svmInfo.get("name"));
