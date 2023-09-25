@@ -792,7 +792,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
                 LEFT JOIN SYS0047M USR3 ON HS.TGT_UPD_USER_ID = USR3.USER_ID
-                LEFT JOIN SYS0047M USR4 ON HS.UPD_USER_ID = USR4.USER_ID
+                LEFT JOIN SYS0047M USR4 ON sal09.SRV_UPD_USER_ID = USR4.USER_ID
                 WHERE 1=1
 
                 AND sal09.SRV_STUS_ID  <![CDATA[ <> ]]>  8
