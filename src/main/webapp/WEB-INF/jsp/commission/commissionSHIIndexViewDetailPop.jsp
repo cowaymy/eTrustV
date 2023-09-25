@@ -12,31 +12,56 @@
 	$(document).ready(function() {
 		createAUIGrid();
 
-		$("#searchD").click(function(){
+
+		let data = {
+				catType  : '${data.catType}',
+                custType : '${data.custType}',
+                shiDate  : '${data.shiDate}',
+                memCode  : '${data.memCode}',
+                level    : '${data.level}',
+                teamCode : '${data.teamCode}'
+		};
+        console.log(data);
+		/* $("#searchD").click(function(){
 			Common.ajax("GET", "/commission/report/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
 				AUIGrid.setGridData(detailGridID, result);
 			});
-		});
+		}); */
+
+		Common.ajax("GET", "/commission/report/commSHIDetailSearch", data, function(result) {
+            AUIGrid.setGridData(detailGridID, result);
+        });
 
 		$("#excel").click(function(){
-			var date =$("#searchDtD").val();
+			/* var date =$("#searchDtD").val();
             var month = Number(date.substring(0, 2));
             var year = Number(date.substring(3));
-            var memCd = $("#memberCd").val();
+            var memCd = $("#memberCd").val(); */
+
+            let data = $("#myForm").serializeJSON();
+            let month = Number(data.shiDate.substring(0, 2));
+            let year = Number(data.shiDate.substring(3));
 
             var reportFileName = "/commission/SHIIndexExcelRawByMember.rpt"; //reportFileName
             var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
             var reportViewType = "EXCEL"; //viewType
 
-            $("#reportForm2 #memberCode").val(memCd);
+            $("#reportForm2 #memberCode").val(data.memCode);
             $("#reportForm2 #pvMonth").val(month);
             $("#reportForm2 #pvYear").val(year);
+            $("#reportForm2 #memLvl").val(data.level);
+            $("#reportForm2 #memType").val(data.typeCode);
+            $("#reportForm2 #deptCode").val(data.teamCode);
+            $("#reportForm2 #custType").val(data.custType);
+            $("#reportForm2 #catType").val(data.catType);
             $("#reportForm2 #reportFileName").val(reportFileName);
             $("#reportForm2 #reportDownFileName").val(reportDownFileName);
             $("#reportForm2 #viewType").val(reportViewType);
 
+            console.log($("#reportForm2").serializeJSON());
+
         //  report 호출
-            var option = {
+             var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
             };
             Common.report("reportForm2", option);
@@ -125,16 +150,24 @@
            <input type="hidden" name="V_MEMCODE" id="memberCode"/>
            <input type="hidden" name="V_PVMTH" id="pvMonth"/>
            <input type="hidden" name="V_PVYEAR" id="pvYear"/>
+           <input type="hidden" name="V_MEMLVL" id="memLvl"/>
+           <input type="hidden" name="V_MEMTYPE" id="memType"/>
+           <input type="hidden" name="V_DEPTCODE" id="deptCode"/>
+           <input type="hidden" name="V_CUST_TYPE" id="custType"/>
+           <input type="hidden" name="V_CAT_TYPE" id="catType"/>
            <input type="hidden" name="reportDownFileName" id="reportDownFileName"/>
            <input type="hidden" name="reportFileName" id="reportFileName"/>
            <input type="hidden" name="viewType" id="viewType"/>
        </form>
-        <form id="detailFrom">
 
-           <ul class="right_btns">
-              <li><p class="btn_blue"><a href="#" id="searchD"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-              <li><p class="btn_blue"><a href="#" id="excel"><spring:message code='commission.button.generate'/></a></p></li>
-            </ul>
+       <ul class="right_btns">
+            <%-- <li><p class="btn_blue"><a href="#" id="searchD"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li> --%>
+            <li><p class="btn_blue"><a href="#" id="excel"><spring:message code='commission.button.generate'/></a></p></li>
+       </ul>
+
+        <%--<form id="detailFrom">
+
+
 
             <table class="type1 mt10"><!-- table start -->
                 <caption>table</caption>
@@ -167,7 +200,7 @@
                     </tr>
                 </tbody>
             </table><!-- table end -->
-        </form>
+        </form> --%>
 
         <article class="grid_wrap3">
             <!-- grid_wrap start -->

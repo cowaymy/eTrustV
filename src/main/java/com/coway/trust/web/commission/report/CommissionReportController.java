@@ -563,10 +563,10 @@ public class CommissionReportController {
 
     for(int i = 0; i< list.size(); i++){
       next++;
-      
+
       if(next == list.size())
         hasNext = false;
-      
+
       memberMap =new EgovMap();
 
       nDEPTCODE   = hasNext ? list.get(next).get("deptCode").toString()   : null ;
@@ -715,13 +715,19 @@ public class CommissionReportController {
 		model.addAttribute("today", today);
 		model.addAttribute("searchDtD", dt);
 		model.addAttribute("memCode", params.get("memCode"));
+
+	  model.addAttribute("data",params);
+
 		// 호출될 화면
 		return "commission/commissionSHIIndexViewDetailPop";
 	}
 
 	@RequestMapping(value = "commSHIDetailSearch")
 	public ResponseEntity<List<EgovMap>> commSHIDetailSearch(@RequestParam Map<String, Object> params, ModelMap model) {
-		String date = params.get("searchDt").toString();
+
+	  System.out.println(params);
+
+	  String date = params.get("shiDate").toString();
 		String pvMonth =date.substring(0,2);
 		String pvYear=date.substring(date.indexOf("/")+1,date.length());
 		params.put("pvMonth",pvMonth);
@@ -729,9 +735,7 @@ public class CommissionReportController {
 
 		commissionReportService.commSHIIndexDetailsCall(params);
 		List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
-		logger.debug("################################");
-		System.out.println(list);
-		logger.debug("################################");
+
 		return ResponseEntity.ok(list);
 	}
 

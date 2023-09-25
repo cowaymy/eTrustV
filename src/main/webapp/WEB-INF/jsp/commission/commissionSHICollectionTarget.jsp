@@ -93,8 +93,8 @@
                   Common.popupDiv("/common/memberPop.do", $("#myForm").serializeJSON(), null,true);
                 });
 
-            AUIGrid.bind(myGridID2,"cellClick",function(event) {
-                      memCode = null;
+            AUIGrid.bind(myGridID2,"cellDoubleClick",function(event) {
+                      /* memCode = null;
                       if (AUIGrid.getCellValue(myGridID2, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID2,event.rowIndex,"memCode") != "") {
                         memCode = AUIGrid.getCellValue(myGridID2,event.rowIndex,"memCode");
                         var date = {
@@ -102,6 +102,40 @@
                           "searchDt" : $("#shiDate").val()
                         };
                         Common.popupDiv("/commission/report/commSHIIndexViewDetailsPop.do",date);
+                      } */
+
+                      let data = {
+                    		catType : !$("#catType").val(),
+                            custType : $("#custType").val(),
+                            shiDate : $("#shiDate").val(),
+                      };
+
+                      let level = 4;
+                      let teamCode = "";
+
+                      if (event.item.topOrgCode){
+                    	  level = 0;
+                    	  teamCode = event.item.topOrgCode;
+                      }
+                      if (event.item.orgCode){
+                    	  level = 1;
+                          teamCode = event.item.orgCode;
+                      }
+                      if (event.item.grpCode){
+                    	  level = 2;
+                    	  teamCode = event.item.grpCode;
+                      }
+                      if (event.item.deptCode){
+                    	  level = 3;
+                    	  teamCode = event.item.deptCode;
+                      }
+
+                      data["teamCode"] = teamCode;
+                      data["level"]    = level;
+                      data["memCode"]  = event.item.memCode;
+
+                      if($('#level').val() <= level){
+                    	  Common.popupDiv("/commission/report/commSHIIndexViewDetailsPop.do", data);
                       }
                     });
 
@@ -429,12 +463,12 @@
     <!-- search_table end -->
     <section class="search_result">
         <!-- search_result start -->
-        <ul class="right_btns">
+        <%-- <%-- <ul class="right_btns">
             <li>
                 <p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate' /></a></p>
                 <!-- <p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p> -->
             </li>
-        </ul>
+        </ul> --%> --%>
         <article class="grid_wrap">
         <!-- grid_wrap start -->
             <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
