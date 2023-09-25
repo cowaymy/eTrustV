@@ -241,7 +241,8 @@ console.log("membershipESvmList");
 
     $(function(){
         $('#_btnClear').click(function() {
-            $('#_frmESvmSrch').clearForm();
+            //$('#_frmESvmSrch').clearForm();
+        	window.location.reload();
         });
         $('#_btnSearch').click(function() {
             if(fn_validSearchList())
