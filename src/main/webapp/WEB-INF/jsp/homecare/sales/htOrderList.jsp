@@ -137,7 +137,8 @@ console.log($("#listSearchForm").serialize());
           if(fn_validSearchList()) fn_selectListAjax();
       });
       $('#btnClear').click(function() {
-          $('#listSearchForm').clearForm();
+          //$('#listSearchForm').clearForm();
+          window.location.reload();
       });
       $('#btnSof').click(function() {
     	    Common.popupDiv("/homecare/sales/htOrderSOFListPop.do", null, null, true);
