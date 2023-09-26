@@ -93,6 +93,11 @@
           width : 100,
           editable : false
         }, {
+            dataField : "followUpPic",
+            headerText : "Follow Up By",
+            width : 120,
+            editable : false
+        }, {
           dataField : "ordNo",
           headerText : "<spring:message code='sal.title.ordNo' />.",
           width : 120,
@@ -279,6 +284,8 @@
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
   doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M',
       'f_multiCombo'); // Application Type Combo Box
+
+  doGetComboOrder('/common/selectCodeList.do', '565', 'CODE_NAME', '', 'cmbFollowUp', 'S', ''); //Common Code
 
   // 조회조건 combo box
   function f_multiCombo() {
@@ -734,16 +741,12 @@
         code="sal.title.text.callLogStus" /></th>
       <td><select id="callStusId" name="callStusId"
        class="multy_select w100p" multiple="multiple">
-        <option value="1" selected><spring:message
-          code="sal.combo.text.active" /></option>
-        <option value="19" selected><spring:message
-          code="sal.combo.text.recall" /></option>
-        <option value="32"><spring:message
-          code="sal.combo.text.confirmToCancel" /></option>
-        <option value="31"><spring:message
-          code="sal.combo.text.reversalOfCancellation" /></option>
-        <option value="105"><spring:message
-          code="sal.combo.text.continueRental" /></option>
+        <option value="1" selected><spring:message code="sal.combo.text.active" /></option>
+        <option value="19" selected><spring:message code="sal.combo.text.recall" /></option>
+        <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
+        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>
+        <option value="105"><spring:message code="sal.combo.text.continueRental" /></option>
+        <option value="123"><spring:message code="sal.combo.text.reversalOfCancellation"/> (Careline)</option>
       </select></td>
      </tr>
      <tr>
@@ -855,6 +858,16 @@
          <option value="${list.stusCodeId }">${list.name }</option>
         </c:forEach>
       </select></td>
+     </tr>
+     <tr>
+        <th scope="row">Follow Up By</th>
+        <td>
+           <select id="cmbFollowUp" name="cmbFollowUp" class="w100p" ></select>
+        </td>
+        <th/>
+        <td/>
+        <th/>
+        <td/>
      </tr>
     </tbody>
    </table>

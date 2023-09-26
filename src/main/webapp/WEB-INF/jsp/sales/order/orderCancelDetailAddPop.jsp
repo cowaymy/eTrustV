@@ -10,6 +10,7 @@
 
     /* KV -cancellation status */
     doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
+    doGetComboOrder('/common/selectCodeList.do', '565', 'CODE_NAME', '${cancelReqInfo.soReqFollowUp}', '_cmbFollowUp', 'S', ''); //Common Code
 
     if($("#callStusId").val() == '1'){
       $("#addDiv").css("display" , "none");
@@ -203,7 +204,7 @@
     $("#m8").hide(); // APPOINTMENT SESSION
     $("#m9").hide(); // REMARK
 
-    if ($("#addStatus").val() == "31" || $("#addStatus").val() == "105") {
+    if ($("#addStatus").val() == "31" || $("#addStatus").val() == "123" || $("#addStatus").val() == "105") {
       if ("${cancelReqInfo.reqResnCode}" == "0098") {
         $("#addStatus").val("");
         Common.alert("<spring:message code='sal.msg.reqFailCanc'/>");
@@ -226,6 +227,7 @@
       $("#addAppRetnDt").attr('disabled','disabled');
       $("#addAppRetnDt").val('');
       $("#addCallRecallDt").removeAttr("disabled");
+      $("#_cmbFollowUp").removeAttr("disabled");
 
       $("#m7").show();
       $("#m9").show();
@@ -238,6 +240,7 @@
       $("select[name=cmbAssignCt]").addClass("w100p disabled");
       $("#addCallRecallDt").attr('disabled','disabled');
       $("#addCallRecallDt").val('');
+      $("#_cmbFollowUp").attr("disabled", "disabled");
 
       if("${cancelReqInfo.reqStageId}" == '24') { // BEFORE INSTALL
         $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
@@ -261,6 +264,7 @@
            $("select[name=cmbAssignCt]").addClass("w100p"); */
         $("#requestDate").removeAttr("disabled");
 
+
         $("#m3").show();
         $("#m4").show();
         $("#m5").show();
@@ -268,7 +272,7 @@
         $("#m8").show();
         $("#m9").show();
       }
-    } else if($("#addStatus").val() == '31'){ // Reversal Of Cancellation
+    } else if($("#addStatus").val() == '31' || $("#addStatus").val() == '123'){ // Reversal Of Cancellation
       $("select[name=cmbAssignCt]").removeAttr("disabled");
       $("select[name=cmbAssignCt]").removeClass("w100p disabled");
       $("select[name=cmbAssignCt]").addClass("w100p");
@@ -285,6 +289,7 @@
       $("select[name=cmbAssignCt]").addClass("w100p disabled");
       $("#requestDate").attr('disabled','disabled');
       $("#requestDate").val('');
+      $("#_cmbFollowUp").attr("disabled", "disabled");
 
       if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
         $("#addCallRecallDt").removeAttr("disabled");
@@ -311,6 +316,7 @@
        $("select[name=cmbAssignCt]").addClass("w100p disabled");
        $("#requestDate").attr('disabled','disabled');
        $("#requestDate").val('');
+       $("#_cmbFollowUp").attr("disabled", "disabled");
 
        if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
          $("#addCallRecallDt").removeAttr("disabled");
@@ -333,7 +339,7 @@
       if($("#addStatus").val() == '32'){     // Confirm To Cancel
         fdb = '5530';
       }
-        if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
+      if($("#addStatus").val() == '31' || $("#addStatus").val() == '123'){     // Reversal Of Cancellation
           fdb = '5531';
       }
       if($("#addStatus").val() == '105'){     //Continue Rental
@@ -362,10 +368,16 @@
         return false;
       }
 
+      if(addCallForm._cmbFollowUp.value  == ""){
+          Common.alert("Please select Follow Up By");
+          return false;
+      }
+
       if(addCallForm.addRem.value == ""){
         Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
         return false;
       }
+
       // }
     }
 
@@ -429,7 +441,7 @@
       }
     }
 
-    if($("#addStatus").val() == '31'){ // REVERSAL OF CANCELLATION
+    if($("#addStatus").val() == '31' || $("#addStatus").val() == "123" ){ // REVERSAL OF CANCELLATION
       if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
         if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
@@ -520,7 +532,7 @@
 
     function fn_cancelReload(){
       fn_orderCancelListAjax();
-      if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31' ||$("#addStatus").val() == '105'){
+      if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31' || $("#addStatus").val() == "123" ||$("#addStatus").val() == '105'){
         $("#callStusId").val(1);
       }
 
@@ -1005,7 +1017,16 @@
       </c:if>
       </c:if>
       </c:if>
+
     </tr>
+    <tr>
+        <th scope="row">Follow Up By</th>
+        <td>
+           <select id="_cmbFollowUp" name="_cmbFollowUp" class="w100p" class="disabled" disabled="disabled"></select>
+        </td>
+        <th/>
+        <td/>
+     </tr>
     <tr>
       <th scope="row"><spring:message code="sal.text.remark" /><span id='m9' name='m9' class="must">*</span></th>
       <td colspan="3">

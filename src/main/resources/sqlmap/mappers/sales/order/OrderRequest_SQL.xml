@@ -134,6 +134,7 @@
     , SO_REQ_ACC_NAME
     , SO_REQ_ATTACH
     , ATCH_FILE_GRP_ID
+    , SO_REQ_FOLLOW_UP
     )
     VALUES
     ( #{soReqId}
@@ -169,6 +170,7 @@
     , #{soReqAccName}
     , #{soReqAttach}
     ,#{atchFileGrpId}
+    , #{soReqFollowUp}
     )
   </insert>
 
@@ -508,7 +510,7 @@
     , SO_EXCHG_OLD_CUST_ID
     , SO_EXCHG_NW_CUST_ID
     , SO_EXCHG_FORM_NO
-    , ATCH_FILE_GRP_ID
+    --, ATCH_FILE_GRP_ID
     )
     VALUES
     ( #{soExchgId}
@@ -549,7 +551,7 @@
     , #{soExchgOldCustId}
     , #{soExchgNwCustId}
     , #{soExchgFormNo}
-    , #{soExchgAtchGrpId}
+    --, #{soExchgAtchGrpId}
     )
   </insert>
 

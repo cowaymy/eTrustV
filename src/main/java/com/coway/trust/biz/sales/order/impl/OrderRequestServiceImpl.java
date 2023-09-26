@@ -2191,6 +2191,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     salesReqCancelVO.setSoReqPreRetnDt(
         (int) params.get("stusCodeId") == 4 ? (String) params.get("dpReturnDate") : SalesConstants.DEFAULT_DATE);
     salesReqCancelVO.setSoReqRem((String) params.get("txtRemark"));
+    salesReqCancelVO.setSoReqFollowUp(params.get("cmbFollowUp").toString());
     /*
      * OrderReqCancelMaster.SOReqID = 0; OrderReqCancelMaster.SOReqSOID =
      * int.Parse(OrderID); OrderReqCancelMaster.SOReqStatusID = 1;

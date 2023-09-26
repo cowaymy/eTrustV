@@ -94,7 +94,9 @@
 					A.ATCH_FILE_NAME ,
 					A.PHYSICL_FILE_NAME,
 					A.RESULT_REP_EMAIL_NO,
-					A.EMAIL_SENT_COUNT
+					A.EMAIL_SENT_COUNT,
+                    A.SO_REQ_FOLLOW_UP,
+                    A.FOLLOW_UP_PIC
 
 					FROM (
 						SELECT V.REQ_ID ,
@@ -165,7 +167,9 @@
 						V.ATCH_FILE_NAME ,
 						V.PHYSICL_FILE_NAME,
 						V.RESULT_REP_EMAIL_NO,
-						V.EMAIL_SENT_COUNT
+						V.EMAIL_SENT_COUNT,
+                        V.SO_REQ_FOLLOW_UP,
+                        V.FOLLOW_UP_PIC
 
 						FROM (( SELECT DISTINCT r.SO_REQ_ID REQ_ID,
 						r.SO_REQ_NO REQ_NO,
@@ -245,7 +249,10 @@
 						F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
 
                         CASE WHEN rer.RESULT_RPT_EMAIL_NO IS NOT NULL THEN rer.RESULT_RPT_EMAIL_NO ELSE cust.EMAIL END AS RESULT_REP_EMAIL_NO,
-                        r.EMAIL_SENT_COUNT
+                        r.EMAIL_SENT_COUNT,
+
+                        r.SO_REQ_FOLLOW_UP,
+                        fu.CODE_NAME FOLLOW_UP_PIC
 
 						from SAL0020D r
 						JOIN SAL0001D som ON som.SALES_ORD_ID = r.SO_REQ_SO_ID AND r.SO_REQ_STUS_ID <> 8
@@ -268,7 +275,8 @@
 						LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = re.UPD_USER_ID AND ORG2.USER_TYPE_ID > 2
 						LEFT JOIN ORG0001D ORG3 ON ORG3.MEM_ID = RE.CT_ID
 						LEFT JOIN SYS0070M E ON r.ATCH_FILE_GRP_ID = E.ATCH_FILE_GRP_ID
-						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID) V)) A
+						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID
+                        LEFT JOIN SYS0013M fu ON fu.CODE_ID = R.SO_REQ_FOLLOW_UP) V) ) A
 				LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
 				 ]]>
                 WHERE A.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
@@ -360,6 +368,10 @@
 
     <if test="endAppDt != null and endAppDt != '' ">
       AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+
+    <if test="cmbFollowUp != null and cmbFollowUp != ''">
+      AND SO_REQ_FOLLOW_UP = #{cmbFollowUp}
     </if>
   </select>
 
@@ -497,7 +509,8 @@
                       ELSE 0 END DSC_BRNCH_ID  ,
                     CASE WHEN ( A.UPD_DT IS NOT NULL )
                       THEN A.UPD_DT
-                      ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT
+                      ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT ,
+                    A.SO_REQ_FOLLOW_UP
     FROM ( SELECT V.REQ_ID ,
                   V.REQ_NO ,
                   V.ORD_ID ,
@@ -550,7 +563,8 @@
                   V.BANK_ACC ,
                   V.ISS_BANK ,
                   V.ACC_NAME ,
-                  V.ATTACH
+                  V.ATTACH ,
+                  V.SO_REQ_FOLLOW_UP
            FROM SAL1007V V ) A
     WHERE A.REQ_ID = #{reqId}
   </select>
@@ -1026,6 +1040,10 @@
     UPDATE SAL0020D SET SO_REQ_UPD_DT = SYSDATE,
                         SO_REQ_UPD_USER_ID = #{callCrtUserId},
                         SO_REQ_STUS_ID = #{callStusId}
+                        <if test="_cmbFollowUp != null and _cmbFollowUp != ''">
+                          , SO_REQ_FOLLOW_UP = #{_cmbFollowUp}
+                        </if>
+
     WHERE SO_REQ_ID = #{soReqId}
   </update>
 

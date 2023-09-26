@@ -1494,7 +1494,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
           return false;
         }
         if (todayYY >= 2018) {
-          if (todayDD == 26 || todayDD == 27 || todayDD == 1
+          if (/* todayDD == 26 || */ todayDD == 27 || todayDD == 1
               || todayDD == 2) {
             var msg = '<spring:message code="sal.msg.chkCancDate" />';
             Common.alert(
@@ -1630,7 +1630,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         }
 
         if (todayYY >= 2018) {
-          if (todayDD >= 26 || todayDD == 1) {
+          if (/* todayDD >= 26 ||  */todayDD == 1) {
             //                      var msg = "Ownership transfer is not allowed from 26 until 1 next month.";
             var msg = '<spring:message code="sal.msg.underOwnTrans2" />';
 
@@ -1908,6 +1908,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     $('#dpReturnDate').prop("disabled", true);
     $('#txtRemark').prop("disabled", true);
     $('#txtPenaltyAdj').prop("disabled", true);
+    $('#cmbFollowUp').prop("disabled", true);
 
     $('#btnReqCancOrder').addClass("blind");
   }
@@ -2209,6 +2210,8 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     if (ORD_STUS_ID == '4') {
       msg += '<spring:message code="sal.alert.msg.prefRtrnDt" /> : '
           + $('#dpReturnDate').val() + '<br />';
+      msg += 'Follow Up By : '
+          + $('#cmbFollowUp option:selected').text() + '<br />';
 
       if (APP_TYPE_ID == 66) {
         msg += '<br />';
@@ -2385,7 +2388,8 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                 		  txtPenaltyAdj : $("#txtPenaltyAdj").val(),
                 		  txtCurrentOutstanding : $("#txtCurrentOutstanding").val(),
                 		  spTotalAmount : $("#spTotalAmount").val(),
-                		  atchFileGrpId : atchFileGrpId
+                		  atchFileGrpId : atchFileGrpId,
+                		  cmbFollowUp   : $("#cmbFollowUp").val()
 
                 };
 
@@ -2437,7 +2441,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     var todayDD = Number(TODAY_DD.substr(0, 2));
     var todayYY = Number(TODAY_DD.substr(6, 4));
 
-    if (todayYY >= 2018 && (todayDD >= 26 || todayDD == 1)) {
+    if (todayYY >= 2018 && (/* todayDD >= 26 || */ todayDD == 1)) {
       msg = '<spring:message code="sal.msg.underOwnTrans2" />';
       Common.alert(
           '<spring:message code="sal.alert.msg.actionRestriction" />'
@@ -2833,6 +2837,10 @@ console.log("result.lastbillmth;"+result.lastbillmth);
       isValid = false;
       msg += '* <spring:message code="sal.alert.msg.pleaseKeyInTheRemark" /><br>';
     }
+    if ($("#cmbFollowUp option:selected").index() <= 0) {
+        isValid = false;
+        msg += 'Please select Follow Up PIC';
+      }
 
     if (!isValid)
       Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />'
@@ -2895,6 +2903,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
   function fn_loadListCanc() {
     //doGetComboOrder('/common/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
     doGetComboOrder('/sales/order/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
+    doGetComboOrder('/common/selectCodeList.do', '565', 'CODE_NAME', '', 'cmbFollowUp', 'S', ''); //Common Code
     doGetComboData('/sales/order/selectResnCodeList.do', {
       resnTypeId : '536',
       stusCodeId : '1'
@@ -3495,6 +3504,22 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                         <input id="dpReturnDate" name="dpReturnDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled />
                       </td>
                     </tr>
+                    <th scope="row"><spring:message code="sal.alert.msg.prefRtrnDt" /><span id="spPrfRtnDt" class="must blind">*</span></th>
+                      <td>
+                        <input id="dpReturnDate" name="dpReturnDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled />
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                        <th>Follow up by<span class="must">*</span></th>
+                        <td>
+                            <select id="cmbFollowUp" name="cmbFollowUp" class="w100p" />
+                        </td>
+                    </tr>
+                    <c:if test='${orderDetail.basicInfo.ordStusId == 4 }'>
+                    </c:if>
+
                     <tr>
                       <th scope="row"><spring:message code="sal.text.ocrRem" /><span class="must">*</span></th>
                       <td colspan="3">

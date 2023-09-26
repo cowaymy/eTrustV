@@ -207,6 +207,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       orderCancelMapper.updateCancelCCR0006D(saveParam);
 
       saveParam.put("soReqId", params.get("paramReqId"));
+      saveParam.put("_cmbFollowUp", params.get("_cmbFollowUp"));
       orderCancelMapper.updReservalCancelSAL0020D(saveParam);
 
       logger.info("####################### Recall save End!! #####################");
@@ -345,7 +346,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
       logger.info("####################### Confirm To Cancel save END!! #####################");
 
-    } else if (status == 31 || status == 105) { // Reversal Of Cancellation or
+    } else if (status == 31 || status == 105 || status == 123 ) { // Reversal Of Cancellation or
                                                 // Continue Rental
       logger.info("####################### Reversal Of Cancellation or Continue Rental save Start!! #####################");
       // 해야함
