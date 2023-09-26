@@ -199,7 +199,8 @@
             if(fn_validSearchList()) fn_selectListAjax();
         });
         $('#btnClear').click(function() {
-            $('#listSearchForm').clearForm();
+            //$('#listSearchForm').clearForm();
+            window.location.reload();
         });
         $('#btnVaLetter').click(function() {
 
