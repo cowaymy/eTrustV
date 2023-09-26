@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
-/** 
+/**
  * The persistent class for the SAL0020D database table.
  *
  */
@@ -78,11 +78,12 @@ public class SalesReqCancelVO implements Serializable {
 
 	private String soReqAttach;
 
-	 private String atchFileGrpId;
+	private String atchFileGrpId;
+
+	private String soReqFollowUp;
 
 
-
-	public int getSoReqId() {
+  public int getSoReqId() {
 		return soReqId;
 	}
 
@@ -344,6 +345,14 @@ public class SalesReqCancelVO implements Serializable {
 
   public void setAtchFileGrpId(String atchFileGrpId) {
     this.atchFileGrpId = atchFileGrpId;
+  }
+
+  public String getSoReqFollowUp() {
+    return soReqFollowUp;
+  }
+
+  public void setSoReqFollowUp(String soReqFollowUp) {
+    this.soReqFollowUp = soReqFollowUp;
   }
 
 }
