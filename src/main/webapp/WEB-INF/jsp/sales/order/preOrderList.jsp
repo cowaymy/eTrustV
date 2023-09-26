@@ -399,7 +399,8 @@ console.log("preOrderList");
             });
         });
         $('#_btnClear').click(function() {
-        	$('#_frmPreOrdSrch').clearForm();
+        	//$('#_frmPreOrdSrch').clearForm();
+        	window.location.reload();
         });
         $('#_btnSearch').click(function() {
         	if(fn_validSearchList()) fn_getPreOrderList();
