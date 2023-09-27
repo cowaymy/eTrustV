@@ -20,7 +20,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-//import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.payment.billing.service.impl.ProductLostBillingMapper;
 import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
@@ -103,8 +103,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Resource(name = "billingGroupMapper")
   private BillingGroupMapper billingGroupMapper;
 
-  //@Resource(name = "voucherMapper")
-  //private VoucherMapper voucherMapper;
+  @Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -1107,9 +1107,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
 
     //Voucher Exchange If Any
-	//String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
-	//String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-	//this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
+	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -2758,7 +2758,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return orderRequestMapper.checkDefectByReason(params);
   }
 
-  /*private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
+  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
 		if(existingVoucherCode.isEmpty() == false){
 			if(existingVoucherCode.equals(currentVoucherCode) == false){
 				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
@@ -2779,5 +2779,5 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     voucherMapper.updateVoucherCodeUseStatus(params);
     return true;
-    }*/
+    }
 }
