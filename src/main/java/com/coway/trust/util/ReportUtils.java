@@ -38,7 +38,6 @@ public class ReportUtils {
 			Fields fields) {
 		params.forEach((k, v) -> {
 			try {
-				LOGGER.debug(" k : {}, V : {}", k, v);
 				int index = fields.find(k, FieldDisplayNameType.fieldName, Locale.getDefault());
 				if (index >= 0) {
 					if (((Field) fields.get(index))
