@@ -54,6 +54,8 @@ public interface PreCcpRegisterService {
 
 	int submitConsent(Map<String, Object> params) ;
 
+	void updateCustomerScore(Map<String, Object> params);
+
 	EgovMap checkStatus(Map<String, Object> params);
 
 	List <EgovMap> selectPreCcpResult(Map<String, Object> params);

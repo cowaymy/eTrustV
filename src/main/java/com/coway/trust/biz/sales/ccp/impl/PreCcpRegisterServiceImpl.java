@@ -169,6 +169,11 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public void updateCustomerScore(Map<String, Object> params){
+		preCcpRegisterMapper.updateCustomerScore(params);
+	}
+
+	@Override
 	public EgovMap checkStatus(Map<String, Object> params){
 		return preCcpRegisterMapper.checkStatus(params);
 	}

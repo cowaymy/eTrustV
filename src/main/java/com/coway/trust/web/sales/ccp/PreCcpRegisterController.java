@@ -323,6 +323,7 @@ public class PreCcpRegisterController {
 		    boolean flag = ctos(params);
 		    if(flag == true){
 		    	 result = preCcpRegisterService.submitConsent(params);
+		    	 preCcpRegisterService.updateCustomerScore(params);
 		    }
 			message.setCode(result > 0 ? AppConstants.SUCCESS : AppConstants.FAIL);
     		message.setMessage(result > 0 ? messageAccessor.getMessage("preccp.successConsent") : messageAccessor.getMessage("preccp.failConsent"));

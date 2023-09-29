@@ -331,6 +331,26 @@
 		AND TYPE_ID = 7290
 	</update>
 
+	<update id="updateCustomerScore" parameterType="Map">
+	       MERGE INTO SAL0029D A
+		   USING(
+		            SELECT DISTINCT
+		                B.CUST_ID, C.CREDIT_SCRE, C.CCRIS_DT
+		            FROM SAL0343D A
+		            JOIN SAL0029D B ON A.CUST_IC = B.NRIC
+		            JOIN SAL0402D C ON A.CCRIS_ID = C.CCRIS_ID
+		            WHERE A.TYPE_ID = 7290
+		            AND NVL(A.CCRIS_ID,0) <![CDATA[<>]]> 0
+		            AND C.STUS_CODE_ID = 4
+		            AND NVL(A.DISAB,0) = 0
+		            AND A.TAC_NO || A.PRECCP_SEQ = #{id}
+		    )SRC ON (A.CUST_ID = SRC.CUST_ID)
+		    WHEN MATCHED THEN
+		    UPDATE SET
+            A.FICO_SCRE = SRC.CREDIT_SCRE,
+            A.CTOS_DT = SRC.CCRIS_DT
+	</update>
+
 	<select id="checkStatus" resultType="egovMap">
 		SELECT
 		      NVL(SMS_CONSENT,0) CHK_STATUS
