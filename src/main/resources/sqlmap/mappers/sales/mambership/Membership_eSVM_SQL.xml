@@ -418,7 +418,7 @@
     </select>
 
     <select id="selectESvmPreSalesInfo" parameterType="Map" resultType="egovMap">
-        SELECT INFO.*,
+        SELECT DISTINCT INFO.*,
         <![CDATA[
             CASE WHEN INFO.EXPINT <= 0 THEN 'Under membership'
                  WHEN (INFO.EXPINT > 0 AND INFO.COOLING_PERIOD >= INFO.EXPINT) THEN 'Under cooling off period'
