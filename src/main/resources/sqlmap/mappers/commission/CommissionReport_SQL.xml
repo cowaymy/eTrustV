@@ -46,46 +46,20 @@
 
    <select id="commSHIMemberSearch" parameterType="Map" resultType="Map">
         SELECT
-            sub.MEM_ID AS MEM_ID,
-            sub.MEM_UP_ID AS MEM_UP_ID,
-            sub.MEM_LVL AS MEM_LVL,
-            sub.DEPT_CODE AS DEPT_CODE,
-            sub.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID,
-            sub.HIST_MONTH AS HIST_MONTH,
-            sub.HIST_YEAR AS HIST_YEAR,
-            sub.CRT_DT AS CRT_DT,
-            sub.CRT_USER_ID AS CRT_USER_ID,
-            sub.PR_CODE AS PR_CODE,
-            sub.PR_MEM_ID AS PR_MEM_ID,
-            sub.GRAND_PR_CODE AS GRAND_PR_CODE,
-            sub.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID,
-            sub.LAST_DEPT_CODE AS LAST_DEPT_CODE,
-            sub.LAST_GRP_CODE AS LAST_GRP_CODE,
-            sub.LAST_ORG_CODE AS LAST_ORG_CODE
-        FROM ( SELECT
             t2.MEM_ID AS MEM_ID,
             t2.MEM_UP_ID AS MEM_UP_ID,
             t2.MEM_LVL AS MEM_LVL,
+            t2.ORG_CODE AS ORG_CODE,
+            t2.GRP_CODE AS GRP_CODE,
             t2.DEPT_CODE AS DEPT_CODE,
-            t2.ORG_STUS_CODE_ID AS ORG_STUS_CODE_ID,
             t2.HIST_MONTH AS HIST_MONTH,
-            t2.HIST_YEAR AS HIST_YEAR,
-            t2.CRT_DT AS CRT_DT,
-            t2.CRT_USER_ID AS CRT_USER_ID,
-            t2.PR_CODE AS PR_CODE,
-            t2.PR_MEM_ID AS PR_MEM_ID,
-            t2.GRAND_PR_CODE AS GRAND_PR_CODE,
-            t2.GRAND_PR_MEM_ID AS GRAND_PR_MEM_ID,
-            t2.LAST_DEPT_CODE AS LAST_DEPT_CODE,
-            t2.LAST_GRP_CODE AS LAST_GRP_CODE,
-            t2.LAST_ORG_CODE AS LAST_ORG_CODE
-            FROM  ORG0001D  t1 JOIN ORG0006D  t2
-              ON t2.MEM_ID = t1.MEM_ID
-                  AND t2.HIST_MONTH = #{pvMonth}
-                  AND t2.HIST_YEAR = #{pvYear}
+            t2.HIST_YEAR AS HIST_YEAR
+        FROM ORG0001D  t1
+        JOIN ORG1002V  t2 ON t2.MEM_ID = t1.MEM_ID
+                         AND t2.HIST_MONTH = #{pvMonth}
+                         AND t2.HIST_YEAR = #{pvYear}
             WHERE t1.MEM_CODE =#{memCode}
               AND t1.MEM_TYPE = #{typeCode}
-        )   sub
     </select>
 
     <resultMap id="commSHIIndexMap" type="egovMap" />
