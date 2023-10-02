@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.a.a.a.g.m.l;
 import com.coway.trust.biz.commission.report.CommissionReportService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -54,6 +55,9 @@ public class CommissionReportController {
 
 	@Resource(name = "commissionReportService")
 	private CommissionReportService commissionReportService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 	@Value("${app.name}")
 	private String appName;
@@ -180,6 +184,19 @@ public class CommissionReportController {
 		model.addAttribute("today", today);
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("loginId",loginId);
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		  params.put("userId", sessionVO.getUserId());
+
+      EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+
+      model.put("memCodeType", getUserInfo.get("memType"));
+      model.put("orgCode", getUserInfo.get("orgCode"));
+      model.put("grpCode", getUserInfo.get("grpCode"));
+      model.put("deptCode", getUserInfo.get("deptCode"));
+      model.put("memCode", getUserInfo.get("memCode"));
+		}
+
 		// 호출될 화면
 		return "commission/commissionSHICollectionTarget";
 	}

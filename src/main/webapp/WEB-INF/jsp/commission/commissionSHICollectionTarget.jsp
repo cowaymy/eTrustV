@@ -37,12 +37,68 @@
   var today = "${today}";
   var userDefine1 = "${PAGE_AUTH.funcUserDefine1}";
   var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
+  var MEM_TYPE = "${memCodeType}";
+
   $(document).ready( function() {
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID2, "singleRow");
-
+            
             if ("${SESSION_INFO.userTypeId}" != 1 && "${SESSION_INFO.userTypeId}" != 2) {
               $("#typeCode").prop("disabled", false);
+            }
+
+            if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+
+                if("${SESSION_INFO.memberLevel}" =="1"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                    $("#deptCode").val("${deptCode}");
+                    $("#deptCode").attr("class", "w100p readonly");
+                    $("#deptCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                    $("#deptCode").val("${deptCode}");
+                    $("#deptCode").attr("class", "w100p readonly");
+                    $("#deptCode").attr("readonly", "readonly");
+
+                    $("#memCode").val("${SESSION_INFO.userName}");
+                    $("#memCode").attr("class", "w100p readonly");
+                    $("#memCode").attr("readonly", "readonly");
+                    $("#_memBtn").hide();
+
+                }
             }
 
             $("#search").click(function() {
@@ -141,6 +197,61 @@
 
             $("#clear").click(function() {
               document.myForm.reset();
+
+              if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+
+                  if("${SESSION_INFO.memberLevel}" =="1"){
+
+                      $("#orgCode").val("${orgCode}");
+                      $("#orgCode").attr("class", "w100p readonly");
+                      $("#orgCode").attr("readonly", "readonly");
+
+                  }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+                      $("#orgCode").val("${orgCode}");
+                      $("#orgCode").attr("class", "w100p readonly");
+                      $("#orgCode").attr("readonly", "readonly");
+
+                      $("#grpCode").val("${grpCode}");
+                      $("#grpCode").attr("class", "w100p readonly");
+                      $("#grpCode").attr("readonly", "readonly");
+
+                  }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+                      $("#orgCode").val("${orgCode}");
+                      $("#orgCode").attr("class", "w100p readonly");
+                      $("#orgCode").attr("readonly", "readonly");
+
+                      $("#grpCode").val("${grpCode}");
+                      $("#grpCode").attr("class", "w100p readonly");
+                      $("#grpCode").attr("readonly", "readonly");
+
+                      $("#deptCode").val("${deptCode}");
+                      $("#deptCode").attr("class", "w100p readonly");
+                      $("#deptCode").attr("readonly", "readonly");
+
+                  }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+                      $("#orgCode").val("${orgCode}");
+                      $("#orgCode").attr("class", "w100p readonly");
+                      $("#orgCode").attr("readonly", "readonly");
+
+                      $("#grpCode").val("${grpCode}");
+                      $("#grpCode").attr("class", "w100p readonly");
+                      $("#grpCode").attr("readonly", "readonly");
+
+                      $("#deptCode").val("${deptCode}");
+                      $("#deptCode").attr("class", "w100p readonly");
+                      $("#deptCode").attr("readonly", "readonly");
+
+                      $("#memCode").val("${SESSION_INFO.userName}");
+                      $("#memCode").attr("class", "w100p readonly");
+                      $("#memCode").attr("readonly", "readonly");
+                      $("#_memBtn").hide();
+
+                  }
+              }
+
             });
 
             $("#generate").click(
@@ -175,7 +286,7 @@
                         $("#reportForm #year").val(year);
                         $("#reportForm #mLvl").val(level);
                         $("#reportForm #mType").val(typeCode);
-                        $("#reportForm #deptCode").val(teamCode);
+                        $("#reportForm #rptDeptCode").val(teamCode);
                         $("#reportForm #rptCustType").val(custType);
                         $("#reportForm #rptCatType").val(catType);
 
@@ -324,7 +435,7 @@
             <input type="hidden" name="V_MEMCODE" id="mCode" />
             <input type="hidden" name="V_PVMTH" id="month" /> <input type="hidden" name="V_PVYEAR" id="year" />
             <input type="hidden" name="V_MEMLVL" id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" />
-            <input type="hidden" name="V_DEPTCODE" id="deptCode" />
+            <input type="hidden" name="V_DEPTCODE" id="rptDeptCode" />
             <input type="hidden" name="V_CUST_TYPE" id="rptCustType" />
             <input type="hidden" name="V_CAT_TYPE" id="rptCatType" />
             <input type="hidden" name="reportDownFileName" id="reportDownFileName" />
@@ -372,13 +483,21 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">* <spring:message code='commission.text.search.teamCode' /></th>
+                        <%-- <th scope="row">* <spring:message code='commission.text.search.teamCode' /></th>
                         <td>
                             <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" id="teamCode" name="teamCode" />
-                        </td>
+                        </td> --%>
                         <th scope="row">* <spring:message code='commission.text.search.level' /></th>
                         <td>
                             <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" readonly="readonly" id="level" name="level" />
+                        </td>
+                        <th scope="row">* <spring:message code='sal.title.text.category' /></th>
+                        <td>
+                            <select class="w100p" id="catType" name="catType">
+                                <option value="">All</option>
+                                <option value="HA">HA - Home Appliances</option>
+                                <option value="HC">HC - Homecare</option>
+                            </select>
                         </td>
                         <th scope="row">Customer Type</th>
                         <td>
@@ -389,7 +508,7 @@
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <%-- <tr>
                         <th scope="row">* <spring:message code='sal.title.text.category' /></th>
                         <td>
                             <select class="w100p" id="catType" name="catType">
@@ -402,6 +521,14 @@
                         <td></td>
                         <th scope="row"></th>
                         <td></td>
+                    </tr> --%>
+                    <tr>
+                        <th scope="row">Org Code</th>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" /></td>
+                        <th scope="row">Grp Code</th>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
+                        <th scope="row">Dept Code</th>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
                     </tr>
                     <tr>
                         <td colspan="6" class="col_all">
@@ -468,7 +595,7 @@
                 <p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate' /></a></p>
                 <!-- <p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p> -->
             </li>
-        </ul> --%> --%>
+        </ul> --%>
         <article class="grid_wrap">
         <!-- grid_wrap start -->
             <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
