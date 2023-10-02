@@ -602,6 +602,12 @@ public class CommonController {
 
     if (params.get("indicator").equals("INST")) {
       info = commonService.getGeneralInstInfo(params);
+    } else if (params.get("indicator").equals("AS")) {
+      info = commonService.getGeneralASInfo(params);
+    } else if (params.get("indicator").equals("PR")) {
+      info = commonService.getGeneralPRInfo(params);
+    } else if (params.get("indicator").equals("HS")) {
+      info = commonService.getGeneralHSInfo(params);
     }
 
     info.put("path", params.get("path"));
