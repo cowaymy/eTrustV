@@ -2207,6 +2207,60 @@
         AND A.INSTALL_ENTRY_ID = #{key}
   </select>
 
+  <select id="getGeneralASInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.AS_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE
+    FROM SVC0001D A
+    JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.AS_MEM_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    WHERE A.AS_SO_ID = #{ordId}
+        AND A.AS_ID = #{key}
+  </select>
+
+  <select id="getGeneralPRInfo" resultType="egovMap">
+     SELECT TO_CHAR(A.RETN_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE
+    FROM LOG0038D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.CALL_ENTRY_ID = #{key}
+  </select>
+
+  <select id="getGeneralHSInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.NO) AS JOB_NO,
+           TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE
+    FROM SVC0008D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CODY_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.SCHDUL_ID = #{key}
+  </select>
+
   <select id="selectTimePick"  parameterType="Map" resultType="egovMap">
     SELECT CODE AS CODE_ID,
            CODE_NAME AS CODE_NAME
