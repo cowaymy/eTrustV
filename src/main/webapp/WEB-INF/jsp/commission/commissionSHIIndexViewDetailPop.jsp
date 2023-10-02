@@ -21,7 +21,7 @@
                 level    : '${data.level}',
                 teamCode : '${data.teamCode}'
 		};
-        console.log(data);
+		
 		/* $("#searchD").click(function(){
 			Common.ajax("GET", "/commission/report/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
 				AUIGrid.setGridData(detailGridID, result);
@@ -38,7 +38,7 @@
             var year = Number(date.substring(3));
             var memCd = $("#memberCd").val(); */
 
-            let data = $("#myForm").serializeJSON();
+            //let data = $("#myForm").serializeJSON();
             let month = Number(data.shiDate.substring(0, 2));
             let year = Number(data.shiDate.substring(3));
 
@@ -57,8 +57,6 @@
             $("#reportForm2 #reportFileName").val(reportFileName);
             $("#reportForm2 #reportDownFileName").val(reportDownFileName);
             $("#reportForm2 #viewType").val(reportViewType);
-
-            console.log($("#reportForm2").serializeJSON());
 
         //  report 호출
              var option = {
