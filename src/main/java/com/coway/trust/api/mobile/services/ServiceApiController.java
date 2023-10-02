@@ -191,9 +191,10 @@ import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
  * 30/10/2019 ONGHC 1.0.9 - Amend Installation for add EXC_CT_ID as parameter
  * 22/04/2019 ONGHC 1.0.10 - Add function getRelateOrderInfo
  * 23/04/2019 ONGHC 1.0.11 - Add function getOrdDetail
- * 24/09/2020 FARUQ 1.0.12 - Missing product name when fail (mobile site only)
- * 07/07/2022 FARUQ 1.0.13 - establish /mobile/api/v1/service/insertAsFromCodyRequest
+ * 24/09/2020 FARUQ  1.0.12 - Missing product name when fail (mobile site only)
+ * 07/07/2022 FARUQ  1.0.13 - establish /mobile/api/v1/service/insertAsFromCodyRequest
  * 03/04/2022 FANNIE 1.0.14 - Add function update GPS
+ * 02/10/2023 ONGHC 1.0.15 - Remove Heavy Load Logger
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -255,11 +256,13 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]HEART SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < HeartServiceJobList.size(); i++) {
       LOGGER.debug("heartServiceJobList: {}", HeartServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]HEART SERVICE JOB LIST SEARCH====================================");
+    */
 
     List<HeartServiceJobDto> list = HeartServiceJobList.stream().map(r -> HeartServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -274,11 +277,13 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]HEART SERVICE JOB BATCH SEARCH====================================");
     for (int i = 0; i < HeartServiceJobList.size(); i++) {
       LOGGER.debug("heartServiceJobList_b : {}", HeartServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]HEART SERVICE JOB BATCH SEARCH====================================");
+    */
 
     List<HeartServiceJobDto> list = HeartServiceJobList.stream().map(r -> HeartServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -293,11 +298,13 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < AfterServiceJobList.size(); i++) {
       LOGGER.debug("afterServiceJobList : {}", AfterServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
+    */
 
     List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -312,11 +319,13 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
     for (int i = 0; i < AfterServiceJobList.size(); i++) {
       LOGGER.debug("afterServiceJobList_b : {}", AfterServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
+    */
 
     List<AfterServiceJobDto_b> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto_b.create(r)).collect(Collectors.toList());
 
@@ -331,11 +340,13 @@ public class ServiceApiController {
 
     List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
     for (int i = 0; i < InstallationJobList.size(); i++) {
       LOGGER.debug("installationJobList : {}", InstallationJobList.get(i));
     }
     LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
+    */
 
     List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
 
@@ -350,11 +361,13 @@ public class ServiceApiController {
 
     List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
     for (int i = 0; i < InstallationJobList.size(); i++) {
       LOGGER.debug("installationJobList_b    값 : {}", InstallationJobList.get(i));
     }
     LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
+    */
 
     List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
 
@@ -369,11 +382,12 @@ public class ServiceApiController {
 
     List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
 
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
+    /*LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
     for (int i = 0; i < ProductRetrunJobList.size(); i++) {
       LOGGER.debug("productRetrunJobList : {}", ProductRetrunJobList.get(i));
     }
     LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
+    */
 
     List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
 
@@ -388,11 +402,13 @@ public class ServiceApiController {
 
     List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
     for (int i = 0; i < ProductRetrunJobList.size(); i++) {
       LOGGER.debug("productRetrunJobList_b : {}", ProductRetrunJobList.get(i));
     }
     LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
+    */
 
     List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
 
@@ -407,11 +423,13 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts(params);
 
+    /*
     LOGGER.debug("==================================[MB]HEART SERVICE PART LIST SEARCH====================================");
     for (int i = 0; i < HeartServiceParts.size(); i++) {
       LOGGER.debug("heartServiceParts : {}", HeartServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]HEART SERVICE PART LIST SEARCH====================================");
+    */
 
     List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -426,11 +444,13 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]HEART SERVICE PART LIST BATCH SEARCH====================================");
     for (int i = 0; i < HeartServiceParts.size(); i++) {
       LOGGER.debug("heartServiceParts_b : {}", HeartServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]HEART SERVICE PART LIST BATCH SEARCH====================================");
+    */
 
     List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -445,11 +465,13 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
     for (int i = 0; i < AfterServiceParts.size(); i++) {
       LOGGER.debug("afterServiceParts : {}", AfterServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
+    */
 
     List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -464,11 +486,13 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts_b(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
     for (int i = 0; i < AfterServiceParts.size(); i++) {
       LOGGER.debug("afterServiceParts_b  : {}", AfterServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
+    */
 
     List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -1728,9 +1752,11 @@ public class ServiceApiController {
 
     Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
 
+    /*
     LOGGER.debug("==================================[MB]HS RE APPOINMENT REQUEST ====================================");
     LOGGER.debug("### HS RE APPOINTMENT REQUEST FORM : " + params.toString());
     LOGGER.debug("==================================[MB]HS RE APPOINMENT REQUEST ====================================");
+    */
 
     // CREATE HISTORY LOG
     if (RegistrationConstants.IS_INSERT_HSRE_LOG) {
@@ -2298,11 +2324,13 @@ public class ServiceApiController {
 
     List<EgovMap> careServiceJobList = MSvcLogApiService.getCareServiceJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < careServiceJobList.size(); i++) {
       LOGGER.debug("careServiceJobList: {}", careServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
+    */
 
     List<CareServiceJobDto> list = careServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -2316,11 +2344,13 @@ public class ServiceApiController {
 
     List<EgovMap> hcServiceJobList = MSvcLogApiService.getHcServiceJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < hcServiceJobList.size(); i++) {
       LOGGER.debug("careServiceJobList: {}", hcServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
+    */
 
     List<HcServiceJobDto> list = hcServiceJobList.stream().map(r -> HcServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -2334,11 +2364,13 @@ public class ServiceApiController {
 
     List<EgovMap> careServiceParts = MSvcLogApiService.heartServiceParts(params);
 
+    /*
     LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
     for (int i = 0; i < careServiceParts.size(); i++) {
       LOGGER.debug("careServiceParts : {}", careServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
+    */
 
     List<CareServicePartsDto> list = careServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -2352,11 +2384,13 @@ public class ServiceApiController {
 
     List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < dtAfterServiceJobList.size(); i++) {
       LOGGER.debug("dtAfterServiceJobList : {}", dtAfterServiceJobList.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
+    */
 
     List<DtAfterServiceJobDto> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto.create(r)).collect(Collectors.toList());
 
@@ -2370,11 +2404,13 @@ public class ServiceApiController {
 
     List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts(params);
 
+    /*
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
     for (int i = 0; i < dtAfterServiceParts.size(); i++) {
       LOGGER.debug("dtAfterServiceParts : {}", dtAfterServiceParts.get(i));
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
+    */
 
     List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -2388,11 +2424,13 @@ public class ServiceApiController {
 
     List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
     for (int i = 0; i < dtProductRetrunJobList.size(); i++) {
       LOGGER.debug("dtProductRetrunJobList : {}", dtProductRetrunJobList.get(i));
     }
     LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
+    */
 
     List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
 
@@ -2406,11 +2444,13 @@ public class ServiceApiController {
 
     List<EgovMap> dtInstallationJobList = MSvcLogApiService.getDtInstallationJobList(params);
 
+    /*
     LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
     for (int i = 0; i < dtInstallationJobList.size(); i++) {
       LOGGER.debug("dtInstallationJobList : {}", dtInstallationJobList.get(i));
     }
     LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
+    */
 
     List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
 
@@ -2424,9 +2464,11 @@ public class ServiceApiController {
 
     Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
 
+    /*
     LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
     LOGGER.debug("### HT RE APPOINTMENT REQUEST FORM : " + params.toString());
     LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
+    */
 
     MSvcLogApiService.updateHTReAppointmentReturnResult(params);
 
@@ -2440,9 +2482,11 @@ public class ServiceApiController {
 
     Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
 
+    /*
     LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
     LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST FORM : " + params.toString());
     LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
+    */
 
     // CREATE HISTORY LOG
     if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
@@ -2630,11 +2674,13 @@ public class ServiceApiController {
 
     List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
 
+    /*
     LOGGER.debug("==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
     for (int i = 0; i < DtRentalCollectionList.size(); i++) {
       LOGGER.debug("DtRentalCollectionList: {}", DtRentalCollectionList.get(i));
     }
     LOGGER.debug("==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
+    */
 
     List<DtRentalCollectionListDto> list = DtRentalCollectionList.stream().map(r -> DtRentalCollectionListDto.create(r)).collect(Collectors.toList());
 
