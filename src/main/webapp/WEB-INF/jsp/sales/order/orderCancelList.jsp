@@ -363,8 +363,7 @@
       return false;
     }
     if (detailForm.paramRsoStusId.value != 'ACT') {
-      Common
-          .alert("Only available to use this function  in case of Return Service Order Status in ‘ACT’");
+      Common.alert("Only available to use this function  in case of Return Service Order Status in ‘ACT’");
       return false;
     }
 
@@ -372,21 +371,26 @@
     var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
 
     Common.ajax("POST", "/sales/order/selRcdTms2.do", {
-        orderId :   $("#salesOrdId").val(),
-        callEntryId :  $("#callEntryId").val(),
-        rcdTms : rcdTms
-      }, function(result) {
-        if (result.code == "99") {
-          Common.alert(result.message);
-          return;
-        } else {
-    Common.popupDiv(
-        "/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId="
-            + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1, $(
-            "#detailForm").serializeJSON(), null, "false",
-        "addInstallationPopupId");
-        }
-      });
+      orderId : $("#salesOrdId").val(),
+      callEntryId : $("#callEntryId").val(),
+      rcdTms : rcdTms
+    }, function(result) {
+      if (result.code == "99") {
+        Common.alert(result.message);
+        return;
+      } else {
+        /* Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
+                                      $("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId"); */
+
+        // TEMP
+        var prm = { "path" : "/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
+                          "indicator" : "PR",
+                          "ordId" : salesOrdId1,
+                          "key" : $("#callEntryId").val(),
+                          "popId" : "addInstallationPopupId"};
+        Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
+      }
+    });
 
   }
 
