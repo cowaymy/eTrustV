@@ -480,6 +480,12 @@ public interface CommonService {
 
   EgovMap getGeneralInstInfo(Map<String, Object> params);
 
+  EgovMap getGeneralASInfo(Map<String, Object> params);
+
+  EgovMap getGeneralPRInfo(Map<String, Object> params);
+
+  EgovMap getGeneralHSInfo(Map<String, Object> params);
+
   List<EgovMap> selectTimePick();
 
 }
