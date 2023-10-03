@@ -254,7 +254,7 @@ function fn_vendorValidation(ts){
             $("#isPass").val(result.isPass);
             $("#mem_acc_id").val(result.vendorAccId);
 
-            if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+             if($("#isReset").val() == 1 && $("#isPass").val() == 0)
             {
             	// new
                 if(FormUtil.isEmpty($("#newReqNo").val())) {
@@ -283,12 +283,12 @@ function fn_vendorValidation(ts){
     {
     	var obj = $("#form_newVendor").serializeJSON();
         console.log("fn_vendorValidation_submit");
-        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+        Common.ajax("GET", "/eAccounting/vendor/vendorValidation2.do?_cacheId=" + Math.random(), obj, function(result){
             $("#isReset").val(result.isReset);
             $("#isPass").val(result.isPass);
             $("#mem_acc_id").val(result.vendorAccId);
 
-            if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+             if($("#isReset").val() == 1 && $("#isPass").val() == 0)
             {
                 if(FormUtil.isEmpty($("#newReqNo").val())) {
                     fn_attachmentUpload("");
