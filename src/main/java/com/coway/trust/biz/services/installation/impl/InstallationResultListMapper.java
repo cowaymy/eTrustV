@@ -324,6 +324,4 @@ public interface InstallationResultListMapper {
 
  void updateEmailSentCount(Map<String, Object> params);
 
- EgovMap getEmailInfo(Map<String, Object> params);
-
 }
