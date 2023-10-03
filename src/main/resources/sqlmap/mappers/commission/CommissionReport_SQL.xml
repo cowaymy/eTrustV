@@ -58,8 +58,14 @@
         JOIN ORG1002V  t2 ON t2.MEM_ID = t1.MEM_ID
                          AND t2.HIST_MONTH = #{pvMonth}
                          AND t2.HIST_YEAR = #{pvYear}
-            WHERE t1.MEM_CODE =#{memCode}
+            WHERE 1 = 1
               AND t1.MEM_TYPE = #{typeCode}
+              <if test="orgCode != null and orgCode != ''"> AND T2.ORG_CODE = #{orgCode} </if>
+              <if test="grpCode != null and grpCode != ''"> AND T2.GRP_CODE = #{grpCode}</if>
+              <if test="deptCode != null and deptCode != ''"> AND T2.DEPT_CODE = #{deptCode}</if>
+              <if test="memCode != null and memCode != ''"> AND t1.MEM_CODE =#{memCode} </if>
+              ORDER BY T2.MEM_LVL
+              FETCH NEXT 1 ROW ONLY
     </select>
 
     <resultMap id="commSHIIndexMap" type="egovMap" />

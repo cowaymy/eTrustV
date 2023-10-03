@@ -102,13 +102,16 @@
             }
 
             $("#search").click(function() {
-                      var valid = $("#memCode").val();
-                      if (valid == null || valid == "") {
-                        Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
+                      var valid = false;
+
+
+                      if (valid) {
+                        Common.alert("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
                         $("#teamCode").val("");
                         $("#level").val("");
                       } else {
                         $("#typeCode").prop("disabled",false);
+
                         Common.ajax("GET","/commission/report/commSHIMemSearch",$("#myForm").serializeJSON(),function(result) {
                                   if (result != null) {
                                     $("#teamCode").val(result.DEPT_CODE);
@@ -119,30 +122,31 @@
                                     if(!$("#deptCode").val()) $("#deptCode").val(result.DEPT_CODE);
 
                                     Common.ajaxSync("GET","/commission/report/commSPCRgenrawSHIIndex",$("#myForm").serializeJSON(),function(result) {
-                                              $("#typeCode").prop("disabled",true);
+                                        //$("#typeCode").prop("disabled",true);
 
-                                              AUIGrid.setProp(myGridID2, "rowStyleFunction", function(rowIndex, item){
-                                                  if (item.topOrgCode)
-                                                      return "l0-style";
-                                                  if (item.orgCode)
-                                                      return "l1-style";
-                                                  if (item.grpCode)
-                                                      return "l2-style";
-                                                  if (item.deptCode)
-                                                      return "l3-style";
-                                              });
+                                        AUIGrid.setProp(myGridID2, "rowStyleFunction", function(rowIndex, item){
+                                            if (item.topOrgCode)
+                                                return "l0-style";
+                                            if (item.orgCode)
+                                                return "l1-style";
+                                            if (item.grpCode)
+                                                return "l2-style";
+                                            if (item.deptCode)
+                                                return "l3-style";
+                                        });
 
-                                              AUIGrid.setGridData(myGridID2,result);
-                                              AUIGrid.setGridData(excelGridID,result);
-                                            });
+                                        AUIGrid.setGridData(myGridID2,result);
+                                        AUIGrid.setGridData(excelGridID,result);
+                                      });
                                   } else {
-                                    Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
+                                    Common.alert("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
                                     if (userDefine2 == "Y") {
                                       $("#memCode").val("");
                                       $("#teamCode").val("");
                                       $("#level").val("");
                                     }
                                   }
+
                                 });
                       }
                     });
@@ -473,7 +477,7 @@
                         <th scope="row"><spring:message code='commission.text.search.memCode' /></th>
                         <td>
                             <input type="text" title="" placeholder="" id="memCode" name="memCode"
-                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly </c:if>
+                                <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly </c:if> --%>
                             />
                             <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                                 <a id="memBtn" href="#" class="search_btn">
@@ -493,7 +497,7 @@
                         </td> --%>
                         <th scope="row">* <spring:message code='commission.text.search.level' /></th>
                         <td>
-                            <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" readonly="readonly" id="level" name="level" />
+                            <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" id="level" name="level" />
                         </td>
                         <th scope="row">* <spring:message code='sal.title.text.category' /></th>
                         <td>
