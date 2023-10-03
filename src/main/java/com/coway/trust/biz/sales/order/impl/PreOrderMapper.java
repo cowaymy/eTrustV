@@ -61,5 +61,5 @@ public interface PreOrderMapper {
 
 	EgovMap checkExtradeSchedule();
 
-	String selectExistingSalesVoucherCode(PreOrderVO preOrderVO);
+//	String selectExistingSalesVoucherCode(PreOrderVO preOrderVO);
 }

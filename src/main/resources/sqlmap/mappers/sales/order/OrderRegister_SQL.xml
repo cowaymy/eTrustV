@@ -245,7 +245,7 @@
              , T4.NAME ORDER_STATUS
              , NVL(T5.STUS_CODE_ID, '-') RENTAL_STATUS
              , T6.CNTRCT_RENTAL_PRIOD RENTAL_PERIOD
-             , T1.VOUCHER_CODE
+<!--              , T1.VOUCHER_CODE -->
     FROM SAL0001D T1
     LEFT JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_ID
     LEFT JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID
@@ -1226,7 +1226,7 @@
                   , PRE_ORD_ID
                   , ECOMM_ORD_ID
                   , EX_TRADE_PR
-                  , VOUCHER_CODE
+<!--                   , VOUCHER_CODE -->
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1291,7 +1291,7 @@
              , #{preOrdId}
              , #{ecommOrdId}
              , #{isExtradePR}
-             , #{voucherCode}
+<!--              , #{voucherCode} -->
      )
   </insert>
 

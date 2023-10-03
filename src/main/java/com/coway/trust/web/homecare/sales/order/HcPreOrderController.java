@@ -179,7 +179,6 @@ public class HcPreOrderController {
         model.put("codeList_325", commonService.selectCodeList(extradeParam));
         model.put("codeList_415", commonService.selectCodeList("415", "CODE_ID"));
         model.put("codeList_416", commonService.selectCodeList("416", "CODE_ID"));
-        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
         // Search BranchCodeList
         model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
         model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
@@ -329,8 +328,6 @@ public class HcPreOrderController {
 		model.put("preMatOrderInfo", matOrderInfo);
 		model.put("preFrmOrderInfo", frmOrderInfo);
 
-        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
-
 		return "homecare/sales/order/hcPreOrderModifyPop";
 	}
 
@@ -448,7 +445,6 @@ public class HcPreOrderController {
         model.put("codeList_17", codeList_17);
         model.put("codeList_19", codeList_19);
         model.put("codeList_322", codeList_322);
-        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 		model.put("preOrderInfo", preOrderInfo);
 		model.put("hcPreOrdInfo", hcPreOrdInfo);
 		model.put("preMatOrderInfo", matOrderInfo);
