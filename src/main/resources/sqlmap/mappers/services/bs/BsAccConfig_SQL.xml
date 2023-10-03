@@ -766,7 +766,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , SO.PV_MONTH
                               , SO.PV_YEAR
                               , CASE WHEN hs.TGT_UPD_DT IS NULL THEN hs.UPD_DT ELSE hs.TGT_UPD_DT END AS TGT_UPD_DT
-                              , CASE WHEN hs.TGT_UPD_USER_ID IS NULL THEN USR2.MEM_CODE ELSE USR3.USER_NAME END AS TGT_UPD_USER
+                              , CASE WHEN hs.TGT_UPD_USER_ID IS NULL THEN USR4.USER_NAME ELSE USR3.USER_NAME END AS TGT_UPD_USER
 
                 FROM SAL0001D sal01
                 INNER JOIN SAL0090D sal09 ON sal09.SRV_SO_ID = sal01.SALES_ORD_ID
