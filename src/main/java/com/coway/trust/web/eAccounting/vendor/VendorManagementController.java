@@ -260,6 +260,77 @@ public class VendorManagementController {
 
     }
 
+    @RequestMapping(value = "/vendorValidation2.do", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> vendorValidation2(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        ReturnMessage message = new ReturnMessage();
+        int regCompNoCount = vendorService.checkExistNo(params.get("regCompNo").toString());
+        int paymentTypeCount = vendorService.checkExistPaymentType(params);
+        int bankListCount = vendorService.checkExistBankListNo(params);
+        int bankAccNoCount = vendorService.checkExistBankAccNo(params);
+        String vendorAccId = vendorService.selectExistBankAccNo(params);
+//        String checkReqNo = vendorService.checkReqNo(params);
+        int isReset = 1; // 1:false, 0:true;
+        int isPass = 1; // 1:NotPass, 0:Pass;
+//        int sameReqNo = 1; // 1:NotSame, 0:Same;
+
+//        if (checkReqNo != null && !checkReqNo.equals("") && checkReqNo.equals(params.get("newReqNo").toString())) {
+//            sameReqNo = 0;
+//        }
+
+        if (regCompNoCount == 0) {
+            isPass = 0;
+            params.put("isPass", isPass);
+            params.put("isReset", isReset);
+
+        } else {
+            if (paymentTypeCount == 0) {
+                isPass = 0;
+                params.put("isPass", isPass);
+                params.put("isReset", isReset);
+            } else {
+                if (bankListCount == 0) {
+                    isPass = 0;
+                    params.put("isPass", isPass);
+                    params.put("isReset", isReset);
+                } else {
+                    if (bankAccNoCount == 0) {
+                        isPass = 0;
+                        params.put("isPass", isPass);
+                        params.put("isReset", isReset);
+                    } else {
+                        if (vendorAccId != null && !vendorAccId.equals("")) {
+                            isReset = 0;
+                            isPass = 1;
+                            params.put("isReset", isReset);
+                            params.put("isPass", isPass);
+                            params.put("vendorAccId", vendorAccId);
+                            message.setCode(AppConstants.FAIL);
+                            message.setData(params);
+                            message.setMessage("Vendor Existed. Member Account ID: " + vendorAccId);
+                        } else {
+                            isReset = 0;
+                            isPass = 1;
+                            params.put("isReset", isReset);
+                            params.put("isPass", isPass);
+                            message.setCode(AppConstants.FAIL);
+                            message.setData(params);
+                            message.setMessage("Vendor existed in Pending stage.");
+                        }
+                    }
+                }
+            }
+        }
+
+//        params.put("sameReqNo", sameReqNo);
+        LOGGER.debug("params =====================================>>  " + params);
+        return ResponseEntity.ok(params);
+
+    }
+
     @RequestMapping(value = "/insertVendorInfo.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> insertVendorInfo(@RequestBody Map<String, Object> params, Model model,
             SessionVO sessionVO) {
