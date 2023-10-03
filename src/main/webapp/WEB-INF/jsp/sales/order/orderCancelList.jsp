@@ -748,7 +748,7 @@
         <option value="1" selected><spring:message code="sal.combo.text.active" /></option>
         <option value="19" selected><spring:message code="sal.combo.text.recall" /></option>
         <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
-        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>
+        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /> (DSC)</option>
         <option value="105"><spring:message code="sal.combo.text.continueRental" /></option>
         <option value="123"><spring:message code="sal.combo.text.reversalOfCancellation"/> (Careline)</option>
       </select></td>

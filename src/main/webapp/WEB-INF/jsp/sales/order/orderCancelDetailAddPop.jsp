@@ -227,6 +227,8 @@
       $("#addAppRetnDt").attr('disabled','disabled');
       $("#addAppRetnDt").val('');
       $("#addCallRecallDt").removeAttr("disabled");
+
+      if("${cancelReqInfo.reqStageId}" == '25')
       $("#_cmbFollowUp").removeAttr("disabled");
 
       $("#m7").show();
@@ -262,8 +264,6 @@
            $("select[name=cmbAssignCt]").removeAttr("disabled");
            $("select[name=cmbAssignCt]").removeClass("w100p disabled");
            $("select[name=cmbAssignCt]").addClass("w100p"); */
-        $("#requestDate").removeAttr("disabled");
-
 
         $("#m3").show();
         $("#m4").show();
@@ -368,7 +368,7 @@
         return false;
       }
 
-      if(addCallForm._cmbFollowUp.value  == ""){
+      if("${cancelReqInfo.reqStageId}" == '25' && addCallForm._cmbFollowUp.value  == ""){
           Common.alert("Please select Follow Up By");
           return false;
       }

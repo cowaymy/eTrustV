@@ -1494,7 +1494,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
           return false;
         }
         if (todayYY >= 2018) {
-          if (/* todayDD == 26 || */ todayDD == 27 || todayDD == 1
+          if (todayDD == 26 || todayDD == 27 || todayDD == 1
               || todayDD == 2) {
             var msg = '<spring:message code="sal.msg.chkCancDate" />';
             Common.alert(
@@ -1908,7 +1908,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     $('#dpReturnDate').prop("disabled", true);
     $('#txtRemark').prop("disabled", true);
     $('#txtPenaltyAdj').prop("disabled", true);
-    //$('#cmbFollowUp').prop("disabled", true);
+    $('#cmbFollowUp').prop("disabled", true);
 
     $('#btnReqCancOrder').addClass("blind");
   }
@@ -2210,8 +2210,8 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     if (ORD_STUS_ID == '4') {
       msg += '<spring:message code="sal.alert.msg.prefRtrnDt" /> : '
           + $('#dpReturnDate').val() + '<br />';
-     // msg += 'Follow Up By : '
-     //     + $('#cmbFollowUp option:selected').text() + '<br />';
+      msg += 'Follow Up By : '
+          + $('#cmbFollowUp option:selected').text() + '<br />';
 
       if (APP_TYPE_ID == 66) {
         msg += '<br />';
@@ -2389,7 +2389,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                 		  txtCurrentOutstanding : $("#txtCurrentOutstanding").val(),
                 		  spTotalAmount : $("#spTotalAmount").val(),
                 		  atchFileGrpId : atchFileGrpId,
-                		  // cmbFollowUp   : $("#cmbFollowUp").val()
+                		  cmbFollowUp   : $("#cmbFollowUp").val()
 
                 };
 
@@ -2441,7 +2441,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     var todayDD = Number(TODAY_DD.substr(0, 2));
     var todayYY = Number(TODAY_DD.substr(6, 4));
 
-    if (todayYY >= 2018 && (/* todayDD >= 26 || */ todayDD == 1)) {
+    if (todayYY >= 2018 && (todayDD >= 26 || todayDD == 1)) {
       msg = '<spring:message code="sal.msg.underOwnTrans2" />';
       Common.alert(
           '<spring:message code="sal.alert.msg.actionRestriction" />'
@@ -2837,10 +2837,10 @@ console.log("result.lastbillmth;"+result.lastbillmth);
       isValid = false;
       msg += '* <spring:message code="sal.alert.msg.pleaseKeyInTheRemark" /><br>';
     }
-    //if ($("#cmbFollowUp option:selected").index() <= 0) {
-    //    isValid = false;
-    //    msg += 'Please select Follow Up PIC';
-    //  }
+    if ($("#cmbFollowUp option:selected").index() <= 0) {
+        isValid = false;
+        msg += 'Please select Follow Up PIC';
+      }
 
     if (!isValid)
       Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />'
@@ -2903,7 +2903,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
   function fn_loadListCanc() {
     //doGetComboOrder('/common/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
     doGetComboOrder('/sales/order/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
-    //doGetComboOrder('/common/selectCodeList.do', '565', 'CODE_NAME', '', 'cmbFollowUp', 'S', ''); //Common Code
+    doGetComboOrder('/common/selectCodeList.do', '565', 'CODE_NAME', '', 'cmbFollowUp', 'S', ''); //Common Code
     doGetComboData('/sales/order/selectResnCodeList.do', {
       resnTypeId : '536',
       stusCodeId : '1'
@@ -3510,16 +3510,15 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                       </td>
                     </tr>
 
-<!--
                     <c:if test='${orderDetail.basicInfo.ordStusId == 4 }'>
                     <tr>
-                        <th>Follow up by<span class="must">*</span></th>
+                        <th>Follow up by</th>
                         <td>
-                            <select id="cmbFollowUp" name="cmbFollowUp" class="w100p" />
+                            <select id="cmbFollowUp" name="cmbFollowUp" class="w100p" ><span class="must">*</span></select>
                         </td>
                     </tr>
                     </c:if>
--->
+
                     <tr>
                       <th scope="row"><spring:message code="sal.text.ocrRem" /><span class="must">*</span></th>
                       <td colspan="3">
