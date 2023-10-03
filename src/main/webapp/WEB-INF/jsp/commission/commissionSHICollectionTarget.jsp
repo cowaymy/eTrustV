@@ -114,9 +114,9 @@
                                     $("#teamCode").val(result.DEPT_CODE);
                                     $("#level").val(result.MEM_LVL);
 
-                                    $("#orgCode").val(result.ORG_CODE);
-                                    $("#grpCode").val(result.GRP_CODE);
-                                    $("#deptCode").val(result.DEPT_CODE);
+                                    if(!$("#orgCode").val()) $("#orgCode").val(result.ORG_CODE);
+                                    if(!$("#grpCode").val()) $("#grpCode").val(result.GRP_CODE);
+                                    if(!$("#deptCode").val()) $("#deptCode").val(result.DEPT_CODE);
 
                                     Common.ajaxSync("GET","/commission/report/commSPCRgenrawSHIIndex",$("#myForm").serializeJSON(),function(result) {
                                               $("#typeCode").prop("disabled",true);
@@ -165,9 +165,9 @@
                       } */
 
                       let data = {
-                    		catType : $("#catType").val(),
+                    		catType  : $("#catType").val(),
                             custType : $("#custType").val(),
-                            shiDate : $("#shiDate").val(),
+                            shiDate  : $("#shiDate").val(),
                       };
 
                       let level = 4;
