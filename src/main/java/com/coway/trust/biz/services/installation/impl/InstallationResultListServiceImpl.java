@@ -3916,9 +3916,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   		emailArr = (List<String>) params.get("emailArr");
 
 	    String emailSubject = "COWAY: New Installation";
-
-	    List<String> emailNo = new ArrayList<String>();
-
 	    String content = "";
 	    content += "Dear Customer,\n\n";
 	    content += "Thank you for choosing Coway \n\n";
@@ -3940,20 +3937,21 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(REPORT_DOWN_FILE_NAME,  "InstallationNoteDigitalization_" + CommonUtils.getNowDate());
 
   		for (int i = 0; i < installEntryIdArr.size(); i++) {
+  		    List<String> emailNo = new ArrayList<String>();
 
   			int installEntryId = installEntryIdArr.get(i);
   			String insNumSent = insNoSendArr.get(i);
 
-  			/*if (!"".equals(CommonUtils.nvl(emailArr.get(i)))) {
+  			if (!"".equals(CommonUtils.nvl(emailArr.get(i)))) {
 		        emailNo.add(CommonUtils.nvl(emailArr.get(i)));
-		    }*/
+		    }
 		    //emailNo.add("keyi.por@coway.com.my"); //for self test only
 
   			params.put("V_WHERE", installEntryId);// parameter
   			params.put("installEntryId", installEntryId);
 
-  			EgovMap mailInfo = installationResultListMapper.getEmailInfo(params);
-  			emailNo.add(mailInfo.get("resultRepEmailNo").toString());
+  			/*EgovMap mailInfo = installationResultListMapper.getEmailInfo(params);
+  			emailNo.add(mailInfo.get("resultRepEmailNo").toString());*/
   			params.put(EMAIL_TO, emailNo);
 
   			try{
