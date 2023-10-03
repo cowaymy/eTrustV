@@ -22,13 +22,10 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
-import com.coway.trust.AppConstants;
-import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -55,9 +52,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	@Resource(name = "orderLedgerMapper")
 	private OrderLedgerMapper orderLedgerMapper;
 
-	@Resource(name = "voucherMapper")
-	private VoucherMapper voucherMapper;
-
 //	@Autowired
 //	private MessageSourceAccessor messageSourceAccessor;
 
@@ -73,19 +67,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 		if(rslt.get("preTm") != null) {
 			rslt.put("preTm", this.convert12Tm((String) rslt.get("preTm")));
-		}
-
-		if(rslt.get("voucherCode") != null){
-			String voucherCode = rslt.get("voucherCode").toString();
-			if(voucherCode.isEmpty() == false){
-		        Map<String, Object> voucherParams = new HashMap();
-		        voucherParams.put("voucherCode",voucherCode);
-				EgovMap voucher = voucherMapper.getVoucherInfo(voucherParams);
-
-				if(voucher != null){
-					rslt.put("voucherInfo", voucher);
-				}
-			}
 		}
 
 		return preOrderMapper.selectPreOrderInfo(params);
@@ -115,13 +96,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void insertPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		/*
-		 * Check if the voucher has been used before on sales order
-		 * Also check if the voucher has been use before on other e-keyin sales
-		 */
-		if(preOrderVO.getVoucherCode().isEmpty() == false){
-			this.checkVoucherValideKeyIn(preOrderVO.getVoucherCode());
-		}
 
 		preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 		this.preprocPreOrder(preOrderVO, sessionVO);
@@ -137,23 +111,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		String existingVoucherCode = preOrderMapper.selectExistingSalesVoucherCode(preOrderVO);
-		String currentVoucherCode = preOrderVO.getVoucherCode();
-
-		/*
-		 * Check if the voucher has been used before on sales order
-		 * Also check if the voucher has been use before on other e-keyin sales
-		 */
-		if(currentVoucherCode.isEmpty() == false){
-			if(existingVoucherCode.isEmpty()){
-				this.checkVoucherValideKeyIn(currentVoucherCode);
-			}
-			else{
-				if(existingVoucherCode.equals(currentVoucherCode) == false){
-					this.checkVoucherValideKeyIn(currentVoucherCode);
-				}
-			}
-		}
 
 		this.preprocPreOrder(preOrderVO, sessionVO);
 		preOrderMapper.updatePreOrder(preOrderVO);
@@ -588,27 +545,4 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	public EgovMap checkExtradeSchedule() {
 			return preOrderMapper.checkExtradeSchedule();
 		}
-
-//	private boolean updateVoucherUseStatus(String voucherCode, int isUsed){
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("voucherCode", voucherCode);
-//		params.put("isUsed", isUsed);
-//
-//		voucherMapper.updateVoucherCodeUseStatus(params);
-//		return true;
-//	}
-
-	private void checkVoucherValideKeyIn(String voucherCode)
-	{
-        Map<String, Object> voucherParams = new HashMap();
-        voucherParams.put("voucherCode", voucherCode);
-		int valid = voucherMapper.isVoucherValidToApply(voucherParams);
-		if(valid == 0){
-			throw new ApplicationException(AppConstants.FAIL, "Voucher applied is not a valid voucher");
-		}
-		int eKeyInValid = voucherMapper.isVoucherValidToApplyIneKeyIn(voucherParams);
-		if(eKeyInValid == 0){
-			throw new ApplicationException(AppConstants.FAIL, "Voucher is applied on other e-KeyIn orders");
-		}
-	}
 }
