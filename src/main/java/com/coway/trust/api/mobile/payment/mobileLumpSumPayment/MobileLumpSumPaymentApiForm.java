@@ -136,6 +136,7 @@ public class MobileLumpSumPaymentApiForm {
 				params.put("nric", data.getNric());
 				params.put("ordTypeId", data.getOrdTypeId());
 				params.put("ordTypeName", data.getOrdTypeName());
+				params.put("srvMemId", data.getSrvMemId());
 				paramList.add(params);
 			}
 		}
