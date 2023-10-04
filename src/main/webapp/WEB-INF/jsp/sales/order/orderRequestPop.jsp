@@ -2837,9 +2837,9 @@ console.log("result.lastbillmth;"+result.lastbillmth);
       isValid = false;
       msg += '* <spring:message code="sal.alert.msg.pleaseKeyInTheRemark" /><br>';
     }
-    if ($("#cmbFollowUp option:selected").index() <= 0) {
+    if ($("#cmbFollowUp option:selected").index() <= 0 && '${orderDetail.basicInfo.ordStusId }' == 4) {
         isValid = false;
-        msg += 'Please select Follow Up PIC';
+        msg += '* Please select Follow Up PIC';
       }
 
     if (!isValid)
