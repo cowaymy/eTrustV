@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
+import com.coway.trust.api.mobile.services.history.AsDetailDto;
+import com.coway.trust.api.mobile.services.history.AsDetailForm;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.google.gson.JsonObject;
@@ -24,6 +26,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *********************************************************************************************/
 
 public interface MSvcLogApiService {
+
+  AsDetailDto selectAsDetails(AsDetailForm param) throws Exception;
 
   List<EgovMap> getHeartServiceJobList(Map<String, Object> params);
 
