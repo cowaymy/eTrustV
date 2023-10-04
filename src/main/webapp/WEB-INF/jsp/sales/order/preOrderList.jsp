@@ -268,11 +268,13 @@ console.log("preOrderList");
           , { headerText : "Product",         dataField : "product",    editable : false, width : '10%'}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '10%'  }
           /* , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  } */
+          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%'}
+          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%'}
           , { headerText : "Creator",         dataField : "crtName",   editable : false, width : '10%' }
           , { headerText : "Status",          dataField : "stusName",     editable : false,  width : '10%' }
           , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width : '10%' }
-          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%',visible : false }
-          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' ,visible : false}
+          , { headerText : "Cody User Branch",  dataField : "branchName",  editable : false, width:300}
+          , { headerText : "Region", dataField : "regionName",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false, width : '18%' }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
           , {headerText : "Installation State",       dataField : "state",   editable : false, width : '15%'}
