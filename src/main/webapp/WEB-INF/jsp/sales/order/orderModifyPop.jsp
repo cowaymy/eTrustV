@@ -771,6 +771,17 @@
                     }
                   }
 
+                  if($('#rentPayMode').val() == '135'){
+                	  $("#rentPayIC").hide();
+                	  $("#nricPassbook").text("Credit Card No");
+                	  $("#pnpRpsCrcNo").show();
+                  }
+                  else{
+                	  $("#rentPayIC").show();
+                      $("#nricPassbook").text("NRIC on DD/Passbook");
+                      $("#pnpRpsCrcNo").hide();
+                  }
+
                   fn_loadRejectReasonList($('#rentPayMode')
                       .val(), 0)
                 }
@@ -1463,6 +1474,16 @@
             else if (rsltInfo.payModeId == '132') {
               $('#scPC_DirectDebit').removeClass("blind");
               fn_loadBankAccount(rsltInfo.bankAccId);
+            }
+
+            if(rsltInfo.payModeId == '135'){
+                $('#pnpRpsCrcNo').show().val(rsltInfo.pnpRpsCrcNo);
+                $("#nricPassbook").text("Credit Card No");
+                $('#rentPayIC').hide();
+            }else{
+                $('#pnpRpsCrcNo').hide();
+                $("#nricPassbook").text("NRIC on DD/Passbook");
+                $('#rentPayIC').show();
             }
 
             $('#rentPayIC').val(rsltInfo.oldIc);
@@ -2220,6 +2241,9 @@
             msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
           }
         }
+      } else if ($("#rentPayMode").val() == '135' && FormUtil.isEmpty($("#pnpRpsCrcNo").val()) ){
+    	  isValid = false;
+    	  msg += '<spring:message code="crditCardMgmt.crditCardNo.msg" />';
       }
     }
 
@@ -3958,10 +3982,14 @@
           code="sal.text.rentalPaymode" /><span class="must">*</span></th>
         <td><select id="rentPayMode" name="rentPayMode"
          class="w100p" ></select></td>
-        <th scope="row"><spring:message
-          code="sal.text.nricPassbook" /></th>
-        <td><input id="rentPayIC" name="rentPayIC" type="text"
-         title="" placeholder="" class="w100p" /></td>
+
+        <th scope="row" id="nricPassbook"></th>
+        <td>
+            <input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" />
+            <input id="pnpRpsCrcNo" name="pnpRpsCrcNo" type="text" title="" placeholder="PNPRPS Crc No" class="w100p" hidden/>
+        </td>
+
+
        </tr>
       </tbody>
      </table>
@@ -4114,8 +4142,7 @@
         title="Create start Date" placeholder="DD/MM/YYYY"
         class="j_date w100p" /></td>
        <th scope="row"><label> <input id="chkRejectDate"
-         name="chkRejectDate" type="checkbox" value="1" /><span>Reject
-          Date</span><span id="spRjctDate" class="must"></span></label></th>
+         name="chkRejectDate" type="checkbox" value="1" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
        <td><input id="modRejectDate" name="rejectDate" type="text"
         title="Create start Date" placeholder="DD/MM/YYYY"
         class="j_date w100p" disabled /></td>
