@@ -134,7 +134,7 @@
     , SO_REQ_ACC_NAME
     , SO_REQ_ATTACH
     , ATCH_FILE_GRP_ID
-    <!-- , SO_REQ_FOLLOW_UP -->
+    , SO_REQ_FOLLOW_UP
     )
     VALUES
     ( #{soReqId}
@@ -170,7 +170,7 @@
     , #{soReqAccName}
     , #{soReqAttach}
     ,#{atchFileGrpId}
-    <!-- , #{soReqFollowUp} -->
+    , #{soReqFollowUp}
     )
   </insert>
 
