@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcPreOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderMapper;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
@@ -50,6 +51,9 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
   	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
+
+  	@Resource(name = "voucherMapper")
+	private VoucherMapper voucherMapper;
 
 	/**
 	 * Search Homecare Pre OrderList
@@ -90,6 +94,15 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(matStkId+fraStkId <= 0) {
 				throw new ApplicationException(AppConstants.FAIL, "Pre Order Register Failed. - Null Product ID");
 			}
+
+			/*
+			 * Check if the voucher has been used before on sales order
+			 * Also check if the voucher has been use before on other e-keyin sales
+			 */
+			if(preOrderVO.getVoucherCode().isEmpty() == false){
+				this.checkVoucherValideKeyIn(preOrderVO.getVoucherCode());
+			}
+
 			// 제품이 둘다 있는 경우.
 			if(matStkId > 0 && fraStkId > 0) {
 				BigDecimal discRntFee2 = preOrderVO.getDiscRntFee2(); // frame rental fee
@@ -229,6 +242,29 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(matStkId+fraStkId <= 0) {
 				throw new ApplicationException(AppConstants.FAIL, "Pre Order Update Failed. - Null Product ID");
 			}
+
+			if(preOrderVO.getPreOrdId1() > 0){
+				PreOrderVO newPreOrderVOForVoucher = new PreOrderVO();
+				newPreOrderVOForVoucher.setPreOrdId(preOrderVO.getPreOrdId1());
+				String existingVoucherCode = preOrderMapper.selectExistingSalesVoucherCode(newPreOrderVOForVoucher);
+				String currentVoucherCode = preOrderVO.getVoucherCode();
+
+				/*
+				 * Check if the voucher has been used before on sales order
+				 * Also check if the voucher has been use before on other e-keyin sales
+				 */
+				if(currentVoucherCode.isEmpty() == false){
+					if(existingVoucherCode.isEmpty()){
+						this.checkVoucherValideKeyIn(currentVoucherCode);
+					}
+					else{
+						if(existingVoucherCode.equals(currentVoucherCode) == false){
+							this.checkVoucherValideKeyIn(currentVoucherCode);
+						}
+					}
+				}
+			}
+
 			// 제품이 둘다 있는 경우.
     		if(matStkId > 0 && fraStkId > 0) {
     			BigDecimal discRntFee2 = preOrderVO.getDiscRntFee2(); // frame rental fee
@@ -403,4 +439,17 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 		return rtnCnt;
 	}
 
+	private void checkVoucherValideKeyIn(String voucherCode)
+	{
+        Map<String, Object> voucherParams = new HashMap();
+        voucherParams.put("voucherCode", voucherCode);
+		int valid = voucherMapper.isVoucherValidToApply(voucherParams);
+		if(valid == 0){
+			throw new ApplicationException(AppConstants.FAIL, "Voucher applied is not a valid voucher");
+		}
+		int eKeyInValid = voucherMapper.isVoucherValidToApplyIneKeyIn(voucherParams);
+		if(eKeyInValid == 0){
+			throw new ApplicationException(AppConstants.FAIL, "Voucher is applied on other e-KeyIn orders");
+		}
+	}
 }

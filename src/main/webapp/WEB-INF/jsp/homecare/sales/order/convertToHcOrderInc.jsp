@@ -337,4 +337,21 @@
         var pType = $("#appType").val() == '66' ? '1' : '2';
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
+
+	function voucherAppliedDisplay(){
+		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
+
+		if(voucherCode != null && voucherCode != ''){
+			$('.voucherSection').show();
+
+			var voucherEmail = '${preOrderInfo.voucherInfo.custEmail}';
+			var platformId = '${preOrderInfo.voucherInfo.platformId}';
+			$('#voucherCode').val(voucherCode);
+			$('#voucherEmail').val(voucherEmail);
+			$('#voucherType').val(platformId);
+		   	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+	    	$('#voucherMsg').show();
+	    	$('#btnVoucherApply').hide();
+		}
+	}
 </script>
