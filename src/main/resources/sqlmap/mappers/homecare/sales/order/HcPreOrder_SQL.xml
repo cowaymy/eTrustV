@@ -22,8 +22,8 @@
                  , T8.NAME AS STUS_NAME
                  , T1.STUS_ID
                  , T1.PRE_ORD_ID
-                 , T1.REM1
-                 , T1.REM2
+                 , T20.REM1
+                 , T20.REM2
                  , CASE
                     WHEN ( T17.mem_type =  2) THEN 'Cody'
                     WHEN ( T17.mem_type =  1) THEN 'HP'
@@ -82,6 +82,7 @@
     LEFT JOIN SYS0005M T18 ON T18.BRNCH_ID = T17.BRNCH
     INNER JOIN SYS0005M T19 ON T19.CODE = CASE WHEN STK_CTGRY_ID IN (7233,7240,7237,7241) THEN T13.AC_BRNCH_CODE  ELSE T13.DT_BRNCH_CODE END AND T19.STUS_ID = 1
     LEFT JOIN SYS0013M RGN   ON RGN.CODE_ID = T18.REGN_ID
+    LEFT JOIN SAL0302D T20 ON T20.PRE_ORD_ID = T1.PRE_ORD_ID
     WHERE 1=1
         <if test='_memCode != null and _memCode != ""'>
             AND T1.MEM_CODE = #{_memCode}
