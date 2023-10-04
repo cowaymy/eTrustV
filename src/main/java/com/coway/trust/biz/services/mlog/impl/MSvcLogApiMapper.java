@@ -305,4 +305,6 @@ public interface MSvcLogApiMapper {
   Map<String, Object> getCustAddDtlLst(Map<String, Object> params);
 
   void updateGps(Map<String, Object> params);
+
+  EgovMap selectAsDetails (Map<String, Object> params);
 }
