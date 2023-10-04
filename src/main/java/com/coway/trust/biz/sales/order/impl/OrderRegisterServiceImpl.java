@@ -460,10 +460,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
                     int allowToExTrade = rentalPeriod - exTrade_mth;
 
-                    if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
+                    /*if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
                     	   msg = msg + " -Not allow early ex-trade before end of contract. <br/>";
                            isInValid = "InValid";
-                    }
+                    }*/
 
                     if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
                       msg = msg + " -Different Customer is not allowed.";
