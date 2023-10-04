@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.services.history.AsDetailDto;
+import com.coway.trust.api.mobile.services.history.AsDetailForm;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.impl.CommonMapper;
@@ -603,6 +607,21 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
   }
+
+  @Override
+  public AsDetailDto selectAsDetails(AsDetailForm param) throws Exception {
+    if (null == param) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+    }
+
+    EgovMap selectAsDetails = MSvcLogApiMapper.selectAsDetails(AsDetailForm.createMap(param));
+    AsDetailDto rtn = new AsDetailDto();
+    if (MapUtils.isNotEmpty(selectAsDetails)) {
+      return rtn.create(selectAsDetails);
+    }
+    return rtn;
+  }
+
 
   @Override
   public List<EgovMap> serviceHistory(Map<String, Object> params) {
