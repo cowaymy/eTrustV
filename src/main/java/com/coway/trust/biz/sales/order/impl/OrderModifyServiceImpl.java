@@ -491,6 +491,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     // rentPaySetVO.setRem("");
     rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
     rentPaySetVO.setPayTrm(Integer.parseInt((String) params.get("payTerm")));
+    rentPaySetVO.setPnpRpsCrcNo(params.get("pnpRpsCrcNo").toString());
   }
 
   private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params,

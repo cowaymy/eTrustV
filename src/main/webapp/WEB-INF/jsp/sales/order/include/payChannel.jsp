@@ -32,7 +32,16 @@
     <th scope="row"><spring:message code="sal.text.claimBillDt" /></th>
     <td><span></span></td>
     <th scope="row"><spring:message code="sal.text.creditCardNo" /></th>
-    <td><span>${orderDetail.rentPaySetInf.rentPayCrcNo}</span></td>
+    <td><span>
+        <choose>
+        <when test="${orderDetail.rentPaySetInf.payModeId == 135}">
+            ${orderDetail.rentPaySetInf.pnprpsCrcNo}
+        </when>
+        <otherwise>
+            ${orderDetail.rentPaySetInf.rentPayCrcNo}
+        </otherwise>
+        </choose>
+    </span></td>
     <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayCrOwner}</span></td>
    </tr>

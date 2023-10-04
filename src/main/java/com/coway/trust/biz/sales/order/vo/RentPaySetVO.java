@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0074D database table.
- * 
+ *
  */
 public class RentPaySetVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -59,6 +59,8 @@ public class RentPaySetVO implements Serializable {
 	private Date updDt;
 
 	private int updUserId;
+
+	private String pnpRpsCrcNo;
 
 	public RentPaySetVO() {
 	}
@@ -254,5 +256,13 @@ public class RentPaySetVO implements Serializable {
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
+
+  public String getPnpRpsCrcNo() {
+    return pnpRpsCrcNo;
+  }
+
+  public void setPnpRpsCrcNo(String pnpRpsCrcNo) {
+    this.pnpRpsCrcNo = pnpRpsCrcNo;
+  }
 
 }
