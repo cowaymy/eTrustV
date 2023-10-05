@@ -423,6 +423,10 @@
         }
       }
 
+      if ( $("#waterSrcType").val() == "") {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Water source type' htmlEscape='false'/> </br>";
+        }
+
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
       // PSI CHECKING
       if ( "${orderInfo.appTypeId}" != "144" && (("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
