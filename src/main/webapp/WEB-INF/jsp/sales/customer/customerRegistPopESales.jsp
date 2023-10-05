@@ -319,7 +319,6 @@
     }
     // Customer Type 선택시 Company Type 변경 (Basic Info)
    function onChangeCompanyType(val){
-
         if($("#_cmbTypeId_").val() == '965'){ // Company
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
@@ -357,6 +356,9 @@
                 $("select[name=cmbNation]").addClass("w100p");
                 $("#_pasSportExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
                 $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
+                $(".foreigner").show();
+            }else{
+            	$(".foreigner").hide();
             }
 
             $("select[name=cmbRace]").removeClass("w100p disabled");
@@ -1163,19 +1165,19 @@
                                 <td><input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18" placeholder="Old IC/Army/Police" class="w100p" disabled="disabled" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span>
+                                <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must foreigner">*</span>
                                 <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled"></select></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
+                                <th scope="row"><spring:message code="sal.text.passportExpire" /><span class="must foreigner">*</span></th>
                                 <td><input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
+                                <th scope="row"><spring:message code="sal.text.visaExpire" /><span class="must foreigner">*</span></th>
                                 <td><input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.dob2" /></th>
+                                <th scope="row"><spring:message code="sal.text.dob2" /><span class="foreignerMust">*</span></th>
                                 <td><input type="text" id="_dob_" name="dob" title="Create start Date" placeholder="Date Of Birth" class="j_date3 w100p" disabled="disabled" /></td>
                             </tr>
                             <tr>
