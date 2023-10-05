@@ -19,9 +19,10 @@
                 shiDate  : '${data.shiDate}',
                 memCode  : '${data.memCode}',
                 level    : '${data.level}',
-                teamCode : '${data.teamCode}'
+                teamCode : '${data.teamCode}',
+                typeCode : '${data.typeCode}'
 		};
-		
+
 		/* $("#searchD").click(function(){
 			Common.ajax("GET", "/commission/report/commSHIDetailSearch", $("#detailFrom").serializeJSON(), function(result) {
 				AUIGrid.setGridData(detailGridID, result);

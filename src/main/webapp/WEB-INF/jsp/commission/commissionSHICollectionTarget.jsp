@@ -172,6 +172,7 @@
                     		catType  : $("#catType").val(),
                             custType : $("#custType").val(),
                             shiDate  : $("#shiDate").val(),
+                            typeCode : $("#typeCode").val()
                       };
 
                       let level = 4;
