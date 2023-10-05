@@ -2532,21 +2532,17 @@ SELECT MST.*
 
   <select id="selectAsDetails" parameterType="Map" resultType="egovMap">
 
-    SELECT
-            D.SALES_ORD_NO,
-            C.MEM_CODE ,
-            B.STUS_CODE_ID,
-            NVL(B.WATER_SRC_TYPE, '') AS WATER_SRC_TYPE
-    FROM SAL0046D A,
-            SAL0047D B,
-            ORG0001D C,
-            SAL0001D D
+    SELECT  A.INSTALL_ENTRY_ID,
+                C.SALES_ORD_NO,
+                B.STUS_CODE_ID,
+                NVL(B.WATER_SRC_TYPE, '') AS WATER_SRC_TYPE
+    FROM    SAL0046D A,
+                SAL0047D B,
+                SAL0001D C
     where
-            A.INSTALL_ENTRY_ID =  B.ENTRY_ID
-            and A.SALES_ORD_ID  = D.SALES_ORD_ID
-            and A.CT_ID = C.MEM_ID
-            and D.SALES_ORD_NO = #{salesOrderNo}
-            and C.MEM_CODE = #{userId}
+                A.INSTALL_ENTRY_ID =  B.ENTRY_ID
+                and A.SALES_ORD_ID  = C.SALES_ORD_ID
+                and D.SALES_ORD_NO = #{salesOrderNo}
 
   </select>
 
