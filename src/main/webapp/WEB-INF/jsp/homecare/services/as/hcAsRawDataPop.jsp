@@ -288,9 +288,8 @@
 					&& $("#settleDateTo").val() != ''
 					&& $("#settleDateFr").val() != null
 					&& $("#settleDateTo").val() != null) {
-				whereSql2 = " AND G.AS_SETL_DT between to_Date('"
-						+ settleDateFrom + "','YYYY-MM-DD') AND to_Date('"
-						+ settleDateTo + "','YYYY-MM-DD')+1";
+				//whereSql2 = " AND G.AS_SETL_DT between to_Date('"+ settleDateFrom + "','YYYY-MM-DD') AND to_Date('"+ settleDateTo + "','YYYY-MM-DD')+1";
+				whereSql2 = " AND G.AS_SETL_DT between trunc(to_Date('" + settleDateFrom + "','YYYY-MM-DD')) AND trunc(to_Date('" + settleDateTo + "','YYYY-MM-DD'))";
 			} else {
 				whereSql2LeftJoin = " LEFT ";
 			}
