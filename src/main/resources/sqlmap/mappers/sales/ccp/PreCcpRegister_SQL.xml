@@ -397,8 +397,6 @@
 		LEFT JOIN SYS0013M G ON G.CODE_ID = A.SCORE_IND AND G.CODE_MASTER_ID = 559
 		LEFT JOIN SALES H on H.NRIC = A.CUST_IC
 		WHERE A.TYPE_ID = 7290
-		AND NVL(CCRIS_ID,0) <![CDATA[ <> ]]> 0
-		AND NVL(SMS_CONSENT,0) = 1
 		<if test="memberCode !=null and memberCode !=''">
 			AND D.MEM_CODE = #{memberCode}
 		</if>
