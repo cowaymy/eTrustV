@@ -32,6 +32,11 @@ $(document).ready(function(){
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
 
+
+        $("#V_ORGCODE").val("${orgCode}");
+        $("#V_ORGCODE").attr("class", "w100p readonly");
+        $("#V_ORGCODE").attr("readonly", "readonly");
+
     }else if("${SESSION_INFO.memberLevel}" =="2"){
 
         $("#orgCode").val("${orgCode}");
