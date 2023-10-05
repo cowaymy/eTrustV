@@ -15,21 +15,21 @@
 <script type="text/javaScript">
   $(document).ready(function() {
       $("#m5").hide(); //hide mandatory indicator (*) for Settle Date
-	  fn_populateComboOption();
+      fn_populateComboOption();
   });
 
   function fn_toggleAdditionalFilter(selVal) {
-	  if(selVal == '3') {
+      if(selVal == '3') {
           $("#reportForm1 .tr_toggle_display").show();
           $("#m2").hide(); //hide mandatory indicator (*) for Request Date
           $("#m3").hide(); //hide mandatory indicator (*) for Date Option
           $("#m5").show(); //show mandatory indicator (*) for Settle Date
-	  } else {
+      } else {
           $("#reportForm1 .tr_toggle_display").hide();
           $("#m2").show();
           $("#m3").show();
           $("#m5").hide();
-	  }
+      }
   }
 
   function fn_populateComboOption() {
@@ -80,8 +80,8 @@
           $('#cmbProductCode').change(function() {
 
           }).multipleSelect({
-        	  selectAll: false,
-        	  width: '80%'
+              selectAll: false,
+              width: '80%'
           });
 
           $('#cmbAsAging').change(function() {
@@ -185,36 +185,36 @@
 
       // VALIDATE SETTLE DATE ONLY FOR AS RAW (PQC)
       if ($("#reportType").val() == '3' ) {
-    	  if ($("#settleDateFr").val() != '' || $("#reqstDateTo").val() != '') {
-    		  var keyInDateFrom = $("#settleDateFr").val().substring(3, 5) + "/"
+          if ($("#settleDateFr").val() != '' || $("#reqstDateTo").val() != '') {
+              var keyInDateFrom = $("#settleDateFr").val().substring(3, 5) + "/"
                             + $("#settleDateFr").val().substring(0, 2) + "/"
                             + $("#settleDateFr").val().substring(6, 10);
 
-    		  var keyInDateTo = $("#settleDateTo").val().substring(3, 5) + "/"
+              var keyInDateTo = $("#settleDateTo").val().substring(3, 5) + "/"
                           + $("#settleDateTo").val().substring(0, 2) + "/"
                           + $("#settleDateTo").val().substring(6, 10);
 
-    		  var date1 = new Date(keyInDateFrom);
-    		  var date2 = new Date(keyInDateTo);
+              var date1 = new Date(keyInDateFrom);
+              var date2 = new Date(keyInDateTo);
 
-    		  var diff_in_time = date2.getTime() - date1.getTime();
+              var diff_in_time = date2.getTime() - date1.getTime();
 
-    		  var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+              var diff_in_days = diff_in_time / (1000 * 3600 * 24);
 
-    		  if (diff_in_days > dtRange) {
-    			    Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
-    			    return false;
-    	      }
-    	  }
+              if (diff_in_days > dtRange) {
+                    Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+                    return false;
+              }
+          }
       }
     }
 
     // VALIDATE AS STATUS ONLY FOR AS RAW (PQC)
     if ($("#reportType").val() == '3') {
-    	if ($("#cmbAsStatus").val() == '' || $("#cmbAsStatus").val() == null) {
+        if ($("#cmbAsStatus").val() == '' || $("#cmbAsStatus").val() == null) {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS Status' htmlEscape='false'/>");
             return false;
-    	}
+        }
     }
 
     return true;
@@ -262,7 +262,8 @@
       if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
           && $("#settleDateFr").val() != null
           && $("#settleDateTo").val() != null) {
-          whereSql2 = " AND B.AS_SETL_DT between to_Date('" + settleDateFrom + "','YYYY-MM-DD') AND to_Date('" + settleDateTo + "','YYYY-MM-DD')+1";
+          //whereSql2 = " AND B.AS_SETL_DT between to_Date('" + settleDateFrom  + ' 00:00:00'+ "','YYYY-MM-DD HH:MI:SS') AND to_Date('" + settleDateTo + ' 23:59:59'+ "','YYYY-MM-DD HH:MI:SS')";
+    	  whereSql2 = " AND B.AS_SETL_DT between trunc(to_Date('" + settleDateFrom + "','YYYY-MM-DD')) AND trunc(to_Date('" + settleDateTo + "','YYYY-MM-DD'))";
       } else {
           whereSql2LeftJoin = " LEFT ";
       }
@@ -318,7 +319,7 @@
           }
 
           if ($("#cmbProductType").val() != '' && $("#cmbProductType").val() != null) {
-        	  var wherePrdType = " AND PRODUCT_TYPE IN ('" + $("#cmbProductType").val().toString().replace(/,/g, "','") + "') ";
+              var wherePrdType = " AND PRODUCT_TYPE IN ('" + $("#cmbProductType").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += wherePrdType;
           }
 
@@ -348,8 +349,8 @@
           }
 
           if ($("#cmbDefectDescSym").val() != '' && $("#cmbDefectDescSym").val() != null) {
-        	  var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE IN ('" + $("#cmbDefectDescSym").val().toString().replace(/,/g, "','") + "') ";
-        	  whereSql3 += whereDefDescSym;
+              var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE IN ('" + $("#cmbDefectDescSym").val().toString().replace(/,/g, "','") + "') ";
+              whereSql3 += whereDefDescSym;
           }
 
           //SP_CR_GEN_AS_RAW_PQC
@@ -538,8 +539,8 @@
         if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
             && $("#settleDateFr").val() != null
             && $("#settleDateTo").val() != null) {
-        	settleDateFrom = settleDateFrom + " 12:00:00 AM";
-        	settleDateTo = settleDateTo + " 12:00:00 AM";
+            settleDateFrom = settleDateFrom + " 12:00:00 AM";
+            settleDateTo = settleDateTo + " 12:00:00 AM";
         } else {
             settleDateFrom = "1900-01-01 12:00:00 AM";
             settleDateTo = "9999-12-31 12:00:00 AM";
