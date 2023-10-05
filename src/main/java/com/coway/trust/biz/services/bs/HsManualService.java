@@ -147,7 +147,7 @@ public interface HsManualService {
 
   //HS REVERSE OMBAK -- ADDED BY TPY - 18/06/2019
 
-  EgovMap checkHsBillASInfo(Map<String, Object> params);
+  EgovMap checkHsBillASInfo(Map<String, Object> params) throws Exception;
 
   String reverseHSResult(Map<String, Object> params , SessionVO sessionVO );
 

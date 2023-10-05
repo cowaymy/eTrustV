@@ -1217,12 +1217,18 @@ public class HsManualController {
     String ASResultNo = "";
     String ReverseASResultNo = "";
 
-    EgovMap stkInfo = hsManualService.checkHsBillASInfo(params); // CHECK HS /
-                                                                 // AS / BILL
-                                                                 // INFORMATION
-                                                                 // - ADDED BY
-                                                                 // TPY -
-                                                                 // 18/06/2019
+    EgovMap stkInfo;
+	try {
+		stkInfo = hsManualService.checkHsBillASInfo(params);
+	} catch (Exception e) {
+		message.setMessage("HS result alredy reversed.");
+	    return ResponseEntity.ok(message);
+	} // CHECK HS /
+     // AS / BILL
+     // INFORMATION
+     // - ADDED BY
+     // TPY -
+     // 18/06/2019
     String stkItem = "";
     if(stkInfo != null) {
         logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : " + stkInfo.get("itmStkId").toString());

@@ -320,6 +320,8 @@ public interface HsManualMapper {
 
   EgovMap checkHsBillASInfo(Map<String, Object> params);
 
+  int checkDuplicateReverse(Map<String, Object> p);
+
   EgovMap checkHsBillASInfoPass(Map<String, Object> params);
 
   void updateHsResultMas(Map<String, Object> params);

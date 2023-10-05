@@ -2866,7 +2866,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   }
 
   @Override
-  public EgovMap checkHsBillASInfo(Map<String, Object> params) {
+  public EgovMap checkHsBillASInfo(Map<String, Object> params) throws Exception {
+	if (hsManualMapper.checkDuplicateReverse(params) >= 1) {
+		throw new Exception("Duplicate reverse.");
+	}
     if (params.get("revInd").equals("1")) {
       return hsManualMapper.checkHsBillASInfoPass(params);
     } else {
@@ -3476,7 +3479,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     String ASResultNo = "";
     String ReverseASResultNo = "";
 
-    EgovMap stkInfo = this.checkHsBillASInfo(params); // CHECK HS /
+    EgovMap stkInfo;
+	try {
+		stkInfo = this.checkHsBillASInfo(params);
+	} catch (Exception e) {
+		msg = "HS result already reversed.";
+		return msg;
+	} // CHECK HS /
                                                       // AS / BILL
                                                       // INFORMATION
                                                       // - ADDED BY
