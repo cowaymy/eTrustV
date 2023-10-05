@@ -73,7 +73,7 @@ import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDetail
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.api.mobile.services.history.AsDetailDto;
-import com.coway.trust.api.mobile.services.history.AsDetailForm;
+//import com.coway.trust.api.mobile.services.history.AsDetailForm;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryDto;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryFilterDetailDto;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryForm;
@@ -2137,11 +2137,11 @@ public class ServiceApiController {
     return ResponseEntity.ok(selectSyncIhr.stream().map(r -> SyncIhrApiDto.create(r)).collect(Collectors.toList()));
   }
 
-  @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/selectAsDetails", method = RequestMethod.GET)
-  public ResponseEntity<AsDetailDto> selectAsDetails(@ModelAttribute AsDetailForm param) throws Exception {
-    return ResponseEntity.ok(MSvcLogApiService.selectAsDetails(param));
-  }
+//  @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//  @RequestMapping(value = "/selectAsDetails", method = RequestMethod.GET)
+//  public ResponseEntity<AsDetailDto> selectAsDetails(@ModelAttribute AsDetailForm param) throws Exception {
+//    return ResponseEntity.ok(MSvcLogApiService.selectAsDetails(param));
+//  }
 
   @ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
