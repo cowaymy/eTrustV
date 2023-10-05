@@ -79,6 +79,9 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public ReturnMessage hcRequestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 		// 대상주문을 취소요청 한다.
+
+	  params.put("cmbFollowUp", 0); // Follow Up only available for HA at the moment
+
 		ReturnMessage rtnMsg = orderRequestService.requestCancelOrder(params, sessionVO);
 
 		// 같이 주문된 주문 건이 있는경우 취소한다.
