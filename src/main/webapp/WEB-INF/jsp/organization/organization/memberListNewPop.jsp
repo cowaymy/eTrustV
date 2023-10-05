@@ -1082,8 +1082,11 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
         Common.alert("Please key in the bank account no");
         return false;
     }
-
-
+  //Wawa 5/10/23 add branch validation
+    if($("#branch").val() == ''){
+        Common.alert("Please select the branch");
+        return false;
+    }
     //type 별로 다르게 해야됨
     if($("#deptCd").val() == ''){
         Common.alert("Please select the department code");
