@@ -45,6 +45,12 @@ public class VoucherServiceImpl implements VoucherService {
 	@Override
 	public ReturnMessage createVoucherCampaign(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
+
+		if(voucherMapper.isCampaignMasterCodeExist(params) > 0){
+			throw new ApplicationException(AppConstants.FAIL,
+					"Master Code exist, please enter different code");
+		}
+
 		int voucherCampaignId = voucherMapper.getVoucherCampaignNextVal();
 
 		params.put("userId", sessionVO.getUserId());

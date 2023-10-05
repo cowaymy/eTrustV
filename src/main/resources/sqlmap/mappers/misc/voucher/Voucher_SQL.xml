@@ -557,4 +557,9 @@
 		#{userId}
 		)
 	</insert>
+
+	<select id="isCampaignMasterCodeExist" parameterType="Map" resultType="int">
+		SELECT CASE WHEN COUNT(MASTER_CODE) > 0 THEN 1 ELSE 0 END AS COUNT FROM MSC0056M
+		WHERE MASTER_CODE = #{masterCode}
+	</select>
 </mapper>

@@ -39,4 +39,5 @@ public interface VoucherMapper {
 	 int editVoucherCampaignStatus(Map<String, Object> params);
 	 int getBatchEmailNextVal();
 	 int insertBatchEmailSender(Map<String, Object> params);
+	 int isCampaignMasterCodeExist(Map<String, Object> params);
 }
