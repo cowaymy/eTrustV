@@ -130,4 +130,6 @@ public interface MlogApiService {
 
   List<EgovMap> getOnHandStkSerialList(Map<String, Object> params);
 
+  List<EgovMap> getAllMember(Map<String, Object> params);
+
 }
