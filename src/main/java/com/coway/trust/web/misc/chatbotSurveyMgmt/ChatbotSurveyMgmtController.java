@@ -66,13 +66,20 @@ public class ChatbotSurveyMgmtController {
 
         LOGGER.debug("=============== selectChatbotSurveyMgmtList ===============");
 		LOGGER.debug("params =====================================>>  " + params);
+		String finalStartDt = null;
+		String finalEndDt = null;
 
-		String[] startDt = params.get("surveyFrDt").toString().split("/");
-		String finalStartDt = startDt[0] != "" ? startDt[1] + startDt[0] : null;
+		if(params.get("surveyFrDt") != null && params.get("surveyFrDt") != ""){
+    		String[] startDt = params.get("surveyFrDt").toString().split("/");
+    		finalStartDt = startDt[0] != "" ? startDt[1] + startDt[0] : null;
+		}
 		params.put("surveyStartDt", finalStartDt);
 
-		String[] endDt = params.get("surveyToDt").toString().split("/");
-		String finalEndDt = endDt[0] != ""  ? endDt[1] + endDt[0] : null;
+
+		if(params.get("surveyToDt") != null && params.get("surveyToDt") != ""){
+    		String[] endDt = params.get("surveyToDt").toString().split("/");
+    		finalEndDt = endDt[0] != ""  ? endDt[1] + endDt[0] : null;
+		}
 		params.put("surveyEndDt", finalEndDt);
 
 		surveyMgmtList =  chatbotSurveyMgmtService.selectChatbotSurveyMgmtList(params);
