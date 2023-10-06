@@ -2618,16 +2618,14 @@
   </select>
 
   <select id="getAllMember" parameterType="Map" resultType="egovMap">
-    SELECT A.NAME AS NAME
-             , A.MEM_CODE AS MEM_CODE
-             , B.CODE_NAME AS CODE_NAME
-             , D.MEM_ORG_DESC AS MEM_ORG_DESC
-             , E.CODE AS BRNCH_CODE
-             , E.NAME AS BRNCH_NAME
-             , CASE WHEN TRIM(C.DEPT_CODE) IS NULL THEN NULL
-                       ELSE C.DEPT_CODE END AS DEPT_CODE
-             , A.MEM_TYPE AS MEM_TYPE
-             , A.MEM_ID AS MEM_ID
+    SELECT TO_CHAR(A.MEM_ID) AS MEM_ID
+             , TO_CHAR(A.NAME) AS NAME
+             , TO_CHAR(A.MEM_CODE) AS MEM_CODE
+             , TO_CHAR(B.CODE_NAME) AS CODE_NAME
+             , TO_CHAR(D.MEM_ORG_DESC) AS MEM_ORG_DESC
+             , TO_CHAR(E.CODE) AS BRNCH_CODE
+             , TO_CHAR(E.NAME) AS BRNCH_NAME
+             , TO_CHAR(A.MEM_TYPE) AS MEM_TYPE
       FROM  ORG0001D A
       INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
       INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
@@ -2649,5 +2647,6 @@
       </if>
 
       AND A.STUS = 1
+      ORDER BY MEM_CODE
   </select>
 </mapper>
