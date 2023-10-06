@@ -2542,7 +2542,7 @@ SELECT MST.*
     where
                 A.INSTALL_ENTRY_ID =  B.ENTRY_ID
                 and A.SALES_ORD_ID  = C.SALES_ORD_ID
-                and D.SALES_ORD_NO = #{salesOrderNo}
+                and C.SALES_ORD_NO = #{salesOrderNo}
 
   </select>
 
