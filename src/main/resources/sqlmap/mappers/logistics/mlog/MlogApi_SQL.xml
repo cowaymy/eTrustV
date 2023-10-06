@@ -2616,4 +2616,38 @@
 
        ORDER BY A.SERIAL_NO
   </select>
+
+  <select id="getAllMember" parameterType="Map" resultType="egovMap">
+    SELECT A.NAME AS NAME
+             , A.MEM_CODE AS MEM_CODE
+             , B.CODE_NAME AS CODE_NAME
+             , D.MEM_ORG_DESC AS MEM_ORG_DESC
+             , E.CODE AS BRNCH_CODE
+             , E.NAME AS BRNCH_NAME
+             , CASE WHEN TRIM(C.DEPT_CODE) IS NULL THEN NULL
+                       ELSE C.DEPT_CODE END AS DEPT_CODE
+             , A.MEM_TYPE AS MEM_TYPE
+             , A.MEM_ID AS MEM_ID
+      FROM  ORG0001D A
+      INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
+      INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
+                                        AND C.DEPT_CODE = ( SELECT B.DEPT_CODE
+                                                                        FROM ORG0001D A
+                                                                        JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+                                                                        WHERE A.MEM_CODE = #{userId})
+      INNER JOIN ORG0012D D ON A.MEM_TYPE = D.MEM_TYPE_ID
+                                        AND C.MEM_LVL = D.MEM_ORG_LVL
+      INNER JOIN SYS0005M E ON  A.BRNCH = E.BRNCH_ID
+      WHERE C.MEM_LVL = '4'
+
+      <if test="txtSearch1 !=null and txtSearch1 !=''">
+        AND A.MEM_CODE = #{txtSearch1}
+      </if>
+
+      <if test="txtSearch1 == null and txtSearch1 ==''">
+        AND A.MEM_CODE != #{userId}
+      </if>
+
+      AND A.STUS = 1
+  </select>
 </mapper>
