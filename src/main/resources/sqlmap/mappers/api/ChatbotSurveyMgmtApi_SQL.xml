@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.ChatbotSurveyMgmtApiMapper">
+
+	<select id="checkAccess" parameterType="Map" resultType="egovMap">
+	    SELECT *
+	    FROM API0001M
+        WHERE API_USER_STUS_ID = 1
+            AND API_USER_NAME = #{userName}
+            AND API_KEY = #{key}
+	</select>
+
+	<insert id="insertSurveyResp" parameterType="Map">
+	   INSERT INTO CBT0005D (
+			TXN_ID,
+			STATISTICS_PROCESSED,
+			STATISTICS_SENT,
+			STATISTICS_DELIVERED,
+			STATISTICS_SEEN,
+			STATISTICS_CLICKED,
+			STATISTICS_VIEWED,
+			STATISTICS_RESPONDED,
+			RESPONSE,
+			CRT_USER_ID,
+			CRT_DT,
+			UPD_USER_ID,
+			UPD_DT
+	   ) VALUES (
+	       #{txnId},
+           #{statisticsProcessed},
+	       #{statisticsSent},
+           #{statisticsDelivered},
+	       #{statisticsSeen},
+           #{statisticsClicked},
+           #{statisticsViewed},
+	       #{statisticsResponded},
+           #{response},
+           349,
+           SYSDATE,
+           349,
+           SYSDATE
+	   )
+	</insert>
+</mapper>
