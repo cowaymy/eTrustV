@@ -264,7 +264,7 @@
            $("select[name=cmbAssignCt]").removeAttr("disabled");
            $("select[name=cmbAssignCt]").removeClass("w100p disabled");
            $("select[name=cmbAssignCt]").addClass("w100p"); */
-
+		   $("#requestDate").removeAttr("disabled");
         $("#m3").show();
         $("#m4").show();
         $("#m5").show();
