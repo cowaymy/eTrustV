@@ -48,6 +48,8 @@ import com.coway.trust.api.mobile.logistics.hiCare.HiCareInventoryDto;
 import com.coway.trust.api.mobile.logistics.hiCare.HiCareInventoryForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryCodyOnHandStockDto;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryCodyOnHandStockForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockSerialDto;
@@ -1299,10 +1301,25 @@ public class LogisticsApiController {
 
     for (int i = 0; i < detail.size(); i++) {
       LOGGER.debug("ON HAND STOCK SERIAL CHECK : {}", detail.get(i));
-
     }
 
     List<InventoryOnHandStockSerialDto> list = detail.stream().map(r -> InventoryOnHandStockSerialDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Consignment Transfer Amount Cody - Get Member Listing Only Own Branch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getMemberList", method = RequestMethod.GET)
+  public ResponseEntity<List<InventoryCodyOnHandStockDto>> getMemberList(@ModelAttribute InventoryCodyOnHandStockForm inventoryCodyOnHandStockForm) throws Exception {
+
+    Map<String, Object> params = InventoryCodyOnHandStockForm.createMap(inventoryCodyOnHandStockForm);
+    List<EgovMap> detail = MlogApiService.getAllMember(params);
+
+    for (int i = 0; i < detail.size(); i++) {
+      LOGGER.debug("MEMBER LISTING : {}", detail.get(i));
+    }
+
+    List<InventoryCodyOnHandStockDto> list = detail.stream().map(r -> InventoryCodyOnHandStockDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
   }
