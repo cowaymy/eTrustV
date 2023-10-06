@@ -1032,4 +1032,10 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
   public List<EgovMap> getOnHandStkSerialList(Map<String, Object> params) {
     return MlogApiMapper.getOnHandStkSerialList(params);
   }
+
+  @Override
+  public List<EgovMap> getAllMember(Map<String, Object> params) {
+    return MlogApiMapper.getAllMember(params);
+  }
+
 }
