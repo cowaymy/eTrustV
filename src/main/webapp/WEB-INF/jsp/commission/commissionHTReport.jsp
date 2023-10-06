@@ -48,11 +48,6 @@
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
 
-     // search member code popup
-        $('#memBtn').click(function() {
-            Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
-        });
-
         // search member confirm
         $('#confirm').click(function() {
             $("#searchForm [name=confirmChk]").val("N");
@@ -67,11 +62,10 @@
                 return;
             }
             Common.ajax("GET", "/commission/report/selectMemberCount", $("#searchForm").serialize(), function(result) {
-                console.log("<spring:message code='sys.msg.success'/>");
-                console.log("mem_type: " + $("#searchForm [name=memType]").val());
-                if (result.cnt < 1) {
+                //console.log("<spring:message code='sys.msg.success'/>");
+                //console.log("mem_type: " + $("#searchForm [name=memType]").val());
+                if (result < 1) {
                     Common.alert("Unable to find [" + salesPersonCd + "] in HT Code .<br />Please ensure you key in the correct member code.");
-                    //Common.alert("<spring:message code='commission.alert.common.unableCtCode' arguments='"+salesPersonCd+"' htmlEscape='false' />");
                     $("#searchForm [name=salesPersonCd]").val("");
                 } else {
                 	$("#searchForm #memberLevel").val(result.emplyLev);
