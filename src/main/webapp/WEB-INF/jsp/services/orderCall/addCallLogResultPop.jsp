@@ -35,9 +35,25 @@
 
       if (typeof superCtInd === 'undefined' || superCtInd == null){
           if (rdcStk <= 0) {
+        	  var leadTm = $("#leadTm").text();
+              if (leadTm.trim() != '' || leadTm != null) {
+            	  leadTm = Number(leadTm);
+              } else {
+            	  leadTm = Number(7);
+              }
+
+        	  var availDate     = new Date();
+        	  var availDay      = (((availDate.getDate()+leadTm).toString().length) == 1) ? '0'+(availDate.getDate()) : (availDate.getDate());
+        	  var availMonth    = (((availDate.getMonth()+1).toString().length) == 1) ? '0'+(availDate.getMonth()+1) : (availDate.getMonth()+1);
+        	  var availYear     = availDate.getFullYear();
+        	  var formatDate  = availDay + "/" + availMonth + "/" + availYear;
               // Common.alert("There is no available inventory in RDC to create installation order ");
-              msg += "* There is no available inventory in RDC to create installation order </br>";
+              //msg += "* There is no available inventory in RDC to create installation order </br>";
+              if($("#requestDate").val() < formatDate){
+            	  msg += "* There is no available inventory in RDC to create installation order. Available Installtion Date start from " + formatDate + " </br>";
+              }
           }
+    	  console.log("RDC empty stock ");
       } else {
           var rdcSuperCtStk = $("#rdcSuperCt").text();
           if (rdcSuperCtStk.trim() != '' || rdcSuperCtStk != null) {
@@ -52,9 +68,27 @@
                   msg += "* There is no available inventory in Super CT RDC to create installation order </br>";
                 }
           } else {
-              if (rdcStk <= 0) {
-                  // Common.alert("There is no available inventory in RDC to create installation order ");
-                  msg += "* There is no available inventory in RDC to create installation order </br>";
+              if (rdcStk <= 0 && $("#hiddenATP").val() == 'Y') {
+                  var leadTm = $("#leadTm").text();
+                  if (leadTm.trim() != '' || leadTm != null) {
+                      leadTm = Number(leadTm);
+                  } else {
+                      leadTm = Number(7);
+                  }
+                  console.log("leadTm " + leadTm);
+                  var availDate     = new Date();
+                  availDate.setDate(availDate.getDate() + leadTm);
+                  var availDay      = ((availDate.getDate().toString().length) == 1) ? '0'+(availDate.getDate()) : (availDate.getDate());
+                  var availMonth    = (((availDate.getMonth()+1).toString().length) == 1) ? '0'+(availDate.getMonth()+1) : (availDate.getMonth()+1);
+                  var availYear     = availDate.getFullYear();
+                  var formatDate  = availDay + "/" + availMonth + "/" + availYear;
+                  console.log("formatDate " + formatDate);
+                  if($("#requestDate").val() < formatDate){
+                      msg += "* There is no available inventory in RDC to create installation order. Available Installtion Date start from " + formatDate + " </br>";
+                  }
+              }else if(rdcStk <= 0){
+            	Common.alert("There is no available inventory in RDC to create installation order ");
+                msg += "* There is no available inventory in RDC to create installation order </br>";
               }
           }
         }
@@ -115,7 +149,22 @@
 
   function fn_saveConfirm() {
     if (fn_saveValidation()) {
-      var msg = "<b>Kindly confirm on stock quantity before saving!!!</b></br></br>";
+	  if ($("#callStatus").val() == 20) {
+         var rdcStk = $("#rdc").text();
+         if (rdcStk.trim() != '' || rdcStk != null) {
+           rdcStk = Number(rdcStk);
+         } else {
+           rdcStk = Number(0);
+         }
+      }
+	  var msg = "";
+	  if (rdcStk <= 0) {
+          // Common.alert("There is no available inventory in RDC to create installation order ");
+          //msg += "* There is no available inventory in RDC, STO will be create to increase stock qty</br>";
+          msg = "<b>There is no available inventory in RDC, STO will be create to increase stock qty!!!</b></br></br>";
+      }else{
+    	  msg = "<b>Kindly confirm on stock quantity before saving!!!</b></br></br>";
+      }
 
       if ($("#callStatus").val() != "") {
         msg += "<spring:message code='service.title.CallLogStatus'/><b>" + " : " + $("#callStatus option:selected").text() + "</b></br>";
@@ -530,6 +579,14 @@
         </c:if>
         -->
        </tr>
+       <tr>
+        <th scope="row">Lead Time (Day)</th>
+        <td><span id="leadTm"><c:out value="${orderCall.leadTm}" /></span></td>
+        <th scope="row"></th>
+        <td></td>
+        <th scope="row"></th>
+        <td></td>
+       </tr>
        <!-- Added for Special Delivery CT enhancement 2 by Hui Ding, 2020-04-17 -->
        <c:if test="${superCtInd != null}">
             <tr>
@@ -618,6 +675,22 @@
    <input type="hidden" value="${orderCall.rcdTms}" id="rcdTms" name="rcdTms" />
    <input type="hidden" value="${orderCall.callTypeId}" id="callTypeId" name="callTypeId" />
    <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
+   <input type="hidden" id="raqty" value="${orderRdcInCdc.raqty}"/>
+   <%-- <input type="hidden" value="${orderCall.dscBrnchId}" id="dscBrnchId" name="dscBrnchId" /> --%>
+   <c:choose>
+		<c:when test="${orderRdcInCdc.raqty < 1 || orderRdcInCdc.raqty == '' || orderRdcInCdc.raqty == null }">
+		  <input type="hidden" value="Y" id="hiddenATP" name="hiddenATP" />
+		</c:when>
+		<c:otherwise>
+		  <input type="hidden" value="N" id="hiddenATP" name="hiddenATP" />
+		</c:otherwise>
+	</c:choose>
+    <%-- <c:if test="${orderRdcInCdc.raqty < 1}">
+	   <input type="hidden" value="Y" id="hiddenATP" name="hiddenATP" />
+	</c:if>
+	<c:if test="${orderRdcInCdc.raqty >= 1}">
+	   <input type="hidden" value="N" id="hiddenATP" name="hiddenATP" />
+	</c:if> --%>
 
    <table class="type1" id="hideContent1">
     <!-- table start -->

@@ -179,6 +179,7 @@ SELECT '0' AS CHK
      , C.WH_LOC_ID
      , C.WH_LOC_CODE
      , C.WH_LOC_DESC
+     , A.LEAD_TM
   FROM SCM0022M A /* CDC-Warehouse Mapping */
   LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0) /* System Code */
   LEFT OUTER JOIN SYS0028M C ON (C.WH_LOC_ID = A.WH_ID) /* Warehouse Code */
@@ -189,6 +190,12 @@ SELECT '0' AS CHK
        #{item}
 		</foreach>
 	</if>
+	<if test="brnchLoc != null and !brnchLoc.isEmpty">
+   AND C.WH_LOC_CODE IN
+        <foreach item="item" collection="brnchLoc" index="index" open="(" separator="," close=")">
+       #{item}
+        </foreach>
+    </if>
  ORDER BY B.CODE, A.WH_ID
 </select>
 
@@ -267,5 +274,13 @@ VALUES
 <delete id="deleteCdcBrMapping" parameterType="Map">
 DELETE FROM LOG0028D WHERE BRNCH_ID = #{brnchId} AND CDC = #{sysCode}
 </delete>
+
+<update id="updateCdcLeadTimeMapping" parameterType="Map">
+	UPDATE SCM0022M SET
+	LEAD_TM = #{leadTm}
+	,UPD_USER_ID = #{crtUserId}
+	,UPD_DT = SYSDATE
+	WHERE WH_ID = #{whId} AND CDC = #{sysCode}
+</update>
 
 </mapper>

@@ -196,6 +196,7 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		int saveCnt	= 0;
 
 		for ( Object obj : delList ) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			scmMasterManagementMapper.deleteCdcWhMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
@@ -236,6 +237,19 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 
 		for ( Object obj : delList ) {
 			scmMasterManagementMapper.deleteCdcBrMapping((Map<String, Object>) obj);
+			saveCnt++;
+		}
+
+		return	saveCnt;
+	}
+
+//	save Unmap
+	@Override
+	public int updateCdcLeadTimeMapping(List<Object> insList, Integer crtUserId) {
+		int saveCnt	= 0;
+
+		for ( Object obj : insList ) {
+			scmMasterManagementMapper.updateCdcLeadTimeMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
 

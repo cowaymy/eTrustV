@@ -267,6 +267,7 @@
            , Limit1.CRT_USER_ID_ID CRT_USER_ID_ID
            , Limit1.CRT_USER_ID CRT_USER_ID
            , Limit1.RCD_TMS RCD_TMS
+           , Limit1.LEAD_TM LEAD_TM
       FROM ( SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID
                     , Extent1.CALL_TYPE_ID CALL_TYPE_ID
                     , Extent1.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -314,6 +315,7 @@
                       ELSE 0
                     END C4
                     , Extent1.RCD_TMS RCD_TMS
+                    , Extent1.LEAD_TM LEAD_TM
              FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID ,
                            vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID ,
                            vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE ,
@@ -351,7 +353,8 @@
                            vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID ,
                            vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE ,
                            vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC,
-                           vCallLogOrderCall.RCD_TMS RCD_TMS
+                           vCallLogOrderCall.RCD_TMS RCD_TMS,
+                           vCallLogOrderCall.LEAD_TM LEAD_TM
                     FROM CCR1002V vCallLogOrderCall ) Extent1
       WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId} AND ROWNUM <= 1 ) Limit1
     ]]>

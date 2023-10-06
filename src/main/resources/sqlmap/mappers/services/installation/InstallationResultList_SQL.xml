@@ -124,6 +124,58 @@
   </select>
 
   <select id="installationResultList" parameterType="Map" resultType="egovMap">
+  WITH INS AS (
+                  SELECT
+                        DISTINCT INSTALL_ENTRY_NO
+                  FROM SAL0046D A
+                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                  WHERE B.BNDL_ID IS NULL
+
+                  <if test="installNo != null and installNo != ''">
+                  AND A.INSTALL_ENTRY_NO = #{installNo}
+                 </if>
+
+                 <if test="orderNo != null and orderNo != ''">
+                  AND B.SALES_ORD_NO = #{orderNo}
+                 </if>
+
+                 <if test="orderRefNo != null and orderRefNo != ''">
+                  AND B.REF_NO = #{orderRefNo}
+                </if>
+
+                <if test="poNo != null and poNo != ''">
+                  AND B.CUST_PO_NO = #{poNo}
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate == '' ">
+                 <![CDATA[ AND A.INSTALL_DT  >= TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="installEndDate != '' and instalStrlDate == '' ">
+                    <![CDATA[ AND A.INSTALL_DT <=  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate != '' ">
+                    <![CDATA[ AND A.INSTALL_DT  between TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') and  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate == '' ">
+                    <![CDATA[ AND  A.APPNT_DT  >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="endDate != '' and startDate == '' ">
+                    <![CDATA[  AND A.APPNT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate != '' ">
+                    <![CDATA[  AND A.APPNT_DT between TO_DATE(#{startDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="orderDate != null and orderDate != ''">
+                    AND B.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
+                </if>
+
+          )
     <![CDATA[
       SELECT DISTINCT CD1.CODE
                     , IE.INSTALL_ENTRY_NO
@@ -165,6 +217,8 @@
                     , I.INSTCT || DBMS_LOB.SUBSTR(CR.CALL_REM, DBMS_LOB.GETLENGTH(CR.CALL_REM), 1) AS REMARK
                     , CASE WHEN IE.RESULT_RPT_EMAIL_NO IS NOT NULL THEN IE.RESULT_RPT_EMAIL_NO ELSE CUST.EMAIL END AS RESULT_REP_EMAIL_NO
                     , IE.EMAIL_SENT_COUNT
+                    ,STODELVRSTS.DELVRY_GR_CMPLT sto_delvry_gr
+                    ,SMODELVRSTS.DELVRY_GR_CMPLT smo_delvry_gr
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
       JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -185,6 +239,30 @@
       LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = MEM.MEM_CODE
       LEFT JOIN SAL0027D CN ON CN.CUST_CNTC_ID = SOM.CUST_CNT_ID
       LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
+      LEFT JOIN (
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          ,CASE WHEN NVL(GR.DELVRY_GR_CMPLT,'N') = 'Y' THEN '1' ELSE '0' END STO_FLAG
+          FROM LOG0047M GI
+          JOIN INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
+          WHERE GI.TRNSC_TYPE_DTL = 'US03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) STODELVRSTS ON STODELVRSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
+      LEFT JOIN (
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          ,CASE WHEN NVL(GR.DELVRY_GR_CMPLT,'N') = 'Y' THEN '2' ELSE '0' END SMO_FLAG
+          FROM LOG0047M GI
+          JOIN INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
+          WHERE GI.TRNSC_TYPE_DTL = 'UM03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) SMODELVRSTS ON SMODELVRSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
       WHERE 1 = 1
         AND som.BNDL_ID IS NULL    -- homecare Remove(except)
     ]]>
@@ -270,6 +348,27 @@
     </if>
     <if test="product != null and product != ''">
       AND STK.STK_CODE = #{product}
+    </if>
+    <if test="product != null and product != ''">
+      AND STK.STK_CODE = #{product}
+    </if>
+    <if test="product != null and product != ''">
+      AND STK.STK_CODE = #{product}
+    </if>
+    <if test="stkAllctList != null and stkAllctList != '' ">
+      AND (
+      STODELVRSTS.STO_FLAG in
+	      <foreach item="item" collection="stkAllctList" index="index"
+	        open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+       or
+       SMODELVRSTS.SMO_FLAG in
+	       <foreach item="item" collection="stkAllctList" index="index"
+	      open="(" separator="," close=")">
+	      #{item}
+	      </foreach>
+         )
     </if>
   </select>
 
@@ -447,6 +546,9 @@
   </select>
 
   <select id="getInstallResultByInstallEntryID" parameterType="Map" resultType="egovMap">
+    WITH INS as(
+    SELECT INSTALL_ENTRY_NO FROM SAL0046D WHERE INSTALL_ENTRY_ID = #{installEntryId}
+    )
     SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
          , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
          , Extent3.SALES_ORD_ID SALES_ORD_ID
@@ -524,6 +626,12 @@
          , Extent20.SERIAL_NO PREINSTALLATION_SERIAL_NO
          , Extent20.SERIAL_NO2 PREINSTALLATION_SERIAL_NO2
          , Extent20.REMARK PREINSTALLATION_REMARK
+         , CASE WHEN STODELVRSTS.STO_FLAG = 1 AND SMODELVRSTS.SMO_FLAG =2
+	         THEN 'Complete(RDC)'
+	         WHEN STODELVRSTS.STO_FLAG = 1
+	         THEN 'Complete(CDC)'
+	         END
+	         DELVRSTS
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -547,6 +655,30 @@
     JOIN ORG0001D CTCODE ON Extent1.CT_ID = CTCODE.MEM_ID
     LEFT JOIN SYS0028M Extent19 ON CTCODE.MEM_CODE = Extent19.WH_LOC_CODE
     LEFT JOIN SVC0136D Extent20 ON Extent20.INSTALL_ENTRY_NO = Extent1.INSTALL_ENTRY_NO
+    LEFT JOIN (
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          ,CASE WHEN NVL(GR.DELVRY_GR_CMPLT,'N') = 'Y' THEN '1' ELSE '0' END STO_FLAG
+          FROM LOG0047M GI
+          JOIN INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
+          WHERE GI.TRNSC_TYPE_DTL = 'US03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) STODELVRSTS ON STODELVRSTS.REF_DOC_NO = Extent1.INSTALL_ENTRY_NO
+      LEFT JOIN (
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          ,CASE WHEN NVL(GR.DELVRY_GR_CMPLT,'N') = 'Y' THEN '2' ELSE '0' END SMO_FLAG
+          FROM LOG0047M GI
+          JOIN INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
+          WHERE GI.TRNSC_TYPE_DTL = 'UM03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) SMODELVRSTS ON SMODELVRSTS.REF_DOC_NO = Extent1.INSTALL_ENTRY_NO
     WHERE Extent1.INSTALL_ENTRY_ID = #{installEntryId}
       AND ROWNUM = 1
 

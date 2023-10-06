@@ -86,4 +86,10 @@
       }
      </select>
 
+     <select id="SP_LOGISTIC_REQUEST_STO" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_STO( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode1} )
+      }
+     </select>
+
 </mapper>

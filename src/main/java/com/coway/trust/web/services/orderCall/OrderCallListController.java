@@ -304,7 +304,7 @@ public class OrderCallListController {
         if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
           logger.debug("CHECK QUANTITY~~");
           if (rdcStock != null) {
-            if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
+            if ((Integer.parseInt(rdcStock.get("availQty").toString()) > 0) || (Integer.parseInt(rdcStock.get("availQty").toString()) <= 0 && params.get("hiddenATP").equals("Y"))) {
             	resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
 
               if (null != resultValue) {
@@ -332,13 +332,44 @@ public class OrderCallListController {
                   message.setCode("1");
                 }
               }
-            } else {
+            }
+            else {
               message.setMessage("Fail to update due to RDC out of stock. ");
               message.setCode("99");
             }
-          } else {
-            message.setMessage("Fail to update due to RDC out of stock. ");
-            message.setCode("99");
+          }else {
+        	if(params.get("hiddenATP").equals("Y")){
+        		resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+
+                if (null != resultValue) {
+                  if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+                    if ("1".equals(resultValue.get("logStat"))) {
+                      message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
+                      message.setCode("99");
+                    } else {
+                  	  params.put("logStat", resultValue.get("logStat"));
+                  	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
+
+                  	  try{
+                  		  smsResultValue = orderCallListService.callLogSendSMS(params, sessionVO);
+                  	  }catch (Exception e){
+                  		  logger.info("===smsResultValue===" + smsResultValue.toString());
+                  	  }
+                  	  if(smsResultValue.isEmpty()){
+                  		  msg += "</br> Failed to send SMS to " + params.get("custMobileNo").toString();
+                  	  }
+                  	  message.setMessage(msg);
+                        message.setCode("1");
+                    }
+                  } else {
+                    message.setMessage("Record updated successfully.</br> ");
+                    message.setCode("1");
+                  }
+                }
+        	}else{
+        		message.setMessage("Fail to update due to RDC out of stock. ");
+                message.setCode("99");
+        	}
           }
         } else {
           logger.debug("BY PASS CHECK QUANTITY~~");

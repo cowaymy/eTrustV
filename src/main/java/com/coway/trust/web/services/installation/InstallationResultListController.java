@@ -174,6 +174,7 @@ public class InstallationResultListController {
     String[] installStatusList = request.getParameterValues("installStatus");
     String[] typeList = request.getParameterValues("type");
     String[] appTypeList = request.getParameterValues("appType");
+    String[] stkAllctList = request.getParameterValues("stkAllct");
     /* KV- DSC Code */
     String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
 
@@ -187,6 +188,7 @@ public class InstallationResultListController {
     params.put("installStatusList", installStatusList);
     params.put("typeList", typeList);
     params.put("appTypeList", appTypeList);
+    params.put("stkAllctList", stkAllctList);
     /* KV- DSC Code */
     params.put("dscCodeList", dscCodeList);
 

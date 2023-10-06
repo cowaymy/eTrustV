@@ -830,4 +830,12 @@
             AND RCD_TMS = #{rcdTms}
       </select>
 
+      <select id="selectDeliveryInsDet" parameterType="Map" resultType="egovMap">
+        SELECT INS.INSTALL_ENTRY_ID,INS.INSTALL_ENTRY_NO,INS.SALES_ORD_ID,INS.CT_ID,INS.STUS_CODE_ID INS_STUS
+		,CALLLOG.CALL_ENTRY_ID,CALLLOG.TYPE_ID CALL_TYPE
+		FROM SAL0046D INS
+		JOIN CCR0006D CALLLOG ON CALLLOG.call_entry_id = INS.call_entry_id
+		AND INS.INSTALL_ENTRY_NO = #{refdocno}
+    </select>
+
 </mapper>

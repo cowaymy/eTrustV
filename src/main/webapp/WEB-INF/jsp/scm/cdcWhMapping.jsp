@@ -77,10 +77,10 @@ function fnScmCdcGridCbBox() {
 //	Validation SaveUnmap
 function fnValidUnmap() {
 	//var result	= true;
-	var delList	= AUIGrid.getEditedRowItems(mapGridID);	//	we will delete checked item
+	var delList	= AUIGrid.getCheckedRowItems(mapGridID);	//	we will delete checked item
 	
 	if ( 0 == delList.length ) {
-		Common.alert("No Change");
+		Common.alert("No item checked.");
 		return false;
 	}
 	
@@ -113,7 +113,8 @@ function fnAddCDC() {
 function fnSearch() {
 	//	search parameters
 	var params	= {
-			scmCdcCbBox : $("#scmCdcCbBox").multipleSelect("getSelects")
+			scmCdcCbBox : $("#scmCdcCbBox").multipleSelect("getSelects"),
+			brnchLoc : $("#brnchLoc").multipleSelect("getSelects")
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -279,7 +280,22 @@ var MstGridLayout	=
 			width : "30%",
 			style : "aui-grid-left-column",
 			editable : false,
-		}
+		},
+        {
+            dataField : "leadTm",
+            //headerText : "<spring:message code='sys.scm.pomngment.cdc'/>",
+            headerText : "Lead Time (Day)",
+            width : "20%",
+            editRenderer : {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                    var list = getScmLeadTmCbBox();
+                    return list;
+                },
+                keyField : "id"
+            }
+        }
 	];
 
 var LocationGridLayout	=
@@ -349,7 +365,64 @@ $(document).ready(function() {
 	mapGridID	= GridCommon.createAUIGrid("MasterGridDiv", MstGridLayout,"", MstGridLayoutOptions);
 	//	Unmapped Grid
 	unmapGridID	= GridCommon.createAUIGrid("LocationGridDiv", LocationGridLayout,"", MstGridLayoutOptions);
+
+	doGetComboData('/common/selectStockLocationList2.do', {searchlocgb:'02'} , '', 'brnchLoc', 'M','f_multiComboType');
 });	//	$(document).ready
+
+function f_multiComboType() {
+    $(function() {
+        $('#brnchLoc').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });
+    });
+}
+
+function getScmLeadTmCbBox() {
+    var leadTmList = [1,2,3,4,5,6,7];
+    return leadTmList;
+}
+
+//Save Lead Time
+function fnSaveLeadTime() {
+    if ( false == fnValidMapLeadTime() ) {
+        return  false;
+    }
+
+    Common.ajax("POST"
+            , "/scm/saveMapLeadTime.do"
+            , GridCommon.getEditData(mapGridID)
+            , function(result) {
+                Common.alert(result.data + "<spring:message code='sys.msg.savedCnt'/>");
+                fnSearch();
+
+                console.log("Success : " + JSON.stringify(result));
+                console.log("data : " + result.data);
+            }
+            , function(jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("Fail Status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                } catch ( e ) {
+                    console.log(e);
+                }
+                Common.alert("Faile : " + jqXHR.responseJSON.message);
+            });
+}
+
+//Validation SaveMap
+function fnValidMapLeadTime() {
+    var insList = AUIGrid.getEditedRowItems(mapGridID);   //  we will insert CDC selected item
+
+    if ( 0 == insList.length ) {
+        Common.alert("No Data Change");
+        return false;
+    }
+
+    return  true;
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -373,8 +446,9 @@ $(document).ready(function() {
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
-			<col style="width:130px" />
-			<col style="width:200px" />
+			<col style="width:150px" />
+			<col style="width:*" />
+			<col style="width:150px" />
 			<col style="width:*" />
 		</colgroup>
 		<tbody>
@@ -383,7 +457,12 @@ $(document).ready(function() {
 				<td>
 					<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
 				</td>
-				<td></td>
+				<th scope="row">Branch</th>
+                <td>
+                    <select id="brnchLoc" name="brnchLoc" class="multy_select w100p" multiple="multiple"></select>
+                </td>
+                <th></th>
+                <td></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
@@ -396,6 +475,7 @@ $(document).ready(function() {
 				<ul class="right_btns">
 					<li><p class="btn_grid"><a onclick="fnAddCDC();">Add CDC</a></p></li>
 					<li><p class="btn_grid"><a onclick="fnSaveUnmap();">Unmapping</a></p></li>
+					<li><p class="btn_grid"><a onclick="fnSaveLeadTime();">Save Lead Time</a></p></li>
 					<li><p class="btn_grid"><a onclick="fnExcelExport('Mapped_Warehouses');">EXCEL</a></p></li>
 				</ul>
 				<article class="grid_wrap"><!-- grid_wrap start -->

@@ -286,7 +286,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         logPram.put("USERID", Integer.parseInt(String.valueOf(sessionVO.getUserId())));
 
         logger.debug("ORDERCALL 물류 호출 PRAM ===>" + logPram.toString());
-        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+        if(params.get("hiddenATP").equals("Y")){
+        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_STO(logPram);
+        }else{
+        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+        }
         logPram.put("P_RESULT_TYPE", "IN");
         logPram.put("P_RESULT_MSG", logPram.get("p1"));
         logger.debug("ORDERCALL 물류 호출 결과 ===>");

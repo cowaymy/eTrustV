@@ -23,4 +23,6 @@ public interface ServicesLogisticsPFCMapper {
      Map<String, Object> SP_SVC_LOGISTIC_REQUEST_SERIAL(Map<String, Object> param);
      Map<String, Object> SP_LOGISTIC_REQUEST_TRANS_SERIAL(Map<String, Object> param);
 	 Map<String, Object> SP_SVC_BARCODE_SAVE(Map<String, Object> param);
+
+	 Map<String, Object>   SP_LOGISTIC_REQUEST_STO(Map<String, Object> param);
 }

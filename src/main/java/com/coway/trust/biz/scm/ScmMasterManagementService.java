@@ -26,4 +26,6 @@ public interface ScmMasterManagementService
 	List<EgovMap> selectCdcBrUnmappingList(Map<String, Object> params);
 	int insertCdcBrMapping(List<Object> insList, Integer crtUserId);
 	int deleteCdcBrMapping(List<Object> delList, Integer crtUserId);
+
+	int updateCdcLeadTimeMapping(List<Object> insList, Integer crtUserId);
 }

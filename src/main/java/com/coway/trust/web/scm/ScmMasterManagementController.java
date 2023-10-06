@@ -224,4 +224,24 @@ public class ScmMasterManagementController {
 
 		return	ResponseEntity.ok(message);
 	}
+
+//	save Map
+	@RequestMapping(value = "/saveMapLeadTime.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMapLeadTime(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+
+		//	Only edit
+		List<Object> insList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid insList : AUIGRID_UPDATE -> row insert
+
+		if ( 0 < insList.size() ) {
+			totCnt	= scmMasterManagementService.updateCdcLeadTimeMapping(insList, sessionVO.getUserId());
+		}
+
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return	ResponseEntity.ok(message);
+	}
 }

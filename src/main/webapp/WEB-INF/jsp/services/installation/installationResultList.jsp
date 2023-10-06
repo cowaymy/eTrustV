@@ -350,7 +350,10 @@
         dataField : "emailSentCount",
         headerText : 'emailSentCount',
         width : 130
-    }];
+    },
+    {dataField : "stoDelvryGr",headerText : 'Complete(CDC)',width : 130},
+    {dataField : "smoDelvryGr",headerText : 'Complete(RDC)',width : 130}
+    ];
 
     var gridPros = {
       showRowCheckColumn : true,
@@ -949,8 +952,13 @@
       <td><input type="text" class="w100p" title="SIRIM No." placeholder="SIRIM No."
        id="sirimNo" name="sirimNo" /></td>
       <th scope="row"><spring:message code='service.title.SerialNo' /></th>
-      <td colspan="3"><input type="text" class="w100p" title="Serial No."
+      <td><input type="text" class="w100p" title="Serial No."
        placeholder="Serial No." id="serialNo" name="serialNo" /></td>
+       <th scope="row">Stock Allocation</th>
+      <td><select class="multy_select w100p" multiple="multiple" id="stkAllct" name="stkAllct">
+        <option value="1">Complete(CDC)</option>
+        <option value="2">Complete(RDC)</option>
+      </select></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Product' /></th>

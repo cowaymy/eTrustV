@@ -26,6 +26,7 @@ import com.coway.trust.biz.logistics.replenishment.impl.SROMapper;
 import com.coway.trust.biz.logistics.serialmgmt.ScanSearchPopService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -49,6 +50,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "SROMapper")
 	private SROMapper sROMapper;
 
+	@Resource(name = "servicesLogisticsPFCMapper")
+	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
 
 	@Autowired
@@ -445,6 +448,50 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			stocktran.StockTransferiSsue(formMap);
 			stocktran.updateDelivery54(formMap);
 			reVal = (String) formMap.get("rdata");
+
+			//STO COME FROM ATP, AFTER STO GR, NEED TO CREATE SMO FOR THE INSTALLATION
+			if("GR".equals(formMap.get("gtype"))){
+				if (checklist.size() > 0) {
+					for (int i = 0; i < checklist.size(); i++) {
+						Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+
+						Map<String, Object> imap = new HashMap();
+						imap = (Map<String, Object>) map.get("item");
+
+						String docno = (String) imap.get("docno");
+						if (!docno.isEmpty()) {
+							Map<String, Object> insDetailsprm = new HashMap<String, Object>();
+							insDetailsprm.put("refdocno", docno);
+							EgovMap insDetails = stocktran.selectDeliveryInsDet(insDetailsprm);
+
+							if (insDetails !=null && !insDetails.get("insStus").toString().equals("21")) { //active or complete
+								Map<String, Object> logPram = new HashMap<String, Object>();
+							    String pType = "";
+							    String pPrgm = "";
+								if (insDetails.get("callType").toString().equals("258")) { // PRODUCT RETURN
+						          pType = "OD53";
+						          pPrgm = "PEXCALL";
+						        } else {
+						          pType = "OD01";
+						          pPrgm = "OCALL";
+						        }
+
+						        logPram.put("ORD_ID", docno);
+						        logPram.put("RETYPE", "SVO");
+						        logPram.put("P_TYPE", pType);
+						        logPram.put("P_PRGNM", pPrgm);
+						        logPram.put("USERID", Integer.parseInt(String.valueOf(params.get("userId"))));
+
+						        logger.debug("STO GR INS START PRAM ===>" + logPram.toString());
+						        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+						        logPram.put("P_RESULT_TYPE", "IN");
+						        logPram.put("P_RESULT_MSG", logPram.get("p1"));
+						        logger.debug("STO GR INS END ===>");
+							}
+						}
+					}
+				}
+			}
 		}
 		String returnValue[] = reVal.split("∈");
 		return returnValue[1];

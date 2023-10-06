@@ -96,4 +96,6 @@ public interface StockTransferMapper {
 	 */
 	public List<EgovMap> goodReceiptPopList(Map<String, Object> params) throws Exception;
 
+	EgovMap selectDeliveryInsDet(Map<String, Object> params);
+
 }
