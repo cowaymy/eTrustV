@@ -179,4 +179,7 @@ public interface MlogApiMapper {
   int getSMOMoveOutCntList(Map<String, Object> params);
 
   public List<EgovMap> getOnHandStkSerialList(Map<String, Object> params);
+
+  public List<EgovMap> getAllMember(Map<String, Object> params);
+
 }
