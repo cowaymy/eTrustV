@@ -132,4 +132,6 @@ public interface MlogApiService {
 
   List<EgovMap> getAllMember(Map<String, Object> params);
 
+  List<EgovMap> getCodyAvaFilterList(Map<String, Object> params);
+
 }
