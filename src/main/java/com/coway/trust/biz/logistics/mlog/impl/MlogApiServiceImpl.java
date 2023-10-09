@@ -1038,4 +1038,10 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
     return MlogApiMapper.getAllMember(params);
   }
 
+  @Override
+  public List<EgovMap> getCodyAvaFilterList(Map<String, Object> params) {
+    return MlogApiMapper.getCodyAvaFilterList(params);
+  }
+
+
 }
