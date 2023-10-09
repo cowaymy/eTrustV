@@ -182,4 +182,6 @@ public interface MlogApiMapper {
 
   public List<EgovMap> getAllMember(Map<String, Object> params);
 
+  public List<EgovMap> getCodyAvaFilterList(Map<String, Object> params);
+
 }
