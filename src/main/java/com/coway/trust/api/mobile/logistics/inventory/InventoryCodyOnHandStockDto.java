@@ -18,6 +18,21 @@ public class InventoryCodyOnHandStockDto {
   @ApiModelProperty(value = "Member Name")
   private String memName;
 
+  @ApiModelProperty(value = "Stock Code")
+  private String stkCde;
+
+  @ApiModelProperty(value = "Stock Name")
+  private String stkNm;
+
+  @ApiModelProperty(value = "Type ID")
+  private String itmTypId;
+
+  @ApiModelProperty(value = "Type Name")
+  private String itmTypNm;
+
+  @ApiModelProperty(value = "AvaQty")
+  private String AvaQty;
+
   public static InventoryCodyOnHandStockDto create(EgovMap egvoMap) {
     return BeanConverter.toBean(egvoMap, InventoryCodyOnHandStockDto.class);
   }
@@ -44,5 +59,45 @@ public class InventoryCodyOnHandStockDto {
 
   public void setMemName(String memName) {
     this.memName = memName;
+  }
+
+  public String getStkCde() {
+    return stkCde;
+  }
+
+  public void setStkCde(String stkCde) {
+    this.stkCde = stkCde;
+  }
+
+  public String getStkNm() {
+    return stkNm;
+  }
+
+  public void setStkNm(String stkNm) {
+    this.stkNm = stkNm;
+  }
+
+  public String getItmTypId() {
+    return itmTypId;
+  }
+
+  public void setItmTypId(String itmTypId) {
+    this.itmTypId = itmTypId;
+  }
+
+  public String getItmTypNm() {
+    return itmTypNm;
+  }
+
+  public void setItmTypNm(String itmTypNm) {
+    this.itmTypNm = itmTypNm;
+  }
+
+  public String getAvaQty() {
+    return AvaQty;
+  }
+
+  public void setAvaQty(String avaQty) {
+    AvaQty = avaQty;
   }
 }
