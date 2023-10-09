@@ -20,6 +20,8 @@ public class AsDetailDto {
 
 	private String waterSrcType;
 
+	private String codeName;
+
 
 	public static AsDetailDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AsDetailDto.class);
@@ -41,6 +43,15 @@ public class AsDetailDto {
 	public String getWaterSrcType() {
 		return waterSrcType;
 	}
+
+	public String getCodeName() {
+		return codeName;
+	}
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
+	}
+
 
 	public void setSalesOrdNo(String salesOrdNo) {
 		this.salesOrdNo = salesOrdNo;
