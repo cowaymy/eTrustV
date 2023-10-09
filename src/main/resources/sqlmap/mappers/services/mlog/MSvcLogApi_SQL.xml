@@ -2535,13 +2535,19 @@ SELECT MST.*
     SELECT  A.INSTALL_ENTRY_ID,
                 C.SALES_ORD_NO,
                 B.STUS_CODE_ID,
-                NVL(B.WATER_SRC_TYPE, '') AS WATER_SRC_TYPE
+                <!-- NVL(B.WATER_SRC_TYPE, '') AS WATER_SRC_TYPE, -->
+                D.CODE_NAME
+
     FROM    SAL0046D A,
                 SAL0047D B,
-                SAL0001D C
+                SAL0001D C,
+                SYS0013M D
+
     where
                 A.INSTALL_ENTRY_ID =  B.ENTRY_ID
-                and A.SALES_ORD_ID  = C.SALES_ORD_ID
+                and A.SALES_ORD_ID = C.SALES_ORD_ID
+                and B.WATER_SRC_TYPE = D.CODE_ID (+)
+                and D.CODE_MASTER_ID = '501'
                 and C.SALES_ORD_NO = #{salesOrderNo}
 
   </select>
