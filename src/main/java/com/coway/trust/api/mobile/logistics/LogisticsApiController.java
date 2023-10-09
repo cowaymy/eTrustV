@@ -1323,4 +1323,20 @@ public class LogisticsApiController {
 
     return ResponseEntity.ok(list);
   }
+
+  @ApiOperation(value = "Consignment Transfer Amount Cody - Get Available Filter List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getCodyAvaFilterList", method = RequestMethod.GET)
+  public ResponseEntity<List<InventoryCodyOnHandStockDto>> getCodyAvaFilterList(@ModelAttribute InventoryCodyOnHandStockForm inventoryCodyOnHandStockForm) throws Exception {
+
+    Map<String, Object> params = InventoryCodyOnHandStockForm.createMap(inventoryCodyOnHandStockForm);
+    List<EgovMap> detail = MlogApiService.getCodyAvaFilterList(params);
+
+    for (int i = 0; i < detail.size(); i++) {
+      LOGGER.debug("CODY AVAILABLE FILTER LISTING : {}", detail.get(i));
+    }
+
+    List<InventoryCodyOnHandStockDto> list = detail.stream().map(r -> InventoryCodyOnHandStockDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
 }
