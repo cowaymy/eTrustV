@@ -680,8 +680,6 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
 	    String emailSubject = "COWAY: Product Cancellation";
 
-	    List<String> emailNo = new ArrayList<String>();
-
 	    String content = "";
 	    content += "Dear Customer,\n\n";
 	    content += "Your Product Cancellation have successful.\n\n";
@@ -701,6 +699,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 	    params.put(REPORT_DOWN_FILE_NAME,  "PRNoteDigitalization_" + CommonUtils.getNowDate());
 
 		for (int i = 0; i < soReqIdArr.size(); i++) {
+		    List<String> emailNo = new ArrayList<String>();
 
 			int soReqId = soReqIdArr.get(i);
 			String reqNoSent = reqNoSendArr.get(i);

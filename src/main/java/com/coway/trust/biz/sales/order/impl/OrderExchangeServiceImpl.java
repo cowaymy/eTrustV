@@ -369,8 +369,6 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 
 	    String emailSubject = "COWAY: Product Return";
 
-	    List<String> emailNo = new ArrayList<String>();
-
 	    String content = "";
 	    content += "Dear Customer,\n\n";
 	    content += "Your product Exchange is successful.\n\n";
@@ -393,6 +391,7 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 	    params.put(REPORT_DOWN_FILE_NAME,  "PEXNoteDigitalization_" + CommonUtils.getNowDate());
 
 		for (int i = 0; i < soIdArr.size(); i++) {
+		    List<String> emailNo = new ArrayList<String>();
 
 			int soId = soIdArr.get(i);
 			String reqNoSent = ordNoSendArr.get(i);
