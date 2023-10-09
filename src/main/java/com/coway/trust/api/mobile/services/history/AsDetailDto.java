@@ -12,13 +12,13 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AsDetailDto", description = "공통코드 Dto")
 public class AsDetailDto {
 
+	private int installEntryId;
+
 	private String salesOrdNo;
 
 	private String memCode;
 
-	private String stusCodeId;
-
-	private String waterSrcType;
+	private int stusCodeId;
 
 	private String codeName;
 
@@ -28,28 +28,33 @@ public class AsDetailDto {
 	}
 
 
+	public int getInstallEntryId() {
+		return installEntryId;
+	}
+
+
 	public String getSalesOrdNo() {
 		return salesOrdNo;
 	}
+
 
 	public String getMemCode() {
 		return memCode;
 	}
 
-	public String getStusCodeId() {
+
+	public int getStusCodeId() {
 		return stusCodeId;
 	}
 
-	public String getWaterSrcType() {
-		return waterSrcType;
-	}
 
 	public String getCodeName() {
 		return codeName;
 	}
 
-	public void setCodeName(String codeName) {
-		this.codeName = codeName;
+
+	public void setInstallEntryId(int installEntryId) {
+		this.installEntryId = installEntryId;
 	}
 
 
@@ -57,15 +62,20 @@ public class AsDetailDto {
 		this.salesOrdNo = salesOrdNo;
 	}
 
+
 	public void setMemCode(String memCode) {
 		this.memCode = memCode;
 	}
 
-	public void setStusCodeId(String stusCodeId) {
+
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
-	public void setWaterSrcType(String waterSrcType) {
-		this.waterSrcType = waterSrcType;
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
 	}
+
+
 }
