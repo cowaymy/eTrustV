@@ -15,10 +15,14 @@ public class InventoryCodyOnHandStockForm {
   @ApiModelProperty(value = "Input Text 1", example = "")
   private String txtSearch1;
 
+  @ApiModelProperty(value = "Input Text 2", example = "")
+  private String txtSearch2;
+
   public static Map<String, Object> createMap(InventoryCodyOnHandStockForm InventoryCodyOnHandStockForm) {
     Map<String, Object> params = new HashMap<>();
     params.put("userId", InventoryCodyOnHandStockForm.getUserId());
     params.put("txtSearch1", InventoryCodyOnHandStockForm.getTxtSearch1());
+    params.put("txtSearch2", InventoryCodyOnHandStockForm.getTxtSearch2());
     return params;
   }
 
@@ -38,4 +42,11 @@ public class InventoryCodyOnHandStockForm {
     this.txtSearch1 = txtSearch1;
   }
 
+  public String getTxtSearch2() {
+    return txtSearch2;
+  }
+
+  public void setTxtSearch2(String txtSearch2) {
+    this.txtSearch2 = txtSearch2;
+  }
 }
