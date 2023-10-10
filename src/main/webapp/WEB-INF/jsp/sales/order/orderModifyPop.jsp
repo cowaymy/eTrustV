@@ -3986,7 +3986,7 @@
         <th scope="row" id="nricPassbook"></th>
         <td>
             <input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" />
-            <input id="pnpRpsCrcNo" name="pnpRpsCrcNo" type="text" title="" placeholder="PNPRPS Crc No" class="w100p" hidden/>
+            <input id="pnpRpsCrcNo" name="pnpRpsCrcNo" type="text" title="" placeholder="PNPRPS Crc No" class="w100p" maxlength="16" hidden/>
         </td>
 
 
