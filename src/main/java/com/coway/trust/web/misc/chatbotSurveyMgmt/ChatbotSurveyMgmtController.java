@@ -25,6 +25,7 @@ import com.coway.trust.biz.api.vo.ChatbotVO;
 import com.coway.trust.biz.misc.chatbotSurveyMgmt.ChatbotSurveyMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -62,19 +63,20 @@ public class ChatbotSurveyMgmtController {
 	@RequestMapping(value = "/selectChatbotSurveyMgmtList", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectChatbotSurveyMgmtList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
+
         LOGGER.debug("=============== selectChatbotSurveyMgmtList ===============");
 		LOGGER.debug("params =====================================>>  " + params);
 		String finalStartDt = null;
 		String finalEndDt = null;
 
-		if(params.get("surveyFrDt") != null && params.get("surveyFrDt") != ""){
+		if(CommonUtils.nvl(params.get("surveyFrDt")).equals("") == false){
     		String[] startDt = params.get("surveyFrDt").toString().split("/");
     		finalStartDt = startDt[0] != "" ? startDt[1] + startDt[0] : null;
 		}
 		params.put("surveyStartDt", finalStartDt);
 
 
-		if(params.get("surveyToDt") != null && params.get("surveyToDt") != ""){
+		if(CommonUtils.nvl(params.get("surveyToDt")).equals("") == false){
     		String[] endDt = params.get("surveyToDt").toString().split("/");
     		finalEndDt = endDt[0] != ""  ? endDt[1] + endDt[0] : null;
 		}

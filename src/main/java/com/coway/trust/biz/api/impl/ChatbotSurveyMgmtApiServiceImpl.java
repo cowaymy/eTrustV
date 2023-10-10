@@ -170,7 +170,8 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		Gson gson = builder.setPrettyPrinting().create();
 		String jsonString = gson.toJson(chatbotVO);
 
-		LOGGER.debug("End Calling Chatbot API ...." + jsonString + "......\n");
+//		LOGGER.debug("End Calling Chatbot API ...." + jsonString + "......\n");
+		LOGGER.debug("Start Calling Chatbot API ....\n");
 
 		// Call informNewMasterData
 		String cbtUrl = CBTApiDomains + CBTApiUrlQues;
@@ -182,7 +183,8 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = cbtReqApi(reqInfo);
 
-		LOGGER.debug("End Calling Chatbot API ...." + reqInfo + "......\n");
+		LOGGER.debug("End Calling Chatbot API ....\n");
+//		LOGGER.debug("End Calling Chatbot API ...." + reqInfo + "......\n");
 
 		return resultValue;
 	}
