@@ -2679,15 +2679,17 @@
         AND S28.WH_LOC_CODE = #{txtSearch1}
         AND (QTY - NVL(L75.BOOKING_QTY , 0)) <![CDATA[ > ]]> 0
 
-        <if test="txtSearch2 !=null and txtSearch2 !=''">
-          <if test="txtSearch2 == '1'">
-            AND S26.STK_CODE = #{txtSearch3}
-          </if>
+        <if test="txtSearch3 !=null and txtSearch3 !=''">
+          <if test="txtSearch2 !=null and txtSearch2 !=''">
+            <if test="txtSearch2 == '1'">
+              AND S26.STK_CODE = #{txtSearch3}
+            </if>
 
-          <if test="txtSearch2 == '2'">
-            AND S26.STK_DESC = #{txtSearch3}
+            <if test="txtSearch2 == '2'">
+              AND S26.STK_DESC = #{txtSearch3}
+            </if>
           </if>
-        </if>
+         </if>
 
     ORDER BY S26.STK_CODE
   </select>
