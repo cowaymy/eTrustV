@@ -98,6 +98,6 @@ public class InventoryCodyOnHandStockDto {
   }
 
   public void setAvaQty(String avaQty) {
-    avaQty = avaQty;
+    this.avaQty = avaQty;
   }
 }
