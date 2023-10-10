@@ -574,7 +574,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         }
 
         //send sms
-        /*Map<String, Object> smsResultValue = new HashMap<String, Object>();
+        Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
         try{
         	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
@@ -598,7 +598,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       	}catch (Exception e){
       		logger.info("===smsResultValue===" + smsResultValue.toString());
       		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-      	}*/
+      	}
       }
     } else {
       if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
