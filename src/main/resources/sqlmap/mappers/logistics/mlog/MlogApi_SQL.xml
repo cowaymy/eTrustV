@@ -2642,9 +2642,9 @@
         AND A.MEM_CODE = #{txtSearch1}
       </if>
 
-      <if test="txtSearch1 == null and txtSearch1 ==''">
+      <!-- <if test="txtSearch1 == null and txtSearch1 ==''"> -->
         AND A.MEM_CODE != #{userId}
-      </if>
+      <!-- </if> -->
 
       AND A.STUS = 1
       ORDER BY MEM_CODE
