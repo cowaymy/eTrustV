@@ -24,14 +24,14 @@ public class HcSurveyResultCsvVO{
 		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyymmDD HH:mm:ss");
 
 		vo.setTxnId(Integer.parseInt(CSVRecord[0]));
-		vo.setStatisticsProcessed(CSVRecord[1].isEmpty() ? null : dtFormat.parse(CSVRecord[1]));
-		vo.setStatisticsSent(CSVRecord[2].isEmpty() ? null : dtFormat.parse(CSVRecord[2]));
-		vo.setStatisticsDelivered(CSVRecord[3].isEmpty() ? null : dtFormat.parse(CSVRecord[3]));
-		vo.setStatisticsSeen(CSVRecord[4].isEmpty() ? null : dtFormat.parse(CSVRecord[4]));
-		vo.setStatisticsClicked(CSVRecord[5].isEmpty() ? null : dtFormat.parse(CSVRecord[5]));
-		vo.setStatisticsViewed(CSVRecord[6].isEmpty() ? null : dtFormat.parse(CSVRecord[6]));
-		vo.setStatisticsResponded(CSVRecord[7].isEmpty() ? null : dtFormat.parse(CSVRecord[7]));
-		vo.setResponse(CSVRecord[8]);
+		vo.setStatisticsProcessed((CSVRecord.length < 2 || CSVRecord[1].isEmpty()) ? null : dtFormat.parse(CSVRecord[1]));
+		vo.setStatisticsSent((CSVRecord.length < 3 || CSVRecord[2].isEmpty()) ? null : dtFormat.parse(CSVRecord[2]));
+		vo.setStatisticsDelivered((CSVRecord.length < 4 || CSVRecord[3].isEmpty()) ? null : dtFormat.parse(CSVRecord[3]));
+		vo.setStatisticsSeen((CSVRecord.length < 5 || CSVRecord[4].isEmpty()) ? null : dtFormat.parse(CSVRecord[4]));
+		vo.setStatisticsClicked((CSVRecord.length < 6 || CSVRecord[5].isEmpty()) ? null : dtFormat.parse(CSVRecord[5]));
+		vo.setStatisticsViewed((CSVRecord.length < 7 || CSVRecord[6].isEmpty()) ? null : dtFormat.parse(CSVRecord[6]));
+		vo.setStatisticsResponded((CSVRecord.length < 8 || CSVRecord[7].isEmpty()) ? null : dtFormat.parse(CSVRecord[7]));
+		vo.setResponse((CSVRecord.length < 9 || CSVRecord[8].isEmpty()) ? null : CSVRecord[8]);
 
 		return vo;
 	}

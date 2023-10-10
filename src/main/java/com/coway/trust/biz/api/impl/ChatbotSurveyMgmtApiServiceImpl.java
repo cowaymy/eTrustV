@@ -450,24 +450,30 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	    stopWatch.reset();
 	    stopWatch.start();
 
-    	String authorization = request.getHeader("Authorization");
-    	String[] values = {"",""};
+//	    Uncomment this when use Basic Auth
+//    	String authorization = request.getHeader("Authorization");
+//    	String[] values = {"",""};
+//
+//    	if (authorization != null && authorization.startsWith("Basic")) {
+//    		// Authorization: Basic base64credentials
+//    		String base64Credentials = authorization.substring("Basic".length()).trim();
+//    		byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+//    		String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+//    		// credentials = username:password
+//    		values = credentials.split(":", 2);
+//    	}
 
-    	if (authorization != null && authorization.startsWith("Basic")) {
-    		// Authorization: Basic base64credentials
-    		String base64Credentials = authorization.substring("Basic".length()).trim();
-    		byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
-    		String credentials = new String(credDecoded, StandardCharsets.UTF_8);
-    		// credentials = username:password
-    		values = credentials.split(":", 2);
-    	}
+	    String userName = request.getHeader("userName");
+	    String key = request.getHeader("key");
 
     	Exception e1 = null;
 
     	EgovMap access = new EgovMap();
     	Map<String, Object> reqPrm = new HashMap<>();
-    	reqPrm.put("userName", values[0]);
-    	reqPrm.put("key", values[1]);
+//    	reqPrm.put("userName", values[0]);
+//    	reqPrm.put("key", values[1]);
+    	reqPrm.put("userName", userName);
+    	reqPrm.put("key", key);
 
     	access = chatbotSurveyMgmtApiMapper.checkAccess(reqPrm);
 
