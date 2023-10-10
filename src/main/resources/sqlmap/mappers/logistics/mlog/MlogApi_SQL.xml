@@ -2651,14 +2651,14 @@
   </select>
 
   <select id="getCodyAvaFilterList" parameterType="Map" resultType="egovMap">
-    SELECT S26.STK_CODE STK_CODE,
-               S26.STK_DESC STK_DESC,
-               S26.STK_TYPE_ID TYPE_ID,
-               STYPE.CODE_NAME TYPE_NAME,
-               L56.QTY QTY,
+    SELECT S26.STK_CODE AS STK_CDE,
+               S26.STK_DESC AS STK_NM,
+               S26.STK_TYPE_ID AS ITEM_TYP_ID,
+               STYPE.CODE_NAME AS ITEM_TYP_NM,
+               L56.QTY AS QTY,
                <!-- NVL(L56.MOV_QTY , 0) MOV_QTY ,
-               NVL(L75.BOOKING_QTY , 0) BOOKING_QTY, -->
-               QTY - NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
+               NVL(L75.BOOKING_QTY , 0) AS BOOKING_QTY, -->
+               QTY - NVL(L75.BOOKING_QTY , 0) AS AVA_QTY
     FROM LOG0056M L56
     JOIN SYS0028M S28 ON S28.WH_LOC_ID = L56.LOC_ID
     JOIN SYS0026M S26 ON S26.STK_CODE  = L56.STK_CODE
