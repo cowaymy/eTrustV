@@ -31,7 +31,7 @@ public class InventoryCodyOnHandStockDto {
   private String itmTypNm;
 
   @ApiModelProperty(value = "AvaQty")
-  private String AvaQty;
+  private String avaQty;
 
   public static InventoryCodyOnHandStockDto create(EgovMap egvoMap) {
     return BeanConverter.toBean(egvoMap, InventoryCodyOnHandStockDto.class);
@@ -94,10 +94,10 @@ public class InventoryCodyOnHandStockDto {
   }
 
   public String getAvaQty() {
-    return AvaQty;
+    return avaQty;
   }
 
   public void setAvaQty(String avaQty) {
-    AvaQty = avaQty;
+    avaQty = avaQty;
   }
 }
