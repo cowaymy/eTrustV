@@ -2681,11 +2681,11 @@
 
         <if test="txtSearch3 !=null and txtSearch3 !=''">
           <if test="txtSearch2 !=null and txtSearch2 !=''">
-            <if test="txtSearch2 == '1'">
+            <if test="txtSearch2 == 1">
               AND S26.STK_CODE = #{txtSearch3}
             </if>
 
-            <if test="txtSearch2 == '2'">
+            <if test="txtSearch2 == 2">
               AND S26.STK_DESC = #{txtSearch3}
             </if>
           </if>
