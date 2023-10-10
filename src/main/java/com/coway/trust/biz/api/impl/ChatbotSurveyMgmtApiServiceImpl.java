@@ -364,14 +364,14 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
     			util.disconnection();
 
     			if(!downloadSuccess){
-    				resultValue.put("status", "2000");
+    				resultValue.put("status", AppConstants.FAIL);
     				resultValue.put("message", "Error download file from SFTP");
     				return resultValue;
     			}
 		    }catch(Exception e){
 		    	LOGGER.error("Timeout:");
 				LOGGER.error("[Chatbot API] - Caught Exception: " + e);
-				resultValue.put("status", "2001");
+				resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
 				resultValue.put("message", "Unexpected Error");
 				return resultValue;
 		    }
@@ -411,7 +411,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	    	}catch (Exception e){
 	    		LOGGER.error("Timeout:");
 				LOGGER.error("[Chatbot API] - Caught Exception: " + e);
-				resultValue.put("status", "2001");
+				resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
 				resultValue.put("message", "Unexpected Error");
 				return resultValue;
 	    	}
