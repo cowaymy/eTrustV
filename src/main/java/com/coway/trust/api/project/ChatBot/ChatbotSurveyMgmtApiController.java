@@ -39,7 +39,7 @@ public class ChatbotSurveyMgmtApiController{
 	@Resource(name = "chatbotSurveyMgmtApiService")
 	private ChatbotSurveyMgmtApiService chatbotSurveyMgmtApiService;
 
-	@ApiOperation(value = "hcSurveyResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "/hcSurveyResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/hcSurveyResult", method = RequestMethod.POST)
 	public ResponseEntity<Map<String,Object>> hcSurveyResult(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
 		return ResponseEntity.ok(chatbotSurveyMgmtApiService.hcSurveyResult(request, params));

@@ -62,8 +62,6 @@ public class ChatbotSurveyMgmtController {
 	@RequestMapping(value = "/selectChatbotSurveyMgmtList", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectChatbotSurveyMgmtList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
-        List<EgovMap> surveyMgmtList = null;
-
         LOGGER.debug("=============== selectChatbotSurveyMgmtList ===============");
 		LOGGER.debug("params =====================================>>  " + params);
 		String finalStartDt = null;
@@ -82,7 +80,7 @@ public class ChatbotSurveyMgmtController {
 		}
 		params.put("surveyEndDt", finalEndDt);
 
-		surveyMgmtList =  chatbotSurveyMgmtService.selectChatbotSurveyMgmtList(params);
+		List<EgovMap> surveyMgmtList =  chatbotSurveyMgmtService.selectChatbotSurveyMgmtList(params);
 
         // 데이터 리턴.
         return ResponseEntity.ok(surveyMgmtList);
