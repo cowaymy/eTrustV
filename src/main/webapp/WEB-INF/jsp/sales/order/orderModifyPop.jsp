@@ -304,15 +304,49 @@
       return isExist;
   }
 
+  function fn_checkAccessModify(tabNm) {
+
+      var isValid = true, msg = "";
+
+      if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
+          isValid = false;
+          window.location.reload();
+      } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'CNT' && '${PAGE_AUTH.funcUserDefine5}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'NRC' && '${PAGE_AUTH.funcUserDefine6}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'INS' && '${PAGE_AUTH.funcUserDefine9}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'PAY' && '${PAGE_AUTH.funcUserDefine11}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'DOC' && '${PAGE_AUTH.funcUserDefine7}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'RFR' && '${PAGE_AUTH.funcUserDefine13}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'PRM' && '${PAGE_AUTH.funcUserDefine12}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'GST' && '${PAGE_AUTH.funcUserDefine8}'  != 'Y') {
+          isValid = false;
+      }
+
+      Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+
+      return isValid;
+  }
+
   $(function() {
     $('#btnEditType').click(function() {
       var tabNm = $('#ordEditType').val();
+      fn_checkAccessModify(TAB_NM);
+
       if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM'){
         Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
       }
-      else{
+      /* else{
           fn_changeTab(tabNm);
-      }
+      } */
 
     });
     $('#btnSaveBasicInfo').click(function() {
@@ -1202,11 +1236,11 @@
       $('#aTabBI').click();
       fn_loadUpdateInfo(ORD_ID);
 
-/*       if (ROLE_ID == 256 || ROLE_ID == 250 || ROLE_ID == 249
-          || ROLE_ID == 177 || ROLE_ID == 179 || ROLE_ID == 180) { */
+       if (ROLE_ID == 256 || ROLE_ID == 250 || ROLE_ID == 249
+          || ROLE_ID == 177 || ROLE_ID == 179 || ROLE_ID == 180) {
         $('#modSalesmanCd').prop("disabled", true);
         $('#btnSalesmanPop').hide();
-//      }
+      }
 
     } else {
       $('#scBI').addClass("blind");
