@@ -286,7 +286,6 @@ public class VendorManagementController {
             params.put("isPass", isPass);
             params.put("isReset", isReset);
 
-        } else {
             if (paymentTypeCount == 0) {
                 isPass = 0;
                 params.put("isPass", isPass);
@@ -323,6 +322,16 @@ public class VendorManagementController {
                     }
                 }
             }
+
+    } else {
+                    isReset = 0;
+                    isPass = 1;
+                    params.put("isReset", isReset);
+                    params.put("isPass", isPass);
+                    params.put("vendorAccId", vendorAccId);
+                    message.setCode(AppConstants.FAIL);
+                    message.setData(params);
+                    message.setMessage("Vendor Existed. Member Account ID: " + vendorAccId);
         }
 
 //        params.put("sameReqNo", sameReqNo);
