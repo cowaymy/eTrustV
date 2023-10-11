@@ -2656,6 +2656,7 @@
                TO_CHAR(S26.STK_DESC) AS STK_NM,
                TO_CHAR(S26.STK_TYPE_ID) AS ITEM_TYP_ID,
                TO_CHAR(STYPE.CODE_NAME) AS ITEM_TYP_NM,
+               TO_CHAR(S28.WH_LOC_ID) AS WH_ID,
                TO_CHAR(L56.QTY) AS QTY,
                <!-- TO_CHAR(NVL(L56.MOV_QTY , 0)) MOV_QTY ,
                TO_CHAR(NVL(L75.BOOKING_QTY , 0)) AS BOOKING_QTY, -->
