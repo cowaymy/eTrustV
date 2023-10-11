@@ -33,6 +33,9 @@ public class InventoryCodyOnHandStockDto {
   @ApiModelProperty(value = "Type Name")
   private String itmTypNm;
 
+  @ApiModelProperty(value = "WH ID")
+  private String whID;
+
   @ApiModelProperty(value = "AvaQty")
   private String avaQty;
 
@@ -102,6 +105,14 @@ public class InventoryCodyOnHandStockDto {
 
   public void setItmTypNm(String itmTypNm) {
     this.itmTypNm = itmTypNm;
+  }
+
+  public String getWhID() {
+    return whID;
+  }
+
+  public void setWhID(String whID) {
+    this.whID = whID;
   }
 
   public String getAvaQty() {
