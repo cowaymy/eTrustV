@@ -639,6 +639,11 @@
         Common.popupDiv("/eAccounting/staffAdvance/staffAdvanceAppvViewPop.do", data, null, true, "webInvoiceAppvViewPop");
     }
 
+    function fn_setGridData(gridId, data) {
+        console.log(data);
+        AUIGrid.setGridData(gridId, data);
+    }
+
     /*******************************************
     ****************** COMMON ******************
     ********************************************/

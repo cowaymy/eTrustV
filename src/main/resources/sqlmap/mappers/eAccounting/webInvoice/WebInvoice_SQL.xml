@@ -1022,6 +1022,21 @@ WHERE  T1.APPV_PRCSS_NO = #{appvPrcssNo}
 ORDER  BY T1.APPV_LINE_SEQ
 </select>
 
+<select id="selectAppvInfo" parameterType="Map" resultType="egovMap">
+SELECT  NM.HR_CODE || ' - ' || NM.USER_FULL_NAME AS APPROVER_NAME,
+            TO_CHAR(APPVD.APPV_DT, 'DD/MM/YYYY') AS APPROVAL_DATE,
+            CD.CODE_DESC AS APPROVAL_STATUS,
+            UPPER(APPVD.REJCT_RESN) AS APPROVER_COMMENT
+FROM FCM0004M APPVM
+        JOIN FCM0027M RMAS ON APPVM.APPV_PRCSS_NO = RMAS.APPV_PRCSS_NO
+        JOIN FCM0005D APPVD ON APPVM.APPV_PRCSS_NO = APPVD.APPV_PRCSS_NO
+        JOIN SYS0047M NM ON APPVD.UPD_USER_ID = NM.USER_ID
+        JOIN SYS0013M CD ON APPVD.APPV_STUS = CD.CODE AND CD.CODE_MASTER_ID = 508
+        WHERE RMAS.APPV_PRCSS_NO = #{appvPrcssNo}
+        <!--AND APPV_STUS IN ('A', 'J') -->
+ORDER BY APPVD.APPV_LINE_SEQ
+</select>
+
 <select id="selectRejectOfAppvPrcssNo" parameterType="Map" resultType="String">
 /* webInvoiceMapper.selectRejectOfAppvPrcssNo */
 SELECT REJCT_RESN

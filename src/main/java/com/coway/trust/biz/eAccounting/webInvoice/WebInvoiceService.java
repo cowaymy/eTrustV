@@ -47,6 +47,8 @@ public interface WebInvoiceService {
 
   List<EgovMap> selectAppvLineInfo(Map<String, Object> params);
 
+  List<EgovMap> selectAppvInfo(Map<String, Object> params);
+
   String selectRejectOfAppvPrcssNo(Map<String, Object> params);
 
   List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params);

@@ -292,6 +292,9 @@ public class VendorAdvanceController {
             details.put("settlementItems", settlementItems);
         }
 
+        List<EgovMap> approvalInfo = webInvoiceService.selectAppvInfo(params);
+        details.put("approvalInfo", approvalInfo);
+
         // Retrieve Attachment details
         if("6".equals(params.get("advType").toString())) {
         	 List<EgovMap> atchInfo = webInvoiceService.selectAttachList(String.valueOf(params.get("fileAtchGrpId")));
@@ -513,6 +516,7 @@ public class VendorAdvanceController {
 
         List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
         List<EgovMap> appvInfoAndItems = vendorAdvanceService.selectAppvInfoAndItems(params);
+        List<EgovMap> approvalInfo = webInvoiceService.selectAppvInfo(params);
 
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
         memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
@@ -549,6 +553,7 @@ public class VendorAdvanceController {
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);
+        model.addAttribute("approvalInfo", new Gson().toJson(approvalInfo));
         model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
         if(params.containsKey("type")) {
             model.addAttribute("type", params.get("type"));

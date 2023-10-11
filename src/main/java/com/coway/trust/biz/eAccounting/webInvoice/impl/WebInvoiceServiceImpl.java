@@ -116,6 +116,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
+	public List<EgovMap> selectAppvInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAppvInfo(params);
+	}
+
+	@Override
 	public String selectRejectOfAppvPrcssNo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectRejectOfAppvPrcssNo(params);

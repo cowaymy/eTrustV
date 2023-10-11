@@ -15,6 +15,7 @@
     console.log("vendorAdvanceApproveViewPop");
     var myGridID;
     var myGridData = $.parseJSON('${appvInfoAndItems}');
+    var approvalGridData = ${approvalInfo};
     var attachList = null;
     var myColumnLayout = [ {
         dataField : "clmUn",
@@ -108,6 +109,46 @@
     	    selectionMode : "multipleCells"
     	};
 
+    // Approval Info Grid -- Start
+     var approvalInfoColLayout = [{
+        dataField : "approverName",
+        headerText : "Approver Name",
+        editable : false,
+        width : "35%"
+    }, {
+        dataField : "approvalDate",
+        headerText : "Approval Date",
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approverComment",
+        headerText : "Approver Comment",
+        style : "aui-grid-user-custom-left",
+        editable : false,
+        width : "35%"
+    },
+    ];
+
+    var approvalInfoGridPros = {
+            usePaging : true,
+            pageRowCount : 20,
+            editable : true,
+            showStateColumn : true,
+            softRemovePolicy : "exceptNew",
+            softRemoveRowMode : false,
+            rowIdField : "clmSeq",
+            selectionMode : "singleCell",
+            enableColumnResize : false
+        };
+    // Approval Info Grid -- End
+
     	var mGridColumnLayout = [ {
     	    dataField : "clamUn",
     	    headerText : '<spring:message code="newWebInvoice.seq" />'
@@ -177,6 +218,7 @@
 
     $(document).ready(function () {
         myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
+        approvalInfoGridId = AUIGrid.create("#approvalInfo_grid_wrap", approvalInfoColLayout, approvalInfoGridPros);
 
         $("#viewClmNo").text(myGridData[0].clmNo);
         $("#viewAdvClm").text(myGridData[0].advRefdClmNo);
@@ -279,6 +321,7 @@
         $("#pApprove_btn").click(fn_approvalSubmit);
         $("#pReject_btn").click(fn_RejectSubmit);
 
+        fn_setGridData(approvalInfoGridId, approvalGridData);
 
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#appvBtns").hide();
@@ -524,6 +567,9 @@
 
         <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
         </article><!-- grid_wrap end -->
+
+        <article class="grid_wrap" id="approvalInfo_grid_wrap"></article>
+
         <ul class="center_btns" id="appvBtns">
             <li><p class="btn_blue2"><a href="#" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
             <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>

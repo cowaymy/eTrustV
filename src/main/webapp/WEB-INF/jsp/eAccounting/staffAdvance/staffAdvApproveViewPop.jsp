@@ -15,10 +15,52 @@
     console.log("staffAdvanceApproveViewPop");
     var myGridID;
     var myGridData = ${appvInfoAndItems};
+    var approvalGridData = ${approvalInfo};
     var attachList = null;
+
+    // Approval Info Grid -- Start
+    var approvalInfoColLayout = [{
+        dataField : "approverName",
+        headerText : "Approver Name",
+        editable : false,
+        width : "35%"
+    }, {
+        dataField : "approvalDate",
+        headerText : "Approval Date",
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approverComment",
+        headerText : "Approver Comment",
+        style : "aui-grid-user-custom-left",
+        editable : false,
+        width : "35%"
+    },
+    ];
+
+    var approvalInfoGridPros = {
+            usePaging : true,
+            pageRowCount : 20,
+            editable : true,
+            showStateColumn : true,
+            softRemovePolicy : "exceptNew",
+            softRemoveRowMode : false,
+            rowIdField : "clmSeq",
+            selectionMode : "singleCell",
+            enableColumnResize : false
+        };
+    // Approval Info Grid -- End
 
     $(document).ready(function () {
         //myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
+        approvalInfoGridId = AUIGrid.create("#approvalInfo_grid_wrap", approvalInfoColLayout, approvalInfoGridPros);
 
         $("#viewClmNo").text(myGridData[0].clmNo);
         $("#viewClmType").text(myGridData[0].clmType);
@@ -99,6 +141,8 @@
                 }
             });
         });
+
+        fn_setGridData(approvalInfoGridId, approvalGridData);
 
         //$("#fileListPop_btn").click(fn_fileListPop);
 
@@ -432,6 +476,9 @@
                     </tr>
                 </table>
             </form>
+
+            <article class="grid_wrap" id="approvalInfo_grid_wrap"></article>
+
         </section>
 
         <ul class="center_btns" id="appvBtns">

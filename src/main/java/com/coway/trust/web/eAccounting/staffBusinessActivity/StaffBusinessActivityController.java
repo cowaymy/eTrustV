@@ -767,6 +767,7 @@ public class StaffBusinessActivityController {
 
         List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
         List<EgovMap> appvInfoAndItems = staffBusinessActivityService.selectAppvInfoAndItems(params);
+        List<EgovMap> approvalInfo = webInvoiceService.selectAppvInfo(params);
 
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
         memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
@@ -803,6 +804,7 @@ public class StaffBusinessActivityController {
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);
+        model.addAttribute("approvalInfo", new Gson().toJson(approvalInfo));
         model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
         if(params.containsKey("type")) {
             model.addAttribute("type", params.get("type"));

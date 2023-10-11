@@ -271,6 +271,47 @@
     };
     // Settlement Grid -- End
 
+    // Approval Info Grid -- Start
+     var approvalInfoColLayout = [{
+        dataField : "approverName",
+        headerText : "Approver Name",
+        editable : false,
+        width : "35%"
+    }, {
+        dataField : "approvalDate",
+        headerText : "Approval Date",
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : "15%"
+    }, {
+        dataField : "approverComment",
+        headerText : "Approver Comment",
+        style : "aui-grid-user-custom-left",
+        editable : false,
+        width : "35%"
+    },
+    ];
+
+
+    var approvalInfoGridPros = {
+            usePaging : true,
+            pageRowCount : 20,
+            editable : true,
+            showStateColumn : true,
+            softRemovePolicy : "exceptNew",
+            softRemoveRowMode : false,
+            rowIdField : "clmSeq",
+            selectionMode : "singleCell",
+            enableColumnResize : false
+        };
+    // Approval Info Grid -- End
+
     // Approval Line Grid -- Start
     var approveLineColumnLayout = [
         {
@@ -387,6 +428,10 @@
         // Vendor Advance Settlement Grid
         //settlementGridId = AUIGrid.create("#settlementGridWrap", settlementColLayout, settlementGridPros);
         settlementGridId = GridCommon.createAUIGrid("#settlement_grid_wrap", settlementColLayout, null, settlementGridPros);
+        // Vendor Advance Request Approval Grid
+        reqApprovalInfoGridId = GridCommon.createAUIGrid("#reqApprovalInfo_grid_wrap", approvalInfoColLayout, null, approvalInfoGridPros);
+        // Vendor Advance Refund Approval Grid
+        refApprovalInfoGridId = GridCommon.createAUIGrid("#refApprovalInfo_grid_wrap", approvalInfoColLayout, null, approvalInfoGridPros);
         // Approval Line
         approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
         // Settlement - Budget Search
@@ -646,6 +691,7 @@
             advGridRepayStus = event.item.settlementStus;
             advGridCostCenter = event.item.costCenter;
             advAtchFileId  = event.item.fileAtchGrpId;
+            advGridSettlementStus = event.item.settlementStus;
         });
 
         AUIGrid.bind(advGridId, "cellDoubleClick", function(event) {
@@ -700,6 +746,9 @@
             };
 
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
+                AUIGrid.resize(reqApprovalInfoGridId, 1203, $(".reqApprovalInfo_grid_wrap").innerHeight());
+                $("#reqApprovalInfo_grid_wrap").hide();
+                AUIGrid.setGridData(reqApprovalInfoGridId, result.data.approvalInfo);
                 console.log(result);
 
                 if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J" || advGridAppvPrcssStus == "R" || advGridAppvPrcssStus == "P") {
@@ -733,6 +782,8 @@
                     $("#reqCostCenter").val(result.data.costCenter + '/' + result.data.costCenterNm);
                     $("#appvStusRow").show();
                     $("#viewAppvStus").html(result.data.appvPrcssStus);
+
+                    $("#reqApprovalInfo_grid_wrap").show();
 
                     if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
                     	Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
@@ -824,6 +875,10 @@
             $("#reqDraft").show();
             $("#reqSubmit").show();
 
+            $("#appvStusRow").hide();
+            $("#finalAppvRow").hide();
+            $("#reqApprovalInfo_grid_wrap").hide();
+
             $("#keyDate").val(fn_getToday);
 
             $("#supplier_search_btn").show();
@@ -859,6 +914,7 @@
         console.log("fn_repaymentPop");
 
         AUIGrid.resize(settlementGridId, 1203, $(".settlement_grid_wrap").innerHeight());
+        AUIGrid.resize(refApprovalInfoGridId, 1203, $(".refApprovalInfo_grid_wrap").innerHeight());
         fn_setSettlementGridEvent();
 
         //$("#settlementKeyDate").val(fn_getToday); //comment due View Pop up should display Settlement Create Date - 180423
@@ -868,7 +924,46 @@
             Common.alert("No advance request selected for settlement.");
             return false;
 
-        } else {
+        }
+
+        if(advGridClmNo.substring(0, 1) == "R") {
+            if(advGridAppvPrcssStus != "A") {
+                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
+                console.log (advGridClmNo.substring(0, 1));
+                console.log
+                return false;
+            }
+        }
+
+        if(advGridClmNo.substring(0, 1) == "A") {
+            if(advGridAppvPrcssStus != "T" && mode != "DRAFT") {
+                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
+                return false;
+            }
+        }
+
+        if(advGridSettlementStus == "3" || advGridSettlementStus == "4" || advGridSettlementStus == "5") {
+            // Repaid
+            if(advGridSettlementStus == "3") {
+                Common.alert("Request is repaid.");
+                return false;
+            }
+
+            // Pending Approval
+            if(advGridSettlementStus == "4") {
+                Common.alert("Settlement claim pending approval.");
+                return false;
+            }
+
+            // Draft
+            if(advGridSettlementStus == "5") {
+                Common.alert("Drafted repayment exist!");
+                return false;
+            }
+        }
+
+        else {
+
             var data = {
                     clmNo : advGridClmNo,
                     appvPrcssNo : advAppvPrcssNo,
@@ -881,6 +976,9 @@
             console.log("advGridAppvPrcssStus " + advGridAppvPrcssStus);
             console.log("advGridCostCenter " + advGridCostCenter);
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
+
+            	AUIGrid.setGridData(refApprovalInfoGridId, result.data.approvalInfo);
+                $("#refApprovalInfo_grid_wrap").hide();
                 console.log(result);
 
                 if(advGridAdvType == "5") {
@@ -991,6 +1089,8 @@
                         $("#settlement_add_row").hide();
                         $("#settlement_remove_row").hide();
                         $("#appvStusRowSett").show();
+
+                        $("#refApprovalInfo_grid_wrap").show();
 
                         if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
                             Common.ajaxSync("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
@@ -2462,6 +2562,8 @@
                 </table><!-- table end -->
             </form>
         </section><!-- search_table end -->
+
+        <article class="grid_wrap" id="reqApprovalInfo_grid_wrap"></article>
     </section>
 </div>
 <!--
@@ -2746,6 +2848,8 @@
             </ul>
         </aside>
         <article class="grid_wrap" id="settlement_grid_wrap"></article>
+
+        <article class="grid_wrap" id="refApprovalInfo_grid_wrap"></article>
 
         <!--
         <section class="search_result" style="width: 100%">
