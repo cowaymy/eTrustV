@@ -17,6 +17,15 @@ public class EnrollmentUpdateDVO {
 	private String inputRejectCode;
 	private int rejectCodeId;
 	private int serviceContractId;
+	// Added for eMandate-paperless by Hui Ding, 25/08/2023
+	private String ddPaymentId;
+
+	public String getDdPaymentId() {
+		return ddPaymentId;
+	}
+	public void setDdPaymentId(String ddPaymentId) {
+		this.ddPaymentId = ddPaymentId;
+	}
 	public int getEnrollUpdateDetId() {
 		return enrollUpdateDetId;
 	}
@@ -122,6 +131,6 @@ public class EnrollmentUpdateDVO {
 				+ ", message=" + message + ", inputRejectCode=" + inputRejectCode + ", rejectCodeId=" + rejectCodeId
 				+ ", serviceContractId=" + serviceContractId + "]";
 	}
-	
-	
+
+
 }

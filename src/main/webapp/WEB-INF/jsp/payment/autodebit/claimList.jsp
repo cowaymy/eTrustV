@@ -1211,7 +1211,7 @@
               .alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
           return;
         }
-      } else if ($("#new_claimType option:selected").val() == "132") {
+      } else if ($("#new_claimType option:selected").val() == "132") { // direct debit
         if ($("#new_issueBank option:selected").val() == '') {
           Common
               .alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");

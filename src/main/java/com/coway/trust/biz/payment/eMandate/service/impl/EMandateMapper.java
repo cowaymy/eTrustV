@@ -17,4 +17,5 @@ public interface EMandateMapper {
 	EgovMap getNextPaymentId(Map<String, Object> params);
 	int insertDDRequest (Map<String, Object> params);
 	int updateStatusDDRequest(Map<String, Object> params);
+	String getOrderNoByPaymentId(Map<String, Object> params);
 }

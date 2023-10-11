@@ -71,8 +71,12 @@
    </tr>
    <tr>
     <th scope="row">Payment Term</th>
-    <td colspan="5"><span>${orderDetail.rentPaySetInf.payTrm}
+    <td><span>${orderDetail.rentPaySetInf.payTrm}
       month(s)</span></td>
+
+    <!-- Added for emandate paperless-phase 2, Hui Ding, 06-09-2023 -->
+    <th scope="row">DD Paperless</th>
+    <td colspan="3"><span>${orderDetail.rentPaySetInf.ddPaperless}</span></td>
    </tr>
    <tr>
     <th scope="row">Pay By Third Party</th>

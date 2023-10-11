@@ -31,4 +31,11 @@ public interface EMandateEnrollmentService {
 	 * Jul 24, 2023
 	 */
 	Map<String, Object> enrollRespond (Map<String, Object> params) throws Exception;
+
+	/**
+	 *
+	 * @author HQIT-HUIDING
+	 * Aug 24, 2023
+	 */
+	String getOrderIdByPaymentId(String paymentId);
 }

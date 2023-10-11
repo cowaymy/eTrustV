@@ -55,4 +55,8 @@
         WHERE PAYMENT_ID = #{paymentId}
     </update>
 
+     <select id="getOrderNoByPaymentId" parameterType="Map" resultType="String">
+            SELECT S.SALES_ORD_NO FROM PAY0353M D JOIN SAL0001D S ON D.SALES_ORD_ID = S.SALES_ORD_ID WHERE D.PAYMENT_ID =#{paymentId}
+     </select>
+
   </mapper>

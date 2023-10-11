@@ -114,7 +114,8 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 
 		  // Configure HashValue
 		  /**Hash Key = Password + ServiceID + PaymentID + MerchantReturnURL + MerchantApprovalURL + MerchantUnApprovalURL +
-		   * MerchantCallBackURL + Amount + CurrencyCode + CustIP + PageTimeout + CardNo + Token + RecurringCriteria*/
+		   * MerchantCallBackURL + Amount +
+		   * +CurrencyCode + CustIP + PageTimeout + CardNo + Token + RecurringCriteria*/
 		  String hashKey = password + serviceId + paymentID + unApprovedURL + approvedURL + unApprovedURL + unApprovedURL + rentalAmount +
 				  					EMandateConstants.CURRENCY_CODE + clientIp + EMandateConstants.PAGE_TIME_OUT;
 
@@ -293,5 +294,14 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 
 		 return returnParams;
 
+	 }
+
+	 @Override
+	 public String getOrderIdByPaymentId (String paymentId){
+
+		 Map<String, Object> param = new HashMap<String, Object>();
+		 param.put("paymentId", paymentId);
+
+		 return eMandateMapper.getOrderNoByPaymentId(param);
 	 }
 }

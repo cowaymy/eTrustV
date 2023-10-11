@@ -3938,9 +3938,17 @@
       <tr>
        <th scope="row"><spring:message
          code="sal.text.payByThirdParty" /></th>
-       <td colspan="3"><label><input id="thrdParty"
+       <td><label><input id="thrdParty"
          name="thrdParty" id="thrdParty" type="checkbox" value="1" /><span></span></label>
        </td>
+
+        <!-- Added for eMandate-paperless phase 2 by Hui Ding, 04/09/2023 -->
+        <th scope="row">
+            DD Paperless
+        </th>
+        <td><label><input id="ddPaperless" name="ddPaperless" id="ddPaperless" type="checkbox" value="1" onclick="return false;"/></label>
+       </td>
+       <!-- Added for eMandate-paperless phase 2 by Hui Ding, 04/09/2023 -->
       </tr>
      </tbody>
     </table>

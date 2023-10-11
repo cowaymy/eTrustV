@@ -5,20 +5,20 @@
 var myGridID;
 var viewGridID;
 var newGridID;
-var selectedGridValue; 
+var selectedGridValue;
 
 $(document).ready(function(){
-	
+
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	//viewGridID = GridCommon.createAUIGrid("grid_wrap_view", viewColumn,null,gridPros);
     newGridID = GridCommon.createAUIGrid("grid_wrap_new", newColumn,null,gridPros);
-    
+
     AUIGrid.setGridData(viewGridID, []);
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
     	selectedGridValue = event.rowIndex;
     });
-    
+
  // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
     function checkHTML5Brower() {
         var isCompatible = false;
@@ -27,14 +27,14 @@ $(document).ready(function(){
         }
         return isCompatible;
     }
-    
+
     // 파일 선택하기
     $('#fileSelector').on('change', function(evt) {
         if (!checkHTML5Brower()) {
             // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
             // 파일 내용 읽어 반환시켜 그리드에 적용.
             commitFormSubmit();
-            
+
             //alert("브라우저가 HTML5 를 지원하지 않습니다.");
         } else {
             var data = null;
@@ -49,7 +49,7 @@ $(document).ready(function(){
                 if (typeof event.target.result != "undefined") {
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(newGridID, event.target.result, false);
-                    
+
                   //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                     AUIGrid.removeRow(newGridID,0);
                 } else {
@@ -61,8 +61,8 @@ $(document).ready(function(){
             };
         }
     });
-    
-    
+
+
 });
 
 //HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
@@ -80,20 +80,20 @@ $('#myForm').ajaxSubmit({
    type : "json",
    success : function(responseText, statusText) {
        if(responseText != "error") {
-           
+
            var csvText = responseText;
-           
+
            // 기본 개행은 \r\n 으로 구분합니다.
            // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
            // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-           // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+           // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
            csvText = csvText.replace(/\r?\n/g, "\r\n")
-           
+
            // 그리드 CSV 데이터 적용시킴
            AUIGrid.setCsvGridData(newGridID, csvText);
-           
+
            AUIGrid.removeAjaxLoader(newGridID);
-           
+
            //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
            AUIGrid.removeRow(newGridID,0);
        }
@@ -111,7 +111,7 @@ var gridPros = {
 };
 
 var columnLayout=[
-                      
+
     {dataField:"enrollupdateid", headerText:"<spring:message code='pay.head.updateBatchId'/>"},
     {dataField:"type", headerText:"<spring:message code='pay.head.updateType'/>"},
     {dataField:"totalupdate", headerText:"<spring:message code='pay.head.totalUpdate'/>"},
@@ -122,12 +122,12 @@ var columnLayout=[
 ];
 
 var viewColumn=[
-     {dataField:"status", headerText:"<spring:message code='pay.head.status'/>"},    
-     {dataField:"orderno", headerText:"<spring:message code='pay.head.orderNo'/>"},   
-     {dataField:"inputday", headerText:"<spring:message code='pay.head.day'/>"},   
-     {dataField:"inputmonth", headerText:"<spring:message code='pay.head.month'/>"},   
-     {dataField:"inputyear", headerText:"<spring:message code='pay.head.year'/>"},   
-     {dataField:"inputrejectcode", headerText:"<spring:message code='pay.head.rejectCode'/>"},   
+     {dataField:"status", headerText:"<spring:message code='pay.head.status'/>"},
+     {dataField:"orderno", headerText:"<spring:message code='pay.head.orderNo'/>"},
+     {dataField:"inputday", headerText:"<spring:message code='pay.head.day'/>"},
+     {dataField:"inputmonth", headerText:"<spring:message code='pay.head.month'/>"},
+     {dataField:"inputyear", headerText:"<spring:message code='pay.head.year'/>"},
+     {dataField:"inputrejectcode", headerText:"<spring:message code='pay.head.rejectCode'/>"},
      {dataField:"Message", headerText:"<spring:message code='pay.head.message'/>"}
 ];
 
@@ -139,7 +139,7 @@ var newColumn=[
       {dataField:"4", headerText:"<spring:message code='pay.head.rejectCode'/>"}
 ];
 //리스트 조회.
-function fn_getOrderListAjax() {        
+function fn_getOrderListAjax() {
     Common.ajax("GET", "/payment/selectResultList", $("#resultForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
         selectedGridValue = undefined;
@@ -189,16 +189,27 @@ hideNewPopup = function() {
 	});
 }
 
+showDDNewPopup = function() {
+	$("#new_dd_wrap").show();
+}
+
+hideDDNewPopup = function() {
+    $("#new_dd_wrap").hide();
+    $("#myDdForm").each(function(){
+        this.reset();
+    });
+}
+
 //수정 처리
 function fn_saveGridMap(){
-    
+
     //param data array
     var data = {};
 
     var gridList = AUIGrid.getGridData(newGridID);       //그리드 데이터
     var formList = $("#myForm").serializeArray();       //폼 데이터
-    
-    //array에 담기        
+
+    //array에 담기
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
@@ -206,16 +217,16 @@ function fn_saveGridMap(){
         return;
         //data.all = [];
     }
-    
+
     if(formList.length > 0) data.form = formList;
     else data.form = [];
-    
+
     //Ajax 호출
     Common.ajax("POST", "/payment/uploadFile", data, function(result) {
         resetUpdatedItems(); // 초기화
         Common.alert(result.message);
-        
-        
+
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
@@ -226,7 +237,7 @@ function fn_saveGridMap(){
         } catch (e) {
             console.log(e);
         }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);        
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
 }
 
@@ -234,7 +245,7 @@ function fn_saveGridMap(){
 function resetUpdatedItems() {
      AUIGrid.resetUpdatedItems(myGridID, "a");
  }
- 
+
 function fn_clear(){
     $("#resultForm")[0].reset();
 }
@@ -249,13 +260,13 @@ function fn_clear(){
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>Enrollment Result</h2>   
+        <h2>Enrollment Result</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
-        </ul>    
+        </ul>
     </aside>
     <!-- title_line end -->
 
@@ -309,27 +320,29 @@ function fn_clear(){
     </section>
 
     <!-- search_result start -->
-    <section class="search_result">     
+    <section class="search_result">
 
         <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-        
+
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="#" onclick="javascript:showViewPopup()"><spring:message code='pay.btn.link.viewEnrollmentResult'/></a></p></li>
+                        <!-- Added for E-mandate paperless, Hui Ding 11/09/2023 -->
+                        <li><p class="link_btn"><a href="#" onclick="javascript:showDDNewPopup()"><spring:message code='pay.btn.link.newDDEnrollmentResult'/></a></p></li>
                     </ul>
-                    <ul class="btns">                        
+                    <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()"><spring:message code='pay.btn.link.newEnrollmentResult'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
             </c:if>
-            
+
         </aside>
         <!-- link_btns_wrap end -->
 
@@ -382,7 +395,7 @@ function fn_clear(){
                 </tr>
             </tbody>
         </table>
-        
+
         <!-- grid_wrap start -->
         <article id="grid_wrap_view" class="grid_wrap"></article>
         <!-- grid_wrap end -->
@@ -397,7 +410,7 @@ function fn_clear(){
             <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
-    
+
     <!-- pop_body start -->
     <section class="pop_body">
         <!-- search_table start -->
@@ -437,7 +450,63 @@ function fn_clear(){
                 </table>
             </form>
         </section>
-        
+
+        <!-- grid_wrap start -->
+            <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- pop_body end -->
+</div>
+
+
+<div id="new_DD_wrap" class="popup_wrap" style="display:none;">
+    <header class="pop_header">
+        <h1>Enrollment Result Update</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+
+    <!-- pop_body start -->
+    <section class="pop_body">
+        <!-- search_table start -->
+        <ul class="right_btns mb10">
+            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a></p></li>
+            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/EnrollmentResult_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+        </ul>
+        <section class="search_table">
+            <form name="myForm" id="myForm">
+                <!-- table start -->
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:175px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Update Type</th>
+                            <td>
+                                <select name="updateType" id="updateType"  style="width:100%">
+                                    <option value="978">Submit Date</option>
+                                    <option value="979">Start Date</option>
+                                    <option value="980">Reject Date</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Select your CSV file *</th>
+                            <td>
+                                <div class="auto_file"><!-- auto_file start -->
+                                    <input type="file" id="fileSelector" title="file add" accept=".csv"/>
+                                </div><!-- auto_file end -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </section>
+
         <!-- grid_wrap start -->
             <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
         <!-- grid_wrap end -->

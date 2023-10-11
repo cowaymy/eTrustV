@@ -365,6 +365,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
       rentPaySetInf.put("rentPayRejct", "-");
     }
 
+    // Added for eMandate Paperless-phase 2, Hui Ding, 2023-09-06
+    if (!CommonUtils.isEmpty(rentPaySetInf.get("ddPaperless"))){
+    	rentPaySetInf.put("ddPaperless", "Yes");
+    }
+
   }
 
   private void loadMailingInfo(EgovMap mailingInfo, EgovMap basicInfo) {
