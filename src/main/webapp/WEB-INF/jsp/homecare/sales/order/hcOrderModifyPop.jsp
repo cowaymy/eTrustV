@@ -24,7 +24,7 @@
     var modDocGridID;
     var modRfrGridID;
 
-    var voucherAppliedStatus = 0;
+    /* var voucherAppliedStatus = 0;
     var voucherAppliedCode = "";
     var voucherAppliedEmail = "";
     var voucherPromotionId = [];
@@ -33,7 +33,7 @@
     codeList_562.push({codeId:"0", codeName:"No", code:"No"});
     <c:forEach var="obj" items="${codeList_562}">
     codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
+    </c:forEach> */
 
     var option = {
         winName : "popup",
@@ -67,7 +67,7 @@
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
 
-        doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+       /*  doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code */
 
         fn_statusCodeSearch();
 
@@ -236,14 +236,50 @@
     });
   }
 
+  function fn_checkAccessModify(tabNm) {
+
+      var isValid = true, msg = "";
+
+      if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
+          isValid = false;
+          window.location.reload();
+      } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'CNT' && '${PAGE_AUTH.funcUserDefine5}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'NRC' && '${PAGE_AUTH.funcUserDefine6}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'INS' && '${PAGE_AUTH.funcUserDefine9}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'PAY' && '${PAGE_AUTH.funcUserDefine11}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'DOC' && '${PAGE_AUTH.funcUserDefine7}'  != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'RFR' && '${PAGE_AUTH.funcUserDefine13}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'PRM' && '${PAGE_AUTH.funcUserDefine12}' != 'Y') {
+          isValid = false;
+      } else if(tabNm == 'GST' && '${PAGE_AUTH.funcUserDefine8}'  != 'Y') {
+          isValid = false;
+      }
+
+      Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+
+      return isValid;
+  }
+
     $(function() {
         $('#btnEditType').click(function() {
             var tabNm = $('#ordEditType').val();
+            fn_checkAccessModify(TAB_NM);
+
             if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
                 Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-            } else {
-                fn_changeTab(tabNm);
             }
+
+            /* else {
+                fn_changeTab(tabNm);
+            } */
         });
 
         // Save Basic Info
@@ -1307,12 +1343,12 @@
                         srvPacId : SRV_PAC_ID
                       }, promoId, 'ordPromo', 'S', ''); //Common Code
 
-                if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
+               /*  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
                 	$('#voucherCode').val(basicInfo.voucherInfo.voucherCode);
                 	$('#voucherEmail').val(basicInfo.voucherInfo.custEmail);
                 	$('#voucherType').val(basicInfo.voucherInfo.platformId);
                 	applyCurrentUsedVoucher();
-                }
+                } */
               }
             });
   }
@@ -2683,7 +2719,7 @@ console.log(salesOrderMVO);
 	    $('#btnCloseModify').click();
     }
 
-    function displayVoucherSection(){
+/*     function displayVoucherSection(){
   	  if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
   	  {
   		  $('.voucherSection').show();
@@ -2796,7 +2832,7 @@ console.log(salesOrderMVO);
     			return;
     		}
     	});
-    }
+    } */
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -4003,16 +4039,16 @@ console.log(salesOrderMVO);
      </colgroup>
      <tbody>
       <tr>
-        <th scope="row">Voucher Type</th>
+<!--         <th scope="row">Voucher Type</th>
 	    <td colspan="3">
 		    <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p" disabled></select></p>
 	        <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p" readonly/></p>
 	        <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p" readonly/></p>
-<!-- 	        <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p> -->
+	        <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p>
 	        <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsg"></p>
 	    </td>
       </tr>
-      <tr>
+      <tr> -->
        <th scope="row"><spring:message code="sal.text.product" /></th>
        <td><span id="prdName"></span></td>
        <th scope="row"><spring:message
