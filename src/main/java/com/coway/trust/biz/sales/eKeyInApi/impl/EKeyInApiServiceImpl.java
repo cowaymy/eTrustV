@@ -38,6 +38,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.HomecareCmMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.LoginVO;
@@ -83,6 +84,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Resource(name = "homecareCmMapper")
   private HomecareCmMapper homecareCmMapper;
+
+  @Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;
 
   @Autowired
   private LoginMapper loginMapper;
@@ -136,6 +140,18 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     selecteKeyInDetail.setPackTypeList(selectOrderInfo.getPackTypeList());
     selecteKeyInDetail.setProductList(selectOrderInfo.getProductList());
     selecteKeyInDetail.setPromotionList(selectOrderInfo.getPromotionList());
+
+    if(selecteKeyInDetail.getVoucherCode() != null
+    		&& selecteKeyInDetail.getVoucherCode().length() > 0){
+        Map<String,Object> voucherParam = new HashMap();
+        voucherParam.put("voucherCode", selecteKeyInDetail.getVoucherCode());
+        EgovMap voucherInfo = voucherMapper.getVoucherInfo(voucherParam);
+
+        if(voucherInfo != null){
+        	selecteKeyInDetail.setVoucherEmail(voucherInfo.get("custEmail").toString());
+        	selecteKeyInDetail.setVoucherType(Integer.parseInt(voucherInfo.get("platformId").toString()));
+        }
+    }
 
     if (CommonUtils.isNotEmpty(selecteKeyInDetail.getHcGu()) && selecteKeyInDetail.getHcGu().equals("HC")) {
       List<EgovMap> selecteKeyInDetailOrderHomecare = eKeyInApiMapper.selecteKeyInDetailOrderHomecare(EKeyInApiForm.createMap(param));

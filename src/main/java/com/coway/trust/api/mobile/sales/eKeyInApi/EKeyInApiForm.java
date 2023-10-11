@@ -61,6 +61,7 @@ public class EKeyInApiForm {
     params.put("voucherType", vo.getVoucherType());
     params.put("voucherCode", vo.getVoucherCode());
     params.put("voucherEmail", vo.getVoucherEmail());
+    params.put("voucherPromotion", vo.getVoucherPromotion());
     return params;
   }
 
@@ -95,6 +96,7 @@ public class EKeyInApiForm {
   private int voucherType;
   private String voucherCode;
   private String voucherEmail;
+  private int voucherPromotion;
 
   public int getStusCodeId() {
     return stusCodeId;
@@ -342,6 +344,14 @@ public String getVoucherEmail() {
 
 public void setVoucherEmail(String voucherEmail) {
 	this.voucherEmail = voucherEmail;
+}
+
+public int getVoucherPromotion() {
+	return voucherPromotion;
+}
+
+public void setVoucherPromotion(int voucherPromotion) {
+	this.voucherPromotion = voucherPromotion;
 }
 
 }
