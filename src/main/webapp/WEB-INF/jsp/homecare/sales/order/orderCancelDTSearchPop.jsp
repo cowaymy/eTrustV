@@ -16,7 +16,7 @@
 
         // If CT (Aircond), only show DSC
         if (dtMemType == '3') {
-        	doGetComboSepa('/common/selectBranchCodeList.do',  "3A", ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
+        	doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
         }
         else {
             doGetComboSepa('/common/selectBranchCodeList.do',  dtMemType, ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
