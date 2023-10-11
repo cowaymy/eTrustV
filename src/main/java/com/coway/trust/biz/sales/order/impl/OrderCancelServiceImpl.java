@@ -240,7 +240,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       }
 
       if (reqStageId == 25) {
-        salesReqCancelParam.put("callEntryId", salesReqCancel.get("soReqPrevCallEntryId"));
+        salesReqCancelParam.put("salesOrdId", salesReqCancel.get("soReqSoId"));
         EgovMap installEntry = orderCancelMapper.newSearchCancelSAL0046D(salesReqCancelParam);
         String getMovId = orderCancelMapper.crtSeqLOG0031D();
         String getStkRetnId = orderCancelMapper.crtSeqLOG0038D();

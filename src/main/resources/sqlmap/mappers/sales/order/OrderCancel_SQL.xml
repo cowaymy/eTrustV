@@ -1125,7 +1125,7 @@
            Extent1.UPD_USER_ID   ,
            Extent1.REV_ID
     FROM SAL0046D Extent1
-    WHERE Extent1.CALL_ENTRY_ID = #{callEntryId}
+    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
       AND 4 = Extent1.STUS_CODE_ID
       <![CDATA[
         AND ROWNUM <= 1
