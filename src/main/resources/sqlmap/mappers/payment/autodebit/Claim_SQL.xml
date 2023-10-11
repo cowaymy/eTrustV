@@ -377,6 +377,7 @@
     TRIM(Extent3.SALES_ORD_NO)
     ELSE TRIM(Extent3.SALES_ORD_NO) END) AS
     BILL_NO,
+    case when Extent1.DD_PAYMENT_ID IS NOT NULL THEN Extent1.DD_PAYMENT_ID ELSE
     (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
     (CASE
     WHEN
@@ -397,7 +398,7 @@
     ELSE
     TRIM(Extent3.SALES_ORD_NO)
     END)
-    END) AS CNTRCT_N_ORD_NO,
+    END)END AS CNTRCT_N_ORD_NO,
     Extent6.BANK_ACH_CODE,
     Extent2.CODE
     FROM
