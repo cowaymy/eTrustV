@@ -18,6 +18,9 @@ public class InventoryCodyOnHandStockDto {
   @ApiModelProperty(value = "Member Name")
   private String memName;
 
+  @ApiModelProperty(value = "Stock id")
+  private String stkId;
+
   @ApiModelProperty(value = "Stock Code")
   private String stkCde;
 
@@ -59,6 +62,14 @@ public class InventoryCodyOnHandStockDto {
 
   public void setMemName(String memName) {
     this.memName = memName;
+  }
+
+  public String getStkId() {
+    return stkId;
+  }
+
+  public void setStkId(String stkId) {
+    this.stkId = stkId;
   }
 
   public String getStkCde() {
