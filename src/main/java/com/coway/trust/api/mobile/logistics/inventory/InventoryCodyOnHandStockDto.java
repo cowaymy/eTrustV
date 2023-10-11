@@ -111,7 +111,7 @@ public class InventoryCodyOnHandStockDto {
     return whId;
   }
 
-  public void setWhID(String whId) {
+  public void setWhId(String whId) {
     this.whId = whId;
   }
 
