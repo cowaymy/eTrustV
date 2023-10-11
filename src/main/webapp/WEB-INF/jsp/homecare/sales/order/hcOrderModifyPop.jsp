@@ -1131,11 +1131,11 @@
       $('#aTabBI').click();
       fn_loadUpdateInfo(ORD_ID);
 
-/*       if (ROLE_ID == 256 || ROLE_ID == 250 || ROLE_ID == 249
-          || ROLE_ID == 177 || ROLE_ID == 179 || ROLE_ID == 180) { */
+       if (ROLE_ID == 256 || ROLE_ID == 250 || ROLE_ID == 249
+          || ROLE_ID == 177 || ROLE_ID == 179 || ROLE_ID == 180) {
         $('#modSalesmanCd').prop("disabled", true);
         $('#btnSalesmanPop').hide();
-//      }
+      }
 
     } else {
       $('#scBI').addClass("blind");
