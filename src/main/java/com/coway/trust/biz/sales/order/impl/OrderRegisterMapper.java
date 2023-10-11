@@ -232,4 +232,8 @@ public interface OrderRegisterMapper {
 
   int chkCanExtradeWoutPR(int ordId);
  //int chkIsAcMainOrd(String salesOrdId);
+
+  Map<String, Object> automatedCcpProcess(Map<String, Object> params);
+
+
 }

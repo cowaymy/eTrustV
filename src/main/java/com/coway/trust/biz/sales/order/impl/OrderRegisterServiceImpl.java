@@ -2228,6 +2228,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			voucherParam.put("isUsed", 1);
 			voucherMapper.updateVoucherCodeUseStatus(voucherParam);
 		}
+
+		try{
+			orderRegisterMapper.automatedCcpProcess(params);
+		}catch(Exception e){
+
+		}
+
+
   }
 
   @Override

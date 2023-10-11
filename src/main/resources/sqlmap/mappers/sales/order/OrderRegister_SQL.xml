@@ -3284,4 +3284,10 @@ WHERE
                    AND A.SALES_ORD_ID = #{value}
                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6
   </select>
+
+  <select id="automatedCcpProcess" parameterType="Map" statementType="CALLABLE">
+        {
+        call SP_UPD_PRECCP_SCRE_UPD_CCP(#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
+        }
+  </select>
 </mapper>
