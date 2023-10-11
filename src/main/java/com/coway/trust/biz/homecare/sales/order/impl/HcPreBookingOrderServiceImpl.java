@@ -15,7 +15,7 @@ import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
-import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
+//import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
