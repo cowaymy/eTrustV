@@ -245,7 +245,7 @@
              , T4.NAME ORDER_STATUS
              , NVL(T5.STUS_CODE_ID, '-') RENTAL_STATUS
              , T6.CNTRCT_RENTAL_PRIOD RENTAL_PERIOD
-             , T1.VOUCHER_CODE
+<!--              , T1.VOUCHER_CODE -->
     FROM SAL0001D T1
     LEFT JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_ID
     LEFT JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID
@@ -818,157 +818,157 @@
     </select>
 
     <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
-		SELECT T.MEM_ID
-		     , T.MEM_CODE
-		     , T.NAME
-		     , T.NRIC
-		     , T.MEM_TYPE
-		     , T.CODE_NAME
-		     , T.DEPT_CODE
-		     , T.GRP_CODE
-		     , T.ORG_CODE
-		     , T.MEM_LVL
-		     , T.LVL3_UP_ID
-		     , T.LVL2_UP_ID
-		     , T.LVL1_UP_ID
-		  FROM (
-		     SELECT T1.MEM_ID
-		          , T1.MEM_CODE
-		          , T1.MEM_TYPE
-		          , T1.NAME
-		          , T1.NRIC
-		          , T2.CODE_NAME
-		          , CASE WHEN (NOT((T3.MEM_ID IS NULL)
-		                       AND (T3.MEM_CODE IS NULL)
-		                       AND (T3.MEM_LVL IS NULL)
-		                       AND (T3.DEPT_CODE IS NULL)
-		                       AND (T3.GRP_CODE IS NULL)
-		                       AND (T3.ORG_CODE IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID IS NULL)
-		                       AND (T3.LVL3_UP_ID IS NULL)
-		                       AND (T3.LVL2_UP_ID IS NULL)
-		                       AND (T3.LVL1_UP_ID IS NULL)
-		                       AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
-		                 ELSE ''
-		            END DEPT_CODE
-		          , CASE WHEN (NOT((T3.MEM_ID IS NULL)
-		                       AND (T3.MEM_CODE IS NULL)
-		                       AND (T3.MEM_LVL IS NULL)
-		                       AND (T3.DEPT_CODE IS NULL)
-		                       AND (T3.GRP_CODE IS NULL)
-		                       AND (T3.ORG_CODE IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID IS NULL)
-		                       AND (T3.LVL3_UP_ID IS NULL)
-		                       AND (T3.LVL2_UP_ID IS NULL)
-		                       AND (T3.LVL1_UP_ID IS NULL)
-		                       AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
-		                 ELSE ''
-		            END GRP_CODE
-		          , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
-		                       AND (T3.MEM_CODE     IS NULL)
-		                       AND (T3.MEM_LVL      IS NULL)
-		                       AND (T3.DEPT_CODE    IS NULL)
-		                       AND (T3.GRP_CODE     IS NULL)
-		                       AND (T3.ORG_CODE     IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID    IS NULL)
-		                       AND (T3.LVL3_UP_ID   IS NULL)
-		                       AND (T3.LVL2_UP_ID   IS NULL)
-		                       AND (T3.LVL1_UP_ID   IS NULL)
-		                       AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
-		                 ELSE ''
-		            END ORG_CODE
-		          , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
-		                       AND (T3.MEM_CODE     IS NULL)
-		                       AND (T3.MEM_LVL      IS NULL)
-		                       AND (T3.DEPT_CODE    IS NULL)
-		                       AND (T3.GRP_CODE     IS NULL)
-		                       AND (T3.ORG_CODE     IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID    IS NULL)
-		                       AND (T3.LVL3_UP_ID   IS NULL)
-		                       AND (T3.LVL2_UP_ID   IS NULL)
-		                       AND (T3.LVL1_UP_ID   IS NULL)
-		                       AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
-		                ELSE 0
-		                   END MEM_LVL
-		          , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
-		                       AND (T3.MEM_CODE     IS NULL)
-		                       AND (T3.MEM_LVL      IS NULL)
-		                       AND (T3.DEPT_CODE    IS NULL)
-		                       AND (T3.GRP_CODE     IS NULL)
-		                       AND (T3.ORG_CODE     IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID    IS NULL)
-		                       AND (T3.LVL3_UP_ID   IS NULL)
-		                       AND (T3.LVL2_UP_ID   IS NULL)
-		                       AND (T3.LVL1_UP_ID   IS NULL)
-		                       AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
-		                 ELSE 0
-		            END LVL3_UP_ID
-		          , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
-		                       AND (T3.MEM_CODE     IS NULL)
-		                       AND (T3.MEM_LVL      IS NULL)
-		                       AND (T3.DEPT_CODE    IS NULL)
-		                       AND (T3.GRP_CODE     IS NULL)
-		                       AND (T3.ORG_CODE     IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID    IS NULL)
-		                       AND (T3.LVL3_UP_ID   IS NULL)
-		                       AND (T3.LVL2_UP_ID   IS NULL)
-		                       AND (T3.LVL1_UP_ID   IS NULL)
-		                       AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
-		                 ELSE 0
-		            END LVL2_UP_ID
-		          , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
-		                       AND (T3.MEM_CODE     IS NULL)
-		                       AND (T3.MEM_LVL      IS NULL)
-		                       AND (T3.DEPT_CODE    IS NULL)
-		                       AND (T3.GRP_CODE     IS NULL)
-		                       AND (T3.ORG_CODE     IS NULL)
-		                       AND (T3.TOP_ORG_CODE IS NULL)
-		                       AND (T3.MEM_UP_ID    IS NULL)
-		                       AND (T3.LVL3_UP_ID   IS NULL)
-		                       AND (T3.LVL2_UP_ID   IS NULL)
-		                       AND (T3.LVL1_UP_ID   IS NULL)
-		                       AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
-		                 ELSE 0
-		            END LVL1_UP_ID
-		       FROM ORG0001D T1
-		       JOIN SYS0013M T2
-		         ON T2.CODE_ID = T1.MEM_TYPE
-		       LEFT
-		       JOIN (SELECT V1.MEM_ID
-		                  , V1.MEM_CODE
-		                  , V1.MEM_LVL
-		                  , V1.DEPT_CODE
-		                  , V1.GRP_CODE
-		                  , V1.ORG_CODE
-		                  , V1.TOP_ORG_CODE
-		                  , V1.MEM_UP_ID
-		                  , V1.LVL3_UP_ID
-		                  , V1.LVL2_UP_ID
-		                  , V1.LVL1_UP_ID
-		                  , V1.LVL0_UP_ID
-		                      FROM ORG1001V V1 ) T3
-		         ON T3.MEM_ID = T1.MEM_ID
-		      WHERE 1 = 1
+        SELECT T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
               <if test='memId != null and memId !=0'>
                 AND T1.MEM_ID = #{memId}
               </if>
               <if test='memCode != null and memCode !=""'>
                 AND T1.MEM_CODE = #{memCode}
               </if>
-			  <if test='stus != null and stus !=""'>
+              <if test='stus != null and stus !=""'>
                 AND T1.STUS = #{stus}
               </if>
               <if test='salesMen != null and salesMen !=""'>
                 AND (MEM_LVL = 4
                 AND MEM_TYPE IN (1,2,7) OR MEM_TYPE IN (4,6) )
               </if>
-		        AND ROWNUM &lt;= 1 ) T
+                AND ROWNUM &lt;= 1 ) T
     </select>
 
     <select id="checkRC" parameterType="Map" resultType="egovMap">
@@ -1028,76 +1028,76 @@
     </select>
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
-		SELECT TT.MEM_ID
-		     , TT.MEM_CODE
-		     , TT.MEM_TYPE
-		     , TT.MEM_TYPE_NAME
-		     , TT.NAME
-		     , TT.NRIC
-		     , TT.RANK
-		     , TT.UPD_DT
-		     , TT.BRNCH
-		     , TT.STUS
-		     , TT.TEL_HUSE
-		     , TT.TEL_MOBILE
-		     , TT.TEL_OFFICE
-		     , TT.MEM_LVL
-		     , TT.DEPT_CODE
-		     , TT.EMAIL
-		  FROM ( SELECT T.MEM_ID
-		              , T.MEM_CODE
-		              , T.MEM_TYPE
-		              , T.MEM_TYPE_NAME
-		              , T.NAME
-		              , T.NRIC
-		              , T.RANK
-		              , T.UPD_DT
-		              , T.BRNCH
-		              , T.STUS
-		              , T.TEL_HUSE
-		              , T.TEL_MOBILE
-		              , T.TEL_OFFICE
-		              , T.MEM_LVL
-		              , T.DEPT_CODE
-		              , T.EMAIL
-		              , ROW_NUMBER() OVER ( ORDER BY T.MEM_CODE ASC  ) ROW_NUMBER
-		           FROM
-		              ( SELECT T1.MEM_ID
-		                     , T1.MEM_CODE
-		                     , T1.MEM_TYPE
-		                     , T3.CODE_NAME AS MEM_TYPE_NAME
-		                     , T1.NAME
-		                       <choose>
+        SELECT TT.MEM_ID
+             , TT.MEM_CODE
+             , TT.MEM_TYPE
+             , TT.MEM_TYPE_NAME
+             , TT.NAME
+             , TT.NRIC
+             , TT.RANK
+             , TT.UPD_DT
+             , TT.BRNCH
+             , TT.STUS
+             , TT.TEL_HUSE
+             , TT.TEL_MOBILE
+             , TT.TEL_OFFICE
+             , TT.MEM_LVL
+             , TT.DEPT_CODE
+             , TT.EMAIL
+          FROM ( SELECT T.MEM_ID
+                      , T.MEM_CODE
+                      , T.MEM_TYPE
+                      , T.MEM_TYPE_NAME
+                      , T.NAME
+                      , T.NRIC
+                      , T.RANK
+                      , T.UPD_DT
+                      , T.BRNCH
+                      , T.STUS
+                      , T.TEL_HUSE
+                      , T.TEL_MOBILE
+                      , T.TEL_OFFICE
+                      , T.MEM_LVL
+                      , T.DEPT_CODE
+                      , T.EMAIL
+                      , ROW_NUMBER() OVER ( ORDER BY T.MEM_CODE ASC  ) ROW_NUMBER
+                   FROM
+                      ( SELECT T1.MEM_ID
+                             , T1.MEM_CODE
+                             , T1.MEM_TYPE
+                             , T3.CODE_NAME AS MEM_TYPE_NAME
+                             , T1.NAME
+                               <choose>
                                     <when test=" GOC == 2">
                                ,REGEXP_REPLACE(T1.NRIC, '\d{8}(\d{4})', 'XXXXXXXX\1') NRIC
                                     </when>
                                     <otherwise>
-		                     , T1.NRIC
-		                            </otherwise>
+                             , T1.NRIC
+                                    </otherwise>
                                </choose>
-		                     , T1.RANK
-		                     , T1.UPD_DT
-		                     , NVL(T1.BRNCH, 0) BRNCH
-		                     , NVL(T1.STUS, 0) STUS
-		                     , NVL(T1.TEL_HUSE, '') TEL_HUSE
-		                     , NVL(T1.TEL_MOBILE, '') TEL_MOBILE
-		                     , NVL(T1.TEL_OFFICE, '') TEL_OFFICE
-		                     , NVL(T2.MEM_LVL, 0) MEM_LVL
-		                     , NVL(T2.DEPT_CODE, '') DEPT_CODE
-		                     , NVL(T1.EMAIL, '') EMAIL
-		                  FROM ORG0001D T1
-		                  LEFT
-		                  JOIN ORG0005D T2
-		                    ON T2.MEM_ID = T1.MEM_ID
+                             , T1.RANK
+                             , T1.UPD_DT
+                             , NVL(T1.BRNCH, 0) BRNCH
+                             , NVL(T1.STUS, 0) STUS
+                             , NVL(T1.TEL_HUSE, '') TEL_HUSE
+                             , NVL(T1.TEL_MOBILE, '') TEL_MOBILE
+                             , NVL(T1.TEL_OFFICE, '') TEL_OFFICE
+                             , NVL(T2.MEM_LVL, 0) MEM_LVL
+                             , NVL(T2.DEPT_CODE, '') DEPT_CODE
+                             , NVL(T1.EMAIL, '') EMAIL
+                          FROM ORG0001D T1
+                          LEFT
+                          JOIN ORG0005D T2
+                            ON T2.MEM_ID = T1.MEM_ID
                           LEFT
                           JOIN SYS0013M T3
                             ON T3.CODE_ID = T1.MEM_TYPE
                            AND T3.CODE_MASTER_ID = 1
-		                 WHERE 1=1
-		                 <if test='stus != null and stus > 0'>
+                         WHERE 1=1
+                         <if test='stus != null and stus > 0'>
                        AND 8 != T1.STUS
-		                   AND T1.STUS = #{stus}
-		                 </if>
+                           AND T1.STUS = #{stus}
+                         </if>
                          <if test='memType != null and memType > 0'>
                            AND T1.MEM_TYPE = #{memType}
                          </if>
@@ -1116,42 +1116,42 @@
                          <if test='memLvl != null and memLvl > 0'>
                            AND T2.MEM_LVL = #{memLvl}
                          </if>
-		              ) T
-		       ) TT ORDER BY MEM_CODE ASC
+                      ) T
+               ) TT ORDER BY MEM_CODE ASC
     </select>
 
     <select id="selectBOMList" parameterType="Map" resultType="egovMap">
-		SELECT T1.BOM_ID
-		     , T1.BOM_STK_ID
-		     , T2.STK_DESC
-		     , T1.BOM_PART_ID
-		     , T3.STK_DESC
-		     , T1.BOM_PART_QTY
-		     , T1.BOM_PART_TYPE_ID
-		     , T4.CODE_NAME
-		     , T1.BOM_PART_STUS_ID
-		     , T6.NAME
-		     , T1.BOM_PART_PRIOD
-		     , T1.BOM_CRT_DT
-		     , T1.BOM_CRT_USER_ID
-		     , NVL(T7.USER_NAME, '') USER_NAME
-		     , T1.BOM_UPD_DT
-		     , T1.BOM_UPD_USER_ID
-		     , NVL(T8.USER_NAME, '') USER_NAME
-		     , T1.BOM_TYPE_ID
-		     , T5.CODE_NAME
-		  FROM LOG0001M T1
-		  JOIN SYS0026M T2 ON T2.STK_ID = T1.BOM_STK_ID
-		  JOIN SYS0026M T3 ON T3.STK_ID = T1.BOM_PART_ID
-		  JOIN SYS0013M T4 ON T4.CODE_ID = T1.BOM_PART_TYPE_ID
-		  JOIN SYS0013M T5 ON T5.CODE_ID = T1.BOM_TYPE_ID
-		  JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T1.BOM_PART_STUS_ID
-		  LEFT
-		  JOIN SYS0047M T7 ON T7.USER_ID = T1.BOM_CRT_USER_ID
-		  LEFT
-		  JOIN SYS0047M T8 ON T8.USER_ID = T1.BOM_UPD_USER_ID
-		 WHERE T1.BOM_STK_ID = #{bomStkId}
-		   AND T1.BOM_PART_PRIOD &gt; 0
+        SELECT T1.BOM_ID
+             , T1.BOM_STK_ID
+             , T2.STK_DESC
+             , T1.BOM_PART_ID
+             , T3.STK_DESC
+             , T1.BOM_PART_QTY
+             , T1.BOM_PART_TYPE_ID
+             , T4.CODE_NAME
+             , T1.BOM_PART_STUS_ID
+             , T6.NAME
+             , T1.BOM_PART_PRIOD
+             , T1.BOM_CRT_DT
+             , T1.BOM_CRT_USER_ID
+             , NVL(T7.USER_NAME, '') USER_NAME
+             , T1.BOM_UPD_DT
+             , T1.BOM_UPD_USER_ID
+             , NVL(T8.USER_NAME, '') USER_NAME
+             , T1.BOM_TYPE_ID
+             , T5.CODE_NAME
+          FROM LOG0001M T1
+          JOIN SYS0026M T2 ON T2.STK_ID = T1.BOM_STK_ID
+          JOIN SYS0026M T3 ON T3.STK_ID = T1.BOM_PART_ID
+          JOIN SYS0013M T4 ON T4.CODE_ID = T1.BOM_PART_TYPE_ID
+          JOIN SYS0013M T5 ON T5.CODE_ID = T1.BOM_TYPE_ID
+          JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T1.BOM_PART_STUS_ID
+          LEFT
+          JOIN SYS0047M T7 ON T7.USER_ID = T1.BOM_CRT_USER_ID
+          LEFT
+          JOIN SYS0047M T8 ON T8.USER_ID = T1.BOM_UPD_USER_ID
+         WHERE T1.BOM_STK_ID = #{bomStkId}
+           AND T1.BOM_PART_PRIOD &gt; 0
     </select>
 
   <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
@@ -1226,7 +1226,7 @@
                   , PRE_ORD_ID
                   , ECOMM_ORD_ID
                   , EX_TRADE_PR
-                  , VOUCHER_CODE
+<!--                   , VOUCHER_CODE -->
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1291,7 +1291,7 @@
              , #{preOrdId}
              , #{ecommOrdId}
              , #{isExtradePR}
-             , #{voucherCode}
+<!--              , #{voucherCode} -->
      )
   </insert>
 
@@ -1302,336 +1302,336 @@
     </update>
 
     <insert id="insertSalesOrderD" parameterType="salesOrderDVO">
-		INSERT
-		  INTO SAL0002D
-		     ( SALES_ORD_ID
-		     , ITM_NO
-		     , ITM_STK_ID
-		     , ITM_PRC_ID
-		     , ITM_QTY
-		 <!--, ITM_TAX-->
-		 <!--, ITM_DSCNT-->
-		     , ITM_PRC
-		     , ITM_PV
-		     , STUS_CODE_ID
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , EDIT_TYPE_ID
-		     , ITM_ID
-		     , ITM_CALL_ENTRY_ID
-		     , CPNT_ID
-		     )
-		VALUES
-		     ( #{salesOrdId}
-		     , #{itmNo}
-		     , #{itmStkId}
-		     , #{itmPrcId}
-		     , #{itmQty}
-		     , #{itmPrc}
-		     , #{itmPv}
-		     , #{stusCodeId}
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{editTypeId}
-		     , #{itmId}
-		     , #{itmCallEntryId}
-		     , #{itmCompId}
-		     )
-	</insert>
+        INSERT
+          INTO SAL0002D
+             ( SALES_ORD_ID
+             , ITM_NO
+             , ITM_STK_ID
+             , ITM_PRC_ID
+             , ITM_QTY
+         <!--, ITM_TAX-->
+         <!--, ITM_DSCNT-->
+             , ITM_PRC
+             , ITM_PV
+             , STUS_CODE_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , EDIT_TYPE_ID
+             , ITM_ID
+             , ITM_CALL_ENTRY_ID
+             , CPNT_ID
+             )
+        VALUES
+             ( #{salesOrdId}
+             , #{itmNo}
+             , #{itmStkId}
+             , #{itmPrcId}
+             , #{itmQty}
+             , #{itmPrc}
+             , #{itmPv}
+             , #{stusCodeId}
+             , SYSDATE
+             , #{updUserId}
+             , #{editTypeId}
+             , #{itmId}
+             , #{itmCallEntryId}
+             , #{itmCompId}
+             )
+    </insert>
 
     <insert id="insertInstallation" parameterType="installationVO">
       <selectKey keyProperty="installId" resultType="Integer" order="BEFORE">
         SELECT SAL0045D_INSTALL_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0045D
-		     ( INSTALL_ID
-		     , SALES_ORD_ID
-		     , ADD_ID
-		     , CNT_ID
-		     , PRE_CALL_DT
-		     , PRE_DT
-		     , PRE_TM
-		     , ACT_DT
-		     , ACT_TM
-		     , STUS_CODE_ID
-		     , INSTCT
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , BRNCH_ID
-		     , EDIT_TYPE_ID
-		     , IS_TRADE_IN
-		     , VRIFY_REM
-		     )
-		VALUES
-		     ( #{installId}
-		     , #{salesOrdId}
-		     , #{addId}
-		     , #{cntId}
-		     , TO_DATE(#{preDt}, 'DD/MM/YYYY') - 1
-		     , TO_DATE(#{preDt}, 'DD/MM/YYYY')
-		     , #{preTm}
-		     , TO_DATE(#{actDt}, 'YYYY/MM/DD')
-		     , #{actTm}
-		     , #{stusCodeId}
-		     , #{instct}
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{brnchId}
-		     , #{editTypeId}
-		     , #{isTradeIn}
-		     , #{vrifyRem}
-		     )
+        INSERT
+          INTO SAL0045D
+             ( INSTALL_ID
+             , SALES_ORD_ID
+             , ADD_ID
+             , CNT_ID
+             , PRE_CALL_DT
+             , PRE_DT
+             , PRE_TM
+             , ACT_DT
+             , ACT_TM
+             , STUS_CODE_ID
+             , INSTCT
+             , UPD_DT
+             , UPD_USER_ID
+             , BRNCH_ID
+             , EDIT_TYPE_ID
+             , IS_TRADE_IN
+             , VRIFY_REM
+             )
+        VALUES
+             ( #{installId}
+             , #{salesOrdId}
+             , #{addId}
+             , #{cntId}
+             , TO_DATE(#{preDt}, 'DD/MM/YYYY') - 1
+             , TO_DATE(#{preDt}, 'DD/MM/YYYY')
+             , #{preTm}
+             , TO_DATE(#{actDt}, 'YYYY/MM/DD')
+             , #{actTm}
+             , #{stusCodeId}
+             , #{instct}
+             , SYSDATE
+             , #{updUserId}
+             , #{brnchId}
+             , #{editTypeId}
+             , #{isTradeIn}
+             , #{vrifyRem}
+             )
     </insert>
 
     <insert id="insertRentPaySet" parameterType="rentPaySetVO">
       <selectKey keyProperty="rentPayId" resultType="Integer" order="BEFORE">
         SELECT SAL0074D_RENT_PAY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0074D
-		     ( RENT_PAY_ID
-		     , SALES_ORD_ID
-		     , MODE_ID
-		     , CUST_CRC_ID
-		     , BANK_ID
-		     , CUST_ACC_ID
-		     , DD_APPLY_DT
-		     , DD_SUBMIT_DT
-		     , DD_START_DT
-		     , DD_REJCT_DT
-		     , UPD_USER_ID
-		     , UPD_DT
-		     , STUS_CODE_ID
-		     , IS_3RD_PARTY
-		     , CUST_ID
-		     , EDIT_TYPE_ID
-		     , NRIC_OLD
-		     , FAIL_RESN_ID
-		     , ISSU_NRIC
-		     , AEON_CNVR
-		     , REM
-		     , LAST_APPLY_USER
-		     , PAY_TRM
-		     , SVC_CNTRCT_ID
-		     )
-		VALUES
-		     ( #{rentPayId}
-		     , #{salesOrdId}
-		     , #{modeId}
-		     , #{custCrcId}
-		     , #{bankId}
-		     , #{custAccId}
-		     , SYSDATE
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , #{updUserId}
-		     , SYSDATE
-		     , #{stusCodeId}
-		     , #{is3rdParty}
-		     , #{custId}
-		     , #{editTypeId}
-		     , #{nricOld}
-		     , #{failResnId}
-		     , #{issuNric}
-		     , #{aeonCnvr}
-		     , #{rem}
-		     , #{lastApplyUser}
-		     , #{payTrm}
-		     , #{svcCntrctId}
-	     )
-	</insert>
+        INSERT
+          INTO SAL0074D
+             ( RENT_PAY_ID
+             , SALES_ORD_ID
+             , MODE_ID
+             , CUST_CRC_ID
+             , BANK_ID
+             , CUST_ACC_ID
+             , DD_APPLY_DT
+             , DD_SUBMIT_DT
+             , DD_START_DT
+             , DD_REJCT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , STUS_CODE_ID
+             , IS_3RD_PARTY
+             , CUST_ID
+             , EDIT_TYPE_ID
+             , NRIC_OLD
+             , FAIL_RESN_ID
+             , ISSU_NRIC
+             , AEON_CNVR
+             , REM
+             , LAST_APPLY_USER
+             , PAY_TRM
+             , SVC_CNTRCT_ID
+             )
+        VALUES
+             ( #{rentPayId}
+             , #{salesOrdId}
+             , #{modeId}
+             , #{custCrcId}
+             , #{bankId}
+             , #{custAccId}
+             , SYSDATE
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , #{updUserId}
+             , SYSDATE
+             , #{stusCodeId}
+             , #{is3rdParty}
+             , #{custId}
+             , #{editTypeId}
+             , #{nricOld}
+             , #{failResnId}
+             , #{issuNric}
+             , #{aeonCnvr}
+             , #{rem}
+             , #{lastApplyUser}
+             , #{payTrm}
+             , #{svcCntrctId}
+         )
+    </insert>
 
     <insert id="insertCustBillMaster" parameterType="custBillMasterVO">
       <selectKey keyProperty="custBillId" resultType="Integer" order="BEFORE">
         SELECT SAL0024D_CUST_BILL_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0024D
-		     ( CUST_BILL_ID
-		     , CUST_BILL_SO_ID
-		     , CUST_BILL_CUST_ID
-		     , CUST_BILL_CNT_ID
-		     , CUST_BILL_ADD_ID
-		     , CUST_BILL_STUS_ID
-		     , CUST_BILL_REM
-		     , CUST_BILL_UPD_USER_ID
-		     , CUST_BILL_UPD_DT
-		     , CUST_BILL_GRP_NO
-		     , CUST_BILL_CRT_USER_ID
-		     , CUST_BILL_CRT_DT
-		     , CUST_BILL_PAY_TRM
-		     , CUST_BILL_INCHG_MEM_ID
-		     , CUST_BILL_EMAIL
-		     , CUST_BILL_IS_ESTM
-		     , CUST_BILL_IS_SMS
-		     , CUST_BILL_IS_POST
-		     , CUST_BILL_PAY_REF_NO1
-		     , CUST_BILL_PAY_REF_NO2
-		     , CUST_BILL_EMAIL_ADD
-		     , CUST_BILL_IS_WEB_PORTAL
-		     , CUST_BILL_WEB_PORTAL_URL
-		     , CUST_BILL_IS_SMS2
-		     , CUST_BILL_CUST_CARE_CNT_ID
-		     )
-		VALUES
-		     ( #{custBillId}
-		     , #{custBillSoId}
-		     , #{custBillCustId}
-		     , #{custBillCntId}
-		     , #{custBillAddId}
-		     , #{custBillStusId}
-		     , #{custBillRem}
-		     , #{custBillUpdUserId}
-		     , SYSDATE
-		     , #{custBillGrpNo}
-		     , #{custBillCrtUserId}
-		     , SYSDATE
-		     , #{custBillPayTrm}
-		     , #{custBillInchgMemId}
-		     , #{custBillEmail}
-		     , #{custBillIsEstm}
-		     , #{custBillIsSms}
-		     , #{custBillIsPost}
-		     , #{custBillPayRefNo1}
-		     , #{custBillPayRefNo2}
-		     , #{custBillEmailAdd}
-		     , #{custBillIsWebPortal}
-		     , #{custBillWebPortalUrl}
-		     , #{custBillIsSms2}
-		     , #{custBillCustCareCntId}
-		     )
+        INSERT
+          INTO SAL0024D
+             ( CUST_BILL_ID
+             , CUST_BILL_SO_ID
+             , CUST_BILL_CUST_ID
+             , CUST_BILL_CNT_ID
+             , CUST_BILL_ADD_ID
+             , CUST_BILL_STUS_ID
+             , CUST_BILL_REM
+             , CUST_BILL_UPD_USER_ID
+             , CUST_BILL_UPD_DT
+             , CUST_BILL_GRP_NO
+             , CUST_BILL_CRT_USER_ID
+             , CUST_BILL_CRT_DT
+             , CUST_BILL_PAY_TRM
+             , CUST_BILL_INCHG_MEM_ID
+             , CUST_BILL_EMAIL
+             , CUST_BILL_IS_ESTM
+             , CUST_BILL_IS_SMS
+             , CUST_BILL_IS_POST
+             , CUST_BILL_PAY_REF_NO1
+             , CUST_BILL_PAY_REF_NO2
+             , CUST_BILL_EMAIL_ADD
+             , CUST_BILL_IS_WEB_PORTAL
+             , CUST_BILL_WEB_PORTAL_URL
+             , CUST_BILL_IS_SMS2
+             , CUST_BILL_CUST_CARE_CNT_ID
+             )
+        VALUES
+             ( #{custBillId}
+             , #{custBillSoId}
+             , #{custBillCustId}
+             , #{custBillCntId}
+             , #{custBillAddId}
+             , #{custBillStusId}
+             , #{custBillRem}
+             , #{custBillUpdUserId}
+             , SYSDATE
+             , #{custBillGrpNo}
+             , #{custBillCrtUserId}
+             , SYSDATE
+             , #{custBillPayTrm}
+             , #{custBillInchgMemId}
+             , #{custBillEmail}
+             , #{custBillIsEstm}
+             , #{custBillIsSms}
+             , #{custBillIsPost}
+             , #{custBillPayRefNo1}
+             , #{custBillPayRefNo2}
+             , #{custBillEmailAdd}
+             , #{custBillIsWebPortal}
+             , #{custBillWebPortalUrl}
+             , #{custBillIsSms2}
+             , #{custBillCustCareCntId}
+             )
     </insert>
 
     <insert id="insertEStatementReq" parameterType="eStatementReqVO">
       <selectKey keyProperty="reqId" resultType="Integer" order="BEFORE">
         SELECT PAY0060D_REQ_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO PAY0060D
-		     ( REQ_ID
-		     , STUS_CODE_ID
-		     , CUST_BILL_ID
-		     , EMAIL
-		     , CNFM_CODE
-		     , CRT_DT
-		     , CRT_USER_ID
-		     , CNFM_DT
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , EMAIL_FAIL_IND
-		     , EMAIL_FAIL_DESC
-		     , REF_NO
-		     , EMAIL_ADD
-		     )
-		VALUES
-		     ( #{reqId}
-		     , #{stusCodeId}
-		     , #{custBillId}
-		     , #{email}
-		     , #{cnfmCode}
-		     , SYSDATE
-		     , #{crtUserId}
-		     , SYSDATE
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{emailFailInd}
-		     , #{emailFailDesc}
-		     , #{refNo}
-		     , #{emailAdd}
+        INSERT
+          INTO PAY0060D
+             ( REQ_ID
+             , STUS_CODE_ID
+             , CUST_BILL_ID
+             , EMAIL
+             , CNFM_CODE
+             , CRT_DT
+             , CRT_USER_ID
+             , CNFM_DT
+             , UPD_DT
+             , UPD_USER_ID
+             , EMAIL_FAIL_IND
+             , EMAIL_FAIL_DESC
+             , REF_NO
+             , EMAIL_ADD
+             )
+        VALUES
+             ( #{reqId}
+             , #{stusCodeId}
+             , #{custBillId}
+             , #{email}
+             , #{cnfmCode}
+             , SYSDATE
+             , #{crtUserId}
+             , SYSDATE
+             , SYSDATE
+             , #{updUserId}
+             , #{emailFailInd}
+             , #{emailFailDesc}
+             , #{refNo}
+             , #{emailAdd}
              )
      </insert>
 
     <insert id="insertAccClaimAdt" parameterType="accClaimAdtVO">
-		INSERT
-		  INTO PAY0008M
-		     ( ACC_CL_SO_ID
-		     , ACC_CL_SVC_CNTRCT_ID
-		     , ACC_CL_BILL_CLM_AMT
-		     , ACC_CL_CLM_AMT
-		     , ACC_CL_PROMO
-		     , ACC_CL_BANK_CODE
-		     , ACC_CL_BANK_ACC_NO
-		     , ACC_DEC_BANK_ACC_NO
-		     , ACC_CL_REQST_M_CODE
-		     , ACC_CL_APPLY_DT
-		     , ACC_CL_SUBMIT_DT
-		     , ACC_CL_APPV_DT
-		     , ACC_CL_REJCT_DT
-		     , ACC_CL_UPD_USER_ID
-		     , ACC_CL_UPD_DT
-		     , ACC_CL_STUS_ID
-		     , ACC_CL_PROMO_CHK_ID
-		     , ACC_CL_PROMO_START_DT
-		     , ACC_CL_REJCT_ID
-		     , ACC_CL_ACC_T_NAME
-		     , ACC_CL_ACC_NRIC
-		     , ACC_CL_SPL_CLM_AMT
-		     , ACC_CL_SO_NO
-		     , ACC_CL_USER_NAME
-		     , ACC_CL_PAY_MODE
-		     , ACC_CL_PAY_MODE_ID
-		     , ACC_CL_BANK_ID
-		     , ACC_CL_CLM_LIMIT
-		     , ACC_CL_BILL_DT
-		     , ACC_CL_INSERT_DT
-		     )
-		VALUES
-		     ( #{accClSoId}
-		     , #{accClSvcCntrctId}
-		     , #{accClBillClmAmt}
-		     , #{accClClmAmt}
-		     , #{accClPromo}
-		     , #{accClBankCode}
-		     , #{accClBankAccNo}
-		     , #{accDecBankAccNo}
-		     , #{accClReqstMCode}
-		     , SYSDATE
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , #{accClUpdUserId}
-		     , SYSDATE
-		     , #{accClStusId}
-		     , #{accClPromoChkId}
-		     , TO_DATE('1900-01-01', 'YYYY-MM-DD')
-		     , #{accClRejctId}
-		     , #{accClAccTName}
-		     , #{accClAccNric}
-		     , #{accClSplClmAmt}
-		     , #{accClSoNo}
-		     , #{accClUserName}
-		     , #{accClPayMode}
-		     , #{accClPayModeId}
-		     , #{accClBankId}
-		     , #{accClClmLimit}
-		     , #{accClBillDt}
-		     , SYSDATE
-		     )
+        INSERT
+          INTO PAY0008M
+             ( ACC_CL_SO_ID
+             , ACC_CL_SVC_CNTRCT_ID
+             , ACC_CL_BILL_CLM_AMT
+             , ACC_CL_CLM_AMT
+             , ACC_CL_PROMO
+             , ACC_CL_BANK_CODE
+             , ACC_CL_BANK_ACC_NO
+             , ACC_DEC_BANK_ACC_NO
+             , ACC_CL_REQST_M_CODE
+             , ACC_CL_APPLY_DT
+             , ACC_CL_SUBMIT_DT
+             , ACC_CL_APPV_DT
+             , ACC_CL_REJCT_DT
+             , ACC_CL_UPD_USER_ID
+             , ACC_CL_UPD_DT
+             , ACC_CL_STUS_ID
+             , ACC_CL_PROMO_CHK_ID
+             , ACC_CL_PROMO_START_DT
+             , ACC_CL_REJCT_ID
+             , ACC_CL_ACC_T_NAME
+             , ACC_CL_ACC_NRIC
+             , ACC_CL_SPL_CLM_AMT
+             , ACC_CL_SO_NO
+             , ACC_CL_USER_NAME
+             , ACC_CL_PAY_MODE
+             , ACC_CL_PAY_MODE_ID
+             , ACC_CL_BANK_ID
+             , ACC_CL_CLM_LIMIT
+             , ACC_CL_BILL_DT
+             , ACC_CL_INSERT_DT
+             )
+        VALUES
+             ( #{accClSoId}
+             , #{accClSvcCntrctId}
+             , #{accClBillClmAmt}
+             , #{accClClmAmt}
+             , #{accClPromo}
+             , #{accClBankCode}
+             , #{accClBankAccNo}
+             , #{accDecBankAccNo}
+             , #{accClReqstMCode}
+             , SYSDATE
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , #{accClUpdUserId}
+             , SYSDATE
+             , #{accClStusId}
+             , #{accClPromoChkId}
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , #{accClRejctId}
+             , #{accClAccTName}
+             , #{accClAccNric}
+             , #{accClSplClmAmt}
+             , #{accClSoNo}
+             , #{accClUserName}
+             , #{accClPayMode}
+             , #{accClPayModeId}
+             , #{accClBankId}
+             , #{accClClmLimit}
+             , #{accClBillDt}
+             , SYSDATE
+             )
     </insert>
 
     <insert id="insertRentalScheme" parameterType="rentalSchemeVO">
       <selectKey keyProperty="renSchId" resultType="Integer" order="BEFORE">
         SELECT SAL0071D_REN_SCH_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0071D
-		     ( REN_SCH_ID
-		     , SALES_ORD_ID
-		     , STUS_CODE_ID
-		     , REN_SCH_DT
-		     , REN_SCH_TERMS
-		     , IS_SYNC
-		     )
-		VALUES
-		     ( #{renSchId}
-		     , #{salesOrdId}
-		     , #{stusCodeId}
-		     , SYSDATE
-		     , #{renSchTerms}
-		     , #{isSync}
-		     )
+        INSERT
+          INTO SAL0071D
+             ( REN_SCH_ID
+             , SALES_ORD_ID
+             , STUS_CODE_ID
+             , REN_SCH_DT
+             , REN_SCH_TERMS
+             , IS_SYNC
+             )
+        VALUES
+             ( #{renSchId}
+             , #{salesOrdId}
+             , #{stusCodeId}
+             , SYSDATE
+             , #{renSchTerms}
+             , #{isSync}
+             )
     </insert>
 
     <select id="selectBankById" parameterType="Map" resultType="egovMap">
@@ -1651,603 +1651,603 @@
       <selectKey keyProperty="ccpId" resultType="Integer" order="BEFORE">
         SELECT SAL0102D_CCP_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0102D
-		     ( CCP_ID
-		     , CCP_SALES_ORD_ID
-		     , CCP_SCHEME_TYPE_ID
-		     , CCP_TYPE_ID
-		     , CCP_INCOME_RANGE_ID
-		     , CCP_TOT_SCRE_POINT
-		     , CCP_STUS_ID
-		     , CCP_RESN_ID
-		     , CCP_REM
-		     , CCP_RJ_STUS_ID
-		     , CCP_UPD_USER_ID
-		     , CCP_UPD_DT
-		     , CCP_IS_LOU
-		     , CCP_IS_SAMAN
-		     , CCP_IS_SYNC
-		     , CCP_PNC_REM
-		     , CCP_HAS_GRNT
-		     , CCP_IS_HOLD
-		     , CCP_IS_CURR
-		     , CCP_FICO
-		     , CCP_FICO_LOK
-		     , CCP_CTOS_BATCH_NO
-		     , CCP_OPC_MEM_ID
-		     , CCP_OPC_SHI
-		     )
-		VALUES
-		     ( #{ccpId}
-		     , #{ccpSalesOrdId}
-		     , #{ccpSchemeTypeId}
-		     , #{ccpTypeId}
-		     , #{ccpIncomeRangeId}
-		     , #{ccpTotScrePoint}
-		     , #{ccpStusId}
-		     , #{ccpResnId}
-		     , #{ccpRem}
-		     , #{ccpRjStusId}
-		     , #{ccpUpdUserId}
-		     , SYSDATE
-		     , #{ccpIsLou}
-		     , #{ccpIsSaman}
-		     , #{ccpIsSync}
-		     , #{ccpPncRem}
-		     , #{ccpHasGrnt}
-		     , #{ccpIsHold}
-		     , #{ccpIsCurr}
-		     , #{ccpFico}
-		     , #{ccpFicoLok}
-		     , #{ccpCtosBatchNo}
-		     , #{ccpOpcMemId}
+        INSERT
+          INTO SAL0102D
+             ( CCP_ID
+             , CCP_SALES_ORD_ID
+             , CCP_SCHEME_TYPE_ID
+             , CCP_TYPE_ID
+             , CCP_INCOME_RANGE_ID
+             , CCP_TOT_SCRE_POINT
+             , CCP_STUS_ID
+             , CCP_RESN_ID
+             , CCP_REM
+             , CCP_RJ_STUS_ID
+             , CCP_UPD_USER_ID
+             , CCP_UPD_DT
+             , CCP_IS_LOU
+             , CCP_IS_SAMAN
+             , CCP_IS_SYNC
+             , CCP_PNC_REM
+             , CCP_HAS_GRNT
+             , CCP_IS_HOLD
+             , CCP_IS_CURR
+             , CCP_FICO
+             , CCP_FICO_LOK
+             , CCP_CTOS_BATCH_NO
+             , CCP_OPC_MEM_ID
+             , CCP_OPC_SHI
+             )
+        VALUES
+             ( #{ccpId}
+             , #{ccpSalesOrdId}
+             , #{ccpSchemeTypeId}
+             , #{ccpTypeId}
+             , #{ccpIncomeRangeId}
+             , #{ccpTotScrePoint}
+             , #{ccpStusId}
+             , #{ccpResnId}
+             , #{ccpRem}
+             , #{ccpRjStusId}
+             , #{ccpUpdUserId}
+             , SYSDATE
+             , #{ccpIsLou}
+             , #{ccpIsSaman}
+             , #{ccpIsSync}
+             , #{ccpPncRem}
+             , #{ccpHasGrnt}
+             , #{ccpIsHold}
+             , #{ccpIsCurr}
+             , #{ccpFico}
+             , #{ccpFicoLok}
+             , #{ccpCtosBatchNo}
+             , #{ccpOpcMemId}
              , #{ccpOpcShi}
-		     )
+             )
     </insert>
 
      <update id="updatePreccpScore" parameterType="ccpDecisionMVO">
         MERGE INTO SAL0102D A
-		USING(
-		    SELECT DISTINCT
-		          #{ccpId} CCP_ID,
-		          D.CREDIT_SCRE
-		    FROM SAL0001D A
-		    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
-		    JOIN SAL0343D C ON B.NRIC = C.CUST_IC AND C.TYPE_ID = 7290
-		    JOIN SAL0402D D ON C.CCRIS_ID = D.CCRIS_ID AND D.STUS_CODE_ID = 4
-		    WHERE A.SALES_ORD_ID = #{ccpSalesOrdId}
-		)SRC ON (A.CCP_ID = SRC.CCP_ID)
-		WHEN MATCHED THEN UPDATE SET A.CCP_FICO = SRC.CREDIT_SCRE
+        USING(
+            SELECT DISTINCT
+                  #{ccpId} CCP_ID,
+                  D.CREDIT_SCRE
+            FROM SAL0001D A
+            JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+            JOIN SAL0343D C ON B.NRIC = C.CUST_IC AND C.TYPE_ID = 7290
+            JOIN SAL0402D D ON C.CCRIS_ID = D.CCRIS_ID AND D.STUS_CODE_ID = 4
+            WHERE A.SALES_ORD_ID = #{ccpSalesOrdId}
+        )SRC ON (A.CCP_ID = SRC.CCP_ID)
+        WHEN MATCHED THEN UPDATE SET A.CCP_FICO = SRC.CREDIT_SCRE
      </update>
 
     <insert id="insertDocSubmission" parameterType="docSubmissionVO">
       <selectKey keyProperty="docSubId" resultType="Integer" order="BEFORE">
         SELECT ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO ORG0010D
-		     ( DOC_SUB_ID
-		     , DOC_SUB_TYPE_ID
-		     , DOC_TYPE_ID
-		     , DOC_SO_ID
-		     , DOC_MEM_ID
-		     , DOC_SUB_DT
-		     , DOC_COPY_QTY
-		     , STUS_ID
-		     , CRT_USER_ID
-		     , CRT_DT
-		     , UPD_USER_ID
-		     , UPD_DT
-		     , DOC_SUB_BATCH_ID
-		     , DOC_SUB_BRNCH_ID
-		     )
-		VALUES
-		     ( #{docSubId}
-		     , #{docSubTypeId}
-		     , #{docTypeId}
-		     , #{docSoId}
-		     , #{docMemId}
-		     , SYSDATE
-		     , #{docCopyQty}
-		     , #{stusId}
-		     , #{crtUserId}
-		     , SYSDATE
-		     , #{updUserId}
-		     , SYSDATE
-		     , #{docSubBatchId}
-		     , #{docSubBrnchId}
-		     )
+        INSERT
+          INTO ORG0010D
+             ( DOC_SUB_ID
+             , DOC_SUB_TYPE_ID
+             , DOC_TYPE_ID
+             , DOC_SO_ID
+             , DOC_MEM_ID
+             , DOC_SUB_DT
+             , DOC_COPY_QTY
+             , STUS_ID
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , DOC_SUB_BATCH_ID
+             , DOC_SUB_BRNCH_ID
+             )
+        VALUES
+             ( #{docSubId}
+             , #{docSubTypeId}
+             , #{docTypeId}
+             , #{docSoId}
+             , #{docMemId}
+             , SYSDATE
+             , #{docCopyQty}
+             , #{stusId}
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{docSubBatchId}
+             , #{docSubBrnchId}
+             )
     </insert>
 
     <insert id="insertSrvMembershipSales" parameterType="srvMembershipSalesVO">
       <selectKey keyProperty="srvMemId" resultType="Integer" order="BEFORE">
         SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0095D
-		     ( SRV_MEM_ID
-		     , SRV_MEM_QUOT_ID
-		     , SRV_SALES_ORD_ID
-		     , SRV_MEM_NO
-		     , SRV_MEM_BILL_NO
-		     , SRV_MEM_PAC_ID
-		     , SRV_MEM_PAC_AMT
-		     , SRV_MEM_BS_AMT
-		     , SRV_MEM_PV
-		     , SRV_FREQ
-		     , SRV_START_DT
-		     , SRV_EXPR_DT
-		     , SRV_DUR
-		     , SRV_STUS_CODE_ID
-		     , SRV_REM
-		     , SRV_CRT_DT
-		     , SRV_CRT_USER_ID
-		     , SRV_UPD_DT
-		     , SRV_UPD_USER_ID
-		     , SRV_MEM_BS12_AMT
-		     , SRV_MEM_IS_SYNCH
-		     , SRV_MEM_SALES_MEM_ID
-		     , SRV_MEM_CUST_CNT_ID
-		     , SRV_MEM_QTY
-		     , SRV_BS_QTY
-		     , SRV_MEM_PROMO_ID
-		     , SRV_MEM_PV_MONTH
-		     , SRV_MEM_PV_YEAR
-		     , SRV_MEM_IS_MNL
-		     , SRV_MEM_BRNCH_ID
-		     , SRV_MEM_PAC_PROMO_ID
-		     , SRV_MEM_FORM_NO
-		     )
-		VALUES
-		     ( #{srvMemId}
-		     , #{srvMemQuotId}
-		     , #{srvSalesOrdId}
-		     , #{srvMemNo}
-		     , #{srvMemBillNo}
-		     , #{srvMemPacId}
-		     , #{srvMemPacAmt}
-		     , #{srvMemBsAmt}
-		     , #{srvMemPv}
-		     , #{srvFreq}
-		     , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
-		     , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
-		     , #{srvDur}
-		     , #{srvStusCodeId}
-		     , #{srvRem}
-		     , SYSDATE
-		     , #{srvCrtUserId}
-		     , SYSDATE
-		     , #{srvUpdUserId}
-		     , #{srvMemBs12Amt}
-		     , #{srvMemIsSynch}
-		     , #{srvMemSalesMemId}
-		     , #{srvMemCustCntId}
-		     , #{srvMemQty}
-		     , #{srvBsQty}
-		     , #{srvMemPromoId}
-		     , #{srvMemPvMonth}
-		     , #{srvMemPvYear}
-		     , #{srvMemIsMnl}
-		     , #{srvMemBrnchId}
-		     , #{srvMemPacPromoId}
-		     , #{srvMemFormNo}
-		     )
+        INSERT
+          INTO SAL0095D
+             ( SRV_MEM_ID
+             , SRV_MEM_QUOT_ID
+             , SRV_SALES_ORD_ID
+             , SRV_MEM_NO
+             , SRV_MEM_BILL_NO
+             , SRV_MEM_PAC_ID
+             , SRV_MEM_PAC_AMT
+             , SRV_MEM_BS_AMT
+             , SRV_MEM_PV
+             , SRV_FREQ
+             , SRV_START_DT
+             , SRV_EXPR_DT
+             , SRV_DUR
+             , SRV_STUS_CODE_ID
+             , SRV_REM
+             , SRV_CRT_DT
+             , SRV_CRT_USER_ID
+             , SRV_UPD_DT
+             , SRV_UPD_USER_ID
+             , SRV_MEM_BS12_AMT
+             , SRV_MEM_IS_SYNCH
+             , SRV_MEM_SALES_MEM_ID
+             , SRV_MEM_CUST_CNT_ID
+             , SRV_MEM_QTY
+             , SRV_BS_QTY
+             , SRV_MEM_PROMO_ID
+             , SRV_MEM_PV_MONTH
+             , SRV_MEM_PV_YEAR
+             , SRV_MEM_IS_MNL
+             , SRV_MEM_BRNCH_ID
+             , SRV_MEM_PAC_PROMO_ID
+             , SRV_MEM_FORM_NO
+             )
+        VALUES
+             ( #{srvMemId}
+             , #{srvMemQuotId}
+             , #{srvSalesOrdId}
+             , #{srvMemNo}
+             , #{srvMemBillNo}
+             , #{srvMemPacId}
+             , #{srvMemPacAmt}
+             , #{srvMemBsAmt}
+             , #{srvMemPv}
+             , #{srvFreq}
+             , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
+             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
+             , #{srvDur}
+             , #{srvStusCodeId}
+             , #{srvRem}
+             , SYSDATE
+             , #{srvCrtUserId}
+             , SYSDATE
+             , #{srvUpdUserId}
+             , #{srvMemBs12Amt}
+             , #{srvMemIsSynch}
+             , #{srvMemSalesMemId}
+             , #{srvMemCustCntId}
+             , #{srvMemQty}
+             , #{srvBsQty}
+             , #{srvMemPromoId}
+             , #{srvMemPvMonth}
+             , #{srvMemPvYear}
+             , #{srvMemIsMnl}
+             , #{srvMemBrnchId}
+             , #{srvMemPacPromoId}
+             , #{srvMemFormNo}
+             )
     </insert>
 
     <insert id="insertSrvConfiguration" parameterType="srvConfigurationVO">
       <selectKey keyProperty="srvConfigId" resultType="Integer" order="BEFORE">
         SELECT SAL0090D_SRV_CONFIG_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0090D
-		     ( SRV_CONFIG_ID
-		     , SRV_SO_ID
-		     , SRV_CODY_ID
-		     , SRV_PREV_DT
-		     , SRV_REM
-		     , SRV_BS_GEN
-		     , SRV_CRT_DT
-		     , SRV_CRT_USER_ID
-		     , SRV_UPD_DT
-		     , SRV_UPD_USER_ID
-		     , SRV_STUS_ID
-		     , SRV_BS_WEEK
-		     )
-		VALUES
-		     ( #{srvConfigId}
-		     , #{srvSoId}
-		     , #{srvCodyId}
-		     , TO_DATE(#{srvPrevDt}, 'DD/MM/YYYY')
-		     , #{srvRem}
-		     , #{srvBsGen}
-		     , SYSDATE
-		     , #{srvCrtUserId}
-		     , SYSDATE
-		     , #{srvUpdUserId}
-		     , #{srvStusId}
-		     , #{srvBsWeek}
-		     )
+        INSERT
+          INTO SAL0090D
+             ( SRV_CONFIG_ID
+             , SRV_SO_ID
+             , SRV_CODY_ID
+             , SRV_PREV_DT
+             , SRV_REM
+             , SRV_BS_GEN
+             , SRV_CRT_DT
+             , SRV_CRT_USER_ID
+             , SRV_UPD_DT
+             , SRV_UPD_USER_ID
+             , SRV_STUS_ID
+             , SRV_BS_WEEK
+             )
+        VALUES
+             ( #{srvConfigId}
+             , #{srvSoId}
+             , #{srvCodyId}
+             , TO_DATE(#{srvPrevDt}, 'DD/MM/YYYY')
+             , #{srvRem}
+             , #{srvBsGen}
+             , SYSDATE
+             , #{srvCrtUserId}
+             , SYSDATE
+             , #{srvUpdUserId}
+             , #{srvStusId}
+             , #{srvBsWeek}
+             )
     </insert>
 
     <insert id="insertSrvConfigSetting" parameterType="srvConfigSettingVO">
       <selectKey keyProperty="srvSettId" resultType="Integer" order="BEFORE">
         SELECT SAL0089D_SRV_SETT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0089D
-		     ( SRV_SETT_ID
-		     , SRV_CONFIG_ID
-		     , SRV_SETT_TYPE_ID
-		     , SRV_SETT_STUS_ID
-		     , SRV_SETT_REM
-		     , SRV_SETT_CRT_DT
-		     , SRV_SETT_CRT_USER_ID
-		     )
-		VALUES
-		     ( #{srvSettId}
-		     , #{srvConfigId}
-		     , #{srvSettTypeId}
-		     , #{srvSettStusId}
-		     , #{srvSettRem}
-		     , SYSDATE
-		     , #{srvSettCrtUserId}
-		     )
+        INSERT
+          INTO SAL0089D
+             ( SRV_SETT_ID
+             , SRV_CONFIG_ID
+             , SRV_SETT_TYPE_ID
+             , SRV_SETT_STUS_ID
+             , SRV_SETT_REM
+             , SRV_SETT_CRT_DT
+             , SRV_SETT_CRT_USER_ID
+             )
+        VALUES
+             ( #{srvSettId}
+             , #{srvConfigId}
+             , #{srvSettTypeId}
+             , #{srvSettStusId}
+             , #{srvSettRem}
+             , SYSDATE
+             , #{srvSettCrtUserId}
+             )
     </insert>
 
     <insert id="insertSrvConfigPeriod" parameterType="srvConfigPeriodVO">
       <selectKey keyProperty="srvPrdId" resultType="Integer" order="BEFORE">
         SELECT SAL0088D_SRV_PRD_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0088D
-		     ( SRV_PRD_ID
-		     , SRV_CONFIG_ID
-		     , SRV_MBRSH_ID
-		     , SRV_PRD_START_DT
-		     , SRV_PRD_EXPR_DT
-		     , SRV_PRD_DUR
-		     , SRV_PRD_STUS_ID
-		     , SRV_PRD_REM
-		     , SRV_PRD_CRT_DT
-		     , SRV_PRD_CRT_USER_ID
-		     , SRV_PRD_UPD_DT
-		     , SRV_PRD_UPD_USER_ID
-		     , SRV_PRD_CNTRCT_ID
-		     )
-		VALUES
-		     ( #{srvPrdId}
-		     , #{srvConfigId}
-		     , #{srvMbrshId}
-		     , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
-		     , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
-		     , #{srvPrdDur}
-		     , #{srvPrdStusId}
-		     , #{srvPrdRem}
-		     , SYSDATE
-		     , #{srvPrdCrtUserId}
-		     , SYSDATE
-		     , #{srvPrdUpdUserId}
-		     , #{srvPrdCntrctId}
-		     )
+        INSERT
+          INTO SAL0088D
+             ( SRV_PRD_ID
+             , SRV_CONFIG_ID
+             , SRV_MBRSH_ID
+             , SRV_PRD_START_DT
+             , SRV_PRD_EXPR_DT
+             , SRV_PRD_DUR
+             , SRV_PRD_STUS_ID
+             , SRV_PRD_REM
+             , SRV_PRD_CRT_DT
+             , SRV_PRD_CRT_USER_ID
+             , SRV_PRD_UPD_DT
+             , SRV_PRD_UPD_USER_ID
+             , SRV_PRD_CNTRCT_ID
+             )
+        VALUES
+             ( #{srvPrdId}
+             , #{srvConfigId}
+             , #{srvMbrshId}
+             , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
+             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
+             , #{srvPrdDur}
+             , #{srvPrdStusId}
+             , #{srvPrdRem}
+             , SYSDATE
+             , #{srvPrdCrtUserId}
+             , SYSDATE
+             , #{srvPrdUpdUserId}
+             , #{srvPrdCntrctId}
+             )
     </insert>
 
     <insert id="insertSrvConfigFilter" parameterType="srvConfigFilterVO">
       <selectKey keyProperty="srvFilterId" resultType="Integer" order="BEFORE">
         SELECT SAL0087D_SRV_FILTER_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0087D
-		     ( SRV_FILTER_ID
-		     , SRV_CONFIG_ID
-		     , SRV_FILTER_STK_ID
-		     , SRV_FILTER_PRIOD
-		     , SRV_FILTER_PRV_CHG_DT
-		     , SRV_FILTER_STUS_ID
-		     , SRV_FILTER_REM
-		     , SRV_FILTER_CRT_DT
-		     , SRV_FILTER_CRT_USER_ID
-		     , SRV_FILTER_UPD_DT
-		     , SRV_FILTER_UPD_USER_ID
-		     , SRV_FILTER_EXPR_DT
-		     )
-		VALUES
-		     ( #{srvFilterId}
-		     , #{srvConfigId}
-		     , #{srvFilterStkId}
-		     , #{srvFilterPriod}
-		     , TO_DATE(#{srvFilterPrvChgDt}, 'DD/MM/YYYY')
-		     , #{srvFilterStusId}
-		     , #{srvFilterRem}
-		     , SYSDATE
-		     , #{srvFilterCrtUserId}
-		     , SYSDATE
-		     , #{srvFilterUpdUserId}
-		     , TO_DATE(#{srvFilterExprDt}, 'DD/MM/YYYY')
-		     )
+        INSERT
+          INTO SAL0087D
+             ( SRV_FILTER_ID
+             , SRV_CONFIG_ID
+             , SRV_FILTER_STK_ID
+             , SRV_FILTER_PRIOD
+             , SRV_FILTER_PRV_CHG_DT
+             , SRV_FILTER_STUS_ID
+             , SRV_FILTER_REM
+             , SRV_FILTER_CRT_DT
+             , SRV_FILTER_CRT_USER_ID
+             , SRV_FILTER_UPD_DT
+             , SRV_FILTER_UPD_USER_ID
+             , SRV_FILTER_EXPR_DT
+             )
+        VALUES
+             ( #{srvFilterId}
+             , #{srvConfigId}
+             , #{srvFilterStkId}
+             , #{srvFilterPriod}
+             , TO_DATE(#{srvFilterPrvChgDt}, 'DD/MM/YYYY')
+             , #{srvFilterStusId}
+             , #{srvFilterRem}
+             , SYSDATE
+             , #{srvFilterCrtUserId}
+             , SYSDATE
+             , #{srvFilterUpdUserId}
+             , TO_DATE(#{srvFilterExprDt}, 'DD/MM/YYYY')
+             )
     </insert>
 
      <insert id="insertCallEntry" parameterType="callEntryVO">
       <selectKey keyProperty="callEntryId" resultType="Integer" order="BEFORE">
         SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO CCR0006D
-		     ( CALL_ENTRY_ID
-		     , SALES_ORD_ID
-		     , TYPE_ID
-		     , STUS_CODE_ID
-		     , RESULT_ID
-		     , DOC_ID
-		     , CRT_USER_ID
-		     , CRT_DT
-		     , CALL_DT
-		     , IS_WAIT_FOR_CANCL
-		     , HAPY_CALLER_ID
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , ORI_CALL_DT
-		     )
-		VALUES
-		     ( #{callEntryId}
-		     , #{salesOrdId}
-		     , #{typeId}
-		     , #{stusCodeId}
-		     , #{resultId}
-		     , #{docId}
-		     , #{crtUserId}
-		     , SYSDATE
-		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
-		     , #{isWaitForCancl}
-		     , #{hapyCallerId}
-		     , SYSDATE
-		     , #{updUserId}
-		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
-		     )
+        INSERT
+          INTO CCR0006D
+             ( CALL_ENTRY_ID
+             , SALES_ORD_ID
+             , TYPE_ID
+             , STUS_CODE_ID
+             , RESULT_ID
+             , DOC_ID
+             , CRT_USER_ID
+             , CRT_DT
+             , CALL_DT
+             , IS_WAIT_FOR_CANCL
+             , HAPY_CALLER_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , ORI_CALL_DT
+             )
+        VALUES
+             ( #{callEntryId}
+             , #{salesOrdId}
+             , #{typeId}
+             , #{stusCodeId}
+             , #{resultId}
+             , #{docId}
+             , #{crtUserId}
+             , SYSDATE
+             , TO_DATE(#{callDt}, 'DD/MM/YYYY')
+             , #{isWaitForCancl}
+             , #{hapyCallerId}
+             , SYSDATE
+             , #{updUserId}
+             , TO_DATE(#{callDt}, 'DD/MM/YYYY')
+             )
     </insert>
 
     <insert id="insertCallResult" parameterType="callResultVO">
       <selectKey keyProperty="callResultId" resultType="Integer" order="BEFORE">
         SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO CCR0007D
-		     ( CALL_RESULT_ID
-		     , CALL_ENTRY_ID
-		     , CALL_STUS_ID
-		     , CALL_DT
-		     , CALL_ACTN_DT
-		     , CALL_FDBCK_ID
-		     , CALL_CT_ID
-		     , CALL_REM
-		     , CALL_CRT_USER_ID
-		     , CALL_CRT_DT
-		     , CALL_CRT_USER_ID_DEPT
-		     , CALL_HC_ID
-		     , CALL_ROS_AMT
-		     , CALL_SMS
-		     , CALL_SMS_REM
-		     )
-		VALUES
-		     ( #{callResultId}
-		     , #{callEntryId}
-		     , #{callStusId}
-		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
-		     , TO_DATE(#{callActnDt}, 'DD/MM/YYYY')
-		     , #{callFdbckId}
-		     , #{callCtId}
-		     , #{callRem}
-		     , #{callCrtUserId}
-		     , SYSDATE
-		     , #{callCrtUserIdDept}
-		     , #{callHcId}
-		     , #{callRosAmt}
-		     , #{callSms}
-		     , #{callSmsRem}
-		     )
+        INSERT
+          INTO CCR0007D
+             ( CALL_RESULT_ID
+             , CALL_ENTRY_ID
+             , CALL_STUS_ID
+             , CALL_DT
+             , CALL_ACTN_DT
+             , CALL_FDBCK_ID
+             , CALL_CT_ID
+             , CALL_REM
+             , CALL_CRT_USER_ID
+             , CALL_CRT_DT
+             , CALL_CRT_USER_ID_DEPT
+             , CALL_HC_ID
+             , CALL_ROS_AMT
+             , CALL_SMS
+             , CALL_SMS_REM
+             )
+        VALUES
+             ( #{callResultId}
+             , #{callEntryId}
+             , #{callStusId}
+             , TO_DATE(#{callDt}, 'DD/MM/YYYY')
+             , TO_DATE(#{callActnDt}, 'DD/MM/YYYY')
+             , #{callFdbckId}
+             , #{callCtId}
+             , #{callRem}
+             , #{callCrtUserId}
+             , SYSDATE
+             , #{callCrtUserIdDept}
+             , #{callHcId}
+             , #{callRosAmt}
+             , #{callSms}
+             , #{callSmsRem}
+             )
     </insert>
 
     <insert id="insertInstallEntry" parameterType="installEntryVO">
       <selectKey keyProperty="installEntryId" resultType="Integer" order="BEFORE">
         SELECT SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0046D
-		     ( INSTALL_ENTRY_ID
-		     , INSTALL_ENTRY_NO
-		     , SALES_ORD_ID
-		     , STUS_CODE_ID
-		     , CT_ID
-		     , INSTALL_DT
-		     , CALL_ENTRY_ID
-		     , INSTALL_STK_ID
-		     , INSTALL_RESULT_ID
-		     , CRT_USER_ID
-		     , CRT_DT
-		     , ALLOW_COMM
-		     , IS_TRADE_IN
-		     , CT_GRP
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , REV_ID
-		     )
-		VALUES
-		     ( #{installEntryId}
-		     , #{installEntryNo}
-		     , #{salesOrdId}
-		     , #{stusCodeId}
-		     , #{ctId}
-		     , TO_DATE(#{installDt}, 'DD/MM/YYYY')
-		     , #{callEntryId}
-		     , #{installStkId}
-		     , #{installResultId}
-		     , #{crtUserId}
-		     , SYSDATE
-		     , #{allowComm}
-		     , #{isTradeIn}
-		     , #{ctGrp}
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{revId}
-		     )
+        INSERT
+          INTO SAL0046D
+             ( INSTALL_ENTRY_ID
+             , INSTALL_ENTRY_NO
+             , SALES_ORD_ID
+             , STUS_CODE_ID
+             , CT_ID
+             , INSTALL_DT
+             , CALL_ENTRY_ID
+             , INSTALL_STK_ID
+             , INSTALL_RESULT_ID
+             , CRT_USER_ID
+             , CRT_DT
+             , ALLOW_COMM
+             , IS_TRADE_IN
+             , CT_GRP
+             , UPD_DT
+             , UPD_USER_ID
+             , REV_ID
+             )
+        VALUES
+             ( #{installEntryId}
+             , #{installEntryNo}
+             , #{salesOrdId}
+             , #{stusCodeId}
+             , #{ctId}
+             , TO_DATE(#{installDt}, 'DD/MM/YYYY')
+             , #{callEntryId}
+             , #{installStkId}
+             , #{installResultId}
+             , #{crtUserId}
+             , SYSDATE
+             , #{allowComm}
+             , #{isTradeIn}
+             , #{ctGrp}
+             , SYSDATE
+             , #{updUserId}
+             , #{revId}
+             )
     </insert>
 
     <insert id="insertInstallResult" parameterType="installResultVO">
       <selectKey keyProperty="resultId" resultType="Integer" order="BEFORE">
         SELECT SAL0047D_RESULT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0047D
-		     ( RESULT_ID
-		     , ENTRY_ID
-		     , STUS_CODE_ID
-		     , CT_ID
-		     , INSTALL_DT
-		     , REM
-		     , GL_POST
-		     , CRT_USER_ID
-		     , CRT_DT
-		     , SIRIM_NO
-		     , SERIAL_NO
-		     , FAIL_ID
-		     , NEXT_CALL_DT
-		     , ALLOW_COMM
-		     , IS_TRADE_IN
-		     , REQUIRE_SMS
-		     , DOC_REF_NO1
-		     , DOC_REF_NO2
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , ADJ_AMT
-		     , MOBILE_ID
-		     )
-		VALUES
-		     ( #{resultId}
-		     , #{entryId}
-		     , #{stusCodeId}
-		     , #{ctId}
-		     , TO_DATE(#{installDt}, 'DD/MM/YYYY')
-		     , #{rem}
-		     , #{glPost}
-		     , #{crtUserId}
-		     , SYSDATE
-		     , #{sirimNo}
-		     , #{serialNo}
-		     , #{failId}
-		     , TO_DATE(#{nextCallDt}, 'DD/MM/YYYY')
-		     , #{allowComm}
-		     , #{isTradeIn}
-		     , #{requireSms}
-		     , #{docRefNo1}
-		     , #{docRefNo2}
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{adjAmt}
-		     , #{mobileId}
-		     )
+        INSERT
+          INTO SAL0047D
+             ( RESULT_ID
+             , ENTRY_ID
+             , STUS_CODE_ID
+             , CT_ID
+             , INSTALL_DT
+             , REM
+             , GL_POST
+             , CRT_USER_ID
+             , CRT_DT
+             , SIRIM_NO
+             , SERIAL_NO
+             , FAIL_ID
+             , NEXT_CALL_DT
+             , ALLOW_COMM
+             , IS_TRADE_IN
+             , REQUIRE_SMS
+             , DOC_REF_NO1
+             , DOC_REF_NO2
+             , UPD_DT
+             , UPD_USER_ID
+             , ADJ_AMT
+             , MOBILE_ID
+             )
+        VALUES
+             ( #{resultId}
+             , #{entryId}
+             , #{stusCodeId}
+             , #{ctId}
+             , TO_DATE(#{installDt}, 'DD/MM/YYYY')
+             , #{rem}
+             , #{glPost}
+             , #{crtUserId}
+             , SYSDATE
+             , #{sirimNo}
+             , #{serialNo}
+             , #{failId}
+             , TO_DATE(#{nextCallDt}, 'DD/MM/YYYY')
+             , #{allowComm}
+             , #{isTradeIn}
+             , #{requireSms}
+             , #{docRefNo1}
+             , #{docRefNo2}
+             , SYSDATE
+             , #{updUserId}
+             , #{adjAmt}
+             , #{mobileId}
+             )
     </insert>
 
     <insert id="insertSalesOrderLog" parameterType="salesOrderLogVO">
       <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
         SELECT SAL0009D_LOG_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0009D
-		     ( LOG_ID
-		     , SALES_ORD_ID
-		     , PRGRS_ID
-		     , LOG_DT
-		     , REF_ID
-		     , IS_LOK
-		     , LOG_CRT_USER_ID
-		     , LOG_CRT_DT
-		     )
-		VALUES
-		     ( #{logId}
-		     , #{salesOrdId}
-		     , #{prgrsId}
-		     , SYSDATE
-		     , #{refId}
-		     , #{isLok}
-		     , #{logCrtUserId}
-		     , SYSDATE
-		     )
+        INSERT
+          INTO SAL0009D
+             ( LOG_ID
+             , SALES_ORD_ID
+             , PRGRS_ID
+             , LOG_DT
+             , REF_ID
+             , IS_LOK
+             , LOG_CRT_USER_ID
+             , LOG_CRT_DT
+             )
+        VALUES
+             ( #{logId}
+             , #{salesOrdId}
+             , #{prgrsId}
+             , SYSDATE
+             , #{refId}
+             , #{isLok}
+             , #{logCrtUserId}
+             , SYSDATE
+             )
     </insert>
 
     <insert id="insertGSTEURCertificate" parameterType="gSTEURCertificateVO">
       <selectKey keyProperty="eurcId" resultType="Integer" order="BEFORE">
         SELECT SAL0042D_EURC_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0042D
-		     ( EURC_ID
-		     , EURC_REF_NO
-		     , EURC_REF_DT
-		     , EURC_RLIEF_TYPE_ID
-		     , EURC_RLIEF_APP_TYPE_ID
-		     , EURC_SALES_ORD_ID
-		     , EURC_CUST_ID
-		     , EURC_CUST_RGS_NO
-		     , EURC_REM
-		     , EURC_FILE_PATH_NAME
-		     , EURC_STUS_CODE_ID
-		     , EURC_CRT_USER_ID
-		     , EURC_CRT_DT
-		     , EURC_UPD_USER_ID
-		     , EURC_UPD_DT
-		     , ATCH_FILE_GRP_ID
-		     )
-		VALUES
-		     ( #{eurcId}
-		     , #{eurcRefNo}
-		     , TO_DATE(#{eurcRefDt}, 'DD/MM/YYYY')
-		     , #{eurcRliefTypeId}
-		     , #{eurcRliefAppTypeId}
-		     , #{eurcSalesOrdId}
-		     , #{eurcCustId}
-		     , #{eurcCustRgsNo}
-		     , #{eurcRem}
-		     , #{eurcFilePathName}
-		     , #{eurcStusCodeId}
-		     , #{eurcCrtUserId}
-		     , SYSDATE
-		     , #{eurcUpdUserId}
+        INSERT
+          INTO SAL0042D
+             ( EURC_ID
+             , EURC_REF_NO
+             , EURC_REF_DT
+             , EURC_RLIEF_TYPE_ID
+             , EURC_RLIEF_APP_TYPE_ID
+             , EURC_SALES_ORD_ID
+             , EURC_CUST_ID
+             , EURC_CUST_RGS_NO
+             , EURC_REM
+             , EURC_FILE_PATH_NAME
+             , EURC_STUS_CODE_ID
+             , EURC_CRT_USER_ID
+             , EURC_CRT_DT
+             , EURC_UPD_USER_ID
+             , EURC_UPD_DT
+             , ATCH_FILE_GRP_ID
+             )
+        VALUES
+             ( #{eurcId}
+             , #{eurcRefNo}
+             , TO_DATE(#{eurcRefDt}, 'DD/MM/YYYY')
+             , #{eurcRliefTypeId}
+             , #{eurcRliefAppTypeId}
+             , #{eurcSalesOrdId}
+             , #{eurcCustId}
+             , #{eurcCustRgsNo}
+             , #{eurcRem}
+             , #{eurcFilePathName}
+             , #{eurcStusCodeId}
+             , #{eurcCrtUserId}
+             , SYSDATE
+             , #{eurcUpdUserId}
              , SYSDATE
              , #{atchFileGrpId}
-		     )
+             )
     </insert>
 
     <insert id="insertSalesOrderContract" parameterType="salesOrderContractVO">
       <selectKey keyProperty="cntrctId" resultType="Integer" order="BEFORE">
         SELECT SAL0003D_CNTRCT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
-		INSERT
-		  INTO SAL0003D
-		     ( CNTRCT_ID
-		     , CNTRCT_SALES_ORD_ID
-		     , CNTRCT_RENTAL_PRIOD
-		     , CNTRCT_OBLIGT_PRIOD
+        INSERT
+          INTO SAL0003D
+             ( CNTRCT_ID
+             , CNTRCT_SALES_ORD_ID
+             , CNTRCT_RENTAL_PRIOD
+             , CNTRCT_OBLIGT_PRIOD
              , CNTRCT_RCO_PRIOD
-		     , CNTRCT_STUS_ID
-		     , CNTRCT_REM
-		     , CNTRCT_CRT_DT
-		     , CNTRCT_CRT_USER_ID
-		     , CNTRCT_UPD_DT
-		     , CNTRCT_UPD_USER_ID
-		     )
-		VALUES
-		     ( #{cntrctId}
-		     , #{cntrctSalesOrdId}
-		     , #{cntrctRentalPriod}
-		     , #{cntrctObligtPriod}
+             , CNTRCT_STUS_ID
+             , CNTRCT_REM
+             , CNTRCT_CRT_DT
+             , CNTRCT_CRT_USER_ID
+             , CNTRCT_UPD_DT
+             , CNTRCT_UPD_USER_ID
+             )
+        VALUES
+             ( #{cntrctId}
+             , #{cntrctSalesOrdId}
+             , #{cntrctRentalPriod}
+             , #{cntrctObligtPriod}
              , #{cntrctRcoPriod}
-		     , #{cntrctStusId}
-		     , #{cntrctRem}
-		     , SYSDATE
-		     , #{cntrctCrtUserId}
-		     , SYSDATE
-		     , #{cntrctUpdUserId}
-		     )
+             , #{cntrctStusId}
+             , #{cntrctRem}
+             , SYSDATE
+             , #{cntrctCrtUserId}
+             , SYSDATE
+             , #{cntrctUpdUserId}
+             )
     </insert>
 
     <select id="selectLoginInfo" parameterType="Map" resultType="egovMap">
@@ -2298,22 +2298,22 @@
     </select>
 
     <select id="selectCheckAccessRight" parameterType="Map" resultType="egovMap">
-		SELECT T2.AC_LID
-		     , T2.BIZ_ROLE_ID
-		     , T2.MODULE_UNIT_ID
-		     , T2.CAN_EXECUTE
-		     , T2.CAN_CRT
-		     , T2.CAN_READ
-		     , T2.CAN_UPD
-		     , T2.CAN_DEL
-		     , T2.STUS_ID
-		  FROM SYS0045M T1
-		  JOIN SYS0003M T2
-		    ON T2.BIZ_ROLE_ID = T1.ROLE_ID
-		   AND T2.STUS_ID = 1
-		 WHERE T1.STUS_ID= 1
-		   AND T1.USER_ID = #{userId}
-		   AND T2.MODULE_UNIT_ID = #{moduleUnitId}
+        SELECT T2.AC_LID
+             , T2.BIZ_ROLE_ID
+             , T2.MODULE_UNIT_ID
+             , T2.CAN_EXECUTE
+             , T2.CAN_CRT
+             , T2.CAN_READ
+             , T2.CAN_UPD
+             , T2.CAN_DEL
+             , T2.STUS_ID
+          FROM SYS0045M T1
+          JOIN SYS0003M T2
+            ON T2.BIZ_ROLE_ID = T1.ROLE_ID
+           AND T2.STUS_ID = 1
+         WHERE T1.STUS_ID= 1
+           AND T1.USER_ID = #{userId}
+           AND T2.MODULE_UNIT_ID = #{moduleUnitId}
     </select>
 
     <!--Product 정보 조회 -->
@@ -2395,16 +2395,16 @@
           FROM
              (
             <if test='pType != null and pType == "1"'>
-			   SELECT CODE_ID
-			        , CODE
-				    , CODE_NAME
-				    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
-				 FROM SYS0013M T1
-				    , SAL0081D T2
-				WHERE T1.CODE_MASTER_ID = #{appSubType}
-				  AND T1.DISAB = 0
-				  AND T1.CODE = T2.SRV_CNTRCT_PAC_ID
-				  AND T2.PAC_TYPE = 0
+               SELECT CODE_ID
+                    , CODE
+                    , CODE_NAME
+                    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+                 FROM SYS0013M T1
+                    , SAL0081D T2
+                WHERE T1.CODE_MASTER_ID = #{appSubType}
+                  AND T1.DISAB = 0
+                  AND T1.CODE = T2.SRV_CNTRCT_PAC_ID
+                  AND T2.PAC_TYPE = 0
             </if>
             <if test='pType != null and pType == "2"'>
                SELECT CODE_ID
@@ -2475,33 +2475,33 @@
     </select>
 
     <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
-		SELECT T1.SALES_ORD_NO
-		     , T4.CODE_NAME AS APP_TYPE
-		     , T3.STK_CODE
-		     , T3.STK_DESC
-		     , T1.PROMO_ID
-		     , T1.SALES_ORD_ID
-		     , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
+        SELECT T1.SALES_ORD_NO
+             , T4.CODE_NAME AS APP_TYPE
+             , T3.STK_CODE
+             , T3.STK_DESC
+             , T1.PROMO_ID
+             , T1.SALES_ORD_ID
+             , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
                    = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID)
                    BUS_TYPE
-		  FROM SAL0001D T1
-		  JOIN SAL0002D T2
-		    ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
-		  JOIN SYS0026M T3
-		    ON T3.STK_ID = T2.ITM_STK_ID
-		  JOIN SYS0013M T4
-		    ON T4.CODE_ID = T1.APP_TYPE_ID
-		 WHERE T1.CUST_ID = #{custId}
-		   AND T1.STUS_CODE_ID = '4'
-		   <choose>
-		      <when test='isHomecare == "1" '>
-		      <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
-		      AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+          FROM SAL0001D T1
+          JOIN SAL0002D T2
+            ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+          JOIN SYS0026M T3
+            ON T3.STK_ID = T2.ITM_STK_ID
+          JOIN SYS0013M T4
+            ON T4.CODE_ID = T1.APP_TYPE_ID
+         WHERE T1.CUST_ID = #{custId}
+           AND T1.STUS_CODE_ID = '4'
+           <choose>
+              <when test='isHomecare == "1" '>
+              <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
+              AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                           WHERE AA.CODE = BB.CODE
                                                               AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
-		      </when>
-		      <when test='isHomecare == "2" '>
+              </when>
+              <when test='isHomecare == "2" '>
               and T3.STK_CTGRY_ID = '55'
                AND T1.SALES_ORD_ID IN (
             SELECT A.SALES_ORD_ID
@@ -2520,13 +2520,13 @@
                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6
             )
               </when>
-		      <otherwise>
-		       <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
-		      AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+              <otherwise>
+               <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
+              AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                           WHERE AA.CODE = BB.CODE
                                                               AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
-		      </otherwise>
-		   </choose>
+              </otherwise>
+           </choose>
     </select>
 
   <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
@@ -3003,133 +3003,133 @@ WHERE
 
     <insert id="insert_SAL0225D" parameterType="salesOrderMVO">
         /* com.coway.trust.biz.sales.order.impl.OrderRegisterMapper.insert_SAL0225D */
-	    INSERT INTO SAL0225D (
-	            SRV_ORD_ID
-	          , SRV_ORD_NO
-	          , REF_NO
-	          , SALES_DT
-	          , CUST_ID
-	          , CUST_CNT_ID
-	          , CUST_ADD_ID
-	          , MEM_ID
-	          , BRNCH_ID
-	          , APP_TYPE_ID
-	          , TOT_AMT
-	          , PROMO_ID
-	          , BINDING_NO
-	          , CC_PROMO_ID
-	          , TOT_PV
-	          , REM
-	          , PV_MONTH
-	          , PV_YEAR
-	          , STUS_CODE_ID
-	          , UPD_DT
-	          , UPD_USER_ID
-	          , SYNC_CHK
-	          , CUST_PO_NO
-	          , REN_CHK_ID
-	          , INST_PRIOD
-	          , DO_NO
-	          , DEPT_CODE
-	          , GRP_CODE
-	          , ORG_CODE
-	          , SALES_ORD_ID_OLD
-	          , EDIT_TYPE_ID
-	          , CUST_BILL_ID
-	          , MTH_RENT_AMT
-	          , LOK
-	          , AEON_STUS_ID
-	          , COMM_DT
-	          , CRT_USER_ID
-	          , CRT_DT
-	          , PAY_COM_DT
-	          , DEF_RENT_AMT
-	          , REF_DOC_ID
-	          , SALES_HM_ID
-	          , SALES_SM_ID
-	          , SALES_GM_ID
-	          , ADV_BILL
-	          , CNVR_SCHEME_ID
-	          , CUST_CARE_CNT_ID
-	          , EMP_CHK
-	          , EX_TRADE
-	          , ECASH
-	          , PROMO_DISC_PERIOD_TP
-	          , PROMO_DISC_PERIOD
-	          , NOR_AMT
-	          , NOR_RNT_FEE
-	          , DISC_RNT_FEE
-	          , GST_CHK
-	          , SRV_PAC_ID
-	          , SALES_PROD_SZ
-	          , SALES_PROD_BRD
-	          , RCD_TMS
-	          , SRV_PROD_QTY
+        INSERT INTO SAL0225D (
+                SRV_ORD_ID
+              , SRV_ORD_NO
+              , REF_NO
+              , SALES_DT
+              , CUST_ID
+              , CUST_CNT_ID
+              , CUST_ADD_ID
+              , MEM_ID
+              , BRNCH_ID
+              , APP_TYPE_ID
+              , TOT_AMT
+              , PROMO_ID
+              , BINDING_NO
+              , CC_PROMO_ID
+              , TOT_PV
+              , REM
+              , PV_MONTH
+              , PV_YEAR
+              , STUS_CODE_ID
+              , UPD_DT
+              , UPD_USER_ID
+              , SYNC_CHK
+              , CUST_PO_NO
+              , REN_CHK_ID
+              , INST_PRIOD
+              , DO_NO
+              , DEPT_CODE
+              , GRP_CODE
+              , ORG_CODE
+              , SALES_ORD_ID_OLD
+              , EDIT_TYPE_ID
+              , CUST_BILL_ID
+              , MTH_RENT_AMT
+              , LOK
+              , AEON_STUS_ID
+              , COMM_DT
+              , CRT_USER_ID
+              , CRT_DT
+              , PAY_COM_DT
+              , DEF_RENT_AMT
+              , REF_DOC_ID
+              , SALES_HM_ID
+              , SALES_SM_ID
+              , SALES_GM_ID
+              , ADV_BILL
+              , CNVR_SCHEME_ID
+              , CUST_CARE_CNT_ID
+              , EMP_CHK
+              , EX_TRADE
+              , ECASH
+              , PROMO_DISC_PERIOD_TP
+              , PROMO_DISC_PERIOD
+              , NOR_AMT
+              , NOR_RNT_FEE
+              , DISC_RNT_FEE
+              , GST_CHK
+              , SRV_PAC_ID
+              , SALES_PROD_SZ
+              , SALES_PROD_BRD
+              , RCD_TMS
+              , SRV_PROD_QTY
 
-	    ) VALUES (
+        ) VALUES (
 
-	            #{salesOrdId}
-	          , (SELECT FN_GET_DOCNO(168) FROM DUAL)
-	          , UPPER(#{refNo})
-	          , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
-	          , #{custId}
-	          , #{custCntId}
-	          , #{custAddId}
-	          , #{memId}
-	          , #{brnchId}
-	          , #{appTypeId}
-	          , #{totAmt}
-	          , #{promoId}
-	          , #{bindingNo}
-	          , #{ccPromoId}
-	          , #{totPv}
-	          , #{rem}
-	          , #{pvMonth}
-	          , #{pvYear}
-	          , #{stusCodeId}
-	          , SYSDATE
-	          , #{updUserId}
-	          , #{syncChk}
-	          , #{custPoNo}
-	          , #{renChkId}
-	          , #{instPriod}
-	          , #{doNo}
-	          , #{deptCode}
-	          , #{grpCode}
-	          , #{orgCode}
-	          , #{salesOrdIdOld}
-	          , #{editTypeId}
-	          , #{custBillId}
-	          , #{mthRentAmt}
-	          , #{lok}
-	          , #{aeonStusId}
-	          , TO_DATE(#{commDt}, 'yyyy-MM-dd')
-	          , #{crtUserId}
-	          , SYSDATE
-	          , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
-	          , #{defRentAmt}
-	          , #{refDocId}
-	          , #{salesHmId}
-	          , #{salesSmId}
-	          , #{salesGmId}
-	          , #{advBill}
-	          , #{cnvrSchemeId}
-	          , #{custCareCntId}
-	          , #{empChk}
-	          , #{exTrade}
-	          , #{ecash}
-	          , #{promoDiscPeriodTp}
-	          , #{promoDiscPeriod}
-	          , #{norAmt}
-	          , #{norRntFee}
-	          , #{discRntFee}
-	          , #{gstChk}
-	          , #{srvPacId}
-	          , #{salesProdSz}
-	          , (SELECT CODE_NAME FROM SYS0094M WHERE IND = 'MATBSCBRD' AND CODE = 'PRMSRI' AND DISB = 0)
-	          , null
-	          , 1
-	     )
+                #{salesOrdId}
+              , (SELECT FN_GET_DOCNO(168) FROM DUAL)
+              , UPPER(#{refNo})
+              , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
+              , #{custId}
+              , #{custCntId}
+              , #{custAddId}
+              , #{memId}
+              , #{brnchId}
+              , #{appTypeId}
+              , #{totAmt}
+              , #{promoId}
+              , #{bindingNo}
+              , #{ccPromoId}
+              , #{totPv}
+              , #{rem}
+              , #{pvMonth}
+              , #{pvYear}
+              , #{stusCodeId}
+              , SYSDATE
+              , #{updUserId}
+              , #{syncChk}
+              , #{custPoNo}
+              , #{renChkId}
+              , #{instPriod}
+              , #{doNo}
+              , #{deptCode}
+              , #{grpCode}
+              , #{orgCode}
+              , #{salesOrdIdOld}
+              , #{editTypeId}
+              , #{custBillId}
+              , #{mthRentAmt}
+              , #{lok}
+              , #{aeonStusId}
+              , TO_DATE(#{commDt}, 'yyyy-MM-dd')
+              , #{crtUserId}
+              , SYSDATE
+              , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
+              , #{defRentAmt}
+              , #{refDocId}
+              , #{salesHmId}
+              , #{salesSmId}
+              , #{salesGmId}
+              , #{advBill}
+              , #{cnvrSchemeId}
+              , #{custCareCntId}
+              , #{empChk}
+              , #{exTrade}
+              , #{ecash}
+              , #{promoDiscPeriodTp}
+              , #{promoDiscPeriod}
+              , #{norAmt}
+              , #{norRntFee}
+              , #{discRntFee}
+              , #{gstChk}
+              , #{srvPacId}
+              , #{salesProdSz}
+              , (SELECT CODE_NAME FROM SYS0094M WHERE IND = 'MATBSCBRD' AND CODE = 'PRMSRI' AND DISB = 0)
+              , null
+              , 1
+         )
     </insert>
 
     <select id="selectPrevMatOrderNoList" parameterType="Map" resultType="egovMap">
@@ -3163,10 +3163,10 @@ WHERE
 
     <select id="selectPrevMatOrderAppTypeId" parameterType="Map" resultType="string">
         SELECT APP_TYPE FROM
-		(
-		    SELECT APP_TYPE FROM API0005D WHERE BNDL_ID = #{bndlId} AND APP_TYPE != '5764' ORDER BY ECOMM_ORD_ID DESC
-		)
-		WHERE ROWNUM = 1
+        (
+            SELECT APP_TYPE FROM API0005D WHERE BNDL_ID = #{bndlId} AND APP_TYPE != '5764' ORDER BY ECOMM_ORD_ID DESC
+        )
+        WHERE ROWNUM = 1
     </select>
 
     <select id="selectShiIndexInfo" parameterType="Map" resultType="egovMap">
@@ -3205,9 +3205,9 @@ WHERE
     )
   </insert>
 
-	<update id="updateMarketingMessageStatus" parameterType="Map">
-		UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{receivingMarketingMsgStatus}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
-	</update>
+    <update id="updateMarketingMessageStatus" parameterType="Map">
+        UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{receivingMarketingMsgStatus}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
+    </update>
 
   <select id="getExTradeConfig" parameterType="Map" resultType="egovMap">
        SELECT
@@ -3284,7 +3284,6 @@ WHERE
                    AND A.SALES_ORD_ID = #{value}
                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6
   </select>
-
   <select id="automatedCcpProcess" parameterType="Map" statementType="CALLABLE">
         {
         call SP_UPD_PRECCP_SCRE_UPD_CCP(#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
