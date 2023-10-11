@@ -1107,29 +1107,30 @@
   </select>
 
   <select id="newSearchCancelSAL0046D" parameterType="Map" resultType="egovMap">
-    SELECT Extent1.INSTALL_ENTRY_ID   ,
-           Extent1.INSTALL_ENTRY_NO   ,
-           Extent1.SALES_ORD_ID   ,
-           Extent1.STUS_CODE_ID   ,
-           Extent1.CT_ID   ,
-           Extent1.INSTALL_DT   ,
-           Extent1.CALL_ENTRY_ID   ,
-           Extent1.INSTALL_STK_ID   ,
-           Extent1.INSTALL_RESULT_ID   ,
-           Extent1.CRT_USER_ID   ,
-           Extent1.CRT_DT   ,
-           Extent1.ALLOW_COMM   ,
-           Extent1.IS_TRADE_IN   ,
-           Extent1.CT_GRP   ,
-           Extent1.UPD_DT UP_DT  ,
-           Extent1.UPD_USER_ID   ,
-           Extent1.REV_ID
-    FROM SAL0046D Extent1
-    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
-      AND 4 = Extent1.STUS_CODE_ID
-      <![CDATA[
-        AND ROWNUM <= 1
-      ]]>
+    SELECT * FROM
+     (
+	     SELECT Extent1.INSTALL_ENTRY_ID   ,
+	           Extent1.INSTALL_ENTRY_NO   ,
+	           Extent1.SALES_ORD_ID   ,
+	           Extent1.STUS_CODE_ID   ,
+	           Extent1.CT_ID   ,
+	           Extent1.INSTALL_DT   ,
+	           Extent1.CALL_ENTRY_ID   ,
+	           Extent1.INSTALL_STK_ID   ,
+	           Extent1.INSTALL_RESULT_ID   ,
+	           Extent1.CRT_USER_ID   ,
+	           Extent1.CRT_DT   ,
+	           Extent1.ALLOW_COMM   ,
+	           Extent1.IS_TRADE_IN   ,
+	           Extent1.CT_GRP   ,
+	           Extent1.UPD_DT UP_DT  ,
+	           Extent1.UPD_USER_ID   ,
+	           Extent1.REV_ID
+	    FROM SAL0046D Extent1
+	    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+	    AND 4 = Extent1.STUS_CODE_ID
+	    ORDER BY Extent1.INSTALL_ENTRY_ID DESC
+    ) WHERE 1=1 AND ROWNUM  <![CDATA[<= ]]>1
   </select>
 
   <update id="updateCancelSAL0001D" parameterType="Map">
