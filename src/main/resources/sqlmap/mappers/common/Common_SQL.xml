@@ -1553,6 +1553,10 @@
                  AND STUS_ID = 1
                  AND TYPE_ID IN (5754)
               </when>
+              <when test='groupCode == "3A"'><!-- DT ASSIGNMENT HC ORDER CANCELLATION ( FOR AIRCOND ) -->
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (43)
+              </when>
               <otherwise>
                  <!-- AND STUS_ID = 1 -->
               </otherwise>

@@ -383,8 +383,8 @@ public class HcOrderCancelController {
 	@RequestMapping(value = "/orderCancelDTSearchPop.do")
 	public String orderCancelDTSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		logger.debug("params ===========> " + params);
-		String stkId = CommonUtils.nvl(params.get("stockId"));
-		if(stkId != null && (stkId.equals("2187") || stkId.equals("2188"))){
+		String stkCode = CommonUtils.nvl(params.get("stockCode"));
+		if(stkCode != null && (stkCode.equals("200001") || stkCode.equals("200002") || stkCode.equals("200003") || stkCode.equals("200004"))){
 			model.addAttribute("dtMemType", HomecareConstants.MEM_TYPE.CT);
 		}
 

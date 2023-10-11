@@ -13,7 +13,14 @@
         createAUIGrid();
 
         doGetCombo('/common/selectCodeList.do', '1', dtMemType, 'popMemType', 'S', ''); //Common Code
-        doGetComboSepa('/common/selectBranchCodeList.do',  dtMemType, ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
+
+        // If CT (Aircond), only show DSC
+        if (dtMemType == '3') {
+        	doGetComboSepa('/common/selectBranchCodeList.do',  "3A", ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
+        }
+        else {
+            doGetComboSepa('/common/selectBranchCodeList.do',  dtMemType, ' - ', '', 'popBrnchId', 'S', ''); //Branch Code
+        }
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
