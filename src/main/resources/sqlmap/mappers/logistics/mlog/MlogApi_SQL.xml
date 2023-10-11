@@ -2651,7 +2651,8 @@
   </select>
 
   <select id="getCodyAvaFilterList" parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(S26.STK_CODE) AS STK_CDE,
+    SELECT TO_CHAR(S26.STK_ID) AS STK_ID,
+               TO_CHAR(S26.STK_CODE) AS STK_CDE,
                TO_CHAR(S26.STK_DESC) AS STK_NM,
                TO_CHAR(S26.STK_TYPE_ID) AS ITEM_TYP_ID,
                TO_CHAR(STYPE.CODE_NAME) AS ITEM_TYP_NM,
