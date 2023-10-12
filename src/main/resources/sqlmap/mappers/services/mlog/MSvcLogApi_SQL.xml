@@ -560,6 +560,7 @@
                                       lpm AS lpm,
                                       as_unmatch_reason AS as_unmatch_reason,
                                       rework_proj AS rework_proj,
+                                      WATER_SRC_TYPE AS WATER_SRC_TYPE,
                                       prodCat AS prodCat
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -653,6 +654,7 @@
                                            TO_CHAR(svc0004d.LPM) AS lpm,
                                            TO_CHAR (svc0004d.as_unmatch_reason) AS as_unmatch_reason,
                                            TO_CHAR (svc0004d.rework_proj) AS rework_proj,
+                                           TO_CHAR (SVC0004D.WATER_SRC_TYPE) AS WATER_SRC_TYPE,
                                            TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
                                     FROM sal0001d,
                                          sal0002d,
@@ -1801,6 +1803,7 @@
            TO_CHAR(PRODCAT) AS prodcat,
            TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON,
            TO_CHAR(REWORK_PROJ) AS REWORK_PROJ,
+           TO_CHAR(WATER_SRC_TYPE) AS WATER_SRC_TYPE,
            LATITUDE AS LATITUDE,
            LONGITUDE AS LONGITUDE
     FROM SVC0102T
