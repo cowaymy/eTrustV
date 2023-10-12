@@ -271,7 +271,17 @@ public class AfterServiceJobDto_b {
   @ApiModelProperty(value = "REWORK_PROJ")
   private String reworkProj;
 
-  public String getReworkProj() {
+  private String waterSrcType;
+
+  public String getWaterSrcType() {
+	return waterSrcType;
+}
+
+public void setWaterSrcType(String waterSrcType) {
+	this.waterSrcType = waterSrcType;
+}
+
+public String getReworkProj() {
 	return reworkProj;
 }
 
