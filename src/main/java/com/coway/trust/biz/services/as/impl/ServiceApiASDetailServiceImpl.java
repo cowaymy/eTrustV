@@ -438,6 +438,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
                 params.put("AS_LPM", insApiresult.get("lpmRcd"));
                 params.put("AS_UNMATCH_REASON", insApiresult.get("asUnmatchReason"));
                 params.put("REWORK_PROJ", insApiresult.get("reworkProj"));
+                params.put("WATER_SRC_TYPE", insApiresult.get("waterSrcType"));
 
         		if (insApiresult.get("inHouseRepairRemark") != null) {
         			params.put("IN_HUSE_REPAIR_REM", String.valueOf(insApiresult.get("inHouseRepairRemark")));
