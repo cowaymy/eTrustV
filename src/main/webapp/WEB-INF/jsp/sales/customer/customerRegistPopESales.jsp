@@ -79,6 +79,7 @@
         $("#_nric_").val('${nric}');
 
         onChangeCompanyType($("#_cmbTypeId_").val());
+        onChangeNation($("#_cmbNation_").val());
         fn_nricChkAndSuggDob($("#_nric_").val());
 
       //UpperCase Field
@@ -358,6 +359,8 @@
                 $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
                 $(".foreigner").show();
             }else{
+            	$("#_pasSportExpr_").attr({'disabled' : true , 'class' : 'j_date w100p'});
+                $("#_visaExpr_").attr({'disabled' : true , 'class' : 'j_date w100p'});
             	$(".foreigner").hide();
             }
 
@@ -404,6 +407,18 @@
         }
 
     }
+
+   function onChangeNation(val){
+       if($("#_cmbNation_").val() == '1'){ // MALAYSIAN
+	       $("#_pasSportExpr_").attr({'disabled' : true , 'class' : 'j_date w100p'});
+	       $("#_visaExpr_").attr({'disabled' : true , 'class' : 'j_date w100p'});
+	       $(".foreigner").hide();
+       }else{
+           $("#_pasSportExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
+           $("#_visaExpr_").attr({'disabled' : false , 'class' : 'j_date w100p'});
+           $(".foreigner").show();
+       }
+   }
 
     function fn_addCreditCardPop(){
         Common.popupDiv("/sales/customer/customerAddCreditCardeSalesPop.do", $("#insBasicForm").serializeJSON(), null, true, "_cardDiv");
@@ -1166,7 +1181,7 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must foreigner">*</span>
-                                <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled"></select></td>
+                                <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" onchange="onChangeNation(this.value)" disabled="disabled"></select></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.passportExpire" /><span class="must foreigner">*</span></th>
