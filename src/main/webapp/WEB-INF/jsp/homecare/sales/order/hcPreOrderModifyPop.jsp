@@ -66,6 +66,13 @@ var userType = '${SESSION_INFO.userTypeId}';
 
     doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');
 
+    if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
+    	$('#voucherCode').val('${preOrderInfo.voucherInfo.voucherCode}');
+    	$('#voucherEmail').val('${preOrderInfo.voucherInfo.custEmail}');
+    	$('#voucherType').val('${preOrderInfo.voucherInfo.platformId}');
+	  	voucherAppliedStatus = 1;
+    }
+
     //Attach File
     fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
 
@@ -90,7 +97,6 @@ var userType = '${SESSION_INFO.userTypeId}';
       $("#corpCustType").prop("disabled", true);
       $("#agreementType").prop("disabled", true);
     }
-
   });
 
   function createAUIGridStk() {
@@ -1511,7 +1517,6 @@ var userType = '${SESSION_INFO.userTypeId}';
   //LoadProductPromotion
   function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
     $('#ordPromo' + tagNum).removeAttr("disabled");
-
     if(tagNum == '1'){
 	    if (appTypeVal != 66) { // No Rental
 		      doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {
@@ -1522,6 +1527,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        exTrade : exTrade,
 		        srvPacId : $('#srvPacId').val(),
 		        isSrvPac : 'Y'
+		        , voucherPromotion: voucherAppliedStatus
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    } else { // AppType : Rental
 		      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1531,6 +1537,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        promoCustType : custTypeVal,
 		        exTrade : exTrade,
 		        srvPacId : $('#srvPacId').val()
+		        , voucherPromotion: voucherAppliedStatus
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    }
     }
@@ -1544,6 +1551,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        exTrade : exTrade,
 	        srvPacId : $('#srvPacId').val(),
 	        isSrvPac : 'Y'
+		    , voucherPromotion: voucherAppliedStatus
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    } else { // AppType : Rental
 	      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1553,6 +1561,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        promoCustType : custTypeVal,
 	        exTrade : exTrade,
 	        srvPacId : $('#srvPacId').val()
+	        , voucherPromotion: voucherAppliedStatus
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    }
     }
@@ -1965,7 +1974,8 @@ var userType = '${SESSION_INFO.userTypeId}';
         srvPacId : '${preMatOrderInfo.srvPacId}',
         promoId : '${preMatOrderInfo.promoId}',
         isSrvPac:('${preMatOrderInfo.appTypeId}' == 66 ? 'Y' : '')
-      }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
+        , voucherPromotion: voucherAppliedStatus
+      }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', 'voucherPromotionCheck'); //Common Code
 
 
       /*if (appTypeVal != 66) { // No Rental
@@ -2012,7 +2022,8 @@ var userType = '${SESSION_INFO.userTypeId}';
         srvPacId : '${preFrmOrderInfo.srvPacId}',
         promoId : '${preFrmOrderInfo.promoId}',
         isSrvPac:('${preFrmOrderInfo.appTypeId}' == 5764 ? 'Y' : '')
-      }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
+        , voucherPromotion: voucherAppliedStatus
+      }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', 'voucherPromotionCheck'); //Common Code
 
       $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
       $('#promoDiscPeriodTp2').val('${preFrmOrderInfo.promoDiscPeriodTp}');
@@ -2506,7 +2517,18 @@ var userType = '${SESSION_INFO.userTypeId}';
     	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
     	        		if(result.length > 0){
     	        			voucherPromotionId = result;
-    	        			voucherPromotionCheck();
+    	        			//voucherPromotionCheck();
+		    	        	var appTypeIdx = $("#appType option:selected").index();
+		        		    var appTypeVal = $("#appType").val();
+		        		    var custTypeVal = $("#hiddenTypeId").val();
+		        		    var stkIdx = $("#ordProduct1 option:selected").index();
+		        		    var stkIdVal = $("#ordProduct1").val();
+		        		    var empChk = 0;
+		        		    var exTrade = $("#exTrade").val();
+		        		    var srvPacId = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+		        		    if (stkIdx > 0) {
+		        		        fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, "1");
+		        		    }
     	        		}
     	        		else{
     	        			//reset everything
@@ -2553,19 +2575,43 @@ var userType = '${SESSION_INFO.userTypeId}';
       }
 
       function clearVoucherData(){
-    	  	$('#voucherCode').val('');
-      	$('#voucherEmail').val('');
-    		$('#voucherMsg').hide();
-    		$('#voucherMsg').text('');
-    	  	voucherAppliedStatus = 0;
-      	voucherAppliedCode = "";
-      	voucherAppliedEmail = "";
-          voucherPromotionId =[];
+   	  	$('#voucherCode').val('');
+     	$('#voucherEmail').val('');
+   		$('#voucherMsg').hide();
+   		$('#voucherMsg').text('');
+   	  	voucherAppliedStatus = 0;
+     	voucherAppliedCode = "";
+     	voucherAppliedEmail = "";
+        voucherPromotionId =[];
 
-          $('#ordProduct1').val('');
-       	$('#ordPromo1').val('');
-       	$('#ordPromo1 option').remove();
+        $('#ordProduct1').val('');
+      	$('#ordPromo1').val('');
+      	$('#ordPromo1 option').remove();
       }
+
+      function applyCurrentUsedVoucher(){
+  	  	voucherAppliedStatus = 1;
+  	  	var voucherCode = $('#voucherCode').val();
+      	var voucherEmail = $('#voucherEmail').val();
+    		$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+      	voucherAppliedCode = voucherCode;
+      	voucherAppliedEmail = voucherEmail;
+    		$('#voucherMsg').show();
+      		displayVoucherSection();
+
+  	  	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+  	  		if(result.length > 0){
+  	  			voucherPromotionId = result;
+  				voucherPromotionCheck();
+  	  		}
+  	  		else{
+  	  			//reset everything
+  				clearVoucherData();
+  	  			Common.alert("No Promotion is being entitled for this voucher code");
+  	  			return;
+  	  		}
+  	  	});
+    	}
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->

@@ -2577,10 +2577,10 @@ console.log("vBindingNo" + vBindingNo);
         $('#ordPromo').removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
         }
         else
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
     }
 
     //LoadProductPrice
@@ -2952,7 +2952,17 @@ console.log("vBindingNo" + vBindingNo);
 	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
 	        		if(result.length > 0){
 	        			voucherPromotionId = result;
-	        			voucherPromotionCheck();
+	        			//voucherPromotionCheck();
+	        			var appTypeIdx = $("#appType option:selected").index();
+			            var appTypeVal = $("#appType").val();
+			            var custTypeVal= $("#typeId").val();
+			            var stkIdx     = $("#ordProudct option:selected").index();
+			            var stkIdVal   = $("#ordProudct").val();
+			            var empChk     = $("#empChk").val();
+			            var exTrade    = $("#exTrade").val();
+			            if(stkIdx > 0) {
+			                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
+			            }
 	        		}
 	        		else{
 	        			//reset everything

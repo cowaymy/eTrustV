@@ -1,6 +1,7 @@
 package com.coway.trust.biz.homecare.sales.order.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRequestService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
@@ -65,6 +67,9 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Resource(name = "hcOrderRegisterMapper")
 	private HcOrderRegisterMapper hcOrderRegisterMapper;
+
+	@Resource(name = "voucherMapper")
+	private VoucherMapper voucherMapper;
 
 	/**
 	 * Request Cancel Order
@@ -330,6 +335,11 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 	    params.put("stusCodeId", stusCodeId);
 	    params.put("appTypeId", appTypeId);
 	    params.put("logUsrId", logUsrId);
+
+	    //Voucher Exchange If Any
+	  	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+	  	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+	  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
 
 	    // ORDER EXCHANGE
 	    SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -650,6 +660,7 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		salesOrderMVO.setNorAmt(new BigDecimal(CommonUtils.nvl(params.get("norAmt"))));
 		salesOrderMVO.setNorRntFee(new BigDecimal(CommonUtils.nvl(params.get("orgOrdRentalFees"))));
 		salesOrderMVO.setDiscRntFee(new BigDecimal(CommonUtils.nvl(params.get("ordRentalFees"))));
+		salesOrderMVO.setVoucherCode(CommonUtils.nvl(params.get("voucherCode")));
 	}
 
 	private void preprocSalesOrderD(SalesOrderDVO salesOrderDVO, Map<String, Object> params) {
@@ -661,4 +672,26 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
         salesOrderDVO.setUpdUserId(CommonUtils.intNvl(params.get("logUsrId")));
 	}
 
+  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
+		if(existingVoucherCode.isEmpty() == false){
+			if(existingVoucherCode.equals(currentVoucherCode) == false){
+				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
+				this.updateVoucherUseStatus(existingVoucherCode, 0);
+			}
+		}
+
+		if(currentVoucherCode.isEmpty() == false){
+			//UPDATE CURRENT VOUCHER USED TO 1(USED STATE)
+			this.updateVoucherUseStatus(currentVoucherCode, 1);
+		}
+  }
+
+    private boolean updateVoucherUseStatus(String voucherCode, int isUsed){
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("voucherCode", voucherCode);
+    params.put("isUsed", isUsed);
+
+    voucherMapper.updateVoucherCodeUseStatus(params);
+    return true;
+    }
 }

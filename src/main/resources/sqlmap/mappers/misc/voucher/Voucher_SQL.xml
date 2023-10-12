@@ -35,7 +35,7 @@
 	<insert
 		id="insertVoucherCampaignDetail"
 		parameterType="Map">
-		INSERT INTO MSC0056M
+		INSERT INTO MSC0057D
 		(
 		DETAIL_ID
 		,ID
@@ -280,6 +280,7 @@
 		ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
 		WHERE 1 = 1
 		AND T1.PROMO_STUS_ID = 1
+		AND T1.VOUCHER_PROMOTION = 1
 		<if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
 			AND T1.PROMO_APP_TYPE_ID IN
 			<foreach
@@ -415,6 +416,11 @@
 		UPDATE MSC0057D
 		SET
 		CUST_EMAIL = #{custEmail}
+		,CUST_NAME = #{custName}
+		,CUST_CONTACT = #{custContact}
+		,PRODUCT = #{product}
+		,OBLIGATION = #{obligation}
+		,FREE_ITEM = #{free}
 		,ORD_ID = #{ordId}
 		,MAIL_ID = #{mailId}
 		,UPD_BY = #{userId}
@@ -481,20 +487,8 @@
 		AND STUS_ID NOT IN (10)
 	</select>
 
-	<select id="getVoucherEmailAdditionalInfo" parameterType="Map" resultType="egovMap">
-		SELECT
-		/* A.VOUCHER_CODE,A.CUST_EMAIL,*/
-		A.ORD_ID,
-		LISTAGG(B.PROMO_ID,';') WITHIN GROUP(ORDER BY B.PROMO_ID) AS PROMO_ID,
-		LISTAGG(C.PROMO_CODE || C.PROMO_DESC,';') WITHIN GROUP(ORDER BY C.PROMO_CODE) AS VARIATION
-		FROM MSC0057D A
-		LEFT JOIN MSC0058D B
-		ON A.ID = B.ID
-		LEFT JOIN SAL0017D C
-		ON B.PROMO_ID = C.PROMO_ID
-		WHERE A.VOUCHER_CODE = #{voucherCode}
-		AND ROWNUM = 1
-		GROUP BY A.VOUCHER_CODE,A.CUST_EMAIL,A.ORD_ID
+	<select id="getPendingEmailSendInfo" parameterType="Map" resultType="egovMap">
+			SELECT * FROM MSC0059D WHERE EMAIL_SENT_STUS IS NULL OR EMAIL_SENT_STUS = 1
 	</select>
 
 	<select id="getUnsendBatchEmailVoucherInfo" resultType="egovMap">
@@ -561,5 +555,21 @@
 	<select id="isCampaignMasterCodeExist" parameterType="Map" resultType="int">
 		SELECT CASE WHEN COUNT(MASTER_CODE) > 0 THEN 1 ELSE 0 END AS COUNT FROM MSC0056M
 		WHERE MASTER_CODE = #{masterCode}
+	</select>
+
+	<select id="getVoucherEmailAdditionalInfo" parameterType="Map" resultType="egovMap">
+		SELECT
+		/* A.VOUCHER_CODE,A.CUST_EMAIL,*/
+		A.ORD_ID,
+		LISTAGG(B.PROMO_ID,';') WITHIN GROUP(ORDER BY B.PROMO_ID) AS PROMO_ID,
+		LISTAGG(C.PROMO_CODE || C.PROMO_DESC,';') WITHIN GROUP(ORDER BY C.PROMO_CODE) AS VARIATION
+		FROM MSC0057D A
+		LEFT JOIN MSC0058D B
+		ON A.ID = B.ID
+		LEFT JOIN SAL0017D C
+		ON B.PROMO_ID = C.PROMO_ID
+		WHERE A.VOUCHER_CODE = #{voucherCode}
+		AND ROWNUM = 1
+		GROUP BY A.VOUCHER_CODE,A.CUST_EMAIL,A.ORD_ID
 	</select>
 </mapper>

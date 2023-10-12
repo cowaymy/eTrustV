@@ -246,7 +246,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(preOrderVO.getPreOrdId1() > 0){
 				PreOrderVO newPreOrderVOForVoucher = new PreOrderVO();
 				newPreOrderVOForVoucher.setPreOrdId(preOrderVO.getPreOrdId1());
-				String existingVoucherCode = preOrderMapper.selectExistingSalesVoucherCode(newPreOrderVOForVoucher);
+				String existingVoucherCode = CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(newPreOrderVOForVoucher));
 				String currentVoucherCode = preOrderVO.getVoucherCode();
 
 				/*

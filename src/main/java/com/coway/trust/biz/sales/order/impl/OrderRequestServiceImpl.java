@@ -20,7 +20,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-//import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.payment.billing.service.impl.ProductLostBillingMapper;
 import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
@@ -103,8 +103,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Resource(name = "billingGroupMapper")
   private BillingGroupMapper billingGroupMapper;
 
-  //@Resource(name = "voucherMapper")
-  //private VoucherMapper voucherMapper;
+  @Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -339,6 +339,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
        * int.Parse(hiddenCurrentPromotionID.Value) :
        * int.Parse(cmbPromotion.SelectedValue);
        */
+      salesOrderMVO.setVoucherCode(CommonUtils.nvl(params.get("voucherCode")));
     } else if (SalesConstants.ORDER_REQ_TYPE_CD_AEXC.equals(ordReqType)) {
 
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -388,6 +389,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderMVO.setSalesHmId(0);
       salesOrderMVO.setSalesSmId(0);
       salesOrderMVO.setSalesGmId(0);
+      salesOrderMVO.setVoucherCode(CommonUtils.nvl(params.get("voucherCode")));
     } else if (SalesConstants.ORDER_REQ_TYPE_CD_OTRN.equals(ordReqType)) {
 
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -457,6 +459,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderMVO.setSalesHmId(0);
       salesOrderMVO.setSalesSmId(0);
       salesOrderMVO.setSalesGmId(0);
+      salesOrderMVO.setVoucherCode(CommonUtils.nvl(params.get("voucherCode")));
     }
   }
 
@@ -1107,9 +1110,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
 
     //Voucher Exchange If Any
-	//String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
-	//String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-	//this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
+	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -1590,6 +1593,11 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     params.put("stusCodeId", stusCodeId);
     params.put("appTypeId", appTypeId);
+
+    //Voucher Exchange If Any
+  	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+  	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -2758,7 +2766,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return orderRequestMapper.checkDefectByReason(params);
   }
 
-/*  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
+  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
 		if(existingVoucherCode.isEmpty() == false){
 			if(existingVoucherCode.equals(currentVoucherCode) == false){
 				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
@@ -2779,5 +2787,5 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     voucherMapper.updateVoucherCodeUseStatus(params);
     return true;
-    }*/
+    }
 }

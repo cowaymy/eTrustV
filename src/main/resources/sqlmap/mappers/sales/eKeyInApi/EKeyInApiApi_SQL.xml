@@ -1703,11 +1703,11 @@ SELECT A.CUST_ID AS CUST_ID
 		ON A.ID = B.ID
 		WHERE
 		A.VOUCHER_CODE = #{voucherCode}
-		<if test='custEmail != null and custEmail != ""'>
-		AND A.CUST_EMAIL = #{custEmail}
+		<if test='voucherEmail != null and voucherEmail != ""'>
+		AND A.CUST_EMAIL = #{voucherEmail}
 		</if>
-		<if test='platform != null and platform != ""'>
-		AND B.PLATFORM = #{platform}
+		<if test='voucherType != null and voucherType != ""'>
+		AND B.PLATFORM = #{voucherType}
 		</if>
 		AND A.STUS_CODE_ID = 1
 		AND B.STUS_CODE_ID = 1

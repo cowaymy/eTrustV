@@ -1715,7 +1715,8 @@
 
         if(appTypeVal == "66") isSrvPac = "Y";
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+        //function change
+        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
     }
 
     //LoadProductPrice
@@ -2324,7 +2325,18 @@
 	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
 	        		if(result.length > 0){
 	        			voucherPromotionId = result;
-	        			voucherPromotionCheck();
+
+	        			//reload promotion dropdown
+			            var appTypeVal = $("#appType").val();
+			            var custTypeVal= $("#hiddenTypeId").val();
+			            var stkIdVal   = $("#ordProudct").val();
+			            var empChk     = 0;
+			            var exTrade    = $("#exTrade").val();
+			            var stkIdx     = $("#ordProudct option:selected").index();
+
+			            if(stkIdx > 0){
+			                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
+			            }
 	        		}
 	        		else{
 	        			//reset everything

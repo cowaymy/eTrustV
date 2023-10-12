@@ -603,6 +603,6 @@
     </select>
 
     <select id="selectExistingSalesVoucherCode" parameterType="preOrderVO" resultType="String">
-    	SELECT VOUCHER_CODE FROM SAL0213M WHERE WHERE PRE_ORD_ID = #{preOrdId}
+    	SELECT VOUCHER_CODE FROM SAL0213M WHERE PRE_ORD_ID = #{preOrdId}
     </select>
 </mapper>

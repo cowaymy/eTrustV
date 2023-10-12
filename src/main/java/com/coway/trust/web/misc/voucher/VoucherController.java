@@ -31,6 +31,8 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.coway.trust.config.csv.CsvReadComponent;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -246,6 +248,11 @@ public class VoucherController {
 			hm.put("voucherCode",vo.getVoucherCode().trim());
 			hm.put("custEmail",vo.getCustomerEmail().trim());
 			hm.put("orderId",vo.getOrderId().trim());
+			hm.put("custName",vo.getCustomerName().trim());
+			hm.put("contact",vo.getContact().trim());
+			hm.put("productName",vo.getProductName().trim());
+			hm.put("obligation",vo.getObligation().trim());
+			hm.put("freeItem",vo.getFreeItem().trim());
 			details.add(hm);
 		}
 
@@ -272,14 +279,14 @@ public class VoucherController {
 
 	@RequestMapping(value = "/sendVoucherEmailNotification.do")
 	public ResponseEntity<ReturnMessage> sendVoucherEmailNotification(@RequestParam Map<String, Object> params,
-			ModelMap model, SessionVO sessionVO) {
+			ModelMap model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
 		ReturnMessage message = new ReturnMessage();
-		List<EgovMap> voucherEmailInfo = voucherService.getUnsendBatchEmailVoucherInfo();
+		List<EgovMap> emailListToSend = voucherService.getPendingEmailSendInfo();
 
-		if(voucherEmailInfo.size() > 0){
-			for(int i =0;i<voucherEmailInfo.size();i++)
+		if(emailListToSend.size() > 0){
+			for(int i =0;i<emailListToSend.size();i++)
 			{
-				EgovMap info = voucherEmailInfo.get(i);
+				EgovMap info = emailListToSend.get(i);
 				info.put("userId", sessionVO.getUserId());
 				voucherService.sendEmail(info);
 			}

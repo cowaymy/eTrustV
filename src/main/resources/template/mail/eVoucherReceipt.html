@@ -12,7 +12,7 @@
 			<h3>[Coway] E-Voucher Verification Code Has Arrived</h3>
 			<h4>
 				Voucher Code : ${voucherCode}
-				</h3>
+			</h4>
 		</div>
 		<br> <br>
 
@@ -24,8 +24,12 @@
 				<col style="width: 15%; align: right" />
 			</colgroup>
 			<tr>
+				<td>Product Name :</td>
+				<td><span>${product}</span> <span style='display: ${freeItemDisplay}'>(Free: ${free})</span></td>
+			</tr>
+			<tr>
 				<td>Variation :</td>
-				<td>${variation}</td>
+				<td>${obligation}</td>
 			</tr>
 			<tr>
 				<td>Order ID :</td>
@@ -53,8 +57,16 @@
 				style="height: 2px; border: none; color: #333; background-color: #333;">
 			<table height="150">
 				<tr>
+					<td>Buyer Name :</td>
+					<td>${custName}</td>
+				</tr>
+				<tr>
 					<td>Buyer Email :</td>
 					<td>${custEmail}</td>
+				</tr>
+				<tr>
+					<td>Phone Number :</td>
+					<td>${custContact}</td>
 				</tr>
 				<tr>
 					<td>Customer Service Support :</td>

@@ -1440,10 +1440,10 @@
     	var isSrvPac = "Y";
     	//if(appTypeVal == "66") isSrvPac = "Y";
 		 if(tagNum == '1'){ //Voucher Check only applies for Main Product Promotion
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		 }
 		 else{
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 		 }
 
         /*  if(appTypeVal !=66){
@@ -2132,7 +2132,19 @@
   	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
   	        		if(result.length > 0){
   	        			voucherPromotionId = result;
-  	        			voucherPromotionCheck();
+  	        			//voucherPromotionCheck();
+  	        			var appTypeIdx = $("#appType option:selected").index();
+			            var appTypeVal = $("#appType").val();
+			            var custTypeVal = $("#hiddenTypeId").val();
+			            var stkIdx         = $("#ordProduct1 option:selected").index();
+			            var stkIdVal      = $("#ordProduct1").val();
+			            var empChk     = 0;
+			            var exTrade      = $("#exTrade").val();
+			            var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+
+			            if(stkIdx > 0) {
+			                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, "1");
+			            }
   	        		}
   	        		else{
   	        			//reset everything
@@ -2175,7 +2187,7 @@
   				}
   			}
   		}
-  	}
+  	 }
     }
 
     function clearVoucherData(){

@@ -1,10 +1,13 @@
 package com.coway.trust.biz.misc.voucher;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -44,12 +47,11 @@ public interface VoucherService {
 
 	EgovMap getVoucherInfo(Map<String, Object> params);
 
-	void sendEmail(Map<String, Object> params);
+	void sendEmail(Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException;
 
 	List<EgovMap> getVoucherListForExcel(Map<String, Object> params);
 
 	ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO);
 
-	List<EgovMap> getUnsendBatchEmailVoucherInfo();
-
+	List<EgovMap> getPendingEmailSendInfo();
 }

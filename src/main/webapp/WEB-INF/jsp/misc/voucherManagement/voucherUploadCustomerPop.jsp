@@ -27,6 +27,26 @@
 		dataField : "2",
 		headerText : "Sales Order No",
 		editable : false
+	}, {
+		dataField : "3",
+		headerText : "Customer Name",
+		editable : false
+	}, {
+		dataField : "4",
+		headerText : "Customer Contact",
+		editable : false
+	}, {
+		dataField : "5",
+		headerText : "Product",
+		editable : false
+	}, {
+		dataField : "6",
+		headerText : "Obligation",
+		editable : false
+	}, {
+		dataField : "7",
+		headerText : "Free Item",
+		editable : false
 	} ];
 
 	var voucherCsvUploadGridPros = {
@@ -252,6 +272,18 @@
 				if (fn_checkMandatory((AUIGrid.getCellValue(
 						voucherCsvUploadGridID, i, "2")))) {
 					var text = 'Order ID';
+					Common.alert(text + " is mandatory.");
+					return false;
+				}
+				if (fn_checkMandatory((AUIGrid.getCellValue(
+						voucherCsvUploadGridID, i, "3")))) {
+					var text = 'Customer Name';
+					Common.alert(text + " is mandatory.");
+					return false;
+				}
+				if (fn_checkMandatory((AUIGrid.getCellValue(
+						voucherCsvUploadGridID, i, "4")))) {
+					var text = 'Customer Contact';
 					Common.alert(text + " is mandatory.");
 					return false;
 				}

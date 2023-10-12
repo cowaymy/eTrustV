@@ -368,7 +368,8 @@
              , MEGA_DEAL
              , E_SALES
              , ADV_DISC
-             , STK_SIZE)
+             , STK_SIZE
+             , VOUCHER_PROMOTION)
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -402,7 +403,8 @@
              , #{megaDeal}
              , #{promoESales}
              , #{advDisc}
-             , #{stkSize})
+             , #{stkSize}
+             , #{voucherPromotion})
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -498,6 +500,7 @@
              , T1.E_SALES
              , T1.ADV_DISC
              , T1.STK_SIZE
+             , T1.VOUCHER_PROMOTION
           FROM SAL0017D T1
          WHERE T1.PROMO_ID = #{promoId}
     </select>
@@ -698,6 +701,7 @@
              , E_SALES                 = #{promoESales}
              , ADV_DISC                = #{advDisc}
              , STK_SIZE                = #{stkSize}
+             , VOUCHER_PROMOTION = #{voucherPromotion}
          WHERE PROMO_ID                = #{promoId}
     </update>
 
@@ -915,6 +919,7 @@
              , E_SALES
              , ADV_DISC
              , STK_SIZE
+             , VOUCHER_PROMOTION
              , ACTION_TAB
              , APPV_STUS
              , APPV_USER_ID
@@ -952,6 +957,7 @@
              , #{promoESales}
              , #{advDisc}
              , #{stkSize}
+             , #{voucherPromotion}
              , #{actionTab}
              , 60
              , null
@@ -1044,6 +1050,7 @@
              , T4.NAME STATUS
              , T1.STK_SIZE STK_SIZE
              , T1.ACTION_TAB
+             , T1.VOUCHER_PROMOTION
           FROM SAL0358M T1
           LEFT JOIN SYS0047M U1 ON U1.USER_ID = T1.CRT_USER_ID
           LEFT JOIN SYS0047M U2 ON U2.USER_ID = T1.APPV_USER_ID
@@ -1113,6 +1120,7 @@
              , T1.ACTION_TAB
              , T1.APPV_STUS AS APPV_STATUS
              , T1.REMARK AS APPV_REMARK
+             , T1.VOUCHER_PROMOTION
           FROM SAL0358M T1
           LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
          WHERE T1.PROMO_REQST_ID = #{promoReqstId}

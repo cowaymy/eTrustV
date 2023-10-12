@@ -67,6 +67,13 @@ var userType = "${userType}";
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
 
+        if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
+        	$('#voucherCode').val('${preOrderInfo.voucherInfo.voucherCode}');
+        	$('#voucherEmail').val('${preOrderInfo.voucherInfo.custEmail}');
+        	$('#voucherType').val('${preOrderInfo.voucherInfo.platformId}');
+    	  	voucherAppliedStatus = 1;
+        }
+
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
         fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
@@ -92,8 +99,6 @@ var userType = "${userType}";
             $("#corpCustType").prop("disabled", true);
             $("#agreementType").prop("disabled", true);
         }
-
-        applyCurrentUsedVoucher();
     });
 
     function createAUIGridStk() {
@@ -1503,8 +1508,9 @@ var userType = "${userType}";
                     Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
                 },
                 function(jqXHR, textStatus, errorThrown) {
+                	var errMsg = jqXHR.responseJSON.message;
                     try {
-                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order. " + errMsg + "</b>");
                     }
                     catch (e) {
                         console.log(e);
@@ -1727,11 +1733,11 @@ var userType = "${userType}";
         if(appTypeVal == "66") isSrvPac = "Y";
 
         if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' >= '2019') {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
         }
         else
         {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
         }
         //doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
@@ -1945,7 +1951,6 @@ var userType = "${userType}";
                 $('#scPreOrdArea').removeClass("blind");
 
                 var custInfo = result[0];
-
                 console.log("성공.");
                 console.log("custId : " + result[0].custId);
                 console.log("userName1 : " + result[0].name);
@@ -2083,7 +2088,8 @@ var userType = "${userType}";
                 ,exTrade:'${preOrderInfo.exTrade}'
                 ,srvPacId:'${preOrderInfo.srvPacId}'
                 ,promoId:'${preOrderInfo.promoId}'
-                ,isSrvPac:('${preOrderInfo.appTypeId}' == 66 ? 'Y' : '')}
+                ,isSrvPac:('${preOrderInfo.appTypeId}' == 66 ? 'Y' : '')
+                ,voucherPromotion: voucherAppliedStatus}
                 ,'${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
         else
@@ -2093,7 +2099,8 @@ var userType = "${userType}";
                 ,empChk:'${preOrderInfo.empChk}'
                 ,promoCustType:vCustTypeId
                 ,exTrade:'${preOrderInfo.exTrade}'
-                ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                ,srvPacId:'${preOrderInfo.srvPacId}'
+                ,voucherPromotion: voucherAppliedStatus}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
 
 
@@ -2603,8 +2610,7 @@ var userType = "${userType}";
 
   	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
   	        		if(result.length > 0){
-  	        			voucherPromotionId = result;
-  	        			voucherPromotionCheck();
+ 	        			voucherPromotionId = result;
   	        		}
   	        		else{
   	        			//reset everything
@@ -2667,16 +2673,17 @@ var userType = "${userType}";
     function applyCurrentUsedVoucher(){
 	  	voucherAppliedStatus = 1;
 	  	var voucherCode = $('#voucherCode').val();
-    	var voucherEmail $('#voucherEmail').val();
+    	var voucherEmail = $('#voucherEmail').val();
   		$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
     	voucherAppliedCode = voucherCode;
     	voucherAppliedEmail = voucherEmail;
   		$('#voucherMsg').show();
+  		displayVoucherSection();
 
 	  	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
 	  		if(result.length > 0){
 	  			voucherPromotionId = result;
-	  			voucherPromotionCheck();
+  				voucherPromotionCheck();
 	  		}
 	  		else{
 	  			//reset everything

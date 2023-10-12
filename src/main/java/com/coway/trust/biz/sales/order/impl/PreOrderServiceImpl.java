@@ -137,7 +137,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		String existingVoucherCode = preOrderMapper.selectExistingSalesVoucherCode(preOrderVO);
+		String existingVoucherCode = CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(preOrderVO));
 		String currentVoucherCode = preOrderVO.getVoucherCode();
 
 		/*
@@ -149,7 +149,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 				this.checkVoucherValideKeyIn(currentVoucherCode);
 			}
 			else{
-				if(existingVoucherCode.equals(currentVoucherCode) == false){
+				if(existingVoucherCode != null && existingVoucherCode.equals(currentVoucherCode) == false){
 					this.checkVoucherValideKeyIn(currentVoucherCode);
 				}
 			}

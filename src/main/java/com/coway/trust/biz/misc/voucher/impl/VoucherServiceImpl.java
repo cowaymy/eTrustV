@@ -1,5 +1,6 @@
 package com.coway.trust.biz.misc.voucher.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,10 @@ import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -246,6 +251,7 @@ public class VoucherServiceImpl implements VoucherService {
 			SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> campaignParam = new HashMap<String, Object>();
+		ObjectMapper mapper = new ObjectMapper();
 		campaignParam.put("campaignId", campaignId);
 
 		int editable = voucherMapper.isCampaignEditable(campaignParam);
@@ -296,6 +302,11 @@ public class VoucherServiceImpl implements VoucherService {
 			data.put("voucherCode", params.get(i).get("voucherCode"));
 			data.put("custEmail", params.get(i).get("custEmail"));
 			data.put("ordId", params.get(i).get("orderId"));
+			data.put("custName", params.get(i).get("custName"));
+			data.put("custContact", params.get(i).get("contact"));
+			data.put("product", params.get(i).get("productName"));
+			data.put("obligation", params.get(i).get("obligation"));
+			data.put("free", params.get(i).get("freeItem"));
 			data.put("mailId", mailIDNextVal);
 			voucherMapper.updateVoucherCustomerInfo(data);
 
@@ -306,14 +317,28 @@ public class VoucherServiceImpl implements VoucherService {
 			emailParam.put("voucherCode", params.get(i).get("voucherCode"));
 			emailParam.put("custEmail", params.get(i).get("custEmail"));
 			emailParam.put("ordId", params.get(i).get("orderId"));
-			emailParam.putAll(voucherMapper.getVoucherEmailAdditionalInfo(params.get(i)));
+			emailParam.put("custName", params.get(i).get("custName"));
+			emailParam.put("custContact", params.get(i).get("contact"));
+			emailParam.put("product", params.get(i).get("productName"));
+			emailParam.put("obligation", params.get(i).get("obligation"));
+			emailParam.put("free", params.get(i).get("freeItem"));
+			if(params.get(i).get("freeItem") != null && params.get(i).get("freeItem").toString() != ""){
+				emailParam.put("freeItemDisplay", "block");
+			}
+			else{
+				emailParam.put("freeItemDisplay", "none");
+			}
 
-			String test = emailParam.toString();
 			Map<String,Object> masterEmailDet = new HashMap<String, Object>();
 			masterEmailDet.put("mailId", mailIDNextVal);
 			masterEmailDet.put("emailType",AppConstants.EMAIL_TYPE_TEMPLATE);
 			masterEmailDet.put("templateName", AppConstants.E_VOUCHER_RECEIPT_BATCH_TEMPLATE);
-			masterEmailDet.put("emailParams", emailParam.toString());
+			try {
+				masterEmailDet.put("emailParams", mapper.writeValueAsString(emailParam));
+			} catch (JsonProcessingException e) {
+				throw new ApplicationException(AppConstants.FAIL,
+						"Unable to trigger email sender. Please inform IT.");
+			}
 			masterEmailDet.put("email", params.get(i).get("custEmail"));
 			masterEmailDet.put("emailSentStus", 1);
 			masterEmailDet.put("name", "");
@@ -373,20 +398,27 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
-	public List<EgovMap> getUnsendBatchEmailVoucherInfo(){
-		return voucherMapper.getUnsendBatchEmailVoucherInfo();
+	public List<EgovMap> getPendingEmailSendInfo(){
+		return voucherMapper.getPendingEmailSendInfo();
 	}
 
 	@Override
-	public void sendEmail(Map<String, Object> params){
+	public void sendEmail(Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException{
+	    ObjectMapper mapper = new ObjectMapper();
+	    Map<String, Object> additionalParam = new HashMap();
 		EmailVO email = new EmailVO();
-		String emailTitle = "[COWAY] E-VOUCHER VERIFICATION CODE";
-
-
-	    Map<String, Object> additionalParam = (Map<String, Object>) voucherMapper.getVoucherEmailAdditionalInfo(params);
-	    params.putAll(additionalParam);
+		String emailSubject = CommonUtils.nvl(params.get("emailSubject"));
 
 		List<String> emailNo = new ArrayList<String>();
+	    if (!"".equals(params.get("email"))) {
+		      emailNo.add(params.get("email").toString());
+		}
+
+
+	    if(params.get("emailParams") != null && params.get("emailParams").toString() != ""){
+		    additionalParam = mapper.readValue(params.get("emailParams").toString(),Map.class);
+			 params.putAll(additionalParam);
+	    }
 
 	    if (!"".equals(CommonUtils.nvl(params.get("custEmail")))) {
 	      emailNo.add(CommonUtils.nvl(params.get("custEmail")));
@@ -395,7 +427,7 @@ public class VoucherServiceImpl implements VoucherService {
 	    if(emailNo.size() > 0 && additionalParam != null){
 		    email.setTo(emailNo);
 		    email.setHtml(true);
-		    email.setSubject(emailTitle);
+		    email.setSubject(emailSubject);
 		    email.setHasInlineImage(true);
 
 		    boolean isResult = false;
