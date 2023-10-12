@@ -129,7 +129,7 @@ public class ChatbotSurveyMgmtController {
 
 		LOGGER.debug("=============== saveSurveyDetail ===============");
 		LOGGER.debug("params =====================================>>  " + params);
-//		surveyDetList =  chatbotSurveyMgmtService.saveSurveyDetail(params);
+
 		chatbotSurveyMgmtService.saveSurveyDetail(params,sessionVO);
 		// 데이터 리턴.
 		ReturnMessage message = new ReturnMessage();
@@ -147,20 +147,7 @@ public class ChatbotSurveyMgmtController {
 		LOGGER.debug("params =====================================>>  " + params);
 
 		Map<String, Object> returnVal = chatbotSurveyMgmtApiService.pushSurveyQues(params, request);
-//		ChatbotVO returnVal = chatbotSurveyMgmtApiService.pushSurveyQues(params, request);
 
 		return ResponseEntity.ok(returnVal);
 	}
-
-//	@RequestMapping(value = "/pushSurveyeeList.do", method = RequestMethod.POST)
-//	public ResponseEntity<Map<String, Object>> pushSurveyeeList(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
-//
-//		LOGGER.debug("=============== pushSurveyeeList ===============");
-//		LOGGER.debug("params =====================================>>  " + params);
-//
-//		Map<String, Object> returnVal = chatbotSurveyMgmtApiService.pushSurveyeeList(params, request);
-////		ChatbotVO returnVal = chatbotSurveyMgmtApiService.pushSurveyQues(params, request);
-//
-//		return ResponseEntity.ok(returnVal);
-//	}
 }

@@ -84,9 +84,11 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
 
         //Get target question  SURV_ID
        	Object[] survIdList= chatbotSurveyMgmtMapper.getTargetQuestionSurvID(updateInfo).toArray();
-        String[] survIdArray = Arrays.copyOf(survIdList, survIdList.length, String[].class);
-        params.put("survIdArray", survIdArray);
-        chatbotSurveyMgmtMapper.updateTargetAnsYn(params);
+       	if(survIdList.length > 0){
+            String[] survIdArray = Arrays.copyOf(survIdList, survIdList.length, String[].class);
+            params.put("survIdArray", survIdArray);
+            chatbotSurveyMgmtMapper.updateTargetAnsYn(params);
+       	}
 
 
         //INSERT NEW SURVEY QUETION
