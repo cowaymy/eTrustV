@@ -236,7 +236,7 @@
     });
   }
 
-  function fn_checkAccessModify(tabNm) {
+/*   function fn_checkAccessModify(tabNm) {
 
       var isValid = true, msg = "";
 
@@ -266,20 +266,19 @@
       Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
 
       return isValid;
-  }
+  } */
 
     $(function() {
         $('#btnEditType').click(function() {
             var tabNm = $('#ordEditType').val();
-            fn_checkAccessModify(TAB_NM);
+            //fn_checkAccessModify(TAB_NM);
 
             if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
                 Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             }
-
-            /* else {
+            else {
                 fn_changeTab(tabNm);
-            } */
+            }
         });
 
         // Save Basic Info
