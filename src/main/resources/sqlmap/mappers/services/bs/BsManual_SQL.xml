@@ -5381,6 +5381,12 @@ WHERE
              ]]>
 	</select>
 
+	<select id="checkDuplicateReverse" parameterType="Map" resultType="int">
+	   SELECT COUNT(*) FROM (
+		   SELECT RESULT_MTCH_ID, ROW_NUMBER() OVER (ORDER BY RESULT_ID DESC) R FROM SVC0006D WHERE SCHDUL_ID = #{schdulId}
+	   ) WHERE R = 1 AND RESULT_MTCH_ID <![CDATA[ <> ]]> 0
+	</select>
+
 	<select id="checkHsBillASInfoPass" parameterType="Map"
 		resultType="egovMap">
     <![CDATA[
