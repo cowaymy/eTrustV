@@ -92,15 +92,35 @@
 		dataField : "voucherCode",
 		headerText : 'Voucher',
 		style : "aui-grid-user-custom-left"
+	},{
+		dataField : "ordId",
+		headerText : 'Order ID',
+		style : "aui-grid-user-custom-left"
 	}, {
 		dataField : "custEmail",
 		headerText : 'Customer Email',
 		style : "aui-grid-user-custom-left"
 	}, {
-		dataField : "ordId",
-		headerText : 'Order ID',
+		dataField : "custName",
+		headerText : 'Customer Name',
+		style : "aui-grid-user-custom-left"
+	},{
+		dataField : "custContact",
+		headerText : 'Customer Contact',
 		style : "aui-grid-user-custom-left"
 	}, {
+		dataField : "product",
+		headerText : 'Product',
+		style : "aui-grid-user-custom-left"
+	},{
+		dataField : "obligation",
+		headerText : 'Obligation',
+		style : "aui-grid-user-custom-left"
+	}, {
+		dataField : "freeItem",
+		headerText : 'Free Item',
+		style : "aui-grid-user-custom-left"
+	},{
 		dataField : "stusName",
 		headerText : 'Status',
 		style : "aui-grid-user-custom-left"
