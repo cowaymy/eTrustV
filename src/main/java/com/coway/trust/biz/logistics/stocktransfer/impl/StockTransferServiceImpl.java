@@ -459,7 +459,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 						imap = (Map<String, Object>) map.get("item");
 
 						String docno = (String) imap.get("docno");
-						if (!docno.isEmpty()) {
+						if (docno != null && !docno.isEmpty()) {
 							Map<String, Object> insDetailsprm = new HashMap<String, Object>();
 							insDetailsprm.put("refdocno", docno);
 							EgovMap insDetails = stocktran.selectDeliveryInsDet(insDetailsprm);
