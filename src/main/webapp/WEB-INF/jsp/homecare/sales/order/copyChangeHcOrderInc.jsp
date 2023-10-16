@@ -112,6 +112,11 @@
                 $('#refereNo').val('');
 
                 $('#ordPromo1, #ordPromo2').removeAttr("disabled");
+
+                var voucherAppliedStatus = 0;
+                if('${orderInfo.basicInfo.voucherInfo}' != null && '${orderInfo.basicInfo.voucherInfo}' != ""){
+				  	voucherAppliedStatus = 1;
+			    }
                 /* var month = '${orderInfo.basicInfo.month}';
                 var year = '${orderInfo.basicInfo.year}';
                 var date = year + month;
@@ -148,7 +153,8 @@
                              , promoCustType:$("#typeId").val()
                              , exTrade:'${orderInfo.basicInfo.exTrade}'
                              , srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                             , promoId:'${orderInfo.basicInfo.ordPromoId}'}
+                             , promoId:'${orderInfo.basicInfo.ordPromoId}'
+                             , voucherPromotion: voucherAppliedStatus}
                              , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
                              , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
@@ -171,7 +177,8 @@
                              , promoCustType:$("#typeId").val()
                              , exTrade:'${orderInfo2.basicInfo.exTrade}'
                              , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
-                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'}
+                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'
+                             , voucherPromotion: voucherAppliedStatus}
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
@@ -199,7 +206,8 @@
                              , exTrade:'${orderInfo.basicInfo.exTrade}'
                              , srvPacId:'${orderInfo.basicInfo.srvPacId}'
                              , isSrvPac:'Y'
-                             , promoId:'${orderInfo.basicInfo.ordPromoId}'}
+                             , promoId:'${orderInfo.basicInfo.ordPromoId}'
+                             , voucherPromotion: voucherAppliedStatus}
                              , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
                              , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
@@ -223,7 +231,8 @@
                              , exTrade:'${orderInfo2.basicInfo.exTrade}'
                              , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
                              , isSrvPac:'Y'
-                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'}
+                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'
+                             , voucherPromotion: voucherAppliedStatus}
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
