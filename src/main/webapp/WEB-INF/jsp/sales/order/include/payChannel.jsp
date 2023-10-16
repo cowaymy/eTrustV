@@ -33,14 +33,14 @@
     <td><span></span></td>
     <th scope="row"><spring:message code="sal.text.creditCardNo" /></th>
     <td><span>
-        <choose>
-        <when test="${orderDetail.rentPaySetInf.payModeId == 135}">
+        <c:choose>
+        <c:when test="${orderDetail.rentPaySetInf.payModeId == 135}">
             ${orderDetail.rentPaySetInf.pnprpsCrcNo}
-        </when>
-        <otherwise>
+        </c:when>
+        <c:otherwise>
             ${orderDetail.rentPaySetInf.rentPayCrcNo}
-        </otherwise>
-        </choose>
+        </c:otherwise>
+        </c:choose>
     </span></td>
     <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayCrOwner}</span></td>

@@ -1170,9 +1170,14 @@ ORDER BY PC.CRT_DT ASC
                    FAIL_RESN_ID = null,
                    UPD_USER_ID = #{userId},
                    UPD_DT = SYSDATE,
-                   <if test="modeId == 135">
-                     PNPRPS_CRC_NO = #{tknId},
-                   </if>
+                   <choose>
+                    <when test="modeId == 135">
+                        PNPRPS_CRC_NO = #{tknId},
+                    </when>
+                    <otherwise>
+                        PNPRPS_CRC_NO = NULL,
+                    </otherwise>
+                 </choose>
                    GRACE_PERIOD = 0,
                    DEDUCT_ACC_ID = 0
 
