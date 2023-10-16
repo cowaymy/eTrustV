@@ -146,6 +146,11 @@
 
                 //$('#ordPromo').removeAttr("disabled");
                 //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
+                var voucherAppliedStatus = 0;
+                if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
+				  	voucherAppliedStatus = 1;
+			    }
+
                 if(date >= 201907) {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                         ,stkId:'${preOrderInfo.itmStkId}'
@@ -153,7 +158,8 @@
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
-                        ,promoId:'${preOrderInfo.promoId}'}
+                        ,promoId:'${preOrderInfo.promoId}'
+                        ,voucherPromotion: voucherAppliedStatus}
                         , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -163,7 +169,8 @@
                         ,empChk:'${preOrderInfo.empChk}'
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${preOrderInfo.exTrade}'
-                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                        ,srvPacId:'${preOrderInfo.srvPacId}'
+                        ,voucherPromotion: voucherAppliedStatus}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
 
 

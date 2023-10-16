@@ -122,6 +122,11 @@
                     $("#isReturnExtrade").prop("checked", false);
                 }
 
+                var voucherAppliedStatus = 0;
+                if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
+				  	voucherAppliedStatus = 1;
+			    }
+
                 // Set Mattress Promotion
                 if($("#ordProduct1 option:selected").index() > 0) {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
@@ -130,7 +135,8 @@
                         , promoCustType:$("#typeId").val()
                         , exTrade:'${preMatOrderInfo.exTrade}'
                         , srvPacId:'${preMatOrderInfo.srvPacId}'
-                        , promoId:'${preMatOrderInfo.promoId}'}
+                        , promoId:'${preMatOrderInfo.promoId}'
+                        , voucherPromotion: voucherAppliedStatus}
                         , '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
@@ -153,7 +159,8 @@
                         , promoCustType:$("#typeId").val()
                         , exTrade:'${preFrmOrderInfo.exTrade}'
                         , srvPacId:'${preFrmOrderInfo.srvPacId}'
-                        , promoId:'${preFrmOrderInfo.promoId}'}
+                        , promoId:'${preFrmOrderInfo.promoId}'
+                        , voucherPromotion: voucherAppliedStatus}
                         , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
                     $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
