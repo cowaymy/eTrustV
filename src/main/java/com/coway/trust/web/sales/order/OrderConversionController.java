@@ -356,7 +356,10 @@ public class OrderConversionController {
 
 	@RequestMapping(value = "/paymodeConversion.do")
 	public String paymodeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
-		logger.info("###################### New ###############");
+
+	  System.out.println(params);
+	  model.addAttribute("isPNP",params.get("isPNP").toString());
+
 		return "sales/order/paymodeConvertNewPop";
 	}
 
@@ -415,6 +418,54 @@ public class OrderConversionController {
 		return ResponseEntity.ok(cnt);
 	}
 
+	@RequestMapping(value = "/orderConversionListPNP.do")
+	public String orderConversionListPNPRPS(@RequestParam Map<String, Object>params, ModelMap model) {
+	  return "payment/cardpayment/payModeConversionPNPList";
+	}
+
+	@RequestMapping(value = "/paymodeConversionPNP.do")
+	public String paymodeConversionPNPRPS(@RequestParam Map<String, Object>params, ModelMap model) {
+	  return "payment/cardpayment/paymodeConvertNewPNPPop";
+	}
+
+	@RequestMapping(value = "/chkPayCnvrListPnp", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> chkPayCnvrListPnp (@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+	  params.put("userId", sessionVO.getUserId());
+
+	  List<EgovMap> chkList = orderConversionService.chkPayCnvrListPnp(params);
+
+	  ReturnMessage message = new ReturnMessage();
+	  message.setCode(AppConstants.SUCCESS);
+	  message.setData(chkList);
+	  message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	  return ResponseEntity.ok(message);
+
+	}
+
+	 @RequestMapping(value = "/savePayConvertListPnp", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> savePayConvertListPnp (@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+	    params.put("userId", sessionVO.getUserId());
+	    orderConversionService.savePayConvertListPnp(params);
+
+	      ReturnMessage message = new ReturnMessage();
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	      return ResponseEntity.ok(message);
+	  }
+
+	 @RequestMapping(value = "/paymodeConversionDetailPNPPop.do")
+	  public String paymodeConversionPnpDetailPop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+	   EgovMap cnvrInfo = orderConversionService.paymodeConversionView(params);
+
+	    model.addAttribute("cnvrInfo", cnvrInfo);
+
+	    return "payment/cardpayment/paymodeConversionDetailPNPPop";
+	  }
 
 
 }

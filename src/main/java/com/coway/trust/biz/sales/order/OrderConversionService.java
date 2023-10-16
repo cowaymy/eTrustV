@@ -51,4 +51,9 @@ public interface OrderConversionService {
 
 	int countPaymodeCnvrExcelList(Map<String, Object> params);
 
+
+
+	List<EgovMap> chkPayCnvrListPnp(Map<String, Object> params);
+	void savePayConvertListPnp(Map<String, Object> params);
+
 }

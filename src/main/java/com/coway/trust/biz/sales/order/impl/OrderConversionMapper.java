@@ -89,7 +89,9 @@ public interface OrderConversionMapper {
 
 	List<EgovMap> selectOrdPayCnvrList(Map<String, Object> params);
 
-   	int countPaymodeCnvrExcelList(Map<String, Object> params);
+  int countPaymodeCnvrExcelList(Map<String, Object> params);
 
+  EgovMap pnpOrderCnvrInfo(Map<String, Object> params);
 
+  void updSalesSAL0074D(Map<String, Object> params);
 }

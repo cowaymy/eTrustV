@@ -266,6 +266,7 @@ public void savePayConvertList(Map<String, Object> params) {
 		params.put("totalItm", total);
 		params.put("payCnvrRem", formData.get("newCnvrRem"));
 		params.put("payCnvrAttachURL", "");
+    params.put("isPnp", 0);
 
 		orderConversionMapper.insertCnvrSAL0234D(params);
 
@@ -278,6 +279,7 @@ public void savePayConvertList(Map<String, Object> params) {
 			params.put("cntrctNo",  ((Map<String, Object>) obj).get("srvCntrctRefNo"));
 			params.put("remark",  ((Map<String, Object>) obj).get("reason"));
 			params.put("status", 4);
+			params.put("validRem","");
 
 			orderConversionMapper.insertCnvrSAL0235D(params);
 
@@ -341,9 +343,115 @@ public List<EgovMap> selectOrdPayCnvrList(Map<String, Object> params) {
 	return orderConversionMapper.selectOrdPayCnvrList(params);
 }
 
-@Override
 public int countPaymodeCnvrExcelList(Map<String, Object> params) {
-	// TODO Auto-generated method stub
 	return orderConversionMapper.countPaymodeCnvrExcelList(params);
 }
+
+  @Override
+  public List<EgovMap> chkPayCnvrListPnp(Map<String, Object> params) {
+
+    List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+    Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+
+    EgovMap result = new EgovMap();
+
+    String msg = null;
+
+    Map<String, Object> map = new HashMap();
+
+    List checkList = new ArrayList();
+
+    for (Object obj : list)
+    {
+      Map<String, Object> o = (Map<String, Object>) obj;
+
+      String cardNo = null;
+      String validRemark = null;
+
+      o.put("userId", params.get("userId"));
+
+      if(!StringUtils.isEmpty(o.get("0").toString())){
+
+        cardNo = o.get("2").toString();
+
+        o.put("orderNo", o.get("0"));
+        o.put("reason", o.get("1"));
+        o.put("cardNo", cardNo);
+
+        EgovMap info = orderConversionMapper.pnpOrderCnvrInfo(o);
+
+        if(info != null){
+          o.put("orderId", info.get("ordId"));
+
+          if( info.get("modeId").toString().equals(formData.get("payCnvrStusTo").toString()) && info.get("pnprpsCrcNo").toString().equals(cardNo))
+            validRemark = "Paymode Unchanged";
+
+        }else{
+          validRemark = "Invalid Order Number";
+        }
+
+        if( !cardNo.matches("^[0-9]{6}[*]{6}[0-9]{4}$") || cardNo.length() != 16 )
+          validRemark = "Invalid Card Number";
+
+        o.put("validRemark", validRemark);
+
+        checkList.add(o);
+      }
+    }
+    return checkList;
+  }
+
+  public void savePayConvertListPnp(Map<String, Object> params) {
+
+    List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+    Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+
+    int total = list.size();
+    String convertFrom = String.valueOf(formData.get("payCnvrStusFrom"));
+    String convertTo = String.valueOf(formData.get("payCnvrStusTo"));
+
+    params.put("docNoId", 167);
+    String convertNo = membershipRSMapper.getDocNo(params);
+
+    int crtSeqSAL0234D = orderConversionMapper.crtSeqSAL0234D();
+    params.put("payCnvrId", crtSeqSAL0234D);
+    params.put("payCnvrNo", convertNo);
+    params.put("payStusId", 1);
+    params.put("payCnvrStusId", 4);
+    params.put("payStusFrom", formData.get("payCnvrStusFrom"));
+    params.put("payStusTo", formData.get("payCnvrStusTo"));
+    params.put("totalItm", total);
+    params.put("payCnvrRem", formData.get("newCnvrRem"));
+    params.put("payCnvrAttachURL", "");
+    params.put("isPnp", formData.get("hiddenIsPnp"));
+
+    orderConversionMapper.insertCnvrSAL0234D(params);
+
+    for (Object obj : list)
+    {
+      Map<String, Object> o = (Map<String, Object>) obj;
+
+      int status  = o.get("validRemark") != null ? 6 : 4;
+      int modeId  = params.get("payStusTo").toString().equals("PNP") ? 135 : 130 ;
+
+      params.put("tknId",     o.get("cardNo"));
+      params.put("ordId",     o.get("orderId"));
+      params.put("ordNo",     o.get("orderNo"));
+      params.put("cntrctId",  0);
+      params.put("cntrctNo",  0);
+      params.put("remark",    o.get("reason"));
+      params.put("validRemark",  o.get("validRemark"));
+      params.put("status", status);
+      params.put("modeId", modeId);
+
+      orderConversionMapper.insertCnvrSAL0235D(params);
+
+      if(status == 4){
+        orderConversionMapper.updSAL0001D(params);
+        orderConversionMapper.updSalesSAL0074D(params);
+      }
+
+    }
+  }
+
 }

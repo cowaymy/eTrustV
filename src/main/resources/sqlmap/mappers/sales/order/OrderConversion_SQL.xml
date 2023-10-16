@@ -356,7 +356,7 @@
     </update>
 
     <select id="orderCnvrInfo" parameterType="Map" resultType="egovMap">
-        SELECT a.ORD_ID, a.ORD_NO, a.ORD_STUS_ID, a.ORD_STUS_CODE, a.APP_TYPE_ID, a.APP_TYPE_CODE, a.RENTAL_STUS, c.CODE, c.CODE_NAME
+        SELECT a.ORD_ID, a.ORD_NO, a.ORD_STUS_ID, a.ORD_STUS_CODE, a.APP_TYPE_ID, a.APP_TYPE_CODE, a.RENTAL_STUS, c.CODE, c.CODE_NAME, B.PNPRPS_CRC_NO
 		  FROM SAL1006V a
 		  LEFT JOIN SAL0074D b on b.SALES_ORD_ID = a.ORD_ID
 		  LEFT JOIN SYS0013M c on c.CODE_ID = b.MODE_ID
@@ -447,11 +447,11 @@
         INSERT INTO SAL0234D
               ( PAY_CNVR_ID, PAY_CNVR_NO, PAY_STUS_ID, PAY_CNVR_STUS_ID, PAY_CNVR_STUS_FROM
               , PAY_CNVR_STUS_TO, PAY_CNVR_TOTAL_ITM, PAY_CNVR_CRT_USER_ID, PAY_CNVR_CRT_DT
-              , PAY_CNVR_UPD_USER_ID, PAY_CNVR_UPD_DT, PAY_CNVR_REM, PAY_CNVR_ATTACH_URL )
+              , PAY_CNVR_UPD_USER_ID, PAY_CNVR_UPD_DT, PAY_CNVR_REM, PAY_CNVR_ATTACH_URL, IS_PNP )
         VALUES
               ( #{payCnvrId}, #{payCnvrNo}, #{payStusId}, #{payCnvrStusId}, #{payStusFrom}
               , #{payStusTo}, #{totalItm}, #{userId}, SYSDATE, #{userId}
-              , SYSDATE, #{payCnvrRem}, #{payCnvrAttachURL} )
+              , SYSDATE, #{payCnvrRem}, #{payCnvrAttachURL}, #{isPnp} )
      </insert>
 
      <insert id="insertCnvrSAL0235D" parameterType="Map">
@@ -468,8 +468,9 @@
                 PAY_CNVR_ITM_CRT_USER_ID,
                 PAY_CNVR_ITM_CRT_DT,
                 PAY_CNVR_ITM_UPD_USER_ID,
-                PAY_CNVR_ITM_UPD_DT
-
+                PAY_CNVR_ITM_UPD_DT,
+                PAY_CNVR_ITM_VALID_REM,
+                PAY_CNVR_ITM_CARD_NO
              )
              VALUES
              (
@@ -484,7 +485,9 @@
                  #{userId},
                  SYSDATE,
                  #{userId},
-                 SYSDATE
+                 SYSDATE,
+                 #{validRemark},
+                 #{tknId}
 
              )
     </insert>
@@ -915,6 +918,14 @@
                  <if test="convRem != null and convRem != ''">
                      AND UPPER(Extent1.PAY_CNVR_REM) LIKE '%' || UPPER(#{batchRem}) || '%'
                  </if>
+                 <choose>
+                    <when test="isPnp != null">
+                        AND Extent1.IS_PNP = 1
+                    </when>
+                    <otherwise>
+                        AND Extent1.IS_PNP = 0
+                    </otherwise>
+                 </choose>
         ORDER BY Extent1.PAY_CNVR_NO ASC
     </select>
 
@@ -939,7 +950,8 @@
                                   Extent4.USER_ID USERID1  ,
                                   Extent4.USER_NAME USERNAME1  ,
                                   Extent5.USER_ID USERID2  ,
-                                  Extent5.USER_NAME USERNAME2
+                                  Extent5.USER_NAME USERNAME2,
+                                  Extent1.PAY_CNVR_ID
                          FROM SAL0234D Extent1
                                   JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.PAY_STUS_ID
                                   JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.PAY_CNVR_STUS_ID
@@ -964,7 +976,9 @@
                    TO_DATE(Extent1.PAY_CNVR_ITM_UPD_DT, 'dd/mm/yyyy')  PAY_CNVR_ITM_UPD_DT  ,
                    Extent2.CODE STATUS,
                    Extent3.USER_NAME  CREATOR ,
-                   Extent4.USER_NAME  UPDATOR
+                   Extent4.USER_NAME  UPDATOR ,
+                   Extent1.PAY_CNVR_ITM_VALID_REM,
+                   Extent1.PAY_CNVR_ITM_CARD_NO
               FROM SAL0235D Extent1
                      JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.PAY_CNVR_ITM_STUS
                      LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PAY_CNVR_ITM_CRT_USER_ID
@@ -1134,6 +1148,36 @@ ORDER BY PC.CRT_DT ASC
 )
     </select>
 
+    <select id="pnpOrderCnvrInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            a.ORD_ID, a.ORD_NO, B.PNPRPS_CRC_NO, b.MODE_ID
+        FROM SAL1006V a
+        LEFT JOIN SAL0074D b on b.SALES_ORD_ID = a.ORD_ID
+        WHERE ORD_NO = #{orderNo}
+    </select>
+
+    <update id="updSalesSAL0074D">
+        UPDATE SAL0074D
+        SET
+                   MODE_ID  = #{modeId},
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = '1900/01/01',
+                   DD_START_DT = '1900/01/01',
+                   DD_REJCT_DT = '1900/01/01',
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
+                   <if test="modeId == 135">
+                     PNPRPS_CRC_NO = #{tknId},
+                   </if>
+                   GRACE_PERIOD = 0,
+                   DEDUCT_ACC_ID = 0
+
+         WHERE SALES_ORD_ID = #{ordId}
+    </update>
 
 
 </mapper>
