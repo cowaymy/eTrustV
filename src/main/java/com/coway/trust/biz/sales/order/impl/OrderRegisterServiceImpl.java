@@ -2230,7 +2230,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
       try{
-        orderRegisterMapper.automatedCcpProcess(params);
+    	Map<String,Object> preccpParam = new HashMap();
+    	preccpParam.put("salesOrdId", salesOrderMVO.getSalesOrdId());
+    	EgovMap checkPreCcp= orderRegisterMapper.checkPreCcp(preccpParam);
+    	if(checkPreCcp != null){
+    		if(checkPreCcp.get("preccpChk").toString().equals("1")){
+    			 orderRegisterMapper.automatedCcpProcess(preccpParam);
+    		}
+    	}
       }catch(Exception e){
 
       }

@@ -235,5 +235,7 @@ public interface OrderRegisterMapper {
 
   Map<String, Object> automatedCcpProcess(Map<String, Object> params);
 
+  EgovMap checkPreCcp(Map<String, Object> params);
+
 
 }
