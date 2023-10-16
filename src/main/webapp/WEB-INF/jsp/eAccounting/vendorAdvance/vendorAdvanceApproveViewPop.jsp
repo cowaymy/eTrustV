@@ -253,14 +253,6 @@
 
             fn_setGridData(myGridID, myGridData);
 
-            if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J"){
-	            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-	                console.log(result);
-
-	                $("#finApprAct").show();
-	                $("#viewFinAppr").text(result.finalAppr);
-	            });
-            }
         } else if(myGridData[0].advType == 4 || myGridData[0].advType == 6) {
 
             $("#refTrvPeriod").text(myGridData[0].refTrvPrdFr + " To " + myGridData[0].refTrvPrdTo);
@@ -328,19 +320,7 @@
             $("#pApprove_btn").hide();
             $("#pReject_btn").hide();
 
-            $("#finApprAct").show();
-
-            if(myGridData[0].appvPrcssStus == "A") {
-                $("#rejectReasonRow").css("display", "none");
-            }
-
-            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-                console.log(result);
-
-                $("#viewFinAppr").text(result.finalAppr);
-            });
         } else {
-            $("#finApprAct").hide();
             if("${type}" == "view") {
                 $("#appvBtns").hide();
             }
@@ -548,18 +528,6 @@
                                 <input type="file" id="fileSelector" name="fileSelector" title="file add" accept=".rar, .zip" />
                             </div> -->
                         </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
-                        <td colspan="4" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
-                    </tr>
-                    <tr id="rejectReasonRow" style=display:none>
-                        <th scope="row">Reject Reason</th>
-                        <td colspan="4">${rejctResn}</td>
-                    </tr>
-                    <tr id="finApprAct">
-                        <th scope="row">Final Approver</th>
-                        <td colspan="4" id="viewFinAppr"></td>
                     </tr>
                 </table>
             </form>

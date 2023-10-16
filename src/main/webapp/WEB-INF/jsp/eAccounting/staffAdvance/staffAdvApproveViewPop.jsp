@@ -165,19 +165,7 @@
             $("#pApprove_btn").hide();
             $("#pReject_btn").hide();
 
-            $("#finApprAct").show();
-
-            if(myGridData[0].appvPrcssStus == "A") {
-                $("#rejectReasonRow").css("display", "none");
-            }
-
-            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-                console.log(result);
-
-                $("#viewFinAppr").text(result.finalAppr);
-            });
         } else {
-            $("#finApprAct").hide();
             if("${type}" == "view") {
                 $("#appvBtns").hide();
             }
@@ -458,20 +446,6 @@
                         <th scope="row">Repayment Due Date</th>
                         <td colspan="2">
                             <span id="viewTrvRefdDt"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
-                        <td colspan="2" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
-                    </tr>
-                    <tr id="rejectReasonRow">
-                        <th scope="row">Reject Reason</th>
-                        <td colspan="2">${rejctResn}</td>
-                    </tr>
-                    <tr id="finApprRow">
-                        <th scope="row">Final Approver</th>
-                        <td colspan="2">
-                            <span id="viewFinAppr"></span>
                         </td>
                     </tr>
                 </table>

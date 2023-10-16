@@ -249,16 +249,6 @@
 
             fn_setGridData(myGridID, myGridData);
 
-            if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J"){
-	            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-
-	                $("#finApprAct").show();
-	                $("#viewFinAppr").text(result.finalAppr);
-	                if("${type}" == "view"){
-	                	$("#viewHeader").text("View Submit");
-	                }
-	            });
-            }
         } else if(myGridData[0].advType == 4 || myGridData[0].advType == 6) {
 
         	$("#advAmtHeader").text("Total Expenses");
@@ -335,23 +325,12 @@
 
         fn_setGridData(approvalInfoGridId, approvalGridData);
 
-        if(myGridData[0].appvPrcssStus != "J") {
-            $("#rejectReasonRow").css("display", "none");
-        }
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#appvBtns").hide();
             $("#pApprove_btn").hide();
             $("#pReject_btn").hide();
 
-            $("#finApprAct").show();
-
-            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-
-                $("#viewFinAppr").text(result.finalAppr);
-                $("#viewRejctResn").text(result.rejctResn);
-            });
         } else {
-            $("#finApprAct").hide();
             if("${type}" == "view") {
                 $("#appvBtns").hide();
                 $("#viewHeader").text("View Submit");
@@ -595,18 +574,6 @@
                         <td colspan="4">
                             <span id="viewTrvRefdDt"></span>
                         </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
-                        <td colspan="4" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
-                    </tr>
-                    <tr id="rejectReasonRow">
-                        <th scope="row">Reject Reason</th>
-                        <td colspan="4" id="viewRejctResn">${rejctResn}</td>
-                    </tr>
-                    <tr id="finApprAct">
-                        <th scope="row">Final Approver</th>
-                        <td colspan="4" id="viewFinAppr"></td>
                     </tr>
                 </table>
             </form>

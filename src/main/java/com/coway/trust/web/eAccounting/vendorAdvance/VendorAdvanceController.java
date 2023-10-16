@@ -310,13 +310,6 @@ public class VendorAdvanceController {
         //if("6".equals(params.get("advType").toString()) && (!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString()))) {
         if(!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString())) {
             List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
-            for(int i = 0; i < appvLineInfo.size(); i++) {
-                EgovMap info = appvLineInfo.get(i);
-                if("J".equals(info.get("appvStus"))) {
-                    String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
-                    details.put("rejctResn", rejctResn);
-                }
-            }
 
             // Approval line + Approver's actions and date
             String appvPrcss = "";
@@ -530,10 +523,6 @@ public class VendorAdvanceController {
 
             String appvPrcssResult = String.valueOf(info.get("appvStus"));
             model.addAttribute("appvPrcssResult", appvPrcssResult);
-
-            if("J".equals(info.get("appvStus"))) {
-                rejctSeq = Integer.parseInt(info.get("appvLineSeq").toString());
-            }
         }
 
         if(!appvLineUserId.contains(memCode) && apprDtls != null) {
@@ -542,14 +531,6 @@ public class VendorAdvanceController {
 
         // TODO appvPrcssStus 생성
         String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
-
-        Map<String, Object> m1 = new HashMap<String, Object>();
-        m1.put("appvPrcssNo", params.get("appvPrcssNo"));
-        m1.put("appvLineSeq", rejctSeq);
-        if(rejctSeq != 0) {
-            String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(m1);
-            model.addAttribute("rejctResn", rejctResn);
-        }
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);
