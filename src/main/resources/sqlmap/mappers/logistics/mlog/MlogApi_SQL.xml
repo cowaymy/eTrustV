@@ -1447,6 +1447,7 @@
                LG54M.DELVRY_GI_DT GI_DATE,
                LG54M.DELVRY_GR_DT GR_DATE,
                SY28M.WH_LOC_DESC gi_Cust_Name,
+               SY28M_GR.WH_LOC_DESC gr_Cust_Name,
                LG47M.REQST_CRT_DT,
                LG47M.TRNSC_TYPE_DTL,
                ( SELECT WH_LOC_ID
@@ -1455,6 +1456,7 @@
                SY28M.SERIAL_REQUIRE_CHK_YN
     FROM LOG0047M LG47M,
              SYS0028M SY28M,
+             SYS0028M SY28M_GR,
              ( SELECT DISTINCT L55.REQST_NO ,
                                         L54.DELVRY_GI_DT ,
                                         L54.DELVRY_GR_DT
@@ -1467,13 +1469,16 @@
         AND LG47M.TRNSC_TYPE = 'UM'
         AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
 
-        <if test="reqStatus eq 'MRRL'.toString() ">
+        AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
+        AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
+
+        <!-- <if test="reqStatus eq 'MRRL'.toString() ">
           AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
         </if>
 
         <if test="reqStatus eq 'MROL'.toString() ">
            AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
-        </if>
+        </if> -->
 
         AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
 
