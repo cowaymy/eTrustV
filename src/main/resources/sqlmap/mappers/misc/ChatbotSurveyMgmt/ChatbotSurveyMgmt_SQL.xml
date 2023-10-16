@@ -205,8 +205,8 @@
 		    CTRL_USE_YN
 		FROM CBT0001M
 		WHERE 1=1
-		AND CTRL_USE_YN = 'Y'
-		AND CTRL_END_YYYYMM <![CDATA[ > ]]> TO_CHAR(SYSDATE, 'YYYYMM')
+<!-- 		AND CTRL_USE_YN = 'Y' -->
+		AND CTRL_END_YYYYMM <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMM')
     </select>
 
     <select id="getSurveyTargetQuesList" parameterType="Map" resultType="egovMap">
@@ -226,8 +226,8 @@
 		    SURV_QUES_YN
 		FROM CBT0002M
 		WHERE 1=1
-		AND SURV_QUES_YN = 'Y'
-		AND SURV_QUES_END <![CDATA[ > ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+<!-- 		AND SURV_QUES_YN = 'Y' -->
+		AND SURV_QUES_END <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
     </select>
 
     <select id="getSurveyTargetAnsList" parameterType="Map" resultType="egovMap">
@@ -242,7 +242,7 @@
 		    USE_YN
 		FROM CBT0003D
 		WHERE 1=1
-		AND USE_YN = 'Y'
+<!-- 		AND USE_YN = 'Y' -->
     </select>
     <!-- END API PART -->
 </mapper>

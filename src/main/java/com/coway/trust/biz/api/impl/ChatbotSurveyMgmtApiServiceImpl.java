@@ -326,6 +326,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	    	// Create file in TO DIR
 			String toRootPath = uploadFileDir + "/Chatbot/SurveyResponse"; // to dir
 			String fileName = p.getFileName().toString();
+			LOGGER.debug(">>> FileName :" + fileName);
 
 			File file = new File(toRootPath + "/");
 
@@ -386,26 +387,25 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 	    	try{
     		    FileReader fr = new FileReader(file + "/" + fileName);
+
     		    BufferedReader br = new BufferedReader(fr);
+
+    		    // Skip first row (Column header)
+    		    br.readLine();
 
     		    String line = "";
 
-    		    int i = 0;
     		    while ((line = br.readLine()) != null) {
-    		    	if (i > 0){
-        		    	String[] info = line.split(",");
-        		    	if(info.length > 0 ){
-            		    	HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(info);
-            		    	hcSurveyResultCsvVO.add(res);
-            		    	line = br.readLine();
-        		    	} else{
-        		    		LOGGER.error("[Chatbot API] : No record found");
-        					resultValue.put("status", "204");
-        					resultValue.put("message", "No record from survey Response");
-        					return resultValue;
-        		    	}
+    		    	String[] info = line.split(",");
+    		    	if(info.length > 0 ){
+        		    	HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(info);
+        		    	hcSurveyResultCsvVO.add(res);
+    		    	} else{
+    		    		LOGGER.error("[Chatbot API] : No record found");
+    					resultValue.put("status", "204");
+    					resultValue.put("message", "No record from survey Response");
+    					return resultValue;
     		    	}
-    		    	i++;
     	        }
     		    br.close();
 	    	}catch (Exception e){
