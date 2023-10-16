@@ -11,117 +11,127 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RequestResultMListDto", description = "공통코드 Dto")
 public class RequestResultMListDto {
 
-	@ApiModelProperty(value = "SMO no")
-	private String smoNo;
+  @ApiModelProperty(value = "SMO no")
+  private String smoNo;
 
-	@ApiModelProperty(value = "type(auto / manual)")
-	private String reqType;
+  @ApiModelProperty(value = "type(auto / manual)")
+  private String reqType;
 
-	@ApiModelProperty(value = "상태")
-	private String reqStatus;
+  @ApiModelProperty(value = "상태")
+  private String reqStatus;
 
-	@ApiModelProperty(value = "gi 요청자")
-	private String giCustName;
+  @ApiModelProperty(value = "gi 요청자")
+  private String giCustName;
 
-	@ApiModelProperty(value = "gi locationCode")
-	private String giLocationCode;
+  @ApiModelProperty(value = "gr 요청자")
+  private String grCustName;
 
-	@ApiModelProperty(value = "gi locationName")
-	private String giLocationName;
+  @ApiModelProperty(value = "gi locationCode")
+  private String giLocationCode;
 
-	@ApiModelProperty(value = "gi 날짜")
-	private String giDate;
+  @ApiModelProperty(value = "gi locationName")
+  private String giLocationName;
 
-	@ApiModelProperty(value = "gr 날짜")
-	private String grDate;
+  @ApiModelProperty(value = "gi 날짜")
+  private String giDate;
 
-	@ApiModelProperty(value = "Location ID")
-	private int rdcCode;
+  @ApiModelProperty(value = "gr 날짜")
+  private String grDate;
 
-	private List<RequestResultDListDto> partsList = null;
+  @ApiModelProperty(value = "Location ID")
+  private int rdcCode;
 
-	public static RequestResultMListDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, RequestResultMListDto.class);
-	}
+  private List<RequestResultDListDto> partsList = null;
 
-	public String getSmoNo() {
-		return smoNo;
-	}
+  public static RequestResultMListDto create(EgovMap egvoMap) {
+    return BeanConverter.toBean(egvoMap, RequestResultMListDto.class);
+  }
 
-	public void setSmoNo(String smoNo) {
-		this.smoNo = smoNo;
-	}
+  public String getSmoNo() {
+    return smoNo;
+  }
 
-	public String getReqType() {
-		return reqType;
-	}
+  public void setSmoNo(String smoNo) {
+    this.smoNo = smoNo;
+  }
 
-	public void setReqType(String reqType) {
-		this.reqType = reqType;
-	}
+  public String getReqType() {
+    return reqType;
+  }
 
-	public String getReqStatus() {
-		return reqStatus;
-	}
+  public void setReqType(String reqType) {
+    this.reqType = reqType;
+  }
 
-	public void setReqStatus(String reqStatus) {
-		this.reqStatus = reqStatus;
-	}
+  public String getReqStatus() {
+    return reqStatus;
+  }
 
-	public String getGiCustName() {
-		return giCustName;
-	}
+  public void setReqStatus(String reqStatus) {
+    this.reqStatus = reqStatus;
+  }
 
-	public void setGiCustName(String giCustName) {
-		this.giCustName = giCustName;
-	}
+  public String getGiCustName() {
+    return giCustName;
+  }
 
-	public String getGiLocationCode() {
-		return giLocationCode;
-	}
+  public void setGiCustName(String giCustName) {
+    this.giCustName = giCustName;
+  }
 
-	public void setGiLocationCode(String giLocationCode) {
-		this.giLocationCode = giLocationCode;
-	}
+  public String getGiLocationCode() {
+    return giLocationCode;
+  }
 
-	public String getGiDate() {
-		return giDate;
-	}
+  public void setGiLocationCode(String giLocationCode) {
+    this.giLocationCode = giLocationCode;
+  }
 
-	public void setGiDate(String giDate) {
-		this.giDate = giDate;
-	}
+  public String getGiDate() {
+    return giDate;
+  }
 
-	public String getGrDate() {
-		return grDate;
-	}
+  public void setGiDate(String giDate) {
+    this.giDate = giDate;
+  }
 
-	public void setGrDate(String grDate) {
-		this.grDate = grDate;
-	}
+  public String getGrDate() {
+    return grDate;
+  }
 
-	public List<RequestResultDListDto> getPartsList() {
-		return partsList;
-	}
+  public void setGrDate(String grDate) {
+    this.grDate = grDate;
+  }
 
-	public void setPartsList(List<RequestResultDListDto> partsList) {
-		this.partsList = partsList;
-	}
+  public List<RequestResultDListDto> getPartsList() {
+    return partsList;
+  }
 
-	public String getGiLocationName() {
-		return giLocationName;
-	}
+  public void setPartsList(List<RequestResultDListDto> partsList) {
+    this.partsList = partsList;
+  }
 
-	public void setGiLocationName(String giLocationName) {
-		this.giLocationName = giLocationName;
-	}
+  public String getGiLocationName() {
+    return giLocationName;
+  }
 
-	public int getRdcCode() {
-		return rdcCode;
-	}
+  public void setGiLocationName(String giLocationName) {
+    this.giLocationName = giLocationName;
+  }
 
-	public void setRdcCode(int rdcCode) {
-		this.rdcCode = rdcCode;
-	}
+  public int getRdcCode() {
+    return rdcCode;
+  }
 
+  public void setRdcCode(int rdcCode) {
+    this.rdcCode = rdcCode;
+  }
+
+  public String getGrCustName() {
+    return grCustName;
+  }
+
+  public void setGrCustName(String grCustName) {
+    this.grCustName = grCustName;
+  }
 }
