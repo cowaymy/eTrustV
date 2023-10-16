@@ -279,20 +279,6 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
-//		for (int i = 0; i < params.size(); i++) {
-//			Map<String, Object> data = new HashMap<String, Object>();
-//			data.put("salesOrdNo", params.get(i).get("salesOrdNo"));
-//			String salesOrdId = voucherMapper.getSalesOrderIdInfo(data);
-//
-//			if (salesOrdId.isEmpty()) {
-//				throw new ApplicationException(AppConstants.FAIL,
-//						"Sales Order No " + params.get(i).get("salesOrdNo") + " is not a valid sales." );
-//			}
-//			else{
-//				params.get(i).put("salesOrdId", Integer.parseInt(salesOrdId));
-//			}
-//		}
-
 		for (int i = 0; i < params.size(); i++) {
 			int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
 
