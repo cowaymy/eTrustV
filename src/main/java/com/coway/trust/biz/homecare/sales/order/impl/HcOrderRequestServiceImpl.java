@@ -339,7 +339,7 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 	    //Voucher Exchange If Any
 	  	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
 	  	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-	  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode);
+	  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString());
 
 	    // ORDER EXCHANGE
 	    SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -672,24 +672,27 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
         salesOrderDVO.setUpdUserId(CommonUtils.intNvl(params.get("logUsrId")));
 	}
 
-  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode){
+  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode, String salesOrdNo){
 		if(existingVoucherCode.isEmpty() == false){
 			if(existingVoucherCode.equals(currentVoucherCode) == false){
 				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
-				this.updateVoucherUseStatus(existingVoucherCode, 0);
+				this.updateVoucherUseStatus(existingVoucherCode, 0, salesOrdNo);
 			}
 		}
 
 		if(currentVoucherCode.isEmpty() == false){
 			//UPDATE CURRENT VOUCHER USED TO 1(USED STATE)
-			this.updateVoucherUseStatus(currentVoucherCode, 1);
+			this.updateVoucherUseStatus(currentVoucherCode, 1, salesOrdNo);
 		}
   }
 
-    private boolean updateVoucherUseStatus(String voucherCode, int isUsed){
+    private boolean updateVoucherUseStatus(String voucherCode, int isUsed, String salesOrdNo){
     Map<String, Object> params = new HashMap<String, Object>();
     params.put("voucherCode", voucherCode);
     params.put("isUsed", isUsed);
+    if(isUsed == 1){
+        params.put("salesOrdNo", salesOrdNo);
+    }
 
     voucherMapper.updateVoucherCodeUseStatus(params);
     return true;

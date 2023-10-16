@@ -467,8 +467,13 @@
 		UPDATE MSC0057D
 		SET
 		USED = #{isUsed}
-		<if test='salesOrdNo != null and salesOrdNo !=""'>
-         	,SALES_ORD_NO = #{salesOrdNo}
+		<if test='isUsed == 1'>
+         	<if test='salesOrdNo != null and salesOrdNo !=""'>
+	         	,SALES_ORD_NO = #{salesOrdNo}
+			</if>
+		</if>
+		<if test='isUsed == 0'>
+			,SALES_ORD_NO = NULL
 		</if>
 		WHERE
 		1=1

@@ -589,15 +589,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 			return preOrderMapper.checkExtradeSchedule();
 		}
 
-//	private boolean updateVoucherUseStatus(String voucherCode, int isUsed){
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("voucherCode", voucherCode);
-//		params.put("isUsed", isUsed);
-//
-//		voucherMapper.updateVoucherCodeUseStatus(params);
-//		return true;
-//	}
-
 	private void checkVoucherValideKeyIn(String voucherCode)
 	{
         Map<String, Object> voucherParams = new HashMap();
