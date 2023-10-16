@@ -468,9 +468,10 @@
 		SET
 		USED = #{isUsed}
 		<if test='salesOrdNo != null and salesOrdNo !=""'>
-         	AND SALES_ORD_NO = #{salesOrdNo}
+         	,SALES_ORD_NO = #{salesOrdNo}
 		</if>
 		WHERE
+		1=1
 		AND VOUCHER_CODE = #{voucherCode}
 	</update>
 
