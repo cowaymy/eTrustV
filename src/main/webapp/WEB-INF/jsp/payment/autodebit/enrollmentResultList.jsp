@@ -190,11 +190,12 @@ hideNewPopup = function() {
 }
 
 showDDNewPopup = function() {
-	$("#new_dd_wrap").show();
+	console.log("test dd show");
+	$("#new_DD_wrap").show();
 }
 
 hideDDNewPopup = function() {
-    $("#new_dd_wrap").hide();
+    $("#new_DD_wrap").hide();
     $("#myDdForm").each(function(){
         this.reset();
     });
