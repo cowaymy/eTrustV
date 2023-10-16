@@ -322,11 +322,11 @@ public class VoucherServiceImpl implements VoucherService {
 			emailParam.put("product", params.get(i).get("productName"));
 			emailParam.put("obligation", params.get(i).get("obligation"));
 			emailParam.put("free", params.get(i).get("freeItem"));
-			if(params.get(i).get("freeItem") != null && params.get(i).get("freeItem").toString() != ""){
-				emailParam.put("freeItemDisplay", "block");
+			if(params.get(i).get("freeItem") == null || params.get(i).get("freeItem").toString().trim().isEmpty()){
+				emailParam.put("freeItemDisplay", "none");
 			}
 			else{
-				emailParam.put("freeItemDisplay", "none");
+				emailParam.put("freeItemDisplay", "block");
 			}
 
 			Map<String,Object> masterEmailDet = new HashMap<String, Object>();
