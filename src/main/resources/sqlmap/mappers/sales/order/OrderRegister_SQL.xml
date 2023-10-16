@@ -1773,6 +1773,16 @@
         WHEN MATCHED THEN UPDATE SET A.CCP_FICO = SRC.CREDIT_SCRE
      </update>
 
+     <select id="checkPreCcp" parameterType="Map" resultType="egovMap">
+         SELECT DISTINCT
+                COUNT(DISTINCT C.CUST_IC) PRECCP_CHK
+         FROM SAL0001D A
+         JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+         JOIN SAL0343D C ON B.NRIC = C.CUST_IC AND C.TYPE_ID = 7290
+         JOIN SAL0402D D ON C.CCRIS_ID = D.CCRIS_ID AND D.STUS_CODE_ID = 4
+         WHERE A.SALES_ORD_ID = #{salesOrdId}
+     </select>
+
     <insert id="insertDocSubmission" parameterType="docSubmissionVO">
       <selectKey keyProperty="docSubId" resultType="Integer" order="BEFORE">
         SELECT ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL FROM DUAL
@@ -3338,7 +3348,7 @@ WHERE
   </select>
   <select id="automatedCcpProcess" parameterType="Map" statementType="CALLABLE">
         {
-        call SP_UPD_PRECCP_SCRE_UPD_CCP(#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
+        call SP_UPD_PRECCP_SCRE_UPD_CCP(#{salesOrdId},#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
         }
   </select>
 </mapper>
