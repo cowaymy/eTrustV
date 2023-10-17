@@ -79,19 +79,22 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
         updateInfo.put("userId", sessionVO.getUserId());
         updateInfo.put("lastDay", lastDay);
 
+        //Get existing target question SURV_ID
+        Object[] survIdList= chatbotSurveyMgmtMapper.getTargetQuestionSurvID(updateInfo).toArray();
+
         //Update existing records
-      	chatbotSurveyMgmtMapper.updateExistTargetQues(updateInfo);
+        if(survIdList.length > 0){
+          String[] survIdArray = Arrays.copyOf(survIdList, survIdList.length, String[].class);
+          updateInfo.put("survIdArray", survIdArray);
 
-        //Get target question  SURV_ID
-       	Object[] survIdList= chatbotSurveyMgmtMapper.getTargetQuestionSurvID(updateInfo).toArray();
-       	if(survIdList.length > 0){
-            String[] survIdArray = Arrays.copyOf(survIdList, survIdList.length, String[].class);
-            params.put("survIdArray", survIdArray);
-            chatbotSurveyMgmtMapper.updateTargetAnsYn(params);
-       	}
+          //Update existing target question
+          chatbotSurveyMgmtMapper.updateExistTargetQues(updateInfo);
 
+          //Update existing target answer
+          chatbotSurveyMgmtMapper.updateTargetAnsYn(updateInfo);
+     	}
 
-        //INSERT NEW SURVEY QUETION
+        //INSERT NEW SURVEY QUESTION
         String newStartDt = null;
         // Only marketing campaign and customer care survey able to reflect new survey on NEXT DAY
         // Other than above mentioned, new survey questions able to reflect on FIRST DAY OF NEXT MONTH

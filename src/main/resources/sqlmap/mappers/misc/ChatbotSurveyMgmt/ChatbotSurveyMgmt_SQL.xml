@@ -108,7 +108,11 @@
             SURV_QUES_YN = 'N',
             UPD_DT = SYSDATE,
             UPD_USER_ID = #{userId}
-        WHERE CTRL_ID = #{ctrlId}
+        WHERE SURV_ID IN
+        <foreach item="item" collection="survIdArray" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+         </foreach>
     </update>
 
     <select id="getTargetQuestionSurvID" parameterType="String" resultType="String">

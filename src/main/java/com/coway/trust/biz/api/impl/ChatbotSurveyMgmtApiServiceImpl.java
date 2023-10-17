@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+//import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+//import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -170,7 +172,6 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		Gson gson = builder.setPrettyPrinting().create();
 		String jsonString = gson.toJson(chatbotVO);
 
-//		LOGGER.debug("End Calling Chatbot API ...." + jsonString + "......\n");
 		LOGGER.debug("Start Calling Chatbot API ....\n");
 
 		// Call informNewMasterData
@@ -184,7 +185,6 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		resultValue = cbtReqApi(reqInfo);
 
 		LOGGER.debug("End Calling Chatbot API ....\n");
-//		LOGGER.debug("End Calling Chatbot API ...." + reqInfo + "......\n");
 
 		return resultValue;
 	}

@@ -11,8 +11,8 @@ public class SurveyTargetAnsDto implements Serializable{
 	private int survId;
 	private int tmplAnswSeq;
 	private int tmplType;
-	private String tmplAnwsOpt1;
-	private String tmplAnwsOpt2;
+	private String tmplAnswOpt1;
+	private String tmplAnswOpt2;
 	private String tmplRem;
 	private String useYn;
 
@@ -49,22 +49,22 @@ public class SurveyTargetAnsDto implements Serializable{
 		this.tmplType = tmplType;
 	}
 
-	public String getTmplAnwsOpt1() {
-		return tmplAnwsOpt1;
+	public String getTmplAnswOpt1() {
+		return tmplAnswOpt1;
 	}
-	public void setTmplAnwsOpt1(String tmplAnwsOpt1) {
-		this.tmplAnwsOpt1 = tmplAnwsOpt1;
+	public void setTmplAnswOpt1(String tmplAnswOpt1) {
+		this.tmplAnswOpt1 = tmplAnswOpt1;
 	}
 
-	public String getTmplAnwsOpt2() {
-		return tmplAnwsOpt2;
+	public String getTmplAnswOpt2() {
+		return tmplAnswOpt2;
 	}
-	public void setTmplAnwsOpt2(String tmplAnwsOpt2) {
-		if(tmplAnwsOpt2.isEmpty()){
-			tmplAnwsOpt2 = "";
+	public void setTmplAnswOpt2(String tmplAnswOpt2) {
+		if(tmplAnswOpt2.isEmpty()){
+			tmplAnswOpt2 = "";
 		}
 
-		this.tmplAnwsOpt2 = tmplAnwsOpt2;
+		this.tmplAnswOpt2 = tmplAnswOpt2;
 	}
 
 	public String getTmplRem() {
