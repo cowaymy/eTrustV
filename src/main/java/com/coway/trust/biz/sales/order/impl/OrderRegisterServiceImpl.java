@@ -2225,6 +2225,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			Map<String,Object> voucherParam = new HashMap();
 			voucherParam.put("voucherCode", salesOrderMVO.getVoucherCode());
 			voucherParam.put("salesOrdNo", salesOrderMVO.getSalesOrdNo());
+			voucherParam.put("updBy", salesOrderMVO.getUpdUserId());
 			voucherParam.put("isUsed", 1);
 			voucherMapper.updateVoucherCodeUseStatus(voucherParam);
 		}

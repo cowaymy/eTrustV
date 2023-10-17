@@ -180,6 +180,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				Map<String,Object> voucherParam = new HashMap();
 				voucherParam.put("voucherCode", salesOrderMVO1.getVoucherCode());
 				voucherParam.put("salesOrdNo", matOrdNo);
+				voucherParam.put("updBy", salesOrderMVO1.getUpdUserId());
 				voucherParam.put("isUsed", 1);
 				voucherMapper.updateVoucherCodeUseStatus(voucherParam);
 			}

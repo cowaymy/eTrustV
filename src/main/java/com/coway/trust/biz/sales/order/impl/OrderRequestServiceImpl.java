@@ -1110,7 +1110,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     //Voucher Exchange If Any
 	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
 	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString());
+	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -1595,7 +1595,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     //Voucher Exchange If Any
   	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
   	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString());
+  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -2764,24 +2764,25 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return orderRequestMapper.checkDefectByReason(params);
   }
 
-  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode, String salesOrdNo){
+  private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode, String salesOrdNo, int userId){
 		if(existingVoucherCode.isEmpty() == false){
 			if(existingVoucherCode.equals(currentVoucherCode) == false){
 				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
-				this.updateVoucherUseStatus(existingVoucherCode, 0, salesOrdNo);
+				this.updateVoucherUseStatus(existingVoucherCode, 0, salesOrdNo, userId);
 			}
 		}
 
 		if(currentVoucherCode.isEmpty() == false){
 			//UPDATE CURRENT VOUCHER USED TO 1(USED STATE)
-			this.updateVoucherUseStatus(currentVoucherCode, 1 , salesOrdNo);
+			this.updateVoucherUseStatus(currentVoucherCode, 1 , salesOrdNo, userId);
 		}
   }
 
-    private boolean updateVoucherUseStatus(String voucherCode, int isUsed, String salesOrdNo){
+    private boolean updateVoucherUseStatus(String voucherCode, int isUsed, String salesOrdNo, int userId){
     Map<String, Object> params = new HashMap<String, Object>();
     params.put("voucherCode", voucherCode);
     params.put("isUsed", isUsed);
+    params.put("updBy", userId);
     if(isUsed == 1){
         params.put("salesOrdNo", salesOrdNo);
     }
