@@ -73,11 +73,11 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                         ,S71.FILE_SUB_PATH SUBPATH
                         ,S71.PHYSICL_FILE_NAME FILENAME
                 FROM PAY0061D Extent1
-                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
-                       LEFT JOIN SYS0070m S70 on TO_CHAR(S70.ATCH_FILE_GRP_ID) = Extent1.FILE_URL
-                       LEFT JOIN SYS0071D S71 on S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
-                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
-                       LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+                       JOIN SYS0013M Extent2  ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
+                       LEFT JOIN SYS0070M S70 ON S70.ATCH_FILE_GRP_ID = (CASE WHEN REGEXP_LIKE(extent1.file_url,'^[[:digit:]]+$') THEN extent1.file_url END)
+                       LEFT JOIN SYS0071D S71 ON S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
+                       LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                       LEFT JOIN SYS0047M Extent4 ON Extent4.USER_ID = Extent1.UPD_USER_ID
                  WHERE  ( 1 = Extent1.STUS_CODE_ID )
                      <if test="searchTypeLabel != null and searchTypeLabel !=''">
 				        AND UPPER(Extent1.FILE_TYPE_LBL) LIKE UPPER('%' || #{searchTypeLabel} || '%')
