@@ -467,6 +467,8 @@
 		UPDATE MSC0057D
 		SET
 		USED = #{isUsed}
+		,UPD_DT = SYSDATE
+		,UPD_BY = #{updBy}
 		<if test='isUsed == 1'>
          	<if test='salesOrdNo != null and salesOrdNo !=""'>
 	         	,SALES_ORD_NO = #{salesOrdNo}
