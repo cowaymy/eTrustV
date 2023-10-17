@@ -66,6 +66,9 @@
     }, {
         dataField : "repayStusDesc",
         headerText : "Repayment Status"
+    },{
+    	dataField : "isResubmitAllow",
+    	visible : false
     }];
 
     var advanceGridPros = {
@@ -178,7 +181,7 @@
         });
 
         $("#refund_btn").click(fn_repaymentPop);
-
+        $("#editRejBtnTrv").click(fn_editRejected);
         $("#search_costCenter_btn").click(fn_costCenterSearchPop);
         $("#search_payee_btn").click(fn_popPayeeSearchPop);
 
@@ -291,6 +294,54 @@
           Common.report("dataForm", option);
     }
 
+    //Edit Rejected
+    function fn_editRejected() {
+    console.log("fn_editRejected");
+
+    var gridObj = AUIGrid.getSelectedItems(advGridId);
+    var list = AUIGrid.getCheckedRowItems(advGridId);
+
+    if(gridObj != "" || list != "") {
+        var status;
+        var selClmNo;
+        var isEditRejectedAllow;
+
+        if(list.length > 1) {
+            Common.alert("* Only 1 record is permitted. ");
+            return;
+        }
+
+        if(gridObj.length > 0) {
+            status = gridObj[0].item.appvPrcssStus;
+            selClmNo = gridObj[0].item.clmNo;
+            isEditRejectedAllow = gridObj[0].item.isResubmitAllow;
+        } else {
+            status = list[0].item.appvPrcssStus;
+            selClmNo = list[0].item.clmNo;
+            isEditRejectedAllow = list[0].item.isResubmitAllow;
+        }
+
+	        if(isEditRejectedAllow == "0"){
+	        	Common.alert("* You are not allow to perform Edit Rejected on the selected claim. Please reselect. ");
+	        }else{
+	        	if(status == "J") {
+	                Common.ajax("POST", "/eAccounting/staffAdvance/editRejected.do", {clmNo : selClmNo}, function(result1) {
+	                    console.log(result1);
+
+	                    Common.alert("New claim number : " + result1.data.newClmNo);
+	                    fn_searchAdv();
+	                })
+	            } else {
+	                Common.alert("Only rejected claims are allowed to edit.");
+	            }
+	        }
+
+    } else {
+        Common.alert("* No Value Selected. ");
+        return;
+    }
+}
+
     /******************************************
     ********** MAIN MENU BLUE BUTTON **********
     *******************************************/
@@ -305,8 +356,10 @@
     function fn_advReqPop() {
         console.log("fn_advReqPop");
 
-        $("#bankName").val("CIMB BANK BHD");
-        $("#bankId").val("3");
+        /* $("#bankName").val("CIMB BANK BHD");
+        $("#bankId").val("3"); */
+
+
 
         $("#reqAdvType").attr("disabled", true);
 
@@ -423,7 +476,7 @@
                     $("#payeeCode").val(results.payee);
                     $("#payeeName").val(results.payeeName);
                     $("#bankName").val(results.bankName);
-                    $("#bankAccNo").val(results.bankAccno);
+                    $("#bankAccNo").val(results.bankAccNo);
 
                     $("#locationFrom").val(results.advLocFr);
                     $("#locationTo").val(results.advLocTo);
@@ -476,6 +529,9 @@
 
                     fn_trvPeriod("F");
                 });
+            }
+            else{
+            	claimNo = "";
             }
         });
     }
@@ -564,8 +620,12 @@
                 console.log(results);
 
                 $("#trvAdvRepay").show();
-
+                $("#refAdvType").val(results.advType);
                 $("#repayDraftClaimNo").text(claimNo);
+                $("#refClmNo").val(claimNo);
+                $("#refBankId").val(results.bankCode);
+                $("#refCostCenterName").val(results.costCenterNm);
+                $("#trvAdvBankInDate").val(results.bankInDt);
                 $("#advReqClmNo").val(results.advReqClmNo);
                 $("#refKeyDate").val(results.entryDt);
                 $("#refCostCenterCode").val(results.costCenter);
@@ -578,6 +638,7 @@
                 $("#trvAdvRepayDate").val(results.advRefdDt);
                 $("#trvBankRefNo").val(results.invcNo);
                 $("#trvRepayRem").val(results.advRem);
+                $("#refAtchFileGrpId").val(results.fileAtchGrpId);
 
                 $("#trvAdvFileSelector").html("");
                 $("#trvAdvFileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
@@ -594,10 +655,10 @@
                         console.log(flResult);
                         if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
                             // TODO View
-                            var fileSubPath = result.fileSubPath;
+                            var fileSubPath = flResult.fileSubPath;
                             fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
+                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
                         } else {
                             var fileSubPath = flResult.fileSubPath;
                             fileSubPath = fileSubPath.replace('\', '/'');
@@ -657,7 +718,8 @@
     function fn_closePop() {
         console.log("fn_closePop");
         appvStus = null;
-        mdoe = null;
+        //mdoe = null;
+        mode = null;
         advType = null;
 
         if(menu == "REQ") {
@@ -922,7 +984,7 @@
         var errMsg;
 
         // Travel Request
-        if(advType == 1) {
+        if(advType[0] == 1) {
             errMsg = "Travel advance can only be applied for outstation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights."
 
             if(FormUtil.isEmpty($("#costCenterCode").val())) {
@@ -1085,7 +1147,7 @@
             $("#advReqMsgPop").hide();
             $("#acknowledgement").hide();
 
-            $("#advType").val('');
+            //$("#advType").val('');
             fn_closePop();
             fn_alertClmNo(result.data.clmNo);
             fn_searchAdv();
@@ -1143,7 +1205,7 @@
     function fn_saveRefund(v) {
         console.log("fn_saveRefund");
 
-        if(fn_checkRefund) {
+        if(fn_checkRefund()) {
             if(mode != "DRAFT") {
                 var formData = Common.getFormData("advRepayForm");
                 Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpload.do", formData, function(result) {
@@ -1175,10 +1237,11 @@
                 });
             } else {
                 var formData = Common.getFormData("advRepayForm");
-                formData.append("atchFileGrp", $("refATchFileGrpId").val());
+                formData.append("atchFileGrp", $("#refAtchFileGrpId").val());
                 Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpdate.do", formData, function(result) {
                     console.log(result);
 
+                    $("#refMode").val(mode);
                     var obj = $("#advRepayForm").serializeJSON();
 
                     Common.ajax("POST", "/eAccounting/staffAdvance/saveAdvRef.do", obj, function(result1) {
@@ -1228,19 +1291,24 @@
     function fn_checkRefund() {
         console.log("fn_checkRefund");
 
-        if(advType == "1") {
+        if(advType == "2") {
             if($("#trvAdvRepayDate").val() == "" || $("#trvAdvRepayDate").val() == null) {
                 Common.alert("Repayment Date required.");
                 return false;
             }
 
-            if($("#trvBankRefNo").val() == "" || $("#trvBankRefNo").val() == null) {
+            /* if($("#trvBankRefNo").val() == "" || $("#trvBankRefNo").val() == null) {
                 Common.alert("Bank-In Advice Ref No required.");
                 return false;
-            }
+            } */
 
             if($("#trvRepayRem").val() == "" || $("#trvRepayRem").val() == null) {
                 Common.alert("Remarks required.");
+                return false;
+            }
+
+            if(FormUtil.isEmpty($("#trvAdvBankInDate").val())) {
+                Common.alert("Please select the Bank In Date.");
                 return false;
             }
 
@@ -1502,6 +1570,7 @@
         <dd>
         <ul class="btns">
             <li><p class="link_btn"><a href="#" id="_staffTravelAdvBtn" >Staff Travel Advance</a></p></li>
+            <li><p class="link_btn"><a href="#" id="editRejBtnTrv">Edit Rejected</a></p></li>
             <%-- </c:if> --%>
         </ul>
         <ul class="btns">
@@ -1535,7 +1604,7 @@
             <form action="#" method="post" enctype="multipart/form-data" id="advReqForm">
                 <input type="hidden" id="createUserId" name="createUserId" />
                 <input type="hidden" id="costCenterName" name="costCenterName" />
-                <input type="hidden" id="bankId" name="bankId" value="3"/>
+<!--                 <input type="hidden" id="bankId" name="bankId" value="3"/> -->
                 <input type="hidden" id="clmNo" name="clmNo" />
                 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
 
@@ -1608,12 +1677,19 @@
                         <tr>
                             <th scope="row">Bank</th>
                             <td>
+						        <select class="w100p" id="bankId" name="bankId">
+						            <c:forEach var="list" items="${bankName}" varStatus="status">
+						               <option value="${list.bankId}">${list.bankName}</option>
+						            </c:forEach>
+						        </select>
+						    </td>
+                            <!-- <td>
                                 <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="CIMB BANK BHD" readonly/>
-                                <!-- <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/> -->
-                            </td>
+                                <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/>
+                            </td> -->
                             <th scope="row">Bank Account</th>
                             <td>
-                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" maxlength="10"
+                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" maxlength="16"
                                 onKeypress="return event.charCode >= 48 && event.charCode <= 57"/>
                                 <!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
                             </td>
@@ -1777,8 +1853,9 @@
         <section class="search_table">
             <form action="#" method="post" enctype="multipart/form-data" id="advRepayForm">
                 <input type="hidden" id="createUserId" name="createUserId" />
-                <input type="hidden" id="costCenterName" name="costCenterName" />
-                <input type="hidden" id="bankId" name="bankId" />
+                <input type="hidden" id="refCostCenterName" name="refCostCenterName" />
+                <input type="hidden" id="refBankId" name="refBankId" />
+                <input type="hidden" id="refMode" name="refMode" />
                 <input type="hidden" id="refClmNo" name="refClmNo" />
                 <input type="hidden" id="refAtchFileGrpId" name="refAtchFileGrpId" />
 
@@ -1859,13 +1936,13 @@
                     <tr>
                         <th scope="row">Claim No for Advance Request</th>
                         <td colspan="2">
-                            <input type="text" title="Advance Request Claim No" placeholder="Advance Request Claim No" id="advReqClmNo" name="advReqClmNo" style="200px" readonly/>
+                            <input type="text" title="Advance Request Claim No" class="w100p" placeholder="Advance Request Claim No" id="advReqClmNo" name="advReqClmNo" style="200px" readonly/>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Amount Repaid (RM)</th>
                         <td colspan="2">
-                            <input type="text" title="Amount Repaid (RM)" placeholder="Amount Repaid (RM)" id="trvAdvRepayAmt" name="trvAdvRepayAmt" style="200px" readonly/>
+                            <input type="text" title="Amount Repaid (RM)" class="w100p" placeholder="Amount Repaid (RM)" id="trvAdvRepayAmt" name="trvAdvRepayAmt" style="200px" readonly/>
                         </td>
                     </tr>
                     <tr>
@@ -1873,6 +1950,16 @@
                         <td colspan="2">
                             <input type="text" title="Repayment Date" placeholder="Repayment Date" id="trvAdvRepayDate" name="trvAdvRepayDate" class="w100p readonly" style="200px" readonly/>
                         </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bank In Date<span class="must">*</span></th>
+                        <div class="date_set w100p">
+                            <p>
+                                <td colspan="2">
+                                    <input type="text" title="Bank In Date" placeholder="Repayment Date" id="trvAdvBankInDate" name="trvAdvBankInDate" class="j_date w100p"/>
+                                </td>
+                            </p>
+                        </div>
                     </tr>
                     <!--
                     <tr>

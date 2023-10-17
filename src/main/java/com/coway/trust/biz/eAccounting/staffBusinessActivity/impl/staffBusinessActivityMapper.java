@@ -86,4 +86,6 @@ public interface staffBusinessActivityMapper {
     void deleteDraftRequestD(Map<String, Object> params);
 
     int manualStaffBusinessAdvReqSettlement(Map<String, Object> params);
+
+    List<EgovMap> selectBank();
 }

@@ -3,6 +3,8 @@ package com.coway.trust.biz.eAccounting.staffAdvance;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface staffAdvanceService {
@@ -52,4 +54,14 @@ public interface staffAdvanceService {
     EgovMap getAdvClmInfo(Map<String, Object> params);
 
     void updateTotal(Map<String, Object> params);
+
+    void saveAdvReq(Map<String, Object> params, SessionVO sessionVO);
+
+    void submitAdvReq(Map<String, Object> params, SessionVO sessionVO);
+
+    void saveAdvRef(Map<String, Object> params, SessionVO sessionVO);
+
+    void editRejected(Map<String, Object> params);
+
+    List<EgovMap> selectBank();
 }

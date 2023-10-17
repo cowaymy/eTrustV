@@ -76,6 +76,8 @@ public class StaffAdvanceController {
     @RequestMapping(value = "/staffAdvance.do")
     public String staffAdvance(@RequestParam Map<String, Object> params, ModelMap model) {
 
+    	List<EgovMap> bankName = staffAdvanceService.selectBank();
+    	model.addAttribute("bankName", bankName);
         return "eAccounting/staffAdvance/staffAdvance";
     }
 
@@ -194,136 +196,7 @@ public class StaffAdvanceController {
         LOGGER.debug("=============== saveAdvReq.do ===============");
         LOGGER.debug("params ==============================>> " + params);
 
-        String pClmNo = params.get("clmNo").toString();
-
-        if(pClmNo.isEmpty()) {
-            String clmType = "";
-            String glAccNo = "";
-            int clmSeq = 1;
-
-            if("1".equals(params.get("reqAdvType")) || "3".equals(params.get("reqAdvType"))) {
-                clmType = "REQ";
-                if("1".equals(params.get("reqAdvType"))) {
-                    glAccNo = "1240300";
-                } else {
-                    glAccNo = "1240200";
-                }
-            } else if("2".equals(params.get("reqAdvType")) || "4".equals(params.get("reqAdvType"))) {
-                clmType = "REF";
-                glAccNo = "22200400";
-            }
-
-            params.put("clmType", clmType);
-            params.put("glAccNo", glAccNo);
-
-            String clmNo = staffAdvanceService.selectNextClmNo(params);
-            params.put("clmNo", clmNo);
-            params.put("userId", sessionVO.getUserId());
-
-            staffAdvanceService.insertRequest(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", clmNo);
-
-            if("1".equals(params.get("reqAdvType"))) {
-                // Staff Travel Request
-                if(Double.parseDouble(params.get("accmdtAmt").toString()) != 0.00) {
-                    hmTrv.put("clmSeq", clmSeq);
-                    hmTrv.put("expType", "AD001");
-                    hmTrv.put("expTypeNm", "Accommodation");
-                    hmTrv.put("dAmt", params.get("accmdtAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.insertTrvDetail(hmTrv);
-                    clmSeq++;
-                }
-
-                if(Double.parseDouble(params.get("mileageAmt").toString()) != 0.00) {
-                    hmTrv.put("clmSeq", clmSeq);
-                    hmTrv.put("expType", "AD002");
-                    hmTrv.put("expTypeNm", "Mileage");
-                    hmTrv.put("mileage", params.get("mileage"));
-                    hmTrv.put("dAmt", params.get("mileageAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.insertTrvDetail(hmTrv);
-                    hmTrv.put("mileage", "");
-                    clmSeq++;
-                }
-
-                if(Double.parseDouble(params.get("tollAmt").toString()) != 0.00) {
-                    hmTrv.put("clmSeq", clmSeq);
-                    hmTrv.put("expType", "AD003");
-                    hmTrv.put("expTypeNm", "Toll");
-                    hmTrv.put("dAmt", params.get("tollAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.insertTrvDetail(hmTrv);
-                    clmSeq++;
-                }
-
-                if(Double.parseDouble(params.get("othTrsptAmt").toString()) != 0.00) {
-                    hmTrv.put("clmSeq", clmSeq);
-                    hmTrv.put("expType", "AD004");
-                    hmTrv.put("expTypeNm", "Other Transportation");
-                    hmTrv.put("dAmt", params.get("othTrsptAmt"));
-                    hmTrv.put("rem", params.get("trsptMode"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.insertTrvDetail(hmTrv);
-                    clmSeq++;
-                }
-            } else if("3".equals(params.get("reqAdvType"))) {
-                // Staff/Company Event Advance Request
-            }
-
-        } else {
-            staffAdvanceService.editDraftRequestM(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", params.get("clmNo"));
-
-            if("1".equals(params.get("reqAdvType"))) {
-
-                hmTrv.put("advType", params.get("reqAdvType"));
-
-                // Staff Travel Request
-                if(Double.parseDouble(params.get("accmdtAmt").toString()) != 0.00) {
-                    hmTrv.put("expType", "AD001");
-                    hmTrv.put("expTypeNm", "Accommodation");
-                    hmTrv.put("dAmt", params.get("accmdtAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.editDraftRequestD(hmTrv);
-                }
-
-                if(Double.parseDouble(params.get("mileageAmt").toString()) != 0.00) {
-                    hmTrv.put("expType", "AD002");
-                    hmTrv.put("expTypeNm", "Mileage");
-                    hmTrv.put("mileage", params.get("mileage"));
-                    hmTrv.put("dAmt", params.get("mileageAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.editDraftRequestD(hmTrv);
-                    hmTrv.put("mileage", "");
-                }
-
-                if(Double.parseDouble(params.get("tollAmt").toString()) != 0.00) {
-                    hmTrv.put("expType", "AD003");
-                    hmTrv.put("expTypeNm", "Toll");
-                    hmTrv.put("dAmt", params.get("tollAmt"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.editDraftRequestD(hmTrv);
-                }
-
-                if(Double.parseDouble(params.get("othTrsptAmt").toString()) != 0.00) {
-                    hmTrv.put("expType", "AD004");
-                    hmTrv.put("expTypeNm", "Other Transportation");
-                    hmTrv.put("dAmt", params.get("othTrsptAmt"));
-                    hmTrv.put("rem", params.get("trsptMode"));
-                    hmTrv.put("userId", sessionVO.getUserId());
-                    staffAdvanceService.editDraftRequestD(hmTrv);
-                }
-
-                staffAdvanceService.updateTotal(hmTrv);
-            }
-        }
-
-        LOGGER.debug("staffadvancecontroller :: saveAdvReq :: " + params);
+    	staffAdvanceService.saveAdvReq(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
@@ -339,146 +212,7 @@ public class StaffAdvanceController {
         LOGGER.debug("=============== submitAdvReq.do ===============");
         LOGGER.debug("params ==============================>> " + params);
 
-        params.put("userId", sessionVO.getUserId());
-        params.put("userName", sessionVO.getUserName());
-
-        if(params.containsKey("refClmNo")) {
-            params.put("clmNo", params.get("refClmNo"));
-            params.put("appvPrcssDesc", params.get("trvRepayRem"));
-        }
-
-        String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
-        params.put("appvPrcssNo", appvPrcssNo);
-
-        List<Object> apprGridList = (List<Object>) params.get("apprLineGrid");
-        params.put("appvLineCnt", apprGridList.size());
-
-        // Insert FCM0004M
-        staffAdvanceService.insertApproveManagement(params);
-        LOGGER.debug("staffAdvance :: insertApproveManagement");
-
-        if(apprGridList.size() > 0) {
-            Map hm = null;
-            List<String> appvLineUserId = new ArrayList<>();
-
-            for(Object map : apprGridList) {
-                hm = (HashMap<String, Object>) map;
-                hm.put("appvPrcssNo", params.get("appvPrcssNo"));
-                hm.put("userId", params.get("userId"));
-                hm.put("userName", params.get("userName"));
-                staffAdvanceService.insertApproveLineDetail(hm);
-            }
-
-            if(params.containsKey("clmNo")) {
-                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
-            } else if(params.containsKey("refClmNo")) {
-                params.put("clmType", params.get("refClmNo").toString().substring(0, 2));
-                params.put("clmNo", params.get("refClmNo"));
-            }
-
-            // Insert missed out final designated approver
-            EgovMap e1 = webInvoiceService.getFinApprover(params);
-            String memCode = e1.get("apprMemCode").toString();
-            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-            if(!appvLineUserId.contains(memCode)) {
-                Map mAppr = new HashMap<String, Object>();
-                mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
-                mAppr.put("userId", params.get("userId"));
-                mAppr.put("memCode", memCode);
-                staffAdvanceService.insMissAppr(mAppr);
-            }
-
-            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
-            if(params.containsKey("clmNo")) {
-                ntf.put("clmNo", params.get("clmNo"));
-            } else if(params.containsKey("refClmNo")) {
-                ntf.put("clmNo", params.get("refClmNo"));
-            }
-
-            EgovMap ntfDtls = new EgovMap();
-            ntfDtls = (EgovMap) staffAdvanceService.getClmDesc(params);
-            ntf.put("codeName", ntfDtls.get("codeDesc"));
-
-            ntfDtls = (EgovMap) staffAdvanceService.getNtfUser(ntf);
-            ntf.put("reqstUserId", ntfDtls.get("userName"));
-            ntf.put("code", params.get("clmNo").toString().substring(0, 2));
-            ntf.put("appvStus", "R");
-            ntf.put("rejctResn", "Pending Approval.");
-            ntf.put("userId", sessionVO.getUserId());
-
-            LOGGER.debug("ntf =====================================>>  " + ntf);
-
-            staffAdvanceService.insertNotification(ntf);
-        }
-
-        LOGGER.debug("staffAdvance :: insert approval details");
-        // Insert Approval Details
-        Map hm = new HashMap<String, Object>();
-        hm.put("appvPrcssNo", appvPrcssNo);
-        String advType = "";
-        if(params.containsKey("reqAdvType")) {
-            advType = (String) params.get("reqAdvType");
-        } else if(params.containsKey("refAdvType")) {
-            advType = (String) params.get("refAdvType");
-        }
-
-        if("1".equals(advType) || "3".equals(advType)) {
-            hm.put("appvItmSeq", "1");
-            hm.put("memAccId", params.get("payeeCode"));
-            hm.put("payDueDt", params.get("refdDate"));
-            hm.put("expType", params.get("reqAdvType"));
-            if("1".equals(advType)) {
-                hm.put("expTypeNm", "Staff Travel Expenses");
-                hm.put("glAccNo", "1240300");
-                hm.put("glAccNm", "Advances-Staff Travel Expenses");
-                hm.put("billPeriodFr", params.get("trvPeriodFr"));
-                hm.put("billPeriodTo", params.get("trvPeriodTo"));
-            } /*else {
-                hm.put("expTypeNm", "Staff/Company Events");
-                hm.put("glAccNo", "1240200");
-                hm.put("glAccNm", "Advances-Staff(Company/Events)");
-                //hm.put("billPeriodFr", params.get(key));
-                //hm.put("billPeriodTo", params.get(key));
-            }*/
-            hm.put("costCenter", params.get("costCenterCode"));
-            hm.put("costCenterNm", params.get("costCenterName"));
-            hm.put("amt", params.get("reqTotAmt"));
-            hm.put("expDesc", params.get("trvReqRem"));
-            hm.put("atchFileGrpId", params.get("atchFileGrpId"));
-            hm.put("userId", sessionVO.getUserId());
-
-            staffAdvanceService.insertAppvDetails(hm);
-            LOGGER.debug("staffAdvance :: insertAppvDetails");
-
-        } else if("2".equals(advType) || "4".equals(advType)) {
-
-            hm.put("appvItmSeq", "1");
-            hm.put("memAccId", params.get("refPayeeCode"));
-            hm.put("invcNo", params.get("trvBankRefNo"));
-            hm.put("invcDt", params.get("trvAdvRepayDate"));
-            hm.put("expType", params.get("refAdvType"));
-            if("2".equals(advType)) {
-                hm.put("expTypeNm", "Staff Travel Expenses Repayment");
-                hm.put("glAccNo", "12510100");
-                hm.put("glAccNm", "CIMB Bhd 8000 58 6175");
-            } /*else {
-                hm.put("expTypeNm", "Staff/Company Events");
-                hm.put("glAccNo", "1240200");
-                hm.put("glAccNm", "Advances-Staff(Company/Events) Repayment");
-                //hm.put("billPeriodFr", params.get(key));
-                //hm.put("billPeriodTo", params.get(key));
-            }*/
-            hm.put("costCenter", params.get("refCostCenterCode"));
-            hm.put("amt", params.get("trvAdvRepayAmt"));
-            hm.put("expDesc", params.get("trvRepayRem"));
-            hm.put("atchFileGrpId", params.get("refAtchFileGrpId"));
-            hm.put("userId", sessionVO.getUserId());
-
-            staffAdvanceService.insertAppvDetails(hm);
-
-        }
-
-        staffAdvanceService.updateAdvanceReqInfo(params);
+        staffAdvanceService.submitAdvReq(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
@@ -503,61 +237,7 @@ public class StaffAdvanceController {
         LOGGER.debug("=============== saveAdvRef.do ===============");
         LOGGER.debug("params ==============================>> " + params);
 
-        int clmSeq = 1;
-
-        params.put("clmType", "REF");
-        params.put("glAccNo", "22200400");
-
-        String pClmNo = params.containsKey("clmNo") ? params.get("clmNo").toString() : "";
-
-        if(pClmNo.isEmpty()) {
-            // Refund New Save
-
-            String clmNo = staffAdvanceService.selectNextClmNo(params);
-            params.put("clmNo", clmNo);
-            params.put("userId", sessionVO.getUserId());
-
-            // Insert FCM0027M
-            staffAdvanceService.insertRefund(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", clmNo);
-
-            if("2".equals(params.get("refAdvType"))) {
-                // Advance Refund for Staff Travelling Advance
-                hmTrv.put("clmSeq", clmSeq);
-                hmTrv.put("invcNo", params.get("trvBankRefNo"));
-                hmTrv.put("invcDt", params.get("trvAdvRepayDate"));
-                hmTrv.put("expType", "AD101");
-                hmTrv.put("expTypeNm", "Refund Travel Advance");
-                hmTrv.put("dAmt", params.get("trvAdvRepayAmt"));
-                hmTrv.put("userId", sessionVO.getUserId());
-                staffAdvanceService.insertTrvDetail(hmTrv);
-
-            } else if("4".equals(params.get("reqAdvType"))) {
-                // Advance Refund for Staff/Company Event
-            }
-        } else {
-            staffAdvanceService.editDraftRequestM(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", params.get("clmNo"));
-
-            if("2".equals(params.get("refAdvType"))) {
-                // Advance Refund for Staff Travelling Advance
-                hmTrv.put("invcNo", params.get("trvBankRefNo"));
-                hmTrv.put("invcDt", params.get("trvAdvRepayDate"));
-                hmTrv.put("expType", "AD101");
-                hmTrv.put("expTypeNm", "Refund Travel Advance");
-                hmTrv.put("dAmt", params.get("trvAdvRepayAmt"));
-                hmTrv.put("userId", sessionVO.getUserId());
-                staffAdvanceService.editDraftRequestD(hmTrv);
-
-            }
-
-        }
-
-        staffAdvanceService.updateAdvRequest(params);
+        staffAdvanceService.saveAdvRef(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
@@ -593,6 +273,10 @@ public class StaffAdvanceController {
 
             String appvPrcssResult = String.valueOf(info.get("appvStus"));
             model.addAttribute("appvPrcssResult", appvPrcssResult);
+
+            if("J".equals(info.get("appvStus"))) {
+                rejctSeq = Integer.parseInt(info.get("appvLineSeq").toString());
+            }
         }
 
         if(!appvLineUserId.contains(memCode) && apprDtls != null) {
@@ -601,6 +285,14 @@ public class StaffAdvanceController {
 
         // TODO appvPrcssStus 생성
         String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+
+        Map<String, Object> m1 = new HashMap<String, Object>();
+        m1.put("appvPrcssNo", params.get("appvPrcssNo"));
+        m1.put("appvLineSeq", rejctSeq);
+        if(rejctSeq != 0) {
+            String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(m1);
+            model.addAttribute("rejctResn", rejctResn);
+        }
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);
@@ -621,5 +313,39 @@ public class StaffAdvanceController {
         EgovMap advClmInfo = staffAdvanceService.getAdvClmInfo(params);
 
         return ResponseEntity.ok(advClmInfo);
+    }
+
+    @RequestMapping(value = "/editRejected.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editRejected(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        if(params.get("clmNo") != null && !params.get("clmNo").equals(""))
+        {
+        	String reqType = (String)params.get("clmNo");
+        	String clmType = "";
+        	reqType = reqType.substring(0, 2);
+        	params.put("reqType", reqType);
+
+        	if("R2".equals(reqType)) {
+        		clmType = "REQ";
+            } else if("A1".equals(reqType)) {
+            	clmType = "REF";
+            }
+
+        	params.put("clmType", clmType);
+        }
+        String reqNo = staffAdvanceService.selectNextClmNo(params);
+        params.put("newClmNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        staffAdvanceService.editRejected(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
     }
 }

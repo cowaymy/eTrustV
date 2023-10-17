@@ -83,6 +83,9 @@ public class StaffBusinessActivityController {
     	List<EgovMap> advOcc = staffBusinessActivityService.selectAdvOccasions(params);
     	model.addAttribute("costCentr", sessionVO.getCostCentr());
 
+    	List<EgovMap> bankName = staffBusinessActivityService.selectBank();
+    	model.addAttribute("bankName", bankName);
+
     	model.put("advOcc", advOcc);
         return "eAccounting/staffBusinessActivity/staffBusinessActivity";
     }
@@ -781,6 +784,10 @@ public class StaffBusinessActivityController {
 
             String appvPrcssResult = String.valueOf(info.get("appvStus"));
             model.addAttribute("appvPrcssResult", appvPrcssResult);
+
+            if("J".equals(info.get("appvStus"))) {
+                rejctSeq = Integer.parseInt(info.get("appvLineSeq").toString());
+            }
         }
 
         if(!appvLineUserId.contains(memCode) && apprDtls != null) {
@@ -789,6 +796,14 @@ public class StaffBusinessActivityController {
 
         // TODO appvPrcssStus 생성
         String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+
+        Map<String, Object> m1 = new HashMap<String, Object>();
+        m1.put("appvPrcssNo", params.get("appvPrcssNo"));
+        m1.put("appvLineSeq", rejctSeq);
+        if(rejctSeq != 0) {
+            String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(m1);
+            model.addAttribute("rejctResn", rejctResn);
+        }
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);

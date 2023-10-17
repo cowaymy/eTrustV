@@ -81,4 +81,6 @@ public interface staffBusinessActivityService {
     int saveAdvReq(Map<String, Object> params, SessionVO sessionVO);
 
     int saveAdvRef(Map<String, Object> params, SessionVO sessionVO);
+
+    List<EgovMap> selectBank();
 }

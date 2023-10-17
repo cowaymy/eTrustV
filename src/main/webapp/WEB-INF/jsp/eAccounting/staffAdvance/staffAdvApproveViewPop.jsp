@@ -110,6 +110,7 @@
             $("#refAdvReqClmNo").text(myGridData[0].advRefdClmNo);
             $("#refAmtRepay").text(myGridData[0].repayAmt.toFixed(2));
             $("#refRepayDate").text(myGridData[0].advRefdDt);
+            $("#refBankInDate").text(myGridData[0].bankInDt);
             $("#refBankInRefNo").text(myGridData[0].invcNo);
             $("#trvRefRem").text(myGridData[0].expDesc);
         }
@@ -165,7 +166,19 @@
             $("#pApprove_btn").hide();
             $("#pReject_btn").hide();
 
+            /* $("#finApprAct").show();
+
+            if(myGridData[0].appvPrcssStus == "A") {
+                $("#rejectReasonRow").css("display", "none");
+            }
+
+            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
+                console.log(result);
+
+                $("#viewFinAppr").text(result.finalAppr);
+            }); */
         } else {
+            //$("#finApprAct").hide();
             if("${type}" == "view") {
                 $("#appvBtns").hide();
             }
@@ -405,6 +418,12 @@
                                 <span id="refRepayDate"></span>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row">Bank In Date</th>
+                            <td colspan="2">
+                                <span id="refBankInDate"></span>
+                            </td>
+                        </tr>
                         <!--
                         <tr>
                             <th scope="row">Bank-in Advice Ref Note</th>
@@ -448,6 +467,20 @@
                             <span id="viewTrvRefdDt"></span>
                         </td>
                     </tr>
+                    <%-- <tr>
+                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+                        <td colspan="2" style="height:100px; line-height: 20px;" id="viewAppvStus">${appvPrcssStus}</td>
+                    </tr>
+                    <tr id="rejectReasonRow">
+                        <th scope="row">Reject Reason</th>
+                        <td colspan="2">${rejctResn}</td>
+                    </tr>
+                    <tr id="finApprRow">
+                        <th scope="row">Final Approver</th>
+                        <td colspan="2">
+                            <span id="viewFinAppr"></span>
+                        </td>
+                    </tr> --%>
                 </table>
             </form>
 

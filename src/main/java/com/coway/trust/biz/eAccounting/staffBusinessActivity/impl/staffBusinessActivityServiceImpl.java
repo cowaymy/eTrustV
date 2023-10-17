@@ -794,4 +794,10 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
         return rtn;
 
     }
+
+    @Override
+	public List<EgovMap> selectBank() {
+		// TODO Auto-generated method stub
+		return staffBusinessActivityMapper.selectBank();
+	}
 }

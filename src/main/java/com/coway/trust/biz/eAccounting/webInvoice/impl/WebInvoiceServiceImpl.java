@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -1103,7 +1104,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
             	timestamp = new Timestamp(Long.parseLong((String) params.get(i).get("reqstDt")));
                 requestDate = new Date(timestamp.getTime());
             }
-            String emailSubject = "Reminder/Notification for e-claim document";
+            String emailSubject = "";
 
             List<String> emailNo = new ArrayList<String>();
 
@@ -1111,18 +1112,60 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
             	emailNo.add(CommonUtils.nvl(params.get(i).get("email")));
             }
 
+            String clmType = params.get(i).get("clmNo").toString().substring(0, 2);
+            String[] advanceClmType = {"A1", "R2", "A2", "R3", "A3", "R4"};
+            boolean advanceType = Arrays.stream(advanceClmType).anyMatch(clmType::contains); //check if clmType fall into any of the advanceClmType
             String content = "";
-            content += "Dear Sir/Madam,<br/>";
-            if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "A"){
-            	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been approved.<br/><br/>";
-            }  else if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "J"){
-            	String isResubmitAllowed = CommonUtils.nvl(params.get(i).get("isResubmitAllowed"));
-                if(isResubmitAllowed.equals("0")) {
-                	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected.<br/><br/>";
+
+            if(clmType != null && advanceType){ //when is advance claim type
+
+            	switch(clmType){
+            		case "A1" :
+            			emailSubject = "[Rejection] Repayment for Staff Travel Advance No: ";
+            			break;
+            		case "R2" :
+            			emailSubject = "[Rejection] Request for Staff Travel Advance No: ";
+            			break;
+            		case "A2" :
+            			emailSubject = "[Rejection] Repayment for Staff Business Activity No: ";
+            			break;
+            		case "R3" :
+            			emailSubject = "[Rejection] Request for Staff Business Activity No: ";
+            			break;
+            		case "A3" :
+            			emailSubject = "[Rejection] Repayment for Vendor Advance No: ";
+            			break;
+            		case "R4" :
+            			emailSubject = "[Rejection] Request for Vendor Advance No: ";
+            			break;
+            	}
+
+            	emailSubject += params.get(i).get("clmNo").toString();
+            	content += "Dear Sir/Madam,<br/>";
+            	if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "J"){
+                	String isResubmitAllowed = CommonUtils.nvl(params.get(i).get("isResubmitAllowed"));
+                    if(isResubmitAllowed.equals("0")) {
+                    	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected, kindly resubmit ASAP. <br/><br/>";
+                    }
+                    else{
+                        content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected. Kindly resubmit (edit rejected) your document. <br/><br/>";
+                    }
                 }
-                else{
-                    content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected. Kindly resubmit your document no later than two (2)";
-                    content += " months from the receipt month.<br/><br/>";
+            }
+            else{
+            	emailSubject = "Reminder/Notification for e-claim document";
+            	content += "Dear Sir/Madam,<br/>";
+                if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "A"){
+                	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been approved.<br/><br/>";
+                }  else if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "J"){
+                	String isResubmitAllowed = CommonUtils.nvl(params.get(i).get("isResubmitAllowed"));
+                    if(isResubmitAllowed.equals("0")) {
+                    	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected.<br/><br/>";
+                    }
+                    else{
+                        content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected. Kindly resubmit your document no later than two (2)";
+                        content += " months from the receipt month.<br/><br/>";
+                    }
                 }
             }
 

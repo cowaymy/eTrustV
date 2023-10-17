@@ -76,6 +76,9 @@
         dataField : "advOcc",
         headerText : "Occasion",
         visible : false
+    },{
+        dataField : "isResubmitAllow",
+        visible : false
     }];
 
     var busActGridPros = {
@@ -726,8 +729,8 @@ var myGridPros = {
 
         advType = "3";
         $(".input_text").val("");
-        $("#bankName").val("CIMB BANK BHD");
-        $("#bankId").val("3");
+        /* $("#bankName").val("CIMB BANK BHD");
+        $("#bankId").val("3"); */
         $("#costCenterCode").val("${costCentr}");
 
         $("#reqAdvType").attr("disabled", true);
@@ -2155,6 +2158,7 @@ var myGridPros = {
      if(gridObj != "" || list != "") {
          var status;
          var selClmNo;
+         var isEditRejectedAllow;
 
          if(list.length > 1) {
              Common.alert("* Only 1 record is permitted. ");
@@ -2164,21 +2168,28 @@ var myGridPros = {
          if(gridObj.length > 0) {
              status = gridObj[0].item.appvPrcssStus;
              selClmNo = gridObj[0].item.clmNo;
+             isEditRejectedAllow = gridObj[0].item.isResubmitAllow;
          } else {
              status = list[0].item.appvPrcssStus;
              selClmNo = list[0].item.clmNo;
+             isEditRejectedAllow = list[0].item.isResubmitAllow;
          }
 
-         if(status == "J") {
-             Common.ajax("POST", "/eAccounting/staffBusinessActivity/editRejected.do", {clmNo : selClmNo}, function(result1) {
-                 console.log(result1);
+         if(isEditRejectedAllow == "0"){
+             Common.alert("* You are not allow to perform Edit Rejected on the selected claim. Please reselect. ");
+         }else{
+        	 if(status == "J") {
+                 Common.ajax("POST", "/eAccounting/staffBusinessActivity/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                     console.log(result1);
 
-                 Common.alert("New claim number : " + result1.data.newClmNo);
-                 fn_searchAdv();
-             });
-         } else {
-             Common.alert("Only rejected claims are allowed to edit.");
+                     Common.alert("New claim number : " + result1.data.newClmNo);
+                     fn_searchAdv();
+                 });
+             } else {
+                 Common.alert("Only rejected claims are allowed to edit.");
+             }
          }
+
      } else {
          Common.alert("* No Value Selected. ");
          return;
@@ -2439,7 +2450,7 @@ var myGridPros = {
 				id="busActReqForm">
 				<input type="hidden" id="createUserId" name="createUserId" />
 				<input type="hidden" id="costCenterName" name="costCenterName" />
-				<input type="hidden" id="bankId" name="bankId" value="3" />
+				<!-- <input type="hidden" id="bankId" name="bankId"/> -->
 				<input type="hidden" id="clmNo" name="clmNo" />
 				<input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
 				<input type="hidden" id="advOccDesc" name="advOccDesc" />
@@ -2513,9 +2524,15 @@ var myGridPros = {
 						</tr>
 						<tr>
 							<th scope="row">Bank</th>
-							<td><input type="text" title="Bank Name"
+							<!-- <td><input type="text" title="Bank Name"
 								placeholder="Bank Name" class="w100p" id="bankName"
-								name="bankName" value="CIMB BANK BHD" readonly /> <!-- <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/> -->
+								name="bankName" value="CIMB BANK BHD" readonly /> <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/>
+							</td> -->
+							<td><select class="w100p" id="bankId" name="bankId">
+	                                    <c:forEach var="list" items="${bankName}" varStatus="status">
+	                                       <option value="${list.bankId}">${list.bankName}</option>
+	                                    </c:forEach>
+                                    </select>
 							</td>
 							<th scope="row">Bank Account</th>
 							<td><input type="text" title="Bank Account No"

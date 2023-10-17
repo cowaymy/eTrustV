@@ -81,6 +81,9 @@
     }, {
         dataField : "atchFileId",
         visible : false
+    },{
+        dataField : "isResubmitAllow",
+        visible : false
     }];
 
     var advanceGridPros = {
@@ -758,6 +761,8 @@
 
                     $("#reqDraft").hide();
                     $("#reqSubmit").hide();
+                    /* $("#rejectReasonRow").hide();
+                    $("#finalAppvRow").hide(); */
                     $("#keyDate").val(result.data.crtDt);
                     $("#keyDate").addClass("readonly");
                     $("#reqCostCenter").addClass("readonly");
@@ -778,10 +783,23 @@
                     $("#supplier_search_btn").hide();
                     $("#costCenter_search_btn").hide();
                     $("#reqCostCenter").val(result.data.costCenter + '/' + result.data.costCenterNm);
+                    /* $("#appvStusRow").show(); */
                     $("#viewAppvStus").html(result.data.appvPrcssStus);
 
                     $("#reqApprovalInfo_grid_wrap").show();
 
+                    /* if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
+                    	Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
+                    		$("#finalAppvRow").show();
+                    		$("#viewFinalApprover").html(result1.finalAppr);
+                    		if(advGridAppvPrcssStus == "J"){
+                                $("#rejectReasonRow").show();
+                                $("#viewRejectReason").html(result.data.rejctResn);
+
+                            }
+                        });
+                    }
+ */
                 } else if(advGridAppvPrcssStus == "T") {
                     // Draft
                     $("#h1_req").text("Vendor Advance Request - Edit");
@@ -860,6 +878,8 @@
             $("#reqDraft").show();
             $("#reqSubmit").show();
 
+            /* $("#appvStusRow").hide();
+            $("#finalAppvRow").hide(); */
             $("#reqApprovalInfo_grid_wrap").hide();
 
             $("#keyDate").val(fn_getToday);
@@ -914,6 +934,13 @@
                 Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
                 console.log (advGridClmNo.substring(0, 1));
                 console.log
+                return false;
+            }
+        }
+
+        if(advGridClmNo.substring(0, 1) == "A") {
+            if(advGridAppvPrcssStus != "T" && mode != "DRAFT") {
+                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
                 return false;
             }
         }
@@ -1064,8 +1091,21 @@
                         $("#settlementSubmit").hide();
                         $("#settlement_add_row").hide();
                         $("#settlement_remove_row").hide();
+                        /* $("#appvStusRowSett").show(); */
 
                         $("#refApprovalInfo_grid_wrap").show();
+
+                        /* if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
+                            Common.ajaxSync("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
+                                $("#finApprActRowSett").show();
+                                $("#viewFinAppr").html(result1.finalAppr);
+                                if(advGridAppvPrcssStus == "J"){
+                                    $("#rejectReasonRowSett").show();
+                                    $("#viewRejctResn").html(result.data.rejctResn);
+
+                                }
+                            });
+                        } */
 
                         $("#settlementMemAccId").val(result.data.memAccId);
                         $("#settlementMemAccName").val(result.data.memAccName);
@@ -2151,6 +2191,7 @@
     if(gridObj != "" || list != "") {
         var status;
         var selClmNo;
+        var isEditRejectedAllow;
 
         if(list.length > 1) {
             Common.alert("* Only 1 record is permitted. ");
@@ -2160,21 +2201,28 @@
         if(gridObj.length > 0) {
             status = gridObj[0].item.appvPrcssStus;
             selClmNo = gridObj[0].item.clmNo;
+            isEditRejectedAllow = gridObj[0].item.isResubmitAllow;
         } else {
             status = list[0].item.appvPrcssStus;
             selClmNo = list[0].item.clmNo;
+            isEditRejectedAllow = gridObj[0].item.isResubmitAllow;
         }
 
-        if(status == "J") {
-            Common.ajax("POST", "/eAccounting/vendorAdvance/editRejected.do", {clmNo : selClmNo}, function(result1) {
-                console.log(result1);
+        if(isEditRejectedAllow == "0"){
+            Common.alert("* You are not allow to perform Edit Rejected on the selected claim. Please reselect. ");
+        }else{
+        	if(status == "J") {
+                Common.ajax("POST", "/eAccounting/vendorAdvance/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                    console.log(result1);
 
-                Common.alert("New claim number : " + result1.data.newClmNo);
-                fn_searchAdv();
-            })
-        } else {
-            Common.alert("Only rejected claims are allowed to edit.");
+                    Common.alert("New claim number : " + result1.data.newClmNo);
+                    fn_searchAdv();
+                })
+            } else {
+                Common.alert("Only rejected claims are allowed to edit.");
+            }
         }
+
     } else {
         Common.alert("* No Value Selected. ");
         return;
@@ -2496,6 +2544,18 @@
                                 <select id="advOccasion" name="advOccasion"></select>
                             </td>
                         </tr>
+                       <%--  <tr id="appvStusRow" style="display:none;">
+	                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+	                        <td colspan="3" style="height:60px" id="viewAppvStus" name="viewAppvStus"></td>
+	                    </tr>
+	                    <tr id="rejectReasonRow" style="display:none;">
+	                        <th scope="row">Reject Reason</th>
+	                        <td colspan="3" id="viewRejectReason" name="viewRejectReason"></td>
+	                    </tr>
+	                    <tr id=finalAppvRow style="display:none;">
+                            <th scope="row">Final Approver</th>
+                            <td colspan="2" style="height:60px" id="viewFinalApprover" name="viewFinalApprover"></td>
+                        </tr> --%>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
                             <td colspan="3">
@@ -2775,6 +2835,18 @@
                                 </div><!-- auto_file end -->
                             </td>
                         </tr>
+                        <%-- <tr id="appvStusRowSett" style="display:none;">
+                            <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+                            <td colspan="3" style="height:60px" id="viewAppvStusSett"></td>
+                        </tr>
+                        <tr id="rejectReasonRowSett" style="display:none;">
+                            <th scope="row">Reject Reason</th>
+                            <td colspan="3" id="viewRejctResn"></td>
+                        </tr>
+                        <tr id="finApprActRowSett" style="display:none;">
+                            <th scope="row">Final Approver</th>
+                            <td colspan="3" id="viewFinAppr"></td>
+                        </tr> --%>
                     </tbody>
                 </table><!-- table end -->
             </form>

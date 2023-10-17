@@ -42,4 +42,19 @@ public interface staffAdvanceMapper {
     EgovMap getAdvClmInfo(Map<String, Object> params);
 
     void updateTotal(Map<String, Object> params);
+
+  //Edit Rejected - 14/09/2023 - Start
+    EgovMap getAttachmenDetails(Map<String, Object> params);
+
+	int getFileAtchGrpId();
+	int getFileAtchId();
+
+	void insertSYS0070M_ER(Map<String, Object> params);
+	void insertSYS0071D_ER(Map<String, Object> params);
+
+	void insertRejectM(Map<String, Object> params);
+	void insertRejectD(Map<String, Object> params);
+
+	List<EgovMap> selectBank();
+	// Edit Rejected - 14/09/2023 - End
 }

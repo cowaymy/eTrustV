@@ -32,6 +32,7 @@
             END AS REPAY_STUS_DESC,
 		    ADV_OCC,
 		    ADV_OCC_DESC
+		    ,IS_RESUBMIT_ALLOW
         FROM (
             SELECT
                 A.CRT_DT POST_DATE,
@@ -83,6 +84,7 @@
                 END as REPAY_STUS,
 	            A.ADV_OCC,
 	            E.CODE_DESC ADV_OCC_DESC
+	            , NVL(B.IS_RESUBMIT_ALLOWED, 0) AS IS_RESUBMIT_ALLOW
             FROM FCM0027M A
             LEFT JOIN FCM0004M B
                 ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
@@ -439,7 +441,7 @@
             COST_CENTER = #{costCenterCode},
             COST_CENTER_NM = (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCenterCode}),
             MEM_ACC_ID = #{payeeCode},
-            BANK_CODE = '3',
+            BANK_CODE = #{bankId},
             BANK_ACC_NO = #{bankAccNo},
             <if test="advType == 3">
                 ADV_REM = #{busActReqRem},
@@ -1091,6 +1093,12 @@
         SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
         FROM FCM0027M
         WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+        <if test='reqType == "R3"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'R3'
+            </if>
+            <if test='reqType == "A2"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'A2'
+            </if>
     )
     </select>
 
@@ -1307,4 +1315,13 @@
             UPD_USER_ID = #{userId}
         WHERE CLM_NO = #{clmNo}
     </update>
+
+    <select id="selectBank" resultType="egovMap">
+
+        SELECT BANK_ID BANK_ID, NAME BANK_NAME
+        FROM SYS0004M
+        WHERE IS_SAP = 1
+        ORDER BY CODE
+
+    </select>
 </mapper>
