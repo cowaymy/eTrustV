@@ -12,8 +12,8 @@ public class SurveyCategoryDto implements Serializable{
 	private String ctrlNm;
 	private int ctrlType;
 	private String ctrlRem;
-	private String ctrlStrYyyyMm;
-	private String ctrlEndYyyMm;
+	private String ctrlStrYyyymm;
+	private String ctrlEndYyyymm;
 	private String ctrlUseYn;
 
 	@SuppressWarnings("unchecked")
@@ -56,18 +56,18 @@ public class SurveyCategoryDto implements Serializable{
 		this.ctrlRem = ctrlRem;
 	}
 
-	public String getCtrlStrYyyyMm() {
-		return ctrlStrYyyyMm;
+	public String getCtrlStrYyyymm() {
+		return ctrlStrYyyymm;
 	}
-	public void setCtrlStrYyyyMm(String ctrlStrYyyyMm) {
-		this.ctrlStrYyyyMm = ctrlStrYyyyMm;
+	public void setCtrlStrYyyymm(String ctrlStrYyyymm) {
+		this.ctrlStrYyyymm = ctrlStrYyyymm;
 	}
 
-	public String getCtrlEndYyyMm() {
-		return ctrlEndYyyMm;
+	public String getCtrlEndYyyymm() {
+		return ctrlEndYyyymm;
 	}
-	public void setCtrlEndYyyMm(String ctrlEndYyyMm) {
-		this.ctrlEndYyyMm = ctrlEndYyyMm;
+	public void setCtrlEndYyyymm(String ctrlEndYyyymm) {
+		this.ctrlEndYyyymm = ctrlEndYyyymm;
 	}
 
 	public String getCtrlUseYn() {

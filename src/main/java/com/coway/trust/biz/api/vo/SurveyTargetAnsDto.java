@@ -7,7 +7,7 @@ import com.coway.trust.util.BeanConverter;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class SurveyTargetAnsDto implements Serializable{
-	private int tmpId;
+	private int tmplId;
 	private int survId;
 	private int tmplAnswSeq;
 	private int tmplType;
@@ -21,11 +21,11 @@ public class SurveyTargetAnsDto implements Serializable{
 		return BeanConverter.toBean(egvoMap, SurveyTargetAnsDto.class);
 	}
 
-	public int getTmpId() {
-		return tmpId;
+	public int getTmplId() {
+		return tmplId;
 	}
-	public void setTmpId(int tmpId) {
-		this.tmpId = tmpId;
+	public void setTmplId(int tmplId) {
+		this.tmplId = tmplId;
 	}
 
 	public int getSurvId() {
