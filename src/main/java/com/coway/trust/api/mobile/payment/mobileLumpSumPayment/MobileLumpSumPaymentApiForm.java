@@ -43,6 +43,7 @@ public class MobileLumpSumPaymentApiForm {
     //Submit cash matching info
     private String mobPayGroupNo;
     private String slipNo;
+    private String status;
 
     //Submit cheque info
     private int issueBank;
@@ -400,6 +401,14 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setChequeNo(String chequeNo) {
 		this.chequeNo = chequeNo;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

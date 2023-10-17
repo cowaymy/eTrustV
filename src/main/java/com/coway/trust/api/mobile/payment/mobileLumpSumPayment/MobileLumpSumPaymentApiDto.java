@@ -45,6 +45,7 @@ public class MobileLumpSumPaymentApiDto {
 	private int payStusId;
 	private String payStusName;
 	private String crtDt;
+	private String remarks;
 
 	//Result
 	private int responseCode;
@@ -334,5 +335,13 @@ public class MobileLumpSumPaymentApiDto {
 
 	public void setSrvMemId(int srvMemId) {
 		this.srvMemId = srvMemId;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }
