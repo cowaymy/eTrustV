@@ -116,7 +116,7 @@
     </update>
 
     <select id="getTargetQuestionSurvID" parameterType="String" resultType="String">
-        SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId}
+        SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId} AND SURV_QUES_YN = 'Y'
     </select>
 
     <update id="updateTargetAnsYn" parameterType="Map">
