@@ -217,6 +217,9 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 				mainMap.put("status", 0);
 				continue;
 		    	}else{
+		    	  // Check the original stock code - HMC0010D
+		    	  String originalStockCode = serialMgmtNewMapper.selectHPDeliveryGRStockCode(mainMap);
+		    	  mainMap.put("stockCode", originalStockCode);
 		    		mainMap.put("docNoItm", serialPrefixChk);
 		    	}
 		    }
