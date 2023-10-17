@@ -693,4 +693,13 @@
 		    </if>
 		   AND A.USE_YN = 'Y'
     </select>
+
+    <select id="selectHPDeliveryGRStockCode" parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectHPDeliveryGRStockCode] - MY TOMMY */
+		SELECT MAX(STOCK_CODE) AS STOCK_CODE
+		  FROM HMC0010D
+		 WHERE HMC_GR_NO = #{docNo}
+		   AND USE_YN = 'Y'
+    </select>
+
 </mapper>
