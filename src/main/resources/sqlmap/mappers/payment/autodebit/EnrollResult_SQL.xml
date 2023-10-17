@@ -205,7 +205,7 @@
                  #{creator},
                  #{message},
                  #{inputRejectCode},
-                 #{serviceContractId}
+                 #{serviceContractId},
                  #{ddPaymentId}
             )
     </update>
