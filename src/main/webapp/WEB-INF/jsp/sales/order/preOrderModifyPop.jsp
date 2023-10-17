@@ -71,7 +71,7 @@ var userType = "${userType}";
         	$('#voucherCode').val('${preOrderInfo.voucherInfo.voucherCode}');
         	$('#voucherEmail').val('${preOrderInfo.voucherInfo.custEmail}');
         	$('#voucherType').val('${preOrderInfo.voucherInfo.platformId}');
-    	  	voucherAppliedStatus = 1;
+    	  	applyCurrentUsedVoucher();
         }
 
         //Attach File
