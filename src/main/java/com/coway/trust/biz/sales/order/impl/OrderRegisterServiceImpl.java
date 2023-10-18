@@ -720,7 +720,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public List<EgovMap> selectMemberList(Map<String, Object> params) {
     // TODO Auto-generated method stub
     //params.put("stus", 1);
-    if ((params.get("status")).equals("")) {
+	logger.debug("@#### params:" + params);
+    if ((params.get("status")) != null && (params.get("status")).equals("")) {
       params.put("stus", "");
     } else {
       params.put("stus", 1);
