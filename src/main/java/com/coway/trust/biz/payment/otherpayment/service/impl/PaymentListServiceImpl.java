@@ -91,6 +91,11 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
 	@Override
 	public int invalidDCF(Map<String, Object> params) {
+		if (!(params.get("groupSeq") instanceof Iterable)) {
+			List<Object> x = new ArrayList<Object>();
+			x.add(params.get("groupSeq"));
+			params.put("groupSeq", x);
+		}
 		return paymentListMapper.invalidDCF(params);
 	}
 
