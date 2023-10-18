@@ -117,7 +117,8 @@
 			LAST_SERVICE_DT ,
 			STK_CODE ,
 			STK_DESC ,
-			SALES_ORD_NO
+			SALES_ORD_NO ,
+            UN_BILL_AMT
 		FROM CP1013V
 		WHERE CUST_ID = #{cowayCustId}
      </select>
@@ -130,7 +131,8 @@
 
 			STK_CODE ,
 			STK_DESC ,
-			SALES_ORD_NO
+			SALES_ORD_NO ,
+            UN_BILL_AMT
 		FROM CP1013V
 		WHERE ACCOUNT_CODE = #{accountCode}
      </select>
@@ -160,7 +162,8 @@
             MAIL_CNT_TELM ,
             MAIL_CNT_EMAIL ,
             MAIL_CNT_NRIC ,
-            ACCOUNT_CODE
+            ACCOUNT_CODE ,
+            UN_BILL_AMT
         FROM CP1013V
         WHERE SALES_ORD_NO = #{orderNo}
     </select>
