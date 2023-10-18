@@ -92,6 +92,7 @@ public class MobileLumpSumPaymentApiForm {
 		//search cash matching
 		params.put("fromDate", vo.getFromDate());
 		params.put("toDate", vo.getToDate());
+		params.put("status", vo.getStatus());
 
 		//upload image
 		params.put("uploadImg1", vo.getUploadImg1());
