@@ -938,13 +938,6 @@
             }
         }
 
-        if(advGridClmNo.substring(0, 1) == "A") {
-            if(advGridAppvPrcssStus != "T" && mode != "DRAFT") {
-                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
-                return false;
-            }
-        }
-
         if(advGridSettlementStus == "3" || advGridSettlementStus == "4" || advGridSettlementStus == "5") {
             // Repaid
             if(advGridSettlementStus == "3") {
