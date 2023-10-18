@@ -297,7 +297,7 @@
         headerText : "Approver Comment",
         style : "aui-grid-user-custom-left",
         editable : false,
-        width : "35%"
+        width : 475
     },
     ];
 
