@@ -587,7 +587,7 @@
 
     function fn_checkAccessModify(tabNm) {
 
-        var isValid = true, msg = "";
+        var isValid = true;
 
         if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
             isValid = false;
@@ -611,7 +611,9 @@
             isValid = false;
         }
 
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        if (!isValid) {
+            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
 
         return isValid;
     }
@@ -751,7 +753,7 @@
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
-    <input id="editInstallAccess" name="editInstallAccess" type="button" value='${PAGE_AUTH.funcUserDefine28}'/>
+<%--    <input id="editInstallAccess" name="editInstallAccess" type="button" value='${PAGE_AUTH.funcUserDefine28}'/> --%>
 <%--     <input id="memId" name="memId" type="hidden" value="${memId}"/> --%>
 
 <table class="type1"><!-- table start -->
