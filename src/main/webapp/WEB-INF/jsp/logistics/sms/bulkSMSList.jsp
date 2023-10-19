@@ -96,7 +96,7 @@ var updResultColLayout = [
         {
         	var smsUploadId = AUIGrid.getCellValue(myGridID, event.rowIndex, "smsUploadId");
         	var url = "/logistics/sms/selectBulkSmsItem.do";
-        	if("${SESSION_INFO.userId}" =="40784") {
+        	if("${SESSION_INFO.userId}" =="40784" || "${SESSION_INFO.userId}" =="207511" ) {
         		url = "/logistics/sms/selectBulkSmsItemException.do";
         	}
 
@@ -238,7 +238,8 @@ var updResultColLayout = [
 
    	    $("#search").click(function(){
    	    	/* if(fn_validSearchList()) */
-   	    	if("${SESSION_INFO.userId}" !="40784") {
+   	    	console.log("${SESSION_INFO.userId}".val)
+   	    	if("${SESSION_INFO.userId}" !="40784" && "${SESSION_INFO.userId}" !="207511") {
    	    	    getBulkSmsListAjax();
    	    	}
    	    	else
