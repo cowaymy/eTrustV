@@ -130,6 +130,47 @@ function fn_memberListSearch(){
 
 }
 
+function fn_validSearchList() {
+    var isValid = true, msg = "";
+
+    if(FormUtil.isEmpty($('#code').val())
+    && FormUtil.isEmpty($('#name').val())
+    && FormUtil.isEmpty($('#icNum').val())
+    && FormUtil.isEmpty($('#birth').val())
+    ) {
+
+        if(FormUtil.isEmpty($('#createDate').val()) || FormUtil.isEmpty($('#endDate').val())) {
+            isValid = false;
+            msg += '* <spring:message code="sal.alert.msg.selKeyInDt" /><br/>';
+        }
+        else {
+            var diffDay = fn_diffDate($('#createDate').val(), $('#endDate').val());
+
+            if(diffDay > 91 || diffDay < 0) {
+                isValid = false;
+                msg += '* <spring:message code="sal.alert.msg.srchKeyInDt" />';
+            }
+        }
+    }
+
+    if(!isValid) Common.alert('<spring:message code="sal.title.text.memberSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+    return isValid;
+}
+
+function fn_diffDate(startDt, endDt) {
+    var arrDt1 = startDt.split("/");
+    var arrDt2 = endDt.split("/");
+
+    var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+    var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+    var diff = new Date(dt2 - dt1);
+    var day = diff/1000/60/60/24;
+
+    return day;
+}
+
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("excel_list_grid_wrap", "xlsx", "MemberList");
