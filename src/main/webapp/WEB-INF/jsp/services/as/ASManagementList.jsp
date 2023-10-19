@@ -320,7 +320,7 @@
                                var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
 
                                if (asStusId == "COM") {
-                            	   Common.popupDiv('/sales/order/getInstImg.do', { insNo : AS_NO}, null , true);
+                            	   Common.popupDiv('/sales/order/getInstImg.do', { insNo : AS_NO,  type : 'preInstallation' }, null , true);
                                }
                                else{
                             	   Common.alert("Only Completed AS able to view image.");
