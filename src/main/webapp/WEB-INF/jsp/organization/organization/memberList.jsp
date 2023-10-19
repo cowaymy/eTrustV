@@ -43,85 +43,90 @@ function fn_memberListNew(){
 }
 
 function fn_memberListSearch(){
-    selRowIndex = null;
-    /* if ($("#memTypeCom").val() == '5' ) {
-        AUIGrid.showColumnByDataField(myGridID, "testResult");
-        AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
-    } else {
-        AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
-    } */
 
-    Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
-        console.log("성공.");
-        //console.log("data : " + result);
 
-        var isTrainee = 0;
-        var isHp = false;
-        for (var i=0; i<result.length; i++) {
-            if (result[i]["membertype"] == 5) {
-                isTrainee = 1;
-
-            }else if (result[i]["hpType"] != "" && result[i]["hpType"] != null){
-            	isHp = true;
-            }
-            	else {
-                result[i]["testResult"] = "";
-            }
-        }
-
-        if(isHp == true){
-        	AUIGrid.showColumnByDataField(myGridID, "hpType");
-        }
-        else{
-        	AUIGrid.hideColumnByDataField(myGridID, "hpType");
-        }
-        if (isTrainee != 0) {
+    if(fn_validSearchList()) {
+        selRowIndex = null;
+        /* if ($("#memTypeCom").val() == '5' ) {
             AUIGrid.showColumnByDataField(myGridID, "testResult");
             AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
         } else {
             AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
-        }
+        } */
 
-        // change row color by its vaccination status. Hui Ding, 14/09/2021
-        AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item){
-        	if (item.vaccineStatus == "C") { // completed vaccine
-        		return "my-yellow-style";
-        	} else if (item.vaccineStatus == "D"){
-        		if (item.reasonId == '6504' || item.reasonId == '6505') {
-        			return "my-orange-style";
-        		} else {
-        			return "my-grey-style";
-        		}
-        	} else if (item.vaccineStatus == "P"){
-        		return "my-blue-style";
-        	} else {
-        		return "";
-        	}
-        });
+        Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
+            console.log("성공.");
+            //console.log("data : " + result);
 
+            var isTrainee = 0;
+            var isHp = false;
+            for (var i=0; i<result.length; i++) {
+                if (result[i]["membertype"] == 5) {
+                    isTrainee = 1;
 
-        AUIGrid.setGridData(myGridID, result);
-
-        // EXCEL Set Row Colour and Grid
-        AUIGrid.setProp(excelGridID, "rowStyleFunction", function(rowIndex, item){
-            if (item.vaccineStatus == "C") { // completed vaccine
-                return "my-yellow-style";
-            } else if (item.vaccineStatus == "D"){
-                if (item.reasonId == '6504' || item.reasonId == '6505') {
-                    return "my-orange-style";
-                } else {
-                    return "my-grey-style";
+                }else if (result[i]["hpType"] != "" && result[i]["hpType"] != null){
+                    isHp = true;
                 }
-            } else if (item.vaccineStatus == "P"){
-                return "my-blue-style";
-            } else {
-                return "";
+                    else {
+                    result[i]["testResult"] = "";
+                }
             }
+
+            if(isHp == true){
+                AUIGrid.showColumnByDataField(myGridID, "hpType");
+            }
+            else{
+                AUIGrid.hideColumnByDataField(myGridID, "hpType");
+            }
+            if (isTrainee != 0) {
+                AUIGrid.showColumnByDataField(myGridID, "testResult");
+                AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
+            } else {
+                AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
+            }
+
+            // change row color by its vaccination status. Hui Ding, 14/09/2021
+            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item){
+                if (item.vaccineStatus == "C") { // completed vaccine
+                    return "my-yellow-style";
+                } else if (item.vaccineStatus == "D"){
+                    if (item.reasonId == '6504' || item.reasonId == '6505') {
+                        return "my-orange-style";
+                    } else {
+                        return "my-grey-style";
+                    }
+                } else if (item.vaccineStatus == "P"){
+                    return "my-blue-style";
+                } else {
+                    return "";
+                }
+            });
+
+
+            AUIGrid.setGridData(myGridID, result);
+
+            // EXCEL Set Row Colour and Grid
+            AUIGrid.setProp(excelGridID, "rowStyleFunction", function(rowIndex, item){
+                if (item.vaccineStatus == "C") { // completed vaccine
+                    return "my-yellow-style";
+                } else if (item.vaccineStatus == "D"){
+                    if (item.reasonId == '6504' || item.reasonId == '6505') {
+                        return "my-orange-style";
+                    } else {
+                        return "my-grey-style";
+                    }
+                } else if (item.vaccineStatus == "P"){
+                    return "my-blue-style";
+                } else {
+                    return "";
+                }
+            });
+
+
+            AUIGrid.setGridData(excelGridID, result);
         });
+    }
 
-
-        AUIGrid.setGridData(excelGridID, result);
-    });
 
 }
 
@@ -201,55 +206,52 @@ function fn_requestVacationPop(){
 
         console.log("traineeType :: " + traineeType);
 
-     Common.ajax("POST", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
-         console.log("성공.");
-         console.log("result1111.");
+        Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
+            console.log("성공.");
+            console.log("result1111.");
 
-         if(result.message.code =="99" ) {
-        	 Common.alert(result.message.message);
-         }
-         else {
+            if(result !="" ){
 
-        	    var telMobile = result.telMobile;
-        	    var sms;
+                   var telMobile = result.telMobile;
+                   var sms;
 
-             //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
-                 if ( traineeType == 2) {
-                    Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
-                    sms = 'Your Cody Code: ' + result.memCode + ' is created. PW: Last 6 digits of your NRIC No. Kindly login to e-Trust for activation & confirm Bank acc. no. in 2 days. TQ';
-                }
+                //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
+                    if ( traineeType == 2) {
+                       Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
+                       sms = 'Your Cody Code: ' + result.memCode + ' is created. PW: Last 6 digits of your NRIC No. Kindly login to e-Trust for activation & confirm Bank acc. no. in 2 days. TQ';
+                   }
 
-                if ( traineeType == 3) {
-                    Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.memCode);
-                }
+                   if ( traineeType == 3) {
+                       Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.memCode);
+                   }
 
-                if ( traineeType == 7) { // ADDED HOMECARE -- BY TOMMY
-                    Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.memCode);
-                    sms = 'Your HT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                }
+                   if ( traineeType == 7) { // ADDED HOMECARE -- BY TOMMY
+                       Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.memCode);
+                       sms = 'Your HT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                   }
 
-                if ( traineeType == 5758) { // ADDED HOMECARE DELIVERY TECHNICIAN -- BY TOMMY
-                    Common.alert(" DT  registration has been completed. "+membercode+" to "+ result.memCode);
-                    sms = 'Your DT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                }
+                   if ( traineeType == 5758) { // ADDED HOMECARE DELIVERY TECHNICIAN -- BY TOMMY
+                       Common.alert(" DT  registration has been completed. "+membercode+" to "+ result.memCode);
+                       sms = 'Your DT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                   }
 
-                if ( traineeType == 6672) { // ADDED LOGISTIC TECHNICIAN - BY KEYI
-                    Common.alert(" LT  registration has been completed. "+membercode+" to "+ result.memCode);
-                    sms = 'Your LT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                }
+                   if ( traineeType == 6672) { // ADDED LOGISTIC TECHNICIAN - BY KEYI
+                       Common.alert(" LT  registration has been completed. "+membercode+" to "+ result.memCode);
+                       sms = 'Your LT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                   }
 
-                if(telMobile != "") {
-                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo : telMobile, msg : sms} , function(result) {
-                        console.log("sms.");
-                        console.log( result);
-                    });
-                }
-              fn_memberListSearch();
-         }
-     });
-    }else {
-        Common.alert("Only available to entry with Confirm Member Registration in Case of Trainee Type");
-    }
+                   if(telMobile != "") {
+                       Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo : telMobile, msg : sms} , function(result) {
+                           console.log("sms.");
+                           console.log( result);
+                       });
+                   }
+                 fn_memberListSearch();
+            }
+        });
+       }else {
+           Common.alert("Only available to entry with Confirm Member Registration in Case of Trainee Type");
+       }
 }
 
 function fn_clickHpApproval(){
@@ -298,7 +300,7 @@ function fn_addMemberValidDate(){ // cyc
 
 
     if(selectedItems.length  >  0) {
-    	membercode  =selectedItems[0].item.membercode;
+        membercode  =selectedItems[0].item.membercode;
     } */
 
 
@@ -308,17 +310,17 @@ function fn_addMemberValidDate(){ // cyc
 
 function fn_clickHpReject(){
       Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , function() {
-    	  if($("#userRole").val() == 111 || $("#userRole").val() == 112 || $("#userRole").val() == 113 || $("#userRole").val() == 114) {
-    		  if(statusName == "Pending") {
+          if($("#userRole").val() == 111 || $("#userRole").val() == 112 || $("#userRole").val() == 113 || $("#userRole").val() == 114) {
+              if(statusName == "Pending") {
                   fn_RejectHPMem();
-    		  } else {
-    			  Common.alert("Member cancellation is not allowed under READY / APPROVED status");
+              } else {
+                  Common.alert("Member cancellation is not allowed under READY / APPROVED status");
               }
           } else if($("#userRole").val() != 111 || $("#userRole").val() != 112 || $("#userRole").val() != 113 || $("#userRole").val() != 114) {
-        	  if(statusName == "Pending" || statusName == "Ready") {
+              if(statusName == "Pending" || statusName == "Ready") {
                   fn_RejectHPMem();
-        	  } else {
-        		  Common.alert("Member cancellation is not allowed under READY / APPROVED status");
+              } else {
+                  Common.alert("Member cancellation is not allowed under READY / APPROVED status");
               }
           }
       });
@@ -389,7 +391,7 @@ function fn_hpMemRegisPop(){
 }
 function fn_RejectHPMem(){
      if (memberType == "2803" ) {
-    	 Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
+         Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
              if(result.message == "success"){
                    Common.alert("Successfully reject HP Applicant :" + membercode);
 
@@ -531,18 +533,18 @@ $(document).ready(function() {
     if(userRole == "130 " || userRole == "137 " // Administrator
         || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
     //|| userRole =="342 " || userRole =="343 " || userRole =="344 "
-    	|| username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01" ) {
+        || username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01" ) {
        console.log("userole1 " + userRole);
        $("#getNonVaccineDeclare").show();
    }else if("${SESSION_INFO.userTypeId}" == "4" || "${SESSION_INFO.userTypeId}" == "6" ){
-	   var memberID = "${SESSION_INFO.memId}";
-	   console.log("memberID: " + memberID);
+       var memberID = "${SESSION_INFO.memId}";
+       console.log("memberID: " + memberID);
 
-	   Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
-		   if(result != 0){
-			   $("#getNonVaccineDeclare").show();
-		   }
-	   });
+       Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
+           if(result != 0){
+               $("#getNonVaccineDeclare").show();
+           }
+       });
    }
     else{
       var userId = "${SESSION_INFO.userId}";
@@ -687,7 +689,7 @@ function createAUIGrid() {
             width : 0
         },
         {
-        	dataField : "approvedBy",
+            dataField : "approvedBy",
             headerText : "Approved by",
             editable : false,
             width : 130
@@ -699,7 +701,7 @@ function createAUIGrid() {
             width : 130
         },
         {
-        	dataField : "branch",
+            dataField : "branch",
             headerText : "Approved Branch",
             editable : false,
             width : 130
@@ -1012,9 +1014,9 @@ function fn_genRawData() {
 
 function fn_pushCU(){
 
-	let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
-	var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
-	Common.ajax("GET","/organization/selectCntMemSameEmail.do", {email : memEmail}, function(cnt) {
+    let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
+    var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
+    Common.ajax("GET","/organization/selectCntMemSameEmail.do", {email : memEmail}, function(cnt) {
         if(cnt > 1){
             Common.alert("Failed request. Duplicate email");
         }
@@ -1108,8 +1110,8 @@ $(function() {
 
     $("#htContactList").click(function() {
 
-//     	 if('${SESSION_INFO.userTypeId}' == "7") {
-    		 Common.popupDiv("/organization/getHTContactList.do", null, null, true);
+//       if('${SESSION_INFO.userTypeId}' == "7") {
+             Common.popupDiv("/organization/getHTContactList.do", null, null, true);
 //          } else {
 //              Common.alert("Only HT Member is allowed!");
 //          }
@@ -1129,13 +1131,13 @@ $(function() {
         console.log("userole" + $("#userRole").val());
         if(userRole == "130 " || userRole == "137 " // Administrator
             || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
-            	//|| userRole =="342 " || userRole =="343 " || userRole =="344 "
-            	|| username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01"
-            	) {
+                //|| userRole =="342 " || userRole =="343 " || userRole =="344 "
+                || username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01"
+                ) {
 
             if(selRowIndex >= 0 && selRowIndex != null) {
                 Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : membercode}, function(result){
-                	console.log(result);
+                    console.log(result);
 
                     if(result.message == "PENDING") {
                         Common.alert("Pending user fill in declaration form.");
@@ -1161,10 +1163,10 @@ $(function() {
             var username2;
             Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
                 if(result.cnt == 1){
-                	username = "${SESSION_INFO.userName}";
-                	btnGeneratePDF_Click(username);
+                    username = "${SESSION_INFO.userName}";
+                    btnGeneratePDF_Click(username);
                 }else{
-                	Common.alert("Pending user fill in declaration form.");
+                    Common.alert("Pending user fill in declaration form.");
                 }
             });
         }
@@ -1181,7 +1183,7 @@ $(function() {
                     Common.alert("Pending user fill in declaration form.");
                 }
                 else if(result.message == "success.") {
-                	btnGeneratePDF_Click(username);
+                    btnGeneratePDF_Click(username);
                 }else{
                     Common.alert("No record found for this user.");
                 }
@@ -1197,8 +1199,8 @@ $(function() {
    });
 
     $('#paExpiry').click(function() {
-    	 var date = new Date();
-    	 var whereSeq = "";
+         var date = new Date();
+         var whereSeq = "";
          var month = date.getMonth() + 1;
          var day = date.getDate();
          var memLvl = "${SESSION_INFO.memberLevel}"
@@ -1214,7 +1216,7 @@ $(function() {
             if($("#orgCode").val() != '' && $("#orgCode").val() != null) {
              whereSeq += "AND O3.ORG_CODE = '" +  $("#orgCode").val() + "'";
         }else{
-        	   Common.alert('Missing ORG code <br> download failed <br> ');
+               Common.alert('Missing ORG code <br> download failed <br> ');
                return;
 
         }
@@ -1222,9 +1224,9 @@ $(function() {
 
 
          if (memLvl == "2") {
-        	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
-    	        whereSeq += "AND O3.GRP_CODE = '" + $("#grpCode").val() + "'" ;
-    	}else{
+             if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
+                whereSeq += "AND O3.GRP_CODE = '" + $("#grpCode").val() + "'" ;
+        }else{
             Common.alert('Missing GRP code <br> download failed ');
             return;
 
@@ -1233,7 +1235,7 @@ $(function() {
 
 
          if (memLvl == "3") {
-        	 if ($("#deptCode").val() != '' && $("#deptCode").val() != null) {
+             if ($("#deptCode").val() != '' && $("#deptCode").val() != null) {
              whereSeq += "AND O3.DEPT_CODE = '" + $("#deptCode").val() +  "'";
         }else{
             Common.alert('Missing DEPT code <br> download failed ');
@@ -1244,17 +1246,17 @@ $(function() {
 
 
 
-    	 console.log(whereSeq);
+         console.log(whereSeq);
 
 
-    	 $("#PAExpiryReport #V_WHERESQL").val(whereSeq);
-    	 $("#PAExpiryReport #reportFileName").val('/organization/PAExpiry.rpt');
+         $("#PAExpiryReport #V_WHERESQL").val(whereSeq);
+         $("#PAExpiryReport #reportFileName").val('/organization/PAExpiry.rpt');
          $("#PAExpiryReport #viewType").val("EXCEL");
          $("#PAExpiryReport #reportDownFileName").val("PAExpiry_" + day + month + date.getFullYear());
 
          var option = {
-        	        isProcedure : true,
-        	      };
+                    isProcedure : true,
+                  };
 
          Common.report("PAExpiryReport", option);
     });
@@ -1306,7 +1308,7 @@ function fn_socialMediaInfo(){
     }
     else
     {
-    	var status = selectedItems[0].item.status;
+        var status = selectedItems[0].item.status;
         var memberid = selectedItems[0].item.memberid;
         var memberType = selectedItems[0].item.membertype;
         var membercode = selectedItems[0].item.membercode;
