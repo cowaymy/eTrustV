@@ -162,12 +162,12 @@
           Common.alert("Please key in Customer NRIC.");
           return false;
       }
-      else{
-          if(!checkAge()){
-                Common.alert("This customer is not allowed to check Pre-CCP.");
-                return false;
-          }
-      }
+//       else{
+//           if(!checkAge()){
+//                 Common.alert("This customer is not allowed to check Pre-CCP.");
+//                 return false;
+//           }
+//       }
 	  return true;
   }
 
