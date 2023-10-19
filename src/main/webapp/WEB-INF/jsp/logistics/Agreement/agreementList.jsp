@@ -27,7 +27,7 @@ $(document).ready(function() {
             $("#userRole").val() == 415 || $("#userRole").val() == 414 ||                                            // Administrator New (ITGC)
             $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261 || // DST Planning
             $("#userRole").val() == 335 || $("#userRole").val() == 336 || $("#userRole").val() == 337 || // Sales Care
-            $("#userRole").val() == 243 || // Compliance
+            $("#userRole").val() == 243 || $("#userRole").val() == 264 ||// Compliance
             $("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
             $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
             $("#userRole").val() == 250 || $("#userRole").val() == 256 || // Cody Branch
