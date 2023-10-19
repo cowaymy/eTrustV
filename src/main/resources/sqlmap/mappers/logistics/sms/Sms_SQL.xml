@@ -70,7 +70,7 @@ WHERE
 	JOIN SYS0047M T3 ON T1.SMS_UPLOAD_CRT_USER_ID = T3.USER_ID
 	WHERE
     1 = 1
-    AND ( T3.USER_ID NOT IN ('40784'))
+    AND ( T3.USER_ID NOT IN ('40784','207511'))
     <if test="smsUploadId != null and smsUploadId !=''">
                AND  ( T1.SMS_UPLOAD_ID = #{smsUploadId})
     </if>
