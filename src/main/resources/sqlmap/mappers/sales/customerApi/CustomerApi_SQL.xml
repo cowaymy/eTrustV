@@ -430,59 +430,67 @@
 
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
     WITH REN_PRC AS (
-		SELECT AA.CUST_ID,SUM(BB.ORD_MTH_RENTAL) ORD_MTH_RENTAL FROM SAL0330D AA
-		JOIN SAL1006V BB ON AA.SALES_ORD_ID = BB.ORD_ID
-		WHERE AA.CUST_ID = #{custId}
-		AND BB.APP_TYPE_ID = 66
-		GROUP BY AA.CUST_ID
-		)
-    select
-	a.CUST_ID, cd.code cust_tier, a.TIER_SCORE, a.TOT_SALES_CNT,a.TIER_COLC_SCORE, a.TIER_REWD_SCORE
-	,nvl(b.cur_point,0) t_cur_point, nvl(b.onhold_point,0) t_onhold_point, nvl(b.exping_point,0) t_expiring_point, nvl(b.expired_point,0) t_expired_point
-	, (newcd.min_next_point - a.TIER_SCORE) pt_to_ach_nx_lvl
-    , round((newcd.min_next_point - a.TIER_SCORE)/REN_PRC.ORD_MTH_RENTAL) mth_to_ach_nx_lvl
-	from
-	SAL0333M a
-	left join sys0013m cd on cd.code_id = a.TIER_RANK
-	left join(
-    select * from (
-                select q1.cust_id,q1.SALES_TIER_STUS
-                ,case when q1.sales_tier_stus = q2.min_status
-                then sum(q1.SALES_TOT_SCORE) + sum(nvl(q3.REWRD_POINT,0))
-                else sum(q1.SALES_TOT_SCORE)
-                end SALES_TOT_SCORE
-                from (
-                select CUST_ID,SALES_TIER_STUS SALES_TIER_STUS
-                ,CASE WHEN SALES_TIER_STUS = 7082 THEN sum(SALES_EXP_SCORE)
-                ELSE sum(SALES_TOT_SCORE) END SALES_TOT_SCORE
-                from SAL0330D
-                group by cust_id,SALES_TIER_STUS
-                ) q1
-                left join (select CUST_ID, min(SALES_TIER_STUS) min_status from SAL0330D group by  cust_id) q2 on q1.cust_id = q2.cust_id
-                left join (select cust_id,sum(REWRD_POINT)REWRD_POINT from SAL0332D group by cust_id) q3 on q1.cust_id = q3.cust_id
-                group by q1.cust_id,q1.sales_tier_stus,q2.min_status
+        SELECT AA.CUST_ID,SUM(BB.ORD_MTH_RENTAL) ORD_MTH_RENTAL FROM SAL0330D AA
+        JOIN SAL1006V BB ON AA.SALES_ORD_ID = BB.ORD_ID
+        WHERE AA.CUST_ID = #{custId}
+        AND BB.APP_TYPE_ID = 66
+        GROUP BY AA.CUST_ID
+        )
+
+        SELECT
+        Q1.CUST_ID, Q1.CUST_TIER,NVL(NEWCD.CODE,Q1.CUST_TIER) ORI_TIER, Q1.TIER_SCORE, Q1.TOT_SALES_CNT,Q1.TIER_COLC_SCORE, Q1.TIER_REWD_SCORE
+    ,Q1.T_CUR_POINT, Q1.T_ONHOLD_POINT, Q1.T_EXPIRING_POINT, Q1.T_EXPIRED_POINT
+        , (NEWCD.MIN_NEXT_POINT - Q1.TIER_SCORE) PT_TO_ACH_NX_LVL
+    , ROUND((NEWCD.MIN_NEXT_POINT - Q1.TIER_SCORE)/REN_PRC.ORD_MTH_RENTAL) MTH_TO_ACH_NX_LVL
+        FROM (
+    SELECT
+    A.CUST_ID, CD.CODE CUST_TIER, A.TIER_SCORE, A.TOT_SALES_CNT,A.TIER_COLC_SCORE, A.TIER_REWD_SCORE
+    ,NVL(B.CUR_POINT,0) T_CUR_POINT, NVL(B.ONHOLD_POINT,0) T_ONHOLD_POINT, NVL(B.EXPING_POINT,0) T_EXPIRING_POINT, NVL(B.EXPIRED_POINT,0) T_EXPIRED_POINT
+    , CASE WHEN TIERDROP.CUST_ID IS NOT NULL THEN A.TIER_RANK+1 ELSE A.TIER_RANK END TIER_RANK
+    FROM
+    SAL0333M A
+    LEFT JOIN SYS0013M CD ON CD.CODE_ID = A.TIER_RANK
+    LEFT JOIN SAL0334D TIERDROP ON TIERDROP.CUST_ID = A.CUST_ID
+    LEFT JOIN(
+    SELECT * FROM (
+                SELECT Q1.CUST_ID,Q1.SALES_TIER_STUS
+                ,CASE WHEN Q1.SALES_TIER_STUS = Q2.MIN_STATUS
+                THEN SUM(Q1.SALES_TOT_SCORE) + SUM(NVL(Q3.REWRD_POINT,0))
+                ELSE SUM(Q1.SALES_TOT_SCORE)
+                END SALES_TOT_SCORE
+                FROM (
+                SELECT CUST_ID,SALES_TIER_STUS SALES_TIER_STUS
+                ,CASE WHEN SALES_TIER_STUS = 7082 THEN SUM(SALES_EXP_SCORE)
+                ELSE SUM(SALES_TOT_SCORE) END SALES_TOT_SCORE
+                FROM SAL0330D
+                GROUP BY CUST_ID,SALES_TIER_STUS
+                ) Q1
+                LEFT JOIN (SELECT CUST_ID, MIN(SALES_TIER_STUS) MIN_STATUS FROM SAL0330D GROUP BY  CUST_ID) Q2 ON Q1.CUST_ID = Q2.CUST_ID
+                LEFT JOIN (SELECT CUST_ID,SUM(REWRD_POINT)REWRD_POINT FROM SAL0332D GROUP BY CUST_ID) Q3 ON Q1.CUST_ID = Q3.CUST_ID
+                GROUP BY Q1.CUST_ID,Q1.SALES_TIER_STUS,Q2.MIN_STATUS
                 )
-                pivot
+                PIVOT
                 (
-                    sum(SALES_TOT_SCORE)
-                    for SALES_TIER_STUS in (
-                    7079 cur_point,7080 onhold_point,7081 exping_point,7082 expired_point
+                    SUM(SALES_TOT_SCORE)
+                    FOR SALES_TIER_STUS IN (
+                    7079 CUR_POINT,7080 ONHOLD_POINT,7081 EXPING_POINT,7082 EXPIRED_POINT
                     )
                 )
-                where cust_id = #{custId}
-    ) b on b.cust_id = a.cust_id
-    left join (select code
-    ,code_id
-    ,case when code_id = 7204 then 800
-    when code_id = 7205 then 1800
-    when code_id = 7206 then 3800
-    when code_id = 7207 then 6800
-    when code_id = 7208 then 10800
-    end min_next_point
-    from sys0013m where CODE_MASTER_ID = 538) newcd on newcd.code_id = a.TIER_RANK+1
-    LEFT JOIN REN_PRC ON REN_PRC.CUST_ID = A.CUST_ID
-	where
-	a.CUST_ID = #{custId}
+                WHERE CUST_ID = #{custId}
+    ) B ON B.CUST_ID = A.CUST_ID
+    ) Q1
+    LEFT JOIN (SELECT CODE
+    ,CODE_ID
+    ,CASE WHEN CODE_ID = 7204 THEN 800
+    WHEN CODE_ID = 7205 THEN 1800
+    WHEN CODE_ID = 7206 THEN 3800
+    WHEN CODE_ID = 7207 THEN 6800
+    WHEN CODE_ID = 7208 THEN 10800
+    END MIN_NEXT_POINT
+    FROM SYS0013M WHERE CODE_MASTER_ID = 538) NEWCD ON NEWCD.CODE_ID = Q1.TIER_RANK+1
+    LEFT JOIN REN_PRC ON REN_PRC.CUST_ID = Q1.CUST_ID
+    WHERE
+    Q1.CUST_ID = #{custId}
 
   </select>
 

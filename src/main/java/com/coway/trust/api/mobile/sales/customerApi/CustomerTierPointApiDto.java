@@ -44,6 +44,7 @@ public class CustomerTierPointApiDto {
 
 	private int custId;
 	private String custTier;
+	private String oriTier;
 	private int tCurPoint;
 	private int tExpiredPoint;
 	private int tOnholdPoint;
@@ -66,6 +67,14 @@ public class CustomerTierPointApiDto {
 	public void setCustTier(String custTier) {
 		this.custTier = custTier;
 	}
+	public String getOriTier() {
+		return oriTier;
+	}
+
+	public void setOriTier(String oriTier) {
+		this.oriTier = oriTier;
+	}
+
 	public int gettCurPoint() {
 		return tCurPoint;
 	}
