@@ -137,8 +137,11 @@
       var indicator = $("#ddlErrorDesc").val();
       var jsonObj = {
           errCd : $("#ddlErrorCode").val(),
-          errDesc : $("#ddlErrorDesc").val()
+          errDesc : $("#ddlErrorDesc").val(),
+          prodCat : '${orderDetail.basicInfo.ordCtgryCd}'
       };
+
+      console.log("prodCat: " + '${orderDetail.basicInfo.ordCtgryCd}');
 
       Common.ajax("GET", "/homecare/services/as/getAsDefectEntry.do", jsonObj,
               function(result) {
@@ -162,24 +165,24 @@
       $("#def_part_text").val(result[0].defectDesc);
       $("#DP").hide();
       //DD AS PROBLEM SYMPTOM LARGE
-      $("#def_def").val(result[3].defectCode);
-      $("#def_def_id").val(result[3].defectId);
-      $("#def_def_text").val(result[3].defectDesc);
+      $("#def_def").val(result[1].defectCode);
+      $("#def_def_id").val(result[1].defectId);
+      $("#def_def_text").val(result[1].defectDesc);
       $("#HDD").hide();
       //DC AS PROBLEM SYMPTOM SMALL
-      $("#def_code").val(result[4].defectCode);
-      $("#def_code_id").val(result[4].defectId);
-      $("#def_code_text").val(result[4].defectDesc);
+      $("#def_code").val(result[2].defectCode);
+      $("#def_code_id").val(result[2].defectId);
+      $("#def_code_text").val(result[2].defectDesc);
       $("#HDC").hide();
       //DT AS SOLUTION LARGE
-      $("#def_type").val(result[2].defectCode);
-      $("#def_type_id").val(result[2].defectId);
-      $("#def_type_text").val(result[2].defectDesc);
+      $("#def_type").val(result[3].defectCode);
+      $("#def_type_id").val(result[3].defectId);
+      $("#def_type_text").val(result[3].defectDesc);
       $("#HDT").hide();
       //SC AS SOLUTION SMALL
-      $("#solut_code").val(result[1].defectCode);
-      $("#solut_code_id").val(result[1].defectId);
-      $("#solut_code_text").val(result[1].defectDesc);
+      $("#solut_code").val(result[4].defectCode);
+      $("#solut_code_id").val(result[4].defectId);
+      $("#solut_code_text").val(result[4].defectDesc);
       $("#HSC").hide();
 
       if ($("#ddlErrorCode").val() == "400200" && $("#ddlErrorDesc").val() == "400206") {
@@ -1496,7 +1499,6 @@
       _AS_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
       _AS_SLUTN_RESN_ID = $('#solut_code_id').val();
     }
-
     // IN HOUSE
     var inHInd = "";
     if ($('#ddlStatus').val() == '4') {
