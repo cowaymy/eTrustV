@@ -367,16 +367,18 @@
 
 	$(function() {
     $('#btnEditType').click(function() {
-      var tabNm = $('#ordEditType').val();
-      //fn_checkAccessModify(TAB_NM);
+    	var tabNm = $('#ordEditType').val();
+        var isValid = fn_checkAccessModify(tabNm);
 
-      if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM'){
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-      }
-      else {
-          fn_changeTab(tabNm);
-      }
+        if ("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
+            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
 
+        if (!isValid) {
+            return false;
+        } else {
+            fn_changeTab(tabNm);
+        }
     });
     $('#btnSaveBasicInfo').click(function() {
       if (!fn_validBasicInfo())
