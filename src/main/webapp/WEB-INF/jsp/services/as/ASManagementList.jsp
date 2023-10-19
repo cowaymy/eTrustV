@@ -307,6 +307,27 @@
           headerText : "",
           width : 100,
           visible : false
+        },
+        {
+        	  dataField : "undefined",
+              headerText : "AS Image",
+              width : 100,
+              renderer : {
+                           type : "ButtonRenderer",
+                           labelText : "View",
+                           onclick : function(rowIndex, columnIndex, value, item) {
+                               var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo") + "_";
+                               var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
+
+                               if (asStusId == "COM") {
+                            	   Common.popupDiv('/sales/order/getInstImg.do', { insNo : AS_NO}, null , true);
+                               }
+                               else{
+                            	   Common.alert("Only Completed AS able to view image.");
+                            	   return;
+                               }
+                           }
+              }
         }
     ];
 
@@ -482,16 +503,16 @@
         Common.alert(result.message);
         return;
       } else {
-        /*var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
-        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');*/
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
+        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
 
         // TEMP
-        var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
-                          "indicator" : "AS",
-                          "ordId" : salesOrdId,
-                          "key" : asId,
-                          "popId" : "_newASResultDiv1"};
-        Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
+//         var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
+//                           "indicator" : "AS",
+//                           "ordId" : salesOrdId,
+//                           "key" : asId,
+//                           "popId" : "_newASResultDiv1"};
+//         Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
       }
     });
   }

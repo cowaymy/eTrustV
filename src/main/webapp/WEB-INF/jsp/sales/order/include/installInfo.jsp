@@ -114,6 +114,20 @@
         }
 
     });
+
+    function fn_atchViewDown(fileGrpId, fileId) {
+        var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+        };
+
+        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+            var fileSubPath = result.fileSubPath;
+
+            fileSubPath = fileSubPath.replace('\', '/'');
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        });
+    }
 </script>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -214,6 +228,20 @@
     </td>
     <th scope="row"><spring:message code="service.title.AssignedCTMobileNo" /></th>
     <td colspan="3"><span>${orderDetail.installationInfo.assignedCtMobileno}</span></td>
+</tr>
+<tr>
+    <th scope="row">Water Source Type</th>
+    <td colspan="5">
+    <div>${orderDetail.installationInfo.waterSrcType}</div>
+    <br/>
+    <ul class="btns">
+      <li>
+        <p class="btn_grid">
+          <a href="#" onClick="fn_atchViewDown(${orderDetail.installationInfo.atchFileGrpId},${orderDetail.installationInfo.atchFileId})"><spring:message code='sys.btn.view' /></a>
+        </p>
+       </li>
+      </ul>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -3,6 +3,7 @@
 
 <script type="text/javaScript" language="javascript">
 
+
 	//AUIGrid 생성 후 반환 ID
 	var listMyGridID;
 	var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
@@ -750,6 +751,7 @@
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
+    <input id="editInstallAccess" name="editInstallAccess" type="button" value='${PAGE_AUTH.funcUserDefine28}'/>
 <%--     <input id="memId" name="memId" type="hidden" value="${memId}"/> --%>
 
 <table class="type1"><!-- table start -->

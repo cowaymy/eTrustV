@@ -1,5 +1,22 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style>
+    .auto_file4{position:relative; width:237px; padding-right:62px; height:20px;}
+    .auto_file4{float:none!important; width:490px; padding-right:0; margin-top:5px;}
+    .auto_file4:first-child{margin-top:0;}
+    .auto_file4:after{content:""; display:block; clear:both;}
+    .auto_file4.w100p{width:100%!important; box-sizing:border-box;}
+    .auto_file4 input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
+    .auto_file4 label{display:block; margin:0!important;}
+    .auto_file4 label:after{content:""; display:block; clear:both;}
+    .auto_file4 label{float:left; width:100%;}
+    label input[type=text]{width:100%!important;}
+    label input[type=text]{width:237px!important; float:left}
+    .attachment_file label{float:left; width:407px;}
+    .attachment_file label input[type=text]{width:345px!important; float:left}
+    span.label_text2{float:left;}
+    span.label_text2 a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
+</style>
 <script type="text/javaScript" language="javascript">
   var ORD_ID = "${salesOrderId}";
   var ORD_NO = "${salesOrderNo}";
@@ -19,6 +36,8 @@
   var PV_YEAR = "${ordPvYear}";
   var CUST_TYPE_ID = "${typeId}";
   var SOF_NO = "${orderDetail.basicInfo.ordRefNo}";
+  var myFileCaches = {};
+  let editInstallAccess= $("#editInstallAccess").val();
 
   var keyValueList = [];
 
@@ -45,6 +64,16 @@
 
   $(document).ready(
     function() {
+	  document.querySelectorAll("#agreement label").forEach(label => {
+	   	        label.onclick = () => {
+	   	        	if(editInstallAccess=="Y"){
+	   	        		label.parentElement.querySelector("input[type=file]").click();
+	   	        	}else{
+	   	        		Common.alert("Upload New File is disallowed");
+	   	        		return;
+	   	        	}
+	   	        }
+	  });
 
       if ("${memType}" == "2") {
         TAB_NM = 'CNT';
@@ -1732,11 +1761,17 @@
     }, function(instInfo) {
 
       if (instInfo != null) {
+    	  console.log(instInfo)
         $("#modInstallId").val(instInfo.installId);
         $("#dscBrnchId").val(instInfo.dscId);
         $("#modPreferInstDt").val(instInfo.preferInstDt);
         $("#modPreferInstTm").val(instInfo.preferInstTm);
         $("#modInstct").val(instInfo.instct);
+        $("#modInstWaterSourceType").val(instInfo.waterSrcType);
+
+        if(instInfo.atchFileGrpId){
+        	displayFileName(instInfo.atchFileGrpId,instInfo.atchFileId);
+        }
 
         fn_loadInstallAddrInfo(instInfo.installAddrId);
         fn_loadInstallCntcInfo(instInfo.installCntcId);
@@ -2231,12 +2266,30 @@
       msg += '<spring:message code="sal.alert.msg.plzKeyinSpecialInstruction" />';
     }
 
+    if(document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files.length && document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="application/pdf"){
+  	   isValid = false;
+  	   msg += "* Supplementary Agreement is compulsory to uplaod with pdf format. </br>";
+    }
+
     if (!isValid)
       Common
           .alert('<spring:message code="sal.alert.msg.ordUpdSummary" />'
               + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
+  }
+
+  function removeImg(value){
+	  if(editInstallAccess=="Y"){
+	      document.querySelector("#"+value).parentElement.parentElement.querySelector("input[type=file]").value = "";
+	      $("#"+value).val("");
+	      $("#attachment").val("0");
+	      Common.alert("File has been deleted");
+	      return;
+	  }else{
+          Common.alert("Delete File is disallowed.");
+          return;
+	  }
   }
 
   function fn_validPaymentChannel() {
@@ -2656,34 +2709,79 @@
             });
   }
 
+  let uploadFlag = false;
+
+  $(function(){
+      $('#file').change(function(evt) {
+          let fileAexc = evt.target.files[0];
+
+          if(fileAexc.size > 2000000){
+              Common.alert("*Only allow file with less than 2MB.");
+              return;
+          }
+
+          if(fileAexc == null && myFileCaches[1] != null){
+              delete myFileCaches[0];
+          }else if(fileAexc != null){
+              myFileCaches[1] = {file:fileAexc};
+          }
+          uploadFlag= true;
+          myFileCaches[1].file['checkFileValid'] = true;
+      });
+
+  });
+
+  function updateInstallInfo(){
+	    Common.ajax("POST","/sales/order/updateInstallInfo.do",$('#frmInstInfo').serializeJSON(), function(result) {
+             Common.alert(
+                 '<spring:message code="sal.alert.msg.updSummary" />'
+                     + DEFAULT_DELIMITER + "<b>"
+                     + result.message + "</b>",
+                 fn_reloadPage);
+           },
+           function(jqXHR, textStatus, errorThrown) {
+             try {
+               Common
+                   .alert('<spring:message code="sal.msg.dataPrepFail" />'
+                       + DEFAULT_DELIMITER
+                       + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+             } catch (e) {
+               console.log(e);
+             }
+           });
+  }
+
   function fn_doSaveInstallInfo() {
     console.log('!@# fn_doSaveInstallInfo START');
+    if(document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files.length){
 
-    Common
-        .ajax(
-            "POST",
-            "/sales/order/updateInstallInfo.do",
-            $('#frmInstInfo').serializeJSON(),
-            function(result) {
+        let formData = new FormData();
+        $.each(myFileCaches, function(n, v) {
+            formData.append(n, v.file);
+        });
 
-              Common.alert(
-                  '<spring:message code="sal.alert.msg.updSummary" />'
-                      + DEFAULT_DELIMITER + "<b>"
-                      + result.message + "</b>",
-                  fn_reloadPage);
+         if(uploadFlag){
+             fetch("/sales/order/attachmentFileUpload.do", {
+                 method: "POST",
+                 body: formData
+             })
+             .then(d=>d.json())
+             .then(r=> {
+                     if(r.code =="99"){
+                          Common.alert("Supplementary Agreement is failed to add. Please upload another file.");
+                          return;
+                      }
+                     $("#attachment").val(r.data.fileGroupKey);
+                     updateInstallInfo();
+             })
+         }else{
+        	   Common.alert("Supplementary Agreement is failed to add. Please upload another file.");
+               return;
+         }
+    }else{
+    	updateInstallInfo();
+    }
 
-            },
-            function(jqXHR, textStatus, errorThrown) {
-              try {
-                //                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common
-                    .alert('<spring:message code="sal.msg.dataPrepFail" />'
-                        + DEFAULT_DELIMITER
-                        + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-              } catch (e) {
-                console.log(e);
-              }
-            });
   }
 
   function fn_doSavePaymentChannel() {
@@ -3069,6 +3167,13 @@
   			return;
   		}
   	});
+  }
+
+  function displayFileName(fileGrpId, fileId){
+      var data = { atchFileGrpId : fileGrpId, atchFileId : fileId };
+      Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+    	  $("#agreementFile").val(result.atchFileName);
+      });
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -3697,6 +3802,7 @@
     <form id="frmInstInfo" method="post">
      <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
      <input name="salesOrdNo" type="hidden" value="${salesOrderNo}" />
+     <input name="attachment" type="hidden" id="attachment">
      <!-- Install Address Info                                                    -->
      <input id="modInstallId" name="installId" type="hidden" /> <input
       id="modInstCustAddIdOld" name="custAddIdOld" type="hidden" /> <input
@@ -3890,6 +3996,22 @@
         <td colspan="3"><textarea id="modInstct" name="instct"
           cols="20" rows="5"></textarea></td>
        </tr>
+	   <tr>
+	          <th scope="row">Water Source Type</th>
+	          <td colspan=3>
+	                <input id="modInstWaterSourceType" type="text" class="readonly w100p" readonly>
+					<div style="display:flex;margin-top:5px;">
+					    <div id="agreement" class="auto_file4 asImage" style="width: auto;">
+					      <input id="file" type="file" title="file add" accept="application/pdf" />
+					      <label for="agreement">
+					           <input id="agreementFile" type="text" class="input_text imageDetails" readonly class="readonly">
+					           <span class="label_text2"><a href="#">Add Supplementary Agreement</a></span>
+					      </label>
+					   </div>
+					    <div onclick="removeImg('agreementFile')"><label><span class="label_text2"><a href="#">Remove</a></span></label></div>
+					</div>
+	           </td>
+	     </tr>
       </tbody>
      </table>
      <!-- table end -->
@@ -4515,3 +4637,9 @@
  <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
+
+
+<script>
+
+
+</script>

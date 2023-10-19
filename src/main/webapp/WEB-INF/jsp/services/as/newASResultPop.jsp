@@ -15,6 +15,24 @@
  30/09/2020  FARUQ   1.0.10        Default value for DP,DD,DC,DT,SC when certain err description
  -->
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
+
+<style>
+    .auto_file4{position:relative; width:237px; padding-right:62px; height:20px;}
+    .auto_file4{float:none!important; width:490px; padding-right:0; margin-top:5px;}
+    .auto_file4:first-child{margin-top:0;}
+    .auto_file4:after{content:""; display:block; clear:both;}
+    .auto_file4.w100p{width:100%!important; box-sizing:border-box;}
+    .auto_file4 input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
+    .auto_file4 label{display:block; margin:0!important;}
+    .auto_file4 label:after{content:""; display:block; clear:both;}
+    .auto_file4 label{float:left; width:300px;}
+    label input[type=text]{width:100%!important;}
+    label input[type=text]{width:237px!important; float:left}
+    .attachment_file label{float:left; width:407px;}
+    .attachment_file label input[type=text]{width:345px!important; float:left}
+    span.label_text2{float:left;}
+    span.label_text2 a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
+</style>
 <script type="text/javaScript">
 	var regGridID;
 	var myFltGrd10;
@@ -26,7 +44,6 @@
 		    function() {
 			 createAUIGrid();
 			 createCFilterAUIGrid();
-
 			 //add_CreateAUIGrid();
 			 AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
 			 AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
@@ -169,8 +186,6 @@
 
 		if ($("#ddlErrorCode").val() == "9001800" && $("#ddlErrorDesc").val() == "2") {
 			Common.ajax("GET", "/services/as/selectDefectEntry.do?ORD_NO=" + SALES_ORD_NO, "", function(result) {
-				console.log("selectDefectEntry");
-				console.log(result);
 
 				if (result != null && result.length > 0) {
 					$("#def_part").val(result[0].defectCodeDp);
@@ -319,7 +334,6 @@
 	}
 
 	function fn_setSVC0004dInfo(result) {
-		console.log(result);
 		$("#creator").val(result[0].c28);
 		$("#creatorat").val(result[0].asResultCrtDt);
 		$("#txtResultNo").text(result[0].asResultNo);
@@ -1222,6 +1236,9 @@
 		$("#txtFilterRemark").attr("disabled", false);
 		$("#asNotMatch").attr("disabled", false);
 		$("#reworkProj").attr("disabled", false);
+		document.querySelectorAll(".imageFile").forEach(res=>{
+		    res.style.display="";
+		});
 		fn_clearPanelField_ASChargesFees();
 
 		//$("#ddlFilterQty").val("1");
@@ -1297,6 +1314,10 @@
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
 
+		document.querySelectorAll(".imageFile").forEach(res=>{
+		    res.style.display="none";
+		});
+
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
 		$("#psiRcd").val("");
@@ -1339,6 +1360,11 @@
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
 		$('#waterSrcType').attr("disabled", "disabled");
+
+	    document.querySelectorAll(".imageFile").forEach(res=>{
+	          res.style.display="none";
+	    });
+
 		$('#asNotMatch').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
 
@@ -1382,6 +1408,10 @@
 		$('#ddlWarehouse').attr("disabled", true);
 		$('#txtRemark').attr("disabled", true);
 		$("#iscommission").attr("disabled", true);
+
+        document.querySelectorAll(".imageFile").forEach(res=>{
+            res.style.display="none";
+        });
 
 		// AS CHARGES FEES
 		fn_clearPanelField_ASChargesFees();
@@ -1503,13 +1533,6 @@
 			inHInd = 'WEB';
 		}
 
-		/*var inHseRprInd = "";
-		if ($("input[name='replacement'][value='1']").prop("checked")) {
-		  inHseRprInd = 1;
-		} else {
-		  inHseRprInd = 0;
-		}*/
-
 		var asResultM = {
 			// GENERAL DATA
 			AS_NO : "${AS_NO}",
@@ -1532,6 +1555,7 @@
 			AS_PSI : $('#psiRcd').val(),
 			AS_LPM : $('#lpmRcd').val(),
 			WATER_SRC_TYPE : $('#waterSrcType').val(),
+			ATTACHMENT : 0,
 			AS_UNMATCH_REASON : $('#asNotMatch').val(),
 			REWORK_PROJ : $('#reworkProj').val(),
 
@@ -1570,16 +1594,6 @@
 			AS_WORKMNSH_TXS : 0,
 			AS_RESULT_MOBILE_ID : 0,
 
-			// AS IN HOUSE REPAIR
-			/*IN_HUSE_REPAIR_REM : $("#inHouseRemark").val(),
-			IN_HUSE_REPAIR_REPLACE_YN : inHseRprInd,
-			IN_HUSE_REPAIR_PROMIS_DT : $("#promisedDate").val(),
-			IN_HUSE_REPAIR_GRP_CODE : $("#productGroup").val(),
-			IN_HUSE_REPAIR_PRODUCT_CODE : $("#productCode").val(),
-			IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val(),
-			CHANGBN : inHInd,
-			IN_HOUSE_CLOSE : $("#IN_HOUSE_CLOSE").val(),*/
-
 			IN_HUSE_REPAIR_REM : "",
 			IN_HUSE_REPAIR_REPLACE_YN : 0,
 			IN_HUSE_REPAIR_PROMIS_DT : "",
@@ -1594,11 +1608,6 @@
 			// KR-OHK Serial Check
 			SERIAL_NO : $("#stockSerialNo").val(),
 			SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val(),
-			// DATA FOR SMS
-			/* AS_CT_CODE : $('#ddlCTCodeText').val(),
-			AS_FAIL_RESN_DESC : $('#ddlFailReason option:selected').text(),
-			TEL_M : $("#txtTelMobile").text(), */
-
 		}
 
 		var saveForm = {
@@ -1606,51 +1615,93 @@
 			"add" : addedRowItems,
 			"update" : editedRowItems,
 			"remove" : removedRowItems
-		}
+		};
 
-		// SAVE RESULT
-		// KR-OHK Serial Check add
-		if ($("#hidSerialRequireChkYn").val() == 'Y') {
-			Common.ajax("POST", "/services/as/newASInHouseAddSerial.do", saveForm, function(result) {
-				 if (result.code == '99') {
-					    Common.alert(result.message);
-				 } else {
-					    if (result.data != "" && result.data != null && result.data != "null") {
-					    	   Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>"
-											+ result.data + " </b>");
-					    	   $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
-							   fn_DisablePageControl();
-							   $("#_newASResultDiv1").remove();
-							   fn_searchASManagement();
-						} else {
-							   Common.alert("<b>AS result save successfully.</b>");
-							   $("#txtResultNo").html("<font size='3' color='red'> <b> "+ $("#txtResultNo").val()+ " </b></font>");
-							   fn_DisablePageControl();
-							   $("#_newASResultDiv1").remove();
-							   fn_searchASManagement();
-						}
-				}
-			});
-		} else {
-			Common.ajax("POST","/services/as/newASInHouseAdd.do", saveForm, function(result) {
-			    if (result.data != "" && result.data != null && result.data != "null") {
-			        Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
-					$("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
-					fn_DisablePageControl();
-					$("#_newASResultDiv1").remove();
-					fn_searchASManagement();
-				} else {
-				    Common.alert("<b>AS result save successfully.</b>");
-				    $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
-					fn_DisablePageControl();
-					$("#_newASResultDiv1").remove();
-					fn_searchASManagement();
-				}
-			}, function() {
-			    $("#_newASResultDiv1").remove();
-				fn_searchASManagement();
-			});
-		}
+        const formData = new FormData();
+        const container = new DataTransfer();
+        let uploadFlag = false;
+
+        if($('#ddlStatus').val() =="4"){
+	        document.querySelectorAll(".imageFile input.imageDetails").forEach((e, index)=> {
+	                if(e.parentElement.parentElement.querySelector("input[type=file]").files[0]){
+	                    uploadFlag=true;
+	                    container.items.add(new File([e.parentElement.parentElement.querySelector("input[type=file]").files[0]], 'MOBILE_SVC_' + "${AS_NO}" + '_' + moment().format("YYYYMMDD") + (index+1) +'.png', {type: e.parentElement.parentElement.querySelector("input[type=file]").files[0].type}))
+	                }
+	        });
+
+            if(uploadFlag){
+                $.each(container.files, function(n, v) {
+                          formData.append(n, v);
+                });
+
+                fetch("/homecare/services/install/uploadInsImage.do", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(d=>d.json())
+                .then(r=> {
+                        if(r.code =="99"){
+                             Common.alert("AS Image File is failed to submit. Please upload another image.");
+                             return;
+                        }
+                        asResultM.ATTACHMENT = r.fileGroupKey;
+                        updateASresult(saveForm);
+                })
+            }
+        }else{
+        	updateASresult(saveForm);
+        }
+	}
+
+	function removeImg(value){
+		document.querySelector("#"+value).parentElement.parentElement.querySelector("input[type=file]").value = "";
+		$("#"+value).val("");
+	}
+
+	function updateASresult(saveForm){
+	    // SAVE RESULT
+        // KR-OHK Serial Check add
+        if ($("#hidSerialRequireChkYn").val() == 'Y') {
+            Common.ajax("POST", "/services/as/newASInHouseAddSerial.do", saveForm, function(result) {
+                 if (result.code == '99') {
+                        Common.alert(result.message);
+                 } else {
+                        if (result.data != "" && result.data != null && result.data != "null") {
+                               Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>"
+                                            + result.data + " </b>");
+                               $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
+                               fn_DisablePageControl();
+                               $("#_newASResultDiv1").remove();
+                               fn_searchASManagement();
+                        } else {
+                               Common.alert("<b>AS result save successfully.</b>");
+                               $("#txtResultNo").html("<font size='3' color='red'> <b> "+ $("#txtResultNo").val()+ " </b></font>");
+                               fn_DisablePageControl();
+                               $("#_newASResultDiv1").remove();
+                               fn_searchASManagement();
+                        }
+                }
+            });
+        } else {
+            Common.ajax("POST","/services/as/newASInHouseAdd.do", saveForm, function(result) {
+                if (result.data != "" && result.data != null && result.data != "null") {
+                    Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
+                    $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
+                    fn_DisablePageControl();
+                    $("#_newASResultDiv1").remove();
+                    fn_searchASManagement();
+                } else {
+                    Common.alert("<b>AS result save successfully.</b>");
+                    $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
+                    fn_DisablePageControl();
+                    $("#_newASResultDiv1").remove();
+                    fn_searchASManagement();
+                }
+            }, function() {
+                $("#_newASResultDiv1").remove();
+                fn_searchASManagement();
+            });
+        }
 	}
 
 	function fn_clearPanelField_ASChargesFees() {
@@ -1840,6 +1891,36 @@
 	                    rtnValue = false;
 	                }
 				}
+
+				 if (document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+                     rtnMsg += "* Image1 is compulsory to uplaod. </br>";
+                     rtnValue = false;
+                 }else{
+                     if(document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                         rtnMsg += "* Image1 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+                         rtnValue = false;
+                     }
+                 }
+
+                 if (document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+                     rtnMsg += "* Image2 is compulsory to uplaod. </br>";
+                     rtnValue = false;
+                 }else{
+                     if(document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                         rtnMsg += "* Image2 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+                         rtnValue = false;
+                     }
+                 }
+
+                 if (document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+                     rtnMsg += "* Image3 is compulsory to uplaod. </br>";
+                     rtnValue = false;
+                 }else{
+                     if(document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                         rtnMsg += "* Image3 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+                         rtnValue = false;
+                     }
+                 }
 
 				// KR-OHK Serial Check
 				if ($("#hidSerialRequireChkYn").val() == 'Y'
@@ -2180,7 +2261,7 @@
 			CTIDObj : 'CTIDObj',
 			CTgroupObj : 'CTgroupObj'
 		}
-	    console.log("newAsResultPop.do");
+
 		Common.popupDiv("/organization/allocation/allocation.do", {
 			ORD_ID : ord_id,
 			S_DATE : vdte,
@@ -2926,11 +3007,12 @@
                                     <tr>
 							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
 							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled">
-							                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
-							                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
-							                   <option value="${list.codeId}">${list.codeName}</option>
-							                </c:forEach></td>
-							            </select></td>
+									                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+									                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+									                   <option value="${list.codeId}">${list.codeName}</option>
+									                </c:forEach>
+							                 </select>
+							            </td>
 							            <th scope="row">AS Error Not Match</th>
                                         <td><select class="w100p" id="asNotMatch" name="asNotMatch" disabled="disabled">
                                             <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -2939,6 +3021,51 @@
                                             </c:forEach></td>
                                         </select></td>
 							       </tr>
+							       <tr class="imageFile" style="display:none;">
+								        <th scope="row">Image 1<span name="m18" id="m18" class="must">*</span></th>
+								        <td colspan=3>
+								            <div style="display:flex">
+					                            <div id="asImage1" class="auto_file4 asImage" style="width: auto;">
+					                              <input type="file" title="file add" accept="image/*" />
+					                              <label for="asImage1">
+					                                   <input id="imageFile1" type="text" class="input_text imageDetails" readonly class="readonly">
+					                                   <span class="label_text2"><a href="#">Upload</a></span>
+					                              </label>
+					                           </div>
+					                           <div onclick="removeImg('imageFile1')"><label><span class="label_text2"><a href="#">Remove</a></span></label></div>
+                                            </div>
+                                         </td>
+							       </tr>
+                                   <tr class="imageFile" style="display:none;">
+                                        <th scope="row">Image 2<span name="m18" id="m18" class="must">*</span></th>
+                                        <td colspan=3>
+                                            <div style="display:flex">
+                                                <div id="asImage2" class="auto_file4 asImage" style="width: auto;">
+                                                  <input type="file" title="file add" accept="image/*" />
+                                                  <label for="asImage2">
+                                                       <input id="imageFile2" type="text" class="input_text imageDetails" readonly class="readonly">
+                                                       <span class="label_text2"><a href="#">Upload</a></span>
+                                                  </label>
+                                               </div>
+                                               <div onclick="removeImg('imageFile2')"><label><span class="label_text2"><a href="#">Remove</a></span></label></div>
+                                            </div>
+                                         </td>
+                                   </tr>
+                                   <tr class="imageFile" style="display:none;">
+                                        <th scope="row">Image 3<span name="m18" id="m18" class="must">*</span></th>
+                                        <td colspan=3>
+                                            <div style="display:flex">
+                                                <div id="asImage3" class="auto_file4 asImage" style="width: auto;">
+                                                  <input type="file" title="file add" accept="image/*" />
+                                                  <label for="asImage3">
+                                                       <input id="imageFile3" type="text" class="input_text imageDetails" readonly class="readonly">
+                                                       <span class="label_text2"><a href="#">Upload</a></span>
+                                                  </label>
+                                               </div>
+                                                <div onclick="removeImg('imageFile3')"><label><span class="label_text2"><a href="#">Remove</a></span></label></div>
+                                            </div>
+                                         </td>
+                                   </tr>
                                 </tbody>
                             </table>
                         </dd>
@@ -3241,5 +3368,10 @@
     </section>
 </div>
 <script type="text/javaScript">
+	document.querySelectorAll(".asImage label").forEach(label => {
+	    label.onclick = () => {
+	        label.parentElement.querySelector("input[type=file]").click()
+	    }
+	});
 
 </script>
