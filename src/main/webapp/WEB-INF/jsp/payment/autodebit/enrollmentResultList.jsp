@@ -277,11 +277,11 @@ hideNewPopup = function() {
 
 showDDNewPopup = function() {
 	console.log("test dd show");
-	$("#new_DD_wrap").show();
+	$("#new_dd_wrap").show();
 }
 
 hideDDNewPopup = function() {
-    $("#new_DD_wrap").hide();
+    $("#new_dd_wrap").hide();
     $("#myDdForm").each(function(){
         this.reset();
     });
