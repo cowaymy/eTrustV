@@ -803,4 +803,17 @@ public class HcASManagementListController {
       return ResponseEntity.ok(getAsDefectEntryList);
     }
 
+    @RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getErrDetilList(@RequestParam Map<String, Object> params,
+        HttpServletRequest request, ModelMap model) {
+      logger.debug("===========================/getErrDetilList.do===============================");
+      logger.debug("== params " + params.toString());
+      logger.debug("===========================/getErrDetilList.do===============================");
+
+      List<EgovMap> getErrDetilList = hcASManagementListService.getErrDetilList(params);
+      return ResponseEntity.ok(getErrDetilList);
+    }
+
+
+
 }
