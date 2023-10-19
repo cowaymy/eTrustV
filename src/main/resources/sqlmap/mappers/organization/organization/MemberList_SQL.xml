@@ -487,27 +487,24 @@ FROM (
 <select id="selectMemberList" parameterType="Map" resultType="egovMap">
  <![CDATA[
           WITH LAST_ACT AS (
-              SELECT
-                PV_YEAR || '/' || TO_CHAR(PV_MONTH, '00') LAST_ACT_DT, MEM_ID
+               SELECT
+                MAX(PV_YEAR || '/' || TO_CHAR(PV_MONTH, '00')) LAST_ACT_DT, MEM_ID
               FROM SAL0001D
               WHERE PV_YEAR <> 0
                 AND PV_MONTH <> 0
                 AND STUS_CODE_ID = 4
-                ORDER BY PV_YEAR DESC, PV_MONTH DESC
+                GROUP BY MEM_ID
           ),
           TEST_RESULT_TABLE AS (
+
               SELECT
-                COURS_MEM_ID,
-                CASE COURS_TEST_RESULT
-                     WHEN 'P' THEN 'Pass'
-                     WHEN 'F' THEN 'Fail'
-                     WHEN 'AB' THEN 'Absent'
-                     ELSE '' END TEST_RESULT
-              FROM MSC0009D A
-              JOIN MSC0008d b on b.cours_id = a.cours_id
-              WHERE COURS_MEM_STUS_ID <>  8
-                AND b.cours_stus_id not in (3,8)
-              ORDER BY A.COURS_ITM_ID DESC
+                    COURS_MEM_ID,
+                    MAX(COURS_ITM_ID) COURS_ITM_ID
+                FROM MSC0009D A
+                JOIN MSC0008d b on b.cours_id = a.cours_id
+                WHERE COURS_MEM_STUS_ID <>  8 AND b.cours_stus_id not in (3,8)
+                GROUP BY COURS_MEM_ID
+
           )
           SELECT
           Extent1.MEM_ID MemberID,
@@ -523,7 +520,17 @@ FROM (
           Extent5.ct_sub_grp,
           extent1.TRAINEE_TYPE,
           Extend6.MEM_ORG_DESC position_name,
-          ( SELECT TEST_RESULT FROM TEST_RESULT_TABLE WHERE COURS_MEM_ID = EXTENT1.MEM_ID AND ROWNUM <= 1 ) TEST_RESULT,
+          CASE x.COURS_TEST_RESULT
+            WHEN 'P'  THEN
+                'Pass'
+            WHEN 'F'  THEN
+                'Fail'
+            WHEN 'AB' THEN
+                'Absent'
+            ELSE
+                ''
+          END TEST_RESULT,
+          -- ( SELECT TEST_RESULT FROM TEST_RESULT_TABLE WHERE COURS_MEM_ID = EXTENT1.MEM_ID AND ROWNUM <= 1 ) TEST_RESULT,
           Extent9.USER_NAME as approved_by,
           Extent10.CODE as branch,
           TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') CRT_DT,
@@ -542,7 +549,7 @@ FROM (
                         END
           AS ADDRESS,
           Extent12.GRP_CODE,
-          ( SELECT LAST_ACT_DT FROM LAST_ACT WHERE MEM_ID = EXTENT1.MEM_ID AND ROWNUM <= 1 ) LAST_ACT_DT,
+          ( SELECT LAST_ACT_DT FROM LAST_ACT WHERE MEM_ID = EXTENT1.MEM_ID) LAST_ACT_DT,
           /*vaccination information */
           V.VACCINE_STATUS,
           V.REASON_ID,
@@ -573,6 +580,8 @@ FROM (
             /* Vaccination info */
             LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE = Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
             LEFT JOIN SYS0013M Extent17 ON Extent1.rank = Extent17.code_id
+            LEFT JOIN TEST_RESULT_TABLE C ON C.COURS_MEM_ID = Extent1.MEM_ID
+            LEFT JOIN MSC0009D x ON x.cours_itm_id = c.cours_itm_id
     ]]>
   WHERE 1=1
   <if test="memTypeCom != null and memTypeCom != ''">
@@ -632,7 +641,7 @@ FROM (
   <if test="deptCode != null and deptCode != '' ">
     AND EXTENT12.DEPT_CODE = #{deptCode}
   </if>
-  <if test="sessionTypeID != 4 and sessionTypeID != 6">
+  <!-- <if test="sessionTypeID != 4 and sessionTypeID != 6">
     <choose>
       <when test="memberLevel == 1">
         AND extent12.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
@@ -649,7 +658,7 @@ FROM (
         </if>
       </when>
     </choose>
-  </if>
+  </if> -->
   ORDER BY Extent1.MEM_CODE ASC
 </select>
 
