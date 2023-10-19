@@ -36,7 +36,26 @@ FROM    ORG0005D A                                                              
             ON  A.MEM_ID = B.MEM_ID
             AND B.STUS = 1
             AND B.MEM_TYPE = #{memType}
-        LEFT OUTER JOIN ORG0007D C                                              --MemberPromoEntry
+        LEFT OUTER JOIN (
+            SELECT * FROM ORG0007D C WHERE
+             c.promo_id IN (
+                SELECT
+                    MAX(c.promo_id) AS promo_id
+                FROM
+                    org0007d c
+                WHERE
+                    to_char(c.evt_apply_dt, 'YYYYMM') <= to_char(sysdate, 'YYYYMM')
+                GROUP BY
+                    c.mem_id
+                UNION
+                SELECT
+                    MAX(c.promo_id) AS promo_id
+                FROM
+                    org0007d c
+                WHERE
+                    c.promo_id IS NULL
+            )
+           ) C                                              --MemberPromoEntry
             ON  C.MEM_ID = A.MEM_ID
             AND C.EVT_APPLY_DT IS NOT NULL
             AND TO_CHAR(C.EVT_APPLY_DT, 'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
@@ -68,15 +87,6 @@ AND     (
             AND A.MEM_UP_ID = #{memId}
 </if>
 <![CDATA[
-        )
-AND     (
-            C.PROMO_ID IN (
-                              SELECT  MAX(C.PROMO_ID) AS PROMO_ID
-                              FROM    ORG0007D C
-                              WHERE   TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
-                              GROUP   BY C.MEM_ID
-                          )
-             OR C.PROMO_ID IS NULL
         )
 ]]>
 <if test="memType == 2 or memType == 5758">
