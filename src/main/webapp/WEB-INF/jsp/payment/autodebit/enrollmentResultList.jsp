@@ -7,11 +7,15 @@ var viewGridID;
 var newGridID;
 var selectedGridValue;
 
+var newDdGridID;
+
 $(document).ready(function(){
 
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	//viewGridID = GridCommon.createAUIGrid("grid_wrap_view", viewColumn,null,gridPros);
     newGridID = GridCommon.createAUIGrid("grid_wrap_new", newColumn,null,gridPros);
+
+    newDdGridID = GridCommon.createAUIGrid("grid_wrap_dd_new", newColumnDD,null,gridPros);
 
     AUIGrid.setGridData(viewGridID, []);
     // Master Grid 셀 클릭시 이벤트
@@ -62,6 +66,39 @@ $(document).ready(function(){
         }
     });
 
+    $('#fileSelector2').on('change', function(evt) {
+        if (!checkHTML5Brower()) {
+            // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
+            // 파일 내용 읽어 반환시켜 그리드에 적용.
+            commitFormSubmit2();
+
+            //alert("브라우저가 HTML5 를 지원하지 않습니다.");
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                return;
+            }
+            var reader = new FileReader();
+            //reader.readAsText(file); // 파일 내용 읽기
+            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+            reader.onload = function(event) {
+                if (typeof event.target.result != "undefined") {
+                    // 그리드 CSV 데이터 적용시킴
+                    AUIGrid.setCsvGridData(newDdGridID, event.target.result, false);
+
+                  //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(newDdGridID,0);
+                } else {
+                    Common.alert("<spring:message code='pay.alert.noData'/>");
+                }
+            };
+            reader.onerror = function() {
+                Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
+            };
+        }
+    });
+
 
 });
 
@@ -104,6 +141,42 @@ $('#myForm').ajaxSubmit({
 });
 }
 
+function commitFormSubmit2() {
+
+	AUIGrid.showAjaxLoader(newDdGridID);
+
+	// Submit 을 AJax 로 보내고 받음.
+	// ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
+	// 링크 : http://malsup.com/jquery/form/
+
+	$('#myDdForm').ajaxSubmit({
+	   type : "json",
+	   success : function(responseText, statusText) {
+	       if(responseText != "error") {
+
+	           var csvText = responseText;
+
+	           // 기본 개행은 \r\n 으로 구분합니다.
+	           // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
+	           // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
+	           // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
+	           csvText = csvText.replace(/\r?\n/g, "\r\n")
+
+	           // 그리드 CSV 데이터 적용시킴
+	           AUIGrid.setCsvGridData(newDdGridID, csvText);
+
+	           AUIGrid.removeAjaxLoader(newDdGridID);
+
+	           //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+	           AUIGrid.removeRow(newDdGridID,0);
+	       }
+	   },
+	   error : function(e) {
+	       Common.alert("ajaxSubmit Error : " + e);
+	   }
+	});
+	}
+
 var gridPros = {
         editable: false,
         showStateColumn: false,
@@ -138,6 +211,19 @@ var newColumn=[
       {dataField:"3", headerText:"<spring:message code='pay.head.year'/>"},
       {dataField:"4", headerText:"<spring:message code='pay.head.rejectCode'/>"}
 ];
+
+var newColumnDD=[
+               {dataField:"0", headerText:"PaymentID"},
+               {dataField:"1", headerText:"Type"},
+               {dataField:"2", headerText:"AccountNo"},
+               {dataField:"3", headerText:"AccountType"},
+               {dataField:"4", headerText:"AccountHolder"},
+               {dataField:"5", headerText:"IssueBank"},
+               {dataField:"6", headerText:"StartDate"},
+               {dataField:"7", headerText:"RejectDate"},
+               {dataField:"8", headerText:"RejectCode"},
+               {dataField:"9", headerText:"Status"}
+         ];
 //리스트 조회.
 function fn_getOrderListAjax() {
     Common.ajax("GET", "/payment/selectResultList", $("#resultForm").serialize(), function(result) {
@@ -202,25 +288,51 @@ hideDDNewPopup = function() {
 }
 
 //수정 처리
-function fn_saveGridMap(){
+function fn_saveGridMap(type){
 
-    //param data array
-    var data = {};
+	//param data array
+	var data = {};
 
-    var gridList = AUIGrid.getGridData(newGridID);       //그리드 데이터
-    var formList = $("#myForm").serializeArray();       //폼 데이터
+	if (type =='DD'){ // eMandate
 
-    //array에 담기
-    if(gridList.length > 0) {
-        data.all = gridList;
-    }  else {
-    	Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
-        return;
-        //data.all = [];
-    }
+	    var gridList = AUIGrid.getGridData(newDdGridID);       //그리드 데이터
+	    var formList = $("#myDdForm").serializeArray();       //폼 데이터
 
-    if(formList.length > 0) data.form = formList;
-    else data.form = [];
+	    //array에 담기
+	    if(gridList.length > 0) {
+	        data.all = gridList;
+	    }  else {
+	    	Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
+	        return;
+	        //data.all = [];
+	    }
+
+	    if(formList.length > 0){
+	    	data.form = formList;
+	    	data.type = ['DD'];
+	    }
+	    else data.form = [];
+
+	} else {
+
+        var gridList = AUIGrid.getGridData(newGridID);       //그리드 데이터
+        var formList = $("#myForm").serializeArray();       //폼 데이터
+
+        //array에 담기
+        if(gridList.length > 0) {
+            data.all = gridList;
+        }  else {
+            Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
+            return;
+            //data.all = [];
+        }
+
+        if(formList.length > 0) {
+        	data.form = formList;
+        	data.type = [];
+        }
+        else data.form = [];
+	}
 
     //Ajax 호출
     Common.ajax("POST", "/payment/uploadFile", data, function(result) {
@@ -460,7 +572,7 @@ function fn_clear(){
 </div>
 
 
-<div id="new_DD_wrap" class="popup_wrap" style="display:none;">
+<div id="new_dd_wrap" class="popup_wrap" style="display:none;">
     <header class="pop_header">
         <h1>Enrollment Result Update</h1>
         <ul class="right_opt">
@@ -472,11 +584,11 @@ function fn_clear(){
     <section class="pop_body">
         <!-- search_table start -->
         <ul class="right_btns mb10">
-            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a></p></li>
-            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/EnrollmentResult_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap('DD');"><spring:message code='sys.btn.save'/></a></p></li>
+            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/DD_EnrollmentResult_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
         <section class="search_table">
-            <form name="myForm" id="myForm">
+            <form name="myDdForm" id="myDdForm">
                 <!-- table start -->
                 <table class="type1">
                     <caption>table</caption>
@@ -489,7 +601,7 @@ function fn_clear(){
                             <th scope="row">Update Type</th>
                             <td>
                                 <select name="updateType" id="updateType"  style="width:100%">
-                                    <option value="978">Submit Date</option>
+                                    <!-- <option value="978">Submit Date</option> -->
                                     <option value="979">Start Date</option>
                                     <option value="980">Reject Date</option>
                                 </select>
@@ -499,7 +611,7 @@ function fn_clear(){
                             <th scope="row">Select your CSV file *</th>
                             <td>
                                 <div class="auto_file"><!-- auto_file start -->
-                                    <input type="file" id="fileSelector" title="file add" accept=".csv"/>
+                                    <input type="file" id="fileSelector2" title="file add" accept=".csv"/>
                                 </div><!-- auto_file end -->
                             </td>
                         </tr>
@@ -509,7 +621,7 @@ function fn_clear(){
         </section>
 
         <!-- grid_wrap start -->
-            <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
+            <article id="grid_wrap_dd_new" class="grid_wrap" style="display:none;"></article>
         <!-- grid_wrap end -->
     </section>
     <!-- pop_body end -->
