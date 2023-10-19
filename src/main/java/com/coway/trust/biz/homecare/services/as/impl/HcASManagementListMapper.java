@@ -23,6 +23,8 @@ public interface HcASManagementListMapper {
 	public List<EgovMap> selectCTByDSCSearch2(Map<String, Object> params) throws Exception;
 	public List<EgovMap> getErrMstList(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> getErrDetilList(Map<String, Object> params);
+
 	public List<EgovMap> selectASManagementList(Map<String, Object> params) throws Exception;
 
 	public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception;
