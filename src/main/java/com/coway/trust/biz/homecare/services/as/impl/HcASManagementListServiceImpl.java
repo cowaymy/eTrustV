@@ -950,4 +950,9 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
       return hcASManagementListMapper.getAsDefectEntry(params);
     }
 
+    @Override
+    public List<EgovMap> getErrDetilList(Map<String, Object> params) {
+      return hcASManagementListMapper.getErrDetilList(params);
+    }
+
 }
