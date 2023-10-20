@@ -137,7 +137,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		String existingVoucherCode = "";//CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(preOrderVO));
+		String existingVoucherCode = CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(preOrderVO));
 		String currentVoucherCode = preOrderVO.getVoucherCode();
 
 		/*
