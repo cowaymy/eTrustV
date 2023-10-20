@@ -2124,7 +2124,7 @@
   		  Common.alert('Both voucher code and voucher email must be key in');
   		  return;
   	  }
-  	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+  	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail, isEKeyIn: true}, function(result) {
   	        if(result.code == "00") {
   	        	voucherAppliedStatus = 1;
   	        	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);

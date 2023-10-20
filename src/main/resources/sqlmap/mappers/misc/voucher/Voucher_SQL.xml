@@ -452,6 +452,17 @@
 		AND A.USED = 0
 	</select>
 
+	<select id="isVoucherValidToApplyForEKeyIn" resultType="int">
+		SELECT CASE WHEN COUNT(PRE_ORD_ID) > 0 THEN 0 ELSE 1 END AS VALID
+		FROM SAL0213M
+		WHERE 1=1
+		AND VOUCHER_CODE = #{voucherCode}
+		AND STUS_ID NOT IN (10)
+		<if test = 'preOrdId != null and preOrdId != "" and preOrdId != 0'>
+		AND PRE_ORD_ID != #{preOrdId}
+		</if>
+	</select>
+
 	<select id="getVoucherUsagePromotionId" resultType="int">
  		 SELECT B.PROMO_ID FROM MSC0057D A
          JOIN MSC0058D B

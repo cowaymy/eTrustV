@@ -266,7 +266,17 @@ public class VoucherController {
 	public ResponseEntity<ReturnMessage> voucherVerification(@RequestParam Map<String, Object> params,
 			ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		message = voucherService.isVoucherValidToApply(params, sessionVO);
+
+		if(params.get("isEKeyIn") != null && params.get("isEKeyIn").toString().equals("true")){
+			message = voucherService.isVoucherValidToApplyForEKeyIn(params, sessionVO);
+			if(message.getCode() == AppConstants.SUCCESS){
+				message = voucherService.isVoucherValidToApply(params, sessionVO);
+			}
+		}
+		else{
+			message = voucherService.isVoucherValidToApply(params, sessionVO);
+		}
+
 		return ResponseEntity.ok(message);
 	}
 

@@ -54,4 +54,6 @@ public interface VoucherService {
 	ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO);
 
 	List<EgovMap> getPendingEmailSendInfo();
+
+	ReturnMessage isVoucherValidToApplyForEKeyIn(Map<String, Object> params, SessionVO sessionVO);
 }

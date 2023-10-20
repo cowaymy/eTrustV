@@ -364,6 +364,30 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
+	public ReturnMessage isVoucherValidToApplyForEKeyIn(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		if(params.get("voucherCode").toString().isEmpty() || params.get("custEmail").toString().isEmpty()
+				|| params.get("platform").toString().isEmpty()){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Please fill in all the required infromation for checking.");
+			return message;
+		}
+
+		int validResult = voucherMapper.isVoucherValidToApplyForEKeyIn(params);
+
+		if(validResult == 0){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Voucher is applied on other e-KeyIn orders");
+			return message;
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageSourceAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return message;
+	}
+
+	@Override
 	public List<EgovMap> getVoucherUsagePromotionId(Map<String, Object> params) {
 		return voucherMapper.getVoucherUsagePromotionId(params);
 	}
