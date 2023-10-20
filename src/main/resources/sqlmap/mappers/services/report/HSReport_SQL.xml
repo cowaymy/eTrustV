@@ -622,23 +622,21 @@
    ]]>
 
      <if test="hsMonth != null and hsMonth != ''">
-       AND ( A.YEAR = TO_NUMBER(TO_CHAR(TO_DATE(#{hsMonth},'mm/yyyy'), 'yyyy')) )
-       AND ( A.MONTH = TO_NUMBER(TO_CHAR(TO_DATE(#{hsMonth},'mm/yyyy'), 'mm')) )
+       AND A.YEAR  = EXTRACT(YEAR  FROM TO_DATE(#{hsMonth},'mm/yyyy'))
+       AND A.MONTH = EXTRACT(MONTH FROM TO_DATE(#{hsMonth},'mm/yyyy'))
      </if>
 
      <if test="hsNumber != null and hsNumber != ''">
-       AND A.NO = UPPER(#{hsNumber})
+       AND A.NO = #{hsNumber}
      </if>
 
      <if test="orderNumber != null and orderNumber != ''">
        AND C.SALES_ORD_NO = #{orderNumber}
      </if>
 
-     <if test="settleDtFrm != null and settleDtFrm != ''">
-       <if test="settleDtTo != null and settleDtTo != ''">
-       AND ((to_char(B.SETL_DT, 'yyyymmdd')) <![CDATA[>=]]> to_char(to_date(#{settleDtFrm}, 'dd/mm/yyyy'), 'yyyymmdd')
-       AND (to_char(B.SETL_DT, 'yyyymmdd')) <![CDATA[<=]]> to_char(to_date(#{settleDtTo}, 'dd/mm/yyyy'), 'yyyymmdd'))
-       </if>
+     <if test="settleDtFrm != null and settleDtFrm != ''and settleDtTo != null and settleDtTo != ''">
+       AND B.SETL_DT <![CDATA[>=]]> to_date(#{settleDtFrm}|| ' 00:00:00', 'dd/mm/yyyy hh24:mi:ss')
+       AND B.SETL_DT <![CDATA[<=]]> to_date(#{settleDtTo} || ' 23:59:59', 'dd/mm/yyyy hh24:mi:ss')
      </if>
 
     <![CDATA[
@@ -655,7 +653,7 @@
     ]]>
 
     <if test="memberCode != null and memberCode != ''">
-      AND (CASE WHEN (E.Mem_ID IS NOT NULL) THEN E.Mem_Code ELSE '' END) = UPPER(#{memberCode})
+      WHERE E.Mem_Code = #{memberCode}
     </if>
 
      <![CDATA[ ORDER BY A.SCHDUL_ID ASC ]]>
