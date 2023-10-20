@@ -123,7 +123,7 @@ console.log(gridObj);
     }
 
     function fn_clear(){
-        $("#searchForm")[0].reset();
+    	window.location.reload();
     }
 
     function fn_excelDown(){
