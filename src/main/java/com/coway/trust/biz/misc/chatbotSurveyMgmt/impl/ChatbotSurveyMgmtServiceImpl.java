@@ -53,74 +53,113 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public List<EgovMap> selectChatbotSurveyMgmtEdit(Map<String, Object> params) {
-		return chatbotSurveyMgmtMapper.selectChatbotSurveyMgmtEdit(params);
+
+		List<EgovMap> result = null;
+
+		int categoryDt = chatbotSurveyMgmtMapper.getCategoryDate(params.get("ctrlId").toString());
+
+		if(categoryDt > 0){
+			Date today = new Date();
+	        String targetQuesStr = null;
+
+        	//Get first day of the next month
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(today);
+
+            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+
+            Date firstDayOfNextMonth = calendar.getTime();
+            targetQuesStr = new SimpleDateFormat("yyyyMMdd").format(firstDayOfNextMonth);
+
+	        params.put("sysDt",targetQuesStr);
+
+			 result = chatbotSurveyMgmtMapper.selectChatbotSurveyMgmtEdit(params);
+		 }
+
+		return result;
 	}
 
 	@Override
 	public void saveSurveyDetail(Map<String, Object> params, SessionVO sessionVO) {
 
-		//Get last day of the month
-        Date today = new Date();
+		Date today = new Date();
+        String targetQuesStr = null;
 
+    	//Get first day of the next month
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
 
         calendar.add(Calendar.MONTH, 1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.add(Calendar.DATE, -1);
 
-        Date lastDayOfMonth = calendar.getTime();
-        String lastDay = new SimpleDateFormat("yyyyMMdd").format(lastDayOfMonth);
+        Date firstDayOfNextMonth = calendar.getTime();
+        targetQuesStr = new SimpleDateFormat("yyyyMMdd").format(firstDayOfNextMonth);
+
+		// ============================
+		// Get and update existing questions :: Start
+		// ============================
+		// GET EIXST SURVEY QUESTION
+		List<EgovMap> result = null;
+		EgovMap updateInfo = new EgovMap();
+
+		int categoryDt = chatbotSurveyMgmtMapper.getCategoryDate(params.get("id").toString());
+
+		if(categoryDt > 0){
+
+	        updateInfo.put("sysDt",targetQuesStr);
+		 	updateInfo.put("ctrlId", params.get("id").toString());
+
+		 	//Get valid existing Surv_id
+		 	Object[] existSurveyQuesList = chatbotSurveyMgmtMapper.getExistTargetQuestion(updateInfo).toArray();
+
+			if(existSurveyQuesList.length > 0){
+				String[] survIdArray = Arrays.copyOf(existSurveyQuesList, existSurveyQuesList.length, String[].class);
+				updateInfo.put("survIdArray", survIdArray);
+
+				String targetQuesStrDt = chatbotSurveyMgmtMapper.getTargetQuesStrDt(updateInfo);
 
 
-		//CBT0002M SURV_QUES_YN = N AND endDate = editDt (last day of the month)
-        EgovMap updateInfo = new EgovMap();
-        updateInfo.put("ctrlId", params.get("id").toString());
-        updateInfo.put("userId", sessionVO.getUserId());
-        updateInfo.put("lastDay", lastDay);
+				if(targetQuesStrDt.equals(targetQuesStr)){
+					//Update exist target question's end date to yesterday
 
-        //Get existing target question SURV_ID
-        Object[] survIdList= chatbotSurveyMgmtMapper.getTargetQuestionSurvID(updateInfo).toArray();
+					Calendar calendar2 = Calendar.getInstance();
+					calendar2.setTime(today);
+					calendar2.add(Calendar.DATE, -1);
 
-        //Update existing records
-        if(survIdList.length > 0){
-          String[] survIdArray = Arrays.copyOf(survIdList, survIdList.length, String[].class);
-          updateInfo.put("survIdArray", survIdArray);
+					Date yesterdayDt = calendar2.getTime();
+					String yesterday = new SimpleDateFormat("yyyyMMdd").format(yesterdayDt);
+					updateInfo.put("lastDay", yesterday);
+				}else{
+					// update ques end date to end of the month
+					calendar.add(Calendar.DATE, -1);
 
-          //Update existing target question
-          chatbotSurveyMgmtMapper.updateExistTargetQues(updateInfo);
+					Date lastDayOfMonth = calendar.getTime();
+			        String lastDay = new SimpleDateFormat("yyyyMMdd").format(lastDayOfMonth);
 
-          //Update existing target answer
-          chatbotSurveyMgmtMapper.updateTargetAnsYn(updateInfo);
-     	}
+					updateInfo.put("lastDay", lastDay);
+				}
 
-        //INSERT NEW SURVEY QUESTION
-        String newStartDt = null;
-        // Only marketing campaign and customer care survey able to reflect new survey on NEXT DAY
-        // Other than above mentioned, new survey questions able to reflect on FIRST DAY OF NEXT MONTH
-        if(params.get("ctrlType").toString().equals("508") || params.get("ctrlType").toString().equals("509") || params.get("ctrlType").toString().equals("510")){
-        	//Get first day of the next month
-        	calendar.add(Calendar.DATE, 1);
+				updateInfo.put("userId", sessionVO.getUserId());
 
-            Date firstDayOfNextMonth = calendar.getTime();
-            newStartDt = new SimpleDateFormat("yyyyMMdd").format(firstDayOfNextMonth);
+				//Update existing target question
+				chatbotSurveyMgmtMapper.updateExistTargetQues(updateInfo);
 
-        }else{
-        	Calendar calendar2 = Calendar.getInstance();
-        	calendar2.setTime(today);
+			}
+		}
+		// ===========================
+		// Get and update existing questions :: End
+		// ===========================
 
-        	calendar2.add(Calendar.DAY_OF_YEAR, 1);
-        	Date tomorrow = calendar2.getTime();
 
-        	newStartDt = new SimpleDateFormat("yyyyMMdd").format(tomorrow);
-        }
-
-        //Set end date for new survey question (get value from master table)
+        // ==========================
+        // Insert new question and answer :: Start
+        // ==========================
+		//Set end date for new survey question (get value from master table)
         String endDate = chatbotSurveyMgmtMapper.getSurveyEndDate(params.get("id").toString());
         String newEndDt = null;
 
         try {
-
 			Date endDt = new SimpleDateFormat("yyyyMM").parse(endDate);
 			Calendar c = Calendar.getInstance();
 			c.setTime(endDt);
@@ -142,7 +181,7 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
         	gridData = (Map<String, Object>) gridDataList.get(i);
         	gridData.put("userId", sessionVO.getUserId());
         	gridData.put("ctrlId", params.get("id").toString());
-        	gridData.put("newStartDt", newStartDt);
+        	gridData.put("newStartDt", targetQuesStr);
         	gridData.put("newEndDt", newEndDt);
 
         	// get cbt0002m nextval, coz need to insert 0003d togther
@@ -182,5 +221,8 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
             	chatbotSurveyMgmtMapper.insertNewSurveyAns(gridData);
         	}
         }
+        // ==========================
+        // Insert new question and answer :: End
+        // ==========================
 	}
 }

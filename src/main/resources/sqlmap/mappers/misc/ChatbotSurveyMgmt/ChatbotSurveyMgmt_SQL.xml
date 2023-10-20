@@ -36,7 +36,7 @@
             GROUP BY A.CTRL_ID, B.USER_NAME
         )C ON A.CTRL_ID = C.CTRL_ID
         WHERE 1=1
-        AND A.CTRL_USE_YN = 'Y'
+<!--         AND A.CTRL_USE_YN = 'Y' -->
         <if test="surveyType != null and surveyType != '' ">
             AND A.CTRL_TYPE = #{surveyType}
         </if>
@@ -61,6 +61,14 @@
         AND DISAB = 0
     </select>
 
+    <select id="getCategoryDate" parameterType="String" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM CBT0001M
+        WHERE CTRL_ID = #{ctrlId}
+        AND TO_CHAR(SYSDATE, 'YYYYMM') BETWEEN CTRL_STR_YYYYMM AND CTRL_END_YYYYMM
+    </select>
+
     <select id="selectChatbotSurveyMgmtEdit" parameterType="Map" resultType="egovMap">
         SELECT
 				A.SURV_SEQ,
@@ -77,7 +85,8 @@
 	                    TMPL_ANSW_OPT_1 || ',' || TMPL_ANSW_OPT_2 AS TMPL_ANS,
 	                    TMPL_TYPE
 	                FROM CBT0003D
-	                WHERE TMPL_TYPE = 7361 AND USE_YN = 'Y'
+<!-- 	                WHERE TMPL_TYPE = 7361 AND USE_YN = 'Y' -->
+	                WHERE TMPL_TYPE = 7361
 	                GROUP BY SURV_ID, TMPL_ANSW_OPT_1, TMPL_ANSW_OPT_2,TMPL_TYPE
 
 	                UNION
@@ -87,14 +96,48 @@
 	                    LISTAGG(TMPL_ANSW_OPT_1, ',') WITHIN GROUP (ORDER BY TMPL_ANSW_SEQ) AS TMPL_ANS,
 	                    TMPL_TYPE
 	                FROM CBT0003D
-	                WHERE TMPL_TYPE  <![CDATA[ <> ]]>  7361 AND USE_YN = 'Y'
+<!-- 	                WHERE TMPL_TYPE  <![CDATA[ <> ]]>  7361 AND USE_YN = 'Y' -->
+	                WHERE TMPL_TYPE  <![CDATA[ <> ]]>  7361
 	                GROUP BY SURV_ID,TMPL_TYPE
 	            )AA
 	            LEFT JOIN SYS0013M BB ON AA.TMPL_TYPE = BB.CODE_ID AND BB.CODE_MASTER_ID = 557
 	        )B ON A.SURV_ID = B.SURV_ID
 		WHERE 1=1
 			AND A.CTRL_ID = #{ctrlId}
-			AND A.SURV_QUES_YN = 'Y'
+		   AND #{sysDt} BETWEEN A.SURV_QUES_STR AND A.SURV_QUES_END
+<!-- 			AND A.SURV_QUES_YN = 'Y' -->
+    </select>
+
+    <select id="getTargetQuestionSurvID" parameterType="String" resultType="String">
+        SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId}
+    </select>
+
+<!--     <select id="getExistTargetQuestion" parameterType="String" resultType="String"> -->
+<!--         SELECT -->
+<!-- 				A.SURV_ID -->
+<!-- 		FROM CBT0002M A -->
+<!-- 	    WHERE A.CTRL_ID = #{ctrlId} -->
+<!--         AND A.SURV_QUES_STR <![CDATA[ <= ]]> #{strDt} -->
+<!--         AND A.SURV_QUES_END <![CDATA[ = ]]> #{endDt} -->
+<!--     </select> -->
+
+    <select id="getExistTargetQuestion" parameterType="String" resultType="String">
+        SELECT
+            A.SURV_ID
+		FROM CBT0002M A
+	    WHERE A.CTRL_ID = #{ctrlId}
+	    AND #{sysDt} BETWEEN A.SURV_QUES_STR AND A.SURV_QUES_END
+    </select>
+
+    <select id="getTargetQuesStrDt" parameterType="String" resultType="String">
+        SELECT
+				DISTINCT SURV_QUES_STR
+		FROM CBT0002M
+	    WHERE SURV_ID IN
+        <foreach item="item" collection="survIdArray" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+         </foreach>
     </select>
 
     <select id="getSurveyEndDate" parameterType="String" resultType="String">
@@ -105,7 +148,6 @@
         UPDATE CBT0002M
         SET
             SURV_QUES_END = #{lastDay},
-            SURV_QUES_YN = 'N',
             UPD_DT = SYSDATE,
             UPD_USER_ID = #{userId}
         WHERE SURV_ID IN
@@ -115,22 +157,37 @@
          </foreach>
     </update>
 
-    <select id="getTargetQuestionSurvID" parameterType="String" resultType="String">
-        SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId} AND SURV_QUES_YN = 'Y'
-    </select>
+<!--     <update id="updateExistTargetQues" parameterType="Map"> -->
+<!--         UPDATE CBT0002M -->
+<!--         SET -->
+<!--             SURV_QUES_END = #{lastDay}, -->
+<!--             SURV_QUES_YN = 'N', -->
+<!--             UPD_DT = SYSDATE, -->
+<!--             UPD_USER_ID = #{userId} -->
+<!--         WHERE SURV_ID IN -->
+<!--         <foreach item="item" collection="survIdArray" index="index" -->
+<!--                    open="(" separator="," close=")"> -->
+<!--                    #{item} -->
+<!--          </foreach> -->
+<!--     </update> -->
 
-    <update id="updateTargetAnsYn" parameterType="Map">
-       UPDATE CBT0003D
-       SET
-            USE_YN = 'N',
-            UPD_DT = SYSDATE,
-            UPD_USER_ID = #{userId}
-       WHERE SURV_ID IN
-        <foreach item="item" collection="survIdArray" index="index"
-                   open="(" separator="," close=")">
-                   #{item}
-         </foreach>
-    </update>
+<!--     <select id="getTargetQuestionSurvID" parameterType="String" resultType="String"> -->
+<!--         SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId} AND SURV_QUES_YN = 'Y' -->
+<!--     </select> -->
+
+<!--     <update id="updateTargetAnsYn" parameterType="Map"> -->
+<!--        UPDATE CBT0003D -->
+<!--        SET -->
+<!--             USE_YN = 'N', -->
+<!--             UPD_DT = SYSDATE, -->
+<!--             UPD_USER_ID = #{userId} -->
+<!--        WHERE SURV_ID IN -->
+<!--         <foreach item="item" collection="survIdArray" index="index" -->
+<!--                    open="(" separator="," close=")"> -->
+<!--                    #{item} -->
+<!--          </foreach> -->
+<!--     </update> -->
+
 
    <select id="getNextSurvSeq" resultType="int">
         SELECT CBT0002M_RUN_ID_SEQ.NEXTVAL FROM DUAL

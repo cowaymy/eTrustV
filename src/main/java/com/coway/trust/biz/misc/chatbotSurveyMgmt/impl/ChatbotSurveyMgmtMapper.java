@@ -15,11 +15,21 @@ public interface ChatbotSurveyMgmtMapper {
 	List<EgovMap> selectChatbotSurveyType(Map<String, Object> params);
 	List<EgovMap> selectChatbotSurveyMgmtList(Map<String, Object> params);
 	List<EgovMap> selectChatbotSurveyDesc(Map<String, Object> params);
+	int getCategoryDate(String ctrlId);
+
 	List<EgovMap> selectChatbotSurveyMgmtEdit(Map<String, Object> params);
 	String getSurveyEndDate(String ctrlId);
+
+
+//	void updateExistTargetQues(Map<String,Object> params);
+//	List<String> getTargetQuestionSurvID(Map<String,Object> params);
+//	void updateTargetAnsYn(Map<String, Object> params);
+
+
+	List<String> getExistTargetQuestion(Map<String, Object> params);
+	String getTargetQuesStrDt(Map<String, Object> params);
 	void updateExistTargetQues(Map<String,Object> params);
-	List<String> getTargetQuestionSurvID(Map<String,Object> params);
-	void updateTargetAnsYn(Map<String, Object> params);
+
 	int getNextSurvSeq();
 	void insertNewSurveyQues(Map<String,Object> params);
 	void insertNewSurveyAns(Map<String,Object> params);

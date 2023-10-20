@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-//import java.io.FileOutputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-//import java.io.ObjectOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,6 +56,8 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.SFTPUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
@@ -172,6 +174,9 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		Gson gson = builder.setPrettyPrinting().create();
 		String jsonString = gson.toJson(chatbotVO);
 
+		Gson gson1 = new GsonBuilder().create();
+	    String longJsonString = gson1.toJson(chatbotVO); // without beautify
+
 		LOGGER.debug("Start Calling Chatbot API ....\n");
 
 		// Call informNewMasterData
@@ -180,6 +185,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		EgovMap reqInfo = new EgovMap();
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("cbtUrl", cbtUrl);
+		reqInfo.put("longJsonString", longJsonString);
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = cbtReqApi(reqInfo);
@@ -278,13 +284,14 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 		    params.put("responseCode", resultValue.get("status") == null ? "" : resultValue.get("status").toString());
             params.put("responseMessage", resultValue.get("message") == null ? "" : resultValue.get("message").toString());
-            params.put("reqPrm", jsonString != null ? jsonString.length() >= 2000 ? jsonString.substring(0,2000) : jsonString : jsonString);
+//            params.put("reqPrm", jsonString != null ? jsonString.length() >= 2000 ? jsonString.substring(0,2000) : jsonString : jsonString);
 //            params.put("ipAddr", "");
             params.put("url", cbtUrl);
             params.put("respTm", respTm);
             params.put("resPrm", output1);
             params.put("apiUserId", cbtApiUserId);
-            //params.put("refNo", params.get("memCode") == null ? params.get("username").toString() :params.get("memCode").toString());
+            params.put("longReqPrm", params.get("longJsonString").toString());
+//            params.put("refNo", params.get("memCode") == null ? params.get("username").toString() :params.get("memCode").toString());
 
             rtnRespMsg(params);
 		}
@@ -506,15 +513,18 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 	      params.put("respCde", param.get("responseCode"));
 	      params.put("errMsg", param.get("responseMessage"));
-	      params.put("reqParam", param.get("reqPrm"));
+//	      params.put("reqParam", param.get("reqPrm"));
 //	      params.put("ipAddr", "");
 	      params.put("prgPath", param.get("url"));
 	      params.put("respTm", param.get("respTm"));
 	      params.put("respParam", param.get("resPrm"));
 	      params.put("apiUserId", param.get("apiUserId"));
+	      params.put("longReqParam", String.valueOf(param.get("longReqPrm")));
 //	      params.put("refNo", param.get("refNo"));
 
-	      commonApiMapper.insertApiAccessLog(params);
+//	      commonApiMapper.insertApiAccessLog(params);
+	      chatbotSurveyMgmtApiMapper.insertApiAccessLog(params);
+
 	  }
 
 }

@@ -102,7 +102,7 @@
     });
 
     function searchData(){
-        Common.ajax("POST","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtEdit.do", {ctrlId : $("#ctrlId").val()}, function(result){
+        Common.ajax("POST","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtEdit.do", {ctrlId : $("#ctrlId").val(), ctrlType : $("#ctrlType").val()}, function(result){
         	AUIGrid.setGridData(mySurveyGridID, result);
         });
     }

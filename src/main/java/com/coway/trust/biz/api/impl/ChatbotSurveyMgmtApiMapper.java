@@ -12,4 +12,5 @@ public interface ChatbotSurveyMgmtApiMapper {
 
 	EgovMap checkAccess(Map<String, Object> params);
 	void insertSurveyResp(HcSurveyResultCsvVO hcSurveyResultCsvVO);
+	void insertApiAccessLog(Map<String, Object> params);
 }
