@@ -710,10 +710,12 @@ var batchInfoLayout = [
                     Common.alert(text+ " is mandatory.");
                     return false;
                 }
-                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "2")))) {
-                     var text = '<spring:message code="pay.head.refNo"/>';
-                     Common.alert(text+ " is mandatory.");
-                     return false;
+                 if($("#advance").is(":checked")) {
+	                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "2")))) {
+	                     var text = '<spring:message code="pay.head.refNo"/>';
+	                     Common.alert(text+ " is mandatory.");
+	                     return false;
+	                 }
                  }
                  if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "3")))) {
                      var text = '<spring:message code="pay.head.Amount"/>';
@@ -745,11 +747,11 @@ var batchInfoLayout = [
                      Common.alert(text+ " is mandatory.");
                      return false;
                  }
-                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "18")))) {
-                     var text = '<spring:message code="pay.head.remark"/>';
-                     Common.alert(text+ " is mandatory.");
-                     return false;
-                 }
+//                  if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "18")))) {
+//                      var text = '<spring:message code="pay.head.remark"/>';
+//                      Common.alert(text+ " is mandatory.");
+//                      return false;
+//                  }
                  if($("#advance").is(":checked")) {
                      if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "22")))) {
                          var text = '<spring:message code="sal.title.text.paymentChnnl"/>';
