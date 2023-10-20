@@ -1702,6 +1702,22 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Attachment does not exist.");
     }
 
+    if (CommonUtils.isEmpty(param.getVoucherCode()) == false) {
+      Map<String, Object> voucherParam = new HashMap<String, Object>();
+      voucherParam.put("voucherCode", param.getVoucherCode());
+  	  int validVoucherResult = eKeyInApiMapper.isVoucherValidToApply(voucherParam);
+  	  int ekeyInValidResult = eKeyInApiMapper.isVoucherValidToApplyIneKeyIn(voucherParam);
+
+	  if(validVoucherResult == 0 || ekeyInValidResult == 0){
+		  if(validVoucherResult == 0){
+		      throw new ApplicationException(AppConstants.FAIL, "Voucher applied is not a valid voucher.");
+		  }
+		  if(ekeyInValidResult == 0){
+		      throw new ApplicationException(AppConstants.FAIL, "Voucher is applied on other e-KeyIn orders.");
+		  }
+	  }
+    }
+
     Map<String, Object> sal0213M = new HashMap<String, Object>();
     // sal0213M.put("preOrdId", );
     // sal0213M.put("reqstDt, );
