@@ -122,9 +122,10 @@
                     $("#isReturnExtrade").prop("checked", false);
                 }
 
-                var voucherAppliedStatus = 0;
+                voucherAppliedStatus = 0;
                 if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
 				  	voucherAppliedStatus = 1;
+					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
 			    }
 
                 // Set Mattress Promotion

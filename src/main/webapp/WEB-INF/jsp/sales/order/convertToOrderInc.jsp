@@ -146,9 +146,10 @@
 
                 //$('#ordPromo').removeAttr("disabled");
                 //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
-                var voucherAppliedStatus = 0;
+                voucherAppliedStatus = 0;
                 if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
 				  	voucherAppliedStatus = 1;
+					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
 			    }
 
                 if(date >= 201907) {
@@ -386,7 +387,6 @@
 
 	function voucherAppliedDisplay(){
 		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
-
 		if(voucherCode != null && voucherCode != ''){
 			$('.voucherSection').show();
 

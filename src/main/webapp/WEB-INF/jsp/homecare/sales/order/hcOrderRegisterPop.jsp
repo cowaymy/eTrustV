@@ -1891,7 +1891,7 @@
 
         },  function(jqXHR, textStatus, errorThrown) {
             try {
-                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b>');
+                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b><b>' + jqXHR.responseJSON.message + "</b>");
             } catch (e) {
                 console.log(e);
             }

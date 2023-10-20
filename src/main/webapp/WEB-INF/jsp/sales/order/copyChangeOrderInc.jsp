@@ -127,9 +127,10 @@
                 console.log("aaa:"+year);
                 console.log("aaa:"+ekeyCrtUser);
 
-                var voucherAppliedStatus = 0;
+                voucherAppliedStatus = 0;
                 if('${orderInfo.basicInfo.voucherInfo}' != null && '${orderInfo.basicInfo.voucherInfo}' != ""){
 				  	voucherAppliedStatus = 1;
+					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
 			    }
 
                 if(date >= 201907 && ekeyCrtUser != null) {

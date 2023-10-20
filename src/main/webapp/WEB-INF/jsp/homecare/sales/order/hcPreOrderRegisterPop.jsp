@@ -1291,7 +1291,7 @@
                 },
                 function(jqXHR, textStatus, errorThrown) {
                     try {
-                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order." + jqXHR.responseJSON.message + "</b>");
                         Common.removeLoader();
 
                     } catch (e) {

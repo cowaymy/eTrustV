@@ -113,9 +113,10 @@
 
                 $('#ordPromo1, #ordPromo2').removeAttr("disabled");
 
-                var voucherAppliedStatus = 0;
+                voucherAppliedStatus = 0;
                 if('${orderInfo.basicInfo.voucherInfo}' != null && '${orderInfo.basicInfo.voucherInfo}' != ""){
 				  	voucherAppliedStatus = 1;
+					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
 			    }
                 /* var month = '${orderInfo.basicInfo.month}';
                 var year = '${orderInfo.basicInfo.year}';

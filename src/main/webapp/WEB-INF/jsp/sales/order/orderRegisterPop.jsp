@@ -1889,7 +1889,7 @@ console.log("vBindingNo" + vBindingNo);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
 //              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b>');
+                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b><b>' + jqXHR.responseJSON.message + "</b>");
             }
             catch (e) {
                 console.log(e);
