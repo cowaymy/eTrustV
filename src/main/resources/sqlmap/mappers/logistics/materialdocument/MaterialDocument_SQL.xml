@@ -62,7 +62,42 @@
         <!-- Added by Hui Ding for displaying main sales order no in mdn search list, 2020-06-24 -->
         , l60.MAIN_ORD_NO
         from log0059m l59
-        , log0060d l60
+        <choose>
+            <when test="serialNo !=null and serialNo !=''">
+        , (
+                    SELECT
+                        *
+                    FROM
+                        log0060d
+                    WHERE
+                        EXISTS (
+                            SELECT 1 FROM
+                                log0099d t
+                            WHERE
+                                t.reqst_no = stock_trnsfr_reqst
+                                AND t.serial_no = #{serialNo}
+                        )
+                    UNION
+                    SELECT
+                        *
+                    FROM
+                        log0060d
+                    WHERE
+                        EXISTS (
+                            SELECT
+                                1
+                            FROM
+                                log0100m
+                            WHERE
+                                hs_no = sales_ord_no
+                                AND serial_no = #{serialNo}
+                        )
+                ) l60
+            </when>
+            <otherwise>
+                        , log0060d l60
+            </otherwise>
+        </choose>
         , sys0026m s26
         , sys0028m f28
         , sys0028m t28
@@ -181,16 +216,6 @@
         </if>
         <if test="ordno !=null and ordno != ''">
             AND l59.MAIN_SALES_ORD_NO = #{ordno}
-        </if>
-        <if test="serialNo !=null and serialNo !=''">
-            AND EXISTS (SELECT 1
-                                 FROM LOG0099D T
-                               WHERE T.REQST_NO = l60.STOCK_TRNSFR_REQST
-                                   AND T.SERIAL_NO = #{serialNo}
-
-                                   union
-                                    select 1 from log0100m where HS_NO = l60.sales_ord_no AND SERIAL_NO = #{serialNo}
-                             )
         </if>
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
@@ -527,7 +552,7 @@
         <if test="ordno !=null and ordno != ''">
             AND l59.MAIN_SALES_ORD_NO = #{ordno}
         </if>
-        <if test="serialNo !=null and serialNo !=''">
+        <!-- <if test="serialNo !=null and serialNo !=''">
             AND EXISTS (SELECT 1
                                  FROM LOG0099D T
                                WHERE T.REQST_NO = l60.STOCK_TRNSFR_REQST
@@ -536,7 +561,7 @@
                                    union
                                     select 1 from log0100m where HS_NO = l60.sales_ord_no AND SERIAL_NO = #{serialNo}
                              )
-        </if>
+        </if> -->
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
 
