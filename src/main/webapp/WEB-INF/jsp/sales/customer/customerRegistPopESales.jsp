@@ -653,6 +653,22 @@
                 Common.alert('<spring:message code="sal.alert.msg.plzSelCntcPersonInitial" />');
                    return false;
             }
+
+            console.log("5A. foreigner check");//aaaaaaaaaaaaaaaaaa
+            if($("#_cmbNation_").val() != "1" ){
+                if($("#_pasSportExpr_").val() == ''){
+                    Common.alert('<spring:message code="sal.alert.msg.plzKeyinPassportExp" />');
+                       return false;
+                }
+                if($("#_visaExpr_").val() == ''){
+                    Common.alert('<spring:message code="sal.alert.msg.plzKeyinVisaExp" />');
+                       return false;
+                }
+                if(!$('input[name=gender]:checked').val()){
+                    Common.alert('<spring:message code="sal.alert.msg.plzKeyinGender" />');
+                    return false;
+                }
+            }
         }
 
         console.log("5B.  cmb type check for 965 ");// For company
@@ -699,22 +715,6 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
             return false;
         } */
-
-        console.log("11. foreigner check");//aaaaaaaaaaaaaaaaaa
-        if($("#_cmbNation_").val() != "1" ){
-            if($("#_pasSportExpr_").val() == ''){
-                Common.alert('<spring:message code="sal.alert.msg.plzKeyinPassportExp" />');
-                   return false;
-            }
-            if($("#_visaExpr_").val() == ''){
-                Common.alert('<spring:message code="sal.alert.msg.plzKeyinVisaExp" />');
-                   return false;
-            }
-            if(!$('input[name=gender]:checked').val()){
-                Common.alert('<spring:message code="sal.alert.msg.plzKeyinGender" />');
-                return false;
-            }
-        }
 
         console.log("12.  cust name check");
         if($("#_asCustName_").val() == ''){
