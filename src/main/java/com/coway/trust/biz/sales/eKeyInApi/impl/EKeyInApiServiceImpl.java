@@ -2482,6 +2482,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 	  params.put("voucherType", param.getVoucherType());
 	  params.put("voucherCode", param.getVoucherCode());
 	  params.put("voucherEmail", param.getVoucherEmail());
+	  if(param.getPreOrdId() > 0){
+		  params.put("preOrdId", param.getPreOrdId());
+	  }
 	  int valid = 1;
 	  int validVoucherResult = eKeyInApiMapper.isVoucherValidToApply(params);
 	  int ekeyInValidResult = eKeyInApiMapper.isVoucherValidToApplyIneKeyIn(params);
