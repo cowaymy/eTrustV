@@ -154,10 +154,8 @@
                 <th scope="row"><spring:message code="sal.title.text.statusFrom" /></th>
                 <td>
                 <select class="multy_select w100p" id="cmbStatusFr" name="cmbStatusFr" multiple="multiple">
+                    <option value="ALL">All</option>
                     <option value="PNP">PNP PRS</option>
-                    <option value="CRC">CRC</option>
-                    <option value="DD">DD</option>
-                    <option value="REG"><spring:message code="sal.combo.text.regular" /></option>
                 </select>
                 </td>
                 <th scope="row"><spring:message code="sal.title.text.statusTo" /></th>

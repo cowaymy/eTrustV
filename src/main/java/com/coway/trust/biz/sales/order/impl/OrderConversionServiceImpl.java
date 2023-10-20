@@ -390,8 +390,9 @@ public int countPaymodeCnvrExcelList(Map<String, Object> params) {
           validRemark = "Invalid Order Number";
         }
 
-        if( !cardNo.matches("^[0-9]{6}[*]{6}[0-9]{4}$") || cardNo.length() != 16 )
+        if( "PNP".equals(formData.get("payCnvrStusTo").toString()) && (!cardNo.matches("^[0-9]{6}[*]{6}[0-9]{4}$") || cardNo.length() != 16) ){
           validRemark = "Invalid Card Number";
+        }
 
         o.put("validRemark", validRemark);
 

@@ -12,7 +12,7 @@
 var uploadGrid;
 var cnvrListGrid;
 
-let stusFrData = [ {"codeId" : "CRC", "codeName" : "CRC"}, {"codeId" : "DD", "codeName" : "DD"}, {"codeId" : "REG", "codeName" : "REG"}, {"codeId" : "PNP", "codeName" : "PNP RPS"}];
+let stusFrData = [ {"codeId" : "ALL", "codeName" : "All"}, {"codeId" : "PNP", "codeName" : "PNP RPS"}];
 let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG", "codeName" : "REG"}];
 
     $(document).ready(function(){
@@ -25,31 +25,34 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
 
         $('#fileSelector').on('change', function(evt) {
 
-            var data = null;
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                return;
-            }
+          if(fn_validCnvr()){
+        	  var data = null;
+              var file = evt.target.files[0];
+              if (typeof file == "undefined") {
+                  return;
+              }
 
-            var reader = new FileReader();
-            reader.readAsText(file, "EUC-KR");
-            reader.onload = function(event) {
-                if (typeof event.target.result != "undefined") {
-                    console.log("data : " + event.target.result);
-                    AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
-                    AUIGrid.removeRow(uploadGrid,0);
-                    fn_checkNewCnvr();
+              var reader = new FileReader();
+              reader.readAsText(file, "EUC-KR");
+              reader.onload = function(event) {
+                  if (typeof event.target.result != "undefined") {
+                      console.log("data : " + event.target.result);
+                      AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
+                      AUIGrid.removeRow(uploadGrid,0);
+                      fn_checkNewCnvr();
 
-                } else {
-                    alert('No data to import!');
-                }
-            };
+                  } else {
+                      alert('No data to import!');
+                  }
+              };
 
-            reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
-            };
+              reader.onerror = function() {
+                  alert('Unable to read ' + file.fileName);
+              };
 
-    });
+          }
+
+          });
 
     });
 
@@ -89,7 +92,7 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
             dataField : "validRemark",
             headerText : "Valid Remark",
             width : "25%"
-        },{
+        /* },{
             dataField : "undefined",
             headerText : "Action",
             width : "10%",
@@ -100,11 +103,11 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
                       AUIGrid.removeRow(cnvrListGrid, rowIndex);
                       AUIGrid.removeSoftRows(cnvrListGrid);
                   }
-           }
-       },{
-           dataField : "chkSaveRow",
-           visible : false
-       }];
+           } */
+         },{
+             dataField : "chkSaveRow",
+             visible : false
+         }];
 
         var upOptions = {
                    showStateColumn:false,
@@ -226,7 +229,16 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
         }
 
 
-    	if (!valid) Common.alert(msg);
+    	if (!valid) {
+    		Common.alert(msg);
+
+    		$("#newCnvrRem").val('');
+            $("#fileSelector").val('');
+            $("#hiddenTotal").val('');
+            AUIGrid.clearGridData(uploadGrid);
+            AUIGrid.clearGridData(cnvrListGrid);
+
+    	}
 
     	console.log(valid);
     	return valid;

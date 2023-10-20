@@ -19,7 +19,7 @@ $.fn.clearForm = function() {
 	$("#cmbOrderSts").multipleSelect("uncheckAll");
 	$("#cmbAppType").multipleSelect("uncheckAll");
 	$("#cmbRentalSts").multipleSelect("uncheckAll");
-	
+
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -34,55 +34,55 @@ $.fn.clearForm = function() {
 };
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	
+
 	var dpUpdateDateFr = $("#dpUpdateDateFr").val();
 	var dpUpdateDateTo = $("#dpUpdateDateTo").val();
     if(!(dpUpdateDateFr == null || dpUpdateDateFr.length == 0) || !(dpUpdateDateTo == null || dpUpdateDateTo.length == 0)){
     	if((dpUpdateDateFr == null || dpUpdateDateFr.length == 0) || (dpUpdateDateTo == null || dpUpdateDateTo.length == 0)){
-            
+
     		valid = false;
     		message +=  '<spring:message code="sal.alert.msg.plzKeyInUpdDtFromTo" />';
-        }	
+        }
     }
-    
+
     var dpOrderDateFr = $("#dpOrderDateFr").val();
     var dpOrderDateTo = $("#dpOrderDateTo").val();
     if(!(dpOrderDateFr == null || dpOrderDateFr.length == 0) || !(dpOrderDateTo == null || dpOrderDateTo.length == 0)){
         if((dpOrderDateFr == null || dpOrderDateFr.length == 0) || (dpOrderDateTo == null || dpOrderDateTo.length == 0)){
-            
+
             valid = false;
             message +=  '<spring:message code="sal.alert.msg.keyInOrdDateFromTo" />';
-        }   
+        }
     }
-	
+
     var txtOrderNoFr = $("#txtOrderNoFr").val().trim();
     var txtOrderNoTo = $("#txtOrderNoTo").val().trim();
     if(!(txtOrderNoFr == null || txtOrderNoFr.length == 0) || !(txtOrderNoTo == null || txtOrderNoTo.length == 0)){
         if((txtOrderNoFr == null || txtOrderNoFr.length == 0) || (txtOrderNoTo == null || txtOrderNoTo.length == 0)){
-            
+
             valid = false;
             message +=  '<spring:message code="sal.alert.msg.keyInOrdNoFromTo" />';
-        }   
+        }
     }
-	
+
 	if(valid == true){
 		   fn_report();
 	}else{
 	       Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
-	}	
+	}
 }
- 
+
 function fn_report(){
-	
+
 	var whereSQL = "";
-	
+
 	var runPay = 0;
 	if($('#cmbPaymode :selected').length > 0){
 		whereSQL = " AND (";
-		$('#cmbPaymode :selected').each(function(i, mul){ 
+		$('#cmbPaymode :selected').each(function(i, mul){
             if(runPay > 0){
             	whereSQL += " OR r.MODE_ID = '"+$(mul).val()+"' ";
             }else{
@@ -90,13 +90,13 @@ function fn_report(){
             }
             runPay += 1;
         });
-        whereSQL += ") ";   
+        whereSQL += ") ";
 	}
-	
+
 	var runBank = 0;
 	if($('#cmbBank :selected').length > 0){
         whereSQL = " AND (";
-        $('#cmbBank :selected').each(function(i, mul){ 
+        $('#cmbBank :selected').each(function(i, mul){
             if(runBank > 0){
                 whereSQL += " OR rb.BANK_ID = '"+$(mul).val()+"' ";
             }else{
@@ -104,13 +104,13 @@ function fn_report(){
             }
             runBank += 1;
         });
-        whereSQL += ") ";   
+        whereSQL += ") ";
     }
-	
+
 	var runApp = 0;
 	if($('#cmbAppType :selected').length > 0){
         whereSQL = " AND (";
-        $('#cmbAppType :selected').each(function(i, mul){ 
+        $('#cmbAppType :selected').each(function(i, mul){
             if(runApp > 0){
                 whereSQL += " OR som.APP_TYPE_ID = '"+$(mul).val()+"' ";
             }else{
@@ -118,13 +118,13 @@ function fn_report(){
             }
             runApp += 1;
         });
-        whereSQL += ") ";   
+        whereSQL += ") ";
     }
-	
+
 	var runOrd = 0;
 	if($('#cmbOrderSts :selected').length > 0){
         whereSQL = " AND (";
-        $('#cmbOrderSts :selected').each(function(i, mul){ 
+        $('#cmbOrderSts :selected').each(function(i, mul){
             if(runOrd > 0){
                 whereSQL += " OR s.STUS_CODE_ID = '"+$(mul).val()+"' ";
             }else{
@@ -132,13 +132,13 @@ function fn_report(){
             }
             runOrd += 1;
         });
-        whereSQL += ") ";   
+        whereSQL += ") ";
     }
-	
+
 	var runRen = 0;
 	if($('#cmbRentalSts :selected').length > 0 && $("#cmbRentalSts").prop("disabled", false)){
         whereSQL = " AND (";
-        $('#cmbRentalSts :selected').each(function(i, mul){ 
+        $('#cmbRentalSts :selected').each(function(i, mul){
             if(runRen > 0){
                 whereSQL += " OR rs.STUS_CODE_ID = '"+$(mul).val()+"' ";
             }else{
@@ -146,61 +146,61 @@ function fn_report(){
             }
             runRen += 1;
         });
-        whereSQL += ") ";   
+        whereSQL += ") ";
     }
-	
+
     if(!($("#dpUpdateDateFr").val() == null || $("#dpUpdateDateFr").val().length == 0) && !($("#dpUpdateDateTo").val() == null || $("#dpUpdateDateTo").val().length == 0)){
-        
+
         var frArr = $("#dpUpdateDateFr").val().split("/");
         var toArr = $("#dpUpdateDateTo").val().split("/");
         var dpUpdateDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
         var dpUpdateDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
-        
+
         whereSQL += " AND (r.UPD_DT BETWEEN TO_DATE('"+dpUpdateDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpUpdateDateTo+"', 'MM/dd/YY'))";
     }
-    
+
     if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
-    	
+
     	whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNoFr").val().trim()+"' AND '"+$("#txtOrderNoTo").val().trim()+"')";
     }
-    
+
     if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
-        
+
         var frArr = $("#dpOrderDateFr").val().split("/");
         var toArr = $("#dpOrderDateTo").val().split("/");
         var dpOrderDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
         var dpOrderDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
-        
+
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpOrderDateTo+"', 'MM/dd/YY'))";
     }
-    
-    if($("#cmbKeyBranch :selected").index() > 0){ 
-        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";       
+
+    if($("#cmbKeyBranch :selected").index() > 0){
+        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
     }
-	
-	
+
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
+    }
     $("#reportDownFileName").val("RentPaySetUpdateList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
     $("#viewType").val("EXCEL");
     $("#reportFileName").val("/sales/RentPaySetLastUpdateList.rpt");
-    
+
     $("#V_WHERESQL").val(whereSQL);
-    
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
-    
+
     Common.report("form", option);
-	
+
 }
 
-function cmbAppType_OnItemChecked(){ 
-	
+function cmbAppType_OnItemChecked(){
+
 	if($("#cmbAppType :selected").length == 0){
 		$("#cmbRentalSts").multipleSelect("enable");
 	}
@@ -209,17 +209,17 @@ function cmbAppType_OnItemChecked(){
 	    if($(mul).val() == "67" || $(mul).val() == "1412" || $("#cmbAppType :selected").length > 1){
 	    	$('#cmbRentalSts').multipleSelect("disable");
 	    	$("#cmbRentalSts").multipleSelect("uncheckAll");
-	
+
 	    }else{
 	    	$("#cmbRentalSts").multipleSelect("enable");
 	    }
 	});
-	
+
 }
- 
+
  CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
  CommonCombo.make('cmbBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
- 
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -258,6 +258,7 @@ function cmbAppType_OnItemChecked(){
         <option value="132" selected><spring:message code="sal.combo.text.directDebit" /></option>
         <option value="134" selected><spring:message code="sal.combo.text.fpx  " /></option>
         <option value="130" selected><spring:message code="sal.combo.text.regualrCash" /></option>
+        <option value="135" selected><spring:message code="sal.combo.text.pnp" /></option>
     </select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.updateDate" /></th>
@@ -349,7 +350,7 @@ function cmbAppType_OnItemChecked(){
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
