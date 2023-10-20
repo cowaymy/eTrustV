@@ -750,10 +750,12 @@ var batchInfoLayout = [
                      Common.alert(text+ " is mandatory.");
                      return false;
                  }
-                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "22")))) {
-                     var text = '<spring:message code="sal.title.text.paymentChnnl"/>';
-                     Common.alert(text+ " is mandatory.");
-                     return false;
+                 if($("#advance").is(":checked")) {
+                     if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "22")))) {
+                         var text = '<spring:message code="sal.title.text.paymentChnnl"/>';
+                         Common.alert(text+ " is mandatory.");
+                         return false;
+                     }
                  }
             }
         }
