@@ -193,7 +193,7 @@
                         AND M1.MEM_LVL = 3 -- Admin only assign to ACM. and ACM will distribute to ACI accordingly.
                         AND M.STUS = 1
                         AND
-                        B.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.AC_BRNCH_CODE
+                        B.CODE = (SELECT    F.AC_BRNCH_CODE
                                               FROM SAL0001D A
                                                       , SAL0045D B
                                                       , SAL0023D E
@@ -232,7 +232,7 @@
                       AND B.MEM_ID = C.MEM_ID
                       AND C.MEM_LVL = '2'
                       AND B.STUS = '1'
-                      AND A.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_BRNCH_CODE
+                      AND A.CODE = (SELECT   F.DT_BRNCH_CODE
                                               FROM SAL0001D A
                                                       , SAL0045D B
                                                       , SAL0023D E
