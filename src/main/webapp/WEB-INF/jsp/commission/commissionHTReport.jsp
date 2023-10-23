@@ -29,9 +29,14 @@
 
 
             $("#mLvlcontainer").hide(); //stat
+            $("#searchForm #memberLvlcontainer").hide();
             if (val == "10") { //ctComm_PDF.rpt
 
              $("#searchForm #mLvlcontainer").show();
+
+            }else if (val == "8" || val == "9" || val == "12") {
+
+             $("#searchForm #memberLvlcontainer").show();
 
             }
 
@@ -85,6 +90,7 @@
             var salesPersonCd = $("#searchForm [name=salesPersonCd]").val(); //member code
 
             var mLvl = $("#searchForm #mLvl").val(); //member level
+            var memberLvl = $("#searchForm #memberLvl").val(); //member level
             if (type == "") {
                 //Common.alert("Please select Report Type ");
                 Common.alert("<spring:message code='commission.alert.report.selectType'/>");
@@ -217,34 +223,72 @@
 
             } else if (type == '8') {
 
-            	reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
-                reportDownFileName = "ManagerCommissionRawMark" + today; //report name
-                reportViewType = "EXCEL"; //viewType
+                if (memberLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (memberLvl == 3) {
+                    reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
+                    reportDownFileName = "HTMCommissionRawMark" + today; //report name **PREVIOUSLY MANAGER
+                    reportViewType = "EXCEL"; //viewType
 
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
-                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
-                $("#reportForm #HTM").val("7");
-                $("#reportForm #TaskID").val(taskID);
+                    $("#reportForm #HTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+
+                } else if (memberLvl == 2) {
+                    reportFileName = "/commission/SHTMCommissionRawMark_Excel.rpt"; //reportFileName
+                    reportDownFileName = "SHTMCommissionRawMark" + today; //report name **PREVIOUSLY MANAGER
+                    reportViewType = "EXCEL"; //viewType
+
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #SHTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+                }
 
             } else if (type == '9') {
 
-            	reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
-                reportDownFileName = "ManagerCommissionRawRate" + today; //report name
-                reportViewType = "EXCEL"; //viewType
+                if (memberLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (memberLvl == 3) {
+                    reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
+                    reportDownFileName = "HTMCommissionRawRate" + today; //report name **PREVIOUSLY MANAGER
+                    reportViewType = "EXCEL"; //viewType
 
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
-                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
-                $("#reportForm #HTM").val("7");
-                $("#reportForm #TaskID").val(taskID);
+                    $("#reportForm #HTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+
+
+                } else if (memberLvl == 2) {
+                    reportFileName = "/commission/SHTMCommissionRawRate_Excel.rpt"; //reportFileName
+                    reportDownFileName = "SHTMCommissionRawRate" + today; //report name **PREVIOUSLY MANAGER
+                    reportViewType = "EXCEL"; //viewType
+
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #SHTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+                }
 
             }
 
 
             else if (type == '10'){
+
                 if (mLvl == '') {
                     Common.alert("Please select a member level before generating the report.");
                     return;
@@ -279,20 +323,50 @@
 
 //                     $("#reportForm #EMPLEV1").val(mLvl);
 //                     $("#reportForm #TaskID").val(taskID);
-                }
+
+                } else if (mLvl == 2) {
+                    reportFileName = "/commission/SHTM_Sales_Rental_Commission.rpt";
+                    reportDownFileName = "SHTM Sales Rental Commission" + today;
+                    reportViewType = "EXCEL";
+
+                    $($reportForm).append('<input type="hidden" id="EMPLEV2" name="EMPLEV2" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #EMPLEV2").val(mLvl);
+                    $("#reportForm #TaskID").val(taskID);
+               }
             }
             else if (type == '12'){
 
-            	reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
-                reportDownFileName = "HTM Sales Rental Commission Overriding" + today; //report name
-                reportViewType = "EXCEL"; //viewType
+                if (memberLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (memberLvl == 3) {
+                    reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
+                    reportDownFileName = "HTM Sales Rental Commission Overriding" + today; //report name
+                    reportViewType = "EXCEL"; //viewType
 
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="HT" name="HTM" value="" /> ');
-                $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 
-                $("#reportForm #HTM").val("7");
-                $("#reportForm #TaskID").val(taskID);
+                    $("#reportForm #HTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+
+
+                } else if (memberLvl == 2) {
+                    reportFileName = "/commission/SHTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
+                    reportDownFileName = "SHTM Sales Rental Commission Overriding" + today; //report name
+                    reportViewType = "EXCEL"; //viewType
+
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+
+                    $("#reportForm #SHTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+                }
             }
 
 
@@ -440,13 +514,13 @@
                                     <option value="2">Homecare Technician Commission Raw (Mark)</option>
                                     <option value="7">Homecare Technician Commission Raw (Rate)</option>
                                     <option value="3">Homecare Technician Manager Commission</option>
-                                    <option value="8">Manager Commission Raw (Mark)</option>
-                                    <option value="9">Manager Commission Raw (Rate)</option>
+                                    <option value="8">HTM / SHTM Commission Raw (Mark)</option>
+                                    <option value="9">HTM / SHTM Commission Raw (Rate)</option>
                                     <option value="4">Homecare Technician Comm Calculation</option>
                                     <option value="5">Homecare Technician Manager Comm Calculation</option>
                                     <option value="6">Homecare Technician Non-Monetary Incentive</option>
-                                    <option value="10">HT / HTM Sales Rental Commission</option>
-                                    <option value="12">HTM Sales Rental Commission Overriding</option>
+                                    <option value="10">HT / HTM / SHTM Sales Rental Commission</option>
+                                    <option value="12">HTM / SHTM Sales Rental Commission Overriding</option>
 
 
                                 </c:if>
@@ -461,13 +535,30 @@
                             </p>
                         </td>
                         <tr id="mLvlcontainer" name="mLvlcontainer" style="display: none;">
-                        <th scope="row">MemberLevel</th>
+                        <th scope="row">Member Level</th>
                         <td colspan="3">
                 <select id="mLvl" name="mLvl">
             <option value="">Select a Member Level</option>
 
+            <option value="2">SHTM</option>
             <option value="3">HTM</option>
             <option value="4">HT</option>
+        </select>
+    </td>
+    <td>
+
+
+
+                        </td>
+                    </tr>
+                                            <tr id="memberLvlcontainer" name="memberLvlcontainer" style="display: none;">
+                        <th scope="row">Member Level</th>
+                        <td colspan="3">
+                <select id="memberLvl" name="memberLvl">
+            <option value="">Select a Member Level</option>
+
+            <option value="2">SHTM</option>
+            <option value="3">HTM</option>
         </select>
     </td>
     <td>
