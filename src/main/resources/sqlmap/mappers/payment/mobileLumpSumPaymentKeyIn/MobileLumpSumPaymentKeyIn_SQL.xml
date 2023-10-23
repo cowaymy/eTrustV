@@ -2,7 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.impl.MobileLumpSumPaymentKeyInMapper">
 	<select  id="getCustomerInfoBySalesOrderNo" parameterType="Map" resultType="egovMap">
-		SELECT s0029d.CUST_ID,s0029d.NAME, s0029d.NRIC, s0029d.EMAIL,
+		SELECT s0029d.CUST_ID,s0029d.NAME,
+		CASE WHEN s0029d.TYPE_ID = 964 THEN SUBSTR(s0029d.NRIC, 1, 8) || '****' ELSE s0029d.NRIC AS NRIC,
+		s0029d.EMAIL,
 		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
 		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
 		FROM SAL0001D s0001d
@@ -30,7 +32,9 @@
 	</select>
 
 	<select id="getCustomerInfo" parameterType="Map" resultType="egovMap">
-		SELECT s0029d.CUST_ID,s0029d.NAME, s0029d.NRIC, s0029d.EMAIL,
+		SELECT s0029d.CUST_ID,s0029d.NAME,
+		CASE WHEN s0029d.TYPE_ID = 964 THEN SUBSTR(s0029d.NRIC, 1, 8) || '****' ELSE s0029d.NRIC AS NRIC,
+		s0029d.EMAIL,
 		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
 		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
 		FROM SAL0029D s0029d
