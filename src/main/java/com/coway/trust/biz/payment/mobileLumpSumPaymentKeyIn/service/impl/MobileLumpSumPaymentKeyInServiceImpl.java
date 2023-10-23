@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
@@ -174,6 +175,22 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		params.put("mobPayGroupNo", mobPayGroupNo);
 		params.put("userId", sessionVO.getUserId());
 
+		if (StringUtils.isEmpty(params.get("userId"))) {
+	        throw new ApplicationException(AppConstants.FAIL, "Please check the User Id value.");
+	      }
+
+	      if (StringUtils.isEmpty(params.get("status"))) {
+	        throw new ApplicationException(AppConstants.FAIL, "Reject reason value does not exist.");
+	      }
+
+	      if (StringUtils.isEmpty(params.get("failReasonId"))) {
+	        throw new ApplicationException(AppConstants.FAIL, "Reject reason value does not exist.");
+	      }
+
+	      if (StringUtils.isEmpty(params.get("mobPayGroupNo"))) {
+		        throw new ApplicationException(AppConstants.FAIL, "No record is selected for rejection.");
+		  }
+
 		int updateResult = mobileLumpSumPaymentKeyInMapper.updateRejectLumpSumPayment(params);
 
 		if (updateResult > 0) {
@@ -196,6 +213,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		int nextGroupID = mobileLumpSumPaymentKeyInMapper.selectNextMobPayGroupId();
 		EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
 		params.put("userId", user.get("userId"));
+		params.put("userBrnchId", user.get("userBrnchId"));
 		params.put("mobilePayGrpNo", nextGroupID);
 		LOGGER.debug("Mobile LS : " + params);
 

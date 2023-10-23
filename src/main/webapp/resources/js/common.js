@@ -679,6 +679,31 @@ var Common = {
 
     },
 
+    alertScroll: function (message, callback) {
+
+        if(FormUtil.isEmpty(message)){
+            console.log("message parameter  is empty !!!!!!");
+            return;
+        }
+
+        var msgArray = message.split(DEFAULT_DELIMITER);
+        var title = "Message";
+        var content = "";
+
+        if(msgArray.length > 1){
+            title = msgArray[0];
+            content = msgArray[1];
+        }else{
+            content = message;
+        }
+
+        Common.alertBase2Scroll({
+            title : title,
+            content : content
+        }, callback);
+
+    },
+
     /**
      * 공통 alert BASE....
      * @param _options
@@ -714,6 +739,53 @@ var Common = {
             + '</header>'
             + '<section class="pop_body">'
             + '<p class="msg_txt">' + option.content + '</p>'
+            + '<ul class="center_btns">'
+            + '	<li><p class="btn_blue2" id="_alertOk"><a href="javascript:void(0);">OK</a></p></li>'
+            + '</ul>'
+            + '</section>'
+            + '</div>';
+
+        var $obj = $(msgHtml);
+
+        $("body").append($obj);
+
+        $("#_alertOk").find('a').focus();
+
+        $obj.find('#_popClose').on('click', function () {
+            $obj.remove();
+        });
+
+        $obj.find('#_alertOk').on('click', function () {
+            $obj.remove();
+
+            if (callback) {
+                callback();
+            }
+        });
+    },
+
+    alertBase2Scroll : function (_options, callback){
+
+        var option = {
+            title : "Message",
+            isBig : false
+        };
+
+        option = $.extend(option, _options);
+
+        var bigClass = "";
+
+        if(option.isBig){
+            bigClass = "msg_big";
+        }
+
+        var msgHtml = '<div id="popup_wrap" alert="Y" class="popup_wrap msg_box ' + bigClass + '">'
+            + '	<header class="pop_header">'
+            + '<h1>' + option.title + '</h1>'
+            + '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
+            + '</header>'
+            + '<section class="pop_body no_height">'
+            + '<p class="msg_txt_overflow">' + option.content + '</p>'
             + '<ul class="center_btns">'
             + '	<li><p class="btn_blue2" id="_alertOk"><a href="javascript:void(0);">OK</a></p></li>'
             + '</ul>'

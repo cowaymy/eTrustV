@@ -13,7 +13,11 @@
 		height : "500px" // 창 세로 크기
 	};
 	var basicAuth = false;
+
+	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "6","codeName": "Reject"}];
 	$(document).ready(function() {
+
+	    doDefCombo(actData, '' ,'action', 'S', '');
 
 		$("#trIssDt").on('focus', function(e) {
 			$(this).attr('autocomplete', 'off');
@@ -38,6 +42,29 @@
 		$('#_listSearchBtn').click(function() {
 			selectList();
 		})
+
+		$("#action").change(function (){
+
+	    	if($("#action").val() == 21){
+	    		$('#reject_reason').hide();
+	            $('#rejectReason').val('');
+
+	    		$('#fail_reason').show();
+	    		doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 341, inputId : 0, separator : '-'}, '', 'failReason', 'S'); //Reason Code
+	    	}else if($("#action").val() == 6){
+	    		$('#fail_reason').hide();
+	    		$('#failReason').val('');
+
+	    		$('#reject_reason').show();
+	            doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 342, inputId : 0, separator : '-'}, '', 'rejectReason', 'S');
+	    	}else{
+	    		$('#reject_reason').hide();
+	    		$('#rejectReason').val('');
+
+	    		$('#fail_reason').hide();
+	    		$('#failReason').val('');
+	    	}
+	    });
 	});
 
 	function selectList() {
@@ -123,15 +150,15 @@
 					editable : false
 				},
 				{
-					dataField : "oriOutAmt",
-					headerText : '<spring:message code="pay.head.outstandingAmount" />',
-					width : 130,
+					dataField : "pvYear",
+					headerText : '<spring:message code="sal.title.text.pvYear" />',
+					width : 120,
 					editable : false
 				},
 				{
-					dataField : "payAmt",
-					headerText : '<spring:message code="pay.head.paymentAmount" />',
-					width : 130,
+					dataField : "pvMonth",
+					headerText : '<spring:message code="service.title.PVMonth" />',
+					width : 120,
 					editable : false
 				},
 				{
@@ -143,6 +170,18 @@
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict"
+				},
+				{
+					dataField : "oriOutAmt",
+					headerText : '<spring:message code="pay.head.outstandingAmount" />',
+					width : 130,
+					editable : false
+				},
+				{
+					dataField : "payAmt",
+					headerText : '<spring:message code="pay.head.paymentAmount" />',
+					width : 130,
+					editable : false
 				},
 				{
 					dataField : "totOriOutAmt",
@@ -164,7 +203,7 @@
 				},
 				{
 					dataField : "slipNo",
-					headerText : 'Slip No',
+					headerText : '<spring:message code="pay.head.slipNo" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -172,7 +211,7 @@
 				},
 				{
 					dataField : "chequeNo",
-					headerText : 'Cheque No',
+					headerText : '<spring:message code="pay.title.chequeNo" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -180,7 +219,7 @@
 				},
 				{
 					dataField : "chequeDate",
-					headerText : 'Cheque Date',
+					headerText : '<spring:message code="service.text.IssueDt" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -188,23 +227,7 @@
 				},
 				{
 					dataField : "issueBankName",
-					headerText : 'Issue Bank',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "chequeNo",
-					headerText : 'Cheque no',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "chequeDate",
-					headerText : 'Cheque Date',
+					headerText : '<spring:message code="pay.text.issBnk" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -212,15 +235,7 @@
 				},
 				{
 					dataField : "cardNo",
-					headerText : 'Card No',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "expiryDate",
-					headerText : 'Expiry Date',
+					headerText : '<spring:message code="pay.head.crc.cardNo" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -228,7 +243,7 @@
 				},
 				{
 					dataField : "approvalNo",
-					headerText : 'Approval No',
+					headerText : '<spring:message code="sal.title.text.apprvNo" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -236,7 +251,7 @@
 				},
 				{
 					dataField : "crcName",
-					headerText : 'CRC Name',
+					headerText : '<spring:message code="sal.text.nameOnCard" />',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -244,7 +259,15 @@
 				},
 				{
 					dataField : "transactionDate",
-					headerText : 'TRX Date',
+					headerText : 'CRC Transaction Date',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "expiryDate",
+					headerText : 'Card Expiry Date',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -268,7 +291,7 @@
 				},
 				{
 					dataField : "cardBrandDesc",
-					headerText : 'Card Brand',
+					headerText : 'CRC Brand',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
@@ -337,7 +360,72 @@
 							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
 						}
 					}
-				}, {
+				},
+				{
+					dataField : "remarks",
+					headerText : '<spring:message code="pay.head.remark" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "crtUserBrnchNm",
+					headerText : '<spring:message code="pay.title.branchCode" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "updDt",
+					headerText : '<spring:message code="pay.text.updDt" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "updUserName",
+					headerText : '<spring:message code="pay.head.updateUser" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "email1",
+					headerText : '<spring:message code="pay.head.email" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "email2",
+					headerText : '<spring:message code="pay.head.addEmail" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "sms1",
+					headerText : '<spring:message code="pay.head.sms" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
+					dataField : "sms2",
+					headerText : '<spring:message code="pay.head.addSms" />',
+					width : 100,
+					cellMerge : true,
+					mergeRef : "mobPayGroupNo",
+					mergePolicy : "restrict"
+				},
+				{
 					dataField : "issueBank",
 					visible : false
 				}, {
@@ -806,7 +894,7 @@
 															}
 														}
 
-														Common.alert(message,
+														Common.alertScroll(message,
 																function() {
 																	selectList();
 																});
@@ -960,8 +1048,7 @@
 														}
 														fn_clearPopDetails();
 
-														Common
-																.alert(
+														Common.alertScroll(
 																		message,
 																		function() {
 																			$(
@@ -986,6 +1073,7 @@
 
 	function fn_rejectRecord(value) {
 		if (value == 'C') {
+		    $('#updFailForm')[0].reset();
 			$('#reject_pop').hide();
 			return false;
 		}
@@ -1009,10 +1097,30 @@
 			info.push(selectedItems[i].mobPayGroupNo);
 		}
 
+		var stus = $("#action").val();
+		var reasonId = "";
+		if(stus != ''){
+
+			  if(stus == 21 && $("#failReason").val() != ''){
+				  reasonId = $("#failReason").val();
+		      }else if(stus == 6 && $("#rejectReason").val() != ''){
+		    	  reasonId = $('#rejectReason').val();
+		      }else{
+		    	Common.alert("* Please select reason");
+		    	return;
+		      }
+		}
+		else{
+			Common.alert("* Please select action");
+	    	return;
+		}
+
 		Common.ajax("POST", "/payment/mobileLumpSumPayment/rejectApproval.do",
 				{
 					data : info.join(","),
-					remark : $('#rejctResn1').val()
+					status: $("#action").val(),
+					remark : $('#rejctResn1').val(),
+					failReasonId : reasonId,
 				}, function(result) {
 					if (result.code == 00) {
 						var message = "Payment Reject Success.";
@@ -1025,7 +1133,7 @@
 										+ ")</font><br>";
 							}
 						}
-						Common.alert(message, function() {
+						Common.alertScroll(message, function() {
 							selectList();
 						});
 					} else {
@@ -1039,7 +1147,16 @@
 
 	function fn_clear() {
 		$("#searchForm")[0].reset();
+		$('#updFailForm')[0].reset();
 	}
+
+  function fn_close(){
+	  $('#reject_pop').hide();
+      $('#updFailForm')[0].reset();
+
+      $('#errSum_wrap').hide();
+      $('#errorSummaryReport')[0].reset();
+  }
 </script>
 <!-- html content -->
 <section id="content">
@@ -1122,9 +1239,9 @@
 							class="multy_select w100p" multiple="multiple">
 								<option value="1">Active</option>
 								<option value="104">Processing</option>
+								<option value="21">Failed</option>
 								<option value="5">Approved</option>
 								<option value="6">Rejected</option>
-								<option value="21">Failed</option>
 								<option value="10">Cancelled</option>
 						</select></td>
 						<th scope="row"><spring:message code="pay.title.branchCode" /></th>
@@ -1419,67 +1536,6 @@
 	<!-- popup_wrap end -->
 
 	<!-- popup_wrap start -->
-	<div class="popup_wrap size_small" id="updFail_wrap"
-		style="display: none;">
-		<!-- pop_header start -->
-		<header class="pop_header" id="updFail_pop_header">
-			<h1>Update Status</h1>
-			<ul class="right_opt">
-				<li><p class="btn_blue2">
-						<a href="#" onclick="fn_close()">CLOSE</a>
-					</p></li>
-			</ul>
-		</header>
-		<!-- pop_header end -->
-
-		<!-- pop_body start -->
-		<form name="updFailForm" id="updFailForm" method="post">
-			<section class="pop_body">
-				<!-- search_table start -->
-				<section class="search_table">
-					<!-- table start -->
-					<table class="type1">
-						<caption>table</caption>
-						<colgroup>
-							<col style="width: 175px" />
-							<col style="width: *" />
-						</colgroup>
-
-						<tbody>
-							<tr>
-								<th scope="row">Action<span class="must">*</span></th>
-								<td><select id="_action" name="_action"></select></td>
-							</tr>
-
-							<tr id="fail_reason" style="display: none;">
-								<th scope="row">Fail reason code<span class="must">*</span></th>
-								<td><select id="failReason" name="failReason" class="w50p"></select></td>
-							</tr>
-							<tr id="reject_reason" style="display: none;">
-								<th scope="row">Reject reason code<span class="must">*</span></th>
-								<td><select id="rejectReason" name="rejectReason"
-									class="w50p"></select></td>
-							</tr>
-							<tr id="rem">
-								<th scope="row"><spring:message code="pay.head.remark" /></th>
-								<td><textarea cols="20" rows="2" id="etc" name="etc"
-										placeholder="Remark"></textarea></td>
-							</tr>
-						</tbody>
-					</table>
-				</section>
-
-				<ul class="center_btns">
-					<li><p class="btn_blue2">
-							<a href="#" onClick="fn_updateFailStatus()">Save</a>
-						</p></li>
-				</ul>
-			</section>
-		</form>
-		<!-- pop_body end -->
-	</div>
-
-	<!-- popup_wrap start -->
 	<div class="popup_wrap size_mid" id="errSum_wrap"
 		style="display: none;">
 		<!-- pop_header start -->
@@ -1561,32 +1617,58 @@
 </section>
 <!--  Pop Up 2 -->
 
-<div id="reject_pop" class="popup_wrap msg_box" style="display: none;">
+<div id="reject_pop" class="popup_wrap size_mid" style="display: none;">
 	<header class="pop_header">
 		<h1>Reject Reason</h1>
 		<ul class="right_opt">
 			<li><p class="btn_blue2">
-					<a href="#"><spring:message code="expense.CLOSE" /></a>
+						<a href="#" onclick="fn_close()">CLOSE</a>
 				</p></li>
 		</ul>
 	</header>
+    <form name="updFailForm" id="updFailForm"  method="post">
+		<section class="pop_body">
+			<table class="type1">
+	                <caption>table</caption>
+	                 <colgroup>
+	                    <col style="width:300px" />
+	                    <col style="width:*" />
+	                </colgroup>
 
-	<section class="pop_body">
-		<p class="msg_txt">
-			<spring:message code="rejectionWebInvoiceMsg.registMsg" />
-			<textarea cols="20" rows="5" id="rejctResn1"
-				placeholder="Reject reason max 400 characters"></textarea>
-		</p>
+	                <tbody>
+	                <tr>
+	                     <th scope="row">Action<span class="must">*</span></th>
+	                     <td><select id="action" name="action"></select></td>
+	                 </tr>
 
-		<ul class="center_btns">
-			<li><p class="btn_blue">
-					<a href="#" onclick="javascript:fn_rejectRecord('P');">Proceed</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a href="#" onclick="javascript:fn_rejectRecord('C')">Cancel</a>
-				</p></li>
-		</ul>
-	</section>
+	                 <tr id="fail_reason" style="display: none;">
+	                     <th scope="row">Fail reason code<span class="must">*</span></th>
+	                        <td><select id="failReason" name="failReason" class="w50p"></select></td>
+	                 </tr>
+	                 <tr id="reject_reason" style="display: none;">
+	                     <th scope="row">Reject reason code<span class="must">*</span></th>
+	                        <td><select id="rejectReason" name="rejectReason" class="w50p"></select></td>
+	                 </tr>
+	                 <tr id="rem">
+	                     <th scope="row"><spring:message code="pay.head.remark" /></th>
+	                         <td>
+	                             <textarea cols="20" rows="5" id="rejctResn1"
+										placeholder="Reject reason max 400 characters"></textarea>
+	                         </td>
+	                 </tr>
+	                </tbody>
+	        </table>
+
+			<ul class="center_btns">
+				<li><p class="btn_blue">
+						<a href="#" onclick="javascript:fn_rejectRecord('P');">Proceed</a>
+					</p></li>
+				<li><p class="btn_blue">
+						<a href="#" onclick="javascript:fn_rejectRecord('C')">Cancel</a>
+					</p></li>
+			</ul>
+		</section>
+	</form>
 </div>
 </section>
 <!-- html content -->
