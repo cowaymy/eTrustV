@@ -503,7 +503,7 @@
 
         if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
             isValid = false;
-        } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'N') {
+        } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
             isValid = false;
         } else if(tabNm == 'CNT' && '${PAGE_AUTH.funcUserDefine5}'  != 'Y') {
             isValid = false;
