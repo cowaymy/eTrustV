@@ -499,11 +499,11 @@
 
     function fn_checkAccessModify(tabNm) {
 
-        var isValid = true, msg = "";
+        var isValid = true;
 
         if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
             isValid = false;
-        } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
+        } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'N') {
             isValid = false;
         } else if(tabNm == 'CNT' && '${PAGE_AUTH.funcUserDefine5}'  != 'Y') {
             isValid = false;
@@ -523,7 +523,9 @@
             isValid = false;
         }
 
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        if (!isValid) {
+            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
 
         return isValid;
     }
