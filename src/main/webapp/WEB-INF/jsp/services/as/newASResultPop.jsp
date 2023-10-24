@@ -1186,6 +1186,19 @@
 		$("#solut_code_text").val("");
 	}
 
+	function fn_waterSrcType_SelectedIndexChanged(waterSrcType){
+		   document.querySelectorAll(".imageFile").forEach(res=>{
+			           res.style.display="none";
+		   });
+
+		   if(waterSrcType=="6676"){
+		          document.querySelectorAll(".imageFile").forEach(res=>{
+		                res.style.display="";
+		          });
+		   }
+
+	}
+
 	function fn_openField_Complete() {
 		// OPEN MANDATORY
 		$("#m2").show();
@@ -1236,9 +1249,10 @@
 		$("#txtFilterRemark").attr("disabled", false);
 		$("#asNotMatch").attr("disabled", false);
 		$("#reworkProj").attr("disabled", false);
-		document.querySelectorAll(".imageFile").forEach(res=>{
-		    res.style.display="";
-		});
+
+	    document.querySelectorAll(".imageFile").forEach(res=>{
+              res.style.display="none";
+        });
 		fn_clearPanelField_ASChargesFees();
 
 		//$("#ddlFilterQty").val("1");
@@ -1621,7 +1635,7 @@
         const container = new DataTransfer();
         let uploadFlag = false;
 
-        if($('#ddlStatus').val() =="4"){
+        if($('#ddlStatus').val() =="4" && $("#waterSrcType").val() == "6676"){
 	        document.querySelectorAll(".imageFile input.imageDetails").forEach((e, index)=> {
 	                if(e.parentElement.parentElement.querySelector("input[type=file]").files[0]){
 	                    uploadFlag=true;
@@ -1892,35 +1906,37 @@
 	                }
 				}
 
-				 if (document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-                     rtnMsg += "* Image1 is compulsory to uplaod. </br>";
-                     rtnValue = false;
-                 }else{
-                     if(document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-                         rtnMsg += "* Image1 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
-                         rtnValue = false;
-                     }
-                 }
+				if ($("#waterSrcType").val() == "6676"){
+	                if (document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+	                     rtnMsg += "* Image1 is compulsory to uplaod. </br>";
+	                     rtnValue = false;
+	                 }else{
+	                     if(document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+	                         rtnMsg += "* Image1 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnValue = false;
+	                     }
+	                 }
 
-                 if (document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-                     rtnMsg += "* Image2 is compulsory to uplaod. </br>";
-                     rtnValue = false;
-                 }else{
-                     if(document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-                         rtnMsg += "* Image2 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
-                         rtnValue = false;
-                     }
-                 }
+	                 if (document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+	                     rtnMsg += "* Image2 is compulsory to uplaod. </br>";
+	                     rtnValue = false;
+	                 }else{
+	                     if(document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+	                         rtnMsg += "* Image2 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnValue = false;
+	                     }
+	                 }
 
-                 if (document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-                     rtnMsg += "* Image3 is compulsory to uplaod. </br>";
-                     rtnValue = false;
-                 }else{
-                     if(document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-                         rtnMsg += "* Image3 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
-                         rtnValue = false;
-                     }
-                 }
+	                 if (document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+	                     rtnMsg += "* Image3 is compulsory to uplaod. </br>";
+	                     rtnValue = false;
+	                 }else{
+	                     if(document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+	                         rtnMsg += "* Image3 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnValue = false;
+	                     }
+	                 }
+				}
 
 				// KR-OHK Serial Check
 				if ($("#hidSerialRequireChkYn").val() == 'Y'
@@ -3006,7 +3022,7 @@
                                 </tr>
                                     <tr>
 							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
-							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled">
+							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled" onChange="fn_waterSrcType_SelectedIndexChanged(this.value)">
 									                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
 									                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
 									                   <option value="${list.codeId}">${list.codeName}</option>
