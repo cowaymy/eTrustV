@@ -1291,9 +1291,7 @@
 		    PAY0012D Extent1
 		    LEFT JOIN PAY0030D Extent2   ON Extent1.MEMO_ITM_INVC_ITM_ID = Extent2.INVC_ITM_ID
 		    LEFT JOIN PAY0029D Extent3   ON Extent2.TAX_INVC_ID = Extent3.TAX_INVC_ID
-		    LEFT JOIN SAL0001D Extent4   ON ( Extent2.INVC_ITM_ORD_NO = Extent4.SALES_ORD_NO )
-		    OR ( ( Extent2.INVC_ITM_ORD_NO IS NULL )
-		    AND ( Extent4.SALES_ORD_NO IS NULL ) )
+		    LEFT JOIN SAL0001D Extent4   ON Extent2.INVC_ITM_ORD_NO = Extent4.SALES_ORD_NO
 		    LEFT JOIN SAL0077D Extent5   ON Extent2.INVC_ITM_DESC2 = Extent5.SRV_CNTRCT_REF_NO
 		 WHERE  Extent1.MEMO_ADJ_ID = #{adjId}
     </select>
