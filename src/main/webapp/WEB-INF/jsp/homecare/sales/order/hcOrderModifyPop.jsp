@@ -3,20 +3,20 @@
 <script type="text/javaScript" language="javascript">
     var ORD_ID = "${salesOrderId}";
     var ORD_NO = "${salesOrderNo}";
-	var ORD_STUS_ID = "${ordStusId}";
-	var CUST_ID = "${custId}";
-	var APP_TYPE_ID = "${appTypeId}";
-	var APP_TYPE_DESC = "${appTypeDesc}";
-	var TAB_NM = "${ordEditType}";
-	var CUST_NRIC = "${custNric}";
-	var PROMO_CODE = "${promoCode}";
-	var PROMO_DESC = "${promoDesc}";
-	var SRV_PAC_ID = "${srvPacId}";
-	var GST_CHK = "${orderDetail.basicInfo.gstChk}";
-	var ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
-	var ROLE_ID = "${SESSION_INFO.roleId}";
-	var PV_MONTH = "${ordPvMonth}";
-	var PV_YEAR = "${ordPvYear}";
+    var ORD_STUS_ID = "${ordStusId}";
+    var CUST_ID = "${custId}";
+    var APP_TYPE_ID = "${appTypeId}";
+    var APP_TYPE_DESC = "${appTypeDesc}";
+    var TAB_NM = "${ordEditType}";
+    var CUST_NRIC = "${custNric}";
+    var PROMO_CODE = "${promoCode}";
+    var PROMO_DESC = "${promoDesc}";
+    var SRV_PAC_ID = "${srvPacId}";
+    var GST_CHK = "${orderDetail.basicInfo.gstChk}";
+    var ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
+    var ROLE_ID = "${SESSION_INFO.roleId}";
+    var PV_MONTH = "${ordPvMonth}";
+    var PV_YEAR = "${ordPvYear}";
     var CUST_TYPE_ID = "${typeId}";
     var STK_ID = "${stkId}";
 
@@ -24,7 +24,7 @@
     var modDocGridID;
     var modRfrGridID;
 
-    var voucherAppliedStatus = 0;
+    /* var voucherAppliedStatus = 0;
     var voucherAppliedCode = "";
     var voucherAppliedEmail = "";
     var voucherPromotionId = [];
@@ -33,7 +33,7 @@
     codeList_562.push({codeId:"0", codeName:"No", code:"No"});
     <c:forEach var="obj" items="${codeList_562}">
     codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
+    </c:forEach> */
 
     var option = {
         winName : "popup",
@@ -67,7 +67,7 @@
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
 
-        doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+       /*  doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code */
 
         fn_statusCodeSearch();
 
@@ -95,7 +95,7 @@
         Common.ajax("GET", "/sales/order/selectStateCodeList.do", $("#searchForm").serialize(), function(result) {
             keyValueList = result;
         }, null, {
-        	async : false
+            async : false
         });
     }
 
@@ -133,30 +133,30 @@
                     unCheckValue : 0
                 }
             },
-		    {headerText : '<spring:message code="sal.title.text.document" />',       dataField : "typeDesc",              editable : false},
-		    {headerText : '<spring:message code="sal.title.qty" />',                      dataField : "docCopyQty",          editable : true,          width : 120},
-		    {headerText : "docTypeId",          dataField : "docTypeId",                  visible : false},
-		    {headerText : "docSoId",             dataField : "docSoId",                      visible : false}
-		];
+            {headerText : '<spring:message code="sal.title.text.document" />',       dataField : "typeDesc",              editable : false},
+            {headerText : '<spring:message code="sal.title.qty" />',                      dataField : "docCopyQty",          editable : true,          width : 120},
+            {headerText : "docTypeId",          dataField : "docTypeId",                  visible : false},
+            {headerText : "docSoId",             dataField : "docSoId",                      visible : false}
+        ];
 
         //그리드 속성 설정
         var docGridPros = {
             usePaging : true, //페이징 사용
             pageRowCount : 12, //한 화면에 출력되는 행 개수 20(기본값:20)
-			editable : true,
-			fixedColumnCount : 0,
-			showStateColumn : false,
-			showRowCheckColumn : false,
-			displayTreeOpen : false,
-			rowIdField : "codeId",
-			//selectionMode       : "singleRow",  //"multipleCells",
-			headerHeight : 30,
-			useGroupingPanel : false, //그룹핑 패널 사용
-			skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-			wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-			showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
-			noDataMessage : "No order found.",
-			groupingMessage : "Here groupping"
+            editable : true,
+            fixedColumnCount : 0,
+            showStateColumn : false,
+            showRowCheckColumn : false,
+            displayTreeOpen : false,
+            rowIdField : "codeId",
+            //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight : 30,
+            useGroupingPanel : false, //그룹핑 패널 사용
+            skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
+            noDataMessage : "No order found.",
+            groupingMessage : "Here groupping"
         };
 
         modDocGridID = GridCommon.createAUIGrid("grid_mod_doc_wrap", docColumnLayout, "", docGridPros);
@@ -183,7 +183,7 @@
                     list : keyValueList, //key-value Object 로 구성된 리스트
                     keyField : "stateId", //key 에 해당되는 필드명
                     valueField : "name" //value 에 해당되는 필드명
-				}
+                }
             },
             {headerText : '<spring:message code="sal.text.contactNo" />',          dataField : "refCntc",          editable : true,          width : 110,
                 editRenderer : {type : "InputEditRenderer", onlyNumeric : true}
@@ -198,20 +198,20 @@
         var rfrGridPros = {
             usePaging : true, //페이징 사용
             pageRowCount : 10, //한 화면에 출력되는 행 개수 20(기본값:20)
-			editable : true,
-			fixedColumnCount : 0,
-			showStateColumn : false,
-			showRowCheckColumn : false,
-			displayTreeOpen : false,
-			rowIdField : "codeId",
-			//selectionMode       : "singleRow",  //"multipleCells",
-			headerHeight : 30,
-			useGroupingPanel : false, //그룹핑 패널 사용
-			skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-			wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-			showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
-			noDataMessage : "No order found.",
-			groupingMessage : "Here groupping"
+            editable : true,
+            fixedColumnCount : 0,
+            showStateColumn : false,
+            showRowCheckColumn : false,
+            displayTreeOpen : false,
+            rowIdField : "codeId",
+            //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight : 30,
+            useGroupingPanel : false, //그룹핑 패널 사용
+            skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
+            noDataMessage : "No order found.",
+            groupingMessage : "Here groupping"
         };
 
         modRfrGridID = GridCommon.createAUIGrid("grid_mod_rfr_wrap", rfrColumnLayout, "", rfrGridPros);
@@ -270,16 +270,19 @@
 
     $(function() {
         $('#btnEditType').click(function() {
-            var tabNm = $('#ordEditType').val();
-            //fn_checkAccessModify(TAB_NM);
+        var tabNm = $('#ordEditType').val();
+        var isValid = fn_checkAccessModify(tabNm);
 
-            if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
-                Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-            }
-            else {
-                fn_changeTab(tabNm);
-            }
-        });
+        if ("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
+            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
+
+        if (!isValid) {
+            return false;
+        } else {
+            fn_changeTab(tabNm);
+        }
+    });
 
         // Save Basic Info
         $('#btnSaveBasicInfo').click(function() {
@@ -317,12 +320,12 @@
 
             Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : $('#hiddenRentPayCRCId').val()}, function(result) {
 
-            	if(result == true){
-            		Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
-            	}
+                if(result == true){
+                    Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
+                }
 
-            	else {
-            		Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID }, function(result) {
+                else {
+                    Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID }, function(result) {
                         if (result.stusCodeId != "4" && result.modeId == "131") {
                             if ($('#rentPayMode').val() != '131') {
                                 Common.alert('Change paymode is not allowed due to installation is not complete');
@@ -333,7 +336,7 @@
                             fn_doSavePaymentChannel();
                         }
                     });
-            	}
+                }
             });
 
         });
@@ -1281,17 +1284,17 @@
           srvPacId : SRV_PAC_ID
     }, function(promoPriceInfo) {
           if (promoPriceInfo != null) {
-			$("#ordPrice").val(promoPriceInfo.orderPricePromo);
-			$("#ordPv").val(promoPriceInfo.orderPVPromo);
-			$("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-			$("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
-			$("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
-			/*
-			 $("#orgOrdPrice").val(promoPriceInfo.orderPrice);
-			 $("#orgOrdPv").val(promoPriceInfo.orderPV);
-			 */
-			$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-			$("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+            $("#ordPrice").val(promoPriceInfo.orderPricePromo);
+            $("#ordPv").val(promoPriceInfo.orderPVPromo);
+            $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
+            $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+            $("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
+            /*
+             $("#orgOrdPrice").val(promoPriceInfo.orderPrice);
+             $("#orgOrdPv").val(promoPriceInfo.orderPV);
+             */
+            $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+            $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
           }
         });
   }
@@ -1330,8 +1333,7 @@
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID,
                         isSrvPac : 'Y'
-                        , voucherPromotion: voucherAppliedStatus
-                      }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+                      }, promoId, 'ordPromo', 'S', ''); //Common Code
                 } else
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
                       {
@@ -1341,15 +1343,14 @@
                         promoCustType : custTypeVal,
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
-                        , voucherPromotion: voucherAppliedStatus
-                      }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+                      }, promoId, 'ordPromo', 'S', ''); //Common Code
 
-                 if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
-                	$('#voucherCode').val(basicInfo.voucherInfo.voucherCode);
-                	$('#voucherEmail').val(basicInfo.voucherInfo.custEmail);
-                	$('#voucherType').val(basicInfo.voucherInfo.platformId);
-                	applyCurrentUsedVoucher();
-                }
+               /*  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
+                    $('#voucherCode').val(basicInfo.voucherInfo.voucherCode);
+                    $('#voucherEmail').val(basicInfo.voucherInfo.custEmail);
+                    $('#voucherType').val(basicInfo.voucherInfo.platformId);
+                    applyCurrentUsedVoucher();
+                } */
               }
             });
   }
@@ -1582,15 +1583,15 @@
   }
 
   function fn_loadInstallInfo(ordId) {
-	  Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: STK_ID}, function(result) {
+      Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: STK_ID}, function(result) {
           if(result != null)
           {
-          	if(result.data == 1){
-          		doGetComboSepa ('/homecare/selectAcBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-          	}
-          	else{
-          		doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-          	}
+            if(result.data == 1){
+                doGetComboSepa ('/homecare/selectAcBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+            }
+            else{
+                doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+            }
           }
       },  function(jqXHR, textStatus, errorThrown) {
           alert("Fail to check Air Conditioner. Please contact IT");
@@ -2245,7 +2246,7 @@
     }
 
     if (!isValid) {
-    	Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+        Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
     }
 
     return isValid;
@@ -2259,17 +2260,17 @@
 //       msg += '<spring:message code="sal.alert.msg.plzSeltheAddr" />';
 //     }
 
-	if (!FormUtil.isEmpty($('#modCustAddId').val().trim())) {
-	    if (FormUtil.isEmpty($('#modRem').val().trim())) {
-	      isValid = false;
-	      msg += '<spring:message code="sal.alert.msg.plzKeyinReasonUpdate" />';
-	    } else {
-	      if (FormUtil.byteLength($('#modRem').val().trim()) > 200) {
-	        isValid = false;
-	        msg += '<spring:message code="sal.alert.msg.rsnUpdValidTwoHundChar" />';
-	      }
-	    }
-	 }
+    if (!FormUtil.isEmpty($('#modCustAddId').val().trim())) {
+        if (FormUtil.isEmpty($('#modRem').val().trim())) {
+          isValid = false;
+          msg += '<spring:message code="sal.alert.msg.plzKeyinReasonUpdate" />';
+        } else {
+          if (FormUtil.byteLength($('#modRem').val().trim()) > 200) {
+            isValid = false;
+            msg += '<spring:message code="sal.alert.msg.rsnUpdValidTwoHundChar" />';
+          }
+        }
+     }
 
     if (!isValid)
       Common.alert('<spring:message code="sal.alert.msg.updSummary" />'
@@ -2334,12 +2335,12 @@
     }
 
     if (APP_TYPE_ID == '66' && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
-    	if ($("#modCorpCustType option:selected").index() <= 0) {
-    	      isValid = false;
-    	      msg += '* Please select the SST Type</br>';
+        if ($("#modCorpCustType option:selected").index() <= 0) {
+              isValid = false;
+              msg += '* Please select the SST Type</br>';
         }
 
-    	if ($("#modAgreementType option:selected").index() <= 0) {
+        if ($("#modAgreementType option:selected").index() <= 0) {
             isValid = false;
             msg += '* Please select the Agreement Type</br>';
         }
@@ -2625,22 +2626,22 @@
             srvPacId : SRV_PAC_ID
 
         }, function(stkPriceInfo) {
-        	if (stkPriceInfo != null) {
-        	    var pvVal = stkPriceInfo.orderPV;
-        	    var pvValGst = Math.floor(pvVal * (1 / 1.06))
+            if (stkPriceInfo != null) {
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal * (1 / 1.06))
 
-		        $("#ordPrice").val(stkPriceInfo.orderPrice);
-		        $("#ordPv").val(pvVal);
-		        $("#ordPvGST").val(pvValGst);
-		        $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
-		        $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
-		        $("#ordPriceId").val(stkPriceInfo.priceId);
-		        $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
+                $("#ordPrice").val(stkPriceInfo.orderPrice);
+                $("#ordPv").val(pvVal);
+                $("#ordPvGST").val(pvValGst);
+                $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#ordPriceId").val(stkPriceInfo.priceId);
+                $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
 
-		        $("#promoId").val('');
-		        $("#promoDiscPeriodTp").val('');
-		        $("#promoDiscPeriod").val('');
-		    }
+                $("#promoId").val('');
+                $("#promoDiscPeriodTp").val('');
+                $("#promoDiscPeriod").val('');
+            }
         });
     }
 
@@ -2651,57 +2652,57 @@
         if (APP_TYPE_ID == 66) {    // Rental
             var salesOrderMVO = {
                 salesOrdId : ORD_ID,
-		        promoId : $('#ordPromo').val().trim(),
-		        totAmt : $('#ordPrice').val().trim(),
-		        mthRentAmt : $('#ordRentalFees').val().trim(),
-		        totPv : $('#ordPv').val().trim(),
-		        discRntFee : $('#ordRentalFees').val().trim(),
-		        promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
-		        promoDiscPeriod : $('#promoDiscPeriod').val(),
-		        salesOrdNo : ORD_NO,
-		        defRentAmt : $('#ordRentalFees').val().trim(),
-		        norAmt : $('#orgOrdPrice').val().trim()
-		    };
+                promoId : $('#ordPromo').val().trim(),
+                totAmt : $('#ordPrice').val().trim(),
+                mthRentAmt : $('#ordRentalFees').val().trim(),
+                totPv : $('#ordPv').val().trim(),
+                discRntFee : $('#ordRentalFees').val().trim(),
+                promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
+                promoDiscPeriod : $('#promoDiscPeriod').val(),
+                salesOrdNo : ORD_NO,
+                defRentAmt : $('#ordRentalFees').val().trim(),
+                norAmt : $('#orgOrdPrice').val().trim()
+            };
         } else {
             var salesOrderMVO = {
                 salesOrdId : ORD_ID,
-		        promoId : $('#ordPromo').val().trim(),
-		        totAmt : $('#ordPrice').val().trim(),
-		        mthRentAmt : $('#ordRentalFees').val().trim(),
-		        totPv : $('#ordPv').val().trim(),
-		        discRntFee : $('#ordRentalFees').val().trim(),
-		        promoDiscPeriodTp : 0,
-		        promoDiscPeriod : 0,
-		        salesOrdNo : ORD_NO,
-		        defRentAmt : 0,
-		        norAmt : $('#orgOrdPrice').val().trim()
-		    };
+                promoId : $('#ordPromo').val().trim(),
+                totAmt : $('#ordPrice').val().trim(),
+                mthRentAmt : $('#ordRentalFees').val().trim(),
+                totPv : $('#ordPv').val().trim(),
+                discRntFee : $('#ordRentalFees').val().trim(),
+                promoDiscPeriodTp : 0,
+                promoDiscPeriod : 0,
+                salesOrdNo : ORD_NO,
+                defRentAmt : 0,
+                norAmt : $('#orgOrdPrice').val().trim()
+            };
         }
 console.log(salesOrderMVO);
-	    Common.ajax("POST", "/homecare/sales/order/updateHcPromoPriceInfo.do", salesOrderMVO, function(result) {
-	        Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
+        Common.ajax("POST", "/homecare/sales/order/updateHcPromoPriceInfo.do", salesOrderMVO, function(result) {
+            Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
 
-	    }, function(jqXHR, textStatus, errorThrown) {
-	        try {
-	            Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-	        } catch (e) {
-	            console.log(e);
-	        }
-	    });
-	}
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    }
 
     function fn_doSaveGstCertInfo() {
         var gSTEURCertificateVO = {
             eurcId : $('#eurcId').val().trim(),
-	        eurcSalesOrdId : ORD_ID,
-	        eurcRefNo : $('#certRefNo').val().trim(),
-	        eurcRefDt : $('#certRefDt').val().trim(),
-	        eurcCustRgsNo : $('#txtCertCustRgsNo').val().trim(),
-	        eurcRem : $('#txtCertRemark').val().trim(),
-	        eurcRliefAppTypeId : APP_TYPE_ID,
-	        atchFileGrpId : $('#atchFileGrpId').val(),
-	        existData : $('#existData').val()
-	    };
+            eurcSalesOrdId : ORD_ID,
+            eurcRefNo : $('#certRefNo').val().trim(),
+            eurcRefDt : $('#certRefDt').val().trim(),
+            eurcCustRgsNo : $('#txtCertCustRgsNo').val().trim(),
+            eurcRem : $('#txtCertRemark').val().trim(),
+            eurcRliefAppTypeId : APP_TYPE_ID,
+            atchFileGrpId : $('#atchFileGrpId').val(),
+            existData : $('#existData').val()
+        };
 
         Common.ajax("POST", "/sales/order/updateGstCertInfo.do", gSTEURCertificateVO, function(result) {
             Common.alert("GST Certificate Saved" + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
@@ -2716,126 +2717,124 @@ console.log(salesOrderMVO);
     }
 
     function fn_reloadPage() {
-	    //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
-	    $('#btnCloseModify').click();
+        //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
+        $('#btnCloseModify').click();
     }
 
-	function displayVoucherSection(){
-  	  if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
-  	  {
-  		  $('.voucherSection').show();
-  	  }
-  	  else{
-  		  $('.voucherSection').hide();
-  			clearVoucherData();
-  	  }
+/*     function displayVoucherSection(){
+      if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
+      {
+          $('.voucherSection').show();
+      }
+      else{
+          $('.voucherSection').hide();
+            clearVoucherData();
+      }
     }
 
     function applyVoucher() {
-  	  var voucherCode = $('#voucherCode').val();
-  	  var voucherEmail = $('#voucherEmail').val();
-  	  var voucherType = $('#voucherType option:selected').val();
+      var voucherCode = $('#voucherCode').val();
+      var voucherEmail = $('#voucherEmail').val();
+      var voucherType = $('#voucherType option:selected').val();
 
-  	  if(voucherCode.length == 0 || voucherEmail.length ==0){
-  		clearVoucherData();
-  		  Common.alert('Both voucher code and voucher email must be key in');
-  		  return;
-  	  }
-  	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-  	        if(result.code == "00") {
-  	        	voucherAppliedStatus = 1;
-  	        	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-  		      	voucherAppliedCode = voucherCode;
-  		      	voucherAppliedEmail = voucherEmail;
-  	        	$('#voucherMsg').show();
+      if(voucherCode.length == 0 || voucherEmail.length ==0){
+        clearVoucherData();
+          Common.alert('Both voucher code and voucher email must be key in');
+          return;
+      }
+      Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+            if(result.code == "00") {
+                voucherAppliedStatus = 1;
+                $('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+                voucherAppliedCode = voucherCode;
+                voucherAppliedEmail = voucherEmail;
+                $('#voucherMsg').show();
 
-  	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-  	        		if(result.length > 0){
-  	        			voucherPromotionId = result;
-  	        			//voucherPromotionCheck();
-	        			fn_loadPromotionInfo(ORD_ID);
-  	        		}
-  	        		else{
-  	        			//reset everything
-  	    				clearVoucherData();
-  	        			Common.alert("No Promotion is being entitled for this voucher code");
-  	        			return;
-  	        		}
-  	        	});
-  	        }
-  	        else{
-  				clearVoucherData();
-  	        	Common.alert(result.message);
-  	        	return;
-  	        }
-  	  });
+                Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+                    if(result.length > 0){
+                        voucherPromotionId = result;
+                        voucherPromotionCheck();
+                    }
+                    else{
+                        //reset everything
+                        clearVoucherData();
+                        Common.alert("No Promotion is being entitled for this voucher code");
+                        return;
+                    }
+                });
+            }
+            else{
+                clearVoucherData();
+                Common.alert(result.message);
+                return;
+            }
+      });
     }
 
     function voucherPromotionCheck(){
-  	 if(voucherAppliedStatus == 1){
-  		displayVoucherSection();
-  		var orderPromoId = [];
-  		var orderPromoIdToRemove = [];
-  		$("#ordPromo option").each(function()
-  		{
-  			  orderPromoId.push($(this).val());
-  	    });
-  		orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-  		    return !voucherPromotionId.some(function(obj2) {
-  			        return obj == obj2;
-  		    });
-  		});
-  		if(orderPromoIdToRemove.length > 0){
-  		   	$('#ordPromo').val('');
-  		  	$('#ordPromo').trigger('change');
-  			for(var i = 0; i < orderPromoIdToRemove.length; i++){
-  				if(orderPromoIdToRemove[i] == ""){
-  				}
-  				else{
-  					$("#ordPromo option[value='" + orderPromoIdToRemove[i] +"']").remove();
-  				}
-  			}
-  		}
-  	}
+     if(voucherAppliedStatus == 1){
+        displayVoucherSection();
+        var orderPromoId = [];
+        var orderPromoIdToRemove = [];
+        $("#ordPromo option").each(function()
+        {
+              orderPromoId.push($(this).val());
+        });
+        orderPromoIdToRemove = orderPromoId.filter(function(obj) {
+            return !voucherPromotionId.some(function(obj2) {
+                    return obj == obj2;
+            });
+        });
+        if(orderPromoIdToRemove.length > 0){
+            $('#ordPromo').val('');
+            $('#ordPromo').trigger('change');
+            for(var i = 0; i < orderPromoIdToRemove.length; i++){
+                if(orderPromoIdToRemove[i] == ""){
+                }
+                else{
+                    $("#ordPromo option[value='" + orderPromoIdToRemove[i] +"']").remove();
+                }
+            }
+        }
+    }
     }
 
     function clearVoucherData(){
-  	  $('#voucherCode').val('');
-    		$('#voucherEmail').val('');
-  		$('#voucherMsg').hide();
-  		$('#voucherMsg').text('');
-  	  voucherAppliedStatus = 0;
-    	  voucherAppliedCode = "";
-    	  voucherAppliedEmail = "";
+      $('#voucherCode').val('');
+            $('#voucherEmail').val('');
+        $('#voucherMsg').hide();
+        $('#voucherMsg').text('');
+      voucherAppliedStatus = 0;
+          voucherAppliedCode = "";
+          voucherAppliedEmail = "";
         voucherPromotionId =[];
 
-     	  $('#ordPromo').val('');
-     	  $('#ordPromo option').remove();
+          $('#ordPromo').val('');
+          $('#ordPromo option').remove();
     }
 
     function applyCurrentUsedVoucher(){
-  	  	voucherAppliedStatus = 1;
-  	  	var voucherCode = $('#voucherCode').val();
-      	var voucherEmail = $('#voucherEmail').val();
-    		$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-      	voucherAppliedCode = voucherCode;
-      	voucherAppliedEmail = voucherEmail;
-    		$('#voucherMsg').show();
+        voucherAppliedStatus = 1;
+        var voucherCode = $('#voucherCode').val();
+        var voucherEmail = $('#voucherEmail').val();
+            $('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+        voucherAppliedCode = voucherCode;
+        voucherAppliedEmail = voucherEmail;
+            $('#voucherMsg').show();
 
-    	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-    		if(result.length > 0){
-    			voucherPromotionId = result;
-      			//voucherPromotionCheck();
-    			fn_loadPromotionInfo(ORD_ID);
-    		}
-    		else{
-    			//reset everything
-  				clearVoucherData();
-    			Common.alert("No Promotion is being entitled for this voucher code");
-    			return;
-    		}
-    	});
-    }
+        Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+            if(result.length > 0){
+                voucherPromotionId = result;
+                voucherPromotionCheck();
+            }
+            else{
+                //reset everything
+                clearVoucherData();
+                Common.alert("No Promotion is being entitled for this voucher code");
+                return;
+            }
+        });
+    } */
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2927,10 +2926,10 @@ console.log(salesOrderMVO);
         <td><input id="modInstallDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p" disabled /></td>
         <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
         <td>
-	        <input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" />
-	        <a id="btnSalesmanPop" href="#" class="search_btn">
-	            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-	        </a>
+            <input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" />
+            <a id="btnSalesmanPop" href="#" class="search_btn">
+                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+            </a>
         </td>
        </tr>
        <tr>
@@ -3044,28 +3043,28 @@ console.log(salesOrderMVO);
         <tr>
         <th scope="row">Receiving Marketing Message</th>
         <td colspan="3">
-        	<div style="display:inline-block;width:100%;">
-			    <div style="display:inline-block;">
-					<c:choose>
-					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
-					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
-					  </c:when>
-					  <c:otherwise>
-					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
-					  </c:otherwise>
-					</c:choose>
-			    </div>
-			      <div style="display:inline-block;">
-					<c:choose>
-					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
-				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
-					  </c:when>
-					  <c:otherwise>
-				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
-					  </c:otherwise>
-					</c:choose>
-			    </div>
-	    	</div>
+            <div style="display:inline-block;width:100%;">
+                <div style="display:inline-block;">
+                    <c:choose>
+                     <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
+                         <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+                      </c:when>
+                      <c:otherwise>
+                         <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+                      </c:otherwise>
+                    </c:choose>
+                </div>
+                  <div style="display:inline-block;">
+                    <c:choose>
+                     <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
+                        <input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
+                      </c:when>
+                      <c:otherwise>
+                        <input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
+                      </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
         </td>
        </tr>
        <tr>
@@ -3151,28 +3150,28 @@ console.log(salesOrderMVO);
         <tr>
         <th scope="row">Receiving Marketing Message</th>
         <td colspan="3">
-        	<div style="display:inline-block;width:100%;">
-			    <div style="display:inline-block;">
-					<c:choose>
-					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
-					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
-					  </c:when>
-					  <c:otherwise>
-					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
-					  </c:otherwise>
-					</c:choose>
-			    </div>
-			      <div style="display:inline-block;">
-					<c:choose>
-					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
-				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
-					  </c:when>
-					  <c:otherwise>
-				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
-					  </c:otherwise>
-					</c:choose>
-			    </div>
-	    	</div>
+            <div style="display:inline-block;width:100%;">
+                <div style="display:inline-block;">
+                    <c:choose>
+                     <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
+                         <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+                      </c:when>
+                      <c:otherwise>
+                         <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+                      </c:otherwise>
+                    </c:choose>
+                </div>
+                  <div style="display:inline-block;">
+                    <c:choose>
+                     <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
+                        <input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
+                      </c:when>
+                      <c:otherwise>
+                        <input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
+                      </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
         </td>
        </tr>
       </tbody>
@@ -4042,16 +4041,16 @@ console.log(salesOrderMVO);
      </colgroup>
      <tbody>
       <tr>
-        <th scope="row">Voucher Type</th>
-	    <td colspan="3">
-		    <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p" disabled></select></p>
-	        <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p" readonly/></p>
-	        <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p" readonly/></p>
-<!-- 	        <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p> -->
-	        <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsg"></p>
-	    </td>
+<!--         <th scope="row">Voucher Type</th>
+        <td colspan="3">
+            <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p" disabled></select></p>
+            <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p" readonly/></p>
+            <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p" readonly/></p>
+            <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p>
+            <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsg"></p>
+        </td>
       </tr>
-      <tr>
+      <tr> -->
        <th scope="row"><spring:message code="sal.text.product" /></th>
        <td><span id="prdName"></span></td>
        <th scope="row"><spring:message
