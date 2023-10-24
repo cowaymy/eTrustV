@@ -267,7 +267,14 @@
 	                         ELSE Extent7.AS_CMMS END AS CMS,
 	                         Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
 	                         NVL(ma1.CITY, '-') AS INST_CITY,
-                             Extent15.DEFECT_DESC,
+                             (
+                                       SELECT DEFECT_DESC
+                                       FROM (
+                                           SELECT UPPER(DEFECT_DESC) DEFECT_DESC, DEFECT_GRP DEF_TYPE, DEFECT_ID DEF_DET FROM SYS0100M WHERE DEFECT_STATUS = 1
+                                           UNION
+                                           SELECT UPPER(DEFECT_DTL_CODE_DESC) DEFECT_DESC, to_number(DEFECT_TYPE_CODE) DEF_TYPE, to_number(DEFECT_DTL_CODE) DEF_DET FROM SVC0056M WHERE STUS_CODE_ID = 1
+                                       ) Extent15 WHERE  Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
+                             ) DEFECT_DESC,
                              HMC.BNDL_NO
 	                  FROM SVC0001D Extent1
 	                  JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
@@ -310,13 +317,13 @@
 	                  ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 	                               AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
 	                               AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-	                 LEFT JOIN (SELECT * FROM (
+	                 <!-- LEFT JOIN (SELECT * FROM (
 	                       SELECT DEFECT_DESC, DEF_TYPE, DEF_DET, ROW_NUMBER() OVER (PARTITION BY DEF_TYPE, DEF_DET ORDER BY 1) N FROM (
 			                   SELECT DEFECT_DESC, CAST(DEFECT_GRP AS VARCHAR(10)) DEF_TYPE, CAST(DEFECT_ID AS VARCHAR(10)) DEF_DET FROM SYS0100M WHERE DEFECT_STATUS = 1
 			                   UNION ALL
 			                   SELECT DEFECT_DTL_CODE_DESC DEFECT_DESC, DEFECT_TYPE_CODE DEF_TYPE, DEFECT_DTL_CODE DEF_DET FROM SVC0056M WHERE STUS_CODE_ID = 1
 	                       )
-		               ) WHERE N = 1) Extent15 ON Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
+		               ) WHERE N = 1) Extent15 ON Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID -->
 
 	                 left join sal0002d  sod on sod.SALES_ORD_ID = Extent1.AS_SO_ID
                      left join SYS0026M STK ON STK.STK_ID =  sod.ITM_STK_ID
@@ -326,12 +333,15 @@
                      LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
                      LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-                      AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
-                                                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC'))
 
-                      and  STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                        AND Extent9.TYPE_ID IN (42,43,5754,48)
+                      <!-- AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
+                                                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC')) -->
+
+                      <!-- and  STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                    WHERE AA.CODE = BB.CODE
-                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */ -->
+                        and GET_HOMECARE_FLAG_YN(STK.STK_CTGRY_ID) = 1
 
 	                 <if test="asStatusList != null and asStatusList != '' ">
 	                   AND Extent1.AS_STUS_ID IN
