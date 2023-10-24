@@ -222,14 +222,14 @@
                 $("#reportForm #TaskID").val(taskID);
 
             } else if (type == '8') {
-
+debugger;
                 if (memberLvl == '') {
                     Common.alert("Please select a member level before generating the report.");
                     return;
                 }
                 if (memberLvl == 3) {
                     reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
-                    reportDownFileName = "HTMCommissionRawMark" + today; //report name **PREVIOUSLY MANAGER
+                    reportDownFileName = "HTMCommissionRawMark_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
@@ -241,7 +241,7 @@
 
                 } else if (memberLvl == 2) {
                     reportFileName = "/commission/SHTMCommissionRawMark_Excel.rpt"; //reportFileName
-                    reportDownFileName = "SHTMCommissionRawMark" + today; //report name **PREVIOUSLY MANAGER
+                    reportDownFileName = "SHTMCommissionRawMark_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
@@ -260,7 +260,7 @@
                 }
                 if (memberLvl == 3) {
                     reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
-                    reportDownFileName = "HTMCommissionRawRate" + today; //report name **PREVIOUSLY MANAGER
+                    reportDownFileName = "HTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
@@ -273,7 +273,7 @@
 
                 } else if (memberLvl == 2) {
                     reportFileName = "/commission/SHTMCommissionRawRate_Excel.rpt"; //reportFileName
-                    reportDownFileName = "SHTMCommissionRawRate" + today; //report name **PREVIOUSLY MANAGER
+                    reportDownFileName = "SHTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
@@ -289,13 +289,14 @@
 
             else if (type == '10'){
 
+            	debugger;
                 if (mLvl == '') {
                     Common.alert("Please select a member level before generating the report.");
                     return;
                 }
                 if (mLvl == 4) {
                     reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
-                    reportDownFileName = "HT Sales Rental Commission" + today;
+                    reportDownFileName = "HT Sales Rental Commission_" + today;
                     reportViewType = "EXCEL";
 
                     $($reportForm).append('<input type="hidden" id="EMPLEV" name="EMPLEV" value="" /> ');
@@ -306,7 +307,7 @@
 
                 } else if (mLvl == 3) {
                 	 reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
-                     reportDownFileName = "HTM Sales Rental Commission" + today;
+                     reportDownFileName = "HTM Sales Rental Commission_" + today;
                      reportViewType = "EXCEL";
 
                      $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
@@ -326,11 +327,11 @@
 
                 } else if (mLvl == 2) {
                     reportFileName = "/commission/SHTM_Sales_Rental_Commission.rpt";
-                    reportDownFileName = "SHTM Sales Rental Commission" + today;
+                    reportDownFileName = "SHTM Sales Rental Commission_" + today;
                     reportViewType = "EXCEL";
 
                     $($reportForm).append('<input type="hidden" id="EMPLEV2" name="EMPLEV2" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 
                     $("#reportForm #EMPLEV2").val(mLvl);
                     $("#reportForm #TaskID").val(taskID);
@@ -344,7 +345,7 @@
                 }
                 if (memberLvl == 3) {
                     reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
-                    reportDownFileName = "HTM Sales Rental Commission Overriding" + today; //report name
+                    reportDownFileName = "HTM Sales Rental Commission Overriding_" + today; //report name
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
@@ -356,13 +357,13 @@
 
 
                 } else if (memberLvl == 2) {
-                    reportFileName = "/commission/SHTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
-                    reportDownFileName = "SHTM Sales Rental Commission Overriding" + today; //report name
+                    reportFileName = "/commission/SHTM_Promoted_Overriding_Commission.rpt"; //reportFileName
+                    reportDownFileName = "SHTM Sales Rental Commission Overriding_" + today; //report name
                     reportViewType = "EXCEL"; //viewType
 
                     //set parameters
                     $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
                     $("#reportForm #SHTM").val("7");
                     $("#reportForm #TaskID").val(taskID);
@@ -450,7 +451,7 @@
             if(type == "6" || type == "1")
                 var option = { isProcedure : true };
             else{
-                var option = { isProcedure : false }
+                var option = { isProcedure : false };
             }
 
             Common.report("reportForm", option);
