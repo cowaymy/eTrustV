@@ -50,6 +50,7 @@ import com.coway.trust.biz.common.EncryptionDecryptionService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
@@ -85,8 +86,24 @@ public class MobileAutoDebitController {
 	@Resource(name = "encryptionDecryptionService")
 	private EncryptionDecryptionService encryptionDecryptionService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@RequestMapping(value = "/autoDebitEnrollmentList.do")
-	public String autoDebitEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String autoDebitEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3 || sessionVO.getUserTypeId() == 7 ||
+	    	sessionVO.getUserTypeId() == 5758 || sessionVO.getUserTypeId() == 6672){
+
+    	    EgovMap result =  salesCommonService.getUserInfo(params);
+
+    	    model.put("orgCode", result.get("orgCode"));
+    	    model.put("grpCode", result.get("grpCode"));
+    	    model.put("deptCode", result.get("deptCode"));
+    	    model.put("memCode", result.get("memCode"));
+	    }
 
 		return "payment/mobileautodebit/autoDebitEnrollmentList";
 	}

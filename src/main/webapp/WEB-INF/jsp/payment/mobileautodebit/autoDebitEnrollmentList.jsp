@@ -24,6 +24,7 @@
     doGetCombo('/common/selectCodeList.do', '115', '', 'cardTypeId', 'M', 'f_multiCombo'); //card type
     doGetCombo('/common/selectCodeList.do', '8', '', 'custTypeId', 'M', 'f_multiCombo'); //cust type
     f_multiCombo();
+    loadMemberInfo();
 
     createAUIGrid();
     createExcelAUIGrid();
@@ -198,6 +199,11 @@
           width : 110,
           editable : false
         }, {
+            dataField : "outstandingMth",
+            headerText : 'Outstanding Month',
+            width : 110,
+            editable : false
+        },{
           dataField : "resnDesc",
           headerText : 'Fail Reason',
           width : 130,
@@ -396,6 +402,53 @@
     $('#grpCode').val('');
     $('#deptCode').val('');
     $('#memTyp').val('');
+    loadMemberInfo();
+  }
+
+  function loadMemberInfo(){
+    if("${SESSION_INFO.memberLevel}" =="1"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+    }else if("${SESSION_INFO.memberLevel}" =="2"){
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+    }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+
+    }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+    }
   }
 </script>
 <!-- html content -->
@@ -527,8 +580,16 @@
                 <option value="HT">HT</option>
               </select>
             </td>
-            <th scope="row"></th>
+            <th scope="row">Outstanding Month</th>
             <td>
+              <select id="outstandingMth" name="outstandingMth" class="w100p">
+                <option value="999">Choose One</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
             </td>
             <th scope="row"></th>
             <td>

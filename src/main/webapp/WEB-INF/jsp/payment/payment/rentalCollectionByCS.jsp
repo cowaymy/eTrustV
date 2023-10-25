@@ -12,6 +12,61 @@
 //AUIGrid 그리드 객체
 var myGridID;
 
+function loadMember(){
+    if("${orgCode}"){
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${SESSION_INFO.userName}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+        }
+    }
+}
+
 $(document).ready(function(){
 
     var gridPros = {
@@ -22,6 +77,7 @@ $(document).ready(function(){
             showStateColumn : false
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	loadMember();
 
 });
 
@@ -104,6 +160,7 @@ var columnLayout = [
 
     function fn_clear(){
         $("#searchForm")[0].reset();
+        loadMember();
     }
 
     function fn_excelDown() {

@@ -83,83 +83,83 @@ var memType = "${SESSION_INFO.userTypeId}";
 var memLevel = "${SESSION_INFO.memberLevel}";
 var bizType = "${SESSION_INFO.bizType}";
 
+function loadMember(){
+    if("${orgCode}"){
+        if("${SESSION_INFO.memberLevel}" =="1"){
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+              $("#searchBankType").val("2730");
+              $("#searchBankType").attr("disabled", "disabled");
+              $("#searchBankAcc").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+               $("#orgCode").val("${orgCode}");
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+               $("#searchBankType").val("2730");
+               $("#searchBankType").attr("disabled", "disabled");
+               $("#searchBankAcc").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+               $("#orgCode").val("${orgCode}");
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+               $("#deptCode").val("${deptCode}");
+               $("#deptCode").attr("class", "w100p readonly");
+               $("#deptCode").attr("readonly", "readonly");
+
+               $("#searchBankType").val("2730");
+               $("#searchBankType").attr("disabled", "disabled");
+               $("#searchBankAcc").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+               $("#orgCode").val("${orgCode}");
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+               $("#deptCode").val("${deptCode}");
+               $("#deptCode").attr("class", "w100p readonly");
+               $("#deptCode").attr("readonly", "readonly");
+               $("#searchVa").val("${memVaNo}");
+
+               $("#searchBankType").val("2730");
+               $("#searchBankType").attr("disabled", "disabled");
+               $("#searchBankAcc").attr("readonly", "readonly");
+           }
+    }
+}
+
 $(document).ready(function(){
 
-	 if("${SESSION_INFO.userTypeId}" =="2"){
-		 if("${SESSION_INFO.memberLevel}" =="1"){
+    if("${SESSION_INFO.userTypeId}" =="2"){
+    	bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayoutCody,null,gridPros);
+    }else{
+    	bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    }
 
-		        /* $("#orgCode").val("${orgCode}");
-		        $("#orgCode").attr("class", "w100p readonly");
-		        $("#orgCode").attr("readonly", "readonly"); */
-
-		        $("#searchBankType").val("2730");
-		        $("#searchBankType").attr("disabled", "disabled");
-		         $("#searchBankAcc").attr("readonly", "readonly");
-
-		    }else if("${SESSION_INFO.memberLevel}" =="2"){
-
-		        $("#orgCode").val("${orgCode}");
-		        $("#orgCode").attr("class", "w100p readonly");
-		        $("#orgCode").attr("readonly", "readonly");
-
-		        $("#grpCode").val("${grpCode}");
-		        $("#grpCode").attr("class", "w100p readonly");
-		        $("#grpCode").attr("readonly", "readonly");
-
-	             $("#searchBankType").val("2730");
-	             $("#searchBankType").attr("disabled", "disabled");
-	              $("#searchBankAcc").attr("readonly", "readonly");
-
-		    }else if("${SESSION_INFO.memberLevel}" =="3"){
-
-		        $("#orgCode").val("${orgCode}");
-		        $("#orgCode").attr("class", "w100p readonly");
-		        $("#orgCode").attr("readonly", "readonly");
-
-		        $("#grpCode").val("${grpCode}");
-		        $("#grpCode").attr("class", "w100p readonly");
-		        $("#grpCode").attr("readonly", "readonly");
-
-		        $("#deptCode").val("${deptCode}");
-		        $("#deptCode").attr("class", "w100p readonly");
-		        $("#deptCode").attr("readonly", "readonly");
-
-	             $("#searchBankType").val("2730");
-	             $("#searchBankType").attr("disabled", "disabled");
-	              $("#searchBankAcc").attr("readonly", "readonly");
-
-		    }else if("${SESSION_INFO.memberLevel}" =="4"){
-
-		        $("#orgCode").val("${orgCode}");
-		        $("#orgCode").attr("class", "w100p readonly");
-		        $("#orgCode").attr("readonly", "readonly");
-
-		        $("#grpCode").val("${grpCode}");
-		        $("#grpCode").attr("class", "w100p readonly");
-		        $("#grpCode").attr("readonly", "readonly");
-
-		        $("#deptCode").val("${deptCode}");
-		        $("#deptCode").attr("class", "w100p readonly");
-		        $("#deptCode").attr("readonly", "readonly");
-		        $("#searchVa").val("${memVaNo}");
-
-		        $("#searchBankType").val("2730");
-		        $("#searchBankType").attr("disabled", "disabled");
-		        $("#searchBankAcc").attr("readonly", "readonly");
-
-		    }
-
-
-	     bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayoutCody,null,gridPros);
-	 }
-	 else
-	 {
-		   bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-     }
-
-	    $("#memType").val(memType);
-	    $("#memLevel").val(memLevel);
-	    $("#bizType").val(bizType);
+    loadMember();
+    $("#memType").val(memType);
+    $("#memLevel").val(memLevel);
+    $("#bizType").val(bizType);
 
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
 
@@ -2185,6 +2185,7 @@ function isDupPOSToFinal(){
     	$("#payMode").val("105");
     	$("#searchForm")[0].reset();
     	AUIGrid.clearGridData(bankGridID);
+    	loadMember();
     }
 
     function fn_searchList(){

@@ -20,57 +20,64 @@ var bsMonth = [{"codeId":"","codeName":"All"},{"codeId":"Yes","codeName":"Yes"},
 var openingAging = [{"codeId":"0","codeName":"All"},{"codeId":"0","codeName":"0"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
 
 
+function loadMember(){
+    if("${orgCode}"){
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${SESSION_INFO.userName}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+        }
+    }
+}
+
 $(document).ready(function(){
 
-    if("${SESSION_INFO.userTypeId}" == "2" ){
-
-	    if("${SESSION_INFO.memberLevel}" =="1"){
-
-	        $("#orgCode").val("${orgCode}");
-	        $("#orgCode").attr("class", "w100p readonly");
-	        $("#orgCode").attr("readonly", "readonly");
-
-	    }else if("${SESSION_INFO.memberLevel}" =="2"){
-
-	        $("#orgCode").val("${orgCode}");
-	        $("#orgCode").attr("class", "w100p readonly");
-	        $("#orgCode").attr("readonly", "readonly");
-
-
-	    }else if("${SESSION_INFO.memberLevel}" =="3"){
-
-	        $("#orgCode").val("${orgCode}");
-	        $("#orgCode").attr("class", "w100p readonly");
-	        $("#orgCode").attr("readonly", "readonly");
-
-	        $("#grpCode").val("${grpCode}");
-	        $("#grpCode").attr("class", "w100p readonly");
-	        $("#grpCode").attr("readonly", "readonly");
-
-	        $("#deptCode").val("${deptCode}");
-	        $("#deptCode").attr("class", "w100p readonly");
-	        $("#deptCode").attr("readonly", "readonly");
-
-	    }else if("${SESSION_INFO.memberLevel}" =="4"){
-
-	        $("#orgCode").val("${orgCode}");
-	        $("#orgCode").attr("class", "w100p readonly");
-	        $("#orgCode").attr("readonly", "readonly");
-
-	        $("#grpCode").val("${grpCode}");
-	        $("#grpCode").attr("class", "w100p readonly");
-	        $("#grpCode").attr("readonly", "readonly");
-
-	        $("#deptCode").val("${deptCode}");
-	        $("#deptCode").attr("class", "w100p readonly");
-	        $("#deptCode").attr("readonly", "readonly");
-
-	        $("#memCode").val("${SESSION_INFO.userName}");
-	        $("#memCode").attr("class", "w100p readonly");
-	        $("#memCode").attr("readonly", "readonly");
-	    }
-    }
-
+    loadMember();
 	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'cmbCustTypeId', 'S', '');       // Customer Type Combo Box
 	doDefCombo(paymode, '', 'cmbPaymode', 'S', '');
 	doDefCombo(isPaid, '', 'cmbIsPaid', 'S', '');
@@ -160,6 +167,7 @@ var columnLayout = [
 
     function fn_clear(){
         $("#searchForm")[0].reset();
+        loadMember();
     }
 
     function fn_excelDown(){

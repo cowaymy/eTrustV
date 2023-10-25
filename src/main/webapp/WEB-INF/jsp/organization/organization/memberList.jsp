@@ -482,9 +482,9 @@ $(document).ready(function() {
 
     if("${SESSION_INFO.memberLevel}" =="1"){
 
-        /* $("#orgCode").val("${orgCode}");
+        $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
-        $("#orgCode").attr("readonly", "readonly"); */
+        $("#orgCode").attr("readonly", "readonly");
 
     }else if("${SESSION_INFO.memberLevel}" =="2"){
 

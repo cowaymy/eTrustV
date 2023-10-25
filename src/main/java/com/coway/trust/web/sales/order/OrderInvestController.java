@@ -75,12 +75,14 @@ public class OrderInvestController {
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3 || sessionVO.getUserTypeId() == 7 ||
+	        sessionVO.getUserTypeId() == 5758 || sessionVO.getUserTypeId() == 6672){
+
 			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
 			model.put("memType", getUserInfo.get("memType"));
-			model.put("orgCode", getUserInfo.get("lastOrgCode"));
-			model.put("grpCode", getUserInfo.get("lastGrpCode"));
-			model.put("deptCode", getUserInfo.get("lastDeptCode"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
 			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
 

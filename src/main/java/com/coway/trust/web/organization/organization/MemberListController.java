@@ -190,8 +190,9 @@ public class MemberListController {
 		//logger.debug("userRole     " + userRole);
 		model.addAttribute("userRole", userRole.get("roleid"));
 
-    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
-		//if( sessionVO.getUserTypeId() == 1){
+    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3 || sessionVO.getUserTypeId() == 7 ||
+    	sessionVO.getUserTypeId() == 5758 || sessionVO.getUserTypeId() == 6672){
+
       EgovMap result =  salesCommonService.getUserInfo(params);
 
       model.put("orgCode", result.get("orgCode"));
