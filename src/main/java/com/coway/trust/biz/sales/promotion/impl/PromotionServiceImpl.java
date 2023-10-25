@@ -546,4 +546,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	public List<EgovMap> selectPromoReqstPrdHistList(Map<String, Object> params) {
 		return promotionMapper.selectPromoReqstPrdHistList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectExcelPromoList(Map<String, Object> params) {
+		return promotionMapper.selectExcelPromoList(params);
+	}
 }

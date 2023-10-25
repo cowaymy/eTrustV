@@ -555,6 +555,9 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		smap.put("crtUserId", params.get("upd_user"));
 		smap2.put("crtUserId", params.get("upd_user"));
 
+		smap.put("chgRemark", params.get("chgRemark"));
+		smap2.put("chgRemark", params.get("chgRemark"));
+
 		if (params.get("priceTypeid") != null) {
 			if ("61".equals(params.get("priceTypeid").toString())){
 
@@ -568,6 +571,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		    smap.put("tradeinpv", params.get("dTradeInPV"));
 		    smap.put("srvpacid", params.get("srvPackageId"));
 		    smap.put("pricerpf", params.get("dRentalDeposit"));
+
 
 		    //rental package
 		    smap2.put("stockId", params.get("stockId"));

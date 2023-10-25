@@ -275,6 +275,10 @@
         //copyAUIGrid(columnLayout);
         AUIGrid.setGridData(myGridID, []);
         doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
+
+        $("#chgRemark").keyup(function(){
+            $("#characterCount").text($(this).val().length + " of 100 max characters");
+      });
     });
 
     function f_removeclass(){
@@ -931,6 +935,7 @@
                 $("#exCost").prop("disabled", true);
                 $("#exTradePv").prop("disabled", true);
                 $("#exPenalty").prop("disabled", true);
+                $("#chgRemark").prop("disabled", true);
              //   $("#exValidFr").prop("disabled", true);
             }
     	}else if(w == "R"){
@@ -941,6 +946,7 @@
             $("#exCost").prop("disabled", false);
             $("#exTradePv").prop("disabled", false);
             $("#exPenalty").prop("disabled", false);
+            $("#chgRemark").prop("disabled", false);
           //  $("#exValidFr").prop("disabled", false);
     	}else if(w == "O"){
     		$("#exPrice").prop("disabled", true);
@@ -950,6 +956,7 @@
             $("#exCost").prop("disabled", false);
             $("#exTradePv").prop("disabled", false);
             $("#exPenalty").prop("disabled", false);
+            $("#chgRemark").prop("disabled", false);
           //  $("#exValidFr").prop("disabled", false);
     	}
 
@@ -1086,7 +1093,8 @@
                 dTradeInPV : $("#exTradePv").val(),
                 dMonthlyRental : $("#exPrice").val(),
                 dNormalPrice : $("#exNormalPrice").val(),
-                dPenaltyCharge  : $("#exPenalty").val()
+                dPenaltyCharge  : $("#exPenalty").val(),
+                chgRemark : $("#chgRemark").val()
         };
        console.log("priceTypeId: " + typeId2);
        console.log(param);
@@ -2562,6 +2570,14 @@
                                 <input type="text" id = "exValidFr" name="exValidFr" class = "j_date" placeholder="DD/MM/YYYY" disabled = "disabled"/>
                             </td> -->
                         </tr>
+                        <tr>
+                         <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+                         <td colspan="3">
+                         <textarea type="text" title="" placeholder="" class="w100p" id="chgRemark" name="chgRemark" maxlength="100"></textarea>
+                         <span id="characterCount">0 of 100 max characters</span>
+                         </td>
+                        </tr>
+</tr>
                     </tbody>
                 </table><!-- table end -->
             </form>

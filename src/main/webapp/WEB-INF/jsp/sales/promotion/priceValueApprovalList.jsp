@@ -290,6 +290,7 @@
                       $("#exNormalPriceV").val(result.data.amt);
                       $("#appvStatusV").val(result.data.appvStus);
                       $("#appvRemarkV").val(result.data.remark);
+                      $("#chgRemarkV").val(result.data.chgRemark);
                       AUIGrid.setGridData(priceHistoryGridV, result.data2);
                       AUIGrid.resize(priceHistoryGridV,950, 280);
                   }
@@ -303,6 +304,7 @@
                       $("#exCost").val(result.data.pricecost);
                       $("#exTradePv").val(result.data.tradeinpv);
                       $("#exNormalPrice").val(result.data.amt);
+                      $("#chgRemarkV").val(result.data.chgRemark);
                       AUIGrid.setGridData(priceHistoryGrid, result.data2);
                       AUIGrid.resize(priceHistoryGrid,950, 280);
                   }
@@ -612,8 +614,13 @@
                                 <option value=6>Reject</option>
                                 </select></td>
                         </tr>
+                        <tr>
+ <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+     <td colspan="3"><input id="chgRemark" name="chgRemark" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
                        <tr>
-                           <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+                       <tr>
+                           <th scope="row">Approval Remark<span style="color:red">*</span></th>
                            <td colspan="3">
                            <textarea type="text" title="" placeholder="" class="w100p" id="appvRemark" name="appvRemark" maxlength="100"></textarea>
                            <span id="characterCount">0 of 100 max characters</span>
@@ -722,8 +729,12 @@
                                 <option value=6>Reject</option>
                                 </select></td>
                         </tr>
+                        <tr>
+ <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+     <td colspan="3"><input id="chgRemarkV" name="chgRemarkV" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
                        <tr>
-    <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+    <th scope="row">Approval Remark<span style="color:red">*</span></th>
     <td colspan="3">
         <textarea type="text" title="" placeholder="" class="w100p" id="appvRemarkV" name="appvRemarkV" maxlength="100"  disabled = "disabled"></textarea>
         <span id="characterCount">0 of 100 max characters</span>

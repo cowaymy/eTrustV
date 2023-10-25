@@ -405,6 +405,57 @@ public class PromotionController {
 		return ResponseEntity.ok(resultList);
 	}
 
+	@RequestMapping(value = "/selectExcelPromoList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectExcelPromoList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		String[] arrPromoAppTypeId   = request.getParameterValues("promoAppTypeId"); //Promotion Application
+		String[] arrPromoTypeId   = request.getParameterValues("promoTypeId"); //Promotion Type
+
+		List<String> lPromoAppTypeId = new ArrayList<String>();
+
+		for(String s : arrPromoAppTypeId){
+
+			lPromoAppTypeId.add(s);
+
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(s)) {
+				lPromoAppTypeId.add(String.valueOf(SalesConstants.APP_TYPE_CODE_ID_RENTAL));
+			}
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT == Integer.parseInt(s)) {
+				lPromoAppTypeId.add(String.valueOf(SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT));
+			}
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_INS == Integer.parseInt(s)) {
+				lPromoAppTypeId.add(String.valueOf(SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT));
+			}
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS == Integer.parseInt(s)) {
+				lPromoAppTypeId.add(String.valueOf(SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS));
+			}
+		}
+
+		String[] arrPromoAppTypeId2 = new String[lPromoAppTypeId.size()];
+
+		for(int i = 0; i < lPromoAppTypeId.size(); i++){
+			arrPromoAppTypeId2[i] = lPromoAppTypeId.get(i);
+		}
+
+    	params.put("promoDt", CommonUtils.changeFormat(String.valueOf(params.get("promoDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+
+		if(arrPromoAppTypeId != null && !CommonUtils.containsEmpty(arrPromoAppTypeId)) params.put("arrPromoAppTypeId", arrPromoAppTypeId2);
+		if(arrPromoTypeId != null && !CommonUtils.containsEmpty(arrPromoTypeId)) params.put("arrPromoTypeId", arrPromoTypeId);
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### promoAppTypeId : "+params.get("arrPromoAppTypeId"));
+		logger.debug("!@###### promoTypeId : "+params.get("arrPromoTypeId"));
+		logger.debug("!@###### promoDt : "+params.get("promoDt"));
+		logger.debug("!@###### promoStusId : "+params.get("promoStusId"));
+		logger.debug("!@###### promoCode : "+params.get("promoCode"));
+		logger.debug("!@###### promoDesc : "+params.get("promoDesc"));
+		logger.debug("!@##############################################################################");
+
+		List<EgovMap> resultList = promotionService.selectExcelPromoList(params);
+
+		return ResponseEntity.ok(resultList);
+	}
+
 
 
 }

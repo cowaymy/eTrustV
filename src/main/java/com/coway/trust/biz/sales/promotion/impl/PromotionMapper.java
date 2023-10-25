@@ -78,4 +78,6 @@ public interface PromotionMapper {
 	List<EgovMap> selectPromoHistList(Map<String, Object> params);
 	List<EgovMap> selectPromoReqstPrdHistList(Map<String, Object> params);
 
+	List<EgovMap> selectExcelPromoList(Map<String, Object> params);
+
 }

@@ -5,6 +5,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var listGridID;
+    var excelGridID;
     var listStckGridID, listGiftGridID;
 
     var keyValueList = [];
@@ -19,7 +20,12 @@
 
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        createAUIGridExcel();
         createAUIGridStk();
+
+        $("#chgRemark").keyup(function(){
+            $("#characterCount").text($(this).val().length + " of 100 max characters");
+      });
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
@@ -96,6 +102,11 @@
         });
     }
 
+    function fn_excelDown(){
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("excel_list_grid_wrap", "xlsx", "PromotionList");
+    }
+
     function createAUIGrid() {
 
         //AUIGrid 칼럼 설정
@@ -148,6 +159,68 @@
         };
 
         listGridID = GridCommon.createAUIGrid("list_promo_grid_wrap", columnLayout, "", gridPros);
+    }
+
+    function createAUIGridExcel(){
+
+        //AUIGrid 칼럼 설정
+        var excelColumnLayout = [
+            { headerText : "<spring:message code='sal.text.promotionId'/>",        dataField : "promoId", editable : false,   width : 100 }
+            , { headerText : "<spring:message code='sales.AppType2'/>",        dataField : "promoAppTypeName", editable : false,   width : 100 }
+            , { headerText : "<spring:message code='sales.promo.promoType'/>", dataField : "promoTypeName",    editable : false,   width : 100 }
+            , { headerText : "<spring:message code='sales.promo.promoCd'/>",   dataField : "promoCode",        editable : false,   width : 140 }
+            , { headerText : "<spring:message code='sales.promo.promoNm'/>",   dataField : "promoDesc",        editable : false }
+            , { headerText : "<spring:message code='sales.StartDate'/>",       dataField : "promoDtFrom",      editable : false,   width : 100 }
+            , { headerText : "<spring:message code='sales.EndDate'/>",         dataField : "promoDtEnd",       editable : false,   width : 100 }
+            , { headerText : "<spring:message code='sales.Status'/>",          dataField : "promoStusId",      editable : true,    width : 80
+              , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+                                    var retStr = "";
+                                    for(var i=0,len=keyValueList.length; i<len; i++) {
+                                        if(keyValueList[i]["stusCodeId"] == value) {
+                                            retStr = keyValueList[i]["codeName"];
+                                            break;
+                                        }
+                                    }
+                                    return retStr == "" ? value : retStr;
+                                }
+              , editRenderer : {
+                    type       : "ComboBoxRenderer",
+                    list       : keyValueList, //key-value Object 로 구성된 리스트
+                    keyField   : "stusCodeId", // key 에 해당되는 필드명
+                    valueField : "codeName" // value 에 해당되는 필드명
+                }}
+            , { headerText : "Approval Status",         dataField : "appvStus",       editable : false,   width : 100 }
+            , { headerText : "Voucher Promotion",         dataField : "voucherPromotion",       editable : false,   width : 100 }
+            , { headerText : "Customer Type",         dataField : "promoCustTypeDesc",       editable : false,   width : 100 }
+            , { headerText : "Ex-Trade",         dataField : "exTradeDesc",       editable : false,   width : 100 }
+            , { headerText : "Employee",         dataField : "empChkDesc",       editable : false,   width : 100 }
+            , { headerText : "Discount Type",         dataField : "promoDiscTypeDesc",       editable : false,   width : 100 }
+            , { headerText : "Discount Value",         dataField : "promoPrcPrcnt",       editable : false,   width : 100 }
+            , { headerText : "RPF Discount",         dataField : "promoRpfDiscAmt",       editable : false,   width : 100 }
+            , { headerText : "Discount Period Type",         dataField : "promoDiscPeriodTpDesc",       editable : false,   width : 100 }
+            , { headerText : "Discount Period Value",         dataField : "promoDiscPeriod",       editable : false,   width : 100 }
+            , { headerText : "Additional Discount (RM)",         dataField : "promoAddDiscPrc",       editable : false,   width : 100 }
+            , { headerText : "Additional Discount (PV)",         dataField : "promoAddDiscPv",       editable : false,   width : 100 }
+            , { headerText : "Mega Deal",         dataField : "megaDeal",       editable : false,   width : 100 }
+            , { headerText : "Mega Deal",         dataField : "megaDeal",       editable : false,   width : 100 }
+            , { headerText : "Apply To",        dataField : "eSales",        visible : false}
+            , { headerText : "Advance Discount",         dataField : "advDisc",       editable : false,   width : 100 }
+            , { headerText : "Mattress Size",         dataField : "stkSize",       editable : false,   width : 100 }
+            , { headerText : "promoAppTypeId", dataField : "promoAppTypeId", visible : false}
+        ];
+
+        var excelGridPros = {
+             enterKeyColumnBase : true,
+             useContextMenu : true,
+             enableFilter : true,
+             showStateColumn : true,
+             displayTreeOpen : true,
+             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+             exportURL : "/common/exportGrid.do"
+         };
+
+        excelGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
     }
 
     function createAUIGridStk() {
@@ -218,6 +291,10 @@
         console.log('fn_selectPromoListAjax START');
         Common.ajax("GET", "/sales/promotion/selectPromotionList.do", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
+        });
+
+        Common.ajax("GET", "/sales/promotion/selectExcelPromoList.do", $("#listSearchForm").serialize(), function(resultExcel) {
+        	AUIGrid.setGridData(excelGridID, resultExcel);
         });
     }
 
@@ -388,7 +465,30 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-
+      <!-- link_btns_wrap start -->
+   <aside class="link_btns_wrap">
+     <p class="show_btn">
+      <a href="#"><img
+       src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+       alt="link show" /></a>
+     </p>
+     <dl class="link_list">
+      <dt>Link</dt>
+      <dd>
+       <ul class="btns">
+         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+         <li><p class="link_btn"><a href="javascript:fn_excelDown();" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
+         </c:if>
+       </ul>
+       <p class="hide_btn">
+        <a href="#"><img
+         src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+         alt="hide" /></a>
+       </p>
+      </dd>
+     </dl>
+   </aside>
+   <!-- link_btns_wrap end -->
 <!-- link_btns_wrap start -->
 <!--
 <aside class="link_btns_wrap">
@@ -424,6 +524,7 @@
 -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="list_promo_grid_wrap" style="width:100%; height:480; margin:0 auto;"></div>
+<div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->

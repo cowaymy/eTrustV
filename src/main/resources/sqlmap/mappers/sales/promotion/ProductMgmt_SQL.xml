@@ -281,7 +281,7 @@ WHERE 1 = 1
     ORDER BY STK.STK_CODE    </select>
 
   <select id="selectPriceReqstInfo" parameterType="Map" resultType="egovMap">
-   SELECT A.APPV_STUS, A.REMARK,
+   SELECT A.APPV_STUS, A.REMARK, A.CHG_REMARK,
    <if test="typeId !=null and typeId == '61'">
                 <if test="appTypeId !=null and appTypeId == '66'">
                     NVL(A.PRC_COSTING, 0) PRICECOST,

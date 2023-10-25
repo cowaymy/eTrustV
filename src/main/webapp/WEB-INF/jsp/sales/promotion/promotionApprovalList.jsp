@@ -430,6 +430,7 @@
                       $("#promoAppTypeId").val(promoInfo.promoAppTypeId);
                       $("#promoCustType").val(promoInfo.promoCustType);
                       $("#actionTab").val(promoInfo.actionTab);
+                      $("#chgRemark").val(promoInfo.chgRemark);
 
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'promoTypeId',       'S'); //Promo Type
@@ -504,6 +505,7 @@
                       $("#v_actionTab").val(promoInfo.actionTab);
                       $("#v_appvRemark").val(promoInfo.appvRemark);
                       $("#v_appvStatus").val(promoInfo.appvStatus);
+                      $("#v_chgRemark").val(promoInfo.chgRemark);
 
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'v_promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'v_promoTypeId',       'S'); //Promo Type
@@ -1424,6 +1426,10 @@
         <select id="stkSize" name="stkSize" class="w100p"></select>
     </td>
 </tr>
+<tr>
+ <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+     <td colspan="3"><input id="chgRemark" name="chgRemark" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 </form>
@@ -1452,7 +1458,7 @@
 </select></td>
 </tr>
 <tr>
- <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+ <th scope="row">Approval Remark<span style="color:red">*</span></th>
     <td colspan="3">
         <textarea type="text" title="" placeholder="" class="w100p" id="appvRemark" name="appvRemark" maxlength="100"></textarea>
         <span id="characterCount">0 of 100 max characters</span>
@@ -1656,6 +1662,10 @@
         <select id="v_stkSize" name="v_stkSize" class="w100p"></select>
     </td>
 </tr>
+<tr>
+ <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+     <td colspan="3"><input id="v_chgRemark" name="v_chgRemark" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 </form>
@@ -1684,7 +1694,7 @@
 </select></td>
 </tr>
 <tr>
- <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
+ <th scope="row">Approval Remark<span style="color:red">*</span></th>
     <td colspan="3">
         <textarea type="text" title="" placeholder="" class="w100p" id="v_appvRemark" name="v_appvRemark" maxlength="100"></textarea>
         <span id="characterCount">0 of 100 max characters</span>
