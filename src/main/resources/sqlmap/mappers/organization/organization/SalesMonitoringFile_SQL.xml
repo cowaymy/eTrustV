@@ -154,8 +154,21 @@
                                     DISTINCT PV_YEAR, PV_MONTH,MEM_ID,MAX(TARGETATMT_SHI)TARGETATMT_SHI
                             FROM ORG0044T
                             WHERE TARGETATMT_SHI IS NOT NULL
+
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                            AND ORG_CODE = #{orgCode}
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND GRP_CODE = #{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND DEPT_CODE = #{deptCode}
+                        </if>
+                        <if test="memCode != null and memCode != ''">
+                            AND  MEM_CODE = #{memCode}
+                        </if>
                           <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " )'>
-                           AND TO_CHAR(TO_DATE(PV_YEAR || PV_MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+                           AND TO_CHAR(TO_DATE(PV_YEAR || PV_MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
                          </if>
 
                          <if test="netSalesMonth != null and netSalesMonth != ''">
@@ -235,7 +248,7 @@
                         </if>
 
                          <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " )'>
-                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM') = #{currentYm}
                          </if>
 
                          <if test="netSalesMonth != null and netSalesMonth != ''">

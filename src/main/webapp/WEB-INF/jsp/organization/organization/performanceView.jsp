@@ -7,6 +7,8 @@ var listMyGridID;
 var memCode;
 
 $(document).ready(function() {
+
+	 $("#netSalesMonth").val(moment().format('MM/YYYY'));
 	 bindValue();
 	 createAUIGrid();
 
@@ -225,6 +227,11 @@ $(function(){
 });
 
 function fn_selectListAjax() {
+
+    if(!$("#netSalesMonth").val()){
+    	Common.alert("Please choose the Month");
+    	return;
+    }
     Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(listMyGridID, result);
     });
