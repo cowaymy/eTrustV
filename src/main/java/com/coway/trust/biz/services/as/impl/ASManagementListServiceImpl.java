@@ -2153,135 +2153,135 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     // ASManagementListMapper.insert_LOG0014D(svc0004dmap); 꼭 주석 ㅜ
 
 //    // CN Waive Billing (If Current Result has charge)
-//    if (asTotAmt > 0) {
-//      ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
+    if (asTotAmt > 0) {
+      ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
+
+      svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID"));
+      List<EgovMap> resultPAY0016DList = ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
+
+      EgovMap pay0016dData = null;
+      if (null != resultPAY0016DList) {
+        int reverse_updatePAY0016D_cnt = ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
+      }
+
+      pay0016dData = (EgovMap) ASManagementListMapper.getResult_PAY0016D(svc0004dmap);
 //
-//      svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID"));
-//      List<EgovMap> resultPAY0016DList = ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
-//
-//      EgovMap pay0016dData = null;
-//      if (null != resultPAY0016DList) {
-//        int reverse_updatePAY0016D_cnt = ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
-//      }
-//
-//      pay0016dData = (EgovMap) ASManagementListMapper.getResult_PAY0016D(svc0004dmap);
-//
-//      EgovMap CN_DocNoMap = null;
-//      String CNNO = null;
-//
-//      EgovMap CNReportNo_DocNoMap = null;
-//      String CNReportNo = null;
-//
-//      params.put("DOCNO", "134");
-//      CN_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
-//      CNNO = String.valueOf(CN_DocNoMap.get("asno"));
-//
-//      params.put("DOCNO", "18");
-//      CNReportNo_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
-//      CNReportNo = String.valueOf(CNReportNo_DocNoMap.get("asno"));
-//
-//      List<EgovMap> resultPAY0031DList = null;
-//      svc0004dmap.put("accBillRem", pay0016dData.get("accBillRem"));
-//      resultPAY0031DList = ASManagementListMapper.getResult_PAY0031D(svc0004dmap);
-//      EgovMap resultPAY0031DInfo = resultPAY0031DList.get(0);
-//
-//      ////////////////// pay16d AccOrderBill ////////////////////
-//      EgovMap PAY0016DSEQMap = ASManagementListMapper.getPAY0016DSEQ(params);
-//      String PAY0016DSEQ = String.valueOf(PAY0016DSEQMap.get("seq"));
-//      EgovMap pay16d_insert = new EgovMap();
-//      pay16d_insert.put("memoAdjId", PAY0016DSEQ);
-//      pay16d_insert.put("memoAdjRefNo", CNNO);
-//      pay16d_insert.put("memoAdjRptNo", CNReportNo);
-//      pay16d_insert.put("memoAdjTypeId", "1293");
-//      pay16d_insert.put("memoAdjInvcNo", pay0016dData.get("accBillRem"));
-//      pay16d_insert.put("memoAdjInvcTypeId", "128");
-//      pay16d_insert.put("memoAdjStusId", "4");
-//      pay16d_insert.put("memoAdjResnId", "2038");
-//      pay16d_insert.put("memoAdjRem", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay16d_insert.put("memoAdjTxsAmt", resultPAY0031DInfo.get("taxInvcTxs"));
-//      pay16d_insert.put("memoAdjTotAmt", resultPAY0031DInfo.get("taxInvcAmtDue"));
-//      pay16d_insert.put("memoAdjCrtDt", new Date());
-//      pay16d_insert.put("memoAdjCrtUserId", svc0004dmap.get("updator"));
-//      pay16d_insert.put("memoAdjUpdDt", new Date());
-//      pay16d_insert.put("memoAdjUpdUserId", svc0004dmap.get("updator"));
-//      pay16d_insert.put("batchId", "");
-//      ASManagementListMapper.reverse_PAY0016D(pay16d_insert);
-//      ////////////////// ////////////////////
-//
-//      ////////////////// AccInvoiceAdjustment_Sub ////////////////////
-//      svc0004dmap.put("MEMO_ADJ_ID", PAY0016DSEQ);
-//      svc0004dmap.put("MEMO_ITM_TAX_CODE_ID", pay0016dData.get("accBillTaxCodeId"));
-//      svc0004dmap.put("MEMO_ITM_REM", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      svc0004dmap.put("TAX_INVC_REF_NO", pay0016dData.get("accBillRem"));
-//      int reverse_PAY0012D_cnt = ASManagementListMapper.reverse_PAY0012D(svc0004dmap);
-//      ////////////////// pay12d ////////////////////
-//
-//      ////////////////// pay27d AccTaxDebitCreditNote ////////////////////
-//      EgovMap PAY0027DSEQMap = ASManagementListMapper.getPAY0027DSEQ(params);
-//      String PAY0027DSEQ = String.valueOf(PAY0027DSEQMap.get("seq"));
-//      EgovMap pay27d_insert = new EgovMap();
-//      pay27d_insert.put("noteId", PAY0027DSEQ);
-//      pay27d_insert.put("noteEntryId", PAY0016DSEQ);
-//      pay27d_insert.put("noteTypeId", "1293");
-//      pay27d_insert.put("noteGrpNo", resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay27d_insert.put("noteRefNo", CNNO);
-//      pay27d_insert.put("noteRefDt", resultPAY0031DInfo.get("taxInvcRefDt"));
-//      pay27d_insert.put("noteInvcNo", pay0016dData.get("accBillRem"));
-//      pay27d_insert.put("noteInvcTypeId", "128");
-//      pay27d_insert.put("noteCustName", resultPAY0031DInfo.get("taxInvcCustName"));
-//      pay27d_insert.put("noteCntcPerson", resultPAY0031DInfo.get("taxInvcCntcPerson"));
-//      pay27d_insert.put("noteAddr1", resultPAY0031DInfo.get("taxInvcAddr1"));
-//      pay27d_insert.put("noteAddr2", resultPAY0031DInfo.get("taxInvcAddr2"));
-//      pay27d_insert.put("noteAddr3", resultPAY0031DInfo.get("taxInvcAddr3"));
-//      pay27d_insert.put("noteAddr4", resultPAY0031DInfo.get("taxInvcAddr4"));
-//      pay27d_insert.put("notePostCode", resultPAY0031DInfo.get("taxInvcPostCode"));
-//      pay27d_insert.put("noteAreaName", "");
-//      pay27d_insert.put("noteStateName", resultPAY0031DInfo.get("taxInvcStateName"));
-//      pay27d_insert.put("noteCntyName", resultPAY0031DInfo.get("taxInvcCnty"));
-//      pay27d_insert.put("noteTxs", resultPAY0031DInfo.get("taxInvcTxs"));
-//      pay27d_insert.put("noteChrg", resultPAY0031DInfo.get("taxInvcChrg"));
-//      pay27d_insert.put("noteAmtDue", resultPAY0031DInfo.get("taxInvcAmtDue"));
-//      pay27d_insert.put("noteRem", "AS RESULT REVERSAL - " + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay27d_insert.put("noteStusId", "4");
-//      pay27d_insert.put("noteCrtDt", new Date());
-//      pay27d_insert.put("noteCrtUserId", svc0004dmap.get("updator"));
-//      ASManagementListMapper.reverse_PAY0027D(pay27d_insert);
-//      ////////////////// pay27d end ////////////////////
-//
-//      ////////// AccTaxDebitCreditNote_Sub ////////////
-//      if (reverse_PAY0012D_cnt > 0) {
-//        svc0004dmap.put("NOTE_ID", PAY0027DSEQ);
-//        int reverse_PAY0028D_cnt = ASManagementListMapper.reverse_PAY0028D(svc0004dmap);
-//      }
-//
-//      ////////////////// pay17d pay18d ////////////////////
-//      EgovMap PAY0017DSEQMap = ASManagementListMapper.getPAY0017DSEQ(params);
-//      String PAY0017DSEQ = String.valueOf(PAY0017DSEQMap.get("seq"));
-//      svc0004dmap.put("ACC_INV_VOID_ID", PAY0017DSEQ);
-//      svc0004dmap.put("accInvVoidSubCrditNoteId", PAY0016DSEQ);
-//      svc0004dmap.put("accInvVoidSubCrditNote", CNNO);
-//      setPay17dData(svc0004dmap);
-//      setPay18dData(svc0004dmap);
-//      ////////////////// pay17d pay18d end////////////////////
-//
-//      ////////////////// pay06d ////////////////////
-//      EgovMap pay06d_insert = new EgovMap();
-//      pay06d_insert.put("asId", AS_ID);
-//      pay06d_insert.put("asDocNo", CNNO);
-//      pay06d_insert.put("asLgDocTypeId", "155");
-//      pay06d_insert.put("asLgDt", new Date());
-//      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
-//      pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
-//      pay06d_insert.put("asLgUpdDt", new Date());
-//      pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
-//      pay06d_insert.put("asResultNo", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
-//      pay06d_insert.put("asSoId", svc0004dmap.get("AS_SO_ID"));
-//      pay06d_insert.put("asAdvPay", "0");
-//      pay06d_insert.put("r01", "");
-//      // 4
-//      int reverse_PAY0006D_cnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
-//      ////////////////// pay06d end////////////////////
-//    }
+      EgovMap CN_DocNoMap = null;
+      String CNNO = null;
+
+      EgovMap CNReportNo_DocNoMap = null;
+      String CNReportNo = null;
+
+      params.put("DOCNO", "134");
+      CN_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
+      CNNO = String.valueOf(CN_DocNoMap.get("asno"));
+
+      params.put("DOCNO", "18");
+      CNReportNo_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
+      CNReportNo = String.valueOf(CNReportNo_DocNoMap.get("asno"));
+
+      List<EgovMap> resultPAY0031DList = null;
+      svc0004dmap.put("accBillRem", pay0016dData.get("accBillRem"));
+      resultPAY0031DList = ASManagementListMapper.getResult_PAY0031D(svc0004dmap);
+      EgovMap resultPAY0031DInfo = resultPAY0031DList.get(0);
+
+      ////////////////// pay16d AccOrderBill ////////////////////
+      EgovMap PAY0016DSEQMap = ASManagementListMapper.getPAY0016DSEQ(params);
+      String PAY0016DSEQ = String.valueOf(PAY0016DSEQMap.get("seq"));
+      EgovMap pay16d_insert = new EgovMap();
+      pay16d_insert.put("memoAdjId", PAY0016DSEQ);
+      pay16d_insert.put("memoAdjRefNo", CNNO);
+      pay16d_insert.put("memoAdjRptNo", CNReportNo);
+      pay16d_insert.put("memoAdjTypeId", "1293");
+      pay16d_insert.put("memoAdjInvcNo", pay0016dData.get("accBillRem"));
+      pay16d_insert.put("memoAdjInvcTypeId", "128");
+      pay16d_insert.put("memoAdjStusId", "4");
+      pay16d_insert.put("memoAdjResnId", "2038");
+      pay16d_insert.put("memoAdjRem", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay16d_insert.put("memoAdjTxsAmt", resultPAY0031DInfo.get("taxInvcTxs"));
+      pay16d_insert.put("memoAdjTotAmt", resultPAY0031DInfo.get("taxInvcAmtDue"));
+      pay16d_insert.put("memoAdjCrtDt", new Date());
+      pay16d_insert.put("memoAdjCrtUserId", svc0004dmap.get("updator"));
+      pay16d_insert.put("memoAdjUpdDt", new Date());
+      pay16d_insert.put("memoAdjUpdUserId", svc0004dmap.get("updator"));
+      pay16d_insert.put("batchId", "");
+      ASManagementListMapper.reverse_PAY0016D(pay16d_insert);
+      ////////////////// ////////////////////
+
+      ////////////////// AccInvoiceAdjustment_Sub ////////////////////
+      svc0004dmap.put("MEMO_ADJ_ID", PAY0016DSEQ);
+      svc0004dmap.put("MEMO_ITM_TAX_CODE_ID", pay0016dData.get("accBillTaxCodeId"));
+      svc0004dmap.put("MEMO_ITM_REM", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      svc0004dmap.put("TAX_INVC_REF_NO", pay0016dData.get("accBillRem"));
+      int reverse_PAY0012D_cnt = ASManagementListMapper.reverse_PAY0012D(svc0004dmap);
+      ////////////////// pay12d ////////////////////
+
+      ////////////////// pay27d AccTaxDebitCreditNote ////////////////////
+      EgovMap PAY0027DSEQMap = ASManagementListMapper.getPAY0027DSEQ(params);
+      String PAY0027DSEQ = String.valueOf(PAY0027DSEQMap.get("seq"));
+      EgovMap pay27d_insert = new EgovMap();
+      pay27d_insert.put("noteId", PAY0027DSEQ);
+      pay27d_insert.put("noteEntryId", PAY0016DSEQ);
+      pay27d_insert.put("noteTypeId", "1293");
+      pay27d_insert.put("noteGrpNo", resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay27d_insert.put("noteRefNo", CNNO);
+      pay27d_insert.put("noteRefDt", resultPAY0031DInfo.get("taxInvcRefDt"));
+      pay27d_insert.put("noteInvcNo", pay0016dData.get("accBillRem"));
+      pay27d_insert.put("noteInvcTypeId", "128");
+      pay27d_insert.put("noteCustName", resultPAY0031DInfo.get("taxInvcCustName"));
+      pay27d_insert.put("noteCntcPerson", resultPAY0031DInfo.get("taxInvcCntcPerson"));
+      pay27d_insert.put("noteAddr1", resultPAY0031DInfo.get("taxInvcAddr1"));
+      pay27d_insert.put("noteAddr2", resultPAY0031DInfo.get("taxInvcAddr2"));
+      pay27d_insert.put("noteAddr3", resultPAY0031DInfo.get("taxInvcAddr3"));
+      pay27d_insert.put("noteAddr4", resultPAY0031DInfo.get("taxInvcAddr4"));
+      pay27d_insert.put("notePostCode", resultPAY0031DInfo.get("taxInvcPostCode"));
+      pay27d_insert.put("noteAreaName", "");
+      pay27d_insert.put("noteStateName", resultPAY0031DInfo.get("taxInvcStateName"));
+      pay27d_insert.put("noteCntyName", resultPAY0031DInfo.get("taxInvcCnty"));
+      pay27d_insert.put("noteTxs", resultPAY0031DInfo.get("taxInvcTxs"));
+      pay27d_insert.put("noteChrg", resultPAY0031DInfo.get("taxInvcChrg"));
+      pay27d_insert.put("noteAmtDue", resultPAY0031DInfo.get("taxInvcAmtDue"));
+      pay27d_insert.put("noteRem", "AS RESULT REVERSAL - " + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay27d_insert.put("noteStusId", "4");
+      pay27d_insert.put("noteCrtDt", new Date());
+      pay27d_insert.put("noteCrtUserId", svc0004dmap.get("updator"));
+      ASManagementListMapper.reverse_PAY0027D(pay27d_insert);
+      ////////////////// pay27d end ////////////////////
+
+      ////////// AccTaxDebitCreditNote_Sub ////////////
+      if (reverse_PAY0012D_cnt > 0) {
+        svc0004dmap.put("NOTE_ID", PAY0027DSEQ);
+        int reverse_PAY0028D_cnt = ASManagementListMapper.reverse_PAY0028D(svc0004dmap);
+      }
+
+      ////////////////// pay17d pay18d ////////////////////
+      EgovMap PAY0017DSEQMap = ASManagementListMapper.getPAY0017DSEQ(params);
+      String PAY0017DSEQ = String.valueOf(PAY0017DSEQMap.get("seq"));
+      svc0004dmap.put("ACC_INV_VOID_ID", PAY0017DSEQ);
+      svc0004dmap.put("accInvVoidSubCrditNoteId", PAY0016DSEQ);
+      svc0004dmap.put("accInvVoidSubCrditNote", CNNO);
+      setPay17dData(svc0004dmap);
+      setPay18dData(svc0004dmap);
+      ////////////////// pay17d pay18d end////////////////////
+
+      ////////////////// pay06d ////////////////////
+      EgovMap pay06d_insert = new EgovMap();
+      pay06d_insert.put("asId", AS_ID);
+      pay06d_insert.put("asDocNo", CNNO);
+      pay06d_insert.put("asLgDocTypeId", "155");
+      pay06d_insert.put("asLgDt", new Date());
+      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
+      pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
+      pay06d_insert.put("asLgUpdDt", new Date());
+      pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
+      pay06d_insert.put("asResultNo", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
+      pay06d_insert.put("asSoId", svc0004dmap.get("AS_SO_ID"));
+      pay06d_insert.put("asAdvPay", "0");
+      pay06d_insert.put("r01", "");
+      // 4
+      int reverse_PAY0006D_cnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
+      ////////////////// pay06d end////////////////////
+    }
 //
 //    ////////////////// pay06d ////////////////////
 //    /// Restore Advanced AS Payment Use In Current Result
@@ -2704,137 +2704,137 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     // ASManagementListMapper.insert_LOG0014D(svc0004dmap); 꼭 주석 ㅜ
 
 //    // CN Waive Billing (If Current Result has charge)
-//    if (asTotAmt > 0) {
-//      // AccBillings
-//      ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
-//
-//      svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID"));
-//      List<EgovMap> resultPAY0016DList = ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
-//
-//      EgovMap pay0016dData = null;
-//      if (null != resultPAY0016DList) {
-//
-//        // AccOrderBill
-//        int reverse_updatePAY0016D_cnt = ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
-//      }
-//
-//      pay0016dData = (EgovMap) ASManagementListMapper.getResult_PAY0016D(svc0004dmap);
-//
-//      EgovMap CN_DocNoMap = null;
-//      String CNNO = null;
-//
-//      EgovMap CNReportNo_DocNoMap = null;
-//      String CNReportNo = null;
-//
-//      params.put("DOCNO", "134");
-//      CN_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
-//      CNNO = String.valueOf(CN_DocNoMap.get("asno"));
-//
-//      params.put("DOCNO", "18");
-//      CNReportNo_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
-//      CNReportNo = String.valueOf(CNReportNo_DocNoMap.get("asno"));
-//
-//      List<EgovMap> resultPAY0031DList = null;
-//      svc0004dmap.put("accBillRem", pay0016dData.get("accBillRem"));
-//      resultPAY0031DList = ASManagementListMapper.getResult_PAY0031D(svc0004dmap);
-//      EgovMap resultPAY0031DInfo = resultPAY0031DList.get(0);
-//
-//      ////////////////// pay16d ////////////////////
-//      EgovMap PAY0016DSEQMap = ASManagementListMapper.getPAY0016DSEQ(params);
-//      String PAY0016DSEQ = String.valueOf(PAY0016DSEQMap.get("seq"));
-//      EgovMap pay16d_insert = new EgovMap();
-//      pay16d_insert.put("memoAdjId", PAY0016DSEQ);
-//      pay16d_insert.put("memoAdjRefNo", CNNO);
-//      pay16d_insert.put("memoAdjRptNo", CNReportNo);
-//      pay16d_insert.put("memoAdjTypeId", "1293");
-//      pay16d_insert.put("memoAdjInvcNo", pay0016dData.get("accBillRem"));
-//      pay16d_insert.put("memoAdjInvcTypeId", "128");
-//      pay16d_insert.put("memoAdjStusId", "4");
-//      pay16d_insert.put("memoAdjResnId", "2038");
-//      pay16d_insert.put("memoAdjRem", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay16d_insert.put("memoAdjTxsAmt", resultPAY0031DInfo.get("taxInvcTxs"));
-//      pay16d_insert.put("memoAdjTotAmt", resultPAY0031DInfo.get("taxInvcAmtDue"));
-//      pay16d_insert.put("memoAdjCrtDt", new Date());
-//      pay16d_insert.put("memoAdjCrtUserId", svc0004dmap.get("updator"));
-//      pay16d_insert.put("memoAdjUpdDt", new Date());
-//      pay16d_insert.put("memoAdjUpdUserId", svc0004dmap.get("updator"));
-//      pay16d_insert.put("batchId", "");
-//      ASManagementListMapper.reverse_PAY0016D(pay16d_insert);
-//      ////////////////// pay12d ////////////////////
-//
-//      ////////////////// pay12d ////////////////////
-//      svc0004dmap.put("MEMO_ADJ_ID", PAY0016DSEQ);
-//      svc0004dmap.put("MEMO_ITM_TAX_CODE_ID", pay0016dData.get("accBillTaxCodeId"));
-//      svc0004dmap.put("MEMO_ITM_REM", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      svc0004dmap.put("TAX_INVC_REF_NO", pay0016dData.get("accBillRem"));
-//      int reverse_PAY0012D_cnt = ASManagementListMapper.reverse_PAY0012D(svc0004dmap);
-//      ////////////////// pay12d ////////////////////
-//
-//      ////////////////// pay27d ////////////////////
-//      EgovMap PAY0027DSEQMap = ASManagementListMapper.getPAY0027DSEQ(params);
-//      String PAY0027DSEQ = String.valueOf(PAY0027DSEQMap.get("seq"));
-//      EgovMap pay27d_insert = new EgovMap();
-//      pay27d_insert.put("noteId", PAY0027DSEQ);
-//      pay27d_insert.put("noteEntryId", PAY0016DSEQ);
-//      pay27d_insert.put("noteTypeId", "1293");
-//      pay27d_insert.put("noteGrpNo", resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay27d_insert.put("noteRefNo", CNNO);
-//      pay27d_insert.put("noteRefDt", resultPAY0031DInfo.get("taxInvcRefDt"));
-//      pay27d_insert.put("noteInvcNo", pay0016dData.get("accBillRem"));
-//      pay27d_insert.put("noteInvcTypeId", "128");
-//      pay27d_insert.put("noteCustName", resultPAY0031DInfo.get("taxInvcCustName"));
-//      pay27d_insert.put("noteCntcPerson", resultPAY0031DInfo.get("taxInvcCntcPerson"));
-//      pay27d_insert.put("noteAddr1", resultPAY0031DInfo.get("taxInvcAddr1"));
-//      pay27d_insert.put("noteAddr2", resultPAY0031DInfo.get("taxInvcAddr2"));
-//      pay27d_insert.put("noteAddr3", resultPAY0031DInfo.get("taxInvcAddr3"));
-//      pay27d_insert.put("noteAddr4", resultPAY0031DInfo.get("taxInvcAddr4"));
-//      pay27d_insert.put("notePostCode", resultPAY0031DInfo.get("taxInvcPostCode"));
-//      pay27d_insert.put("noteAreaName", "");
-//      pay27d_insert.put("noteStateName", resultPAY0031DInfo.get("taxInvcStateName"));
-//      pay27d_insert.put("noteCntyName", resultPAY0031DInfo.get("taxInvcCnty"));
-//      pay27d_insert.put("noteTxs", resultPAY0031DInfo.get("taxInvcTxs"));
-//      pay27d_insert.put("noteChrg", resultPAY0031DInfo.get("taxInvcChrg"));
-//      pay27d_insert.put("noteAmtDue", resultPAY0031DInfo.get("taxInvcAmtDue"));
-//      pay27d_insert.put("noteRem", "AS RESULT REVERSAL - " + resultPAY0031DInfo.get("taxInvcSvcNo"));
-//      pay27d_insert.put("noteStusId", "4");
-//      pay27d_insert.put("noteCrtDt", new Date());
-//      pay27d_insert.put("noteCrtUserId", svc0004dmap.get("updator"));
-//      ASManagementListMapper.reverse_PAY0027D(pay27d_insert);
-//      ////////////////// pay27d end ////////////////////
-//
-//      if (reverse_PAY0012D_cnt > 0) {
-//        svc0004dmap.put("NOTE_ID", PAY0027DSEQ);
-//        int reverse_PAY0028D_cnt = ASManagementListMapper.reverse_PAY0028D(svc0004dmap);
-//      }
-//
-//      ////////////////// pay17d pay18d ////////////////////
-//      EgovMap PAY0017DSEQMap = ASManagementListMapper.getPAY0017DSEQ(params);
-//      String PAY0017DSEQ = String.valueOf(PAY0017DSEQMap.get("seq"));
-//      svc0004dmap.put("ACC_INV_VOID_ID", PAY0017DSEQ);
-//      svc0004dmap.put("accInvVoidSubCrditNoteId", PAY0016DSEQ);
-//      svc0004dmap.put("accInvVoidSubCrditNote", CNNO);
-//      setPay17dData(svc0004dmap);
-//      setPay18dData(svc0004dmap);
-//      ////////////////// pay17d pay18d end////////////////////
-//
-//      ////////////////// pay06d ////////////////////
-//      EgovMap pay06d_insert = new EgovMap();
-//      pay06d_insert.put("asId", AS_ID);
-//      pay06d_insert.put("asDocNo", CNNO);
-//      pay06d_insert.put("asLgDocTypeId", "155");
-//      pay06d_insert.put("asLgDt", new Date());
-//      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
-//      pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
-//      pay06d_insert.put("asLgUpdDt", new Date());
-//      pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
-//      pay06d_insert.put("asResultNo", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
-//      pay06d_insert.put("asSoId", svc0004dmap.get("AS_SO_ID"));
-//      pay06d_insert.put("asAdvPay", "0");
-//      pay06d_insert.put("r01", "");
-//
-//      int reverse_PAY0006D_cnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
-//      ////////////////// pay06d end////////////////////
-//    }
+    if (asTotAmt > 0) {
+      // AccBillings
+      ASManagementListMapper.reverse_PAY0007D(svc0004dmap);
+
+      svc0004dmap.put("ACC_BILL_ID", svc0004dmap.get("ACC_BILL_ID"));
+      List<EgovMap> resultPAY0016DList = ASManagementListMapper.getResult_SVC0004D(svc0004dmap);
+
+      EgovMap pay0016dData = null;
+      if (null != resultPAY0016DList) {
+
+        // AccOrderBill
+        int reverse_updatePAY0016D_cnt = ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
+      }
+
+      pay0016dData = (EgovMap) ASManagementListMapper.getResult_PAY0016D(svc0004dmap);
+
+      EgovMap CN_DocNoMap = null;
+      String CNNO = null;
+
+      EgovMap CNReportNo_DocNoMap = null;
+      String CNReportNo = null;
+
+      params.put("DOCNO", "134");
+      CN_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
+      CNNO = String.valueOf(CN_DocNoMap.get("asno"));
+
+      params.put("DOCNO", "18");
+      CNReportNo_DocNoMap = ASManagementListMapper.getASEntryDocNo(params);
+      CNReportNo = String.valueOf(CNReportNo_DocNoMap.get("asno"));
+
+      List<EgovMap> resultPAY0031DList = null;
+      svc0004dmap.put("accBillRem", pay0016dData.get("accBillRem"));
+      resultPAY0031DList = ASManagementListMapper.getResult_PAY0031D(svc0004dmap);
+      EgovMap resultPAY0031DInfo = resultPAY0031DList.get(0);
+
+      ////////////////// pay16d ////////////////////
+      EgovMap PAY0016DSEQMap = ASManagementListMapper.getPAY0016DSEQ(params);
+      String PAY0016DSEQ = String.valueOf(PAY0016DSEQMap.get("seq"));
+      EgovMap pay16d_insert = new EgovMap();
+      pay16d_insert.put("memoAdjId", PAY0016DSEQ);
+      pay16d_insert.put("memoAdjRefNo", CNNO);
+      pay16d_insert.put("memoAdjRptNo", CNReportNo);
+      pay16d_insert.put("memoAdjTypeId", "1293");
+      pay16d_insert.put("memoAdjInvcNo", pay0016dData.get("accBillRem"));
+      pay16d_insert.put("memoAdjInvcTypeId", "128");
+      pay16d_insert.put("memoAdjStusId", "4");
+      pay16d_insert.put("memoAdjResnId", "2038");
+      pay16d_insert.put("memoAdjRem", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay16d_insert.put("memoAdjTxsAmt", resultPAY0031DInfo.get("taxInvcTxs"));
+      pay16d_insert.put("memoAdjTotAmt", resultPAY0031DInfo.get("taxInvcAmtDue"));
+      pay16d_insert.put("memoAdjCrtDt", new Date());
+      pay16d_insert.put("memoAdjCrtUserId", svc0004dmap.get("updator"));
+      pay16d_insert.put("memoAdjUpdDt", new Date());
+      pay16d_insert.put("memoAdjUpdUserId", svc0004dmap.get("updator"));
+      pay16d_insert.put("batchId", "");
+      ASManagementListMapper.reverse_PAY0016D(pay16d_insert);
+      ////////////////// pay12d ////////////////////
+
+      ////////////////// pay12d ////////////////////
+      svc0004dmap.put("MEMO_ADJ_ID", PAY0016DSEQ);
+      svc0004dmap.put("MEMO_ITM_TAX_CODE_ID", pay0016dData.get("accBillTaxCodeId"));
+      svc0004dmap.put("MEMO_ITM_REM", "AS RESULT REVERSAL_" + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      svc0004dmap.put("TAX_INVC_REF_NO", pay0016dData.get("accBillRem"));
+      int reverse_PAY0012D_cnt = ASManagementListMapper.reverse_PAY0012D(svc0004dmap);
+      ////////////////// pay12d ////////////////////
+
+      ////////////////// pay27d ////////////////////
+      EgovMap PAY0027DSEQMap = ASManagementListMapper.getPAY0027DSEQ(params);
+      String PAY0027DSEQ = String.valueOf(PAY0027DSEQMap.get("seq"));
+      EgovMap pay27d_insert = new EgovMap();
+      pay27d_insert.put("noteId", PAY0027DSEQ);
+      pay27d_insert.put("noteEntryId", PAY0016DSEQ);
+      pay27d_insert.put("noteTypeId", "1293");
+      pay27d_insert.put("noteGrpNo", resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay27d_insert.put("noteRefNo", CNNO);
+      pay27d_insert.put("noteRefDt", resultPAY0031DInfo.get("taxInvcRefDt"));
+      pay27d_insert.put("noteInvcNo", pay0016dData.get("accBillRem"));
+      pay27d_insert.put("noteInvcTypeId", "128");
+      pay27d_insert.put("noteCustName", resultPAY0031DInfo.get("taxInvcCustName"));
+      pay27d_insert.put("noteCntcPerson", resultPAY0031DInfo.get("taxInvcCntcPerson"));
+      pay27d_insert.put("noteAddr1", resultPAY0031DInfo.get("taxInvcAddr1"));
+      pay27d_insert.put("noteAddr2", resultPAY0031DInfo.get("taxInvcAddr2"));
+      pay27d_insert.put("noteAddr3", resultPAY0031DInfo.get("taxInvcAddr3"));
+      pay27d_insert.put("noteAddr4", resultPAY0031DInfo.get("taxInvcAddr4"));
+      pay27d_insert.put("notePostCode", resultPAY0031DInfo.get("taxInvcPostCode"));
+      pay27d_insert.put("noteAreaName", "");
+      pay27d_insert.put("noteStateName", resultPAY0031DInfo.get("taxInvcStateName"));
+      pay27d_insert.put("noteCntyName", resultPAY0031DInfo.get("taxInvcCnty"));
+      pay27d_insert.put("noteTxs", resultPAY0031DInfo.get("taxInvcTxs"));
+      pay27d_insert.put("noteChrg", resultPAY0031DInfo.get("taxInvcChrg"));
+      pay27d_insert.put("noteAmtDue", resultPAY0031DInfo.get("taxInvcAmtDue"));
+      pay27d_insert.put("noteRem", "AS RESULT REVERSAL - " + resultPAY0031DInfo.get("taxInvcSvcNo"));
+      pay27d_insert.put("noteStusId", "4");
+      pay27d_insert.put("noteCrtDt", new Date());
+      pay27d_insert.put("noteCrtUserId", svc0004dmap.get("updator"));
+      ASManagementListMapper.reverse_PAY0027D(pay27d_insert);
+      ////////////////// pay27d end ////////////////////
+
+      if (reverse_PAY0012D_cnt > 0) {
+        svc0004dmap.put("NOTE_ID", PAY0027DSEQ);
+        int reverse_PAY0028D_cnt = ASManagementListMapper.reverse_PAY0028D(svc0004dmap);
+      }
+
+      ////////////////// pay17d pay18d ////////////////////
+      EgovMap PAY0017DSEQMap = ASManagementListMapper.getPAY0017DSEQ(params);
+      String PAY0017DSEQ = String.valueOf(PAY0017DSEQMap.get("seq"));
+      svc0004dmap.put("ACC_INV_VOID_ID", PAY0017DSEQ);
+      svc0004dmap.put("accInvVoidSubCrditNoteId", PAY0016DSEQ);
+      svc0004dmap.put("accInvVoidSubCrditNote", CNNO);
+      setPay17dData(svc0004dmap);
+      setPay18dData(svc0004dmap);
+      ////////////////// pay17d pay18d end////////////////////
+
+      ////////////////// pay06d ////////////////////
+      EgovMap pay06d_insert = new EgovMap();
+      pay06d_insert.put("asId", AS_ID);
+      pay06d_insert.put("asDocNo", CNNO);
+      pay06d_insert.put("asLgDocTypeId", "155");
+      pay06d_insert.put("asLgDt", new Date());
+      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
+      pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
+      pay06d_insert.put("asLgUpdDt", new Date());
+      pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
+      pay06d_insert.put("asResultNo", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
+      pay06d_insert.put("asSoId", svc0004dmap.get("AS_SO_ID"));
+      pay06d_insert.put("asAdvPay", "0");
+      pay06d_insert.put("r01", "");
+
+      int reverse_PAY0006D_cnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
+      ////////////////// pay06d end////////////////////
+    }
 //
 //    ////////////////// pay06d ////////////////////
 //    /// Restore Advanced AS Payment Use In Current Result
