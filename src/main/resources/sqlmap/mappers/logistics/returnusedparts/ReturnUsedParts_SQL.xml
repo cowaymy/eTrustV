@@ -114,7 +114,7 @@
             and o01v.DEPT_CODE = (select dept_code from org0005d where mem_id = #{searchCM})
          </if>
         <if test="searchLoc != null and searchLoc !=''">
-            and o01.MEM_id = #{searchLoc}
+            and l82.MEM_id = #{searchLoc}
          </if>
         <if test="searchSerialChk != null and searchSerialChk !=''">
             and NVL(trim(s26.SERIAL_CHK),'N') = #{searchSerialChk}
