@@ -367,12 +367,12 @@
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
-            if($('#exTrade').val() == '1') {
-                $('#promoRpfDiscAmt').val('200').prop("readonly", true).addClass("readonly");
-            }
-            else if($('#exTrade').val() == '0') {
-                $('#promoRpfDiscAmt').val('').removeAttr("readonly").removeClass("readonly");
-            }
+//             if($('#exTrade').val() == '1') {
+//                 $('#promoRpfDiscAmt').val('200').prop("readonly", true).addClass("readonly");
+//             }
+//             else if($('#exTrade').val() == '0') {
+//                 $('#promoRpfDiscAmt').val('').removeAttr("readonly").removeClass("readonly");
+//             }
 
             fn_calcDiscountPrice();
             fn_calcDiscountRPF();
