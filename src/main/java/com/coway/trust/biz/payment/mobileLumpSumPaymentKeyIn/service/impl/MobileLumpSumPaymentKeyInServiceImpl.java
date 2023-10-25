@@ -121,6 +121,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		if (custCiType.equals("2")) {
 			EgovMap billingInfoSearchResult = mobileLumpSumPaymentKeyInMapper.getCustomerBillingInfoByInvoiceNo(params);
 
+			if(billingInfoSearchResult.get("nric") == null){
+				throw new ApplicationException(AppConstants.FAIL,
+						"There is no invoice found.");
+			}
 			params.put("nric", billingInfoSearchResult.get("nric").toString());
 			params.put("accBillCrtDt", billingInfoSearchResult.get("accBillCrtDt").toString());
 			params.put("accBillGrpId", billingInfoSearchResult.get("accBillGrpId").toString());
