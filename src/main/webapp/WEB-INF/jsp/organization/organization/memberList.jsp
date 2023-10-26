@@ -251,7 +251,7 @@ function fn_requestVacationPop(){
 
         console.log("traineeType :: " + traineeType);
 
-     Common.ajax("POST", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
+     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
          console.log("성공.");
          console.log("result1111.");
 
