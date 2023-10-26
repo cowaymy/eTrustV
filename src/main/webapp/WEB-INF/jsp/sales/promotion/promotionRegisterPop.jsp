@@ -195,12 +195,14 @@
 
             orgRpfVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
 
-            if($('#promoAppTypeId').val() != 2284 || $('#exTrade').val() == '1') {
-                newRpfVal = 0;
-            }
-            else {
-                newRpfVal = orgRpfVal - dscRpfVal;
-            }
+            newRpfVal = orgRpfVal - dscRpfVal;
+
+//             if($('#promoAppTypeId').val() != 2284 || $('#exTrade').val() == '1') {
+//                 newRpfVal = 0;
+//             }
+//             else {
+//                 newRpfVal = orgRpfVal - dscRpfVal;
+//             }
 
             if(newRpfVal < 0) newRpfVal = 0;
 
