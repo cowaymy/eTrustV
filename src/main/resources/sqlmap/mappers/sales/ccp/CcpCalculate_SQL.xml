@@ -155,10 +155,10 @@ WITH S291D AS
                       extent17.stus_id eRstatus,
                       (SELECT REMARKS FROM S291D WHERE ORDER_NO = Extent3.SALES_ORD_NO)  ASSIGNMENT_BATCH
                    FROM SAL0102D Extent1
-                      JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
+                      <!-- JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
                                     MAX(Extent2.CCP_ID)  A1
                               FROM SAL0102D Extent2
-                              GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1
+                              GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1 -->
                       JOIN SAL0001D Extent3   ON Extent1.CCP_SALES_ORD_ID = Extent3.SALES_ORD_ID
                       LEFT JOIN SYS0013M cd ON cd.CODE_ID = Extent3.CORP_CUST_TYPE
                       LEFT JOIN SYS0013M cd2 ON cd2.CODE_ID = Extent3.AGREEMENT_TYPE
