@@ -384,7 +384,7 @@
 		                            AND A.DEPT_CODE = #{deptCode_HA}
 		                        </if>
 		                         <if test='netSalesMonth_HA == null or netSalesMonth_HA == "" or netSalesMonth_HA == " "'>
-		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
 		                         </if>
 	                               <if test="netSalesMonth_HA != null and netSalesMonth_HA != ''">
 	                               AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')))
@@ -518,7 +518,7 @@
                             AND A.DEPT_CODE = #{deptCode_HC}
                         </if>
                           <if test='netSalesMonth_HC == null or netSalesMonth_HC == "" or netSalesMonth_HC == " "'>
-                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
                          </if>
                          <if test="netSalesMonth_HC != null and netSalesMonth_HC != ''">
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')))
@@ -651,7 +651,7 @@
                             AND A.DEPT_CODE = #{deptCode_actHP}
                         </if>
                         <if test='netSalesMonth_actHP == null or netSalesMonth_actHP == "" or netSalesMonth_actHP == " "'>
-                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM') = #{currentYm}
                          </if>
                          <if test="netSalesMonth_actHP != null and netSalesMonth_actHP != ''">
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')))

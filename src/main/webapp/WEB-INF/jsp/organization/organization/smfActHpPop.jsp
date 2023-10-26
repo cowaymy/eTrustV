@@ -12,6 +12,7 @@ deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
 var listMyGridID;
 
 $(document).ready(function() {
+	$("#netSalesMonth_actHP").val(moment().format('MM/YYYY'));
 	bindData();
     createAUIGrid();
     fn_selectSmfActHpListAjax();
@@ -65,6 +66,12 @@ function bindData(){
 
 $(function(){
     $('#btnSrch_actHP').click(function() {
+
+        if(!$("#netSalesMonth_actHP").val()){
+            Common.alert("Please choose the Month");
+            return;
+        }
+
     	fn_selectSmfActHpListAjax();
     });
 

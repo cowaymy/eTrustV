@@ -12,6 +12,7 @@ deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
 var listMyGridID;
 
 $(document).ready(function() {
+	$("#netSalesMonth_HA").val(moment().format('MM/YYYY'));
 	bindData();
     createAUIGrid();
     fn_selectHAListAjax();
@@ -93,6 +94,10 @@ function f_multiCombo(){
 
 $(function(){
     $('#btnSrch_HA').click(function() {
+   	   if(!$("#netSalesMonth_HA").val()){
+   	        Common.alert("Please choose the Month");
+   	        return;
+   	    }
     	fn_selectHAListAjax();
     });
 
