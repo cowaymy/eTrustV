@@ -251,13 +251,7 @@
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
 
             orgRpfVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
-
-            if($('#promoAppTypeId').val() != 2284 || $('#exTrade').val() == '1') {
-                newRpfVal = 0;
-            }
-            else {
-                newRpfVal = orgRpfVal - dscRpfVal;
-            }
+            newRpfVal = orgRpfVal - dscRpfVal;
 
             if(newRpfVal < 0) newRpfVal = 0;
 
@@ -436,13 +430,6 @@
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
-            if($('#exTrade').val() == '1') {
-                $('#promoRpfDiscAmt').val('200').prop("readonly", true).addClass("readonly");
-            }
-            else if($('#exTrade').val() == '0') {
-                $('#promoRpfDiscAmt').val('').removeAttr("readonly").removeClass("readonly");
-            }
-
             fn_calcDiscountPrice();
             fn_calcDiscountRPF();
             fn_calcDiscountPV();
