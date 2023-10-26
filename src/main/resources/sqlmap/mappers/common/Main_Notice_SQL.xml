@@ -192,11 +192,7 @@ FROM VIEW_COUNT
 				    NVL(ROUND(HC_RC_RATE, 2),0) HC_RC,
 				    NVL(ROUND(OPC_RATE, 2),0) OPC
 				FROM REP0080D
-				INNER JOIN ORG0001D
-				    ON REP0080D.MEM_ID = ORG0001D.MEM_ID
-				INNER JOIN SYS0047M
-				    ON ORG0001D.MEM_CODE = SYS0047M.USER_NAME
-				WHERE SYS0047M.USER_ID = #{userId}
+				WHERE MEM_ID = #{memId}
 				ORDER BY YEAR DESC, MONTH DESC
 			) WHERE ROWNUM <= 4
         ]]>
@@ -227,7 +223,7 @@ FROM VIEW_COUNT
 				JOIN ORG1001V B
 				    ON A.MEM_ID = B.MEM_ID
 				<if test="roleId == 114">
-				    AND B.DEPT_CODE = (
+				    AND B.DEPT_CODE IN (
 				        SELECT LAST_DEPT_CODE
 				        FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
 				        WHERE X1.MEM_ID = X2.MEM_ID
@@ -236,7 +232,7 @@ FROM VIEW_COUNT
 				    )
 				</if>
 				<if test="roleId == 113">
-				    AND B.GRP_CODE = (
+				    AND B.GRP_CODE IN (
 		                SELECT LAST_GRP_CODE
 		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
 		                WHERE X1.MEM_ID = X2.MEM_ID
@@ -245,7 +241,7 @@ FROM VIEW_COUNT
 		            )
 		        </if>
 		        <if test="roleId == 112">
-		            AND B.ORG_CODE = (
+		            AND B.ORG_CODE IN (
 		                SELECT LAST_ORG_CODE
 		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
 		                WHERE X1.MEM_ID = X2.MEM_ID
