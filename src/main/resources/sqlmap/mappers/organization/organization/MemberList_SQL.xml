@@ -5864,6 +5864,19 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                     '3',
                     '7'
                   )
+                  <if test="promoDisHisCode != null and promoDisHisCode != ''">
+                  AND O1.MEM_CODE =#{promoDisHisCode}
+                 </if>
+                 <if test="orgCodeHd != null and orgCodeHd != '' ">
+                    AND O2.ORG_CODE =#{orgCodeHd}
+                 </if>
+                 <if test="grpCodeHd != null and grpCodeHd != '' ">
+                    AND O2.GRP_CODE = #{grpCodeHd}
+                 </if>
+                 <if test="deptCodeHd != null and deptCodeHd != '' ">
+                    AND O2.DEPT_CODE = #{deptCodeHd}
+                 </if>
+
                 UNION
                 SELECT
                   EXTENT1.MEM_ID,
@@ -5966,19 +5979,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
                )
               WHERE 1=1
-               <if test="promoDisHisCode != null and promoDisHisCode != ''">
-                  AND MEM_CODE =#{promoDisHisCode}
-               </if>
-               <if test="orgCodeHd != null and orgCodeHd != '' ">
-                  AND ORG_CODE =#{orgCodeHd}
-               </if>
-               <if test="grpCodeHd != null and grpCodeHd != '' ">
-                  AND GRP_CODE = #{grpCodeHd}
-               </if>
-               <if test="deptCodeHd != null and deptCodeHd != '' ">
-                  AND DEPT_CODE = #{deptCodeHd}
-               </if>
-
                 ORDER BY MEM_CODE,PROMO_ID
     </select>
 
