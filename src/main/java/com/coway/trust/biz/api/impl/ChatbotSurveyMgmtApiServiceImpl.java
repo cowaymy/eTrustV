@@ -18,11 +18,13 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -311,25 +313,26 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	    stopWatch.reset();
 	    stopWatch.start();
 
+	    // Check file whether exist or not
+    	String data = commonApiService.decodeJson(request);
+    	Gson g = new Gson();
+    	HcSurveyResultForm p = g.fromJson(data, HcSurveyResultForm.class);
+
+    	Exception e1 = null;
+    	if(p.getFileName().toString().isEmpty()){
+    		resultValue.put("status", AppConstants.FAIL);
+    		resultValue.put("message", "file name is required");
+    		return resultValue;
+    	}else if(!p.getFileName().toString().isEmpty() && !p.getFileName().toString().toUpperCase().contains("CSV")){
+    		resultValue.put("status", AppConstants.FAIL);
+    		resultValue.put("message", "file format is invalid");
+    		return resultValue;
+    	}
+    	params.put("reqParam", data);
+
 	    EgovMap authorize = verifyBasicAuth(params, request);
 
 	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
-			// Check file whether exist or not
-	    	String data = commonApiService.decodeJson(request);
-	    	Gson g = new Gson();
-	    	HcSurveyResultForm p = g.fromJson(data, HcSurveyResultForm.class);
-
-	    	Exception e1 = null;
-	    	if(p.getFileName().toString().isEmpty()){
-	    		resultValue.put("status", AppConstants.FAIL);
-	    		resultValue.put("message", "file name is required");
-	    		return resultValue;
-	    	}else if(!p.getFileName().toString().isEmpty() && !p.getFileName().toString().toUpperCase().contains("CSV")){
-	    		resultValue.put("status", AppConstants.FAIL);
-	    		resultValue.put("message", "file format is invalid");
-	    		return resultValue;
-	    	}
-
 	    	// Create file in TO DIR
 			String toRootPath = uploadFileDir + "/Chatbot/SurveyResponse"; // to dir
 			String fileName = p.getFileName().toString();
@@ -403,9 +406,25 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
     		    String line = "";
 
     		    while ((line = br.readLine()) != null) {
-    		    	String[] info = line.split(",");
-    		    	if(info.length > 0 ){
-        		    	HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(info);
+    		    	String[] items = null;
+
+    		    	int startResponse = line.indexOf("\"{\"");
+    		    	int endResponse = line.indexOf("\"}\"");
+
+    		    	if(startResponse > 0 && endResponse >0){
+    		    		String response = line.substring(startResponse, endResponse);
+    		    		String data2 = line.substring(0, startResponse);
+    		    		String[] test = data2.split(",");
+
+    		    		items = Arrays.copyOf(test, test.length+1);
+    		    		items[test.length] = response;
+
+    		    	}else{
+    		    		 items = line.split(",");
+    		    	}
+
+    		    	if(items.length > 0 ){
+        		    	HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(items);
         		    	hcSurveyResultCsvVO.add(res);
     		    	} else{
     		    		LOGGER.error("[Chatbot API] : No record found");
@@ -500,7 +519,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
     	stopWatch.stop();
     	respTm = stopWatch.toString();
 
-  		return commonApiService.rtnRespMsg(request, code, message, respTm, params, null,apiUserId);
+  		return commonApiService.rtnRespMsg(request, code, message, respTm, params.get("reqParam").toString(), null,apiUserId);
 	}
 
 
