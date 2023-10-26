@@ -168,9 +168,7 @@
           AND GR.DELVRY_NO IS NOT NULL
           GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
       ) RETURNSTS ON RETURNSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
-        WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                   WHERE AA.CODE = BB.CODE
-                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+        WHERE GET_HOMECARE_FLAG_YN(stk.stk_ctgry_id) = 1
           AND som.BNDL_ID IS NOT NULL
 		]]>
 		<if test="preinsChkList != null and preinsChkList != '' ">
