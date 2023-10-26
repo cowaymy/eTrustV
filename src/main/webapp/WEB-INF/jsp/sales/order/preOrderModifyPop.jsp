@@ -1984,8 +1984,10 @@ var userType = "${userType}";
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
                 $("#gender").val(custInfo.gender); //Gender
-                $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
-                $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+                //$("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+                //$("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+                $("#pasSportExpr").val(custInfo.pasSportExpr); //Passport Expiry
+                $("#visaExpr").val(custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
                 $('#speclInstct').html('${preOrderInfo.instct}');
                 if ('${preOrderInfo.appTypeId}' == '66' && custInfo.typeId == '965') {
