@@ -3,12 +3,64 @@
 <script type="text/javaScript">
 $(document).ready(function(){
     createHSGroupListAUIGrid();
+    loadMember();
 
     var today = new Date();
     var month1 = today.getMonth()+1;
     $("#dayMonth").val(month1);
     $("#dayYear").val(today.getFullYear());
 });
+
+function loadMember(){
+    if("${orgCode}"){
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#indOrgCode").val("${orgCode}");
+            $("#indOrgCode").attr("class", "w100p readonly");
+            $("#indOrgCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#indOrgCode").val("${orgCode}");
+            $("#indOrgCode").attr("class", "w100p readonly");
+            $("#indOrgCode").attr("readonly", "readonly");
+
+            $("#indGrpCode").val("${grpCode}");
+            $("#indGrpCode").attr("class", "w100p readonly");
+            $("#indGrpCode").attr("readonly", "readonly");
+
+
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#indOrgCode").val("${orgCode}");
+            $("#indOrgCode").attr("class", "w100p readonly");
+            $("#indOrgCode").attr("readonly", "readonly");
+
+            $("#indGrpCode").val("${grpCode}");
+            $("#indGrpCode").attr("class", "w100p readonly");
+            $("#indGrpCode").attr("readonly", "readonly");
+
+            $("#indDeptCode").val("${deptCode}");
+            $("#indDeptCode").attr("class", "w100p readonly");
+            $("#indDeptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#indOrgCode").val("${orgCode}");
+            $("#indOrgCode").attr("class", "w100p readonly");
+            $("#indOrgCode").attr("readonly", "readonly");
+
+            $("#indGrpCode").val("${grpCode}");
+            $("#indGrpCode").attr("class", "w100p readonly");
+            $("#indGrpCode").attr("readonly", "readonly");
+
+            $("#indDeptCode").val("${deptCode}");
+            $("#indDeptCode").attr("class", "w100p readonly");
+            $("#indDeptCode").attr("readonly", "readonly");
+        }
+    }
+}
 
 var myGridID_Hsgroup;
 function createHSGroupListAUIGrid() {
@@ -89,20 +141,8 @@ function fn_HSIndividualReportGroup(){
 
 
 $.fn.clearForm = function() {
-    return this.each(function() {
-        var type = this.type, tag = this.tagName.toLowerCase();
-        if (tag === 'form'){
-            return $(':input',this).clearForm();
-        }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-            this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
-        }else if (tag === 'select'){
-            this.selectedIndex = -1;
-        }
-
-    });
+    $("#searchHsIndividualGroupReport")[0].reset();
+    loadMember();
 };
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -144,11 +184,11 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Organization Code</th>
-    <td><input type="text" title="" placeholder="Organization Code" class="w100p" id="orgCode" name="orgCode"/></td>
+    <td><input type="text" title="" placeholder="Organization Code" class="w100p" id="indOrgCode" name="orgCode"/></td>
     <th scope="row">Group Code</th>
-    <td><input type="text" title="" placeholder="Group Code" class="w100p" id="grpCode" name="grpCode"/></td>
+    <td><input type="text" title="" placeholder="Group Code" class="w100p" id="indGrpCode" name="grpCode"/></td>
     <th scope="row">Department Code</th>
-    <td><input type="text" title="" placeholder="Department Coder" class="w100p" id="deptCode" name="deptCode"/></td>
+    <td><input type="text" title="" placeholder="Department Coder" class="w100p" id="indDeptCode" name="deptCode"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

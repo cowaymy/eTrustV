@@ -44,8 +44,20 @@ public class HSReportController {
   }
 
   @RequestMapping(value = "/hsReportGroupPop.do")
-  public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     // 호출될 화면
+	  params.put("userId", sessionVO.getUserId());
+
+	  if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3 || sessionVO.getUserTypeId() == 7 ||
+		  sessionVO.getUserTypeId() == 5758 || sessionVO.getUserTypeId() == 6672){
+
+	      EgovMap result =  salesCommonService.getUserInfo(params);
+
+	      model.put("orgCode", result.get("orgCode"));
+	      model.put("grpCode", result.get("grpCode"));
+	      model.put("deptCode", result.get("deptCode"));
+	      model.put("memCode", result.get("memCode"));
+	    }
     return "services/bs/hsReportGroupPop";
   }
 
