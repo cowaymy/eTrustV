@@ -1,22 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<style>
-    .auto_file4{position:relative; width:237px; padding-right:62px; height:20px;}
-    .auto_file4{float:none!important; width:490px; padding-right:0; margin-top:5px;}
-    .auto_file4:first-child{margin-top:0;}
-    .auto_file4:after{content:""; display:block; clear:both;}
-    .auto_file4.w100p{width:100%!important; box-sizing:border-box;}
-    .auto_file4 input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
-    .auto_file4 label{display:block; margin:0!important;}
-    .auto_file4 label:after{content:""; display:block; clear:both;}
-    .auto_file4 label{float:left; width:100%;}
-    label input[type=text]{width:100%!important;}
-    label input[type=text]{width:237px!important; float:left}
-    .attachment_file label{float:left; width:407px;}
-    .attachment_file label input[type=text]{width:345px!important; float:left}
-    span.label_text2{float:left;}
-    span.label_text2 a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
-</style>
 <script type="text/javaScript" language="javascript">
   var ORD_ID = "${salesOrderId}";
   var ORD_NO = "${salesOrderNo}";
@@ -36,8 +19,6 @@
   var PV_YEAR = "${ordPvYear}";
   var CUST_TYPE_ID = "${typeId}";
   var SOF_NO = "${orderDetail.basicInfo.ordRefNo}";
-  var myFileCaches = {};
-  let editInstallAccess= $("#editInstallAccess").val();
 
   var keyValueList = [];
 
@@ -51,29 +32,9 @@
 
   var modDocGridID;
   var modRfrGridID;
-  var voucherAppliedStatus = 0;
-  var voucherAppliedCode = "";
-  var voucherAppliedEmail = "";
-  var voucherPromotionId = [];
-
-  var codeList_562 = [];
-  codeList_562.push({codeId:"0", codeName:"No", code:"No"});
-  <c:forEach var="obj" items="${codeList_562}">
-  codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-  </c:forEach>
 
   $(document).ready(
     function() {
-      document.querySelectorAll("#agreement label").forEach(label => {
-                label.onclick = () => {
-                    if(editInstallAccess=="Y"){
-                        label.parentElement.querySelector("input[type=file]").click();
-                    }else{
-                        Common.alert("Upload New File is disallowed");
-                        return;
-                    }
-                }
-      });
 
       if ("${memType}" == "2") {
         TAB_NM = 'CNT';
@@ -98,8 +59,6 @@
       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
       doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
       doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
-
-      doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
 
       fn_statusCodeSearch();
 
@@ -333,10 +292,13 @@
       return isExist;
   }
 
-      $(function() {
+    $(function() {
     $('#btnEditType').click(function() {
         var tabNm = $('#ordEditType').val();
-        var isValid = fn_checkAccessModify(tabNm);
+        var isValid = true
+        if (window["fn_checkAccessModify"]) {
+            isValid = fn_checkAccessModify(tabNm);
+        }
 
         if ("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
             Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
@@ -802,17 +764,6 @@
                       $('#scPC_DirectDebit').removeClass(
                           "blind");
                     }
-                  }
-
-                  if($('#rentPayMode').val() == '135'){
-                      $("#rentPayIC").hide();
-                      $("#nricPassbook").text("Credit Card No");
-                      $("#pnpRpsCrcNo").show();
-                  }
-                  else{
-                      $("#rentPayIC").show();
-                      $("#nricPassbook").text("NRIC on DD/Passbook");
-                      $("#pnpRpsCrcNo").hide();
                   }
 
                   fn_loadRejectReasonList($('#rentPayMode')
@@ -1457,9 +1408,8 @@
                         promoCustType : custTypeVal,
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
-                        , voucherPromotion: voucherAppliedStatus
-                      }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
-                } else {
+                      }, promoId, 'ordPromo', 'S', ''); //Common Code
+                } else
                   doGetComboData(
                       '/sales/order/selectPromotionByAppTypeStock.do',
                       {
@@ -1469,16 +1419,7 @@
                         promoCustType : custTypeVal,
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
-                        , voucherPromotion: voucherAppliedStatus
-                      }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
-                }
-
-                if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
-                    $('#voucherCode').val(basicInfo.voucherInfo.voucherCode);
-                    $('#voucherEmail').val(basicInfo.voucherInfo.custEmail);
-                    $('#voucherType').val(basicInfo.voucherInfo.platformId);
-                    applyCurrentUsedVoucher();
-                }
+                      }, promoId, 'ordPromo', 'S', ''); //Common Code
               }
             });
   }
@@ -1509,16 +1450,6 @@
             else if (rsltInfo.payModeId == '132') {
               $('#scPC_DirectDebit').removeClass("blind");
               fn_loadBankAccount(rsltInfo.bankAccId);
-            }
-
-            if(rsltInfo.payModeId == '135'){
-                $('#pnpRpsCrcNo').show().val(rsltInfo.pnpRpsCrcNo);
-                $("#nricPassbook").text("Credit Card No");
-                $('#rentPayIC').hide();
-            }else{
-                $('#pnpRpsCrcNo').hide();
-                $("#nricPassbook").text("NRIC on DD/Passbook");
-                $('#rentPayIC').show();
             }
 
             $('#rentPayIC').val(rsltInfo.oldIc);
@@ -1731,17 +1662,11 @@
     }, function(instInfo) {
 
       if (instInfo != null) {
-          console.log(instInfo)
         $("#modInstallId").val(instInfo.installId);
         $("#dscBrnchId").val(instInfo.dscId);
         $("#modPreferInstDt").val(instInfo.preferInstDt);
         $("#modPreferInstTm").val(instInfo.preferInstTm);
         $("#modInstct").val(instInfo.instct);
-        $("#modInstWaterSourceType").val(instInfo.waterSrcType);
-
-        if(instInfo.atchFileGrpId){
-            displayFileName(instInfo.atchFileGrpId,instInfo.atchFileId);
-        }
 
         fn_loadInstallAddrInfo(instInfo.installAddrId);
         fn_loadInstallCntcInfo(instInfo.installCntcId);
@@ -2236,30 +2161,12 @@
       msg += '<spring:message code="sal.alert.msg.plzKeyinSpecialInstruction" />';
     }
 
-    if(document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files.length && document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="application/pdf"){
-       isValid = false;
-       msg += "* Supplementary Agreement is compulsory to uplaod with pdf format. </br>";
-    }
-
     if (!isValid)
       Common
           .alert('<spring:message code="sal.alert.msg.ordUpdSummary" />'
               + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
-  }
-
-  function removeImg(value){
-      if(editInstallAccess=="Y"){
-          document.querySelector("#"+value).parentElement.parentElement.querySelector("input[type=file]").value = "";
-          $("#"+value).val("");
-          $("#attachment").val("0");
-          Common.alert("File has been deleted");
-          return;
-      }else{
-          Common.alert("Delete File is disallowed.");
-          return;
-      }
   }
 
   function fn_validPaymentChannel() {
@@ -2300,9 +2207,6 @@
             msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
           }
         }
-      } else if ($("#rentPayMode").val() == '135' && FormUtil.isEmpty($("#pnpRpsCrcNo").val()) ){
-          isValid = false;
-          msg += '<spring:message code="crditCardMgmt.crditCardNo.msg" />';
       }
     }
 
@@ -2679,79 +2583,34 @@
             });
   }
 
-  let uploadFlag = false;
-
-  $(function(){
-      $('#file').change(function(evt) {
-          let fileAexc = evt.target.files[0];
-
-          if(fileAexc.size > 2000000){
-              Common.alert("*Only allow file with less than 2MB.");
-              return;
-          }
-
-          if(fileAexc == null && myFileCaches[1] != null){
-              delete myFileCaches[0];
-          }else if(fileAexc != null){
-              myFileCaches[1] = {file:fileAexc};
-          }
-          uploadFlag= true;
-          myFileCaches[1].file['checkFileValid'] = true;
-      });
-
-  });
-
-  function updateInstallInfo(){
-        Common.ajax("POST","/sales/order/updateInstallInfo.do",$('#frmInstInfo').serializeJSON(), function(result) {
-             Common.alert(
-                 '<spring:message code="sal.alert.msg.updSummary" />'
-                     + DEFAULT_DELIMITER + "<b>"
-                     + result.message + "</b>",
-                 fn_reloadPage);
-           },
-           function(jqXHR, textStatus, errorThrown) {
-             try {
-               Common
-                   .alert('<spring:message code="sal.msg.dataPrepFail" />'
-                       + DEFAULT_DELIMITER
-                       + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-             } catch (e) {
-               console.log(e);
-             }
-           });
-  }
-
   function fn_doSaveInstallInfo() {
     console.log('!@# fn_doSaveInstallInfo START');
-    if(document.getElementById("agreementFile").parentElement.parentElement.querySelector("input[type=file]").files.length){
 
-        let formData = new FormData();
-        $.each(myFileCaches, function(n, v) {
-            formData.append(n, v.file);
-        });
+    Common
+        .ajax(
+            "POST",
+            "/sales/order/updateInstallInfo.do",
+            $('#frmInstInfo').serializeJSON(),
+            function(result) {
 
-         if(uploadFlag){
-             fetch("/sales/order/attachmentFileUpload.do", {
-                 method: "POST",
-                 body: formData
-             })
-             .then(d=>d.json())
-             .then(r=> {
-                     if(r.code =="99"){
-                          Common.alert("Supplementary Agreement is failed to add. Please upload another file.");
-                          return;
-                      }
-                     $("#attachment").val(r.data.fileGroupKey);
-                     updateInstallInfo();
-             })
-         }else{
-               Common.alert("Supplementary Agreement is failed to add. Please upload another file.");
-               return;
-         }
-    }else{
-        updateInstallInfo();
-    }
+              Common.alert(
+                  '<spring:message code="sal.alert.msg.updSummary" />'
+                      + DEFAULT_DELIMITER + "<b>"
+                      + result.message + "</b>",
+                  fn_reloadPage);
 
+            },
+            function(jqXHR, textStatus, errorThrown) {
+              try {
+                //                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common
+                    .alert('<spring:message code="sal.msg.dataPrepFail" />'
+                        + DEFAULT_DELIMITER
+                        + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+              } catch (e) {
+                console.log(e);
+              }
+            });
   }
 
   function fn_doSavePaymentChannel() {
@@ -3019,132 +2878,6 @@
     //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
     $('#btnCloseModify').click();
   }
-
-  function displayVoucherSection(){
-      if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
-      {
-          $('.voucherSection').show();
-      }
-      else{
-          $('.voucherSection').hide();
-            clearVoucherData();
-      }
-  }
-
-  function applyVoucher() {
-      var voucherCode = $('#voucherCode').val();
-      var voucherEmail = $('#voucherEmail').val();
-      var voucherType = $('#voucherType option:selected').val();
-
-      if(voucherCode.length == 0 || voucherEmail.length ==0){
-        clearVoucherData();
-          Common.alert('Both voucher code and voucher email must be key in');
-          return;
-      }
-      Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-            if(result.code == "00") {
-                voucherAppliedStatus = 1;
-                $('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-                voucherAppliedCode = voucherCode;
-                voucherAppliedEmail = voucherEmail;
-                $('#voucherMsg').show();
-
-                Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-                    if(result.length > 0){
-                        voucherPromotionId = result;
-                        //voucherPromotionCheck();
-                        fn_loadPromotionInfo(ORD_ID);
-                    }
-                    else{
-                        //reset everything
-                        clearVoucherData();
-                        Common.alert("No Promotion is being entitled for this voucher code");
-                        return;
-                    }
-                });
-            }
-            else{
-                clearVoucherData();
-                Common.alert(result.message);
-                return;
-            }
-      });
-  }
-
-  function voucherPromotionCheck(){
-     if(voucherAppliedStatus == 1){
-        displayVoucherSection();
-        var orderPromoId = [];
-        var orderPromoIdToRemove = [];
-        $("#ordPromo option").each(function()
-        {
-              orderPromoId.push($(this).val());
-        });
-        orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-            return !voucherPromotionId.some(function(obj2) {
-                    return obj == obj2;
-            });
-        });
-
-        if(orderPromoIdToRemove.length > 0){
-            $('#ordPromo').val('');
-            $('#ordPromo').trigger('change');
-            for(var i = 0; i < orderPromoIdToRemove.length; i++){
-                if(orderPromoIdToRemove[i] == ""){
-                }
-                else{
-                    $("#ordPromo option[value='" + orderPromoIdToRemove[i] +"']").remove();
-                }
-            }
-        }
-    }
-  }
-
-  function clearVoucherData(){
-      $('#voucherCode').val('');
-        $('#voucherEmail').val('');
-        $('#voucherMsg').hide();
-        $('#voucherMsg').text('');
-      voucherAppliedStatus = 0;
-      voucherAppliedCode = "";
-      voucherAppliedEmail = "";
-      voucherPromotionId =[];
-
-      $('#ordPromo').val('');
-      $('#ordPromo option').remove();
-  }
-
-  function applyCurrentUsedVoucher(){
-        voucherAppliedStatus = 1;
-        var voucherCode = $('#voucherCode').val();
-        var voucherEmail = $('#voucherEmail').val();
-        $('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-        voucherAppliedCode = voucherCode;
-        voucherAppliedEmail = voucherEmail;
-        $('#voucherMsg').show();
-        displayVoucherSection();
-
-    Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-        if(result.length > 0){
-            voucherPromotionId = result;
-            //voucherPromotionCheck();
-            fn_loadPromotionInfo(ORD_ID);
-        }
-        else{
-            //reset everything
-            clearVoucherData();
-            Common.alert("No Promotion is being entitled for this voucher code");
-            return;
-        }
-    });
-  }
-
-  function displayFileName(fileGrpId, fileId){
-      var data = { atchFileGrpId : fileGrpId, atchFileId : fileId };
-      Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-          $("#agreementFile").val(result.atchFileName);
-      });
-  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -3192,7 +2925,7 @@
   <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-  <jsp:include page="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"/>
+  <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
   <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
@@ -3772,7 +3505,6 @@
     <form id="frmInstInfo" method="post">
      <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
      <input name="salesOrdNo" type="hidden" value="${salesOrderNo}" />
-     <input name="attachment" type="hidden" id="attachment">
      <!-- Install Address Info                                                    -->
      <input id="modInstallId" name="installId" type="hidden" /> <input
       id="modInstCustAddIdOld" name="custAddIdOld" type="hidden" /> <input
@@ -3966,22 +3698,6 @@
         <td colspan="3"><textarea id="modInstct" name="instct"
           cols="20" rows="5"></textarea></td>
        </tr>
-       <tr>
-              <th scope="row">Water Source Type</th>
-              <td colspan=3>
-                    <input id="modInstWaterSourceType" type="text" class="readonly w100p" readonly>
-                    <div style="display:flex;margin-top:5px;">
-                        <div id="agreement" class="auto_file4 asImage" style="width: auto;">
-                          <input id="file" type="file" title="file add" accept="application/pdf" />
-                          <label for="agreement">
-                               <input id="agreementFile" type="text" class="input_text imageDetails" readonly class="readonly">
-                               <span class="label_text2"><a href="#">Add Supplementary Agreement</a></span>
-                          </label>
-                       </div>
-                        <div onclick="removeImg('agreementFile')"><label><span class="label_text2"><a href="#">Remove</a></span></label></div>
-                    </div>
-               </td>
-         </tr>
       </tbody>
      </table>
      <!-- table end -->
@@ -4035,17 +3751,9 @@
       <tr>
        <th scope="row"><spring:message
          code="sal.text.payByThirdParty" /></th>
-       <td><label><input id="thrdParty"
+       <td colspan="3"><label><input id="thrdParty"
          name="thrdParty" id="thrdParty" type="checkbox" value="1" /><span></span></label>
        </td>
-
-        <!-- Added for eMandate-paperless phase 2 by Hui Ding, 04/09/2023 -->
-        <th scope="row">
-            DD Paperless
-        </th>
-        <td><label><input id="ddPaperless" name="ddPaperless" id="ddPaperless" type="checkbox" value="1" onclick="return false;"/></label>
-       </td>
-       <!-- Added for eMandate-paperless phase 2 by Hui Ding, 04/09/2023 -->
       </tr>
      </tbody>
     </table>
@@ -4121,11 +3829,10 @@
           code="sal.text.rentalPaymode" /><span class="must">*</span></th>
         <td><select id="rentPayMode" name="rentPayMode"
          class="w100p" ></select></td>
-        <th scope="row" id="nricPassbook"></th>
-        <td>
-            <input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" />
-            <input id="pnpRpsCrcNo" name="pnpRpsCrcNo" type="text" title="" placeholder="PNPRPS Crc No" class="w100p" maxlength="16" hidden/>
-        </td>
+        <th scope="row"><spring:message
+          code="sal.text.nricPassbook" /></th>
+        <td><input id="rentPayIC" name="rentPayIC" type="text"
+         title="" placeholder="" class="w100p" /></td>
        </tr>
       </tbody>
      </table>
@@ -4278,7 +3985,8 @@
         title="Create start Date" placeholder="DD/MM/YYYY"
         class="j_date w100p" /></td>
        <th scope="row"><label> <input id="chkRejectDate"
-         name="chkRejectDate" type="checkbox" value="1" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
+         name="chkRejectDate" type="checkbox" value="1" /><span>Reject
+          Date</span><span id="spRjctDate" class="must"></span></label></th>
        <td><input id="modRejectDate" name="rejectDate" type="text"
         title="Create start Date" placeholder="DD/MM/YYYY"
         class="j_date w100p" disabled /></td>
@@ -4436,16 +4144,6 @@
       <col style="width: *" />
      </colgroup>
      <tbody>
-     <tr>
-        <th scope="row">Voucher Type</th>
-        <td colspan="3">
-            <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p" disabled></select></p>
-            <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p" readonly/></p>
-            <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p" readonly/></p>
-<!--            <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p> -->
-            <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsg"></p>
-        </td>
-     </tr>
       <tr>
        <th scope="row"><spring:message code="sal.text.product" /></th>
        <td><span id="prdName"></span></td>
@@ -4607,9 +4305,3 @@
  <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
-
-
-<script>
-
-
-</script>
