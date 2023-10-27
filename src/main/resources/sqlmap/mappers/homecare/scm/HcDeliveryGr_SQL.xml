@@ -273,8 +273,8 @@
 						                  , ITM_CODE
 						               FROM LOG0099D
                                        WHERE REQST_NO = Z.ING_GR_NO
+                                       AND ITM_CODE = Z.STOCK_CODE
 						            ) Z1
-						       <!-- AND Z1.ITM_CODE = Z.STOCK_CODE -->
 						       WHERE Z1.RN = 1
 						   )
 			      END AS RCIPT_TM_QTY
