@@ -24,7 +24,7 @@
     doGetCombo('/common/selectCodeList.do', '115', '', 'cardTypeId', 'M', 'f_multiCombo'); //card type
     doGetCombo('/common/selectCodeList.do', '8', '', 'custTypeId', 'M', 'f_multiCombo'); //cust type
     f_multiCombo();
-    loadMemberInfo();
+    //loadMemberInfo();
 
     createAUIGrid();
     createExcelAUIGrid();
@@ -402,7 +402,7 @@
     $('#grpCode').val('');
     $('#deptCode').val('');
     $('#memTyp').val('');
-    loadMemberInfo();
+    //loadMemberInfo();
   }
 
   function loadMemberInfo(){
