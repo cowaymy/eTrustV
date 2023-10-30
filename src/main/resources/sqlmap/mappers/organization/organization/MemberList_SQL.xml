@@ -563,7 +563,8 @@ FROM (
           Extent1.EMRGCY_CNTC_NO,
           Extent1.EMRGCY_CNTC_INIT,
           Extent1.TRM_REJOIN,
-          Extent1.EMAIL
+          Extent1.EMAIL,
+          TO_CHAR(Extent1.JOIN_DT,'DD-MM-YYYY') JOIN_DT
           FROM ORG0001D Extent1
             JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
             JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID
@@ -933,8 +934,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.HSPTLZ HSPTLZ  ,
                 Extent1.TRAINEE_TYPE,
                 Extent2.NAME NAME1  ,
-
-                Extent3.CODE_NAME CODE_NAME   ,
+                CASE WHEN Extent1.MEM_TYPE = 2 AND Extent1.GENDER = 'M' THEN 'Service Technician' ELSE Extent3.CODE_NAME END AS CODE_NAME,
                 CASE
                      WHEN ( Extent1.BRNCH IS NOT NULL ) THEN TO_NUMBER(Extent1.BRNCH,99999.99)
                 ELSE 0

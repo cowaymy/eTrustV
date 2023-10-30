@@ -6,8 +6,9 @@
     <![CDATA[
       SELECT B.MEM_CODE AS MEM_CODE
                , B.NAME AS MEM_NAME
-               , C.CODE_NAME || CASE WHEN C.CODE_DESC = 'HP'   THEN '[HP Type]'
-                                                 ELSE NULL END AS MEM_TYPE_NAME
+               , CASE WHEN B.MEM_TYPE = 2 AND B.GENDER = 'M' THEN 'Service Technician'
+                 ELSE C.CODE_NAME || CASE WHEN C.CODE_DESC = 'HP'   THEN '[HP Type]' ELSE NULL END
+                 END AS MEM_TYPE_NAME
                , D.NAME AS MEM_STATUS
                , E.CODE AS BRNCH_CODE
                , E.NAME AS BRNCH_NAME

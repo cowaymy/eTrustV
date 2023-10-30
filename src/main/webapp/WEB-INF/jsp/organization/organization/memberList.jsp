@@ -851,6 +851,12 @@ function createAUIGrid() {
              }
         },
         {
+            dataField : "joinDt",
+            headerText : "Join Date",
+            editable : false,
+            width : 130
+        },
+        {
             dataField : "uniformSize",
             headerText : "Uniform Size",
             editable : false,
