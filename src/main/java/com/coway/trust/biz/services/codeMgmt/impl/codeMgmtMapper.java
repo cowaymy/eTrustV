@@ -17,7 +17,7 @@ public interface codeMgmtMapper {
 
 	List<EgovMap> chkProductAvail(String string);
 
-	List<EgovMap> chkDupReasons(String string);
+	List<EgovMap> chkDupReasons(Map<String, Object> params);
 
 	List<EgovMap> chkDupDefectCode(Map<String, Object> params);
 

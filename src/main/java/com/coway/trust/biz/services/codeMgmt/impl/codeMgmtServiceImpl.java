@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.services.codeMgmt.codeMgmtService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -44,16 +46,18 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 	@Override
 	public List<EgovMap> chkDupReasons(Map<String, Object> params) {
 		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
-		params.put("reasonCodeId", typeCode.toString());
+		params.put("reasonCodeId", typeCode.get("code").toString());
 
-	    return codeMgmtMapper.chkDupReasons(params.get("reasonCodeId").toString());
+		logger.debug("aaaaa111====" + params.toString());
+		logger.debug("aaaaa222====" + params.get("reasonCodeId").toString());
+	    return codeMgmtMapper.chkDupReasons(params);
 	}
 
 	@Override
 	public List<EgovMap> chkDupDefectCode(Map<String, Object> params) {
 		EgovMap typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
 		params.put("defectType", typeCode.get("code").toString());
-		logger.debug("aaaaa1====" + typeCode.get("code").toString());
+		//logger.debug("aaaaa1====" + typeCode.get("code").toString());
 
 	    return codeMgmtMapper.chkDupDefectCode(params);
 	}
@@ -80,8 +84,6 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		    EgovMap typeCode;
 		    EgovMap defectId;
 
-		    logger.debug("aaaaa====" + saveParam.toString());
-
 		    if (saveParam.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
 		    	codeMgmtMapper.updateProductSetting(params);
 		    }else {
@@ -100,7 +102,13 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 				    		|| saveParam.get("codeCtgry").toString().equals("7303") || saveParam.get("codeCtgry").toString().equals("7307")){ //SMALL
 
 			    		defectId = codeMgmtMapper.getDefectIdParent(saveParam);
-				    	params.put("defectGrp", defectId.get("defectGrp").toString());
+
+			    		try{
+				    		params.put("defectGrp", defectId.get("defectGrp").toString());
+
+			    		}catch (Exception e){
+							throw new ApplicationException(AppConstants.FAIL, saveParam.get("svcLargeCode") + " is not available in system");
+			    		}
 				    	codeMgmtMapper.addDefectCodesSmall(params);
 			    	}else{
 				    	codeMgmtMapper.addDefectCodes(params);

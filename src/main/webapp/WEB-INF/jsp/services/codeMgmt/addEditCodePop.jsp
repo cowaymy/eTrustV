@@ -27,14 +27,14 @@ $(document).ready(function(){
 	//PEX 7299
 	//PR 7298
 
-	if ('${codeMgmtMap.typeId}' == 'HA'){ //AS
+	/* if ('${codeMgmtMap.busiCat}' == 'HA'){ //AS
 		busiCat = '6665';
     }else{
     	busiCat = '6666';
-    }
+    } */
 
     doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '${codeMgmtMap.prodCatId}', 'productCtgry', 'S','');
-    doGetCombo('/common/selectCodeList.do', '500', busiCat, 'busiCat', 'S','');
+    doGetCombo('/common/selectCodeList.do', '500', '${codeMgmtMap.busiCat}', 'busiCat', 'S','');
     doGetCombo('/common/selectCodeList.do', '553', typeId, 'type', 'S','');
     doGetCombo('/common/selectCodeList.do', '554', '${codeMgmtMap.codeCatId}', 'codeCtgry', 'S','');
 
@@ -50,7 +50,9 @@ $(document).ready(function(){
 function  fn_viewType(type){
     type = "${viewType}";
 
-    $("#busiCat").val(busiCat);
+    console.log('${codeMgmtMap}');
+    console.log('${codeMgmtMap.busiCat}');
+    $("#busiCat").val('${codeMgmtMap.busiCat}');
     $("#type").val(typeId);
     $("#productCtgry").val('${codeMgmtMap.prodCatId}');
     $("#codeCtgry").val('${codeMgmtMap.codeCatId}');
@@ -166,7 +168,7 @@ function fn_chkDupReasons(){
     Common.ajaxSync("GET", "/services/codeMgmt/chkDupReasons.do", {"codeCtgry" : $("#codeCtgry").val(),"svcCode" : $("#svcCode").val()}, function(result) {
         //$("#hidVal").val(result.length);
 
-        if(result[0].count > 1 ){
+        if(result[0].count > 0 ){
             rtnVAL = true;
             Common.alert($("#svcCode").val() + " this reason code is already in system <br>");
             return true;
@@ -182,7 +184,7 @@ function fn_chkDupDefectCode(){
         //$("#hidVal").val(result.length);
 
         console.log(result[0].count);
-        if(result[0].count > 1 ){
+        if(result[0].count > 0 ){
             rtnVAL = true;
             Common.alert( $("#svcCode").val() + " this defect code is already in system <br>");
             return true;
@@ -218,6 +220,12 @@ function fn_validate(){
         } */
     } else {
 
+    	if($("#codeCtgry").val() >= 7300 && $("#codeCtgry").val() <= 7303){
+    		if($("#productCtgry").val() == ""){
+                msg += "* Please select a product category <br>";
+            }
+    	}
+
     	if($("#type").val() == ""){
             msg += "* Please select a service type <br>";
         }
@@ -225,10 +233,6 @@ function fn_validate(){
     	if($("#busiCat").val() == ""){
             msg += "* Please select a business category <br>";
         }
-
-    	/* if($("#productCtgry").val() == ""){
-            msg += "* Please select a product category <br>";
-        } */
 
     	if($("#codeCtgry").val() == ""){
             msg += "* Please select a code category <br>";
@@ -294,7 +298,11 @@ function fn_saveclose() {
 <div id="popup_wrap" class="popup_wrap "><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add New Service Code</h1>
+<h1>
+    <c:if test="${viewType eq  '1' }"> Add New Service Code</c:if>
+    <c:if test="${viewType eq  '2' }"> Edit New Service Code</c:if>
+    <c:if test="${viewType eq  '3' }"> View New Service Code</c:if>
+</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="nc_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
