@@ -209,16 +209,15 @@
      SELECT Project1.BRNCH_ID CODE_ID  ,
                 Project1.C1 CODE_NAME
      FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
-                           Extent1.CODE || '-' || Extent1.NAME C1,
-                           EXTENT1.REGN_ID
+                           Extent1.CODE || '-' || Extent1.NAME C1
                 FROM SYS0005M Extent1
                 WHERE  ( 1 = Extent1.STUS_ID )
                      AND ( 42 = Extent1.TYPE_ID )
-                     AND EXTENT1.REGN_ID = #{groupCode}
+
                 UNION ALL
+
                 SELECT 0 BRNCH_ID  ,
-                           'All Cody Branches(NationWide)',
-                           'Region'
+                           'All Cody Branches(NationWide)'
                 FROM DUAL ) Project1
      ORDER BY Project1.BRNCH_ID ASC
   </select>
