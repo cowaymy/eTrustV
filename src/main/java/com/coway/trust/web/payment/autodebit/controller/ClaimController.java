@@ -3089,7 +3089,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 			if (cnt > 0){
 				message.setCode(AppConstants.FAIL);
 				message.setData("");
-				message.setMessage("Kindly upload orders with REG paymode and in CAN status only");
+				message.setMessage("Kindly upload orders with REG paymode only");
 			}
 			else {
 				Map<String, Object> result = claimService.saveCsvVRescueBulkUpload(master, detailList);
@@ -3122,7 +3122,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  	  if(unableUploadList.size() > 0){
 				message.setCode(AppConstants.FAIL);
 				message.setData("");
-				message.setMessage("Kindly upload orders with REG paymode and in CAN status only");
+				message.setMessage("Kindly upload orders with REG paymode only");
 	  	  }
 
 	  	  else {

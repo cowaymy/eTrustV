@@ -1547,7 +1547,7 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
         #{item}
       </foreach>
     AND B.MODE_ID NOT IN (130)
-    UNION
+ <!--    UNION
     SELECT C.SALES_ORD_NO
     FROM SAL0001D C
     JOIN SAL0074D D ON D.SALES_ORD_ID = C.SALES_ORD_ID
@@ -1558,7 +1558,8 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
         #{item}
       </foreach>
     AND D.MODE_ID IN (130)
-    AND C.STUS_CODE_ID NOT IN (4,10) )
+    AND C.STUS_CODE_ID NOT IN (4,10) -->
+    )
     </select>
 
     <select id="selectUnableBulkUploadList2" parameterType="Map" resultType="egovMap">
@@ -1567,13 +1568,13 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
     JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
     WHERE A.BATCH_ID = #{batchId}
     AND C.MODE_ID NOT IN (130)
-    UNION
+<!--     UNION
     SELECT E.SALES_ORD_NO, F.MODE_ID, E.STUS_CODE_ID FROM SAL0348D D
     JOIN SAL0001D E ON E.SALES_ORD_NO = D.ORD_NO
     JOIN SAL0074D F ON F.SALES_ORD_ID = E.SALES_ORD_ID
     WHERE D.BATCH_ID = #{batchId}
     AND F.MODE_ID IN (130)
-    AND E.STUS_CODE_ID <![CDATA[ <> ]]> '10'
+    AND E.STUS_CODE_ID <![CDATA[ <> ]]> '10' -->
     </select>
 
 </mapper>
