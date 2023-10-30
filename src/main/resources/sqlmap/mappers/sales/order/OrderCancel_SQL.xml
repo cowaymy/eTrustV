@@ -96,8 +96,8 @@
 					A.RESULT_REP_EMAIL_NO,
 					A.EMAIL_SENT_COUNT,
                     A.SO_REQ_FOLLOW_UP,
-                    A.FOLLOW_UP_PIC
-
+                    A.FOLLOW_UP_PIC,
+                    A.KEYIN_DT
 					FROM (
 						SELECT V.REQ_ID ,
 						V.REQ_NO ,
@@ -169,7 +169,8 @@
 						V.RESULT_REP_EMAIL_NO,
 						V.EMAIL_SENT_COUNT,
                         V.SO_REQ_FOLLOW_UP,
-                        V.FOLLOW_UP_PIC
+                        V.FOLLOW_UP_PIC,
+                        V.KEYIN_DT
 
 						FROM (( SELECT DISTINCT r.SO_REQ_ID REQ_ID,
 						r.SO_REQ_NO REQ_NO,
@@ -252,8 +253,8 @@
                         r.EMAIL_SENT_COUNT,
 
                         r.SO_REQ_FOLLOW_UP,
-                        fu.CODE_NAME FOLLOW_UP_PIC
-
+                        fu.CODE_NAME FOLLOW_UP_PIC,
+                        DECODE(K.SALES_ORD_ID, SOM.SALES_ORD_ID, K.REQST_DT, SOM.SALES_DT) AS KEYIN_DT
 						from SAL0020D r
 						JOIN SAL0001D som ON som.SALES_ORD_ID = r.SO_REQ_SO_ID AND r.SO_REQ_STUS_ID <> 8
 						JOIN SAL0045D i ON i.SALES_ORD_ID = som.SALES_ORD_ID
@@ -276,7 +277,9 @@
 						LEFT JOIN ORG0001D ORG3 ON ORG3.MEM_ID = RE.CT_ID
 						LEFT JOIN SYS0070M E ON r.ATCH_FILE_GRP_ID = E.ATCH_FILE_GRP_ID
 						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID
-                        LEFT JOIN SYS0013M fu ON fu.CODE_ID = R.SO_REQ_FOLLOW_UP) V) ) A
+                        LEFT JOIN SYS0013M fu ON fu.CODE_ID = R.SO_REQ_FOLLOW_UP
+                        LEFT JOIN SAL0213M K ON K.SALES_ORD_ID = SOM.SALES_ORD_ID
+                        ) V) ) A
 				LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
 				 ]]>
                 WHERE A.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB

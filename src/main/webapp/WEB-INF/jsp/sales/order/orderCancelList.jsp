@@ -87,7 +87,15 @@
             formatString:"dd/mm/yyyy",
             width : 140,
             editable : false
-          },{
+          },  {
+              dataField : "keyinDt",
+              headerText : "Key In Sales Date",
+              dataType:"date",
+              formatString:"dd/mm/yyyy",
+              width : 140,
+              editable : false
+            },
+          {
           dataField : "reqStusCode",
           headerText : "<spring:message code='sal.title.status' />",
           width : 100,
