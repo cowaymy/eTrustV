@@ -192,7 +192,7 @@
     THEN LPAD(REF_NO,7,'0')
     WHEN LENGTH(REF_NO) <![CDATA[   > ]]>
     7
-    THEN LPAD(REF_NO,14,'0')
+    THEN LPAD(REF_NO,16,'0')
     ELSE REF_NO END
     ),
     REF_CODE = (CASE WHEN
