@@ -55,6 +55,7 @@
 	}
 
 	function fn_disableEditFeature() {
+		$('#buttonSectionDate').hide();
 		if (isEditable == 1) {
 			$('#voucherCampaignForm :input').prop('disabled', false);
 			$('#addPromotionSection').show();
@@ -64,7 +65,15 @@
 			$('#voucherCampaignForm :input').prop('disabled', true);
 			$('#addPromotionSection').hide();
 			$('#buttonSection').hide();
+			fn_enableDateEditFeatureOnly();
 		}
+	}
+
+	function fn_enableDateEditFeatureOnly(){
+		$('#campaignId').prop('disabled', false);
+		$('#startDate').prop('disabled', false);
+		$('#endDate').prop('disabled', false);
+		$('#buttonSectionDate').show();
 	}
 
 	function fn_multiCombo() {
@@ -245,6 +254,26 @@
 			if (result.code == "00") {
 				fn_getVoucherCampaignList();
 				$("#voucherCampaignEditPop").remove();
+				Common.alert("Success");
+			} else {
+				Common.alert("Error: " + result.message);
+				return;
+			}
+		});
+	}
+
+	function submitDateEdit(){
+		if ($('#startDate').val() == "" || $('#endDate').val() == "") {
+			Common.alert("Please fill in all required fields");
+			return false;
+		}
+
+		Common.ajax("POST", "/misc/voucher/editVoucherCampaignDate.do", $("#voucherCampaignForm").serializeJSON(), function(result) {
+			console.log(result);
+			if (result.code == "00") {
+				fn_getVoucherCampaignList();
+				$("#voucherCampaignEditPop").remove();
+				Common.alert("Success");
 			} else {
 				Common.alert("Error: " + result.message);
 				return;
@@ -493,6 +522,11 @@
 		<ul class="center_btns" id="buttonSection">
 			<li><p class="btn_blue2">
 					<a href="#" id="btn_edit" onclick="javascript:submit()">Save</a>
+				</p></li>
+		</ul>
+		<ul class="center_btns" id="buttonSectionDate">
+			<li><p class="btn_blue2">
+					<a href="#" id="btn_edit_date" onclick="javascript:submitDateEdit()">Save</a>
 				</p></li>
 		</ul>
 	</section>

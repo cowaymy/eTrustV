@@ -160,6 +160,18 @@
 		WHERE ID = #{campaignId}
 	</update>
 
+		<update
+		id="editVoucherCampaignDate"
+		parameterType="Map">
+		UPDATE MSC0056M
+		SET
+		START_DATE = TO_DATE(#{startDate},'DD/MM/YYYY')
+		,END_DATE =	TO_DATE(#{endDate},'DD/MM/YYYY')
+		,UPD_BY =	#{userId}
+		,UPD_DT = SYSDATE
+		WHERE ID = #{campaignId}
+	</update>
+
 	<update
 		id="editVoucherCampaignStatus"
 		parameterType="Map">
@@ -436,7 +448,8 @@
 	</update>
 
 	<select id="isVoucherValidToApply" resultType="int">
-		SELECT CASE WHEN COUNT(A.DETAIL_ID) > 0 THEN 1 ELSE 0 END AS VALID FROM MSC0057D A
+		SELECT CASE WHEN COUNT(A.DETAIL_ID) > 0 THEN 1 ELSE 0 END AS VALID
+		FROM MSC0057D A
 		JOIN MSC0056M B
 		ON A.ID = B.ID
 		WHERE
@@ -450,17 +463,7 @@
 		AND A.STUS_CODE_ID = 1
 		AND B.STUS_CODE_ID = 1
 		AND A.USED = 0
-	</select>
-
-	<select id="isVoucherValidToApplyForEKeyIn" resultType="int">
-		SELECT CASE WHEN COUNT(PRE_ORD_ID) > 0 THEN 0 ELSE 1 END AS VALID
-		FROM SAL0213M
-		WHERE 1=1
-		AND VOUCHER_CODE = #{voucherCode}
-		AND STUS_ID NOT IN (10)
-		<if test = 'preOrdId != null and preOrdId != "" and preOrdId != 0'>
-		AND PRE_ORD_ID != #{preOrdId}
-		</if>
+		AND SYSDATE BETWEEN B.START_DATE AND B.END_DATE
 	</select>
 
 	<select id="getVoucherUsagePromotionId" resultType="int">
@@ -503,12 +506,15 @@
 		WHERE A.VOUCHER_CODE = #{voucherCode}
 	</select>
 
-	<select id="isVoucherValidToApplyIneKeyIn" parameterType="Map"  resultType="int">
+	<select id="isVoucherValidToApplyIneKeyIn" parameterType="Map" resultType="int">
 		SELECT CASE WHEN COUNT(PRE_ORD_ID) > 0 THEN 0 ELSE 1 END AS VALID
 		FROM SAL0213M
 		WHERE 1=1
 		AND VOUCHER_CODE = #{voucherCode}
 		AND STUS_ID NOT IN (10)
+		<if test = 'preOrdId != null and preOrdId != "" and preOrdId != 0'>
+		AND PRE_ORD_ID != #{preOrdId}
+		</if>
 	</select>
 
 	<select id="getPendingEmailSendInfo" parameterType="Map" resultType="egovMap">

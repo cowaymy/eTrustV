@@ -77,6 +77,14 @@ public class VoucherController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/editVoucherCampaignDate.do")
+	public ResponseEntity<ReturnMessage> editVoucherCampaignDate(@RequestBody Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		message = voucherService.editVoucherCampaignDate(params, sessionVO);
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/editVoucherCampaignStatus.do")
 	public ResponseEntity<ReturnMessage> editVoucherCampaignStatus(@RequestBody Map<String, Object> params,
 			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
@@ -268,7 +276,7 @@ public class VoucherController {
 		ReturnMessage message = new ReturnMessage();
 
 		if(params.get("isEKeyIn") != null && params.get("isEKeyIn").toString().equals("true")){
-			message = voucherService.isVoucherValidToApplyForEKeyIn(params, sessionVO);
+			message = voucherService.isVoucherValidToApplyIneKeyIn(params, sessionVO);
 			if(message.getCode() == AppConstants.SUCCESS){
 				message = voucherService.isVoucherValidToApply(params, sessionVO);
 			}

@@ -32,7 +32,6 @@ public interface VoucherMapper {
 	 List<EgovMap> getVoucherUsagePromotionId(Map<String, Object> params);
 	 int updateVoucherCodeUseStatus(Map<String, Object> params);
 	 EgovMap getVoucherInfo(Map<String, Object> params);
-	 int isVoucherValidToApplyIneKeyIn(Map<String, Object> params);
 	 EgovMap getVoucherEmailAdditionalInfo(Map<String, Object> params);
 	 List<EgovMap> getPendingEmailSendInfo();
 	 int updateBatchEmailSuccess(Map<String, Object> params);
@@ -40,5 +39,6 @@ public interface VoucherMapper {
 	 int getBatchEmailNextVal();
 	 int insertBatchEmailSender(Map<String, Object> params);
 	 int isCampaignMasterCodeExist(Map<String, Object> params);
-	 int isVoucherValidToApplyForEKeyIn(Map<String, Object> params);
+	 int isVoucherValidToApplyIneKeyIn(Map<String, Object> params);
+	 int editVoucherCampaignDate(Map<String, Object> params);
 }

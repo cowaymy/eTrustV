@@ -119,6 +119,19 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
+	public ReturnMessage editVoucherCampaignDate(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		params.put("userId", sessionVO.getUserId());
+		voucherMapper.editVoucherCampaignDate(params);
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageSourceAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return message;
+	}
+
+
+	@Override
 	public ReturnMessage editVoucherCampaignStatus(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 
@@ -364,7 +377,7 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	@Override
-	public ReturnMessage isVoucherValidToApplyForEKeyIn(Map<String, Object> params, SessionVO sessionVO) {
+	public ReturnMessage isVoucherValidToApplyIneKeyIn(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 
 		if(params.get("voucherCode").toString().isEmpty() || params.get("custEmail").toString().isEmpty()
@@ -374,7 +387,7 @@ public class VoucherServiceImpl implements VoucherService {
 			return message;
 		}
 
-		int validResult = voucherMapper.isVoucherValidToApplyForEKeyIn(params);
+		int validResult = voucherMapper.isVoucherValidToApplyIneKeyIn(params);
 
 		if(validResult == 0){
 			message.setCode(AppConstants.FAIL);
