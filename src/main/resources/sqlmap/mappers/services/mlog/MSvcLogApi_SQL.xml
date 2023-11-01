@@ -6138,5 +6138,11 @@ SELECT MST.*
         WHERE CUST_ADD_ID =  #{custAddId}
   </update>
 
+  <select id="getCustNRIC" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(NRIC) as custNric
+    FROM SAL0001D A
+    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+    WHERE SALES_ORD_NO = #{salesOrdNo}
+  </select>
 
 </mapper>
