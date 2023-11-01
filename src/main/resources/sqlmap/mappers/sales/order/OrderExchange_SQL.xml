@@ -162,7 +162,8 @@
 					              Extent16.NAME NAME8 ,
 					              Extent11.STK_CTGRY_ID,
 
-					              CASE WHEN Extent18.RESULT_RPT_EMAIL_NO IS NOT NULL THEN Extent18.RESULT_RPT_EMAIL_NO ELSE Extent3.EMAIL END AS RESULT_REP_EMAIL_NO,
+                                  Extent3.EMAIL AS RESULT_REP_EMAIL_NO,
+					              --CASE WHEN Extent18.RESULT_RPT_EMAIL_NO IS NOT NULL THEN Extent18.RESULT_RPT_EMAIL_NO ELSE Extent3.EMAIL END AS RESULT_REP_EMAIL_NO,
 					              Extent1.EMAIL_SENT_COUNT,
                                   Extent1.ATCH_FILE_GRP_ID
 
