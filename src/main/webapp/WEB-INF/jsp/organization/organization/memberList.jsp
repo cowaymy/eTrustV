@@ -524,9 +524,9 @@ $(document).ready(function() {
         $("#deptCode").attr("class", "w100p readonly");
         $("#deptCode").attr("readonly", "readonly");
 
-        $("#memCode").val("${memCode}");
-        $("#memCode").attr("class", "w100p readonly");
-        $("#memCode").attr("readonly", "readonly");
+        $("#code").val("${memCode}");
+        $("#code").attr("class", "w100p readonly");
+        $("#code").attr("readonly", "readonly");
 
 
         $("#memLvl").attr("class", "w100p readonly");
@@ -850,12 +850,12 @@ function createAUIGrid() {
                    }
              }
         },
-        {
-            dataField : "joinDt",
-            headerText : "Join Date",
-            editable : false,
-            width : 130
-        },
+//         {
+//             dataField : "joinDt",
+//             headerText : "Join Date",
+//             editable : false,
+//             width : 130
+//         },
         {
             dataField : "uniformSize",
             headerText : "Uniform Size",
