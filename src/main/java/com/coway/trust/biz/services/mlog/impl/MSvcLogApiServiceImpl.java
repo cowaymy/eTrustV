@@ -1131,4 +1131,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
         return jsonReturn;
     }
   }
+
+  @Override
+  public List<EgovMap> getCustNRIC(Map<String, Object> params) {
+    return MSvcLogApiMapper.getCustNRIC(params);
+  }
 }
