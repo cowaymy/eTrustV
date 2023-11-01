@@ -2772,4 +2772,12 @@ public class ServiceApiController {
 
        return ResponseEntity.ok(checkInMileageStat);
   }
+
+  @ApiOperation(value = "GET CUSTOMER NRIC", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getCustNRIC", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getCustNRIC(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> getCustNRIC = MSvcLogApiService.getCustNRIC(params);
+
+    return ResponseEntity.ok(getCustNRIC);
+  }
 }
