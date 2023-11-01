@@ -307,4 +307,6 @@ public interface MSvcLogApiMapper {
   void updateGps(Map<String, Object> params);
 
   EgovMap selectAsDetails (Map<String, Object> params);
+
+  List<EgovMap> getCustNRIC(Map<String, Object> params);
 }
