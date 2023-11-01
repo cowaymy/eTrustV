@@ -153,7 +153,7 @@
             <tr>
               <th scope="row">Address</th>
               <td colspan='3'>
-                <input type="text" class="w100p" id="address" name="address" value="${params.address}" />
+                <span id="lblAddress">${params.address}</span>
               </td>
             </tr>
           </tbody>
