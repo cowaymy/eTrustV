@@ -347,6 +347,11 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		return ccpRentalAgreementMapper.selectContactOrdersAjax(params);
 	}
 
+	public List<EgovMap> selectContactOrdersAjaxIncludeInactive(Map<String, Object> params) throws Exception {
+
+		return ccpRentalAgreementMapper.selectContactOrdersAjaxIncludeInactive(params);
+	}
+
 
 
 	/* 전체 Save*/
