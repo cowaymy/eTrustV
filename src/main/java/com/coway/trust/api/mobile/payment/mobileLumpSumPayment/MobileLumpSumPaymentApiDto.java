@@ -47,6 +47,9 @@ public class MobileLumpSumPaymentApiDto {
 	private String crtDt;
 	private String remarks;
 
+	//History
+	private String serialNo;
+
 	//Result
 	private int responseCode;
 
@@ -92,6 +95,9 @@ public class MobileLumpSumPaymentApiDto {
 		params.put("payStusId",vo.getPayStusId());
 		params.put("payStusName",vo.getPayStusName());
 		params.put("crtDt",vo.getCrtDt());
+
+		//History
+		params.put("serialNo",vo.getSerialNo());
 
 		params.put("responseCode", vo.getResponseCode());
 		return params;
@@ -343,5 +349,13 @@ public class MobileLumpSumPaymentApiDto {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
 }
