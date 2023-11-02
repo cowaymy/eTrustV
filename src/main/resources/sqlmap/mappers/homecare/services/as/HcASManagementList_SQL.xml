@@ -176,7 +176,8 @@
 	           S.INST_CITY,
                S.DEFECT_DESC,
                S.RESN_DESC,
-               S.BNDL_NO
+               S.BNDL_NO,
+               S.REMARK
 	    FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
 	                           E.AS_NO AS_NO ,
 	                           E.ASSOID1 AS_SO_ID ,
@@ -231,7 +232,8 @@
 	                           E.INST_CITY,
                                E.DEFECT_DESC,
                                Extent17.RESN_DESC,
-                               E.BNDL_NO
+                               E.BNDL_NO,
+                               E.REMARK
 	           FROM ( SELECT Extent1.AS_ID AS_ID ,
 	                         Extent1.AS_NO AS_NO ,
 	                         Extent1.AS_SO_ID ASSOID1 ,
@@ -275,7 +277,8 @@
                                            SELECT UPPER(DEFECT_DTL_CODE_DESC) DEFECT_DESC, to_number(DEFECT_TYPE_CODE) DEF_TYPE, to_number(DEFECT_DTL_CODE) DEF_DET FROM SVC0056M WHERE STUS_CODE_ID = 1
                                        ) Extent15 WHERE  Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
                              ) DEFECT_DESC,
-                             HMC.BNDL_NO
+                             HMC.BNDL_NO,
+                             extent1.AS_RQST_REM REMARK
 	                  FROM SVC0001D Extent1
 	                  JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 	                  JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -767,7 +770,7 @@
         AND B.TYPE_ID in (SELECT CODE_ID FROM SYS0013M
                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE in ('HDC','DSC'))  -- 5754
         AND E.MEM_ID = C.MEM_ID
-        AND C.MEM_TYPE in (5758,3)              -- homecare/CT
+        AND C.MEM_TYPE in (5758,3,6672)              -- homecare/CT
         AND A.MEM_LVL IN ('3','4')
         <!-- AND B.CODE = D.DT_BRNCH_CODE
         AND E.CT_SUB_GRP = D.DT_SUB_GRP -->
