@@ -178,6 +178,12 @@ var branchDs = [];
           width : 100
         },
         {
+            dataField : "remark",
+            headerText : "Requestor Remark",
+            editable : false,
+            width : 100
+          },
+        {
           dataField : "name",
           headerText : "<spring:message code='service.title.CustomerName'/>",
           style:"aui-grid-user-custom-left",
