@@ -304,7 +304,7 @@
                       $("#exCost").val(result.data.pricecost);
                       $("#exTradePv").val(result.data.tradeinpv);
                       $("#exNormalPrice").val(result.data.amt);
-                      $("#chgRemarkV").val(result.data.chgRemark);
+                      $("#chgRemark").val(result.data.chgRemark);
                       AUIGrid.setGridData(priceHistoryGrid, result.data2);
                       AUIGrid.resize(priceHistoryGrid,950, 280);
                   }
