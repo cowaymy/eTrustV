@@ -121,6 +121,11 @@
             atchFileId : fileId
         };
 
+        if(fileGrpId=="0"){
+        	Common.alert("No file to view.")
+        	return false;
+        }
+
         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
             var fileSubPath = result.fileSubPath;
 
