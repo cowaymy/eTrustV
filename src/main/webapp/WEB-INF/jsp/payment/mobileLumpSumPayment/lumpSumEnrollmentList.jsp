@@ -26,7 +26,7 @@
 		$("#trIssDt2").on('focus', function(e) {
 			$(this).attr('autocomplete', 'off');
 		});
-
+		loadComboBox();
 		var selectedRecord;
 		var memLevel = "${memLevel}";
 
@@ -456,7 +456,6 @@
 		var gridPros = {
 			enableCellMerge : true,
 			cellMergePolicy : "withNull",
-			usePaging : false,
 			editable : false,
 			headerHeight : 30,
 			wordWrap : true
@@ -929,14 +928,18 @@
 	}
 
 	function loadComboBox() {
-		doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'L', ''); // Pay Mode
-		doGetCombo('/common/selectCodeList.do', '49', '', 'cmbRegion', 'L',
-				'f_multiCombo'); //region
+		doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', '', 'f_multiCombo'); // Pay Mode
+		doGetCombo('/common/selectCodeList.do', '49', '', 'cmbRegion', '','f_multiCombo'); //region
 	}
 
 	function f_multiCombo() {
 		$(function() {
 			$('#cmbRegion').change(function() {
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			});
+			$('#payMode').change(function() {
 			}).multipleSelect({
 				selectAll : true,
 				width : '80%'

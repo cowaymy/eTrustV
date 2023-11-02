@@ -592,12 +592,12 @@
 	    <if test='requestStartDate != null and requestStartDate != null'>
 			<if test='requestEndDate != "" and requestEndDate != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{dateTo},'DD/MM/YYYY')
+					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{requestStartDate},'DD/MM/YYYY') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{requestEndDate},'DD/MM/YYYY')
 				]]>
 			</if>
 		</if>
         <if test='orderNo != null and orderNo != ""'>
-        	AND p0349m.SALES_ORD_NO = TRIM(#{orderNo})
+        	AND p0350d.SALES_ORD_NO = TRIM(#{orderNo})
 	    </if>
         <if test='ticketStatus != null and ticketStatus != ""'>
         	AND p0349m.PAY_STUS_ID = #{ticketStatus}
@@ -844,7 +844,8 @@
   	<select id="getMobileLumpSumHistory" parameterType="Map" resultType="egovMap">
 		SELECT A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,LISTAGG(B.SALES_ORD_NO,',') WITHIN GROUP (ORDER BY B.SALES_ORD_NO) AS ORD_NO,
 		C.NAME,D.NAME AS PAY_STUS_NAME,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS CRT_DT,
-		E.CODE_NAME AS PAY_MODE_NAME,A.REMARKS
+		E.CODE_NAME AS PAY_MODE_NAME,A.REMARKS,
+		CASE WHEN A.CHEQUE_NO IS NULL THEN A.SLIP_NO ELSE A.CHEQUE_NO END AS SERIAL_NO
 		FROM PAY0349M A
 		JOIN PAY0350D B
 		ON A.MOB_PAY_GROUP_NO = B.MOB_PAY_GROUP_NO
@@ -877,7 +878,7 @@
 		<if test='status != null and status != ""'>
 			AND A.PAY_STUS_ID = #{status}
 		</if>
-		GROUP BY A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,C.NAME,D.NAME,A.CRT_DT,E.CODE_NAME,A.REMARKS
+		GROUP BY A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,C.NAME,D.NAME,A.CRT_DT,E.CODE_NAME,A.REMARKS,A.SLIP_NO,A.CHEQUE_NO
 		ORDER BY A.CRT_DT DESC
 	</select>
 
