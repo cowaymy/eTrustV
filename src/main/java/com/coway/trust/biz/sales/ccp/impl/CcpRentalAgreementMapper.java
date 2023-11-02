@@ -82,6 +82,8 @@ public interface CcpRentalAgreementMapper {
 
 	List<EgovMap> selectContactOrdersAjax(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectContactOrdersAjaxIncludeInactive(Map<String, Object> params) throws Exception;
+
 	/*####### Consign Save ######*/
 
 	void updateReceiveDate (Map<String, Object> params ) throws Exception;
