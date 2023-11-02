@@ -87,7 +87,7 @@
           LEFT JOIN GBSLCVD.SYS0047M usr ON b.UPD_USER_ID = usr.USER_ID
           LEFT JOIN GBSLCVD.SYS0005M brnch ON usr.USER_BRNCH_ID = brnch.BRNCH_ID
           -- Added cmgroup by Hui Ding, 2020-12-17
-          LEFT JOIN sal0090D C on C.SRV_SO_ID = A.ord_id
+          LEFT JOIN sal0090D C on C.SRV_SO_ID = A.ord_id AND C.SRV_STUS_ID = 1
           --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
           LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
                       , V1.MEM_CODE MEM_CODE
