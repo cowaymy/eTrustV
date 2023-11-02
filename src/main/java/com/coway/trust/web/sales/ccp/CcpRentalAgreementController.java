@@ -374,7 +374,7 @@ public class CcpRentalAgreementController {
 
 		params.put("govAgId", params.get("ordAgId"));
 		List<EgovMap> orderList = null;
-		orderList = ccpRentalAgreementService.selectContactOrdersAjax(params);
+		orderList = ccpRentalAgreementService.selectContactOrdersAjaxIncludeInactive(params);
 
 		return ResponseEntity.ok(orderList);
 
