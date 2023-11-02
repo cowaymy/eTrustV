@@ -620,7 +620,7 @@
                     <td>
                         <select class="multy_select w100p" multiple="multiple" id="sStatus" name="status">
                             <option value="1" >Active</option>
-                            <option value="8">InActive</option>
+                            <option value="8">Inactive</option>
                         </select>
                     </td>
                     <th scope="row"><spring:message code='sys.label.level'/></th>
