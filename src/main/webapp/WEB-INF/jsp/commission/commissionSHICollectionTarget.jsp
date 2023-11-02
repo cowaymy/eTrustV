@@ -104,7 +104,6 @@
             $("#search").click(function() {
                       var valid = false;
 
-
                       if (valid) {
                         Common.alert("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
                         $("#teamCode").val("");
@@ -263,15 +262,13 @@
 
             });
 
-            $("#generate").click(
-                    function() {
-                      var valid = $("#memCode").val();
+            $("#generate").click(function() {
+                      let valid = AUIGrid.getRowCount(myGridID2);
 
-                      if (valid == null || valid == "") {
-                        //Common.alert("Please select the member code");
-                        Common
-                            .setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
+                      if (valid <= 0) {
+                        Common.alert("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
                       } else {
+
                         var date = $("#shiDate").val();
                         var month = Number(date.substring(0, 2));
                         if (month < 10) {
@@ -280,8 +277,10 @@
                         var year = Number(date.substring(3));
                         var memCd = $("#memCode").val();
                         var typeCode = $("#typeCode").val();
-                        var teamCode = $("#teamCode").val();
+                        var teamCode = $("#deptCode").val();
                         var level = $("#level").val();
+                        let grpCode = $("#grpCode").val();
+                        let orgCode = $("#orgCode").val();
 
                         var custType = $("#custType").val();
                         var catType = $("#catType").val();
@@ -298,6 +297,8 @@
                         $("#reportForm #rptDeptCode").val(teamCode);
                         $("#reportForm #rptCustType").val(custType);
                         $("#reportForm #rptCatType").val(catType);
+                        $("#reportForm #rptGrpCode").val(grpCode);
+                        $("#reportForm #rptOrgCode").val(orgCode);
 
                         $("#reportForm #reportFileName").val(reportFileName);
                         $("#reportForm #reportDownFileName").val(reportDownFileName);
@@ -307,8 +308,8 @@
                         var option = {
                           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
                         };
-                        Common.report("reportForm",
-                            option);
+
+                        Common.report("reportForm",option);
                       }
                     });
 
@@ -442,9 +443,13 @@
         <!-- search_table start -->
         <form name="reportForm" id="reportForm">
             <input type="hidden" name="V_MEMCODE" id="mCode" />
-            <input type="hidden" name="V_PVMTH" id="month" /> <input type="hidden" name="V_PVYEAR" id="year" />
-            <input type="hidden" name="V_MEMLVL" id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" />
+            <input type="hidden" name="V_PVMTH" id="month" />
+            <input type="hidden" name="V_PVYEAR" id="year" />
+            <input type="hidden" name="V_MEMLVL" id="mLvl" />
+            <input type="hidden" name="V_MEMTYPE" id="mType" />
             <input type="hidden" name="V_DEPTCODE" id="rptDeptCode" />
+            <input type="hidden" name="V_GRPCODE" id="rptGrpCode" />
+            <input type="hidden" name="V_ORGCODE" id="rptOrgCode" />
             <input type="hidden" name="V_CUST_TYPE" id="rptCustType" />
             <input type="hidden" name="V_CAT_TYPE" id="rptCatType" />
             <input type="hidden" name="reportDownFileName" id="reportDownFileName" />
@@ -599,12 +604,12 @@
     <!-- search_table end -->
     <section class="search_result">
         <!-- search_result start -->
-        <%-- <%-- <ul class="right_btns">
+        <ul class="right_btns">
             <li>
                 <p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate' /></a></p>
                 <!-- <p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p> -->
             </li>
-        </ul> --%>
+        </ul>
         <article class="grid_wrap">
         <!-- grid_wrap start -->
             <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
