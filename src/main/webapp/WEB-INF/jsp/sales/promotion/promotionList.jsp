@@ -199,6 +199,7 @@
             , { headerText : "RPF Discount",         dataField : "promoRpfDiscAmt",       editable : false,   width : 100 }
             , { headerText : "Discount Period Type",         dataField : "promoDiscPeriodTpDesc",       editable : false,   width : 100 }
             , { headerText : "Discount Period Value",         dataField : "promoDiscPeriod",       editable : false,   width : 100 }
+            , { headerText : "Service Package",         dataField : "codeName",       editable : false,   width : 100 }
             , { headerText : "Additional Discount (RM)",         dataField : "promoAddDiscPrc",       editable : false,   width : 100 }
             , { headerText : "Additional Discount (PV)",         dataField : "promoAddDiscPv",       editable : false,   width : 100 }
             , { headerText : "Mega Deal",         dataField : "megaDeal",       editable : false,   width : 100 }

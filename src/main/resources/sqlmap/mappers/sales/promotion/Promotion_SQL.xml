@@ -1262,6 +1262,87 @@ SELECT T1.PROMO_REQST_ITM_ID
     </select>
 
 <select id="selectExcelPromoList" parameterType="Map" resultType="egovMap">
+
+WITH PKG_LIST AS (
+ SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 1 AS APP_ID
+                 FROM SAL0081D W1
+                    , SYS0013M W2
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '367'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_CNTRCT_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 1 AS APP_ID
+                 FROM SAL0081D W1
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 2 AS APP_ID
+                 FROM SAL0081D W1
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE = '1'
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 3 AS APP_ID
+                 FROM SAL0091M W1
+                    , SYS0013M W2
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '368'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_MEM_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 3 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 5 AS APP_ID
+                 FROM SAL0091M W1
+                    , SYS0013M W2
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '370'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_MEM_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 5 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 4 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE = '1'
+
+)
+SELECT A.* , B.CODE_NAME
+
+FROM (
+
         SELECT T1.PROMO_ID
              , T1.PROMO_MTCH_ID
              , T1.PROMO_CODE
@@ -1303,6 +1384,17 @@ SELECT T1.PROMO_REQST_ITM_ID
              , DECODE(T1.ADV_DISC, 1, 'Yes', 'No') ADV_DISC
              , DECODE(T1.STK_SIZE, 'KING', 'KING', 'QUEEN', 'QUEEN', 'SINGLE', 'SINGLE') STK_SIZE_DESC
              , DECODE(T1.E_SALES, 0, 'Admin key-in', 1, 'eKey-in', 2, 'Both') E_SALES
+             ,  CASE WHEN t1.promo_app_type_id IN (2284)
+                 THEN '1'
+                 WHEN t1.promo_app_type_id IN (2285)
+                 THEN '3'
+                 WHEN t1.promo_app_type_id IN (2287)
+                 THEN '5'
+                 WHEN t1.promo_app_type_id IN (2289, 2744)
+                 THEN '2'
+                 WHEN t1.promo_app_type_id IN (2288, 2290)
+                 THEN '4'
+              ELSE '0' END AS APP_ID
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -1385,6 +1477,18 @@ SELECT T1.PROMO_REQST_ITM_ID
              , DECODE(T1.ADV_DISC, 1, 'Yes', 'No') ADV_DISC
              , DECODE(T1.STK_SIZE, 'KING', 'KING', 'QUEEN', 'QUEEN', 'SINGLE', 'SINGLE') STK_SIZE_DESC
              , DECODE(T1.E_SALES, 0, 'Admin key-in', 1, 'eKey-in', 2, 'Both') E_SALES
+             ,  CASE WHEN t1.promo_app_type_id IN (2284)
+                 THEN '1'
+                 WHEN t1.promo_app_type_id IN (2285)
+                 THEN '3'
+                 WHEN t1.promo_app_type_id IN (2287)
+                 THEN '5'
+                 WHEN t1.promo_app_type_id IN (2289, 2744)
+                 THEN '2'
+                 WHEN t1.promo_app_type_id IN (2288, 2290)
+                 THEN '4'
+              ELSE '0' END AS APP_ID
+
           FROM SAL0358M T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -1421,5 +1525,10 @@ SELECT T1.PROMO_REQST_ITM_ID
          <if test='promoDesc != null and promoDesc !=""'>
            AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
          </if>
+
+) A
+
+LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_ID
+
     </select>
 </mapper>
