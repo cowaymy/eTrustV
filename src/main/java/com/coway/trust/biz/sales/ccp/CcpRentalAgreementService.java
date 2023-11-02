@@ -50,6 +50,8 @@ public interface CcpRentalAgreementService {
 
 	void uploadCcpFile(Map<String, Object> params) throws Exception;
 
-  List<EgovMap> selectAgreementProgressStatus(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectAgreementProgressStatus(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectContactOrdersAjaxIncludeInactive(Map<String, Object> params) throws Exception;
 
 }
