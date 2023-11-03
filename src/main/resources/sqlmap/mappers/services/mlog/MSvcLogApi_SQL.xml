@@ -280,8 +280,8 @@
                     FROM SAL0047D A,
                   ( SELECT MAX (A.RESULT_ID) AS RESULT_ID,
                            A.ENTRY_ID
-                    FROM SAL0047D A,
-                    ( SELECT MAX (C.INSTALL_ENTRY_ID) AS ENTRY_ID,
+                    FROM SAL0047D A
+                    <!-- ,( SELECT MAX (C.INSTALL_ENTRY_ID) AS ENTRY_ID,
                              C.SALES_ORD_ID
                       FROM SVC0008D A
                       INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID   AND B.MEM_CODE = #{userId}
@@ -289,7 +289,7 @@
                       WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                         AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
                       GROUP BY C.INSTALL_ENTRY_ID, C.SALES_ORD_ID) B
-                   WHERE A.ENTRY_ID = B.ENTRY_ID
+                   WHERE A.ENTRY_ID = B.ENTRY_ID -->
                    GROUP BY A.ENTRY_ID) B
                  WHERE A.ENTRY_ID = B.ENTRY_ID AND A.RESULT_ID = B.RESULT_ID) J,
                  SAL0002D K,
