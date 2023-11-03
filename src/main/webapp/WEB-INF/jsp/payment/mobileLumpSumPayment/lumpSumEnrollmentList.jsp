@@ -67,6 +67,8 @@
 	    		$('#failReason').val('');
 	    	}
 	    });
+
+		loadMemberInfo();
 	});
 
 	function selectList() {
@@ -454,11 +456,20 @@
 					visible : false
 				} ];
 		var gridPros = {
-			enableCellMerge : true,
-			cellMergePolicy : "withNull",
-			editable : false,
-			headerHeight : 30,
-			wordWrap : true
+	             editable            : false,
+	             fixedColumnCount    : 2,
+	             showStateColumn     : false,
+	             displayTreeOpen     : false,
+	             selectionMode       : "multipleCells", //"singleRow",
+	             headerHeight        : 30,
+	             useGroupingPanel    : false,        //그룹핑 패널 사용
+	             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	             showRowNumColumn    : true,      //줄번호 칼럼 렌더러 출력
+
+	             enableCellMerge : true,
+	             cellMergePolicy: "withNull",
+	             showRowBgStyles: false
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 		AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
@@ -968,6 +979,7 @@
 		$('#orgCode').val('');
 		$('#grpCode').val('');
 		$('#deptCode').val('');
+	    loadMemberInfo();
 	}
 
 	//그리드 헤더 클릭 핸들러
@@ -1544,6 +1556,52 @@
 	      };
 	      AUIGrid.exportToXlsx(excelListGridID, excelProps);
   }
+
+  function loadMemberInfo(){
+	    if("${SESSION_INFO.memberLevel}" =="1"){
+
+	        $("#orgCode").val("${orgCode}");
+	        $("#orgCode").attr("class", "w100p readonly");
+	        $("#orgCode").attr("readonly", "readonly");
+
+	    }else if("${SESSION_INFO.memberLevel}" =="2"){
+	        $("#orgCode").val("${orgCode}");
+	        $("#orgCode").attr("class", "w100p readonly");
+	        $("#orgCode").attr("readonly", "readonly");
+
+	        $("#grpCode").val("${grpCode}");
+	        $("#grpCode").attr("class", "w100p readonly");
+	        $("#grpCode").attr("readonly", "readonly");
+
+	    }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+	        $("#orgCode").val("${orgCode}");
+	        $("#orgCode").attr("class", "w100p readonly");
+	        $("#orgCode").attr("readonly", "readonly");
+
+	        $("#grpCode").val("${grpCode}");
+	        $("#grpCode").attr("class", "w100p readonly");
+	        $("#grpCode").attr("readonly", "readonly");
+
+	        $("#deptCode").val("${deptCode}");
+	        $("#deptCode").attr("class", "w100p readonly");
+	        $("#deptCode").attr("readonly", "readonly");
+
+	    }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+	        $("#orgCode").val("${orgCode}");
+	        $("#orgCode").attr("class", "w100p readonly");
+	        $("#orgCode").attr("readonly", "readonly");
+
+	        $("#grpCode").val("${grpCode}");
+	        $("#grpCode").attr("class", "w100p readonly");
+	        $("#grpCode").attr("readonly", "readonly");
+
+	        $("#deptCode").val("${deptCode}");
+	        $("#deptCode").attr("class", "w100p readonly");
+	        $("#deptCode").attr("readonly", "readonly");
+	    }
+	  }
 </script>
 <!-- html content -->
 <section id="content">
@@ -1680,24 +1738,18 @@
 
 					<tr>
 						<th scope="row"><spring:message code="sal.text.orgCode" /></th>
-						<td><input type="text"
-							title="<spring:message code="sal.text.orgCode" />" id="orgCode"
-							name="orgCode" class="w100p" disabled value="${memDetail.orgcde}" />
-							<input type="hidden" title="" id="hidOrgCode" name="hidOrgCode"
-							class="w100p" value="${memDetail.orgcde}" /></td>
+						<td><input type="text" title="<spring:message code="sal.text.orgCode" />" id="orgCode"
+							name="orgCode" class="w100p" value="${orgCode}" />
 						<th scope="row"><spring:message code="sal.text.grpCode" /></th>
-						<td><input type="text"
-							title="<spring:message code="sal.text.orgCode" />" id="grpCode"
-							name="grpCode" class="w100p" disabled value="${memDetail.grpcde}" />
-							<input type="hidden" title="" id="hidGrpCode" name="hidGrpCode"
-							class="w100p" value="${memDetail.grpcde}" /></td>
+						<td>
+							<input type="text"	title="<spring:message code="sal.text.grpCode" />" id="grpCode"
+							name="grpCode" class="w100p" value="${grpCode}" />
+						</td>
 						<th scope="row"><spring:message code="sal.text.detpCode" /></th>
-						<td><input type="text"
-							title="<spring:message code="sal.text.detpCode" />" id="deptCode"
-							name="deptCode" class="w100p" disabled
-							value="${memDetail.deptcde}" /> <input type="hidden" title=""
-							id="hidDeptCode" name="hidDeptCode" class="w100p"
-							value="${memDetail.deptcde}" /></td>
+						<td>
+							<input type="text" title="<spring:message code="sal.text.detpCode" />" id="deptCode"
+							name="deptCode" class="w100p" value="${deptCode}" />
+						</td>
 					</tr>
 				</tbody>
 			</table>

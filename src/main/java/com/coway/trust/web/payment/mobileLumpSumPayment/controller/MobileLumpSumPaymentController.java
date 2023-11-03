@@ -28,6 +28,7 @@ import com.coway.trust.biz.common.EncryptionDecryptionService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -61,16 +62,28 @@ public class MobileLumpSumPaymentController {
     @Resource(name = "encryptionDecryptionService")
     private EncryptionDecryptionService encryptionDecryptionService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@RequestMapping(value = "/lumpSumEnrollmentList.do")
 	public String lumpSumEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		List<EgovMap> userBranch = memberListService.selectUserBranch();
 
-	    EgovMap memDetail = mobilePaymentKeyInService.selectMemDetails(sessionVO);
 	    model.addAttribute("userBranch", userBranch);
-	    model.addAttribute("memDetail", memDetail);
 	    model.addAttribute("memLevel", sessionVO.getMemberLevel());
-	    model.addAttribute("memCode", sessionVO.getUserName());
+
+	    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3 || sessionVO.getUserTypeId() == 7 ||
+		    	sessionVO.getUserTypeId() == 5758 || sessionVO.getUserTypeId() == 6672){
+	    		Map<String,Object> userParam = new HashMap();
+	    		userParam.put("userId", sessionVO.getUserId());
+	    	    EgovMap result =  salesCommonService.getUserInfo(userParam);
+
+	    	    model.addAttribute("orgCode", result.get("orgCode"));
+	    	    model.addAttribute("grpCode", result.get("grpCode"));
+	    	    model.addAttribute("deptCode", result.get("deptCode"));
+	    	    model.addAttribute("memCode", result.get("memCode"));
+		}
 		return "payment/mobileLumpSumPayment/lumpSumEnrollmentList";
 	}
 

@@ -585,6 +585,8 @@
         LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0349m.FAIL_RESN_ID
         LEFT JOIN SYS0005M s0005m1 ON s0005m1.BRNCH_ID = p0349m.CRT_USER_BRNCH
         LEFT JOIN SAL0001D s0001d ON s0001d.SALES_ORD_NO = p0350d.SALES_ORD_NO
+	    LEFT JOIN ORG0001D o0001d ON s0047m1.USER_NAME = o0001d.MEM_CODE
+	    LEFT JOIN ORG1001V o1001v ON o1001v.MEM_ID = o0001d.MEM_ID
         WHERE 1=1
         <if test='grpTicketNo != null and grpTicketNo != ""'>
         	AND p0349m.MOB_PAY_GROUP_NO = TRIM(#{grpTicketNo})
@@ -635,13 +637,13 @@
           AND SUBSTR (p0349m.CARD_NO, 13, 4) = #{cardNoB}
         </if>
 	    <if test='orgCode != null and orgCode != ""'>
-			AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
+			AND o1001v.ORG_CODE = TRIM(#{orgCode})
 		</if>
 		<if test='grpCode != null and grpCode != ""'>
-			AND o0005d.LAST_GRP_CODE = TRIM(#{grpCode})
+			AND o1001v.GRP_CODE = TRIM(#{grpCode})
 		</if>
 		<if test='deptCode != null and deptCode != ""'>
-			AND o0005d.LAST_DEPT_CODE = TRIM(#{deptCode})
+			AND o1001v.DEPT_CODE = TRIM(#{deptCode})
 		</if>
 		ORDER BY p0349m.CRT_DT DESC,p0349m.MOB_PAY_GROUP_NO DESC
 	</select>
