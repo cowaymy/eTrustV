@@ -765,7 +765,8 @@
                        '02', 'RDC',
                        '03', 'CT',
                        '04', 'CODY',
-                       '05', 'RDC',
+                       '05', 'CDC' || chr(38) || 'RDC',
+                       '09', 'DT',
                        S28.WH_LOC_GB)
                   LOCATION_TYPE,
                Case When S28.WH_LOC_CODE = CRDC.CDC_CODE Then (case when CRDC.CDC_CODE = CRDC.RDC_CODE then 0
@@ -2634,7 +2635,7 @@
       FROM  ORG0001D A
       INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
       INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
-                                        AND C.DEPT_CODE = ( SELECT B.DEPT_CODE
+                                        AND C.LAST_GRP_CODE = ( SELECT B.LAST_GRP_CODE
                                                                         FROM ORG0001D A
                                                                         JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
                                                                         WHERE A.MEM_CODE = #{userId})
