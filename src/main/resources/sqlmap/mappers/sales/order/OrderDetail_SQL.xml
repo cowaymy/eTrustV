@@ -122,7 +122,7 @@
                                WHEN V2.EX_TRADE = 1 AND V2.EX_TRADE_PR IS NULL THEN '1'
                                WHEN V2.EX_TRADE = 1 THEN CASE WHEN V2.EX_TRADE_PR= '1' THEN '1' ELSE '0' END
                                END EX_TRADE_PR
-<!--                            , V2.VOUCHER_CODE -->
+                           , V2.VOUCHER_CODE
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -793,7 +793,7 @@
              , V1.CARD_TYPE_ID
              , V1.DDT_CHNL
              , V1.VISA_TYPE
-<!--              , V1.PNPRPS_CRC_NO -->
+             , V1.PNPRPS_CRC_NO
              <!-- Added for eMandate Paperless-phase 2, Hui Ding, 2023-09-06 -->
              , V1.DD_PAPERLESS
     FROM PAY1009V V1
