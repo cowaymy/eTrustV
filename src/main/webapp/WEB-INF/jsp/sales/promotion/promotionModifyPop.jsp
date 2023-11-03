@@ -51,12 +51,12 @@
             $('#advDiscN').prop("checked", true);
         }
 
-//         if('${promoInfo.voucherPromotion}' == '1') {
-//             $('#voucherPromotionY').prop("checked", true);
-//         }
-//         else {
-//             $('#voucherPromotionN').prop("checked", true);
-//         }
+        if('${promoInfo.voucherPromotion}' == '1') {
+            $('#voucherPromotionY').prop("checked", true);
+        }
+        else {
+            $('#voucherPromotionN').prop("checked", true);
+        }
     });
 
     function fn_addOption() {
@@ -176,7 +176,7 @@
                 advDisc                 : $('input:radio[name="advDisc"]:checked').val(),
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
-//                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val()
+                voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -850,13 +850,13 @@
     <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
     <td><input id="promoCode" name="promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
-<!-- <tr> -->
-<!--     <th scope="row">Voucher Promotion</th> -->
-<!--     <td> -->
-<!--         <input id="voucherPromotionY" name="voucherPromotion" type="radio" value="1" /><span>Yes</span> -->
-<!--         <input id="voucherPromotionN" name="voucherPromotion" type="radio" value="0"/><span>No</span> -->
-<!--     </td> -->
-<!-- </tr> -->
+<tr>
+    <th scope="row">Voucher Promotion</th>
+    <td>
+        <input id="voucherPromotionY" name="voucherPromotion" type="radio" value="1" /><span>Yes</span>
+        <input id="voucherPromotionN" name="voucherPromotion" type="radio" value="0"/><span>No</span>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
