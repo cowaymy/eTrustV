@@ -161,62 +161,57 @@
         }, {
           dataField : "padNo",
           headerText : 'PAD No.',
-          width : 120,
+          width : '8%',
           editable : false
         }, {
           dataField : "keyInDate",
-          headerText : 'PAD Key-in Date',
-          width : 120,
-          editable : false
-        }, {
-          dataField : "keyInTimestamp",
-          headerText : 'PAD Key-in Time',
-          width : 120,
+          headerText : 'PAD Key-in at',
+          width : '8%',
           editable : false
         }, {
           dataField : "statusDesc",
           headerText : 'Status',
-          width : 120,
+          width : '6%',
           editable : false
         }, {
           dataField : "salesOrdNo",
           headerText : 'Order Number',
-          width : 100,
+          width : '6%',
           editable : false
         }, {
           dataField : "custName",
           headerText : 'Customer Name',
-          width : 180,
+          width : '8%',
           editable : false
         }, {
           dataField : "creator",
           headerText : 'Creator',
-          width : 110,
+          width : '8%',
           editable : false
         }, {
           dataField : "userBranch",
           headerText : 'User Branch',
-          width : 110,
+          width : '8%',
           editable : false
         }, {
-            dataField : "outstandingMth",
+            dataField : "ordOtstndMth",
             headerText : 'Outstanding Month',
-            width : 110,
+            width : '5%',
             editable : false
         },{
           dataField : "resnDesc",
           headerText : 'Fail Reason',
-          width : 130,
+          width : '10%',
           editable : false
         }, {
           dataField : "remarks",
           headerText : 'Fail Remark',
-          width : 140,
+          width : '10%',
           editable : false
         }, {
           dataField : "lastUpdatedDate",
           headerText : 'Last Update At(By)',
-          width : 180,
+          width : '8%',
           editable : false,
           labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
             var formatString = "";
@@ -234,7 +229,34 @@
             }
             return formatString;
           }
-        }];
+        },{
+            dataField : "custMobile",
+            headerText : 'SMS Contact',
+            width : '8%',
+            editable : false,
+            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+            }
+     },{
+           dataField : "custEmail",
+           headerText : 'Email Address',
+           width : '8%',
+           editable : false,
+           labelFunction : function(rowIndex, columnIndex, value){
+               let maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@"));
+               let postfix= value.substr(value.lastIndexOf("@"));
+
+               for(let i=0; i<prefix.length; i++){
+                   if(i == 0 || i == prefix.length - 1) {
+                       maskedEmail = maskedEmail + prefix[i].toString();
+                   }
+                   else {
+                       maskedEmail = maskedEmail + "*";
+                   }
+               }
+               return maskedEmail =maskedEmail +postfix;
+           }
+     }];
 
     var gridPros = {
       usePaging : true,
@@ -362,7 +384,17 @@
             }
             return formatString;
           }
-        }];
+     },{
+            dataField : "custMobile",
+            headerText : 'SMS Contact',
+            width : 170,
+            editable : false
+     },{
+           dataField : "custEmail",
+           headerText : 'Email Address',
+           width : 170,
+           editable : false
+     }];
 
     //그리드 속성 설정
     var excelGridPros = {
