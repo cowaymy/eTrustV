@@ -10,14 +10,18 @@ var otherFile1Id = 0;
 var otherFile2Id = 0;
 var otherFile3Id = 0;
 var otherFile4Id = 0;
+var otherFile5Id = 0;
+var otherFile6Id = 0;
 
 var cifFileName = "";
 var otherFileName1 = "";
 var otherFileName2 = "";
 var otherFileName3 = "";
 var otherFileName4 = "";
+var otherFileName5 = "";
+var otherFileName6 = "";
 var attachmentInfoList;
-var custType = "${mobileAutoDebitDetail.custType}";
+var custType = `${mobileAutoDebitDetail.custType}`;
 
 
 $(document).ready(function() {
@@ -207,6 +211,40 @@ function fn_attachmentButtonRegister(){
           }
      });
 
+     $('#otherFile5').change(function(evt) {
+         var file = evt.target.files[0];
+         if(file == null) {
+             if(myFileCaches[6] != null){
+                 delete myFileCaches[6];
+             }
+             if(otherFile5Id != '0'){
+                 remove.push(otherFile5Id);
+             }
+         }else if(file.name != otherFileName5) {
+              myFileCaches[6] = {file:file};
+              if(otherFileName5 != "") {
+                  update.push(otherFile5Id);
+              }
+          }
+     });
+
+     $('#otherFile6').change(function(evt) {
+         var file = evt.target.files[0];
+         if(file == null) {
+             if(myFileCaches[7] != null){
+                 delete myFileCaches[7];
+             }
+             if(otherFile6Id != '0'){
+                 remove.push(otherFile6Id);
+             }
+         }else if(file.name != otherFileName6) {
+              myFileCaches[7] = {file:file};
+              if(otherFileName6 != "") {
+                  update.push(otherFile6Id);
+              }
+          }
+     });
+
 	 if(custType.toUpperCase() == "COMPANY"){
 		 $('.optional2').hide();//remove
 		 $('.optional3').hide();//remove
@@ -340,6 +378,8 @@ function doSave(){
         formData.append(n, v.file);
     });
 
+    console.log(formData);
+
 	Common.ajaxFile("/payment/mobileautodebit/attachmentAutoDebitFileUpdate.do", formData, function(result) {
 		if(result.code == 99){
             Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
@@ -443,7 +483,7 @@ function fn_atchViewDown(fileData) {
 }
 
 function loadAttachmentData(){
-	attachmentInfoList = JSON.parse('${autoDebitAttachmentInfo}');
+	attachmentInfoList = ${autoDebitAttachmentInfo};
 
 	if(attachmentInfoList){
 		if(attachmentInfoList.length > 0)
@@ -474,6 +514,16 @@ function loadAttachmentData(){
                 	 otherFile4Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
                 	 otherFileName4 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
                      $(".input_text[id='otherFileTxt4']").val(otherFileName4);
+                     break;
+                 case '6':
+                     otherFile5Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                     otherFileName5 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt5']").val(otherFileName5);
+                     break;
+                 case '7':
+                     otherFile6Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                     otherFileName6 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt6']").val(otherFileName6);
                      break;
                  default:
                      Common.alert("No attachment found.");
@@ -544,6 +594,14 @@ function fn_removeFile(name){
         $("#otherFile4").val("");
         $(".input_text[id='otherFileTxt4']").val("");
         $('#otherFile4').change();
+    }else if(name == "OTH5") {
+        $("#otherFile5").val("");
+        $(".input_text[id='otherFileTxt5']").val("");
+        $('#otherFile5').change();
+    }else if(name == "OTH6") {
+        $("#otherFile6").val("");
+        $(".input_text[id='otherFileTxt6']").val("");
+        $('#otherFile6').change();
     }
 }
 //Attachments

@@ -94,6 +94,40 @@
     </td>
 </tr>
 <tr>
+    <th scope="row">Other 2</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile5" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt5'/>
+                <c:if test="${authFuncChange == 'Y'}">
+                <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
+            </label>
+            <c:if test="${authFuncChange == 'Y'}">
+            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH5")'>Remove</a></span>
+                </c:if>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Other 3</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile6" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt6'/>
+                <c:if test="${authFuncChange == 'Y'}">
+                <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
+            </label>
+            <c:if test="${authFuncChange == 'Y'}">
+            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH6")'>Remove</a></span>
+                </c:if>
+        </div>
+    </td>
+</tr>
+<tr>
     <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
 </tr>
 </tbody>

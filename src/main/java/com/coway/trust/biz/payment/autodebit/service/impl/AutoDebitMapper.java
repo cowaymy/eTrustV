@@ -36,4 +36,5 @@ public interface AutoDebitMapper {
 	EgovMap getProductDescription(Map<String, Object> params);
 	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
 	List<EgovMap> selectCustomerList(Map<String, Object> params);
+	int updateFailReason(Map<String, Object> params);
 }

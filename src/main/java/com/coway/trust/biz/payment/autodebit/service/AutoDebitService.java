@@ -9,6 +9,7 @@ import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -47,4 +48,6 @@ public interface AutoDebitService {
 	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
 
 	List<EgovMap> selectCustomerList(CustomerApiForm param) throws Exception;
+
+	int updateFailReason(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
 }

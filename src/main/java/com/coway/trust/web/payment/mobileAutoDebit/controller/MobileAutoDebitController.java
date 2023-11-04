@@ -320,4 +320,26 @@ public class MobileAutoDebitController {
 
         return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/updateFailReason.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateFailReason(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		ReturnMessage message = new ReturnMessage();
+
+		int updResult = autoDebitService.updateFailReason(params, sessionVO);
+
+        if(updResult >= 1){
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage("<b>Update Success.</b>");
+        }
+        else{
+        	message.setCode(AppConstants.FAIL);
+            message.setMessage("<b>Fail to save. Please try again.</b>");
+        }
+
+		return ResponseEntity.ok(message);
+	}
+
+
 }

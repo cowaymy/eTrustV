@@ -16,6 +16,7 @@
   };
 
   var basicAuth = false;
+  var failReasonList = f_getTtype();
 
   $(document).ready(function() {
     //Branch Combo
@@ -86,6 +87,30 @@
         exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
       };
       AUIGrid.exportToXlsx(excelListGridID, excelProps);
+    });
+
+    $('#updateFailReason').click(function(event){
+    	event.preventDefault();
+    	if(GridCommon.getEditData(myGridID).update.length){
+    	       Common.confirm("<spring:message code='sys.common.alert.save'/>",function(e){
+    	             Common.showLoader();
+    	             fetch("/payment/mobileautodebit/updateFailReason.do",{
+    	                 method: "POST",
+    	                 headers : {
+    	                     "Content-Type": "application/json",
+    	                 },
+    	                 body : JSON.stringify(GridCommon.getEditData(myGridID))
+    	             })
+    	             .then(r=>r.json())
+    	             .then(data=>{
+    	                 Common.removeLoader();
+    	                 Common.alert(data.message,selectList)
+    	             })
+    	         });
+    	}else{
+    		Common.alert('No data selected.');
+    		return;
+    	}
     });
 
     $('#memTyp').change(function() {
@@ -194,16 +219,34 @@
           width : '8%',
           editable : false
         }, {
-            dataField : "ordOtstndMth",
-            headerText : 'Outstanding Month',
-            width : '5%',
-            editable : false
-        },{
-          dataField : "resnDesc",
-          headerText : 'Fail Reason',
-          width : '10%',
+          dataField : "ordOtstndMth",
+          headerText : 'Outstanding Month',
+          width : '5%',
           editable : false
-        }, {
+        },
+        {dataField: "resnDesc",
+          headerText :"Fail Reason" ,
+          width : '10%',
+          labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                var retStr = "";
+
+                for(var i=0,len=failReasonList.length; i<len; i++) {
+                    if(failReasonList[i]["code"] == value) {
+                        retStr = failReasonList[i]["codeName"];
+                        break;
+                    }
+                }
+                return retStr == "" ? value : retStr;
+            },editRenderer :
+            {
+               type : "ComboBoxRenderer",
+               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+               list : failReasonList,
+               keyField : "code",
+               valueField : "codeName"
+            }
+        },
+        {
           dataField : "remarks",
           headerText : 'Fail Remark',
           width : '10%',
@@ -243,8 +286,7 @@
            width : '8%',
            editable : false,
            labelFunction : function(rowIndex, columnIndex, value){
-               let maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@"));
-               let postfix= value.substr(value.lastIndexOf("@"));
+               let maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
 
                for(let i=0; i<prefix.length; i++){
                    if(i == 0 || i == prefix.length - 1) {
@@ -285,8 +327,6 @@
   }
 
   function fn_setDetail(gridID, rowIdx) {
-    console.log("gridid" + gridID);
-    console.log("rowindx" + rowIdx);
     var padidvalue = AUIGrid.getCellValue(gridID, rowIdx, "padId");
     var salesOrdNo = AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo");
     var custCrcId = AUIGrid.getCellValue(gridID, rowIdx, "custCrcId");
@@ -482,6 +522,33 @@
         $("#deptCode").attr("readonly", "readonly");
     }
   }
+
+  function f_getTtype() {
+      var rData = new Array();
+      $.ajax({
+          type : "GET",
+          url : "/payment/mobileautodebit/selectRejectReasonCodeOption.do",
+          dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          async : false,
+          success : function(data) {
+              $.each(data, function(index, value) {
+                  var list = new Object();
+                  list.code = data[index].code;
+                  list.codeId = data[index].codeId;
+                  list.codeName = data[index].codeName;
+                  rData.push(list);
+              });
+          },
+          error : function(jqXHR, textStatus, errorThrown) {
+              Common.alert("Draw ComboBox['" + obj + "'] is failed. \n\n Please try again.");
+          },
+          complete : function() {
+          }
+      });
+
+      return rData;
+  }
 </script>
 <!-- html content -->
 <section id="content">
@@ -632,6 +699,7 @@
     </form>
   </section>
   <ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" id="updateFailReason">Update Fail Reason</a></p></li>
     <li><p class="btn_grid"><a href="#" id="excelDown">Download</a></p></li>
   </ul>
   <!-- search_table end -->

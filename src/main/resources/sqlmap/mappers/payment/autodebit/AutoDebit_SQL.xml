@@ -275,11 +275,12 @@
 	</select>
 
 	<select id="selectRejectReasonCode" parameterType="Map" resultType="egovMap">
-        SELECT RESN_ID CODE, CODE || '-' || RESN_DESC AS CODE_NAME
-        FROM SYS0032M
+        SELECT A.RESN_ID CODE, A.CODE || '-' || A.RESN_DESC AS CODE_NAME
+        FROM SYS0032M A
         WHERE 1=1
-        AND RESN_TYPE_ID = 6852
-        ORDER BY RESN_ID ASC
+        AND A.STUS_CODE_ID = 1
+        AND A.RESN_TYPE_ID = 6852
+        ORDER BY A.CODE ASC
     </select>
 
 	  <select id="selectNextFileGroupId" resultType="int">
@@ -519,4 +520,12 @@
       ) WHERE ROW_NUMBER = 1
     ]]>
   </select>
+
+    <update id="updateFailReason"  parameterType="Map" >
+        UPDATE PAY0333M
+        SET FAIL_REASON_CODE = #{resnDesc},
+               UPT_DT = SYSDATE,
+               UPT_BY = #{updUserId}
+        WHERE PAD_ID = #{padId}
+    </update>
 </mapper>

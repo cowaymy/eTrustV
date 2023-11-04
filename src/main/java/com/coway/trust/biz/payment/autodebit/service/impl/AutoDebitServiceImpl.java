@@ -60,6 +60,7 @@ import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
@@ -674,5 +675,30 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	    else{
 	    	throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
 	    }
-	  }
+   }
+
+
+  @Override
+	public int updateFailReason(Map<String, ArrayList<Object>> params,SessionVO sessionVO)  {
+
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE);
+
+  		int loginId = 0, updResult = 0;
+  		if(sessionVO != null){
+  			loginId = sessionVO.getUserId();
+  		}
+
+  		if(updateList != null && updateList.size() >0){
+      		for (Object list : updateList){
+      			Map<String, Object> map = (Map<String, Object>) list;
+      			map.put("updUserId", loginId);
+      			updResult = autoDebitMapper.updateFailReason(map);
+      		}
+  		}
+
+  		return updResult;
+	}
+
+
+
 }
