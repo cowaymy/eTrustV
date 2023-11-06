@@ -108,6 +108,24 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 	 */
 
 	@Override
+	public EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response) {
+		EgovMap result = new EgovMap();
+		EgovMap request = new EgovMap();
+
+		LOGGER.debug("listBucketObjects : start\n" );
+		String dirName = "";
+		dirName = params.get("dirName").toString();
+		request.put("directory", dirName);
+//		request.put("fileId", fileId);
+		request.put("uploadPath", uploadPath);
+		request.put("fileType", ".xls");
+		awsService.listBucketObjects(request);
+		LOGGER.debug("listBucketObjects : done\n" );
+
+		return result;
+	}
+
+	@Override
 	public EgovMap executeAdvPymt(Map<String, Object> params, HttpServletResponse response) {
 		EgovMap result = new EgovMap();
 		EgovMap fileResultList = new EgovMap();
