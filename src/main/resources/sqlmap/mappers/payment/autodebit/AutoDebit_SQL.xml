@@ -88,7 +88,10 @@
   </select>
 
   <select  id="selectAutoDebitEnrollmentList" parameterType="Map" resultType="egovMap">
-    SELECT z.* FROM
+    SELECT
+	     CASE WHEN z.ORD_OTSTND_MTH <![CDATA[ < ]]> 0 THEN 0 ELSE z.ORD_OTSTND_MTH END ORD_OTSTND_MTH,
+	     z.*
+     FROM
     (
 	    SELECT p0333m.PAD_ID,
 	               p0333m.PAD_NO,

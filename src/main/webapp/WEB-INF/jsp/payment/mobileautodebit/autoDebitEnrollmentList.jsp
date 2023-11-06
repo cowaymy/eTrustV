@@ -33,6 +33,13 @@
       fn_setDetail(myGridID, event.rowIndex);
     });
 
+    AUIGrid.bind(myGridID, "cellEditBegin", function(event){
+    	if(event.item.statusDesc == "Rejected"){
+    		return true;
+    	}
+    	return false;
+    });
+
     //Search
     $("#_listSearchBtn").click(function() {
 
@@ -237,10 +244,11 @@
                     }
                 }
                 return retStr == "" ? value : retStr;
-            },editRenderer :
+            },
+            editRenderer :
             {
                type : "ComboBoxRenderer",
-               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+               showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                list : failReasonList,
                keyField : "code",
                valueField : "codeName"
@@ -365,11 +373,6 @@
           width : 160,
           editable : false
         }, {
-          dataField : "keyInTimestamp",
-          headerText : 'PAD Key-in Time',
-          width : 170,
-          editable : false
-        }, {
           dataField : "statusDesc",
           headerText : 'Status',
           width : 150,
@@ -395,6 +398,11 @@
           width : 170,
           editable : false
         }, {
+          dataField : "ordOtstndMth",
+          headerText : 'Outstanding Month',
+          width : 170,
+          editable : false
+        },{
           dataField : "resnDesc",
           headerText : 'Fail Reason',
           width : 170,
