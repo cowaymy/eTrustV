@@ -970,55 +970,55 @@
     <select id="selectPsmDetail" parameterType="Map" resultType="egovMap">
     </select>
 
-    <select id="selectPSMList" parameterType="Map" resultType="egovMap">
-        /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectPSMList] */
-        SELECT
-            A.PSM_ID,
-            A.PSM_NO,
-            B.SALES_ORD_NO,
-            A.SVM_QUOT_ID,
-            A.STUS,
-            CASE WHEN A.STUS = 1 THEN 'Active'
-                 WHEN A.STUS = 5 THEN 'Complete'
-                 WHEN A.STUS = 6 THEN  'Rejected'
-            END STUS_NAME,
-            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') REQST_DT,
-            B.PAY_AMT TOTAL_AMT,
-            B.PAY_MODE,
-            A.ATCH_FILE_GRP_ID,
-            D.NAME CUST_NAME,
-            NVL(A.APPV_INSTRCT, 0) RESN_ID,
-            NVL(E.RESN_DESC, '-') RESN,
-            NVL(A.APPV_REM, '-') APPV_REM,
-            A.SA_REF
-        FROM SAL0298D A
-        JOIN PAY0312D B
-            ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
-        JOIN SAL0001D C
-            ON B.SALES_ORD_NO = C.SALES_ORD_NO
-        JOIN SAL0029D D
-            ON C.CUST_ID = D.CUST_ID
-        LEFT JOIN SYS0032M E
-            ON A.APPV_INSTRCT = E.RESN_ID
-        WHERE A.CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
-        <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
-            AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
-        </if>
-        <if test="selectType != null and selectType != '' ">
-            <choose>
-                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
-                    AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
-                </when>
-                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
-                    AND UPPER(A.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
-                </when>
-                <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
-                    AND UPPER(A.STUS) = #{selectKeyword}
-                </when>
-            </choose>
-        </if>
-        ORDER BY A.SVM_QUOT_ID DESC
-    </select>
+  <select id="selectPSMList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectPSMList] */
+    SELECT A.PSM_ID,
+               A.PSM_NO,
+               B.SALES_ORD_NO,
+               A.SVM_QUOT_ID,
+               A.STUS,
+               CASE WHEN A.STUS = 1 THEN 'Active'
+                       WHEN A.STUS = 5 THEN 'Complete'
+                       WHEN A.STUS = 6 THEN  'Rejected'
+               END STUS_NAME,
+               TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') REQST_DT,
+               B.PAY_AMT TOTAL_AMT,
+               B.PAY_MODE,
+               A.ATCH_FILE_GRP_ID,
+               D.NAME CUST_NAME,
+               NVL(A.APPV_INSTRCT, 0) RESN_ID,
+               NVL((E.CODE || ' - ' || E.RESN_DESC), '') RESN,
+               NVL(A.APPV_REM, '-') APPV_REM,
+               A.SA_REF,
+               TO_CHAR(F.USER_NAME) as UPD_BY,
+               TO_CHAR(A.UPD_DT, 'MM/DD/YY HH:MI:SS A.M.') AS UPD_DT
+    FROM SAL0298D A
+    JOIN PAY0312D B ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
+    JOIN SAL0001D C ON B.SALES_ORD_NO = C.SALES_ORD_NO
+    JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
+    LEFT JOIN SYS0032M E ON A.APPV_INSTRCT = E.RESN_ID
+    LEFT JOIN SYS0047M F ON A.UPD_USER_ID = F.USER_ID
+    WHERE A.CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+
+    <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+      AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+    </if>
+
+    <if test="selectType != null and selectType != '' ">
+      <choose>
+        <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+        </when>
+        <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(A.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
+        </when>
+        <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(A.STUS) = #{selectKeyword}
+        </when>
+      </choose>
+    </if>
+    ORDER BY A.SVM_QUOT_ID DESC
+  </select>
 
     <select id="selectESvmAttachment" parameterType="Map" resultType="egovMap">
         SELECT
