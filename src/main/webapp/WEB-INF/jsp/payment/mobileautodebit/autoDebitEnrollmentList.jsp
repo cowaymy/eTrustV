@@ -699,7 +699,9 @@
     </form>
   </section>
   <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="updateFailReason">Update Fail Reason</a></p></li>
+    </c:if>
     <li><p class="btn_grid"><a href="#" id="excelDown">Download</a></p></li>
   </ul>
   <!-- search_table end -->

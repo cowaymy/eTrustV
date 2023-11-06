@@ -378,8 +378,6 @@ function doSave(){
         formData.append(n, v.file);
     });
 
-    console.log(formData);
-
 	Common.ajaxFile("/payment/mobileautodebit/attachmentAutoDebitFileUpdate.do", formData, function(result) {
 		if(result.code == 99){
             Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
@@ -471,7 +469,6 @@ function undefinedCheck(value, type){
 };
 
 function fn_atchViewDown(fileData) {
-	console.log(fileData);
         var fileSubPath = fileData.CI_FILE_SUB_PATH;
         fileSubPath = fileSubPath.replace('\', '/'');
 
@@ -526,7 +523,7 @@ function loadAttachmentData(){
                      $(".input_text[id='otherFileTxt6']").val(otherFileName6);
                      break;
                  default:
-                     Common.alert("No attachment found.");
+//                      Common.alert("No attachment found.");
                  	break;
 				}
 			}

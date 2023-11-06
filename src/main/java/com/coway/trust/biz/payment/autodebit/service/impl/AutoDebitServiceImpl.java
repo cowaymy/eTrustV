@@ -248,7 +248,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   public void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params, String seq) {
     LOGGER.debug("insertFile :: Start");
 
-    int atchFlId = Integer.parseInt(params.get("atchFileGroupId").toString());
+    int atchFlId = autoDebitMapper.selectNextFileId();
 
     FileGroupVO fileGroupVO = new FileGroupVO();
 
