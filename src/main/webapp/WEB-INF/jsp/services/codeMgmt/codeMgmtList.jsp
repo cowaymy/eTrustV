@@ -465,7 +465,7 @@ function fn_excelDown() {
         <article class="grid_wrap">
           <!-- grid_wrap start -->
           <!-- 그리드 영역 1-->
-          <div id="largeGrid" style="height:290px;"></div>
+          <div id="largeGrid" style="width: 100%; height: 500px; margin: 0 auto;"></div>
         </article><!-- grid_wrap end -->
 
       </section><!-- search_result end -->
