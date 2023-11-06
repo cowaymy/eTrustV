@@ -148,6 +148,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 				request.put("fileId", file[2]);
 				EgovMap dwldResult = awsService.downloadSingleFile1(request);
 
+				LOGGER.debug("dwldResult : ..........\n" + dwldResult.toString());
 				if(dwldResult != null){
 					if(Integer.parseInt(dwldResult.get("status").toString()) > 0){
 						EgovMap returnResult = this.excelFileProcess(request);

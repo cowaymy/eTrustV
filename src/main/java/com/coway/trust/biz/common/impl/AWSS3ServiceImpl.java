@@ -347,7 +347,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
             logger.info("AWSS3 ServiceImpl downloadSingleFile s3ObjectInputStream : " + s3ObjectInputStream);
 
 
-        	return s3ObjectInputStream;
+        	//return s3ObjectInputStream;
         } catch (final AmazonServiceException ex) {
         	String errorCode = ex.getErrorCode();
 
@@ -357,26 +357,31 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         	if(s3ObjectInputStream != null){
         		s3ObjectInputStream.abort();
         	}
-        	return s3ObjectInputStream;
+        	//return s3ObjectInputStream;
 
-        }catch (final Exception ex) {
+        }catch (AmazonClientException ace) {
+            // Handle errors related to the Amazon S3 client
+        	logger.debug("AmazonClientException code:{}");
+            ace.printStackTrace();
+        } catch (final Exception ex) {
         	logger.info("File download is failed.");
         	logger.error("Error= {} while uploading file.", ex.getMessage());
         	if(s3ObjectInputStream != null){
         		s3ObjectInputStream.abort();
         	}
-        	return s3ObjectInputStream;
+        	//return s3ObjectInputStream;
 
         }
-//        finally {
-//        	if(s3ObjectInputStream!=null) {try {
-//            	s3ObjectInputStream.abort();
-//        		s3ObjectInputStream.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}};
-//        }
+        finally {
+        	if(s3ObjectInputStream!=null) {try {
+            	s3ObjectInputStream.abort();
+        		s3ObjectInputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}};
+			return s3ObjectInputStream;
+        }
 
     }
 
@@ -848,7 +853,11 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 				}
 				s3ObjIs = s3ObjectInputStream;
 
-			} catch (final Exception ex) {
+			} catch (AmazonClientException ace) {
+	            // Handle errors related to the Amazon S3 client
+	            ace.printStackTrace();
+	            logger.error("AmazonClientException = {} .", ace.getMessage());
+	        } catch (final Exception ex) {
 				logger.info("File download is failed.");
 				logger.error("Error= {} while uploading file.", ex.getMessage());
 				if (s3ObjectInputStream != null) {
