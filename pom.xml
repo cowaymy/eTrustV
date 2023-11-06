@@ -37,7 +37,7 @@
 		<repository>
 			<id>mvn2</id>
 			<!-- no Hazelcast use below URL -->
-            <url>http://repo1.maven.org/maven2/</url>
+            <url>https://repo1.maven.org/maven2/</url>
 
             <!-- for Hazelcast use below url
             <url>https://repo1.maven.org/maven2/</url>
@@ -383,7 +383,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.8.0</version>
+			<version>2.8.6</version>
 		</dependency>
 
 		<!-- swagger -->
@@ -566,7 +566,44 @@
           <version>5.2.0</version>
         </dependency>
  -->
+ 
+ <!-- AWS SDK -->
+
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.561</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
+		
+		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
+		<dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+			<version>2.20.103</version>
+        </dependency>
+		
+		<dependency>
+		  <groupId>software.amazon.awssdk</groupId>
+		  <artifactId>s3-transfer-manager</artifactId>
+		  <version>2.20.63</version>
+	   </dependency>
+	   
+	   <dependency>
+		  <groupId>software.amazon.awssdk.crt</groupId>
+		  <artifactId>aws-crt</artifactId>
+		  <version>0.21.12</version>
+	   </dependency>
 	</dependencies>
+	
 
 	<build>
 		<defaultGoal>install</defaultGoal>
