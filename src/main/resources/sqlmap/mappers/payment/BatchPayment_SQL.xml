@@ -453,6 +453,7 @@
 		BATCH_PAY_CUST_TYPE
         ,BATCH_IS_ADV
         ,BATCH_IS_EMANDATE
+        ,IS_BATCH
 		) VALUES
 	    (
 		#{batchId},
@@ -472,6 +473,7 @@
 		#{paymentCustType}
         , #{advance}
         , #{eMandate}
+        , #{isBatch}
 		)
     </insert>
 
@@ -683,8 +685,10 @@
       #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
     </update>
 
+    <resultMap id="confMap1" type="egovMap"></resultMap>
     <update id="callBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">
-        {call SP_BATCH_PAY_VERIFY_DET(#{batchId})}
+        {call SP_BATCH_PAY_VERIFY_DET(#{batchId},
+        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap1} )}
     </update>
 
     <select id="selectBatchPayCardModeId" parameterType="String" resultType="String">

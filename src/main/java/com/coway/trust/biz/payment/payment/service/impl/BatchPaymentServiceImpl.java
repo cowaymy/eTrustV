@@ -123,6 +123,7 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public int saveBatchPaymentUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+		int insResult = 0;
 		int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
 		master.put("batchId", mastetSeq);
 		int mResult = batchPaymentMapper.saveBatchPayMaster(master);
@@ -160,7 +161,10 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 
       //CALL PROCEDURE
-      batchPaymentMapper.callBatchPayVerifyDet(master);
+      insResult = batchPaymentMapper.callBatchPayVerifyDet(master);
+      if(!master.get("p1").toString().equals("1")){
+    	  mastetSeq = -1;
+      }
     }
 
     return mastetSeq;

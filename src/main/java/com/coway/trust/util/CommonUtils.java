@@ -2,21 +2,31 @@ package com.coway.trust.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.SimpleTimeZone;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +34,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.ParseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
@@ -36,15 +52,37 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.web.sales.SalesConstants;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * <pre>
  * 서비스 요청 데이타를 처리함에 있어 공통적으로 처리 될 수 있는 유틸리티성 기능들을 제공하는 클래스
  * </pre>
  */
+@Service
 public final class CommonUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
+	private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+  private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+  private static final String NUMBER = "0123456789";
+  private static final String DATA_FOR_RANDOM_STRING = CHAR_LOWER+CHAR_UPPER+NUMBER;
+  private static SecureRandom random = new SecureRandom();
+
+  private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+  public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+      Pattern.CASE_INSENSITIVE);
+
+  /** Whitespace regular expression. */
+  private static final String WHITESPACE_REGEX = "\\s";
+  /** Base64 validation regular expression. */
+  private static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
+  private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$";
+
 
 	private CommonUtils() {
 	}
@@ -1109,4 +1147,316 @@ public final class CommonUtils {
 		}
 		return cvtTm;
 	}
+
+//From TH common Utils
+
+  public static boolean isJSONValid(String test) {
+      try {
+          new JSONObject(test);
+      } catch (JSONException ex) {
+          // edited, to include @Arthur's comment
+          // e.g. in case JSONArray is valid as well...
+          try {
+              new JSONArray(test);
+          } catch (JSONException ex1) {
+              return false;
+          }
+      }
+      return true;
+  }
+
+  public static boolean isNullOrEmpty(String str) {
+      if(str != null && !str.isEmpty())
+          return false;
+      return true;
+  }
+  public static String generalErrorReturnString(String errorType, String errorMsg, JsonObject jsonObject) {
+    String returnJsonString = "";
+    JsonObject returnJson = new JsonObject();
+    returnJson.addProperty("oRtnCode","ERROR" );
+
+    switch(errorType) {
+      case "MISSINGKEY":
+      returnJson.addProperty("oRtnMsg", "Mandatory Key in Json is missing: Key["+errorMsg+"]");
+      break;
+      case "UNKNOWNKEY":
+      returnJson.addProperty("oRtnMsg", "Key Value in Json is unknown: Key["+errorMsg+"]");
+      break;
+      case "JSONERROR":
+      returnJson.addProperty("oRtnMsg", "Body Contents Error: Body["+errorMsg+"]");
+      break;
+      case "INT-ERR":
+      returnJson.addProperty("oRtnMsg", errorMsg);
+      break;
+      case "UNKNOWN":
+      returnJson.addProperty("oRtnMsg", errorMsg);
+      break;
+      default:
+      returnJson.addProperty("oRtnMsg", errorMsg);
+    }
+
+    returnJson.add("oRtnJson",jsonObject );
+  returnJsonString = returnJson.toString();
+
+
+    return returnJsonString;
+  }
+
+  public static String generalSuccessReturnString(JsonObject jsonObject) {
+    String returnJsonString = "";
+    JsonObject returnJson = new JsonObject();
+    returnJson.addProperty("oRtnCode","OK" );
+    returnJson.addProperty("oRtnMsg", "-");
+
+    returnJson.add("oRtnJson",jsonObject );
+  returnJsonString = returnJson.toString();
+
+
+    return returnJsonString;
+  }
+
+  public static ResponseEntity<Object> httpReqRtnString(String code, Object Msg, JsonObject dataJsonObj, String errorType ) {
+    HttpStatus rtnHttpStatus;
+
+    switch(errorType) {
+      case "br":
+        rtnHttpStatus = HttpStatus.BAD_REQUEST;
+        break;
+      case "ok":
+        rtnHttpStatus = HttpStatus.OK;
+        break;
+        default:
+          rtnHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+
+    JsonObject returnJson = new JsonObject();
+  String returnJsonString = "";
+
+        returnJson.addProperty("oResultCd",code);
+        returnJson.addProperty("oResultMsg",Msg.toString());
+        returnJson.add("oResultData",dataJsonObj);
+        returnJsonString = returnJson.toString();
+  return new ResponseEntity<Object>(returnJsonString, rtnHttpStatus);
+
+  }
+
+  public static ResponseEntity<Object> httpReqRtnString(String code, Object Msg, JsonArray dataJsonArray, String errorType ) {
+    HttpStatus rtnHttpStatus;
+
+    switch(errorType) {
+      case "br":
+        rtnHttpStatus = HttpStatus.BAD_REQUEST;
+        break;
+      case "ok":
+        rtnHttpStatus = HttpStatus.OK;
+        break;
+        default:
+          rtnHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+
+    JsonObject returnJson = new JsonObject();
+  String returnJsonString = "";
+
+        returnJson.addProperty("oResultCd",code);
+        returnJson.addProperty("oResultMsg",Msg.toString());
+        returnJson.add("oResultData",dataJsonArray);
+        returnJsonString = returnJson.toString();
+  return new ResponseEntity<Object>(returnJsonString, rtnHttpStatus);
+
+  }
+
+  public static boolean isJSONArray(String test) {
+      try {
+          new JSONArray(test);
+      } catch (JSONException ex) {
+
+              return false;
+      }
+      return true;
+  }
+
+  public static boolean isJSONObject(String test) {
+      try {
+          new JSONObject(test);
+      } catch (JSONException ex) {
+
+              return false;
+      }
+      return true;
+  }
+  public static String returnMsgBuilderJsonArr(String rtnCode, String rtnMsg, JsonArray rtnJsonArr){
+
+    JsonObject returnJson = new JsonObject();
+    returnJson.addProperty("oRtnCode",rtnCode );
+    returnJson.addProperty("oRtnMsg", rtnMsg);
+    returnJson.add("oRtnJsonArr", rtnJsonArr );
+  return returnJson.toString();
+  }
+  public static String returnMsgBuilderJsonObj(String rtnCode, String rtnMsg, JsonObject rtnJsonArr){
+
+    JsonObject returnJson = new JsonObject();
+    returnJson.addProperty("Result",rtnCode );
+    returnJson.addProperty("ResultMsg", rtnMsg);
+    returnJson.add("oRtnJsonArr", rtnJsonArr );
+  return returnJson.toString();
+  }
+
+public static Map<String, Object> splitQueryString(String str) throws UnsupportedEncodingException {
+    Map<String, Object> query_pairs = new LinkedHashMap<String, Object>();
+    String[] pairs = str.split("&");
+
+    for (String pair : pairs) {
+        int idx = pair.indexOf("=");
+        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        LOGGER.info("splitQueryString.pair & Key:{}:{}",URLDecoder.decode(pair.substring(0, idx), "UTF-8"),URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+    }
+    return query_pairs;
+}
+
+
+public static Map<String, Object> convertPostBodyToMap(String str) {
+    Map<String, Object> query_pairs = new LinkedHashMap<String, Object>();
+    Gson gson = new Gson();
+    try {
+        if(isJSONObject(str)) {
+
+          Type type = new TypeToken<Map<String, Object>>(){}.getType();
+          query_pairs = gson.fromJson(str, type);
+
+        }else {
+
+        query_pairs = splitQueryString(str);
+
+        }
+
+        return query_pairs;
+    }catch (UnsupportedEncodingException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    return query_pairs;
+  }
+}
+
+  public static String generateRandomString(int length) {
+      if (length < 1) throw new IllegalArgumentException();
+
+      StringBuilder sb = new StringBuilder(length);
+      for (int i = 0; i < length; i++) {
+
+      // 0-62 (exclusive), random returns 0-61
+          int rndCharAt = random.nextInt(DATA_FOR_RANDOM_STRING.length());
+          char rndChar = DATA_FOR_RANDOM_STRING.charAt(rndCharAt);
+
+          // debug
+
+          sb.append(rndChar);
+
+      }
+
+      return sb.toString();
+
+  }
+
+
+public static JsonArray jsonArrAGridByType(String AuiGrid, String gridContentsType) {
+      JsonObject  tmpJsonObj  = new JsonObject();
+      JsonElement tmpJsonElem  = null;
+      JsonArray rtnJsonArr  = new JsonArray();
+      Gson gson = new Gson();
+      try {
+        String[] gridContentsTypes = {"add","update","remove","checked"};
+        boolean contains = Arrays.stream(gridContentsTypes).anyMatch(gridContentsType::equals);
+
+        if(!contains) {
+          throw new Exception ("gridContentsType is not correct value:"+gridContentsType);
+        }
+
+        if(!isJSONObject(AuiGrid)) {
+          throw new Exception ("AUIGrid Input is not JsonObject");
+        }
+
+
+        tmpJsonObj  = gson.fromJson(AuiGrid,JsonObject.class);
+
+        if(!tmpJsonObj.has(gridContentsType)){
+          throw new Exception ("No AUIGrid key ("+gridContentsType+")");
+        }
+
+        tmpJsonElem = tmpJsonObj.get(gridContentsType);
+        if(!tmpJsonElem.isJsonArray()) {
+          throw new Exception ("No AUIGrid key ("+gridContentsType+") is Not JsonArray");
+        }
+        rtnJsonArr = tmpJsonElem.getAsJsonArray();
+
+
+
+          return rtnJsonArr;
+      }catch (Exception e) {
+      // TODO Auto-generated catch block
+        LOGGER.error("Unexpected Exception on jsonArrAGridByType:"+e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+public static boolean isInteger(String s) {
+    return isInteger(s,10);
+}
+
+public static boolean isInteger(String s, int radix) {
+    if(s.isEmpty()) return false;
+    for(int i = 0; i < s.length(); i++) {
+        if(i == 0 && s.charAt(i) == '-') {
+            if(s.length() == 1) return false;
+            else continue;
+        }
+        if(Character.digit(s.charAt(i),radix) < 0) return false;
+    }
+    return true;
+}
+
+  public static boolean isValidDate(String date, String DateFormat) {
+
+      boolean valid = false;
+
+      try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormat);
+          // ResolverStyle.STRICT for 30, 31 days checking, and also leap year.
+          LocalDate.parse(date,formatter);
+
+          valid = true;
+
+      } catch (DateTimeParseException e) {
+          //e.printStackTrace();
+        LOGGER.error("DateTimeParseException with Msg:{}",e.getMessage());
+          valid = false;
+      }
+
+      return valid;
+  }
+
+  public static boolean isNumeric(String strNum) {
+      if (strNum == null) {
+          return false;
+      }
+      try {
+          double d = Double.parseDouble(strNum);
+      } catch (NumberFormatException nfe) {
+          return false;
+      }
+      return true;
+  }
+
+  public static boolean isValidBase64(final String s) {
+      final String sanitized = s.replaceAll(WHITESPACE_REGEX, "");
+      return BASE64_PATTERN.matcher(sanitized).matches();
+  }
+
+  public static boolean isValidPassword(String password){
+      Pattern pattern = Pattern.compile(PASSWORD_REGEX);
+      Matcher matcher = pattern.matcher(password);
+      return matcher.matches();
+  }
 }

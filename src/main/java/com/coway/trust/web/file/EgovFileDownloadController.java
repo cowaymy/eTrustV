@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.FileDownException;
@@ -18,6 +20,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.common.AWSS3Service;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.util.EgovBasicLogger;
@@ -57,6 +60,9 @@ public class EgovFileDownloadController {
 
 	@Autowired
 	private FileService fileService;
+
+	@Autowired
+  private AWSS3Service awsservice;
 
 	/**
 	 * 브라우저 구분 얻기.
@@ -357,5 +363,64 @@ public class EgovFileDownloadController {
 
             throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
         }
+    }
+
+    @RequestMapping(value = "/fileDownWebAws.do")
+    public void fileDownWebAws(@RequestParam Map<String, Object> params, HttpServletRequest request,
+        HttpServletResponse response) throws Exception {
+
+      String fileId = (String) params.get("fileId");
+      String subPath = "";
+      String fileName = "";
+      String originalFileName = "";
+      //AWS Stream
+      S3ObjectInputStream s3ObjIs  = null;
+
+      if (StringUtils.isNotEmpty(fileId)) {
+        FileVO fileVO = fileService.getFile(Integer.parseInt(fileId));
+        subPath = fileVO.getFileSubPath();
+        fileName = fileVO.getPhysiclFileName();
+        originalFileName = fileVO.getAtchFileName();
+      } else {
+        subPath = (String) params.get("subPath");
+        fileName = (String) params.get("fileName");
+        originalFileName = (String) params.get("orignlFileNm");
+      }
+      s3ObjIs = awsservice.downloadSingleFile(  subPath, fileName);
+      //File uFile = new File(uploadDirWeb + File.separator + subPath, fileName);
+      //File uFile = new File(uploadDirWeb + File.separator + subPath, fileName);
+      ObjectMetadata metadata =  awsservice.objectMetaData(  subPath, fileName);
+
+      //long fSize = uFile.length();
+      long fSize          =  metadata.getContentLength();
+      String contentsType =  metadata.getContentType();
+
+      if (fSize > 0) {
+        //String mimetype = "application/x-msdownload";
+        //response.setContentType(mimetype);
+        response.setContentType(contentsType);
+        response.setHeader("Set-Cookie", "fileDownload=true; path=/");  ///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+        setDisposition(originalFileName, request, response);
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
+
+        try {
+          //in = new BufferedInputStream(new FileInputStream(uFile));
+          in = new BufferedInputStream(s3ObjIs);
+          out = new BufferedOutputStream(response.getOutputStream());
+
+          FileCopyUtils.copy(in, out);
+          out.flush();
+        } catch (IOException ex) {
+          EgovBasicLogger.ignore("IO Exception", ex);
+        } finally {
+          EgovResourceCloseHelper.close(in, out);
+          if(s3ObjIs!=null) {s3ObjIs.close();}
+        }
+
+      } else {
+
+        throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
+      }
     }
 }

@@ -32,6 +32,7 @@ public class EgovFormBasedFileVo implements Serializable {
 	private long size = 0L;
 	/** 파일 확장자 */
 	private String extension = "";
+	private String fileContentsType = "";
 	/**
 	 * fileName attribute를 리턴한다.
 	 * 
@@ -141,5 +142,14 @@ public class EgovFormBasedFileVo implements Serializable {
 
 	public void setExtension(String extension) {
 		this.extension = extension;
+	}
+
+	public String getFileContentsType() {
+		return fileContentsType;
+	}
+
+	public void setFileContentsType(String fileContentsType) {
+		this.fileContentsType = fileContentsType;
+
 	}
 }

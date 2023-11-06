@@ -129,7 +129,7 @@ public interface BatchPaymentMapper {
 	 * @param params
 	 * @return
 	 */
-	void callBatchPayVerifyDet(Map<String, Object> params);
+	int callBatchPayVerifyDet(Map<String, Object> params);
 
 	String selectBatchPayCardModeId(String cardModeCode);
 	
