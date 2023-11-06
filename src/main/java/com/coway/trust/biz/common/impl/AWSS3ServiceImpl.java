@@ -852,11 +852,14 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 					s3ObjectInputStream.abort();
 				}
 				s3ObjIs = s3ObjectInputStream;
-
+				result.put("status", "-2");
+				result.put("message", ex.getMessage());
 			} catch (AmazonClientException ace) {
 	            // Handle errors related to the Amazon S3 client
 	            ace.printStackTrace();
 	            logger.error("AmazonClientException = {} .", ace.getMessage());
+	            result.put("status", "-3");
+				result.put("message", ace.getMessage());
 	        } catch (final Exception ex) {
 				logger.info("File download is failed.");
 				logger.error("Error= {} while uploading file.", ex.getMessage());
@@ -864,7 +867,8 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 					s3ObjectInputStream.abort();
 				}
 				s3ObjIs = s3ObjectInputStream;
-
+				result.put("status", "-4");
+				result.put("message", ex.getMessage());
 			}
 
 			if (s3ObjIs == null) {
@@ -921,6 +925,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 			result.put("message", e.getMessage());
 		} finally {
 			// if(s3ObjIs!=null) { try { s3ObjIs.abort(); s3ObjIs.close();}catch (Exception e) {}};
+			logger.error("downloadSingleFile1 finally");
 			return result;
 		}
 	}
