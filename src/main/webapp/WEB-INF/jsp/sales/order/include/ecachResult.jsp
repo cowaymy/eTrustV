@@ -31,11 +31,13 @@
     }
 
     function displayEcashValidity(){
-    	let orderDt =  `${orderDetail.basicInfo.ordDt}`;
-    	const getDateArray = orderDt.split(" ");
-    	const startDate = moment(getDateArray[0]).format('DD/MM/YYYY');
-    	const endDate = moment(getDateArray[0]).add(30, 'days').format('DD/MM/YYYY');
-    	document.querySelector("#ecashValidityPeriod").innerHTML = `<h1>eCash validity period : ` + startDate + ` - `+ endDate + `</h1>`
+    	if(`${orderDetail.basicInfo.appTypeDesc}` == "Rental"){
+	    	let orderDt =  `${orderDetail.basicInfo.ordDt}`;
+	    	const getDateArray = orderDt.split(" ");
+	    	const startDate = moment(getDateArray[0]).format('DD/MM/YYYY');
+	    	const endDate = moment(getDateArray[0]).add(30, 'days').format('DD/MM/YYYY');
+	    	document.querySelector("#ecashValidityPeriod").innerHTML = `<h1>eCash validity period : ` + startDate + ` - `+ endDate + `</h1>`
+    	}
     }
 
 </script>
