@@ -132,7 +132,7 @@ public class TagMgmtController {
   }
 
   @RequestMapping(value = "/selectTagStatus")
-  ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params, HttpServletRequest request) {
+  ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
     String[] statusList = request.getParameterValues("statusList");
     String[] sub_department = request.getParameterValues("sub_department");
     params.put("listStatus", statusList);
@@ -156,6 +156,10 @@ public class TagMgmtController {
     	    Object[] commaCm= cmCode.toArray();
     		params.put("cmGroup", commaCm);
 
+    }
+
+    if (sessionVO.getUserTypeId() == 2) {
+    	params.put("isCD", sessionVO.getUserMemCode());
     }
 
     List<EgovMap> notice = tagMgmtService.getTagStatus(params);
