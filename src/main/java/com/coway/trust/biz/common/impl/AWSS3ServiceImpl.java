@@ -906,7 +906,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
+			logger.error("downloadSingleFile1: {}", e.toString());
 			// return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 			result.put("status", "-1");
 			result.put("message", e.getMessage());

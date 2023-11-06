@@ -148,19 +148,25 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 				request.put("fileId", file[2]);
 				EgovMap dwldResult = awsService.downloadSingleFile1(request);
 
-				if(Integer.parseInt(dwldResult.get("status").toString()) > 0){
-					EgovMap returnResult = this.excelFileProcess(request);
+				if(dwldResult != null){
+					if(Integer.parseInt(dwldResult.get("status").toString()) > 0){
+						EgovMap returnResult = this.excelFileProcess(request);
 
-					//success and move the file to archieve
-					if(Integer.parseInt(returnResult.get("status").toString()) >= 0){
-						result = this.moveFileLocal(request);
+						//success and move the file to archieve
+						if(Integer.parseInt(returnResult.get("status").toString()) >= 0){
+							result = this.moveFileLocal(request);
 
-						request.put("sourceFile", dirName + "/" + fileId);
-						request.put("targetFile", dirName + "/arhive/" + fileId);
-						awsService.moveFile(request);
-					}else{
-						result = returnResult;
+							request.put("sourceFile", dirName + "/" + fileId);
+							request.put("targetFile", dirName + "/arhive/" + fileId);
+							awsService.moveFile(request);
+						}else{
+							result = returnResult;
+						}
 					}
+				}else{
+					result.put("status", "-1");
+					result.put("message", "dwldResult is null");
+					LOGGER.debug("dwldResult : Failed..........\n");
 				}
 			}
 
