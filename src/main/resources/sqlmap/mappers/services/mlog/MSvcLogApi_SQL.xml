@@ -457,10 +457,11 @@
 
   <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
     <![CDATA[
-      SELECT /*+ use_nl(A, MST1, SUB1  ) */
+      SELECT
              SUB2.Membership_Contract_Expiry AS MEMBERSHIP_CONTRACT_EXPIRY,
              MST1.*,
-             TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty,
+             NULL AS warranty,
+             /* TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty, */
              /* FN_GET_SVC_MADDRESS (sales_Order_No, 'POST') postcode, */
              /* FN_GET_SVC_MADDRESS (sales_Order_No, 'STATE') service_State, */
              /* FN_GET_SVC_MADDRESS (sales_Order_No, 'FULL_ADDR') install_Address, */
@@ -735,7 +736,7 @@
                                      AND F.MEM_CODE = #{userId}
                                       )) B
            ON A.service_No = B.AS_NO) MST1
-           LEFT OUTER JOIN
+           /* LEFT OUTER JOIN
            (SELECT *
             FROM (SELECT ROW_NUMBER () OVER (PARTITION BY Project1.SALES_ORD_ID, Project1.SRV_PRD_EXPR_DT ORDER BY Project1.SRV_PRD_EXPR_DT DESC) RNUM,
                          Project1.SRV_PRD_START_DT SRV_PRD_START_DT,
@@ -760,7 +761,7 @@
                         JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
                   WHERE 1 = 1) Project1)
              WHERE RNUM = 1) SUB1
-           ON MST1.SALES_ORDER_NO = SUB1.SALES_ORD_NO
+           ON MST1.SALES_ORDER_NO = SUB1.SALES_ORD_NO */
             LEFT JOIN
            (select
            TO_CHAR(MAX(A.SRV_EXPR_DT),'YYYYMMDD') AS Membership_Contract_Expiry ,
