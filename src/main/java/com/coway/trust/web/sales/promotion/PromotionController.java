@@ -255,12 +255,22 @@ public class PromotionController {
 	}
 
 	@RequestMapping(value = "/selectPromotionApprovalList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPromotionApprovalList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectPromotionApprovalList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		String[] arrPromoAppTypeId   = request.getParameterValues("promoAppTypeId"); //Promotion Application
 		String[] arrPromoTypeId   = request.getParameterValues("promoTypeId"); //Promotion Type
 
 		List<String> lPromoAppTypeId = new ArrayList<String>();
+
+		int roleId;
+		if (sessionVO == null) {
+			roleId = 99999999;
+		} else {
+			roleId = sessionVO.getRoleId();
+		}
+
+    	params.put("roleId", roleId);
+
 
 		for(String s : arrPromoAppTypeId){
 
@@ -297,6 +307,7 @@ public class PromotionController {
 		logger.debug("!@###### promoDt : "+params.get("promoDt"));
 		logger.debug("!@###### promoStusId : "+params.get("promoStusId"));
 		logger.debug("!@###### promoDesc : "+params.get("promoDesc"));
+		logger.debug("!@###### roleId : "+params.get("roleId"));
 		logger.debug("!@##############################################################################");
 
 		List<EgovMap> resultList = promotionService.selectPromotionApprovalList(params);

@@ -1056,6 +1056,7 @@
           FROM SAL0358M T1
           LEFT JOIN SYS0047M U1 ON U1.USER_ID = T1.CRT_USER_ID
           LEFT JOIN SYS0047M U2 ON U2.USER_ID = T1.APPV_USER_ID
+          LEFT JOIN SYS0045M U3 ON U3.USER_ID = T1.CRT_USER_ID
           LEFT OUTER
           JOIN SYS0013M T2
             ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
@@ -1087,6 +1088,12 @@
          </if>
          <if test='promoDesc != null and promoDesc !=""'>
            AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+         <if test='roleId == "236"'>
+           AND U3.ROLE_ID IN ('237', '238')
+         </if>
+         <if test='roleId == "96"'>
+           AND U3.ROLE_ID IN ('95')
          </if>
     </select>
 
