@@ -115,6 +115,29 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     private AmazonS3 amazonS3Client() {
     	logger.info("Start loading AmazonS3 Client with {}:{}:{}:{}",accessKey,secretKey,region,bucket);
+
+    	try{
+    	AmazonS3 aa = AmazonS3ClientBuilder
+                .standard()
+                .withRegion(Regions.AP_SOUTHEAST_1)
+                //.withRegion(region)
+//                .withEndpointConfiguration(new EndpointConfiguration(
+//                        "https://s3.eu-west-1.amazonaws.com",
+//                        region))
+                .withCredentials(new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(accessKey, secretKey)))
+                .build();
+    	} catch (AmazonServiceException ase) {
+            // Handle errors related to Amazon Web Services (AWS) service
+            ase.printStackTrace();
+        } catch (AmazonClientException ace) {
+            // Handle errors related to the Amazon S3 client
+            ace.printStackTrace();
+        } catch (Exception e) {
+            // Handle any other exceptions that may occur
+            e.printStackTrace();
+        }
+
         return AmazonS3ClientBuilder
                 .standard()
                 .withRegion(Regions.AP_SOUTHEAST_1)
