@@ -108,7 +108,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 	 */
 
 	@Override
-	public EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response) {
+	public EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response) throws Exception {
 		EgovMap result = new EgovMap();
 		EgovMap request = new EgovMap();
 
@@ -126,7 +126,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 	}
 
 	@Override
-	public EgovMap executeAdvPymt(Map<String, Object> params, HttpServletResponse response) {
+	public EgovMap executeAdvPymt(Map<String, Object> params, HttpServletResponse response) throws Exception {
 		EgovMap result = new EgovMap();
 		EgovMap fileResultList = new EgovMap();
 		EgovMap request = new EgovMap();

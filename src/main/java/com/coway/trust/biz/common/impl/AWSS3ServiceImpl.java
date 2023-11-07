@@ -113,11 +113,12 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private AmazonS3 amazonS3Client() {
+    private AmazonS3 amazonS3Client() throws Exception{
     	logger.info("Start loading AmazonS3 Client with {}:{}:{}:{}",accessKey,secretKey,region,bucket);
 
+    	AmazonS3 aa = null;
     	try{
-    	AmazonS3 aa = AmazonS3ClientBuilder
+    		aa = AmazonS3ClientBuilder
                 .standard()
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 //.withRegion(region)
@@ -138,16 +139,17 @@ public class AWSS3ServiceImpl implements AWSS3Service {
             e.printStackTrace();
         }
 
-        return AmazonS3ClientBuilder
-                .standard()
-                .withRegion(Regions.AP_SOUTHEAST_1)
-                //.withRegion(region)
-//                .withEndpointConfiguration(new EndpointConfiguration(
-//                        "https://s3.eu-west-1.amazonaws.com",
-//                        region))
-                .withCredentials(new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(accessKey, secretKey)))
-                .build();
+        return aa;
+//        AmazonS3ClientBuilder
+//                .standard()
+//                .withRegion(Regions.AP_SOUTHEAST_1)
+//                //.withRegion(region)
+////                .withEndpointConfiguration(new EndpointConfiguration(
+////                        "https://s3.eu-west-1.amazonaws.com",
+////                        region))
+//                .withCredentials(new AWSStaticCredentialsProvider(
+//                        new BasicAWSCredentials(accessKey, secretKey)))
+//                .build();
     }
 
 //    @Lazy
@@ -635,15 +637,21 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     }
 
 
-    private PutObjectResult upload(String filePath, String uploadKey) throws FileNotFoundException {
+    private PutObjectResult upload(String filePath, String uploadKey) throws Exception {
         return upload(new FileInputStream(filePath), uploadKey);
     }
 
-    private PutObjectResult upload(InputStream inputStream, String uploadKey) {
+    private PutObjectResult upload(InputStream inputStream, String uploadKey) throws Exception {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadKey, inputStream, new ObjectMetadata());
 
         putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-        AmazonS3 amazonS3 = this.amazonS3Client();
+        AmazonS3 amazonS3 = null;
+		try {
+			amazonS3 = this.amazonS3Client();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         PutObjectResult putObjectResult = amazonS3.putObject(putObjectRequest);
 
         IOUtils.closeQuietly(inputStream);
@@ -651,23 +659,24 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         return putObjectResult;
     }
 
-    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) {
+    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) throws IOException {
         List<PutObjectResult> putObjectResults = new ArrayList<>();
 
         Arrays.stream(multipartFiles)
                 .filter(multipartFile -> !StringUtils.isEmpty(multipartFile.getOriginalFilename()))
                 .forEach(multipartFile -> {
                     try {
-                        putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+						putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 });
 
         return putObjectResults;
     }
 
-    public ResponseEntity<byte[]> download(String key) throws IOException {
+    public ResponseEntity<byte[]> download(String key) throws Exception {
 
 
 
@@ -699,8 +708,14 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
     }
 
-    public List<S3ObjectSummary> list() {
-        AmazonS3 amazonS3 = this.amazonS3Client();
+    public List<S3ObjectSummary> list() throws Exception {
+        AmazonS3 amazonS3 = null;
+		try {
+			amazonS3 = this.amazonS3Client();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         ObjectListing objectListing = amazonS3.listObjects(new ListObjectsRequest().withBucketName(bucket));
 
         List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
@@ -953,7 +968,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 		}
 	}
 
-	public EgovMap listBucketObjects(EgovMap request) {
+	public EgovMap listBucketObjects(EgovMap request) throws Exception {
 
 		EgovMap result = new EgovMap();
 		S3Object s3Object = null;
@@ -1020,7 +1035,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 		return result;
 	    }
 
-	public EgovMap moveFile(EgovMap request) {
+	public EgovMap moveFile(EgovMap request) throws Exception {
 		EgovMap result = new EgovMap();
         String sourceKey = request.get("sourceFile").toString();
         String targetKey = request.get("targetFile").toString();

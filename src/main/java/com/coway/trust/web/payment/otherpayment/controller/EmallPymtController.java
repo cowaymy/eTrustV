@@ -53,13 +53,13 @@ public class EmallPymtController {
   }*/
 
   @RequestMapping(value = "/executeAdvPymtTesting.do")
-  public ResponseEntity<EgovMap> executeAdvPymtTesting(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) {
+  public ResponseEntity<EgovMap> executeAdvPymtTesting(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) throws Exception {
     EgovMap result = emallPymtService.executeAdvPymtTesting(params,response);
     return ResponseEntity.ok(result);
   }
 
   @RequestMapping(value = "/executeAdvPymt.do")
-  public ResponseEntity<EgovMap> executeAdvPymt(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) {
+  public ResponseEntity<EgovMap> executeAdvPymt(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) throws Exception {
     EgovMap result = emallPymtService.executeAdvPymt(params,response);
     return ResponseEntity.ok(result);
   }

@@ -14,9 +14,9 @@ public interface EmallPymtService
 
   List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params);*/
 
-  EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response);
+  EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response)  throws Exception;
 
-  EgovMap executeAdvPymt(Map<String, Object> params, HttpServletResponse response);
+  EgovMap executeAdvPymt(Map<String, Object> params, HttpServletResponse response)  throws Exception;
 
   EgovMap excelFileProcess(Map<String, Object> params);
 

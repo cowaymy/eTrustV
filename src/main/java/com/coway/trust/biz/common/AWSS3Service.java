@@ -20,8 +20,8 @@ public interface AWSS3Service {
 	JsonObject uploadFile( String dirName, MultipartFile multipartFile, HashMap<String,String> hashMap, String fileId);
 	S3ObjectInputStream downloadSingleFile(  String dirName, String fileId);
 	EgovMap downloadSingleFile1( EgovMap request);
-	EgovMap listBucketObjects( EgovMap request);
-	EgovMap moveFile( EgovMap request);
+	EgovMap listBucketObjects( EgovMap request)  throws Exception;
+	EgovMap moveFile( EgovMap request)  throws Exception;
 	ObjectMetadata objectMetaData(  String dirName, String fileId);
 
 	JsonObject uploadStream( String dirName, String fileName, InputStream is,
