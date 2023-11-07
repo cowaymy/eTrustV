@@ -1450,7 +1450,6 @@ FROM (
              , NULL
              , T1.PROMO_IS_TRIAL_CNVR
              , T1.PROMO_PRC_PRCNT
-             , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION
              , DECODE(T1.PROMO_CUST_TYPE, 964, 'Individual', 965, 'Company', 'All') PROMO_CUST_TYPE_DESC
              , T1.PROMO_CUST_TYPE
              , T1.PROMO_DISC_TYPE
