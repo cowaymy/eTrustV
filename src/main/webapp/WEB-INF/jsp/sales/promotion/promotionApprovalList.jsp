@@ -461,13 +461,6 @@
                           $('#advDiscN').prop("checked", true);
                       }
 
-                      if(promoInfo.voucherPromotion == '1') {
-                          $('#voucherPromotionY').prop("checked", true);
-                      }
-                      else {
-                          $('#voucherPromotionN').prop("checked", true);
-                      }
-
                       $('#modifyForm').find(':input').prop("disabled", true);
 
                       fn_selectPromotionPrdListAjax(promoReqstId, val);
@@ -534,13 +527,6 @@
                       }
                       else {
                           $('#v_advDiscN').prop("checked", true);
-                      }
-
-                      if(promoInfo.voucherPromotion == '1') {
-                          $('#v_voucherPromotionY').prop("checked", true);
-                      }
-                      else {
-                          $('#v_voucherPromotionN').prop("checked", true);
                       }
 
                       $('#viewForm').find(':input').prop("disabled", true);
@@ -1023,7 +1009,6 @@
                   promoESales             :$('#eSales').val().trim(),
                   appvStus                :$('#appvStatus').val(),
                   appvRemark              :$('#appvRemark').val(),
-                  voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1095,7 +1080,6 @@
               promoESales             :$('#eSales').val().trim(),
               appvStus                :$('#appvStatus').val(),
               appvRemark              :$('#appvRemark').val(),
-              voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val()
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1302,13 +1286,6 @@
     <td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
     <td><input id="promoCode" name="promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" disabled/></td>
-</tr>
-<tr>
-    <th scope="row">Voucher Promotion</th>
-    <td>
-        <input id="voucherPromotionY" name="voucherPromotion" type="radio" value="1" /><span>Yes</span>
-        <input id="voucherPromotionN" name="voucherPromotion" type="radio" value="0"/><span>No</span>
-    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1537,13 +1514,6 @@
     <td><input id="v_promoDesc" name="v_promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
     <td><input id="v_promoCode" name="v_promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" disabled/></td>
-</tr>
-<tr>
-    <th scope="row">Voucher Promotion</th>
-    <td>
-        <input id="v_voucherPromotionY" name="v_voucherPromotion" type="radio" value="1" /><span>Yes</span>
-        <input id="v_voucherPromotionN" name="v_voucherPromotion" type="radio" value="0"/><span>No</span>
-    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

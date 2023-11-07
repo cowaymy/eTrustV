@@ -118,7 +118,7 @@
                 advDisc                : $('input:radio[name="advDisc"]:checked').val(),
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
-                voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
+          //      voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
                 chgRemark              :$('#chgRemark').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
