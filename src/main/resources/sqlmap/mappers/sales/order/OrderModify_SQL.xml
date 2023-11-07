@@ -362,7 +362,7 @@
 		     , LAST_APPLY_USER = #{lastApplyUser}
 		     , PAY_TRM         = #{payTrm}
 		     , GRACE_PERIOD = 0
-<!--              , PNPRPS_CRC_NO   = #{pnpRpsCrcNo} -->
+             , PNPRPS_CRC_NO   = #{pnpRpsCrcNo}
 		 WHERE RENT_PAY_ID     = #{rentPayId}
     </update>
 

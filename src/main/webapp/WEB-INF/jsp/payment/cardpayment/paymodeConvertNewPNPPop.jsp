@@ -197,15 +197,16 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
     }
 
     $(function(){
-    $('#cnvrType').change(function(){
-        $("#newCnvrRem").val('');
-        $("#fileSelector").val('');
-        $("#hiddenTotal").val('');
-        AUIGrid.clearGridData(uploadGrid);
-        AUIGrid.clearGridData(cnvrListGrid);
+        $('#cnvrType').change(function(){
+        	$("#newCnvrForm").trigger("reset");
+            AUIGrid.clearGridData(uploadGrid);
+            AUIGrid.clearGridData(cnvrListGrid);
+        });
 
+        $('#_clearBtn').click(function(){
+        	$('#cnvrType').change();
+        });
 
-    });
     });
 
     function setInputFile(){
