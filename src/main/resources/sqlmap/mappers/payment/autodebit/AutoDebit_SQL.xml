@@ -108,8 +108,8 @@
 	               TO_CHAR(s0028d.CUST_CRC_CRT_DT,'DD/MM/YYYY') AS CRC_APPLY_DATE,
 	               NVL(FLOOR((SELECT NVL(SUM(p0022d.RENT_AMT) , 0)  FROM PAY0022D p0022d WHERE  p0022d.RENT_SO_ID = s0001d.SALES_ORD_ID group by p0022d.RENT_SO_ID) /
 	               (CASE WHEN p0286d.REBATE_AMT_PER_INSTLMT IS NOT NULL THEN (s0001D.MTH_RENT_AMT - p0286d.REBATE_AMT_PER_INSTLMT) ELSE  s0001D.MTH_RENT_AMT END)),0) ORD_OTSTND_MTH,
-	               s0029d.EMAIL AS CUST_EMAIL,
-	               s0027d.TEL_M1 AS CUST_MOBILE
+	               p0333m.CUST_EMAIL AS CUST_EMAIL,
+	               p0333m.CUST_PHONE AS CUST_MOBILE
 	    FROM PAY0333M p0333m
 	    LEFT JOIN SAL0029D s0029d ON p0333m.CUST_ID = s0029d.CUST_ID
 	    LEFT JOIN SYS0038M s0038m ON p0333m.STUS_CODE_ID = s0038m.STUS_CODE_ID
@@ -122,7 +122,6 @@
 	    LEFT JOIN SAL0028D s0028d ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
 	    LEFT JOIN SAL0001D s0001d ON s0001D.SALES_ORD_NO = p0333m.SALES_ORD_NO
 	    LEFT JOIN PAY0286D p0286d on p0286d.ORD_ID = s0001d.SALES_ORD_ID AND p0286d.STUS_ID = 1 AND p0286d.CNTRCT_ID = 0
-	    LEFT JOIN SAL0027D s0027d ON s0001d.CUST_CNT_ID = s0027d.CUST_CNTC_ID
 	    WHERE 1=1
 	    <if test='padNo != null and padNo != ""'>
 	      AND p0333m.PAD_NO = TRIM(#{padNo})
@@ -365,11 +364,11 @@
     <insert id="insertAutoDebitMobileSubmmisionData" parameterType="Map">
 		INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
 		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
-		ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID)
+		ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID,CUST_PHONE, CUST_NEW_PHONE, CUST_EMAIL, CUST_NEW_EMAIL)
 		VALUES
 		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
 		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
-		TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId})
+		TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId},#{sms1}, #{sms2},#{email1}, #{email2})
 	</insert>
 
 	<select id="getSmsTemplate" parameterType="Map" resultType="String">
