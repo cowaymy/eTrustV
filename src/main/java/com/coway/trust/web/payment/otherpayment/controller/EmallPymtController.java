@@ -54,7 +54,7 @@ public class EmallPymtController {
 
   @RequestMapping(value = "/executeAdvPymtTesting.do")
   public ResponseEntity<EgovMap> executeAdvPymtTesting(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) {
-    EgovMap result = emallPymtService.executeAdvPymt(params,response);
+    EgovMap result = emallPymtService.executeAdvPymtTesting(params,response);
     return ResponseEntity.ok(result);
   }
 
