@@ -91,7 +91,7 @@ public class MainNoticeController {
 
 	@RequestMapping(value = "/getSalesOrgPerf.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> getSalesOrgPerf(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
-        params.put("userId", sessionVO.getUserId());
+        params.put("memId", sessionVO.getMemId());
         List<EgovMap> notice = mainNoticeService.getSalesOrgPerf(params);
         return ResponseEntity.ok(notice);
     }
