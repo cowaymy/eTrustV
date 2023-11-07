@@ -139,6 +139,8 @@ public class AWSS3ServiceImpl implements AWSS3Service {
             e.printStackTrace();
         }
 
+    	logger.info("end loading AmazonS3 Client ");
+
         return aa;
 //        AmazonS3ClientBuilder
 //                .standard()
