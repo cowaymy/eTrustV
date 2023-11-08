@@ -139,7 +139,7 @@
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 				}else{
-					if(year >= 2023 && month >=11 || year > 2023)
+					if(year >= 2023 && month >=10 || year > 2023)
                     {
                         reportFileName = "/commission/HPComm_PDF_202311.rpt"; //reportFileName
                     }
