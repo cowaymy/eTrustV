@@ -442,54 +442,54 @@ public class LoginController {
 					LOGGER.debug("============ ACCEPTED =============");
 					// HM, SM, GM Renewal
 					if ("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-						Date currDate = new Date(); // Current Date
-						Date janRe = null; // January Renewal
-						Date julRe = null; // July Renewal
-						Date cnfmDate = null; // Agreement Confirmation Date
-
-						Calendar cal = Calendar.getInstance();
-
-						cal.setTime(currDate);
-						int cYear = cal.get(Calendar.YEAR);
-						int cMth = cal.get(Calendar.MONTH);
-						if (cMth < 7) {
-							cMth = 1;
-						} else {
-							cMth = 2;
-						}
-
-						//popType B - Short Term Extension Agreement for HM, SM and GM
-						try {
-							janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
-							julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
-							cnfmDate = sdf.parse(cnfmDt);
-
-							switch (cMth) {
-							case 1:
-								if (cnfmDate.compareTo(janRe) < 0) {
-									params.put("roleId", item1.get("roleType"));
-									params.put("popType", "B");
-								} else {
-									params.put("popType", "M");
-								}
-								break;
-							case 2:
-								if (cnfmDate.compareTo(julRe) < 0) {
-									params.put("roleId", item1.get("roleType"));
-									params.put("popType", "B");
-								} else {
-									params.put("popType", "M");
-								}
-								break;
-							default:
-								params.put("popType", "M");
-								break;
-							}
-						} catch (Exception e) {
-							LOGGER.error(e.toString());
-						}
+//						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//
+//						Date currDate = new Date(); // Current Date
+//						Date janRe = null; // January Renewal
+//						Date julRe = null; // July Renewal
+//						Date cnfmDate = null; // Agreement Confirmation Date
+//
+//						Calendar cal = Calendar.getInstance();
+//
+//						cal.setTime(currDate);
+//						int cYear = cal.get(Calendar.YEAR);
+//						int cMth = cal.get(Calendar.MONTH);
+//						if (cMth < 7) {
+//							cMth = 1;
+//						} else {
+//							cMth = 2;
+//						}
+//
+//						//popType B - Short Term Extension Agreement for HM, SM and GM
+//						try {
+//							janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
+//							julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
+//							cnfmDate = sdf.parse(cnfmDt);
+//
+//							switch (cMth) {
+//							case 1:
+//								if (cnfmDate.compareTo(janRe) < 0) {
+//									params.put("roleId", item1.get("roleType"));
+//									params.put("popType", "B");
+//								} else {
+//									params.put("popType", "M");
+//								}
+//								break;
+//							case 2:
+//								if (cnfmDate.compareTo(julRe) < 0) {
+//									params.put("roleId", item1.get("roleType"));
+//									params.put("popType", "B");
+//								} else {
+//									params.put("popType", "M");
+//								}
+//								break;
+//							default:
+//								params.put("popType", "M");
+//								break;
+//							}
+//						} catch (Exception e) {
+//							LOGGER.error(e.toString());
+//						}
 					}
 					// Cody agreement renewal
 					else if ("0002".equals(userTypeId) && "121".equals(item1.get("roleType"))) {

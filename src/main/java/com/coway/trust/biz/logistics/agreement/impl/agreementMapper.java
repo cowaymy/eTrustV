@@ -28,6 +28,18 @@ public interface agreementMapper {
     EgovMap cdEagmt1(Map<String, Object> params);
 
     int checkConsent(Map<String, Object> params);
-    
+
     List<EgovMap> consentList(Map<String, Object> params);
+
+    List<EgovMap> selectAgreementHistoryList(Map<String, Object> params);
+
+    int insertUploadNamelist(Map<String, Object> params);
+
+    int selectNextAplctnIdSeq();
+
+    int insertNewAgreementPop(Map<String, Object> params);
+
+    int updateMemberAgreementAplictnId(Map<String, Object> params);
+
+    int selectCurrentUserRole(Map<String, Object> params);
 }

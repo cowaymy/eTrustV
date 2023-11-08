@@ -7,7 +7,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.agreement.agreementService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -64,14 +67,43 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
     public EgovMap cdEagmt1(Map<String, Object> params) {
         return agreementMapper.cdEagmt1(params);
     }
-	
+
 	@Override
 	public int checkConsent(Map<String, Object> params) {
 	    return agreementMapper.checkConsent(params);
 	}
-	
+
 	@Override
     public List<EgovMap> consentList(Map<String, Object> params) {
         return agreementMapper.consentList(params);
     }
+
+	@Override
+    public List<EgovMap> selectAgreementHistoryList(Map<String, Object> params) {
+        return agreementMapper.selectAgreementHistoryList(params);
+    }
+
+	@Override
+	public ReturnMessage agreementNamelistUpload(List<Map<String, Object>> params,
+			SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		int userId = sessionVO.getUserId();
+
+		for(int i = 0; i < params.size(); i++) {
+			Map<String, Object> item = (Map<String, Object>) params.get(i);
+			int aplicntIdSeq = agreementMapper.selectNextAplctnIdSeq();
+			int currentRoleId = agreementMapper.selectCurrentUserRole(item);
+
+			//INSERT AFTER APLICNT_ID GET
+			item.put("userId", userId);
+			item.put("aplctnId", aplicntIdSeq);
+			item.put("roleId", currentRoleId);
+			agreementMapper.insertUploadNamelist(item);
+			agreementMapper.insertNewAgreementPop(item);
+			agreementMapper.updateMemberAgreementAplictnId(item);
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		return message;
+	}
 }

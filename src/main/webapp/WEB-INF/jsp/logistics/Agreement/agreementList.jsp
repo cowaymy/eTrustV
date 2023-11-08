@@ -916,6 +916,55 @@ function fn_consentRawDownload() {
 
 }
 
+function uploadClear(){
+    //화면내 모든 form 객체 초기화
+    $("#uploadForm")[0].reset();
+
+    //그리드 초기화
+    AUIGrid.clearGridData(myUploadGridID);
+}
+
+function fn_uploadAgreementNamelist(){
+    var formData = new FormData();
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+
+	var confirmMsg = "Are you sure you want to require these member to re-sign agreement?";
+    Common.confirm(confirmMsg,function (){
+    	 Common.ajaxFile("/logistics/agreement/csvAgreementNamelistFileUpload.do", formData, function(result){
+			if(result.code =="00"){
+	             Common.alert(result.message, function (){
+	                 hideViewPopup('#upload_popup_wrap');
+	             });
+			}
+			else{
+	             Common.alert(result.message);
+	             fn_uploadClear();
+			}
+         });
+    });
+}
+
+hideViewPopup=function(val){
+    $(val).hide();
+
+    //업로드창이 닫히면 upload 화면도 reset한다.
+    if(val == '#upload_popup_wrap'){
+        fn_uploadClear();
+    }
+}
+
+function fn_uploadClear(){
+    //화면내 모든 form 객체 초기화
+    $("#uploadForm")[0].reset();
+
+    //그리드 초기화
+    //AUIGrid.clearGridData(myUploadGridID);
+}
+
+function fn_uploadPopup(){
+	$('#upload_popup_wrap').show();
+	//AUIGrid.resize(myUploadGridID);
+}
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -1076,6 +1125,7 @@ function fn_consentRawDownload() {
                      <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                      <li><p class="link_btn"><a href="javascript:fn_consentRawDownload();" id="consentRawDownload">Consent Agreement Raw</a></li>
                      </c:if>
+                     <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Namelist</a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
@@ -1107,4 +1157,50 @@ function fn_consentRawDownload() {
     </form>
 
 </section>
+
+<div id="upload_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+	<header class="pop_header"><!-- pop_header start -->
+		<h1>Member Upload</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
+		</ul>
+	</header><!-- pop_header end -->
+	<section class="pop_body">
+		<form action="#" method="post" id="uploadForm">
+			<table class="type1">
+			<caption>table</caption>
+				<colgroup>
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				    <col style="width:150px" />
+                    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">File</th>
+					    <td >
+					    <div class="auto_file"><!-- auto_file start -->
+					        <input type="file" title="file add" id="uploadfile" name="uploadfile" />
+					    </div><!-- auto_file end -->
+					    </td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		<ul class="center_btns mt20">
+	           <li><p class="btn_blue2"><a href="javascript:uploadClear();"><spring:message code='sys.btn.clear'/></a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadAgreementNamelist();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
+	           <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/misc/AgreementNamelistUpload.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+		</ul>
+
+     	<!-- search_result start -->
+        <section class="search_result">
+            <!-- grid_wrap start -->
+            <article id="grid_upload_wrap" class="grid_wrap"></article>
+            <!-- grid_wrap end -->
+        </section>
+        <!-- search_result end -->
+	</section>
+	<!-- pop_body end -->
+</div>
 <!-- content end -->

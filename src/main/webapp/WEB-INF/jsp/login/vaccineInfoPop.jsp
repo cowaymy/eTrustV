@@ -170,7 +170,7 @@ function fn_submit() {
             $("#form #atchFileGrpId").val(result.data.fileGroupKey);
 
             Common.ajax("POST", "/login/vaccineInfoSave.do", $("#form").serializeJSON(), function(result) {
-                Common.alert("Vaccination info updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_goMain()); //fn_goMain()
+                Common.alert("Vaccination info updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_login()); //fn_goMain()
             },
             function(jqXHR, textStatus, errorThrown) {
                 try {

@@ -296,4 +296,196 @@
           AND A.MEM_TYPE IN (1,2,7)
         ORDER BY MEM_CODE
     </select>
+
+    <select id="selectAgreementHistoryList" parameterType="Map" resultType="EgovMap">
+		SELECT A.APLCTN_ID,A.APLICNT_CODE,A.APLICNT_TYPE,A.APLICNT_FULL_NAME, A.APLICNT_NRIC,
+		A.REM,A.STUS_ID，
+		B.NAME AS STUS_NAME,TO_CHAR(A.CRT_DT,'DD/MM/YYYY hh:mm:ss AM') AS CRT_DT,A.CRT_USER_ID,
+		C.USER_NAME AS CRT_USER_NAME ,TO_CHAR(A.UPD_DT,'DD/MM/YYYY hh:mm:ss AM') AS UPD_DT,
+		A.UPD_USER_ID, D.USER_NAME AS UPD_USER_NAME,
+		A.CNFM,CASE WHEN A.CNFM = 1 THEN 'Signed' ELSE 'Unsigned' END CNFM_STUS
+		,TO_CHAR(A.CNFM_DT,'DD/MM/YYYY hh:mm:ss AM') AS CNFM_DT,A.AREA_ID,
+		TO_CHAR(E.JOIN_DT,'DD/MM/YYYY') AS JOIN_DT,TO_CHAR(E.PROMO_DT,'DD/MM/YYYY') AS PROMO_DT,
+		A.DEPT_CODE,
+		F.LAST_DEPT_CODE,
+		F.LAST_GRP_CODE,
+		F.LAST_ORG_CODE
+
+		FROM ORG0003D A
+		LEFT JOIN SYS0038M B
+		ON A.STUS_ID = B.STUS_CODE_ID
+		LEFT JOIN SYS0047M C
+		ON A.CRT_USER_ID = C.USER_ID
+		LEFT JOIN SYS0047M D
+		ON A.UPD_USER_ID = D.USER_ID
+		LEFT JOIN ORG0001D E
+		ON A.APLICNT_CODE = E.MEM_CODE
+		LEFT JOIN ORG0006D F
+		ON E.MEM_ID = F.MEM_ID AND TO_CHAR(A.CRT_DT, 'MM') = TO_CHAR(F.HIST_MONTH, 'fm00') AND TO_CHAR(A.CRT_DT,'YYYY') = F.HIST_YEAR
+
+		WHERE 1 = 1
+        <if test="memCode != null and memCode != '' ">
+             AND A.APLICNT_CODE = #{memCode}
+        </if>
+        <if test="name != null and name != '' ">
+            AND A.APLICNT_FULL_NAME LIKE '%#{name}%'
+        </if>
+        <if test="memTypeCom != null and memTypeCom != '' ">
+        	AND A.APLICNT_TYPE = #{memTypeCom}
+        </if>
+        <if test="memLevelCom != null and memLevelCom != '' ">
+        	AND F.MEM_LVL = #{memLevelCom}
+        </if>
+        <if test="memStusCmb != null and memStusCmb != '' ">
+        	AND A.STUS_ID = #{memStusCmb}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+        	AND A.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+        	AND F.LAST_GRP_CODE = #{grpCode}
+        </if>
+        <if test="orgCode != null and orgCode != '' ">
+        	AND F.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="selectBranch != null and selectBranch != '' ">
+        	AND F.MEM_BRNCH = #{selectBranch}
+        </if>
+        <if test="startDt != null and startDt != '' ">
+        	AND A.CNFM_DT >= TO_DATE(#{startDt},'DD/MM/YYYY')
+        </if>
+        <if test="endDt != null and endDt != '' ">
+        	AND A.CNFM_DT <![CDATA[<=]]> TO_DATE(#{endDt},'DD/MM/YYYY') + 1
+        </if>
+        ORDER BY A.APLCTN_ID
+    </select>
+
+    <select id="selectNextAplctnIdSeq" resultType="int">
+		SELECT ORG0003D_APLCTN_ID_SEQ.NEXTVAL
+        FROM DUAL
+    </select>
+
+    <insert id="insertUploadNamelist" parameterType="Map">
+    	INSERT INTO ORG0051D (ID, MEM_CODE, APLCTN_ID, CRT_DT, CRT_BY)
+    	VALUES
+    	(ORG0051D_ID_SEQ.NEXTVAL
+    	,#{memCode}
+    	,#{aplctnId}
+    	,SYSDATE
+    	,#{userId})
+    </insert>
+
+    <insert id="insertNewAgreementPop" parameterType="Map">
+    INSERT INTO ORG0003D (
+    APLCTN_ID,
+    APLICNT_CODE,
+    APLICNT_TYPE,
+    APLICNT_NAME,
+    APLICNT_FULL_NAME,
+    APLICNT_NRIC,
+    APLICNT_DOB,
+    APLICNT_GENDER,
+    APLICNT_RACE,
+    APLICNT_MARTL,
+    APLICNT_NATION,
+    APLICNT_TEL_OFFICE,
+    APLICNT_TEL_HUSE,
+    APLICNT_TEL_MOBILE,
+    APLICNT_EMAIL,
+    APLICNT_SPOUSE_CODE,
+    APLICNT_SPOUSE_NAME,
+    APLICNT_SPOUSE_NRIC,
+    APLICNT_SPOUSE_OCPAT,
+    APLICNT_SPOUSE_TEL_CNTC,
+    APLICNT_SPOUSE_DOB,
+    APLICNT_EDU_LEV,
+    APLICNT_LANG,
+    APLICNT_BANK_ID,
+    APLICNT_BANK_ACC_NO,
+    APLICNT_SPONS_CODE,
+    APLICNT_TRNSPRT,
+    CRT_DT,
+    CRT_USER_ID,
+    CNFM,
+    CNFM_DT,
+    DEPT_CODE,
+    AREA_ID,
+    ADDR_DTL,
+    STREET,
+    MAIN_DEPT,
+    SUB_DEPT,
+    APLICNT_MEETPOINT,
+    STUS_ID,
+    CNTRCT_TYPE,
+    COLLCT_BRNCH,
+    ATCH_FILE_GRP_ID,
+    COURS_ID,
+    APLICNT_INC_TAX,
+    APLICNT_REG_OPT)
+    	SELECT
+	    	#{aplctnId},
+	    	A.MEM_CODE,
+			A.MEM_TYPE,
+			A.NAME,
+			A.FULL_NAME,
+			A.NRIC,
+			A.DOB,
+			A.GENDER,
+			A.RACE,
+			A.MARTL,
+			A.NATION,
+			A.TEL_OFFICE,
+			A.TEL_HUSE,
+			A.TEL_MOBILE,
+			A.EMAIL,
+			A.SPUSE_CODE,
+			A.SPOUSE_NAME,
+			A.SPOUSE_NRIC,
+			A.SPOUSE_OCPAT,
+			A.SPOUSE_TEL_CNTC,
+			A.SPOUSE_DOB,
+			A.EDC_LEV,
+			A.LANG,
+			A.BANK,
+			A.BANK_ACC_NO,
+			A.SPONS_CODE,
+			A.TRNSPRT,
+			SYSDATE,
+			#{userId},
+			0,
+			TO_DATE('01/01/1900','DD-MM-YYYY'),
+			B.DEPT_CODE,
+			A.AREA_ID,
+			A.ADDR_DTL,
+			A.STREET,
+			A.MAIN_DEPT,
+			A.SUB_DEPT,
+			D.APLICNT_MEETPOINT,
+	        '44',
+			#{roleId},
+			null,
+			null,
+			null,
+			null,
+			null
+	  	FROM ORG0001D A
+	  	INNER JOIN ORG0005D B
+			ON A.MEM_ID = B.MEM_ID
+		LEFT JOIN ORG0003D D
+			ON A.APLICNT_ID = D.APLCTN_ID
+		WHERE A.MEM_CODE = #{memCode}
+    </insert>
+
+    <update id="updateMemberAgreementAplictnId" parameterType="Map">
+    	UPDATE ORG0001D SET APLICNT_ID = #{aplctnId},UPD_DT = SYSDATE,UPD_USER_ID = #{userId}
+    	WHERE MEM_CODE = #{memCode}
+    </update>
+
+    <select id="selectCurrentUserRole"  parameterType="Map" resultType="int">
+    	SELECT A.ROLE_ID
+    	FROM SYS0045M A
+    	JOIN SYS0047M B
+    	ON A.USER_ID = B.USER_ID
+    	WHERE B.USER_NAME = #{memCode}
+    </select>
 </mapper>

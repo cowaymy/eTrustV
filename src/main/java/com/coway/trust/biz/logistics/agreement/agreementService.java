@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface agreementService {
@@ -26,8 +29,12 @@ public interface agreementService {
     List<EgovMap> branch();
 
     EgovMap cdEagmt1(Map<String, Object> params);
-    
+
     int checkConsent(Map<String, Object> params);
-    
+
     List<EgovMap> consentList(Map<String, Object> params);
+
+	List<EgovMap> selectAgreementHistoryList(Map<String, Object> params);
+
+	ReturnMessage agreementNamelistUpload(List<Map<String, Object>> params, SessionVO sessionVO);
 }
