@@ -574,7 +574,7 @@ FROM
       SELECT ROW_NUMBER() OVER(
         PARTITION BY no ORDER BY Result  DESC) AS DUM_SEQ,
         Project3.* FROM (
-          SELECT DISTINCT Project2.No No
+          SELECT          Project2.No No
                         , Project2.HS_DATE HS_DATE
                         , Project2.STUS_CODE_ID STUS_CODE_ID
                         , Project2.Code CODE
