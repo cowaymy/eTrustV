@@ -1470,16 +1470,15 @@
         AND LG47M.TRNSC_TYPE = 'UM'
         AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
 
-        AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
-        AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
-
-        <!-- <if test="reqStatus eq 'MRRL'.toString() ">
+        <if test="reqStatus eq 'MRRL'.toString() ">
           AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
+          AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
         </if>
 
         <if test="reqStatus eq 'MROL'.toString() ">
            AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
-        </if> -->
+           AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
+        </if>
 
         AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
 
