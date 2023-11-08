@@ -1562,7 +1562,7 @@
          , T.PV_MONTH
          , T.PV_YEAR
 
-    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+    FROM ( SELECT
                   V1.APP_TYPE_CODE
                 , V1.APP_TYPE_ID
                 , V1.APP_TYPE_NAME
