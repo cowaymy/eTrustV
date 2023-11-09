@@ -31,6 +31,7 @@ public interface ChatbotSurveyMgmtMapper {
 	void updateExistTargetQues(Map<String,Object> params);
 
 	int getNextSurvSeq();
+	int getNextSurvGrpId(String ctrlId);
 	void insertNewSurveyQues(Map<String,Object> params);
 	void insertNewSurveyAns(Map<String,Object> params);
 

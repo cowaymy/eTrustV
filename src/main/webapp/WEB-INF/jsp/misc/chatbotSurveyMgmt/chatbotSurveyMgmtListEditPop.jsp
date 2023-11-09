@@ -102,8 +102,13 @@
     });
 
     function searchData(){
-        Common.ajax("POST","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtEdit.do", {ctrlId : $("#ctrlId").val(), ctrlType : $("#ctrlType").val()}, function(result){
+        Common.ajax("POST","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtEdit.do", {ctrlId : $("#ctrlId").val(), ctrlType : $("#ctrlType").val(), survGrpId : $("#survGrpId").val()}, function(result){
         	AUIGrid.setGridData(mySurveyGridID, result);
+
+        	 if(result[0].survStus == 8){
+                 $("#btn_save").hide();
+                 $("#btn_add").hide();
+             }
         });
     }
 
@@ -158,7 +163,8 @@
 		var data = {
 				all : AUIGrid.getGridData(mySurveyGridID),
 				id : $("#ctrlId").val(),
-				ctrlType : $("#ctrlType").val()
+				ctrlType : $("#ctrlType").val(),
+				survGrpId : $("#survGrpId").val()
 		};
 
 		Common.ajax("POST", "/misc/chatbotSurveyMgmt/saveSurveyDetail.do", data, function(result){
@@ -239,7 +245,7 @@
         </article>
 
         <ul class="right_btns">
-		    <li><p class="btn_grid"><a onclick="fn_addRow();">Add</a></p></li>
+		    <li><p class="btn_grid" id="btn_add"><a onclick="fn_addRow();">Add</a></p></li>
 		</ul>
 
         <article class="grid_wrap">
@@ -251,6 +257,7 @@
                <form name="_surveySearchForm" id="_surveySearchForm"  method="post">
                 <input id="ctrlId" name="ctrlId" value="${ctrlId}" type="hidden" />
                 <input id="ctrlType" name="ctrlType" value="${ctrlType}" type="hidden" />
+                <input id="survGrpId" name="survGrpId" value="${survGrpId}" type="hidden" />
             </form>
         </section>
 

@@ -53,31 +53,7 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public List<EgovMap> selectChatbotSurveyMgmtEdit(Map<String, Object> params) {
-
-		List<EgovMap> result = null;
-
-		int categoryDt = chatbotSurveyMgmtMapper.getCategoryDate(params.get("ctrlId").toString());
-
-		if(categoryDt > 0){
-			Date today = new Date();
-	        String targetQuesStr = null;
-
-        	//Get first day of the next month
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(today);
-
-            calendar.add(Calendar.MONTH, 1);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-
-            Date firstDayOfNextMonth = calendar.getTime();
-            targetQuesStr = new SimpleDateFormat("yyyyMMdd").format(firstDayOfNextMonth);
-
-	        params.put("sysDt",targetQuesStr);
-
-			 result = chatbotSurveyMgmtMapper.selectChatbotSurveyMgmtEdit(params);
-		 }
-
-		return result;
+		return chatbotSurveyMgmtMapper.selectChatbotSurveyMgmtEdit(params);
 	}
 
 	@Override
@@ -109,6 +85,7 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
 
 	        updateInfo.put("sysDt",targetQuesStr);
 		 	updateInfo.put("ctrlId", params.get("id").toString());
+		 	updateInfo.put("survGrpId", params.get("survGrpId").toString());
 
 		 	//Get valid existing Surv_id
 		 	Object[] existSurveyQuesList = chatbotSurveyMgmtMapper.getExistTargetQuestion(updateInfo).toArray();
@@ -175,7 +152,10 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
         // INSERT INTO CBT0002M
         List<Object> gridDataList = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
 
-        Map<String, Object> gridData = null;
+     	Map<String, Object> gridData = null;
+
+        // get next value of surv_grp_id
+    	int nextSurvGrpId = chatbotSurveyMgmtMapper.getNextSurvGrpId(params.get("id").toString()) + 1;
 
         for(int i = 0 ; i < gridDataList.size() ; i++){
         	gridData = (Map<String, Object>) gridDataList.get(i);
@@ -183,6 +163,7 @@ public class ChatbotSurveyMgmtServiceImpl extends EgovAbstractServiceImpl implem
         	gridData.put("ctrlId", params.get("id").toString());
         	gridData.put("newStartDt", targetQuesStr);
         	gridData.put("newEndDt", newEndDt);
+        	gridData.put("nextSurvGrpId", nextSurvGrpId);
 
         	// get cbt0002m nextval, coz need to insert 0003d togther
         	int nextSurvSeq = chatbotSurveyMgmtMapper.getNextSurvSeq();

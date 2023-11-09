@@ -30,11 +30,12 @@
 	    {dataField : "ctrlType",headerText : "Ctrl Type ID",width : 80 , editable : false, visible: false},
 	    {dataField : "survType",headerText : "Survey Type",width : 180 , editable : false},
 	    {dataField : "ctrlRem",headerText : "Survey Name",width : 500 , editable : false,style : "aui-grid-left-column"},
-	    {dataField : "ctrlStrYyyymm",headerText : "Survey Start Date",width : 130 , editable : false},
-	    {dataField : "ctrlEndYyyymm",headerText : "Survey End Date",width : 130 , editable : false},
-	    {dataField : "ctrlUseYn",headerText : "Use YN",width : 100 , editable : false},
+	    {dataField : "survQuesStr",headerText : "Survey Start Date",width : 130 , editable : false},
+	    {dataField : "survQuesEnd",headerText : "Survey End Date",width : 130 , editable : false},
+	    {dataField : "survStus",headerText : "Survey Status",width : 100 , editable : false},
 	    {dataField : "userName",headerText : "Updated By",width : 130 , editable : false},
-	    {dataField : "updDt",headerText : "Updated Date",width : 100 , editable : false}
+	    {dataField : "updDt",headerText : "Updated Date",width : 100 , editable : false},
+	    {dataField : "survGrpId",headerText : "Survey Group Id",width : 100 , visible : false}
     ];
 
 
@@ -52,6 +53,11 @@
         Common.ajax("GET","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtList",$("#searchForm").serializeJSON(), function(result){
             AUIGrid.setGridData(myGridID, result);
         });
+    }
+
+    function clearForm(){
+    	console.log( $("#searchForm")[0]);
+        $("#searchForm")[0].reset();
     }
 
     function fn_syncSurvey(){
@@ -74,7 +80,7 @@
              return;
 
         } else {
-        	Common.popupDiv('/misc/chatbotSurveyMgmt/initChatbotSurveyMgmtEdit.do', {ctrlId :selectedItem[0].item.ctrlId, ctrlType:selectedItem[0].item.ctrlType, ctrlRem: selectedItem[0].item.ctrlRem}, null , true ,'_chatbotSurveyMgmtListEditPop');
+        	Common.popupDiv('/misc/chatbotSurveyMgmt/initChatbotSurveyMgmtEdit.do', {ctrlId :selectedItem[0].item.ctrlId, ctrlType:selectedItem[0].item.ctrlType, ctrlRem: selectedItem[0].item.ctrlRem, survGrpId: selectedItem[0].item.survGrpId}, null , true ,'_chatbotSurveyMgmtListEditPop');
         }
     }
 
@@ -95,6 +101,7 @@
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	        <ul class="right_btns">
 	            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+	            <li><p class="btn_blue"><a href="javascript:clearForm();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 	        </ul>
         </c:if>
     </aside>
@@ -120,21 +127,21 @@
                             <select id="surveyType" name="surveyType" class="w100p"></select>
                         </td>
 
-                        <th scope="row">Use YN</th>
+                        <th scope="row">Survey Status</th>
                         <td>
-                            <select id="useYN" name="useYN" class="w100p">
+                            <select id="surveyStatus" name="surveyStatus" class="w100p">
                                 <option value="">Choose One</option>
-                                <option value="Y">Y</option>
-                                <option value="N">N</option>
+                                <option value="1">Active</option>
+                                <option value="8">Inactive</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Survey Start ~ End Date</th>
                         <td>
-                            <p><input type="text" id="surveyFrDt" name="surveyFrDt" title="" placeholder="" class="j_date2" /></p>
+                            <p><input type="text" id="surveyFrDt" name="surveyFrDt" title="" placeholder="" class="j_date" /></p>
                             <span>~</span>
-                            <p><input type="text" id="surveyToDt" name="surveyToDt" title="" placeholder="" class="j_date2" /></p>
+                            <p><input type="text" id="surveyToDt" name="surveyToDt" title="" placeholder="" class="j_date" /></p>
                         </td>
                     </tr>
                 </tbody>

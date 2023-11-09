@@ -66,21 +66,6 @@ public class ChatbotSurveyMgmtController {
 
         LOGGER.debug("=============== selectChatbotSurveyMgmtList ===============");
 		LOGGER.debug("params =====================================>>  " + params);
-		String finalStartDt = null;
-		String finalEndDt = null;
-
-		if(CommonUtils.nvl(params.get("surveyFrDt")).equals("") == false){
-    		String[] startDt = params.get("surveyFrDt").toString().split("/");
-    		finalStartDt = startDt[0] != "" ? startDt[1] + startDt[0] : null;
-		}
-		params.put("surveyStartDt", finalStartDt);
-
-
-		if(CommonUtils.nvl(params.get("surveyToDt")).equals("") == false){
-    		String[] endDt = params.get("surveyToDt").toString().split("/");
-    		finalEndDt = endDt[0] != ""  ? endDt[1] + endDt[0] : null;
-		}
-		params.put("surveyEndDt", finalEndDt);
 
 		List<EgovMap> surveyMgmtList =  chatbotSurveyMgmtService.selectChatbotSurveyMgmtList(params);
 
@@ -97,6 +82,7 @@ public class ChatbotSurveyMgmtController {
 		model.put("ctrlId", params.get("ctrlId").toString());
 		model.put("ctrlType", params.get("ctrlType").toString());
 		model.put("ctrlRem", params.get("ctrlRem").toString());
+		model.put("survGrpId", params.get("survGrpId").toString());
 
 		return "misc/chatbotSurveyMgmt/chatbotSurveyMgmtListEditPop";
 	}
