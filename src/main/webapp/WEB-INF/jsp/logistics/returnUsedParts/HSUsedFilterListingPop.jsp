@@ -83,7 +83,10 @@ function validRequiredField(){
         valid = false;
         message += 'Please select Department Code';
    }
-
+    if($("#cmbBranchCode").val() == null || $("#cmbBranchCode").val().length == 0){
+        valid = false;
+        message += 'Please select Warehouse Code';
+   }
     if(valid == false){
         Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
 
@@ -91,6 +94,25 @@ function validRequiredField(){
 
     return valid;
 }
+	function fn_validationBulk(){
+		if(($("#dpHSSettleDateFrom").val() == null || $("#dpHSSettleDateFrom").val().length == 0) || ($("#dpHSSettleDateTo").val() == null || $("#dpHSSettleDateTo").val().length == 0)){
+			Common.alert("Please select HS Settle Date");
+            return false;
+		}
+		if($("#chkType").val() == "1" && ($("#cmbCodyCode").val() == null || $("#cmbCodyCode").val().length == 0)){
+            Common.alert("Please select Cody Code");
+            return false;
+        }
+		if($("#cmbDepartmentCode").val() == null || $("#cmbDepartmentCode").val().length == 0){
+            Common.alert("Please select Department Code");
+            return false;
+        }
+		if($("#cmbBranchCode").val() == null || $("#cmbBranchCode").val().length == 0){
+            Common.alert("Please select Warehouse Code");
+            return false;
+        }
+		 return true;
+	}
 
 function cmbDepartmentCode_SelectedIndexChanged(){
     CommonCombo.make('cmbCodyCode', '/logistics/returnusedparts/getCodyCodeList', {memLvl : 4, memType : 2, upperLineMemberID : $("#cmbDepartmentCode").val()}, '');
@@ -108,8 +130,8 @@ function btnGeneratePDF_Click(type){
 
 	$("#chkType").val(type);
 
-    if(validRequiredField() == true){
-
+    //if(validRequiredField() == true){
+    if (fn_validationBulk()) {
         var listingType = "";
         var hsSettleDateFrom = "";
         var hsSettleDateTo = "";
@@ -192,13 +214,14 @@ function btnGeneratePDF_Click(type){
         if($("#cmbListingType :selected").val() == 1){
             $("#form #reportFileName").val("/logistics/HSUsedFilterListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-            orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
+            //orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
+            orderBySQL += " ) ORDER BY cody_code,RN";
 
         }
         if($("#cmbListingType :selected").val() == 2){
             $("#form #reportFileName").val("/logistics/HSUsedFilterSummaryListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterSummaryListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-            orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC";
+            orderBySQL += " ) ORDER BY cody_code,RN";
         }
 
 
