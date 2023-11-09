@@ -379,26 +379,21 @@
     var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
 
     Common.ajax("POST", "/sales/order/selRcdTms2.do", {
-      orderId : $("#salesOrdId").val(),
-      callEntryId : $("#callEntryId").val(),
-      rcdTms : rcdTms
-    }, function(result) {
-      if (result.code == "99") {
-        Common.alert(result.message);
-        return;
-      } else {
-        /* Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
-                                      $("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId"); */
-
-        // TEMP
-        var prm = { "path" : "/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
-                          "indicator" : "PR",
-                          "ordId" : salesOrdId1,
-                          "key" : $("#callEntryId").val(),
-                          "popId" : "addInstallationPopupId"};
-        Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
-      }
-    });
+        orderId :   $("#salesOrdId").val(),
+        callEntryId :  $("#callEntryId").val(),
+        rcdTms : rcdTms
+      }, function(result) {
+        if (result.code == "99") {
+          Common.alert(result.message);
+          return;
+        } else {
+    Common.popupDiv(
+        "/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId="
+            + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1, $(
+            "#detailForm").serializeJSON(), null, "false",
+        "addInstallationPopupId");
+        }
+      });
 
   }
 
