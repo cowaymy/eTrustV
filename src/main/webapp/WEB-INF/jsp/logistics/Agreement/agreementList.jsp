@@ -1125,7 +1125,9 @@ function fn_uploadPopup(){
                      <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                      <li><p class="link_btn"><a href="javascript:fn_consentRawDownload();" id="consentRawDownload">Consent Agreement Raw</a></li>
                      </c:if>
+                     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                      <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Namelist</a></p></li>
+                     </c:if>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
