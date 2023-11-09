@@ -28,7 +28,7 @@ $(document).ready(function() {
     });
 
     $("#Branch").change(function(){
-        if(($('#loctype').val() == "04") && ($('#Branch').val() != "")){
+        if((($('#loctype').val() == "04") || ($('#loctype').val() == "02")) && ($('#Branch').val() != "")){
 //             doGetComboData('/common/selectStockLocationList.do', paramdata , '', 'location', 'S','');
             doGetComboData('/common/selectDepartmentCode.do', {brnchId : $("#Branch").val()},'','deptCode', 'S', ''); //Dept Code
         }
@@ -55,6 +55,16 @@ function fn_validation(){
 }
 
 function fn_validationBulk(){
+	if($("#loctype").val() == "02"){
+		  if($("#loctype").val() == ''){
+	            Common.alert("Please select Location Type.");
+	            return false;
+	    }
+	    if($("#location").val() == '' || $("#location").val() == null){
+	            Common.alert("Please select Location.");
+	            return false;
+	    }
+	} else if($("#loctype").val() == "04") {
     if($("#loctype").val() == ''){
             Common.alert("Please select Location Type.");
             return false;
@@ -66,7 +76,7 @@ function fn_validationBulk(){
     if($("#deptCode").val() == '' || $("#deptCode").val() == null){
         Common.alert("Please select Department Code (CM).");
         return false;
-}
+}}
     return true;
 }
 
