@@ -375,6 +375,10 @@
     	,#{userId})
     </insert>
 
+    <select id="isMemberExist" parameterType="Map" resultType="int">
+    	SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM ORG0001D WHERE MEM_CODE = #{memCode}
+    </select>
+
     <insert id="insertNewAgreementPop" parameterType="Map">
     INSERT INTO ORG0003D (
     APLCTN_ID,

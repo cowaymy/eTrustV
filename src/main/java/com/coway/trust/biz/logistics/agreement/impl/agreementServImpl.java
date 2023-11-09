@@ -91,6 +91,17 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
 
 		for(int i = 0; i < params.size(); i++) {
 			Map<String, Object> item = (Map<String, Object>) params.get(i);
+			int result = agreementMapper.isMemberExist(item);
+
+			if(result == 0){
+				message.setMessage("Unable to find member code : " + item.get("memCode").toString());
+				message.setCode(AppConstants.FAIL);
+				return message;
+			}
+		}
+
+		for(int i = 0; i < params.size(); i++) {
+			Map<String, Object> item = (Map<String, Object>) params.get(i);
 			int aplicntIdSeq = agreementMapper.selectNextAplctnIdSeq();
 			int currentRoleId = agreementMapper.selectCurrentUserRole(item);
 
@@ -103,6 +114,7 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
 			agreementMapper.updateMemberAgreementAplictnId(item);
 		}
 
+		message.setMessage("Upload Success!");
 		message.setCode(AppConstants.SUCCESS);
 		return message;
 	}

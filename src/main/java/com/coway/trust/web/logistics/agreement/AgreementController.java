@@ -338,7 +338,6 @@ public class AgreementController {
 
 		if(details.size() > 0){
 			message = agreementService.agreementNamelistUpload(details, sessionVO);
-			message.setMessage("Upload Success!");
 		}
 		else{
 			message.setCode(AppConstants.FAIL);

@@ -42,4 +42,6 @@ public interface agreementMapper {
     int updateMemberAgreementAplictnId(Map<String, Object> params);
 
     int selectCurrentUserRole(Map<String, Object> params);
+
+    int isMemberExist(Map<String, Object> params);
 }
