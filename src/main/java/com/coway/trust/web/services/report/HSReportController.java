@@ -310,15 +310,15 @@ public class HSReportController {
     logger.debug("selectCodyList2 {}", selectCodyList2);
     return ResponseEntity.ok(selectCodyList2);
   }
-//  @RequestMapping(value = "/selectRegion.do", method = RequestMethod.GET)
-//  public ResponseEntity<List<EgovMap>> selectRegion(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-//	    params.put("memLevl", sessionVO.getMemberLevel());
-//	    params.put("userName", sessionVO.getUserName());
-//	    params.put("userType", sessionVO.getUserTypeId());
-//    List<EgovMap> selectRegion = HSReportService.selectRegion(params);
-//    logger.debug("selectCodyList2 {}", selectRegion);
-//    return ResponseEntity.ok(selectRegion);
-//  }
+  @RequestMapping(value = "/selectRegion.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectRegion(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    params.put("memLevl", sessionVO.getMemberLevel());
+	    params.put("userName", sessionVO.getUserName());
+	    params.put("userType", sessionVO.getUserTypeId());
+    List<EgovMap> selectRegion = HSReportService.selectRegion(params);
+    logger.debug("selectCodyList2 {}", selectRegion);
+    return ResponseEntity.ok(selectRegion);
+  }
   @RequestMapping(value = "/getCdUpMem.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getCdUpMem(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    params.put("memLevl", sessionVO.getMemberLevel());
