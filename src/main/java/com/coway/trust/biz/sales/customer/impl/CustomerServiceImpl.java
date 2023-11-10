@@ -1045,4 +1045,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	  customerMapper.updatePreccpData(params);
   }
 
+  @Override
+  public List<EgovMap> searchCreditCardNoExp(Map<String, Object> params){
+	  return customerMapper.searchCreditCardNoExp(params);
+  }
+
 }

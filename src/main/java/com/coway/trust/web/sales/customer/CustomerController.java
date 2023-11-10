@@ -2805,11 +2805,18 @@ public class CustomerController {
 	public  ResponseEntity<Boolean>  checkDeleteAccess(@RequestParam Map<String, Object> params) throws Exception {
 		boolean result = false;
 
-		 LOGGER.debug("getAutoDebitUserId params : {}", params.toString());
+		LOGGER.debug("getAutoDebitUserId params : {}", params.toString());
 		result = customerService.getAutoDebitUserId(params);
-
 		return ResponseEntity.ok(result);
-
-
 	}
+
+	@RequestMapping(value = "/checkCreditCardNoExp.do")
+	public String checkCreditCardOwnerNoExp(@RequestParam Map<String, Object>params, ModelMap model) {
+		return "/sales/customer/checkCreditCardNoExp";
 	}
+
+	@RequestMapping(value = "/searchCreditCardNoExp.do")
+	public ResponseEntity<List<EgovMap>> searchCreditCardNoExp(@RequestParam Map<String, Object>params, ModelMap model){
+		return ResponseEntity.ok(customerService.searchCreditCardNoExp(params));
+	}
+}

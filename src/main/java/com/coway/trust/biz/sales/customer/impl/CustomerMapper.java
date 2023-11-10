@@ -651,4 +651,6 @@ public interface CustomerMapper {
 
   void updatePreccpData(Map<String, Object> params);
 
+  List<EgovMap> searchCreditCardNoExp(Map<String, Object> params);
+
 }

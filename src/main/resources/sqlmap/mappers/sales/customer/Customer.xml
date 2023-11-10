@@ -3208,4 +3208,26 @@
 	        A.CTOS_DT = SRC.CCRIS_DT
   </update>
 
+  <select id="searchCreditCardNoExp" resultType="egovMap">
+        SELECT
+            A.CUST_ID,
+            C.SALES_ORD_NO,
+            A.CUST_CRC_OWNER,
+            CUST_CRC_TOKEN,
+            E.NAME AS STUS,
+            D.USER_NAME,
+            G.CODE || ' - ' || G.NAME AS BRANCH_NAME,
+            A.CUST_CRC_UPD_DT,
+            CASE WHEN (SELECT COUNT(*) FROM PAY0318D WHERE TOKEN_ID = A.CUST_CRC_TOKEN AND STATUS <![CDATA[<>]]> 8) > 0 THEN 'Y' ELSE 'N' END TNA_FLAG1
+        FROM SAL0028D A
+        LEFT JOIN SAL0074D B ON A.CUST_CRC_ID = B.CUST_CRC_ID
+        LEFT JOIN SAL0001D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
+        LEFT JOIN SYS0047M D ON D.USER_ID = A.CUST_CRC_CRT_USER_ID
+        LEFT JOIN SYS0038M E ON C.STUS_CODE_ID = E.STUS_CODE_ID
+        LEFT JOIN ORG0001D F ON F.MEM_CODE = D.HR_CODE
+        LEFT JOIN SYS0005M G ON G.BRNCH_ID = F.BRNCH
+        WHERE 1=1
+        AND A.CUST_CRC_NO LIKE #{grp1} ||'%' || #{grp2}
+  </select>
+
 </mapper>
