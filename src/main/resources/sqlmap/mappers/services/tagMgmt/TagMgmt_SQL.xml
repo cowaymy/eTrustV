@@ -107,7 +107,7 @@
                    SELECT DISTINCT DEPT_CODE FROM ORG0005D A JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
                    START WITH B.MEM_CODE = #{isCD}
                    CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
-               ) CD_FILTER ON T4.DEPT_CODE = CD_FILTER.DEPT_CODE
+               ) CD_FILTER ON T4.DEPT_CODE = CD_FILTER.DEPT_CODE AND 'MD08' IN (A.DEPT_CODE, B.MAIN_DEPT)
           </if>
           WHERE A.TR_DVCD = 'T'
     ) Z
