@@ -1,25 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<script type="text/javaScript" language="javascript">
-
-//     $.fn.clearForm = function() {
-//         return this.each(function() {
-//             var type = this.type, tag = this.tagName.toLowerCase();
-//             if (tag === 'form'){
-//                 return $(':input',this).clearForm();
-//             }
-//             if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-//                 this.value = '';
-//             }else if (type === 'checkbox' || type === 'radio'){
-//                 this.checked = false;
-//             }else if (tag === 'select'){
-//                 this.selectedIndex = -1;
-//             }
-//         });
-//     };
-</script>
-
 <section id="content">
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -32,7 +13,7 @@
 	    <h2>Check Credit Card Owner (no Exp)</h2>
 		<ul class="right_btns">
 		    <li><p class="btn_blue"><a href="#" onClick="searchCreditCardInfo()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
-		    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+		    <li><p class="btn_blue"><a href="#" onclick="resetForm()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 		</ul>
 	</aside>
 
@@ -165,6 +146,10 @@
 	}
 
 	checkFormat();
+
+    const resetForm = () => {
+        document.getElementById("searchForm").reset();
+    }
 
 
 </script>
