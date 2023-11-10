@@ -17,13 +17,42 @@ $(document).ready(function() {
 function createAUIGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [
+	{
+	    dataField : "aplctnId",
+	    headerText : "ID",
+	    visible : false
+	},
     {
         dataField : "aplicntType",
         headerText : "Member Type",
-        editable : false,
-        width : 130,
         visible : false
-    }, {
+    },
+	{
+	    dataField : "cnfm",
+	    headerText : "cnfm",
+	    visible : false
+	},
+	{
+	    dataField : "memLvl",
+	    headerText : "memLvl",
+	    visible : false
+	},
+	{
+        dataField : "rptCnfmDt",
+        headerText : "rptCnfmDt",
+	    visible : false
+    },
+	{
+        dataField : "joinDt",
+        headerText : "joinDt",
+	    visible : false
+    },
+	{
+        dataField : "rptFileName",
+        headerText : "rptFileName",
+	    visible : false
+    },
+	{
         dataField : "aplicntCode",
         headerText : "Member Code",
         width : 130
@@ -265,6 +294,84 @@ function fn_searchMemberEAgreement() {
 function fn_ExcelDownload(){
     GridCommon.exportTo("grid_wrap_memList", "xlsx", "E-Agreement History List");
 }
+
+function fn_downloadAgreement() {
+	var aplctnId, memCode,cnfm,memType,memLvl,cnfmDt,rptFileName,joinDt;
+    var option = {
+        isProcedure : true
+    };
+
+	if(AUIGrid.getSelectedItems(myGridID).length > 0){
+		aplctnId = AUIGrid.getSelectedItems(myGridID)[0].item.aplctnId;
+        memCode = AUIGrid.getSelectedItems(myGridID)[0].item.aplicntCode;
+        cnfm = AUIGrid.getSelectedItems(myGridID)[0].item.cnfm;
+        memType = AUIGrid.getSelectedItems(myGridID)[0].item.aplicntType;
+        memLvl = AUIGrid.getSelectedItems(myGridID)[0].item.memLvl;
+        cnfmDt = AUIGrid.getSelectedItems(myGridID)[0].item.rptCnfmDt;
+        rptFileName = AUIGrid.getSelectedItems(myGridID)[0].item.rptFileName;
+        joinDt = AUIGrid.getSelectedItems(myGridID)[0].item.joinDt;
+
+        if(cnfm == 0){
+    		Common.alert("Current record has not been signed yet. Download is not allowed.")
+    		return false;
+        }
+
+        $("#v_memCode").val(memCode);
+
+        if(memType == "1")
+        {
+        	//Health Planner Agreement
+
+        	if(memLvl < "4" && memLvl != "") {
+                $("#v_contractStartDt").val(cnfmDt);
+                $("#v_contractEndDt").val('');
+                $("#v_signedDt").val(cnfmDt);
+        	}
+            $("#reportFileName").val("/organization/agreement/" + rptFileName);
+
+            var rptDlFlNm = rptFileName.split(".");
+            $("#reportDownFileName").val(rptDlFlNm[0] + "_" + memCode);
+
+            Common.report("agreementReport", option);
+        }
+        else if(memType =="2"){
+        	//Cody Agreement
+
+			console.log(cnfmDt.substring(6) + "-" + cnfmDt.substring(3, 5) + "-" + cnfmDt.substring(0, 2));
+        	debugger;
+            $("#v_signedDt").val(cnfmDt);
+            $("#v_contractStartDt").val(cnfmDt.substring(6) + "-" + cnfmDt.substring(3, 5) + "-" + cnfmDt.substring(0, 2));
+
+
+            $("#reportFileName").val("/organization/agreement/" + rptFileName);
+            $("#reportDownFileName").val("CodyAgreement_" + memCode);
+            Common.report("agreementReport", option);
+        }
+        else if(memType =="7"){
+        	//Home Technician Agreement
+
+			var cnfmDtSplit = cnfmDt.split("/");
+
+			var cnfmDtFormat = new Date(cnfmDtSplit[2] + "-" + cnfmDtSplit[1] + "-" + cnfmDtSplit[0]);
+            $("#v_contractStartDt").val(cnfmDtFormat);
+        	//Always Y to get ORG0003D confirm date
+        	$("#v_currentSts").val("Y");
+
+            if(memLvl == "4") {
+                $("#reportFileName").val("/organization/agreement/HTAgreement_2022v1.rpt");
+                $("#reportDownFileName").val("HTAgreement_" + memCode);
+            } else {
+                $("#reportFileName").val("/organization/agreement/HTMAgreement_2022v1.rpt");
+                $("#reportDownFileName").val("HTMAgreement_" + memCode);
+            }
+            Common.report("agreementReport", option);
+        }
+    }
+	else{
+		Common.alert("Please select a history record");
+		return false;
+	}
+}
 </script>
 
 <section id="content">
@@ -281,6 +388,9 @@ function fn_ExcelDownload(){
         <h2>e-Agreement History</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_searchMemberEAgreement();"><span class="search"></span>Search</a></p></li>
+	        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+	            <li><p class="btn_blue"><a href="javascript:fn_downloadAgreement();">Download</a></p></li>
+	        </c:if>
         </ul>
     </aside>
 
@@ -406,6 +516,16 @@ function fn_ExcelDownload(){
         <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
     </article>
 
-
+	<form id="agreementReport" name="agreementReport">
+        <input type="hidden" id="tmpRptNm" name="tmpRptNm" value="" />
+        <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+        <input type="hidden" id="viewType" name="viewType" value="PDF" />
+        <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+        <input type="hidden" id="v_memCode" name="v_memCode" value="" />
+        <input type="hidden" id="v_contractStartDt" name="v_contractStartDt" value="" />
+        <input type="hidden" id="v_contractEndDt" name="v_contractEndDt" value="" />
+        <input type="hidden" id="v_currentSts" name="v_currentSts" value="" />
+        <input type="hidden" id="v_signedDt" name="v_signedDt" value="" />
+    </form>
 </section>
 <!-- content end -->
