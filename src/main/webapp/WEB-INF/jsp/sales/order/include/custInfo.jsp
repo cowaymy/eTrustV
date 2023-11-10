@@ -100,6 +100,10 @@
     <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td><span>${orderDetail.basicInfo.custVisaExpr}</span></td>
 </tr>
+<tr>
+    <th scope="row">Customer Status</th>
+    <td><span>${orderDetail.basicInfo.custStatus}</span></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

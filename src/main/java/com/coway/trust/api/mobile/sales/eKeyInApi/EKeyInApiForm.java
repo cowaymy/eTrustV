@@ -97,6 +97,7 @@ public class EKeyInApiForm {
   private String voucherCode;
   private String voucherEmail;
   private int voucherPromotion;
+  private int custStatusId;
 
   public int getStusCodeId() {
     return stusCodeId;
@@ -352,6 +353,14 @@ public int getVoucherPromotion() {
 
 public void setVoucherPromotion(int voucherPromotion) {
 	this.voucherPromotion = voucherPromotion;
+}
+
+public int getCustStatusId() {
+	return custStatusId;
+}
+
+public void setCustStatusId(int custStatusId) {
+	this.custStatusId = custStatusId;
 }
 
 }

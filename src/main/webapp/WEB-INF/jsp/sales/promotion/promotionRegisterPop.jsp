@@ -25,6 +25,7 @@
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '','eSales','S');
         doDefCombo(stkSizeData, '' ,'stkSize', 'S', '');
+        doGetCombo('/common/selectCodeList.do', '566', '', 'list_custStatusId',    'M', 'fn_multiCombo'); //Promo Type
 
         $("#chgRemark").keyup(function(){
             $("#characterCount").text($(this).val().length + " of 100 max characters");
@@ -93,6 +94,25 @@
 
         $('#exTrade').removeAttr("disabled");
 
+        var vCustStatusNew = "";
+        var vCustStatusDisen = "";
+        var vCustStatusEn = "";
+        if($('#custStatusNew').is(":checked")) {
+        	vCustStatusNew = 1;
+        }else{
+        	vCustStatusNew = 0;
+        }
+        if($('#custStatusDisen').is(":checked")) {
+        	vCustStatusDisen = 1;
+        }else{
+        	vCustStatusDisen = 0;
+        }
+        if($('#custStatusEn').is(":checked")) {
+        	vCustStatusEn = 1;
+        }else{
+        	vCustStatusEn = 0;
+        }
+
         var promotionVO = {
 
             salesPromoMVO : {
@@ -119,7 +139,10 @@
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
-                chgRemark              :$('#chgRemark').val()
+                chgRemark              :$('#chgRemark').val(),
+                custStatusNew : vCustStatusNew,
+                custStatusDisen : vCustStatusDisen,
+                custStatusEn : vCustStatusEn
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -447,6 +470,11 @@
         }
         }
 
+        if(FormUtil.isEmpty($('[name="custStatus"]:checked').val())){
+        	isValid = false;
+            msg += "<spring:message code='sales.promo.msg19'/><br /> ";
+        }
+
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
@@ -761,6 +789,14 @@
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
+</tr>
+<tr>
+<th scope="row">Customer Status<span class="must">*</span></th>
+    <td colspan = "2">
+        <input id="custStatusNew" name="custStatus" type="checkbox" value="7465" checked /><span>New</span>
+        <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" /><span>Disengaged</span>
+        <input id="custStatusEn" name="custStatus" type="checkbox" value="7466" /><span>Engaged</span>
     </td>
 </tr>
 </tbody>

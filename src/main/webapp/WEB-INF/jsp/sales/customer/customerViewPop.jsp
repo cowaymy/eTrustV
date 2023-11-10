@@ -569,7 +569,9 @@
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.remark" /></th>
-        <td colspan="5">${result.rem}</td>
+        <td colspan="3">${result.rem}</td>
+        <th scope="row">Customer Status</th>
+        <td><span>${result.custStatus}</span></td>
     </tr>
     </tbody>
     </table><!-- table end -->

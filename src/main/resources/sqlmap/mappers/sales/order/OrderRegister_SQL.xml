@@ -395,6 +395,7 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
@@ -441,6 +442,7 @@
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
@@ -468,6 +470,7 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
@@ -516,6 +519,7 @@
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
@@ -543,6 +547,7 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                   JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
@@ -592,6 +597,7 @@
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
@@ -618,6 +624,7 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
@@ -666,6 +673,7 @@
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
+                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}

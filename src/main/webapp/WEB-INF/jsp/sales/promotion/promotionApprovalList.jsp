@@ -432,6 +432,23 @@
                       $("#actionTab").val(promoInfo.actionTab);
                       $("#chgRemark").val(promoInfo.chgRemark);
 
+                      if(promoInfo.custStatusNew == '1') {
+                          $('#custStatusNew').prop("checked", true);
+                      }else{
+                          $('#custStatusNew').prop("checked", false);
+                      }
+                      if(promoInfo.custStatusDisen == '1') {
+                          $('#custStatusDisen').prop("checked", true);
+                      }else{
+                          $('#custStatusDisen').prop("checked", false);
+                      }
+                      if(promoInfo.custStatusEn == '1') {
+                          $('#custStatusEn').prop("checked", true);
+                      }else{
+                          $('#custStatusEn').prop("checked", false);
+                      }
+
+
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'promoTypeId',       'S'); //Promo Type
 /*                       doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption()'); //Customer Type
@@ -506,6 +523,22 @@
                       $("#v_appvRemark").val(promoInfo.appvRemark);
                       $("#v_appvStatus").val(promoInfo.appvStatus);
                       $("#v_chgRemark").val(promoInfo.chgRemark);
+
+                      if(promoInfo.custStatusNew == '1') {
+                          $('#v_custStatusNew').prop("checked", true);
+                      }else{
+                          $('#v_custStatusNew').prop("checked", false);
+                      }
+                      if(promoInfo.custStatusDisen == '1') {
+                          $('#v_custStatusDisen').prop("checked", true);
+                      }else{
+                          $('#v_custStatusDisen').prop("checked", false);
+                      }
+                      if(promoInfo.custStatusEn == '1') {
+                          $('#v_custStatusEn').prop("checked", true);
+                      }else{
+                          $('#v_custStatusEn').prop("checked", false);
+                      }
 
                       doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', promoInfo.promoAppTypeId,    'v_promoAppTypeId', 'S'); //Promo Application
                       doGetCombo('/common/selectCodeList.do', '76',  promoInfo.promoTypeId,       'v_promoTypeId',       'S'); //Promo Type
@@ -994,6 +1027,25 @@
 	  console.log($('#appvStatus').val());
 	   console.log($('#appvStatus').val().trim());
 
+       var vCustStatusNew = "";
+       var vCustStatusDisen = "";
+       var vCustStatusEn = "";
+       if($('#custStatusNew').is(":checked")) {
+           vCustStatusNew = 1;
+       }else{
+           vCustStatusNew = 0;
+       }
+       if($('#custStatusDisen').is(":checked")) {
+           vCustStatusDisen = 1;
+       }else{
+           vCustStatusDisen = 0;
+       }
+       if($('#custStatusEn').is(":checked")) {
+           vCustStatusEn = 1;
+       }else{
+           vCustStatusEn = 0;
+       }
+
       var promotionVO = {
 
               salesPromoMVO : {
@@ -1023,7 +1075,10 @@
                   promoESales             :$('#eSales').val().trim(),
                   appvStus                :$('#appvStatus').val(),
                   appvRemark              :$('#appvRemark').val(),
-                  voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val()
+                  voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
+                  custStatusNew : vCustStatusNew,
+                  custStatusDisen : vCustStatusDisen,
+                  custStatusEn : vCustStatusEn
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1066,6 +1121,25 @@
 
       $('#exTrade').removeAttr("disabled");
 
+      var vCustStatusNew = "";
+      var vCustStatusDisen = "";
+      var vCustStatusEn = "";
+      if($('#custStatusNew').is(":checked")) {
+          vCustStatusNew = 1;
+      }else{
+          vCustStatusNew = 0;
+      }
+      if($('#custStatusDisen').is(":checked")) {
+          vCustStatusDisen = 1;
+      }else{
+          vCustStatusDisen = 0;
+      }
+      if($('#custStatusEn').is(":checked")) {
+          vCustStatusEn = 1;
+      }else{
+          vCustStatusEn = 0;
+      }
+
       var promotionVO = {
 
           salesPromoMVO : {
@@ -1095,7 +1169,10 @@
               promoESales             :$('#eSales').val().trim(),
               appvStus                :$('#appvStatus').val(),
               appvRemark              :$('#appvRemark').val(),
-              voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val()
+              voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
+              custStatusNew : vCustStatusNew,
+              custStatusDisen : vCustStatusDisen,
+              custStatusEn : vCustStatusEn
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1346,6 +1423,14 @@
     <select id="empChk" name="empChk" class="w100p" disabled></select>
     </td>
 </tr>
+<tr>
+<th scope="row">Customer Status<span class="must">*</span></th>
+    <td colspan = "2">
+        <input id="custStatusNew" name="custStatus" type="checkbox" value="7465" disabled/><span>New</span>
+        <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
+        <input id="custStatusEn" name="custStatus" type="checkbox" value="7466" disabled/><span>Engaged</span>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -1580,6 +1665,14 @@
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="v_empChk" name="v_empChk" class="w100p" disabled></select>
+    </td>
+</tr>
+<tr>
+<th scope="row">Customer Status<span class="must">*</span></th>
+    <td colspan = "2">
+        <input id="v_custStatusNew" name="custStatus" type="checkbox" value="7465" disabled/><span>New</span>
+        <input id="v_custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
+        <input id="v_custStatusEn" name="custStatus" type="checkbox" value="7466" disabled/><span>Engaged</span>
     </td>
 </tr>
 </tbody>

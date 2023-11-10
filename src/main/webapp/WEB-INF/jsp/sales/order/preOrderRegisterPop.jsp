@@ -1716,7 +1716,7 @@
         if(appTypeVal == "66") isSrvPac = "Y";
 
         //function change
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
     }
 
     //LoadProductPrice
@@ -1924,6 +1924,8 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
 //              $("#custRem").val(custInfo.rem); //Remark
 //              $("#gstChk").val('0').prop("disabled", true);
 
@@ -2479,6 +2481,7 @@
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
     <input id="hiddenCallPrgm" name="callPrgm" type="hidden" />
+     <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 
 	<aside class="title_line"><!-- title_line start -->
 	<h3>Customer information</h3>
@@ -2568,6 +2571,10 @@
 					</div>
 				</td>
 			</tr>
+			<tr>
+                <th scope="row">Customer Status</th>
+                <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+            </tr>
 			<!-- <tr>
 			    <th scope="row">Tel (Mobile)</th>
 			    <td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>

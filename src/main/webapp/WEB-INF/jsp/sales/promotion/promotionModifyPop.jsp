@@ -57,6 +57,22 @@
         else {
             $('#voucherPromotionN').prop("checked", true);
         }
+
+        if('${promoInfo.custStatusNew}' == '1') {
+            $('#custStatusNew').prop("checked", true);
+        }else{
+            $('#custStatusNew').prop("checked", false);
+        }
+        if('${promoInfo.custStatusDisen}' == '1') {
+            $('#custStatusDisen').prop("checked", true);
+        }else{
+            $('#custStatusDisen').prop("checked", false);
+        }
+        if('${promoInfo.custStatusEn}' == '1') {
+            $('#custStatusEn').prop("checked", true);
+        }else{
+            $('#custStatusEn').prop("checked", false);
+        }
     });
 
     function fn_addOption() {
@@ -150,6 +166,25 @@
 
         $('#exTrade').removeAttr("disabled");
 
+        var vCustStatusNew = "";
+        var vCustStatusDisen = "";
+        var vCustStatusEn = "";
+        if($('#custStatusNew').is(":checked")) {
+            vCustStatusNew = 1;
+        }else{
+            vCustStatusNew = 0;
+        }
+        if($('#custStatusDisen').is(":checked")) {
+            vCustStatusDisen = 1;
+        }else{
+            vCustStatusDisen = 0;
+        }
+        if($('#custStatusEn').is(":checked")) {
+            vCustStatusEn = 1;
+        }else{
+            vCustStatusEn = 0;
+        }
+
         var promotionVO = {
 
             salesPromoMVO : {
@@ -177,7 +212,10 @@
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
-                chgRemark              :$('#chgRemark').val()
+                chgRemark              :$('#chgRemark').val(),
+                custStatusNew : vCustStatusNew,
+                custStatusDisen : vCustStatusDisen,
+                custStatusEn : vCustStatusEn
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -466,6 +504,7 @@
             $('#promoAppTypeId').prop("disabled", true);
             $('#promoTypeId').prop("disabled", true);
             $('#promoCode').prop("disabled", true);
+            $('input[name="custStatus"]').prop("disabled", false);
 
             AUIGrid.setProp(stckGridID, "editable" , true);
         }
@@ -555,6 +594,11 @@
                 msg += "<spring:message code='sales.promo.msg17'/><br /> ";
             }
             }
+
+        if(FormUtil.isEmpty($('[name="custStatus"]:checked').val())){
+            isValid = false;
+            msg += "<spring:message code='sales.promo.msg19'/><br /> ";
+        }
 
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -888,6 +932,14 @@
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
+</tr>
+<tr>
+<th scope="row">Customer Status<span class="must">*</span></th>
+    <td colspan = "2">
+        <input id="custStatusNew" name="custStatus" type="checkbox" value="7465" disabled/><span>New</span>
+        <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
+        <input id="custStatusEn" name="custStatus" type="checkbox" value="7466" disabled/><span>Engaged</span>
     </td>
 </tr>
 </tbody>

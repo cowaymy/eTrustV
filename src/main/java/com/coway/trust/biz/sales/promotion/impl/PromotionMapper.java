@@ -80,4 +80,7 @@ public interface PromotionMapper {
 
 	List<EgovMap> selectExcelPromoList(Map<String, Object> params);
 
+	void insertSalesPromoAddtValue(EgovMap params);
+	void insertSalesPromoRequestAddtValue(EgovMap params);
+
 }

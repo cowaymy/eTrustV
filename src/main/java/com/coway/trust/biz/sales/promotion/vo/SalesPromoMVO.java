@@ -95,6 +95,10 @@ public class SalesPromoMVO implements Serializable {
 
 	private String chgRemark;
 
+	private int custStatusNew;
+	private int custStatusDisen;
+	private int custStatusEn;
+
 	public int getPromoId() {
 		return promoId;
 	}
@@ -416,5 +420,29 @@ public class SalesPromoMVO implements Serializable {
 		  public void setChgRemark(String chgRemark) {
 		    this.chgRemark = chgRemark;
 		  }
+
+		public int getCustStatusNew() {
+			return custStatusNew;
+		}
+
+		public void setCustStatusNew(int custStatusNew) {
+			this.custStatusNew = custStatusNew;
+		}
+
+		public int getCustStatusDisen() {
+			return custStatusDisen;
+		}
+
+		public void setCustStatusDisen(int custStatusDisen) {
+			this.custStatusDisen = custStatusDisen;
+		}
+
+		public int getCustStatusEn() {
+			return custStatusEn;
+		}
+
+		public void setCustStatusEn(int custStatusEn) {
+			this.custStatusEn = custStatusEn;
+		}
 
 }

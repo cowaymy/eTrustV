@@ -203,6 +203,8 @@
                 $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
                 $("#hiddenCustCrtDt").val(custInfo.crtDt); //cust create date
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
@@ -2560,16 +2562,16 @@
 
         if(tagNum == '1'){ //Voucher Check only applies for Main Product Promotion
             if(appTypeVal !=66){
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
             } else {
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
             }
         }
         else{
         	if(appTypeVal !=66){
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
             } else {
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
             }
         }
     }
@@ -2579,9 +2581,9 @@
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         }
     }
 
@@ -3161,6 +3163,11 @@
 		</div>
 	</td>
 </tr>
+<tr>
+    <th scope="row">Customer Status</th>
+    <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea  id="custRem" name="custRem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>

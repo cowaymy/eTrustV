@@ -4,6 +4,7 @@
 package com.coway.trust.biz.sales.promotion.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.promotion.PromotionService;
 import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
@@ -41,6 +43,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 
 	@Resource(name = "promotionMapper")
 	private PromotionMapper promotionMapper;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -138,6 +143,14 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 
 		promotionMapper.updateReqstPromoId(salesPromoMVO);
 
+		EgovMap extraParams = new EgovMap();
+		extraParams.put("promoId", salesPromoMVO.getPromoId());
+		extraParams.put("promoReqstId", salesPromoMVO.getPromoReqstId());
+		extraParams.put("codeMasterId", 566);
+		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVO , extraParams, sessionVO);
+		EgovMap custStatusIns = new EgovMap();
+		custStatusIns.put("list", custStatusList);
+		promotionMapper.insertSalesPromoAddtValue(custStatusIns);
 /*		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 
 		for(SalesPromoFreeGiftVO salesPromoFreeGiftVO : addSalesPromoFreeGiftVOList) {
@@ -189,6 +202,15 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			}
 
 		}
+
+		EgovMap extraParams = new EgovMap();
+		extraParams.put("promoId", salesPromoMVO.getPromoId());
+		extraParams.put("promoReqstId", salesPromoMVO.getPromoReqstId());
+		extraParams.put("codeMasterId", 566);
+		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVO , extraParams, sessionVO);
+		EgovMap custStatusIns = new EgovMap();
+		custStatusIns.put("list", custStatusList);
+		promotionMapper.insertSalesPromoAddtValue(custStatusIns);
 
 /*		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
 			delVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
@@ -318,6 +340,15 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
 			promotionMapper.insertPromoReqstD(salesPromoDVO);
 		}
+
+		EgovMap extraParams = new EgovMap();
+		extraParams.put("promoId", salesPromoMVO.getPromoId());
+		extraParams.put("promoReqstId", salesPromoMVO.getPromoReqstId());
+		extraParams.put("codeMasterId", 566);
+		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVO , extraParams, sessionVO);
+		EgovMap custStatusIns = new EgovMap();
+		custStatusIns.put("list", custStatusList);
+		promotionMapper.insertSalesPromoRequestAddtValue(custStatusIns);
 	}
 
 	@Override
@@ -361,6 +392,16 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			delVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
 			promotionMapper.insertPromoReqstD(delVO);
 		}
+
+		EgovMap extraParams = new EgovMap();
+		extraParams.put("promoId", salesPromoMVO.getPromoId());
+		extraParams.put("promoReqstId", salesPromoMVO.getPromoReqstId());
+		extraParams.put("codeMasterId", 566);
+		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVO , extraParams, sessionVO);
+		EgovMap custStatusIns = new EgovMap();
+		custStatusIns.put("list", custStatusList);
+		promotionMapper.insertSalesPromoRequestAddtValue(custStatusIns);
+
 
 	}
 
@@ -550,5 +591,36 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	@Override
 	public List<EgovMap> selectExcelPromoList(Map<String, Object> params) {
 		return promotionMapper.selectExcelPromoList(params);
+	}
+
+	private List<EgovMap> preprocSalesPromoCustStatus(SalesPromoMVO salesPromoMVO, EgovMap params, SessionVO sessionVO) {
+
+		EgovMap custStatusParams = new EgovMap();
+		custStatusParams.put("groupCode", 566);
+		List<EgovMap> salesPromoCustStatusList = commonService.selectCodeList(custStatusParams);
+
+		List<EgovMap> custStatusList = new ArrayList<>();
+		if(salesPromoCustStatusList != null) {
+			for (int i = 0; i < salesPromoCustStatusList.size(); i++) {
+				EgovMap insert = new EgovMap();
+				insert.put("promoId", params.get("promoId"));
+				insert.put("promoReqstId", params.get("promoReqstId"));
+				insert.put("typeId", params.get("codeMasterId"));
+				insert.put("itmValue", salesPromoCustStatusList.get(i).get("codeId"));
+				int stusId = 0;
+				if(salesPromoCustStatusList.get(i).get("codeId").toString().equals("7465")){
+					stusId = salesPromoMVO.getCustStatusNew();
+				}else if(salesPromoCustStatusList.get(i).get("codeId").toString().equals("7467")){
+					stusId = salesPromoMVO.getCustStatusDisen();
+				}else if(salesPromoCustStatusList.get(i).get("codeId").toString().equals("7466")){
+					stusId = salesPromoMVO.getCustStatusEn();
+				}
+				insert.put("stusId", stusId);
+				insert.put("userId", sessionVO.getUserId());
+				custStatusList.add(insert);
+			}
+		}
+
+		return custStatusList;
 	}
 }

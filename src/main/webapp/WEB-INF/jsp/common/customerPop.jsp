@@ -80,6 +80,8 @@
           , { headerText : "Name",            dataField : "name"       }
           , { headerText : "NRIC/Company No", dataField : "nric",      width : 170 }
           , { headerText : "custAddId",       dataField : "custAddId", visible : false }
+          , { headerText : "Customer Status", dataField : "custStatus",      width : 170 }
+          , { headerText : "custStatusId",       dataField : "custStatusId", visible : false }
           ];
 
         //그리드 속성 설정

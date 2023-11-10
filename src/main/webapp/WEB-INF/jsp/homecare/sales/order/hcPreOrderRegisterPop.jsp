@@ -1440,10 +1440,10 @@
     	var isSrvPac = "Y";
     	//if(appTypeVal == "66") isSrvPac = "Y";
 		 if(tagNum == '1'){ //Voucher Check only applies for Main Product Promotion
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		 }
 		 else{
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 		 }
 
         /*  if(appTypeVal !=66){
@@ -1691,6 +1691,8 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
@@ -2284,6 +2286,7 @@
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
     <input id="hiddenCallPrgm" name="callPrgm" type="hidden" />
+    <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Customer information</h3>
@@ -2372,6 +2375,10 @@
 			</div>
 		</div>
 	</td>
+</tr>
+<tr>
+    <th scope="row">Customer Status</th>
+    <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <!-- <tr>
     <th scope="row">Tel (Mobile)</th>
