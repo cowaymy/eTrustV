@@ -1519,10 +1519,12 @@
             if(result != 0 && result.code == 00){
                 //atchFileGrpId = result.data.fileGroupKey;
                 orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+                $("#btnConfirm_RW").hide();
                 Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
                     Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
                 },
                 function(jqXHR, textStatus, errorThrown) {
+                	$("#btnConfirm_RW").show();
                     try {
                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order. " + jqXHR.responseJSON.message + "</b>");
                         Common.removeLoader();

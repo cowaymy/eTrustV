@@ -1888,10 +1888,12 @@
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
          console.log(orderVO);
+         $("#btnConfirm_RW").hide();
          Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
+        	$("#btnConfirm_RW").show();
             try {
                 Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b><b>' + jqXHR.responseJSON.message + "</b>");
             } catch (e) {

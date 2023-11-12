@@ -1879,11 +1879,13 @@ console.log("vBindingNo" + vBindingNo);
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
         console.log(orderVO.docSubmissionVOList);
+          $("#btnConfirm_RW").hide();
           Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
 
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
+        	$("#btnConfirm_RW").show();
             try {
                 console.log("status : " + jqXHR.status);
                 console.log("code : " + jqXHR.responseJSON.code);

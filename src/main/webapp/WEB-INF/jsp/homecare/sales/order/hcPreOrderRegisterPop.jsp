@@ -1285,11 +1285,12 @@
         Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
             if(result != 0 && result.code == 00) {
                 orderVO["atchFileGrpId"] = result.data.fileGroupKey;
-
+                $("#btnConfirm_RW").hide();
                 Common.ajax("POST", "/homecare/sales/order/registerHcPreOrder.do", orderVO, function(result) {
                     Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
                 },
                 function(jqXHR, textStatus, errorThrown) {
+                	$("#btnConfirm_RW").show();
                     try {
                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order." + jqXHR.responseJSON.message + "</b>");
                         Common.removeLoader();
