@@ -338,7 +338,8 @@ function fn_multiCombo3(){
 }
 
 function fn_getProductSize(){
-
+    /*If update any new category in product size, please update this sp SP_UPDATE_HC_SERVICE as well*/
+    /*For prevent missing any service type in care service order*/
 	var serviceType = "";
 	var unitTypeMasterId;
 	if ($("#serviceTypeId").val() == '6861'){
