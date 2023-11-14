@@ -25,14 +25,14 @@
             </list>
         </property>
     </bean>
-    
+
     <!-- 쿠키를 이용한 Locale 이용 -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="defaultLocale" value="en"/>
     </bean>
-    <!-- session을 이용한 Locale 이용 -->    
+    <!-- session을 이용한 Locale 이용 -->
      <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" /> -->
-    
+
     <!--  controller 프로퍼티 -->
     <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="locations">
@@ -41,9 +41,9 @@
             </list>
         </property>
     </bean>
-    
+
     <mvc:interceptors>
-        <!-- 
+        <!--
                 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다
         -->
         <mvc:interceptor>
@@ -74,6 +74,7 @@
             <mvc:exclude-mapping path="/webjars/**"/>
             <mvc:exclude-mapping path="/v2/**"/>
             <mvc:exclude-mapping path="/configuration/**"/>
+            <mvc:exclude-mapping path="/robots.txt"/>
 
             <mvc:exclude-mapping path="/sample/**"/>
 
@@ -101,7 +102,6 @@
         <!-- mobile web Interceptor-->
         <mvc:interceptor>
             <mvc:mapping path="/mobileWeb/**"/>
-
             <mvc:exclude-mapping path="/mobileWeb/login.do"/>
             <mvc:exclude-mapping path="/**/api/**"/>
 
@@ -116,22 +116,23 @@
 		    </bean>
         </mvc:interceptor>
     </mvc:interceptors>
-    
+
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory-->
 	<mvc:resources mapping="/help/**" location="/help/" />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/" />
 	<mvc:resources mapping="/swagger-resources/**" location="classpath:/META-INF/resources/" />
 	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+    <mvc:resources mapping="/robots.txt" location="/, classpath:/META-INF/web-resources/" order="0"/>
 
     <alias alias="multipartResolver" name="spring.RegularCommonsMultipartResolver"/>
-    
+
     <!-- multipart resolvers -->
     <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="spring.RegularCommonsMultipartResolver">
         <property name="maxUploadSize" value="600000000"/>          <!-- bytes -->
         <property name="maxInMemorySize" value="100000000"/>     <!-- bytes -->
     </bean>
-    
+
     <!-- Configure to plugin JSON as request and response in method handler
     <bean
         class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -142,8 +143,8 @@
         </property>
     </bean>
      -->
-     
-    <!-- Configure bean to convert JSON to POJO and vice versa 
+
+    <!-- Configure bean to convert JSON to POJO and vice versa
     <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
     </bean>
      -->
