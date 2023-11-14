@@ -1391,6 +1391,8 @@ var TODAY_DD      = "${toDay}";
         <option value="68">Installment</option>
         <option value="142">Sponsor</option>
         <option value="144">Education</option>
+        <option value="143">Service</option>
+        <option value="5764">Auxiliary</option>
       </select></td>
       <th scope="row">Complete Date</th>
       <td>
