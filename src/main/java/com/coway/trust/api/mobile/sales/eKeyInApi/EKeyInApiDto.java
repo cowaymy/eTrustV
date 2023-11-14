@@ -18,13 +18,13 @@ import io.swagger.annotations.ApiModel;
  * @History
  *
  *          <pre>
- * Date             Author          Description
- * -------------    -----------     -------------
- * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
- * 2020. 03. 23.    MY-ONGHC         Amend custCrcExprMM and custCrcExprYYYY from INT to STRING
- * 2020. 04. 08.    MY-ONGHC         Add cpntList for component
- *                                               Add promoByCpntIdList
- * 2020. 09. 01.    MY-ONGHC         Add Billing Address Getter and Setter
+ *          Date Author Description
+ *          ------------- ----------- -------------
+ *          2019. 12. 09. KR-JAEMJAEM:) First creation
+ *          2020. 03. 23. MY-ONGHC Amend custCrcExprMM and custCrcExprYYYY from INT to STRING
+ *          2020. 04. 08. MY-ONGHC Add cpntList for component
+ *          Add promoByCpntIdList
+ *          2020. 09. 01. MY-ONGHC Add Billing Address Getter and Setter
  *          </pre>
  */
 @ApiModel(value = "EKeyInApiDto", description = "EKeyInApiDto")
@@ -253,6 +253,8 @@ public class EKeyInApiDto {
   private String voucherCode;
   private int voucherType;
   private String voucherEmail;
+  private String customerStatusCode;
+  private String customerStatus;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1607,12 +1609,12 @@ public class EKeyInApiDto {
   }
 
   public int getFlg6Month() {
-      return flg6Month;
-    }
+    return flg6Month;
+  }
 
-    public void setFlg6Month(int flg6Month) {
-      this.flg6Month = flg6Month;
-    }
+  public void setFlg6Month(int flg6Month) {
+    this.flg6Month = flg6Month;
+  }
 
   public int getCnt() {
     return cnt;
@@ -1903,46 +1905,46 @@ public class EKeyInApiDto {
   }
 
   public BigDecimal getQuotaStus() {
-	return quotaStus;
+    return quotaStus;
   }
 
   public void setQuotaStus(BigDecimal quotaStus) {
-	this.quotaStus = quotaStus;
+    this.quotaStus = quotaStus;
   }
 
-public int getReceivingMarketingMsgStatus() {
-	return receivingMarketingMsgStatus;
-}
+  public int getReceivingMarketingMsgStatus() {
+    return receivingMarketingMsgStatus;
+  }
 
-public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
-	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
-}
+  public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
+    this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+  }
 
-public int getIsHcAcInstallationFlag() {
-	return isHcAcInstallationFlag;
-}
+  public int getIsHcAcInstallationFlag() {
+    return isHcAcInstallationFlag;
+  }
 
-public void setIsHcAcInstallationFlag(int isHcAcInstallationFlag) {
-	this.isHcAcInstallationFlag = isHcAcInstallationFlag;
-}
+  public void setIsHcAcInstallationFlag(int isHcAcInstallationFlag) {
+    this.isHcAcInstallationFlag = isHcAcInstallationFlag;
+  }
 
-public String getAcBrnch() {
-	return acBrnch;
-}
+  public String getAcBrnch() {
+    return acBrnch;
+  }
 
-public void setAcBrnch(String acBrnch) {
-	this.acBrnch = acBrnch;
-}
+  public void setAcBrnch(String acBrnch) {
+    this.acBrnch = acBrnch;
+  }
 
-public int getAcBrnchId() {
-	return acBrnchId;
-}
+  public int getAcBrnchId() {
+    return acBrnchId;
+  }
 
-public void setAcBrnchId(int acBrnchId) {
-	this.acBrnchId = acBrnchId;
-}
+  public void setAcBrnchId(int acBrnchId) {
+    this.acBrnchId = acBrnchId;
+  }
 
-public int getCustCrcTokenIdStus() {
+  public int getCustCrcTokenIdStus() {
     return custCrcTokenIdStus;
   }
 
@@ -1955,39 +1957,55 @@ public int getCustCrcTokenIdStus() {
   }
 
   public void setIs3rdParty(int Is3rdParty) {
-	    this.Is3rdParty = Is3rdParty;
-	  }
+    this.Is3rdParty = Is3rdParty;
+  }
 
-public int getVoucherValid() {
-	return voucherValid;
-}
+  public int getVoucherValid() {
+    return voucherValid;
+  }
 
-public void setVoucherValid(int voucherValid) {
-	this.voucherValid = voucherValid;
-}
+  public void setVoucherValid(int voucherValid) {
+    this.voucherValid = voucherValid;
+  }
 
-public String getVoucherCode() {
-	return voucherCode;
-}
+  public String getVoucherCode() {
+    return voucherCode;
+  }
 
-public void setVoucherCode(String voucherCode) {
-	this.voucherCode = voucherCode;
-}
+  public void setVoucherCode(String voucherCode) {
+    this.voucherCode = voucherCode;
+  }
 
-public int getVoucherType() {
-	return voucherType;
-}
+  public int getVoucherType() {
+    return voucherType;
+  }
 
-public void setVoucherType(int voucherType) {
-	this.voucherType = voucherType;
-}
+  public void setVoucherType(int voucherType) {
+    this.voucherType = voucherType;
+  }
 
-public String getVoucherEmail() {
-	return voucherEmail;
-}
+  public String getVoucherEmail() {
+    return voucherEmail;
+  }
 
-public void setVoucherEmail(String voucherEmail) {
-	this.voucherEmail = voucherEmail;
-}
+  public void setVoucherEmail(String voucherEmail) {
+    this.voucherEmail = voucherEmail;
+  }
+
+  public String getCustomerStatusCode() {
+    return customerStatusCode;
+  }
+
+  public void setCustomerStatusCode(String customerStatusCode) {
+    this.customerStatusCode = customerStatusCode;
+  }
+
+  public String getCustomerStatus() {
+    return customerStatus;
+  }
+
+  public void setCustomerStatus(String customerStatus) {
+    this.customerStatus = customerStatus;
+  }
 
 }
