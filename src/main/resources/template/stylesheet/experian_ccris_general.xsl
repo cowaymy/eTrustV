@@ -17,14 +17,14 @@
 				height: "2cm",
 				contents: function() 
 				{
-				return "<div><span style='float: left; height:50px;'><img src='https://ct.experian.com.my/images/ExperianLogo.png' width='143px' height='48px' /></span><span style='float: right; font-size: 7px; height:50px;'><b>STRICTLY CONFIDENTIAL<br />CreditTrack by Experian<br/>Order Date: "+ orderDate +"<br />Order ID: "+ orderID +"<br />User Name: "+ username +"</b></span></div><hr style='clear: both;' />";
+				return "<div><span style='float: left; height:50px;'><img src='https://ct.experian.com.my/images/ExperianLogo.png' width='143px' height='48px' /></span><span style='float: right; font-size: 7px; height:50px;'><b>STRICTLY CONFIDENTIAL<br />CrediTrack by Experian<br/>Order Date: "+ orderDate +"<br />Order ID: "+ orderID +"<br />User Name: "+ username +"</b></span></div><hr style='clear: both;' />";
 				}
 			  },
 			  footer: {
 				height: "3.7cm",
 				contents: function(pageNum, numPages) 
 				{ 
-				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: No 17-9 &amp; 19-9, 9th Floor, The Boulevard, Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
+				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: Suite 16.02, Level 16, Centrepoint South Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
 				}
 			  }
 			 };
@@ -51,14 +51,14 @@
 				height: "2cm",
 				contents: function() 
 				{
-				return "<div><span style='float: left; height:50px;'><img src='https://ct.experian.com.my/images/ExperianLogo.png' width='143px' height='48px' /></span><span style='float: left; height:50px;'><img src='https://spekar.experian.com.my/images/angkasa.png' width='41px' height='48px' /></span><span style='float: right; font-size: 7px; height:50px;'><b>STRICTLY CONFIDENTIAL<br />CreditTrack by Experian<br/>Order Date: "+ orderDate +"<br />Order ID: "+ orderID +"<br />User Name: "+ username +"</b></span></div><hr style='clear: both;' />";
+				return "<div><span style='float: left; height:50px;'><img src='https://ct.experian.com.my/images/ExperianLogo.png' width='143px' height='48px' /></span><span style='float: left; height:50px;'><img src='https://spekar.experian.com.my/images/angkasa.png' width='41px' height='48px' /></span><span style='float: right; font-size: 7px; height:50px;'><b>STRICTLY CONFIDENTIAL<br />CrediTrack by Experian<br/>Order Date: "+ orderDate +"<br />Order ID: "+ orderID +"<br />User Name: "+ username +"</b></span></div><hr style='clear: both;' />";
 				}
 			  },
 			  footer: {
 				height: "3.7cm",
 				contents: function(pageNum, numPages) 
 				{ 
-				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: No 17-9 &amp; 19-9, 9th Floor, The Boulevard, Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
+				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: Suite 16.02, Level 16, Centrepoint South Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
 				}
 			  }
 			 };
@@ -86,7 +86,7 @@
 				height: "2cm",
 				contents: function(pageNum, numPages) 
 				{ 
-				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: No 17-9 &amp; 19-9, 9th Floor, The Boulevard, Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
+				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: Suite 16.02, Level 16, Centrepoint South Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
 				}
 			  }
 			 };
@@ -114,7 +114,7 @@
 				height: "2cm",
 				contents: function(pageNum, numPages) 
 				{ 
-				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: No 17-9 &amp; 19-9, 9th Floor, The Boulevard, Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
+				return "<hr /><div style='font-size: 6px;'>Experian Information Services (Malaysia) Sdn. Bhd. (532271-T)<br /><br />NOTICE: The information provided by Experian in this report is based on information which has been compiled from public sources and third parties. We do not guarantee the accuracy of the information provided by Experian. While we have used our best endeavours to ensure that the data is complete and accurate, we do not accept any liability for errors, omissions, incomplete information or non-current data and a purchaser or user of the information in this Report shall verify the accuracy of the information on its own. The information furnished is <u>STRICTLY CONFIDENTIAL</u> and should not be disclosed to any party including the subject concerned. The information in this report is not for evaluation or a comment on the credit-worthiness of the subject nor is it any advice, analysis, observation, representation or comment on the credit risk of the subject person or company/business or any other entity on whom/which the information is provided. Experian shall not be liable for any conclusions drawn by you/the user of any of the information found in this report. Please notify &amp; contact Experian promptly of any questions regarding the accuracy of the information contained in this report to the Customer Service at: Suite 16.02, Level 16, Centrepoint South Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur, Malaysia or call: +60326151128.<br /><span style='float: right; font-size: 8px;'><b>Page " + pageNum + " of " + numPages + "</b></span></div>";
 				}
 			  }
 			 };
@@ -385,7 +385,7 @@
 		<br />
 		<table border="0" width="100%" class="full_border">
 			<tr>
-				<th colspan="3" align="left">ADDRESS (S) IN BANKING &#38; EXPERIAN  DATABANK<br /><span class="small">NOTE: The address(s) stated below may not be the current or last known address of the subject.</span></th>
+				<th colspan="3" align="left">ADDRESS (S) IN BANKING &#38; EXPERIAN DATABANK<br /><span class="small">NOTE: The address(s) stated below may not be the current or last known address of the subject.</span></th>
 			</tr>
 			<xsl:choose>
 				<xsl:when test="count(ccris_corporate_address)">
@@ -1602,7 +1602,9 @@
 							<td>
 								<xsl:value-of select="lender_type"/>
 							</td>
-							<td>N/A</td>
+							<td>
+								<xsl:value-of select="facility"/>
+							</td>
 							<td>0</td>
 							<td>&#160;</td>
 							<td>
@@ -1625,6 +1627,31 @@
 							<td>&#160;</td>
 							<td>&#160;</td>
 						</tr>
+						<xsl:choose>
+							<xsl:when test="string-length(property_status) >0 or string-length(property_long_address) >0 or string-length(property_city) >0 or string-length(property_postcode) >0 or string-length(property_state_code) >0 or string-length(property_country_code) >0">
+								<tr class="BACKGROUND_DFDFE5">
+									<td>&#160;</td>
+									<td class="bold" colspan="3">Property Status</td>
+									<td colspan="21"><xsl:value-of select="property_status"/></td>
+								</tr>
+								<tr class="BACKGROUND_DFDFE5">
+									<td>&#160;</td>
+									<td class="bold" colspan="3">Address</td>
+									<td colspan="21"><xsl:value-of select="property_long_address"/></td>
+								</tr>
+								<tr class="BACKGROUND_DFDFE5">
+									<td>&#160;</td>
+									<td class="bold" colspan="3">District/City/Town</td>
+									<td colspan="2"><xsl:value-of select="property_city"/></td>
+									<td class="bold">Postcode</td>
+									<td><xsl:value-of select="property_postcode"/></td>
+									<td class="bold">State</td>
+									<td><xsl:value-of select="property_state_desc"/></td>
+									<td class="bold">Country</td>
+									<td colspan="14"><xsl:value-of select="property_country_code"/></td>									
+								</tr>									
+							</xsl:when>
+						</xsl:choose>
 					</xsl:for-each>
 					<tr>
 						<td>&#160;</td>
@@ -2020,7 +2047,7 @@
 		<br />
 		<table border="0" width="100%" class="full_border">
 			<tr>
-				<th colspan="3" align="left">ADDRESS (S) IN BANKING &#38; EXPERIAN  DATABANK<br /><span class="small">NOTE: The address (s) stated below may not be the current or last known address of the subject</span></th>
+				<th colspan="3" align="left">ADDRESS (S) IN BANKING &#38; EXPERIAN DATABANK<br /><span class="small">NOTE: The address (s) stated below may not be the current or last known address of the subject</span></th>
 			</tr>
 			<xsl:choose>
 				<xsl:when test="ccris_individual_address">

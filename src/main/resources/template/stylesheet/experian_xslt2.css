@@ -495,6 +495,11 @@ table.nostyle_11 {
 	padding: 5px;
 	margin: 0px;
 }
+
+.BACKGROUND_DFDFE5 {
+	background-color: #dfdfe5;
+}
+
 /*
 
 .note {
@@ -551,6 +556,10 @@ p {
 
 .right {
 	text-align: right;
+}
+
+.BACKGROUND_DFDFE5 {
+	background-color: #dfdfe5;
 }
 
 /* add zoom:1; display:inline; to inline-block elements */
