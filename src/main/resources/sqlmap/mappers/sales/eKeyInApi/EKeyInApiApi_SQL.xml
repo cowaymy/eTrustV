@@ -474,7 +474,7 @@ SELECT A.CUST_ID AS CUST_ID
      </if>
 
      <if test='customerStatusCode != null || customerStatusCode != ""'>
-        LEFT JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{customerStatusCode} AND C.STUS_ID = 1
+        JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{customerStatusCode} AND C.STUS_ID = 1
      </if>
 
     <![CDATA[
