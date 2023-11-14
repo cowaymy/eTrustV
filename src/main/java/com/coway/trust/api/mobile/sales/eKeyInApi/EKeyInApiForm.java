@@ -62,6 +62,7 @@ public class EKeyInApiForm {
     params.put("voucherCode", vo.getVoucherCode());
     params.put("voucherEmail", vo.getVoucherEmail());
     params.put("voucherPromotion", vo.getVoucherPromotion());
+    params.put("custStatusId", vo.getCustStatusId());
     return params;
   }
 
