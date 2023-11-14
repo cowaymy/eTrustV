@@ -89,7 +89,6 @@ function btnGenerate_Click(){
         var holderType = "";
         var reportType = $("#sExportType").val();
         var listingType = $("#sType").val();
-        var condition = "";
 
         $("#reportFileName").val("");
         $("#reportDownFileName").val("");
@@ -128,8 +127,6 @@ function btnGenerate_Click(){
         }
 
         if($('#sStatus :selected').length > 0){
-
-
             if(whereSQL == ""){
                 whereSQL += " a.status in (";
             }else{
@@ -154,12 +151,6 @@ function btnGenerate_Click(){
             whereSQL += " AND a.condition in (";
             var runNo = 0;
 
-            if (document.querySelector("#test>.ms-parent>button>span").innerText == "All selected" ){
-            	condition = "New, Used, Defect, Repair";
-            }else{
-                condition = document.querySelector("#test>.ms-parent>button>span").innerText;
-            }
-
             $('#sCondition :selected').each(function(i, mul){
                 if(runNo == 0){
                     whereSQL += "'" + $(mul).val() + "'";
@@ -170,9 +161,7 @@ function btnGenerate_Click(){
                 runNo += 1;
             });
             whereSQL += ") ";
-        };
-
-
+        }
 
         if($('#sModel :selected').length > 0){
             whereSQL += " AND a.model in (";
@@ -191,7 +180,6 @@ function btnGenerate_Click(){
         }
         console.log("whereSQL" + whereSQL);
         console.log("holderType" + holderType);
-        console.log("condition: " + condition);
 
         var date = new Date().getDate();
         if(date.toString().length == 1){
@@ -213,7 +201,6 @@ function btnGenerate_Click(){
 
         $("#form #V_WHERESQL").val(whereSQL);
         $("#form #holderType").val(holderType);
-        $("#form #V_CONDITION").val(condition);
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
         var option = {
                 isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -595,7 +582,7 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.grid.condition'/></th>
-    <td td id="test">
+    <td>
         <select class="multy_select w100p" multiple="multiple" id="sCondition" name="sCondition">
             <option value="33" selected="selected"><spring:message code="sal.combo.text.new" /></option>
             <option value="111" selected="selected"><spring:message code="sal.combo.text.used" /></option>
@@ -627,7 +614,6 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
 
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
 <input type="hidden" id="holderType" name="holderType" value="" />
-<input type="hidden" id="V_CONDITION" name="V_CONDITION" value="" />
 
 <input type="hidden" id="userName" name="userName" value="${SESSION_INFO.userName}">
 
