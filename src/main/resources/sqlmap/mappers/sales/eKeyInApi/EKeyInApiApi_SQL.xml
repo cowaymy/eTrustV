@@ -1255,6 +1255,8 @@ SELECT A.CUST_ID AS CUST_ID
                        ELSE TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
              , A.CUST_ID AS CUST_ID
              , A.RECEIVING_MARKETING_MSG_STATUS
+             , G.CODE_ID AS CUSTOMER_STATUS_CODE
+             , G.CODE_DESC AS CUSTOMER_STATUS
      FROM SAL0029D A
      LEFT OUTER JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
                                                AND B.STUS_CODE_ID = 9
@@ -1266,6 +1268,7 @@ SELECT A.CUST_ID AS CUST_ID
                                               AND E.CODE_MASTER_ID = 2
                                               AND E.DISAB = 0
      LEFT OUTER JOIN SYS0013M F ON A.CORP_TYPE_ID = F.CODE_ID
+     LEFT JOIN SYS0013M G ON G.CODE_MASTER_ID = '566' AND A.IS_EXST_CUST = G.CODE_ID
      WHERE UPPER(TRIM(A.NRIC)) =  UPPER(TRIM(#{nric}))
          AND A.TYPE_ID = #{typeId}
          AND A.STUS_CODE_ID != 8
