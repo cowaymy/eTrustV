@@ -1334,6 +1334,7 @@
                         srvPacId : SRV_PAC_ID,
                         isSrvPac : 'Y'
                         , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 } else
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
@@ -1345,6 +1346,7 @@
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
                  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){

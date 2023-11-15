@@ -1461,6 +1461,7 @@
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 } else {
                   doGetComboData(
@@ -1473,6 +1474,7 @@
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 }
 
@@ -4504,6 +4506,7 @@
          <a id="btnCal" href="#">Exclude GST Calculation</a>
         </p></td>
       </tr>
+      <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
      </tbody>
     </table>
     <!-- table end -->

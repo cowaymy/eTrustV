@@ -1733,11 +1733,11 @@ var userType = "${userType}";
         if(appTypeVal == "66") isSrvPac = "Y";
 
         if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' >= '2019') {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
         }
         else
         {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
         }
         //doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
@@ -2005,6 +2005,9 @@ var userType = "${userType}";
 
                   }
 
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
+
                 if(custInfo.receivingMarketingMsgStatus == 1){
                     $("#marketMessageYes").prop("checked", true);
                 }
@@ -2098,7 +2101,8 @@ var userType = "${userType}";
                 ,srvPacId:'${preOrderInfo.srvPacId}'
                 ,promoId:'${preOrderInfo.promoId}'
                 ,isSrvPac:('${preOrderInfo.appTypeId}' == 66 ? 'Y' : '')
-                ,voucherPromotion: voucherAppliedStatus}
+                ,voucherPromotion: voucherAppliedStatus
+                ,custStatus: $('#hiddenCustStatusId').val()}
                 ,'${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
         else
@@ -2109,7 +2113,8 @@ var userType = "${userType}";
                 ,promoCustType:vCustTypeId
                 ,exTrade:'${preOrderInfo.exTrade}'
                 ,srvPacId:'${preOrderInfo.srvPacId}'
-                ,voucherPromotion: voucherAppliedStatus}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                ,voucherPromotion: voucherAppliedStatus
+                ,custStatus: $('#hiddenCustStatusId').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
 
 
@@ -2855,6 +2860,12 @@ var userType = "${userType}";
         </div>
     </td>
 </tr>
+<tr>
+    <th scope="row">Customer Status</th>
+    <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
+
 <!-- <tr>
     <th scope="row">Tel (Mobile)<span class="must">*</span></th>
     <td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>

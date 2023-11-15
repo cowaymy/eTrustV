@@ -237,5 +237,5 @@ public interface OrderRegisterMapper {
 
   EgovMap checkPreCcp(Map<String, Object> params);
 
-
+  void insertSalesSpecialPromotion(Map<String, Object> params);
 }

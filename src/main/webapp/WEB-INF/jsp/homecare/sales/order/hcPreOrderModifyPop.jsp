@@ -1528,6 +1528,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        srvPacId : $('#srvPacId').val(),
 		        isSrvPac : 'Y'
 		        , voucherPromotion: voucherAppliedStatus
+		        ,custStatus: $('#hiddenCustStatusId').val()
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    } else { // AppType : Rental
 		      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1538,6 +1539,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        exTrade : exTrade,
 		        srvPacId : $('#srvPacId').val()
 		        , voucherPromotion: voucherAppliedStatus
+		        ,custStatus: $('#hiddenCustStatusId').val()
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    }
     }
@@ -1552,6 +1554,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        srvPacId : $('#srvPacId').val(),
 	        isSrvPac : 'Y'
 		    , voucherPromotion: voucherAppliedStatus
+		    ,custStatus: $('#hiddenCustStatusId').val()
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    } else { // AppType : Rental
 	      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1562,6 +1565,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        exTrade : exTrade,
 	        srvPacId : $('#srvPacId').val()
 	        , voucherPromotion: voucherAppliedStatus
+	        ,custStatus: $('#hiddenCustStatusId').val()
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    }
     }
@@ -1863,6 +1867,9 @@ var userType = '${SESSION_INFO.userTypeId}';
           $('#agreementType').removeAttr("disabled");
         }
 
+        $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+        $("#custStatus").val(custInfo.custStatus); //Customer Status
+
         if(custInfo.receivingMarketingMsgStatus == 1){
         	$("#marketMessageYes").prop("checked", true);
         }
@@ -1975,6 +1982,7 @@ var userType = '${SESSION_INFO.userTypeId}';
         promoId : '${preMatOrderInfo.promoId}',
         isSrvPac:('${preMatOrderInfo.appTypeId}' == 66 ? 'Y' : '')
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: $('#hiddenCustStatusId').val()
       }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', 'voucherPromotionCheck'); //Common Code
 
 
@@ -2023,6 +2031,7 @@ var userType = '${SESSION_INFO.userTypeId}';
         promoId : '${preFrmOrderInfo.promoId}',
         isSrvPac:('${preFrmOrderInfo.appTypeId}' == 5764 ? 'Y' : '')
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: $('#hiddenCustStatusId').val()
       }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', 'voucherPromotionCheck'); //Common Code
 
       $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
@@ -2798,6 +2807,11 @@ var userType = '${SESSION_INFO.userTypeId}';
 						</div>
 					</td>
 				</tr>
+				<tr>
+				    <th scope="row">Customer Status</th>
+				    <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+				</tr>
+				<input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
                   <!--
                   <tr>
                     <th scope="row">Tel (Mobile)<span class="must">*</span></th>

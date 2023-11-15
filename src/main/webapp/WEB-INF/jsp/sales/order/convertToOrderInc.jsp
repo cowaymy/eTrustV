@@ -38,6 +38,9 @@
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
 
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
+
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
                 }
@@ -160,7 +163,8 @@
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
                         ,promoId:'${preOrderInfo.promoId}'
-                        ,voucherPromotion: voucherAppliedStatus}
+                        ,voucherPromotion: voucherAppliedStatus
+                        ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -171,7 +175,8 @@
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
-                        ,voucherPromotion: voucherAppliedStatus}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                        ,voucherPromotion: voucherAppliedStatus
+                        ,custStatus: $('#hiddenCustStatusId').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
 
 

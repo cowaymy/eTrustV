@@ -1671,6 +1671,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
     int srvPacId = CommonUtils.intNvl(salesOrderMVO.getSrvPacId());
 
+    EgovMap specialPromoMap = new EgovMap();
     if (promoId > 0) {
 
       Map<String, Object> iMap = new HashMap<String, Object>();
@@ -1685,6 +1686,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       iMap.put("orderAppType", orderAppType);
 
       EgovMap oMap = this.selectProductPromotionPriceByPromoStockID(iMap);
+      specialPromoMap = oMap;
 
       BigDecimal totAmt = new BigDecimal((String) oMap.get("orderPricePromo"));
       BigDecimal mthRentAmt = new BigDecimal((String) oMap.get("orderRentalFeesPromo"));
@@ -1925,6 +1927,24 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
+
+    // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
+    if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill")) > 7474 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
+    	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill"))  == 7475){
+    		EgovMap map1 = new EgovMap();
+    		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
+    		map1.put("fromPeriod",1);
+    		map1.put("toPeriod",6);
+    		map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+    		map1.put("percentage",50);
+    		BigDecimal CNamt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.CEILING);
+    		map1.put("cnAmt",CNamt);
+    		map1.put("status",1);
+    		map1.put("userId",sessionVO.getUserId());
+
+    		orderRegisterMapper.insertSalesSpecialPromotion(map1);
+    	}
+    }
   }
 
   private void doSaveOrder(OrderVO orderVO) {

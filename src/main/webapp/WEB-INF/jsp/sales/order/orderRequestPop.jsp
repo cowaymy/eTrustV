@@ -28,6 +28,7 @@
   var IS_NEW_VER = "${orderDetail.isNewVer}";
   var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
   var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
+  var custStatusId = "${orderDetail.basicInfo.custStatusId}";
 
   var myFileCaches = {};
   var atchFileGrpId = 0;
@@ -1365,6 +1366,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         exTrade : exTrade,
         srvPacId : $("#srvPacIdAexc").val()
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: custStatusId
       }, '', 'cmbPromotionAexc', 'S', 'fn_setDefaultPromotionAexc'); //Common Code
     }
     else {
@@ -1376,6 +1378,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         exTrade : exTrade,
         srvPacId : $("#srvPacIdAexc").val()
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: custStatusId
       }, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
     }
   }
@@ -1394,6 +1397,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         exTrade : exTrade,
         srvPacId : srvPacId
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: custStatusId
       }, '', 'cmbPromotion', 'S', 'voucherPromotionCheckPrdEx'); //Common Code
     }
     else {
@@ -1405,6 +1409,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         exTrade : exTrade,
         srvPacId : srvPacId
         , voucherPromotion: voucherAppliedStatus
+        ,custStatus: custStatusId
       }, '', 'cmbPromotion', 'S', 'voucherPromotionCheckPrdEx'); //Common Code
     }
   }

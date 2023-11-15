@@ -24,6 +24,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.promoDiscType}',        'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '${promoInfo.eSales}',        'eSales',        'S'); //Discount Type
+        doGetCombo('/common/selectCodeList.do', '568',  '${promoInfo.promoDiscOnBill}', 'promoSpecialDisId',       'S'); //Discount on billing
 
       //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
         doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : '${promoInfo.promoAppTypeId}'}, '${promoInfo.promoSrvMemPacId}', 'promoSrvMemPacId', 'S'); //Common Code
@@ -215,7 +216,8 @@
                 chgRemark              :$('#chgRemark').val(),
                 custStatusNew : vCustStatusNew,
                 custStatusDisen : vCustStatusDisen,
-                custStatusEn : vCustStatusEn
+                custStatusEn : vCustStatusEn,
+                promoDiscOnBill : $('#promoSpecialDisId').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -598,6 +600,11 @@
         if(FormUtil.isEmpty($('[name="custStatus"]:checked').val())){
             isValid = false;
             msg += "<spring:message code='sales.promo.msg19'/><br /> ";
+        }
+
+        if(!$('#promoSpecialDisId').is(":disabled") && FormUtil.isEmpty($('#promoSpecialDisId').val())) {
+            isValid = false;
+            msg += "<spring:message code='sales.promo.msg20'/><br />";
         }
 
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -1034,16 +1041,12 @@
         <span id="characterCount">0 of 100 max characters</span>
     </td>
 </tr>
-<!--
 <tr>
-    <th scope="row">Membership Package<span class="must">*</span></th>
+    <th scope="row">Discount on Billing<span style="color:red">*</span></th>
     <td>
-    <select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
+    <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p"></select>
     </td>
-    <th scope="row"></th>
-    <td></td>
 </tr>
--->
 </tbody>
 </table><!-- table end -->
 </form>

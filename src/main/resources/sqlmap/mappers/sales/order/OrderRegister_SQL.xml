@@ -725,6 +725,7 @@
              , T1.PROMO_ITM_PV
              , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
              , T3.PROMO_APP_TYPE_ID
+             , T3.PROMO_DISC_ON_BILL
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -763,6 +764,7 @@
              , T1.PROMO_ITM_PV
              , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
              , T3.PROMO_APP_TYPE_ID
+             , T3.PROMO_DISC_ON_BILL
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -801,6 +803,7 @@
              , T1.PROMO_ITM_PV
              , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
              , T3.PROMO_APP_TYPE_ID
+             , T3.PROMO_DISC_ON_BILL
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -3359,4 +3362,32 @@ WHERE
         call SP_UPD_PRECCP_SCRE_UPD_CCP(#{salesOrdId},#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
         }
   </select>
+
+
+  <insert id="insertSalesSpecialPromotion" parameterType="Map">
+    INSERT INTO SAL0408D
+	(
+		SALES_ORD_ID,
+		FROM_PERIOD,
+		TO_PERIOD,
+		PROMO_ID,
+		DISC_PRC,
+		CN_AMT,
+		STUS_ID,
+		CRT_USER_ID  ,
+		CRT_DT
+	)
+	VALUES
+	(
+		#{salesOrdId}
+		,#{fromPeriod}
+		,#{toPeriod}
+		,#{promoId}
+		,#{percentage}
+		,#{cnAmt}
+		,#{status}
+		,#{userId}
+		,SYSDATE
+	)
+	</insert>
 </mapper>

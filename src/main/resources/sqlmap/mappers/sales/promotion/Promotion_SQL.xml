@@ -369,7 +369,8 @@
              , E_SALES
              , ADV_DISC
              , STK_SIZE
-             , VOUCHER_PROMOTION)
+             , VOUCHER_PROMOTION
+             , PROMO_DISC_ON_BILL)
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -404,7 +405,8 @@
              , #{promoESales}
              , #{advDisc}
              , #{stkSize}
-             , #{voucherPromotion})
+             , #{voucherPromotion}
+             , #{promoDiscOnBill})
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -504,6 +506,7 @@
              , T3.cust_Status_en
              , T3.cust_Status_Disen
              , T3.cust_Status_New
+             , T1.PROMO_DISC_ON_BILL
           FROM SAL0017D T1
           LEFT JOIN (SELECT * FROM (select PROMO_ID,PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0405D a)
 pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New))) T3 on T3.PROMO_ID = T1.PROMO_ID
@@ -707,6 +710,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , ADV_DISC                = #{advDisc}
              , STK_SIZE                = #{stkSize}
              , VOUCHER_PROMOTION = #{voucherPromotion}
+             , PROMO_DISC_ON_BILL = #{promoDiscOnBill}
          WHERE PROMO_ID                = #{promoId}
     </update>
 
@@ -934,7 +938,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , CRT_DT
              , UPD_USER_ID
              , UPD_DT
-             , CHG_REMARK)
+             , CHG_REMARK
+             , PROMO_DISC_ON_BILL)
         VALUES
              ( #{promoReqstId}
              , #{promoId}
@@ -973,7 +978,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , SYSDATE
              , #{updUserId}
              , SYSDATE
-             , #{chgRemark})
+             , #{chgRemark}
+             , #{promoDiscOnBill})
     </insert>
 
     <insert id="insertPromoReqstD" parameterType="salesPromoDVO">
@@ -1139,6 +1145,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T3.cust_Status_en
              , T3.cust_Status_Disen
              , T3.cust_Status_New
+             , T1.PROMO_DISC_ON_BILL
           FROM SAL0358M T1
           LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
           LEFT JOIN (SELECT * FROM (select PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0406D a)

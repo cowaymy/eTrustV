@@ -41,6 +41,7 @@
     var ordCtgryCd = "${hcOrder.ordCtgryCd}";
     var anoOrdId = "${hcOrder.anoOrdId}";
     var isComToPEX = "${isComToPEX}";
+    var custStatusId = "${orderDetail.basicInfo.custStatusId}";
     var chgPromoNum = '';
 
     var myFileCaches = {};
@@ -1295,9 +1296,9 @@
         if(appTypeVal == '' || exTrade == '') return;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
         }
     }
 
@@ -1310,9 +1311,9 @@
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         }
     }
 

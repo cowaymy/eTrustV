@@ -458,9 +458,9 @@
                       doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'promoDiscType',        'S'); //Discount Type
                     //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
                       doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, promoInfo.eSales,        'eSales',        'S'); //Discount Type
-
                     //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
                       doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'promoSrvMemPacId', 'S'); //Common Code
+                      doGetCombo('/common/selectCodeList.do', '568',  promoInfo.promoDiscOnBill, 'promoSpecialDisId',       'S'); //Discount on billing
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
 
@@ -549,7 +549,7 @@
                       doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.promoDiscType,        'v_promoDiscType',        'S'); //Discount Type
                     //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
                       doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, promoInfo.eSales,        'v_eSales',        'S'); //Discount Type
-
+                      doGetCombo('/common/selectCodeList.do', '568',  promoInfo.promoDiscOnBill, 'v_promoSpecialDisId',       'S'); //Discount on billing
                     //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
                       doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'v_promoSrvMemPacId', 'S'); //Common Code
 
@@ -1078,7 +1078,8 @@
                   voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
                   custStatusNew : vCustStatusNew,
                   custStatusDisen : vCustStatusDisen,
-                  custStatusEn : vCustStatusEn
+                  custStatusEn : vCustStatusEn,
+                  promoDiscOnBill : $('#promoSpecialDisId').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1172,7 +1173,8 @@
               voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
               custStatusNew : vCustStatusNew,
               custStatusDisen : vCustStatusDisen,
-              custStatusEn : vCustStatusEn
+              custStatusEn : vCustStatusEn,
+              promoDiscOnBill : $('#promoSpecialDisId').val()
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1515,6 +1517,12 @@
  <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
      <td colspan="3"><input id="chgRemark" name="chgRemark" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
+<tr>
+    <th scope="row">Discount on Billing<span style="color:red">*</span></th>
+    <td>
+    <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p" disabled></select>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 </form>
@@ -1758,6 +1766,12 @@
 <tr>
  <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
      <td colspan="3"><input id="v_chgRemark" name="v_chgRemark" value="${promoInfo.chgRemark}" type="text" title="" placeholder="" class="w100p" disabled/></td>
+</tr>
+<tr>
+    <th scope="row">Discount on Billing<span style="color:red">*</span></th>
+    <td>
+    <select id="v_promoSpecialDisId" name="v_promoSpecialDisId" class="w100p" disabled></select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

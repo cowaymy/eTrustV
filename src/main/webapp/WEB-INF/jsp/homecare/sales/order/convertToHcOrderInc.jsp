@@ -31,6 +31,8 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
                 }
@@ -137,7 +139,8 @@
                         , exTrade:'${preMatOrderInfo.exTrade}'
                         , srvPacId:'${preMatOrderInfo.srvPacId}'
                         , promoId:'${preMatOrderInfo.promoId}'
-                        , voucherPromotion: voucherAppliedStatus}
+                        , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
@@ -161,7 +164,8 @@
                         , exTrade:'${preFrmOrderInfo.exTrade}'
                         , srvPacId:'${preFrmOrderInfo.srvPacId}'
                         , promoId:'${preFrmOrderInfo.promoId}'
-                        , voucherPromotion: voucherAppliedStatus}
+                        , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
                     $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');

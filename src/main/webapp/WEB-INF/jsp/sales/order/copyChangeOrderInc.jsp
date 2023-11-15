@@ -34,6 +34,9 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
 
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
+
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
                 }
@@ -142,7 +145,8 @@
                         ,exTrade:'${orderInfo.basicInfo.exTrade}'
                         ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                 	    ,promoId:'${orderInfo.basicInfo.ordPromoId}'
-                        , voucherPromotion: voucherAppliedStatus}
+                        , voucherPromotion: voucherAppliedStatus
+                        ,custStatus: $('#hiddenCustStatusId').val()}
                 	    ,'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -154,7 +158,8 @@
                               ,promoCustType:$("#typeId").val()
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                              , voucherPromotion: voucherAppliedStatus}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              , voucherPromotion: voucherAppliedStatus
+                              ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
 
                 	 }
                 	 else{
@@ -165,7 +170,8 @@
                               , isSrvPac:'Y'
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                              , voucherPromotion: voucherAppliedStatus}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              , voucherPromotion: voucherAppliedStatus
+                              ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 	 }
 
 
