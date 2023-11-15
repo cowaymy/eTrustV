@@ -122,7 +122,7 @@
                                WHEN V2.EX_TRADE = 1 AND V2.EX_TRADE_PR IS NULL THEN '1'
                                WHEN V2.EX_TRADE = 1 THEN CASE WHEN V2.EX_TRADE_PR= '1' THEN '1' ELSE '0' END
                                END EX_TRADE_PR
-<!--                            , V2.VOUCHER_CODE -->
+                           , V2.VOUCHER_CODE
                            , V3.IS_EXST_CUST cust_status_id
                            , V10.code_name cust_status
     FROM SAL1006V V1
