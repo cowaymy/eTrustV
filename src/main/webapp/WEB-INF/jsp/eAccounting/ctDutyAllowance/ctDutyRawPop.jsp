@@ -87,7 +87,7 @@ function validRequiredField(){
         valid = false;
         message += 'Please select one of the selection';
     }
-    else if( $("#sBranchCode :selected").length > 10 && (sroleId != '297' || sroleId != '529')){
+    else if( $("#sBranchCode :selected").length > 10 && sroleId != '297' && sroleId != '529'){
     	valid = false;
         message += 'DSC Code not allow to select more than 10 branches';
     }
