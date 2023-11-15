@@ -128,11 +128,22 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		// Third Layer
 		List<EgovMap> surveyCatDto = chatbotSurveyMgmtMapper.getSurveyCategoryList();
 		List<EgovMap> surveyQuesDto = chatbotSurveyMgmtMapper.getSurveyTargetQuesList();
-		List<EgovMap> surveyAnsDto = chatbotSurveyMgmtMapper.getSurveyTargetAnsList();
+//		List<EgovMap> surveyAnsDto = chatbotSurveyMgmtMapper.getSurveyTargetAnsList();
+		List<EgovMap> surveyAnsDto = null;
+
+		if(surveyQuesDto.size() > 0){
+			String[] surveyQuesArray= new String[surveyQuesDto.size()];
+
+			for(int i = 0; i < surveyQuesDto.size(); i++){
+				surveyQuesArray[i] = surveyQuesDto.get(i).get("survId").toString();
+			}
+
+			surveyAnsDto = chatbotSurveyMgmtMapper.getSurveyTargetAnsList(surveyQuesArray);
+		}
 
 		int surveyCatRecord = surveyCatDto.size();
 		int surveyQuesRecord = surveyQuesDto.size();
-		int surveyAnsRecord = surveyAnsDto.size();
+		int surveyAnsRecord = surveyAnsDto == null ? 0 : surveyAnsDto.size();
 
 		List<SurveyCategoryDto> sCat = new ArrayList<>();
 		for(EgovMap catList : surveyCatDto){
@@ -141,15 +152,18 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		}
 
 		List<SurveyTargetQuesDto> sTargetQues = new ArrayList<>();
-		for(EgovMap quesList : surveyQuesDto){
-			SurveyTargetQuesDto surveyTargetQuesList = SurveyTargetQuesDto.create(quesList);
-			sTargetQues.add(surveyTargetQuesList);
-		}
-
 		List<SurveyTargetAnsDto> sTargetAns = new ArrayList<>();
-		for(EgovMap ansList : surveyAnsDto){
-			SurveyTargetAnsDto surveyTargetAnsList = SurveyTargetAnsDto.create(ansList);
-			sTargetAns.add(surveyTargetAnsList);
+
+		if(surveyQuesDto.size() > 0){
+    		for(EgovMap quesList : surveyQuesDto){
+    			SurveyTargetQuesDto surveyTargetQuesList = SurveyTargetQuesDto.create(quesList);
+    			sTargetQues.add(surveyTargetQuesList);
+    		}
+
+    		for(EgovMap ansList : surveyAnsDto){
+    			SurveyTargetAnsDto surveyTargetAnsList = SurveyTargetAnsDto.create(ansList);
+    			sTargetAns.add(surveyTargetAnsList);
+    		}
 		}
 
 		// Second Layer
@@ -193,6 +207,23 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		resultValue = cbtReqApi(reqInfo);
 
 		LOGGER.debug("End Calling Chatbot API ....\n");
+
+		LOGGER.debug("Start update is_sync ....\n");
+
+		if(resultValue.containsKey("message") && resultValue.get("message").toString().equals("Success")){
+    		EgovMap updInfo = new EgovMap();
+    		updInfo.put("userId", params.get("userId"));
+
+    		if(surveyQuesDto.size() > 0){
+    			for(int i = 0; i < surveyQuesDto.size(); i++){
+    				updInfo.put("survId", surveyQuesDto.get(i).get("survId"));
+
+    				chatbotSurveyMgmtMapper.updateSync(updInfo);
+    			}
+    		}
+		}
+
+		LOGGER.debug("End update is_sync ....\n");
 
 		return resultValue;
 	}

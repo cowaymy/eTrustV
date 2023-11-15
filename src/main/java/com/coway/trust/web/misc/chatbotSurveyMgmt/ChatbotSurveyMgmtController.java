@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.api.ChatbotSurveyMgmtApiService;
 import com.coway.trust.biz.api.vo.ChatbotVO;
 import com.coway.trust.biz.misc.chatbotSurveyMgmt.ChatbotSurveyMgmtService;
@@ -127,10 +128,12 @@ public class ChatbotSurveyMgmtController {
 	}
 
 	@RequestMapping(value = "/pushSurveyQues.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> pushSurveyQues(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+	public ResponseEntity<Map<String, Object>> pushSurveyQues(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws Exception {
 
 		LOGGER.debug("=============== pushSurveyQues ===============");
 		LOGGER.debug("params =====================================>>  " + params);
+
+		params.put("userId", sessionVO.getUserId());
 
 		Map<String, Object> returnVal = chatbotSurveyMgmtApiService.pushSurveyQues(params, request);
 

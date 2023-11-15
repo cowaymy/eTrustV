@@ -5,6 +5,12 @@
 .aui-grid-left-column {
   text-align:left;
 }
+
+.my-green-style {
+    background:#86E57F;
+    font-weight:bold;
+    color:#22741C;
+}
 </style>
 
 <script type="text/javaScript">
@@ -13,6 +19,8 @@
 
     //Grid Properties 설정
     var gridPros = {
+    		usePaging : true,
+    	    pageRowCount : 20,
 	       // 편집 가능 여부 (기본값 : false)
 	       editable : false,
 	       // 상태 칼럼 사용
@@ -43,7 +51,8 @@
     	doGetCombo('/misc/chatbotSurveyMgmt/selectChatbotSurveyType', null, '' ,'surveyType' , 'S');
 
         //그리드 생성
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, gridPros);
+//         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, gridPros);
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 
     });
 
@@ -52,6 +61,13 @@
 
         Common.ajax("GET","/misc/chatbotSurveyMgmt/selectChatbotSurveyMgmtList",$("#searchForm").serializeJSON(), function(result){
             AUIGrid.setGridData(myGridID, result);
+
+            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
+                if(item.flag == "IN USE") {
+                	  return "my-green-style";
+                }
+
+             });
         });
     }
 
@@ -160,10 +176,14 @@
 		</c:if>
 	</ul>
 
+   <ul class="left_btns">
+        <li><span class="green_text">Currently used</span></li>
+    </ul>
+
     <!-- search_result start -->
     <section class="search_result">
         <!-- grid_wrap start -->
-        <article id="grid_wrap" class="grid_wrap"></article>
+        <article id="grid_wrap" class="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></article>
         <!-- grid_wrap end -->
     </section>
     <!-- search_result end -->

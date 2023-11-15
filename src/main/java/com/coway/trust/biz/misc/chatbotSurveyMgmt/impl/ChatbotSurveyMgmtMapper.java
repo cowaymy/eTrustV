@@ -39,5 +39,7 @@ public interface ChatbotSurveyMgmtMapper {
 //	API PART
 	List<EgovMap> getSurveyCategoryList();
 	List<EgovMap> getSurveyTargetQuesList();
-	List<EgovMap> getSurveyTargetAnsList();
+//	List<EgovMap> getSurveyTargetAnsList();
+	List<EgovMap> getSurveyTargetAnsList(String[] surveyQuesArray);
+	void updateSync(EgovMap updInfo);
 }
