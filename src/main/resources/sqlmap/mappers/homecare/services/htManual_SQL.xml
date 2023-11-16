@@ -664,8 +664,9 @@ FROM
                 FROM SVC0008D HS
                 JOIN (
                     SELECT
-                        SALES_ORD_ID SALES_ORD_ID,BRNCH_ID,CUST_ID,SALES_ORD_NO ,STUS_CODE_ID , PV_YEAR, PV_MONTH, app_type_id, 0 SRV_TYPE , null SALES_PROD_SZ, null unit_type, BNDL_ID
-                    FROM SAL0001D WHERE BNDL_ID IS NOT NULL
+                        S1.SALES_ORD_ID ,S1.BRNCH_ID,S1.CUST_ID,S1.SALES_ORD_NO ,S1.STUS_CODE_ID , S1.PV_YEAR, S1.PV_MONTH, S1.app_type_id, to_number(S2.SRV_TYPE) SRV_TYPE , S2.SALES_PROD_SZ , S2.unit_type unit_type, S1.BNDL_ID
+                    FROM SAL0001D S1
+                    JOIN SAL0225D S2 ON S2.SRV_ORD_ID = S1.SALES_ORD_ID
                     UNION
                     SELECT
                         SRV_ORD_ID SALES_ORD_ID,BRNCH_ID,CUST_ID, SRV_ORD_NO SALES_ORD_NO, STUS_CODE_ID, PV_YEAR, PV_MONTH, app_type_id, to_number(SRV_TYPE) SRV_TYPE , SALES_PROD_SZ, unit_type, 0 BNDL_ID
@@ -774,8 +775,9 @@ FROM
                 FROM SVC0008D HS
                 JOIN (
                   SELECT
-                    SALES_ORD_ID SALES_ORD_ID,BRNCH_ID,CUST_ID,SALES_ORD_NO ,STUS_CODE_ID , PV_YEAR, PV_MONTH, app_type_id, 0 SRV_TYPE , null SALES_PROD_SZ, null unit_type, BNDL_ID
-                  FROM SAL0001D WHERE BNDL_ID IS NOT NULL
+                    S1.SALES_ORD_ID ,S1.BRNCH_ID,S1.CUST_ID,S1.SALES_ORD_NO ,S1.STUS_CODE_ID , S1.PV_YEAR, S1.PV_MONTH, S1.app_type_id, to_number(S2.SRV_TYPE) SRV_TYPE , S2.SALES_PROD_SZ , S2.unit_type unit_type, S1.BNDL_ID
+                  FROM SAL0001D S1
+                  JOIN SAL0225D S2 ON S2.SRV_ORD_ID = S1.SALES_ORD_ID
                   UNION
                   SELECT
                     SRV_ORD_ID SALES_ORD_ID,BRNCH_ID,CUST_ID, SRV_ORD_NO SALES_ORD_NO, STUS_CODE_ID, PV_YEAR, PV_MONTH, app_type_id, to_number(SRV_TYPE) SRV_TYPE , SALES_PROD_SZ, unit_type, 0 BNDL_ID
