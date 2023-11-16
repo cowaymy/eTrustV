@@ -91,7 +91,7 @@ function fn_memberSave(){
                                                              " for confirmation of HP agreement. TQ!"; */
                                         var cnfmSms = " COWAY: HP Application successful. Click " +
                                                               "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                              " to accept T&C's of the HP agreement."+ "Agreement password: " + "${pdfPwd}";
+                                                              " to accept T&C." + "Password: " + "${pdfPwd}";
                                         /* VER NBL [E] */
 
                                         if($("#mobileNo").val() != "") {
@@ -170,7 +170,7 @@ function fn_memberSave(){
                                               " for confirmation of HP agreement. TQ!"; */
                          var cnfmSms = " COWAY: HP Application successful. Click " +
                                                "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                               " to accept T&C's of the HP agreement." + "Agreement password: " + "${pdfPwd}";
+                                               " to accept T&C." + "Password: " + "${pdfPwd}";
                          /* VER NBL [E]*/
 
 
