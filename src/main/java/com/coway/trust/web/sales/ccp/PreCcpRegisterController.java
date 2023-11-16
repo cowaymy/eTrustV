@@ -357,7 +357,7 @@ public class PreCcpRegisterController {
 	    	   	params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
 
 	    	   	String smsMessage ="";
-    			smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+    			smsMessage += "COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
     			smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
     			smsMessage += ", check the box and submit. Thank you.";
 
