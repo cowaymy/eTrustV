@@ -59,6 +59,8 @@ public class LoginVO {
 	private String groupCode;
 	private String deptCode;
 
+	private int checkMfaFlag;
+
 	public String getUserMemCode() {
 		return userMemCode;
 	}
@@ -468,5 +470,13 @@ public class LoginVO {
 
 	public void setDeptCode(String deptCode) {
 		this.deptCode = deptCode;
+	}
+
+	public int getCheckMfaFlag() {
+		return checkMfaFlag;
+	}
+
+	public void setCheckMfaFlag(int checkMfaFlag) {
+		this.checkMfaFlag = checkMfaFlag;
 	}
 }

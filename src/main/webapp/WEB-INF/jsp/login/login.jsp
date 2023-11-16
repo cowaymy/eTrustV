@@ -8,6 +8,9 @@
     var returnUserInfo = {};
     var returnSearchUserInfo = {};
     var gVarForm = "";
+    var otpMfaForm = "";
+    var isCheckedMfa = "N";
+    var mfaObj;
     var pgwBrowser;
 
     $(function () {
@@ -102,6 +105,19 @@
     		Common.popupDiv("/login/vaccineInfoPop.do", null, null, false, '_vaccineInfoPop');
     	   //Common.popupDiv("/login/vaccineInfoPop.do", null, null, false, '_vaccineInfoPop');
     }
+
+    function fn_checkMFAForm(userInfo){
+
+    	var param = {
+    			userId : userInfo.userId,
+    			userName: userInfo.userName,
+    			email : userInfo.userEmail,
+    			memCode: userInfo.userMemCode,
+    			isCheckMfa: userInfo.checkMfaFlag
+    	};
+
+        Common.popupDiv("/login/checkMFA.do", param, null, true, 'checkMFAPop');
+}
 
     function fnFindIdPopUp() {
         var popUpObj = Common.popupDiv(
@@ -253,6 +269,51 @@
             });
     }
 
+    function fn_submitMFA() {
+
+    	otpMfaForm = "#otpMfaForm";
+    	mfaObj = $(otpMfaForm).serializeJSON();
+    	console.log(mfaObj);
+
+    	if(mfaObj.code != null && mfaObj.code != "") {
+    	      Common.ajaxSync("POST"
+    	              , "/login/otpMFASubmit.do"
+    	              , $(otpMfaForm).serializeJSON()
+    	              , function (result) {
+    	                  if (result.code != 99) {
+    	                      mfaPopUpClose();
+    	                      isCheckedMfa = "Y";
+    	                      fn_login();
+    	                  }
+    	                  else {
+    	                      Common.alert(result.message);
+    	                  }
+
+    	                  console.log("성공." + JSON.stringify(result));
+    	              }
+    	              , function (jqXHR, textStatus, errorThrown) {
+    	                  try {
+    	                      console.log("Fail Status : " + jqXHR.status);
+    	                      console.log("code : " + jqXHR.responseJSON.code);
+    	                      console.log("message : " + jqXHR.responseJSON.message);
+    	                      console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+    	                  }
+    	                  catch (e) {
+    	                      console.log(e);
+    	                  }
+
+    	                  Common.alert("Fail : " + jqXHR.responseJSON.message);
+
+    	              });
+    	}
+
+    	else {
+    		Common.alert("Please enter the code");
+    	}
+
+
+    }
+
     function fn_login() {
         var userId = $("#userId").val();
         var password = $("#password").val();
@@ -294,10 +355,20 @@
 
                 $("#loginUserId").val(returnUserInfo.userId);
 
+
+                console.log('checkMfa', returnUserInfo.checkMfaFlag);
+                console.log('returnUserInfo', returnUserInfo);
+                console.log('result', result);
                 if (parseInt(result.data.diffDay) > 90) {
                     fnPassWordResetPopUp();
                 }
+
+                else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
+                    fn_checkMFAForm(returnUserInfo);
+                }
+
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
+
                     fn_configCookies(userId);
 
                     // HP, Cody, CT, Staff, Admin

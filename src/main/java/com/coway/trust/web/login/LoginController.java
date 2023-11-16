@@ -1,19 +1,25 @@
 package com.coway.trust.web.login;
 
 import java.io.File;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
+import org.apache.commons.codec.binary.Base32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +37,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
@@ -76,8 +85,148 @@ public class LoginController {
 	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
+
+
+	@RequestMapping(value = "/checkMFA.do")
+	public String checkMFA(@RequestParam Map<String, Object> params, RedirectAttributes redirectAttributes, HttpServletRequest request,ModelMap model)  throws  Exception {
+
+		LOGGER.debug("params{}", params);
+	    Base32 codec =  new  Base32();
+	    //Generate authentication key
+	    //String  encodedKey =  new  String (codec.encode("leo.ham@coway.com.my".getBytes()));
+
+	    String email = (String) params.get("email");
+	    String memCode = (String) params.get("memCode");
+	    String userName = (String) params.get("userName");
+	    String isHideQR = (String) params.get("isCheckMfa");
+	    String userId = (String) params.get("userId");
+	    byte [] secretKey =  Arrays.copyOf(email.getBytes(),  10 );
+	  	    byte []bEncodedKey =  codec.encode(secretKey);
+	    String  encodedKey =  new  String (bEncodedKey);
+	    //Generate barcode address
+	    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
+
+	    model.addAttribute( "encodedKey" , encodedKey);
+	    model.addAttribute( "QrUrl" , QrUrl);
+	    model.addAttribute( "userName" , userName);
+	    model.addAttribute( "memCode" , memCode);
+	    model.addAttribute( "isHideQR" , isHideQR);
+	    model.addAttribute( "userId" , userId);
+
+	    LOGGER.debug("encodedKey : {}", encodedKey);
+	    LOGGER.debug("QrUrl : {}", QrUrl);
+
+	    return  "/login/checkMFAPop" ;
+	}
+
+
+	//Barcode creation function
+	public static String getQRBarcodeURL(String user, String host, String secret) {
+		// QR코드 주소 생성
+		String format2 = "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
+
+		return String.format(format2, user, host, secret);
+	}
+
+	@RequestMapping(value = "/otpMFASubmit.do" , method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> otpMFASubmit(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model)  throws  Exception {
+
+	ReturnMessage message = new ReturnMessage();
+
+	LOGGER.info("code{}", params.get("code"));
+	LOGGER.info("encodedKey{}",  params.get("encodedKey"));
+	LOGGER.info("params{}",  params);
+
+	try {
+
+	int userId = Integer. parseInt((String) params.get("userId"));
+	String  code =  (String) params.get("code");
+	long codeCheck  =  Integer. parseInt (code);
+	String  encodedKey =  (String) params.get("encodedKey");
+	long  l =  new Date().getTime();
+	long  ll =   l /  30000 ;
+	LOGGER.info("code{}", code);
+	LOGGER.info("codeCheck{}", codeCheck);
+	LOGGER.info("encodedKey{}", encodedKey);
+	boolean  check_code =  false ;
+	check_code =  check_code(encodedKey, codeCheck, ll);
+
+	if (! check_code) {
+	    LOGGER.debug("back to OTP!!!!");
+		message.setCode(AppConstants.FAIL);
+		message.setData("");
+		message.setMessage("OTP code does not match.");
+	}
+
+	else {
+
+		LOGGER.info("uuuserrr{}", userId);
+		loginService.updateCheckMfaFlag(userId);
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	}
+
+
+	} catch (Exception e){
+	LOGGER.error(e.toString());
+	}
+
+	return ResponseEntity.ok(message);
+	}
+
+
+	//code check function
+	private  static  boolean  check_code( String  secret,  long  code,  long  t)  throws  InvalidKeyException, NoSuchAlgorithmException {
+	  Base32 codec =  new  Base32();
+	  byte [] decodedKey =  codec.decode(secret);
+
+	  LOGGER.debug("CHECK SCRT", secret);
+
+	  int  window =  3 ;
+	  for  ( int  i = - window; i <=  window; ++ i) {
+	      long  hash =  verify_code(decodedKey, t +  i);
+
+	      if  (hash ==  code) {
+	          return  true ;
+	      }
+	  }
+
+	  return  false ;
+	}
+
+	//code check function
+	private  static  int  verify_code( byte [] key,  long  t)  throws  NoSuchAlgorithmException, InvalidKeyException{
+	  byte [] data =  new  byte [ 8 ];
+	  long  value =  t;
+	  for  ( int  i =  8 ; i-- >  0 ; value >>>=  8 ) {
+	      data[i] =  ( byte ) value;
+	  }
+
+	  SecretKeySpec signKey =  new  SecretKeySpec(key,  "HmacSHA1" );
+	  Mac mac =  Mac.getInstance( "HmacSHA1" );
+	  mac.init(signKey);
+	  byte [] hash =  mac.doFinal(data);
+
+	  LOGGER.debug("CHECK hash", hash);
+
+	  int  offset =  hash[ 20 -  1 ] &  0xF ;
+
+	  long  truncatedHash =  0 ;
+	  for  ( int  i =  0 ; i <  4 ; ++ i) {
+	      truncatedHash <<=  8 ;
+	      truncatedHash |=  (hash[offset +  i] &  0xFF );
+	  }
+
+	  truncatedHash &=  0x7FFFFFFF ;
+	  truncatedHash %=  1000000 ;
+
+	  return  ( int ) truncatedHash;
+	}
+
+
 	@RequestMapping(value = "/login.do")
-	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	public String loginEtrust(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		model.addAttribute("languages", loginService.getLanguages());
 		model.addAttribute("exception", params.get("exception"));
 		return "login/login";

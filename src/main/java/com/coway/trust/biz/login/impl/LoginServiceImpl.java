@@ -528,4 +528,9 @@ public class LoginServiceImpl implements LoginService {
 	public int checkSecurityAnswer (Map<String, Object> params) {
 		return loginMapper.checkSecurityAnswer(params);
 	}
+
+	@Override
+	public void updateCheckMfaFlag(int userId){
+		 loginMapper.updateCheckMfaFlag(userId);
+	}
 }

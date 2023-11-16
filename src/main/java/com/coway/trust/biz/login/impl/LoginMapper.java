@@ -92,4 +92,6 @@ public interface LoginMapper {
   int getLoginFailedMaxAttempt();
 
   int checkSecurityAnswer(Map<String, Object> params);
+
+  void updateCheckMfaFlag(int userId);
 }

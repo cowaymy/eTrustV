@@ -67,4 +67,6 @@ public interface LoginService {
 	public EgovMap selectUserByUserName(String username);
 
 	public int checkSecurityAnswer (Map<String, Object> params);
+
+	public void updateCheckMfaFlag(int userId);
 }
