@@ -127,7 +127,7 @@ function fn_memberSave(){
                                           " for confirmation of HP agreement. TQ!"; */
                             var cnfmSms = " COWAY: HP Application successful. Click " +
                                                   "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                  " to accept T&C's of the HP agreement.";
+                                                  " to accept T&C's of the HP agreement." + "Agreement password: " + "${pdfPwd}";
                             /* VER NBL [E] */
 
                             console.log(cnfmSms);
@@ -146,7 +146,7 @@ function fn_memberSave(){
                                 var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient,password:'true'}, function(result) {
                                     console.log("email.");
                                     console.log(result);
                                 })

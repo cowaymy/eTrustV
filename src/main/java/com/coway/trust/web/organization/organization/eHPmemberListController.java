@@ -79,6 +79,9 @@ public class eHPmemberListController {
   @Value("${web.resource.upload.file}")
   private String uploadDir;
 
+  @Value("${pdf.password}")
+  private String pdfPassword;
+
 
   @RequestMapping(value = "/eHpMemberList.do")
    public String eHpMemberList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
@@ -207,6 +210,7 @@ public class eHPmemberListController {
 
        model.addAttribute("spouseInfoView", list);
        model.addAttribute("memType", params.get("memType"));
+	   model.addAttribute("pdfPwd", pdfPassword);
 
        // 호출될 화면
        return "organization/organization/eHpMemberListNewPop";

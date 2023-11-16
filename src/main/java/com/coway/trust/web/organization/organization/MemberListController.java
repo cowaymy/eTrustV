@@ -122,6 +122,9 @@ public class MemberListController {
 	@Autowired
 	private WebInvoiceService webInvoiceService;
 
+	@Value("${pdf.password}")
+	private String pdfPassword;
+
 //	@Resource(name = "ssoLoginService")
 //	  private SsoLoginService ssoLoginService;
 
@@ -402,6 +405,7 @@ public class MemberListController {
 
 		model.addAttribute("spouseInfoView", list);
 		model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("pdfPwd", pdfPassword);
 
 		// 호출될 화면
 		return "organization/organization/memberListNewPop";
@@ -1994,6 +1998,10 @@ public class MemberListController {
         //logger.debug("==================== sendEmail.do ====================");
 
         //logger.debug("params {}", params);
+    	String pdfPasswordMsg ="";
+    	if(params.get("password") != null && params.get("password").equals("true")){
+    		pdfPasswordMsg = "<br />Agreement Password: " +  pdfPassword;
+    	}
 
         // send email
         EmailVO email = new EmailVO();
@@ -2012,7 +2020,9 @@ public class MemberListController {
         String url = (String) params.get("url");
         String msg = "Dear Sir/Madam, <br /><br />"
                 + "Congratulations, your application has been successful. We are pleased to appoint you as our Health Planner, subject to terms and conditions "
-        		+ "of the Health Planner [Health Planner Agreement (\"HP Agreement\") accessible at "+ url + " <br /><br />"
+        		+ "of the Health Planner [Health Planner Agreement (\"HP Agreement\") accessible at "+ url
+        		+ pdfPasswordMsg
+        		+ " <br /><br />"
                 + "Kindly read, understand and confirm your acceptance of the HP Agreement within seven (7) days from the date hereof.<br /><br />"
                 + "Thank you."
                 + "<br /><br />" + "Best Regards,<br /><b>Coway (Malaysia) Sdn Bhd</b>"
