@@ -733,6 +733,17 @@
                     }
                   }
 
+                  if($('#rentPayMode').val() == '135'){
+                      $("#rentPayIC").hide();
+                      $("#nricPassbook").text("Credit Card No");
+                      $("#pnpRpsCrcNo").show();
+                  }
+                  else{
+                      $("#rentPayIC").show();
+                      $("#nricPassbook").text("NRIC on DD/Passbook");
+                      $("#pnpRpsCrcNo").hide();
+                  }
+
                   fn_loadRejectReasonList($('#rentPayMode')
                       .val(), 0)
                 }
@@ -1383,6 +1394,16 @@
             else if (rsltInfo.payModeId == '132') {
               $('#scPC_DirectDebit').removeClass("blind");
               fn_loadBankAccount(rsltInfo.bankAccId);
+            }
+
+            if(rsltInfo.payModeId == '135'){
+                $('#pnpRpsCrcNo').show().val(rsltInfo.pnpRpsCrcNo);
+                $("#nricPassbook").text("Credit Card No");
+                $('#rentPayIC').hide();
+            }else{
+                $('#pnpRpsCrcNo').hide();
+                $("#nricPassbook").text("NRIC on DD/Passbook");
+                $('#rentPayIC').show();
             }
 
             $('#rentPayIC').val(rsltInfo.oldIc);
@@ -2133,6 +2154,9 @@
             msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
           }
         }
+      } else if ($("#rentPayMode").val() == '135' && FormUtil.isEmpty($("#pnpRpsCrcNo").val()) ){
+          isValid = false;
+          msg += '<spring:message code="crditCardMgmt.crditCardNo.msg" />';
       }
     }
 
@@ -3731,10 +3755,11 @@ console.log(salesOrderMVO);
           code="sal.text.rentalPaymode" /><span class="must">*</span></th>
         <td><select id="rentPayMode" name="rentPayMode"
          class="w100p" ></select></td>
-        <th scope="row"><spring:message
-          code="sal.text.nricPassbook" /></th>
-        <td><input id="rentPayIC" name="rentPayIC" type="text"
-         title="" placeholder="" class="w100p" /></td>
+        <th scope="row"><spring:message code="sal.text.nricPassbook" /></th>
+        <td>
+            <input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="" class="w100p" />
+            <input id="pnpRpsCrcNo" name="pnpRpsCrcNo" type="text" title="" placeholder="PNPRPS Crc No" class="w100p" maxlength="16" hidden/>
+        </td>
        </tr>
       </tbody>
      </table>
