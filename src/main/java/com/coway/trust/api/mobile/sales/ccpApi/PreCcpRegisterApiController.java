@@ -188,7 +188,7 @@ public class PreCcpRegisterApiController {
 
     		if(getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)){
         	    	String smsMessage ="";
-        			smsMessage += "RM0 COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+        			smsMessage += "COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
         			smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
         			smsMessage += ", check the box and submit. Thank you.";
 
