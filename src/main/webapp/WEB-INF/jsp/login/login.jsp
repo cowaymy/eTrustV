@@ -363,9 +363,9 @@
                     fnPassWordResetPopUp();
                 }
 
-                else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
-                    fn_checkMFAForm(returnUserInfo);
-                }
+//                 else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
+//                     fn_checkMFAForm(returnUserInfo);
+//                 }
 
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
 
