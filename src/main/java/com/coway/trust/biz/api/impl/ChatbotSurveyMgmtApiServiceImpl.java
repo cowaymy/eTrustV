@@ -440,15 +440,18 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
     		    	String[] items = null;
 
     		    	int startResponse = line.indexOf("\"{\"");
-    		    	int endResponse = line.indexOf("\"}\"");
+//    		    	int endResponse = line.indexOf("\"}\"");
 
-    		    	if(startResponse > 0 && endResponse >0){
-    		    		String response = line.substring(startResponse, endResponse);
-    		    		String data2 = line.substring(0, startResponse);
-    		    		String[] test = data2.split(",");
+//    		    	if(startResponse > 0 && endResponse >0){
+//    		    		String response = line.substring(startResponse, endResponse);
 
-    		    		items = Arrays.copyOf(test, test.length+1);
-    		    		items[test.length] = response;
+    		    	if(startResponse > 0){
+    		    		String response = line.substring(startResponse);
+    		    		String dateList = line.substring(0, startResponse);
+    		    		String[] dateInfo = dateList.split(",");
+
+    		    		items = Arrays.copyOf(dateInfo, dateInfo.length+1);
+    		    		items[dateInfo.length] = response;
 
     		    	}else{
     		    		 items = line.split(",");

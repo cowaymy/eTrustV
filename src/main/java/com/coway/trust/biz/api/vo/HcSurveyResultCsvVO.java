@@ -15,7 +15,6 @@ public class HcSurveyResultCsvVO{
 	private Date statisticsDelivered;
 	private Date statisticsSeen;
 	private Date statisticsClicked;
-	private Date statisticsViewed;
 	private Date statisticsResponded;
 	private String response;
 
@@ -29,9 +28,8 @@ public class HcSurveyResultCsvVO{
 		vo.setStatisticsDelivered((CSVRecord.length < 4 || CSVRecord[3].isEmpty()) ? null : dtFormat.parse(CSVRecord[3]));
 		vo.setStatisticsSeen((CSVRecord.length < 5 || CSVRecord[4].isEmpty()) ? null : dtFormat.parse(CSVRecord[4]));
 		vo.setStatisticsClicked((CSVRecord.length < 6 || CSVRecord[5].isEmpty()) ? null : dtFormat.parse(CSVRecord[5]));
-		vo.setStatisticsViewed((CSVRecord.length < 7 || CSVRecord[6].isEmpty()) ? null : dtFormat.parse(CSVRecord[6]));
-		vo.setStatisticsResponded((CSVRecord.length < 8 || CSVRecord[7].isEmpty()) ? null : dtFormat.parse(CSVRecord[7]));
-		vo.setResponse((CSVRecord.length < 9 || CSVRecord[8].isEmpty()) ? null : CSVRecord[8]);
+		vo.setStatisticsResponded((CSVRecord.length < 7 || CSVRecord[6].isEmpty()) ? null : dtFormat.parse(CSVRecord[6]));
+		vo.setResponse((CSVRecord.length < 8 || CSVRecord[7].isEmpty()) ? null : CSVRecord[7]);
 
 		return vo;
 	}
@@ -84,13 +82,6 @@ public class HcSurveyResultCsvVO{
 		this.statisticsClicked = statisticsClicked;
 	}
 
-	public Date getStatisticsViewed() {
-		return statisticsViewed;
-	}
-
-	public void setStatisticsViewed(Date statisticsViewed) {
-		this.statisticsViewed = statisticsViewed;
-	}
 
 	public Date getStatisticsResponded() {
 		return statisticsResponded;
