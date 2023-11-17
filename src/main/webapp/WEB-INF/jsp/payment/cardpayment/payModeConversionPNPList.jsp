@@ -115,9 +115,13 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>PNP RPS Paymode Conversion List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_newConvert()"><spring:message code="sal.btn.new" /></a></p></li>
-    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onClick="fn_newConvert()"><spring:message code="sal.btn.new" /></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+        <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+    </c:if>
 </ul>
 </aside>
 
