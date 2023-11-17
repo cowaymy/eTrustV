@@ -356,10 +356,6 @@ public class OrderConversionController {
 
 	@RequestMapping(value = "/paymodeConversion.do")
 	public String paymodeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
-
-	  System.out.println(params);
-	  model.addAttribute("isPNP",params.get("isPNP").toString());
-
 		return "sales/order/paymodeConvertNewPop";
 	}
 
