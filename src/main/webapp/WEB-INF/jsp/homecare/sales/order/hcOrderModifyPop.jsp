@@ -24,7 +24,7 @@
     var modDocGridID;
     var modRfrGridID;
 
-    var voucherAppliedStatus = 0;
+    /* var voucherAppliedStatus = 0;
     var voucherAppliedCode = "";
     var voucherAppliedEmail = "";
     var voucherPromotionId = [];
@@ -33,7 +33,7 @@
     codeList_562.push({codeId:"0", codeName:"No", code:"No"});
     <c:forEach var="obj" items="${codeList_562}">
     codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
+    </c:forEach> */
 
     var option = {
         winName : "popup",
@@ -67,7 +67,7 @@
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
 
-        doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+        /*  doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code */
 
         fn_statusCodeSearch();
 
@@ -1344,8 +1344,8 @@
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID,
                         isSrvPac : 'Y'
-                        , voucherPromotion: voucherAppliedStatus
-                        ,custStatus: basicInfo.custStatusId
+                        /*, voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId */
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 } else
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
@@ -1356,16 +1356,16 @@
                         promoCustType : custTypeVal,
                         exTrade : exTrade,
                         srvPacId : SRV_PAC_ID
-                        , voucherPromotion: voucherAppliedStatus
-                        ,custStatus: basicInfo.custStatusId
+                        /*, voucherPromotion: voucherAppliedStatus
+                        ,custStatus: basicInfo.custStatusId */
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
-                 if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
+                /* if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
                     $('#voucherCode').val(basicInfo.voucherInfo.voucherCode);
                     $('#voucherEmail').val(basicInfo.voucherInfo.custEmail);
                     $('#voucherType').val(basicInfo.voucherInfo.platformId);
                     applyCurrentUsedVoucher();
-                }
+                } */
               }
             });
   }
@@ -2749,7 +2749,7 @@ console.log(salesOrderMVO);
         $('#btnCloseModify').click();
     }
 
-    function displayVoucherSection(){
+/*     function displayVoucherSection(){
       if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
       {
           $('.voucherSection').show();
@@ -2864,7 +2864,7 @@ console.log(salesOrderMVO);
                 return;
             }
         });
-    }
+    } */
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -4072,7 +4072,7 @@ console.log(salesOrderMVO);
      </colgroup>
      <tbody>
       <tr>
-        <th scope="row">Voucher Type</th>
+<!--         <th scope="row">Voucher Type</th>
         <td colspan="3">
             <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p" disabled></select></p>
             <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p" readonly/></p>
@@ -4081,7 +4081,7 @@ console.log(salesOrderMVO);
             <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsg"></p>
         </td>
       </tr>
-      <tr>
+      <tr> -->
        <th scope="row"><spring:message code="sal.text.product" /></th>
        <td><span id="prdName"></span></td>
        <th scope="row"><spring:message
