@@ -6214,4 +6214,132 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
         WHERE IND = 'HP_REG_PRC'
         AND CODE = #{regOptionId}
      </select>
+
+     <insert id="insertMfaResetRequest" parameterType="Map">
+        INSERT INTO ORG0052D (
+			  REQ_ID
+			, START_DT
+			, END_DT
+			, REMARK
+			, CRT_USER_ID
+			, CRT_DT
+			, UPD_USER_ID
+			, UPD_DT
+        )
+        SELECT
+	        ORG0052D_REQ_ID_SEQ.NEXTVAL
+	        , TO_DATE(#{startDt}, 'RRRR/MM/DD')
+	        , TO_DATE(#{endDt}, 'RRRR/MM/DD')
+	        , #{remark}
+	        , #{userId}
+	        , SYSDATE
+	        , #{userId}
+	        , SYSDATE
+        FROM DUAL
+       </insert>
+
+       <select id="selectCurrRequestId" resultType="int">
+        SELECT ORG0052D_REQ_ID_SEQ.CURRVAL FROM DUAL
+       </select>
+
+       <insert id="insertMfaApprovalLine" parameterType="Map">
+        INSERT INTO ORG0053D (
+              REQ_ID
+            , MEM_ID
+            , MEM_CODE
+            , SEQ
+            , STUS_CODE_ID
+            , CRT_DT
+        )
+        SELECT
+              #{reqId}
+            , MEM_ID
+            , #{memCode}
+            , #{seq}
+            , 1
+            , SYSDATE
+        FROM ORG0001D WHERE MEM_CODE = #{memCode}
+       </insert>
+
+       <select id="mfaResetList" resultType="egovMap" parameterType="Map">
+        SELECT A.*, B.NAME
+        FROM (
+            SELECT
+                'MFAR'||LPAD(A.REQ_ID, 5, '0') REQNO,
+                A.REQ_ID,
+                B.USER_NAME,
+                START_DT,
+                END_DT,
+                A.REMARK,
+                COUNT(CASE WHEN C.STUS_CODE_ID = 1 THEN 1 END) ACTIVE,
+                COUNT(CASE WHEN C.STUS_CODE_ID = 5 THEN 1 END) APPROVE,
+                COUNT(CASE WHEN C.STUS_CODE_ID = 6 THEN 1 END) REJECT,
+                A.CRT_USER_ID
+            FROM ORG0052D A
+            JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+            JOIN ORG0053D C ON C.REQ_ID = A.REQ_ID
+            GROUP BY A.REQ_ID, B.USER_NAME, START_DT, END_DT, A.REMARK, A.CRT_USER_ID
+        ) A
+        LEFT JOIN (
+            SELECT REQ_ID, A.STUS_CODE_ID, B.NAME, B.MEM_ID,
+            LAG(STUS_CODE_ID) OVER (PARTITION BY REQ_ID ORDER BY SEQ) PREV_STUS
+            FROM
+            ORG0053D A
+            JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+        ) B ON A.REQ_ID = B.REQ_ID AND (PREV_STUS IS NULL OR PREV_STUS = 5) AND STUS_CODE_ID IN (1,6)
+        WHERE 1=1
+        <if test="type == 'list'">
+           AND A.CRT_USER_ID = #{userId}
+        </if>
+        <if test="type == 'approval'">
+           AND B.MEM_ID = #{curr}
+           AND B.STUS_CODE_ID = 1
+        </if>
+        <if test="type == 'reset'">
+           AND ACTIVE = 0 AND REJECT = 0
+           AND SYSDATE BETWEEN TRUNC(A.START_DT) AND TRUNC(A.END_DT)
+        </if>
+        ORDER BY REQNO DESC
+<!--        <if test="type == 'list'"> -->
+<!--            FETCH FIRST 10 ROWS ONLY -->
+<!--        </if> -->
+     </select>
+
+     <update id="updateMFAApproval" parameterType="Map">
+        UPDATE ORG0053D
+        SET STUS_CODE_ID = #{stus},
+              UPD_DT = SYSDATE
+        WHERE MEM_ID = #{memId}
+        AND REQ_ID = #{reqId}
+     </update>
+
+     <update id="resetMfa" parameterType="Map">
+        UPDATE SYS0047M
+        SET CHECK_MFA = NULL
+        WHERE HR_CODE = #{memCode}
+     </update>
+
+
+     <insert id="insertResetMfaHistory" parameterType="Map">
+        INSERT INTO ORG0054H (
+              MEM_CODE
+            , RESET_DT
+            , RESET_BY
+        )
+        SELECT
+              #{memCode}
+            , SYSDATE
+            , #{userId}
+        FROM DUAL
+       </insert>
+
+       <select id="getMfaResetHist" parameterType="Map" resultType="egovMap">
+        SELECT
+              MEM_CODE
+            , RESET_DT
+            , RESET_BY
+            FROM ORG0054H
+        WHERE MEM_CODE = #{memCode}
+      </select>
+
 </mapper>

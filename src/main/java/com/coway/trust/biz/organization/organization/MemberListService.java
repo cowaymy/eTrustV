@@ -280,4 +280,21 @@ public interface MemberListService {
 	BigDecimal getOwnPurcOutsInfo(Map<String, Object> params);
 
 	int selectCntMemSameEmail(Map<String, Object> params);
+
+	int insertMfaResetRequest(Map<String, Object> p);
+
+	int insertMfaApprovalLine(Map<String, Object> p);
+
+	List<EgovMap> mfaResetList(Map<String, Object> p);
+
+	void updateMFAApproval(Map<String, Object> p);
+
+	int selectCurrRequestId();
+
+	int resetMfa(Map<String, Object> p);
+
+	int insertResetMfaHistory(Map<String, Object> p);
+
+	List<EgovMap> getMfaResetHist(Map<String, Object> params);
+
 }

@@ -1094,6 +1094,19 @@ function fn_pushCU(){
 }
 
 $(function() {
+
+    $("#requestToResetMFA").click(function() {
+        Common.popupDiv("/organization/requestToResetMFAPop.do", null, null, true);
+    });
+
+    $("#approveToResetMFA").click(function() {
+        Common.popupDiv("/organization/approveToResetMFAPop.do", null, null, true);
+    });
+
+    $("#resetMFA").click(function() {
+        Common.popupDiv("/organization/resetMFAPop.do", null, null, true);
+    });
+
     $('#hpYSListingBtn').click(function() {
         Common.popupDiv("/organization/HPYSListingPop.do", null, null, true);
     });
@@ -1672,6 +1685,15 @@ function fn_socialMediaInfo(){
             </c:if>
             <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
             <li><p class="link_btn"><a href="#" id="rejoinRawListing">Rejoin Raw Listing</a></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine19 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="requestToResetMFA">MFA Request</a></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="approveToResetMFA">MFA Approval</a></li>
+            </c:if>
+            <c:if test="${isMFAReset}">
+	            <li><p class="link_btn"><a href="#" id="resetMFA">MFA Reset</a></li>
+            </c:if>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>

@@ -3024,4 +3024,44 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public int selectCntMemSameEmail(Map<String, Object> params) {
 	    return memberListMapper.selectCntMemSameEmail(params);
 	}
+
+	@Override
+	public int insertMfaResetRequest(Map<String, Object> params){
+		  return memberListMapper.insertMfaResetRequest(params);
+	}
+
+	@Override
+	public int selectCurrRequestId() {
+		return memberListMapper.selectCurrRequestId();
+	}
+
+	@Override
+	public int insertMfaApprovalLine(Map<String, Object> params){
+		  return memberListMapper.insertMfaApprovalLine(params);
+	}
+
+	@Override
+	public List<EgovMap> mfaResetList(Map<String, Object> p) {
+		return memberListMapper.mfaResetList(p);
+	}
+
+	@Override
+	public void updateMFAApproval(Map<String, Object> p) {
+		memberListMapper.updateMFAApproval(p);
+	}
+
+	@Override
+	public int resetMfa(Map<String, Object> p) {
+		return memberListMapper.resetMfa(p);
+	}
+
+	@Override
+	public int insertResetMfaHistory(Map<String, Object> p) {
+		return memberListMapper.insertResetMfaHistory(p);
+	}
+
+	@Override
+    public List<EgovMap> getMfaResetHist(Map<String, Object> params) {
+        return memberListMapper.getMfaResetHist(params);
+    }
 }
