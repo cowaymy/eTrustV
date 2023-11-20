@@ -186,15 +186,18 @@ public class CommissionReportController {
 		model.addAttribute("loginId",loginId);
 
 		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
-		  params.put("userId", sessionVO.getUserId());
+		  params.put("typeCode",sessionVO.getUserTypeId());
+		  params.put("memCode", sessionVO.getUserMemCode());
+		  params.put("pvMonth", today.substring(2,4));
+		  params.put("pvYear", today.substring(4));
 
-      EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+      Map getUserInfo =commissionReportService.commSHIMemberSearch(params);
 
-      model.put("memCodeType", getUserInfo.get("memType"));
-      model.put("orgCode", getUserInfo.get("orgCode"));
-      model.put("grpCode", getUserInfo.get("grpCode"));
-      model.put("deptCode", getUserInfo.get("deptCode"));
-      model.put("memCode", getUserInfo.get("memCode"));
+      model.put("memCodeType", sessionVO.getUserTypeId() );
+      model.put("orgCode", getUserInfo.get("ORG_CODE"));
+      model.put("grpCode", getUserInfo.get("GRP_CODE"));
+      model.put("deptCode", getUserInfo.get("DEPT_CODE"));
+      model.put("memCode", getUserInfo.get("MEM_CODE"));
 		}
 
 		// 호출될 화면
