@@ -5948,6 +5948,18 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                  <if test="position != null and position != ''">
                    AND Extent8.MEM_LVL= #{position}
                 </if>
+                <if test="promoDisHisCode != null and promoDisHisCode != ''">
+                  AND O1.MEM_CODE =#{promoDisHisCode}
+                 </if>
+                 <if test="orgCodeHd != null and orgCodeHd != '' ">
+                    AND EXTENT4.ORG_CODE =#{orgCodeHd}
+                 </if>
+                 <if test="grpCodeHd != null and grpCodeHd != '' ">
+                    AND EXTENT4.GRP_CODE = #{grpCodeHd}
+                 </if>
+                 <if test="deptCodeHd != null and deptCodeHd != '' ">
+                    AND EXTENT4.DEPT_CODE = #{deptCodeHd}
+                 </if>
                 <if test="sessionTypeID != 4 and sessionTypeID != 6">
                    <choose>
                         <when test="memberLevel == 1">
