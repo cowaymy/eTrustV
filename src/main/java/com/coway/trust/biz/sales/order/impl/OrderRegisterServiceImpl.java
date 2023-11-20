@@ -30,7 +30,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.impl.EcommApiMapper;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
-import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.ASEntryVO;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -97,9 +96,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "voucherMapper")
   private VoucherMapper voucherMapper;
-
-  @Resource(name = "customerService")
-  private CustomerService customerService;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -1932,12 +1928,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
-    EgovMap custParams = new EgovMap();
-    custParams.put("custId", salesOrderMVO.getCustId());
-    EgovMap custBasicinfo = customerService.selectCustomerViewBasicInfo(custParams);
     // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
-    if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill")) > 7474 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX
-    		&& CommonUtils.intNvl(custBasicinfo.get("custStatusId")) != 7466) {
+    if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill")) > 7474 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
     	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill"))  == 7475){
     		EgovMap map1 = new EgovMap();
     		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
