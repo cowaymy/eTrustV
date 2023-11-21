@@ -2633,15 +2633,17 @@
              , TO_CHAR(A.MEM_TYPE) AS MEM_TYPE
       FROM  ORG0001D A
       INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
-      INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
+      <!-- INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
                                         AND C.LAST_GRP_CODE = ( SELECT B.LAST_GRP_CODE
                                                                         FROM ORG0001D A
                                                                         JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
-                                                                        WHERE A.MEM_CODE = #{userId})
+                                                                        WHERE A.MEM_CODE = #{userId})  -->
+      INNER JOIN ORG1001V C ON A.MEM_ID = C.MEM_ID
+                                        AND C.GRP_CODE = ( SELECT GRP_CODE FROM ORG1001V WHERE MEM_CODE = #{userId})
       INNER JOIN ORG0012D D ON A.MEM_TYPE = D.MEM_TYPE_ID
                                         AND C.MEM_LVL = D.MEM_ORG_LVL
       INNER JOIN SYS0005M E ON  A.BRNCH = E.BRNCH_ID
-      WHERE C.MEM_LVL = '4'
+      WHERE C.MEM_LVL = '4' AND A.STUS = 1
 
       <if test="txtSearch1 !=null and txtSearch1 !=''">
         AND A.MEM_CODE = #{txtSearch1}
