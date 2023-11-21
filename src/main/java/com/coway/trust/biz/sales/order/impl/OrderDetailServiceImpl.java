@@ -366,7 +366,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     }
 
     // Added for eMandate Paperless-phase 2, Hui Ding, 2023-09-06
-    if (!CommonUtils.isEmpty(rentPaySetInf.get("ddPaperless"))){
+    if (!CommonUtils.isEmpty(rentPaySetInf.get("ddPaperless"))
+    		&& !CommonUtils.isEmpty(rentPaySetInf.get("rentPayModeCode")) && rentPaySetInf.get("rentPayModeCode").toString().equalsIgnoreCase("DD")){
     	rentPaySetInf.put("ddPaperless", "Yes");
     }
 
