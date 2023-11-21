@@ -1,15 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +45,6 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.ctDutyAllowance.CtDutyAllowanceApplication;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
-import com.coway.trust.biz.enquiry.EnquiryService;
 import com.coway.trust.biz.login.LoginService;
 //import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
@@ -75,8 +66,6 @@ import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
@@ -99,14 +88,11 @@ public class MemberListController {
 	@Resource(name = "tagMgmtService")
 	TagMgmtService tagMgmtService;
 
-    @Resource(name = "salesCommonService")
-    private SalesCommonService salesCommonService;
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
   	@Resource(name="locationService")
   	private LocationService locationService;
-
-	 @Resource(name = "EnquiryService")
-	 private EnquiryService enquiryService;
 
   	@Autowired
     private LoginService loginService;
@@ -217,10 +203,6 @@ public class MemberListController {
       model.put("deptCode", result.get("deptCode"));
       model.put("memCode", result.get("memCode"));
     }
-
-    Map<String, Object> p = new HashMap();
-	p.put("type", "reset");
-    model.put("isMFAReset", memberListService.mfaResetList(p).size() == 0 ? false : true);
 
 		// 호출될 화면
 		return "organization/organization/memberList";
@@ -2989,124 +2971,5 @@ public class MemberListController {
 		int cnt = memberListService.selectCntMemSameEmail(params);
 		return ResponseEntity.ok(cnt);
 	}
-
-	@RequestMapping(value="/requestToResetMFAPop.do")
-	public String requestToResetMFAPop(ModelMap model, SessionVO sessionVO){
-		Map<String, Object> p = new HashMap();
-		p.put("userId", sessionVO.getUserId());
-		p.put("type", "list");
-		model.put("requests", new Gson().toJson(memberListService.mfaResetList(p)));
-		return "organization/organization/requestToResetMFAPop";
-	}
-
-	@RequestMapping(value="/approveToResetMFAPop.do")
-	public String approveToResetMFAPop(ModelMap model, SessionVO sessionVO){
-		Map<String, Object> p = new HashMap();
-		p.put("type", "approval");
-		p.put("curr", sessionVO.getMemId());
-		model.put("requests", new Gson().toJson(memberListService.mfaResetList(p)));
-		return "organization/organization/approveToResetMFAPop";
-	}
-
-	@RequestMapping(value="/resetMFAPop.do")
-	public String resetMFAPop(){
-		return "organization/organization/resetMFAPop";
-	}
-
-	@Transactional
-	@RequestMapping(value="/submitMfaResetRequest.do", method=RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> submitMfaResetRequest(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
-
-		ReturnMessage message = new ReturnMessage();
-
-		try{
-			int masterResult = 0 , detailsResult= 0;
-			Map<String, Object> data = new Gson().fromJson(request.getParameter("data"), HashMap.class);
-			data.put("userId",  sessionVO.getUserId());
-			masterResult = memberListService.insertMfaResetRequest(data);
-
-			int currentId = memberListService.selectCurrRequestId();
-
-			List<HashMap<String, Object>> approvalLine = (List<HashMap<String, Object>>) data.get("members");
-
-			for(int i = 0; i < approvalLine.size(); i++) {
-				Map<String, Object> d = (Map<String, Object>) approvalLine.get(i);
-				d.put("reqId", currentId);
-				d.put("seq", i+1);
-				detailsResult = memberListService.insertMfaApprovalLine(d);
-			}
-
-			message.setCode(masterResult > 0 && detailsResult > 0 ? AppConstants.SUCCESS:AppConstants.FAIL);
-			message.setMessage(masterResult > 0 && detailsResult > 0 ? "Success to submit." : "Fail to submit.");
-		}catch(Exception e){
-			 Map<String, Object> errorParam = new HashMap<>();
-			 errorParam.put("pgmPath","/organization");
-			 errorParam.put("functionName", "submitMfaResetRequest.do?userId=" + sessionVO.getUserId());
-			 errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
-			 enquiryService.insertErrorLog(errorParam);
-
-			 message.setCode(AppConstants.FAIL);
-			 message.setMessage("Fail to submit.");
-		}
-		 return ResponseEntity.ok(message);
-	}
-
-	@Transactional
-	@RequestMapping(value="/approveToResetMFA.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> approveToResetMFA(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
-		ReturnMessage message = new ReturnMessage();
-		try {
-			Map<String, Object> data = new Gson().fromJson(request.getParameter("data"), HashMap.class);
-			if ((boolean) data.get("approve")) {
-				data.put("stus", 5);
-			} else {
-				data.put("stus", 6);
-			}
-			data.put("memId", sessionVO.getMemId());
-			memberListService.updateMFAApproval(data);
-			message.setCode(AppConstants.SUCCESS);
-		} catch(Exception e) {
-			 Map<String, Object> errorParam = new HashMap<>();
-			 errorParam.put("pgmPath","/organization");
-			 errorParam.put("functionName", "approveToResetMFA.do?userId=" + sessionVO.getUserId());
-			 errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
-			 enquiryService.insertErrorLog(errorParam);
-
-			 message.setCode(AppConstants.FAIL);
-		}
-		return ResponseEntity.ok(message);
-	}
-
-	@Transactional
-	@RequestMapping(value="/resetMfa.do", method=RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> resetAttendance(@RequestBody Map<String, Object> p, SessionVO session) throws Exception {
-		ReturnMessage message = new ReturnMessage();
-		try{
-	  		Map<String, Object> d = new HashMap();
-	  		d.put("memCode", p.get("memCode"));
-	  		d.put("userId", session.getUserId());
-	  		int resetMfa = memberListService.resetMfa(d);
-	  		int resetMfaHistory = memberListService.insertResetMfaHistory(d);
-			message.setCode(resetMfa > 0 ? AppConstants.SUCCESS:AppConstants.FAIL);
-			message.setMessage(resetMfa > 0 ? "Success to reset." : "Fail to reset.");
-		}catch(Exception e){
-			 Map<String, Object> errorParam = new HashMap<>();
-			 errorParam.put("pgmPath","/organization");
-			 errorParam.put("functionName", "resetMfa.do?memCode=" + p + "&userId=" + session.getUserId());
-			 errorParam.put("errorMsg",CommonUtils.printStackTraceToString(e));
-			 enquiryService.insertErrorLog(errorParam);
-
-			 message.setCode(AppConstants.FAIL);
-			 message.setMessage("Fail to reset.");
-		}
-		return ResponseEntity.ok(message);
-	}
-
-    @RequestMapping(value = "/getMfaResetHist.do", method = RequestMethod.GET)
-    public ResponseEntity<List<EgovMap>> getMfaResetHist(@RequestParam Map<String, Object> params) throws Exception {
-        return ResponseEntity.ok(memberListService.getMfaResetHist(params));
-    }
-
-
 }
 
