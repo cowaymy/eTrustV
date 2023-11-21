@@ -3393,6 +3393,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
 
    	  $('#cmbPromotionAexc').val('');
    	  $('#cmbPromotionAexc option').remove();
+	  fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
   }
 
   function applyCurrentUsedVoucherAexc(){
@@ -3523,6 +3524,13 @@ console.log("result.lastbillmth;"+result.lastbillmth);
 
 	    $('#cmbPromotion').val('');
 	   	$('#cmbPromotion option').remove();
+
+	   	//reload promotion
+	   	var stkIdVal = $("#cmbOrderProduct").val();
+        if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68) {
+          SRV_PAC_ID = 0;
+        }
+		fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
   	}
 
   function applyCurrentUsedVoucherPrdEx(){

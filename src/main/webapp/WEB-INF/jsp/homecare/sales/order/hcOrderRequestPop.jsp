@@ -2838,6 +2838,9 @@
 
 		$('#cmbPromotionAexc').val('');
 		$('#cmbPromotionAexc option').remove();
+
+		//Reload current product promotion
+		fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
 	}
 
 	function applyCurrentUsedVoucherAexc() {
@@ -2872,16 +2875,11 @@
 									if (result.length > 0) {
 										voucherPromotionId = result;
 										//voucherPromotionCheck();
-										fn_loadProductPromotionAexc($(
-												'#cmbAppTypeAexc').val(),
-												STOCK_ID, EMP_CHK,
-												CUST_TYPE_ID, $("#exTradeAexc")
-														.val());
+										fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
 									} else {
 										//reset everything
 										clearVoucherDataAexc();
-										Common
-												.alert("No Promotion is being entitled for this voucher code");
+										Common.alert("No Promotion is being entitled for this voucher code");
 										return;
 									}
 								});
@@ -2981,6 +2979,10 @@
 
 		    $('#cmbPromotion').val('');
 		   	$('#cmbPromotion option').remove();
+
+		   	//Reload product promotion
+			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
+			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
 	  	}
 
 	    function applyCurrentUsedVoucherPrdEx(){
