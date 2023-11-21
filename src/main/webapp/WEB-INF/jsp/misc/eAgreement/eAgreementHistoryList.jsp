@@ -325,8 +325,12 @@ function fn_downloadAgreement() {
         	//Health Planner Agreement
 
         	if(memLvl < "4" && memLvl != "") {
-                $("#v_contractStartDt").val(cnfmDt);
-                $("#v_contractEndDt").val('');
+        		if($("#startDt").val() == "" && $("#endDt").val() == ""){
+        			Common.alert("Generating HM,SM,GM agreement requires Contract Period to be filled.")
+        			return false;
+        		}
+                $("#v_contractStartDt").val($("#startDt").val());
+                $("#v_contractEndDt").val($("#endDt").val());
                 $("#v_signedDt").val(cnfmDt);
         	}
             $("#reportFileName").val("/organization/agreement/" + rptFileName);
@@ -340,7 +344,7 @@ function fn_downloadAgreement() {
         	//Cody Agreement
 
 			console.log(cnfmDt.substring(6) + "-" + cnfmDt.substring(3, 5) + "-" + cnfmDt.substring(0, 2));
-        	debugger;
+
             $("#v_signedDt").val(cnfmDt);
             $("#v_contractStartDt").val(cnfmDt.substring(6) + "-" + cnfmDt.substring(3, 5) + "-" + cnfmDt.substring(0, 2));
 
