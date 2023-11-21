@@ -260,15 +260,17 @@ function fn_onChgMemLvl() {
 
 function fn_searchMemberEAgreement() {
 
-    if($("#code").val() == "" && $("#icNum").val() == "") {
-        Common.alert("Member Code/NRIC is required.");
-        return false;
-    }
+	if($("#startDt").val() == "" && $("#endDt").val() == ""){
+	    if($("#code").val() == "" && $("#icNum").val() == "") {
+	        Common.alert("Member Code/NRIC is required.");
+	        return false;
+	    }
 
-    if($("#memTypeCom").val() == "") {
-        Common.alert("Please select one member type.");
-        return false;
-    }
+	    if($("#memTypeCom").val() == "") {
+	        Common.alert("Please select one member type.");
+	        return false;
+	    }
+	}
     var obj = {
         memCode : $("#code").val(),
         name : $("#name").val(),
