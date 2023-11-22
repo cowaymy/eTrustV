@@ -73,8 +73,7 @@
 
 	function selectList() {
 		Common.ajax("GET",
-				"/payment/mobileLumpSumPayment/getlumpSumEnrollmentList.do", $(
-						"#searchForm").serialize(), function(result) {
+				"/payment/mobileLumpSumPayment/getlumpSumEnrollmentList.do", $("#searchForm").serialize(), function(result) {
 					AUIGrid.setGridData(myGridID, result);
 				    AUIGrid.setGridData(excelListGridID, result);
 				});

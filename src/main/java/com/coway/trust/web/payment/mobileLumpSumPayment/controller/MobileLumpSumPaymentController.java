@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -88,7 +89,17 @@ public class MobileLumpSumPaymentController {
 	}
 
 	@RequestMapping(value = "/getlumpSumEnrollmentList.do")
-	public ResponseEntity<List<EgovMap>> getlumpSumEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> getlumpSumEnrollmentList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		 String[] statusIdList = request.getParameterValues("ticketStatus");
+		 String[] branchIdList = request.getParameterValues("branchCode");
+		 String[] regionIdList = request.getParameterValues("cmbRegion");
+		 String[] payModeIdList = request.getParameterValues("payMode");
+
+		 params.put("statusIdList",statusIdList);
+		 params.put("branchIdList",branchIdList);
+		 params.put("regionIdList",regionIdList);
+		 params.put("payModeIdList",payModeIdList);
 
 		List<EgovMap> resultList = mobileLumpSumPaymentKeyInService.getLumpSumEnrollmentList(params);
 	    return ResponseEntity.ok(resultList);

@@ -601,9 +601,13 @@
         <if test='orderNo != null and orderNo != ""'>
         	AND p0350d.SALES_ORD_NO = TRIM(#{orderNo})
 	    </if>
-        <if test='ticketStatus != null and ticketStatus != ""'>
-        	AND p0349m.PAY_STUS_ID = #{ticketStatus}
-	    </if>
+	    <if test="statusIdList != null and statusIdList != ''">
+		      AND p0349m.PAY_STUS_ID in
+		      <foreach item="item" collection="statusIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
 	    <if test="branchIdList != null and branchIdList != ''">
 		      AND s0005m.BRNCH_ID in
 		      <foreach item="item" collection="branchIdList" index="index"
@@ -611,16 +615,20 @@
 		        #{item}
 		      </foreach>
 		</if>
-		<if test="cmbRegionList != null and cmbRegionList != ''">
+		<if test="regionIdList != null and regionIdList != ''">
 		      AND s0005m.REGN_ID in
-		      <foreach item="item" collection="cmbRegionList" index="index"
+		      <foreach item="item" collection="regionIdList" index="index"
 		        open="(" separator="," close=")">
 		        #{item}
 		      </foreach>
 		</if>
-		<if test="payMode != null and payMode != '' ">
-           AND p0349m.PAY_MODE = #{payMode}
-        </if>
+        <if test="payModeIdList != null and payModeIdList != ''">
+		      AND p0349m.PAY_MODE in
+		      <foreach item="item" collection="payModeIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
         <if test="serialNo != null and serialNo != '' ">
           AND ( p0349m.SLIP_NO = #{serialNo} OR p0349m.CHEQUE_NO = #{serialNo} )
         </if>
