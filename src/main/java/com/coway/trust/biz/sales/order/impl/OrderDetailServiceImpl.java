@@ -369,6 +369,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     if (!CommonUtils.isEmpty(rentPaySetInf.get("ddPaperless"))
     		&& !CommonUtils.isEmpty(rentPaySetInf.get("rentPayModeCode")) && rentPaySetInf.get("rentPayModeCode").toString().equalsIgnoreCase("DD")){
     	rentPaySetInf.put("ddPaperless", "Yes");
+    } else {
+    	rentPaySetInf.put("ddPaperless", "-");
     }
 
   }
