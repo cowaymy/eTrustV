@@ -17,7 +17,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2019. 11. 13.    KR-JAEMJAEM:)   First creation
  * </pre>
  */
-@Mapper("RoyaltyCustomerListApiMapper")
+@Mapper("HomecareServiceApiMapper")
 public interface HomecareServiceApiMapper {
 
 	List<EgovMap> selectPartnerCode(Map<String, Object> params);
