@@ -695,11 +695,15 @@
     </select>
 
     <select id="selectHPDeliveryGRStockCode" parameterType="Map" resultType="String">
-    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectHPDeliveryGRStockCode] - MY TOMMY */
-		SELECT MAX(STOCK_CODE) AS STOCK_CODE
-		  FROM HMC0010D
-		 WHERE HMC_GR_NO = #{docNo}
-		   AND USE_YN = 'Y'
+	/* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectHPDeliveryGRStockCode] - MY TOMMY */
+		SELECT B.STOCK_CODE
+			FROM LOG0205M A
+			JOIN HMC0010D B ON A.PREFIX_STK_ID = B.STOCK_ID AND B.HMC_GR_NO = #{docNo}
+			LEFT JOIN SYS0026M C ON A.PREFIX_CONV_STK_ID = C.STK_ID
+			LEFT JOIN SYS0026M D ON A.PREFIX_STK_ID = D.STK_ID
+		WHERE 1=1
+			AND LPAD(FN_GET_CONVERT_NUM(C.STK_CODE,36),5,'0') = SUBSTR(#{boxno},4,5)
+			AND A.USE_YN = 'Y'
     </select>
 
 </mapper>
