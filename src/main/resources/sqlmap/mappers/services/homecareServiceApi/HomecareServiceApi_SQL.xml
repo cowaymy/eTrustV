@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.royaltyCustomerListApi.impl.RoyaltyCustomerListApiMapper">
+
+
+
+
+<select id="selectPartnerCode" resultType="egovMap">
+<![CDATA[
+
+    SELECT MEM_ID AS DT_ID
+    , MEM_CODE AS DT_MEM_CODE
+    FROM
+    ORG0001D ORG
+    WHERE ORG.MEM_TYPE IN ('5758','6672')
+    AND ORG.STUS = 1
+    AND ORG.MEM_CODE <> #{regId}
+    AND ORG.BRNCH IN
+    (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{regId})
+
+]]>
+</select>
+
+
+</mapper>
