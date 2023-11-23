@@ -78,6 +78,8 @@ import com.coway.trust.api.mobile.services.history.ServiceHistoryDto;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryFilterDetailDto;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryForm;
 import com.coway.trust.api.mobile.services.history.ServiceHistoryPartDetailDto;
+import com.coway.trust.api.mobile.services.installation.HomecareServiceApiDto;
+import com.coway.trust.api.mobile.services.installation.HomecareServiceApiForm;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestForm;
 import com.coway.trust.api.mobile.services.installation.InstallReAppointmentRequestDto;
@@ -120,6 +122,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationService;
 import com.coway.trust.biz.services.bs.ServiceApiHSService;
+import com.coway.trust.biz.services.homecareServiceApi.HomecareServiceApiService;
 import com.coway.trust.biz.services.as.ServiceApiASService;
 import com.coway.trust.biz.services.as.ServiceMileageApiService;
 import com.coway.trust.biz.services.pr.ServiceApiPRService;
@@ -225,6 +228,9 @@ public class ServiceApiController {
 
   @Autowired
   private AdaptorService adaptorService;
+
+   @Resource(name = "HomecareServiceApiService")
+   private HomecareServiceApiService homecareServiceApiService;
 
   @Resource(name = "returnUsedPartsService")
   private ReturnUsedPartsService returnUsedPartsService;
@@ -2136,6 +2142,18 @@ public class ServiceApiController {
     }
     return ResponseEntity.ok(selectSyncIhr.stream().map(r -> SyncIhrApiDto.create(r)).collect(Collectors.toList()));
   }
+
+	 @ApiOperation(value = "selectPartnerCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	    @RequestMapping(value = "/selectPartnerCode", method = RequestMethod.GET)
+	    public ResponseEntity<List<HomecareServiceApiDto>> selectPartnerCode(@ModelAttribute HomecareServiceApiForm param) throws Exception {
+	        List<EgovMap>  selectPartnerCode = homecareServiceApiService.selectPartnerCode(param);
+	        if(LOGGER.isErrorEnabled()){
+	            for (int i = 0; i < selectPartnerCode.size(); i++) {
+	                    LOGGER.debug("selectPartnerCode    값 : {}", selectPartnerCode.get(i));
+	            }
+	        }
+	        return ResponseEntity.ok(selectPartnerCode.stream().map(r -> HomecareServiceApiDto.create(r)).collect(Collectors.toList()));
+	    }
 
   @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectAsDetails", method = RequestMethod.GET)
