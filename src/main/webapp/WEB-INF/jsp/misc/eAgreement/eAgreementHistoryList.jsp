@@ -33,11 +33,6 @@ function createAUIGrid() {
 	    visible : false
 	},
 	{
-	    dataField : "memLvl",
-	    headerText : "memLvl",
-	    visible : false
-	},
-	{
         dataField : "rptCnfmDt",
         headerText : "rptCnfmDt",
 	    visible : false
@@ -65,7 +60,11 @@ function createAUIGrid() {
         headerText : "Member NRIC",
         style : "my-column",
         width : 130
-    }, {
+    }, 	{
+	    dataField : "memLvl",
+	    headerText : "Member Lvl",
+        width : 130
+	},{
         dataField : "deptCode",
         headerText : "Department Code",
         width : 150
