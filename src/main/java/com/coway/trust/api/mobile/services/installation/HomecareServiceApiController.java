@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.services.installation;
+/*package com.coway.trust.api.mobile.services.installation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,4 +61,4 @@ public class HomecareServiceApiController {
 	        }
 	        return ResponseEntity.ok(selectPartnerCode.stream().map(r -> HomecareServiceApiDto.create(r)).collect(Collectors.toList()));
 	    }
-	 }
+	 }*/
