@@ -17,7 +17,6 @@
 
 	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "6","codeName": "Reject"}];
 	$(document).ready(function() {
-
 	    doDefCombo(actData, '' ,'action', 'S', '');
 
 		$("#trIssDt").on('focus', function(e) {
@@ -179,13 +178,19 @@
 					dataField : "oriOutAmt",
 					headerText : '<spring:message code="pay.head.outstandingAmount" />',
 					width : 130,
-					editable : false
+					editable : false,
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			            return thousandSeperator(value);
+			          }
 				},
 				{
 					dataField : "payAmt",
 					headerText : '<spring:message code="pay.head.paymentAmount" />',
 					width : 130,
-					editable : false
+					editable : false,
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			            return thousandSeperator(value);
+			          }
 				},
 				{
 					dataField : "totOriOutAmt",
@@ -194,7 +199,10 @@
 					editable : false,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			            return thousandSeperator(value);
+			          }
 				},
 				{
 					dataField : "totPayAmt",
@@ -203,7 +211,10 @@
 					dataType : "numeric",
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			            return thousandSeperator(value);
+			          }
 				},
 				{
 					dataField : "slipNo",
@@ -403,7 +414,20 @@
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+		           labelFunction : function(rowIndex, columnIndex, value){
+		               var maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+
+		               for(var i=0; i<prefix.length; i++){
+		                   if(i == 0 || i == prefix.length - 1) {
+		                       maskedEmail = maskedEmail + prefix[i].toString();
+		                   }
+		                   else {
+		                       maskedEmail = maskedEmail + "*";
+		                   }
+		               }
+		               return maskedEmail =maskedEmail +postfix;
+		           }
 				},
 				{
 					dataField : "email2",
@@ -411,7 +435,20 @@
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+			           labelFunction : function(rowIndex, columnIndex, value){
+			               var maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+
+			               for(var i=0; i<prefix.length; i++){
+			                   if(i == 0 || i == prefix.length - 1) {
+			                       maskedEmail = maskedEmail + prefix[i].toString();
+			                   }
+			                   else {
+			                       maskedEmail = maskedEmail + "*";
+			                   }
+			               }
+			               return maskedEmail =maskedEmail +postfix;
+			           }
 				},
 				{
 					dataField : "sms1",
@@ -419,7 +456,10 @@
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+		            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+		            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            }
 				},
 				{
 					dataField : "sms2",
@@ -427,7 +467,10 @@
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
+					mergePolicy : "restrict",
+		            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+		            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            }
 				},
 				{
 					dataField : "issueBank",
@@ -1601,6 +1644,10 @@
 	        $("#deptCode").attr("readonly", "readonly");
 	    }
 	  }
+
+  function thousandSeperator(value) {
+	    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
 </script>
 <!-- html content -->
 <section id="content">

@@ -591,11 +591,9 @@
         <if test='grpTicketNo != null and grpTicketNo != ""'>
         	AND p0349m.MOB_PAY_GROUP_NO = TRIM(#{grpTicketNo})
 	    </if>
-	    <if test='requestStartDate != null and requestStartDate != null'>
-			<if test='requestEndDate != "" and requestEndDate != ""'>
-				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{requestStartDate},'DD/MM/YYYY') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{requestEndDate},'DD/MM/YYYY')
-				]]>
+	    <if test='requestStartDate != null and requestEndDate != null'>
+			<if test='requestStartDate != "" and requestEndDate != ""'>
+				AND p0349m.CRT_DT BETWEEN TO_DATE(#{requestStartDate},'DD/MM/YYYY') AND (TO_DATE(#{requestEndDate},'DD/MM/YYYY') + 1)
 			</if>
 		</if>
         <if test='orderNo != null and orderNo != ""'>
@@ -855,7 +853,8 @@
 		SELECT A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,LISTAGG(B.SALES_ORD_NO,',') WITHIN GROUP (ORDER BY B.SALES_ORD_NO) AS ORD_NO,
 		C.NAME,D.NAME AS PAY_STUS_NAME,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS CRT_DT,
 		E.CODE_NAME AS PAY_MODE_NAME,A.REMARKS,
-		CASE WHEN A.CHEQUE_NO IS NULL THEN A.SLIP_NO ELSE A.CHEQUE_NO END AS SERIAL_NO
+		CASE WHEN A.CHEQUE_NO IS NULL THEN A.SLIP_NO ELSE A.CHEQUE_NO END AS SERIAL_NO,
+		CASE WHEN (A.UPLOAD_IMG1 IS NOT NULL OR A.UPLOAD_IMG2 IS NOT NULL OR A.UPLOAD_IMG3 IS NOT NULL OR A.UPLOAD_IMG4 IS NOT NULL) THEN 1 ELSE 0 END ATCH_EXIST
 		FROM PAY0349M A
 		JOIN PAY0350D B
 		ON A.MOB_PAY_GROUP_NO = B.MOB_PAY_GROUP_NO
@@ -867,8 +866,8 @@
         ON E.CODE_ID = A.PAY_MODE
 		WHERE 1=1
 		AND A.CRT_BY = #{userId}
-		<if test='fromDate != null and fromDate != null'>
-			<if test='toDate != "" and toDate != ""'>
+		<if test='fromDate != null and toDate != null'>
+			<if test='fromDate != "" and toDate != ""'>
 				<![CDATA[
 					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD') AND TO_DATE(A.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
 				]]>
