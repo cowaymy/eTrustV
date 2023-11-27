@@ -1929,8 +1929,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
     // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
-    if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill")) > 7474 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
-    	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBill"))  == 7475){
+    if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode")) > 01 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
+    	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02){
     		EgovMap map1 = new EgovMap();
     		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
     		map1.put("fromPeriod",1);

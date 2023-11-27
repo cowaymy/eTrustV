@@ -98,6 +98,7 @@ public class SalesPromoMVO implements Serializable {
 	private int custStatusNew;
 	private int custStatusDisen;
 	private int custStatusEn;
+	private int custStatusEnWoutWp;
 	private int promoDiscOnBill;
 
 	public int getPromoId() {
@@ -444,6 +445,14 @@ public class SalesPromoMVO implements Serializable {
 
 		public void setCustStatusEn(int custStatusEn) {
 			this.custStatusEn = custStatusEn;
+		}
+
+		public int getCustStatusEnWoutWp() {
+			return custStatusEnWoutWp;
+		}
+
+		public void setCustStatusEnWoutWp(int custStatusEnWoutWp) {
+			this.custStatusEnWoutWp = custStatusEnWoutWp;
 		}
 
 		public int getPromoDiscOnBill() {

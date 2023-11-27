@@ -74,6 +74,11 @@
         }else{
             $('#custStatusEn').prop("checked", false);
         }
+        if('${promoInfo.custStatusEnWoutWp}' == '1') {
+            $('#custStatusEnWoutWp').prop("checked", true);
+        }else{
+            $('#custStatusEnWoutWp').prop("checked", false);
+        }
     });
 
     function fn_addOption() {
@@ -170,6 +175,7 @@
         var vCustStatusNew = "";
         var vCustStatusDisen = "";
         var vCustStatusEn = "";
+        var vCustStatusEnWoutWp = "";
         if($('#custStatusNew').is(":checked")) {
             vCustStatusNew = 1;
         }else{
@@ -184,6 +190,11 @@
             vCustStatusEn = 1;
         }else{
             vCustStatusEn = 0;
+        }
+        if($('#custStatusEnWoutWp').is(":checked")) {
+            vCustStatusEnWoutWp = 1;
+        }else{
+            vCustStatusEnWoutWp = 0;
         }
 
         var promotionVO = {
@@ -217,6 +228,7 @@
                 custStatusNew : vCustStatusNew,
                 custStatusDisen : vCustStatusDisen,
                 custStatusEn : vCustStatusEn,
+                custStatusEnWoutWp : vCustStatusEnWoutWp,
                 promoDiscOnBill : $('#promoSpecialDisId').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
@@ -943,10 +955,11 @@
 </tr>
 <tr>
 <th scope="row">Customer Status<span class="must">*</span></th>
-    <td colspan = "2">
+    <td colspan = "3">
         <input id="custStatusNew" name="custStatus" type="checkbox" value="7465" disabled/><span>New</span>
-        <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
         <input id="custStatusEn" name="custStatus" type="checkbox" value="7466" disabled/><span>Engaged</span>
+        <input id="custStatusEnWoutWp" name="custStatus" type="checkbox" value="7476" /><span>Engaged (New to WP)</span>
+        <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
     </td>
 </tr>
 </tbody>
