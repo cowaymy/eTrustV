@@ -20,7 +20,7 @@ public class HcSurveyResultCsvVO{
 
 	public static HcSurveyResultCsvVO create(String[] CSVRecord) throws ParseException{
 		HcSurveyResultCsvVO vo = new HcSurveyResultCsvVO();
-		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyymmDD HH:mm:ss");
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 
 		vo.setTxnId(Integer.parseInt(CSVRecord[0]));
 		vo.setStatisticsProcessed((CSVRecord.length < 2 || CSVRecord[1].isEmpty()) ? null : dtFormat.parse(CSVRecord[1]));
