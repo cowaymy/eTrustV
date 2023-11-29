@@ -47,9 +47,14 @@
         	  var availMonth    = (((availDate.getMonth()+1).toString().length) == 1) ? '0'+(availDate.getMonth()+1) : (availDate.getMonth()+1);
         	  var availYear     = availDate.getFullYear();
         	  var formatDate  = availDay + "/" + availMonth + "/" + availYear;
+
+        	  var availFormattedDate  = new Date(availMonth + "/" + availDay + "/" + availYear);
+              var parts = $("#requestDate").val().split("/");
+              var requestFormattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+              if(requestFormattedDate < availFormattedDate){
               // Common.alert("There is no available inventory in RDC to create installation order ");
               //msg += "* There is no available inventory in RDC to create installation order </br>";
-              if($("#requestDate").val() < formatDate){
+              //if($("#requestDate").val() < formatDate){
             	  msg += "* There is no available inventory in RDC to create installation order. Available Installtion Date start from " + formatDate + " </br>";
               }
           }
@@ -82,8 +87,12 @@
                   var availMonth    = (((availDate.getMonth()+1).toString().length) == 1) ? '0'+(availDate.getMonth()+1) : (availDate.getMonth()+1);
                   var availYear     = availDate.getFullYear();
                   var formatDate  = availDay + "/" + availMonth + "/" + availYear;
-                  console.log("formatDate " + formatDate);
-                  if($("#requestDate").val() < formatDate){
+
+                  var availFormattedDate  = new Date(availMonth + "/" + availDay + "/" + availYear);
+                  var parts = $("#requestDate").val().split("/");
+                  var requestFormattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                  //if($("#requestDate").val() < formatDate){
+                	  if(requestFormattedDate < availFormattedDate){
                       msg += "* There is no available inventory in RDC to create installation order. Available Installtion Date start from " + formatDate + " </br>";
                   }
               }else if(rdcStk <= 0){
