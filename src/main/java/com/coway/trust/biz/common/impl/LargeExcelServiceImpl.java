@@ -23,6 +23,7 @@ import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileAMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
@@ -386,4 +387,15 @@ public class LargeExcelServiceImpl implements LargeExcelService {
     public void downloadOrdPayCnvrList(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
         this.downLoad(LargeExcelQuery.PAY_CNVR_LIST.getQueryId(), parameter, excelDownloadHandler);
     }
+
+  @Override
+  public void downloadCreditCardFileAMB(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler) {
+      this.downLoad(LargeExcelQuery.CREDITCARD_DETAIL_PAGING.getQueryId(), parameter, claimFileGeneralHandler);
+  }
+
+  @Override
+  public void downLoadECashGrpDeductionFileAMB(Object parameter, ECashGrpDeductionFileAMBHandler eCashGrpDeductionFileAMBHandler) {
+    this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileAMBHandler);
+  }
+
 }
