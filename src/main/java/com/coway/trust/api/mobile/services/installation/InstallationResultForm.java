@@ -93,6 +93,9 @@ public class InstallationResultForm {
   private String checkSend;
   private String custMobileNo;
   private String customerType;
+
+  private String partnerCode;
+  private String memCode;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
   @ApiModelProperty(value = "partList")
@@ -103,6 +106,22 @@ public class InstallationResultForm {
 
 public String getChkCrtAs() {
 	return chkCrtAs;
+}
+
+public String getPartnerCode() {
+	return partnerCode;
+}
+
+public String getMemCode() {
+	return memCode;
+}
+
+public void setPartnerCode(String partnerCode) {
+	this.partnerCode = partnerCode;
+}
+
+public void setMemCode(String memCode) {
+	this.memCode = memCode;
 }
 
 public void setChkCrtAs(String chkCrtAs) {
