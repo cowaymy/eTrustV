@@ -1937,7 +1937,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		map1.put("toPeriod",6);
     		map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
     		map1.put("percentage",50);
-    		BigDecimal CNamt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.CEILING);
+    		BigDecimal CNamt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
     		map1.put("cnAmt",CNamt);
     		map1.put("status",1);
     		map1.put("userId",sessionVO.getUserId());
