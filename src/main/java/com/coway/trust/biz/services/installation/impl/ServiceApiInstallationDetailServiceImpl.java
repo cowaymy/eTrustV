@@ -734,6 +734,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("hidStockIsSirim", String.valueOf(insApiresult.get("sirimNo")));
         params.put("hidSerialNo", String.valueOf(insApiresult.get("serialNo")));
         params.put("remark", insApiresult.get("resultRemark"));
+        params.put("dtPairId", insApiresult.get("partnerCode"));
+        params.put("memCode", insApiresult.get("memCode"));
         params.put("EXC_CT_ID", String.valueOf(userId));
 
         params.put("hidSerialRequireChkYn", "Y");
