@@ -41,6 +41,7 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.ecash.service.ECashDeductionService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.biz.payment.payment.service.ECashResultAmbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ECashResultUploadVO;
 import com.coway.trust.biz.payment.payment.service.ECashResultScbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ECashResultCimbUploadVO;
@@ -56,8 +57,10 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileAMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.FileInfoVO;
@@ -454,7 +457,22 @@ public class ECashDeductionController {
                             this.createECashGrpDeductionFileMBB(claimMap);
         				}
         			}
-                }
+                }else if ("23".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
+                  //
+                  int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
+                  int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
+                  int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
+
+                  if (pageCnt > 0){
+                    for(int i = 1 ; i <= pageCnt ; i++){
+                      claimMap.put("pageNo", i);
+                      claimMap.put("rowCount", 60000);
+                      claimMap.put("batchNo", totBatToday);
+                      claimMap.put("pageCnt", pageCnt);
+                      this.createECashGrpDeductionFileAMB(claimMap);
+                    }
+                  }
+                    }
 
     		}
     		/*else{
@@ -1028,7 +1046,55 @@ public class ECashDeductionController {
 				eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
 				eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
 
-				 }
+				 }else if( request.getParameter("bankCode").equals("AMB")){
+		        List<ECashResultAmbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ECashResultAmbUploadVO::create);
+
+		        //CVS 파일 객체 세팅
+		        Map<String, Object> cvsParam = new HashMap<String, Object>();
+		        cvsParam.put("voList", vos);
+		        cvsParam.put("userId", sessionVO.getUserId());
+
+		        // cvs 파일 저장 처리
+		        List<ECashResultAmbUploadVO> vos2 = (List<ECashResultAmbUploadVO>) cvsParam.get("voList");
+
+		        List<Map> list = vos2.stream().map(r -> {
+		          Map<String, Object> map = BeanConverter.toMap(r);
+		          map.put("itmCnt", r.getItmCnt());
+		          map.put("itmId", r.getItmId());
+		          map.put("appvCode", !CommonUtils.nvl(r.getAppvCode()).equals("A") ? "0000" : r.getAppvCode());
+		          map.put("respnsCode", CommonUtils.nvl(r.getAppvCode()).equals("A") ? "00" : r.getRespnsCode());
+		          map.put("settleDate",today);
+		          return map;
+		        }).collect(Collectors.toList());
+
+		        int size = 500;
+		        int page = list.size() / size;
+		        int start;
+		        int end;
+
+		        Map<String, Object> bulkMap = new HashMap<>();
+		        eCashDeductionService.deleteECashDeductionResultItem(eCashMap);
+		        for (int i = 0; i <= page; i++) {
+		          start = i * size;
+		          end = size;
+
+		          if (i == page) {
+		            end = list.size();
+		          }
+		          LOGGER.info("list ::" + list.stream().skip(start).limit(end).count());
+		          if(list.stream().skip(start).limit(end).count() != 0){
+		            bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+		            eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+		          }
+		        }
+
+
+		        eCashMap = eCashDeductionService.selectECashBankResult(eCashMap);
+		        eCashMap.put("settleDate", list.get(0).get("settleDate").toString());
+		        eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
+		        eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
+
+		         }
 		 else{
     				List<ECashResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultUploadVO::create);
 
@@ -1095,7 +1161,7 @@ public class ECashDeductionController {
       String emailBody = claimsMap.get("emailBody").toString();
       String fileDirectory = filePath + subPath;
 
-        String zipFile = fileDirectory + "/" + batchName +batchDate + ".zip";
+        String zipFile = fileDirectory + "/" + batchName + batchDate + ".zip";
         String srcDir  = fileDirectory + "/" + batchDate;
         String subPathFile = subPath + batchName +batchDate + ".zip";
 
@@ -1150,6 +1216,52 @@ public class ECashDeductionController {
         }
     }
 
+    private ECashGrpDeductionFileAMBHandler getTextDownloadAMBGrpHandler(String fileName, String[] columns, String[] titles, String path,
+        String subPath, Map<String, Object> params) {
+      FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+      excelDownloadVO.setFilePath(path);
+      excelDownloadVO.setSubFilePath(subPath);
+      return new ECashGrpDeductionFileAMBHandler(excelDownloadVO, params);
+    }
+
+    /**
+     * CRC AMB - Create eCash Deduction Group File
+     *
+     * @param claimMap
+     * @param claimDetailList
+     * @throws Exception
+     */
+    public void createECashGrpDeductionFileAMB(EgovMap claimMap) throws Exception {
+
+      ECashGrpDeductionFileAMBHandler downloadHandler = null;
+
+      try {
+
+        String inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+        String todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+        String fileName = claimMap.get("batchName").toString();
+        String subPath =  claimMap.get("subPath").toString() + inputDate + "/";
+        String ext = claimMap.get("ext").toString();
+        String batchNo = claimMap.get("fileBatchId").toString();
+
+        String sFile = fileName + todayDate + "_" + batchNo + "." + ext;
+
+        downloadHandler = getTextDownloadAMBGrpHandler(sFile, claimFileColumns, null, filePath, subPath , claimMap);
+        largeExcelService.downLoadECashGrpDeductionFileAMB(claimMap, downloadHandler);
+        downloadHandler.writeFooter();
+
+      } catch (Exception ex) {
+        throw new ApplicationException(ex, AppConstants.FAIL);
+      } finally {
+        if (downloadHandler != null) {
+          try {
+            downloadHandler.close();
+          } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+          }
+        }
+      }
+    }
 
 
 }
