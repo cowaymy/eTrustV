@@ -50,6 +50,7 @@ import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.biz.payment.payment.service.vRescueBulkUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultScbUploadVO;
+import com.coway.trust.biz.payment.payment.service.ClaimResultAmbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultCimbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultHsbcUploadVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -573,6 +574,49 @@ public class ClaimController {
 
           map.put("refNo", r.getRefNo());
           map.put("refCode", r.getRefCode());
+          map.put("id", claimMap.get("ctrlId"));
+          map.put("itemId", r.getItemId());
+
+          return map;
+        }).collect(Collectors.toList());
+
+        int size = 500;
+        int page = list.size() / size;
+        int start;
+        int end;
+
+        Map<String, Object> bulkMap = new HashMap<>();
+        for (int i = 0; i <= page; i++) {
+          start = i * size;
+          end = size;
+
+          if (i == page) {
+            end = list.size();
+          }
+          if(list.stream().skip(start).limit(end).count() != 0){
+              bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+              claimService.updateClaimResultItemBulk4(bulkMap);
+          }
+        }
+    }else if( claimMap.get("bankCode").equals("AMB") && claimMap.get("ctrlIsCrc").equals("1")){
+      List<ClaimResultAmbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultAmbUploadVO::create);
+
+      // CVS 파일 객체 세팅
+        Map<String, Object> cvsParam = new HashMap<String, Object>();
+        cvsParam.put("voList", vos);
+        cvsParam.put("userId", sessionVO.getUserId());
+
+        // 파일 내용 Insert
+        // claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
+        // cvs 파일 저장 처리
+
+        List<ClaimResultAmbUploadVO> vos2 = (List<ClaimResultAmbUploadVO>) cvsParam.get("voList");
+
+        List<Map> list = vos2.stream().map(r -> {
+          Map<String, Object> map = BeanConverter.toMap(r);
+
+          map.put("refCode", CommonUtils.nvl(r.getApprCode()).equals("A") ? "00" : r.getRefCode());
+          map.put("apprCode", r.getApprCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
 
@@ -1278,7 +1322,23 @@ public class ClaimController {
                     this.createCreditCardFileHSBC(claimMap);
                 }
             }
-        }
+        } else if("23".equals(String.valueOf(claimMap.get("ctrlBankId")))) { // Ambank
+          // createCreditCardFileAMB
+          int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
+          int totBatToday = claimService.selectClaimDetailBatchGen(map);
+          int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
+
+          if(pageCnt > 0) {
+              for(int i = 1; i <= pageCnt; i++) {
+                  claimMap.put("pageNo", i);
+                  claimMap.put("rowCount", 60000);
+                  claimMap.put("batchNo", claimMap.get("ctrlId"));
+                  claimMap.put("pageCnt", pageCnt);
+
+                  this.createCreditCardFileAMB(claimMap);
+              }
+          }
+      }
       }
       /* else {
         if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
@@ -2436,6 +2496,66 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           }
       }
   }
+
+  /**
+   * CRC AMB - Create Claim File
+   *
+   * @param claimMap
+   * @param claimDetailList
+   * @throws Exception
+   */
+  public void createCreditCardFileAMB(EgovMap claimMap) throws Exception {
+      ClaimFileGeneralHandler downloadHandler = null;
+      String sFile = "";
+      String subPath = "";
+      String inputDate = "";
+      String todayDate = "";
+
+      Map<String, Object> map = new HashMap<String, Object>();
+      LOGGER.debug("params : {}", claimMap);
+      List<EgovMap> fileInfo = claimService.selectMstConf(claimMap);
+
+      try {
+          LOGGER.info("createCreditCardFileAMB :: Start");
+          if(fileInfo.size() > 0) {
+              for(int i = 0; i < fileInfo.size(); i++) {
+                  Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+                  fileInfoConf = (Map<String, Object>) fileInfo.get(i);
+                  claimMap.put("ctrlConfId", fileInfoConf.get("id"));
+                  String fileName = fileInfoConf.get("ctrlFileNm").toString();
+                  String ext = fileInfoConf.get("ctrlFileExt").toString();
+                  String batchNo = String.valueOf(claimMap.get("batchNo"));
+                  String pageNo = String.valueOf(claimMap.get("pageNo"));
+
+                  // Form File Name
+
+                  todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+                  sFile = fileName + todayDate + "_" + batchNo + "." + ext;
+
+                  inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+                  subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")) + inputDate + "/";
+
+                  downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
+                  largeExcelService.downloadCreditCardFileAMB(claimMap, downloadHandler);
+                  downloadHandler.writeFooter();
+              }
+          }
+          LOGGER.info("createCreditCardFileAMB :: End");
+      } catch(Exception ex) {
+          LOGGER.debug(ex.getMessage());
+          throw new ApplicationException(ex, AppConstants.FAIL);
+      } finally {
+          if(downloadHandler != null) {
+              try {
+                  downloadHandler.close();
+                  LOGGER.info("createCreditCardFileAMB :: downloadHandler :: Close");
+              } catch(Exception ex) {
+                  LOGGER.debug(ex.getMessage());
+              }
+          }
+      }
+  }
+
 
   /**
    * FPX - Create Claim File
