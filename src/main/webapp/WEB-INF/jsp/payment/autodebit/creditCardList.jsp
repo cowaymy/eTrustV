@@ -24,15 +24,18 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
                 {"codeId": "7","codeName": "RHB Bank"},
                 {"codeId": "9","codeName": "BSN Bank"},
                 {"codeId": "46","codeName": "My Clear"},
-                {"codeId": "17","codeName": "HSBC Bank"}
+                {"codeId": "17","codeName": "HSBC Bank"},
+                {"codeId": "23","codeName": "AmBank"}
                 ];
 
 //Issue Bank Combo Data for CRC
 var bankDataCRC = [
                 {"codeId": "3","codeName": "CIMB Bank"},
                 {"codeId": "19","codeName": "Standard Chartered Bank"},
-                {"codeId": "17","codeName": "HSBC Bank"}
+                {"codeId": "17","codeName": "HSBC Bank"},
+                {"codeId": "23","codeName": "AmBank"}
                 /* {"codeId": "21","codeName": "Maybank"} */
+
                 ];
 //SMS Combo Data
 var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];
