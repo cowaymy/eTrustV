@@ -19,7 +19,8 @@ var bankData = [ /* {"codeId": "21","codeName": "Maybank"},
                              */
                              {"codeId": "3","codeName": "CIMB Bank"},
                              {"codeId": "19","codeName": "Standard Chartered Bank"},
-                             {"codeId": "17","codeName": "HSBC Bank"}
+                             {"codeId": "17","codeName": "HSBC Bank"},
+                             {"codeId": "23","codeName": "AmBank"}
                            ];
 
 var subPath = "/resources/WebShare/CRT";
