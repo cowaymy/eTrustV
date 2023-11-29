@@ -371,6 +371,7 @@
                             ,Z.*
                             ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
                             ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+                            ,TO_CHAR(SYSDATE, 'YYYYMMDD') AS FILEDATE
          from (
             SELECT
                 EXTENT1.FILE_BATCH_GRP_ID,
