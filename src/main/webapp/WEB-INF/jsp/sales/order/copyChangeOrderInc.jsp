@@ -130,14 +130,15 @@
                 console.log("aaa:"+year);
                 console.log("aaa:"+ekeyCrtUser);
 
-                voucherAppliedStatus = 0;
-                if('${orderInfo.basicInfo.voucherInfo}' != null && '${orderInfo.basicInfo.voucherInfo}' != ""){
-				  	voucherAppliedStatus = 1;
-					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
-			    }
+//                 voucherAppliedStatus = 0;
+//                 if('${orderInfo.basicInfo.voucherInfo}' != null && '${orderInfo.basicInfo.voucherInfo}' != ""){
+// 				  	voucherAppliedStatus = 1;
+// 					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
+// 			    }
 
                 if(date >= 201907 && ekeyCrtUser != null) {
                 //if(month >= '7' && year == '2019' ) {
+                	//Voucher Management
                 	doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
                         ,stkId:'${orderInfo.basicInfo.stockId}'
                         ,empChk:'${orderInfo.basicInfo.empChk}'
@@ -145,7 +146,7 @@
                         ,exTrade:'${orderInfo.basicInfo.exTrade}'
                         ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                 	    ,promoId:'${orderInfo.basicInfo.ordPromoId}'
-                        , voucherPromotion: voucherAppliedStatus
+//                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()}
                 	    ,'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 }
@@ -158,7 +159,7 @@
                               ,promoCustType:$("#typeId").val()
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                              , voucherPromotion: voucherAppliedStatus
+//                               , voucherPromotion: voucherAppliedStatus
                               ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
 
                 	 }
@@ -170,7 +171,7 @@
                               , isSrvPac:'Y'
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                              , voucherPromotion: voucherAppliedStatus
+//                               , voucherPromotion: voucherAppliedStatus
                               ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 	 }
 

@@ -144,7 +144,7 @@
                 advDisc                : $('input:radio[name="advDisc"]:checked').val(),
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
-                voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
+//                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
                 chgRemark              :$('#chgRemark').val(),
                 custStatusNew : vCustStatusNew,
                 custStatusDisen : vCustStatusDisen,
@@ -765,13 +765,13 @@
     <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
     <td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" disabled /></td>
 </tr>
-<tr>
-    <th scope="row">Voucher Promotion</th>
-    <td>
-        <input id="voucherPromotionY" name="voucherPromotion" type="radio" value="1" /><span>Yes</span>
-        <input id="voucherPromotionN" name="voucherPromotion" type="radio" value="0" checked/><span>No</span>
-    </td>
-</tr>
+<!-- <tr> -->
+<!--     <th scope="row">Voucher Promotion</th> -->
+<!--     <td> -->
+<!--         <input id="voucherPromotionY" name="voucherPromotion" type="radio" value="1" /><span>Yes</span> -->
+<!--         <input id="voucherPromotionN" name="voucherPromotion" type="radio" value="0" checked/><span>No</span> -->
+<!--     </td> -->
+<!-- </tr> -->
 </tbody>
 </table><!-- table end -->
 

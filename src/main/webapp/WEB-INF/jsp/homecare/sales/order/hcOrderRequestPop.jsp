@@ -50,16 +50,17 @@
     var filterGridID;
     var _cancleMsg = "Another order :  "+ anoOrdNo +"<br/>is also canceled together.<br/>";
 
-    var voucherAppliedStatus = 0;
-    var voucherAppliedCode = "";
-    var voucherAppliedEmail = "";
-    var voucherPromotionId = [];
+//     var voucherAppliedStatus = 0;
+//     var voucherAppliedCode = "";
+//     var voucherAppliedEmail = "";
+//     var voucherPromotionId = [];
 
-    var codeList_562 = [];
-    codeList_562.push({codeId:"0", codeName:"No", code:"No"});
-    <c:forEach var="obj" items="${codeList_562}">
-    codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
+//voucher management
+//     var codeList_562 = [];
+//     codeList_562.push({codeId:"0", codeName:"No", code:"No"});
+//     <c:forEach var="obj" items="${codeList_562}">
+//     codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+//     </c:forEach>
 
     $(document).ready(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode :'348'}, TAB_NM, 'ordReqType', 'S', 'fn_ordReqTypeCallBack'); //Order Edit Type
@@ -69,8 +70,9 @@
 // </c:if>
 //             fn_changeTab(TAB_NM);
 //         }
-        doDefCombo(codeList_562, '0', 'voucherTypeAexc', 'S', 'displayVoucherSectionAexc');    // Voucher Type Code
-        doDefCombo(codeList_562, '0', 'voucherTypePrdEx', 'S', 'displayVoucherSectionPrdEx');    // Voucher Type Code
+
+//         doDefCombo(codeList_562, '0', 'voucherTypeAexc', 'S', 'displayVoucherSectionAexc');    // Voucher Type Code
+//         doDefCombo(codeList_562, '0', 'voucherTypePrdEx', 'S', 'displayVoucherSectionPrdEx');    // Voucher Type Code
 
         if(isComToPEX == 'Y'){
         	/* if(APP_TYPE_ID == '5764'){
@@ -615,7 +617,7 @@
         } else {
             fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
         }
-        voucherPromotionCheckPrdEx(_tagNum);
+//         voucherPromotionCheckPrdEx(_tagNum);
     }
 
     // 합계
@@ -1295,10 +1297,17 @@
 
         if(appTypeVal == '' || exTrade == '') return;
 
+        //Voucher Management
+//         if(appTypeVal == 67 || appTypeVal == 68) {
+//             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
+//         } else {
+//             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
+//         }
+
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y',custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', ''); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(),custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S'); //Common Code
         }
     }
 
@@ -1310,10 +1319,16 @@
         chgPromoNum = tagNum;
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
+//         if(appTypeVal !=66){
+//             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+//         } else {
+//             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+//         }
+
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         }
     }
 
@@ -1432,7 +1447,7 @@
                 return false;
             }
 
-            applyCurrentUsedVoucherPrdEx();
+//             applyCurrentUsedVoucherPrdEx();
         }
 
         if(tabNm == 'SCHM') {
@@ -1483,7 +1498,7 @@
                 return false;
             }
 
-            applyCurrentUsedVoucherAexc();
+//             applyCurrentUsedVoucherAexc();
         }
 
         if(tabNm == 'OTRN') {
@@ -2027,7 +2042,7 @@
 
                   let jsonObj =  $('#frmReqAppExc').serializeJSON();
                   jsonObj.soExchgAtchGrpId = result.data.fileGroupKey;
-  				  jsonObj.voucherCode = voucherAppliedCode;
+//   				  jsonObj.voucherCode = voucherAppliedCode;
 
                   Common.ajax("POST","/sales/order/requestAppExch.do", jsonObj, function(result) {
                       Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+ result.message + "</b>",fn_selfClose);
@@ -2365,17 +2380,17 @@
         var isValid = true;
         var msg = "";
 
-        if($('#voucherTypePrdEx').val() == ""){
-        	 isValid = false;
-             msg += "* Please select voucher type.<br>";
-        }
+//         if($('#voucherTypePrdEx').val() == ""){
+//         	 isValid = false;
+//              msg += "* Please select voucher type.<br>";
+//         }
 
-        if($('#voucherTypePrdEx').val() != "" && $('#voucherTypePrdEx').val() > 0){
-        	if(voucherAppliedStatus == 0){
-        	 isValid = false;
-             msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
-        	}
-        }
+//         if($('#voucherTypePrdEx').val() != "" && $('#voucherTypePrdEx').val() > 0){
+//         	if(voucherAppliedStatus == 0){
+//         	 isValid = false;
+//              msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
+//         	}
+//         }
 
         if($("#ordProduct1 option:selected").index() <= 0) {
             isValid = false;
@@ -2458,17 +2473,17 @@
     function fn_validReqAexc() {
         var isValid = true, msg = "";
 
-        if($('#voucherTypeAexc').val() == ""){
-         	 isValid = false;
-              msg += "* Please select voucher type.<br>";
-         }
+//         if($('#voucherTypeAexc').val() == ""){
+//          	 isValid = false;
+//               msg += "* Please select voucher type.<br>";
+//          }
 
-         if($('#voucherTypeAexc').val() != "" && $('#voucherTypeAexc').val() > 0){
-         	if(voucherAppliedStatus == 0){
-         	 isValid = false;
-              msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
-         	}
-         }
+//          if($('#voucherTypeAexc').val() != "" && $('#voucherTypeAexc').val() > 0){
+//          	if(voucherAppliedStatus == 0){
+//          	 isValid = false;
+//               msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
+//          	}
+//          }
 
         if($("#cmbAppTypeAexc option:selected").index() <= 0) {
             isValid = false;
@@ -2747,277 +2762,277 @@
 
     });
 
-    function displayVoucherSectionAexc(){
-  	  if($('#voucherTypeAexc option:selected').val() != null && $('#voucherTypeAexc option:selected').val() != "" && $('#voucherTypeAexc option:selected').val() != "0")
-  	  {
-  		  $('.voucherSectionAexc').show();
-  	  }
-  	  else{
-  		  $('.voucherSectionAexc').hide();
-  			clearVoucherDataAexc();
-  	  }
-    }
+//     function displayVoucherSectionAexc(){
+//   	  if($('#voucherTypeAexc option:selected').val() != null && $('#voucherTypeAexc option:selected').val() != "" && $('#voucherTypeAexc option:selected').val() != "0")
+//   	  {
+//   		  $('.voucherSectionAexc').show();
+//   	  }
+//   	  else{
+//   		  $('.voucherSectionAexc').hide();
+//   			clearVoucherDataAexc();
+//   	  }
+//     }
 
-    function applyVoucherAexc() {
-  	  var voucherCode = $('#voucherCodeAexc').val();
-  	  var voucherEmail = $('#voucherEmailAexc').val();
-  	  var voucherType = $('#voucherTypeAexc option:selected').val();
+//     function applyVoucherAexc() {
+//   	  var voucherCode = $('#voucherCodeAexc').val();
+//   	  var voucherEmail = $('#voucherEmailAexc').val();
+//   	  var voucherType = $('#voucherTypeAexc option:selected').val();
 
-  	  if(voucherCode.length == 0 || voucherEmail.length ==0){
-  		clearVoucherDataAexc();
-  		  Common.alert('Both voucher code and voucher email must be key in');
-  		  return;
-  	  }
-  	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-  	        if(result.code == "00") {
-  	        	voucherAppliedStatus = 1;
-  	        	$('#voucherMsgAexc').text('Voucher Applied for ' + voucherCode);
-  		      	voucherAppliedCode = voucherCode;
-  		      	voucherAppliedEmail = voucherEmail;
-  	        	$('#voucherMsgAexc').show();
+//   	  if(voucherCode.length == 0 || voucherEmail.length ==0){
+//   		clearVoucherDataAexc();
+//   		  Common.alert('Both voucher code and voucher email must be key in');
+//   		  return;
+//   	  }
+//   	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+//   	        if(result.code == "00") {
+//   	        	voucherAppliedStatus = 1;
+//   	        	$('#voucherMsgAexc').text('Voucher Applied for ' + voucherCode);
+//   		      	voucherAppliedCode = voucherCode;
+//   		      	voucherAppliedEmail = voucherEmail;
+//   	        	$('#voucherMsgAexc').show();
 
-  	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-  	        		if(result.length > 0){
-  	        			voucherPromotionId = result;
-  	        			//voucherPromotionCheck();
-  	        			fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
-  	        		}
-  	        		else{
-  	        			//reset everything
-  	    				clearVoucherDataAexc();
-  	        			Common.alert("No Promotion is being entitled for this voucher code");
-  	        			return;
-  	        		}
-  	        	});
-  	        }
-  	        else{
-  				clearVoucherDataAexc();
-  	        	Common.alert(result.message);
-  	        	return;
-  	        }
-  	  });
-    }
+//   	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+//   	        		if(result.length > 0){
+//   	        			voucherPromotionId = result;
+//   	        			//voucherPromotionCheck();
+//   	        			fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
+//   	        		}
+//   	        		else{
+//   	        			//reset everything
+//   	    				clearVoucherDataAexc();
+//   	        			Common.alert("No Promotion is being entitled for this voucher code");
+//   	        			return;
+//   	        		}
+//   	        	});
+//   	        }
+//   	        else{
+//   				clearVoucherDataAexc();
+//   	        	Common.alert(result.message);
+//   	        	return;
+//   	        }
+//   	  });
+//     }
 
-    function voucherPromotionCheckAexc(){
-  	 if(voucherAppliedStatus == 1){
-  		displayVoucherSectionAexc();
-  		var orderPromoId = [];
-  		var orderPromoIdToRemove = [];
-  		$("#cmbPromotionAexc option").each(function()
-  		{
-  			  orderPromoId.push($(this).val());
-  	    });
-  		orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-  		    return !voucherPromotionId.some(function(obj2) {
-  			        return obj == obj2;
-  		    });
-  		});
+//     function voucherPromotionCheckAexc(){
+//   	 if(voucherAppliedStatus == 1){
+//   		displayVoucherSectionAexc();
+//   		var orderPromoId = [];
+//   		var orderPromoIdToRemove = [];
+//   		$("#cmbPromotionAexc option").each(function()
+//   		{
+//   			  orderPromoId.push($(this).val());
+//   	    });
+//   		orderPromoIdToRemove = orderPromoId.filter(function(obj) {
+//   		    return !voucherPromotionId.some(function(obj2) {
+//   			        return obj == obj2;
+//   		    });
+//   		});
 
-  		if(orderPromoIdToRemove.length > 0){
-  		   	$('#cmbPromotionAexc').val('');
-  			for(var i = 0; i < orderPromoIdToRemove.length; i++){
-  				if(orderPromoIdToRemove[i] == ""){
-  				}
-  				else{
-  					$("#cmbPromotionAexc option[value='" + orderPromoIdToRemove[i] +"']").remove();
-  				}
-  			}
-  		}
-  	}
-    }
+//   		if(orderPromoIdToRemove.length > 0){
+//   		   	$('#cmbPromotionAexc').val('');
+//   			for(var i = 0; i < orderPromoIdToRemove.length; i++){
+//   				if(orderPromoIdToRemove[i] == ""){
+//   				}
+//   				else{
+//   					$("#cmbPromotionAexc option[value='" + orderPromoIdToRemove[i] +"']").remove();
+//   				}
+//   			}
+//   		}
+//   	}
+//     }
 
-    function clearVoucherDataAexc(){
-		$('#voucherCodeAexc').val('');
-		$('#voucherEmailAexc').val('');
-		$('#voucherMsgAexc').hide();
-		$('#voucherMsgAexc').text('');
-		voucherAppliedStatus = 0;
-		voucherAppliedCode = "";
-		voucherAppliedEmail = "";
-		voucherPromotionId = [];
+//     function clearVoucherDataAexc(){
+// 		$('#voucherCodeAexc').val('');
+// 		$('#voucherEmailAexc').val('');
+// 		$('#voucherMsgAexc').hide();
+// 		$('#voucherMsgAexc').text('');
+// 		voucherAppliedStatus = 0;
+// 		voucherAppliedCode = "";
+// 		voucherAppliedEmail = "";
+// 		voucherPromotionId = [];
 
-		$('#cmbPromotionAexc').val('');
-		$('#cmbPromotionAexc option').remove();
+// 		$('#cmbPromotionAexc').val('');
+// 		$('#cmbPromotionAexc option').remove();
 
-		//Reload current product promotion
-		fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
-	}
+// 		//Reload current product promotion
+// 		fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
+// 	}
 
-	function applyCurrentUsedVoucherAexc() {
-		var voucherCode = "${orderDetail.basicInfo.voucherCode}";
-		if (voucherCode != null && voucherCode != "") {
-			var voucherInfo = "${orderDetail.basicInfo.voucherInfo}";
-			if (voucherInfo != null && voucherInfo != "") {
-				$('#voucherCodeAexc').val(
-						"${orderDetail.basicInfo.voucherInfo.voucherCode}");
-				$('#voucherEmailAexc').val(
-						"${orderDetail.basicInfo.voucherInfo.custEmail}");
-				$('#voucherTypeAexc').val(
-						"${orderDetail.basicInfo.voucherInfo.platformId}");
+// 	function applyCurrentUsedVoucherAexc() {
+// 		var voucherCode = "${orderDetail.basicInfo.voucherCode}";
+// 		if (voucherCode != null && voucherCode != "") {
+// 			var voucherInfo = "${orderDetail.basicInfo.voucherInfo}";
+// 			if (voucherInfo != null && voucherInfo != "") {
+// 				$('#voucherCodeAexc').val(
+// 						"${orderDetail.basicInfo.voucherInfo.voucherCode}");
+// 				$('#voucherEmailAexc').val(
+// 						"${orderDetail.basicInfo.voucherInfo.custEmail}");
+// 				$('#voucherTypeAexc').val(
+// 						"${orderDetail.basicInfo.voucherInfo.platformId}");
 
-				voucherAppliedStatus = 1;
-				var voucherCode = $('#voucherCodeAexc').val();
-				var voucherEmail = $('#voucherEmailAexc').val();
-				$('#voucherMsgAexc').text('Voucher Applied for ' + voucherCode);
-				voucherAppliedCode = voucherCode;
-				voucherAppliedEmail = voucherEmail;
-				$('#voucherMsgAexc').show();
+// 				voucherAppliedStatus = 1;
+// 				var voucherCode = $('#voucherCodeAexc').val();
+// 				var voucherEmail = $('#voucherEmailAexc').val();
+// 				$('#voucherMsgAexc').text('Voucher Applied for ' + voucherCode);
+// 				voucherAppliedCode = voucherCode;
+// 				voucherAppliedEmail = voucherEmail;
+// 				$('#voucherMsgAexc').show();
 
-				Common
-						.ajax(
-								"GET",
-								"/misc/voucher/getVoucherUsagePromotionId.do",
-								{
-									voucherCode : voucherCode,
-									custEmail : voucherEmail
-								},
-								function(result) {
-									if (result.length > 0) {
-										voucherPromotionId = result;
-										//voucherPromotionCheck();
-										fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
-									} else {
-										//reset everything
-										clearVoucherDataAexc();
-										Common.alert("No Promotion is being entitled for this voucher code");
-										return;
-									}
-								});
-			}
-		}
-	}
+// 				Common
+// 						.ajax(
+// 								"GET",
+// 								"/misc/voucher/getVoucherUsagePromotionId.do",
+// 								{
+// 									voucherCode : voucherCode,
+// 									custEmail : voucherEmail
+// 								},
+// 								function(result) {
+// 									if (result.length > 0) {
+// 										voucherPromotionId = result;
+// 										//voucherPromotionCheck();
+// 										fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(),STOCK_ID, EMP_CHK,CUST_TYPE_ID, $("#exTradeAexc").val());
+// 									} else {
+// 										//reset everything
+// 										clearVoucherDataAexc();
+// 										Common.alert("No Promotion is being entitled for this voucher code");
+// 										return;
+// 									}
+// 								});
+// 			}
+// 		}
+// 	}
 
-	  function displayVoucherSectionPrdEx(){
-		  if($('#voucherTypePrdEx option:selected').val() != null && $('#voucherTypePrdEx option:selected').val() != "" && $('#voucherTypePrdEx option:selected').val() != "0")
-		  {
-			  $('.voucherSectionPrdEx').show();
-		  }
-		  else{
-			  $('.voucherSectionPrdEx').hide();
-				clearVoucherDataPrdEx();
-		  }
-	  }
+// 	  function displayVoucherSectionPrdEx(){
+// 		  if($('#voucherTypePrdEx option:selected').val() != null && $('#voucherTypePrdEx option:selected').val() != "" && $('#voucherTypePrdEx option:selected').val() != "0")
+// 		  {
+// 			  $('.voucherSectionPrdEx').show();
+// 		  }
+// 		  else{
+// 			  $('.voucherSectionPrdEx').hide();
+// 				clearVoucherDataPrdEx();
+// 		  }
+// 	  }
 
-	  function applyVoucherPrdEx() {
-		  var voucherCode = $('#voucherCodePrdEx').val();
-		  var voucherEmail = $('#voucherEmailPrdEx').val();
-		  var voucherType = $('#voucherTypePrdEx option:selected').val();
+// 	  function applyVoucherPrdEx() {
+// 		  var voucherCode = $('#voucherCodePrdEx').val();
+// 		  var voucherEmail = $('#voucherEmailPrdEx').val();
+// 		  var voucherType = $('#voucherTypePrdEx option:selected').val();
 
-		  if(voucherCode.length == 0 || voucherEmail.length ==0){
-			clearVoucherDataPrdEx();
-			  Common.alert('Both voucher code and voucher email must be key in');
-			  return;
-		  }
-		  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-		        if(result.code == "00") {
-		        	voucherAppliedStatus = 1;
-		        	$('#voucherMsgPrdEx').text('Voucher Applied for ' + voucherCode);
-			      	voucherAppliedCode = voucherCode;
-			      	voucherAppliedEmail = voucherEmail;
-		        	$('#voucherMsgPrdEx').show();
+// 		  if(voucherCode.length == 0 || voucherEmail.length ==0){
+// 			clearVoucherDataPrdEx();
+// 			  Common.alert('Both voucher code and voucher email must be key in');
+// 			  return;
+// 		  }
+// 		  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+// 		        if(result.code == "00") {
+// 		        	voucherAppliedStatus = 1;
+// 		        	$('#voucherMsgPrdEx').text('Voucher Applied for ' + voucherCode);
+// 			      	voucherAppliedCode = voucherCode;
+// 			      	voucherAppliedEmail = voucherEmail;
+// 		        	$('#voucherMsgPrdEx').show();
 
-		        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-		        		if(result.length > 0){
-		        			voucherPromotionId = result;
-		        			//voucherPromotionCheck();
-		        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
-		        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
-		        			}
-		        		else{
-		        			//reset everything
-		    				clearVoucherDataPrdEx();
-		        			Common.alert("No Promotion is being entitled for this voucher code");
-		        			return;
-		        		}
-		        	});
-		        }
-		        else{
-		        	clearVoucherDataPrdEx();
-		        	Common.alert(result.message);
-		        	return;
-		        }
-		  });
-	  }
+// 		        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+// 		        		if(result.length > 0){
+// 		        			voucherPromotionId = result;
+// 		        			//voucherPromotionCheck();
+// 		        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
+// 		        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
+// 		        			}
+// 		        		else{
+// 		        			//reset everything
+// 		    				clearVoucherDataPrdEx();
+// 		        			Common.alert("No Promotion is being entitled for this voucher code");
+// 		        			return;
+// 		        		}
+// 		        	});
+// 		        }
+// 		        else{
+// 		        	clearVoucherDataPrdEx();
+// 		        	Common.alert(result.message);
+// 		        	return;
+// 		        }
+// 		  });
+// 	  }
 
-	  function voucherPromotionCheckPrdEx(_tagNum){
-			 if(voucherAppliedStatus == 1){
-				displayVoucherSectionPrdEx();
-				var orderPromoId = [];
-				var orderPromoIdToRemove = [];
-				$("#ordPromo"+ _tagNum+ " option").each(function()
-				{
-					  orderPromoId.push($(this).val());
-			    });
-				orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-				    return !voucherPromotionId.some(function(obj2) {
-					        return obj == obj2;
-				    });
-				});
+// 	  function voucherPromotionCheckPrdEx(_tagNum){
+// 			 if(voucherAppliedStatus == 1){
+// 				displayVoucherSectionPrdEx();
+// 				var orderPromoId = [];
+// 				var orderPromoIdToRemove = [];
+// 				$("#ordPromo"+ _tagNum+ " option").each(function()
+// 				{
+// 					  orderPromoId.push($(this).val());
+// 			    });
+// 				orderPromoIdToRemove = orderPromoId.filter(function(obj) {
+// 				    return !voucherPromotionId.some(function(obj2) {
+// 					        return obj == obj2;
+// 				    });
+// 				});
 
-				if(orderPromoIdToRemove.length > 0){
-				   	$('#ordPromo' + _tagNum).val('');
-					for(var i = 0; i < orderPromoIdToRemove.length; i++){
-						if(orderPromoIdToRemove[i] == ""){
-						}
-						else{
-							$("#ordPromo" + _tagNum +" option[value='" + orderPromoIdToRemove[i] +"']").remove();
-						}
-					}
-				}
-			}
-		  }
+// 				if(orderPromoIdToRemove.length > 0){
+// 				   	$('#ordPromo' + _tagNum).val('');
+// 					for(var i = 0; i < orderPromoIdToRemove.length; i++){
+// 						if(orderPromoIdToRemove[i] == ""){
+// 						}
+// 						else{
+// 							$("#ordPromo" + _tagNum +" option[value='" + orderPromoIdToRemove[i] +"']").remove();
+// 						}
+// 					}
+// 				}
+// 			}
+// 		  }
 
-	  	function clearVoucherDataPrdEx(){
-			$('#voucherCodePrdEx').val('');
-		  	$('#voucherEmailPrdEx').val('');
-			$('#voucherMsgPrdEx').hide();
-			$('#voucherMsgPrdEx').text('');
-			voucherAppliedStatus = 0;
-		  	voucherAppliedCode = "";
-		  	voucherAppliedEmail = "";
-		    voucherPromotionId =[];
+// 	  	function clearVoucherDataPrdEx(){
+// 			$('#voucherCodePrdEx').val('');
+// 		  	$('#voucherEmailPrdEx').val('');
+// 			$('#voucherMsgPrdEx').hide();
+// 			$('#voucherMsgPrdEx').text('');
+// 			voucherAppliedStatus = 0;
+// 		  	voucherAppliedCode = "";
+// 		  	voucherAppliedEmail = "";
+// 		    voucherPromotionId =[];
 
-		    $('#cmbPromotion').val('');
-		   	$('#cmbPromotion option').remove();
+// 		    $('#cmbPromotion').val('');
+// 		   	$('#cmbPromotion option').remove();
 
-		   	//Reload product promotion
-			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
-			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
-	  	}
+// 		   	//Reload product promotion
+// 			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
+// 			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
+// 	  	}
 
-	    function applyCurrentUsedVoucherPrdEx(){
-	  	  var voucherCode = "${orderDetail.basicInfo.voucherCode}";
-	        if(voucherCode != null && voucherCode != ""){
-	      	var voucherInfo = "${orderDetail.basicInfo.voucherInfo}";
-	          if(voucherInfo != null && voucherInfo != ""){
-	            	$('#voucherCodePrdEx').val("${orderDetail.basicInfo.voucherInfo.voucherCode}");
-	            	$('#voucherEmailPrdEx').val("${orderDetail.basicInfo.voucherInfo.custEmail}");
-	            	$('#voucherTypePrdEx').val("${orderDetail.basicInfo.voucherInfo.platformId}");
+// 	    function applyCurrentUsedVoucherPrdEx(){
+// 	  	  var voucherCode = "${orderDetail.basicInfo.voucherCode}";
+// 	        if(voucherCode != null && voucherCode != ""){
+// 	      	var voucherInfo = "${orderDetail.basicInfo.voucherInfo}";
+// 	          if(voucherInfo != null && voucherInfo != ""){
+// 	            	$('#voucherCodePrdEx').val("${orderDetail.basicInfo.voucherInfo.voucherCode}");
+// 	            	$('#voucherEmailPrdEx').val("${orderDetail.basicInfo.voucherInfo.custEmail}");
+// 	            	$('#voucherTypePrdEx').val("${orderDetail.basicInfo.voucherInfo.platformId}");
 
-	            	voucherAppliedStatus = 1;
-	      	  	var voucherCode = $('#voucherCodePrdEx').val();
-	        		var voucherEmail = $('#voucherEmailPrdEx').val();
-	      		$('#voucherMsgPrdEx').text('Voucher Applied for ' + voucherCode);
-	      	  	voucherAppliedCode = voucherCode;
-	      	  	voucherAppliedEmail = voucherEmail;
-	      		$('#voucherMsgPrdEx').show();
+// 	            	voucherAppliedStatus = 1;
+// 	      	  	var voucherCode = $('#voucherCodePrdEx').val();
+// 	        		var voucherEmail = $('#voucherEmailPrdEx').val();
+// 	      		$('#voucherMsgPrdEx').text('Voucher Applied for ' + voucherCode);
+// 	      	  	voucherAppliedCode = voucherCode;
+// 	      	  	voucherAppliedEmail = voucherEmail;
+// 	      		$('#voucherMsgPrdEx').show();
 
-	      		Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-	      			if(result.length > 0){
-	      				voucherPromotionId = result;
-	      				fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
-	        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
-	      			}
-	      			else{
-	      				//reset everything
-	      				clearVoucherDataPrdEx();
-	      				Common.alert("No Promotion is being entitled for this voucher code");
-	      				return;
-	      			}
-	      		});
-	          }
-	        }
-	  	}
+// 	      		Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+// 	      			if(result.length > 0){
+// 	      				voucherPromotionId = result;
+// 	      				fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct1").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "1");
+// 	        			fn_loadProductPromotion(APP_TYPE_ID, $("#ordProduct2").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', "2");
+// 	      			}
+// 	      			else{
+// 	      				//reset everything
+// 	      				clearVoucherDataPrdEx();
+// 	      				Common.alert("No Promotion is being entitled for this voucher code");
+// 	      				return;
+// 	      			}
+// 	      		});
+// 	          }
+// 	        }
+// 	  	}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -3238,16 +3253,16 @@
 			<%--     <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th> --%>
 			<!--     <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td> -->
 			<!-- </tr> -->
-		 		<tr>
-			        <th scope="row">Voucher Type<span class="must">*</span></th>
-				    <td colspan="3">
-					    <p> <select id="voucherTypePrdEx" name="voucherTypePrdEx" onchange="displayVoucherSectionPrdEx()" class="w100p"></select></p>
-				        <p class="voucherSectionPrdEx"><input id="voucherCodePrdEx" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p>
-				        <p class="voucherSectionPrdEx"><input id="voucherEmailPrdEx" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p>
-				        <p style="width: 70px;" class="voucherSectionPrdEx btn_grid"><a id="btnVoucherApplyPrdEx" href="#" onclick="javascript:applyVoucherPrdEx()">Apply</a></p>
-				        <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsgPrdEx"></p>
-				    </td>
-			    </tr>
+<!-- 		 		<tr> -->
+<!-- 			        <th scope="row">Voucher Type<span class="must">*</span></th> -->
+<!-- 				    <td colspan="3"> -->
+<!-- 					    <p> <select id="voucherTypePrdEx" name="voucherTypePrdEx" onchange="displayVoucherSectionPrdEx()" class="w100p"></select></p> -->
+<!-- 				        <p class="voucherSectionPrdEx"><input id="voucherCodePrdEx" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p> -->
+<!-- 				        <p class="voucherSectionPrdEx"><input id="voucherEmailPrdEx" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p> -->
+<!-- 				        <p style="width: 70px;" class="voucherSectionPrdEx btn_grid"><a id="btnVoucherApplyPrdEx" href="#" onclick="javascript:applyVoucherPrdEx()">Apply</a></p> -->
+<!-- 				        <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsgPrdEx"></p> -->
+<!-- 				    </td> -->
+<!-- 			    </tr> -->
 			<tr>
 			    <td colspan="2"><h3>Mattress</h3></td>
 			    <td colspan="2"><h3>Frame</h3></td>
@@ -3449,17 +3464,17 @@
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
-	<th scope="row">Voucher Type<span class="must">*</span></th>
-	<td colspan="3">
-	    <p> <select id="voucherTypeAexc" name="voucherTypeAexc" onchange="displayVoucherSectionAexc()" class="w100p"></select></p>
-        <p class="voucherSectionAexc"><input id="voucherCodeAexc" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p>
-        <p class="voucherSectionAexc"><input id="voucherEmailAexc" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p>
-        <p style="width: 70px;" class="voucherSectionAexc btn_grid"><a id="btnVoucherApplyAexc" href="#" onclick="javascript:applyVoucherAexc()">Apply</a></p>
-        <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsgAexc"></p>
-	 </td>
-	</tr>
-<tr>
+<!-- <tr> -->
+<!-- 	<th scope="row">Voucher Type<span class="must">*</span></th> -->
+<!-- 	<td colspan="3"> -->
+<!-- 	    <p> <select id="voucherTypeAexc" name="voucherTypeAexc" onchange="displayVoucherSectionAexc()" class="w100p"></select></p> -->
+<!--         <p class="voucherSectionAexc"><input id="voucherCodeAexc" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p> -->
+<!--         <p class="voucherSectionAexc"><input id="voucherEmailAexc" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p> -->
+<!--         <p style="width: 70px;" class="voucherSectionAexc btn_grid"><a id="btnVoucherApplyAexc" href="#" onclick="javascript:applyVoucherAexc()">Apply</a></p> -->
+<!--         <br/><p style="display:none; color:red;font-size:10px;float: right;" id="voucherMsgAexc"></p> -->
+<!-- 	 </td> -->
+<!-- 	</tr> -->
+<!-- <tr> -->
     <th scope="row"><spring:message code="sal.text.appType" /><span class="must">*</span></th>
     <td>
     <p><select id="cmbAppTypeAexc" name="cmbAppType" class="w100p"></select></select></p>
