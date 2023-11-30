@@ -25,14 +25,15 @@
 	       //** End exTrade Neo to Neo Plus **//
 
             Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val(), prodId : $('#prodId').val(), stkId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId")}, function(RESULT) {
-                console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
-                console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
-                console.log('RESULT MSG         :'+RESULT.msg);
-                console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
-                console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
-                console.log("buss type" + AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType"));
+                //console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
+                //console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
+                //console.log('RESULT MSG         :'+RESULT.msg);
+                //console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
+                //console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
+                //console.log("buss type" + AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType"));
                 busType = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType");
-                console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
+                //console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
+                //console.log('RESULT MONTH EXPIRED:'+RESULT.monthExpired);
 
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
@@ -61,6 +62,7 @@
                 if(RESULT.rootState == 'ROOT_4') {
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
+                    $('#hiddenMonthExpired').val(RESULT.monthExpired);
                     Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_5') {
@@ -70,11 +72,13 @@
                 if(RESULT.rootState == 'ROOT_6') {
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
+                    $('#hiddenMonthExpired').val(RESULT.monthExpired);
                     Common.alert('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_7') {
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
                     $('#speclInstct').val(RESULT.instSpecInst);
+                    $('#hiddenMonthExpired').val(RESULT.monthExpired);
                     btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
                     //fn_popOrderDetail();
                     //$('#oldOrderCloseBtn').click();
@@ -154,8 +158,8 @@
       }
 
     function btnHidden_Valid_Click(isInValid, salesOrdNo , salesOrdId) {
-        console.log('btnHidden_Valid_Click CALL START');
-        console.log('isInValid :'+isInValid);
+        //console.log('btnHidden_Valid_Click CALL START');
+        //console.log('isInValid :'+isInValid);
 
 
         $('#txtBusType').val(busType);
