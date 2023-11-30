@@ -11,7 +11,6 @@
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"},{"codeId": "5764","codeName": "Auxiliary"}];
     var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
     var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
-    var myFileCaches = {};
     var recentGridItem = null;
     var selectRowIdx;
     var popupObj;
@@ -107,10 +106,10 @@
         });
 
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
-        doDefCombo(actData, '' ,'_action', 'S', '');
-        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
+        //doDefCombo(actData, '' ,'_action', 'S', '');
+        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_preStusId', 'M', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_preBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doDefCombo(codeList_8, '' ,'_preTypeId', 'M', 'fn_multiCombo');
 
         if (memTypeFiltered) {
             doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
@@ -118,13 +117,13 @@
             doDefCombo(memTypeData, '', 'memType', 'S', '');
         }
 
-         doDefCombo(productList, '' ,'_ordProudctList', 'M', 'fn_multiCombo2');
-         doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo2'); //Branch Code
+         doDefCombo(productList, '' ,'_preOrdProudctList', 'M', 'fn_multiCombo2');
+         //doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo2'); //Branch Code
 
         //excel Download
         $('#excelDown').click(function() {
             var excelProps = {
-                fileName     : "eKey-in",
+                fileName     : "Pre-Booking Order List",
                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
             };
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
@@ -139,13 +138,13 @@
             width: '100%'
         });
 
-        $('#_ordProudctList').change(function() {
+        $('#_preOrdProudctList').change(function() {
         }).multipleSelect({
             selectAll: true,
             width: '100%'
         });
 
-       $('#_ordProudctList').multipleSelect("checkAll");
+       $('#_preOrdProudctList').multipleSelect("checkAll");
        $('#listDscBrnchId').multipleSelect("checkAll");
     }
 
@@ -155,120 +154,24 @@
         });
     }
 
-    function fn_setDetail(gridID, rowIdx){
-        Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
-    }
-
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text")
-    }
-
-    function fn_validStatus() {
-        var isValid = true;
-
-        if(selectRowIdx > -1) {
-            var stusId = AUIGrid.getCellValue(listGridID, selectRowIdx, "stusId");
-            var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
-            var sofNo = AUIGrid.getCellValue(listGridID, selectRowIdx, "sofNo");
-            var custNric = AUIGrid.getCellValue(listGridID, selectRowIdx, "nric");
-            var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
-
-            $('#hiddenPreOrdId').val(preOrdId);
-            $('#hiddenRcdTms').val(rcdTms);
-            $('#hiddenSof').val(sofNo);
-            $('#view_sofNo').text(sofNo);
-            $('#view_custIc').text(custNric);
-
-            if(stusId == 4 || stusId == 10){
-                Common.alert("Completed eKey-in cannot be edited.");
-                isValid = false;
-            }
-        } else {
-           Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
-           isValid = false;
-        }
-
-        return isValid;
-    }
-
-    function fn_doFailStatus(){
-        var action = $('#_action option:selected').val().trim();
-        var name = $('#_action option:selected').text();
-        var sof = $('#hiddenSof').val();
-
-        var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
-        var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
-
-        if(action == "" ){
-            Common.alert("Please select action");
-            return;
-        }
-
-        if(action == 21 && ($('input[name=cmbFailCode]:checked').val() == null || $('#_rem_').val() == null) ){
-            Common.alert("Please select Reason Code and key in Remark");
-            return;
-        }
-
-        var failUpdOrd = {
-                failCode  : $('input[name=cmbFailCode]:checked').val(),
-                remark    : $('#_rem_').val(),
-                sof         : sof,
-                preOrdId : $('#hiddenPreOrdId').val(),
-                stusId     : action
-        };
-
-        Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
-        	Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#updFailForm").serialize(), function(result) {
-                if(result.code == "99"){
-                    Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+ result.message +"</b>", function(){
-                        hideViewPopup('#updFail_wrap');
-                        fn_getPreOrderList();
-                    });
-                }else{
-                    Common.ajax("POST", "/homecare/sales/order/updateHcPreOrderStatus.do", failUpdOrd, function(result) {
-                        Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
-                    },
-                    function(jqXHR, textStatus, errorThrown) {
-                        try {
-                            Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                        }
-                        catch (e) {
-                            console.log(e);
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    function fn_closeFailedStusPop() {
-        fn_getPreOrderList();
-        $('#updFail_wrap').hide();
-        $('#updFailForm').clearForm();
     }
 
     function createAUIGrid() {
         //AUIGrid
         var columnLayout = [
-            {headerText : "BNDL No.", dataField : "bndlNo", editable : false, width : '7%'}
-          , {headerText : "SOF No.", dataField : "sofNo", editable : false, width : '7%'}
-          , {headerText : "eKey-in Date", dataField : "requestDt", editable : false, width : '8%'}
-          , {headerText : "eKey-in Entry Point", dataField : "channel", editable : false, width : '10%' }
-          , {headerText : "Application Type", dataField : "appType", editable : false, width : 80  }
-          , {headerText : "eKey-in Time", dataField : "requestTm", editable : false, width : '8%'}
-          , { headerText : "DT Branch",  dataField : "dtBranch",  editable : false, width : '10%' }
-          , {headerText : "Product", dataField : "product", editable : false, width : '12%'}
-          , {headerText : "Customer Name", dataField : "custNm", editable : false, width : '15%'}
-          , {headerText : "Creator",  dataField : "crtName", editable : false, width : '8%'}
-          , {headerText : "Status", dataField : "stusName",  editable : false, width : '8%'}
-          , {headerText : "Order Number", dataField : "salesOrdNo", editable : false, width : '10%'}
-          , {headerText : "Fail Reason Code", dataField : "rem1", editable : false,  width : '10%'}
-          , {headerText : "Fail Remark", dataField : "rem2", editable : false,  width : '15%'}
-          , {headerText : "Last Update At (By)", dataField : "lastUpd",  editable : false,  width : '18%'}
-          , {headerText : "Installation State", dataField : "state", editable : false,  width: '15%'}
-          , {headerText : "StatusId", dataField : "stusId",  visible  : false}
-          , {headerText : "preOrdId",  dataField : "preOrdId", visible  : false}
-          , {headerText : "updDt", dataField : "updDt", visible : false}
+          { headerText : "Pre-Booking Order No.", dataField : "preBookNo", editable : false, width : '12%'}
+          , { headerText : "Status", dataField : "stusCode", editable : false, width : '5%'}
+          , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : '12%'}
+          , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : '8%'}
+          , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : '12%'}
+          , { headerText : "Customer Info", dataField : "custName", editable : false, width : '15%'}
+          , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : '15%'}
+          , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : '15%'}
+          , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : '15%'}
+          , { headerText : "preBookId",dataField : "preBookId", visible  : false}
+          , { headerText : "stusId",dataField : "stusId", visible  : false}
         ];
 
         var gridPros = {
@@ -294,35 +197,16 @@
     function createExcelAUIGrid() {
         //AUIGrid
         var excelColumnLayout = [
-           { headerText : "eKey-in Date", dataField : "requestDt", editable : false, width:100}
-          , { headerText : "SOF No.", dataField : "sofNo", editable : false, width:100}
-          , { headerText : "eKey-in Time", dataField : "requestTm", editable : false, width:100}
-          , { headerText : "eKey-in Entry Point", dataField : "channel", editable : false, width:100}
-          , { headerText : "Order Number", dataField : "salesOrdNo", editable : false, width:100}
-          , { headerText : "Status", dataField : "stusName", editable : false,width:150}
-          , { headerText : "PV Month", dataField : "pvMonth", editable : false,width:200}
-          , { headerText : "PV Month", dataField : "pvYear",   editable : false,width:200}
-          , { headerText : "Customer Name",   dataField : "custNm", editable : false,width:300}
-          , { headerText : "Area", dataField : "area", editable : false,width:450}
-          , { headerText : "Posting Branch", dataField : "soBrnchCode", editable : false,width:100}
-          , { headerText : "Doc Submit", dataField : "docSubmit", editable : false,width:100}
-          , { headerText : "Submit Branch", dataField : "submitBranch", editable : false,width:100}
-          , { headerText : "Branch Location", dataField : "branchLocation",  editable : false,width:300}
-          , { headerText : "Product", dataField : "product", editable : false,width:450}
-          , { headerText : "Promo Code", dataField : "promoCode", editable : false,width:200}
-          , { headerText : "Promotion Description ", dataField : "promoDesc", editable : false,width:400}
-          , { headerText : "Fail Reason Code", dataField : "rem1", editable : false,width:500}
-          , { headerText : "Fail Remark", dataField : "rem2", editable : false,width:750}
-          , { headerText : "Sales By", dataField : "salesUserId", editable : false,width:100}
-          , { headerText : "Creator",  dataField : "crtName", editable : false,width:100}
-          , { headerText : "Cody User Branch",  dataField : "branchName",  editable : false, width:300}
-          , { headerText : "Region", dataField : "regionName", editable : false,width:200}
-          , { headerText : "HP Name", dataField : "hpName", editable : false,width:400}
-          , { headerText : "Organization Code", dataField : "orgCode", editable : false,width:200}
-          , { headerText : "Group Code", dataField : "grpCode",  editable : false,width:200}
-          , { headerText : "Dept Code", dataField : "deptCode", editable : false,width:200}
-          , { headerText : "Last Update At (By)", dataField : "lastUpd", editable : false,width:400}
-          , { headerText : "Installation State", dataField : "state", editable : false, width : 300}
+           { headerText : "Pre-Booking Order No.", dataField : "preBookNo", editable : false, width : 200}
+          , { headerText : "Status", dataField : "stusCode", editable : false, width : 200}
+          , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : 200}
+          , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : 200}
+          , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : 200}
+          , { headerText : "Customer Info", dataField : "custName", editable : false, width : 300}
+          , { headerText : "Previous Product Model", dataField : "", editable : false, width : 200}
+          , { headerText : "Previous Product Order No", dataField : "", editable : false, width : 200}
+          , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
+
         ];
 
         var excelGridPros = {
@@ -340,7 +224,7 @@
     }
 
     $(function(){
-        $('#_btnNew').click(function() {
+    	$('#_btnNew').click(function() {
             Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc){
                 if(memRc != null) {
                     if(memRc.rookie == 1) {
@@ -353,6 +237,14 @@
                         return false;
                     }
                 }
+
+                // 20190925 KR-OHK Moblie Popup Setting
+                if(Common.checkPlatformType() == "mobile") {
+                    popupObj = Common.popupWin("frmNew", "/homecare/sales/order/hcPreBookOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+                } else{
+                    Common.popupDiv("/homecare/sales/order/hcPreBookOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
+                }
+
             });
         });
         $('#_btnClear').click(function() {
@@ -360,15 +252,11 @@
         });
 
         $('#_btnSearch').click(function() {
-            if(fn_validSearchList()) fn_getPreOrderList();
+            if(fn_validSearchList()) fn_getPreBookOrderList();
         });
 
-        $('#_btnConvOrder').click(function() {
-            fn_convToOrderPop();
-        });
-
-        $('#_btnFailSave').click(function() {
-            fn_doFailStatus();
+        $('#_btnCancelPreBook').click(function() {
+            fn_cancelPreBookOrderPop();
         });
 
         $('#_memBtn').click(function() {
@@ -395,17 +283,7 @@
             }
         });
 
-        $('#_action').change(function(event) {
-            var action = $('#_action').val().trim();
 
-            if(action == 21){
-                $("#fail_reason").show();
-                $("#fail_rem").show();
-            }else{
-                $("#fail_reason").hide();
-                $("#fail_rem").hide();
-            }
-        });
     });
 
     function fn_validSearchList() {
@@ -413,8 +291,8 @@
 
         if(FormUtil.isEmpty($('#_memCode').val())
         	&& FormUtil.isEmpty($('#_appTypeId').val())
-        	&& FormUtil.isEmpty($('#_stusId').val()) && FormUtil.isEmpty($('#_brnchId').val())
-            && FormUtil.isEmpty($('#_typeId').val())
+        	&& FormUtil.isEmpty($('#_preStusId').val()) && FormUtil.isEmpty($('#_preBrnchId').val())
+            && FormUtil.isEmpty($('#_preTypeId').val())
             && FormUtil.isEmpty($('#_nric').val())
             && FormUtil.isEmpty($('#_name').val()) && (FormUtil.isEmpty($('#_reqstStartDt').val())
             || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
@@ -425,16 +303,16 @@
                 msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
             }
 
-            if(FormUtil.isEmpty($('#_sofNo').val())){
+            /* if(FormUtil.isEmpty($('#_sofNo').val())){
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
-            }
+            } */
         }
 
         if(!FormUtil.isEmpty($('#_reqstStartTime').val()) || !FormUtil.isEmpty($('#_reqstEndTime').val())) {
             if(FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val())) {
                 isValid = false;
-                msg += '* Please select Pre-Order Date first<br/>';
+                msg += '* Please select Pre-Booking Order Date first<br/>';
             }
         }
 
@@ -459,43 +337,10 @@
         });
     }
 
-    // Click - Convert Order Button
-    function fn_convToOrderPop() {
-        var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
 
-        if(selIdx > -1) {
-            var stusId = AUIGrid.getCellValue(listGridID, selIdx, "stusId");
-            var salesOrdNo = AUIGrid.getCellValue(listGridID, selIdx, "salesOrdNo");
 
-            if(stusId == 10 || stusId == 4 || salesOrdNo != undefined ){
-                Common.alert("Convert order is not allowed for this pre-order");
-            } else {
-                var memCode = AUIGrid.getCellValue(listGridID, selIdx, "crtName");
-
-                Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-                    if(memRc != null) {
-                        if(memRc.rookie == 1) {
-                            if(memRc.rcPrct < 50) {
-                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
-                                return false;
-                            }
-                        } else {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-                            return false;
-                        }
-                    }
-
-                    Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
-
-                });
-            }
-        }else {
-                Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
-        }
-    }
-
-    function fn_getPreOrderList() {
-        Common.ajax("GET", "/homecare/sales/order/selectHcPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
+    function fn_getPreBookOrderList() {
+        Common.ajax("GET", "/homecare/sales/order/selectHcPreBookOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
         });
@@ -503,14 +348,6 @@
 
     function fn_PopClose() {
         if(popupObj!=null) popupObj.close();
-    }
-
-    function fn_calcGst(amt) {
-        var gstAmt = 0;
-        if(FormUtil.isNotEmpty(amt) || amt != 0) {
-            gstAmt = Math.floor(amt*(1/1.06));
-        }
-        return gstAmt;
     }
 
     function fn_multiCombo(){
@@ -521,26 +358,26 @@
         });
         $('#_appTypeId').multipleSelect("checkAll");
 
-        $('#_stusId').change(function() {
+        $('#_preStusId').change(function() {
         }).multipleSelect({
             selectAll: true,
             width: '100%'
         });
-        $('#_stusId').multipleSelect("checkAll");
+        $('#_preStusId').multipleSelect("checkAll");
 
-        $('#_brnchId').change(function() {
+        $('#_preBrnchId').change(function() {
         }).multipleSelect({
             selectAll: true,
             width: '100%'
         });
-        $('#_brnchId').multipleSelect("checkAll");
+        $('#_preBrnchId').multipleSelect("checkAll");
 
-        $('#_typeId').change(function() {
+        $('#_preTypeId').change(function() {
         }).multipleSelect({
             selectAll: true,
             width: '100%'
         });
-        $('#_typeId').multipleSelect("checkAll");
+        $('#_preTypeId').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -609,6 +446,24 @@
         });
     };
 
+    function fn_setDetail(gridID, rowIdx){
+        Common.popupDiv("/homecare/sales/order/hcPreBookOrderDetailPop.do", { preBookId : AUIGrid.getCellValue(gridID, rowIdx, "preBookId") }, null, true, "_divPreOrdModPop");
+    }
+
+
+	function fn_cancelPreBookOrderPop() {
+		var rowIdx = AUIGrid.getSelectedIndex(listGridID)[0];
+		var clickChk = AUIGrid.getSelectedItems(listGridID);
+		if (rowIdx > -1) {
+			if (clickChk[0].item.stusCode != "CAN") {
+				Common.popupDiv("/homecare/sales/order/hcPreBookOrderReqCancelPop.do", {preBookId : AUIGrid.getCellValue(listGridID,rowIdx, "preBookId")}, null, true, "_divPreOrdModPop");
+			} else {
+				Common.alert("Pre-Booking Cancellation" + DEFAULT_DELIMITER + "<b>Pre-Booking Order No." + clickChk[0].item.preBookNo + " had been cancelled before.</b>");
+			}
+		} else {
+			Common.alert("Pre-Booking Missing" + DEFAULT_DELIMITER + "<b>No pre-Booking selected.</b>");
+		}
+	}
 </script>
 
 <section id="content"><!-- content start -->
@@ -622,7 +477,7 @@
 <h2>Pre-Booking (HC)</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-       <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Manual Convert</a></p></li>
+       <li><p class="btn_blue"><a id="_btnCancelPreBook" href="#">Pre-Booking Cancel</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
        <li><p class="btn_blue"><a id="_btnNew" href="#">New</a></p></li>
@@ -654,7 +509,7 @@
     <td>
         <p><input id="_memCode" name="_memCode" type="text" title="" placeholder="" style="width:80px;" class="" /></p>
         <p><a id="_memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
-        <p><input id="_memName" name="_memName" type="text" title="" placeholder="" style="width:90px;" class="readonly" readonly/></p>
+        <p><input id="_memName" name="_memName" type="text" title="" placeholder="" style="width:120px;" class="readonly" readonly/></p>
     </td>
     <th scope="row">Application Type</th>
     <td><select id="_appTypeId" name="_appTypeId" class="multy_select w100p" multiple="multiple"></select></td>
@@ -669,9 +524,9 @@
 </tr>
 <tr>
     <th scope="row">Pre-Booking Order Status</th>
-    <td><select id="_stusId" name="_stusId" class="multy_select w100p" multiple="multiple"></td>
+    <td><select id="_preStusId" name="_preStusId" class="multy_select w100p" multiple="multiple"></select></td>
     <th scope="row">Posting Branch</th>
-    <td><select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select></td>
+    <td><select id="_preBrnchId" name="_preBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
     <th scope="row">NRIC/Company No</th>
     <td><input id="_nric" name="_nric" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
@@ -679,7 +534,7 @@
     <th scope="row">SOF No.</th>
     <td><input id="_sofNo" name="_sofNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Customer Type</th>
-    <td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>
+    <td><select id="_preTypeId" name="_preTypeId" class="multy_select w100p" multiple="multiple"></select></td>
     <th scope="row">Customer Name</th>
     <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
@@ -695,7 +550,7 @@
         </div>
     </td>
     <th scope="row"><spring:message code="sal.text.product" /></th>
-    <td><select id="_ordProudctList" name="ProudctList" class="w100p"></select></select>
+    <td><select id="_preOrdProudctList" name="_preOrdProudctList" class="multy_select w100p" multiple="multiple"></select></td>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
@@ -706,28 +561,22 @@
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
-    <th scope="row">Bundle Number</th>
-    <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-    <th scope="row"><spring:message code="sal.text.memtype" /></th>
-    <td><select id="memType" name="memType" class="w100p" ></select>
-    <th scope="row">DT Branch</th>
-     <td><select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
-</tr>
-<tr>
-    <th scope="row">Verification Status</th>
+ <th scope="row">Verification Status</th>
     <td><select id="verifyStatus" name="verifyStatus" class="w100p" >
             <option value="">Choose One</option>
-            <option value="0">Verified</option>
-            <option value="1">Rejected</option>
+            <option value="ACT">ACT</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
         </select>
      </td>
-    <th scope="row"></th>
-    <td></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td><select id="memType" name="memType" class="w100p" ></select>
+<!--     <th scope="row">DT Branch</th>
+     <td><select id="listDscBrnchId" name="listDscBrnchId" class="multy_select w100p" multiple="multiple"></select></td> -->
 </tr>
+
 <tr>
-    <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
+    <%-- <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th> --%>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -747,74 +596,5 @@
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
-
-<!---------------------------------------------------------------
-    POP-UP (NEW CLAIM)
----------------------------------------------------------------->
-<!-- popup_wrap start -->
-<div class="popup_wrap" id="updFail_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="updFail_pop_header">
-        <h1>Update Status</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updFail_wrap')">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
-
-    <!-- pop_body start -->
-    <form name="updFailForm" id="updFailForm"  method="post">
-    <input id="hiddenPreOrdId" name="preOrdId"   type="hidden"/>
-    <input id="hiddenRcdTms" name="rcdTms"   type="hidden"/>
-    <input id="hiddenSof" name="sofNo"   type="hidden"/>
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:250px" />
-                    <col style="width:*" />
-                    <col style="width:250px" />
-                    <col style="width:*" />
-                </colgroup>
-
-                <tbody>
-                <tr>
-                    <th scope="row">SOF NO</th>
-                    <td id="view_sofNo"></td>
-                    <th scope="row">Customer NRIC</th>
-                    <td id="view_custIc"></td>
-                </tr>
-                <tr>
-                     <th scope="row">Action<span class="must">*</span></th>
-                     <td colspan="3" ><select ass="mr5" id="_action" name="_action"></select></td>
-                 </tr>
-
-                 <tr id="fail_reason" style="display: none;">
-                     <th scope="row">Please select fail reason code<span class="must">*</span></th>
-                         <td colspan="3" >
-                             <label><input type="radio" name="cmbFailCode" value="Incomplete document" /><span>Incomplete document</span></label>
-                             <label><input type="radio" name="cmbFailCode" value="Incorrect key-in" /><span>Incorrect key-in</span></label>
-                         </td>
-                 </tr>
-                 <tr id="fail_rem" style="display: none;">
-                     <th scope="row"><spring:message code="sal.title.remark" /></th>
-                         <td colspan="3" >
-                             <textarea cols="20" rows="2" id="_rem_" name="rem" placeholder="Remark"></textarea>
-                         </td>
-                 </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a id="_btnFailSave" href="#">Save</a></p></li>
-        </ul>
-    </section>
-    </form>
-    <!-- pop_body end -->
-</div>
 
 </section><!-- content end -->
