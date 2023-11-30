@@ -5705,7 +5705,13 @@ SELECT MST.*
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
                    (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
-                   SAL0047D.REM AS RESULT_REMARK
+                   SAL0047D.REM AS RESULT_REMARK,
+                   NVL (SAL0047D.DT_PAIR_ID, '') AS PARTNER_CODE,
+
+                   CASE WHEN SAL0047D.DT_PAIR_ID IS NOT NULL
+                    THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID)
+                    ELSE '' END AS MEM_CODE
+
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
