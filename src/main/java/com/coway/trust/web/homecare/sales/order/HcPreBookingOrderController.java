@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,7 +25,10 @@ import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.PreBookingOrderService;
+import com.coway.trust.biz.sales.order.PreOrderService;
+import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
+import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -33,354 +38,276 @@ import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
- * @ClassName : HcPreOrderController.java
- * @Description : Homecare Pre Order Controller
+ * @ClassName : HcPreBookingOrderController.java
+ * @Description : Homecare Pre Booking Order Controller
  *
  * @History
  *
- * <pre>
- * Date            Author       Description
- * -------------  -----------  -------------
- * 2019. 10. 17.   KR-SH        First creation
- * </pre>
+ *
  */
 @Controller
 @RequestMapping(value = "/homecare/sales/order")
 public class HcPreBookingOrderController {
+  private static Logger logger = LoggerFactory.getLogger(PreOrderServiceImpl.class);
 
-    @Resource(name = "salesCommonService")
-    private SalesCommonService salesCommonService;
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
-    @Resource(name = "commonService")
-    private CommonService commonService;
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
-    @Resource(name = "hcPreBookingOrderService")
-    private HcPreBookingOrderService hcPreBookingOrderService;
+  @Resource(name = "hcPreBookingOrderService")
+  private HcPreBookingOrderService hcPreBookingOrderService;
 
-    @Resource(name = "preBookingOrderService")
-    private PreBookingOrderService preBookingOrderService;
+  @Resource(name = "preBookingOrderService")
+  private PreBookingOrderService preBookingOrderService;
 
-    @Resource(name = "hcOrderListService")
-    private HcOrderListService hcOrderListService;
+  @Resource(name = "hcOrderListService")
+  private HcOrderListService hcOrderListService;
 
+  @Resource(name = "preOrderService")
+  private PreOrderService preOrderService;
 
-    // Homecare Pre OrderList
-    @RequestMapping(value = "/hcPreBookingOrderList.do")
-    public String hcPreBookingOrderList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+  // Homecare Pre OrderList
+  @RequestMapping(value = "/hcPreBookingOrderList.do")
+  public String hcPreBookingOrderList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws ParseException {
 
-        if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7) {
-        	  params.put("userId", sessionVO.getUserId());
+    if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7) {
+      params.put("userId", sessionVO.getUserId());
 
-            EgovMap result = salesCommonService.getUserInfo(params);
+      EgovMap result = salesCommonService.getUserInfo(params);
 
-            model.put("orgCode", result.get("orgCode"));
-            model.put("grpCode", result.get("grpCode"));
-            model.put("deptCode", result.get("deptCode"));
-            model.put("memCode", result.get("memCode"));
-        }
-
-        int userTypeId = 14;
-
-        if(sessionVO.getUserTypeId() == 1) {    // HP
-            userTypeId = 29;
-        } else if(sessionVO.getUserTypeId() == 2) {     // CODY
-            userTypeId = 28;
-        }
-
-        String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-
-        // BranchCodeList
-        params.clear();
-        params.put("groupCode", 1);
-        List<EgovMap> branchCdList = commonService.selectBranchList(params);
-
-        // code List
-        params.clear();
-        params.put("groupCode", 8);
-        List<EgovMap> codeList_8 = commonService.selectCodeList(params);
-
-        //product
-        List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
-
-        model.put("fromDay", CommonUtils.getAddDay(toDay, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
-        model.put("toDay", toDay);
-        model.put("isAdmin", "true");
-        model.put("isAdmin", "true");
-        params.put("userId", sessionVO.getUserId());
-        EgovMap branchTypeRes = salesCommonService.getUserBranchType(params);
-
-    		if (branchTypeRes != null) {
-    			  model.put("branchType", branchTypeRes.get("codeId"));
-    		}
-
-        model.put("userTypeId", userTypeId);
-        model.put("branchCdList", branchCdList);
-        model.put("codeList_8", codeList_8);
-        model.put("productList_1", productList_1);
-
-        return "homecare/sales/order/hcPreBookingOrderList";
+      model.put("orgCode", result.get("orgCode"));
+      model.put("grpCode", result.get("grpCode"));
+      model.put("deptCode", result.get("deptCode"));
+      model.put("memCode", result.get("memCode"));
     }
 
+    int userTypeId = 14;
 
-/*   // Search Homecare Pre OrderList
-  @RequestMapping(value = "/selectHcPreOrderList.do")
-	public ResponseEntity<List<EgovMap>> selectHcPreOrderList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+    if (sessionVO.getUserTypeId() == 1) { // HP
+      userTypeId = 29;
+    } else if (sessionVO.getUserTypeId() == 2) { // CODY
+      userTypeId = 28;
+    }
 
-		String[] arrAppType = request.getParameterValues("_appTypeId"); 	// Application Type
-		String[] arrPreOrdStusId = request.getParameterValues("_stusId");    		// Pre-Order Status
-		String[] arrKeyinBrnchId 	= request.getParameterValues("_brnchId");   	// Key-In Branch
-		String[] arrCustType = request.getParameterValues("_typeId");    		// Customer Type
-		String[] arrOrdProudctList = request.getParameterValues("ProudctList");    		// Product
-		String[] arrDtBranch = request.getParameterValues("dscBrnchId");			// DT Branch
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
-		if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))       	params.put("arrAppType", arrAppType);
-		if(arrPreOrdStusId != null && !CommonUtils.containsEmpty(arrPreOrdStusId)) 	params.put("arrPreOrdStusId", arrPreOrdStusId);
-		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) 	params.put("arrKeyinBrnchId", arrKeyinBrnchId);
-		if(arrCustType      != null && !CommonUtils.containsEmpty(arrCustType))      	params.put("arrCustType", arrCustType);
-		if(arrOrdProudctList      != null && !CommonUtils.containsEmpty(arrOrdProudctList))      	params.put("arrOrdProudctList", arrOrdProudctList);
-		if(arrDtBranch      != null && !CommonUtils.containsEmpty(arrDtBranch))      	params.put("arrDtBranch", arrDtBranch);
+    // BranchCodeList
+    params.clear();
+    params.put("groupCode", 1);
+    List<EgovMap> branchCdList = commonService.selectBranchList(params);
 
-		List<EgovMap> result = hcPreBookingOrderService.selectHcPreBookingOrderList(params);
+    // code List
+    params.clear();
+    params.put("groupCode", 8);
+    List<EgovMap> codeList_8 = commonService.selectCodeList(params);
 
-		return ResponseEntity.ok(result);
-	}
+    // product
+    List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
 
-   // Homecare Pre Order Register Popup
-	@RequestMapping(value = "/hcPreOrderRegisterPop.do")
-	public String hcPreOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
-		// Search code List
-        model.put("codeList_19", commonService.selectCodeList("19", "CODE_NAME"));
-        Map<String, Object> extradeParam = new HashMap();
-        extradeParam.put("notlike", "2");
-        extradeParam.put("groupCode", "325");
+    model.put("fromDay", CommonUtils.getAddDay(toDay, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
+    model.put("toDay", toDay);
+    model.put("isAdmin", "true");
+    model.put("isAdmin", "true");
+    params.put("userId", sessionVO.getUserId());
+    EgovMap branchTypeRes = salesCommonService.getUserBranchType(params);
 
-        model.put("codeList_325", commonService.selectCodeList(extradeParam));
-        model.put("codeList_415", commonService.selectCodeList("415", "CODE_ID"));
-        model.put("codeList_416", commonService.selectCodeList("416", "CODE_ID"));
-        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
-        // Search BranchCodeList
-        model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
-        model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
-		    model.put("nextDay", CommonUtils.getAddDay(CommonUtils.getDateToFormat(SalesConstants.DEFAULT_DATE_FORMAT1), 1, SalesConstants.DEFAULT_DATE_FORMAT1));
+    if (branchTypeRes != null) {
+      model.put("branchType", branchTypeRes.get("codeId"));
+    }
 
-	      EgovMap checkExtradeSchedule = preBookingOrderService.checkExtradeSchedule();
+    model.put("userTypeId", userTypeId);
+    model.put("branchCdList", branchCdList);
+    model.put("codeList_8", codeList_8);
+    model.put("productList_1", productList_1);
 
-        String dayFrom = "", dayTo = "";
+    return "homecare/sales/order/hcPreBookingOrderList";
+  }
 
-        if(checkExtradeSchedule!=null){
-        	dayFrom = checkExtradeSchedule.get("startDate").toString();
-        	dayTo = checkExtradeSchedule.get("endDate").toString();
-        }
-        else{
-        	dayFrom = "20"; // default 20-{month-1}
-       		dayTo = "02"; // default 2-{month}
-        }
+  // Search Homecare PreBookingOrderList
+  @RequestMapping(value = "/selectHcPreBookOrderList.do")
+  public ResponseEntity<List<EgovMap>> selectHcPreOrderList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
 
-		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
-		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    String[] arrAppType = request.getParameterValues("_appTypeId"); // Application Type
+    String[] arrPreOrdStusId = request.getParameterValues("_preStusId"); // Pre-Book Order Status
+    String[] arrKeyinBrnchId = request.getParameterValues("_preBrnchId"); // Key-In Branch
+    String[] arrCustType = request.getParameterValues("_preTypeId"); // Customer Type
+    String[] arrOrdProudctList = request.getParameterValues("_preOrdProudctList"); // Product
 
-		model.put("hsBlockDtFrom", dayFrom);
-		model.put("hsBlockDtTo", dayTo);
-		model.put("bfDay", bfDay);
-		model.put("toDay", toDay);
+    if (arrAppType != null && !CommonUtils.containsEmpty(arrAppType))
+      params.put("arrAppType", arrAppType);
+    if (arrPreOrdStusId != null && !CommonUtils.containsEmpty(arrPreOrdStusId))
+      params.put("arrPreOrdStusId", arrPreOrdStusId);
+    if (arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId))
+      params.put("arrKeyinBrnchId", arrKeyinBrnchId);
+    if (arrCustType != null && !CommonUtils.containsEmpty(arrCustType))
+      params.put("arrCustType", arrCustType);
+    if (arrOrdProudctList != null && !CommonUtils.containsEmpty(arrOrdProudctList))
+      params.put("arrOrdProudctList", arrOrdProudctList);
 
-		return "homecare/sales/order/hcPreOrderRegisterPop";
-	}
+    logger.debug("params : " + params);;
+    List<EgovMap> result = hcPreBookingOrderService.selectHcPreBookingOrderList(params);
 
+    return ResponseEntity.ok(result);
+  }
 
-	// Homecare Pre Order Register Confirm Popup
-	@RequestMapping(value = "/cnfmHcPreOrderDetailPop.do")
-	public String cnfmHcPreOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("atchFileGrpId", params.get("atchFileGrpId"));
+  // Homecare Pre Book Order Register Popup
+  @RequestMapping(value = "/hcPreBookOrderRegisterPop.do")
+  public String hcPreOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
 
-		return "homecare/sales/order/cnfmHcPreOrderDetailPop";
-	}
+    // Search BranchCodeList
+    model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
+    //model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
+    model.put("nextDay", CommonUtils.getAddDay(CommonUtils.getDateToFormat(SalesConstants.DEFAULT_DATE_FORMAT1), 1,
+        SalesConstants.DEFAULT_DATE_FORMAT1));
 
-	 // Homecare Pre Order 저장
-	@RequestMapping(value = "/registerHcPreOrder.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> registerHcPreOrder(@RequestBody PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO) throws Exception {
-		String appTypeStr = HomecareConstants.cnvAppTypeName(preBookingOrderVO.getAppTypeId());
+    EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
 
-		hcPreBookingOrderService.registerHcPreBookingOrder(preBookingOrderVO, sessionVO);
+    String dayFrom = "", dayTo = "";
 
-		HcOrderVO hcOrderVO = preBookingOrderVO.getHcOrderVO();
+    if (checkExtradeSchedule != null) {
+      dayFrom = checkExtradeSchedule.get("startDate").toString();
+      dayTo = checkExtradeSchedule.get("endDate").toString();
+    } else {
+      dayFrom = "20"; // default 20-{month-1}
+      dayTo = "02"; // default 2-{month}
+    }
 
-		String msg = "Order successfully saved.<br />";
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+        SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
-		if(!"".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId()))) {
-			msg += "Pre Order Number(Mattres) : " + hcOrderVO.getMatPreOrdId() + "<br />";
-		}
-		if(!"".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId()))) {
-			msg += "Pre Order Number(Frame) : "   + hcOrderVO.getFraPreOrdId() + "<br />";
-		}
-		msg += "Bundle Number : " + hcOrderVO.getBndlNo() + "<br />";
-		msg += "Application Type : " + appTypeStr + "<br />";
+    model.put("hsBlockDtFrom", dayFrom);
+    model.put("hsBlockDtTo", dayTo);
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(msg);
+    return "homecare/sales/order/hcPreBookOrderRegisterPop";
+  }
 
-		return ResponseEntity.ok(message);
-	}
+  @RequestMapping(value = "/registerHcPreBookingOrder.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> registerHcPreBookingOrder(@RequestBody PreBookingOrderVO preBookingOrderVO,
+      SessionVO sessionVO) throws Exception {
 
+    hcPreBookingOrderService.registerHcPreBookingOrder(preBookingOrderVO, sessionVO);
+    String preBookingOrderNo = preBookingOrderVO.getPreBookOrdNo();
 
-	 // Homecare Pre Order Modify Popup
-	@RequestMapping(value = "/hcPreOrderModifyPop.do")
-	public String hcPreOrderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
-		// Search Pre Order Info
-		EgovMap preOrderInfo = null;
-		// HMC0011D
-		EgovMap hcPreOrdInfo = hcPreBookingOrderService.selectHcPreBookingOrderInfo(params);
-		EgovMap matOrderInfo = null;
-		EgovMap frmOrderInfo = null;
+    String msg = "Pre-Booking Order No : " + preBookingOrderNo + ".<br />";
 
-		String matPreOrdId = CommonUtils.nvl(hcPreOrdInfo.get("matPreOrdId"));
-		String fraPreOrdId =  CommonUtils.nvl(hcPreOrdInfo.get("fraPreOrdId"));
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setMessage(msg);
 
-		if(!"".equals(matPreOrdId) && !"0".equals(matPreOrdId)) {
-			// Mattress Order Info
-			params.put("preOrdId", matPreOrdId);
-			matOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-			preOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-		}
-		if(!"".equals(fraPreOrdId) && !"0".equals(fraPreOrdId)) {
-    		// Frame Order Info
-    		params.put("preOrdId", fraPreOrdId);
-    		frmOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-		}
+    return ResponseEntity.ok(message);
+  }
 
-		//model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+  @RequestMapping(value = "/hcPreBookOrderNoPrevPop.do")
+  public String prevOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-	   EgovMap checkExtradeSchedule = preBookingOrderService.checkExtradeSchedule();
+    model.put("custId", params.get("custId"));
 
-        String dayFrom = "", dayTo = "";
+    return "homecare/sales/order/hcPreBookOrderNoPrevPop";
+  }
 
-        if(checkExtradeSchedule!=null){
-        	dayFrom = checkExtradeSchedule.get("startDate").toString();
-        	dayTo = checkExtradeSchedule.get("endDate").toString();
-        }
-        else{
-        	dayFrom = "20"; // default 20-{month-1}
-       		dayTo = "02"; // default 2-{month}
-        }
+  @RequestMapping(value = "/selectHcPrevOrderNoList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHcPrevOrderNoList(@RequestParam Map<String, Object> params) {
+    List<EgovMap> result = hcPreBookingOrderService.selectHcPrevOrderNoList(params);
+    return ResponseEntity.ok(result);
+  }
 
-		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
-		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+  @RequestMapping(value = "/checkOldOrderId.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectOldOrderId(@RequestParam Map<String, Object> params, ModelMap model)
+      throws Exception {
+    EgovMap RESULT;
+    RESULT = hcPreBookingOrderService.checkOldOrderId(params);
 
-		model.put("hsBlockDtFrom", dayFrom);
-		model.put("hsBlockDtTo", dayTo);
+    // 데이터 리턴.
+    return ResponseEntity.ok(RESULT);
+  }
 
-		model.put("bfDay", bfDay);
-		model.put("toDay", toDay);
+  @RequestMapping(value = "/hcPreBookOrderReqCancelPop.do")
+  public String hcPreBookOrderReqCancelPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
+    // Search Pre Book Order Info
+    EgovMap preBookOrderInfo = hcPreBookingOrderService.selectHcPreBookingOrderInfo(params);
 
-		model.put("preOrderInfo", preOrderInfo);
-		model.put("hcPreOrdInfo", hcPreOrdInfo);
-		model.put("preMatOrderInfo", matOrderInfo);
-		model.put("preFrmOrderInfo", frmOrderInfo);
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+        SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
-    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+    model.put("preBookOrderInfo", preBookOrderInfo);
 
-		return "homecare/sales/order/hcPreOrderModifyPop";
-	}
+    return "homecare/sales/order/hcPreBookOrderReqCancelPop";
+  }
 
+  @RequestMapping(value = "/hcPreBookOrderDetailPop.do")
+  public String hcPreBookOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
+    // Search Pre Book Order Info
+    EgovMap preBookOrderInfo = hcPreBookingOrderService.selectHcPreBookingOrderInfo(params);
 
-	 // Homecare Pre Order
-	@RequestMapping(value = "/updateHcPreOrder.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateHcPreOrder(@RequestBody PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO) throws Exception {
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+        SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
-		hcPreBookingOrderService.updateHcPreBookingOrder(preBookingOrderVO, sessionVO);
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+    model.put("preBookOrderInfo", preBookOrderInfo);
 
-		String msg = "Order successfully saved.<br />";
+    return "homecare/sales/order/hcPreBookOrderDetailPop";
+  }
 
-		if(!"".equals(CommonUtils.nvl(preBookingOrderVO.getHcOrderVO().getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(preBookingOrderVO.getHcOrderVO().getMatPreOrdId()))) {
-			msg += "Pre Order Number(Mattres) : " + preBookingOrderVO.getHcOrderVO().getMatPreOrdId() + "<br />";
-		}
-		if(!"".equals(CommonUtils.nvl(preBookingOrderVO.getHcOrderVO().getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(preBookingOrderVO.getHcOrderVO().getFraPreOrdId()))) {
-			msg += "Pre Order Number(Frame) : "   + preBookingOrderVO.getHcOrderVO().getFraPreOrdId() + "<br />";
-		}
-		msg += "Application Type : " + HomecareConstants.cnvAppTypeName(preBookingOrderVO.getAppTypeId()) + "<br />";
+  @RequestMapping(value = "/selectPreBookOrderVerifyStus.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectPreBookOrderVerifyStus(@RequestParam Map<String, Object> params, ModelMap model)
+      throws Exception {
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(msg);
+    EgovMap result = hcPreBookingOrderService.selectPreBookOrderVerifyStus(params);
 
-		return ResponseEntity.ok(message);
-	}
+    return ResponseEntity.ok(result);
+  }
 
-	// Homecare Pre Order Status Update
-	@RequestMapping(value = "/updateHcPreOrderStatus.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateHcPreOrderStatus(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @RequestMapping(value = "/hcRequestCancelPreBookOrder.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateHcPreBookOrderCancel(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+    // 주문 수정
+    hcPreBookingOrderService.updateHcPreBookOrderCancel(params, sessionVO);
 
-	  hcPreBookingOrderService.updateHcPreBookingOrderStatus(params, sessionVO);
+    String msg = "Pre-Booking Cancel successfully.<br />";
 
-		String msg = "Order Status successfully updated.<br />";
+    // 결과 만들기
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setMessage(msg);
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(msg);
+    return ResponseEntity.ok(message);
+  }
 
-		return ResponseEntity.ok(message);
-	}
+  @RequestMapping(value = "/selectPreBookOrderCancelStatus.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPreBookOrderCancelStatus( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
-	// Convert Homecare Order Popup
-	@RequestMapping(value = "/convertToHcOrderPop.do")
-	public String convertToHcOrderPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
-    		// Search Pre Order Info
-    		EgovMap preOrderInfo = null;
-    		// HMC0011D
-    		EgovMap hcPreOrdInfo = hcPreBookingOrderService.selectHcPreBookingOrderInfo(params);
-    		EgovMap matOrderInfo = null;
-    		EgovMap frmOrderInfo = null;
+    List<EgovMap> result = hcPreBookingOrderService.selectPreBookOrderCancelStatus(params) ;
 
-    		String matPreOrdId = CommonUtils.nvl(hcPreOrdInfo.get("matPreOrdId"));
-    		String fraPreOrdId =  CommonUtils.nvl(hcPreOrdInfo.get("fraPreOrdId"));
+    return ResponseEntity.ok(result);
+  }
 
-    		if(!"".equals(matPreOrdId) && !"0".equals(matPreOrdId)) {
-    			// Mattress Order Info
-    			params.put("preOrdId", matPreOrdId);
-    			matOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-    			preOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-    		}
-    		if(!"".equals(fraPreOrdId) && !"0".equals(fraPreOrdId)) {
-        		// Frame Order Info
-        		params.put("preOrdId", fraPreOrdId);
-        		frmOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
-    		}
+  @RequestMapping(value = "/checkPreBookSalesPerson.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkPreBookSalesPerson(@RequestParam Map<String, Object> params) {
 
-		    // code List
-        params.clear();
-        params.put("groupCode", 10);
-        params.put("orderValue", "CODE_ID");
-        List<EgovMap> codeList_10 = commonService.selectCodeList(params);
+    EgovMap result = hcPreBookingOrderService.checkPreBookSalesPerson(params);
 
-        params.put("groupCode", 19);
-        params.put("orderValue", "CODE_NAME");
-        List<EgovMap> codeList_19 = commonService.selectCodeList(params);
+    return ResponseEntity.ok(result);
+  }
 
-        params.put("groupCode", 17);
-        params.put("orderValue", "CODE_NAME");
-        List<EgovMap> codeList_17 = commonService.selectCodeList(params);
+  @RequestMapping(value = "/checkPreBookConfigurationPerson.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkPreBookConfigurationPerson(@RequestParam Map<String, Object> params) {
 
-        params.put("groupCode", 322);
-        params.put("orderValue", "CODE_ID");
-        List<EgovMap> codeList_322 = commonService.selectCodeList(params);
+    EgovMap result = hcPreBookingOrderService.checkPreBookConfigurationPerson(params);
 
-        model.put("codeList_10", codeList_10);
-        model.put("codeList_17", codeList_17);
-        model.put("codeList_19", codeList_19);
-        model.put("codeList_322", codeList_322);
-        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
-		    model.put("preOrderInfo", preOrderInfo);
-		    model.put("hcPreOrdInfo", hcPreOrdInfo);
-		    model.put("preMatOrderInfo", matOrderInfo);
-		    model.put("preFrmOrderInfo", frmOrderInfo);
-		    model.put("CONV_TO_ORD_YN", "Y");
-		    model.put("matPreOrdId", matPreOrdId);
-		    model.put("fraPreOrdId", fraPreOrdId);
-		    model.put("ordSeqNo", hcPreOrdInfo.get("ordSeqNo"));
-		    model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+    return ResponseEntity.ok(result);
+  }
 
-		return "homecare/sales/order/hcOrderRegisterPop";
-	}
-*/
 }
