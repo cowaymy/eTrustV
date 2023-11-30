@@ -1840,7 +1840,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
     installResult.put("CTID", Integer.parseInt(CommonUtils.nvl(params.get("CTID")).toString()));
     installResult.put("dtPairId", CommonUtils.nvl(params.get("dtPairCode")).toString());
-    installResult.put("memCode", CommonUtils.nvl(params.get("memCode")).toString());
 
     // installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
     // installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
