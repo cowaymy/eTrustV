@@ -151,19 +151,19 @@
         } else {
           if (statusCode == "ACT") {
             if (codeid1 == 257) { // INSTALLATION
-              /*Common.popupDiv(
+              Common.popupDiv(
               "/services/addInstallationPopup.do?isPop=true&installEntryId="
                   + installEntryId + "&codeId=" + codeid1
                   + "&salesOrderNO=" + salesOrdNo1 + "&salesOrderId=" + salesOrderId, "", null,
-              "false", "addInstallationPopupId");*/
+              "false", "addInstallationPopupId");
 
               // TEMP
-              var prm = { "path" : "/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1 + "&salesOrderNO=" + salesOrdNo1 + "&salesOrderId=" + salesOrderId,
+              /* var prm = { "path" : "/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1 + "&salesOrderNO=" + salesOrdNo1 + "&salesOrderId=" + salesOrderId,
                                 "indicator" : "INST",
                                 "ordId" : salesOrderId,
                                 "key" : installEntryId,
                                 "popId" : "addInstallationPopupId"};
-              Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
+              Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv'); */
 
             } else { // PRODUCT RETURN
               Common.popupDiv(
