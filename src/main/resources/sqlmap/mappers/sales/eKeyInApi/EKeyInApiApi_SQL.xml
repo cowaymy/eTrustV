@@ -155,8 +155,8 @@ SELECT A.CUST_ID AS CUST_ID
                , A.TOT_PV_GST AS TOT_PV_GST
                , TO_CHAR(A.CPNT_ID) AS CPNT_CODE
 <!--                , A.VOUCHER_CODE -->
-               , U.CUST_EMAIL AS VOUCHER_EMAIL
-               , V.PLATFORM AS VOUCHER_TYPE
+<!--                , U.CUST_EMAIL AS VOUCHER_EMAIL -->
+<!--                , V.PLATFORM AS VOUCHER_TYPE -->
 
      --INSTALLATION------------------------------------------------------------------
                , UPPER(I.ADDR_DTL) AS ADDR_DTL
