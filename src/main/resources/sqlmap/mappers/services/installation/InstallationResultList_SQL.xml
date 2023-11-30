@@ -3799,7 +3799,6 @@
                         , GAS_PRES_BEF
                         , GAS_PRES_AFT
                         , DT_PAIR_ID
-                        , MEM_CODE
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3845,8 +3844,6 @@
             , nvl(#{gasPreBIns},0)
             , nvl(#{gasPreAIns},0)
             , #{dtPairId}
-            , #{memCode}
-
     )
   </insert>
 
