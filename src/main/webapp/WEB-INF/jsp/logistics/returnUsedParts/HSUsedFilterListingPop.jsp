@@ -148,13 +148,14 @@ function btnGeneratePDF_Click(type){
 
 
         if(!($("#dpHSSettleDateFrom").val() == null || $("#dpHSSettleDateFrom").val().length == 0)){
-            whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') >= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
+            //whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') >= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
+            whereSQL += " AND l82.SVC_DT between TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY')";
             hsSettleDateFrom = $("#dpHSSettleDateFrom").val();
 
         }
 
         if(!($("#dpHSSettleDateTo").val() == null || $("#dpHSSettleDateTo").val().length == 0)){
-            whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') <= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateTo").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
+            whereSQL += " AND TO_DATE('"+$("#dpHSSettleDateTo").val()+"', 'dd/MM/YYYY')";
             hsSettleDateTo = $("#dpHSSettleDateTo").val();
 
         }
