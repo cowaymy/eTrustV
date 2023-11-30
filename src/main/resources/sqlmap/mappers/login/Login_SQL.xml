@@ -82,7 +82,7 @@
              ,NVL(ORGV.DEPT_CODE ,'') deptCode
                       ,NVL(ORGV.GRP_CODE,'') groupCode
                       ,NVL(ORGV.ORG_CODE,'') orgCode
-             --, NVL(USR.CHECK_MFA, 0) AS checkMfaFlag
+             , NVL(USR.CHECK_MFA, 0) AS checkMfaFlag
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
            LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
            LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
