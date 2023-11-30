@@ -252,7 +252,23 @@ public class DtInstallationJobDto {
 
   private BigDecimal longitude;
 
-  public String getSerialChk() {
+  private String partnerCode;
+
+  private String memCode;
+
+  public String getPartnerCode() {
+	return partnerCode;
+}
+public String getMemCode() {
+	return memCode;
+}
+public void setPartnerCode(String partnerCode) {
+	this.partnerCode = partnerCode;
+}
+public void setMemCode(String memCode) {
+	this.memCode = memCode;
+}
+public String getSerialChk() {
 	  return serialChk;
   }
   public void setSerialChk(String serialChk) {
