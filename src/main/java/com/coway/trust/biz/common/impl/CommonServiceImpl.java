@@ -1724,4 +1724,8 @@ public class CommonServiceImpl implements CommonService {
     return commonMapper.selectTimePick();
   }
 
+  public List<EgovMap> selectSystemConfigurationParamVal(Map<String, Object> params) {
+    return commonMapper.selectSystemConfigurationParamVal(params);
+  }
+
 }
