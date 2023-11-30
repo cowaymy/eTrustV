@@ -38,7 +38,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.HomecareCmMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
-import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
+//import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.LoginVO;
@@ -85,8 +85,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Resource(name = "homecareCmMapper")
   private HomecareCmMapper homecareCmMapper;
 
-  @Resource(name = "voucherMapper")
-  private VoucherMapper voucherMapper;
+  /*@Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;*/
 
   @Autowired
   private LoginMapper loginMapper;
@@ -141,7 +141,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     selecteKeyInDetail.setProductList(selectOrderInfo.getProductList());
     selecteKeyInDetail.setPromotionList(selectOrderInfo.getPromotionList());
 
-    if(selecteKeyInDetail.getVoucherCode() != null
+    /*if(selecteKeyInDetail.getVoucherCode() != null
     		&& selecteKeyInDetail.getVoucherCode().length() > 0){
         Map<String,Object> voucherParam = new HashMap();
         voucherParam.put("voucherCode", selecteKeyInDetail.getVoucherCode());
@@ -151,7 +151,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         	selecteKeyInDetail.setVoucherEmail(voucherInfo.get("custEmail").toString());
         	selecteKeyInDetail.setVoucherType(Integer.parseInt(voucherInfo.get("platformId").toString()));
         }
-    }
+    }*/
 
     if (CommonUtils.isNotEmpty(selecteKeyInDetail.getHcGu()) && selecteKeyInDetail.getHcGu().equals("HC")) {
       List<EgovMap> selecteKeyInDetailOrderHomecare = eKeyInApiMapper.selecteKeyInDetailOrderHomecare(EKeyInApiForm.createMap(param));
@@ -1705,7 +1705,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Attachment does not exist.");
     }
 
-    if (CommonUtils.isEmpty(param.getVoucherCode()) == false) {
+    /*if (CommonUtils.isEmpty(param.getVoucherCode()) == false) {
       Map<String, Object> voucherParam = new HashMap<String, Object>();
       voucherParam.put("voucherCode", param.getVoucherCode());
   	  int validVoucherResult = eKeyInApiMapper.isVoucherValidToApply(voucherParam);
@@ -1719,7 +1719,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 		      throw new ApplicationException(AppConstants.FAIL, "Voucher is applied on other e-KeyIn orders.");
 		  }
 	  }
-    }
+    }*/
 
     Map<String, Object> sal0213M = new HashMap<String, Object>();
     // sal0213M.put("preOrdId", );
@@ -1789,7 +1789,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("corpCustType", 0);
     sal0213M.put("agreementType", 0);
     sal0213M.put("bndlId", null);
-    sal0213M.put("voucherCode", param.getVoucherCode());
+    /*sal0213M.put("voucherCode", param.getVoucherCode());*/
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
@@ -2176,7 +2176,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("corpCustType", 0);
     // sal0213M.put("agreementType", 0);
     // sal0213M.put("bndlId", null);
-    sal0213M.put("voucherCode", param.getVoucherCode());
+    /*sal0213M.put("voucherCode", param.getVoucherCode());*/
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
@@ -2489,7 +2489,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     return eKeyInApiMapper.checkTNA(param);
   }
 
-  @Override
+/*  @Override
   public List<EgovMap> selectVoucherPlatformCodeList() throws Exception {
     return eKeyInApiMapper.selectVoucherPlatformCodeList();
   }
@@ -2523,5 +2523,5 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     List<EKeyInApiDto> codeList = selectCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     rtn.setCodeList(codeList);
     return rtn;
-  }
+  }*/
 }
