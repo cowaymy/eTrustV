@@ -490,6 +490,8 @@ SELECT A.CUST_ID AS CUST_ID
 <!--     AND B.VOUCHER_PROMOTION = 0 -->
 <!--     OR B.PROMO_ID IN (31723 <if test='promoId != null and promoId !=0'>, #{promoId}</if> ) -->
 <!--     </if> -->
+<!-- OR -->
+    OR B.PROMO_ID IN (31723 <if test='promoId != null and promoId !=0'>, #{promoId}</if> )
 
     ORDER BY PROMO_DT_FROM DESC
   </select>
