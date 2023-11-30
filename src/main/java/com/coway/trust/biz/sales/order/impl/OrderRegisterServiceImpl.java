@@ -310,6 +310,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int getOldOrderID = 0;
     int custId = 0, promoId = 0 ,extradeWoutPRCnt =0;
     String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
+    String monthExpired = "";
 
     logger.info("!@#### custId:" + (String) params.get("custId"));
     logger.info("!@#### salesOrdNo:" + (String) params.get("salesOrdNo"));
@@ -355,6 +356,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           if (GetExpDate == null) {
             ROOT_STATE = "ROOT_3";
           } else {
+            monthExpired = GetExpDate.get("monthExpired").toString();
 
             /*
             // 2021-03-02 - LaiKW - Amended for expiry date checking
@@ -522,7 +524,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     RESULT.put("OLD_ORDER_ID", getOldOrderID);
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
     RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
-
+    RESULT.put("MONTH_EXPIRED", monthExpired);
 
     return RESULT;
   }
