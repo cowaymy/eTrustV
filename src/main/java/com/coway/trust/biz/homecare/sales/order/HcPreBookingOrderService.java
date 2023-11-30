@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
+import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -22,21 +23,27 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface HcPreBookingOrderService {
 
-/*
- // Search Homecare Pre OrderList
+
+ // Search Homecare Pre Booking Order List
 	public List<EgovMap> selectHcPreBookingOrderList(Map<String, Object> params);
 
-	 // Homecare Pre Order Register
+	 // Homecare Pre Booking Order Register
 	public void registerHcPreBookingOrder(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO) throws ParseException;
 
-	// Search Homacare Pre OrderInfo
+	List<EgovMap> selectHcPrevOrderNoList(Map<String, Object> params);
+
+	EgovMap checkOldOrderId(Map<String, Object> params);
+
 	public EgovMap selectHcPreBookingOrderInfo(Map<String, Object> params);
 
-	 // Homecare Pre Order update
-	public int updateHcPreBookingOrder(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO) throws ParseException;
+	EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
 
-	 // Homecare Pre Order Status Update
-	public int updateHcPreBookingOrderStatus(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
-	*/
+	public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
+	List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
+
+	EgovMap checkPreBookSalesPerson(Map<String, Object> params);
+
+	EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 
 }
