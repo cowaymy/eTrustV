@@ -746,4 +746,11 @@ public class MembershipController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/checkSalesPerson" ,method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkSalesPerson(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		EgovMap result = new EgovMap();
+		result = membershipService.checkMembershipSalesPerson(params);
+		return ResponseEntity.ok(result);
+	}
 }

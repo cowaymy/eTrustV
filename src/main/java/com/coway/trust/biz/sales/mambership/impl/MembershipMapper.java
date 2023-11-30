@@ -161,4 +161,5 @@ public interface MembershipMapper {
 
 	int updateMembershipById(Map<String, Object> params);
 
+	EgovMap selectSalesPerson(Map<String, Object> params);
 }

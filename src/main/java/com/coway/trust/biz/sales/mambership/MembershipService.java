@@ -102,4 +102,6 @@ public interface MembershipService {
 
 	int updateMembershipById (Map<String, Object> params);
 
+	EgovMap checkMembershipSalesPerson(Map<String, Object> params);
+
 }

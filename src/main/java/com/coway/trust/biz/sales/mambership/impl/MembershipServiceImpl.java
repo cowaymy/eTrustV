@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -35,6 +36,9 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	//@Autowired
 	//private MessageSourceAccessor messageSourceAccessor;
+
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 
 	@Override
 	public List<EgovMap> selectMembershipList(Map<String, Object> params) {
@@ -316,6 +320,20 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public int updateMembershipById (Map<String, Object> params){
 		return membershipMapper.updateMembershipById (params);
+	}
+
+	@Override
+	public EgovMap checkMembershipSalesPerson(Map<String,Object> params){
+		params.put("module","SALES");
+		params.put("subModule","MEMBERSHIP");
+		params.put("paramCode","MEM_TYPE");
+
+		List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
+		if(!memType.isEmpty()){
+			params.put("memType", memType);
+		}
+
+		return membershipMapper.selectSalesPerson(params);
 	}
 
 }

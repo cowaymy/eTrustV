@@ -636,9 +636,9 @@ function fn_goSalesConfirm(){
 
                      $("#sale_confirmbt").attr("style" ,"display:none");
                      $("#sale_searchbt").attr("style" ,"display:none");
-                     //$("#sale_resetbt").attr("style" ,"display:inline");
                      $("#SALES_PERSON").attr("class","readonly");
 
+     				checkSalesPersonValidForCreation(result[0].memId,result[0].memCode);
                  }else {
 
                      $("#SALES_PERSON_DESC").html("");
@@ -661,6 +661,7 @@ function fn_goSalesPersonReset(){
     $("#sale_resetbt").attr("style" ,"display:none");
     $("#SALES_PERSON").attr("class","");
     $("#SALES_PERSON_DESC").html("");
+    $('#SALES_PERSON').val('');
     $("#hiddenSalesPersonID").val("");
 
 
@@ -679,6 +680,7 @@ function fn_doSalesResult(item){
            $("#sale_resetbt").attr("style" ,"display:inline");
            $("#SALES_PERSON").attr("class","readonly");
 
+			checkSalesPersonValidForCreation(item.memId,item.memCode);
     }else{
            $("#SALES_PERSON").val("");
            $("#SALES_PERSON_DESC").html("");
@@ -1297,6 +1299,15 @@ function fn_save(){
 			fn_getMembershipPackageFilterInfo();
 		}
 
+	}
+
+	function checkSalesPersonValidForCreation(memId,memCode){
+		Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+			if(memInfo == null){
+				Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+				fn_goSalesPersonReset();
+			}
+		});
 	}
 </script>
 

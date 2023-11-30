@@ -992,7 +992,6 @@ $(document).ready(function(){
 			COLL_MEM_CODE : $("#SALES_PERSON").val()
 		}, function(result) {
 			console.log(result);
-
 			if (result.length > 0) {
 
 				$("#SALES_PERSON").val(result[0].memCode);
@@ -1001,9 +1000,9 @@ $(document).ready(function(){
 
 				$("#sale_confirmbt").attr("style", "display:none");
 				$("#sale_searchbt").attr("style", "display:none");
-				//$("#sale_resetbt").attr("style" ,"display:inline");
 				$("#SALES_PERSON").attr("class", "readonly");
 
+				checkSalesPersonValidForCreation(result[0].memId,result[0].memCode);
 			}
 			else {
 
@@ -1027,12 +1026,12 @@ $(document).ready(function(){
 		$("#sale_resetbt").attr("style", "display:none");
 		$("#SALES_PERSON").attr("class", "");
 		$("#SALES_PERSON_DESC").html("");
+	    $('#SALES_PERSON').val('');
 		$("#hiddenSalesPersonID").val("");
 
 	}
 
 	function fn_doSalesResult(item) {
-
 		if (typeof (item) != "undefined") {
 
 			$("#SALES_PERSON").val(item.memCode);
@@ -1043,6 +1042,7 @@ $(document).ready(function(){
 			$("#sale_resetbt").attr("style", "display:inline");
 			$("#SALES_PERSON").attr("class", "readonly");
 
+			checkSalesPersonValidForCreation(item.memId,item.memCode);
 		}
 		else {
 			$("#SALES_PERSON").val("");
@@ -1431,7 +1431,6 @@ $(document).ready(function(){
 	}
 
 	function fn_DoSaveProcess(_saveOption) {
-
 		$("#srvMemQuotId").val(0);
 		$("#srvSalesOrderId").val($("#ORD_ID").val());
 		$("#srvMemQuotNo").val("");
@@ -1678,6 +1677,15 @@ $(document).ready(function(){
 		};
 
 		oListGridID = GridCommon.createAUIGrid("oList_grid_wrap", columnLayout, "", gridPros);
+	}
+
+	function checkSalesPersonValidForCreation(memId,memCode){
+		Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+			if(memInfo == null){
+				Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+				fn_goSalesPersonReset();
+			}
+		});
 	}
 </script>
 
