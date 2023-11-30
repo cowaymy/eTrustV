@@ -330,4 +330,6 @@ public interface CommonMapper {
 
   List<EgovMap> selectTimePick();
 
+  List<EgovMap> selectSystemConfigurationParamVal(Map<String, Object> params);
+
 }
