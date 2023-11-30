@@ -287,6 +287,7 @@
     	 else{
     	     $("#dataForm #reportFileName").val('/e-accounting/staffTravelRefund.rpt');
     	 }
+    	 $("#dataForm #reportDownFileName").val(claimNo);
 
     	  var option = {
                   isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -1007,7 +1008,7 @@
                 }
             }
 
-            if(FormUtil.isEmpty($("#locationFrom").val()) && FormUtil.isEmpty($("#locationTo").val())) {
+            if(FormUtil.isEmpty($("#locationFrom").val()) && FormUtil.isEmpty($("#locationTo").val()) || FormUtil.isEmpty($("#locationFrom").val()) || FormUtil.isEmpty($("#locationTo").val())) {
                 Common.alert("Please enter the traveling locations");
                 return false;
             }

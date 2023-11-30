@@ -906,6 +906,7 @@
          else{
              $("#dataForm #reportFileName").val('/e-accounting/vendorRefund.rpt');
          }
+          $("#dataForm #reportDownFileName").val(advGridClmNo);
 
           var option = {
                   isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

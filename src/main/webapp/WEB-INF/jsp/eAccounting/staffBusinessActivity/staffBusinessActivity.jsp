@@ -714,6 +714,7 @@ var myGridPros = {
           else{
               $("#dataForm #reportFileName").val('/e-accounting/staffBusinessRefund.rpt');
           }
+           $("#dataForm #reportDownFileName").val(claimNo);
 
            var option = {
                    isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
