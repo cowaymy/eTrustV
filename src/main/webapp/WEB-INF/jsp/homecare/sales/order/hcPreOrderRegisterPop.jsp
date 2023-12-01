@@ -184,8 +184,8 @@
 
     	$('#btnRltdNoEKeyIn').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
-            $('#salesmanCd').val('');
-            $('#salesmanNm').val('');
+            //$('#salesmanCd').val('');
+            //$('#salesmanNm').val('');
       });
 
         $('#btnConfirm').click(function() {
@@ -1403,9 +1403,9 @@
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanNm').val(memInfo.name);
 
-                if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'){
-                    fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
-                    }
+                //if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'){
+                 //   fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
+                 //   }
             }
 
         });
@@ -2083,8 +2083,8 @@
         fn_clearAddCpnt();
         $('#isReturnExtrade').prop("checked", false);
         $('#relatedNo').val("");
-        $('#salesmanCd').val('');
-        $('#salesmanNm').val('');
+        //$('#salesmanCd').val('');
+        //$('#salesmanNm').val('');
 
             if($('#exTrade').val()=='1'){
             	//$('#isReturnExtrade').prop("checked", true); --no product return
@@ -2225,25 +2225,25 @@
 //      	$('#ordPromo1 option').remove();
 //     }
 
-    function fn_checkPreOrderSalesPerson(memId,memCode) {
-    	Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
-    		if(memInfo == null) {
-                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
-                $('#salesmanCd').val('');
-                $('#salesmanNm').val('');
-            }
-    	});
-    }
+//    function fn_checkPreOrderSalesPerson(memId,memCode) {
+//    	Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+//    		if(memInfo == null) {
+//                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+//                $('#salesmanCd').val('');
+//                $('#salesmanNm').val('');
+//            }
+//    	});
+//    }
 
-    function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
-    	Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
-    		if(memInfo == null) {
-                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
-                $('#salesmanCd').val('');
-                $('#salesmanNm').val('');
-            }
-    	});
-    }
+//    function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+//    	Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+//    		if(memInfo == null) {
+//                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+//                $('#salesmanCd').val('');
+//                $('#salesmanNm').val('');
+//            }
+//    	});
+//    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -2640,7 +2640,7 @@
                 <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a></td>
                 <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
                 <input id="txtBusType"  name="txtBusType" type="hidden" />
-                <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+<!--                 <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" /> -->
 		</tr>
 <!-- 		<tr> -->
 <!--     	<th scope="row">Voucher Type<span class="must">*</span></th> -->
