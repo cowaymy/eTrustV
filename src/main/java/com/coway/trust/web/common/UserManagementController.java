@@ -1,11 +1,7 @@
 package com.coway.trust.web.common;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.UserManagementService;
-import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -31,9 +26,6 @@ public class UserManagementController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
-
-	@Resource(name = "ssoLoginService")
-	  private SsoLoginService ssoLoginService;
 
 	@RequestMapping(value = "/userManagementMain.do")
 	public String userManagement(@RequestParam Map<String, Object> params, SessionVO sessionVO,
