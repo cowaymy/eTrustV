@@ -1669,7 +1669,7 @@
             	      $('#salesmanCd').val(memInfo.memCode);
                       $('#salesmanNm').val(memInfo.name);
 
-                      if($('#exTrade').val() == '1' && $("#typeId").val() == '964'){
+                      if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'){
                     	  fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
                       }
 
