@@ -664,6 +664,10 @@
                //** End exTrade Neo to Neo Plus **//
 
                Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+               $('#salesmanCd').val('');
+               $('#salesmanNm').val('');
+
+
         });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
@@ -1232,6 +1236,8 @@
 
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
+            $('#salesmanCd').val('');
+            $('#salesmanNm').val('');
 
             $('#isReturnExtrade').prop("checked", false);
             $('#isReturnExtrade').attr("disabled",true);
@@ -2487,7 +2493,7 @@ console.log("vBindingNo" + vBindingNo);
 
                if(memInfo == null) {
                     Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+                 //   Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
                }
                else {
                     $('#hiddenSalesmanId').val(memInfo.memId);
@@ -2510,6 +2516,14 @@ console.log("vBindingNo" + vBindingNo);
                     $('#departCd').removeClass("readonly");
                     $('#grpCd').removeClass("readonly");
                     $('#orgCd').removeClass("readonly");
+
+                    console.log("**$('#typeId').val()  >> " + $('#typeId').val() );
+                    console.log("**$('#appType').val() >> " + $('#appType').val());
+                    console.log("**$('#exTrade').val() >> " + $('#exTrade').val());
+
+                    if($('#exTrade').val() == '1' && $("#typeId").val() == '964'){
+                        fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                    }
                 }
          });
     }
@@ -2926,6 +2940,32 @@ console.log("vBindingNo" + vBindingNo);
     $('#hiddenCboOrdNoTag').val(ordId);
   }
 
+  function fn_checkOrderSalesPerson(memId,memCode) {
+	    Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+	        if(memInfo == null) {
+	              Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+	              $('#salesmanCd').val('');
+                  $('#salesmanNm').val('');
+                  $('#salesmanType').val('');
+                  $('#salesmanTypeId').val('');
+                  $('#salesmanNric').val('');
+	          }
+	    });
+	  }
+
+	  function fn_checkOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+	    Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+	        if(memInfo == null) {
+	              Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+	              $('#salesmanCd').val('');
+                  $('#salesmanNm').val('');
+                  $('#salesmanType').val('');
+                  $('#salesmanTypeId').val('');
+                  $('#salesmanNric').val('');
+	          }
+	    });
+	  }
+
 //   function displayVoucherSection(){
 // 	  if(convToOrdYn == "Y"){
 // 		  voucherAppliedDisplay();
@@ -3316,6 +3356,7 @@ console.log("vBindingNo" + vBindingNo);
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         </td>
 </tr>
 <!-- <tr> -->

@@ -97,4 +97,8 @@ public interface OrderRegisterService {
   EgovMap getExTradeConfig();
 
   EgovMap getCtgryCode(Map<String, Object> params);
+
+  EgovMap checkPreBookSalesPerson(Map<String, Object> params);
+
+  EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 }

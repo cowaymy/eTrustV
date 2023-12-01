@@ -238,4 +238,8 @@ public interface OrderRegisterMapper {
   EgovMap checkPreCcp(Map<String, Object> params);
 
   void insertSalesSpecialPromotion(Map<String, Object> params);
+
+  EgovMap selectPreBookSalesPerson(Map<String, Object> params);
+
+  EgovMap selectPreBookConfigurationPerson(Map<String, Object> params);
 }

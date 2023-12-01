@@ -2469,4 +2469,34 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	  catCodeMap.put("catCode", catCode);
 	  return catCodeMap;
   }
+
+  @Override
+  public EgovMap checkPreBookSalesPerson(Map<String, Object> params) {
+
+    params.put("module", "SALES");
+    params.put("subModule", "PRE_BOOK");
+    params.put("paramCode", "MEM_TYPE");
+
+    //SYS0098M - PRE_BOOK - MEM_TYPE
+    List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
+    if(!memType.isEmpty()){
+    params.put("memType", memType);
+    }
+    return orderRegisterMapper.selectPreBookSalesPerson(params);
+  }
+
+  @Override
+  public EgovMap checkPreBookConfigurationPerson(Map<String, Object> params) {
+
+    params.put("module", "SALES");
+    params.put("subModule", "PRE_BOOK");
+    params.put("paramCode", "MEM_TYPE");
+
+    //SYS0098M - PRE_BOOK - MEM_TYPE
+    List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
+    if(!memType.isEmpty()){
+    params.put("memType", memType);
+    }
+    return orderRegisterMapper.selectPreBookConfigurationPerson(params);
+  }
 }

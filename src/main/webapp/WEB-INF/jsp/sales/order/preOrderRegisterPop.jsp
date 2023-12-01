@@ -190,6 +190,9 @@
               //  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod : $('#ordProudct').val()}, null, true);
     		  //** Start exTrade Neo to Neo Plus **//
     		  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+    		  $('#salesmanCd').val('');
+              $('#salesmanNm').val('');
+
     	});
 
         $('#btnConfirm').click(function() {
@@ -470,6 +473,8 @@
 
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
+            $('#salesmanCd').val('');
+            $('#salesmanNm').val('');
             $('#relatedNo').val("");
             $('#isReturnExtrade').prop("checked", false);
 
@@ -611,6 +616,7 @@
             if(FormUtil.isNotEmpty(memCd)) {
                 fn_loadOrderSalesman(0, memCd);
             }
+
         });
         $('#salesmanCd').keydown(function (event) {
             if (event.which === 13) {    //enter
@@ -1659,13 +1665,44 @@
 
             if(memInfo == null) {
                 Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-            }
-            else {
-                $('#salesmanCd').val(memInfo.memCode);
-                $('#salesmanNm').val(memInfo.name);
+            } else {
+            	      $('#salesmanCd').val(memInfo.memCode);
+                      $('#salesmanNm').val(memInfo.name);
+
+                      if($('#exTrade').val() == '1' && $("#typeId").val() == '964'){
+                    	  fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
+                      }
+
             }
         });
     }
+
+    function fn_checkPreOrderSalesPerson(memId,memCode) {
+        Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+            if(memInfo == null) {
+                  Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                  $('#salesmanCd').val('');
+                  $('#salesmanNm').val('');
+                  $('#salesmanType').val('');
+                  $('#salesmanTypeId').val('');
+                  $('#salesmanNric').val('');
+              }
+        });
+      }
+
+      function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+        Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+            if(memInfo == null) {
+                  Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                  $('#salesmanCd').val('');
+                  $('#salesmanNm').val('');
+                  $('#salesmanType').val('');
+                  $('#salesmanTypeId').val('');
+                  $('#salesmanNric').val('');
+              }
+        });
+      }
+
 
     function fn_selectPromotionFreeGiftListForList2(promoId) {
         console.log('fn_selectPromotionFreeGiftListAjax START');
@@ -2808,6 +2845,7 @@
     <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></p>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
     </td>
 </tr>
 <!-- <tr> -->

@@ -612,7 +612,8 @@ public class OrderRegisterController {
     //model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
     model.put("isHomecare", params.get("isHomecare") != null ? params.get("isHomecare").equals("A") ? '2' : '1' : '0');
 //    model.put("prodId", params.get("prod") != null ? params.get("prod") : ""); // Used for exTrade Neo to NeoPlus
-
+    logger.info("[prevOrderNoPop] - isPreBooking :: " + params.get("isPreBooking"));
+    model.put("isPreBooking", params.get("isPreBooking") != null ? '1' : null);
     return "sales/order/prevOrderNoPop";
   }
 
@@ -871,4 +872,21 @@ public class OrderRegisterController {
       EgovMap result = orderRegisterService.getCtgryCode(params);
       return ResponseEntity.ok(result);
   }
+
+  @RequestMapping(value = "/checkPreBookSalesPerson.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkPreBookSalesPerson(@RequestParam Map<String, Object> params) {
+
+    EgovMap result = orderRegisterService.checkPreBookSalesPerson(params);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/checkPreBookConfigurationPerson.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkPreBookConfigurationPerson(@RequestParam Map<String, Object> params) {
+
+    EgovMap result = orderRegisterService.checkPreBookConfigurationPerson(params);
+
+    return ResponseEntity.ok(result);
+  }
+
 }
