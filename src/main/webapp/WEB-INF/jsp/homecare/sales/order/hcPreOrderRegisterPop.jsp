@@ -1655,10 +1655,11 @@
                                 return false;
                             }
                         }
-                    }  else {
+                    }
+/*                     else {
                         Common.alert("Currently" + result.name + " (" + result.memCode + ") Has empty data for RC. Kindly refer IT and raise Ticket");
                         return false;
-                    }
+                    } */
                 } else {
                     Common.alert(result.memCode + " (" + result.memCode + ") is still a rookie, no key in is allowed.");
                     return false;
