@@ -606,6 +606,7 @@
     $(function() {
         $('#btnRltdNo').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
+            fn_clearOrderSalesman();
         });
 
         $('#custBtn').click(function() {
@@ -1239,6 +1240,7 @@
         	$('#ordPromo1 option').remove();
             $('#ordPromo2 option').remove();
             fn_clearAddCpnt();
+            fn_clearOrderSalesman();
 
             $('#isReturnExtrade').prop("checked", false);
             $('#isReturnExtrade').attr("disabled",true);
@@ -2523,6 +2525,10 @@
                     $('#departCd').removeClass("readonly");
                     $('#grpCd').removeClass("readonly");
                     $('#orgCd').removeClass("readonly");
+
+                    if($('#exTrade').val() == '1' && $("#typeId").val() == '964'){
+                    fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
+                    }
                 }
             });
     }
@@ -3066,6 +3072,24 @@
 //      	$('#ordPromo1').val('');
 //      	$('#ordPromo1 option').remove();
 //   }
+
+  function fn_checkPreOrderSalesPerson(memId,memCode) {
+  	Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+  		if(memInfo == null) {
+              Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+              fn_clearOrderSalesman();
+          }
+  	});
+  }
+
+  function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+  	Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+  		if(memInfo == null) {
+              Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+              fn_clearOrderSalesman();
+          }
+  	});
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -3352,6 +3376,7 @@
         <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" placeholder="Related Number" class="w100p readonly" readonly /></span>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
     </td>
 </tr>
 <!-- <tr> -->
