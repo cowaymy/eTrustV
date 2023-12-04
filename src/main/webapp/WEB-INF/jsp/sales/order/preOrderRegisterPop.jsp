@@ -418,9 +418,6 @@
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
         });
         $('#rentPayMode').change(function() {
-
-            console.log('rentPayMode click event');
-
             //fn_clearRentPaySetCRC();
             //fn_clearRentPaySetDD();
 
@@ -454,7 +451,6 @@
             }
         });
         $('#srvPacId').change(function() {
-
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
 
@@ -470,7 +466,6 @@
         });
 
         $('#exTrade').change(function() {
-
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
             $('#salesmanCd').val('');
@@ -637,7 +632,6 @@
         });
 
         $('#btnCal').click(function() {
-
             var appTypeName  = $('#appType').val();
             var productName  = $('#ordProudct option:selected').text();
             //Amount before GST
@@ -1669,10 +1663,13 @@
             	      $('#salesmanCd').val(memInfo.memCode);
                       $('#salesmanNm').val(memInfo.name);
 
-                      if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'){
-                    	  fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
-                      }
-
+                     if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+                          fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
+                    }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+                          fn_checkPreOrderSalesPerson(0,$('#salesmanCd').val());
+                    }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+                          fn_checkPreOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
+                    }
             }
         });
     }
@@ -1705,14 +1702,12 @@
 
 
     function fn_selectPromotionFreeGiftListForList2(promoId) {
-        console.log('fn_selectPromotionFreeGiftListAjax START');
         Common.ajax("GET", "/sales/promotion/selectPromotionFreeGiftList.do", { promoId : promoId }, function(result) {
             AUIGrid.setGridData(listGiftGridID, result);
         });
     }
 
     function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
-
         if($('#gstChk').val() == '1') {
             $('#pBtnCal').removeClass("blind");
         }
@@ -1721,11 +1716,7 @@
         }
 
         Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
-
             if(promoPriceInfo != null) {
-
-                console.log("성공.");
-
 //              $("#ordPrice").removeClass("readonly");
 //              $("#ordPv").removeClass("readonly");
 //              $("#ordRentalFees").removeClass("readonly");
@@ -1744,11 +1735,6 @@
 
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
-        console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPromotion --> stkId:'+stkId);
-        console.log('fn_loadProductPromotion --> empChk:'+empChk);
-        console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
-
         var isSrvPac = null;
         $('#ordPromo').removeAttr("disabled");
 
@@ -1763,7 +1749,6 @@
 
     //LoadProductPrice
     function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
-
         if($('#gstChk').val() == '1') {
             $('#pBtnCal').removeClass("blind");
         }
@@ -1782,9 +1767,6 @@
         Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
-
-                console.log("성공.");
-
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
                 $("#ordPv").val(stkPriceInfo.orderPV);
                 $("#ordPvGST").val(stkPriceInfo.orderPV);
@@ -1836,7 +1818,6 @@
 
     //ClearControl_BillGroup
     function fn_clearBillGroup() {
-
         $('#sctBillMthd').addClass("blind");
         $('#sctBillAddr').addClass("blind");
         $('#sctBillPrefer').addClass("blind");
@@ -1912,12 +1893,6 @@
     }
 
     function fn_loadCustomer(custId, nric){
-
-    	 // console.log("cmbTypeId 1:" +cmbTypeId);
-    	  console.log("custId 1:" +custId);
-    	  console.log("nric 1:" +nric);
-
-
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
             Common.removeLoader();
 
@@ -1926,22 +1901,13 @@
                 $('#scPreOrdArea').removeClass("blind");
 
                 var custInfo = result[0];
-
-                console.log("성공.");
-                console.log("custId : " + result[0].custId);
-                console.log("userName1 : " + result[0].name);
-
                 var dob = custInfo.dob;
                 var dobY = dob.split("/")[2];
                 var nowDt = new Date();
                 var nowDtY = nowDt.getFullYear();
-                console.log(nowDt + "," + nowDtY);
-                console.log(nowDtY - dobY);
                 if(!nric.startsWith("TST")){
-
 	                if(dobY != 1900) {
 	                    if((nowDtY - dobY) < 18) {
-
 	                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
 	                        $('#scPreOrdArea').addClass("blind");
 	                        return false;
@@ -2050,15 +2016,8 @@
     }
 
     function fn_loadBillAddr(custAddId){
-        console.log("fn_loadBillAddr START");
-
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(billCustInfo) {
-
             if(billCustInfo != null) {
-
-                console.log("성공.");
-                console.log("hiddenBillAddId : " + billCustInfo.custAddId);
-
                 $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
                 $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
                 $("#billStreet").val(billCustInfo.street); //Street
@@ -2069,23 +2028,13 @@
                 $("#billCountry").val(billCustInfo.country); //Country
 
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
-
-                console.log("hiddenBillAddId2 : " + $("#hiddenBillAddId").val());
             }
         });
     }
 
     function fn_loadInstallAddr(custAddId){
-        console.log("fn_loadInstallAddr START");
-
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
-
             if(custInfo != null) {
-
-                console.log("성공.");
-                console.log("gstChk : " + custInfo.gstChk);
-
-                //
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
                 $("#instAddrDtl").val(custInfo.addrDtl); //Address
                 $("#instStreet").val(custInfo.street); //Street
@@ -2127,13 +2076,8 @@
     }
 
     function fn_loadMainCntcPerson(custCntcId){
-        console.log("fn_loadCntcPerson START");
-
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
-
             if(custCntcInfo != null) {
-                console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
-                //
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custInitial").val(custCntcInfo.code);
                 $("#custEmail").val(custCntcInfo.email);
@@ -2147,18 +2091,8 @@
     }
 
     function fn_loadSrvCntcPerson(custCareCntId) {
-        console.log("fn_loadSrvCntcPerson START");
-
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
-
             if(srvCntcInfo != null) {
-
-                console.log("성공.");
-                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
-                console.log("srvCntcInfo:"+srvCntcInfo.name);
-                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
-                console.log("srvCntcInfo:"+srvCntcInfo.email);
-
                 //hiddenBPCareId
                 $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
                 $("#custCntcName").val(srvCntcInfo.name);
@@ -2174,13 +2108,9 @@
     }
 
     function fn_loadCntcPerson(custCntcId){
-        console.log("fn_loadCntcPerson START");
-
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
 
             if(custCntcInfo != null) {
-                console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
-                //
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custCntcInitial").val(custCntcInfo.code);
                 $("#custCntcName").val(custCntcInfo.name1);

@@ -178,11 +178,6 @@
 
                 var custInfo = result[0];
 
-                console.log("성공.");
-                console.log("custId : " + result[0].custId);
-                console.log("userName1 : " + result[0].name);
-
-                //
                 $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
                 $("#custId").val(custInfo.custId); //Customer ID
                 $("#custTypeNm").val(custInfo.codeName1); //Customer Name
@@ -289,15 +284,9 @@
     }
 
     function fn_loadMailAddr(custAddId){
-        console.log("fn_loadMailAddr START");
-
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(billCustInfo) {
 
             if(billCustInfo != null) {
-
-                console.log("성공.");
-                console.log("hiddenBillAddId : " + billCustInfo.custAddId);
-
                 $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
                 $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
                 $("#billStreet").val(billCustInfo.street); //Street
@@ -306,27 +295,16 @@
                 $("#billPostCode").val(billCustInfo.postcode); //Post Code
                 $("#billState").val(billCustInfo.state); //State
                 $("#billCountry").val(billCustInfo.country); //Country
-
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
-
-                console.log("hiddenBillAddId2 : " + $("#hiddenBillAddId").val());
             }
         });
     }
 
     function fn_loadInstallAddr(custAddId){
-        console.log("fn_loadInstallAddr START");
-
         Common.ajaxSync("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
 
             if(custInfo != null) {
-
-                console.log("성공.");
-                console.log("gstChk : " + custInfo.gstChk);
-
-
                 if(custInfo.areaId != undefined){
-                    console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         /*
@@ -345,8 +323,6 @@
                     return false;
                 }
 
-
-                //
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
                 $("#instAddrDtl").val(custInfo.addrDtl); //Address
                 $("#instStreet").val(custInfo.street); //Street
@@ -372,19 +348,14 @@
 */
                 GST_CHK = custInfo.gstChk;
 
-                console.log('GST_CHK:'+GST_CHK);
-
                 if($("#appType").val() == '66') {
                     $("#gstChk").removeAttr("disabled");
                 }
                 else if($("#appType").val() != '' && $("#appType").val() != '66'){
-
                     var appTypeVal = $("#appType").val();
                     var stkIdVal   = $("#ordProudct").val();
                     var promoIdVal = $("#ordPromo").val();
-
                     var srvPacId = 0;
-
 
                     fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                     if(FormUtil.isNotEmpty(promoIdVal)) {
@@ -408,18 +379,11 @@
     }
 
     function fn_checkDocList(doCheck) {
-
         var vAppType  = $("#appType").val();
         var vCustType = $("#typeId").val();
         var vNational = $("#nationNm").val();
 
-        console.log('fn_checkDocList()');
-        console.log('vAppType:'+vAppType);
-        console.log('vCustType:'+vCustType);
-        console.log('vNational:'+vNational);
-
         for(var i = 0; i < AUIGrid.getRowCount(docGridID) ; i++) {
-
             AUIGrid.setCellValue(docGridID, i, "chkfield", 0);
             var vCodeId = AUIGrid.getCellValue(docGridID, i, "codeId");
 
@@ -464,21 +428,11 @@
     }
 
     function fn_loadSrvCntcPerson(custCareCntId) {
-        console.log("fn_loadSrvCntcPerson START");
-
         $("#searchCustCareCntId").val(custCareCntId);
 
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
 
             if(srvCntcInfo != null) {
-
-                console.log("성공.");
-                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
-                console.log("srvCntcInfo:"+srvCntcInfo.name);
-                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
-                console.log("srvCntcInfo:"+srvCntcInfo.email);
-
-                //
                 $("#srvCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcName").val(srvCntcInfo.name);
                 $("#srvInitial").val(srvCntcInfo.custInitial);
@@ -493,13 +447,9 @@
     }
 
     function fn_loadCntcPerson(custCntcId){
-        console.log("fn_loadCntcPerson START");
-
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
 
             if(custCntcInfo != null) {
-                console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
-                //
                 $("#hiddenInstCntcId").val(custCntcInfo.custCntcId);
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custCntcName").val(custCntcInfo.name1);
@@ -515,19 +465,10 @@
     }
 
     function fn_loadInstallationCntcPerson(custCntcId){
-        console.log("fn_loadInstallationCntcPerson START :custCntcId:"+custCntcId);
-
         $("#searchCustCntcId").val(custCntcId);
 
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(instCntcInfo) {
-
             if(instCntcInfo != null) {
-
-                console.log("fn_loadInstallationCntcPerson hiddenInstCntcId:"+instCntcInfo.custCntcId);
-                console.log("fn_loadInstallationCntcPerson instCntcName    :"+instCntcInfo.name);
-                console.log("fn_loadInstallationCntcPerson instInitial     :"+instCntcInfo.custInitial);
-                console.log("fn_loadInstallationCntcPerson instCntcEmail   :"+instCntcInfo.email);
-
                 //$("#hiddenInstCntcId").val(instCntcInfo.custCntcId);
                 $("#instCntcName").val(instCntcInfo.name1);
                 $("#instInitial").val(instCntcInfo.code);
@@ -548,9 +489,7 @@
     }
 
     function fn_setBillGrp(grpOpt) {
-
         if(grpOpt == 'new') {
-
             fn_clearBillGroup();
 
             $('#grpOpt1').prop("checked", true);
@@ -569,9 +508,6 @@
             $('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
 
             if($('#typeId').val() == '965') { //Company
-
-                console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
-
                 $('#sctBillPrefer').removeClass("blind");
 
                 fn_loadBillingPreference($('#srvCntcId').val());
@@ -598,11 +534,6 @@
                 }
             }
             else if($('#typeId').val() == '964') { //Individual
-
-                console.log("fn_setBillGrp 2 typeId : "+$('#typeId').val());
-                console.log("custCntcEmail : "+$('#custCntcEmail').val());
-                console.log(FormUtil.isNotEmpty($('#custCntcEmail').val().trim()));
-
                 if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
                     /*
                     btnBillGroupEStatement.Checked = true;
@@ -626,7 +557,6 @@
             }
         }
         else if(grpOpt == 'exist') {
-
             fn_clearBillGroup();
 
             $('#grpOpt2').prop("checked", true);
@@ -643,9 +573,7 @@
     }
 
     function fn_loadBillingPreference(custCareCntId) {
-
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
-
             if(srvCntcInfo != null) {
                 $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
                 $("#billPreferInitial").val(srvCntcInfo.custInitial);
@@ -666,8 +594,6 @@
                Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                $('#salesmanCd').val('');
                $('#salesmanNm').val('');
-
-
         });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
@@ -774,7 +700,6 @@
             }
         });
         $('#thrdParty').click(function(event) {
-
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
@@ -804,7 +729,6 @@
             }
         });
         $('#billMthdEstm').change(function() {
-
             $('#spEmail1').text("");
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
@@ -886,7 +810,6 @@
             }
         });
         $('#appType').change(function() {
-
             fn_tabOnOffSet('PAY_CHA', 'HIDE');
 
             //Sales Order
@@ -1196,9 +1119,6 @@
             setTimeout(function() { fn_check(0) }, 200);
         });
         $('#rentPayMode').change(function() {
-
-            console.log('rentPayMode click event');
-
             fn_clearRentPaySetCRC();
             fn_clearRentPaySetDD();
 
@@ -1233,7 +1153,6 @@
             }
         });
         $('#exTrade').change(function() {
-
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
             $('#salesmanCd').val('');
@@ -1293,11 +1212,6 @@
             var newRental    = $('#ordRentalFees').val();
             var oldPv        = $('#ordPv').val();
 
-            console.log('oldPrice:'+oldPrice);
-            console.log('newPrice:'+newPrice);
-            console.log('oldRental:'+oldRental);
-            console.log('newRental:'+newRental);
-
             //Amount of GST applied
             var oldPriceGST  = fn_calcGst(oldPrice);
             var newPriceGST  = fn_calcGst(newPrice);
@@ -1305,18 +1219,10 @@
             var newRentalGST = fn_calcGst(newRental);
             var newPv        = $('#ordPvGST').val();
 
-            console.log('oldPriceGST:'+oldPriceGST);
-            console.log('newPriceGST:'+newPriceGST);
-            console.log('oldRentalGST:'+oldRentalGST);
-            console.log('newRentalGST:'+newRentalGST);
-
             if($('#appType').val() != '66') {
                 oldPriceGST = Math.floor(oldPriceGST/10) * 10;
                 newPriceGST = Math.floor(newPriceGST/10) * 10;
             }
-
-            console.log('oldPriceGST:'+oldPriceGST);
-            console.log('newPriceGST:'+newPriceGST);
 
             var msg = '';
 /*
@@ -1474,8 +1380,6 @@
 
         docSelCnt = fn_getDocChkCount();
 
-        console.log('!@#### docSelCnt:'+docSelCnt);
-
         if(docSelCnt <= 0) {
             isValid = false;
 /*
@@ -1486,9 +1390,6 @@
         }
 
         if(convToOrdYn == 'Y'){// if it is eKeyin order
-
-            console.log("preOrdId::"+ preOrdId);
-            console.log("rcdTms::"+rcdTms);
             Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
                 if(result.code == "99"){
                     Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
@@ -1515,7 +1416,6 @@
                                         Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
                                     }else{
                                         if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-                                            console.log('!@#### ordSaveBtn click START 11111');
                                             $('#txtOldOrderID').val();
                                             $('#relatedNo').val();
                                             Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
@@ -1528,7 +1428,6 @@
                             }
                              else{
                                  if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-                                     console.log('!@#### ordSaveBtn click START 11111');
                                      $('#txtOldOrderID').val();
                                      $('#relatedNo').val();
                                      Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
@@ -1542,29 +1441,22 @@
                 }
             });
         }else{
-
-            console.log('!@#### isValid'+isValid);
-
             if(!isValid) {
                 Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
             }
             else {
 
                 if($("#ordPromo option:selected").index() > 0) {
-                    console.log('!@#### ordSaveBtn click START 00000');
                     if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-                        console.log('!@#### ordSaveBtn click START 11111');
                         $('#txtOldOrderID').val();
                         $('#relatedNo').val();
                         Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
                     }
                     else {
-                        console.log('!@#### ordSaveBtn click START 22222');
                         Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
                     }
                 }
                 else {
-                    console.log('!@#### ordSaveBtn click START 33333');
                     Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
                 }
             }
@@ -1664,9 +1556,6 @@
     Save Logic [START]
 *******************************************************************************/
     function fn_hiddenSave() {
-
-        console.log('!@#### fn_hiddenSave START');
-
         if($("#ordPromo option:selected").index() > 0) {
 
             if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
@@ -1682,8 +1571,6 @@
     }
 
     function fn_doSaveOrder() {
-        console.log('!@# fn_doSaveOrder START');
-
 //      $("#gstChk").removeAttr("disabled");
         $("#promoDiscPeriodTp").removeAttr("disabled");
         $("#dscBrnchId").removeAttr("disabled");
@@ -1697,7 +1584,6 @@
         //var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vBindingNo  = $('#relatedNo').val().trim();
         var vCnvrSchemeId;
-console.log("vBindingNo" + vBindingNo);
         if($('#trialNoChk').is(":checked")) {
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
@@ -1746,7 +1632,7 @@ console.log("vBindingNo" + vBindingNo);
         else if($('#rentPayMode').val() == '134') {
             vAdtPayMode = "FPX";
         }
-        console.log(" TEST CONTACT  ::::: "+ $('#srvCntcId').val().trim());
+
         var orderVO = {
 
             custTypeId      : $('#typeId').val().trim(),
@@ -1885,12 +1771,10 @@ console.log("vBindingNo" + vBindingNo);
             },
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
-        console.log(orderVO.docSubmissionVOList);
+
           $("#btnConfirm_RW").hide();
           Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
-
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
-
         },  function(jqXHR, textStatus, errorThrown) {
         	$("#btnConfirm_RW").show();
             try {
@@ -1912,7 +1796,6 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_orderRegPopClose() {
-
         if(convToOrdYn == 'Y') {
             fn_getPreOrderList();
         }
@@ -2054,7 +1937,6 @@ console.log("vBindingNo" + vBindingNo);
 
         // ADD ON COMPONENT CHECKING
         if ($("#compType option:selected").val() != undefined){
-          console.log($("#compType option").length);
           if($("#compType option").length > 1) {
             if ($("#compType option:selected").index() <= 0) {
               isValid = false;
@@ -2090,13 +1972,9 @@ console.log("vBindingNo" + vBindingNo);
 
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
-
             if($('#hiddenSalesmanId').val() == '1' || $('#hiddenSalesmanId').val() == '2') {
-
                 if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
-
                     if(FormUtil.checkReqValue($('#departCd')) || FormUtil.checkReqValue($('#grpCd')) || FormUtil.checkReqValue($('#orgCd'))) {
-
                         var memType = $('#hiddenSalesmanTypeId').val() == '1' ? "HP" : "Cody";
 
                         isValid = false;
@@ -2125,7 +2003,6 @@ console.log("vBindingNo" + vBindingNo);
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }
-            console.log('isExist:'+isExist);
         });
 
         return isExist;
@@ -2206,11 +2083,6 @@ console.log("vBindingNo" + vBindingNo);
                     }
                 }
                 else {
-
-                    console.log('billMthdSms  checked:' + $("#billMthdSms" ).is(":checked"));
-                    console.log('billMthdPost checked:' + $("#billMthdPost" ).is(":checked"));
-                    console.log('billMthdEstm checked:' + $("#billMthdEstm" ).is(":checked"));
-
                     if(!$("#billMthdSms" ).is(":checked") && !$("#billMthdPost" ).is(":checked") && !$("#billMthdEstm" ).is(":checked")) {
                         isValid = false;
                         msg += '* <spring:message code="sal.alert.msg.pleaseSelectBillingMethod" /><br>';
@@ -2311,8 +2183,6 @@ console.log("vBindingNo" + vBindingNo);
     function fn_validCert() {
         var isValid = true, msg = "";
 
-        console.log('certRefFile'+ $('#certRefFile').val())
-
 //      if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
         if(!$('#tabRC').hasClass("blind") && GST_MANNUAL == 'Y') {
 
@@ -2389,13 +2259,9 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_loadBankAccount(bankAccId) {
-        console.log("fn_loadBankAccount START");
-
         Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
 
             if(rsltInfo != null) {
-                console.log("fn_loadBankAccount Setting");
-
                 $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
                 $("#rentPayBankAccNo").val(rsltInfo.custAccNo);
                 $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
@@ -2443,8 +2309,6 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_loadCreditCard2(custCrcId) {
-        console.log("fn_loadCreditCard START");
-
         Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : custCrcId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 $("#hiddenRentPayCRCId").val(rsltInfo.custCrcId);
@@ -2461,9 +2325,6 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
-
         fn_clearOrderSalesman();
 
         if(LoginRoleID != "105" && LoginRoleID != "97")//Modified by Keyi bypass HOR & Supervisor Key In restriction
@@ -2490,7 +2351,6 @@ console.log("vBindingNo" + vBindingNo);
         }
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
-
                if(memInfo == null) {
                     Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
                  //   Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
@@ -2517,30 +2377,24 @@ console.log("vBindingNo" + vBindingNo);
                     $('#grpCd').removeClass("readonly");
                     $('#orgCd').removeClass("readonly");
 
-                    console.log("**$('#typeId').val()  >> " + $('#typeId').val() );
-                    console.log("**$('#appType').val() >> " + $('#appType').val());
-                    console.log("**$('#exTrade').val() >> " + $('#exTrade').val());
-
-                    if($('#exTrade').val() == '1' && $("#typeId").val() == '964'){
-                        fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
-                    }
+                    if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+                         fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                   }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+                         fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                   }else if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+                         fn_checkOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
+                   }
                 }
          });
     }
 
     function fn_loadTrialNo(trialNo) {
-
         $('#trialNo').val('');
         $('#trialId').val('');
 
         if(FormUtil.isNotEmpty(trialNo)) {
-
             Common.ajax("GET", "/sales/order/selectTrialNo.do", {salesOrdNo : trialNo}, function(trialInfo) {
-
                 if(trialInfo != null) {
-
-                    console.log("성공.");
-
                     $("#trialId").val(trialInfo.salesOrdId);
                     $("#trialNo").val(trialInfo.salesOrdNo);
                 }
@@ -2549,13 +2403,8 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
-
         Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
-
             if(promoPriceInfo != null) {
-
-                console.log("성공.");
-
 //              $("#ordPrice").removeClass("readonly");
 //              $("#ordPv").removeClass("readonly");
 //              $("#ordRentalFees").removeClass("readonly");
@@ -2581,18 +2430,12 @@ console.log("vBindingNo" + vBindingNo);
  */
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
-
             }
         });
     }
 
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
-        console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPromotion --> stkId:'+stkId);
-        console.log('fn_loadProductPromotion --> empChk:'+empChk);
-        console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
-
         $('#ordPromo').removeAttr("disabled");
 
         if(appTypeVal !=66){
@@ -2609,10 +2452,6 @@ console.log("vBindingNo" + vBindingNo);
 
     //LoadProductPrice
     function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
-        console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPrice --> stkId:'+stkId);
-        console.log('fn_loadProductPrice --> srvPacId:'+srvPacId);
-
         var appTypeId = 0;
 
         appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
@@ -2622,11 +2461,7 @@ console.log("vBindingNo" + vBindingNo);
         $("#searchSrvPacId").val(srvPacId);
 
         Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
-
             if(stkPriceInfo != null) {
-
-                console.log("성공.");
-
 //              $("#ordPrice").removeClass("readonly");
 //              $("#ordPv").removeClass("readonly");
 //              $("#ordRentalFees").removeClass("readonly");
@@ -2752,7 +2587,6 @@ console.log("vBindingNo" + vBindingNo);
 
     //ClearControl_BillGroup
     function fn_clearBillGroup() {
-
         $('#sctBillMthd').addClass("blind");
         $('#sctBillAddr').addClass("blind");
         $('#sctBillPrefer').addClass("blind");
@@ -2790,8 +2624,6 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function chgTab(tabNm) {
-        console.log('tabNm:'+tabNm);
-
         switch(tabNm) {
             case 'doc' :
                 AUIGrid.resize(docGridID, 980, 380);
@@ -2929,8 +2761,6 @@ console.log("vBindingNo" + vBindingNo);
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
-
-
 
     doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
   }
