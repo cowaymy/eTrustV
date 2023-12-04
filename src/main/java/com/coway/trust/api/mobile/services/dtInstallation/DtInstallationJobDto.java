@@ -252,17 +252,17 @@ public class DtInstallationJobDto {
 
   private BigDecimal longitude;
 
-  private String partnerCode;
+  private int partnerCode;
 
   private String memCode;
 
-  public String getPartnerCode() {
+  public int getPartnerCode() {
 	return partnerCode;
 }
 public String getMemCode() {
 	return memCode;
 }
-public void setPartnerCode(String partnerCode) {
+public void setPartnerCode(int partnerCode) {
 	this.partnerCode = partnerCode;
 }
 public void setMemCode(String memCode) {
