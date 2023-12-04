@@ -11,6 +11,7 @@
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
 var myGridID;
+var excelGridID;
 
 function loadMember(){
     if("${orgCode}"){
@@ -76,6 +77,7 @@ $(document).ready(function(){
             showStateColumn : false
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    excelGridID = GridCommon.createAUIGrid("excel_grid_wrap", excelColumnLayout,null,gridPros);
 
 	loadMember();
 
@@ -108,53 +110,134 @@ var columnLayout = [
         dataField : "indOrd",
         headerText : "Individual Order",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric"
     }, {
         dataField : "corpOrd",
         headerText : "Corporate Order",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric"
     }, {
         dataField : "corpRatio",
         headerText : "Corporate Ratio",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric",
         formatString:"###0.##"
     }, {
         dataField : "sClCtg",
         headerText : "<spring:message code='pay.head.target'/>",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric",
         formatString:"###0.#"
     }, {
         dataField : "sCol",
         headerText : "<spring:message code='pay.head.collection'/>",
         editable : false,
-        width : 180,dataType:"numeric",
+        width : 100,dataType:"numeric",
         formatString:"###0.#"
     }, {
         dataField : "rcPrct",
         headerText : "RC%",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric"
     }, {
         dataField : "adRatio",
         headerText : "AD Ratio%",
         editable : false,
-        width : 180,
+        width : 100,
         dataType:"numeric"
     }];
+
+var excelColumnLayout = [
+                         {
+                             dataField : "tOrgCode",
+                             headerText : "<spring:message code='pay.head.orgCode'/>",
+                             editable : false
+                         }, {
+                             dataField : "tGrpCode",
+                             headerText : "<spring:message code='pay.head.grpCode'/>",
+                             editable : false
+                         }, {
+                             dataField : "tDeptCode",
+                             headerText : "<spring:message code='pay.head.deptCode'/>",
+                             editable : false
+                         }, {
+                             dataField : "memCode",
+                             headerText : "<spring:message code='pay.head.codyCode'/>",
+                             editable : false
+                         }, {
+                             dataField : "sUnit",
+                             headerText : "<spring:message code='pay.head.unit'/>",
+                             editable : false,
+                             dataType:"numeric"
+                         }, {
+                             dataField : "indOrd",
+                             headerText : "Individual Order",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric"
+                         }, {
+                             dataField : "corpOrd",
+                             headerText : "Corporate Order",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric"
+                         }, {
+                             dataField : "corpRatio",
+                             headerText : "Corporate Ratio",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric",
+                             formatString:"###0.##"
+                         }, {
+                             dataField : "sClCtg",
+                             headerText : "<spring:message code='pay.head.target'/>",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric",
+                             formatString:"###0.#"
+                         }, {
+                             dataField : "sCol",
+                             headerText : "<spring:message code='pay.head.collection'/>",
+                             editable : false,
+                             width : 180,dataType:"numeric",
+                             formatString:"###0.#"
+                         }, {
+                             dataField : "rcPrct",
+                             headerText : "RC%",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric"
+                         }, {
+                             dataField : "adRatio",
+                             headerText : "AD Ratio%",
+                             editable : false,
+                             width : 180,
+                             dataType:"numeric"
+                         }, {
+                             dataField : "cmName",
+                             headerText : "CM Name",
+                             editable : false
+                         }, {
+                             dataField : "branch",
+                             headerText : "Branch",
+                             editable : false
+                         }, {
+                             dataField : "region",
+                             headerText : "Region",
+                             editable : false
+                         }];
 
     // ajax list 조회.
     function searchList(){
     	   Common.ajax("GET","/payment/selectRentalCollectionByBSNewList",$("#searchForm").serialize(), function(result){
-    		   console.log(result);
+    		   console.log('result:', result);
     		AUIGrid.setGridData(myGridID, result);
+    		AUIGrid.setGridData(excelGridID, result);
     	});
     }
 
@@ -164,7 +247,7 @@ var columnLayout = [
     }
 
     function fn_excelDown() {
-      GridCommon.exportTo("grid_wrap", "xlsx", "RC by HS");
+      GridCommon.exportTo("excel_grid_wrap", "xlsx", "RC by HS");
     }
 </script>
 
@@ -229,6 +312,8 @@ var columnLayout = [
     <section class="search_result">
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
+        <article id="excel_grid_wrap" class="grid_wrap" style="display: none;"></article>
+
         <!-- grid_wrap end -->
 
     </section>

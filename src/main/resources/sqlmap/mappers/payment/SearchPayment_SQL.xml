@@ -686,42 +686,50 @@
 
     <select id="searchRentalCollectionByBSNewList" parameterType="rentalCollectionByBSSearchVO" resultType="rentalCollectionByBSListVO">
        SELECT
-           S_ID AS sID,
-           T_ORG_CODE AS tOrgCode,
-           T_GRP_CODE AS tGrpCode,
-           T_DEPT_CODE AS tDeptCode,
-           ORG_CODE AS orgCode,
-           GRP_CODE AS grpCode,
-           DEPT_CODE AS deptCode,
-           MEM_CODE AS memCode,
-           S_UNIT AS sUnit,
-           IND_ORD AS indOrd,
-           CORP_ORD AS corpOrd,
-           CORP_RATIO AS corpRatio,
-           S_CL_CTG AS sClCtg,
-           S_COL AS sCol,
-           RC_PRCT AS rcPrct,
-           AD_RATIO AS adRatio
-
-        FROM REP0085S
+           A.S_ID AS sID,
+           A.T_ORG_CODE AS tOrgCode,
+           A.T_GRP_CODE AS tGrpCode,
+           A.T_DEPT_CODE AS tDeptCode,
+           A.ORG_CODE AS orgCode,
+           A.GRP_CODE AS grpCode,
+           A.DEPT_CODE AS deptCode,
+           A.MEM_CODE AS memCode,
+           A.S_UNIT AS sUnit,
+           A.IND_ORD AS indOrd,
+           A.CORP_ORD AS corpOrd,
+           A.CORP_RATIO AS corpRatio,
+           A.S_CL_CTG AS sClCtg,
+           A.S_COL AS sCol,
+           A.RC_PRCT AS rcPrct,
+           A.AD_RATIO AS adRatio,
+           MEM2.MEM_CODE AS cmName,
+           SUBSTR(C.NAME, INSTR(C.NAME, '-') + 2) AS branch,
+           C.CODE_DESC AS region
+        FROM REP0085S A
+        LEFT JOIN ORG1001V V   ON V.MEM_CODE = A.MEM_CODE
+        LEFT JOIN ORG0001D MEM2   ON MEM2.MEM_ID = V.LVL3_UP_ID AND V.LVL3_UP_ID > 0
+        LEFT JOIN (
+        SELECT B.BRNCH_ID, B.CODE, B.NAME, A.CODE_DESC FROM SYS0013M A
+        INNER JOIN SYS0005M B ON B.REGN_ID = A.CODE_ID WHERE CODE_MASTER_ID = 49
+        ) C ON MEM2.BRNCH = C.BRNCH_ID
         WHERE
         1=1
         <if test="orgCode != '' ">
-           AND T_ORG_CODE = #{orgCode}
+           AND A.T_ORG_CODE = #{orgCode}
        </if>
        <if test="grpCode != '' ">
-           AND T_GRP_CODE = #{grpCode}
+           AND A.T_GRP_CODE = #{grpCode}
        </if>
        <if test="deptCode != '' ">
-           AND T_DEPT_CODE = #{deptCode}
+           AND A.T_DEPT_CODE = #{deptCode}
        </if>
        <if test="memCode != '' ">
-           AND MEM_CODE = #{memCode}
+           AND A.MEM_CODE = #{memCode}
        </if>
        <if test="memType != '' ">
-           AND MEM_TYPE = #{memType}
+           AND A.MEM_TYPE = #{memType}
        </if>
-       ORDER BY S_ID
+       ORDER BY A.S_ID
     </select>
 
      <select id="selectPaymentDetailViewer" parameterType="Map" resultType="egovMap">
@@ -1875,6 +1883,18 @@
             ,CASE WHEN PAYMODE.MODE_ID = 130 THEN '' ELSE SUBSTR(CARD.CUST_ORI_CRC_NO,-4) END AS CRC
             ,CASE WHEN PAYMODE.MODE_ID = 130 THEN '' ELSE CUST_CRC_EXPR END AS CRC_EXPR
             ,B.ACC_DEBT_SUB_CURR_OTSTND_AGING AGING
+            ,B.ACC_DEBT_SUB_OPNG_OTSTND_AGING OPNG_AGING
+            ,(CASE
+                 WHEN v.MEM_LVL = 4 THEN NVL(mem2.MEM_CODE, ' ')
+                 WHEN v.MEM_LVL = 3 THEN NVL(g.MEM_CODE, ' ')
+                 ELSE ' '
+              END) CM_CODE
+             ,(CASE
+                 WHEN ( v.MEM_LVL = 4
+                   OR v.MEM_LVL = 3 ) THEN NVL(mem3.MEM_CODE, ' ')
+                 WHEN v.MEM_LVL = 2 THEN NVL(g.MEM_CODE, ' ')
+                 ELSE ' '
+              END) SCMCODE
         FROM REP0087S A
         INNER JOIN PAY0053S B
             ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
@@ -1896,6 +1916,9 @@
 	        LEFT JOIN SAL0095D H ON H.SRV_SALES_ORD_ID = A.SALES_ORD_ID
 	        JOIN SAL0081D I ON H.SRV_MEM_PAC_ID = I.SRV_CNTRCT_PAC_ID AND I.SRV_CNTRCT_PAC_ID =2
         </if>
+        LEFT JOIN ORG1001V v ON v.MEM_ID = g.MEM_ID
+        LEFT JOIN ORG0001D mem2 ON mem2.MEM_ID = v.LVL3_UP_ID AND v.LVL3_UP_ID > 0
+        LEFT JOIN ORG0001D mem3 ON mem3.MEM_ID = v.LVL2_UP_ID AND v.LVL2_UP_ID > 0
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}

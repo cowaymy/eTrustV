@@ -11,8 +11,9 @@
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
 var myGridID;
+var excelGridID;
 var selCodeCustId;
-var paymode = [{"codeId":"130","codeName":"Regular"},{"codeId":"131","codeName":"Credit Card"},{"codeId":"132","codeName":"Direct Debit"}];
+var paymode = [{"codeId":"130","codeName":"Regular"},{"codeId":"131","codeName":"Credit Card"},{"codeId":"132","codeName":"Direct Debit"},{"codeId":"135","codeName":"PNP RPS"}];
 //var outStandMonth = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
 //var outStandMonth = [{"codeId":"","codeName":"All"},{"codeId":"0","codeName":"0"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
 var outStandMonth = [{"codeId":"","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
@@ -21,7 +22,7 @@ var isPaid = [{"codeId":"1","codeName":"Full Paid"},{"codeId":"2","codeName":"Pa
 var bsMonth = [{"codeId":"","codeName":"All"},{"codeId":"Yes","codeName":"Yes"},{"codeId":"No","codeName":"No"}];
 var openingAging = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
 var rentalPeriod = [{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
-
+var custTypeCom = [{"codeId":"","codeName":"All"}];
 
 function loadMember(){
     if("${orgCode}"){
@@ -87,6 +88,7 @@ $(document).ready(function(){
 	doDefCombo(bsMonth, '', 'cmbBsMonth', 'S', '');
 	doDefCombo(openingAging, '', 'cmbOpeningAging', 'S', '');
 	doDefCombo(rentalPeriod, '', 'renPrd', 'S', '');
+	doDefCombo(custTypeCom, '', 'custComType', 'S', '');
 
     var gridPros = {
             // 편집 가능 여부 (기본값 : false)
@@ -96,6 +98,7 @@ $(document).ready(function(){
             showStateColumn : false
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    excelGridID = GridCommon.createAUIGrid("excel_grid_wrap", excelColumnLayout,null,gridPros);
 
     $("#btnRmdLtr").click(function(){
 
@@ -141,21 +144,47 @@ var columnLayout = [
     , {dataField : "telMobile", headerText : "<spring:message code='pay.head.mobile'/>", editable : false,width : 100}
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
     , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
+    , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "aging",  headerText : "Current Aging", editable : false,width : 100}
     , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
     , {dataField : "crc", headerText : "CRC(last 4-digit)", editable : false, width : 100}
     , {dataField : "crcExpr", headerText : "CRC Exp Date", editable : false, width : 100}
     , {dataField : "monthType", headerText :"M2 Status", editable : false , width : 100}
     , {dataField : "thisMonth", headerText : "This Mth", editable : false, width : 150}
     , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
-    , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
-    , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
-    , {dataField : "aging", editable : false, visible: false}
     ];
+
+var excelColumnLayout = [
+                    {dataField : "salesOrdId", editable : false}
+                  , {dataField : "bsMonth", headerText : "<spring:message code='sal.title.bsMonth'/>", editable : false}
+                  , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
+                  , {dataField : "jompay", headerText : "Jompay No", editable: false, width: 100}
+                  , {dataField : "scmcode", headerText : "SCM Code", editable : false,width : 100}
+                  , {dataField : "cmCode", headerText : "CM Code", editable : false,width : 100}
+                  , {dataField : "codyCode", headerText : "Cody Code", editable : false,width : 100}
+                  , {dataField : "codyName", headerText : "<spring:message code='pay.head.memberName'/>", editable : false,width : 150}
+                  , {dataField : "custName", headerText : "<spring:message code='pay.head.custName'/>", editable : false,width : 150 }
+                  , {dataField : "telMobile", headerText : "<spring:message code='pay.head.mobile'/>", editable : false,width : 100}
+                  , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
+                  , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
+                  , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+                  , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+                  , {dataField : "aging",  headerText : "Current Aging", editable : false,width : 100}
+                  , {dataField : "opngAging",  headerText : "Opening Aging", editable : false,width : 100}
+                  , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
+                  , {dataField : "crc", headerText : "CRC(last 4-digit)", editable : false, width : 100}
+                  , {dataField : "crcExpr", headerText : "CRC Exp Date", editable : false, width : 100}
+                  , {dataField : "monthType", headerText :"M2 Status", editable : false , width : 100}
+                  , {dataField : "thisMonth", headerText : "This Mth", editable : false, width : 150}
+                  , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
+                  ];
 
     // ajax list 조회.
     function searchList(){
     	   Common.ajax("GET","/payment/selectRCByBSAgingMonthNewList.do",$("#searchForm").serialize(), function(result){
     		AUIGrid.setGridData(myGridID, result);
+    		AUIGrid.setGridData(excelGridID, result);
     	});
     }
 
@@ -180,7 +209,7 @@ var columnLayout = [
 
     function fn_excelDown(){
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("grid_wrap", "xlsx", "RC by HS (Aging Month)");
+        GridCommon.exportTo("excel_grid_wrap", "xlsx", "RC by HS (Aging Month)");
     }
 
     function fn_report(){
@@ -259,8 +288,14 @@ var columnLayout = [
                     <tr>
                         <th scope="row">Rental Membership</th>
                         <td><input type="text" title="renMem" id="renMem" name="renMem" placeholder="Rental Membership" class="w100p" /></td>
-                        <th scope="row">Over Rental Period</th>
+                        <th scope="row">Rental Period</th>
                         <td> <select id="renPrd" name="renPrd" class="w100p" ></select></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row">Cust Type Company</th>
+                        <td> <select id="custComType" name="custComType" class="w100p" ></select></td>
                     </tr>
                 </tbody>
             </table>
@@ -308,6 +343,8 @@ var columnLayout = [
     <section class="search_result">
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
+        <article id="excel_grid_wrap" class="grid_wrap" style="display: none;"></article>
+
         <!-- grid_wrap end -->
 
     </section>

@@ -25,6 +25,9 @@ public class RentalCollectionByBSListVO implements Serializable {
 	private String corpRatio;
 	private String rcPrct;
 	private String adRatio;
+	private String cmName;
+	private String branch;
+	private String region;
 
 	public String getsID() {
 		return sID;
@@ -151,6 +154,27 @@ public class RentalCollectionByBSListVO implements Serializable {
     }
     public void setadRatio(String adRatio) {
         this.adRatio = adRatio;
+    }
+
+	public String getCmName() {
+        return cmName;
+    }
+    public void setCmName(String cmName) {
+        this.cmName = cmName;
+    }
+
+	public String getBranch() {
+        return branch;
+    }
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
+	public String getRegion() {
+        return region;
+    }
+    public void setRegion(String region) {
+        this.region = region;
     }
 
 }
