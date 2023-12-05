@@ -1010,6 +1010,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		}
 
         		params.put("AS_RESULT_REM", insApiresult.get("resultRemark"));
+        		params.put("PARTNER_CODE", insApiresult.get("partnerCode"));
 
         		if (insApiresult.get("inHouseRepairRemark") != null) {
         			params.put("IN_HUSE_REPAIR_REM", String.valueOf(insApiresult.get("inHouseRepairRemark")));
