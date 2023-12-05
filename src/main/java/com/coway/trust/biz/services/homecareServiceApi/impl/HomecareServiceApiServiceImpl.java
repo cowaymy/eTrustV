@@ -16,6 +16,7 @@ import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiDto;
 import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiForm;
+import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiForm;
 import com.coway.trust.api.mobile.services.installation.HomecareServiceApiForm;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.royaltyCustomerListApi.RoyaltyCustomerListApiService;
@@ -49,13 +50,6 @@ public class HomecareServiceApiServiceImpl extends EgovAbstractServiceImpl imple
 
     @Override
     public List<EgovMap> selectPartnerCode( HomecareServiceApiForm param) {
-	//public List<EgovMap> selectWsLoyaltyList( RoyaltyCustomerListApiDto param) throws Exception {
-		// TODO Auto-generated method stub
-      //  param.setWhLocId(loginVO.getUserId());
-
-    /*	 if( CommonUtils.isEmpty(param.getRegId()) ){
-             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
-         }*/
 
     	 Map<String, Object> loginInfoMap = new HashMap<String, Object>();
          loginInfoMap.put("_USER_ID", param.getRegId());
@@ -63,10 +57,21 @@ public class HomecareServiceApiServiceImpl extends EgovAbstractServiceImpl imple
          if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
              throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
          }
-      //   param.setWhLocId(loginVO.getUserId());
 
-		//return royaltyCustomerListApiMapper.selectWsLoyaltyList();
 		return homecareServiceApiMapper.selectPartnerCode(HomecareServiceApiForm.createMap(param));
+	}
+
+    @Override
+    public List<EgovMap> selectAsPartnerCode( HomecareAfterServiceApiForm param) {
+
+    	 Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+         loginInfoMap.put("_USER_ID", param.getRegId());
+         LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+         if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
+             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
+         }
+
+		return homecareServiceApiMapper.selectAsPartnerCode(HomecareAfterServiceApiForm.createMap(param));
 	}
 
 

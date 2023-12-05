@@ -22,4 +22,6 @@ public interface HomecareServiceApiMapper {
 
 	List<EgovMap> selectPartnerCode(Map<String, Object> params);
 
+	List<EgovMap> selectAsPartnerCode(Map<String, Object> params);
+
 }
