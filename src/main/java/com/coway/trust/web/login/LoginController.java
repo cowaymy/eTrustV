@@ -51,6 +51,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.logistics.survey.SurveyService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
@@ -85,7 +86,11 @@ public class LoginController {
 	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
+	@Resource(name = "ssoLoginService")
+	private SsoLoginService ssoLoginService;
 
+	@Value("${sso.use.flag}")
+	private int ssoLoginFlag;
 
 	@RequestMapping(value = "/checkMFA.do")
 	public String checkMFA(@RequestParam Map<String, Object> params, RedirectAttributes redirectAttributes, HttpServletRequest request,ModelMap model)  throws  Exception {
@@ -410,14 +415,16 @@ public class LoginController {
 		HttpSession session = sessionHandler.getCurrentSession();
 		session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 
-//		if(loginVO.getUserTypeId() == 1 || loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 3 || loginVO.getUserTypeId() == 7
-//				|| loginVO.getUserTypeId() == 5){
-//			//update password in keycloak
-//			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-//			ssoParamsOldMem.put("memCode", sessionVO.getUserName());
-//			ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
-//			ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
-//		}
+		if(ssoLoginFlag > 0){
+    		if(loginVO.getUserTypeId() == 1 || loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 3 || loginVO.getUserTypeId() == 7
+    				|| loginVO.getUserTypeId() == 5){
+    			//update password in keycloak
+    			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+    			ssoParamsOldMem.put("memCode", sessionVO.getUserName());
+    			ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+    			ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+    		}
+		}
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();

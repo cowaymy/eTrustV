@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Resource(name = "ssoLoginService")
 	private SsoLoginService ssoLoginService;
+
+	@Value("${sso.use.flag}")
+	private int ssoLoginFlag;
 
 	@Override
 	public LoginVO getLoginInfo(Map<String, Object> params) {
@@ -150,18 +154,20 @@ public class LoginServiceImpl implements LoginService {
 		// }
 
 		//ssoLogin
-		try{
-			if(params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2") || params.get("userTypeId").toString().equals("3")
-					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5") || params.get("userTypeId").toString().equals("6672")){
-				//update password in keycloak
-				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-				ssoParamsOldMem.put("memCode", params.get("userName"));
-				ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
-				ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
-			}
-		}catch(Exception ex) {
-			throw ex;
-        }
+		if(ssoLoginFlag > 0){
+    		try{
+    			if(params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2") || params.get("userTypeId").toString().equals("3")
+    					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5") || params.get("userTypeId").toString().equals("6672")){
+    				//update password in keycloak
+    				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+    				ssoParamsOldMem.put("memCode", params.get("userName"));
+    				ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+    				ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+    			}
+    		}catch(Exception ex) {
+    			throw ex;
+            }
+		}
 		return saveCnt;
 	}
 

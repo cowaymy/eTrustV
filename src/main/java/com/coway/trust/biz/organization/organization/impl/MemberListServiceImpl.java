@@ -88,6 +88,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Resource(name = "ssoLoginService")
 	  private SsoLoginService ssoLoginService;
+
+	@Value("${sso.use.flag}")
+	private int ssoLoginFlag;
 	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
@@ -326,13 +329,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
             //202210 - hltang - SSO Login
             // SP_DAY_USER_CRT 프로시저 호출
-            Map<String, Object> userPram = new HashMap<String, Object>();
-            userPram.put("IN_MEMCODE", memCode);
-            userPram.put("IN_TRAINTYPE", params.get("memberType"));
-            logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>" + userPram.toString());
-            memberListMapper.SP_DAY_USER_CRT(userPram);
-            userPram.put("P_STATUS", userPram.get("p1"));
-            logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" + userPram);
+            if(ssoLoginFlag > 0){
+                Map<String, Object> userPram = new HashMap<String, Object>();
+                userPram.put("IN_MEMCODE", memCode);
+                userPram.put("IN_TRAINTYPE", params.get("memberType"));
+                logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>" + userPram.toString());
+                memberListMapper.SP_DAY_USER_CRT(userPram);
+                userPram.put("P_STATUS", userPram.get("p1"));
+                logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" + userPram);
+            }
 
             if(memCode !=null && !memCode.isEmpty()){
             	String memid = memberListMapper.getUserID(memCode);
@@ -1734,7 +1739,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 
 		//hltang 202209 -> for sso login purpose
-		resultValue.put("oldMemCode", oldMemCode);
+		if(ssoLoginFlag > 0){
+			resultValue.put("oldMemCode", oldMemCode);
+		}
 
         return resultValue;
     }

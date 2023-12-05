@@ -55,7 +55,7 @@ import com.coway.trust.biz.eAccounting.ctDutyAllowance.CtDutyAllowanceApplicatio
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.enquiry.EnquiryService;
 import com.coway.trust.biz.login.LoginService;
-//import com.coway.trust.biz.login.SsoLoginService;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
@@ -130,6 +130,9 @@ public class MemberListController {
 	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
+	@Value("${sso.use.flag}")
+	private int ssoLoginFlag;
+
 	@Autowired
 	private FileApplication fileApplication;
 
@@ -139,8 +142,8 @@ public class MemberListController {
 	@Value("${pdf.password}")
 	private String pdfPassword;
 
-//	@Resource(name = "ssoLoginService")
-//	  private SsoLoginService ssoLoginService;
+	@Resource(name = "ssoLoginService")
+	  private SsoLoginService ssoLoginService;
 
 	/**
 	 * Call commission rule book management Page
@@ -585,10 +588,12 @@ public class MemberListController {
            		message.setMessage("fail saved");
            	}else{
            		//after success register in eTrust, create info in keycloak
-//          	    Map<String,Object> ssoParams = new HashMap<String, Object>();
-//          	    ssoParams.put("memCode", memCode);
-//          	    ssoParams.put("trainType", trainType);
-//          	    ssoLoginService.ssoCreateUser(ssoParams);
+           		if(ssoLoginFlag > 0){
+           			Map<String,Object> ssoParams = new HashMap<String, Object>();
+              	    ssoParams.put("memCode", memCode);
+              	    ssoParams.put("trainType", trainType);
+              	    ssoLoginService.ssoCreateUser(ssoParams);
+           		}
 
            		message.setMessage("Compelete to Create a Member Code : " +memCode);
            	}
@@ -921,21 +926,26 @@ public class MemberListController {
 
     		if(null != resultValue){
     			//after success register in eTrust, deactivate old account in keycloak
-//    			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-//    			ssoParamsOldMem.put("memCode", resultValue.get("oldMemCode").toString());
-//    			//ssoParamsOldMem.put("enabled", "false");
-//    			ssoLoginService.ssoDeleteUserStatus(ssoParamsOldMem);
-//    			//create new account in keycloak
-//    	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
-//    	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-//    	     	ssoLoginService.ssoCreateUser(ssoParams);
-//    			//message.setMessage((String)resultValue.get("memCode"));
-
-    	     	//trInfo = resultValue;
-    			trInfo.put("memCode", (String)resultValue.get("memCode"));
-    		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
-    		    //message.setCode(AppConstants.SUCCESS);
-    			//trInfo.put("message", message);
+    			if(ssoLoginFlag > 0){
+    			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+    			ssoParamsOldMem.put("memCode", resultValue.get("oldMemCode").toString());
+    			//ssoParamsOldMem.put("enabled", "false");
+    			ssoLoginService.ssoDeleteUserStatus(ssoParamsOldMem);
+    			//create new account in keycloak
+    	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
+    	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
+    	     	ssoLoginService.ssoCreateUser(ssoParams);
+    			message.setMessage((String)resultValue.get("memCode"));
+    	     	trInfo = resultValue;
+    	     	message.setCode(AppConstants.SUCCESS);
+    			trInfo.put("message", message);
+    			}
+    			else{
+    				message.setCode(AppConstants.SUCCESS);
+    				trInfo.put("message", message);
+    				trInfo.put("memCode", (String)resultValue.get("memCode"));
+        		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
+    			}
     		}
 
 
@@ -1189,20 +1199,22 @@ public class MemberListController {
             	}
 
             	//SSO Login member edit
-//            	if(formMap.containsKey("memberNmUpd") ||  formMap.containsKey("emailUpd") ){
-//            		/*logger.debug("memberNm " + formMap.get("memberNmUpd").toString());
-//            		logger.debug("email " + formMap.get("emailUpd").toString());*/
-//            		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
-//            		ssoParamsMem.put("memCode", memCode);
-//            		if(formMap.get("memberNmUpd") != null){
-//            			ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
-//            		}
-//            		if(formMap.get("emailUpd") != null){
-//            			ssoParamsMem.put("email", formMap.get("emailUpd").toString());
-//            		}
-//
-//              		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
-//            	}
+            	if(ssoLoginFlag > 0){
+                	if(formMap.containsKey("memberNmUpd") ||  formMap.containsKey("emailUpd") ){
+                		/*logger.debug("memberNm " + formMap.get("memberNmUpd").toString());
+                		logger.debug("email " + formMap.get("emailUpd").toString());*/
+                		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
+                		ssoParamsMem.put("memCode", memCode);
+                		if(formMap.get("memberNmUpd") != null){
+                			ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
+                		}
+                		if(formMap.get("emailUpd") != null){
+                			ssoParamsMem.put("email", formMap.get("emailUpd").toString());
+                		}
+
+                  		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
+                	}
+            	}
 
             }
 
@@ -1338,9 +1350,11 @@ public class MemberListController {
 
     			} else {
     				//after success register in eTrust, create info in keycloak
-    		     	/*Map<String,Object> ssoParams = new HashMap<String, Object>();
-    		     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-    		     	ssoLoginService.ssoCreateUser(ssoParams);*/
+    				if(ssoLoginFlag > 0){
+        		     	Map<String,Object> ssoParams = new HashMap<String, Object>();
+        		     	ssoParams.put("memCode", resultValue.get("memCode").toString());
+        		     	ssoLoginService.ssoCreateUser(ssoParams);
+    				}
 
     				message.setMessage((String)resultValue.get("memCode"));
     				// doc UPdate
@@ -2469,10 +2483,12 @@ public class MemberListController {
 
 
         //update password in keycloak
-  		/*Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
-  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
-  		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);*/
+        if(ssoLoginFlag > 0){
+      		Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+      		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
+      		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
+      		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+        }
 
         ReturnMessage message = new ReturnMessage();
         if(cnt > 0) {

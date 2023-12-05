@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -33,6 +34,9 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 	@Resource(name = "ssoLoginService")
 	private SsoLoginService ssoLoginService;
+
+	@Value("${sso.use.flag}")
+	private int ssoLoginFlag;
 
 	@Override
 	public List<EgovMap> selectUserList(Map<String, Object> params) {
@@ -117,14 +121,16 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 		try{
 			//update password in keycloak
-			if(params.get("userType") != null){
-				if(params.get("userType").toString().equals("1") || params.get("userType").toString().toString().equals("2") || params.get("userType").toString().toString().equals("3")
-						|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")  || params.get("userType").toString().toString().equals("6672")){
-					Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-					ssoParamsOldMem.put("memCode", params.get("username"));
-					ssoParamsOldMem.put("password", params.get("userPasswd"));
-					ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
-				}
+			if(ssoLoginFlag > 0){
+    			if(params.get("userType") != null){
+    				if(params.get("userType").toString().equals("1") || params.get("userType").toString().toString().equals("2") || params.get("userType").toString().toString().equals("3")
+    						|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")  || params.get("userType").toString().toString().equals("6672")){
+    					Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+    					ssoParamsOldMem.put("memCode", params.get("username"));
+    					ssoParamsOldMem.put("password", params.get("userPasswd"));
+    					ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+    				}
+    			}
 			}
 		}catch(Exception ex) {
 			throw ex;
