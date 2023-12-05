@@ -61,7 +61,9 @@
 
             if(fn_checkProductQuota() == true) return false;
 
-            fn_doSavePreOrder();
+            if(checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val()) == false) return false;
+
+            //fn_doSavePreOrder();
         });
     });
 
