@@ -21,5 +21,21 @@
 ]]>
 </select>
 
+<select id="selectAsPartnerCode" resultType="egovMap">
+<![CDATA[
+
+    SELECT MEM_ID AS DT_ID
+    , MEM_CODE AS MEM_CODE
+    FROM
+    ORG0001D ORG
+    WHERE ORG.MEM_TYPE IN ('5758','6672')
+    AND ORG.STUS = 1
+    AND ORG.MEM_CODE <> #{regId}
+    AND ORG.BRNCH IN
+    (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{regId})
+
+]]>
+</select>
+
 
 </mapper>
