@@ -119,9 +119,10 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		 * Check if the voucher has been used before on sales order
 		 * Also check if the voucher has been use before on other e-keyin sales
 		 */
-		if(preOrderVO.getVoucherCode().isEmpty() == false){
+
+	  /*	if(preOrderVO.getVoucherCode().isEmpty() == false){
 			this.checkVoucherValideKeyIn(preOrderVO.getVoucherCode());
-		}
+		}*/
 
 		preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 		this.preprocPreOrder(preOrderVO, sessionVO);
