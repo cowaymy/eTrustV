@@ -351,11 +351,13 @@
     </if>
 
     <if test="startCrtDt != null and startCrtDt != '' ">
-      AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+      <!-- AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') -->
+      AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}, 'DD/MM/YYYY')
     </if>
 
     <if test="endCrtDt != null and endCrtDt != ''">
-      AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+      <!-- AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') -->
+      AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt}, 'DD/MM/YYYY') + 1
     </if>
 
     <if test="startRecallDt != null and startRecallDt != '' ">
