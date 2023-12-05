@@ -97,7 +97,17 @@ public class AfterServiceResultForm {
 
   private String waterSrcType;
 
-  public String getWaterSrcType() {
+  private int partnerCode;
+
+  public int getPartnerCode() {
+	return partnerCode;
+}
+
+public void setPartnerCode(int partnerCode) {
+	this.partnerCode = partnerCode;
+}
+
+public String getWaterSrcType() {
 	return waterSrcType;
 }
 
