@@ -184,7 +184,6 @@ $(document).ready(function(){
 	}
 
 	function setText(result) {
-
 		resultBasicObject = result.basic;
 		resultSrvconfigObject = result.srvconfig;
 
@@ -204,6 +203,7 @@ $(document).ready(function(){
 		$("#custType").html(result.basic.custType);
 
 		$("#CUST_ID").val(result.basic.custId);
+		$('#CUST_TYPE_ID').val(result.basic.custTypeId);
 		$("#STOCK_ID").val(result.basic.stockId);
 
 		$("#SAVE_SRV_CONFIG_ID").val(result.srvconfig.configId);
@@ -1680,12 +1680,17 @@ $(document).ready(function(){
 	}
 
 	function checkSalesPersonValidForCreation(memId,memCode){
-		Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
-			if(memInfo == null){
-				Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
-				fn_goSalesPersonReset();
-			}
-		});
+		//Only Cater for IND customer type
+		var custTypeId= $('#CUST_TYPE_ID').val();
+
+		if(custTypeId == '964'){
+			Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+				if(memInfo == null){
+					Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+					fn_goSalesPersonReset();
+				}
+			});
+		}
 	}
 </script>
 
@@ -1703,7 +1708,7 @@ $(document).ready(function(){
     <input type="text" name="PROMO_ID"  id="PROMO_ID"/>
     <input type="text" name="ORD_DATE"  id="ORD_DATE"/>
     <input type="text" name="MBSH_EXP_DT"  id="MBSH_EXP_DT"/>
-
+    <input type="text" name="CUST_TYPE_ID" id="CUST_TYPE_ID"/>
 
     <!--Type of Package  -->
     <input type="text" name="SELPACKAGE_ID"  id="SELPACKAGE_ID"/>
