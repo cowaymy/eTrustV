@@ -3,7 +3,7 @@ package com.coway.trust.biz.services.homecareServiceApi;
 import java.util.List;
 import java.util.Map;
 
-
+import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiForm;
 import com.coway.trust.api.mobile.services.installation.HomecareServiceApiForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -22,5 +22,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface HomecareServiceApiService {
 
 	List<EgovMap> selectPartnerCode (HomecareServiceApiForm param);
+
+	List<EgovMap> selectAsPartnerCode (HomecareAfterServiceApiForm param);
 
 }
