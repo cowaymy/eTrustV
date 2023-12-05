@@ -184,8 +184,6 @@
 
     	$('#btnRltdNoEKeyIn').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
-            $('#salesmanCd').val('');
-            $('#salesmanNm').val('');
       });
 
         $('#btnConfirm').click(function() {
@@ -1392,8 +1390,6 @@
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
-        $('#salesmanCd').val('');
-        $('#salesmanNm').val('');
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
@@ -1402,8 +1398,6 @@
             }else {
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanNm').val(memInfo.name);
-
-                checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
             }
         });
     }
@@ -2080,8 +2074,6 @@
         fn_clearAddCpnt();
         $('#isReturnExtrade').prop("checked", false);
         $('#relatedNo').val("");
-        $('#salesmanCd').val('');
-        $('#salesmanNm').val('');
 
             if($('#exTrade').val()=='1'){
             	//$('#isReturnExtrade').prop("checked", true); --no product return
@@ -2223,23 +2215,36 @@
 //     }
 
     function fn_checkPreOrderSalesPerson(memId,memCode) {
-    	Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+    	var isExist = true;
+        var msg = "";
+    	Common.ajaxSync("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
     		if(memInfo == null) {
-                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
-                $('#salesmanCd').val('');
-                $('#salesmanNm').val('');
+                //Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                isExist = false;
+                $('#aTabOI').click();
+            }else{
+            	fn_doSavePreOrder();
             }
+    		if(isExist == false) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>",btnCnfmOrderClose.click());
+            return isExist;
     	});
     }
 
     function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
-    	Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+    	var isExist = true;
+        var msg = "";
+    	Common.ajaxSync("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
     		if(memInfo == null) {
-                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
-                $('#salesmanCd').val('');
-                $('#salesmanNm').val('');
+                //Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                isExist = false;
+                $('#aTabOI').click();
+            }else{
+            	fn_doSavePreOrder();
             }
+    		if(isExist == false) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>",btnCnfmOrderClose.click());
+            return isExist;
     	});
+
     }
 
     function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
