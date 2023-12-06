@@ -212,6 +212,18 @@ public class BatchPaymentOutController {
 			hm.put("sysBCAmt", 0);
 			hm.put("sysBCAccId", 0);
 
+			String csFlg = null;
+			hm.put("csFlg", csFlg);
+
+			if(!hm.get("userOrderNo").equals(null) && !hm.get("userOrderNo").equals(""))
+			{
+				if(hm.get("userOrderNo").toString().substring(0, 3).equals("CCS")){
+					logger.debug("Substring userOrderNo: " + hm.get("userOrderNo").toString().substring(0, 3));
+					csFlg = "Y";
+					hm.put("csFlg", csFlg);
+				}
+			}
+
 			if(!vo.getTrDate().trim().equals("")){
 				hm.put("userTrDate", vo.getTrDate().trim());
 			}else{

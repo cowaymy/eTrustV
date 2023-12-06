@@ -632,6 +632,10 @@
         SYSDATE,
         #{item.validStatusId},
         #{item.validRemark},
+        <if test="item.csFlg != null">
+        #{item.userOrderNo},
+        </if>
+        <if test="item.csFlg == null">
          decode( #{item.jomPay} , '1' ,
                      (   SELECT B.SALES_ORD_NO
                            FROM SAL0024D A, SAL0001D B
@@ -642,6 +646,7 @@
                       ),
                       LPAD(#{item.userOrderNo}, 7, '0')
          ) ,
+         </if>
         #{item.userTrNo},
         #{item.userRefNo},
         #{item.userAmount},
