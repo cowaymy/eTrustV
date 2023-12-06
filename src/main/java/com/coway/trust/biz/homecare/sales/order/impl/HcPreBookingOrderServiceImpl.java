@@ -23,7 +23,7 @@ import com.coway.trust.biz.homecare.sales.impl.htOrderRegisterMapper;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
-import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
+//import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 // import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -48,9 +48,9 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   @Resource(name = "hcPreBookingOrderMapper")
   private HcPreBookingOrderMapper hcPreBookingOrderMapper;
 
-  @Resource(name = "preBookingOrderMapper")
+/*  @Resource(name = "preBookingOrderMapper")
   private PreBookingOrderMapper preBookingOrderMapper;
-
+*/
   @Resource(name = "hcOrderRegisterMapper")
   private HcOrderRegisterMapper hcOrderRegisterMapper;
 
