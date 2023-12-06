@@ -3197,7 +3197,8 @@
                            AS_UNMATCH_REASON,
                            REWORK_PROJ,
                            AS_TRANSFER_TO_DT,
-                           ATCH_FILE_GRP_ID
+                           ATCH_FILE_GRP_ID,
+                           PARTNER_CODE
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3260,7 +3261,8 @@
                #{AS_UNMATCH_REASON},
                #{REWORK_PROJ},
                NVL(#{AS_TRANSFER_TO_DT},0),
-               #{ATTACHMENT}
+               #{ATTACHMENT},
+               #{PARTNER_CODE}
     )
   </insert>
 
