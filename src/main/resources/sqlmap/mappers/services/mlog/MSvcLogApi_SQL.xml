@@ -562,7 +562,9 @@
                                       as_unmatch_reason AS as_unmatch_reason,
                                       rework_proj AS rework_proj,
                                       WATER_SRC_TYPE AS WATER_SRC_TYPE,
-                                      prodCat AS prodCat
+                                      prodCat AS prodCat,
+                                      MEM_CODE as MEM_CODE
+
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
@@ -656,7 +658,12 @@
                                            TO_CHAR (svc0004d.as_unmatch_reason) AS as_unmatch_reason,
                                            TO_CHAR (svc0004d.rework_proj) AS rework_proj,
                                            TO_CHAR (SVC0004D.WATER_SRC_TYPE) AS WATER_SRC_TYPE,
-                                           TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
+                                           TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat,
+                                           NVL (SVC0004d.PARTNER_CODE, '') AS PARTNER_CODE,
+                                           CASE WHEN SVC0004d.PARTNER_CODE IS NOT NULL
+                                           THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SVC0004d.PARTNER_CODE)
+                                           ELSE '' END AS MEM_CODE
+
                                     FROM sal0001d,
                                          sal0002d,
                                          sal0022d,
