@@ -63,7 +63,7 @@
 
             if(checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val()) == false) return false;
 
-            //fn_doSavePreOrder();
+            fn_doSavePreOrder();
         });
     });
 
