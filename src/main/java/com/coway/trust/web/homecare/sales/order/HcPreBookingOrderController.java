@@ -24,7 +24,7 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
-import com.coway.trust.biz.sales.order.PreBookingOrderService;
+//import com.coway.trust.biz.sales.order.PreBookingOrderService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -59,9 +59,9 @@ public class HcPreBookingOrderController {
   @Resource(name = "hcPreBookingOrderService")
   private HcPreBookingOrderService hcPreBookingOrderService;
 
-  @Resource(name = "preBookingOrderService")
+/*  @Resource(name = "preBookingOrderService")
   private PreBookingOrderService preBookingOrderService;
-
+*/
   @Resource(name = "hcOrderListService")
   private HcOrderListService hcOrderListService;
 
