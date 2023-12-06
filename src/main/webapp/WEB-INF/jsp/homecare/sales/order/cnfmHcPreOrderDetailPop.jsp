@@ -57,13 +57,15 @@
 
     $(function(){
         $('#btnConfirm_RW').click(function() {
+
             if(fn_isExistESalesNo() == 'true') return false;
 
             if(fn_checkProductQuota() == true) return false;
 
-            if(checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val()) == false) return false;
+            if((checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val()))){
+              fn_doSavePreOrder();
+            }
 
-            fn_doSavePreOrder();
         });
     });
 
