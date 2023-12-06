@@ -99,7 +99,17 @@ public class AfterServiceResultForm {
 
   private int partnerCode;
 
-  public int getPartnerCode() {
+  private String memCode;
+
+  public String getMemCode() {
+	return memCode;
+}
+
+public void setMemCode(String memCode) {
+	this.memCode = memCode;
+}
+
+public int getPartnerCode() {
 	return partnerCode;
 }
 
