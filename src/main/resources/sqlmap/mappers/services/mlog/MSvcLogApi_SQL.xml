@@ -563,6 +563,7 @@
                                       rework_proj AS rework_proj,
                                       WATER_SRC_TYPE AS WATER_SRC_TYPE,
                                       prodCat AS prodCat,
+                                      PARTNER_CODE AS PARTNER_CODE,
                                       MEM_CODE as MEM_CODE
 
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
