@@ -259,6 +259,22 @@ public class DtAfterServiceJobDto {
 
   private BigDecimal longitude;
 
+  private int partnerCode;
+
+  private String memCode;
+
+	public int getPartnerCode() {
+	return partnerCode;
+}
+public String getMemCode() {
+	return memCode;
+}
+public void setPartnerCode(int partnerCode) {
+	this.partnerCode = partnerCode;
+}
+public void setMemCode(String memCode) {
+	this.memCode = memCode;
+}
 	public String getSerialChk() {
 		return serialChk;
 	}
