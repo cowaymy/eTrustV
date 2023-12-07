@@ -195,6 +195,8 @@ function btnGeneratePDF_Click(type){
 
         if($("#cmbDepartmentCode :selected").val() > 0){
 
+        	console.log('mem_up_id ' + $("#cmbDepartmentCode").val());
+        	console.log('deptCode ' + $("#cmbDepartmentCode").val());
             whereSQL += " AND ov.MEM_UP_ID = '"+$("#cmbDepartmentCode").val()+"'";
             deptCode = $("#cmbDepartmentCode :selected").text();
         }
@@ -216,13 +218,13 @@ function btnGeneratePDF_Click(type){
             $("#form #reportFileName").val("/logistics/HSUsedFilterListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
             //orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
-            orderBySQL += " ) ORDER BY cody_code,RN";
+            //orderBySQL += " ) ORDER BY cody_code,RN";
 
         }
         if($("#cmbListingType :selected").val() == 2){
             $("#form #reportFileName").val("/logistics/HSUsedFilterSummaryListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterSummaryListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-            orderBySQL += " ) ORDER BY cody_code,RN";
+            //orderBySQL += " ) ORDER BY cody_code,RN";
         }
 
 
@@ -236,6 +238,7 @@ function btnGeneratePDF_Click(type){
         $("#form #V_ORDERBYSQL").val(orderBySQL);
         $("#form #V_SELECTSQL").val("");
         $("#form #V_FULLSQL").val("");
+
 
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
         var option = {
