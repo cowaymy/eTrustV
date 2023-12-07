@@ -2215,7 +2215,7 @@
 //     }
 
     function fn_checkPreOrderSalesPerson(memId,memCode) {
-    	var isExist = true;
+    	var isExist = false;
     	Common.ajaxSync("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
     		if(memInfo == null) {
                 //Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
