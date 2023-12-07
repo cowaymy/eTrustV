@@ -1618,7 +1618,7 @@
              , T3.CODE_NAME
              , T5.SALES_ORD_ID
              , T5.SALES_ORD_NO
-             , T4.SRV_EXPR_DT
+             , MAX(T4.SRV_EXPR_DT) SRV_EXPR_DT
       FROM SAL0090D T1
       LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
       LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
@@ -1645,6 +1645,8 @@
                 #{item.paramVal, jdbcType=INTEGER}
       </foreach>
       </if>
+       GROUP BY T2.MEM_ID, T2.MEM_CODE, T2.NAME, T2.NRIC, T2.MEM_TYPE,
+		T3.CODE_NAME, T5.SALES_ORD_ID, T5.SALES_ORD_NO
     </select>
 
     <select id="selectSvcExpire" parameterType="Map" resultType="egovMap">
