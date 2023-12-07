@@ -1668,7 +1668,7 @@
 
 
     function fn_checkPreOrderSalesPerson(memId,memCode) {
-    	var isExist = true;
+    	var isExist = false;
         Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
             if(memInfo == null) {
                   isExist = false;
@@ -1684,7 +1684,7 @@
       }
 
       function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
-    	  var isExist = true;
+    	  var isExist = false;
         Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
             if(memInfo == null) {
                 isExist = false;

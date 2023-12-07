@@ -50,7 +50,7 @@
       if(fn_checkProductQuota() == true) return false;
 
       if((checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val()))){
-          fn_doSavePreOrder();
+    	  fn_doSavePreOrder();
         }
     });
   });
