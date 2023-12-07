@@ -336,4 +336,22 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		return membershipMapper.selectSalesPerson(params);
 	}
 
+	@Override
+	public EgovMap checkMembershipConfigurationSalesPerson(Map<String,Object> params){
+		params.put("module","SALES");
+		params.put("subModule","MEMBERSHIP");
+		params.put("paramCode","MEM_TYPE");
+
+		List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
+		if(!memType.isEmpty()){
+			params.put("memType", memType);
+		}
+
+		return membershipMapper.selectConfigurationSalesPerson(params);
+	}
+
+	@Override
+	public EgovMap selectSvcExpire (Map<String, Object> params){
+		return membershipMapper.selectSvcExpire(params);
+	}
 }

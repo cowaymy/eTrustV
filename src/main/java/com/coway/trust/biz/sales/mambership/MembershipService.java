@@ -104,4 +104,8 @@ public interface MembershipService {
 
 	EgovMap checkMembershipSalesPerson(Map<String, Object> params);
 
+	EgovMap selectSvcExpire(Map<String, Object> params);
+
+	EgovMap checkMembershipConfigurationSalesPerson(Map<String, Object> params);
+
 }

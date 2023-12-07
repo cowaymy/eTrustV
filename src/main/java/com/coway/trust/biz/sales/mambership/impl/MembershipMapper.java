@@ -162,4 +162,8 @@ public interface MembershipMapper {
 	int updateMembershipById(Map<String, Object> params);
 
 	EgovMap selectSalesPerson(Map<String, Object> params);
+
+	EgovMap selectConfigurationSalesPerson(Map<String, Object> params);
+
+	EgovMap selectSvcExpire(Map<String, Object> params);
 }

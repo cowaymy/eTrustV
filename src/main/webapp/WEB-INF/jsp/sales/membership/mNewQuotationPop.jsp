@@ -208,6 +208,7 @@ $(document).ready(function(){
 
 		$("#SAVE_SRV_CONFIG_ID").val(result.srvconfig.configId);
 		$("#coolingOffPeriod").html(result.basic.coolOffPriod);
+		$('#hiddenMonthExpired').val(result.srvExpiry.monthExpired);
 
 		var address = result.installation.instAddrDtl + " " + result.installation.instStreet + " " + result.installation.instArea + " " + result.installation.instPostcode + " "
 				+ result.installation.instCity + " " + result.installation.instState + " " + result.installation.instCountry;
@@ -1682,14 +1683,27 @@ $(document).ready(function(){
 	function checkSalesPersonValidForCreation(memId,memCode){
 		//Only Cater for IND customer type
 		var custTypeId= $('#CUST_TYPE_ID').val();
-
+		var monthExpired =  $('#hiddenMonthExpired').val();
+		var ordId = $("#ORD_ID").val();
 		if(custTypeId == '964'){
-			Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
-				if(memInfo == null){
-					Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
-					fn_goSalesPersonReset();
-				}
-			});
+			//ALLOW ALL CD
+			if(parseInt(monthExpired) >= 2){
+				Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+					if(memInfo == null){
+						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+						fn_goSalesPersonReset();
+					}
+				});
+			}
+			//ONLY ALLOW CONFIGURATION CD
+			else{
+				Common.ajax("GET", "/sales/membership/checkConfigurationSalesPerson", {memId:memId,memCode:memCode,salesOrdId:ordId}, function(memInfo) {
+					if(memInfo == null){
+						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+						fn_goSalesPersonReset();
+					}
+				});
+			}
 		}
 	}
 </script>
@@ -1733,6 +1747,7 @@ $(document).ready(function(){
     <input type="text" name="hiddenSalesPersonID"  id="hiddenSalesPersonID"/>
     <input type="text" name="hiddentxtBSFreq"  id="hiddentxtBSFreq"/>
     <input type="text" name="hiddenEarlyBirdPromo"  id="hiddenEarlyBirdPromo"/>
+    <input type="text" name="hiddenMonthExpired" id="hiddenMonthExpired"/>
 </div>
 </form>
 

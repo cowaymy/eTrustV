@@ -394,6 +394,7 @@ public class MembershipController {
 		EgovMap basic = null;
 		EgovMap installation = null;
 		EgovMap srvconfig = null;
+		EgovMap srvExpiry = null;
 
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
@@ -402,11 +403,13 @@ public class MembershipController {
 		basic = membershipService.selectMembershipFree_Basic(params);
 		installation = membershipService.selectMembershipFree_installation(params);
 		srvconfig = membershipService.selectMembershipFree_srvconfig(params);
+		srvExpiry = membershipService.selectSvcExpire(params);
 
 		Map<String, Object> map = new HashMap();
 		map.put("basic", basic);
 		map.put("installation", installation);
 		map.put("srvconfig", srvconfig);
+		map.put("srvExpiry", srvExpiry);
 
 		//logger.debug("srvconfig====>"+srvconfig.toString());
 
@@ -751,6 +754,13 @@ public class MembershipController {
 	public ResponseEntity<EgovMap> checkSalesPerson(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		EgovMap result = new EgovMap();
 		result = membershipService.checkMembershipSalesPerson(params);
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/checkConfigurationSalesPerson" ,method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkConfigurationSalesPerson(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		EgovMap result = new EgovMap();
+		result = membershipService.checkMembershipConfigurationSalesPerson(params);
 		return ResponseEntity.ok(result);
 	}
 }
