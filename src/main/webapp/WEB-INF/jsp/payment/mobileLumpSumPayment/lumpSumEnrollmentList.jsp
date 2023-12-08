@@ -507,8 +507,7 @@
 	             useGroupingPanel    : false,        //그룹핑 패널 사용
 	             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	             showRowNumColumn    : true,      //줄번호 칼럼 렌더러 출력
-
+	             showRowNumColumn    : false,      //줄번호 칼럼 렌더러 출력
 	             enableCellMerge : true,
 	             cellMergePolicy: "withNull",
 	             showRowBgStyles: false
