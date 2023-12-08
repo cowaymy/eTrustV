@@ -83,7 +83,6 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
   @Override
   public eSVMApiDto selectSvmOrdNo(eSVMApiForm param) throws Exception {
-//ADD CHECKING ON CONFIGURATION CODY
     if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
@@ -126,7 +125,6 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
       configParam.put("salesOrdId", rtn.getSalesOrdId());
       configParam.put("memCode", param.getUserNm());
-      configParam.put("memId", param.getRegId());
       EgovMap serviceExpiry = eSVMApiMapper.selectSvcExpire(configParam);
 
       if(serviceExpiry == null){
