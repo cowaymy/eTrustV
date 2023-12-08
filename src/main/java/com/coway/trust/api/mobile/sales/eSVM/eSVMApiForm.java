@@ -131,6 +131,7 @@ public class eSVMApiForm {
         params.put("atchFileOther3", vo.getAtchFileOther3());
         params.put("curAtchFileGrpId", vo.getCurAtchFileGrpId());
         params.put("progressStatus", vo.getProgressStatus());
+        params.put("userNm", vo.getUserNm());
         return params;
     }
 
@@ -273,6 +274,8 @@ public class eSVMApiForm {
     private String errorMsg;
 
     //CELESTE
+
+    private String userNm;
 
 	public String getFlag() {
         return flag;
@@ -1232,5 +1235,13 @@ public class eSVMApiForm {
 
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
+	}
+
+	public String getUserNm() {
+		return userNm;
+	}
+
+	public void setUserNm(String userNm) {
+		this.userNm = userNm;
 	}
 }

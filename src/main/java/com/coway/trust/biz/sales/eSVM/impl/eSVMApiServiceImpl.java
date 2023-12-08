@@ -83,7 +83,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
   @Override
   public eSVMApiDto selectSvmOrdNo(eSVMApiForm param) throws Exception {
-
+//ADD CHECKING ON CONFIGURATION CODY
     if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
@@ -111,6 +111,48 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
     } else {
       // fn_getDataInfo
       rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
+
+      //Check Configuration CD
+      //Get membership expiry month if any
+      Map<String, Object> configParam = new HashMap<String, Object>();
+      configParam.put("module","SALES");
+      configParam.put("subModule","MEMBERSHIP");
+      configParam.put("paramCode","MEM_TYPE");
+
+    	List<EgovMap> memType = eSVMApiMapper.selectSystemConfigurationParamVal(configParam);
+    	if(!memType.isEmpty()){
+    		configParam.put("memType", memType);
+    	}
+
+      configParam.put("salesOrdId", rtn.getSalesOrdId());
+      configParam.put("memCode", param.getUserNm());
+      configParam.put("memId", param.getRegId());
+      EgovMap serviceExpiry = eSVMApiMapper.selectSvcExpire(configParam);
+
+      if(serviceExpiry == null){
+          EgovMap salesPerson = eSVMApiMapper.selectSalesPerson(configParam);
+
+          if(salesPerson == null){
+        	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
+          }
+      }
+      else{
+    	  int monthExpired = Integer.parseInt(serviceExpiry.get("monthExpired").toString());
+
+    	  if(monthExpired < 2){
+              EgovMap salesConfigPerson = eSVMApiMapper.selectConfigurationSalesPerson(configParam);
+              if(salesConfigPerson == null){
+            	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
+              }
+    	  }
+    	  else{
+              EgovMap salesPerson = eSVMApiMapper.selectSalesPerson(configParam);
+              if(salesPerson == null){
+            	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
+              }
+    	  }
+      }
+      //Check Configuration CD End
 
       // [Membership Tab]
       if ("NEW".equals(param.getMode())) {
