@@ -208,7 +208,10 @@ $(document).ready(function(){
 
 		$("#SAVE_SRV_CONFIG_ID").val(result.srvconfig.configId);
 		$("#coolingOffPeriod").html(result.basic.coolOffPriod);
-		$('#hiddenMonthExpired').val(result.srvExpiry.monthExpired);
+
+		if(result.srvExpiry){
+			$('#hiddenMonthExpired').val(result.srvExpiry.monthExpired);
+		}
 
 		var address = result.installation.instAddrDtl + " " + result.installation.instStreet + " " + result.installation.instArea + " " + result.installation.instPostcode + " "
 				+ result.installation.instCity + " " + result.installation.instState + " " + result.installation.instCountry;
@@ -1686,18 +1689,18 @@ $(document).ready(function(){
 		var monthExpired =  $('#hiddenMonthExpired').val();
 		var ordId = $("#ORD_ID").val();
 		if(custTypeId == '964'){
-			//ALLOW ALL CD
-			if(parseInt(monthExpired) >= 2){
-				Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+			//ONLY ALLOW CONFIGURATION CD
+			if(parseInt(monthExpired) < 2){
+				Common.ajax("GET", "/sales/membership/checkConfigurationSalesPerson", {memId:memId,memCode:memCode,salesOrdId:ordId}, function(memInfo) {
 					if(memInfo == null){
 						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
 						fn_goSalesPersonReset();
 					}
 				});
 			}
-			//ONLY ALLOW CONFIGURATION CD
+			//ALLOW ALL CD
 			else{
-				Common.ajax("GET", "/sales/membership/checkConfigurationSalesPerson", {memId:memId,memCode:memCode,salesOrdId:ordId}, function(memInfo) {
+				Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
 					if(memInfo == null){
 						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
 						fn_goSalesPersonReset();
