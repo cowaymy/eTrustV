@@ -126,7 +126,8 @@
             BANK_CHG_MAPPING_ID  = #{fTrnscId},
             BANK_CHG_MAPPING_STUS_ID = 4,
             BANK_CHG_MAPPING_USER_ID = #{userId},
-            BANK_CHG_MAPPING_DT = SYSDATE
+            BANK_CHG_MAPPING_DT = SYSDATE,
+            REMARK = #{remark}
         WHERE
             <if test="groupSeqArr == null or groupSeqArr == ''">
                 GROUP_SEQ = #{groupSeq}
