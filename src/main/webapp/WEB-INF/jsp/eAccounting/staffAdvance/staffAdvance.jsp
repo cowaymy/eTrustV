@@ -908,11 +908,22 @@
     }
 
     function fn_calcMil() {
-        var distance = parseFloat($("#mileage").val());
+    	var distance = 0
+    	if($("#mileage").val() != null && $("#mileage").val() != "0" && $("#mileage").val() != ""){
+    		distance = parseFloat($("#mileage").val());
+    	}
         var prct = parseFloat(carMilePrct) / 100;
         var amt = Math.round((distance * parseFloat(carMileRate)) * prct);
+        var defaultAmt = 0;
 
-        $("#mileageAmt").val(amt.toFixed(2));
+        console.log("distance: " + distance);
+        if(distance != null || distance != "0"){
+        	$("#mileageAmt").val(amt.toFixed(2));
+        }
+        else {
+        	$("#mileageAmt").val(defaultAmt.toFixed(2));
+        }
+
         fn_calTotalAdv();
     }
 
@@ -1073,6 +1084,30 @@
         } */
         return true;
     }
+
+    $(function(){
+    	$("input[id=fileSelector]").change(function(){
+            // 필드 채워지면
+            if($(this).val() != ""){
+                // 확장자 체크
+                    var ext = $(this).val().split(".").pop().toLowerCase();
+                    if($.inArray(ext, ["zip"]) == -1){
+                        Common.alert("Only allows .zip file.");
+                        $(this).val("");
+                        return false;
+                    }
+
+                    // 용량 체크
+                    var fileSize = this.files[0].size;
+                    var maxSize = 1024 * 1024*5;
+                    if(fileSize > maxSize){
+                        Common.alert("Only allows Max file size : 5MB");
+                        $(this).val("");
+                        return false;
+                    }
+            }
+        })
+    });
 
     function fn_newSaveReq(mode) {
         $("#reqAdvType").attr("disabled", false);
