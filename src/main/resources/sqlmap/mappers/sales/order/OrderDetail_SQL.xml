@@ -125,6 +125,8 @@
                            <!-- , V2.VOUCHER_CODE -->
                            , V3.IS_EXST_CUST cust_status_id
                            , V10.code_name cust_status
+                            <!-- Added for PreBooking. By Fannie, 10/12/2023 -->
+                           , V11.DISC_WAIVE AS PREBOOKING_PERIOD
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -136,6 +138,8 @@
     LEFT JOIN SAL0261D V8 ON V8.SALES_ORD_ID = V2.SALES_ORD_ID
     LEFT JOIN SAL0340D V9 ON V2.SALES_DT  BETWEEN V9.KEYIN_START_DT AND V9.KEYIN_END_DT
     LEFT JOIN SYS0013M V10 ON V10.CODE_ID = V3.IS_EXST_CUST AND V10.CODE_MASTER_ID = 566
+    <!-- Added for PreBooking. By Fannie, 10/12/2023 -->
+    LEFT JOIN SAL0404M V11 ON V11.SALES_ORD_ID_OLD = V1.ORD_ID
     WHERE V1.ORD_ID = #{salesOrderId}
   </select>
 

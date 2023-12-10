@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.order;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,35 +15,24 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 
 public interface PreBookingOrderService {
+  public List<EgovMap> selectPreBookingOrderList(Map<String, Object> params);
 
-/*	List<EgovMap> selectPreBookingOrderList(Map<String, Object> params);
+	public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO);
 
-	int selectExistSofNo(Map<String, Object> params);
+	EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
 
-	void insertPreBookingOrder(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO);
+	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 
-	EgovMap selectPreBookingOrderInfo(Map<String, Object> params);
+	EgovMap checkOldOrderId(Map<String, Object> params);
 
-	void updatePreBookingOrder(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO);
+	public EgovMap selectPreBookingOrderInfo(Map<String, Object> params);
 
-	void updatePreBookingOrderStatus(PreBookingOrderListVO preBookingOrderListVO, SessionVO sessionVO);
+	public int updatePreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
-	void updatePreBookingOrderFailStatus(Map<String, Object> params, SessionVO sessionVO);
+	List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
 
-	List<EgovMap> selectPreBookingOrderFailStatus(Map<String, Object> params);
+	EgovMap checkPreBookSalesPerson(Map<String, Object> params);
 
-	int selectExistingMember(Map<String, Object> params);
-
-	List<EgovMap> getAttachList(Map<String, Object> params);
-
-	int selRcdTms(Map<String, Object> params);
-
-	int selPreBookingOrdId(Map<String, Object> params);
-
-	EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params);
-
-	EgovMap checkOldOrderIdICareEKeyIn(Map<String, Object> params);*/
-
-	EgovMap checkExtradeSchedule();
+  EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 
 }

@@ -14,78 +14,23 @@
 
 </style>
 <script type="text/javaScript">
-    var TODAY_DD      = "${toDay}";
-    var BEFORE_DD = "${bfDay}";
-    var blockDtFrom = "${hsBlockDtFrom}";
-    var blockDtTo = "${hsBlockDtTo}";
-
-    //파일 저장 캐시
-    var myFileCaches = {};
-
-    //AUIGrid 생성 후 반환 ID
-    var listGiftGridID;
-    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
-    var atchFileGrpId = 0;
-    var alwSale = 1;
-    var voucherAppliedStatus = 0;
-    var voucherAppliedCode = "";
-    var voucherAppliedEmail = "";
-    var voucherPromotionId = [];
-
-    var codeList_19 = [];
-    <c:forEach var="obj" items="${codeList_19}">
-    codeList_19.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
 
     var codeList_325 = [];
     <c:forEach var="obj" items="${codeList_325}">
     codeList_325.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
-    var codeList_415 = [];
-    <c:forEach var="obj" items="${codeList_415}">
-    codeList_415.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
-    var codeList_416 = [];
-    <c:forEach var="obj" items="${codeList_416}">
-    codeList_416.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
-    var branchCdList_1 = [];
-    <c:forEach var="obj" items="${branchCdList_1}">
-    branchCdList_1.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
-    var branchCdList_5 = [];
-    <c:forEach var="obj" items="${branchCdList_5}">
-    branchCdList_5.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
-    var codeList_562 = [];
-    codeList_562.push({codeId:"0", codeName:"No", code:"No"});
-    <c:forEach var="obj" items="${codeList_562}">
-    codeList_562.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
-    var checkFileValid = true;
-
     $(document).ready(function(){
+    	doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
 
-        createAUIGridStk();
+        $('#exTrade option[value="1"]').attr('selected', 'selected');
+        $('#btnRltdNoEKeyIn').removeClass("blind");
 
-        doDefCombo(appTypeData, '' ,'appType', 'S', '');           // Status 생성
-        doDefCombo(codeList_19, '', 'rentPayMode', 'S', '');       // Common Code
-        doDefCombo(codeList_415, '', 'corpCustType', 'S', '');     // Common Code
-        doDefCombo(codeList_416, '', 'agreementType', 'S', '');  // Common Code
-        doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
-        doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
-        doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
-        doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProd', 'S', 'fn_setOptGrpClass');
 
         $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
-        $("#sofNo").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
+
         $('#nric').keypress(function (e) {
             var regex = new RegExp("^[a-zA-Z0-9\s]+$");
             var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
@@ -95,50 +40,15 @@
             e.preventDefault();
             return false;
         });
-
-        // Moblie Popup Setting
-        Common.setMobilePopup(true, false,'');
-
     });
 
-    function createAUIGridStk() {
-
-        //AUIGrid
-        var columnLayoutGft = [
-            { headerText : "Product CD",   dataField : "itmcd",              width : 180 }
-          , { headerText : "Product Name", dataField : "itmname" }
-          , { headerText : "Product QTY",  dataField : "promoFreeGiftQty",   width : 180 }
-          , { headerText : "itmid",        dataField : "promoFreeGiftStkId", visible : false}
-          , { headerText : "promoItmId",   dataField : "promoItmId",         visible : false}
-          ];
-
-
-        var listGridPros = {
-            usePaging           : true,
-            pageRowCount        : 10,
-            editable            : false,
-            fixedColumnCount    : 1,
-            showStateColumn     : false,
-            displayTreeOpen     : false,
-            softRemoveRowMode   : false,
-            headerHeight        : 30,
-            useGroupingPanel    : false,
-            skipReadonlyColumns : true,
-            wrapSelectionMove   : true,
-            showRowNumColumn    : true,
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
-        };
-    }
-
     function disableSaveButton() {
-    	$('#btnSave').unbind()
+    	$('#btnPreBookingSave').unbind();
     }
 
     function enableSaveButton() {
-    	disableSaveButton()
-    	$('#btnSave').click(function() {
-
+    	disableSaveButton();
+    	$('#btnPreBookingSave').click(function() {
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
@@ -149,44 +59,30 @@
                 return false;
             }
 
-            if(!fn_validPaymentInfo()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validFile()) {
-                $('#aTabFL').click();
-                return false;
-            }
-
-            if(fn_isExistESalesNo() == 'true') return false;
-
-            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+            fn_doSavePreBookingOrder();
         });
     }
 
     $(function(){
     	$('#btnRltdNoEKeyIn').click(function() {
-    		  //** Start exTrade Neo to Neo Plus **//
-              //  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod : $('#ordProudct').val()}, null, true);
-    		  //** Start exTrade Neo to Neo Plus **//
-    		  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            $("#hiddenIsPreBooking").val('1');
+    		Common.popupDiv("/sales/order/preBooking/preBookPrevOrderNoPop.do", {custId : $('#hiddenCustId').val(), isPreBooking:  $('#hiddenIsPreBooking').val()}, null, true);
     	});
 
-        $('#btnConfirm').click(function() {
+       $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
-            if(fn_isExistESalesNo() == 'true') return false;
-
             $('#nric').prop("readonly", true).addClass("readonly");
-            $('#sofNo').prop("readonly", true).addClass("readonly");
             $('#btnConfirm').addClass("blind");
             $('#btnClear').addClass("blind");
+            $("#btnPreBookingSave").show();
 
             fn_loadCustomer(null, $('#nric').val());
         });
+
         $('#nric').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
+
                 if(fn_isExistESalesNo() == 'true') return false;
 
                 $('#nric').prop("readonly", true).addClass("readonly");
@@ -197,19 +93,7 @@
                 fn_loadCustomer(null, $('#nric').val());
             }
         });
-        $('#sofNo').keydown(function (event) {
-            if (event.which === 13) {
-                if(!fn_validConfirm())  return false;
-                if(fn_isExistESalesNo() == 'true') return false;
 
-                $('#nric').prop("readonly", true).addClass("readonly");
-                $('#sofNo').prop("readonly", true).addClass("readonly");
-                $('#btnConfirm').addClass("blind");
-                $('#btnClear').addClass("blind");
-
-                fn_loadCustomer(null, $('#nric').val());
-            }
-        });
         $('#chkSameCntc').click(function() {
             if($('#chkSameCntc').is(":checked")) {
                 $('#scAnothCntc').addClass("blind");
@@ -218,206 +102,36 @@
                 $('#scAnothCntc').removeClass("blind");
             }
         });
+
         $('#btnNewCntc').click(function() {
             Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
         });
+
         $('#btnSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_CNTC"}, null, true);
         });
+
         $('#btnNewInstAddr').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_INST_ADD"}, null, true);
         });
+
         $('#btnSelInstAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_INST_ADD"}, null, true);
         });
+
         $('#billNewAddrBtn').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_BILL_ADD"}, null , true);
         });
+
         $('#billSelAddrBtn').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_BILL_ADD"}, null, true);
         });
-        $('#billGrpBtn').click(function() {
-            Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_BILL_GRP"}, null, true);
-        });
-        $('#appType').change(function() {
-            $('#scPayInfo').addClass("blind");
-
-            //CLEAR RENTAL PAY SETTING
-            $('#thrdParty').prop("checked", false);
-
-            fn_clearRentPayMode();
-            fn_clearRentPay3thParty();
-
-            //CLEAR BILLING GROUP
-            fn_clearBillGroup();
-
-            fn_clearSales();
-
-            $('[name="advPay"]').prop("disabled", true);
-
-            var idx    = $("#appType option:selected").index();
-            var selVal = $("#appType").val();
-
-            if(idx > 0) {
-                if(FormUtil.isEmpty($('#hiddenCustId').val())) {
-                    $('#appType').val('');
-                    Common.alert('<b>Please select customer first.</b>');
-
-                    $('#aTabCS').click();
-                }
-                else {
-                    switch(selVal) {
-                        case '66' : //RENTAL
-                            $('#scPayInfo').removeClass("blind");
-                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
-
-                            appSubType = '367';
-
-                            var vCustType = $("#hiddenTypeId").val();
-                            console.log("vCustType : " + vCustType);
-                            if (vCustType == '965' ){
-                                $("#corpCustType").val('').removeAttr("disabled");
-                                $("#agreementType").val('').removeAttr("disabled");
-                            }
-                            else{
-                                $("#corpCustType").val('').prop("disabled", true);
-                                $("#agreementType").val('').prop("disabled", true);
-                            }
-                            break;
-
-                        case '67' : //OUTRIGHT
-                            appSubType = '368';
-                            break;
-
-                        case '68' : //INSTALLMENT
-                            $('#installDur').removeAttr("readonly").removeClass("readonly");
-
-                            appSubType = '369';
-                            break;
-
-                        case '1412' : //Outright Plus
-                            $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
-
-                            $('#scPayInfo').removeClass("blind");
-
-                            appSubType = '370';
-                            break;
-
-                        case '142' : //Sponsor
-                            appSubType = '371';
-                            break;
-
-                        case '143' : //Service
-                            appSubType = '372';
-                            break;
-
-                        case '144' : //Education
-                            appSubType = '373';
-                            break;
-                        case '145' : //Free Trial
-                            appSubType = '374';
-                            break;
-
-                        default :
-                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
-                             break;
-                    }
-
-                    var pType = $("#appType").val() == '66' ? '1' : '2';
-                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-
-                    $('#ordProudct ').removeAttr("disabled");
-                }
-            }
-            else {
-                $('#srvPacId option').remove();
-            }
-
-            $('#ordProudct option').remove();
-            $('#ordProudct optgroup').remove();
-        });
-
-        $('#thrdPartyAddCustBtn').click(function() {
-            Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "PRE_ORD_3PARTY"}, null, true);
-        });
-
-        $('#thrdParty').click(function(event) {
-            fn_clearRentPayMode();
-            fn_clearRentPay3thParty();
-            fn_clearRentPaySetCRC();
-            fn_clearRentPaySetDD();
-
-            if($('#thrdParty').is(":checked")) {
-                $('#sctThrdParty').removeClass("blind");
-            }
-            else {
-                $('#sctThrdParty').addClass("blind");
-            }
-        });
-
-        $('#thrdPartyId').change(function(event) {
-            fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
-        });
-
-        $('#thrdPartyId').keydown(function(event) {
-            if(event.which === 13) {    //enter
-                fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
-            }
-        });
-
-        $('#thrdPartyBtn').click(function() {
-            Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
-        });
-
-        $('#rentPayMode').change(function() {
-            var rentPayModeIdx = $("#rentPayMode option:selected").index();
-            var rentPayModeVal = $("#rentPayMode").val();
-
-            if(rentPayModeIdx > 0) {
-                if(rentPayModeVal == '133' || rentPayModeVal == '134') {
-
-                    Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
-                    fn_clearRentPayMode();
-                }
-                else {
-                    if(rentPayModeVal == '131') {
-                        if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                            Common.alert('<b>Please select the third party first.</b>');
-                        }
-                        else {
-                            $('#sctCrCard').removeClass("blind");
-                        }
-                    }
-                    else if(rentPayModeVal == '132') {
-                        if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                            Common.alert('<b>Please select the third party first.</b>');
-                        }
-                        else {
-                            $('#sctDirectDebit').removeClass("blind");
-                        }
-                    }
-                }
-            }
-        });
-
-        $('#srvPacId').change(function() {
-            $('#ordProudct option').remove();
-            $('#ordProudct optgroup').remove();
-
-            var idx    = $("#srvPacId option:selected").index();
-            var selVal = $("#srvPacId").val();
-
-            if(idx > 0) {
-                var stkType = $("#appType").val() == '66' ? '1' : '2';
-
-                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
-            }
-        });
 
         $('#exTrade').change(function() {
+
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
-            $('#relatedNo').val("");
+           // $('#relatedOrdNo').val("");
             $('#isReturnExtrade').prop("checked", false);
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
@@ -432,12 +146,7 @@
                     var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
                     var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
 
-                    console.log("todayDD: " + todayDD);
-                    console.log("blockDtFrom : " + blockDtFrom);
-                    console.log("blockDtTo : " + blockDtTo);
-
-                     if(todayDD >= blockDtFrom || todayDD <= blockDtTo) {
-                    	 // Block if date > 22th of the month
+                     if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
                          var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                          return;
@@ -445,89 +154,25 @@
                }
             }
             else {
-                $('#relatedNo').val('');
+                $('#relatedOrdNo').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
 
             $('#isReturnExtrade').attr("disabled",true);
-            $('#ordProudct').val('');
+            $('#ordProd').val('');
             $('#speclInstct').val('');
-
-
         });
-        $('#ordProudct').change(function() {
+
+        $('#ordProd').change(function() {
             disableSaveButton()
 
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>* Please select an Ex-Trade.</b>");
-                $('#ordProudct').val('');
+                $('#ordProd').val('');
                 return;
             }
 
-            if(FormUtil.isEmpty($('#ordProudct').val())) {
-                $('#ordPromo option').remove();
-                $("#ordPrice").val('');
-                $("#ordPv").val('');
-                $("#ordPvGST").val('');
-                $("#ordRentalFees").val('');
-                $("#ordPriceId").val('');
-
-                $("#normalOrdPrice").val('');
-                $("#normalOrdPv").val('');
-                $("#normalOrdRentalFees").val('');
-                $("#normalOrdPriceId").val('');
-
-                $("#promoDiscPeriodTp").val('');
-                $("#promoDiscPeriod").val('');
-
-                return;
-            }
-
-            AUIGrid.clearGridData(listGiftGridID);
-
-            var appTypeIdx = $("#appType option:selected").index();
-            var appTypeVal = $("#appType").val();
-            var custTypeVal= $("#hiddenTypeId").val();
-            var stkIdx     = $("#ordProudct option:selected").index();
-            var stkIdVal   = $("#ordProudct").val();
-            var empChk     = 0;
             var exTrade    = $("#exTrade").val();
-            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
-
-            if(appTypeVal == '66')
-           {
-                srvPacId   = $('#srvPacId').val();
-           }
-
-            if(stkIdx > 0) {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
-                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
-            }
-
-            fn_loadProductComponent(appTypeVal, stkIdVal);
-            setTimeout(function() { fn_check(0) }, 200);
-
-        });
-        $('#ordPromo').change(function() {
-        	disableSaveButton();
-
-            AUIGrid.clearGridData(listGiftGridID);
-
-            var appTypeIdx = $("#appType option:selected").index();
-            var appTypeVal = $("#appType").val();
-            var stkIdIdx   = $("#ordProudct option:selected").index();
-            var stkIdVal   = $("#ordProudct").val();
-            var promoIdIdx = $("#ordPromo option:selected").index();
-            var promoIdVal = $("#ordPromo").val();
-            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
-
-            if(promoIdIdx > 0 && promoIdVal != '0') {
-                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
-                fn_selectPromotionFreeGiftListForList2(promoIdVal);
-            }
-            else {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
-            }
         });
 
         $('#salesmanCd').change(function(event) {
@@ -552,646 +197,43 @@
         $('#memBtn').click(function() {
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
-        $('[name="grpOpt"]').click(function() {
-            fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
-        });
-
-        $('#btnCal').click(function() {
-
-            var appTypeName  = $('#appType').val();
-            var productName  = $('#ordProudct option:selected').text();
-            //Amount before GST
-            var oldPrice     = $('#normalOrdPrice').val();
-            var newPrice     = $('#ordPrice').val();
-            var oldRental    = $('#normalOrdPrice').val();
-            var newRental    = $('#ordRentalFees').val();
-            var oldPv        = $('#ordPv').val();
-            //Amount of GST applied
-            var oldPriceGST  = fn_calcGst(oldPrice);
-            var newPriceGST  = fn_calcGst(newPrice);
-            var oldRentalGST = fn_calcGst(oldRental);
-            var newRentalGST = fn_calcGst(newRental);
-            var newPv        = $('#ordPvGST').val();
-
-            var msg = '';
-
-            msg += 'Application Type : '+appTypeName +'<br>';
-            msg += 'Product          : '+productName +'<br>';
-            msg += 'Price(RPF)       : '+newPriceGST +'<br>';
-            msg += 'Normal Rental    : '+oldRentalGST+'<br>';
-            msg += 'Promotion        : '+newRentalGST+'<br>';
-            msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
-
-            fn_excludeGstAmt();
-
-            Common.alert('GST Amount' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
-        });
-        $('#gstChk').change(function(event) {
-            if($("#gstChk").val() == '1') {
-                $('#pBtnCal').removeClass("blind");
-            }
-            else {
-                $('#pBtnCal').addClass("blind");
-
-                var appTypeVal = $("#appType").val();
-                var stkIdVal   = $("#ordProudct").val();
-                var promoIdVal = $("#ordPromo").val();
-
-                fn_loadProductPrice(appTypeVal, stkIdVal,srvPacId);
-                if(FormUtil.isNotEmpty(promoIdVal)) {
-                    fn_loadPromotionPrice(promoIdVal, stkIdVal,srvPacId);
-                }
-            }
-        });
-
-        $('#addCreditCardBtn').click(function() {
-            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            var custNric = $('#thrdParty').is(":checked") ? "" : $('#nric').val();
-            Common.popupDiv("/sales/customer/customerCreditCardeSalesAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD", nric : custNric}, null, true);
-        });
-
-        $('#selCreditCardBtn').click(function() {
-
-            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
-        });
-
-        //Payment Channel - Add New Bank Account
-        $('#btnAddBankAccount').click(function() {
-            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
-        });
-
-        //Payment Channel - Select Another Bank Account
-        $('#btnSelBankAccount').click(function() {
-            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"});
-        });
-
-        $('#sofFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[1] != null){
-                delete myFileCaches[1];
-            }else if(file != null){
-                myFileCaches[1] = {file:file};
-            }
-
-            var msg = '';
-            if(file.name.length > 30){
-            	msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            	msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-            	msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-            	myFileCaches[1].file['checkFileValid'] = false;
-            	Common.alert(msg);
-            }
-            else{
-            	myFileCaches[1].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#nricFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[2] != null){
-                delete myFileCaches[2];
-            }else if(file != null){
-                myFileCaches[2] = {file:file};
-            }
-
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[2].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#payFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[3] != null){
-                delete myFileCaches[3];
-            }else if(file != null){
-                myFileCaches[3] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[3].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[3].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#trFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[4] != null){
-                delete myFileCaches[4];
-            }else if(file != null){
-                myFileCaches[4] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[4].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[4].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#otherFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[5] != null){
-                delete myFileCaches[5];
-            }else if(file != null){
-                myFileCaches[5] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[5].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[5].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#otherFile2').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[6] != null){
-                delete myFileCaches[6];
-            }else if(file != null){
-                myFileCaches[6] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[6].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[6].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#sofTncFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[7] != null){
-                delete myFileCaches[7];
-            }else if(file != null){
-                myFileCaches[7] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[7].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[7].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#msofFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[8] != null){
-                delete myFileCaches[8];
-            }else if(file != null){
-                myFileCaches[8] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[8].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[8].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
-
-        $('#msofTncFile').change(function(evt) {
-            var file = evt.target.files[0];
-            if(file == null && myFileCaches[9] != null){
-                delete myFileCaches[9];
-            }else if(file != null){
-                myFileCaches[9] = {file:file};
-            }
-            var msg = '';
-            if(file.name.length > 30){
-                msg += "*File name wording should be not more than 30 alphabet.<br>";
-            }
-
-            var fileType = file.type.split('/');
-            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-            }
-
-            if(file.size > 2000000){
-                msg += "*Only allow picture with less than 2MB.<br>";
-            }
-            if(msg != null && msg != ''){
-                myFileCaches[9].file['checkFileValid'] = false;
-                Common.alert(msg);
-            }
-            else{
-                myFileCaches[9].file['checkFileValid'] = true;
-            }
-            console.log(myFileCaches);
-        });
 
         enableSaveButton();
     });
 
-    function fn_loadBankAccountPop(bankAccId) {
-        fn_clearRentPaySetDD();
-        fn_loadBankAccount(bankAccId);
-
-        $('#sctDirectDebit').removeClass("blind");
-
-        if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
-            fn_clearRentPaySetDD();
-            $('#sctDirectDebit').removeClass("blind");
-            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
-        }
-    }
-
-    function fn_loadCreditCard2(custCrcId) {
-        Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : custCrcId}, function(rsltInfo) {
-            if(rsltInfo != null) {
-                $("#hiddenRentPayCRCId").val(rsltInfo.custCrcId);
-                $("#rentPayCRCNo").val(rsltInfo.decryptCRCNoShow);
-                $("#hiddenRentPayEncryptCRCNoId").val(rsltInfo.custCrcNo);
-                $("#rentPayCRCType").val(rsltInfo.code);
-                $("#rentPayCRCName").val(rsltInfo.custCrcOwner);
-                $("#rentPayCRCExpiry").val(rsltInfo.custCrcExpr);
-                $("#rentPayCRCBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankId);
-                $("#hiddenRentPayCRCBankId").val(rsltInfo.custCrcBankId);
-                $("#rentPayCRCCardType").val(rsltInfo.codeName);
-            }
-        });
-    }
-
-    function fn_loadThirdParty(custId, sMethd) {
-        fn_clearRentPayMode();
-        fn_clearRentPay3thParty();
-        fn_clearRentPaySetCRC();
-        fn_clearRentPaySetDD();
-
-        if(custId != $('#hiddenCustId').val()) {
-            Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
-
-            if(result != null && result.length == 1) {
-                var custInfo = result[0];
-
-                $('#hiddenThrdPartyId').val(custInfo.custId)
-                $('#thrdPartyId').val(custInfo.custId)
-                $('#thrdPartyType').val(custInfo.codeName1)
-                $('#thrdPartyName').val(custInfo.name)
-                $('#thrdPartyNric').val(custInfo.nric)
-
-                $('#thrdPartyId').removeClass("readonly");
-                $('#thrdPartyType').removeClass("readonly");
-                $('#thrdPartyName').removeClass("readonly");
-                $('#thrdPartyNric').removeClass("readonly");
-            }
-            else {
-                if(sMethd == 2) {
-                    Common.alert('<b>Third party not found.<br />'
-                               + 'Your input third party ID : ' + custId + '</b>');
-                }
-            }
-        });
-        }
-        else {
-            Common.alert('<b>Third party and customer cannot be same person/company.<br />'
-                       + 'Your input third party ID : ' + custId + '</b>');
-        }
-
-        $('#sctThrdParty').removeClass("blind");
-    }
-
-    function fn_excludeGstAmt() {
-        //Amount before GST
-        var oldPrice     = $('#normalOrdPrice').val();
-        var newPrice     = $('#ordPrice').val();
-        var oldRental    = $('#normalOrdRentalFees').val();
-        var newRental    = $('#ordRentalFees').val();
-        var oldPv        = $('#ordPv').val();
-        //Amount of GST applied
-        var oldPriceGST  = fn_calcGst(oldPrice);
-        var newPriceGST  = fn_calcGst(newPrice);
-        var oldRentalGST = fn_calcGst(oldRental);
-        var newRentalGST = fn_calcGst(newRental);
-        var newPv        = $('#ordPvGST').val();
-
-        $('#normalOrdPrice').val(oldPriceGST);
-        $('#ordPrice').val(newPriceGST);
-        $('#normalOrdRentalFees').val(oldRentalGST);
-        $('#ordRentalFees').val(newRentalGST);
-        $('#ordPv').val(newPv);
-
-        $('#pBtnCal').addClass("blind");
-    }
-
-    function fn_isExistESalesNo() {
-        var isExist = false, msg = "";
-
-        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", {selType : $('#selType').val() , sofNo : $('#sofNo').val().trim() }, function(rsltInfo) {
-
-            if(rsltInfo != null) {
-                isExist = rsltInfo.isExist;
-            }
-            console.log('isExistSalesNo:'+isExist);
-        });
-
-        if(isExist == 'true') Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* this Sales has posted, no amendment allow</b>");
-
-        return isExist;
-    }
-
-    function fn_isExistMember() {
-        var isExist = false, msg = "";
-
-        Common.ajaxSync("GET", "/sales/order/selectExistingMember.do", $("#frmCustSearch").serialize(), function(rsltInfo) {
-            if(rsltInfo != null) {
-                isExist = rsltInfo.isExist;
-            }
-            console.log('isExistMember:'+isExist);
-        });
-
-        if(isExist == 'true') Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* The member is our existing HP/Cody/Staff/CT.</b>");
-
-        return isExist;
-    }
-
-    function fn_validPaymentInfo() {
-        var isValid = true, msg = "";
-
-        var appTypeIdx = $("#appType option:selected").index();
-        var appTypeVal = $("#appType").val();
-        var rentPayModeIdx = $("#rentPayMode option:selected").index();
-        var rentPayModeVal = $("#rentPayMode").val();
-        var grpOptSelYN = (!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) ? false : true;
-        var grpOptVal = $(':radio[name="grpOpt"]:checked').val(); //new, exist
-
-        if(appTypeIdx > 0 && appTypeVal == '66') {
-            if($('#thrdParty').is(":checked")) {
-                if(FormUtil.checkReqValue($('#hiddenThrdPartyId'))) {
-                    isValid = false;
-                    msg += "* Please select the third party.<br>";
-                }
-            }
-
-            if(rentPayModeIdx <= 0) {
-                isValid = false;
-                msg += "* Please select the rental paymode.<br>";
-            }
-            else {
-                if(rentPayModeVal == '131') {
-                    if(FormUtil.checkReqValue($('#hiddenRentPayCRCId'))) {
-                        isValid = false;
-                        msg += "* Please select a credit card.<br>";
-                    }
-                    else if(FormUtil.checkReqValue($('#hiddenRentPayCRCBankId')) || $('#hiddenRentPayCRCBankId').val() == '0') {
-                        isValid = false;
-                        msg += "* Invalid credit card issue bank.<br>";
-                    }
-                }
-                else if(rentPayModeVal == '132') {
-                    if(FormUtil.checkReqValue($('#hiddenRentPayBankAccID'))) {
-                        isValid = false;
-                        msg += "* Please select a bank account.<br>";
-                    }
-                    else if(FormUtil.checkReqValue($('#hiddenAccBankId')) || $('#hiddenRentPayCRCBankId').val() == '0') {
-                        isValid = false;
-                        msg += "* Invalid bank account issue bank.<br>";
-                    }
-                }
-            }
-
-            if(!grpOptSelYN) {
-                isValid = false;
-                msg += "* Please select the group option.<br>";
-            }
-            else {
-
-                if(grpOptVal == 'exist') {
-                    if(FormUtil.checkReqValue($('#hiddenBillGrpId'))) {
-                        isValid = false;
-                        msg += "* Please select a billing group.<br>";
-                    }
-                }
-                else {
-                    if(!$("#billMthdSms" ).is(":checked") && !$("#billMthdPost" ).is(":checked") && !$("#billMthdEstm" ).is(":checked")) {
-                        isValid = false;
-                        msg += "* Please select at least one billing method.<br>";
-                    }
-                    else {
-                        if($("#typeId").val() == '965' && $("#billMthdSms" ).is(":checked")) {
-                            isValid = false;
-                            msg += "* SMS billing method is not allow for company type customer.<br>";
-                        }
-
-                        if($("#billMthdEstm" ).is(":checked")) {
-                            if(FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
-                                isValid = false;
-                                msg += "* Please key in the email address.<br>";
-                            }
-                            else {
-                                if(FormUtil.checkEmail($('#billMthdEmailTxt1').val())) {
-                                    isValid = false;
-                                    msg += "* Invalid email address.<br>";
-                                }
-                            }
-                            if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
-                                isValid = false;
-                                msg += "* Invalid email address.<br>";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
-        return isValid;
-    }
 
     function fn_validOrderInfo() {
         var isValid = true, msg = "";
 
-        var appTypeIdx = $("#appType option:selected").index();
-        var appTypeVal = $("#appType").val();
         var custType = $("#hiddenTypeId").val();
         var exTrade = $("#exTrade").val();
 
-        if(appTypeIdx <= 0) {
-            isValid = false;
-            msg += "* Please select an application type.<br>";
-        }
-        else {
-            if(appTypeVal == '68' || appTypeVal == '1412') {
-                if(FormUtil.checkReqValue($('#installDur'))) {
-                    isValid = false;
-                    msg += "* Please key in the installment duration.<br>";
-                }
-            }
-
-            if(appTypeVal == '66') {
-                if($(':radio[name="advPay"]:checked').val() != '1' && $(':radio[name="advPay"]:checked').val() != '0') {
-                    isValid = false;
-                    msg += "* Please select advance rental payment.<br>";
-                }
-            }
-        }
-
-        if($("#ordProudct option:selected").index() <= 0) {
+        if($("#ordProd option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select a product.<br>";
         }
 
         if(FormUtil.checkReqValue($('#salesmanCd')) && FormUtil.checkReqValue($('#salesmanNm'))) {
-            if(appTypeIdx > 0 && appTypeVal != 143) {
                 isValid = false;
                 msg += "* Please select a salesman.<br>";
-            }
-        }
-
-        if($("#ordPromo option:selected").index() <= 0) {
-            isValid = false;
-            msg += "* Please select a promotion.<br>";
         }
 
         if(exTrade == '1' || exTrade == '2') {
-            if(FormUtil.checkReqValue($('#relatedNo'))) {
+            if(FormUtil.checkReqValue($('#relatedOrdNo'))) {
                 isValid = false;
                 msg += "* Please select old order no.<br>";
             }
         }
 
-        if($('#voucherType').val() == ""){
-        	 isValid = false;
-             msg += "* Please select voucher type.<br>";
-        }
-
-        if($('#voucherType').val() != "" && $('#voucherType').val() > 0){
-        	if(voucherAppliedStatus == 0){
-        	 isValid = false;
-             msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
-        	}
-        }
-
-        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
+        if(!isValid)
+        	Common.alert("Save Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         return isValid;
     }
 
     function fn_validConfirm() {
         var isValid = true, msg = "";
+
         var nric = $('#nric').val();
-        var sofNo = $('#sofNo').val();
 
         if(FormUtil.checkReqValue($('#nric'))) {
             isValid = false;
@@ -1199,31 +241,22 @@
         }else{
         	//check if NRIC is Numeric, else company number (includes alphabet)
         	var nric_trim = $("#nric").val().replace(/ |-|_/g,'');
-            console.log ("nric_trim :: "+ nric_trim);
+
             if($.isNumeric($("#nric_trim").val())){
                 var dob = Number($('#nric').val().substr(0,2));
                 var nowDt = new Date();
                 var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
                 var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
-                console.log(age);
+
                 if(age < 18) {
-                    Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
-                    $('#scPreOrdArea').addClass("blind");
+                    Common.alert("Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+                    $('#scPreBookingOrdArea').addClass("blind");
                     return false;
                 }
             }
         }
 
-        if(FormUtil.checkReqValue($('#sofNo'))) {
-            isValid = false;
-            msg += "* Please key in eSales(SOF) No.<br>";
-        }else if($('#sofNo').val().substring(0,3) != "AAA"){
-        	isValid = false;
-            msg += "* Please key in <b>AAA</b> at SOF No";
-        }
-
-        if(!isValid) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
+        if(!isValid) Common.alert("Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         return isValid;
     }
 
@@ -1233,11 +266,6 @@
         if(FormUtil.checkReqValue($('#hiddenCustId'))) {
             isValid = false;
             msg += "* Please select a customer.<br>";
-        }
-
-        if($('#appType').val() == '1412' && $('#hiddenTypeId').val() == '965') {
-            isValid = false;
-            msg = "* Please select an individual customer<br>(Outright Plus).<br>";
         }
 
         if(FormUtil.checkReqValue($('#hiddenCustCntcId'))) {
@@ -1250,245 +278,74 @@
             msg += "* Please select an installation address.<br>";
         }
 
-        if($("#dscBrnchId option:selected").index() <= 0) {
+        if($('#hiddenTypeId').val() == '964') {
             isValid = false;
-            msg += "* Please select the DSC branch.<br>";
+            msg = "* Please select an individual customer<br>";
         }
 
-        if($("#keyinBrnchId option:selected").index() <= 0) {
-            isValid = false;
-            msg += "* Please select the Posting branch.<br>";
-        }
-
-        if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
-            isValid = false;
-            msg += "* Please select prefer install date.<br>";
-        }
-
-        if(FormUtil.isEmpty($('#prefInstTm').val().trim())) {
-            isValid = false;
-            msg += "* Please select prefer install time.<br>";
-        }
-
-        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
+        if(!isValid) Common.alert("Save Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         return isValid;
     }
 
-    function fn_validFile() {
-        var isValid = true, msg = "";
-        if(FormUtil.isEmpty($('#sofFile').val().trim())) {
-            isValid = false;
-            msg += "* Please upload copy of SOF<br>";
-        }
-        if(FormUtil.isEmpty($('#nricFile').val().trim())) {
-            isValid = false;
-            msg += "* Please upload copy of NRIC<br>";
-        }
-
-        $.each(myFileCaches, function(i, j) {
-             if(myFileCaches[i].file.checkFileValid == false){
-            	 isValid = false;
-                msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
-            }
-        });
-
-        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
-        return isValid;
-    }
-
-    function fn_checkProductQuota() {
-        var exceedQuota = false, msg = "";
-
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $('#ordProudct').val() , promoId : $('#ordPromo').val() }, function(result) {
-        	if(result != null) exceedQuota = true;
-        });
-
-        if(exceedQuota == true) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
-
-        return exceedQuota;
-    }
-
-
-    function fn_doSavePreOrder() {
-        var vAppType    = $('#appType').val();
-        var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
-        var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
-        var vBankID     = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCBankId').val() : $('#rentPayMode').val() == '132' ? $('#hiddenAccBankId').val() : 0;
-        var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
-        var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-        var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-        var vIsReturnExtrade = "";
-
-        if($('#exTrade').val() == 1){
-            if($('#isReturnExtrade').is(":checked")) {
-                vIsReturnExtrade = 1;
-            }else{
-                vIsReturnExtrade = 0;
-            }
-        }
+    function fn_doSavePreBookingOrder() {
+       	console.log("[fn_doSavePreBookingOrder] START");
 
         var orderVO = {
-            sofNo                : $('#sofNo').val().trim(),
-            custPoNo             : $('#poNo').val().trim(),
-            appTypeId            : vAppType,
-            srvPacId             : $('#srvPacId').val(),
-            instPriod            : $('#installDur').val().trim(),
-            custId                 : $('#hiddenCustId').val(),
-            empChk               : 0,
-            gstChk                 : $('#gstChk').val(),
-            atchFileGrpId        : atchFileGrpId,
-            custCntcId           : $('#hiddenCustCntcId').val(),
-            keyinBrnchId         : $('#keyinBrnchId').val(),
-            instAddId            : $('#hiddenCustAddId').val(),
-            dscBrnchId           : $('#dscBrnchId').val(),
-            preDt                : $('#prefInstDt').val().trim(),
-            preTm                : $('#prefInstTm').val().trim(),
-            instct               : $('#speclInstct').val().trim(),
-            exTrade              : $('#exTrade').val(),
-            itmStkId             : $('#ordProudct').val(),
-            itmCompId          : $('#compType').val(),
-            promoId              : $('#ordPromo').val(),
-            mthRentAmt           : $('#ordRentalFees').val().trim(),
-            totAmt               : $('#ordPrice').val().trim(),
-            norAmt               : $('#normalOrdPrice').val().trim(),
-            discRntFee           : $('#ordRentalFees').val().trim(),
-            totPv                : $('#ordPv').val().trim(),
-            totPvGst             : $('#ordPvGST').val().trim(),
-            prcId                : $('#ordPriceId').val(),
-            memCode              : $('#salesmanCd').val(),
-            advBill              : $('input:radio[name="advPay"]:checked').val(),
-            custCrcId            : vCustCRCID,
-            bankId               : vBankID,
-            custAccId            : vCustAccID,
-            is3rdParty           : vIs3rdParty,
-            rentPayCustId        : vCustomerId,
-            rentPayModeId        : $('#rentPayMode').val(),
-            custBillId           : vCustBillId,
-            custBillCustId       : $('#hiddenCustId').val(),
-            custBillCntId        : $("#hiddenCustCntcId").val(),
-            custBillAddId        : $("#hiddenBillAddId").val(),
-            custBillEmail        : $('#billMthdEmailTxt1').val().trim(),
-            custBillIsSms        : $('#billMthdSms1').is(":checked") ? 1 : 0,
-            custBillIsPost       : $('#billMthdPost').is(":checked") ? 1 : 0,
-            custBillEmailAdd     : $('#billMthdEmailTxt2').val().trim(),
-            custBillIsWebPortal  : $('#billGrpWeb').is(":checked")   ? 1 : 0,
-            custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
-            custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
-            custBillCustCareCntId: $("#hiddenBPCareId").val(),
-            corpCustType         : $('#corpCustType').val(),
-            agreementType         : $('#agreementType').val(),
-            salesOrdIdOld          : $('#txtOldOrderID').val(),
-            relatedNo               : $('#relatedNo').val(),
-            isExtradePR         : vIsReturnExtrade,
-            receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
-            voucherCode : voucherAppliedCode
+                custId                  : $('#hiddenCustId').val(),
+                custContactNumber: $("#custCntcTelM").val(),
+                memCode             : $('#salesmanCd').val(),
+                salesOrdIdOld       : $('#txtOldOrderID').val(),
+                salesOrdNoOld      : $('#relatedOrdNo').val(),
+                relatedNo             : $('#relatedOrdNo').val(),
+                rem                     : $('#preBookRemark').val(),
+                stkId                   : $('#ordProd').val(),
+                receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 
-        var formData = new FormData();
-        $.each(myFileCaches, function(n, v) {
-            console.log("n : " + n + " v.file : " + v.file);
-            formData.append(n, v.file);
-        });
-
-        Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
-            if(result != 0 && result.code == 00){
-                orderVO["atchFileGrpId"] = result.data.fileGroupKey;
-                Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
-                    Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
-                },
-                function(jqXHR, textStatus, errorThrown) {
-                    try {
-                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                        Common.removeLoader();
-                    }
-                    catch (e) {
-                        console.log(e);
-                    }
-                });
-
-            }else{
-                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            }
-        },function(result){
-            Common.alert("Upload Failed. Please check with System Administrator.");
-        });
+        Common.ajax("GET",
+        		            "/sales/order/preBooking/selectPreBookOrderVerifyStus.do",
+        		           {custId : $('#hiddenCustId').val(), salesOrdIdOld : $('#txtOldOrderID').val()},
+        		           function(result){
+                               if(result != null){
+                            	   if(result.custVerifyStus == 'ACT'){
+                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order currently in progress being pre book. You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
+                            	   }else if(result.custVerifyStus == 'Y'){
+                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order had been pre book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
+                            	   }
+                               }else{
+                            	   Common.ajax("POST", "/sales/order/preBooking/registerPreBooking.do", orderVO, function(result) {
+                                       Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreBookingOrdRegPop);
+                                   },
+                                   function(jqXHR, textStatus, errorThrown) {
+                                       try {
+                                           Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order. " + jqXHR.responseJSON.message + "</b>");
+                                           Common.removeLoader();
+                                       }
+                                       catch (e) {
+                                           console.log(e);
+                                       }
+                                   });
+                               }
+                           }
+        );
+        console.log("[fn_doSavePreBookingOrder] END");
     }
 
-    function fn_closePreOrdRegPop() {
-        myFileCaches = {};
-        $('#btnCnfmOrderClose').click();
+    function fn_closePreBookingOrdRegPop() {
+        $('#btnCnfmPreBookingOrderClose').click();
+        fn_getPreBookingOrderList();
+        $('#_divPreBookingOrdRegPop').remove();
 
-        // Moblie Popup Setting
-        if(Common.checkPlatformType() == "mobile") {
-            opener.fn_PopClose();
-            opener.fn_getPreOrderList();
-        } else {
-            fn_getPreOrderList();
-            $('#_divPreOrdRegPop').remove();
-        }
     }
 
     function fn_closePreBookingOrdRegPop2() {
-        myFileCaches = {};
-        //Moblie Popup Setting
-        if(Common.checkPlatformType() == "mobile") {
-            self.close();
-        } else {
-            $('#_divPreOrdRegPop').remove();
-        }
-    }
-
-    function fn_setBillGrp(grpOpt) {
-        if(grpOpt == 'new') {
-        	fn_clearBillGroup();
-            $('#grpOpt1').prop("checked", true);;
-            $('#sctBillAddr').removeClass("blind");
-            $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
-
-            if($('#hiddenTypeId').val() == '965') { //Company
-                fn_loadBillingPreference($('#srvCntcId').val());
-
-                $('#billMthdEstm').prop("checked", true);
-                $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
-                $('#billMthdEmail2').removeAttr("disabled");
-                $('#billMthdEmailTxt1').removeAttr("disabled");
-                $('#billMthdEmailTxt2').removeAttr("disabled");
-            }
-            else if($('#hiddenTypeId').val() == '964') { //Individual
-                if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
-                    $('#billMthdEstm').prop("checked", true);
-                    $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
-                    $('#billMthdEmail2').removeAttr("disabled");
-                }
-
-                $('#billMthdSms').prop("checked", true);
-                $('#billMthdSms1').prop("checked", true).removeAttr("disabled");
-                $('#billMthdSms2').removeAttr("disabled");
-            }
-        }
-        else if(grpOpt == 'exist') {
-            fn_clearBillGroup();
-            $('#grpOpt2').prop("checked", true);
-            $('#sctBillSel').removeClass("blind");
-            $('#billRem').prop("readonly", true).addClass("readonly");
-        }
-    }
-
-    function fn_loadBillingPreference(custCareCntId) {
-        Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
-            if(srvCntcInfo != null) {
-                $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
-                $("#billPreferInitial").val(srvCntcInfo.custInitial);
-                $("#billPreferName").val(srvCntcInfo.name);
-                $("#billPreferTelO").val(srvCntcInfo.telO);
-                $("#billPreferExt").val(srvCntcInfo.ext);
-            }
-        });
+            $('#_divPreBookingOrdRegPop').remove();
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+
         $('#salesmanCd').val('');
         $('#salesmanNm').val('');
 
@@ -1499,87 +356,18 @@
             else {
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanNm').val(memInfo.name);
+                fn_checkPreBookSalesPerson(memId,memCode);
             }
         });
     }
 
-    function fn_selectPromotionFreeGiftListForList2(promoId) {
-        Common.ajax("GET", "/sales/promotion/selectPromotionFreeGiftList.do", { promoId : promoId }, function(result) {
-            AUIGrid.setGridData(listGiftGridID, result);
-        });
-    }
-
-    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
-        if($('#gstChk').val() == '1') {
-            $('#pBtnCal').removeClass("blind");
-        }
-        else {
-            $('#pBtnCal').addClass("blind");
-        }
-
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
-            if(promoPriceInfo != null) {
-                $("#ordPrice").val(promoPriceInfo.orderPricePromo);
-                $("#ordPv").val(promoPriceInfo.orderPVPromo);
-                $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-                $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
-                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-                $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+    function fn_checkPreBookSalesPerson(memId,memCode) {
+        Common.ajax("GET", "/sales/order/preBooking/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+            if(memInfo == null) {
+                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for pre-book.</b>');
+                $('#salesmanCd').val('');
+                $('#salesmanNm').val('');
             }
-            enableSaveButton();
-        });
-    }
-
-    //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
-        console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPromotion --> stkId:'+stkId);
-        console.log('fn_loadProductPromotion --> empChk:'+empChk);
-        console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
-
-        var isSrvPac = null;
-        $('#ordPromo').removeAttr("disabled");
-
-        if(appTypeVal == "66") isSrvPac = "Y";
-
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
-    }
-
-    //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
-        if($('#gstChk').val() == '1') {
-            $('#pBtnCal').removeClass("blind");
-        }
-        else {
-            $('#pBtnCal').addClass("blind");
-        }
-
-        var appTypeId = 0;
-
-        appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
-
-        $("#searchAppTypeId").val(appTypeId);
-        $("#searchStkId").val(stkId);
-        $("#searchSrvPacId").val(srvPacId);
-
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
-            if(stkPriceInfo != null) {
-                $("#ordPrice").val(stkPriceInfo.orderPrice);
-                $("#ordPv").val(stkPriceInfo.orderPV);
-                $("#ordPvGST").val(stkPriceInfo.orderPV);
-                $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
-                $("#ordPriceId").val(stkPriceInfo.priceId);
-
-                $("#normalOrdPrice").val(stkPriceInfo.orderPrice);
-                $("#normalOrdPv").val(stkPriceInfo.orderPV);
-                $("#normalOrdRentalFees").val(stkPriceInfo.orderRentalFees);
-                $("#normalOrdPriceId").val(stkPriceInfo.priceId);
-
-                $("#promoDiscPeriodTp").val('');
-                $("#promoDiscPeriod").val('');
-
-            }
-            enableSaveButton();
         });
     }
 
@@ -1587,106 +375,12 @@
         $("optgroup").attr("class" , "optgroup_text")
     }
 
-    function fn_setDefaultSrvPacId() {;
-            $('#srvPacId option[value="2"]').attr('selected', 'selected');
-
-            var stkType = $("#appType").val() == '66' ? '1' : '2';
-
-            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');
-    }
-
-    function fn_clearSales() {
-        $('#installDur').val('');
-        $('#ordProudct').val('');
-        $('#ordPromo').val('');
-        $('#relatedNo').val('');
-        $('#isReturnExtrade').attr("disabled",true);
-        $('#ordPrice').val('');
-        $('#ordPriceId').val('');
-        $('#ordPv').val('');
-        $('#ordRentalFees').val('');
-        $('#compType').addClass("blind");
-    }
-
-    //ClearControl_BillGroup
-    function fn_clearBillGroup() {
-        $('#sctBillMthd').addClass("blind");
-        $('#sctBillAddr').addClass("blind");
-        $('#sctBillPrefer').addClass("blind");
-        $('#sctBillSel').addClass("blind");
-
-        $('#grpOpt1').removeAttr("checked");
-        $('#grpOpt2').removeAttr("checked");
-
-        $('#billMthdPost').val('');
-        $('#billMthdSms').val('');
-        $('#billMthdSms1').val('');
-        $('#billMthdSms2').val('');
-        $('#billMthdEstm').val('');
-        $('#billMthdEmail1').val('');
-        $('#billMthdEmail2').val('');
-        $('#billMthdEmailTxt1').val('');
-        $('#billMthdEmailTxt2').val('');
-        $('#billGrpWebUrl').val('');
-
-        $('#billPreferInitial').val('');
-        $('#billPreferName').val('');
-        $('#billPreferTelO').val('');
-        $('#billPreferExt').val('');
-
-        $('#billGrp').val('');
-        $('#hiddenBillGrpId').val('');
-        $('#billType').val('');
-        $('#billAddr').val('');
-    }
-
-    //ClearControl_RentPaySet_ThirdParty
-    function fn_clearRentPayMode() {
-        $('#rentPayMode').val('');
-        $('#rentPayIC').val('');
-    }
-
-    //ClearControl_RentPaySet_ThirdParty
-    function fn_clearRentPay3thParty() {
-        $('#thrdPartyId').val('');
-        $('#hiddenThrdPartyId').val('');
-        $('#thrdPartyType').val('');
-        $('#thrdPartyName').val('');
-        $('#thrdPartyNric').val('');
-    }
-
-    //ClearControl_RentPaySet_DD
-    function fn_clearRentPaySetDD() {
-        $('#sctDirectDebit').addClass("blind");
-        $('#rentPayBankAccNo').val('');
-        $('#hiddenRentPayBankAccID').val('');
-        $('#rentPayBankAccType').val('');
-        $('#accName').val('');
-        $('#accBranch').val('');
-        $('#accBank').val('');
-        $('#hiddenAccBankId').val('');
-    }
-
-    //ClearControl_RentPaySet_CRC
-    function fn_clearRentPaySetCRC() {
-        $('#sctCrCard').addClass("blind");
-        $('#rentPayCRCNo').val('');
-        $('#hiddenRentPayCRCId').val('');
-        $('#hiddenRentPayEncryptCRCNoId').val('');
-        $('#rentPayCRCType').val('');
-        $('#rentPayCRCName').val('');
-        $('#rentPayCRCExpiry').val('');
-        $('#rentPayCRCBank').val('');
-        $('#hiddenRentPayCRCBankId').val('');
-        $('#rentPayCRCCardType').val('');
-    }
-
     function fn_loadCustomer(custId, nric){
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
             Common.removeLoader();
 
             if(result.length > 0 ) {
-                $('#scPreOrdArea').removeClass("blind");
+                $('#scPreBookingOrdArea').removeClass("blind");
 
                 var custInfo = result[0];
                 var dob = custInfo.dob;
@@ -1697,21 +391,19 @@
                 if(!nric.startsWith("TST")){
 	                if(dobY != 1900) {
 	                    if((nowDtY - dobY) < 18) {
-	                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
-	                        $('#scPreOrdArea').addClass("blind");
+	                        Common.alert("Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
+	                        $('#scPreBookingOrdArea').addClass("blind");
 	                        return false;
 	                    }
 	                }
 
                 }
 
-                //
                 $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
                 $("#custTypeNm").val(custInfo.codeName1); //Customer Name
                 $("#hiddenTypeId").val(custInfo.typeId); //Type
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
-
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
@@ -1719,6 +411,8 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
+                $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                $("#custStatus").val(custInfo.custStatus); //Customer Status
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
@@ -1737,11 +431,6 @@
                 if(custInfo.custAddId > 0) {
 
                     //----------------------------------------------------------
-                    // [Billing Detail] : Billing Address SETTING
-                    //----------------------------------------------------------
-                    fn_loadBillAddr(custInfo.custAddId);
-
-                    //----------------------------------------------------------
                     // [Installation] : Installation Address SETTING
                     //----------------------------------------------------------
                     fn_loadInstallAddr(custInfo.custAddId);
@@ -1754,54 +443,17 @@
                     //----------------------------------------------------------
                     fn_loadMainCntcPerson(custInfo.custCntcId);
                     fn_loadCntcPerson(custInfo.custCntcId);
-                    //----------------------------------------------------------
-                    // [Installation] : Installation Contact Person
-                    //----------------------------------------------------------
-                  //$('#instCntcForm').clearForm();
-                  //fn_loadInstallationCntcPerson(custInfo.custCntcId);
+
                 }
 
-                if(custInfo.codeName == 'Government') {
-                    Common.alert('<b>Goverment Customer</b>');
-                }
             }
-            else {
-                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop2);
-            }
+
         });
     }
 
-    function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
-        $('#hiddenBillGrpId').removeClass("readonly").val(billGrpId);
-        $('#billGrp').removeClass("readonly").val(custBillGrpNo);
-        $('#billType').removeClass("readonly").val(billType);
-        $('#billAddr').removeClass("readonly").val(billAddrFull);
-        $('#billRem').removeClass("readonly").val(custBillRem);
-
-        fn_loadBillAddr(custBillAddId);
-    }
-
-    function fn_loadBillAddr(custAddId){
-        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(billCustInfo) {
-
-            if(billCustInfo != null) {
-                $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
-                $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
-                $("#billStreet").val(billCustInfo.street); //Street
-                $("#billArea").val(billCustInfo.area); //Area
-                $("#billCity").val(billCustInfo.city); //City
-                $("#billPostCode").val(billCustInfo.postcode); //Post Code
-                $("#billState").val(billCustInfo.state); //State
-                $("#billCountry").val(billCustInfo.country); //Country
-
-                $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
-            }
-        });
-    }
 
     function fn_loadInstallAddr(custAddId){
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
-
             if(custInfo != null) {
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
                 $("#instAddrDtl").val(custInfo.addrDtl); //Address
@@ -1811,7 +463,6 @@
                 $("#instPostCode").val(custInfo.postcode); //Post Code
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
-
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
                 if(MEM_TYPE == 2)
                     $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
@@ -1819,12 +470,6 @@
                     $("#keyinBrnchId").val(284); //Posting Branch
                 else
                     $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
-                    if(custInfo.gstChk == '1') {
-                        $("#gstChk").val('1').prop("disabled", true);
-                    }
-                    else {
-                        $("#gstChk").val('0').removeAttr("disabled");
-                    }
             }
         });
     }
@@ -1841,7 +486,6 @@
 
     function fn_loadMainCntcPerson(custCntcId){
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
-
             if(custCntcInfo != null) {
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custInitial").val(custCntcInfo.code);
@@ -1885,7 +529,7 @@
 
     function chgTab(tabNm) {
         switch(tabNm) {
-            case 'ord' :
+        case 'ord' :
             	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
                     $('#memBtn').addClass("blind");
                     $('#salesmanCd').prop("readonly",true).addClass("readonly");;
@@ -1893,30 +537,12 @@
                     $('#salesmanCd').change();
                 }
 
-                if($('#ordProudct').val() == null){
+                if($('#ordProd').val() == null){
                        $('#appType').change();
                 }
 
                 $('[name="advPay"]').prop("disabled", true);
                 $('#advPayNo').prop("checked", true);
-
-                break;
-            case 'pay' :
-                if($('#appType').val() == '66'){
-                    $('#rentPayMode').val('131');
-                    $('#rentPayMode').change();
-
-                    console.log('custTypeNm For Third Party: '+$('#custTypeNm').val());
-                    if($('#custTypeNm').val() == 'Company'){
-                        $('#thrdParty').prop("disabled", false);
-                    } else {
-                        $('#thrdParty').prop("disabled", true);
-                    }
-
-                }
-
-                $('[name="grpOpt"]').prop("disabled", true);
-                fn_setBillGrp("new"); // default set billing group option to new
                 break;
             default :
                 break;
@@ -1927,186 +553,13 @@
         $('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
     }
 
-    function fn_removeFile(name){
-        if(name == "PAY") {
-             $("#payFile").val("");
-             $('#payFile').change();
-        }else if(name == "TRF"){
-            $("#trFile").val("");
-            $('#trFile').change();
-        }else if(name == "OTH"){
-            $("#otherFile").val("");
-            $('#otherFile').change();
-        }else if(name == "OTH2"){
-            $("#otherFile2").val("");
-            $('#otherFile2').change();
-        }else if(name == "TNC"){
-            $("#sofTncFile").val("");
-            $('#sofTncFile').change();
-        }else if(name == "MSOF"){
-            $("#msofFile").val("");
-            $('#msofFile').change();
-        }else if(name == "MSOFTNC"){
-            $("#msofTncFile").val("");
-            $('#msofTncFile').change();
-        }
-    }
-
-  function fn_clearAddCpnt() {
-    $('#trCpntId').css("visibility","collapse");
-      $('#compType option').remove();
-    }
-
-  function fn_loadProductComponent(appTyp, stkId) {
-    $('#compType option').remove();
-    $('#compType').removeClass("blind");
-    $('#compType').removeClass("disabled");
-
-    doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType', 'S', '');
-  }
-
-  function fn_check(a) {
-    if ($('#compType option').length <= 0) {
-      if (a == 3) {
-        return;
-      } else {
-        setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
-      }
-    } else if ($('#compType option').length <= 1) {
-      $('#trCpntId').css("visibility","collapse");
-      $('#compType option').remove();
-      $('#compType').addClass("blind");
-      $('#compType').prop("disabled", true);
-    } else if ($('#compType option').length > 1) {
-      $('#trCpntId').css("visibility","visible");
-      $('#compType').remove("blind");
-      $('#compType').removeAttr("disabled");
-
-      var key = 0;
-      Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
-        if(defaultKey != null) {
-          key = defaultKey.code;
-          $('#compType').val(key).change();
-          fn_reloadPromo();
-        }
-      });
-    }
-  }
-
-  function fn_reloadPromo() {
-    $('#ordPromo option').remove();
-    $('#ordPromo').removeClass("blind");
-    $('#ordPromo').removeClass("disabled");
-
-    var appTyp = $("#appType").val();
-    var stkId = $("#ordProudct").val();
-    var cpntId = $("#compType").val();
-    var empInd = 0;
-    var exTrade = $("#exTrade").val();
-    var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
-
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
-  }
-
-  function displayVoucherSection(){
-	  if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
-	  {
-		  $('.voucherSection').show();
-	  }
-	  else{
-		  $('.voucherSection').hide();
-			clearVoucherData();
-	  }
-  }
-
-  function applyVoucher() {
-	  var voucherCode = $('#voucherCode').val();
-	  var voucherEmail = $('#voucherEmail').val();
-	  var voucherType = $('#voucherType option:selected').val();
-
-	  if(voucherCode.length == 0 || voucherEmail.length ==0){
-		  clearVoucherData();
-		  Common.alert('Both voucher code and voucher email must be key in');
-		  return;
-	  }
-	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-	        if(result.code == "00") {
-	        	voucherAppliedStatus = 1;
-	        	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-		      	voucherAppliedCode = voucherCode;
-		      	voucherAppliedEmail = voucherEmail;
-	        	$('#voucherMsg').show();
-
-	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-	        		if(result.length > 0){
-	        			voucherPromotionId = result;
-	        			voucherPromotionCheck();
-	        		}
-	        		else{
-	        			//reset everything
-						clearVoucherData();
-	        			Common.alert("No Promotion is being entitled for this voucher code");
-	        			return;
-	        		}
-	        	});
-	        }
-	        else{
-				clearVoucherData();
-	        	Common.alert(result.message);
-	        	return;
-	        }
-	  });
-  }
-
-  function voucherPromotionCheck(){
-	 if(voucherAppliedStatus == 1){
-		var orderPromoId = [];
-		var orderPromoIdToRemove = [];
-		$("#ordPromo option").each(function()
-		{
-			  orderPromoId.push($(this).val());
-	    });
-		orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-		    return !voucherPromotionId.some(function(obj2) {
-			        return obj == obj2;
-		    });
-		});
-
-		if(orderPromoIdToRemove.length > 0){
-		   	$('#ordPromo').val('');
-			for(var i = 0; i < orderPromoIdToRemove.length; i++){
-				if(orderPromoIdToRemove[i] == ""){
-				}
-				else{
-					$("#ordPromo option[value='" + orderPromoIdToRemove[i] +"']").remove();
-				}
-			}
-		}
-	}
-  }
-
-  function clearVoucherData(){
-	 	$('#voucherCode').val('');
-		$('#voucherEmail').val('');
-		$('#voucherMsg').hide();
-		$('#voucherMsg').text('');
-		voucherAppliedStatus = 0;
-		voucherAppliedCode = "";
-		voucherAppliedEmail = "";
-		voucherPromotionId = [];
-
-		$('#ordProudct').val('');
-		$('#ordPromo').val('');
-		$('#ordPromo option').remove();
-	}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-
 <header class="pop_header"><!-- pop_header start -->
-<h1>eKey-in</h1>
+<h1>Pre-Booking</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">Close</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPreBookingOrdClose" onClick="javascript:fn_closePreBookingOrdRegPop2();" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2133,37 +586,36 @@
 			    <td colspan="3" ><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
 			</tr>
 			<tr>
-			    <th scope="row">SOF No</th>
-			    <td colspan="3" ><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
-			</tr>
-			<tr>
 			    <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
 </form>
 <!------------------------------------------------------------------------------
-    Pre-Order Regist Content START
+    Pre-Booking Order Register Content START
 ------------------------------------------------------------------------------->
-<section id="scPreOrdArea" class="blind">
+<section id="scPreBookingOrdArea" class="blind">
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a id="aTabCS" class="on">Customer</a></li>
     <li><a id="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
-    <li><a id="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
-    <li><a id="aTabFL" >Attachment</a></li>
+  <!-- <li><a id="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
+    <li><a id="aTabFL" >Attachment</a></li> -->
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="frmPreOrdReg" name="frmPreOrdReg" action="#" method="post">
+<form id="frmPreBookingOrdReg" name="frmPreBookingOrdReg" action="#" method="post">
     <input id="hiddenCustId" name="custId"   type="hidden"/>
     <input id="hiddenTypeId" name="typeId"   type="hidden"/>
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
     <input id="hiddenCallPrgm" name="callPrgm" type="hidden" />
+    <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
+    <input id="hiddenIsPreBooking" name="isPreBooking"   type="hidden"/>
+    <input id="hiddenSalesOldOrdId" name="hdnSalesOldOrdId"   type="hidden"/>
 
 	<aside class="title_line"><!-- title_line start -->
 	<h3>Customer information</h3>
@@ -2192,15 +644,6 @@
 			    <th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
 			    <td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 			</tr>
-		</tbody>
-	</table><!-- table end -->
-	<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:40%" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span></th>
 			    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
@@ -2242,13 +685,19 @@
 					</div>
 				</td>
 			</tr>
+            <tr>
+                <th scope="row">Customer Status</th>
+                <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+            </tr>
 		</tbody>
 	</table><!-- table end -->
 
 	<aside class="title_line"><!-- title_line start -->
 	<h3>Contact Person information</h3>
 	</aside><!-- title_line end -->
+
 	<section id="scAnothCntc">
+
 	<ul class="right_btns mb10">
 	    <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Another Contact</a></p></li>
 	    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
@@ -2296,12 +745,10 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>Installation Address &amp; Information</h3>
 </aside><!-- title_line end -->
-
 <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Existing Address</a></p></li>
     <li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
 </ul>
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2339,19 +786,6 @@
     <th scope="row">Country | Negara<span class="must">*</span></th>
     <td colspan="3"><input id="instCountry" name="instCountry" type="text" title="" placeholder="eg. MALAYSIA" class="w100p readonly" readonly/></td>
 </tr>
-
-</tbody>
-</table><!-- table end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:40%" />
-    <col style="width:*" />
-    <col style="width:40%" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
 <tr>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select></td>
@@ -2401,16 +835,12 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-
 </form>
 </section><!-- search_table end -->
-
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-
 <section class="search_table"><!-- search_table start -->
-
 <aside class="title_line"><!-- title_line start -->
 <h3>Order information</h3>
 </aside><!-- title_line end -->
@@ -2420,81 +850,23 @@
 <colgroup>
     <col style="width:40%" />
     <col style="width:*" />
-<!--    <col style="width:220px" />
-    <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
     <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></p>
-        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Voucher Type<span class="must">*</span></th>
-    <td>
-	    <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p"></select></p>
-        <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p>
-        <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p>
-        <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p>
-        <p style="display:none; color:red;font-size:10px;" id="voucherMsg"></p>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
-    <td>
-    <p><select id="appType" name="appType" class="w100p"></select></p>
-    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
+        <p><input id="relatedOrdNo" name="relatedOrdNo" type="text" title="" placeholder="Related Order Number" class="w100p readonly" readonly/></p>
+       <!-- <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a> -->
+      <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
+      <input id="txtBusType"  name="txtBusType" type="hidden" />
+      <input id = "hiddenMonthExpired" name="hiddenMonthExpired" type="hidden"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select>
+    <td><select id="ordProd" name="ordProd" class="w100p"></select>
     </td>
-</tr>
-<tr id='trCpntId' style='visibility:collapse'>
-    <th scope="row"><spring:message code="sal.title.text.cpntId" /> | Komponen Tambahan <span class="must">*</span></th>
-    <td>
-     <select id="compType" name="compType" class="w100p" onchange="fn_reloadPromo()"></select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Promotion | Promosi<span class="must">*</span></th>
-    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
-    <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Installment Duration<span class="must">*</span></th>
-    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36)" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row">Price / RPF (RM)</th>
-    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-        <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
-        <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
-        <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
-</tr>
-<tr>
-    <th scope="row">Rental Fee</th>
-    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-<th scope="row">PV<span class="must">*</span></th>
-    <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-</tr>
-<tr>
-    <th scope="row">Advance Rental Payment*</th>
-    <td><span>Does customer make advance rental payment for 12 months and above?</sapn>
-        <input id="advPayYes" name="advPay" type="radio" value="1" /><span>Yes</span>
-        <input id="advPayNo" name="advPay" type="radio" value="0" /><span>No</span></td>
-</tr>
-<tr>
-    <th scope="row">PO No</th>
-    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Salesman Code / Name<span class="must">*</span></th>
@@ -2504,34 +876,19 @@
         </td>
 </tr>
 <tr>
-    <th scope="row">Special Instruction</th>
-    <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
-</tr>
-<tr style="display:none;">
-
-    <th scope="row">Discount Type /  Period (month)</th>
-    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
-        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
-</tr>
-<tr style="display:none;">
-    <th scope="row">SST Type<span class="must">*</span></th>
-    <td><select id="corpCustType" name="corpCustType" class="w50p" disabled></select>
-</tr>
-<tr style="display:none;">
-    <th scope="row">Agreement Type<span class="must">*</span></th>
-    <td><select id="agreementType" name="agreementType" class="w50p" disabled></select>
+    <th scope="row">Remark</th>
+    <td><textarea id="preBookRemark" name="preBookRemark" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
+
 <br><br><br><br><br>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-
 <section id="scPayInfo" class="search_table blind"><!-- search_table start -->
-
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2549,11 +906,9 @@
 </table><!-- table end -->
 
 <section id="sctThrdParty" class="blind">
-
 <aside class="title_line"><!-- title_line start -->
 <h3>Third Party</h3>
 </aside><!-- title_line end -->
-
 <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="thrdPartyAddCustBtn" href="#">Add New Third Party</a></p></li>
 </ul>
@@ -2592,7 +947,6 @@
     Rental Paymode - Form ID(rentPayModeForm)
 ------------------------------------------------------------------------------->
 <section id="sctRentPayMode">
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2663,6 +1017,10 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<!-- <ul class="center_btns">
+    <li><p class="btn_blue"><a name="ordSaveBtn" href="#">OK</a></p></li>
+</ul> -->
 </section>
 
 <section id="sctDirectDebit" class="blind">
@@ -2956,152 +1314,16 @@
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
-<aside class="title_line"><!-- title_line start -->
-<h3>Attachment area</h3>
-</aside><!-- title_line end -->
-
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:30%" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="sofFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="sofTncFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("TNC")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Payment document</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="payFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Coway temporary receipt (TR)</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="trFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("TRF")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Declaration letter/Others form</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="otherFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Declaration letter/Others form 2</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="otherFile2" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <th scope="row">Mattress Sales Order Form (MSOF)</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="msofFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("MSOF")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
-    <td>
-        <div class="auto_file2">
-            <input type="file" title="file add" id="msofTncFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG, PDF) less than 2 MB.
-    <br>
-    File rename wording no more than 30 alphabet (including spacing, symbol).</span></td>
-</tr>
-</tbody>
-</table>
-</article><!-- tap_area end -->
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
+      <li><p class="btn_blue2"><a id="btnPreBookingSave" onClick="javascript:fn_doSavePreBookingOrder();" href="#">Save</a></p></li>
 </ul>
+
 </section>
 <!------------------------------------------------------------------------------
     Pre-Order Regist Content END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
+
 </div><!-- popup_wrap end -->

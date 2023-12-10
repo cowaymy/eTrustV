@@ -27,39 +27,30 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("preBookingOrderMapper")
 public interface PreBookingOrderMapper {
 
-	/*List<EgovMap> selectPreBookingOrderList(Map<String, Object> params);
+  // Search Pre OrderList
+  public List<EgovMap> selectPreBookingOrderList(Map<String, Object> params);
 
-	EgovMap selectPreBookingOrderInfo(Map<String, Object> params);
+  EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
 
-	int selectExistSofNo(Map<String, Object> params);
+  String selectNextPreBookingNo();
 
-	void insertPreBookingOrder(PreBookingOrderVO preBookingOrderVO);
+  void updatePreBookingNo(Map<String, Object> params);
 
-	void updatePreBookingOrder(PreBookingOrderVO preBookingOrderVO);
+  public int insertPreBooking(PreBookingOrderVO preBookingOrderVO);
 
-	void updatePreBookingOrderStatus(PreBookingOrderVO preBookingOrderVO);
+  public EgovMap selectPreBookingOrderInfo(Map<String, Object> params);
 
-	void updatePreBookingOrderFailStatus(Map<String, Object> params);
+  public int updatePreBookOrderCancel(Map<String, Object> params);
 
-	void InsertPreBookingOrderFailStatus(Map<String, Object> params);
+  List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
 
-	List<EgovMap> selectPreBookingOrderFailStatus(Map<String, Object> params);
+  String getSmsTemplate(Map<String, Object> params);
 
-	int selectExistingMember(Map<String, Object> params);
+  EgovMap getOrdAreaMemInfo(int salesOrdIdOld);
 
-	List<EgovMap> selectAttachList(Map<String, Object> params);
+  List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 
-	int selectNextFileId();
+  EgovMap selectPreBookSalesPerson(Map<String, Object> params);
 
-	void insertFileDetail(Map<String, Object> flInfo);
-
-	int selRcdTms(Map<String, Object> params);
-
-	int selPreBookingOrdId(Map<String, Object> params);
-
-	void updateKeyinSOF(Map<String, Object> params);
-
-	String selectExistingSalesVoucherCode(PreBookingOrderVO preBookingOrderVO);*/
-
-  EgovMap checkExtradeSchedule();
+  EgovMap selectPreBookConfigurationPerson(Map<String, Object> params);
 }

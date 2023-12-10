@@ -161,7 +161,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
-    <td colspan="5">${orderDetail.basicInfo.ordRem}</td>
+    <td colspan="3">${orderDetail.basicInfo.ordRem}</td>
+    <th scope="row">Pre-Booking Period</th>
+    <td>${orderDetail.basicInfo.prebookingPeriod}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>

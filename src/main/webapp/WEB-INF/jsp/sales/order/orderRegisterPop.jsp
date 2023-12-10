@@ -2779,6 +2779,9 @@
                   $('#salesmanType').val('');
                   $('#salesmanTypeId').val('');
                   $('#salesmanNric').val('');
+                  $('#departCd').val('');
+                  $('#grpCd').val('');
+                  $('#orgCd').val('');
 	          }
 	    });
 	  }
@@ -2792,6 +2795,9 @@
                   $('#salesmanType').val('');
                   $('#salesmanTypeId').val('');
                   $('#salesmanNric').val('');
+                  $('#departCd').val('');
+                  $('#grpCd').val('');
+                  $('#orgCd').val('');
 	          }
 	    });
 	  }

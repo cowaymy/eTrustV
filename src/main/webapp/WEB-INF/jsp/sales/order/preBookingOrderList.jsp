@@ -2,27 +2,32 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-console.log("preBookingOrderList");
 	var listGridID;
 	var excelListGridID;
 	var keyValueList = [];
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
 	var appTypeData = [
-            	                   {"codeId": "66","codeName": "Rental"},
-            	                   {"codeId": "67","codeName": "Outright"},
-            	                   {"codeId": "68","codeName": "Instalment"}
+            	                   {"codeId": "66","codeName": "Rental"}
 	                            ];
+
 	var actData= [
 	                        {"codeId": "21","codeName": "Failed"},
 	                        {"codeId": "10","codeName": "Cancel"}
 	                   ];
+
 	var memTypeData = [
-                	                   {"codeId": "1","codeName": "HP"},
                 	                   {"codeId": "2","codeName": "Cody"},
                 	                   {"codeId": "4","codeName": "Staff"},
                 	                   {"codeId": "7","codeName": "HT"}
 	                              ];
+	var discWaive = [
+	                            {"codeId" : "4","codeName":"4 Month Earlier"},
+	                            {"codeId" : "3","codeName":"3 Month Earlier"},
+	                            {"codeId" : "2","codeName":"2 Month Earlier"},
+	                            {"codeId" : "1","codeName":"1 Month Earlier"}
+	                        ];
+
 	var myFileCaches = {};
 	var recentGridItem = null;
 	var selectRowIdx;
@@ -42,6 +47,7 @@ console.log("preBookingOrderList");
         memTypeData = brnchType == 48 ? data.reverse() : data
         memTypeFiltered = true;
     }
+
 
     $(document).ready(function(){
     	fn_statusCodeSearch();
@@ -95,7 +101,7 @@ console.log("preBookingOrderList");
         }
 
         AUIGrid.bind(listGridID , "cellClick", function( event ){
-        	console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        //	console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         	selectRowIdx = event.rowIndex;
         });
 
@@ -104,11 +110,11 @@ console.log("preBookingOrderList");
         });
 
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
-        doDefCombo(actData, '' ,'_action', 'S', '');
-        doGetComboDataStatus('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doDefCombo(discWaive, '' ,'discountWaive', 'M', 'fn_multiCombo');
+        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
+     //   doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
-        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
+     //   doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProdList', 'S', 'fn_setOptGrpClass');
 
         if (memTypeFiltered) {
         	doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
@@ -119,7 +125,7 @@ console.log("preBookingOrderList");
         //excel Download
         $('#excelDown').click(function() {
             var excelProps = {
-                fileName     : "eKey-in",
+                fileName     : "Pre-Booking Order List",
                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
             };
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
@@ -153,11 +159,6 @@ console.log("preBookingOrderList");
         });
     }
 
-    function fn_setDetail(gridID, rowIdx){
-        //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
-        Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
-    }
-
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text")
     }
@@ -167,22 +168,19 @@ console.log("preBookingOrderList");
         if(selectRowIdx > -1) {
             var stusId    = AUIGrid.getCellValue(listGridID, selectRowIdx, "stusId");
             var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
-            var sofNo     = AUIGrid.getCellValue(listGridID, selectRowIdx, "sofNo");
             var custNric  = AUIGrid.getCellValue(listGridID, selectRowIdx, "nric");
             var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
 
             $('#hiddenPreOrdId').val(preOrdId);
             $('#hiddenRcdTms').val(rcdTms);
-            $('#hiddenSof').val(sofNo);
-            $('#view_sofNo').text(sofNo);
             $('#view_custIc').text(custNric);
 
             if(stusId == 4 || stusId == 10){
-                Common.alert("Completed eKey-in cannot be edited.");
+                Common.alert("Completed pre-booking cannot be edited.");
                 isValid = false;
             }
         }else {
-           Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+           Common.alert("Pre-Booking Missing" + DEFAULT_DELIMITER + "<b>No pre-booking selected.</b>");
            isValid = false;
         }
 
@@ -190,10 +188,6 @@ console.log("preBookingOrderList");
     }
 
     function fn_doFailStatus(){
-    	var action = $('#_action option:selected').val().trim();
-    	var name = $('#_action option:selected').text();
-        var sof = $('#hiddenSof').val();
-
         var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
 
     	if(action == "" ){
@@ -213,12 +207,12 @@ console.log("preBookingOrderList");
     		    stusId : action
     	};
 
-    	Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
+        Common.confirm("Confirm to " + name +  " ? " , function(){
     		Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#updFailForm").serialize(), function(result) {
     			if(result.code == "99"){
-                    Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+ result.message +"</b>", function(){
+                    Common.alert("Save Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+ result.message +"</b>", function(){
                         hideViewPopup('#updFail_wrap');
-                        fn_getPreOrderList();
+                        fn_getPreBookingOrderList();
                     });
                 }else{
                 	Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
@@ -238,7 +232,7 @@ console.log("preBookingOrderList");
     }
 
     function fn_closeFailedStusPop() {
-        fn_getPreOrderList();
+        fn_getPreBookingOrderList();
         $('#updFail_wrap').hide();
         $('#updFailForm').clearForm();
     }
@@ -246,24 +240,18 @@ console.log("preBookingOrderList");
     function createAUIGrid() {
     	//AUIGrid
         var columnLayout = [
-            { headerText : "SOF No.", dataField : "sofNo", editable : false, width : '10%' }
-          , { headerText : "eKey-in Date", dataField : "requestDt", editable : false, width : '10%' }
-          , { headerText : "eKey-in Time", dataField : "requestTm", editable : false, width : '10%' }
-          , { headerText : "eKey-in Entry Point",  dataField : "channel",editable : false, width : '10%' }
-          , { headerText : "Application Type",  dataField : "appType", editable : false, width : 80  }
-          , { headerText : "Product", dataField : "product", editable : false, width : '10%' }
-          , { headerText : "Customer Name",   dataField : "custNm", editable : false, width : '10%' }
-          , { headerText : "Creator", dataField : "crtName", editable : false, width : '10%' }
-          , { headerText : "Status", dataField : "stusName", editable : false, width : '10%' }
-          , { headerText : "Order Number", dataField : "salesOrdNo", editable : false, width : '10%' }
-          , { headerText : "Fail Reason Code", dataField : "rem1",editable : false,  width : '9%', visible : false }
-          , { headerText : "Fail Remark", dataField : "rem2", editable : false, width : '9%', visible : false }
-          , { headerText : "Last Update At (By)", dataField : "lastUpd", editable : false, width : '18%' }
-          , { headerText : "StatusId", dataField : "stusId", editable : false, visible : false, width : 100 }
-          , { headerText : "Installation State", dataField : "state", editable : false, width : '15%' }
-          , { headerText : "preOrdId", dataField : "preOrdId", visible : false }
-          , { headerText : "updDt", dataField : "updDt", visible : false }
-
+            { headerText : "Pre-Booking Order No.", dataField : "preBookNo", editable : false, width : '10%' }
+          , { headerText : "Status", dataField : "stusCode", editable : false, width : '10%' }
+          , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : '13%' }
+          , { headerText : "Customer Verification Status", dataField : "custVerifyStus", editable : false, width : '18%' }
+          , { headerText : "Salesperson Code",  dataField : "memCode",editable : false, width : '10%' }
+          , { headerText : "Customer Info",   dataField : "custName", editable : false, width : '10%' }
+          , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : '15%'}
+          , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : '15%'}
+          , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : '10%' }
+          , { headerText : "preBookId", dataField : "preBookId", visible : false }
+          , { headerText : "stusId",dataField : "stusId", visible  : false}
+          , { headerText : "Update Date", dataField : "updDt", visible : false }
        ];
 
         var gridPros = {
@@ -289,35 +277,15 @@ console.log("preBookingOrderList");
     function createExcelAUIGrid() {
         //AUIGrid
         var excelColumnLayout = [
-           { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width:100}
-          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width:100}
-          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width:100}
-          , { headerText : "SOF No.", dataField : "sofNo",  editable : false, width:100}
-          , { headerText : "Order Number", dataField : "salesOrdNo", editable : false, width:100}
-          , { headerText : "Status", dataField : "stusName", editable : false,width:150}
-          , { headerText : "PV Month", dataField : "pvMonth", editable : false,width:200}
-          , { headerText : "PV Month", dataField : "pvYear",   editable : false,width:200}
-          , { headerText : "Customer Name", dataField : "custNm", editable : false,width:300}
-          , { headerText : "Area", dataField : "area", editable : false,width:450}
-          , { headerText : "Posting Branch", dataField : "soBrnchCode", editable : false,width:100}
-          , { headerText : "Doc Submit",  dataField : "docSubmit", editable : false,width:100}
-          , { headerText : "Submit Branch", dataField : "submitBranch", editable : false,width:100}
-          , { headerText : "Branch Location", dataField : "branchLocation", editable : false,width:300}
-          , { headerText : "Product", dataField : "product", editable : false,width:450}
-          , { headerText : "Promo Code", dataField : "promoCode", editable : false,width:200}
-          , { headerText : "Promotion Description ", dataField : "promoDesc",   editable : false,width:400}
-          , { headerText : "Fail Reason Code", dataField : "rem1", editable : false,width:500}
-          , { headerText : "Fail Remark", dataField : "rem2", editable : false,width:750}
-          , { headerText : "Sales By", dataField : "salesUserId", editable : false,width:100}
-          , { headerText : "Creator", dataField : "crtName", editable : false,width:100}
-          , { headerText : "Cody User Branch",  dataField : "branchName",  editable : false, width:300}
-          , { headerText : "Region", dataField : "regionName", editable : false,width:200}
-          , { headerText : "HP Name", dataField : "hpName", editable : false,width:400}
-          , { headerText : "Organization Code", dataField : "orgCode", editable : false,width:200}
-          , { headerText : "Group Code", dataField : "grpCode", editable : false,width:200}
-          , { headerText : "Dept Code", dataField : "deptCode", editable : false,width:200}
-          , { headerText : "Last Update At (By)", dataField : "lastUpd", editable : false,width:400}
-           ,{ headerText : "Installation State", dataField: "state", editable : false, width: 300}
+            { headerText : "Pre-booking order No",  dataField : "preBookNo",  editable : false, width:100}
+           , { headerText : "Status", dataField : "stusCode", editable : false,width:150}
+           , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : 200}
+           , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : 200}
+           , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : 200}
+           , { headerText : "Customer Info", dataField : "custName", editable : false, width : 300}
+           , { headerText : "Previous Product Model", dataField : "", editable : false, width : 200}
+           , { headerText : "Previous Product Order No", dataField : "", editable : false, width : 200}
+           , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
        ];
 
        var excelGridPros = {
@@ -336,8 +304,7 @@ console.log("preBookingOrderList");
 
     $(function(){
         $('#_btnNew').click(function() {
-            Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc) {
-
+          Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc) {
                 if(memRc != null) {
                     if(memRc.rookie == 1) {
                         if(memRc.rcPrct != null) {
@@ -351,20 +318,17 @@ console.log("preBookingOrderList");
                         return false;
                     }
                 }
-                Common.popupDiv("/sales/order/preBookingOrderRegisterPop.do", null, null, true, '_divPreBookingOrdRegPop');
+                Common.popupDiv("/sales/order/preBooking/preBookingOrderRegisterPop.do", null, null, true, '_divPreBookingOrdRegPop');
             });
         });
 
         $('#_btnClear').click(function() {
-        	window.location.reload();
+        	$("#_frmPreBookingOrdSrch").clearForm();
         });
 
         $('#_btnSearch').click(function() {
-        	if(fn_validSearchList()) fn_getPreOrderList();
-        });
-
-        $('#_btnConvOrder').click(function() {
-            fn_convToOrderPop();
+        	if(fn_validSearchList())
+        		fn_getPreBookingOrderList();
         });
 
         $('#_btnFailSave').click(function() {
@@ -372,7 +336,7 @@ console.log("preBookingOrderList");
         });
 
         $('#_memBtn').click(function() {
-            Common.popupDiv("/common/memberPop.do", $("#_frmPreOrdSrch").serializeJSON(), null, true);
+            Common.popupDiv("/common/memberPop.do", $("#_frmPreBookingOrdSrch").serializeJSON(), null, true);
         });
 
         $('#_memCode').change(function(event) {
@@ -406,6 +370,10 @@ console.log("preBookingOrderList");
                 $("#fail_rem").hide();
             }
         });
+
+        $('#_btnCancelPreBook').click(function() {
+            fn_cancelPreBookOrderPop();
+        });
     });
 
     function fn_validSearchList() {
@@ -417,37 +385,33 @@ console.log("preBookingOrderList");
               msg += '* Unable to search due to no access right.<br/>';
         }
 
-        if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
-            || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
+        if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val())) ||
+        	(FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
        {
-                      msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
-                      isValid = false
+              msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+              isValid = false
        }
 
     	if(FormUtil.isEmpty($('#_memCode').val())
   			&& FormUtil.isEmpty($('#_appTypeId').val())
   		    && FormUtil.isEmpty($('#_stusId').val())
-  		    && FormUtil.isEmpty($('#_brnchId').val())
   		    && FormUtil.isEmpty($('#_typeId').val())
   		    && FormUtil.isEmpty($('#_nric').val())
   		    && FormUtil.isEmpty($('#_name').val())
   		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
         ){
-    		if(FormUtil.isEmpty($('#_sofNo').val())){
-    			isValid = false;
-    			msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
-    		}
+    		isValid = false;
+    		msg += '* Please fill in the related empty fields.<br/>';
     	 }
 
     	if(!FormUtil.isEmpty($('#_reqstStartTime').val()) || !FormUtil.isEmpty($('#_reqstEndTime').val())) {
     		if(FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val())) {
                 isValid = false;
-                msg += '* Please select Pre-Order Date first<br/>';
+                msg += '* Please select Pre-Booking Order Date first<br/>';
             }
         }
 
     	if(FormUtil.isEmpty($('#_memCode').val())
-  	        && FormUtil.isEmpty($('#_sofNo').val())
   	        && FormUtil.isEmpty($('#_ordNo').val())
   	        && FormUtil.isEmpty($('#_reqstStartDt').val())
   	        && FormUtil.isEmpty($('#_reqstEndDt').val())
@@ -505,59 +469,16 @@ console.log("preBookingOrderList");
         });
     }
 
-    function fn_convToOrderPop() {
-    	var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
-
-        if(selIdx > -1) {
-        	var stusId = AUIGrid.getCellValue(listGridID, selIdx, "stusId");
-            var salesOrdNo = AUIGrid.getCellValue(listGridID, selIdx, "salesOrdNo");
-
-            if(stusId == 10 || stusId == 4 || salesOrdNo != undefined ){
-                Common.alert("Convert order is not allowed for this pre-order");
-            }
-        	else{
-                var memCode = AUIGrid.getCellValue(listGridID, selIdx, "crtName");
-                Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-
-                    if(memRc != null) {
-                        if(memRc.rookie == 1) {
-                            if(memRc.rcPrct != null) {
-                                if(memRc.rcPrct < 30) {
-                                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
-                                    return false;
-                                }
-                            }
-                        } else {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-                            return false;
-                        }
-                    }
-
-                    Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
-                });
-            }
-        }else {
-                Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
-        }
-    }
-
-    function fn_getPreOrderList() {
-        Common.ajax("GET", "/sales/order/selectPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
+    function fn_getPreBookingOrderList() {
+        Common.ajax("GET", "/sales/order/preBooking/selectPreBookingOrderList.do", $("#_frmPreBookingOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
         });
     }
 
     function fn_PopClose() {
-        if(popupObj!=null) popupObj.close();
-    }
-
-    function fn_calcGst(amt) {
-        var gstAmt = 0;
-        if(FormUtil.isNotEmpty(amt) || amt != 0) {
-            gstAmt = Math.floor(amt*(1/1.06));
-        }
-        return gstAmt;
+        if(popupObj!=null)
+        	popupObj.close();
     }
 
     function fn_multiCombo(){
@@ -571,18 +492,11 @@ console.log("preBookingOrderList");
 
         $('#_stusId').change(function() {
         }).multipleSelect({
-            selectAll: true,
+           selectAll: true,
             width: '100%'
         });
 
-        $('#_stusId').multipleSelect("checkAll");
-
-        $('#_brnchId').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
-        $('#_brnchId').multipleSelect("checkAll");
+       $('#_stusId').multipleSelect("checkAll");
 
         $('#_typeId').change(function() {
         }).multipleSelect({
@@ -591,6 +505,14 @@ console.log("preBookingOrderList");
         });
 
         $('#_typeId').multipleSelect("checkAll");
+
+        $('#discountWaive').change(function() {
+        }).multipleSelect({
+           selectAll: true,
+            width: '100%'
+        });
+
+       $('#discountWaive').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -655,6 +577,24 @@ console.log("preBookingOrderList");
             }
         });
     };
+
+    function fn_setDetail(gridID, rowIdx){
+        Common.popupDiv("/sales/order/preBooking/preBookOrderDetailPop.do", { preBookId : AUIGrid.getCellValue(gridID, rowIdx, "preBookId") }, null, true, "_divPreOrdModPop");
+    }
+
+    function fn_cancelPreBookOrderPop() {
+        var rowIdx = AUIGrid.getSelectedIndex(listGridID)[0];
+        var clickChk = AUIGrid.getSelectedItems(listGridID);
+        if (rowIdx > -1) {
+            if (clickChk[0].item.stusCode != "CAN") {
+                Common.popupDiv("/sales/order/preBooking/preBookOrderReqCancelPop.do", {preBookId : AUIGrid.getCellValue(listGridID,rowIdx, "preBookId")}, null, true, "_divPreOrdModPop");
+            } else {
+                Common.alert("Pre-Booking Cancellation" + DEFAULT_DELIMITER + "<b>Pre-Booking Order No." + clickChk[0].item.preBookNo + " had been cancelled before.</b>");
+            }
+        } else {
+            Common.alert("Pre-Booking Missing" + DEFAULT_DELIMITER + "<b>No pre-Booking selected.</b>");
+        }
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -668,7 +608,8 @@ console.log("preBookingOrderList");
 <h2>Pre-Booking</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-	   <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Manual Convert</a></p></li>
+      <!--<a id="_btnConvOrder" href="#">Manual Convert</a>  -->
+	 <li><p class="btn_blue"><a id="_btnCancelPreBook" href="#">Order Cancel</a></p></li>
 	</c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 	   <li><p class="btn_blue"><a id="_btnNew" href="#">New</a></p></li>
@@ -679,10 +620,9 @@ console.log("preBookingOrderList");
 	</c:if>
 </ul>
 </aside><!-- title_line end -->
-<form id="frmNew" name="frmNew" action="#" method="post">
-</form>
+
 <section class="search_table"><!-- search_table start -->
-<form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post">
+<form id="_frmPreBookingOrdSrch" name="_frmPreBookingOrdSrch" action="#" method="post">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -692,12 +632,10 @@ console.log("preBookingOrderList");
 	<col style="width:*" />
 	<col style="width:160px" />
 	<col style="width:*" />
-
-
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">SalesMan Code</th>
+	<th scope="row">Salesman Code</th>
 	<td>
 		<p><input id="_memCode" name="_memCode" type="text" title="" placeholder="" style="width:80px;" class="" /></p>
 		<p><a id="_memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
@@ -705,7 +643,7 @@ console.log("preBookingOrderList");
 	</td>
 	<th scope="row">Application Type</th>
 	<td><select id="_appTypeId" name="_appTypeId" class="multy_select w100p" multiple="multiple"></select></td>
-	<th scope="row">Pre-Order date</th>
+	<th scope="row">Pre-Booking Order Date</th>
 	<td>
 	   <div class="date_set w100p"><!-- date_set start -->
         <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
@@ -715,22 +653,16 @@ console.log("preBookingOrderList");
     </td>
 </tr>
 <tr>
-	<th scope="row">Pre-Order Status</th>
+	<th scope="row">Pre-Booking Order Status</th>
 	<td><select id="_stusId" name="_stusId" class="multy_select w100p" multiple="multiple"></td>
-	<th scope="row">Posting Branch</th>
-	<td><select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select></td>
 	<th scope="row">NRIC/Company No</th>
 	<td><input id="_nric" name="_nric" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Customer Name</th>
+    <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">SOF No.</th>
-	<td><input id="_sofNo" name="_sofNo" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Customer Type</th>
 	<td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>
-	<th scope="row">Customer Name</th>
-	<td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
-</tr>
-<tr>
     <th scope="row">Pre-Booking Order No.</th>
     <td><input id="_ordNo" name="_ordNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Time</th>
@@ -741,8 +673,6 @@ console.log("preBookingOrderList");
         <p><input id="_reqstEndTime" name="_reqstEndTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}" /></p>
         </div>
     </td>
-    <th scope="row"><spring:message code="sal.text.product" /></th>
-    <td><select id="ordProudctList" name="ordProudctList" class="w100p" ></select>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
@@ -753,7 +683,7 @@ console.log("preBookingOrderList");
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+     <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td><select id="memType" name="memType" class="w100p" ></select></td>
     <th scope="row">Entry Point</th>
     <td>
@@ -766,10 +696,19 @@ console.log("preBookingOrderList");
     <th scope="row">Verification Status</th>
     <td><select id="verifyStatus" name="verifyStatus" class="w100p" >
             <option value="">Choose One</option>
-            <option value="0">Verified</option>
-            <option value="1">Rejected</option>
+            <option value="ACT">ACT</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
         </select>
      </td>
+</tr>
+<tr>
+    <th scope="row">Pre-Booking Period</th>
+    <td><select id="discountWaive" name="discountWaive" class="multy_select w100p" multiple="multiple"></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
@@ -827,8 +766,6 @@ console.log("preBookingOrderList");
 
                 <tbody>
                 <tr>
-                    <th scope="row">SOF NO</th>
-                    <td id="view_sofNo"></td>
                     <th scope="row">Customer NRIC</th>
                     <td id="view_custIc"></td>
                 </tr>
