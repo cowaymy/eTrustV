@@ -361,6 +361,7 @@
     			  rem                    		: $('#preRemark').val(),
     			  stkId                  		: $('#preOrdProduct').val(),
     			  area							: $('#instArea').val(),
+    			  postCode						: $('#instPostCode').val(),
     			  receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
 
     	};
