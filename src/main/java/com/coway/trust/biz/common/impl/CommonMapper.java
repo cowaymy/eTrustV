@@ -332,4 +332,6 @@ public interface CommonMapper {
 
   List<EgovMap> selectSystemConfigurationParamVal(Map<String, Object> params);
 
+  int selectSystemConfigurationParamValue(Map<String, Object> params);
+
 }
