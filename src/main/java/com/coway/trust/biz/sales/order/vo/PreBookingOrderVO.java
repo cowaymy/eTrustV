@@ -54,6 +54,8 @@ public class PreBookingOrderVO implements Serializable {
 
   private String area;
 
+  private String postCode;
+
   public int getPreBookOrdId() {
     return preBookOrdId;
   }
@@ -212,5 +214,13 @@ public class PreBookingOrderVO implements Serializable {
 
   public void setArea(String area) {
     this.area = area;
+  }
+
+  public String getPostCode() {
+    return postCode;
+  }
+
+  public void setPostCode(String postCode) {
+    this.postCode = postCode;
   }
 }
