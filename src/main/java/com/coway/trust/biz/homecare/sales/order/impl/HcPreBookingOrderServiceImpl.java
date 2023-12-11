@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -17,18 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.impl.CommonMapper;
-import com.coway.trust.biz.common.impl.SmsMapper;
 import com.coway.trust.biz.homecare.sales.impl.htOrderRegisterMapper;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
-//import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
-// import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -48,9 +45,6 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   @Resource(name = "hcPreBookingOrderMapper")
   private HcPreBookingOrderMapper hcPreBookingOrderMapper;
 
-/*  @Resource(name = "preBookingOrderMapper")
-  private PreBookingOrderMapper preBookingOrderMapper;
-*/
   @Resource(name = "hcOrderRegisterMapper")
   private HcOrderRegisterMapper hcOrderRegisterMapper;
 
@@ -67,7 +61,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   private CommonMapper commonMapper;
 
   @Autowired
-  private SmsMapper smsMapper;
+  private AdaptorService adaptorService;
 
   // Search Homecare Pre Booking Order List
   @Override
@@ -118,9 +112,9 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
 
       Map<String, Object> smsEntry = new HashMap<String, Object>();
 
-      String smsMessage = "RM0 COWAY: Order No. " + preBookingOrderVO.getSalesOrdNoOld()
-                        + " agree for Extrade Pre Booking under " + preBookingOrderVO.getMemCode()
-                        + ". To agree reply PREBOOK<space><Old Order No.> to XXXXX within 3 days. TQ";
+      /*      String smsMessage = "RM0 COWAY: Order No. " + preBookingOrderVO.getSalesOrdNoOld()
+          + " agree for Extrade Pre Booking under " + preBookingOrderVO.getMemCode()
+          + ". To agree reply PREBOOK<space><Old Order No.> to XXXXX within 3 days. TQ";
 
       smsEntry.put("smsId", 0);
       smsEntry.put("smsMsg", smsMessage);
@@ -132,22 +126,28 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       smsEntry.put("smsRem", "Pre-Booking SMS via e-trust");
       smsEntry.put("smsStartDt", CommonUtils.getNowDate());
       smsEntry.put("smsExprDt", CommonUtils.getCalDate(3));
-      smsEntry.put("smsStusId",1);
-      smsEntry.put("smsRetry",0);
-      smsEntry.put("userId",sessionVO.getUserId());
-      smsEntry.put("smsVendorId",1);
+      smsEntry.put("smsStusId", SalesConstants.STATUS_ACTIVE);
+      smsEntry.put("smsRetry", 0);
+      smsEntry.put("userId", sessionVO.getUserId());
+      smsEntry.put("smsVendorId", 1);*/
 
       // INSERT INTO SMS TABLE - MSC0015D
-      smsMapper.insertSmsEntry(smsEntry);
+      //smsMapper.insertSmsEntry(smsEntry);
 
-      /*Map<String, Object> smsReply = new HashMap<String, Object>();
+      SmsVO sms = new SmsVO(sessionVO.getUserId(), 975);
 
-      smsReply.put("replyCode", "");
-      smsReply.put("replyRem", "");
-      smsReply.put("userId", sessionVO.getUserId());
-      smsReply.put("replyFdbckId", "");
+      smsEntry.put("preBookNo", preBookingOrderVO.getPreBookOrdNo());
+      smsEntry.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
+      smsEntry.put("area", preBookingOrderVO.getArea());
+      smsEntry.put("memCode", preBookingOrderVO.getMemCode());
 
-      smsMapper.insertGatewayReply(smsReply);*/
+      String smsTemplate = hcPreBookingOrderMapper.getHcPreBookSmsTemplate(smsEntry);
+
+      sms.setMessage(CommonUtils.nvl(smsTemplate));
+      sms.setMobiles(CommonUtils.nvl(preBookingOrderVO.getCustContactNumber()));
+      sms.setRemark("Pre-Booking SMS VIA eTRUST");
+      sms.setRefNo(CommonUtils.nvl(preBookingOrdNo));
+      adaptorService.sendSMS(sms);
 
 
       // Update customer marketing message status(universal between HC/HA)
@@ -204,28 +204,6 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
           ROOT_STATE = "ROOT_4";
         }
       }
-
-/*      // CHECK PRE BOOK CONDITION
-      EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
-      EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
-
-      if (ValiRentInstNo == null) {
-        msg = msg + " -Not allowed for Pre Booking (Rental bill not found). <br/>";
-        isInValid = "InValid";
-        ROOT_STATE = "ROOT_4";
-      } else {
-        int rentalContractPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
-        int rentalInstPeriod = Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo")));
-        // RENTAL CONTRACT PERIOD - RENT INST PERIOD (WITHIN 4 MONTHS ONLY ALLOW PRE-BOOK)
-        int allowToPreBook = rentalContractPeriod - rentalInstPeriod;
-
-        if (allowToPreBook > 4) {
-          msg = msg + " -Not allowed for Pre Booking with Pre Book Condition. <br/>";
-          isInValid = "InValid";
-          ROOT_STATE = "ROOT_4";
-        }
-      }*/
-
     }
 
     RESULT.put("ROOT_STATE", ROOT_STATE);
@@ -244,19 +222,18 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   }
 
   @Override
-  public EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception {
-    return hcPreBookingOrderMapper.selectPreBookOrderVerifyStus(params);
+  public EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params) {
+    return hcPreBookingOrderMapper.selectPreBookOrderEligibleInfo(params);
   }
 
   @Override
-  public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO)
-      throws ParseException {
+  public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
     int rtnCnt = 0;
     try {
-      params.put("updUserId",sessionVO.getUserId());
-      params.put("stusId",SalesConstants.STATUS_CANCELLED);
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("stusId", SalesConstants.STATUS_CANCELLED);
       // UPDATE PRE-BOOK STATUS - SAL0404M - STUS_ID
-      rtnCnt = hcPreBookingOrderMapper.updateHcPreBookOrderCancel(params);
+      rtnCnt = hcPreBookingOrderMapper.updateHcPreBookOrderStatus(params);
       if (rtnCnt <= 0) { // not updated
         throw new ApplicationException(AppConstants.FAIL, "Pre-Booking Update Failed.");
       }
@@ -278,10 +255,10 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     params.put("subModule", "PRE_BOOK");
     params.put("paramCode", "MEM_TYPE");
 
-    //SYS0098M - PRE_BOOK - MEM_TYPE
+    // SYS0098M - PRE_BOOK - MEM_TYPE
     List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
-    if(!memType.isEmpty()){
-    params.put("memType", memType);
+    if (!memType.isEmpty()) {
+      params.put("memType", memType);
     }
     return hcPreBookingOrderMapper.selectPreBookSalesPerson(params);
   }
@@ -293,10 +270,10 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     params.put("subModule", "PRE_BOOK");
     params.put("paramCode", "MEM_TYPE");
 
-    //SYS0098M - PRE_BOOK - MEM_TYPE
+    // SYS0098M - PRE_BOOK - MEM_TYPE
     List<EgovMap> memType = commonMapper.selectSystemConfigurationParamVal(params);
-    if(!memType.isEmpty()){
-    params.put("memType", memType);
+    if (!memType.isEmpty()) {
+      params.put("memType", memType);
     }
     return hcPreBookingOrderMapper.selectPreBookConfigurationPerson(params);
   }
