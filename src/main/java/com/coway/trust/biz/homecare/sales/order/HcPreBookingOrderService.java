@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
-import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -36,7 +35,7 @@ public interface HcPreBookingOrderService {
 
 	public EgovMap selectHcPreBookingOrderInfo(Map<String, Object> params);
 
-	EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
+	EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
 	public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
