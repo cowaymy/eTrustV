@@ -319,11 +319,13 @@
 
         if($('#hiddenTypeId').val() != '964') {
             isValid = false;
-            msg = "* Please select an individual customer.<br>";
+            msg += "* Please select an individual customer.<br>";
         }
 
-        if($('#hiddenCustStatusId').val() != '7466' || $('#hiddenCustStatusId').val() != '7476') {
-            isValid = false;
+        if($('#hiddenCustStatusId').val() == '7466' || $('#hiddenCustStatusId').val() == '7476') {
+
+        }else{
+        	isValid = false;
             msg = "* Please select an Engaged customer.<br>";
         }
 
@@ -358,6 +360,7 @@
     			  salesOrdNoOld          		: $('#relatedNo').val(),
     			  rem                    		: $('#preRemark').val(),
     			  stkId                  		: $('#preOrdProduct').val(),
+    			  area							: $('#instArea').val(),
     			  receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
 
     	};
