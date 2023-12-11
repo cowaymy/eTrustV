@@ -11,6 +11,7 @@
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"},{"codeId": "5764","codeName": "Auxiliary"}];
     var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
     var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
+    var preBookPeriod = [{"codeId": "4","codeName": "4M Earlier"},{"codeId": "3","codeName": "3M Earlier"},{"codeId": "2","codeName": "2M Earlier"},{"codeId": "1","codeName": "1M Earlier"}];
     var recentGridItem = null;
     var selectRowIdx;
     var popupObj;
@@ -106,19 +107,17 @@
         });
 
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
+        doDefCombo(preBookPeriod, '' ,'_preBookPeriod', 'M', 'fn_multiCombo');
         //doDefCombo(actData, '' ,'_action', 'S', '');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_preStusId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_preBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doDefCombo(codeList_8, '' ,'_preTypeId', 'M', 'fn_multiCombo');
+        //doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_preBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        //doDefCombo(codeList_8, '' ,'_preTypeId', 'M', 'fn_multiCombo');
 
-        if (memTypeFiltered) {
+       /*  if (memTypeFiltered) {
             doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
         } else {
             doDefCombo(memTypeData, '', 'memType', 'S', '');
-        }
-
-         doDefCombo(productList, '' ,'_preOrdProudctList', 'M', 'fn_multiCombo2');
-         //doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo2'); //Branch Code
+        } */
 
         //excel Download
         $('#excelDown').click(function() {
@@ -132,20 +131,7 @@
     });
 
     function fn_multiCombo2(){
-        $('#listDscBrnchId').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
 
-        $('#_preOrdProudctList').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
-
-       $('#_preOrdProudctList').multipleSelect("checkAll");
-       $('#listDscBrnchId').multipleSelect("checkAll");
     }
 
     function fn_statusCodeSearch(){
@@ -170,6 +156,7 @@
           , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : '15%'}
           , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : '15%'}
           , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : '15%'}
+          , { headerText : "Pre-Booking Period", dataField : "discWaive", editable : false, width : '15%'}
           , { headerText : "preBookId",dataField : "preBookId", visible  : false}
           , { headerText : "stusId",dataField : "stusId", visible  : false}
         ];
@@ -206,6 +193,7 @@
           , { headerText : "Previous Product Model", dataField : "", editable : false, width : 200}
           , { headerText : "Previous Product Order No", dataField : "", editable : false, width : 200}
           , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
+          , { headerText : "Pre-Booking Period", dataField : "discWaive", editable : false, width : 200}
 
         ];
 
@@ -291,8 +279,8 @@
 
         if(FormUtil.isEmpty($('#_memCode').val())
         	&& FormUtil.isEmpty($('#_appTypeId').val())
-        	&& FormUtil.isEmpty($('#_preStusId').val()) && FormUtil.isEmpty($('#_preBrnchId').val())
-            && FormUtil.isEmpty($('#_preTypeId').val())
+        	&& FormUtil.isEmpty($('#_preStusId').val())
+        	&& FormUtil.isEmpty($('#_preBookPeriod').val())
             && FormUtil.isEmpty($('#_nric').val())
             && FormUtil.isEmpty($('#_name').val()) && (FormUtil.isEmpty($('#_reqstStartDt').val())
             || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
@@ -303,10 +291,6 @@
                 msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
             }
 
-            /* if(FormUtil.isEmpty($('#_sofNo').val())){
-                isValid = false;
-                msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
-            } */
         }
 
         if(!FormUtil.isEmpty($('#_reqstStartTime').val()) || !FormUtil.isEmpty($('#_reqstEndTime').val())) {
@@ -358,26 +342,19 @@
         });
         $('#_appTypeId').multipleSelect("checkAll");
 
+        $('#_preBookPeriod').change(function() {
+        }).multipleSelect({
+            selectAll: true,
+            width: '100%'
+        });
+        $('#_preBookPeriod').multipleSelect("checkAll");
+
         $('#_preStusId').change(function() {
         }).multipleSelect({
             selectAll: true,
             width: '100%'
         });
         $('#_preStusId').multipleSelect("checkAll");
-
-        $('#_preBrnchId').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
-        $('#_preBrnchId').multipleSelect("checkAll");
-
-        $('#_preTypeId').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
-        $('#_preTypeId').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -525,23 +502,9 @@
 <tr>
     <th scope="row">Pre-Booking Order Status</th>
     <td><select id="_preStusId" name="_preStusId" class="multy_select w100p" multiple="multiple"></select></td>
-    <th scope="row">Posting Branch</th>
-    <td><select id="_preBrnchId" name="_preBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
     <th scope="row">NRIC/Company No</th>
     <td><input id="_nric" name="_nric" type="text" title="" placeholder="" class="w100p" /></td>
-</tr>
-<tr>
-    <th scope="row">SOF No.</th>
-    <td><input id="_sofNo" name="_sofNo" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Customer Type</th>
-    <td><select id="_preTypeId" name="_preTypeId" class="multy_select w100p" multiple="multiple"></select></td>
-    <th scope="row">Customer Name</th>
-    <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
-</tr>
-<tr>
-    <th scope="row">Pre-Booking Order No.</th>
-    <td><input id="_ordNo" name="_ordNo" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Time</th>
+        <th scope="row">Pre-Booking Time</th>
     <td>
        <div class="date_set w100p">
         <p><input id="_reqstStartTime" name="_reqstStartTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}"  /></p>
@@ -549,8 +512,22 @@
         <p><input id="_reqstEndTime" name="_reqstEndTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}" /></p>
         </div>
     </td>
-    <th scope="row"><spring:message code="sal.text.product" /></th>
-    <td><select id="_preOrdProudctList" name="_preOrdProudctList" class="multy_select w100p" multiple="multiple"></select></td>
+</tr>
+<tr>
+        <th scope="row">Pre-Booking Order No.</th>
+    <td><input id="_ordNo" name="_ordNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Customer Name</th>
+    <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
+     <th scope="row">Verification Status</th>
+    <td><select id="verifyStatus" name="verifyStatus" class="w100p" >
+            <option value="">Choose One</option>
+            <option value="ACT">ACT</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+        </select>
+     </td>
+</tr>
+<tr>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
@@ -561,18 +538,8 @@
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
- <th scope="row">Verification Status</th>
-    <td><select id="verifyStatus" name="verifyStatus" class="w100p" >
-            <option value="">Choose One</option>
-            <option value="ACT">ACT</option>
-            <option value="Y">Y</option>
-            <option value="N">N</option>
-        </select>
-     </td>
-    <th scope="row"><spring:message code="sal.text.memtype" /></th>
-    <td><select id="memType" name="memType" class="w100p" ></select>
-<!--     <th scope="row">DT Branch</th>
-     <td><select id="listDscBrnchId" name="listDscBrnchId" class="multy_select w100p" multiple="multiple"></select></td> -->
+<th scope="row">Pre-Booking Period</th>
+    <td><select id="_preBookPeriod" name="_preBookPeriod" class="multy_select w100p" multiple="multiple"></select></td>
 </tr>
 
 <tr>
