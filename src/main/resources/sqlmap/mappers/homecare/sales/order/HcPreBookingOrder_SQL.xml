@@ -324,7 +324,7 @@
     <select id="getHcPreBookSmsTemplate" parameterType="Map" resultType="String">
         SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'homecare.msg.smsPreBook'),
         '{1}', #{preBookNo}),
-        '{2}', #{area}),
+        '{2}', #{postCode}),
         '{3}', #{memCode}),
         '{4}', #{salesOrdNoOld})
 		FROM DUAL
