@@ -609,7 +609,7 @@ public class AdaptorServiceImpl implements AdaptorService {
         String smsUrl;
         try {
           smsUrl = "http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
-              + "&phone_number=" + giCountryCode + smsVO.getMobile().trim()
+              + "&phone_number=" + giCountryCode + smsVO.getMobiles()
               + "&text=" + URLEncoder.encode(smsVO.getMessage(), "UTF-8");
            //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
         } catch (UnsupportedEncodingException e) {
