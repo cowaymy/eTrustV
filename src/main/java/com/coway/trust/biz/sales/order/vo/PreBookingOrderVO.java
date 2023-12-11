@@ -50,6 +50,10 @@ public class PreBookingOrderVO implements Serializable {
 
   private int receivingMarketingMsgStatus;
 
+  private int preBookPeriod;
+
+  private String area;
+
   public int getPreBookOrdId() {
     return preBookOrdId;
   }
@@ -192,5 +196,21 @@ public class PreBookingOrderVO implements Serializable {
 
   public void setCustContactNumber(String custContactNumber) {
     this.custContactNumber = custContactNumber;
+  }
+
+  public int getPreBookPeriod() {
+    return preBookPeriod;
+  }
+
+  public void setPreBookPeriod(int preBookPeriod) {
+    this.preBookPeriod = preBookPeriod;
+  }
+
+  public String getArea() {
+    return area;
+  }
+
+  public void setArea(String area) {
+    this.area = area;
   }
 }
