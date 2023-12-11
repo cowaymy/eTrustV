@@ -8,7 +8,6 @@
 </style>
 <script type="text/javaScript">
 	var myGridID;
-	var excelListGridID;
 	var option = {
 		width : "1200px", // 창 가로 크기
 		height : "500px" // 창 세로 크기
@@ -38,7 +37,6 @@
 		}
 
 		createAUIGrid();
-	    createExcelAUIGrid();
 
 		$('#_listSearchBtn').click(function() {
 			selectList();
@@ -74,7 +72,6 @@
 		Common.ajax("GET",
 				"/payment/mobileLumpSumPayment/getlumpSumEnrollmentList.do", $("#searchForm").serialize(), function(result) {
 					AUIGrid.setGridData(myGridID, result);
-				    AUIGrid.setGridData(excelListGridID, result);
 				});
 	}
 
@@ -416,7 +413,11 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 		           labelFunction : function(rowIndex, columnIndex, value){
-		               var maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+		               var maskedEmail = "" , prefix= "";
+
+		               if(value){
+		            	   prefix = value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+		               }
 
 		               for(var i=0; i<prefix.length; i++){
 		                   if(i == 0 || i == prefix.length - 1) {
@@ -437,7 +438,11 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 			           labelFunction : function(rowIndex, columnIndex, value){
-			               var maskedEmail = "" , prefix= value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+			               var maskedEmail = "" , prefix= "";
+
+			               if(value){
+			            	   prefix = value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
+			               }
 
 			               for(var i=0; i<prefix.length; i++){
 			                   if(i == 0 || i == prefix.length - 1) {
@@ -458,7 +463,10 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 		            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-		            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            	if(value){
+			            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            	}
+		            	return "";
 		            }
 				},
 				{
@@ -469,7 +477,10 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 		            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-		            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            	if(value){
+			            	return  value.substr(0,3) + value.substr(3,value.length-7).replace(/[0-9]/g, "*") + value.substr(-4);
+		            	}
+		            	return "";
 		            }
 				},
 				{
@@ -605,378 +616,6 @@
 								}
 							}
 						});
-	}
-
-	function createExcelAUIGrid() {
-		var excelColumnLayout = [
-				{
-					dataField : "mobPayGroupNo",
-					headerText : '<spring:message code="pay.title.ticketNo" />',
-					width : 100,
-					cellMerge : true
-				},
-				{
-					dataField : "crtDt",
-					headerText : '<spring:message code="pay.grid.requestDate" />',
-					width : 140,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "payStusName",
-					width : 100,
-					headerText : '<spring:message code="pay.grid.status" />',
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "crtUserName",
-					headerText : '<spring:message code="pay.head.memberCode" />',
-					width : 160,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "payModeName",
-					width : 160,
-					headerText : '<spring:message code="sal.text.payMode" />',
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "salesOrdNo",
-					headerText : '<spring:message code="pay.title.orderNo" />',
-					width : 120,
-					editable : false
-				},
-				{
-					dataField : "payType",
-					headerText : 'Pay Type',
-					width : 130,
-					editable : false
-				},
-				{
-					dataField : "pvYear",
-					headerText : '<spring:message code="sal.title.text.pvYear" />',
-					width : 120,
-					editable : false
-				},
-				{
-					dataField : "pvMonth",
-					headerText : '<spring:message code="service.title.PVMonth" />',
-					width : 120,
-					editable : false
-				},
-				{
-					dataField : "custName",
-					headerText : '<spring:message code="pay.head.customerName" />',
-					width : 200,
-					editable : false,
-					style : "aui-grid-user-custom-left",
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "oriOutAmt",
-					headerText : '<spring:message code="pay.head.outstandingAmount" />',
-					width : 130,
-					editable : false
-				},
-				{
-					dataField : "payAmt",
-					headerText : '<spring:message code="pay.head.paymentAmount" />',
-					width : 130,
-					editable : false
-				},
-				{
-					dataField : "totOriOutAmt",
-					headerText : 'Total Outstanding Amt',
-					width : 100,
-					editable : false,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "totPayAmt",
-					headerText : 'Total Payment Amt',
-					width : 100,
-					dataType : "numeric",
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "slipNo",
-					headerText : '<spring:message code="pay.head.slipNo" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "chequeNo",
-					headerText : '<spring:message code="pay.title.chequeNo" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "chequeDate",
-					headerText : '<spring:message code="service.text.IssueDt" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "issueBankName",
-					headerText : '<spring:message code="pay.text.issBnk" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "cardNo",
-					headerText : '<spring:message code="pay.head.crc.cardNo" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "approvalNo",
-					headerText : '<spring:message code="sal.title.text.apprvNo" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "crcName",
-					headerText : '<spring:message code="sal.text.nameOnCard" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "transactionDate",
-					headerText : 'CRC Transaction Date',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "expiryDate",
-					headerText : 'Card Expiry Date',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "cardModeDesc",
-					headerText : 'Card Mode',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "merchantBankDesc",
-					headerText : 'Merchant Bank',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "cardBrandDesc",
-					headerText : 'CRC Brand',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-// 				{
-// 					dataField : "attchImgUrl1",
-// 					headerText : 'Transaction Slip',
-// 					width : 100,
-// 					cellMerge : true,
-// 					mergeRef : "mobPayGroupNo",
-// 					mergePolicy : "restrict",
-// 					renderer : {
-// 						type : "ImageRenderer",
-// 						width : 20,
-// 						height : 20,
-// 						imgTableRef : {
-// 							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-// 						}
-// 					}
-// 				},
-// 				{
-// 					dataField : "attchImgUrl2",
-// 					headerText : 'Submission Checklist',
-// 					width : 100,
-// 					cellMerge : true,
-// 					mergeRef : "mobPayGroupNo",
-// 					mergePolicy : "restrict",
-// 					renderer : {
-// 						type : "ImageRenderer",
-// 						width : 20,
-// 						height : 20,
-// 						imgTableRef : {
-// 							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-// 						}
-// 					}
-// 				},
-// 				{
-// 					dataField : "attchImgUrl3",
-// 					headerText : 'Other/Cheque Image',
-// 					width : 100,
-// 					cellMerge : true,
-// 					mergeRef : "mobPayGroupNo",
-// 					mergePolicy : "restrict",
-// 					renderer : {
-// 						type : "ImageRenderer",
-// 						width : 20,
-// 						height : 20,
-// 						imgTableRef : {
-// 							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-// 						}
-// 					}
-// 				},
-// 				{
-// 					dataField : "attchImgUrl4",
-// 					headerText : 'Other 2',
-// 					width : 100,
-// 					cellMerge : true,
-// 					mergeRef : "mobPayGroupNo",
-// 					mergePolicy : "restrict",
-// 					renderer : {
-// 						type : "ImageRenderer",
-// 						width : 20,
-// 						height : 20,
-// 						imgTableRef : {
-// 							"DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
-// 						}
-// 					}
-// 				},
-				{
-					dataField : "remarks",
-					headerText : '<spring:message code="pay.head.remark" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "crtUserBrnchNm",
-					headerText : '<spring:message code="pay.title.branchCode" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "updDt",
-					headerText : '<spring:message code="pay.text.updDt" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "updUserName",
-					headerText : '<spring:message code="pay.head.updateUser" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "email1",
-					headerText : '<spring:message code="pay.head.email" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "email2",
-					headerText : '<spring:message code="pay.head.addEmail" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "sms1",
-					headerText : '<spring:message code="pay.head.sms" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "sms2",
-					headerText : '<spring:message code="pay.head.addSms" />',
-					width : 100,
-					cellMerge : true,
-					mergeRef : "mobPayGroupNo",
-					mergePolicy : "restrict"
-				},
-				{
-					dataField : "issueBank",
-					visible : false
-				}, {
-					dataField : "cardMode",
-					visible : false
-				}, {
-					dataField : "merchantBank",
-					visible : false
-				}, {
-					dataField : "cardBrand",
-					visible : false
-				}, {
-					dataField : "payStusId",
-					visible : false
-				}, {
-					dataField : "mobPayDetailId",
-					visible : false
-				}, {
-					dataField : "ordId",
-					visible : false
-				}, {
-					dataField : "payMode",
-					visible : false
-				} ];
-		var excelGridPros = {
-			enableCellMerge : true,
-			cellMergePolicy : "withNull",
-			usePaging : false,
-			editable : false,
-			headerHeight : 30,
-			wordWrap : true,
-	      enterKeyColumnBase : true,
-	      useContextMenu : true,
-	      enableFilter : true,
-	      showStateColumn : true,
-	      displayTreeOpen : true,
-	      noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
-	      groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
-	      exportURL : "/common/exportGrid.do"
-		};
-	    excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
 	}
 
 	function loadComboBox() {
@@ -1589,15 +1228,6 @@
       $('#errorSummaryReport')[0].reset();
   }
 
-  function fn_excelDown(){
-	    //Excel Download
-	      var excelProps = {
-	        fileName : "Mobile Lump Sum List",
-	        exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
-	      };
-	      AUIGrid.exportToXlsx(excelListGridID, excelProps);
-  }
-
   function loadMemberInfo(){
 	    if("${SESSION_INFO.memberLevel}" =="1"){
 
@@ -1647,6 +1277,11 @@
   function thousandSeperator(value) {
 	    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
+
+  function fn_excelDown() {
+	    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	    GridCommon.exportTo("grid_wrap", "xlsx", "Mobile Lump Sum Payment Key-in Search");
+	  }
 </script>
 <!-- html content -->
 <section id="content">
@@ -1831,9 +1466,7 @@
 	<section class="search_result">
 		<article class="grid_wrap">
 			<!-- grid_wrap start -->
-			<div id="grid_wrap" style="width: 100%; margin: 0 auto;"
-				class="autoGridHeight"></div>
-      		<div id="excel_list_grid_wrap" style="display: none;"></div>
+			<div id="grid_wrap" style="width: 100%; margin: 0 auto;" class="autoGridHeight"></div>
 			<!-- grid_wrap end -->
 		</article>
 	</section>

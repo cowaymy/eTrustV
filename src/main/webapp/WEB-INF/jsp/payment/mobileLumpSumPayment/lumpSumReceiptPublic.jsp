@@ -12,16 +12,8 @@ $(document).ready(function(){
 	        styleSheets[i].disabled = true;
 		}
 	}
-	//getData();
 	$('.bottom_msg_box').hide();
 });
-
-function getData(){
-    Common.ajax("GET","/payment/mobileLumpSumPayment/selectLumpSumReceiptData.do?key=" + "${key}",null, function(result){
-        console.log(result);
-
-    });
-}
 </script>
 <div class="container">
 <div style="width:1200px">
@@ -53,6 +45,12 @@ function getData(){
                 <td>: ${info.custName}</td>
                 <td style="font-weight:bold">Receipt Date </td>
                 <td>: ${info.crtDt}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="font-weight:bold">E-TR No</td>
+                <td>: ${info.eTRNo}</td>
             </tr>
         </table>
         <br><br>

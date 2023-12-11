@@ -1181,6 +1181,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	public EgovMap getLumpSumReceiptInfo(Map<String, Object> params){
 		EgovMap result = new EgovMap();
 
+		String mobPayGroupNo = params.get("mobPayGroupNo").toString();
+		String eTRNo = org.apache.commons.lang.StringUtils.leftPad(mobPayGroupNo, 6,"0");
+		result.put("eTRNo", "LS"+eTRNo);
+
 		 EgovMap additionalParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailInfo(params);
 		 result.putAll(additionalParam);
 
@@ -1202,6 +1206,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	public void sendEmail(Map<String, Object> params) {
 		EmailVO email = new EmailVO();
 		String emailSubject = "COWAY: Mobile Bulk Payment";
+
+		String mobPayGroupNo = params.get("mobPayGroupNo").toString();
+		String eTRNo = org.apache.commons.lang.StringUtils.leftPad(mobPayGroupNo, 6,"0");
+		params.put("eTRNo", "LS"+eTRNo);
 
 		List<String> emailNo = new ArrayList<String>();
 
