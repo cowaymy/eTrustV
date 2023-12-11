@@ -138,7 +138,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
 
       smsEntry.put("preBookNo", preBookingOrderVO.getPreBookOrdNo());
       smsEntry.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
-      smsEntry.put("area", preBookingOrderVO.getArea());
+      smsEntry.put("postCode", preBookingOrderVO.getPostCode());
       smsEntry.put("memCode", preBookingOrderVO.getMemCode());
 
       String smsTemplate = hcPreBookingOrderMapper.getHcPreBookSmsTemplate(smsEntry);
@@ -147,7 +147,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       sms.setMobiles(CommonUtils.nvl(preBookingOrderVO.getCustContactNumber()));
       sms.setRemark("Pre-Booking SMS VIA eTRUST");
       sms.setRefNo(CommonUtils.nvl(preBookingOrdNo));
-      adaptorService.sendSMS(sms);
+      adaptorService.sendSMS4(sms);
 
 
       // Update customer marketing message status(universal between HC/HA)
