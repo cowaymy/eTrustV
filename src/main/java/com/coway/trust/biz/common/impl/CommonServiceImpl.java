@@ -1728,4 +1728,9 @@ public class CommonServiceImpl implements CommonService {
     return commonMapper.selectSystemConfigurationParamVal(params);
   }
 
+  @Override
+  public int selectSystemConfigurationParamValue(Map<String, Object> params) {
+    return commonMapper.selectSystemConfigurationParamValue(params);
+  }
+
 }
