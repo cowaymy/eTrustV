@@ -133,20 +133,15 @@ public class HcPreBookingOrderController {
 
     String[] arrAppType = request.getParameterValues("_appTypeId"); // Application Type
     String[] arrPreOrdStusId = request.getParameterValues("_preStusId"); // Pre-Book Order Status
-    String[] arrKeyinBrnchId = request.getParameterValues("_preBrnchId"); // Key-In Branch
-    String[] arrCustType = request.getParameterValues("_preTypeId"); // Customer Type
-    String[] arrOrdProudctList = request.getParameterValues("_preOrdProudctList"); // Product
+    String[] arrPreBookPeriod = request.getParameterValues("_preBookPeriod"); // Application Type
+
 
     if (arrAppType != null && !CommonUtils.containsEmpty(arrAppType))
       params.put("arrAppType", arrAppType);
     if (arrPreOrdStusId != null && !CommonUtils.containsEmpty(arrPreOrdStusId))
       params.put("arrPreOrdStusId", arrPreOrdStusId);
-    if (arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId))
-      params.put("arrKeyinBrnchId", arrKeyinBrnchId);
-    if (arrCustType != null && !CommonUtils.containsEmpty(arrCustType))
-      params.put("arrCustType", arrCustType);
-    if (arrOrdProudctList != null && !CommonUtils.containsEmpty(arrOrdProudctList))
-      params.put("arrOrdProudctList", arrOrdProudctList);
+    if (arrPreBookPeriod != null && !CommonUtils.containsEmpty(arrPreBookPeriod))
+      params.put("arrPreBookPeriod", arrPreBookPeriod);
 
     logger.debug("params : " + params);;
     List<EgovMap> result = hcPreBookingOrderService.selectHcPreBookingOrderList(params);
@@ -266,7 +261,8 @@ public class HcPreBookingOrderController {
   public ResponseEntity<EgovMap> selectPreBookOrderVerifyStus(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
 
-    EgovMap result = hcPreBookingOrderService.selectPreBookOrderVerifyStus(params);
+    params.put("type", 1); // HC
+    EgovMap result = hcPreBookingOrderService.selectPreBookOrderEligibleInfo(params);
 
     return ResponseEntity.ok(result);
   }
