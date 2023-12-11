@@ -17,7 +17,9 @@
 		T4.SALES_ORD_NO ,
 		T5.ITM_STK_ID,
 		T6.STK_DESC AS PREV_STK_DESC ,
-		T7.CODE AS STUS_CODE
+		T7.CODE AS STUS_CODE ,
+		T1.DISC_WAIVE ,
+		T4.APP_TYPE_ID
 		FROM SAL0404M T1
 		LEFT JOIN SAL0029D T2 ON T1.CUST_ID = T2.CUST_ID
 		JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
@@ -26,6 +28,7 @@
 		LEFT JOIN SYS0026M T6 ON T5.ITM_STK_ID = T6.STK_ID
 		LEFT JOIN SYS0038M T7 ON T1.STUS_ID = T7.STUS_CODE_ID
 		LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
+		LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
 
 		WHERE
 		T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
@@ -34,50 +37,61 @@
 		<if test='_ordNo != null and _ordNo != ""'>
 			AND T1.PRE_BOOK_NO = #{_ordNo}
 		</if>
+
 		<if test='_memCode != null and _memCode != ""'>
 			AND T1.MEM_CODE = #{_memCode}
 		</if>
-		<if test='memType != null and memType != ""'>
-			AND T8.MEM_TYPE = #{memType}
-		</if>
+
+		<if test='arrPreBookPeriod != null and arrPreBookPeriod != ""'>
+            AND T1.DISC_WAIVE IN
+            <foreach item="item" collection="arrPreBookPeriod" index="index" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
 		<if test='verifyStatus != null and verifyStatus != ""'>
 			AND T1.CUST_VERIFY_STUS = #{verifyStatus}
 		</if>
+
 		<if
 			test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
 			AND T1.PRE_BOOK_DT BETWEEN TO_DATE(#{_reqstStartDt} ||
 			#{_reqstStartTime}, 'dd/mm/yyyy hh24:mi') AND TO_DATE(#{_reqstEndDt}
 			|| #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
 		</if>
-		<if test='arrOrdProudctList != null and arrOrdProudctList != ""'>
-			AND T1.STK_ID IN
-			<foreach item="item" collection="arrOrdProudctList" index="index"
-				open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
+
 		<if test='_nric != null and _nric != ""'>
 			AND T2.NRIC = #{_nric}
 		</if>
-		<if test='arrCustType != null and arrCustType != ""'>
-			AND T2.TYPE_ID IN
-			<foreach item="item" collection="arrCustType" index="index"
-				open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
+
 		<if test='_name != null and _name != ""'>
 			AND T2.NAME LIKE #{_name}||'%'
 		</if>
+
 		<if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
             AND T7.CODE IN
             <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">
                 #{item, jdbcType=VARCHAR}
             </foreach>
         </if>
-        <if test='_sofNo != null and _sofNo != ""'>
-			AND T4.REF_NO LIKE #{_sofNo}||'%'
-		</if>
+
+        <if test='arrAppType != null and arrAppType != ""'>
+            AND T4.APP_TYPE_ID IN
+            <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+
+        <if test="orgCode != '' ">
+            AND T9.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != '' ">
+            AND T9.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != '' ">
+            AND T9.DEPT_CODE = #{deptCode}
+        </if>
+
 		ORDER BY T1.PRE_BOOK_ID ASC
 	</select>
 
@@ -178,22 +192,35 @@
 		T2.SALES_ORD_NO AS SALES_ORD_NO_OLD ,
 		T3.STK_DESC ,
 		T1.STUS_ID ,
-		T4.CODE AS STUS_CODE
+		T4.CODE AS STUS_CODE ,
+		T1.DISC_WAIVE
 		FROM SAL0404M T1
 		LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
 		LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
 		LEFT JOIN SYS0038M T4 ON T1.STUS_ID = T4.STUS_CODE_ID
 		WHERE
-		T1.PRE_BOOK_ID = #{preBookId}
+		T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+		AND T1.PRE_BOOK_ID = #{preBookId}
     </select>
 
-  <select id="selectPreBookOrderVerifyStus" parameterType="Map" resultType="egovMap">
+  <select id="selectPreBookOrderEligibleInfo" parameterType="Map" resultType="egovMap">
         SELECT
-		T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO
+		T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO , T1.PRE_BOOK_ID , T1.DISC_WAIVE , T1.STUS_ID ,
+		TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
 		FROM SAL0404M T1
 		LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
-		WHERE
-		T1.STUS_ID = 1
+		LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
+		WHERE 1=1
+
+		<if test='type != null and type ==1'>
+          AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+      	</if>
+		AND T1.STUS_ID = 1
+		AND T2.STUS_CODE_ID = 4
 		AND T1.CUST_ID = #{custId}
 		AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
 		AND T1.CUST_VERIFY_STUS NOT IN ('N')
@@ -202,7 +229,7 @@
 		]]>
   </select>
 
-      <update id="updateHcPreBookOrderCancel" parameterType="Map">
+      <update id="updateHcPreBookOrderStatus" parameterType="Map">
         UPDATE SAL0404M SET
                       UPD_DT                = SYSDATE
                     , UPD_USER_ID           = #{updUserId}
@@ -293,5 +320,14 @@
       </foreach>
       </if>
     </select>
+
+    <select id="getHcPreBookSmsTemplate" parameterType="Map" resultType="String">
+        SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'homecare.msg.smsPreBook'),
+        '{1}', #{preBookNo}),
+        '{2}', #{area}),
+        '{3}', #{memCode}),
+        '{4}', #{salesOrdNoOld})
+		FROM DUAL
+	</select>
 
 </mapper>
