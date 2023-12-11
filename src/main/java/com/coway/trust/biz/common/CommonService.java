@@ -488,4 +488,6 @@ public interface CommonService {
 
   List<EgovMap> selectTimePick();
 
+  int selectSystemConfigurationParamValue(Map<String, Object> params);
+
 }
