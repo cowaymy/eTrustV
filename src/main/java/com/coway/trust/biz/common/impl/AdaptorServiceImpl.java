@@ -43,6 +43,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 	private static final String GENSUITE_SUCCESS = "success";
 	private static final String MVGATE_SUCCESS = "000";
+	private static final String GI_SUCCESS = "success";
 
 	@Value("${mail.config.from}")
 	private String from;
@@ -100,6 +101,18 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 	@Value("${sms.preccp.gensuite.password}")
 	private String preccpGensuitePassword;
+
+//SMS g-i
+  @Value("${sms.gi.host}")
+  private String giHost;
+  @Value("${sms.gi.path}")
+  private String giPath;
+  @Value("${sms.gi.user.name}")
+  private String giUserName;
+  @Value("${sms.gi.password}")
+  private String giPassword;
+  @Value("${sms.gi.country.code}")
+  private String giCountryCode;
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -567,4 +580,76 @@ public class AdaptorServiceImpl implements AdaptorService {
         return result;
     }
 
+    //20231211 - Added New Vendor - VendorId 4 --g-i
+    // Add by Fannie
+    @Override
+    public SmsResult sendSMS4(SmsVO smsVO) {
+      return this.sendSMS4(smsVO, null, null);
+    }
+
+    //20231211 - Added New Vendor - VendorId 4 --g-i
+    public SmsResult sendSMS4(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
+
+      if (smsVO.getMobiles().size() == 0) {
+        throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+      }
+
+      Map<String, String> reason = new HashMap<>();
+      SmsResult result = new SmsResult();
+      result.setReqCount(smsVO.getMobiles().size());
+
+      if (templateType != null) {
+        smsVO.setMessage(getSmsTextByTemplate(templateType, templateParams));
+      }
+
+      String msgId = UUIDGenerator.get();
+      result.setMsgId(msgId);
+      int vendorId = 4;
+      smsVO.getMobiles().forEach(mobileNo -> {
+        String smsUrl;
+        try {
+          smsUrl = "http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
+              + "&phone_number=" + giCountryCode + smsVO.getMobile().trim()
+              + "&text=" + URLEncoder.encode(smsVO.getMessage(), "UTF-8");
+           //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
+        } catch (UnsupportedEncodingException e) {
+          throw new ApplicationException(e, AppConstants.FAIL);
+        }
+
+        LOGGER.debug("SMS URL >>>>>>>>>>>>>>>>{}" ,smsUrl);
+
+        Client client = Client.create();
+        WebResource webResource = client.resource(smsUrl);
+        ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+        String output = response.getEntity(String.class);
+
+        int statusId;
+        String body;
+
+        if (response.getStatus() == 200) {
+          body = output;
+
+          if (GI_SUCCESS.equals(body)) {
+            statusId = 4;
+            result.setSuccessCount(result.getSuccessCount() + 1);
+          } else {
+            statusId = 21;
+            result.setFailCount(result.getFailCount() + 1);
+            reason.clear();
+            reason.put(mobileNo, body);
+            result.addFailReason(reason);
+          }
+
+        } else {
+          statusId = 1;
+          body = output;
+          result.setErrorCount(result.getErrorCount() + 1);
+        }
+
+        insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
+            smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
+      });
+
+      return result;
+    }
 }

@@ -91,4 +91,9 @@ public interface AdaptorService {
 	SmsResult sendSMS3(SmsVO smsVO);
 
 	SmsResult sendSMS3(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
+
+	SmsResult sendSMS4(SmsVO smsVO);
+
+  SmsResult sendSMS4(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
+
 }

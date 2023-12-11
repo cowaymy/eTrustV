@@ -200,48 +200,16 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
         logger.info("[PreBookingOrderServiceImpl - insertPreBooking] customer contact number :: {} " + preBookingOrderVO.getCustContactNumber());
 
-        SmsVO sms = new SmsVO(sessionVO.getUserId(), 975);
+        SmsVO sms = new SmsVO(sessionVO.getUserId(), 976);
         sms.setMessage(smsMessage);
-        sms.setMobiles((String) preBookingOrderVO.getCustContactNumber());
+        sms.setMobile((String) preBookingOrderVO.getCustContactNumber());
         sms.setSmsType(1);
         sms.setPriority(1);
-        sms.setBulkUploadId(0);
         sms.setRemark("Pre-Booking SMS via e-trust");
         sms.setExpireDayAdd(Integer.parseInt(CommonUtils.getCalDate(3).toString()));
         sms.setRetryNo(0);
         sms.setUserId(sessionVO.getUserId());
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] SMS REQUEST STRING ::{} " + sms);
-
-        SmsResult smsResult = adaptorService.sendSMS(sms);
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] SMS REQUEST smsResult ::{} " + smsResult);
-
-        /*smsList.put("smsId", 0);
-        smsList.put("smsMsg", smsMessage);
-        smsList.put("smsMsisdn",preBookingOrderVO.getCustContactNumber());
-        smsList.put("smsTypeId", 1);
-        smsList.put("smsPrio", 1);
-        smsList.put("smsRefNo", "");
-        smsList.put("smsBatchUploadId", 0);
-        smsList.put("smsRem", "Pre-Booking SMS via e-trust");
-        smsList.put("smsStartDt", CommonUtils.getNowDate());
-        smsList.put("smsExprDt", CommonUtils.getCalDate(3));
-        smsList.put("smsStusId",1);
-        smsList.put("smsRetry",0);
-        smsList.put("userId",sessionVO.getUserId());
-        smsList.put("smsVendorId",1);
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] - smsList :: {} " + smsList);
-        smsMapper.insertSmsEntry(smsList);*/
-
-       /*
-            Map<String, Object> smsReply =new HashMap<String, Object>();
-
-            smsReply.put("replyCode", "");
-            smsReply.put("replyRem", "");
-            smsReply.put("userId", sessionVO.getUserId());
-            smsReply.put("replyFdbckId", "");
-
-            smsMapper.insertGatewayReply(smsReply);
-        */
+        SmsResult smsResult = adaptorService.sendSMS4(sms);
 
         // Update customer marketing message status(universal between HC/HA)
         Map<String, Object> params1 = new HashMap();
