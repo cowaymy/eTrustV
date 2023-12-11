@@ -3,9 +3,7 @@ package com.coway.trust.biz.homecare.sales.order.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -26,14 +24,16 @@ public interface HcPreBookingOrderMapper {
 
 	public EgovMap selectHcPreBookingOrderInfo(Map<String, Object> params);
 
-	EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
+	EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
-	public int updateHcPreBookOrderCancel(Map<String, Object> params);
+	public int updateHcPreBookOrderStatus(Map<String, Object> params);
 
 	List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
 
 	EgovMap selectPreBookSalesPerson(Map<String, Object> params);
 
 	EgovMap selectPreBookConfigurationPerson(Map<String, Object> params);
+
+	String getHcPreBookSmsTemplate(Map<String, Object> params);
 
 }
