@@ -2288,4 +2288,14 @@
       AND DISB = 0
   </select>
 
+  <select id="selectSystemConfigurationParamValue" parameterType="Map" resultType="Integer">
+  SELECT PARAM_VAL
+      FROM SYS0098M
+      WHERE
+      MODULE = #{module}
+      AND SUB_MODULE = #{subModule}
+      AND PARAM_CODE = #{paramCode}
+      AND DISB = 0
+  </select>
+
 </mapper>
