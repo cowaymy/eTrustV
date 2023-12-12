@@ -87,7 +87,7 @@ function bindValue(){
            $("#deptCode").val( deptCode);
 
        }
-       else{
+       else if("${SESSION_INFO.memberLevel}" =="4"){
            $("#orgCode").attr("class", "w100p readonly");
            $("#orgCode").attr("readonly", "readonly");
            $("#orgCode").val(orgCode);

@@ -738,6 +738,50 @@
                 (
                 SELECT * FROM
                  (
+
+                  WITH ACT_HP AS(
+				          SELECT
+				                  TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
+				                , COUNT(DISTINCT A.MEM_CODE)  RESULT_ACTHP
+				          FROM ORG0044T A
+                 WHERE  1=1
+                  AND A.RESULT_ACTHP IS NOT NULL
+                  AND TO_CHAR(TO_DATE(A.SALES_DT),'YYYYMM')  = #{currentYm}
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                                <if test="orgCode != 'CRS0002'">
+                                 AND A.ORG_CODE = #{orgCode}
+                                </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND A.GRP_CODE =#{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND A.DEPT_CODE = #{deptCode}
+                        </if>
+                         <if test='position != null and position != "" and position != " "'>
+                              <if test="position == 'HP'">
+                              AND A.MEM_CODE = #{memCode}
+                              </if>
+                        </if>
+
+                       GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD'), MEM_LVL
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+	                         <if test="orgCode != 'CRS0002'">
+	                            , A.ORG_CODE
+	                         </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                                , A.GRP_CODE
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                                 , A.DEPT_CODE
+                        </if>
+                       <if test='position != null and position != "" and position != " "'>
+                            <if test="position == 'HP'">
+                                 , A.MEM_CODE
+                             </if>
+                        </if>
+				  )
                  SELECT
                             TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
                           <if test='orgCode != null and orgCode != "" and orgCode != " "'>
@@ -758,10 +802,11 @@
                         </if>
                         , NVL(SUM(A.RESULT_KEYIN),0) RESULT_KEYIN
                         , NVL(SUM(A.RESULT_NETSALES),0) RESULT_NETSALES
-                        , NVL(SUM(A.RESULT_ACTHP),0) RESULT_ACTHP
+                         ,NVL(B.RESULT_ACTHP,0) RESULT_ACTHP
                         , NVL(SUM(A.RESULT_RECRUIT),0) RESULT_RECRUIT
                         , NVL(ROUND(SUM(COLLECTAMT_SHI)/SUM(TARGETATMT_SHI) * 100,2),0) AS RESULT_SHI
                  FROM ORG0044T A
+                  LEFT JOIN ACT_HP B ON TO_CHAR(TO_DATE(A.SALES_DT), 'DD') = B.DAY
                  WHERE  1=1
                   AND TO_CHAR(TO_DATE(A.SALES_DT),'YYYYMM')  = #{currentYm}
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
@@ -781,7 +826,7 @@
                               </if>
                         </if>
 
-                 GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD'), MEM_LVL
+                 GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD'), MEM_LVL, B.RESULT_ACTHP
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
                               <if test="orgCode != 'CRS0002'">
                                  , A.ORG_CODE
