@@ -227,6 +227,11 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   }
 
   @Override
+  public EgovMap selectPreBookOrderEligibleCheck(Map<String, Object> params) {
+    return hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+  }
+
+  @Override
   public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
     int rtnCnt = 0;
     try {
