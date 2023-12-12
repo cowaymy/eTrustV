@@ -97,7 +97,6 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
     // GET PREVIOUS ORDER INFO
     EgovMap ordInfo = orderRegisterMapper.selectOldOrderId((String) params.get("salesOrdNo"));
-    logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] ordInfo :: {} " + ordInfo);
 
     if (ordInfo != null) {
       getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
@@ -108,18 +107,15 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
     } else {
       // CHECK PREVIOUS ORDER RENTAL OUTSTANDING AMOUNT
       String valiOutStandingAmt = String.valueOf(orderRegisterMapper.selectRentAmt(getOldOrderID));
-      logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] valiOutStandingAmt :: {} " + valiOutStandingAmt);
 
       if ("".equals(CommonUtils.nvl(valiOutStandingAmt))) {
         msg = msg + " -Not allowed for Pre Booking (Rental bill not found). <br/>";
         isInValid = "InValid";
         ROOT_STATE = "ROOT_4";
       } else {
-        logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] valiOutStandingAmt != empty or null ");
         BigDecimal valiOutStanding = new BigDecimal(valiOutStandingAmt);
         valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-        logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] valiOutStanding :: " + valiOutStanding);
         if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
           msg = msg + " -Not allowed for Pre Booking with Outstanding amount. <br/>";
           isInValid = "InValid";
@@ -127,7 +123,7 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
         }
       }
     }
-    logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] getOldOrderID :: " + getOldOrderID);
+
     RESULT.put("ROOT_STATE", ROOT_STATE);
     RESULT.put("IS_IN_VALID", isInValid);
     RESULT.put("MSG", msg);
@@ -143,7 +139,6 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
   public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO){
      try{
 	      logger.info("[PreBookingOrderServiceImpl - insertPreBooking] START!!");
-	      logger.info("[PreBookingOrderServiceImpl - insertPreBooking] preBookingOrderVO :: {} " + preBookingOrderVO);
 
         EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
 	      Calendar calNow = Calendar.getInstance();
@@ -166,12 +161,11 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	      }
 
 	      String preBookingNo = preBookingOrderMapper.selectNextPreBookingNo();
-	      logger.info("[PreBookingOrderServiceImpl - insertPreBooking] - preBookingNo :: {}" +preBookingNo);
 
 	      Map<String, Object> docNoList = new HashMap();
         String docNo = preBookingNo.substring(2);
         docNoList.put("preBookingNo",docNo);
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] - docNoList :: {}" +docNoList);
+
 
         preBookingOrderMapper.updatePreBookingNo(docNoList);
 
@@ -181,35 +175,26 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	      preBookingOrderVO.setDiscWaive(discWaive);
 	      preBookingOrderVO.setCustVerifyStus(SalesConstants.STATUS_CODE_NAME_ACT); // Default ACT
 	      preBookingOrderVO.setStusId(SalesConstants.STATUS_ACTIVE); // Default ACT
-	      logger.info("[PreBookingOrderServiceImpl - insertPreBooking] - preBookingOrderVO.getPreBookOrdNo() :: {}" +preBookingOrderVO.getPreBookOrdNo());
+
 	       // INSERT INTO PRE-BOOK MASTER TABLE - SAL0404M
 	      preBookingOrderMapper.insertPreBooking(preBookingOrderVO);
 
-	      Map<String, Object> smsList = new HashMap<String, Object>();
+	       Map<String, Object> smsList = new HashMap<String, Object>();
+	      smsList.put("preBookNo", preBookingOrderVO.getPreBookOrdNo());
+	      smsList.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
+	      smsList.put("postCode", preBookingOrderVO.getPostCode());
+	      smsList.put("memCode", preBookingOrderVO.getMemCode());
 
-        Map<String, Object> smsOrdAreaMemInfoList = new HashMap();
-        smsOrdAreaMemInfoList = preBookingOrderMapper.getOrdAreaMemInfo(preBookingOrderVO.getSalesOrdIdOld());
-
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] - smsOrdAreaMemInfoList :: {}" +smsOrdAreaMemInfoList);
-
-        String smsMessage = "RM0 COWAY: Order No. " + preBookingOrderVO.getSalesOrdNoOld()
-                                        + " of postcode " +  smsOrdAreaMemInfoList.get("postcode")
-                                        + " agree for ex-Trade Pre Booking under " + preBookingOrderVO.getMemCode()
-                                        + ". To agree reply COWAYPREBOOK "+ preBookingOrderVO.getSalesOrdNoOld()
-                                        + " to 8794567 within 3 days.TQ.";
-
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] customer contact number :: {} " + preBookingOrderVO.getCustContactNumber());
+	      String smsTemplate = preBookingOrderMapper.getPreBookingSmsTemplate(smsList);
 
         SmsVO sms = new SmsVO(sessionVO.getUserId(), 976);
-        sms.setMessage(smsMessage);
-        sms.setMobile((String) preBookingOrderVO.getCustContactNumber());
-        sms.setSmsType(1);
-        sms.setPriority(1);
-        sms.setRemark("Pre-Booking SMS via e-trust");
-        sms.setExpireDayAdd(Integer.parseInt(CommonUtils.getCalDate(3).toString()));
-        sms.setRetryNo(0);
-        sms.setUserId(sessionVO.getUserId());
-        SmsResult smsResult = adaptorService.sendSMS4(sms);
+        sms.setMessage(CommonUtils.nvl(smsTemplate));
+        sms.setMobiles(CommonUtils.nvl(preBookingOrderVO.getCustContactNumber()));
+        sms.setRemark("Pre-Booking SMS via e-TRUST");
+        sms.setRefNo(CommonUtils.nvl(preBookingOrderVO.getPreBookOrdNo()));
+
+        // SEND SMS TO CUSTOMER VIA VENDOR GI AND INSERT INTO SMS MASTER TABLE - MSC0015D
+        adaptorService.sendSMS4(sms);
 
         // Update customer marketing message status(universal between HC/HA)
         Map<String, Object> params1 = new HashMap();

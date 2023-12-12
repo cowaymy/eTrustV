@@ -296,9 +296,10 @@
                 memCode             : $('#salesmanCd').val(),
                 salesOrdIdOld       : $('#txtOldOrderID').val(),
                 salesOrdNoOld      : $('#relatedOrdNo').val(),
-                relatedNo             : $('#relatedOrdNo').val(),
-                rem                     : $('#preBookRemark').val(),
-                stkId                   : $('#ordProd').val(),
+                relatedNo              : $('#relatedOrdNo').val(),
+                rem                      : $('#preBookRemark').val(),
+                stkId                    : $('#ordProd').val(),
+                postCode              : $('#instPostCode').val(),
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 

@@ -48,6 +48,8 @@ public interface PreBookingOrderMapper {
 
   EgovMap getOrdAreaMemInfo(int salesOrdIdOld);
 
+  String getPreBookingSmsTemplate(Map<String, Object> params);
+
   List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 
   EgovMap selectPreBookSalesPerson(Map<String, Object> params);

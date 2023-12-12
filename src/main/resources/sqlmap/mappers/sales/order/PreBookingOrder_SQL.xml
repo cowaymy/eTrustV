@@ -162,7 +162,7 @@
         WHERE A.SALES_ORD_ID = #{salesOrdIdOld}
     </select>
 
-<select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
+    <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
           SELECT T1.SALES_ORD_NO
                    , T4.CODE_NAME AS APP_TYPE
                    , T3.STK_CODE
@@ -203,7 +203,7 @@
                    AND B.CUST_ID = #{custId}
                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(A.RENT_INST_DT)),TO_DATE(LAST_DAY(SYSDATE))) BETWEEN 1 AND 4
            )
- </select>
+    </select>
 
     <select id="selectPreBookingOrderInfo" parameterType="Map" resultType="egovMap">
         SELECT
@@ -315,5 +315,14 @@
                 #{item.paramVal, jdbcType=INTEGER}
       </foreach>
       </if>
+    </select>
+
+    <select id="getPreBookingSmsTemplate" parameterType="Map" resultType="String">
+        SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'sales.msg.smsPreBookingExTrade'),
+        '{1}', #{preBookNo}),
+        '{2}', #{postCode}),
+        '{3}', #{memCode}),
+        '{4}', #{salesOrdNoOld})
+        FROM DUAL
     </select>
 </mapper>
