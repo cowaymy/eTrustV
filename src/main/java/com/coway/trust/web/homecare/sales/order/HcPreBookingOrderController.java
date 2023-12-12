@@ -261,7 +261,6 @@ public class HcPreBookingOrderController {
   public ResponseEntity<EgovMap> selectPreBookOrderVerifyStus(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
 
-    params.put("type", 1); // HC
     EgovMap result = hcPreBookingOrderService.selectPreBookOrderEligibleInfo(params);
 
     return ResponseEntity.ok(result);
