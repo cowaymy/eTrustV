@@ -37,6 +37,8 @@ public interface HcPreBookingOrderService {
 
 	EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
+	EgovMap selectPreBookOrderEligibleCheck(Map<String, Object> params);
+
 	public int updateHcPreBookOrderCancel(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
 	List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
