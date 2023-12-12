@@ -211,12 +211,7 @@
 		TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
 		FROM SAL0404M T1
 		LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
-		LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
 		WHERE 1=1
-
-        AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                          WHERE AA.CODE = BB.CODE
-                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
 
 		AND T1.STUS_ID = 1
 		AND T2.STUS_CODE_ID = 4
@@ -251,6 +246,7 @@
                       UPD_DT                = SYSDATE
                     , UPD_USER_ID           = #{updUserId}
                     , STUS_ID               = #{stusId}
+                    , CUST_VERIFY_STUS      = #{custVerifyStus}
                     , REM                   = #{rem}
                   WHERE PRE_BOOK_ID         = #{preBookId}
     </update>
