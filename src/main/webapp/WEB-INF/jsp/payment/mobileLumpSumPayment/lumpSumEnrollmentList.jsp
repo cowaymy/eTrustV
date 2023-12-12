@@ -1275,7 +1275,7 @@
 	  }
 
   function thousandSeperator(value) {
-	    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	    return value.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
   function fn_excelDown() {
