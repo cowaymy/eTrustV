@@ -237,6 +237,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     try {
       params.put("updUserId", sessionVO.getUserId());
       params.put("stusId", SalesConstants.STATUS_CANCELLED);
+      params.put("custVerifyStus", "N");
       // UPDATE PRE-BOOK STATUS - SAL0404M - STUS_ID
       rtnCnt = hcPreBookingOrderMapper.updateHcPreBookOrderStatus(params);
       if (rtnCnt <= 0) { // not updated
