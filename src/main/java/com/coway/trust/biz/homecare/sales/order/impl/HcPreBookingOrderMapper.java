@@ -26,6 +26,8 @@ public interface HcPreBookingOrderMapper {
 
 	EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
+	EgovMap selectPreBookOrderEligibleCheck(Map<String, Object> params);
+
 	public int updateHcPreBookOrderStatus(Map<String, Object> params);
 
 	List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
