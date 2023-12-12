@@ -11,11 +11,6 @@
             	                   {"codeId": "66","codeName": "Rental"}
 	                            ];
 
-	var actData= [
-	                        {"codeId": "21","codeName": "Failed"},
-	                        {"codeId": "10","codeName": "Cancel"}
-	                   ];
-
 	var memTypeData = [
                 	                   {"codeId": "2","codeName": "Cody"},
                 	                   {"codeId": "4","codeName": "Staff"},
@@ -101,7 +96,6 @@
         }
 
         AUIGrid.bind(listGridID , "cellClick", function( event ){
-        //	console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         	selectRowIdx = event.rowIndex;
         });
 
@@ -112,9 +106,6 @@
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doDefCombo(discWaive, '' ,'discountWaive', 'M', 'fn_multiCombo');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-     //   doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
-     //   doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProdList', 'S', 'fn_setOptGrpClass');
 
         if (memTypeFiltered) {
         	doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
@@ -283,8 +274,8 @@
            , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : 200}
            , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : 200}
            , { headerText : "Customer Info", dataField : "custName", editable : false, width : 300}
-           , { headerText : "Previous Product Model", dataField : "", editable : false, width : 200}
-           , { headerText : "Previous Product Order No", dataField : "", editable : false, width : 200}
+           , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : 200}
+           , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : 200}
            , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
        ];
 
@@ -395,7 +386,6 @@
     	if(FormUtil.isEmpty($('#_memCode').val())
   			&& FormUtil.isEmpty($('#_appTypeId').val())
   		    && FormUtil.isEmpty($('#_stusId').val())
-  		    && FormUtil.isEmpty($('#_typeId').val())
   		    && FormUtil.isEmpty($('#_nric').val())
   		    && FormUtil.isEmpty($('#_name').val())
   		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
@@ -498,15 +488,7 @@
 
        $('#_stusId').multipleSelect("checkAll");
 
-        $('#_typeId').change(function() {
-        }).multipleSelect({
-            selectAll: true,
-            width: '100%'
-        });
-
-        $('#_typeId').multipleSelect("checkAll");
-
-        $('#discountWaive').change(function() {
+       $('#discountWaive').change(function() {
         }).multipleSelect({
            selectAll: true,
             width: '100%'
@@ -661,8 +643,8 @@
     <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Customer Type</th>
-	<td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>
+	<!--<th scope="row">Customer Type</th>
+	<td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>  -->
     <th scope="row">Pre-Booking Order No.</th>
     <td><input id="_ordNo" name="_ordNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Time</th>
@@ -673,6 +655,8 @@
         <p><input id="_reqstEndTime" name="_reqstEndTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}" /></p>
         </div>
     </td>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td><select id="memType" name="memType" class="w100p" ></select></td>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
@@ -683,8 +667,6 @@
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
-     <th scope="row"><spring:message code="sal.text.memtype" /></th>
-    <td><select id="memType" name="memType" class="w100p" ></select></td>
     <th scope="row">Entry Point</th>
     <td>
         <select id="entryPoint" name="entryPoint" class="w100p" >
@@ -701,102 +683,28 @@
             <option value="N">N</option>
         </select>
      </td>
-</tr>
-<tr>
-    <th scope="row">Pre-Booking Period</th>
-    <td><select id="discountWaive" name="discountWaive" class="multy_select w100p" multiple="multiple"></td>
-    <th scope="row"></th>
-    <td></td>
-    <th scope="row"></th>
-    <td></td>
+     <th scope="row">Pre-Booking Period</th>
+     <td><select id="discountWaive" name="discountWaive" class="multy_select w100p" multiple="multiple"></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
 </tr>
 </tbody>
 </table><!-- table end -->
-
 </form>
 </section><!-- search_table end -->
 
-<section class="search_result"><!-- search_result start -->
+<section class="search_result">
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="excelDown">Generate</a></p></li>
 </ul>
 </c:if>
-</section><!-- search_result end -->
+</section>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap">
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     <div id="excel_list_grid_wrap" style="display: none;"></div>
-</article><!-- grid_wrap end -->
-
-<!---------------------------------------------------------------
-    POP-UP (NEW CLAIM)
----------------------------------------------------------------->
-<!-- popup_wrap start -->
-<div class="popup_wrap" id="updFail_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="updFail_pop_header">
-        <h1>Update Status</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updFail_wrap')">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
-
-    <!-- pop_body start -->
-    <form name="updFailForm" id="updFailForm"  method="post">
-    <input id="hiddenPreOrdId" name="preOrdId"   type="hidden"/>
-    <input id="hiddenRcdTms" name="rcdTms"   type="hidden"/>
-    <input id="hiddenSof" name="sofNo"   type="hidden"/>
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:250px" />
-                    <col style="width:*" />
-                    <col style="width:250px" />
-                    <col style="width:*" />
-                </colgroup>
-
-                <tbody>
-                <tr>
-                    <th scope="row">Customer NRIC</th>
-                    <td id="view_custIc"></td>
-                </tr>
-                <tr>
-                     <th scope="row">Action<span class="must">*</span></th>
-                     <td colspan="3" ><select ass="mr5" id="_action" name="_action"></select></td>
-                 </tr>
-
-                 <tr id="fail_reason" style="display: none;">
-                     <th scope="row">Please select fail reason code<span class="must">*</span></th>
-                         <td colspan="3" >
-                             <label><input type="radio" name="cmbFailCode" value="Incomplete document" /><span>Incomplete document</span></label>
-                             <label><input type="radio" name="cmbFailCode" value="Incorrect key-in" /><span>Incorrect key-in</span></label>
-                         </td>
-                 </tr>
-                 <tr id="fail_rem" style="display: none;">
-                     <th scope="row"><spring:message code="sal.title.remark" /></th>
-                         <td colspan="3" >
-                             <textarea cols="20" rows="2" id="_rem_" name="rem" placeholder="Remark"></textarea>
-                         </td>
-                 </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a id="_btnFailSave" href="#">Save</a></p></li>
-        </ul>
-    </section>
-    </form>
-    <!-- pop_body end -->
-</div>
+</article>
 
 </section><!-- content end -->

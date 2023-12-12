@@ -171,31 +171,20 @@ public class PreBookingOrderController {
 	public ResponseEntity<List<EgovMap>>  selectPreBookingOrderList(@RequestParam Map<String,Object> params, HttpServletRequest request, ModelMap map)
 	{
 	        logger.info("***[PreBookingOrderController] - selectPreBookingOrderList START!!! ***");
-	        logger.info("[PreBookingOrderController] - selectPreBookingOrderList > request :: {} " + request);
 	        logger.info("[PreBookingOrderController] - selectPreBookingOrderList > params1 :: {} " + params);
 
       	  String[] arrAppType = request.getParameterValues("_appTypeId"); // Application Type
           String[] arrPreOrdStusId = request.getParameterValues("_stusId"); // Pre-Book Order Status
-          String[] arrCustType = request.getParameterValues("_typeId"); // Customer Type
           String[] arrDiscWaive = request.getParameterValues("discountWaive"); // Pre-Booking period
 
           if (arrAppType != null && !CommonUtils.containsEmpty(arrAppType))
             params.put("arrAppType", arrAppType);
           if (arrPreOrdStusId != null && !CommonUtils.containsEmpty(arrPreOrdStusId))
             params.put("arrPreOrdStusId", arrPreOrdStusId);
-          if (arrCustType != null && !CommonUtils.containsEmpty(arrCustType))
-            params.put("arrCustType", arrCustType);
           if (arrDiscWaive != null && !CommonUtils.containsEmpty(arrDiscWaive))
             params.put("arrDiscWaive", arrDiscWaive);
 
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > arrAppType [] :: {} " + arrAppType);
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > arrPreOrdStusId [] :: {} " + arrPreOrdStusId);
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > arrCustType [] :: {} " + arrCustType);
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > arrDiscWaive [] :: {} " + arrDiscWaive);
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > params2 :: {} " + params);
-
       	  List<EgovMap> result = preBookingOrderService.selectPreBookingOrderList(params);
-
           logger.info("[PreBookingOrderController] - selectPreBookingOrderList > result :: {} " + result);
 
           logger.info("***[PreBookingOrderController] - selectPreBookingOrderList END***");
@@ -206,7 +195,6 @@ public class PreBookingOrderController {
   public ResponseEntity<EgovMap> selectPreBookOrderVerifyStus(@RequestParam Map<String, Object>params, ModelMap model) throws Exception{
     logger.info("***[PreBookingOrderController] - selectPreBookOrderVerifyStus START!!! ***");
     EgovMap result = preBookingOrderService.selectPreBookOrderVerifyStus(params);
-    logger.info("[PreBookingOrderController] - selectPreBookOrderVerifyStus > result :: {} " + result);
 
     logger.info("***[PreBookingOrderController] - selectPreBookOrderVerifyStus END!!! ***");
     return ResponseEntity.ok(result);
@@ -220,8 +208,6 @@ public class PreBookingOrderController {
 
 	    preBookingOrderService.insertPreBooking(preBookingOrderVO, sessionVO);
 	    String preBookingOrderNo = preBookingOrderVO.getPreBookOrdNo();
-	    logger.info("[PreBookingOrderController - registerPreBooking] preBookingOrderNo :: {} " + preBookingOrderNo);
-	    logger.info("[PreBookingOrderController - registerPreBooking] customer contact number :: {} " + preBookingOrderVO.getCustContactNumber());
 
 	    String msg = "";
 	    msg += "Pre-Booking No : " + preBookingOrderNo+ "<br />";
