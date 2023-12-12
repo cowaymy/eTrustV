@@ -1939,7 +1939,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       EgovMap params = new EgovMap();
       params.put("custId", salesOrderMVO.getCustId());
       params.put("salesOrdIdOld", salesOrderMVO.getSalesOrdIdOld());
-      EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleInfo(params);
+      EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
 
     	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo == null){
     		EgovMap map1 = new EgovMap();
