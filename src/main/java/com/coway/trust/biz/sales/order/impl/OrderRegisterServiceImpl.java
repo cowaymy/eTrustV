@@ -1954,6 +1954,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		map1.put("userId",sessionVO.getUserId());
 
     		orderRegisterMapper.insertSalesSpecialPromotion(map1);
+
+    	//SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING (PRE-BOOK EXTRADE)
     	}else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo != null){
     	  int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));
         int discWaive = CommonUtils.intNvl(preBookInfo.get("discWaive"));
@@ -1985,8 +1987,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           params2.put("toPeriod",discountPeriod + 1);
           params2.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
           params2.put("percentage",50);
-          BigDecimal discount = new BigDecimal(50);
-          BigDecimal cnAmt = salesOrderMVO.getMthRentAmt().multiply(discount).divide(new BigDecimal(100));
+          BigDecimal cnAmt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
           params2.put("cnAmt",cnAmt);
           params2.put("status",SalesConstants.STATUS_ACTIVE);
           params2.put("userId",salesOrderMVO.getCrtUserId());
