@@ -93,9 +93,16 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 		  //configure client public IP address
 		  //String clientIp = CommonUtils.getClientIp(request);
 		  String clientIp = params.get("clientIp") != null ? params.get("clientIp").toString() : null;
+
 		  if (clientIp == null){
 			  throw new Exception("[E002] Fail to obtain IP Address. Please contact Administrator");
+		  } else {
+			  if (clientIp.length() > 20){
+				  clientIp = clientIp.substring(0, 20); //maximum can set 20 only
+			  }
 		  }
+
+		  //LOGGER.debug("========IP ==========: "+ clientIp);
 
 		  // rental amount
 		  String rentalAmount = params.get("mthRentAmt")+ ".00"; // must be in 2 decimal places
