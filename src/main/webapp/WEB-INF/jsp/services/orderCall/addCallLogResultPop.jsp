@@ -286,6 +286,12 @@
             $("#rdc").text(result.rdcincdc.raqty);
             $("#rdcInCdc").text(result.rdcincdc.rinqty);
             $("#cdc").text("0");
+
+            if(result.rdcincdc.raqty < 1 || result.rdcincdc.raqty == '' || result.rdcincdc.raqty == null ){
+            	$("#hiddenATP").val("Y");
+            }else{
+            	$("#hiddenATP").val("N");
+            }
           } else {
             $("#rdc").text("0");
             $("#rdcInCdc").text("0");
