@@ -535,10 +535,9 @@
   </select>
 
   <select id="selectSubmitStatusOrd" parameterType="Map" resultType="egovMap">
-    select so_cur_stus_id from sal0004d
+    select distinct so_cur_stus_id from sal0004d
     where so_id =
         (select sales_ord_id from sal0001d where sales_ord_no = #{salesOrdNo})
-        and SO_EXCHG_STUS_ID = 1
     </select>
 
        <select id="selectFailChild" parameterType="Map" resultType="egovMap">
