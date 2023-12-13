@@ -309,9 +309,9 @@
         		           function(result){
                                if(result != null){
                             	   if(result.custVerifyStus == 'ACT'){
-                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order currently in progress being pre book with Order No. " + result.preBookNo + ". You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
+                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order currently in progress being pre-book with Order No. " + result.preBookNo + ". You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
                             	   }else if(result.custVerifyStus == 'Y'){
-                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order had been pre book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
+                            		   Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order had been pre-book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreBookingOrdRegPop);
                             	   }
                                }else{
                             	   Common.ajax("POST", "/sales/order/preBooking/registerPreBooking.do", orderVO, function(result) {

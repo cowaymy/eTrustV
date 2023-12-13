@@ -367,9 +367,9 @@
     	};
     	 Common.ajax("GET", "/homecare/sales/order/selectPreBookOrderVerifyStus.do", {custId : $('#hiddenCustId').val() , salesOrdIdOld : $('#txtOldOrderID').val()}, function(result) {
     		 if(result != null && result.custVerifyStus == 'ACT'){
-    			 Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order currently in progress being pre book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreOrdRegPop);
+    			 Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order currently in progress being pre-book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreOrdRegPop);
     		 }else if(result != null && result.custVerifyStus == 'Y'){
-    			 Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order had been pre book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreOrdRegPop);
+    			 Common.alert("Pre-Booking Alert" + DEFAULT_DELIMITER + "<b>This Order had been pre-book with Order No." + result.preBookNo +". You are not allowed to proceed pre-book for this order.</b>", fn_closePreOrdRegPop);
     		 }else{
     			 Common.ajax("POST", "/homecare/sales/order/registerHcPreBookingOrder.do", orderVO, function(result) {
     	             Common.alert("Pre Booking Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
