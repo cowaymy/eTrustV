@@ -246,7 +246,9 @@
                       UPD_DT                = SYSDATE
                     , UPD_USER_ID           = #{updUserId}
                     , STUS_ID               = #{stusId}
+                    <if test='custVerifyStus != null and custVerifyStus != ""'>
                     , CUST_VERIFY_STUS      = #{custVerifyStus}
+                    </if>
                     , REM                   = #{rem}
                   WHERE PRE_BOOK_ID         = #{preBookId}
     </update>
