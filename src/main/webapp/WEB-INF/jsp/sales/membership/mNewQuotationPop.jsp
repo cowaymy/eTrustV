@@ -1684,6 +1684,10 @@ $(document).ready(function(){
 	}
 
 	function checkSalesPersonValidForCreation(memId,memCode){
+		if(memCode == "100116" || memCode == "100224"){
+			return;
+		}
+
 		//Only Cater for IND customer type
 		var custTypeId= $('#CUST_TYPE_ID').val();
 		var monthExpired =  $('#hiddenMonthExpired').val();
