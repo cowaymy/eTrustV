@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -133,12 +134,17 @@ public class OrderCancelController {
     String[] productRetReasonId = request.getParameterValues("cmbproductRetReasonId");
     String[] rsoStatusId = request.getParameterValues("cmbrsoStatusId");
 
+	if(StringUtils.isEmpty(params.get("startCrtDt"))) params.put("startCrtDt", "01/01/1900");
+	if(StringUtils.isEmpty(params.get("endCrtDt")))   params.put("endCrtDt",   "31/12/9999");
+
     params.put("typeIdList", appTypeId);
     params.put("stusIdList", callStusId);
     params.put("reqStageList", reqStageId);
     params.put("branchList", dscBranchId);
     params.put("productRetReasonList", productRetReasonId);
     params.put("rsoStatusList", rsoStatusId);
+	params.put("startCrtDt", CommonUtils.changeFormat(String.valueOf(params.get("startCrtDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+	params.put("endCrtDt", CommonUtils.changeFormat(String.valueOf(params.get("endCrtDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
     // String stDate = (String)params.get("startCrtDt");
     // if(stDate != null && stDate != ""){
     // String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5)
