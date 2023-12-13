@@ -1669,6 +1669,7 @@
 
     function fn_checkPreOrderSalesPerson(memId,memCode) {
     	var isExist = false;
+
         Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
             if(memInfo == null) {
                   isExist = false;
@@ -1680,35 +1681,43 @@
              }
             return isExist;
         });
+
         return isExist;
       }
 
       function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
     	  var isExist = false;
-        Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
-            if(memInfo == null) {
-                isExist = false;
-                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
-                $('#aTabOI').click();
-              }else{
-            	  isExist = true;
-                  fn_doSavePreOrder();
-              }
-            return isExist;
-        });
+
+              Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+                  if(memInfo == null) {
+                      isExist = false;
+                      Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                      $('#aTabOI').click();
+                    }else{
+                  	  alert("[fn_checkPreOrderConfigurationPerson] line 1707 - checkPreBookSalesPerson.do ");
+                  	  isExist = true;
+                        fn_doSavePreOrder();
+                    }
+                  return isExist;
+              });
+
         return isExist;
       }
 
      function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-          if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-        	  return fn_checkPreOrderSalesPerson(0,memCode);
-        }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-        	  return fn_checkPreOrderSalesPerson(0,memCode);
-        }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-        	  return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
-        }else{
-        	  return true;
-        }
+    	 if(memCode == "100116" || memCode == "100224"){
+             return true;
+         }else{
+            if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+            	  return fn_checkPreOrderSalesPerson(0,memCode);
+            }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+            	  return fn_checkPreOrderSalesPerson(0,memCode);
+            }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+            	  return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+            }else{
+            	  return true;
+            }
+         }
     }
 
 

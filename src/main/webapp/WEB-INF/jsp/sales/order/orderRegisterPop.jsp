@@ -2377,14 +2377,18 @@
                     $('#grpCd').removeClass("readonly");
                     $('#orgCd').removeClass("readonly");
 
-                    if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-                         fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
-                   }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-                         fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
-                   }else if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-                         fn_checkOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
-                   }
-                }
+                    if(memCode == "100116" || memCode == "100224"){
+                        return;
+                    }else{
+                          if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+                               fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                         }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+                               fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                         }else if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+                               fn_checkOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
+                         }
+                    }
+               }
          });
     }
 

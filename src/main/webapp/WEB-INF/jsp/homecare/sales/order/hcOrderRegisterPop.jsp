@@ -3091,15 +3091,19 @@
   }
 
   function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-	  if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-      	 fn_checkPreOrderSalesPerson(0,memCode);
-    }else if ($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-     	 fn_checkPreOrderSalesPerson(0,memCode);
-    }else if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-      	 fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
-    }else{
-		//do nothing
-    }
+	  if(memCode == "100116" || memCode == "100224"){
+          return;
+      }else{
+        	 if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+              	 fn_checkPreOrderSalesPerson(0,memCode);
+            }else if ($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+             	 fn_checkPreOrderSalesPerson(0,memCode);
+            }else if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+              	 fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+            }else{
+        		//do nothing
+            }
+      }
   }
 </script>
 
