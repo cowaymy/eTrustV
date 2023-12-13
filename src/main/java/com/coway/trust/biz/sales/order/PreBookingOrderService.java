@@ -19,7 +19,7 @@ public interface PreBookingOrderService {
 
 	public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO);
 
-	EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
+	EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
 	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 

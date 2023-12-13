@@ -75,18 +75,17 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
   }
 
   @Override
-  public EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception {
-    return preBookingOrderMapper.selectPreBookOrderVerifyStus(params);
+  public EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params) {
+    return preBookingOrderMapper.selectPreBookOrderEligibleInfo(params);
   }
 
-	@Override
+ 	@Override
   public List<EgovMap> selectPrevOrderNoList(Map<String, Object> params) {
     return preBookingOrderMapper.selectPrevOrderNoList(params);
   }
 
 	@Override
 	public EgovMap checkOldOrderId(Map<String, Object> params){
-	  logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] START");
 	  EgovMap RESULT = new EgovMap();
     int getOldOrderID = 0;
     int extradeWoutPRCnt = 0;
@@ -131,15 +130,12 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
     RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
 
-    logger.info("[PreBookingOrderServiceImpl - checkOldOrderId] END");
 	  return RESULT;
 	}
 
 	@Override
   public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO){
      try{
-	      logger.info("[PreBookingOrderServiceImpl - insertPreBooking] START!!");
-
         EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
 	      Calendar calNow = Calendar.getInstance();
 	      Calendar calExt = Calendar.getInstance();
@@ -203,7 +199,6 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
         params1.put("receivingMarketingMsgStatus", preBookingOrderVO.getReceivingMarketingMsgStatus());
         orderRegisterMapper.updateMarketingMessageStatus(params1);
 
-        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] END !!");
      }catch(Exception e){
        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed.");
      }
@@ -220,6 +215,7 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	    try {
 	      params.put("updUserId",sessionVO.getUserId());
 	      params.put("stusId",SalesConstants.STATUS_CANCELLED);
+	      params.put("custVerifyStus", "N");
 	      // UPDATE PRE-BOOK STATUS - SAL0404M - STUS_ID
 	      rtnCnt = preBookingOrderMapper.updatePreBookOrderCancel(params);
 	      if (rtnCnt <= 0) { // not updated

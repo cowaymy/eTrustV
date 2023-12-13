@@ -240,6 +240,7 @@
           , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : '15%'}
           , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : '15%'}
           , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : '10%' }
+          , { headerText : "Pre-Booking Period", dataField : "discWaive", editable : false, width : '15%'}
           , { headerText : "preBookId", dataField : "preBookId", visible : false }
           , { headerText : "stusId",dataField : "stusId", visible  : false}
           , { headerText : "Update Date", dataField : "updDt", visible : false }
@@ -277,6 +278,7 @@
            , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : 200}
            , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : 200}
            , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
+           , { headerText : "Pre-Booking Period", dataField : "discWaive", editable : false, width : 200}
        ];
 
        var excelGridPros = {

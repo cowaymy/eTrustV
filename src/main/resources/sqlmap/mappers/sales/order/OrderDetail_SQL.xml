@@ -142,7 +142,7 @@
     LEFT JOIN (SELECT SALES_ORD_ID_OLD,
                                MAX(DISC_WAIVE) AS DISC_WAIVE
                     FROM SAL0404M
-                    GROUP BY SALES_ORD_ID_OLD) V11 ON V2.SALES_ORD_ID = V11.SALES_ORD_ID_OLD
+                    GROUP BY SALES_ORD_ID_OLD) V11 ON V2.SALES_ORD_ID_OLD = V11.SALES_ORD_ID_OLD
     WHERE V1.ORD_ID = #{salesOrderId}
   </select>
 

@@ -83,7 +83,7 @@ public class PreBookingOrderController {
 
 	@RequestMapping(value = "/preBookingOrderList.do")
 	public String preBookingOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		if(sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 		  params.put("userId", sessionVO.getUserId());
 
 			EgovMap result =  salesCommonService.getUserInfo(params);
@@ -170,9 +170,6 @@ public class PreBookingOrderController {
 	@RequestMapping(value="/selectPreBookingOrderList.do")
 	public ResponseEntity<List<EgovMap>>  selectPreBookingOrderList(@RequestParam Map<String,Object> params, HttpServletRequest request, ModelMap map)
 	{
-	        logger.info("***[PreBookingOrderController] - selectPreBookingOrderList START!!! ***");
-	        logger.info("[PreBookingOrderController] - selectPreBookingOrderList > params1 :: {} " + params);
-
       	  String[] arrAppType = request.getParameterValues("_appTypeId"); // Application Type
           String[] arrPreOrdStusId = request.getParameterValues("_stusId"); // Pre-Book Order Status
           String[] arrDiscWaive = request.getParameterValues("discountWaive"); // Pre-Booking period
@@ -185,27 +182,20 @@ public class PreBookingOrderController {
             params.put("arrDiscWaive", arrDiscWaive);
 
       	  List<EgovMap> result = preBookingOrderService.selectPreBookingOrderList(params);
-          logger.info("[PreBookingOrderController] - selectPreBookingOrderList > result :: {} " + result);
 
-          logger.info("***[PreBookingOrderController] - selectPreBookingOrderList END***");
       	  return ResponseEntity.ok(result);
 	}
 
   @RequestMapping(value="/selectPreBookOrderVerifyStus.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> selectPreBookOrderVerifyStus(@RequestParam Map<String, Object>params, ModelMap model) throws Exception{
-    logger.info("***[PreBookingOrderController] - selectPreBookOrderVerifyStus START!!! ***");
-    EgovMap result = preBookingOrderService.selectPreBookOrderVerifyStus(params);
+    EgovMap result = preBookingOrderService.selectPreBookOrderEligibleInfo(params);
 
-    logger.info("***[PreBookingOrderController] - selectPreBookOrderVerifyStus END!!! ***");
     return ResponseEntity.ok(result);
   }
 
 	 @RequestMapping(value = "/registerPreBooking.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> registerPreBooking(@RequestBody PreBookingOrderVO preBookingOrderVO, HttpServletRequest request, Model model, SessionVO sessionVO)
 	      throws Exception {
-	    logger.info("[PreBookingOrderController - registerPreBooking] START!!");
-      logger.info("[PreBookingOrderController - registerPreBooking] preBookingOrderVO :: {} " + preBookingOrderVO);
-
 	    preBookingOrderService.insertPreBooking(preBookingOrderVO, sessionVO);
 	    String preBookingOrderNo = preBookingOrderVO.getPreBookOrdNo();
 
@@ -216,19 +206,13 @@ public class PreBookingOrderController {
 	    message.setCode(AppConstants.SUCCESS);
 	    message.setMessage(msg);
 
-	    logger.info("[PreBookingOrderController - registerPreBooking] END !!");
 	    return ResponseEntity.ok(message);
 	  }
 
 	 @RequestMapping(value = "/selectPrevOrderNoList.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> selectPrevOrderNoList(@RequestParam Map<String, Object> params) {
-     logger.info("[PreBookingOrderController - selectPrevOrderNoList] START!!");
-     logger.info("[PreBookingOrderController] - selectPrevOrderNoList > params :: {} " + params);
-
      List<EgovMap> result = preBookingOrderService.selectPrevOrderNoList(params);
-	   logger.info("[PreBookingOrderController] - selectPrevOrderNoList > result :: {} " + result);
 
-	    logger.info("[PreBookingOrderController - selectPrevOrderNoList] END!!");
 	    return ResponseEntity.ok(result);
 	  }
 
@@ -259,7 +243,6 @@ public class PreBookingOrderController {
 
 	 @RequestMapping(value = "/requestCancelPreBookOrder.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> updatePreBookOrderCancel(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
-
 	    preBookingOrderService.updatePreBookOrderCancel(params, sessionVO);
 
 	    String msg = "Pre-Booking Cancel successfully.<br />";

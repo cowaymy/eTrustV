@@ -29,6 +29,7 @@
         LEFT JOIN SYS0026M T6 ON T5.ITM_STK_ID = T6.STK_ID
         LEFT JOIN SYS0038M T7 ON T1.STUS_ID = T7.STUS_CODE_ID
         LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
+        LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
         WHERE 1=1
        <if test='_ordNo != null and _ordNo != ""'>
             AND T1.PRE_BOOK_NO = #{_ordNo}
@@ -68,23 +69,17 @@
                 #{item}
             </foreach>
         </if>
+        <if test="orgCode != '' ">
+            AND T9.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != '' ">
+            AND T9.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != '' ">
+            AND T9.DEPT_CODE = #{deptCode}
+        </if>
          ORDER BY T1.PRE_BOOK_ID ASC
     </select>
-
-   <select id="selectPreBookOrderVerifyStus" parameterType="Map" resultType="egovMap">
-        SELECT
-        T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO
-        FROM SAL0404M T1
-        LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
-        WHERE
-        T1.STUS_ID = 1
-        AND T1.CUST_ID = #{custId}
-        AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
-        AND T1.CUST_VERIFY_STUS NOT IN ('N')
-        <![CDATA[
-        AND ROWNUM <= 1
-        ]]>
-   </select>
 
    <insert id="insertPreBooking" parameterType="Map">
        <selectKey keyProperty="preBookOrdId" resultType="Integer" order="BEFORE">
@@ -139,21 +134,6 @@
        SET DOC_NO = LPAD(TO_CHAR(TO_NUMBER(#{preBookingNo}) + 1) ,LENGTH(#{preBookingNo}),'0')
        WHERE DOC_NO_PREFIX = 'PB'
     </update>
-
-    <select id ="getOrdAreaMemInfo" parameterType="Integer" resultType="egovMap">
-        SELECT
-        A.SALES_ORD_NO,
-        C.AREA,
-        C.POSTCODE,
-        D.MEM_CODE,
-        E.TEL_M1 AS SMS_MOBILE_NO
-        FROM SAL0001D A
-        LEFT JOIN SAL0023D B ON B.CUST_ID = A.CUST_ID AND B.CUST_ADD_ID = A.CUST_ADD_ID
-        LEFT JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
-        LEFT JOIN ORG0001D D ON D.MEM_ID = A.MEM_ID
-        LEFT JOIN SAL0027D E ON E.CUST_ID = A.CUST_ID AND E.CUST_CNTC_ID = A.CUST_CNT_ID
-        WHERE A.SALES_ORD_ID = #{salesOrdIdOld}
-    </select>
 
     <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
           SELECT T1.SALES_ORD_NO
@@ -217,7 +197,12 @@
         LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
         LEFT JOIN SYS0038M T4 ON T1.STUS_ID = T4.STUS_CODE_ID
         WHERE
-        T1.PRE_BOOK_ID = #{preBookId}
+        T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID
+                                       FROM SYS0013M AA,
+                                                SYS0094M BB
+                                       WHERE AA.CODE = BB.CODE
+                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND != 'HOMECARE')
+        AND T1.PRE_BOOK_ID = #{preBookId}
     </select>
 
     <select id="selectPreBookOrderCancelStatus" parameterType="Map" resultType="egovMap">
@@ -244,6 +229,7 @@
                       UPD_DT = SYSDATE
                     , UPD_USER_ID  = #{updUserId}
                     , STUS_ID = #{stusId}
+                    , CUST_VERIFY_STUS = #{custVerifyStus}
                     , REM = #{rem}
                   WHERE PRE_BOOK_ID = #{preBookId}
     </update>
@@ -318,4 +304,21 @@
         '{4}', #{salesOrdNoOld})
         FROM DUAL
     </select>
+
+    <select id="selectPreBookOrderEligibleInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+        T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO , T1.PRE_BOOK_ID , T1.DISC_WAIVE , T1.STUS_ID ,
+        TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
+        FROM SAL0404M T1
+        LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
+        WHERE 1=1
+        AND T1.STUS_ID = 1
+        AND T2.STUS_CODE_ID = 4
+        AND T1.CUST_ID = #{custId}
+        AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
+        AND T1.CUST_VERIFY_STUS NOT IN ('N')
+        <![CDATA[
+        AND ROWNUM <= 1
+        ]]>
+  </select>
 </mapper>

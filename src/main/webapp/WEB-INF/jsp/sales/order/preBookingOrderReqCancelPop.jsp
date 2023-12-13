@@ -87,10 +87,9 @@
     }
 
     $(function(){
-
     	$('#btnRltdNoEKeyIn').click(function() {
             //Common.popupDiv("/homecare/sales/order/hcPreBookOrderNoPrevPop.do", {custId : $('#hiddenCustId').val() ,isHomecare : 'B'}, null, true);
-      });
+        });
 
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
@@ -101,6 +100,7 @@
 
             fn_checkRc($('#nric').val());
         });
+
         $('#nric').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
@@ -120,15 +120,19 @@
                 $('#scAnothCntc').removeClass("blind");
             }
         });
+
         $('#btnNewCntc').click(function() {
             Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
         });
+
         $('#btnSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_CNTC"}, null, true);
         });
+
         $('#btnNewInstAddr').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_INST_ADD"}, null, true);
         });
+
         $('#btnSelInstAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_INST_ADD"}, null, true);
         });
@@ -360,10 +364,8 @@
                 $("#hiddenTypeId").val(custInfo.typeId); //Type
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
-
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
-
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB

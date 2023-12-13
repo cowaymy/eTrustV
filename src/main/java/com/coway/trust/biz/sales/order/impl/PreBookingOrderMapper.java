@@ -30,7 +30,7 @@ public interface PreBookingOrderMapper {
   // Search Pre OrderList
   public List<EgovMap> selectPreBookingOrderList(Map<String, Object> params);
 
-  EgovMap selectPreBookOrderVerifyStus(Map<String, Object> params) throws Exception;
+  EgovMap selectPreBookOrderEligibleInfo(Map<String, Object> params);
 
   String selectNextPreBookingNo();
 
@@ -43,10 +43,6 @@ public interface PreBookingOrderMapper {
   public int updatePreBookOrderCancel(Map<String, Object> params);
 
   List<EgovMap> selectPreBookOrderCancelStatus(Map<String, Object> params);
-
-  String getSmsTemplate(Map<String, Object> params);
-
-  EgovMap getOrdAreaMemInfo(int salesOrdIdOld);
 
   String getPreBookingSmsTemplate(Map<String, Object> params);
 
