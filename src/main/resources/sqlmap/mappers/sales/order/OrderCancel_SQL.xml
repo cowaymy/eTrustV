@@ -352,12 +352,12 @@
 
     <if test="startCrtDt != null and startCrtDt != '' ">
       <!-- AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') -->
-      AND TO_CHAR(CRT_DT, 'DD/MM/YYYY') <![CDATA[ >= ]]> #{startCrtDt}
+      AND TO_CHAR(CRT_DT, 'YYYY-MM-DD') <![CDATA[ >= ]]> #{startCrtDt}
     </if>
 
     <if test="endCrtDt != null and endCrtDt != ''">
       <!-- AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') -->
-      AND TO_CHAR(CRT_DT, 'DD/MM/YYYY') <![CDATA[ <= ]]> #{endCrtDt}
+      AND TO_CHAR(CRT_DT, 'YYYY-MM-DD') <![CDATA[ <= ]]> #{endCrtDt}
     </if>
 
     <if test="startRecallDt != null and startRecallDt != '' ">
