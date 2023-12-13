@@ -1394,18 +1394,24 @@
     </update>
 
 	  <select id="orderListMonthViewPop" parameterType="Map" resultType="egovMap">
-	   SELECT
-	   CTRL_ID,
-	   MONTH_TYPE,
-	   CTRL_TOT_ITM,
-	   TO_CHAR(CRT_DT,'DD-MM-YYYY') AS CRT_DT
-    FROM PAY0041D
+		 SELECT
+		       A.CTRL_ID,
+		       A.MONTH_TYPE,
+		       A.CTRL_TOT_ITM,
+		       A.CRT_DT AS ORD_CRT,
+		       TO_CHAR(A.CRT_DT,'DD-MM-YYYY') AS CRT_DT,
+		       NVL(A.CTRL_BILL_AMT,0) AS TARGET_AMT,
+		       NVL(A.CTRL_TOT_SUCCES,0) AS TOTAL_SUCCESS,
+		       NVL(A.CTRL_BILL_PAY_AMT,0) AS RECEIVED_AMT,
+		       B.CODE AS STATUS
+	    FROM PAY0041D A
+	    JOIN SYS0038M B ON  A.CTRL_STUS_ID = B.STUS_CODE_ID
 	    WHERE 1 = 1
-	    AND CTRL_IS_CRC = 1
-	    AND CTRL_GROUP = 1
-	    AND VRESCUE = 0
-	    AND MONTH_TYPE IN ('M1/M2','M2')
-	    ORDER BY 1 DESC
+	    AND A.CTRL_IS_CRC = 1
+	    AND A.CTRL_GROUP = 1
+	    AND A.VRESCUE = 0
+	    AND A.MONTH_TYPE IS NOT NULL
+	    ORDER BY ORD_CRT DESC
 	  </select>
 
 	<select id="selectVRescueBulkList" parameterType="Map" resultType="egovMap">
