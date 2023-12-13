@@ -66,7 +66,7 @@
 					THEN A.CALL_RECALL_DT
 					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
 					CASE WHEN ( A.CRT_DT IS NOT NULL )
-					THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
+					THEN A.CRT_DT
 					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
 					CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
 					THEN A.DSC_BRNCH_ID
@@ -352,12 +352,12 @@
 
     <if test="startCrtDt != null and startCrtDt != '' ">
       <!-- AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') -->
-      AND TO_CHAR(CRT_DT, 'YYYY-MM-DD') <![CDATA[ >= ]]> #{startCrtDt}
+      AND TRUNC(CRT_DT) <![CDATA[ >= ]]> TO_DATE(#{startCrtDt}, 'YYYY-MM-DD')
     </if>
 
     <if test="endCrtDt != null and endCrtDt != ''">
       <!-- AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') -->
-      AND TO_CHAR(CRT_DT, 'YYYY-MM-DD') <![CDATA[ <= ]]> #{endCrtDt}
+      AND TRUNC(CRT_DT) <![CDATA[ <= ]]> TO_DATE(#{endCrtDt}, 'YYYY-MM-DD')
     </if>
 
     <if test="startRecallDt != null and startRecallDt != '' ">
