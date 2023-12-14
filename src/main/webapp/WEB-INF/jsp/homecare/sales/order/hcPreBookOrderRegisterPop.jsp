@@ -73,7 +73,7 @@
     }
 
     function setupSaveButton() {
-    	disableSaveButton();
+    	//disableSaveButton();
     	$('#btnSave').click(function() {
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
@@ -230,8 +230,22 @@
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
 
+        $('#btnSave').click(function() {
+            if(!fn_validCustomer()) {
+                $('#aTabCS').click();
+                return false;
+            }
 
-        setupSaveButton();
+            if(!fn_validOrderInfo()) {
+                $('#aTabOI').click();
+                return false;
+            }
+
+          fn_doSavePreOrder();
+
+        });
+
+        //setupSaveButton();
 
 
     });
