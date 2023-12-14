@@ -405,7 +405,7 @@
             document.querySelector("dd[data-caro=" + e.currentTarget.id + "]").style.display = e.currentTarget.classList.contains("on") ? "block" : "none"
             AUIGrid.resize(ePRApprovalGrid)
         }
-    	el.click()
+//     	el.click()
     })
 
     function chgTab(tab) {

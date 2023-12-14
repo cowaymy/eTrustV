@@ -322,7 +322,7 @@
 	    },width: "25%"},
 	    {dataField: 'uom', headerText: 'UOM', editRenderer: {
 	    	type: 'DropDownListRenderer',
-	    	list: ['pc(s)', 'unit(s)', 'set(s)'] // hard coded because need history for previous record's units
+	    	list: ['pc(s)', 'unit(s)', 'set(s)','box(es)', 'pack(s)', 'job(s)'] // hard coded because need history for previous record's units
 	    },width: "25%"},
 	    {dataField: 'remark', headerText: 'Remark',width: "25%"}
 	], '', {
@@ -581,7 +581,7 @@
             type: "ButtonRenderer",
             labelText: "Clear",
             onclick: function (e) {
-                if (e != 4) {
+                if (/*e != 4*/true) {
                     AUIGrid.updateRow(approvalGrid, {memCode: "", name: ""}, e)
                 }
             }
@@ -598,12 +598,12 @@
         enableSorting: false
     })
     function bindApprovalEvent(i) {
-        if (i == 4) return
+//         if (i == 4) return
         apprvRow = i
         Common.popupDiv("/common/memberPop.do", {callPrgm:"TR_BOOK_ASSIGN"}, null, true)
     }
 
-    AUIGrid.setGridData(approvalGrid, [{},{},{},{},{memCode: "${f.memCode}", name: "${f.fullName}"}])
+    AUIGrid.setGridData(approvalGrid, [{},{},{},{},/*{memCode: "${f.memCode}", name: "${f.fullName}"}*/{}])
     function fn_loadOrderSalesman(_x, _y, _z, memCode, name) {
         if (!AUIGrid.getColumnValues(approvalGrid, "memCode", true).find((m) => m == memCode)) {
             AUIGrid.updateRow(approvalGrid, {memCode, name}, apprvRow)
