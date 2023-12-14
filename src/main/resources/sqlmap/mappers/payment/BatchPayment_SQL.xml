@@ -710,5 +710,4 @@
     #{userId},
     #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confAdvMap} )}
   </update>
-
 </mapper>

@@ -282,5 +282,4 @@ public class BatchPaymentOutController {
 
 		return ResponseEntity.ok(message);
 	}
-
 }
