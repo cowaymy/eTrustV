@@ -149,7 +149,7 @@ function btnGeneratePDF_Click(type){
 
         if(!($("#dpHSSettleDateFrom").val() == null || $("#dpHSSettleDateFrom").val().length == 0)){
             //whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') >= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
-            whereSQL += " AND l82.SVC_DT between TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY')";
+            whereSQL += " AND trunc(l82.SVC_DT) between TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY')";
             hsSettleDateFrom = $("#dpHSSettleDateFrom").val();
 
         }
@@ -224,7 +224,7 @@ function btnGeneratePDF_Click(type){
         if($("#cmbListingType :selected").val() == 2){
             $("#form #reportFileName").val("/logistics/HSUsedFilterSummaryListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterSummaryListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-            //orderBySQL += " ) ORDER BY cody_code,RN";
+            orderBySQL += " ) ORDER BY cody_code,RN";
         }
 
 
