@@ -460,7 +460,7 @@
 
         // Product Change Event
         $('#ordProduct1, #ordProduct2').change(function(event) {
-        	disableSaveButton()
+        	//disableSaveButton()
         	var _tagObj = $(event.target);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
@@ -515,7 +515,7 @@
         });
 
         $('#ordPromo1, #ordPromo2').change(function(event) {
-        	disableSaveButton()
+        	//disableSaveButton()
         	AUIGrid.clearGridData(listGiftGridID);
 
             var _tagObj = $(event.target);
@@ -567,7 +567,47 @@
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
 
-        setupSaveButton()
+        $('#btnSave').click(function() {
+            if(!fn_validCustomer()) {
+                $('#aTabCS').click();
+                return false;
+            }
+
+            if(!fn_validOrderInfo()) {
+                $('#aTabOI').click();
+                return false;
+            }
+
+            if(!fn_validPaymentInfo()) {
+                $('#aTabBD').click();
+                return false;
+            }
+
+            if(!fn_validFile()) {
+                $('#aTabFL').click();
+                return false;
+            }
+
+            if(fn_isExistESalesNo() == 'true') return false;
+
+            if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+                // product size check
+                Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1 option:selected").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                    if(result.code != '00') {
+                        Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                        $('#aTabOI').click();
+                        return false;
+
+                    } else {
+                        Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+                    }
+                });
+            } else {
+                Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+            }
+        });
+
+        //setupSaveButton();
 
         /* $('#btnCal').click(function() {
 
@@ -1505,7 +1545,7 @@
         $("#totOrdPrice").val(totOrdPrice.toFixed(2));
         $("#totOrdRentalFees").val(totOrdRentalFees.toFixed(2));
         $("#totOrdPv").val(totOrdPv.toFixed(2));
-        setupSaveButton()
+        //setupSaveButton()
     }
 
     function fn_setOptGrpClass() {
