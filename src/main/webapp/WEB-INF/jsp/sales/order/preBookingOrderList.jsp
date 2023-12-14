@@ -593,7 +593,7 @@
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
       <!--<a id="_btnConvOrder" href="#">Manual Convert</a>  -->
-	 <li><p class="btn_blue"><a id="_btnCancelPreBook" href="#">Order Cancel</a></p></li>
+	 <li><p class="btn_blue"><a id="_btnCancelPreBook" href="#">Pre-Booking Cancel</a></p></li>
 	</c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 	   <li><p class="btn_blue"><a id="_btnNew" href="#">New</a></p></li>
@@ -669,14 +669,6 @@
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
-    <th scope="row">Entry Point</th>
-    <td>
-        <select id="entryPoint" name="entryPoint" class="w100p" >
-            <option value="">Choose One</option>
-            <option value="0">Web</option>
-            <option value="1">Mobile Apps</option>
-        </select>
-    </td>
     <th scope="row">Verification Status</th>
     <td><select id="verifyStatus" name="verifyStatus" class="w100p" >
             <option value="">Choose One</option>
@@ -687,6 +679,8 @@
      </td>
      <th scope="row">Pre-Booking Period</th>
      <td><select id="discountWaive" name="discountWaive" class="multy_select w100p" multiple="multiple"></td>
+     <th scope="row"></th>
+     <td></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
