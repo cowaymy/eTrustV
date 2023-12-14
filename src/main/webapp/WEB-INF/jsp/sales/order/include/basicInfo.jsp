@@ -150,14 +150,7 @@
     <th scope="row"><spring:message code="sal.text.ekeyCrtUser" /></th>
     <td colspan="1">${orderDetail.basicInfo.ekeyCrtUser}</td>
     <th scope="row"><spring:message code="sal.text.ekeyBrnchName" /></th>
-    <td colspan="1">${orderDetail.basicInfo.ekeyBrnchName}</td>
-    <th scope="row"><spring:message code="sal.text.voucherCode" /></th>
-    <c:if test="${orderDetail.basicInfo.voucherCode != null}">
-		<td colspan="1">${orderDetail.basicInfo.voucherCode}</td>
-    </c:if>
-    <c:if test="${orderDetail.basicInfo.voucherCode == null}">
-		<td colspan="1"></td>
-    </c:if>
+    <td colspan="3">${orderDetail.basicInfo.ekeyBrnchName}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
