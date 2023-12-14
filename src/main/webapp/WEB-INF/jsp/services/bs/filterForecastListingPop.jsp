@@ -16,7 +16,19 @@
            }
 
          $("#forecastMonth").change(function(){
-             doGetCombo("/services/bs/report/reportBranchCodeList.do","0", '','branchCmb', 'S', ''); //branch by region
+
+             if ($("#userType").val() == "2"&& $("#memberLevel").val() == "4") {
+                 //doGetCombo('/services/bs/getCdUpMemList.do', $(this).val(), '', 'CMGroup', 'S','fn_cmdBranchCode');
+                 doGetCombo("/services/bs/report/selectCodyBranch.do",'', '', 'branchCmb', 'S','fn_setDefaultBranch');
+                 doGetCombo("/services/bs/report/getCdUpMem.do", '','', 'CMGroup', 'S', 'fn_setDefaultCM');
+                 doGetCombo("/services/bs/report/selectCodyList2.do",'', '', 'codyList', 'S','fn_setDefaultCody');
+                 $("#clearbtn").hide();
+             } else {
+                  //  doGetCombo("/services/bs/report/reportBranchCodeList.do",'' ,''   , 'branchCmb' , 'S', '');
+                  doGetCombo("/services/bs/report/safetyLevelList.do",'', '', 'safetyLv', 'S', '');
+                  doGetCombo("/services/bs/report/selectRegion.do",'', '', 'regionCmb', 'S', '');//region
+                  doGetCombo("/services/bs/report/reportBranchCodeList.do","0", '','branchCmb', 'S', ''); //branch by region
+             }
              });
 
          $("#regionCmb").change(function() {
