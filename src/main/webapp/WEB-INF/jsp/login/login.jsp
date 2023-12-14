@@ -363,7 +363,7 @@
                     fnPassWordResetPopUp();
                 }
 
-                else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N" && returnUserInfo.roleId == '130') {
+                else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
                     fn_checkMFAForm(returnUserInfo);
                 }
 
