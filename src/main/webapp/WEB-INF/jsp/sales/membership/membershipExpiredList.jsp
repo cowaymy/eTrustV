@@ -193,7 +193,19 @@ $(document).ready(function(){
     }
 
     function fn_excelDown() {
-      GridCommon.exportTo("grid_wrap", "xlsx", "RejoinListingRaw");
+    	 const x = XLSX.utils.book_new();
+		 XLSX.utils.book_append_sheet(x, XLSX.utils.json_to_sheet(AUIGrid.exportToObject('#grid_wrap', true)), "Sheet 1");
+		 const bytes = XLSX.write(x, { bookType:'xlsx', bookSST:false, type:'binary' })
+		 const byteLength = bytes.length
+		 const buffer = new ArrayBuffer(byteLength)
+		 const chars = new Uint8Array(buffer)
+		 for(let i = 0; i < byteLength; i ++) chars[i] = bytes.charCodeAt(i)
+		 const file = new File([buffer], 'rejoin.xlsx')
+		 const url = URL.createObjectURL(file)
+		 const a = document.createElement('a')
+		 a.href = url;
+		 a.download = file.name;
+		 a.click()
     }
 
     function fn_multiCombo(){
