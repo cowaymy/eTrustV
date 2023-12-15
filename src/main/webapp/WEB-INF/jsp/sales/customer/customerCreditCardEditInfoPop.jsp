@@ -8,11 +8,11 @@
 
 		  var userId = '${SESSION_INFO.userId}';
 
-	      Common.ajax("GET", "/sales/customer/checkDeleteAccess.do", {userId : userId}, function(result) {
-	           if(result == false){
-	        	   $('#_delBtn').hide();
-	           }
-	         });
+	     // Common.ajax("GET", "/sales/customer/checkDeleteAccess.do", {userId : userId}, function(result) {
+	          // if(result == false){
+	        	//   $('#_delBtn').hide();
+	          // }
+	       //  });
 
 		//j_date
 	    var pickerOpts={
@@ -438,7 +438,9 @@
 
         <ul class="center_btns">
             <li><p class="btn_blue2 big"><a href="#" id="_updBtn"><spring:message code="sal.btn.update" /></a></p></li>
-            <li><p class="btn_blue2 big"><a href="#" id="_delBtn"><spring:message code="sal.btn.delete" /></a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                    <li><p class="btn_blue2 big"><a href="#" id="_delBtn"><spring:message code="sal.btn.delete" /></a></p></li>
+            </c:if>
         </ul>
 
     </section><!-- pop_body end -->
