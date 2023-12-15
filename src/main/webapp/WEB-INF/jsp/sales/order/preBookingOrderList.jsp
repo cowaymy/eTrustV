@@ -43,6 +43,10 @@
         memTypeFiltered = true;
     }
 
+   var branchCdList = [];
+   <c:forEach var="obj" items="${branchCdList}">
+   branchCdList.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+   </c:forEach>
 
     $(document).ready(function(){
     	fn_statusCodeSearch();

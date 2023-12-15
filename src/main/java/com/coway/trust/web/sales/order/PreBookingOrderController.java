@@ -103,6 +103,11 @@ public class PreBookingOrderController {
 
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
+	   // BranchCodeList
+    params.clear();
+    params.put("groupCode", 1);
+    List<EgovMap> branchCdList = commonService.selectBranchList(params);
+
 		model.put("toDay", toDay);
 		model.put("isAdmin", "true");
 
@@ -112,6 +117,8 @@ public class PreBookingOrderController {
 		}
 
 		model.addAttribute("userRoleId", sessionVO.getRoleId());
+	  model.put("branchCdList", branchCdList);
+
 
 		return "sales/order/preBookingOrderList";
 	}
@@ -121,6 +128,8 @@ public class PreBookingOrderController {
           String dayFrom = "", dayTo = "";
 
 	        model.put("codeList_325", commonService.selectCodeList("325"));
+	        model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
+	        model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
 
 	        EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
 
@@ -162,6 +171,7 @@ public class PreBookingOrderController {
 	    model.put("bfDay", bfDay);
 	    model.put("toDay", toDay);
 	    model.put("preBookOrderInfo", preBookOrderInfo);
+
 
 	    return "sales/order/preBookingOrderDetailPop";
 	  }
@@ -228,6 +238,7 @@ public class PreBookingOrderController {
 	 @RequestMapping(value = "/preBookOrderReqCancelPop.do")
 	  public String preBookOrderReqCancelPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
 	      throws Exception {
+
 	    // Search Pre Book Order Info
 	    EgovMap preBookOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
 

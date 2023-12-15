@@ -21,8 +21,21 @@
     codeList_325.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
+    var branchCdList_1 = [];
+    <c:forEach var="obj" items="${branchCdList_1}">
+    branchCdList_1.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var branchCdList_5 = [];
+    <c:forEach var="obj" items="${branchCdList_5}">
+    branchCdList_5.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+
     $(document).ready(function(){
     	doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
+    	doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
+    	doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
 
         $('#exTrade option[value="1"]').attr('selected', 'selected');
         $('#btnRltdNoEKeyIn').removeClass("blind");
@@ -41,27 +54,6 @@
             return false;
         });
     });
-
-    function disableSaveButton() {
-    	$('#btnPreBookingSave').unbind();
-    }
-
-    function enableSaveButton() {
-    	disableSaveButton();
-    	$('#btnPreBookingSave').click(function() {
-            if(!fn_validCustomer()) {
-                $('#aTabCS').click();
-                return false;
-            }
-
-            if(!fn_validOrderInfo()) {
-                $('#aTabOI').click();
-                return false;
-            }
-
-            fn_doSavePreBookingOrder();
-        });
-    }
 
     $(function(){
     	$('#btnRltdNoEKeyIn').click(function() {
@@ -164,8 +156,6 @@
         });
 
         $('#ordProd').change(function() {
-            disableSaveButton()
-
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>* Please select an Ex-Trade.</b>");
                 $('#ordProd').val('');
@@ -197,8 +187,6 @@
         $('#memBtn').click(function() {
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
-
-        enableSaveButton();
     });
 
 
@@ -208,22 +196,20 @@
         var custType = $("#hiddenTypeId").val();
         var exTrade = $("#exTrade").val();
 
-        if($("#ordProd option:selected").index() <= 0) {
-            isValid = false;
-            msg += "* Please select a product.<br>";
-        }
-
         if(FormUtil.checkReqValue($('#salesmanCd')) && FormUtil.checkReqValue($('#salesmanNm'))) {
                 isValid = false;
                 msg += "* Please select a salesman.<br>";
         }
 
-        if(exTrade == '1' || exTrade == '2') {
-            if(FormUtil.checkReqValue($('#relatedOrdNo'))) {
-                isValid = false;
-                msg += "* Please select old order no.<br>";
-            }
-        }
+        if($('#txtOldOrderID').val().trim() == null || $('#txtOldOrderID').val().trim() == ''){
+            isValid = false;
+            msg += "* Please select a Ex-trade order.<br>";
+       }
+
+       if($("#ordProd option:selected").index() <= 0) {
+           isValid = false;
+           msg += "* Please select the Product.<br>";
+       }
 
         if(!isValid)
         	Common.alert("Save Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -268,6 +254,18 @@
             msg += "* Please select a customer.<br>";
         }
 
+        if($('#hiddenTypeId').val() != '964') {
+            isValid = false;
+            msg = "* Please select an individual customer<br>";
+        }
+
+        if($('#hiddenCustStatusId').val() == '7466' || $('#hiddenCustStatusId').val() == '7476') {
+
+        }else{
+            isValid = false;
+            msg = "* Please select an Engaged customer.<br>";
+        }
+
         if(FormUtil.checkReqValue($('#hiddenCustCntcId'))) {
             isValid = false;
             msg += "* Please select a contact person.<br>";
@@ -278,9 +276,9 @@
             msg += "* Please select an installation address.<br>";
         }
 
-        if($('#hiddenTypeId').val() == '964') {
+        if($("#keyinBrnchId option:selected").index() <= 0) {
             isValid = false;
-            msg = "* Please select an individual customer<br>";
+            msg += "* Please select the Posting branch.<br>";
         }
 
         if(!isValid) Common.alert("Save Pre-Booking Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -288,7 +286,15 @@
     }
 
     function fn_doSavePreBookingOrder() {
-       	console.log("[fn_doSavePreBookingOrder] START");
+        if(!fn_validCustomer()) {
+            $('#aTabCS').click();
+            return false;
+        }
+
+        if(!fn_validOrderInfo()) {
+            $('#aTabOI').click();
+            return false;
+        }
 
         var orderVO = {
                 custId                  : $('#hiddenCustId').val(),
@@ -329,7 +335,6 @@
                                }
                            }
         );
-        console.log("[fn_doSavePreBookingOrder] END");
     }
 
     function fn_closePreBookingOrdRegPop() {
@@ -1323,7 +1328,7 @@
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-      <li><p class="btn_blue2"><a id="btnPreBookingSave" onClick="javascript:fn_doSavePreBookingOrder();" href="#">Save</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPreBookingSave" onClick="javascript:fn_doSavePreBookingOrder();" href="#">Save</a></p></li>
 </ul>
 
 </section>
