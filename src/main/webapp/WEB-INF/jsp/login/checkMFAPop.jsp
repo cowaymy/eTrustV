@@ -13,6 +13,11 @@ $(document).ready(function()
         $(this).val($(this).val().replace(/[\D]/g,"").trim());
     });
 
+    // time out to scan QR in 30Seconds
+    setTimeout(function() {
+        $("#checkMFAPop").remove();
+      }, 30000);
+
 
 		});   //$(document).ready
 
@@ -57,7 +62,6 @@ function mfaPopUpClose()
          <input type="hidden" id="encodedKey" name="encodedKey" value = "${encodedKey}"/>
          <input type="hidden" id="userId" name="userId" value = "${userId}"/>
          <c:if test="${isHideQR eq '1'}">
-         <input type = "text" value = "${QrUrl}" hidden="hidden" readonly = "readonly" /> </br>
          <p style = "font-weight:bold;">User Name: ${userName}</p>
          </br>
          <p style = "font-weight:bold;">Staff Code: ${memCode}</p>
