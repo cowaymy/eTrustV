@@ -5,7 +5,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/pgwbrowser.min.js"></script>
 <script  type = "text/javascript">
 
-var isTimeOutQR = ${isHideQR};
 
 $(document).ready(function()
 		{
@@ -15,12 +14,11 @@ $(document).ready(function()
     });
 
     // time out to scan QR in 30Seconds
-    console.log(isTimeOutQR);
-    if(isTimeOutQR != null && isTimeOutQR != '' && isTimeOutQR == 0) {
-        setTimeout(function() {
-            $("#checkMFAPop").remove();
-          }, 30000);
-    }
+    setTimeout(function() {
+        $("#checkMFAPop").remove();
+      }, 30000);
+
+
 		});
 
 function mfaPopUpClose()
