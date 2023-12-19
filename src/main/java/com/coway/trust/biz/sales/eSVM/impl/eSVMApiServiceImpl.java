@@ -111,8 +111,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
       // fn_getDataInfo
       rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
 
-      if(param.getUserNm().toUpperCase().equals("100116") || param.getUserNm().toUpperCase().equals("100224")
-    		  || param.getUserNm().toUpperCase().equals("CT10049"))
+      if(param.getUserNm().toUpperCase().equals("100116") || param.getUserNm().toUpperCase().equals("100224"))
       {
     	  //Special Bypass for Marketing requirement
       }
