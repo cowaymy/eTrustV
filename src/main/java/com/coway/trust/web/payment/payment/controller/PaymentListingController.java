@@ -141,7 +141,7 @@ public class PaymentListingController {
 				if (!"223".equals(paymentItems.get(0))){
 					whereSQL += " ";
 				}else if ("223".equals(paymentItems.get(0))){
-					whereSQL += " AND BILL_SO_ID NOT IN (SELECT SRV_ORD_ID FROM SAL0225D) ";
+					whereSQL += " AND bill1.BILL_SO_ID NOT IN (SELECT SRV_ORD_ID FROM SAL0225D) ";
 				}
 			}
     		}
