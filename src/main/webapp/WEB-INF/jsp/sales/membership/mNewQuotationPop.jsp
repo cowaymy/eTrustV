@@ -1684,7 +1684,7 @@ $(document).ready(function(){
 	}
 
 	function checkSalesPersonValidForCreation(memId,memCode){
-		if(memCode == "100116" || memCode == "100224" || memCode == "CT10049"){
+		if(memCode == "100116" || memCode == "100224"){
 			return;
 		}
 
