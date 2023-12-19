@@ -1961,7 +1961,7 @@ public class ReportBatchController {
       params.put("V_STARTYEAR", startYear);
       params.put("V_ENDYEAR", endYear);
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CCP" + File.separator + "CustHealthScoreRawData_" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
+          "CHS Raw Data (CPD)" + File.separator + "CustHealthScoreRawData_" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
 
       this.viewProcedure(null, null, params);
 
@@ -2004,7 +2004,7 @@ public class ReportBatchController {
       params.put("V_STARTYEAR", startYear);
       params.put("V_ENDYEAR", endYear);
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CCP" + File.separator + "CompCustHealthScoreRawData_" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
+       "CHS Raw Data (CPD)" + File.separator + "CompCustHealthScoreRawData_" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
 
       this.viewProcedure(null, null, params);
 
@@ -2023,7 +2023,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CCP" + File.separator + "Rent_Pay_Set_" + CommonUtils.getNowDate() + ".xls");
+        "Rental Pay Setting (ADD)" + File.separator + "Rent_Pay_Set_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RentalPaymentSettingRaw_Excel...");

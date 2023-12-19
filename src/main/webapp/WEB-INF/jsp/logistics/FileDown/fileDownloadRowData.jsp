@@ -114,18 +114,34 @@ $(function(){
          Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
          return false;
 	 }else if (div == "Rental Details Others Raw"){
-		  if(userId != "281" &&
-                  userId != "16178" &&
-                  userId != "109446" &&
-                  userId != "13938" &&
-                  userId != "36538" &&
-                  userId != "16927" &&
-                  userId != "67605" ){
-		 var msg = "Sorry. You have no access rights to download this file.";
-         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-         return false;
+			  if(userId != "281" &&
+	                  userId != "16178" &&
+	                  userId != "109446" &&
+	                  userId != "13938" &&
+	                  userId != "36538" &&
+	                  userId != "16927" &&
+	                  userId != "67605" ){
+					 var msg = "Sorry. You have no access rights to download this file.";
+			         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+			         return false;
+			   }
+	 }else if (div == "CHS Raw Data (CPD)"){
+         let roleId = '${SESSION_INFO.roleId}';
+         if(roleId!=206 && roleId!=210 &&roleId!=254){
+             var msg = "Sorry. You have no access rights to download this file.";
+             Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+             return false;
+         }
+     }else if (div == "Rental Pay Setting (ADD)"){
+         let roleId = '${SESSION_INFO.roleId}';
+         if(roleId!=206 && roleId!=212){
+             var msg = "Sorry. You have no access rights to download this file.";
+             Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+             return false;
+         }
      }
-	 }
+
+
 
 	 $("#grid_wrap1").show();
 	   SearchListAjax1(div);
@@ -151,7 +167,22 @@ $(function(){
 	         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 	         return false;
 	     }
+	     }else if (div == "CHS Raw Data (CPD)"){
+	         let roleId = '${SESSION_INFO.roleId}';
+	         if(roleId!=206 && roleId!=210 &&roleId!=254){
+	             var msg = "Sorry. You have no access rights to download this file.";
+	             Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+	             return false;
+	         }
+	     }else if (div == "Rental Pay Setting (ADD)"){
+	         let roleId = '${SESSION_INFO.roleId}';
+	         if(roleId!=206 && roleId!=212){
+	             var msg = "Sorry. You have no access rights to download this file.";
+	             Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+	             return false;
+	         }
 	     }
+
 	 $("#grid_wrap2").show();
 	 SearchListAjax2(div);
 
