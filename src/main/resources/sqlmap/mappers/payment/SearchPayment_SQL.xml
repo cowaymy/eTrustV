@@ -1884,17 +1884,8 @@
             ,CASE WHEN PAYMODE.MODE_ID = 130 THEN '' ELSE CUST_CRC_EXPR END AS CRC_EXPR
             ,B.ACC_DEBT_SUB_CURR_OTSTND_AGING AGING
             ,B.ACC_DEBT_SUB_OPNG_OTSTND_AGING OPNG_AGING
-            ,(CASE
-                 WHEN v.MEM_LVL = 4 THEN NVL(mem2.MEM_CODE, ' ')
-                 WHEN v.MEM_LVL = 3 THEN NVL(g.MEM_CODE, ' ')
-                 ELSE ' '
-              END) CM_CODE
-             ,(CASE
-                 WHEN ( v.MEM_LVL = 4
-                   OR v.MEM_LVL = 3 ) THEN NVL(mem3.MEM_CODE, ' ')
-                 WHEN v.MEM_LVL = 2 THEN NVL(g.MEM_CODE, ' ')
-                 ELSE ' '
-              END) SCMCODE
+            ,A.DEPT_CODE AS CM_CODE
+            ,A.GRP_CODE AS SCMCODE
         FROM REP0087S A
         INNER JOIN PAY0053S B
             ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
@@ -1916,9 +1907,6 @@
 	        LEFT JOIN SAL0095D H ON H.SRV_SALES_ORD_ID = A.SALES_ORD_ID
 	        JOIN SAL0081D I ON H.SRV_MEM_PAC_ID = I.SRV_CNTRCT_PAC_ID AND I.SRV_CNTRCT_PAC_ID =2
         </if>
-        LEFT JOIN ORG1001V v ON v.MEM_ID = g.MEM_ID
-        LEFT JOIN ORG0001D mem2 ON mem2.MEM_ID = v.LVL3_UP_ID AND v.LVL3_UP_ID > 0
-        LEFT JOIN ORG0001D mem3 ON mem3.MEM_ID = v.LVL2_UP_ID AND v.LVL2_UP_ID > 0
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}
