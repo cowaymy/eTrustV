@@ -766,6 +766,6 @@
         </form>
     </article><!-- login_box end -->
 
-    <p class="copy" style="padding-top: 80px">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved..TESTSERVER1</p>
+    <p class="copy" style="padding-top: 80px">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved.</p>
 </div><!-- login_wrap end -->
 </body>
