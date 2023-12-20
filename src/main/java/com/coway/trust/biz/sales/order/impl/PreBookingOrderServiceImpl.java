@@ -148,24 +148,12 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
   public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO){
-     try{
+     //try{
         EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
-	      Calendar calNow = Calendar.getInstance();
-	      Calendar calExt = Calendar.getInstance();
-	      int discWaive;
+	      int discWaive = 0;
 	      if (GetExpDate != null) {
-	        Date srvPrdExprDt = (Date) GetExpDate.get("srvPrdExprDt");
-	        calExt.setTime(srvPrdExprDt);
-
-	        int nowMonth = calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH);
-	        int expMonth = calExt.get(Calendar.YEAR) * 12 + calExt.get(Calendar.MONTH);
-	        // CALCULATE PROMOTION DISCOUNT ENTITLEMENT = LAST EXPIRED MONTH - CURRENT PRE-BOOK MONTH
-	        discWaive = expMonth - nowMonth;
-
-	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] nowMonth :: " + nowMonth);
-	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] expMonth :: " + expMonth);
+	        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
 	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] discWaive :: " + discWaive);
-
 	        if(discWaive >= 5 || discWaive <= 0){
 	          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
 	        }
@@ -216,9 +204,9 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
         params1.put("receivingMarketingMsgStatus", preBookingOrderVO.getReceivingMarketingMsgStatus());
         orderRegisterMapper.updateMarketingMessageStatus(params1);
 
-     }catch(Exception e){
-       throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed.");
-     }
+     //}catch(Exception e){
+     //  throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed.");
+     //}
   }
 
 	  public EgovMap selectPreBookingOrderInfo(Map<String, Object> params) {
