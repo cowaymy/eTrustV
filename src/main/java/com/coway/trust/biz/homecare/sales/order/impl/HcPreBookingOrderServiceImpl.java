@@ -20,6 +20,7 @@ import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.homecare.sales.impl.htOrderRegisterMapper;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
+import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -60,6 +61,9 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
   @Resource(name = "commonMapper")
   private CommonMapper commonMapper;
 
+  @Resource(name = "membershipQuotationMapper")
+  private MembershipQuotationMapper membershipQuotationMapper;
+
   @Autowired
   private AdaptorService adaptorService;
 
@@ -93,8 +97,12 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
         logger.info("!@#### expMonth:" + expMonth);
         logger.info("!@#### discWaive:" + discWaive);
 
+        if(discWaive >= 5 || discWaive <= 0){
+          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
+        }
+
       } else {
-        discWaive = 0;
+        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
       }
 
       // GET PRE BOOKING ORDER NO
@@ -204,6 +212,16 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
           ROOT_STATE = "ROOT_4";
         }
       }
+
+      params.put("ORD_NO", (String) params.get("salesOrdNo"));
+      List<EgovMap> quotationInfo = membershipQuotationMapper.mActiveQuoOrder(params);
+      if(!quotationInfo.isEmpty()){
+        msg = msg + " -Not allowed for Pre Booking with Active Membership Quotation. <br/>";
+        isInValid = "InValid";
+        ROOT_STATE = "ROOT_4";
+
+      }
+
     }
 
     RESULT.put("ROOT_STATE", ROOT_STATE);
