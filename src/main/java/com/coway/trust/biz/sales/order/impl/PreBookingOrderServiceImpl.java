@@ -28,6 +28,7 @@ import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.SmsMapper;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
+import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderListVO;
@@ -68,6 +69,9 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Autowired
 	private AdaptorService adaptorService;
+
+	@Resource(name = "membershipQuotationMapper")
+  private MembershipQuotationMapper membershipQuotationMapper;
 
  @Override
   public List<EgovMap> selectPreBookingOrderList(Map<String, Object> params) {
@@ -121,6 +125,15 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
           ROOT_STATE = "ROOT_4";
         }
       }
+
+      params.put("ORD_NO", (String) params.get("salesOrdNo"));
+      List<EgovMap> quotationInfo = membershipQuotationMapper.mActiveQuoOrder(params);
+      if(!quotationInfo.isEmpty()){
+        msg = msg + " -Not allowed for Pre Booking with Active Membership Quotation. <br/>";
+        isInValid = "InValid";
+        ROOT_STATE = "ROOT_4";
+
+      }
     }
 
     RESULT.put("ROOT_STATE", ROOT_STATE);
@@ -152,8 +165,12 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] nowMonth :: " + nowMonth);
 	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] expMonth :: " + expMonth);
 	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] discWaive :: " + discWaive);
+
+	        if(discWaive >= 5 || discWaive <= 0){
+	          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
+	        }
 	      } else{
-	        discWaive = 0;
+	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
 	      }
 
 	      String preBookingNo = preBookingOrderMapper.selectNextPreBookingNo();
