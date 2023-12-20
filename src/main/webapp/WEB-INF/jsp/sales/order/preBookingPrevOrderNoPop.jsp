@@ -132,8 +132,9 @@
     function btnHidden_Valid_Click(isInValid, salesOrdNo , salesOrdId) {
         $('#txtBusType').val(busType);
         if(isInValid == 'InValid') {
-                fn_setData(salesOrdNo)
-                $('#txtOldOrderID').val(salesOrdId);
+        	fn_resetExtradeSales();
+                //fn_setData(salesOrdNo)
+                //$('#txtOldOrderID').val(salesOrdId);
                 $('#btnClose').click();
         } else {
             fn_setData(salesOrdNo)
