@@ -81,26 +81,13 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
 
       // GET MEMBERSHIP LAST EXPIRE DATE
       EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
-      Calendar calNow = Calendar.getInstance();
-      Calendar calExt = Calendar.getInstance();
-      int discWaive;
+      int discWaive = 0;
       if (GetExpDate != null) {
-        Date srvPrdExprDt = (Date) GetExpDate.get("srvPrdExprDt");
-        calExt.setTime(srvPrdExprDt);
-
-        int nowMonth = calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH);
-        int expMonth = calExt.get(Calendar.YEAR) * 12 + calExt.get(Calendar.MONTH);
-        // CALCULATE PROMOTION DISCOUNT ENTITLEMENT = LAST EXPIRED MONTH - CURRENT PRE-BOOK MONTH
-        discWaive = expMonth - nowMonth;
-
-        logger.info("!@#### nowMonth:" + nowMonth);
-        logger.info("!@#### expMonth:" + expMonth);
-        logger.info("!@#### discWaive:" + discWaive);
-
+        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
+        logger.info("[HcPreBookingOrderServiceImpl - registerHcPreBookingOrder] discWaive :: " + discWaive);
         if(discWaive >= 5 || discWaive <= 0){
           throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
         }
-
       } else {
         throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
       }
