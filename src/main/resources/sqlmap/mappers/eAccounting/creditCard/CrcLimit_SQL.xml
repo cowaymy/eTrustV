@@ -326,12 +326,12 @@
                         <if test="(stMonth != null and stMonth != '') or (edMonth != null and edMonth != '')">
                             <if test="stMonth != null and stMonth != '' ">
                                 <![CDATA[
-                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) >= #{stMonth}
+                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -2)) >= #{stMonth}
                                 ]]>
                             </if>
                             <if test="edMonth != null and edMonth != '' ">
                                 <![CDATA[
-                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) <= #{edMonth}
+                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -2)) <= #{edMonth}
                                 ]]>
                             </if>
                         </if>
