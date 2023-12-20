@@ -578,8 +578,9 @@
         });
     }
 
-    function fn_resetSales() {
-
+    function fn_resetExtradeSales() {
+    	$('#txtOldOrderID').val('');
+		$('#relatedNo').val('');
     }
 
     function fn_loadInstallAddr(custAddId){
