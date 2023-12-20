@@ -338,6 +338,7 @@
     <input type="hidden" name="editCustBankId" id="_editCustBankId">
     <input type="hidden" name="editCustCardId" id="_editCustCardId">
     <input type="hidden" name="editCustNric" id="_editCustNric">
+    <input type="hidden" name="pageAuth"  id="pageAuth" value="${PAGE_AUTH.funcUserDefine21}"/> <!-- Page Param  -->
 </form>
 <!-- report Form -->
 <form id="dataForm">
