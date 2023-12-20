@@ -1656,6 +1656,7 @@ public class CustomerController {
     model.addAttribute("detailcard", detailcard);
     model.addAttribute("custId", params.get("custId"));
     model.addAttribute("custNric", params.get("editCustNric"));
+    model.addAttribute("pageAuth", params.get("pageAuth"));
     model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardEditInfoPop";
