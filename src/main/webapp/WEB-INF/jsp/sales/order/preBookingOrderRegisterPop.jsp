@@ -564,6 +564,11 @@
         $('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
     }
 
+    function fn_resetExtradeSales() {
+    	$('#txtOldOrderID').val('');
+		$('#relatedNo').val('');
+    }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
