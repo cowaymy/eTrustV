@@ -569,7 +569,7 @@
 
     function fn_selfClose() {
         $('#btnClose').click();
-        fn_getPreBookOrderList();
+        fn_getPreBookingOrderList();
      }
 
 </script>
