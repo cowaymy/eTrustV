@@ -155,26 +155,13 @@
             ON T3.STK_ID = T2.ITM_STK_ID
           JOIN SYS0013M T4
             ON T4.CODE_ID = T1.APP_TYPE_ID
+          LEFT JOIN SAL0095D T5 ON T5.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SALES_ORD_ID,'1')
          WHERE T1.CUST_ID = #{custId}
            AND T1.STUS_CODE_ID = 4
            AND T1.APP_TYPE_ID = 66
 		   AND T3.STK_CTGRY_ID = 55
-               AND T1.SALES_ORD_ID IN (
-            SELECT A.SALES_ORD_ID
-    FROM
-                   SAL0070D A
-                   JOIN
-                   (
-                   SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
-                   ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
-                    JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
-                     JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
-                     JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID AND D.STK_CTGRY_ID = 55
-                    WHERE
-                   A.RENT_INST_TYPE_ID = 159
-                   AND B.CUST_ID = #{custId}
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(A.RENT_INST_DT)),TO_DATE(LAST_DAY(SYSDATE))) BETWEEN 1 AND 4
-            )
+		   AND CEIL(MONTHS_BETWEEN(TO_DATE(LAST_DAY(T5.SRV_EXPR_DT)),TO_DATE(SYSDATE))) BETWEEN 1 AND 4
+
 
     </select>
 
