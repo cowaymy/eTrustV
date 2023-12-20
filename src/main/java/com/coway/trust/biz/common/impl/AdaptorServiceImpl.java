@@ -580,14 +580,14 @@ public class AdaptorServiceImpl implements AdaptorService {
         return result;
     }
 
-    //20231211 - Added New Vendor - VendorId 4 --g-i
+    //20231211 - Added New Vendor - VendorId 4 --g-i (Pre-booking SMS)
     // Add by Fannie
     @Override
     public SmsResult sendSMS4(SmsVO smsVO) {
       return this.sendSMS4(smsVO, null, null);
     }
 
-    //20231211 - Added New Vendor - VendorId 4 --g-i
+    //20231211 - Added New Vendor - VendorId 4 --g-i (Pre-booking SMS)
     public SmsResult sendSMS4(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
 
       if (smsVO.getMobiles().size() == 0) {
@@ -610,7 +610,9 @@ public class AdaptorServiceImpl implements AdaptorService {
         try {
           smsUrl = "http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
               + "&phone_number=" + giCountryCode + smsVO.getMobiles()
-              + "&text=" + URLEncoder.encode(smsVO.getMessage(), "UTF-8");
+              + "&text=" + URLEncoder.encode(smsVO.getMessage(), "UTF-8")
+              + "&is_long_message=true"
+              + "&is_two_way=true";
            //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
         } catch (UnsupportedEncodingException e) {
           throw new ApplicationException(e, AppConstants.FAIL);
