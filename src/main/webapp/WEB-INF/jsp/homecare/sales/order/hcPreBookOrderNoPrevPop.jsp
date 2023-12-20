@@ -165,10 +165,10 @@
         $('#txtBusType').val(busType);
         if(isInValid == 'InValid') {
 
-
+        	fn_resetExtradeSales();
                 /* fn_setData(salesOrdNo)
-                $('#txtOldOrderID').val(salesOrdId);
-                $('#btnPrevOrderNo').click(); */
+                $('#txtOldOrderID').val(salesOrdId);*/
+                $('#btnPrevOrderNo').click();
         }
 
         else {
