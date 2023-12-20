@@ -87,8 +87,8 @@ public class ECashGrpDeductionFileAMBHandler extends BasicTextDownloadHandler im
     fileDate        = StringUtils.rightPad(String.valueOf(dataRow.get("filedate")),   8, " ");
     fileNumber      = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")),   2, "0");
     processingType  = StringUtils.rightPad(String.valueOf("S"),   1, " ");
-    merchantNumber  = StringUtils.rightPad(String.valueOf("000009140553370"),  15, " ");
-    terminalPoolId  = StringUtils.rightPad(String.valueOf("48108573"),   8, " ");
+    merchantNumber  = StringUtils.rightPad(String.valueOf("000009140549436"),  15, " ");
+    terminalPoolId  = StringUtils.rightPad(String.valueOf("48109424"),   8, " ");
     transactionType = StringUtils.rightPad(String.valueOf("R"),   1, " ");
     filter          = StringUtils.rightPad(String.valueOf(""), 154, " ");
     eolCharacter    = StringUtils.rightPad(String.valueOf("\\n"),   2, " ");
