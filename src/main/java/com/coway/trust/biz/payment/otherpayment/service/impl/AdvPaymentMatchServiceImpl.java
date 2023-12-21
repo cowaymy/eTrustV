@@ -114,6 +114,7 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 	public void saveAdvPaymentDebtor(Map<String, Object> params) {
 
 		//Group Payment Mapping처리
+		params.put("remark", params.get("debtorRemark"));
 		advPaymentMatchMapper.mappingAdvGroupPayment(params);
 
 		//Interface 테이블 처리 - Bank Statement Bank Charge
