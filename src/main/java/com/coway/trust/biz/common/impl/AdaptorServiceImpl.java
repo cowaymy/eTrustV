@@ -626,30 +626,37 @@ public class AdaptorServiceImpl implements AdaptorService {
         String output = response.getEntity(String.class);
 
         int statusId;
-        String body;
+        String body = null;
+        String retCode = null;
 
-        if (response.getStatus() == 200) {
+        // if (response.getStatus() == 200) {
           body = output;
+          LOGGER.info("SMS OUTPUT >>>>>>>>>>>>>>>>{}" ,response.getProperties().get("success").toString());
 
-          if (GI_SUCCESS.equals(body)) {
+        //  if (GI_SUCCESS.equals(body)) {
+          if(response.getProperties().get("success").toString().equals("true")){
+            body = "success";
+            retCode="success";
             statusId = 4;
             result.setSuccessCount(result.getSuccessCount() + 1);
           } else {
+            body= response.getProperties().get("error_code").toString();
+            retCode=response.getProperties().get("error_message").toString();
             statusId = 21;
             result.setFailCount(result.getFailCount() + 1);
             reason.clear();
             reason.put(mobileNo, body);
             result.addFailReason(reason);
+            result.setErrorCount(result.getErrorCount() + 1);
           }
-
-        } else {
+  /*      } else {
           statusId = 1;
           body = output;
           result.setErrorCount(result.getErrorCount() + 1);
-        }
+        }*/
 
         insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
-            smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
+            smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, retCode, msgId, vendorId);
       });
 
       return result;
