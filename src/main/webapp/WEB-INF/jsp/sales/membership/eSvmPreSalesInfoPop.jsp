@@ -1,3 +1,31 @@
+<script type="text/javaScript" language="javascript">
+
+    var oriNric = "${preSalesInfo.custNric}";
+
+    $(document).ready(function(){
+
+     // Masking pen (display last 4)
+        if('${preSalesInfo.custTypeDesc}' == "Individual") {
+            var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+            $("#spanNric").html(maskedNric);
+            // Appear NRIC on hover over field
+            $("#spanNric").hover(function() {
+                $("#spanNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanNric").html(maskedNric);
+            });
+            $("#imgHover").hover(function() {
+                $("#spanNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanNric").html(maskedNric);
+            });
+        } else {
+            $("#spanNric").html(oriNric);
+        }
+    });
+
+</script>
+
 <article class="tap_area"><!-- tap_area start -->
 <aside class="title_line"><!-- title_line start -->
 <h3>Pre Sales Info</h3>
@@ -21,7 +49,10 @@
 </tr>
 <tr>
     <th scope="row">NRIC / Company No</th>
-    <td><input id="presales_nricCompNo" name="presales_nricCompNo" type="text" value="${preSalesInfo.custNric}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td><a href="#" class="search_btn" id="imgHover"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanNric"></span>
+    </td>
+    <!-- <td><input id="presales_nricCompNo" name="presales_nricCompNo" type="text" value="${preSalesInfo.custNric}" title="" placeholder="" class="w100p readonly" readonly /></td>  -->
     <th scope="row">Duration</th>
     <td><input id="presales_duration" name="presales_duration" type="text" value="${preSalesInfo.duration} month(s)" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>

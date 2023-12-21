@@ -124,4 +124,6 @@ public interface eSVMApiMapper {
     EgovMap selectConfigurationSalesPerson(Map<String, Object> params);
 
     List<EgovMap> selectSystemConfigurationParamVal(Map<String, Object> params);
+
+    EgovMap checkActiveESvm(Map<String, Object> params);
 }

@@ -170,6 +170,7 @@ console.log("membershipESvmList");
            {dataField : "userBrcnh", headerText : 'User Branch', width : "10%" , editable : false},
            {dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : "10%" , editable : false},
            {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : "15%" , editable : false},
+           {dataField : "appvRem", headerText : '<spring:message code="sal.title.text.otrRem" />', width : 300 , editable : false},
            {dataField : "svmQuotId", headerText : 'SVM Quotation ID', width : 300 , editable : false, visible  : false},
            {dataField : "psmId",headerText : "psmId", visible  : false },
            {dataField : "atchFileGrpId",headerText : "atchFileGrpId", visible  : false }
@@ -219,6 +220,7 @@ console.log("membershipESvmList");
 		{dataField : "userBrcnh", headerText : 'User Branch', width : 100 , editable : false},
 		{dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : 150 , editable : false},
 		{dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : 300 , editable : false},
+		{dataField : "appvRem", headerText : '<spring:message code="sal.title.text.sal.title.text.otrRem" />', width : 300 , editable : false},
 		{dataField : "svmQuotId", headerText : 'SVM Quotation ID', width : 300 , editable : false, visible  : false}
             ];
 
@@ -413,6 +415,10 @@ console.log("membershipESvmList");
         $('#_stusProgressId').multipleSelect("checkAll");
     }
 
+    function fn_eSvmRaw() {
+        Common.popupDiv("/sales/membership/eSvmRawPop.do", null, null, true, '');
+    }
+
     $.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -588,6 +594,30 @@ console.log("membershipESvmList");
 </ul>
 </c:if>
 </section><!-- search_result end -->
+
+<aside class="link_btns_wrap">
+  <!-- link_btns_wrap start -->
+  <p class="show_btn">
+    <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
+  </p>
+  <dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+      <ul class="btns">
+        <li><p class="link_btn">
+            <a href="#" onclick="javascript:fn_eSvmRaw()" id="eSvmRaw">eSVM Raw</a>
+          </p></li>
+        <%-- </c:if> --%>
+      </ul>
+      <ul class="btns">
+      </ul>
+      <p class="hide_btn">
+        <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a>
+      </p>
+    </dd>
+  </dl>
+</aside>
+<!-- link_btns_wrap end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

@@ -36,14 +36,10 @@
     var POFlg = 0; //0: No need to check
 
     $(document).ready(function() {
-        console.log("esvmDetailPop");
-        if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
-            var elements = document.getElementsByClassName("attach_mod");
-            for(var i = 0; i < elements.length; i++) {
-                elements[i].style.display="none";
-            }
-            $("#btnSave").hide();
-        }
+        console.log("esvmDetailPop MEM_TYPE " +MEM_TYPE);
+
+        fn_allowResubmit();
+
 
         if('${eSvmInfo.atchFileGrpId}' != 0){
             fn_loadAtchment('${eSvmInfo.atchFileGrpId}');
@@ -58,14 +54,16 @@
         }
 
         var stus = '${eSvmInfo.stus}';
+        var progressStus = '${eSvmInfo.stusProgress}';
         var quotStatus = '${quotInfo.validStusId}';
         var quotNumber = '${quotInfo.quotNo}';
+        console.log("progressStus: " +progressStus);
+        console.log("stus:  " +stus);
         if(!(quotStatus == '1' || quotStatus == '4' || quotStatus == '81')){
-            console.log(quotStatus);
-        	console.log(stus);
-        	if(stus != '6'){
-        		Common.alert('Quotation has been deactivated.<br/> Quotation number :<br/> [ ' + quotNumber + ' ]<br/>Please check and proceed reject.');
-        	}
+
+            if(stus != '6'){
+                Common.alert('Quotation has been deactivated.<br/> Quotation number :<br/> [ ' + quotNumber + ' ]<br/>Please check and proceed reject.');
+            }
         }
         //fn_displaySpecialInst();
         var flg = '${paymentInfo.allowComm}';
@@ -75,7 +73,11 @@
         var cardBrandCode = '${paymentInfo.cardBrandCode}';
         var merchantBankCode = '${paymentInfo.merchantBankCode}';
 
-        if(payMode == '6528') {
+        /* Common.ajax("GET", "/sales/order/fail_remark.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
+            AUIGrid.setGridData(fail_remark, result);
+        }); */
+
+        if(payMode == '6528') { //Credit Card (MOTO/MOTO IPP)
             if(stus == '5') {
                 $("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
                 $("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
@@ -114,7 +116,7 @@
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 if(specialInst != null || specialInst != '')
                 {
-                	$("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+                    $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 }
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p" />');
                 $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p" />');
@@ -373,6 +375,30 @@
         });
 
     });
+
+    function fn_allowResubmit(){
+        var stus = '${eSvmInfo.stus}';
+        var progressStus = '${eSvmInfo.stusProgress}';
+        console.log('fn_allowResubmit MEM_TYPE ' +MEM_TYPE);
+
+        if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
+            if (stus == '1' && progressStus == '21' ){
+                 var elements = document.getElementsByClassName("attach_mod");
+                    for(var i = 0; i < elements.length; i++) {
+                        elements[i].style.display="";
+                    }
+                    $("#btnSave").show();
+            } else {
+                var elements = document.getElementsByClassName("attach_mod");
+                for(var i = 0; i < elements.length; i++) {
+                    elements[i].style.display="none";
+                }
+                $("#btnSave").hide();
+            }
+
+        }
+
+    }
 
 
     function fn_doSaveESvmOrder() {
@@ -673,13 +699,19 @@
                         var oriFileName = $(this).val();
                         var fileGrpId;
                         var fileId;
+                        var stus = '${eSvmInfo.stus}';
+                        var progressStus = '${eSvmInfo.stusProgress}';
                         for(var i = 0; i < result.length; i++) {
                             if(result[i].atchFileName == oriFileName) {
                                 fileGrpId = result[i].atchFileGrpId;
                                 fileId = result[i].atchFileId;
                             }
                         }
-                        if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                        if(fileId != null) {
+                            if(stus == '1' && (progressStus == '21' || progressStus == '104')){
+                                fn_atchViewDown(fileGrpId, fileId);
+                            }
+                        }
                     });
                 }
             }
@@ -801,7 +833,7 @@
             return checkResult;
 
         } else if(($("#action").val() == '1' || $("#action").val() == '6')  && FormUtil.isEmpty($("#specialInstruction").val())){
-        	//if(FormUtil.isEmpty($("#specialInstruction").val()) || SpecInstr == 1) {
+            //if(FormUtil.isEmpty($("#specialInstruction").val()) || SpecInstr == 1) {
                      Common.alert('Please choose a Special Instruction.');
                      checkResult = false;
                      return checkResult;
@@ -877,9 +909,9 @@
                 }
             } else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
                 if(FormUtil.isEmpty($("#PONo").val())) {
-	                Common.alert('Please enter Purchase Order.');
-	                checkResult = false;
-	                return checkResult;
+                    Common.alert('Please enter Purchase Order.');
+                    checkResult = false;
+                    return checkResult;
                 }
             }
         }
@@ -949,6 +981,8 @@
     <li><a href="aTabFL" >Attachment</a></li>
     <li><a href="aTabBL" id="aTabBilling">Advance Billing Remark</a></li>
     <li><a href="aTabST" onClick="javascript:chgTab('pay');">Update Status</a></li>
+    <li><a href="aTabRM" onClick="javascript:chgTab('remark');">Failed Remark</a></li>
+    <li><a href="aTabEN" id="aTabNotification" onClick="javascript:chgTab('notif');">E-Notification</a></li>
 </ul>
 
 <!------------------------------------------------------------------------------
@@ -972,6 +1006,14 @@
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/membership/eSvmUpdateStatusPop.jsp" %>
 
+<!------------------------------------------------------------------------------
+                Failed Remarks
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmFailedRemarkPop.jsp" %>
+<!------------------------------------------------------------------------------
+                e-notification
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmNotificationPop.jsp" %>
 
 
 </section><!-- tap_wrap end -->

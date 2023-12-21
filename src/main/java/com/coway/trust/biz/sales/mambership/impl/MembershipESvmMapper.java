@@ -91,4 +91,8 @@ public interface MembershipESvmMapper {
     int  isSARefNoExist(Map<String, Object> params);
 
     String getPayWorNo(Map<String, Object> params);
+
+    List<EgovMap> selectFailRemark(Map<String, Object> params);
+
+    int SAL0407D_insert(Map<String, Object> params);
 }

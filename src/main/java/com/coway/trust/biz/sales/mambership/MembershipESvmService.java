@@ -31,6 +31,8 @@ public interface MembershipESvmService {
 
 	EgovMap selectESvmPaymentInfo(Map<String, Object> params);
 
+	Map<String, Object> updateSVM(Map<String, Object> params, SessionVO sessionVO);
+
 	int updateAction(Map<String, Object> params);
 
 	String checkStatus(Map<String, Object> params);
@@ -56,4 +58,7 @@ public interface MembershipESvmService {
     int isSARefNoExist(Map<String, Object> params);
 
     String getPayWorNo(Map<String, Object> params);
+
+    List<EgovMap> selectFailRemark(Map<String, Object> params);
+
 }

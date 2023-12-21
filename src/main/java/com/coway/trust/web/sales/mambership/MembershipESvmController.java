@@ -106,11 +106,19 @@ public class MembershipESvmController {
 		if(arrCustType     != null && !CommonUtils.containsEmpty(arrCustType))     params.put("arrCustType", arrCustType);
 		if(arrESvmStusProgressId != null && !CommonUtils.containsEmpty(arrESvmStusProgressId)) params.put("arrESvmStusProgressId", arrESvmStusProgressId);
 
+	  logger.info("############# params : " + params);
+
 		List<EgovMap> result = membershipESvmService.selectESvmListAjax(params);
 
 		return ResponseEntity.ok(result);
 
 	}
+
+  @RequestMapping(value = "/eSvmRawPop.do")
+  public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "sales/membership/eSvmRawPop";
+  }
 
 	@RequestMapping(value = "/membershipESvmDetailPop.do")
 	public String membershipESvmDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -215,132 +223,23 @@ public class MembershipESvmController {
         params.put("userId", sessionVO.getUserId());
         params.put("updator", sessionVO.getUserId());
 
-        ReturnMessage message = new ReturnMessage();
-        String docNo = "";
-        String insSal95d_ret = "";
-        int updAct = 0;
-        int resultVal = 0;
-
-        if(!"6506".equals(params.get("payment_mode").toString())) {
-            if(params.get("payment_transactionDt") != null && !params.get("payment_transactionDt").equals("")) {
-                String fmtTrxDt = (String) params.get("payment_transactionDt");
-                fmtTrxDt = fmtTrxDt.replace("/", "");
-                params.put("payment_transactionDt", fmtTrxDt);
-            }
-
-            String psmSrvMemNo = (String) params.get("psmSrvMemNo");
-            if(psmSrvMemNo != null && !psmSrvMemNo.equals("")) {
-                docNo = psmSrvMemNo;
-            } else {
-                params.put("DOCNO", "12");
-                docNo = membershipESvmService.selectDocNo(params);
-            }
-        }
-
-        String statusRemark = "";
-        if(params.get("action").equals("5")) {
-            statusRemark = "Approved";
-        } else if(params.get("action").equals("6")) {
-            statusRemark = "Rejected";
-        } else if(params.get("action").equals("1") && !params.get("specialInstruction").equals("")) {
-            statusRemark = "Active";
-        }
-
-        params.put("statusRemark", statusRemark);
-
-        if(params.get("action").equals("5")) {
-            // Approve Action
-            //==== update SAL0298D eSVM ====
-            params.put("specialInstruction","");
-            if(!"6506".equals(params.get("payment_mode").toString())) {
-                params.put("docNo", docNo);
-
-                // SAL0095D_insert :: Returns SM no
-                // 1. SAL0095D_insert to perform SAL0298D status update (updateAction)
-                // 2. SAL0095D_insert to perform payment matching functions (inclusive of eSVMNormalPayment)
-                logger.debug("pre-SAL0095D_insert :: params :: {}", params);
-                insSal95d_ret = membershipESvmService.SAL0095D_insert(params, sessionVO);
-
-                updAct = !"".equals(insSal95d_ret) ? 1 : 0;
-
-            } else {
-                // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
-                /* Returns
-                 * 1 :: Successfully converted
-                 * 0 :: Failed conversion, duplicated PO reference
-                 * 99, 98, 97 :: Failed conversion
-                 */
-                resultVal = membershipESvmService.genSrvMembershipBilling(params, sessionVO);
-
-                // Get PO's SM number
-                String poSvm = membershipESvmService.getPOSm(params);
-                params.put("docNo", poSvm);
-
-                // To update SAL0298D status (updateAction) [Approved]
-                logger.debug("post-PO Billing - updateAction :: params :: {}", params);
-                if(resultVal == 1) {
-                	params.put("progressStatus", 4);
-                    updAct = membershipESvmService.updateAction(params);
-                }
-            }
-        } else {
-            // Active/Reject Action
-            /* Action ::
-             * 1. Update SAL0298D
-             * 2. Update PAY0312D
-             * 3. Update SAL0093D (SMQ inactive)
-             */
-            // Set resultVal = 2, IF "Active" status action
-            if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
-
-            //CHECK SPECIAL INSTRUCTION IF == 3434/3435 then processing status, Progress Status  remains Processing, else Failed for pending for reuploads
-            if("1".equals(params.get("action").toString())){
-                if(params.get("specialInstruction").toString() != "3434" || params.get("specialInstruction").toString() != "3435"){
-                	params.put("progressStatus", 21);
-                }
-                else{
-                	params.put("progressStatus", 104);
-                }
-            }
-
-
-            //CHECK SPECIAL CASE IF == the eSVM already updated by other admin at the same time
-            String checkCurStus = membershipESvmService.checkStatus(params);
-            if("1".equals(checkCurStus)) {  // IF CURRENT STATUS = 1
-            	updAct = membershipESvmService.updateAction(params);
-            } else { // IF CURRENT STATUS IS ALREADY APPROVED/ REJECT
-            	message.setCode(AppConstants.FAIL);
-                message.setMessage("<b>Failed to save. eSVM status already Approved/ Rejected.");
-            }
-
-
-
-        }
-
-/*
-        // Payment Mode :: PO, Status :: 1 (Active) set result value 2
-        if("6506".equals(params.get("payment_mode").toString()) && !params.get("action").equals("5")) resultVal = 2;
-
-        if((!"6506".equals(params.get("payment_mode").toString()) && !insSal95d_ret.isEmpty()) ||
-           ("6506".equals(params.get("payment_mode").toString()) && (resultVal == 1 || resultVal == 2))) {
-            updAct = membershipESvmService.updateAction(params);
-        }
-*/
+        Map<String, Object> Result = membershipESvmService.updateSVM(params,sessionVO);
 
         //srvMemNo
         //payWorNo
         String payWorNo = "";
+        ReturnMessage message = new ReturnMessage();
 
-        payWorNo = membershipESvmService.getPayWorNo(params);
-        params.put("payWorNo", payWorNo);
+        payWorNo = membershipESvmService.getPayWorNo(Result);
+        Result.put("payWorNo", payWorNo);
 
-        if(updAct > 0) {
-            if(!"6506".equals(params.get("payment_mode").toString())) {
+        if(Integer.parseInt(Result.get("updAct").toString()) > 0) {
+            if(!"6506".equals(Result.get("payment_mode").toString())) {
                 message.setCode(AppConstants.SUCCESS);
                 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-                message.setData(params);
+                message.setData(Result);
             } else {
-                switch(resultVal) {
+                switch(Integer.parseInt(Result.get("resultVal").toString())) {
                 case 0:
                     message.setCode(AppConstants.FAIL);
                     message.setMessage("<b>Failed to save. Duplicated PO.");
@@ -373,7 +272,11 @@ public class MembershipESvmController {
             }
         } else {
             message.setCode(AppConstants.FAIL);
-            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+            if(!params.get("errorMsg").toString().isEmpty()){
+            	message.setMessage(params.get("errorMsg").toString());
+            }else{
+            	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+            }
         }
 
         return ResponseEntity.ok(message);
@@ -392,5 +295,12 @@ public class MembershipESvmController {
 		return ResponseEntity.ok(message);
 
 	}
+
+    @RequestMapping(value = "/selectFailRemark.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectFailRemark(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> result = membershipESvmService.selectFailRemark(params);
+    	return ResponseEntity.ok(result);
+    }
 
 }

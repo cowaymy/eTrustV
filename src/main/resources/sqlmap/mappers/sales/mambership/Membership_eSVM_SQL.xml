@@ -30,6 +30,7 @@
           ,BRCNH.CODE || ' ' || BRCNH.NAME AS USER_BRCNH
           , STS1.NAME PROGRESS_STATUS
           , ESVM.STUS_PROGRESS
+          , REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM
         FROM SAL0298D ESVM
         LEFT JOIN SAL0093D QUO
             ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
@@ -310,6 +311,7 @@
             NVL(QUO.SRV_MEM_PAC_AMT, 0) + NVL(QUO.SRV_MEM_BS_AMT, 0) QUO_TOT,
             CUST.NAME,
             (CASE WHEN NVL(SM.SRV_MEM_ID, 0) = 0 THEN QUO.SRV_MEM_ID ELSE NVL(SM.SRV_MEM_ID, 0) END) CNVR_MEM_ID
+            ,ESVM.STUS_PROGRESS
         FROM SAL0298D ESVM
         LEFT JOIN SAL0093D QUO
             ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
@@ -691,6 +693,7 @@
 		    ESVM.UPD_USER_ID = #{userId},
 		    ESVM.UPD_DT = SYSDATE,
 		    ESVM.STUS_PROGRESS = #{progressStatus}
+		    ESVM.UNMATCH_PAY = {unmatchPayment}
 	   WHERE ESVM.PSM_ID = #{psmId}
     </update>
 
@@ -1335,5 +1338,59 @@
         FROM SAL0298D
         WHERE PSM_ID = #{psmId}
     </select>
+
+    <select id="selectFailRemark" parameterType="Map" resultType="egovMap">
+    SELECT
+       A.FAILED_REM_ID
+            ,A.PSM_ID
+            ,A.STUS
+            ,A.STUS_REM
+            ,A.APPV_INSTRCT
+            ,A.APPV_REM
+            ,A.CRT_USER_ID
+            ,A.CRT_DT
+            ,A.UPD_USER_ID
+            ,A.UPD_DT
+            ,A.STUS_PROGRESS
+            ,B.CODE || ' - ' || B.RESN_DESC FAIL_REASON
+            ,C.NAME STATUS
+            ,'['||D.USER_NAME||']'||A.APPV_REM REMARK
+            ,D.USER_NAME CREATOR
+        FROM SAL0407D A
+        LEFT JOIN SYS0032M B ON A.APPV_INSTRCT = B.RESN_ID
+        LEFT JOIN SYS0038M C ON C.STUS_CODE_ID = A.STUS_PROGRESS
+        LEFT JOIN SYS0047M D ON D.USER_ID = A.UPD_USER_ID
+        WHERE A.PSM_ID = #{psmId}
+        ORDER BY A.FAILED_REM_ID DESC
+    </select>
+
+    <insert id="SAL0407D_insert" parameterType="Map">
+        INSERT INTO SAL0407D (
+			FAILED_REM_ID
+			,PSM_ID
+			,STUS
+			,STUS_REM
+			,APPV_INSTRCT
+			,APPV_REM
+			,CRT_USER_ID
+			,CRT_DT
+			,UPD_USER_ID
+			,UPD_DT
+			,STUS_PROGRESS
+			)
+			VALUES (
+			SAL0407D_FAILED_REMARK_ID_SEQ.nextval
+			,#{psmId}
+			,#{action}
+			,NULL
+			,#{specialInstruction}
+			,REGEXP_REPLACE(#{remark}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+			,#{userId}
+			,SYSDATE
+			,#{userId}
+			,SYSDATE
+			,#{progressStatus}
+			)
+     </insert>
 
 </mapper>

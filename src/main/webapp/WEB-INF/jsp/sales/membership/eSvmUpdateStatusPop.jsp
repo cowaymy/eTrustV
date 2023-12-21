@@ -50,21 +50,21 @@
     <select id="specialInstruction" name="specialInstruction" class="w100p">
         <option value="">Choose One</option>
         <c:forEach var="list" items="${specialInstruction}" varStatus="status">
-               <option value="${list.code}">${list.codeName}</option>
+               <option value="${list.code}"> ${list.code} - ${list.codeName}</option>
         </c:forEach>
     </select></td>
 </tr>
 <tr>
     <th scope="row">Others Remark</th>
     <c:if test="${eSvmInfo.stus eq '1'}">
-	    <td colspan='3'>
-	        <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>
-	    </td>
+        <td colspan='3'>
+            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>
+        </td>
     </c:if>
     <c:if test="${eSvmInfo.stus ne '1'}">
-	    <td colspan='3'>
-	        <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>
-	    </td>
+        <td colspan='3'>
+            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>
+        </td>
     </c:if>
 </tr>
 </tbody>

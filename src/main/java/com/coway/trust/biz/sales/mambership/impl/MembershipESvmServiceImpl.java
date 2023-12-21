@@ -21,6 +21,7 @@ import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.sales.mambership.MembershipESvmService;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.DecimalFormat;
@@ -120,6 +121,123 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     }
 
     @Override
+    public Map<String, Object> updateSVM(Map<String, Object> params, SessionVO sessionVO) {
+
+        String docNo = "";
+        String insSal95d_ret = "";
+        int updAct = 0;
+        int resultVal = 0;
+
+        if(!"6506".equals(params.get("payment_mode").toString())) {
+            if(params.get("payment_transactionDt") != null && !params.get("payment_transactionDt").equals("")) {
+                String fmtTrxDt = (String) params.get("payment_transactionDt");
+                fmtTrxDt = fmtTrxDt.replace("/", "");
+                params.put("payment_transactionDt", fmtTrxDt);
+            }
+
+            String psmSrvMemNo = (String) params.get("psmSrvMemNo");
+            if(psmSrvMemNo != null && !psmSrvMemNo.equals("")) {
+                docNo = psmSrvMemNo;
+            } else {
+                params.put("DOCNO", "12");
+                docNo = selectDocNo(params);
+            }
+        }
+
+        String statusRemark = "";
+        if(params.get("action").equals("5")) {
+            statusRemark = "Approved";
+        } else if(params.get("action").equals("6")) {
+            statusRemark = "Rejected";
+        } else if(params.get("action").equals("1") && !params.get("specialInstruction").equals("")) {
+            statusRemark = "Active";
+        }
+
+        params.put("statusRemark", statusRemark);
+
+        if(params.get("action").equals("5")) {
+            // Approve Action
+            //==== update SAL0298D eSVM ====
+            params.put("specialInstruction","");
+            if(!"6506".equals(params.get("payment_mode").toString())) {
+                params.put("docNo", docNo);
+                params.put("progressStatus", "");
+                // SAL0095D_insert :: Returns SM no
+                // 1. SAL0095D_insert to perform SAL0298D status update (updateAction)
+                // 2. SAL0095D_insert to perform payment matching functions (inclusive of eSVMNormalPayment)
+                logger.debug("pre-SAL0095D_insert :: params :: {}", params);
+                insSal95d_ret = SAL0095D_insert(params, sessionVO);
+
+                updAct = !"".equals(insSal95d_ret) ? 1 : 0;
+
+            } else {
+                // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
+                /* Returns
+                 * 1 :: Successfully converted
+                 * 0 :: Failed conversion, duplicated PO reference
+                 * 99, 98, 97 :: Failed conversion
+                 */
+                resultVal = genSrvMembershipBilling(params, sessionVO);
+
+                // Get PO's SM number
+                String poSvm = getPOSm(params);
+                params.put("docNo", poSvm);
+
+                // To update SAL0298D status (updateAction) [Approved]
+                logger.debug("post-PO Billing - updateAction :: params :: {}", params);
+                if(resultVal == 1) {
+                	params.put("progressStatus", 4);
+                    updAct = updateAction(params);
+                }
+            }
+        } else {
+            // Active/Reject Action
+            /* Action ::
+             * 1. Update SAL0298D
+             * 2. Update PAY0312D
+             * 3. Update SAL0093D (SMQ inactive)
+             */
+            // Set resultVal = 2, IF "Active" status action
+            if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
+
+            //CHECK SPECIAL INSTRUCTION IF == 3434/3435 then processing status, Progress Status  remains Processing, else Failed for pending for reuploads
+            if("1".equals(params.get("action").toString())){
+                if(!(params.get("specialInstruction").toString().equals("3434") || params.get("specialInstruction").toString().equals("3435"))){
+                	params.put("progressStatus", 21);
+                }
+                else{
+                	params.put("progressStatus", 104);
+                }
+            }
+
+
+            //CHECK SPECIAL CASE IF == the eSVM already updated by other admin at the same time
+            String checkCurStus = checkStatus(params);
+            if("1".equals(checkCurStus)) {  // IF CURRENT STATUS = 1
+            	updAct = updateAction(params);
+            } else { // IF CURRENT STATUS IS ALREADY APPROVED/ REJECT
+            	updAct =0;
+            	params.put("errorMsg", "<b>Failed to save. eSVM status already Approved/ Rejected.");
+            }
+        }
+
+/*
+        // Payment Mode :: PO, Status :: 1 (Active) set result value 2
+        if("6506".equals(params.get("payment_mode").toString()) && !params.get("action").equals("5")) resultVal = 2;
+
+        if((!"6506".equals(params.get("payment_mode").toString()) && !insSal95d_ret.isEmpty()) ||
+           ("6506".equals(params.get("payment_mode").toString()) && (resultVal == 1 || resultVal == 2))) {
+            updAct = membershipESvmService.updateAction(params);
+        }
+*/
+
+        params.put("updAct", updAct);
+        params.put("resultVal", resultVal);
+
+        return params;
+    }
+
+    @Override
     public int updateAction(Map<String, Object> params) {
         int updSal298d = membershipESvmMapper.updateAction(params);
         int updPay312d = membershipESvmMapper.updateTR(params);
@@ -129,6 +247,9 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             membershipESvmMapper.updSal93(params);
         }
 
+        if("21".equals(params.get("progressStatus").toString()) || "6".equals(params.get("action").toString())){
+        	membershipESvmMapper.SAL0407D_insert(params);
+        }
         int ret = 0;
         if(updSal298d > 0 && updPay312d > 0) {
             ret = 1;
@@ -1139,5 +1260,10 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     @Override
     public String getPayWorNo(Map<String, Object> params) {
         return membershipESvmMapper.getPayWorNo(params);
+    }
+
+    @Override
+    public List<EgovMap> selectFailRemark(Map<String, Object> params) {
+        return membershipESvmMapper.selectFailRemark(params);
     }
 }
