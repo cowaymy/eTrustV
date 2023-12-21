@@ -148,7 +148,7 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
   public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO){
-     //try{
+     try{
         EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
 	      int discWaive = 0;
 	      if (GetExpDate != null) {
@@ -204,9 +204,9 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
         params1.put("receivingMarketingMsgStatus", preBookingOrderVO.getReceivingMarketingMsgStatus());
         orderRegisterMapper.updateMarketingMessageStatus(params1);
 
-     //}catch(Exception e){
-     //  throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed.");
-     //}
+     }catch(Exception e){
+       throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed.");
+     }
   }
 
 	  public EgovMap selectPreBookingOrderInfo(Map<String, Object> params) {
