@@ -278,6 +278,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public List<EgovMap> getLumpSumEnrollmentList(Map<String, Object> params) {
+		if(params.get("grpTicketNo") !=null && params.get("grpTicketNo").toString().isEmpty() == false){
+			String grpTicketNo = params.get("grpTicketNo").toString();
+			params.put("grpTicketNo", Integer.parseInt(grpTicketNo.replaceAll("[^0-9]", "")));
+		}
+
 		List<EgovMap> resultList = mobileLumpSumPaymentKeyInMapper.getLumpSumEnrollmentList(params);
 		return resultList;
 	}
