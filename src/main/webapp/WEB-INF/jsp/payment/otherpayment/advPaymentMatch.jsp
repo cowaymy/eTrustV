@@ -219,7 +219,7 @@ function fn_bankChange(){
 	} else if ($("#bankType").val() == "2730") {
 		options = [{id: 525, name: "2710/010B - CIMB VA"}]
 	} else if ($("#bankType").val() == "2731") {
-		doGetCombo('/common/getAccountList.do', 'OTH','', 'bankAcc', 'S', '(() => {$("#bankAcc").html($("#bankAcc option").filter((i, a) => !a.value || /(2710|2720)(?=\/)/.test(a.innerHTML)))})' );
+		doGetCombo('/common/getAccountList.do', 'OTH','', 'bankAcc', 'S', '(() => {$("#bankAcc").html($("#bankAcc option").filter((i, a) => !a.value || /(2710|2720)(?=\\/)/.test(a.innerHTML)))})' );
 	} else if ($("#bankType").val() == "2728") {
 		options = [{id: null, name: "Choose One"}, {id: 546, name: "2710/010C - CIMB 641"}, {id: 561, name: "2710/208 - ALB 2"}]
 	}
