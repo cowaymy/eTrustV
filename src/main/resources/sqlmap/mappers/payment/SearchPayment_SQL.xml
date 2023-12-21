@@ -702,7 +702,7 @@
            A.S_COL AS sCol,
            A.RC_PRCT AS rcPrct,
            A.AD_RATIO AS adRatio,
-           MEM2.MEM_CODE AS cmName,
+           MEM2.FULL_NAME AS cmName,
            SUBSTR(C.NAME, INSTR(C.NAME, '-') + 2) AS branch,
            C.CODE_DESC AS region
         FROM REP0085S A
