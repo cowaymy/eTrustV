@@ -18,7 +18,8 @@
 	       , (SELECT A.MEM_LVL
            FROM ORG0005D A, ORG0001D B
           WHERE A.MEM_ID = B.MEM_ID
-            AND B.MEM_CODE = #{userId}) AS memberLevel
+            AND B.MEM_CODE = #{userId}
+            AND B.STUS NOT IN (8)) AS memberLevel
            ,CASE
               WHEN (ORG.BRNCH IS NOT NULL)
                  THEN ORG.BRNCH
