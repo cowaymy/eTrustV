@@ -34,6 +34,8 @@ import com.coway.trust.util.UUIDGenerator;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -613,7 +615,7 @@ public class AdaptorServiceImpl implements AdaptorService {
               + "&text=" + URLEncoder.encode(smsVO.getMessage(), "UTF-8")
               + "&is_long_message=true"
               + "&is_two_way=true";
-           //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
+           //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123&is_long_message=true&is_two_way=true
         } catch (UnsupportedEncodingException e) {
           throw new ApplicationException(e, AppConstants.FAIL);
         }
@@ -627,21 +629,27 @@ public class AdaptorServiceImpl implements AdaptorService {
 
         int statusId;
         String body = null;
-        String retCode = null;
 
-        // if (response.getStatus() == 200) {
           body = output;
-          LOGGER.info("SMS OUTPUT >>>>>>>>>>>>>>>>{}" ,response.getProperties().get("success").toString());
 
-        //  if (GI_SUCCESS.equals(body)) {
-          if(response.getProperties().get("success").toString().equals("true")){
+          ObjectMapper objectMapper = new ObjectMapper();
+          JsonNode jsonNode = null;
+          try {
+            jsonNode = objectMapper.readTree(body);
+
+          } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+
+          if(jsonNode.get("success").asText().equals("true")){
             body = "success";
-            retCode="success";
+            output = "success";
             statusId = 4;
             result.setSuccessCount(result.getSuccessCount() + 1);
           } else {
-            body= response.getProperties().get("error_code").toString();
-            retCode=response.getProperties().get("error_message").toString();
+            body= jsonNode.get("error_code").asText();
+            output = jsonNode.get("error_message").asText();
             statusId = 21;
             result.setFailCount(result.getFailCount() + 1);
             reason.clear();
@@ -649,14 +657,9 @@ public class AdaptorServiceImpl implements AdaptorService {
             result.addFailReason(reason);
             result.setErrorCount(result.getErrorCount() + 1);
           }
-  /*      } else {
-          statusId = 1;
-          body = output;
-          result.setErrorCount(result.getErrorCount() + 1);
-        }*/
 
         insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
-            smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, retCode, msgId, vendorId);
+            smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
       });
 
       return result;
