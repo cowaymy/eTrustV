@@ -343,7 +343,7 @@
 				},
 				{
 					dataField : "attchImgUrl3",
-					headerText : 'Other/Cheque Image',
+					headerText : 'Other 1/Cheque Image',
 					width : 100,
 					cellMerge : true,
 					mergeRef : "mobPayGroupNo",
