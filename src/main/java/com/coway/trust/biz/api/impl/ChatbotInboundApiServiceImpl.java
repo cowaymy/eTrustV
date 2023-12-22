@@ -41,17 +41,16 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception {
-	    String respTm = null, apiUserId = "0", respParam = null;
+	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
 	    EgovMap resultValue = new EgovMap();
 
 	    // Check phone number whether exist or not
     	String data = commonApiService.decodeJson(request);
     	Gson g = new Gson();
-    	VerifyCustIdentityReqForm reqParam = g.fromJson(data, VerifyCustIdentityReqForm.class);
+    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
 
-    	Exception e1 = null;
-    	if(reqParam.getCustPhoneNo().toString().isEmpty()){
+    	if(reqParameter.getCustPhoneNo().toString().isEmpty()){
     		resultValue.put("success", false);
     		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     		resultValue.put("message", "Customer phone number is required");
@@ -63,8 +62,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	    stopWatch.start();
 
 	    List<CustomerVO> cust = new ArrayList<>();
-	    String custPhoneNo = reqParam.getCustPhoneNo().toString();
+	    String custPhoneNo = reqParameter.getCustPhoneNo().toString();
 	    params.put("custPhoneNo", custPhoneNo);
+
+	    Gson gson = new GsonBuilder().create();
+	    reqParam = gson.toJson(reqParameter);
 
 	    EgovMap authorize = verifyBasicAuth(request);
 
@@ -87,8 +89,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 					cust.add(customerList);
 				}
 
-				Gson gson = new GsonBuilder().create();
-			    respParam = gson.toJson(cust);
+
+			    respParam = gson.toJson(customerVO);
 
 	    		params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
 	    		params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
@@ -136,13 +138,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public EgovMap verifyBasicAuth(HttpServletRequest request){
-		String respTm = null, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
+		String message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
 		int code = Integer.parseInt(AppConstants.FAIL);
 
 	    String userName = request.getHeader("userName");
 	    String key = request.getHeader("key");
-
-    	Exception e1 = null;
 
     	EgovMap reqPrm = new EgovMap();
     	reqPrm.put("userName", userName);
@@ -173,12 +173,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public void rtnRespMsg(Map<String, Object> param) {
-		EgovMap data = new EgovMap();
 		Map<String, Object> params = new HashMap<>();
 
 		params.put("respCde", param.get("statusCode"));
 		params.put("errMsg", param.get("message"));
-		params.put("reqParam", param.get("reqPrm"));
+		params.put("reqParam", param.get("reqParam").toString());
 		params.put("ipAddr", param.get("ipAddr"));
 		params.put("prgPath", param.get("prgPath"));
 		params.put("respTm", param.get("respTm"));
