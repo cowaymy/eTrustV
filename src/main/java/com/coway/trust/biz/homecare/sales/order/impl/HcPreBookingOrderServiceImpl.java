@@ -2,8 +2,6 @@ package com.coway.trust.biz.homecare.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.impl.CommonMapper;
-import com.coway.trust.biz.homecare.sales.impl.htOrderRegisterMapper;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
@@ -51,9 +48,6 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
 
   @Resource(name = "orderRegisterMapper")
   private OrderRegisterMapper orderRegisterMapper;
-
-  @Resource(name = "htOrderRegisterMapper")
-  private htOrderRegisterMapper htOrderRegisterMapper;
 
   @Resource(name = "customerMapper")
   private CustomerMapper customerMapper;
@@ -93,8 +87,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       }
 
       // GET PRE BOOKING ORDER NO
-      String preBookingOrdNo = "";
-      preBookingOrdNo = htOrderRegisterMapper.selectDocNo(195);
+      String preBookingOrdNo = commonMapper.selectDocNo("195");
       preBookingOrderVO.setPreBookOrdNo(preBookingOrdNo);
       preBookingOrderVO.setCrtUserId(sessionVO.getUserId());
       preBookingOrderVO.setUpdUserId(sessionVO.getUserId());
