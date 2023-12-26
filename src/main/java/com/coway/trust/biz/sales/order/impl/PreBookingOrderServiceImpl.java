@@ -5,9 +5,6 @@ package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,30 +14,19 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.PreBookingOrderService;
-import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.impl.CommonMapper;
-import com.coway.trust.biz.common.impl.SmsMapper;
-import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
-import com.coway.trust.biz.sales.order.OrderLedgerService;
-import com.coway.trust.biz.sales.order.vo.CallResultVO;
-import com.coway.trust.biz.sales.order.vo.PreBookingOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
-import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -63,9 +49,6 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 
   @Resource(name = "commonMapper")
   private CommonMapper commonMapper;
-
-	@Autowired
-  private SmsMapper smsMapper;
 
 	@Autowired
 	private AdaptorService adaptorService;
@@ -161,16 +144,19 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
 	      }
 
-	      String preBookingNo = preBookingOrderMapper.selectNextPreBookingNo();
+//	      String preBookingNo = preBookingOrderMapper.selectNextPreBookingNo();
+//
+//	      Map<String, Object> docNoList = new HashMap();
+//        String docNo = preBookingNo.substring(2);
+//        docNoList.put("preBookingNo",docNo);
+//
+//
+//        preBookingOrderMapper.updatePreBookingNo(docNoList);
 
-	      Map<String, Object> docNoList = new HashMap();
-        String docNo = preBookingNo.substring(2);
-        docNoList.put("preBookingNo",docNo);
+	   // GET PRE BOOKING ORDER NO
+	      String preBookingOrdNo = commonMapper.selectDocNo("195");
 
-
-        preBookingOrderMapper.updatePreBookingNo(docNoList);
-
-	      preBookingOrderVO.setPreBookOrdNo(preBookingNo);
+	      preBookingOrderVO.setPreBookOrdNo(preBookingOrdNo);
 	      preBookingOrderVO.setCrtUserId(sessionVO.getUserId());
 	      preBookingOrderVO.setUpdUserId(sessionVO.getUserId());
 	      preBookingOrderVO.setDiscWaive(discWaive);
