@@ -413,7 +413,7 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 		           labelFunction : function(rowIndex, columnIndex, value){
-		               var maskedEmail = "" , prefix= "";
+		               var maskedEmail = "" , prefix= "", postfix="";
 
 		               if(value){
 		            	   prefix = value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
@@ -438,7 +438,8 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 			           labelFunction : function(rowIndex, columnIndex, value){
-			               var maskedEmail = "" , prefix= "";
+			        	   debugger;
+			               var maskedEmail = "" , prefix= "", postfix="";
 
 			               if(value){
 			            	   prefix = value.substr(0, value.lastIndexOf("@")), postfix= value.substr(value.lastIndexOf("@"));
