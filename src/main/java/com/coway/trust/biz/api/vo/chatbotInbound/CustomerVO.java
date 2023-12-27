@@ -1,4 +1,4 @@
-package com.coway.trust.biz.api.vo.chatbotInbound.verifyCustomerIdentity;
+package com.coway.trust.biz.api.vo.chatbotInbound;
 
 import java.io.Serializable;
 

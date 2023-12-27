@@ -1,4 +1,4 @@
-package com.coway.trust.biz.api.vo.chatbotInbound.verifyCustomerIdentity;
+package com.coway.trust.biz.api.vo.chatbotInbound;
 
 public class VerifyCustIdentityReqForm {
 	private String custPhoneNo;
