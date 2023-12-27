@@ -768,9 +768,10 @@
                              '05', 'CDC' || chr(38) || 'RDC',
                              '09', 'DT',
                              S28.WH_LOC_GB) LOCATION_TYPE,
-               CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN (CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
-                                                                                                  ELSE NVL (WH_LOC_ID, 0) END)
-                       ELSE WH_LOC_ID END RDC_CODE,
+               CASE WHEN S28.WH_LOC_GB = '05' THEN NVL (WH_LOC_ID, 0)
+                       ELSE CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
+                                                                                                  ELSE NVL (WH_LOC_ID, 0) END
+                       ELSE WH_LOC_ID END END RDC_CODE,
                NVL (QTY, 0),
                CASE WHEN S28.WH_LOC_GB = '05' THEN NVL (BOOKQTY, 0)
                        ELSE CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
