@@ -214,6 +214,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             //CHECK SPECIAL CASE IF == the eSVM already updated by other admin at the same time
             String checkCurStus = checkStatus(params);
             if("1".equals(checkCurStus)) {  // IF CURRENT STATUS = 1
+            	params.put("progressStatus", "");
             	updAct = updateAction(params);
             } else { // IF CURRENT STATUS IS ALREADY APPROVED/ REJECT
             	updAct =0;
@@ -239,6 +240,9 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
     @Override
     public int updateAction(Map<String, Object> params) {
+    	if(params.get("progressStatus") == null){
+    		params.put("progressStatus", "");
+    	}
         int updSal298d = membershipESvmMapper.updateAction(params);
         int updPay312d = membershipESvmMapper.updateTR(params);
 
