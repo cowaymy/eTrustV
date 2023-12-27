@@ -2284,8 +2284,8 @@
     var exTrade = $("#exTrade").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
-  }
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() }, '', 'ordPromo', 'S', '');
+    }
 
 //   function displayVoucherSection(){
 // 	  if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
