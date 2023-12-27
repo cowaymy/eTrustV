@@ -31,6 +31,9 @@
         LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
         LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
         WHERE 1=1
+        AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
        <if test='_ordNo != null and _ordNo != ""'>
             AND T1.PRE_BOOK_NO = #{_ordNo}
         </if>
@@ -81,7 +84,7 @@
          ORDER BY T1.PRE_BOOK_ID ASC
     </select>
 
-   <insert id="insertPreBooking" parameterType="Map">
+   <insert id="insertPreBooking" parameterType="com.coway.trust.biz.sales.order.vo.PreBookingOrderVO">
        <selectKey keyProperty="preBookOrdId" resultType="Integer" order="BEFORE">
             SELECT SAL0404M_PRE_BOOK_ID.NEXTVAL FROM DUAL
         </selectKey>
