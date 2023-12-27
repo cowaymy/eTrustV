@@ -44,96 +44,101 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
 	    EgovMap resultValue = new EgovMap();
-
-	    // Check phone number whether exist or not
-    	String data = commonApiService.decodeJson(request);
-    	Gson g = new Gson();
-    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
-
-    	if(reqParameter.getCustPhoneNo().toString().isEmpty()){
-    		resultValue.put("success", false);
-    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-    		resultValue.put("message", "Customer phone number is required");
-    		return resultValue;
-    	}
-
+	 	List<CustomerVO> cust = new ArrayList<>();
 	    StopWatch stopWatch = new StopWatch();
-	    stopWatch.reset();
-	    stopWatch.start();
 
-	    List<CustomerVO> cust = new ArrayList<>();
-	    String custPhoneNo = reqParameter.getCustPhoneNo().toString();
-	    params.put("custPhoneNo", custPhoneNo);
+	 	try{
 
-	    Gson gson = new GsonBuilder().create();
-	    reqParam = gson.toJson(reqParameter);
+    	    stopWatch.reset();
+    	    stopWatch.start();
 
-	    EgovMap authorize = verifyBasicAuth(request);
+    	    EgovMap authorize = verifyBasicAuth(request);
 
-	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
-			LOGGER.debug(">>> Phone Number :" + custPhoneNo);
+    	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
+    	    	// Check phone number whether exist or not
+    	    	String data = commonApiService.decodeJson(request);
+    	    	Gson g = new Gson();
+    	    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
 
-			apiUserId = authorize.get("apiUserId").toString();
+    	    	if(reqParameter.getCustPhoneNo().toString().isEmpty()){
+    	    		resultValue.put("success", false);
+    	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    	    		resultValue.put("message", "Customer phone number is required");
+    	    		return resultValue;
+    	    	}
 
-		    // Trim country calling code in phone number
-			String custPhoneNoWoutCode = custPhoneNo.substring(1);
-			params.put("custPhoneNoWoutCode", custPhoneNoWoutCode);
+    	   	    String custPhoneNo = reqParameter.getCustPhoneNo().toString();
+    	   	    params.put("custPhoneNo", custPhoneNo);
 
-		    // Get customer info
-			List<EgovMap> customerVO = chatbotInboundApiMapper.verifyCustIdentity(params);
+    	   	    Gson gson = new GsonBuilder().create();
+    	   	    reqParam = gson.toJson(reqParameter);
 
-			if(customerVO.size() > 0){
+    			LOGGER.debug(">>> Phone Number :" + custPhoneNo);
 
-				for(EgovMap custList : customerVO){
-					CustomerVO customerList = CustomerVO.create(custList);
-					cust.add(customerList);
-				}
+    			apiUserId = authorize.get("apiUserId").toString();
 
+    		    // Trim country calling code in phone number
+    			String custPhoneNoWoutCode = custPhoneNo.substring(1);
+    			params.put("custPhoneNoWoutCode", custPhoneNoWoutCode);
 
-			    respParam = gson.toJson(customerVO);
+    		    // Get customer info
+    			List<EgovMap> customerVO = chatbotInboundApiMapper.verifyCustIdentity(params);
 
-	    		params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
-	    		params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
-	    		params.put("respParam", respParam.toString());
+    			if(customerVO.size() > 0){
 
-			}else{
-	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-	    		params.put("message", "Customer not found");
-			}
+    				for(EgovMap custList : customerVO){
+    					CustomerVO customerList = CustomerVO.create(custList);
+    					cust.add(customerList);
+    				}
 
-	    }else{
-    		params.put("statusCode", authorize.get("code"));
-    		params.put("message", authorize.get("message").toString());
-	    }
+    			    respParam = gson.toJson(customerVO);
 
-	    stopWatch.stop();
-	    respTm = stopWatch.toString();
+    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+    	    		params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+    	    		params.put("respParam", respParam.toString());
 
-	    // Insert log into API0004M
-	    params.put("reqParam", reqParam);
-	    params.put("ipAddr", CommonUtils.getClientIp(request));
-	    params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-	    params.put("respTm", respTm);
-	    params.put("apiUserId", apiUserId);
-	    rtnRespMsg(params);
+    			}else{
+    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    	    		params.put("message", "Customer not found");
+    			}
 
-	    // Return result
-        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
-        	resultValue.put("success", true);
-        }else{
-        	resultValue.put("success",false);
-        }
+    	    }else{
+        		params.put("statusCode", authorize.get("code"));
+        		params.put("message", authorize.get("message").toString());
+    	    }
 
-        resultValue.put("statusCode", params.get("statusCode"));
-        resultValue.put("message", params.get("message"));
+	 	} catch(Exception e){
+			throw e;
 
-	    if(params.containsKey("respParam")){
-        	resultValue.put("customers", cust);
-        }
+	 	} finally{
+	 		 // Return result
+	        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+	        	resultValue.put("success", true);
+	        }else{
+	        	resultValue.put("success",false);
+	        }
 
-	    return resultValue;
+	        resultValue.put("statusCode", params.get("statusCode"));
+	        resultValue.put("message", params.get("message"));
+
+		    if(params.containsKey("respParam")){
+	        	resultValue.put("customers", cust);
+	        }
+
+		    stopWatch.stop();
+		    respTm = stopWatch.toString();
+
+		    // Insert log into API0004M
+		    params.put("reqParam", reqParam);
+		    params.put("ipAddr", CommonUtils.getClientIp(request));
+		    params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+		    params.put("respTm", respTm);
+		    params.put("apiUserId", apiUserId);
+		    rtnRespMsg(params);
+	 	}
+
+	 	return resultValue;
 	}
-
 
 
 	@Override
