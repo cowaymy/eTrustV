@@ -23,7 +23,7 @@
           , ESVM.APPV_INSTRCT
           , ESVM.SA_REF
           , ESVM.PSM_SRV_MEM_NO
-          , DD.RESN_DESC
+          , DD.CODE || ' - ' || DD.RESN_DESC AS RESN_DESC
           , ESVM.SVM_QUOT_ID
           ,BRCNH.CODE
           ,BRCNH.NAME
@@ -384,7 +384,7 @@
     </select>
 
     <select id="selectActionOption" parameterType="Map" resultType="egovMap">
-        SELECT RESN_ID CODE, RESN_DESC CODE_NAME
+        SELECT RESN_ID CODE, CODE || ' - ' || RESN_DESC AS CODE_NAME
         FROM SYS0032M
         WHERE 1=1
         <if test="action == 6">
@@ -476,7 +476,8 @@
 	        QUO.SRV_MEM_QUOT_NO SMQ_NO,
 	        SAL.SALES_ORD_NO,
 	        TO_CHAR(QUO.SRV_CRT_DT, 'DD/MM/YYYY') QUO_CRT_DT,
-	        TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT
+	        TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT,
+            NVL(ESVM.UNMATCH_PAY,0) UNMATCH_PAY
 	        FROM SAL0298D ESVM
 	        LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
 	        LEFT JOIN SYS0047M MEM1 on MEM1.USER_ID = QUO.SRV_SALES_MEM_ID
@@ -692,7 +693,7 @@
 		    ESVM.APPV_USER_ID = #{userId},
 		    ESVM.UPD_USER_ID = #{userId},
 		    ESVM.UPD_DT = SYSDATE,
-		    ESVM.STUS_PROGRESS = #{progressStatus}
+		    ESVM.STUS_PROGRESS = #{progressStatus},
 		    ESVM.UNMATCH_PAY = #{unmatchPayment}
 	   WHERE ESVM.PSM_ID = #{psmId}
     </update>

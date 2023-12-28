@@ -86,6 +86,10 @@
                 $("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" <c:out value="${paymentInfo.crcName}"/> placeholder="" class="w100p readonly" readyonly  />');
                 $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                if('${preSalesInfo.unmatchPay}' == '1' ){
+                	$('input:checkbox[id="unmatchPayment"]').attr("checked", true);
+                }
+                $("#unmatchPayment").attr("disabled", true);
 
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
@@ -132,6 +136,10 @@
                 $("#action").attr("disabled", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 $("#specialInstruction").attr("disabled", true);
+                if('${preSalesInfo.unmatchPay}' == '1' ){
+                    $('input:checkbox[id="unmatchPayment"]').attr("checked", true);
+                }
+                $("#unmatchPayment").attr("disabled", true);
 
                 $("#btnSave").hide();
 
@@ -157,6 +165,10 @@
                 $("#action").attr("disabled", true);
                 //$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#specInst").hide();
+                if('${preSalesInfo.unmatchPay}' == '1' ){
+                    $('input:checkbox[id="unmatchPayment"]').attr("checked", true);
+                }
+                $("#unmatchPayment").attr("disabled", true);
 
                 $("#btnSave").hide();
 
@@ -212,6 +224,11 @@
                 $("#action").attr("disabled", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 $("#specialInstruction").attr("disabled", true);
+
+                if('${preSalesInfo.unmatchPay}' == '1' ){
+                    $('input:checkbox[id="unmatchPayment"]').attr("checked", true);
+                }
+                $("#unmatchPayment").attr("disabled", true);
 
                 $("#btnSave").hide();
 

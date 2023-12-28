@@ -50,7 +50,7 @@
     <select id="specialInstruction" name="specialInstruction" class="w100p">
         <option value="">Choose One</option>
         <c:forEach var="list" items="${specialInstruction}" varStatus="status">
-               <option value="${list.code}"> ${list.code} - ${list.codeName}</option>
+               <option value="${list.code}"> ${list.codeName}</option>
         </c:forEach>
     </select></td>
 </tr>
