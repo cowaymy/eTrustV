@@ -36,4 +36,16 @@ public class ChatbotInboundApiController {
 		return ResponseEntity.ok(chatbotInboundApiService.verifyCustIdentity(request, params));
 	}
 
+	@ApiOperation(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getOrderList(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
+		return ResponseEntity.ok(chatbotInboundApiService.getOrderList(request, params));
+	}
+
+	@ApiOperation(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/sendStatement", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> sendStatement(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
+		return ResponseEntity.ok(chatbotInboundApiService.sendStatement(request, params));
+	}
+
 }

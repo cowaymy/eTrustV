@@ -25,4 +25,26 @@
 		AND (A.TEL_M1 = #{custPhoneNo} OR A.TEL_M1 = #{custPhoneNoWoutCode})
 		ORDER BY C.CODE_ID
     </select>
+
+    <select id="isCustExist" parameterType="Map">
+        SELECT
+        COUNT(1)
+        FROM SAL0029D
+        WHERE
+        CUST_ID = #{custId}
+        AND NRIC = #{custNric}
+    </select>
+
+    <select id="getOrderList" parameterType="Map" resultType="egovMap">
+        SELECT S01.SALES_ORD_ID, S01.SALES_ORD_NO, S01.CUST_ADD_ID, S26.STK_CODE, S26.STK_DESC, S64.AREA
+		  FROM SAL0001D S01
+		  JOIN SAL0002D S02 ON S01.SALES_ORD_ID = S02.SALES_ORD_ID
+		  JOIN SAL0029D S29 ON S29.CUST_ID = S01.CUST_ID
+		  LEFT JOIN SYS0026M S26 ON S02.ITM_STK_ID  = S26.STK_ID
+		  LEFT JOIN SAL0023D S23 ON S23.CUST_ADD_ID = S01.CUST_ADD_ID
+		  LEFT JOIN SYS0064M S64 ON S64.AREA_ID  =S23.AREA_ID
+		  WHERE S29.CUST_ID = 1857021
+		  AND S29.NRIC = '880905435884'
+		  AND S01.STUS_CODE_ID <![CDATA[ <> ]]> 10
+    </select>
 </mapper>

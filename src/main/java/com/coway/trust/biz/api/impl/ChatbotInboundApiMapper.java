@@ -10,4 +10,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ChatbotInboundApiMapper {
 	EgovMap checkAccess(Map<String, Object> params);
 	List<EgovMap> verifyCustIdentity(Map<String, Object> params);
+	int isCustExist(Map<String, Object> params);
+	List<EgovMap> getOrderList(Map<String, Object> params);
 }

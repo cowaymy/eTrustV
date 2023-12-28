@@ -17,8 +17,11 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.api.CommonApiService;
-import com.coway.trust.biz.api.vo.chatbotInbound.verifyCustomerIdentity.CustomerVO;
-import com.coway.trust.biz.api.vo.chatbotInbound.verifyCustomerIdentity.VerifyCustIdentityReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.CustomerVO;
+import com.coway.trust.biz.api.vo.chatbotInbound.OrderListReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.OrderVO;
+import com.coway.trust.biz.api.vo.chatbotInbound.StatementReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.VerifyCustIdentityReqForm;
 import com.coway.trust.util.CommonUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -140,6 +143,216 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	 	return resultValue;
 	}
 
+
+	@Override
+	public EgovMap getOrderList(HttpServletRequest request, Map<String, Object> params) throws Exception {
+		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
+
+		StopWatch stopWatch = new StopWatch();
+		EgovMap resultValue = new EgovMap();
+		List<OrderVO> orderVO = new ArrayList<>();
+
+		try{
+    		stopWatch.reset();
+    		stopWatch.start();
+
+    		EgovMap authorize = verifyBasicAuth(request);
+
+    		if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
+
+    			// Check phone number whether exist or not
+    			String data = commonApiService.decodeJson(request);
+    			Gson g = new Gson();
+    			OrderListReqForm reqParameter = g.fromJson(data, OrderListReqForm.class);
+
+    			if(reqParameter.getCustId() < 0){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Customer ID is required");
+    				return resultValue;
+    			}
+
+    			if(reqParameter.getCustNric().isEmpty()){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Customer NRIC is required");
+    				return resultValue;
+    			}
+
+    			params.put("custId", reqParameter.getCustId());
+    			params.put("custNric", reqParameter.getCustNric());
+
+    			Gson gson = new GsonBuilder().create();
+    			reqParam = gson.toJson(reqParameter);
+
+    			apiUserId = authorize.get("apiUserId").toString();
+
+    			// Get customer info
+    			int isCustExist = chatbotInboundApiMapper.isCustExist(params);
+
+    			if(isCustExist > 0){
+
+
+    				List<EgovMap> orderListRaw = chatbotInboundApiMapper.getOrderList(params);
+    				for(EgovMap orderRaw : orderListRaw){
+    					OrderVO order = OrderVO.create(orderRaw);
+    					orderVO.add(order);
+    				}
+
+    				respParam = gson.toJson(orderVO);
+
+    				params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+    				params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+    				params.put("respParam", respParam.toString());
+
+    			}else{
+    				params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				params.put("message", "Order not found");
+    			}
+
+    		}else{
+    			params.put("statusCode", authorize.get("code"));
+    			params.put("message", authorize.get("message").toString());
+    		}
+
+    		// Return result
+    		if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+    			resultValue.put("success", true);
+    		}else{
+    			resultValue.put("success",false);
+    		}
+
+    		resultValue.put("statusCode", params.get("statusCode"));
+    		resultValue.put("message", params.get("message"));
+
+    		if(params.containsKey("respParam")){
+    			resultValue.put("orders", orderVO);
+    		}
+
+		}catch(Exception ex){
+			resultValue.put("success",false);
+		}finally{
+    		stopWatch.stop();
+    		respTm = stopWatch.toString();
+
+    		// Insert log into API0004M
+    		params.put("reqParam", reqParam);
+    		params.put("ipAddr", CommonUtils.getClientIp(request));
+    		params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+    		params.put("respTm", respTm);
+    		params.put("apiUserId", apiUserId);
+    		params.put("respParam", resultValue);
+    		rtnRespMsg(params);
+
+    		return resultValue;
+		}
+	}
+
+	@Override
+	public EgovMap sendStatement(HttpServletRequest request, Map<String, Object> params) throws Exception {
+		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
+
+		StopWatch stopWatch = new StopWatch();
+		EgovMap resultValue = new EgovMap();
+		List<OrderVO> orderVO = new ArrayList<>();
+
+		try{
+    		stopWatch.reset();
+    		stopWatch.start();
+
+    		EgovMap authorize = verifyBasicAuth(request);
+
+    		if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
+
+    			// Check phone number whether exist or not
+    			String data = commonApiService.decodeJson(request);
+    			Gson g = new Gson();
+    			StatementReqForm reqParameter = g.fromJson(data, StatementReqForm.class);
+
+    			if(reqParameter.getOrderNo().isEmpty()){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Order  Number is required");
+    				return resultValue;
+    			}
+
+    			if(reqParameter.getOrderId() < 0){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Order ID is required");
+    				return resultValue;
+    			}
+
+    			if(reqParameter.getCustEmailAdd().isEmpty()){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Customer Email Address is required");
+    				return resultValue;
+    			}
+
+    			if(reqParameter.getStatementType() < 0){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Statement Type is required");
+    				return resultValue;
+    			}
+
+    			if(reqParameter.getStatementType() == 1 && reqParameter.getMonth() < 0){
+    				resultValue.put("success", false);
+    				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    				resultValue.put("message", "Month is required");
+    				return resultValue;
+    			}
+
+    			params.put("orderNo", reqParameter.getOrderNo());
+    			params.put("orderId", reqParameter.getOrderId());
+    			params.put("custEmailAdd", reqParameter.getCustEmailAdd());
+    			params.put("statementType", reqParameter.getStatementType());
+    			params.put("month", reqParameter.getMonth());
+
+    			Gson gson = new GsonBuilder().create();
+    			reqParam = gson.toJson(reqParameter);
+
+    			apiUserId = authorize.get("apiUserId").toString();
+
+    			params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+    			params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+
+//    			params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+//				params.put("message", "Not Found");
+    		}else{
+    			params.put("statusCode", authorize.get("code"));
+    			params.put("message", authorize.get("message").toString());
+    		}
+ 
+    		// Return result
+    		if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+    			resultValue.put("success", true);
+    		}else{
+    			resultValue.put("success",false);
+    		}
+
+    		resultValue.put("statusCode", params.get("statusCode"));
+    		resultValue.put("message", params.get("message"));
+
+		}catch(Exception ex){
+			resultValue.put("success",false);
+		}finally{
+    		stopWatch.stop();
+    		respTm = stopWatch.toString();
+
+    		// Insert log into API0004M
+    		params.put("reqParam", reqParam);
+    		params.put("ipAddr", CommonUtils.getClientIp(request));
+    		params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+    		params.put("respTm", respTm);
+    		params.put("apiUserId", apiUserId);
+    		params.put("respParam", resultValue);
+    		rtnRespMsg(params);
+
+    		return resultValue;
+		}
+	}
 
 	@Override
 	public EgovMap verifyBasicAuth(HttpServletRequest request){
