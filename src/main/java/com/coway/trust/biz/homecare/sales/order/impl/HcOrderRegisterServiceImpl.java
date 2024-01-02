@@ -104,7 +104,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		/*
 	     * Voucher checking before creating order as HC PRE-ORDER does not consume voucher usage
 	     */
-	    /*if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+	    if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
 	        Map<String, Object> voucherInfo = new HashMap<String, Object>();
 	        voucherInfo.put("voucherCode", salesOrderMVO1.getVoucherCode());
 	        int validVoucher = voucherMapper.isVoucherValidToApply(voucherInfo);
@@ -114,7 +114,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	        	throw new ApplicationException(AppConstants.FAIL,
 						"Voucher applied is either used or not a valid voucher : " + salesOrderMVO1.getVoucherCode() + ". Please recheck.");
 	        }
-	    }*/
+	    }
 
 		// has order frame
 		if(matStkId > 0 && fraStkId > 0) {
@@ -176,14 +176,14 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			/*
 			 * If got voucher, updated voucher to use state
 			 */
-			/*if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+			if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
 				Map<String,Object> voucherParam = new HashMap();
 				voucherParam.put("voucherCode", salesOrderMVO1.getVoucherCode());
 				voucherParam.put("salesOrdNo", matOrdNo);
 				voucherParam.put("updBy", salesOrderMVO1.getUpdUserId());
 				voucherParam.put("isUsed", 1);
 				voucherMapper.updateVoucherCodeUseStatus(voucherParam);
-			}*/
+			}
 		}
 
 		// Frame register

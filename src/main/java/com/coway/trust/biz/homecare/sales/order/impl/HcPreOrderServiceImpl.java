@@ -99,9 +99,9 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			 * Check if the voucher has been used before on sales order
 			 * Also check if the voucher has been use before on other e-keyin sales
 			 */
-			/*if(preOrderVO.getVoucherCode().isEmpty() == false){
+			if(preOrderVO.getVoucherCode().isEmpty() == false){
 				this.checkVoucherValideKeyIn(preOrderVO.getVoucherCode());
-			}*/
+			}
 
 			// 제품이 둘다 있는 경우.
 			if(matStkId > 0 && fraStkId > 0) {
@@ -246,7 +246,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(preOrderVO.getPreOrdId1() > 0){
 				PreOrderVO newPreOrderVOForVoucher = new PreOrderVO();
 				newPreOrderVOForVoucher.setPreOrdId(preOrderVO.getPreOrdId1());
-				String existingVoucherCode = "";//CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(newPreOrderVOForVoucher));
+				String existingVoucherCode = CommonUtils.nvl(preOrderMapper.selectExistingSalesVoucherCode(newPreOrderVOForVoucher));
 				String currentVoucherCode = preOrderVO.getVoucherCode();
 
 				/*

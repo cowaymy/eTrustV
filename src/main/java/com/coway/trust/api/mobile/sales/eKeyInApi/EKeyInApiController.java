@@ -435,22 +435,22 @@ public class EKeyInApiController {
     return ResponseEntity.ok(eKeyInApiService.checkTNA(param));
   }
 
-//  @ApiOperation(value = "selectVoucherPlatformSelection", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//  @RequestMapping(value = "/selectVoucherPlatformSelection", method = RequestMethod.GET)
-//  public ResponseEntity<List<EKeyInApiDto>> selectVoucherPlatformSelection(@ModelAttribute EKeyInApiForm param) throws Exception {
-//	    List<EgovMap> selectVoucherPlatformCodeList = eKeyInApiService.selectVoucherPlatformCodeList();
-//	    return ResponseEntity.ok(selectVoucherPlatformCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
-//  }
+  @ApiOperation(value = "selectVoucherPlatformSelection", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectVoucherPlatformSelection", method = RequestMethod.GET)
+  public ResponseEntity<List<EKeyInApiDto>> selectVoucherPlatformSelection(@ModelAttribute EKeyInApiForm param) throws Exception {
+	    List<EgovMap> selectVoucherPlatformCodeList = eKeyInApiService.selectVoucherPlatformCodeList();
+	    return ResponseEntity.ok(selectVoucherPlatformCodeList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+  }
 
-//  @ApiOperation(value = "voucherApplyCheck", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//  @RequestMapping(value = "/voucherApplyCheck", method = RequestMethod.GET)
-//  public ResponseEntity<EKeyInApiDto> voucherApplyCheck(@ModelAttribute EKeyInApiForm param) throws Exception {
-//	    return ResponseEntity.ok(eKeyInApiService.isVoucherValidToApply(param));
-//  }
-//
-//  @ApiOperation(value = "getVoucherUsagePromotionId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//  @RequestMapping(value = "/getVoucherUsagePromotionId", method = RequestMethod.GET)
-//  public ResponseEntity<EKeyInApiDto> getVoucherUsagePromotionId(@ModelAttribute EKeyInApiForm param) throws Exception {
-//    return ResponseEntity.ok(eKeyInApiService.getVoucherUsagePromotionId(param));
-//  }
+  @ApiOperation(value = "voucherApplyCheck", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/voucherApplyCheck", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> voucherApplyCheck(@ModelAttribute EKeyInApiForm param) throws Exception {
+	    return ResponseEntity.ok(eKeyInApiService.isVoucherValidToApply(param));
+  }
+
+  @ApiOperation(value = "getVoucherUsagePromotionId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getVoucherUsagePromotionId", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> getVoucherUsagePromotionId(@ModelAttribute EKeyInApiForm param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.getVoucherUsagePromotionId(param));
+  }
 }

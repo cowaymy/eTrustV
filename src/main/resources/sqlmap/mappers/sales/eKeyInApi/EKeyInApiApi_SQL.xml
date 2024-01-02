@@ -154,6 +154,9 @@ SELECT A.CUST_ID AS CUST_ID
                , A.PRC_ID AS PRC_ID
                , A.TOT_PV_GST AS TOT_PV_GST
                , TO_CHAR(A.CPNT_ID) AS CPNT_CODE
+               , A.VOUCHER_CODE
+               , U.CUST_EMAIL AS VOUCHER_EMAIL
+               , V.PLATFORM AS VOUCHER_TYPE
 
      --INSTALLATION------------------------------------------------------------------
                , UPPER(I.ADDR_DTL) AS ADDR_DTL
@@ -199,6 +202,8 @@ SELECT A.CUST_ID AS CUST_ID
 
      --Attachment--------------------------------------------------------------------
                ,  A.ATCH_FILE_GRP_ID AS ATCH_FILE_GRP_ID
+     --Voucher Code--------------------------------------------------------------------
+               , A.VOUCHER_CODE
       FROM SAL0213M A
       INNER JOIN SAL0029D B ON  A.CUST_ID = B.CUST_ID
       LEFT OUTER JOIN SAL0027D C ON  A.CUST_CNTC_ID = C.CUST_CNTC_ID
@@ -226,6 +231,8 @@ SELECT A.CUST_ID AS CUST_ID
       INNER JOIN SAL0023D R ON  A.CUST_BILL_ADD_ID = R.CUST_ADD_ID
       INNER JOIN SYS0064M S  ON R.AREA_ID = S.AREA_ID
       INNER JOIN SYS0013M T ON O.STK_CTGRY_ID = T.CODE_ID
+      LEFT JOIN MSC0057D U ON U.VOUCHER_CODE = A.VOUCHER_CODE
+      LEFT JOIN MSC0056M V ON V.ID = U.ID
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
@@ -475,7 +482,14 @@ SELECT A.CUST_ID AS CUST_ID
           AND A.PROMO_ITM_STUS_ID = 1
           AND B.E_SALES IN (1,2)
     ]]>
+
+    <if test='voucherPromotion != null and voucherPromotion == 1'>
+    AND B.VOUCHER_PROMOTION = 1
+    </if>
+    <if test='voucherPromotion == null or voucherPromotion == 0'>
+    AND B.VOUCHER_PROMOTION = 0
     OR B.PROMO_ID IN (31723 <if test='promoId != null and promoId !=0'>, #{promoId}</if> )
+    </if>
 
     ORDER BY PROMO_DT_FROM DESC
   </select>
@@ -521,6 +535,13 @@ SELECT A.CUST_ID AS CUST_ID
             AND B.E_SALES IN (0,2)
             ORDER BY PROMO_DT_FROM DESC
       ]]>
+
+	    <if test='voucherPromotion != null and voucherPromotion == 1'>
+	    AND B.VOUCHER_PROMOTION = 1
+	    </if>
+	    <if test='voucherPromotion == null or voucherPromotion == 0'>
+	    AND B.VOUCHER_PROMOTION = 0
+	    </if>
   </select>
 
   <select id="selectAnotherContact" parameterType="Map" resultType="egovMap">
@@ -1417,6 +1438,7 @@ SELECT A.CUST_ID AS CUST_ID
                                       , CORP_CUST_TYPE
                                       , AGREEMENT_TYPE
                                       , BNDL_ID
+                                      , VOUCHER_CODE
     ) VALUES ( #{preOrdId}
                   , SYSDATE
                   , #{chnnl}
@@ -1484,6 +1506,7 @@ SELECT A.CUST_ID AS CUST_ID
                   , #{corpCustType}
                   , #{agreementType}
                   , #{bndlId}
+                  , #{voucherCode}
     )
   </insert>
 
@@ -1563,6 +1586,7 @@ SELECT A.CUST_ID AS CUST_ID
         , A.UPD_USER_ID = #{updUserId}
         , A.UPD_DT = SYSDATE
         , A.CPNT_ID = #{cpntId}
+        , A.VOUCHER_CODE = #{voucherCode}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>

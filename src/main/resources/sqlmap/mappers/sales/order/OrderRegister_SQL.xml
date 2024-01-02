@@ -249,7 +249,8 @@
              , T4.NAME ORDER_STATUS
              , NVL(T5.STUS_CODE_ID, '-') RENTAL_STATUS
              , T6.CNTRCT_RENTAL_PRIOD RENTAL_PERIOD
-             <!-- , T1.VOUCHER_CODE -->
+             <!--Voucher management -Frango-->
+             , T1.VOUCHER_CODE
     FROM SAL0001D T1
     LEFT JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_ID
     LEFT JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID
@@ -403,12 +404,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -426,12 +427,12 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
                    ON 2284 = #{appTypeId}
@@ -478,12 +479,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -503,12 +504,12 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
                    ON 2284 = #{appTypeId}
@@ -555,13 +556,13 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
                   OR T2.PROMO_ID = 31723
-                  </if> -->
+                  </if>
                   OR T2.PROMO_ID = 31723
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
@@ -582,12 +583,12 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
                    ON 2284 = #{appTypeId}
@@ -606,10 +607,9 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
-                  <!-- <if test='voucherPromotion == null or voucherPromotion == "0"'>
+                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   OR T2.PROMO_ID = 31723
-                  </if> -->
-                  OR T2.PROMO_ID = 31723
+                  </if>
 
                 <!--Add Promotion that is not in the list-->
                 <if test='promoId != null and promoId !=0'>
@@ -635,14 +635,13 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (1,2)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
                   OR T2.PROMO_ID = 31723
-                  </if> -->
-                  OR T2.PROMO_ID = 31723
+                  </if>
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -660,12 +659,12 @@
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  <!-- <if test='voucherPromotion != null and voucherPromotion == "1"'>
+                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
-                  </if> -->
+                  </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
                    ON 2284 = #{appTypeId}
@@ -685,10 +684,9 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (0,1,2)
-	                  <!-- <if test='voucherPromotion == null or voucherPromotion == "0"'>
+	                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
 	                  OR T2.PROMO_ID = 31723
-	                  </if> -->
-	                  OR T2.PROMO_ID = 31723
+	                  </if>
                   </if>
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
@@ -1303,7 +1301,7 @@
                   , PRE_ORD_ID
                   , ECOMM_ORD_ID
                   , EX_TRADE_PR
-                  <!-- , VOUCHER_CODE -->
+                  , VOUCHER_CODE
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1368,7 +1366,7 @@
              , #{preOrdId}
              , #{ecommOrdId}
              , #{isExtradePR}
-             <!-- , #{voucherCode} -->
+             , #{voucherCode}
      )
   </insert>
 

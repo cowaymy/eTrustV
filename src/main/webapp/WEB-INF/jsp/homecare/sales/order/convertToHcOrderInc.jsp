@@ -124,11 +124,11 @@
                     $("#isReturnExtrade").prop("checked", false);
                 }
 
-                /* voucherAppliedStatus = 0;
+                voucherAppliedStatus = 0;
                 if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
 				  	voucherAppliedStatus = 1;
 					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
-			    } */
+			    }
 
                 // Set Mattress Promotion
                 if($("#ordProduct1 option:selected").index() > 0) {
@@ -139,7 +139,7 @@
                         , exTrade:'${preMatOrderInfo.exTrade}'
                         , srvPacId:'${preMatOrderInfo.srvPacId}'
                         , promoId:'${preMatOrderInfo.promoId}'
-                        /* , voucherPromotion: voucherAppliedStatus */
+                        , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
@@ -164,7 +164,7 @@
                         , exTrade:'${preFrmOrderInfo.exTrade}'
                         , srvPacId:'${preFrmOrderInfo.srvPacId}'
                         , promoId:'${preFrmOrderInfo.promoId}'
-                        /* , voucherPromotion: voucherAppliedStatus */
+                        , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
@@ -350,7 +350,7 @@
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
 
-	/* function voucherAppliedDisplay(){
+	function voucherAppliedDisplay(){
 		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
 
 		if(voucherCode != null && voucherCode != ''){
@@ -365,5 +365,5 @@
 	    	$('#voucherMsg').show();
 	    	$('#btnVoucherApply').hide();
 		}
-	} */
+	}
 </script>

@@ -249,10 +249,10 @@ public class EKeyInApiDto {
   private int acBrnchId;
   private int custCrcTokenIdStus;
   private int Is3rdParty;
-//  private int voucherValid;
-//  private String voucherCode;
-//  private int voucherType;
-//  private String voucherEmail;
+  private int voucherValid;
+  private String voucherCode;
+  private int voucherType;
+  private String voucherEmail;
   private String customerStatusCode;
   private String customerStatus;
 
@@ -1960,37 +1960,37 @@ public class EKeyInApiDto {
     this.Is3rdParty = Is3rdParty;
   }
 
-//  public int getVoucherValid() {
-//    return voucherValid;
-//  }
-//
-//  public void setVoucherValid(int voucherValid) {
-//    this.voucherValid = voucherValid;
-//  }
-//
-//  public String getVoucherCode() {
-//    return voucherCode;
-//  }
-//
-//  public void setVoucherCode(String voucherCode) {
-//    this.voucherCode = voucherCode;
-//  }
-//
-//  public int getVoucherType() {
-//    return voucherType;
-//  }
-//
-//  public void setVoucherType(int voucherType) {
-//    this.voucherType = voucherType;
-//  }
-//
-//  public String getVoucherEmail() {
-//    return voucherEmail;
-//  }
-//
-//  public void setVoucherEmail(String voucherEmail) {
-//    this.voucherEmail = voucherEmail;
-//  }
+  public int getVoucherValid() {
+    return voucherValid;
+  }
+
+  public void setVoucherValid(int voucherValid) {
+    this.voucherValid = voucherValid;
+  }
+
+  public String getVoucherCode() {
+    return voucherCode;
+  }
+
+  public void setVoucherCode(String voucherCode) {
+    this.voucherCode = voucherCode;
+  }
+
+  public int getVoucherType() {
+    return voucherType;
+  }
+
+  public void setVoucherType(int voucherType) {
+    this.voucherType = voucherType;
+  }
+
+  public String getVoucherEmail() {
+    return voucherEmail;
+  }
+
+  public void setVoucherEmail(String voucherEmail) {
+    this.voucherEmail = voucherEmail;
+  }
 
   public String getCustomerStatusCode() {
     return customerStatusCode;

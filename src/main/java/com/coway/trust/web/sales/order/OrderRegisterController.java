@@ -127,7 +127,7 @@ public class OrderRegisterController {
 
 	model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 	model.put("nextDay", nextDay);
-//    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+    model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
     return "sales/order/orderRegisterPop";
   }

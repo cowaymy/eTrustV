@@ -30,7 +30,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.impl.EcommApiMapper;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.homecare.sales.order.impl.HcPreBookingOrderMapper;
-//import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.ASEntryVO;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -98,8 +98,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   @Resource(name = "hcPreBookingOrderMapper")
   private HcPreBookingOrderMapper hcPreBookingOrderMapper;
 
-/*  @Resource(name = "voucherMapper")
-  private VoucherMapper voucherMapper;*/
+  @Resource(name = "voucherMapper")
+  private VoucherMapper voucherMapper;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -1656,7 +1656,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     /*
      * Voucher checking before creating order as PRE-ORDER does not consume voucher usage
      */
-    /*if(salesOrderMVO.getVoucherCode().isEmpty() == false){
+    if(salesOrderMVO.getVoucherCode().isEmpty() == false){
         Map<String, Object> voucherInfo = new HashMap<String, Object>();
         voucherInfo.put("voucherCode", salesOrderMVO.getVoucherCode());
         int validVoucher = voucherMapper.isVoucherValidToApply(voucherInfo);
@@ -1666,7 +1666,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	throw new ApplicationException(AppConstants.FAIL,
 					"Voucher applied is either used or not a valid voucher : " + salesOrderMVO.getVoucherCode() + ". Please recheck.");
         }
-    }*/
+    }
     // ------------------------------------------------------------------------------
     // START
     // ------------------------------------------------------------------------------
@@ -2308,14 +2308,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		/*
 		 * If got voucher, updated voucher to use state
 		 */
-		/*if(salesOrderMVO.getVoucherCode().isEmpty() == false){
+		if(salesOrderMVO.getVoucherCode().isEmpty() == false){
 			Map<String,Object> voucherParam = new HashMap();
 			voucherParam.put("voucherCode", salesOrderMVO.getVoucherCode());
 			voucherParam.put("salesOrdNo", salesOrderMVO.getSalesOrdNo());
 			voucherParam.put("updBy", salesOrderMVO.getUpdUserId());
 			voucherParam.put("isUsed", 1);
 			voucherMapper.updateVoucherCodeUseStatus(voucherParam);
-		}*/
+		}
 
       try{
     	Map<String,Object> preccpParam = new HashMap();

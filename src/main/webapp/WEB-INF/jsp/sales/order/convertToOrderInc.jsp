@@ -149,12 +149,11 @@
 
                 //$('#ordPromo').removeAttr("disabled");
                 //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
-
-//                 voucherAppliedStatus = 0;
-//                 if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
-// 				  	voucherAppliedStatus = 1;
-// 					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
-// 			    }
+                voucherAppliedStatus = 0;
+                if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
+				  	voucherAppliedStatus = 1;
+					voucherAppliedCode =  '${preOrderInfo.voucherInfo.voucherCode}';
+			    }
 
                 if(date >= 201907) {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
@@ -164,7 +163,7 @@
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
                         ,promoId:'${preOrderInfo.promoId}'
-//                         ,voucherPromotion: voucherAppliedStatus
+                        ,voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()}
                         , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
@@ -176,7 +175,7 @@
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
-//                         ,voucherPromotion: voucherAppliedStatus
+                        ,voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
 
@@ -391,19 +390,19 @@
 		});
 	}
 
-// 	function voucherAppliedDisplay(){
-// 		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
-// 		if(voucherCode != null && voucherCode != ''){
-// 			$('.voucherSection').show();
+	function voucherAppliedDisplay(){
+		var voucherCode = '${preOrderInfo.voucherInfo.voucherCode}';
+		if(voucherCode != null && voucherCode != ''){
+			$('.voucherSection').show();
 
-// 			var voucherEmail = '${preOrderInfo.voucherInfo.custEmail}';
-// 			var platformId = '${preOrderInfo.voucherInfo.platformId}';
-// 			$('#voucherCode').val(voucherCode);
-// 			$('#voucherEmail').val(voucherEmail);
-// 			$('#voucherType').val(platformId);
-// 		   	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-// 	    	$('#voucherMsg').show();
-// 	    	$('#btnVoucherApply').hide();
-// 		}
-// 	}
+			var voucherEmail = '${preOrderInfo.voucherInfo.custEmail}';
+			var platformId = '${preOrderInfo.voucherInfo.platformId}';
+			$('#voucherCode').val(voucherCode);
+			$('#voucherEmail').val(voucherEmail);
+			$('#voucherType').val(platformId);
+		   	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+	    	$('#voucherMsg').show();
+	    	$('#btnVoucherApply').hide();
+		}
+	}
 </script>

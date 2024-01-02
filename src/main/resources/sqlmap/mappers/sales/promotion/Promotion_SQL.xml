@@ -369,7 +369,7 @@
              , E_SALES
              , ADV_DISC
              , STK_SIZE
-             <!-- , VOUCHER_PROMOTION -->
+             , VOUCHER_PROMOTION
              , PROMO_DISC_ON_BILL)
         VALUES
              ( #{promoId}
@@ -405,7 +405,7 @@
              , #{promoESales}
              , #{advDisc}
              , #{stkSize}
-             <!-- , #{voucherPromotion} -->
+             , #{voucherPromotion}
              , #{promoDiscOnBill})
     </insert>
 
@@ -502,7 +502,7 @@
              , T1.E_SALES
              , T1.ADV_DISC
              , T1.STK_SIZE
-             <!-- , T1.VOUCHER_PROMOTION -->
+             , T1.VOUCHER_PROMOTION
              , T3.cust_Status_en
              , T3.cust_Status_Disen
              , T3.cust_Status_New
@@ -710,7 +710,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , E_SALES                 = #{promoESales}
              , ADV_DISC                = #{advDisc}
              , STK_SIZE                = #{stkSize}
-             <!-- , VOUCHER_PROMOTION = #{voucherPromotion} -->
+             , VOUCHER_PROMOTION = #{voucherPromotion}
              , PROMO_DISC_ON_BILL = #{promoDiscOnBill}
          WHERE PROMO_ID                = #{promoId}
     </update>
@@ -929,7 +929,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , E_SALES
              , ADV_DISC
              , STK_SIZE
-             <!-- , VOUCHER_PROMOTION -->
+             , VOUCHER_PROMOTION
              , ACTION_TAB
              , APPV_STUS
              , APPV_USER_ID
@@ -969,7 +969,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , #{promoESales}
              , #{advDisc}
              , #{stkSize}
-             <!-- , #{voucherPromotion} -->
+             , #{voucherPromotion}
              , #{actionTab}
              , 60
              , null
@@ -1064,7 +1064,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T4.NAME STATUS
              , T1.STK_SIZE STK_SIZE
              , T1.ACTION_TAB
-            <!--  , T1.VOUCHER_PROMOTION -->
+             , T1.VOUCHER_PROMOTION
           FROM SAL0358M T1
           LEFT JOIN SYS0047M U1 ON U1.USER_ID = T1.CRT_USER_ID
           LEFT JOIN SYS0047M U2 ON U2.USER_ID = T1.APPV_USER_ID
@@ -1141,7 +1141,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.ACTION_TAB
              , T1.APPV_STUS AS APPV_STATUS
              , T1.REMARK AS APPV_REMARK
-             <!-- , T1.VOUCHER_PROMOTION -->
+             , T1.VOUCHER_PROMOTION
              , T1.CHG_REMARK
              , T3.cust_Status_en
              , T3.cust_Status_Disen
@@ -1385,7 +1385,7 @@ FROM (
              , T1.PROMO_UPD_USER_ID
              , T1.PROMO_IS_TRIAL_CNVR
              , T1.PROMO_PRC_PRCNT
-             <!-- , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION -->
+             , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION
              , DECODE(T1.PROMO_CUST_TYPE, 964, 'Individual', 965, 'Company', 'All') PROMO_CUST_TYPE_DESC
              , T1.PROMO_CUST_TYPE
              , T1.PROMO_DISC_TYPE
@@ -1478,7 +1478,7 @@ FROM (
              , NULL
              , T1.PROMO_IS_TRIAL_CNVR
              , T1.PROMO_PRC_PRCNT
-             <!-- , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION -->
+             , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION
              , DECODE(T1.PROMO_CUST_TYPE, 964, 'Individual', 965, 'Company', 'All') PROMO_CUST_TYPE_DESC
              , T1.PROMO_CUST_TYPE
              , T1.PROMO_DISC_TYPE

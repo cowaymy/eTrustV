@@ -91,7 +91,7 @@ public class SalesPromoMVO implements Serializable {
 
 	private String appvRemark;
 
-	//private int voucherPromotion;
+	private int voucherPromotion;
 
 	private String chgRemark;
 
@@ -407,13 +407,13 @@ public class SalesPromoMVO implements Serializable {
 		    this.appvRemark = appvRemark;
 		  }
 
-		/*public int getVoucherPromotion() {
+		public int getVoucherPromotion() {
 			return voucherPromotion;
 		}
 
 		public void setVoucherPromotion(int voucherPromotion) {
 			this.voucherPromotion = voucherPromotion;
-		}*/
+		}
 
 		public String getChgRemark() {
 		    return chgRemark;
