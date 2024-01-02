@@ -277,6 +277,13 @@
             fn_doSaveESvmOrder();
 
         });
+
+        $('#unmatchPayment').click(function() {
+        	if($("#unmatchPayment").is(":checked") == true && $("#payment_transactionID").val() != ""){
+                Common.confirm('<b>* Transaction ID is keyed in.<br>Do you want to continue tick unmatch payment?</b>', fn_cfmUnmatch, fn_revertTickUnmatch);
+        	}
+        });
+
         $('#svmFrFile').change( function(evt) {
             var file = evt.target.files[0];
              if(file.name != svmFrFileName) {
@@ -392,6 +399,14 @@
         });
 
     });
+
+    function fn_cfmUnmatch(){
+    	$("#payment_transactionID").val("");
+
+    }
+    function fn_revertTickUnmatch(){
+    	$('input:checkbox[id="unmatchPayment"]').prop("checked", false);
+    }
 
     function fn_allowResubmit(){
         var stus = '${eSvmInfo.stus}';

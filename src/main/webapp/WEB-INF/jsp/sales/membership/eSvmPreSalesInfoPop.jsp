@@ -2,6 +2,10 @@
 
     var oriNric = "${preSalesInfo.custNric}";
 
+    var oriAddr = "${preSalesInfo.instlAddr}";
+    var oriMaskAddr1 = "${preSalesInfo.maskAddr1}";
+    var oriMaskAddr2 = "${preSalesInfo.maskAddr2}";
+
     $(document).ready(function(){
 
      // Masking pen (display last 4)
@@ -19,8 +23,23 @@
             }).mouseout(function() {
                 $("#spanNric").html(maskedNric);
             });
+
+            var maskedAddr = oriMaskAddr1 + " ********** " + oriMaskAddr2;
+            $("#presales_instlAdd").html(maskedAddr);
+            // Appear NRIC on hover over field
+            $("#presales_instlAdd").hover(function() {
+                $("#presales_instlAdd").html(oriAddr);
+            }).mouseout(function() {
+                $("#presales_instlAdd").html(maskedAddr);
+            });
+            $("#imgHoverAddr").hover(function() {
+                $("#presales_instlAdd").html(oriAddr);
+            }).mouseout(function() {
+                $("#presales_instlAdd").html(maskedAddr);
+            });
         } else {
             $("#spanNric").html(oriNric);
+            $("#presales_instlAdd").html(oriAddr);
         }
     });
 
@@ -98,7 +117,9 @@
 </tr>
 <tr>
     <th scope="row">Installation Address</th>
-    <td colspan=3><input id=presales_instlAdd name="presales_instlAdd" type="text" value="${preSalesInfo.instlAddr}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td colspan=3><a href="#" class="search_btn" id="imgHoverAddr"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="presales_instlAdd"></span>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
