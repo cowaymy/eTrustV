@@ -109,10 +109,10 @@ var orderListColumnLayout= [
                                {dataField : "ctrlId", headerText : "CTRL ID", width : '15%'},
                                {dataField : "crtDt", headerText : "Date", width : '15%'},
                                {dataField : "monthType", headerText : "Category", width : '15%'},
-                               {dataField : "ctrlTotItm", headerText : "Total Item with decimal", width : '15%' ,dataType : "numeric", formatString : "#,##0.00"},
-                               {dataField : "targetAmt", headerText : "Target Amt", width : '15%', dataType : "numeric", formatString : "#,##0.00"},
-                               {dataField : "totalSuccess", headerText : "Total Success", width : '15%', dataType : "numeric", formatString : "#,##0.00"},
-                               {dataField : "receivedAmt", headerText : "Receive Amt", width : '15%', dataType : "numeric", formatString : "#,##0.00"},
+                               {dataField : "ctrlTotItm", headerText : "Total Item with decimal", width : '15%' ,dataType : "numeric", formatString : "#,###"},
+                               {dataField : "targetAmt", headerText : "Target Amt", width : '15%', dataType : "numeric", formatString : "#,###"},
+                               {dataField : "totalSuccess", headerText : "Total Success", width : '15%', dataType : "numeric", formatString : "#,###"},
+                               {dataField : "receivedAmt", headerText : "Receive Amt", width : '15%', dataType : "numeric", formatString : "#,###"},
                                {dataField : "status", headerText : "Status", width : '15%'}
                                ];
 
@@ -880,6 +880,10 @@ function fn_uploadFileM2(){
     });
 }
 
+function fn_excelDown() {
+    GridCommon.exportTo("orderListId_grid_wrap", "xlsx","M1M2OrderRecord");
+  }
+
 function fn_ordersListPop(){
 
     Common.ajaxFile("/payment/orderListMonthViewPop.do", '', function(result){
@@ -1427,12 +1431,10 @@ function fn_ordersListPop(){
     <header class="pop_header" id="pop_header">
         <h1>M1/M2 Order</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2">
-                    <a href="#" >CLOSE</a>
-                </p></li>
-                  <!-- search_result start -->
-
-                <!-- grid_wrap start -->
+        <li><p class="btn_blue2"><a href="#" onClick="fn_excelDown()">Export To Excel</a></p></li>
+        <li><p class="btn_blue2"><a href="#" >CLOSE</a></p></li>
+ <!-- search_result start -->
+ <!-- grid_wrap start -->
         </ul>
     </header>
 <section class="pop_body"><!-- pop_body start -->
