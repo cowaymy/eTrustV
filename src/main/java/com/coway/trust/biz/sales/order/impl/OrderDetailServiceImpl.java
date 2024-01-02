@@ -40,7 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orderDetailService")
 public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements OrderDetailService {
 
-  private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(OrderDetailServiceImpl.class);
 
   @Resource(name = "orderDetailMapper")
   private OrderDetailMapper orderDetailMapper;
@@ -429,7 +429,6 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
     if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
       mthRentalFees = (BigDecimal) basicInfo.get("ordMthRental");
-      rentalStatus = (String) basicInfo.get("rentalStus");
     }
 
     if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))
@@ -459,6 +458,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
       } else {
         obligationYear = CommonUtils.intNvl(basicInfo.get("obligtYear"));
       }
+
+      rentalStatus = (String) basicInfo.get("rentalStus");
+
     } else if (SalesConstants.APP_TYPE_CODE_INSTALLMENT.equals(basicInfo.get("appTypeCode"))) {
 
       installmentDuration = String.valueOf(basicInfo.get("instlmtPriod"));
