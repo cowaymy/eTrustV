@@ -1705,7 +1705,7 @@
       }
 
      function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-    	 if(memCode == "100116" || memCode == "100224"){
+    	 if(memCode == "100116" || memCode == "100224" || memCode == "678235"){
              return true;
          }else{
             if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
