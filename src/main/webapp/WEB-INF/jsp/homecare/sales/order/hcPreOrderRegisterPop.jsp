@@ -2287,7 +2287,7 @@
     }
 
     function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-    	 if(memCode == "100116" || memCode == "100224"){
+    	 if(memCode == "100116" || memCode == "100224" || memCode == "678235"){
              return true;
          }else{
               if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
@@ -2694,10 +2694,11 @@
 		    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
 		        <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
-                <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a></td>
+                <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
                 <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
                 <input id="txtBusType"  name="txtBusType" type="hidden" />
                 <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+                </td>
 		</tr>
 		<tr>
     	<th scope="row">Voucher Type<span class="must">*</span></th>
