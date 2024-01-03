@@ -72,6 +72,12 @@
                 #{item}
             </foreach>
         </if>
+        <if test='arrAppType != null and arrAppType != ""'>
+            AND T4.APP_TYPE_ID IN
+            <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
         <if test="orgCode != '' ">
             AND T9.ORG_CODE = #{orgCode}
         </if>
@@ -161,7 +167,7 @@
           LEFT JOIN SAL0095D T5 ON T5.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SALES_ORD_ID,'1')
            WHERE T1.CUST_ID = #{custId}
            AND T1.STUS_CODE_ID = 4
-           AND T1.APP_TYPE_ID = 66
+           AND T1.APP_TYPE_ID IN (66,67,68,1412)
        	   AND CEIL(MONTHS_BETWEEN(TO_DATE(LAST_DAY(T5.SRV_EXPR_DT)),TO_DATE(SYSDATE))) BETWEEN 1 AND 4
     </select>
 
