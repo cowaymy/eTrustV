@@ -439,7 +439,7 @@
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanNm').val(memInfo.name);
 
-                if(memInfo.memCode == "100116" || memInfo.memCode == "100224"){
+                if(memInfo.memCode == "100116" || memInfo.memCode == "100224" || memInfo.memCode == "678235" ){
                     return;
                 }else{
                     fn_checkPreBookSalesPerson(memId,memCode);
