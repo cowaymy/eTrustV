@@ -56,6 +56,9 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	@Resource(name = "membershipQuotationMapper")
   private MembershipQuotationMapper membershipQuotationMapper;
 
+	@Resource(name = "orderDetailMapper")
+  private OrderDetailMapper orderDetailMapper;
+
  @Override
   public List<EgovMap> selectPreBookingOrderList(Map<String, Object> params) {
     return preBookingOrderMapper.selectPreBookingOrderList(params);
@@ -92,30 +95,19 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
       ROOT_STATE = "ROOT_1";
     } else {
       // CHECK PREVIOUS ORDER RENTAL OUTSTANDING AMOUNT
-      String valiOutStandingAmt = String.valueOf(orderRegisterMapper.selectRentAmt(getOldOrderID));
-
-      if ("".equals(CommonUtils.nvl(valiOutStandingAmt))) {
-        msg = msg + " -Not allowed for Pre Booking (Rental bill not found). <br/>";
-        isInValid = "InValid";
-        ROOT_STATE = "ROOT_4";
-      } else {
-        BigDecimal valiOutStanding = new BigDecimal(valiOutStandingAmt);
-        valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
-
-        if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+      String valiOutStandingAmt = String.valueOf(orderRegisterMapper.selectOutstandingAmt(getOldOrderID));
+      if (!"".equals(CommonUtils.nvl(valiOutStandingAmt))) {
           msg = msg + " -Not allowed for Pre Booking with Outstanding amount. <br/>";
           isInValid = "InValid";
           ROOT_STATE = "ROOT_4";
         }
-      }
-
+      // CHECK OUTRIGHT SVM ACTIVE QUOTATION
       params.put("ORD_NO", (String) params.get("salesOrdNo"));
       List<EgovMap> quotationInfo = membershipQuotationMapper.mActiveQuoOrder(params);
       if(!quotationInfo.isEmpty()){
         msg = msg + " -Not allowed for Pre Booking with Active Membership Quotation. <br/>";
         isInValid = "InValid";
         ROOT_STATE = "ROOT_4";
-
       }
     }
 
@@ -171,12 +163,18 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	      smsList.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
 	      smsList.put("postCode", preBookingOrderVO.getPostCode());
 	      smsList.put("memCode", preBookingOrderVO.getMemCode());
+	      smsList.put("salesOrderId",preBookingOrderVO.getSalesOrdIdOld());
 
 	      String smsTemplate = preBookingOrderMapper.getPreBookingSmsTemplate(smsList);
+	      EgovMap mailingInfo = orderDetailMapper.selectOrderMailingInfoByOrderID(smsList);
+
+	      if(mailingInfo.get("mailCntTelM") == null){
+	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Mailing Info - Mobile No is empty.");
+	      }
 
         SmsVO sms = new SmsVO(sessionVO.getUserId(), 976);
         sms.setMessage(CommonUtils.nvl(smsTemplate));
-        sms.setMobiles(CommonUtils.nvl(preBookingOrderVO.getCustContactNumber()));
+        sms.setMobiles(CommonUtils.nvl(mailingInfo.get("mailCntTelM")));
         sms.setRemark("Pre-Booking SMS via e-TRUST");
         sms.setRefNo(CommonUtils.nvl(preBookingOrderVO.getPreBookOrdNo()));
 
