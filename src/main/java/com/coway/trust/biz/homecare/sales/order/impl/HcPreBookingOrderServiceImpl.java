@@ -18,6 +18,7 @@ import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipQuotationMapper;
+import com.coway.trust.biz.sales.order.impl.OrderDetailMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -60,6 +61,9 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
 
   @Autowired
   private AdaptorService adaptorService;
+
+  @Resource(name = "orderDetailMapper")
+  private OrderDetailMapper orderDetailMapper;
 
   // Search Homecare Pre Booking Order List
   @Override
@@ -128,11 +132,17 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       smsEntry.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
       smsEntry.put("postCode", preBookingOrderVO.getPostCode());
       smsEntry.put("memCode", preBookingOrderVO.getMemCode());
+      smsEntry.put("salesOrderId", preBookingOrderVO.getSalesOrdIdOld());
 
       String smsTemplate = hcPreBookingOrderMapper.getHcPreBookSmsTemplate(smsEntry);
+      EgovMap mailingInfo = orderDetailMapper.selectOrderMailingInfoByOrderID(smsEntry);
+
+      if(mailingInfo.get("mailCntTelM") == null){
+        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Mailing Info - Mobile No is empty.");
+      }
 
       sms.setMessage(CommonUtils.nvl(smsTemplate));
-      sms.setMobiles(CommonUtils.nvl(preBookingOrderVO.getCustContactNumber()));
+      sms.setMobiles(CommonUtils.nvl(mailingInfo.get("mailCntTelM")));
       sms.setRemark("Pre-Booking SMS VIA eTRUST");
       sms.setRefNo(CommonUtils.nvl(preBookingOrdNo));
       adaptorService.sendSMS4(sms);
@@ -176,32 +186,21 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     if ("0".equals(getOldOrderID)) {
       ROOT_STATE = "ROOT_1";
     } else {
-      // CHECK PREVIOUS ORDER RENTAL OUTSTANDING AMOUNT
-      String valiOutStandingAmt = String.valueOf(orderRegisterMapper.selectRentAmt(getOldOrderID));
-
-      if ("".equals(CommonUtils.nvl(valiOutStandingAmt))) {
-        msg = msg + " -Not allowed for Pre Booking (Rental bill not found). <br/>";
+      // CHECK PREVIOUS ORDER OUTSTANDING AMOUNT
+      String valiOutStandingAmt = String.valueOf(orderRegisterMapper.selectOutstandingAmt(getOldOrderID));
+      if (!"".equals(CommonUtils.nvl(valiOutStandingAmt))) {
+        msg = msg + " -Not allowed for Pre Booking with Outstanding amount. <br/>";
         isInValid = "InValid";
         ROOT_STATE = "ROOT_4";
-      } else {
-        BigDecimal valiOutStanding = new BigDecimal(valiOutStandingAmt);
-        valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
-        if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
-          msg = msg + " -Not allowed for Pre Booking with Outstanding amount. <br/>";
-          isInValid = "InValid";
-          ROOT_STATE = "ROOT_4";
-        }
       }
-
+      // CHECK OUTRIGHT SVM ACTIVE QUOTATION
       params.put("ORD_NO", (String) params.get("salesOrdNo"));
       List<EgovMap> quotationInfo = membershipQuotationMapper.mActiveQuoOrder(params);
       if(!quotationInfo.isEmpty()){
         msg = msg + " -Not allowed for Pre Booking with Active Membership Quotation. <br/>";
         isInValid = "InValid";
         ROOT_STATE = "ROOT_4";
-
       }
-
     }
 
     RESULT.put("ROOT_STATE", ROOT_STATE);
