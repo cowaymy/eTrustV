@@ -2763,7 +2763,7 @@
     var exTrade = $("#exTrade").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() }, '', 'ordPromo', 'S', '');
   }
 
   function fn_setBindComboOrd(ordNo, ordId) {
