@@ -9,6 +9,10 @@
 	var CATE_ID  = "14";
 	var appTypeData = [
             	                   {"codeId": "66","codeName": "Rental"}
+            	                   ,{"codeId": "67","codeName": "Outright"}
+            	                   ,{"codeId": "68","codeName": "Instalment"}
+            	                   ,{"codeId": "1412","codeName": "Outright Plus"}
+            	                   ,{"codeId": "5764","codeName": "Auxiliary"}
 	                            ];
 
 	var memTypeData = [
