@@ -61,10 +61,10 @@ public class LoginServiceImpl implements LoginService {
 	private AdaptorService adaptorService;
 
 	@Autowired
-    private FileService fileService;
+	private FileService fileService;
 
 	@Autowired
-    private FileMapper fileMapper;
+	private FileMapper fileMapper;
 
 	@Resource(name = "ssoLoginService")
 	private SsoLoginService ssoLoginService;
@@ -153,20 +153,23 @@ public class LoginServiceImpl implements LoginService {
 		loginMapper.updatePassWord(params);
 		// }
 
-		//ssoLogin
-		if(ssoLoginFlag > 0){
-    		try{
-    			if(params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2") || params.get("userTypeId").toString().equals("3")
-    					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5") || params.get("userTypeId").toString().equals("6672")){
-    				//update password in keycloak
-    				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-    				ssoParamsOldMem.put("memCode", params.get("userName"));
-    				ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
-    				ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
-    			}
-    		}catch(Exception ex) {
-    			throw ex;
-            }
+		// ssoLogin
+		if (ssoLoginFlag > 0) {
+			try {
+				if (params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2")
+						|| params.get("userTypeId").toString().equals("3")
+						|| params.get("userTypeId").toString().equals("7")
+						|| params.get("userTypeId").toString().equals("5")
+						|| params.get("userTypeId").toString().equals("6672")) {
+					// update password in keycloak
+					Map<String, Object> ssoParamsOldMem = new HashMap<String, Object>();
+					ssoParamsOldMem.put("memCode", params.get("userName"));
+					ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+					ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+				}
+			} catch (Exception ex) {
+				throw ex;
+			}
 		}
 		return saveCnt;
 	}
@@ -192,168 +195,169 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	@CacheEvict(value = { AppConstants.LEFT_MENU_CACHE, AppConstants.LEFT_MY_MENU_CACHE }, key = "#loginHistory.getUserId()")
+	@CacheEvict(value = { AppConstants.LEFT_MENU_CACHE,
+			AppConstants.LEFT_MY_MENU_CACHE }, key = "#loginHistory.getUserId()")
 	public void saveLoginHistory(LoginHistory loginHistory) {
 		loginMapper.insertLoginHistory(loginHistory);
 	}
 
-    @Override
-    public EgovMap checkByPass(Map<String, Object> params) {
-        return loginMapper.checkByPass(params);
-    }
-
-    @Override
-    public LoginVO getAplcntInfo(Map<String, Object> params) {
-        LOGGER.debug("applicantInfo");
-        LoginVO loginVO = loginMapper.getAplcntInfo(params);
-
-        return loginVO;
-    }
+	@Override
+	public EgovMap checkByPass(Map<String, Object> params) {
+		return loginMapper.checkByPass(params);
+	}
 
 	@Override
-    public EgovMap getDtls(Map<String, Object> params) {
-        return loginMapper.getDtls(params);
-    }
+	public LoginVO getAplcntInfo(Map<String, Object> params) {
+		LOGGER.debug("applicantInfo");
+		LoginVO loginVO = loginMapper.getAplcntInfo(params);
+
+		return loginVO;
+	}
 
 	@Override
-    public EgovMap getPopDtls(Map<String, Object> params) {
-        return loginMapper.getPopDtls(params);
-    }
+	public EgovMap getDtls(Map<String, Object> params) {
+		return loginMapper.getDtls(params);
+	}
 
 	@Override
-	public EgovMap getCowayNoticePopDtls(Map<String, Object> params){
+	public EgovMap getPopDtls(Map<String, Object> params) {
+		return loginMapper.getPopDtls(params);
+	}
+
+	@Override
+	public EgovMap getCowayNoticePopDtls(Map<String, Object> params) {
 		return loginMapper.getCowayNoticePopDtls(params);
 	}
 
 	@Override
 	public int checkNotice() {
-	    return loginMapper.checkNotice();
+		return loginMapper.checkNotice();
 	}
 
 	@Override
 	public Map<String, Object> tempPwProcess(Map<String, Object> params) {
-	    LOGGER.debug("LoginServiceImpl :: tempPwProcess");
-        LOGGER.debug("params : {}", params);
+		LOGGER.debug("LoginServiceImpl :: tempPwProcess");
+		LOGGER.debug("params : {}", params);
 
-        Map<String, Object> result = new HashMap<String, Object>();
-        String msg = "";
+		Map<String, Object> result = new HashMap<String, Object>();
+		String msg = "";
 
-        int cnt = loginMapper.checkMobileNumber(params);
+		int cnt = loginMapper.checkMobileNumber(params);
 
-        int userTypeId = loginMapper.selectFindUserIdPop(params).getUserTypeId();
+		int userTypeId = loginMapper.selectFindUserIdPop(params).getUserTypeId();
 
-        if(cnt < 1) {
+		if (cnt < 1) {
 
-        	if (userTypeId == 1) {
-        		msg = "Dear HP, please enter the correct HP code or update your mobile number at nearest sales office.";
-        	} else if (userTypeId == 2) {
-        		msg = "Dear Cody/ST, please enter the correct Cody/ST code or update your mobile number at nearest sales office.";
-        	} else {
-        		msg = "Dear user, please enter the correct username or update your mobile number at nearest sales office.";
-        	}
-            // Mobile number does not exist
-            result.put("flg", "fail");
+			if (userTypeId == 1) {
+				msg = "Dear HP, please enter the correct HP code or update your mobile number at nearest sales office.";
+			} else if (userTypeId == 2) {
+				msg = "Dear Cody/ST, please enter the correct Cody/ST code or update your mobile number at nearest sales office.";
+			} else {
+				msg = "Dear user, please enter the correct username or update your mobile number at nearest sales office.";
+			}
+			// Mobile number does not exist
+			result.put("flg", "fail");
 
-        } else {
-            // Mobile number exist
+		} else {
+			// Mobile number exist
 
-            // TODO
-            // Create checking point if SMS password request reached 7 days limit (querying from SYS0098M)
-            //
-            params.put("module", "LOGIN");
-            params.put("subModule", "PW_RESET");
-            params.put("paramCode", "SMS_REQ_LIMIT");
+			// TODO
+			// Create checking point if SMS password request reached 7 days limit (querying from SYS0098M)
+			//
+			params.put("module", "LOGIN");
+			params.put("subModule", "PW_RESET");
+			params.put("paramCode", "SMS_REQ_LIMIT");
 
-            EgovMap cpMap = null;
-            cpMap = loginMapper.getConfig(params);
-            int smsLimit = Integer.valueOf(cpMap.get("paramVal").toString());
+			EgovMap cpMap = null;
+			cpMap = loginMapper.getConfig(params);
+			int smsLimit = Integer.valueOf(cpMap.get("paramVal").toString());
 
-            params.put("paramCode", "SMS_DAY_CNT");
-            cpMap = loginMapper.getConfig(params);
-            params.put("dayCnt", cpMap.get("paramVal"));
+			params.put("paramCode", "SMS_DAY_CNT");
+			cpMap = loginMapper.getConfig(params);
+			params.put("dayCnt", cpMap.get("paramVal"));
 
-            int smsReqCnt = loginMapper.getSmsReqCnt(params);
+			int smsReqCnt = loginMapper.getSmsReqCnt(params);
 
-            if(smsReqCnt >= smsLimit) {
+			if (smsReqCnt >= smsLimit) {
 
-                if(userTypeId == 1) {
-                	msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
-                } else if (userTypeId == 2) {
-                	msg = "Dear Cody / ST, request limit reached, kindly refer to your manager to email to Cody Operation Department";
-                } else {
-                	msg = "Request limit reached";
-                }
+				if (userTypeId == 1) {
+					msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
+				} else if (userTypeId == 2) {
+					msg = "Dear Cody / ST, request limit reached, kindly refer to your manager to email to Cody Operation Department";
+				} else {
+					msg = "Request limit reached";
+				}
 
-                result.put("flg", "fail");
+				result.put("flg", "fail");
 
-            } else {
-                // Generate temporary password
-                Random random = new Random();
+			} else {
+				// Generate temporary password
+				Random random = new Random();
 
-                char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-                StringBuilder sb = new StringBuilder();
+				char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+				StringBuilder sb = new StringBuilder();
 
-                int charsLen = chars.length;
+				int charsLen = chars.length;
 
-                for(int i = 0; i < 6; i++) {
-                    int num = random.nextInt(charsLen);
-                    sb.append(chars[num]);
-                }
+				for (int i = 0; i < 6; i++) {
+					int num = random.nextInt(charsLen);
+					sb.append(chars[num]);
+				}
 
-                params.put("tempPw", sb.toString());
+				params.put("tempPw", sb.toString());
 
-                int reqId = loginMapper.getReqId();
-                params.put("reqId", reqId);
+				int reqId = loginMapper.getReqId();
+				params.put("reqId", reqId);
 
-                /*
-                 * Insert SMS request log (ORG0033D)
-                 * Update User table with temporary password and expired user password last update date (-3 months)
-                 */
-                loginMapper.logRequest(params);
-                loginMapper.updateSYS47M_req(params);
+				/*
+				 * Insert SMS request log (ORG0033D) Update User table with temporary password and expired user password
+				 * last update date (-3 months)
+				 */
+				loginMapper.logRequest(params);
+				loginMapper.updateSYS47M_req(params);
 
-                String message = " COWAY:Confidential! Never share your temporary password.Password: " +
-                                 sb + ". Kindly login to update your password.";
+				String message = " COWAY:Confidential! Never share your temporary password.Password: " + sb
+						+ ". Kindly login to update your password.";
 
-                int smsType = 6209;
+				int smsType = 6209;
 
-                if(userTypeId == 2) {
-                	smsType = 6416;
-                }
+				if (userTypeId == 2) {
+					smsType = 6416;
+				}
 
-                // Send SMS
-                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), smsType);
-                sms.setMessage(message);
-                sms.setMobiles(CommonUtils.nvl(params.get("mobileNo")));
+				// Send SMS
+				SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), smsType);
+				sms.setMessage(message);
+				sms.setMobiles(CommonUtils.nvl(params.get("mobileNo")));
 
-                SmsResult smsResult = adaptorService.sendSMS2(sms);
-                LOGGER.debug("LoginServiceImpl :: tempPwProcess :: {}", smsResult.toString());
+				SmsResult smsResult = adaptorService.sendSMS2(sms);
+				LOGGER.debug("LoginServiceImpl :: tempPwProcess :: {}", smsResult.toString());
 
-                params.put("smsId", smsResult.getSmsId());
+				params.put("smsId", smsResult.getSmsId());
 
-                loginMapper.updateRequest(params);
+				loginMapper.updateRequest(params);
 
-                result.put("flg", "success");
-            }
-        }
+				result.put("flg", "success");
+			}
+		}
 
-        result.put("message", msg);
-        return result;
+		result.put("message", msg);
+		return result;
 	}
 
 	@Override
 	public int checkConsent() {
-	    return loginMapper.checkConsent();
+		return loginMapper.checkConsent();
 	}
 
 	@Override
 	public EgovMap getConsentDtls(Map<String, Object> params) {
-	    return loginMapper.getConsentDtls(params);
+		return loginMapper.getConsentDtls(params);
 	}
 
 	@Override
 	public int loginPopAccept(Map<String, Object> params) {
-	    return loginMapper.loginPopAccept(params);
+		return loginMapper.loginPopAccept(params);
 	}
 
 	/**
@@ -372,105 +376,113 @@ public class LoginServiceImpl implements LoginService {
 		int fileGroupKey = fileMapper.selectFileGroupKey();
 		AtomicInteger i = new AtomicInteger(0); // get seq key.
 
-		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
+		list.forEach(r -> {
+			this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));
+		});
 		params.put("fileGroupKey", fileGroupKey);
 	}
 
-	private void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
-        LOGGER.debug("login insertFile :: Start");
+	private void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params, String seq) {
+		LOGGER.debug("login insertFile :: Start");
 
-        int atchFlId = loginMapper.selectNextFileId();
+		int atchFlId = loginMapper.selectNextFileId();
 
-        FileGroupVO fileGroupVO = new FileGroupVO();
+		FileGroupVO fileGroupVO = new FileGroupVO();
 
-        Map<String, Object> flInfo = new HashMap<String, Object>();
-        flInfo.put("atchFileId", atchFlId);
-        flInfo.put("atchFileName", flVO.getAtchFileName());
-        flInfo.put("fileSubPath", flVO.getFileSubPath());
-        flInfo.put("physiclFileName", flVO.getPhysiclFileName());
-        flInfo.put("fileExtsn", flVO.getFileExtsn());
-        flInfo.put("fileSize", flVO.getFileSize());
-        flInfo.put("filePassword", flVO.getFilePassword());
-        flInfo.put("fileUnqKey", params.get("claimUn"));
-        flInfo.put("fileKeySeq", seq);
+		Map<String, Object> flInfo = new HashMap<String, Object>();
+		flInfo.put("atchFileId", atchFlId);
+		flInfo.put("atchFileName", flVO.getAtchFileName());
+		flInfo.put("fileSubPath", flVO.getFileSubPath());
+		flInfo.put("physiclFileName", flVO.getPhysiclFileName());
+		flInfo.put("fileExtsn", flVO.getFileExtsn());
+		flInfo.put("fileSize", flVO.getFileSize());
+		flInfo.put("filePassword", flVO.getFilePassword());
+		flInfo.put("fileUnqKey", params.get("claimUn"));
+		flInfo.put("fileKeySeq", seq);
 
-        loginMapper.insertFileDetail(flInfo);
+		loginMapper.insertFileDetail(flInfo);
 
-        fileGroupVO.setAtchFileGrpId(fileGroupKey);
-        fileGroupVO.setAtchFileId(atchFlId);
-        fileGroupVO.setChenalType(flType.getCode());
-        fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
-        fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
+		fileGroupVO.setAtchFileGrpId(fileGroupKey);
+		fileGroupVO.setAtchFileId(atchFlId);
+		fileGroupVO.setChenalType(flType.getCode());
+		fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
+		fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
 
-        fileMapper.insertFileGroup(fileGroupVO);
+		fileMapper.insertFileGroup(fileGroupVO);
 
-        LOGGER.debug("login insertFile :: End");
-    }
+		LOGGER.debug("login insertFile :: End");
+	}
 
 	@Override
-	public int insertVaccineInfo (Map<String, Object> params, int userId, String memId) {
+	public int insertVaccineInfo(Map<String, Object> params, int userId, String memId) {
 
-		Map<String,Object> updParams = new HashMap<String, Object>();
+		Map<String, Object> updParams = new HashMap<String, Object>();
 		String nextPopDt = CommonUtils.getCalDate(7); // defaultly set 21days later to pop again
-		//String secondNextPopDt = CommonUtils.getCalDate(7); // 2nd dose next pop date set to every 7 days
+		// String secondNextPopDt = CommonUtils.getCalDate(7); // 2nd dose next pop date set to every 7 days
 		int update = 0;
 
 		updParams.put("userId", userId);
 		updParams.put("memId", memId);
 
-		if (params.get("currVacStatus") == null || params.get("currVacStatus") == "" || (params.get("currVacStatus") != "" && params.get("currVacStatus").toString().equalsIgnoreCase("D"))){
-			if (params.get("firstDoseChk") != ""){
-        		if (params.get("firstDoseChk").toString().equalsIgnoreCase("yes")){
-        			// insert org0040D
-        			updParams.put("firstDoseChk", "Y"); // completed 1st dose
-        			updParams.put("firstDoseDt", params.get("1stDoseDt"));
-        			updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
-        			updParams.put("otherVacType", params.get("otherVacType"));
+		if (params.get("currVacStatus") == null || params.get("currVacStatus") == ""
+				|| (params.get("currVacStatus") != ""
+						&& params.get("currVacStatus").toString().equalsIgnoreCase("D"))) {
+			if (params.get("firstDoseChk") != "") {
+				if (params.get("firstDoseChk").toString().equalsIgnoreCase("yes")) {
+					// insert org0040D
+					updParams.put("firstDoseChk", "Y"); // completed 1st dose
+					updParams.put("firstDoseDt", params.get("1stDoseDt"));
+					updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
+					updParams.put("otherVacType", params.get("otherVacType"));
 
-        			if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
-        				// set next pop date for 2nd dose info collection
-        				updParams.put("nextPopDt", nextPopDt);
-        				updParams.put("vaccineStatus", "P"); // P = Partial | C = Completed | D = Did not take vaccine
-        			} else {
-        				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
+					if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != ""
+							&& params.get("2ndDoseNo").toString().equalsIgnoreCase("on")) {
+						// set next pop date for 2nd dose info collection
+						updParams.put("nextPopDt", nextPopDt);
+						updParams.put("vaccineStatus", "P"); // P = Partial | C = Completed | D = Did not take vaccine
+					} else {
+						updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
 
-        				if (!params.get("typeOfVaccine").toString().equals("6500") && !params.get("typeOfVaccine").toString().equals("6511")){ // johnson & johnson || CanSino only take 1 dose
-        					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
-        					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
-        				}
-        			}
+						if (!params.get("typeOfVaccine").toString().equals("6500")
+								&& !params.get("typeOfVaccine").toString().equals("6511")) { // johnson & johnson ||
+																							 // CanSino only take 1 dose
+							updParams.put("secondDoseChk", "Y"); // completed 2nd dose
+							updParams.put("secondDoseDt", params.get("2ndDoseDt"));
+						}
+					}
 
-        			updParams.put("yesAtchGrpId", params.get("atchFileGrpId"));
+					updParams.put("yesAtchGrpId", params.get("atchFileGrpId"));
 
-        			//update  = loginMapper.insertVacInfo(updParams);
+					// update = loginMapper.insertVacInfo(updParams);
 
-        		} else {
-        			updParams.put("reasonId", params.get("reason"));
-        			updParams.put("vaccineStatus", "D"); // P = Partial | C = Completed | D = Did not take vaccine
+				} else {
+					updParams.put("reasonId", params.get("reason"));
+					updParams.put("vaccineStatus", "D"); // P = Partial | C = Completed | D = Did not take vaccine
 
-        			if (params.get("reason").equals("6501") ) // pregnancy
-        				updParams.put("reasonDtl", params.get("pregnancyWeek"));
-        			else if (params.get("reason").equals("6502")) // allergic
-        				updParams.put("reasonDtl", params.get("allergicType"));
-        			else
-        				updParams.put("reasonDtl", params.get("reasonDtl"));
+					if (params.get("reason").equals("6501")) // pregnancy
+						updParams.put("reasonDtl", params.get("pregnancyWeek"));
+					else if (params.get("reason").equals("6502")) // allergic
+						updParams.put("reasonDtl", params.get("allergicType"));
+					else
+						updParams.put("reasonDtl", params.get("reasonDtl"));
 
-        			updParams.put("nextPopDt", nextPopDt);
-        			updParams.put("noAtchGrpId", params.get("atchFileGrpId"));
-        		}
+					updParams.put("nextPopDt", nextPopDt);
+					updParams.put("noAtchGrpId", params.get("atchFileGrpId"));
+				}
 			}
 		} else {
 			if (params.get("currVacStatus").toString().equalsIgnoreCase("P")) { // update 2nd dose info only
-				if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
-    				// set next pop date for 2nd dose info collection
-    				updParams.put("nextPopDt", nextPopDt);
+				if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != ""
+						&& params.get("2ndDoseNo").toString().equalsIgnoreCase("on")) {
+					// set next pop date for 2nd dose info collection
+					updParams.put("nextPopDt", nextPopDt);
 				} else {
-    				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
+					updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
 					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
 					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
 				}
 
-				if (params.get("typeOfVaccine") != null){
+				if (params.get("typeOfVaccine") != null) {
 					updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
 				}
 			}
@@ -480,16 +492,16 @@ public class LoginServiceImpl implements LoginService {
 			updParams.put("declareChk", "Y");
 		}
 
-		update  = loginMapper.insertVacInfo(updParams);
+		update = loginMapper.insertVacInfo(updParams);
 
 		return update;
 	}
 
 	@Override
-	public EgovMap getVaccineInfo (String memId){
+	public EgovMap getVaccineInfo(String memId) {
 		EgovMap vacInfo = null;
 
-		if (memId != null){
+		if (memId != null) {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("memId", memId);
 			vacInfo = loginMapper.getVaccineInfo(params);
@@ -498,26 +510,26 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-    public LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params) {
-        LOGGER.debug("getVaccineDeclarationAplcntInfo");
-        LoginVO loginVO = loginMapper.getVaccineDeclarationAplcntInfo(params);
+	public LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params) {
+		LOGGER.debug("getVaccineDeclarationAplcntInfo");
+		LoginVO loginVO = loginMapper.getVaccineDeclarationAplcntInfo(params);
 
-        return loginVO;
-    }
+		return loginVO;
+	}
 
 	@Override
-	public int checkNewPassword (Map<String, Object> params) {
+	public int checkNewPassword(Map<String, Object> params) {
 		return loginMapper.checkUserAndPass(params);
 	}
 
 	@Override
-	public void updateLoginFailAttempt(Map<String, Object> params){
-		 loginMapper.updateLoginFailAttempt(params);
+	public void updateLoginFailAttempt(Map<String, Object> params) {
+		loginMapper.updateLoginFailAttempt(params);
 	}
 
 	@Override
-	public void resetLoginFailAttempt(int userId){
-		 loginMapper.resetLoginFailAttempt(userId);
+	public void resetLoginFailAttempt(int userId) {
+		loginMapper.resetLoginFailAttempt(userId);
 	}
 
 	@Override
@@ -526,17 +538,17 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public EgovMap selectUserByUserName(String username){
+	public EgovMap selectUserByUserName(String username) {
 		return loginMapper.selectUserByUserName(username);
 	}
 
 	@Override
-	public int checkSecurityAnswer (Map<String, Object> params) {
+	public int checkSecurityAnswer(Map<String, Object> params) {
 		return loginMapper.checkSecurityAnswer(params);
 	}
 
 	@Override
-	public void updateCheckMfaFlag(int userId){
-		 loginMapper.updateCheckMfaFlag(userId);
+	public void updateCheckMfaFlag(int userId) {
+		loginMapper.updateCheckMfaFlag(userId);
 	}
 }

@@ -386,7 +386,7 @@
             AND VALID_FR <![CDATA[<=]]> SYSDATE
             AND VALID_TO <![CDATA[>=]]> SYSDATE
         </if>
-        AND POP_FLG = 'A'
+      AND POP_FLG = 'A'
     </select>
 
     <select id="checkNotice" parameterType="Map" resultType="int">
