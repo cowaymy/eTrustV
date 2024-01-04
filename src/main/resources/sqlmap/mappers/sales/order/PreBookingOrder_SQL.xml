@@ -190,11 +190,7 @@
         LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
         LEFT JOIN SYS0038M T4 ON T1.STUS_ID = T4.STUS_CODE_ID
         WHERE
-        T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID
-                                       FROM SYS0013M AA,
-                                                SYS0094M BB
-                                       WHERE AA.CODE = BB.CODE
-                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND != 'HOMECARE')
+        T3.STK_CTGRY_ID IN (54,55,56,57,59,924,400)
         AND T1.PRE_BOOK_ID = #{preBookId}
     </select>
 
