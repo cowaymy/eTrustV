@@ -6310,6 +6310,7 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
         <if test="type == 'reset'">
            AND ACTIVE = 0 AND REJECT = 0
            AND TO_CHAR(SYSDATE,'YYYY/MM/DD') BETWEEN TO_CHAR(A.START_DT,'YYYY/MM/DD') AND TO_CHAR(A.END_DT,'YYYY/MM/DD')
+           AND A.CRT_USER_ID = #{userId}
         </if>
         ORDER BY REQNO DESC
 <!--        <if test="type == 'list'"> -->

@@ -223,6 +223,7 @@ public class MemberListController {
 
     Map<String, Object> p = new HashMap();
 	p.put("type", "reset");
+	p.put("userId", sessionVO.getUserId());
     model.put("isMFAReset", memberListService.mfaResetList(p).size() == 0 ? false : true);
 
 		// 호출될 화면
