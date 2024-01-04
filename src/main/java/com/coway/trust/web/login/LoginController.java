@@ -599,7 +599,7 @@ public class LoginController {
 					// HM, SM, GM Renewal
 					if ("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
 
-						params.put("popType", "N");
+						params.put("popType", "M");
 //						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //
 //						Date currDate = new Date(); // Current Date
