@@ -1233,7 +1233,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/staffPurchaseSVMRaw.do")
-  //@Scheduled(cron = " 0 0 6 15-24 * ?")//Monthly (Day from 15-24) 6:00am
+  //@Scheduled(cron = " 0 0 6 10-24 * ?")//Monthly (Day from 15-24) 6:00am
   public void staffPurchaseSVMRaw() throws IOException {
     LOGGER.info("[START] staffPurchaseSVMRaw...");
     Map<String, Object> params = new HashMap<>();
