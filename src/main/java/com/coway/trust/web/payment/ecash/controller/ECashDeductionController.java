@@ -460,14 +460,14 @@ public class ECashDeductionController {
                 }else if ("23".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
                   //
                   int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
-                  int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
+                  //int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
                   int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
 
                   if (pageCnt > 0){
                     for(int i = 1 ; i <= pageCnt ; i++){
                       claimMap.put("pageNo", i);
                       claimMap.put("rowCount", 60000);
-                      claimMap.put("batchNo", totBatToday);
+                      //claimMap.put("batchNo", totBatToday);
                       claimMap.put("pageCnt", pageCnt);
                       this.createECashGrpDeductionFileAMB(claimMap);
                     }
