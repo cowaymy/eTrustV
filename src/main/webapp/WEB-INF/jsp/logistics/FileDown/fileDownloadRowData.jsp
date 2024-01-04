@@ -134,7 +134,7 @@ $(function(){
          }
      }else if (div == "Rental Pay Setting (ADD)"){
          let roleId = '${SESSION_INFO.roleId}';
-         if(roleId!=206 && roleId!=212){
+         if(roleId!=530 && roleId!=531 && roleId!=532 && roleId!=533 && roleId!=534 && roleId!=535 && roleId!=536){
              var msg = "Sorry. You have no access rights to download this file.";
              Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
              return false;
@@ -176,7 +176,7 @@ $(function(){
 	         }
 	     }else if (div == "Rental Pay Setting (ADD)"){
 	         let roleId = '${SESSION_INFO.roleId}';
-	         if(roleId!=206 && roleId!=212){
+	         if(roleId!=530 && roleId!=531 && roleId!=532 && roleId!=533 && roleId!=534 && roleId!=535 && roleId!=536){
 	             var msg = "Sorry. You have no access rights to download this file.";
 	             Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 	             return false;
