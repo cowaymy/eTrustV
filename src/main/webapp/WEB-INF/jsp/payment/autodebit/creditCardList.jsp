@@ -109,10 +109,10 @@ var orderListColumnLayout= [
                                {dataField : "ctrlId", headerText : "CTRL ID", width : '15%'},
                                {dataField : "crtDt", headerText : "Date", width : '15%'},
                                {dataField : "monthType", headerText : "Category", width : '15%'},
-                               {dataField : "ctrlTotItm", headerText : "Total Item with decimal", width : '15%' ,dataType : "numeric", formatString : "#,###"},
-                               {dataField : "targetAmt", headerText : "Target Amt", width : '15%', dataType : "numeric", formatString : "#,###"},
+                               {dataField : "ctrlTotItm", headerText : "Total Item", width : '15%' ,dataType : "numeric", formatString : "#,###"},
+                               {dataField : "targetAmt", headerText : "Target Amt", width : '15%', dataType : "numeric", formatString : "#,##0.00"},
                                {dataField : "totalSuccess", headerText : "Total Success", width : '15%', dataType : "numeric", formatString : "#,###"},
-                               {dataField : "receivedAmt", headerText : "Receive Amt", width : '15%', dataType : "numeric", formatString : "#,###"},
+                               {dataField : "receivedAmt", headerText : "Receive Amt", width : '15%', dataType : "numeric", formatString : "#,##0.00"},
                                {dataField : "status", headerText : "Status", width : '15%'}
                                ];
 
