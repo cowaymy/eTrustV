@@ -1656,7 +1656,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     /*
      * Voucher checking before creating order as PRE-ORDER does not consume voucher usage
      */
-    if(salesOrderMVO.getVoucherCode().isEmpty() == false){
+    if(CommonUtils.isEmpty(salesOrderMVO.getVoucherCode()) == false){
         Map<String, Object> voucherInfo = new HashMap<String, Object>();
         voucherInfo.put("voucherCode", salesOrderMVO.getVoucherCode());
         int validVoucher = voucherMapper.isVoucherValidToApply(voucherInfo);

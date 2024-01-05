@@ -104,7 +104,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		/*
 	     * Voucher checking before creating order as HC PRE-ORDER does not consume voucher usage
 	     */
-	    if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+	    if(CommonUtils.isEmpty(salesOrderMVO1.getVoucherCode()) == false){
 	        Map<String, Object> voucherInfo = new HashMap<String, Object>();
 	        voucherInfo.put("voucherCode", salesOrderMVO1.getVoucherCode());
 	        int validVoucher = voucherMapper.isVoucherValidToApply(voucherInfo);
