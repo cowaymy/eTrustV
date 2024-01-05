@@ -99,7 +99,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			 * Check if the voucher has been used before on sales order
 			 * Also check if the voucher has been use before on other e-keyin sales
 			 */
-		    if (CommonUtils.isEmpty(preOrderVO.getVoucherCode().isEmpty()) == false) {
+		    if (CommonUtils.isEmpty(preOrderVO.getVoucherCode()) == false) {
 				this.checkVoucherValideKeyIn(preOrderVO.getVoucherCode());
 			}
 
