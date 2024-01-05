@@ -3393,7 +3393,9 @@ console.log("result.lastbillmth;"+result.lastbillmth);
 
    	  $('#cmbPromotionAexc').val('');
    	  $('#cmbPromotionAexc option').remove();
-	  fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
+   	  if($('#cmbAppTypeAexc').val() != null){
+   		  fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
+   	  }
   }
 
   function applyCurrentUsedVoucherAexc(){
