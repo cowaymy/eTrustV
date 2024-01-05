@@ -2308,7 +2308,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		/*
 		 * If got voucher, updated voucher to use state
 		 */
-		if(salesOrderMVO.getVoucherCode().isEmpty() == false){
+		if(CommonUtils.isEmpty(salesOrderMVO.getVoucherCode()) == false){
 			Map<String,Object> voucherParam = new HashMap();
 			voucherParam.put("voucherCode", salesOrderMVO.getVoucherCode());
 			voucherParam.put("salesOrdNo", salesOrderMVO.getSalesOrdNo());

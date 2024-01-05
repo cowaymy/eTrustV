@@ -176,7 +176,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			/*
 			 * If got voucher, updated voucher to use state
 			 */
-			if(salesOrderMVO1.getVoucherCode().isEmpty() == false){
+			if(CommonUtils.isEmpty(salesOrderMVO1.getVoucherCode()) == false){
 				Map<String,Object> voucherParam = new HashMap();
 				voucherParam.put("voucherCode", salesOrderMVO1.getVoucherCode());
 				voucherParam.put("salesOrdNo", matOrdNo);
