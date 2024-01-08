@@ -116,8 +116,10 @@ import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.google.gson.JsonObject;
-import com.ibm.icu.text.DateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
+//import com.ibm.icu.text.DateFormat;
+//import com.ibm.icu.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
