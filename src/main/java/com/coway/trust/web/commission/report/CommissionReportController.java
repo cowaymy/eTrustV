@@ -187,7 +187,8 @@ public class CommissionReportController {
 
 		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 		  params.put("typeCode",sessionVO.getUserTypeId());
-		  params.put("memCode", sessionVO.getUserMemCode());
+		  //params.put("memCode", sessionVO.getUserMemCode());
+		  params.put("memCode", loginId); //ticket #24032866
 		  params.put("pvMonth", today.substring(2,4));
 		  params.put("pvYear", today.substring(4));
 
