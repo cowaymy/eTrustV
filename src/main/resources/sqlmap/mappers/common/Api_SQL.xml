@@ -107,21 +107,26 @@
      </select>
 
      <select id="selectCowayAccountProductPreviewList" parameterType="Map" resultType="egovMap">
-		SELECT
-			NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
-			PRODUCT_TOTAL_OUTSTANDING,
-			MEMBERSHIP_OUTSTANDING,
-			ORDER_STUS,
-			INSTALL_DT ,
-
-			LAST_SERVICE_DT ,
-			STK_CODE ,
-			STK_DESC ,
-			SALES_ORD_NO ,
-            UN_BILL_AMT
-		FROM CP1013V
-		WHERE CUST_ID = #{cowayCustId}
-		AND R = 1
+        SELECT * FROM (
+			SELECT
+			    A.*,
+			    ROW_NUMBER() OVER (PARTITION BY SALES_ORD_NO ORDER BY UN_BILL_AMT) R
+			FROM (
+			    SELECT
+			        NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
+			        PRODUCT_TOTAL_OUTSTANDING,
+			        MEMBERSHIP_OUTSTANDING,
+			        ORDER_STUS,
+			        INSTALL_DT ,
+			        LAST_SERVICE_DT ,
+			        STK_CODE ,
+			        STK_DESC ,
+			        SALES_ORD_NO ,
+			        UN_BILL_AMT
+			    FROM CP1013V
+			    WHERE CUST_ID = #{cowayCustId}
+			)A
+		) WHERE R = 1
      </select>
 
      <select id="selectCowayAccountProductPreviewListByAccountCode" parameterType="Map" resultType="egovMap">
