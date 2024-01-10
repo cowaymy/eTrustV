@@ -31,6 +31,7 @@
                        {dataField:    "addDiscPrc"   ,headerText:    "Additional Discount(RM)"     ,width:    "18%"    , visible : true},
                        {dataField:    "addDiscPv"   ,headerText:    "Additional Discount(PV)"     ,width:    "18%"    , visible : true},
                        {dataField:    "megaDeal"   ,headerText:    "Mega Deal"     ,width:    "10%"    , visible : true},
+                       {dataField:    "preBook"   ,headerText:    "Pre Book"     ,width:    "10%"    , visible : true},
                        {dataField:    "applyTo"   ,headerText:    "Apply To"     ,width:    "18%"    , visible : true},
                        {dataField:    "advDisc"   ,headerText:    "Advance Discount"     ,width:    "10%"    , visible : true},
                        {dataField:    "stkSize"   ,headerText:    "Mattress Size"     ,width:    "18%"    , visible : true}
@@ -483,6 +484,13 @@
                           $('#advDiscN').prop("checked", true);
                       }
 
+                      if(promoInfo.preBook == '1') {
+                          $('#preBookY').prop("checked", true);
+                      }
+                      else {
+                          $('#preBookN').prop("checked", true);
+                      }
+
                       if(promoInfo.voucherPromotion == '1') {
                           $('#voucherPromotionY').prop("checked", true);
                       }
@@ -577,6 +585,13 @@
                       }
                       else {
                           $('#v_advDiscN').prop("checked", true);
+                      }
+
+                      if(promoInfo.preBook == '1') {
+                          $('#v_preBookY').prop("checked", true);
+                      }
+                      else {
+                          $('#v_preBookN').prop("checked", true);
                       }
 
                       if(promoInfo.voucherPromotion == '1') {
@@ -1091,6 +1106,7 @@
                   promoESales             :$('#eSales').val().trim(),
                   appvStus                :$('#appvStatus').val(),
                   appvRemark              :$('#appvRemark').val(),
+                  preBook                : $('input:radio[name="preBook"]:checked').val(),
                   voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
                   custStatusNew : vCustStatusNew,
                   custStatusDisen : vCustStatusDisen,
@@ -1193,6 +1209,7 @@
               promoESales             :$('#eSales').val().trim(),
               appvStus                :$('#appvStatus').val(),
               appvRemark              :$('#appvRemark').val(),
+              preBook                : $('input:radio[name="preBook"]:checked').val(),
               voucherPromotion      : $('input:radio[name="voucherPromotion"]:checked').val(),
               custStatusNew : vCustStatusNew,
               custStatusDisen : vCustStatusDisen,
@@ -1547,6 +1564,11 @@
     <td>
     <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p" disabled></select>
     </td>
+        <th scope="row">Pre Book Promotion</th>
+    <td>
+        <input id="preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
+        <input id="preBookN" name="preBook" type="radio" value="0" /><span>No</span>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1797,6 +1819,11 @@
     <th scope="row">Discount on Billing<span style="color:red">*</span></th>
     <td>
     <select id="v_promoSpecialDisId" name="v_promoSpecialDisId" class="w100p" disabled></select>
+    </td>
+    <th scope="row">Pre Book Promotion</th>
+    <td>
+        <input id="v_preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
+        <input id="v_preBookN" name="preBook" type="radio" value="0" /><span>No</span>
     </td>
 </tr>
 </tbody>
