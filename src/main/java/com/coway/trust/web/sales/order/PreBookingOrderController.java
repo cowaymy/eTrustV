@@ -284,4 +284,12 @@ public class PreBookingOrderController {
 
 	    return ResponseEntity.ok(result);
 	  }
+
+	  @RequestMapping(value = "/selectPreBookOrderEligibleCheck.do", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> selectPreBookOrderEligibleCheck(@RequestParam Map<String, Object> params) {
+
+	    EgovMap result = preBookingOrderService.selectPreBookOrderEligibleCheck(params);
+
+	    return ResponseEntity.ok(result);
+	  }
 }
