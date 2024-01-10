@@ -4,6 +4,13 @@
 
     function fn_loadPreOrderInfo() {
         var _CUST_ID = '${preOrderInfo.custId}';
+        var custId = '${preOrderInfo.custId}';
+        var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        }
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : _CUST_ID}, function(result) {
             $('#popup_wrap').find("input,textarea,button,select").attr("disabled",true);
@@ -140,7 +147,8 @@
                         , srvPacId:'${preMatOrderInfo.srvPacId}'
                         , promoId:'${preMatOrderInfo.promoId}'
                         , voucherPromotion: voucherAppliedStatus
-                        ,custStatus: $('#hiddenCustStatusId').val()}
+                        ,custStatus: $('#hiddenCustStatusId').val()
+                        ,preBook : $('#hiddenPreBook').val()}
                         , '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
@@ -165,7 +173,8 @@
                         , srvPacId:'${preFrmOrderInfo.srvPacId}'
                         , promoId:'${preFrmOrderInfo.promoId}'
                         , voucherPromotion: voucherAppliedStatus
-                        ,custStatus: $('#hiddenCustStatusId').val()}
+                        ,custStatus: $('#hiddenCustStatusId').val()
+                        ,preBook : $('#hiddenPreBook').val()}
                         , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
                     $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
@@ -366,4 +375,14 @@
 	    	$('#btnVoucherApply').hide();
 		}
 	}
+
+	function checkExtradePreBookEligible(custId,salesOrdIdOld){
+		   Common.ajax("GET", "/homecare/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+			   if(result == null){
+				   $('#hiddenPreBook').val('0');
+				   }else{
+				   $('#hiddenPreBook').val('1');
+				   }
+		   });
+	  }
 </script>
