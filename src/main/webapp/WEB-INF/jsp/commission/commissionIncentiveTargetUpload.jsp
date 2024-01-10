@@ -30,7 +30,7 @@
 
         });
         var typeData = [];
-        typeData = [{"codeId": "1062","codeName": "Cody/HP/HT Incentive"},{"codeId": "1063","codeName": "Cody/HP/HT Target"}];
+        typeData = [{"codeId": "1062","codeName": "Cody/HP/HT Incentive"},{"codeId": "1063","codeName": "Cody/HP/HT Target"},{"codeId": "7479","codeName": "HTM & SHM Bonus Candy Rates"}];
         doDefCombo(typeData, '' ,'typeList', 'M', 'type_multiCombo');
 
 

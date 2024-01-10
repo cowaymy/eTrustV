@@ -4,12 +4,17 @@
 
 <script type="text/javaScript">
 	var viewGridID;
-	
+	var uploadTypeId = '${uploadTypeId}';
+
 	$(document).ready(function() {
-	    createAUIGrid();
+		console.log("uploadTypeId", uploadTypeId);
+		createAUIGrid();
 	    fn_itemDetailSearch('0');
+	    if(uploadTypeId == '7479'){
+            setColumnProp();
+        }
 	});
-	
+
 	function createAUIGrid() {
 	    var columnLayout = [{
 	        dataField : "userMemCode",
@@ -59,7 +64,7 @@
 	    }];
 	    // 그리드 속성 설정
 	    var gridPros = {
-	        // 페이징 사용       
+	        // 페이징 사용
 	        usePaging : true,
 	        // 한 화면에 출력되는 행 개수 20(기본값:20)
 	        pageRowCount : 20,
@@ -69,15 +74,15 @@
 	        wrapSelectionMove : true,
 	        // 줄번호 칼럼 렌더러 출력
 	        showRowNumColumn : true
-	        
+
 	    };
-	    
+
 	    itemGridID = AUIGrid.create("#grid_wrap_view", columnLayout,gridPros);
 	}
-	
+
 	function fn_itemDetailSearch(val){
 	    var uploadId = $('#uploadUserId').val();
-	    
+
 	    if(val == "0"){
 	        var valTemp = {"uploadId" : uploadId};
 	        Common.ajax("GET", "/commission/calculation/incentiveItemList", valTemp, function(result) {
@@ -90,6 +95,15 @@
 	        });
 	    }
 	}
+
+	function setColumnProp() {
+
+        // 0 Change header property value
+        AUIGrid.setColumnProp(itemGridID, 5, {
+            headerText: "Bonus Rate (%)",
+            width: 118
+        })
+    };
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

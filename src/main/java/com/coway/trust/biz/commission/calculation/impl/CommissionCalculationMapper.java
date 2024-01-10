@@ -423,5 +423,5 @@ public interface CommissionCalculationMapper {
 	void nonIncentiveDeactivate(Map<String, Object> params);
 	void callNonIncentiveConfirm(Map<String, Object> params);
 	int cntNonIncentiveUploadBatch(Map<String, Object>  param);
-
+	int selectUploadTypeId(Map<String, Object> params);
 }

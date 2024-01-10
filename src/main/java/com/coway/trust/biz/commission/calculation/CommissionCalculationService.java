@@ -315,4 +315,5 @@ public interface CommissionCalculationService
     void nonIncentiveDeactivate(Map<String, Object> params);
     void callNonIncentiveConfirm(Map<String, Object> params);
     int cntNonIncentiveUploadBatch(Map<String, Object> params);
+    int selectUploadTypeId(Map<String, Object> params);
 }

@@ -36,7 +36,7 @@ $(document).on(//인풋파일 삭제
 			Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
 			//Common.alert('No Sample to show for this upload type.');
 		}else{
-			if (val == "1062"){
+			if (val == "1062" || val == "7479"){
 				Common.popupDiv("/commission/calculation/incntivUploadSamplePop.do");
 	        }else{
 	        	Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
@@ -58,13 +58,25 @@ $(document).on(//인풋파일 삭제
 			        formData.append("type", $("#cmbType").val());
 			        formData.append("memberType", $("#cmbMemberType").val());
 
-			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
-			        	$("#search").click();
-			        	document.newForm.reset();
-			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
-			        	//var cntId=result.data.uploadId;
-			            //Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
-			        });
+			        var uploadCmbType = $("#cmbType").val();
+			        if(uploadCmbType != null && uploadCmbType != "" && uploadCmbType == "7479"){
+			        	Common.ajaxFile("/commission/csv/bonusCandyUpload", formData, function (result) {
+	                        $("#search").click();
+	                        document.newForm.reset();
+	                        Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
+	                        //var cntId=result.data.uploadId;
+	                        //Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
+	                    });
+			        }
+			        else {
+			        	Common.ajaxFile("/commission/csv/upload", formData, function (result) {
+	                        $("#search").click();
+	                        document.newForm.reset();
+	                        Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
+	                        //var cntId=result.data.uploadId;
+	                        //Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
+	                    });
+			        }
 				}
 			});
 		}
@@ -86,7 +98,22 @@ $(document).on(//인풋파일 삭제
 			//Common.alert("Please select your csv file.");
             return false;
         }
+		if( $("#cmbType").val() == "7479" && $("#cmbMemberType").val() != "7"){
+            Common.alert('Bonus Candy Upload is only for HT Organization. Please check your selection. ');
+            return false;
+        }
+
 		return true;
+	}
+
+	function fn_downloadSampleCsvFile(){
+		var cmbTypeVal = $('#cmbType').val();
+		console.log(cmbTypeVal);
+		if(cmbTypeVal == "7479"){
+			window.location.href = ("${pageContext.request.contextPath}/resources/download/BonusCandyRateUploadFormat.csv");
+		}else{
+			window.location.href = ("${pageContext.request.contextPath}/resources/download/IncentiveTargetUploadFormat.csv");
+		}
 	}
 </script>
 <div id="popup_wrap" class="popup_wrap size_mid">
@@ -115,6 +142,7 @@ $(document).on(//인풋파일 삭제
 						   <option value=""></option>
 							<option value="1062">Cody/HP/HT Incentive</option>
 							<option value="1063">Cody/HP/HT Target</option>
+							<option value="7479">HTM & SHM Bonus Candy Rates</option>
 						</select>
 					</td>
 				</tr>
@@ -144,7 +172,7 @@ $(document).on(//인풋파일 삭제
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_uploadCsvFile();"><spring:message code='commission.button.uploadFile'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_sampleFormat($('#cmbType').val());"><spring:message code='commission.button.sampleFormat'/></a></p></li>
-			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/IncentiveTargetUploadFormat.csv"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
+			<li id="btn_download"><p class="btn_blue"><a href="javascript:fn_downloadSampleCsvFile()"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
 		</ul>
 
 	</section>

@@ -4,15 +4,20 @@
 
 <script type="text/javaScript">
 var itemGridID;
+var uploadTypeId = '${uploadTypeId}';
+
 	$(document).ready(function() {
+		console.log("uploadTypeId", uploadTypeId);
 		createAUIGrid();
 		fn_itemDetailSearch('0');
-		
+		if(uploadTypeId == '7479'){
+			setColumnProp();
+        }
 		$("#clearComfirm").click(function(){
 			$("#search").click();
 		});
 	});
-	
+
 	function createAUIGrid() {
         var columnLayout = [ {
             dataField : "remove",
@@ -73,7 +78,7 @@ var itemGridID;
         }];
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
@@ -84,13 +89,13 @@ var itemGridID;
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
             height : 280
-            
+
         };
-        
+
         itemGridID = AUIGrid.create("#grid_wrap_confirm", columnLayout,gridPros);
    }
-	
-	
+
+
 	//incentive valid / inValid List search
 	function fn_itemDetailSearch(val){
 		if(val == "0"){
@@ -105,12 +110,12 @@ var itemGridID;
             });
 		}
 	}
-	
+
 	//item Add Pop
 	function fn_itemAdd(){
 		Common.popupDiv("/commission/calculation/commInctivItemAddPop.do",$("#conForm").serializeJSON());
 	}
-	
+
 	//item RemoveAjax
 	function fn_removeItem(){
 		Common.ajax("POST", "/commission/calculation/removeIncentiveItem.do", GridCommon.getEditData(itemGridID) , function(result) {
@@ -123,7 +128,7 @@ var itemGridID;
 			fn_itemDetailSearch('0');
 		});
 	}
-	
+
 	//master deactivate button
 	function fn_deactivate(){
 		var valTemp = {"uploadId" : $('#uploadUserId').val()};
@@ -142,9 +147,10 @@ var itemGridID;
 			}
 		});
 	}
-	
+
 	//master confirm button
 	function fn_confirm(){
+		console.log("validCnt: " + $("#cntValid").val());
 		if(Number($("#cntValid").val()) < 1){
 			Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
 			//Common.alert("No valid item in this batch.");
@@ -161,7 +167,16 @@ var itemGridID;
 			});
 		}
 	}
-	
+
+    function setColumnProp() {
+
+        // 0 Change header property value
+        AUIGrid.setColumnProp(itemGridID, 6, {
+            headerText: "Bonus Rate (%)",
+            width: 118
+        })
+    };
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

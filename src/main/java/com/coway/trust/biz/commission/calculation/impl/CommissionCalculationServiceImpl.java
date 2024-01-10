@@ -1109,4 +1109,9 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public int cntNonIncentiveUploadBatch(Map<String, Object> params) {
 		return commissionCalculationMapper.cntNonIncentiveUploadBatch(params);
 	}
+
+	@Override
+	 public int selectUploadTypeId(Map<String, Object> params){
+		return commissionCalculationMapper.selectUploadTypeId(params);
+	}
 }

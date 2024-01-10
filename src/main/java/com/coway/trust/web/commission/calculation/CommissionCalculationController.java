@@ -2316,6 +2316,9 @@ public class CommissionCalculationController {
 		int totalInvalid = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalInvalid", totalInvalid);
 
+		int uploadTypeId = commissionCalculationService.selectUploadTypeId(map);
+		model.addAttribute("uploadTypeId", uploadTypeId);
+
 		model.addAttribute("uploadId", params.get("uploadId"));
 		model.addAttribute("typeId", params.get("typeId"));
 
@@ -2547,6 +2550,9 @@ public class CommissionCalculationController {
 		model.addAttribute("totalInvalid", totalInvalid);
 
 		model.addAttribute("uploadId", params.get("uploadId"));
+
+		int uploadTypeId = commissionCalculationService.selectUploadTypeId(map);
+		model.addAttribute("uploadTypeId", uploadTypeId);
 		// 호출될 화면
 		return "commission/commissionIncentiveViewPop";
 	}
