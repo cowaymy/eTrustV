@@ -1320,6 +1320,16 @@
                 var empChk = basicInfo.empChk;
                 var exTrade = basicInfo.exTrade;
 
+                var custId = basicInfo.custId;
+                var salesOrdIdOld = basicInfo.salesOrdIdOld;
+
+                if(salesOrdIdOld != null || salesOrdIdOld != ''){
+                	checkExtradePreBookEligible(custId,salesOrdIdOld);
+                }else{
+                	$('#hiddenPreBook').val('0');
+                	$('#hiddenMonthExpired').val('0');
+                }
+
                 $('#prdName').text('(' + basicInfo.stockCode + ') ' + basicInfo.stockDesc);
                 $('#ordPrice').val(basicInfo.ordAmt);
                 $('#ordRentalFees').val(basicInfo.ordMthRental);
@@ -1346,6 +1356,7 @@
                         isSrvPac : 'Y'
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: basicInfo.custStatusId
+                        ,preBook : $('#hiddenPreBook').val()
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 } else
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
@@ -1358,6 +1369,7 @@
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: basicInfo.custStatusId
+                        ,preBook : $('#hiddenPreBook').val()
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
                  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
@@ -2865,6 +2877,19 @@ console.log(salesOrderMVO);
             }
         });
     }
+
+    function checkExtradePreBookEligible(custId,salesOrdIdOld){
+    	   Common.ajax("GET", "/homecare/sales/order/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+    		   if(result == null){
+    			   $('#hiddenPreBook').val('0');
+       			   $('#hiddenMonthExpired').val('0');
+       			   }else{
+       			   $('#hiddenPreBook').val('1');
+       			   $('#hiddenMonthExpired').val(result.monthExpired);
+       			   }
+    	   });
+       }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -3658,7 +3683,7 @@ console.log(salesOrderMVO);
      </p></li>
    </ul>
    <form id="payChanlForm" name="payChanlForm" action="#" method="post">
-    <input name = "hasFrame" type="hidden" value = "2" /><input
+    <input name = "hasFrame" type="hidden" value = "2" />
     <input name="salesOrdId" type="hidden" value="${salesOrderId}" /> <input
      name="salesOrdNo" type="hidden" value="${salesOrderNo}" /> <input
      name="custId" type="hidden" value="${custId}" /> <input
@@ -4121,7 +4146,10 @@ console.log(salesOrderMVO);
       </tr>
       <tr>
        <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
-       <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></td>
+       <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly />
+       <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+       <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
+       </td>
        <td colspan="2"><p id="pBtnCal" class="btn_sky blind">
          <a id="btnCal" href="#">Exclude GST Calculation</a>
         </p></td>
