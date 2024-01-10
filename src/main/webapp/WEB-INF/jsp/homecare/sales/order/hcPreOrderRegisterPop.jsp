@@ -1481,10 +1481,10 @@
 
     	//Voucher Management
 		 if(tagNum == '1'){ //Voucher Check only applies for Main Product Promotion
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val()}, '', 'ordPromo'+tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		 }
 		 else{
-			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+			 doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 		 }
 
         /*  if(appTypeVal !=66){
@@ -2138,6 +2138,8 @@
         	   $('#txtOldOrderID').val('');
                $('#txtBusType').val('');
         	   $('#relatedNo').val('');
+        	   $('#hiddenMonthExpired').val('');
+        	   $('#hiddenPreBook').val('');
                $('#btnRltdNoEKeyIn').addClass("blind");
 
            }
@@ -2698,6 +2700,7 @@
                 <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
                 <input id="txtBusType"  name="txtBusType" type="hidden" />
                 <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+                <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
                 </td>
 		</tr>
 		<tr>
