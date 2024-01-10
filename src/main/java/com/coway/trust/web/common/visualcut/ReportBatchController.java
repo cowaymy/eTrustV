@@ -3,23 +3,34 @@ package com.coway.trust.web.common.visualcut;
 import static com.coway.trust.AppConstants.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.attendance.AttendanceService;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.cmmn.CRJavaHelper;
@@ -46,6 +58,8 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -62,6 +76,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ReportBatchController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportBatchController.class);
+
+  @Resource(name = "AttendanceService")
+  private AttendanceService attendanceService;
 
   @Value("${report.datasource.driver-class-name}")
   private String reportDriverClass;
@@ -2816,6 +2833,54 @@ this.viewProcedure(null, null, params);
 LOGGER.info("[END] etrSummaryList...");
 }
 
+@RequestMapping(value="/attendanceRaw.do")
+//@Scheduled(cron = "0 0 0 * * *")
+public void attendanceRaw() throws ParseException, IOException {
+	Map<String, Object> params = new HashMap();
+	params.put("memCode", "ALL");
+	String date = new SimpleDateFormat("yyyyMM").format(new Date());
+	params.put("calMonthYear", date);
+	List<String> cols = Arrays.asList("date", "time", "day", "orgCode", "grpCode", "deptCode", "hpCode", "hpType", "QR - A0001", "Public Holiday - A0002", "State Holiday - A0003", "RFA - A0004", "Waived - A0005", "late");
+	XSSFWorkbook wb1 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
+	Calendar cal = Calendar.getInstance();
+	cal.add(Calendar.MONTH, -1);
+	Date date2 = cal.getTime();
+	params.put("calMonthYear", new SimpleDateFormat("yyyyMM").format(date2));
+	XSSFWorkbook wb2 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
+	File raw = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + date + "_" + CommonUtils.getNowDate() + ".xlsx");
+	raw.getParentFile().mkdirs();
+	raw.createNewFile();
+	wb1.write(new FileOutputStream(raw, false));
+	File raw2 = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + new SimpleDateFormat("yyyyMM").format(date2) + "_" + CommonUtils.getNowDate() + ".xlsx");
+	raw2.getParentFile().mkdirs();
+	raw2.createNewFile();
+	wb2.write(new FileOutputStream(raw2, false));
+}
+
+private XSSFWorkbook genExcel(List<Map<String, Object>> datas, List<String> cols) {
+	XSSFWorkbook wb = new XSSFWorkbook();
+	XSSFSheet sheet = wb.createSheet("Sheet1");
+	int rowIndex = 1;
+	Row mainRow = sheet.createRow(0);
+	int mainColIndex = 0;
+	for (String col : cols) {
+		Cell mainCol = mainRow.createCell(mainColIndex);
+		String title = col;
+		mainCol.setCellValue(title);
+		mainColIndex += 1;
+	}
+	for (Map<String, Object> data : datas) {
+		Row row = sheet.createRow(rowIndex);
+		int colIndex = 0;
+		for (String col : cols) {
+			Cell rowCell = row.createCell(colIndex);
+			rowCell.setCellValue(data.get(col) == null ? "" : data.get(col).toString());
+			colIndex += 1;
+		}
+		rowIndex += 1;
+	}
+	return wb;
+}
 
 @RequestMapping(value = "/DataMartReport.do")
 public void dataMartReport(HttpServletRequest request) {
