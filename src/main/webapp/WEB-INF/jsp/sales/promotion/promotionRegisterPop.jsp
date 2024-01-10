@@ -145,6 +145,7 @@
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
+				preBook                : $('input:radio[name="preBook"]:checked').val(),
                 chgRemark              :$('#chgRemark').val(),
                 custStatusNew : vCustStatusNew,
                 custStatusDisen : vCustStatusDisen,
@@ -704,6 +705,7 @@
             $('#promoDiscPeriod').val('').prop("disabled", true);
 
             $('[name="megaDeal"]').removeAttr("disabled");
+            $('[name="preBook"]').removeAttr("disabled");
         }
         else {
 //          $('#promoDiscPeriodTp').val('');
@@ -711,6 +713,9 @@
 
             $('[name="megaDeal"]').prop("disabled", true);
             $('#megaDealN').prop("checked", true);
+
+            $('[name="preBook"]').prop("disabled", true);
+            $('#preBookN').prop("checked", true);
         }
     }
 </script>
@@ -909,6 +914,11 @@
     <th scope="row">Discount on Billing<span style="color:red">*</span></th>
     <td>
     <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p"></select>
+    </td>
+    <th scope="row">Pre Book Promotion</th>
+    <td>
+        <input id="preBookY" name="preBook" type="radio" value="1" disabled/><span>Yes</span>
+        <input id="preBookN" name="preBook" type="radio" value="0" disabled checked/><span>No</span>
     </td>
 </tr>
 </tbody>
