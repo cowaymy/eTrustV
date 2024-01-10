@@ -1,5 +1,6 @@
 package com.coway.trust.biz.attendance;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,4 +53,6 @@ public interface AttendanceService {
 	List<EgovMap> getReportingBranch();
 
 	String atdMigrateMonth();
+
+	String getAttendanceRaw(Map<String, Object> params) throws ParseException;
 }
