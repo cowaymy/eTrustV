@@ -3,8 +3,10 @@ package com.coway.trust.biz.attendance.impl;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ import com.coway.trust.biz.attendance.AttendanceService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.util.BeanConverter;
+import com.coway.trust.util.CommonUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -310,5 +314,136 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 @Override
 	 public List<EgovMap> getReportingBranch() {
 		 return attendanceMapper.getReportingBranch();
+	 }
+
+	 private Object nvl(Object a, Object b) {
+		return a != null ? a : b;
+	 }
+
+	 @Override
+	 public String getAttendanceRaw(Map<String, Object> params) throws ParseException {
+		 List<Map<String, Object>> returnData = new ArrayList();
+	 	if ((new SimpleDateFormat("dd/MM/yyyy").parse(this.atdMigrateMonth())).after(new SimpleDateFormat("yyyyMM").parse((String) params.get("calMonthYear")))) {
+	 		returnData.addAll(new Gson().fromJson((new Gson().toJson(this.selectExcelAttd(params))), new TypeToken<List<Map>>() {}.getType()));
+		} else {
+			List<EgovMap> memberInfo = new ArrayList();
+			if (params.containsKey("memCode") && params.get("memCode").equals("ALL")) {
+				EgovMap temp = new EgovMap();
+				temp.put("memCode", "ALL");
+				memberInfo.add(temp);
+			} else {
+				memberInfo = this.getMemberInfo(params);
+			}
+			memberInfo.stream().forEach((m) -> {
+				try {
+					URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
+					connection.setRequestProperty("Authorization", epapanAuth);
+					BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+					String input;
+					StringBuffer content = new StringBuffer();
+					while ((input = in.readLine()) != null) {
+						content.append(input);
+					}
+					in.close();
+					Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+					List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
+					if (params.get("memCode") != null && params.get("memCode").equals("ALL")) {
+						List<String> members = new ArrayList();
+						data.forEach((d) -> {
+							if (!members.contains(d.get("name"))) {
+								members.add((String) d.get("name"));
+							}
+						});
+						int loop = members.size() / 999;
+						if ((members.size() % 999) > 0) {
+							loop += 1;
+						}
+						for (int i = 0; i < loop; i++) {
+							int limit = i * 999 + 999;
+							if (limit >= members.size()) {
+								limit = members.size();
+							}
+							params.put("members", members.subList(i * 999, limit));
+							List<EgovMap> membersInfo = this.getMemberInfo(params);
+							returnData.addAll(data.stream().map((n) -> {
+								EgovMap member = membersInfo.stream().filter((x) -> {
+									return x.get("memCode").equals(n.get("name"));
+								}).findFirst().orElseGet(() -> {return null;});
+								if (member != null) {
+									n.put("orgCode", member.get("orgCode"));
+									n.put("grpCode", member.get("grpCode"));
+									n.put("deptCode", member.get("deptCode"));
+									n.put("hpType", member.get("hpType"));
+									n.put("memCode", member.get("memCode"));
+									n.put("memLvl", member.get("memLvl"));
+								}
+								return n;
+							}).collect(Collectors.toList()));
+						}
+					} else {
+						returnData.addAll(data.stream().map((n) -> {
+							n.put("orgCode", m.get("orgCode"));
+							n.put("grpCode", m.get("grpCode"));
+							n.put("deptCode", m.get("deptCode"));
+							n.put("hpType", m.get("hpType"));
+							n.put("memCode", m.get("memCode"));
+							n.put("memLvl", m.get("memLvl"));
+							return n;
+						}).collect(Collectors.toList()));
+					}
+				} catch (Exception e) {
+					LOGGER.debug("############### {}", e);
+					LOGGER.debug("Doesn't seem like will hit due to api accepting almost any argument.");
+				}
+			});
+		}
+	 	return new Gson().toJson(returnData.stream().map((d) -> {
+	 		Map<String, Object> f = new HashMap();
+	 		String date = null;
+	 		String time = null;
+	 		if (d.get("start").toString().contains("T")) {
+	 			date = d.get("start").toString().split("T")[0];
+	 			time = d.get("start").toString().split("T")[1];
+	 		} else {
+	 			date = d.get("start").toString().split(" ")[0];
+	 			time = d.get("start").toString().split(" ")[1];
+	 		}
+	 		String type = d.get("attend_type_code") != null ? (String) d.get("attend_type_code") : (String) d.get("attendTypeCode");
+	 		try {
+	 			if (d.get("start").toString().contains("T")) {
+		 			f.put("date", new SimpleDateFormat("yyyy/MM/dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(date)));
+		 			f.put("day", new SimpleDateFormat("EE").format(new SimpleDateFormat("yyyy-MM-dd").parse(date)).toUpperCase());
+		 		} else {
+		 			f.put("date", date);
+		 			f.put("day", new SimpleDateFormat("EE").format(new SimpleDateFormat("yyyy/MM/dd").parse(date)).toUpperCase());
+		 		}
+	 			f.put("time", time);
+	 			f.put("orgCode", d.get("orgCode"));
+	 			f.put("grpCode", d.get("grpCode"));
+	 			f.put("deptCode", d.get("deptCode"));
+	 			f.put("hpCode", d.get("memCode"));
+	 			f.put("hpType", d.get("hpType"));
+	 			f.put("QR - A0001", type.equals("A0001") ? 1 : "");
+	 			f.put("Public Holiday - A0002", type.equals("A0002") ? 1 : "");
+	 			f.put("State Holiday - A0003", type.equals("A0003") ? 1 : "");
+	 			f.put("RFA - A0004", type.equals("A0004") ? 1 : "");
+	 			f.put("Waived - A0005", type.equals("A0005") ? 1 : "");
+	 			int memLvl = 0;
+	 			if (d.get("memLvl") != null) {
+	 				if (d.get("start").toString().contains("T")) {
+	 					memLvl = ((BigDecimal) d.get("memLvl")).intValue();
+	 				} else {
+	 					memLvl = ((Double) d.get("memLvl")).intValue();
+	 				}
+	 			}
+	 			f.put("late", type.equals("A0001") ? (
+	 					memLvl == 0 ? 0 :
+	 						memLvl < 4 ? new SimpleDateFormat("HH:mm:ss").parse(time).after(new SimpleDateFormat("HH:mm:ss").parse("09:00:01")) ? 1 : 0 : new SimpleDateFormat("HH:mm:ss").parse(time).after(new SimpleDateFormat("HH:mm:ss").parse("11:00:01")) ? 1 : 0
+	 					) : 0);
+	 		} catch (Exception e) {
+	 			LOGGER.debug("################# {}", CommonUtils.printStackTraceToString(e));
+	 		}
+	 		return f;
+	 	}).collect(Collectors.toList()));
 	 }
 }

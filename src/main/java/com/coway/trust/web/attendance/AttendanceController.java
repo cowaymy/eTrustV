@@ -687,39 +687,6 @@ public class AttendanceController {
 		if (!session.getDeptCode().equals(" ")) params.put("deptCode", session.getDeptCode());
 		if (!session.getGroupCode().equals(" ")) params.put("grpCode", session.getGroupCode());
 		if (!session.getOrgCode().equals(" ")) params.put("orgCode", session.getOrgCode());
-		if ((new SimpleDateFormat("dd/MM/yyyy").parse(attendanceService.atdMigrateMonth())).after(new SimpleDateFormat("yyyyMM").parse((String) params.get("calMonthYear")))) {
-			return ResponseEntity.ok(new Gson().toJson(attendanceService.selectExcelAttd(params)));
-		} else {
-			List<Map<String, Object>> returnData = new ArrayList();
-			List<EgovMap> memberInfo = attendanceService.getMemberInfo(params);
-			memberInfo.stream().forEach((m) -> {
-				try {
-					URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
-					connection.setRequestProperty("Authorization", epapanAuth);
-					BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					String input;
-					StringBuffer content = new StringBuffer();
-					while ((input = in.readLine()) != null) {
-						content.append(input);
-					}
-					in.close();
-					Map<String, Object> res = (Map<String, Object>) new Gson().fromJson(content.toString(), new TypeToken<Map<String, Object>>() {}.getType());
-					List<Map<String, Object>> data = (List<Map<String, Object>>) nvl(res.get("dataList"), new ArrayList());
-					returnData.addAll(data.stream().map((n) -> {
-						n.put("orgCode", m.get("orgCode"));
-						n.put("grpCode", m.get("grpCode"));
-						n.put("deptCode", m.get("deptCode"));
-						n.put("hpType", m.get("hpType"));
-						n.put("memCode", m.get("memCode"));
-						n.put("memLvl", m.get("memLvl"));
-						return n;
-					}).collect(Collectors.toList()));
-				} catch (Exception e) {
-					LOGGER.debug("############### {}", e);
-					LOGGER.debug("Doesn't seem like will hit due to api accepting almost any argument.");
-				}
-			});
-			return ResponseEntity.ok(new Gson().toJson(returnData));
-		}
+		return ResponseEntity.ok(attendanceService.getAttendanceRaw(params));
 	}
 }

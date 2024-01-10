@@ -358,18 +358,28 @@
             )
             AND TRUNC(C.JOIN_DT, 'MM') <![CDATA[ <= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
         WHERE 1=1
-        <if test="orgCode != null and orgCode != ''">
-            AND A.ORG_CODE = #{orgCode}
-        </if>
-        <if test="grpCode != null and grpCode != ''">
-            AND A.GRP_CODE = #{grpCode}
-        </if>
-        <if test="deptCode != null and deptCode != ''">
-            AND A.DEPT_CODE = #{deptCode}
-        </if>
-        <if test="memCode != null and memCode != ''">
-            AND A.MEM_CODE = #{memCode}
-        </if>
+        AND C.MEM_TYPE = 1
+        <choose>
+            <when test="memCode == 'ALL'">
+                <foreach item="item" collection="members" open="AND A.MEM_CODE IN (" separator="," close=")">
+			          #{item}
+			    </foreach>
+            </when>
+            <otherwise>
+		        <if test="orgCode != null and orgCode != ''">
+		            AND A.ORG_CODE = #{orgCode}
+		        </if>
+		        <if test="grpCode != null and grpCode != ''">
+		            AND A.GRP_CODE = #{grpCode}
+		        </if>
+		        <if test="deptCode != null and deptCode != ''">
+		            AND A.DEPT_CODE = #{deptCode}
+		        </if>
+		        <if test="memCode != null and memCode != ''">
+		            AND A.MEM_CODE = #{memCode}
+		        </if>
+            </otherwise>
+        </choose>
     </select>
 
     <select id="selectExcelAttd" parameterType="Map" resultType="egovMap">
