@@ -203,7 +203,7 @@
             , { headerText : "Additional Discount (RM)",         dataField : "promoAddDiscPrc",       editable : false,   width : 100 }
             , { headerText : "Additional Discount (PV)",         dataField : "promoAddDiscPv",       editable : false,   width : 100 }
             , { headerText : "Mega Deal",         dataField : "megaDeal",       editable : false,   width : 100 }
-            , { headerText : "Mega Deal",         dataField : "megaDeal",       editable : false,   width : 100 }
+            , { headerText : "Pre-Book",         dataField : "preBook",       editable : false,   width : 100 }
             , { headerText : "Apply To",        dataField : "eSales",        visible : false}
             , { headerText : "Advance Discount",         dataField : "advDisc",       editable : false,   width : 100 }
             , { headerText : "Mattress Size",         dataField : "stkSize",       editable : false,   width : 100 }
