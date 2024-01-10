@@ -128,6 +128,7 @@
                            , V10.code_name cust_status
                             <!-- Added for PreBooking. By Fannie, 10/12/2023 -->
                            , V11.DISC_WAIVE AS PREBOOKING_PERIOD
+                           , V2.SALES_ORD_ID_OLD
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
