@@ -4,6 +4,13 @@
 
     function fn_loadCopyChange() {
         var _CUST_ID = '${orderInfo.basicInfo.custId}';
+        var custId = '${preOrderInfo.custId}';
+        var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        }
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : _CUST_ID}, function(result) {
 
@@ -158,7 +165,8 @@
                              , srvPacId:'${orderInfo.basicInfo.srvPacId}'
                              , promoId:'${orderInfo.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
-                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'}
+                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'
+                             ,preBook : $('#hiddenPreBook').val()}
                              , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
                              , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
@@ -183,7 +191,8 @@
                              , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
                              , promoId:'${orderInfo2.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
-                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'}
+                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'
+                             ,preBook : $('#hiddenPreBook').val()}
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
@@ -213,7 +222,8 @@
                              , isSrvPac:'Y'
                              , promoId:'${orderInfo.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
-                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'}
+                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'
+                             ,preBook : $('#hiddenPreBook').val()}
                              , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
                              , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
@@ -239,7 +249,8 @@
                              , isSrvPac:'Y'
                              , promoId:'${orderInfo2.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
-                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'}
+                             ,custStatus: '${orderDetail.basicInfo.custStatusId}'
+                             ,preBook : $('#hiddenPreBook').val()}
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
@@ -413,4 +424,14 @@
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
+
+	function checkExtradePreBookEligible(custId,salesOrdIdOld){
+		   Common.ajax("GET", "/homecare/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+			   if(result == null){
+				   $('#hiddenPreBook').val('0');
+				   }else{
+				   $('#hiddenPreBook').val('1');
+				   }
+		   });
+	  }
 </script>
