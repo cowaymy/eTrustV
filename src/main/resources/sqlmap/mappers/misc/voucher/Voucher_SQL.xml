@@ -518,21 +518,7 @@
 	</select>
 
 	<select id="getPendingEmailSendInfo" parameterType="Map" resultType="egovMap">
-			SELECT * FROM MSC0059D WHERE EMAIL_SENT_STUS IS NULL OR EMAIL_SENT_STUS = 1
-	</select>
-
-	<select id="getUnsendBatchEmailVoucherInfo" resultType="egovMap">
-		SELECT A.VOUCHER_CODE,A.CUST_EMAIL, C.MAIL_ID
-		FROM MSC0057D A
-        JOIN MSC0056M B
-        ON A.ID = B.ID
-        LEFT JOIN MSC0059D C
-        ON A.MAIL_ID = C.MAIL_ID
-        WHERE A.STUS_CODE_ID = 1
-        AND B.STUS_CODE_ID = 1
-        AND A.USED = 1
-        AND A.MAIL_ID IS NOT NULL
-        AND C.EMAIL_SENT_STUS IS NULL OR C.EMAIL_SENT_STUS = 1
+			SELECT * FROM MSC0059D WHERE EMAIL_SENT_STUS IS NULL OR EMAIL_SENT_STUS = 1 AND CONFIGURATION = 1
 	</select>
 
 	<update id="updateBatchEmailSuccess" parameterType="Map">
@@ -564,6 +550,7 @@
 		EMAIL,
 		NAME,
 		EMAIL_SENT_STUS,
+		CATEGORY_ID,
 		CRT_DT,
 		CRT_BY
 		)
@@ -577,6 +564,7 @@
 		#{email},
 		#{name},
 		#{emailSentStus},
+		1
 		SYSDATE,
 		#{userId}
 		)
