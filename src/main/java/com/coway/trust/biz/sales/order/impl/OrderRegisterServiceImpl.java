@@ -315,6 +315,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int custId = 0, promoId = 0 ,extradeWoutPRCnt =0;
     String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
     String monthExpired = "";
+    String preBook = "";
 
     logger.info("!@#### custId:" + (String) params.get("custId"));
     logger.info("!@#### salesOrdNo:" + (String) params.get("salesOrdNo"));
@@ -440,6 +441,18 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
                     int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
 
+                    //Check for Pre-booking
+                    params.put("custId", custId);
+                    params.put("salesOrdIdOld", getOldOrderID);
+                    EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+
+                    if(preBookInfo != null){
+                      preBook = "1";
+                    }else{
+                      preBook = "0";
+                    }
+
+
                 	//** Start exTrade Neo to Neo Plus **//
 //                    if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
 //                    	(params.get("stkId").toString()).equals(exTradeConfig.get("exTradeNeoId").toString())){
@@ -529,6 +542,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
     RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
     RESULT.put("MONTH_EXPIRED", monthExpired);
+    RESULT.put("PRE_BOOK", preBook);
 
     return RESULT;
   }
