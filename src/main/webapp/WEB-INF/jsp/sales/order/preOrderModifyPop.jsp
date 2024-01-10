@@ -76,7 +76,17 @@ var userType = "${userType}";
 
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
-        fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+        var custId = '${preOrderInfo.custId}';
+        var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        	$('#hiddenMonthExpired').val('0');
+        	fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+        }
+
+        //fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
 
         if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 ){
             $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
@@ -210,7 +220,8 @@ var userType = "${userType}";
              formData.append(n, v.file);
          });
 
-         fn_doSavePreOrder();
+         //fn_doSavePreOrder();
+         checkSalesPerson($('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
 
      });
  }
@@ -490,6 +501,8 @@ var userType = "${userType}";
             else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
             $('#isReturnExtrade').prop("checked", true);
@@ -1733,11 +1746,11 @@ var userType = "${userType}";
         if(appTypeVal == "66") isSrvPac = "Y";
 
         if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' >= '2019') {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val() , preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
         }
         else
         {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val() , preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
         }
         //doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
@@ -1803,6 +1816,8 @@ var userType = "${userType}";
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#hiddenMonthExpired').val('');
+        $('#hiddenPreBook').val('');
         $('#isReturnExtrade').prop("checked", true);
         $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
@@ -1935,7 +1950,7 @@ var userType = "${userType}";
                 break;
         }
 
-        var pType = $("#appType").val() == '66' ? '2' : '1';
+        var pType = $("#appType").val() == '66' ? '1' : '2';
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
@@ -2102,7 +2117,8 @@ var userType = "${userType}";
                 ,promoId:'${preOrderInfo.promoId}'
                 ,isSrvPac:('${preOrderInfo.appTypeId}' == 66 ? 'Y' : '')
                 ,voucherPromotion: voucherAppliedStatus
-                ,custStatus: $('#hiddenCustStatusId').val()}
+                ,custStatus: $('#hiddenCustStatusId').val()
+                , preBook : $('#hiddenPreBook').val()}
                 ,'${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
         else
@@ -2114,7 +2130,8 @@ var userType = "${userType}";
                 ,exTrade:'${preOrderInfo.exTrade}'
                 ,srvPacId:'${preOrderInfo.srvPacId}'
                 ,voucherPromotion: voucherAppliedStatus
-                ,custStatus: $('#hiddenCustStatusId').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                ,custStatus: $('#hiddenCustStatusId').val()
+                , preBook : $('#hiddenPreBook').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
 
 
@@ -2384,6 +2401,8 @@ var userType = "${userType}";
 
                 //$('#appType').val("66");
                 $('#appType').prop("disabled", true);
+                $('#exTrade').prop("disabled", true);
+
 
                 if($('#ordProudct').val() == null){
                        $('#appType').change();
@@ -2707,6 +2726,73 @@ var userType = "${userType}";
             }
         });
     }
+
+    function fn_checkPreOrderSalesPerson(memId,memCode) {
+    	var isExist = false;
+
+        Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+            if(memInfo == null) {
+                  isExist = false;
+                  Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                  $('#aTabOI').click();
+             }else{
+            	 isExist = true;
+            	 fn_doSavePreOrder();
+             }
+            return isExist;
+        });
+
+        return isExist;
+      }
+
+      function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+    	  var isExist = false;
+
+              Common.ajax("GET", "/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+                  if(memInfo == null) {
+                      isExist = false;
+                      Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
+                      $('#aTabOI').click();
+                    }else{
+                  	  //alert("[fn_checkPreOrderConfigurationPerson] line 1707 - checkPreBookSalesPerson.do ");
+                  	  isExist = true;
+                        fn_doSavePreOrder();
+                    }
+                  return isExist;
+              });
+
+        return isExist;
+      }
+
+     function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
+    	 if(memCode == "100116" || memCode == "100224" || memCode == "678235"){
+             return fn_doSavePreOrder();
+         }else{
+            if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+            	  return fn_checkPreOrderSalesPerson(0,memCode);
+            }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+            	  return fn_checkPreOrderSalesPerson(0,memCode);
+            }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+            	  return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+            }else{
+            	  return fn_doSavePreOrder();
+            }
+         }
+    }
+
+   function checkExtradePreBookEligible(custId,salesOrdIdOld){
+	   Common.ajax("GET", "/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+		   if(result == null){
+			   $('#hiddenPreBook').val('0');
+			   $('#hiddenMonthExpired').val('0');
+			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+			   }else{
+			   $('#hiddenPreBook').val('1');
+			   $('#hiddenMonthExpired').val(result.monthExpired);
+			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+			   }
+	   });
+   }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -3092,6 +3178,8 @@ var userType = "${userType}";
         <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+        <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
         </td>
 </tr>
 <tr>
