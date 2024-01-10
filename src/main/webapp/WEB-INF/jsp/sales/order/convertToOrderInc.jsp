@@ -4,6 +4,13 @@
 
     function fn_loadPreOrderInfo() {
         var _CUST_ID = '${preOrderInfo.custId}';
+        var custId = '${preOrderInfo.custId}';
+        var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        }
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : _CUST_ID}, function(result) {
 
@@ -164,7 +171,8 @@
                         ,srvPacId:'${preOrderInfo.srvPacId}'
                         ,promoId:'${preOrderInfo.promoId}'
                         ,voucherPromotion: voucherAppliedStatus
-                        ,custStatus: $('#hiddenCustStatusId').val()}
+                        ,custStatus: $('#hiddenCustStatusId').val()
+                        ,preBook : $('#hiddenPreBook').val()}
                         , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -176,7 +184,8 @@
                         ,exTrade:'${preOrderInfo.exTrade}'
                         ,srvPacId:'${preOrderInfo.srvPacId}'
                         ,voucherPromotion: voucherAppliedStatus
-                        ,custStatus: $('#hiddenCustStatusId').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                        ,custStatus: $('#hiddenCustStatusId').val()
+                        ,preBook : $('#hiddenPreBook').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
 
 
@@ -405,4 +414,14 @@
 	    	$('#btnVoucherApply').hide();
 		}
 	}
+
+	function checkExtradePreBookEligible(custId,salesOrdIdOld){
+		   Common.ajax("GET", "/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+			   if(result == null){
+				   $('#hiddenPreBook').val('0');
+				   }else{
+				   $('#hiddenPreBook').val('1');
+				   }
+		   });
+	  }
 </script>
