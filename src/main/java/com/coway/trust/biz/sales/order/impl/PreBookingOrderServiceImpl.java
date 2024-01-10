@@ -252,5 +252,10 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	    return preBookingOrderMapper.selectPreBookConfigurationPerson(params);
 	  }
 
+	  @Override
+	  public EgovMap selectPreBookOrderEligibleCheck(Map<String, Object> params) {
+	    return preBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+	  }
+
 
 }
