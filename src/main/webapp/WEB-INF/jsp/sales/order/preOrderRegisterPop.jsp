@@ -503,6 +503,8 @@
             else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
 
@@ -1694,7 +1696,7 @@
                       Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
                       $('#aTabOI').click();
                     }else{
-                  	  alert("[fn_checkPreOrderConfigurationPerson] line 1707 - checkPreBookSalesPerson.do ");
+                  	  //alert("[fn_checkPreOrderConfigurationPerson] line 1707 - checkPreBookSalesPerson.do ");
                   	  isExist = true;
                         fn_doSavePreOrder();
                     }
@@ -1762,7 +1764,7 @@
 
         //function change
 		//voucher management
-		doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+		doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac, voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val() , preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
     }
 
     //LoadProductPrice
@@ -1823,6 +1825,8 @@
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#hiddenMonthExpired').val('');
+        $('#hiddenPreBook').val('');
         //$('#isReturnExtrade').prop("checked", true);
         $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
@@ -2794,6 +2798,7 @@
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></p>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+        <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
     </td>
 </tr>
 <tr>
