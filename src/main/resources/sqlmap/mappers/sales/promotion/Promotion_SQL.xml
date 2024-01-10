@@ -369,6 +369,7 @@
              , E_SALES
              , ADV_DISC
              , STK_SIZE
+             , PRE_BOOK
              , VOUCHER_PROMOTION
              , PROMO_DISC_ON_BILL)
         VALUES
@@ -405,6 +406,7 @@
              , #{promoESales}
              , #{advDisc}
              , #{stkSize}
+             , #{preBook}
              , #{voucherPromotion}
              , #{promoDiscOnBill})
     </insert>
@@ -508,6 +510,7 @@
              , T3.cust_Status_New
              , T3.cust_Status_en_Wout_WP
              , T1.PROMO_DISC_ON_BILL
+             , T1.PRE_BOOK
           FROM SAL0017D T1
           LEFT JOIN (SELECT * FROM (select PROMO_ID,PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0405D a)
 pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP))) T3 on T3.PROMO_ID = T1.PROMO_ID
@@ -712,6 +715,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , STK_SIZE                = #{stkSize}
              , VOUCHER_PROMOTION = #{voucherPromotion}
              , PROMO_DISC_ON_BILL = #{promoDiscOnBill}
+             , PRE_BOOK 		       = #{preBook}
          WHERE PROMO_ID                = #{promoId}
     </update>
 
@@ -930,6 +934,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , ADV_DISC
              , STK_SIZE
              , VOUCHER_PROMOTION
+             , PRE_BOOK
              , ACTION_TAB
              , APPV_STUS
              , APPV_USER_ID
@@ -970,6 +975,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , #{advDisc}
              , #{stkSize}
              , #{voucherPromotion}
+             , #{preBook}
              , #{actionTab}
              , 60
              , null
@@ -1065,6 +1071,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.STK_SIZE STK_SIZE
              , T1.ACTION_TAB
              , T1.VOUCHER_PROMOTION
+            ,  T1.PRE_BOOK
           FROM SAL0358M T1
           LEFT JOIN SYS0047M U1 ON U1.USER_ID = T1.CRT_USER_ID
           LEFT JOIN SYS0047M U2 ON U2.USER_ID = T1.APPV_USER_ID
@@ -1142,6 +1149,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.APPV_STUS AS APPV_STATUS
              , T1.REMARK AS APPV_REMARK
              , T1.VOUCHER_PROMOTION
+             , T1.PRE_BOOK
              , T1.CHG_REMARK
              , T3.cust_Status_en
              , T3.cust_Status_Disen
@@ -1220,6 +1228,7 @@ SELECT A.PROMO_REQST_ID, B.PROMO_ID, B.PROMO_CODE, A.PROMO_DESC
              , DECODE(A.EMP_CHK, 1, 'YES', 'NO') AS EMPLOYEE
              , DECODE(A.MEGA_DEAL, 1, 'YES', 'NO') AS MEGA_DEAL
              , DECODE(A.ADV_DISC, 1, 'YES', 'NO') AS ADV_DISC
+             , DECODE(A.PRE_BOOK, 1, 'YES', 'NO') AS PRE_BOOK
              , D.CODE_DESC AS DISC_TYPE
              , A.PROMO_PRC_PRCNT AS PRCNT
              , A.PROMO_RPF_DISC_AMT AS RPF
@@ -1270,6 +1279,7 @@ SELECT T1.PROMO_REQST_ITM_ID
              , T4.PROMO_ADD_DISC_PV
              , T4.EX_TRADE
              , T4.PROMO_RPF_DISC_AMT
+             , T4.PRE_BOOK
           FROM SAL0359D T1
           JOIN SAL0358M T4 ON T4.PROMO_REQST_ID = T1.PROMO_REQST_ID
           JOIN SAL0018D T3 ON T3.PROMO_ITM_ID = T1.PROMO_ITM_ID
@@ -1421,6 +1431,7 @@ FROM (
                  WHEN t1.promo_app_type_id IN (2288, 2290)
                  THEN '4'
               ELSE '0' END AS APP_ID
+             , DECODE(T1.PRE_BOOK, 1, 'Yes', 'No') PRE_BOOK
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -1514,7 +1525,7 @@ FROM (
                  WHEN t1.promo_app_type_id IN (2288, 2290)
                  THEN '4'
               ELSE '0' END AS APP_ID
-
+            , DECODE(T1.PRE_BOOK, 1, 'Yes', 'No') PRE_BOOK
           FROM SAL0358M T1
           LEFT OUTER
           JOIN SYS0013M T2
