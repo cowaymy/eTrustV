@@ -1190,6 +1190,8 @@
                 $('#txtOldOrderID').val('');
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
                 $('#btnRltdNo').addClass("blind");
                 $('#isReturnExtrade').prop("checked", false);
             }
@@ -2444,11 +2446,11 @@
 
         if(appTypeVal !=66){
         	//Voucher Management
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
         }
         else
         	//Voucher Management
-        	doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
+        	doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
     }
 
     //LoadProductPrice
@@ -3194,6 +3196,7 @@
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+        <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
         </td>
 </tr>
 <tr>
