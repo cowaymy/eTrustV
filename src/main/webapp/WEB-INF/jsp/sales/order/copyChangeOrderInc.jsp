@@ -4,6 +4,13 @@
 
     function fn_loadCopyChange() {
         var _CUST_ID = '${orderInfo.basicInfo.custId}';
+        var custId = '${preOrderInfo.custId}';
+        var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        }
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : _CUST_ID}, function(result) {
 
@@ -146,7 +153,8 @@
                         ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                 	    ,promoId:'${orderInfo.basicInfo.ordPromoId}'
                         , voucherPromotion: voucherAppliedStatus
-                        ,custStatus: $('#hiddenCustStatusId').val()}
+                        ,custStatus: $('#hiddenCustStatusId').val()
+                        ,preBook : $('#hiddenPreBook').val()}
                 	    ,'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -159,7 +167,8 @@
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                               , voucherPromotion: voucherAppliedStatus
-                              ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              ,custStatus: $('#hiddenCustStatusId').val()
+                              ,preBook : $('#hiddenPreBook').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
 
                 	 }
                 	 else{
@@ -171,7 +180,8 @@
                               ,exTrade:'${orderInfo.basicInfo.exTrade}'
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                               , voucherPromotion: voucherAppliedStatus
-                              ,custStatus: $('#hiddenCustStatusId').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              ,custStatus: $('#hiddenCustStatusId').val()
+                              ,preBook : $('#hiddenPreBook').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 	 }
 
 
@@ -329,4 +339,14 @@
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
+
+	function checkExtradePreBookEligible(custId,salesOrdIdOld){
+		   Common.ajax("GET", "/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+			   if(result == null){
+				   $('#hiddenPreBook').val('0');
+				   }else{
+				   $('#hiddenPreBook').val('1');
+				   }
+		   });
+	  }
 </script>
