@@ -190,8 +190,8 @@
           , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : 200}
           , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : 200}
           , { headerText : "Customer Info", dataField : "custName", editable : false, width : 300}
-          , { headerText : "Previous Product Model", dataField : "", editable : false, width : 200}
-          , { headerText : "Previous Product Order No", dataField : "", editable : false, width : 200}
+          , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : 200}
+          , { headerText : "Previous Product Order No", dataField : "salesOrdNo", editable : false, width : 200}
           , { headerText : "Product Interested", dataField : "stkDesc", editable : false, width : 200}
           , { headerText : "Pre-Booking Period", dataField : "discWaive", editable : false, width : 200}
 
