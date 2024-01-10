@@ -1,17 +1,35 @@
 package com.coway.trust.biz.api.impl;
 
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -22,7 +40,30 @@ import com.coway.trust.biz.api.vo.chatbotInbound.OrderListReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.OrderVO;
 import com.coway.trust.biz.api.vo.chatbotInbound.StatementReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.VerifyCustIdentityReqForm;
+import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.biz.common.ReportBatchService;
+import com.coway.trust.biz.sales.order.impl.OrderLedgerMapper;
+import com.coway.trust.cmmn.CRJavaHelper;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.CommonController;
+import com.coway.trust.web.common.ReportController;
+import com.coway.trust.web.common.ReportController.ViewType;
+import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
+import com.coway.trust.web.common.visualcut.ReportBatchController;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,6 +82,39 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Resource(name = "commonApiService")
 	private CommonApiService commonApiService;
+
+	@Resource(name = "orderLedgerMapper")
+	private OrderLedgerMapper orderLedgerMapper;
+
+	@Value("${com.file.upload.path}")
+	private String fileUploadPath;
+
+	@Autowired
+	  private AdaptorService adaptorService;
+	@Autowired
+	  private LargeExcelService largeExcelService;
+	  @Autowired
+	  private MessageSourceAccessor messageAccessor;
+	  @Value("${report.datasource.driver-class-name}")
+	  private String reportDriverClass;
+	  @Value("${report.datasource.url}")
+	  private String reportUrl;
+
+	  @Value("${report.datasource.username}")
+	  private String reportUserName;
+
+	  @Value("${report.datasource.password}")
+	  private String reportPassword;
+
+	  @Value("${report.file.path}")
+	  private String reportFilePath;
+
+	  @Value("${web.resource.upload.file}")
+	  private String uploadDirWeb;
+	  @Autowired
+	  private ReportBatchService reportBatchService;
+//	@Autowired
+//	private ReportBatchController reportBatchController;
 
 	@Override
 	public EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception {
@@ -207,7 +281,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     			}else{
     				params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-    				params.put("message", "Order not found");
+    				params.put("message", "Customer not found");
     			}
 
     		}else{
@@ -216,7 +290,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     		}
 
     		// Return result
-    		if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+    		if(params.get("statusCode").toString().equals("200")){
     			resultValue.put("success", true);
     		}else{
     			resultValue.put("success",false);
@@ -236,12 +310,12 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     		respTm = stopWatch.toString();
 
     		// Insert log into API0004M
-    		params.put("reqParam", reqParam);
+    		params.put("reqParam", CommonUtils.nvl(reqParam));
     		params.put("ipAddr", CommonUtils.getClientIp(request));
     		params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-    		params.put("respTm", respTm);
-    		params.put("apiUserId", apiUserId);
-    		params.put("respParam", resultValue);
+    		params.put("respTm", CommonUtils.nvl(respTm));
+    		params.put("apiUserId", CommonUtils.nvl(apiUserId));
+    		params.put("respParam", CommonUtils.nvl(resultValue));
     		rtnRespMsg(params);
 
     		return resultValue;
@@ -255,6 +329,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		StopWatch stopWatch = new StopWatch();
 		EgovMap resultValue = new EgovMap();
 		List<OrderVO> orderVO = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
 
 		try{
     		stopWatch.reset();
@@ -297,7 +372,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     				return resultValue;
     			}
 
-    			if(reqParameter.getStatementType() == 1 && reqParameter.getMonth() < 0){
+    			if((reqParameter.getStatementType() == 1 || reqParameter.getStatementType() == 2) && reqParameter.getMonth() < 1){
     				resultValue.put("success", false);
     				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     				resultValue.put("message", "Month is required");
@@ -315,16 +390,108 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     			apiUserId = authorize.get("apiUserId").toString();
 
+    			Map<String, Object> emailReqParam = new HashMap<String, Object>();
+
+     			Calendar calNow = Calendar.getInstance();
+    			int nowYear = calNow.get(Calendar.YEAR);
+    			int requestYear = 0;
+    			int nowMonth = calNow.get(Calendar.MONTH) +1;
+    			String requestMonth = "";
+    			String monthName = "";
+
+    			if((reqParameter.getStatementType() == 1 || reqParameter.getStatementType() == 2) && reqParameter.getMonth() > 0){
+    				requestMonth = String.format("%02d", Integer.valueOf(params.get("month").toString()));
+        			if(nowMonth < Integer.valueOf(params.get("month").toString())){
+        				requestYear = nowYear -1;
+        			}else{
+        				requestYear = nowYear;
+        			}
+        			Month month = Month.of(Integer.valueOf(params.get("month").toString()));
+        			monthName = month.toString();
+    			}
+
+    			Date currentDate = calNow.getTime();
+    			SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+    			String formattedDate = dateFormat.format(currentDate);
+
+    			Map<String, Object> rptParam = new HashMap();
+    			//Search Statement ID
+    			if(reqParameter.getStatementType() == 1){//SOA
+    				Map<String, Object> invoiceDet = chatbotInboundApiMapper.getSoaDet(params);
+    				if(invoiceDet == null){
+    					throw new Exception("order not found");
+    				}
+    				rptParam.put("v_statementID", invoiceDet.get("stateId"));
+    				rptParam.put("V_TEMP", "TEMP");
+    				rptParam.put("date", monthName + " "+ String.valueOf(requestYear));
+    				rptParam.put("requestNameType", "STATEMENT OF ACCOUNT");
+    				rptParam.put("custEmail", params.get("custEmailAdd").toString());
+    				emailReqParam.put("rptName", "/statement/Official_StatementofAccount_Company_PDF_New.rpt");
+    				emailReqParam.put("fileName", "SOA_"+ params.get("orderNo").toString() + "_StatementPeriod(" + requestMonth + requestYear + ").pdf");
+    			}else if(reqParameter.getStatementType() == 2){//Tax Invoice
+    				Map<String, Object> invoiceDet = chatbotInboundApiMapper.getInvoiceDet(params);
+    				if(invoiceDet == null){
+    					throw new Exception("order not found");
+    				}
+    				String invcDt = invoiceDet.get("invcDt").toString();
+    				String[] invcDtSplit = invcDt.split("/");
+    				String day = invcDtSplit[0];
+    				String invcDay = String.format("%02d", Integer.valueOf(day));
+
+    				rptParam.put("v_referenceID", invoiceDet.get("stateId"));
+    				rptParam.put("v_taskId", "1");
+    				rptParam.put("v_refMonth", "1");
+    				rptParam.put("v_refYear", "1");
+    				rptParam.put("V_TYPE", 133);
+    				rptParam.put("date", monthName + " " + String.valueOf(requestYear));
+    				rptParam.put("requestNameType", "INVOICE");
+    				rptParam.put("custEmail", params.get("custEmailAdd").toString());
+    				emailReqParam.put("rptName", "/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt");
+    				emailReqParam.put("fileName", "TaxInvoice_"+ params.get("orderNo").toString() + "_InvoiceDate(" + invcDay + requestMonth + requestYear + ").pdf");
+    			}else if(reqParameter.getStatementType() == 3){//Ledger
+    				Map<String, Object> ledgerParam = new HashMap<String, Object>();
+    				ledgerParam.put("ordId", params.get("orderId"));
+    				Map<String, Object> ledgerDet = orderLedgerMapper.selectOrderLedgerView(ledgerParam);
+    				if(ledgerDet == null){
+    					throw new Exception("Ledger not found");
+    				}
+    				rptParam.put("V_ORDERID", params.get("orderId"));
+    				rptParam.put("V_ORDERNO", params.get("orderNo"));
+    				rptParam.put("V_PAYREFNO", ledgerDet.get("jomPayRef"));
+    				rptParam.put("V_CUSTTYPE", ledgerDet.get("custTypeId"));
+    				rptParam.put("V_CUTOFFDATE", "01/01/1900");
+    				rptParam.put("date", formattedDate);
+    				rptParam.put("requestNameType", "LEDGER");
+    				rptParam.put("custEmail", params.get("custEmailAdd").toString());
+    				emailReqParam.put("rptName", "/sales/OrderLedger2.rpt");
+    				emailReqParam.put("fileName", "Ledger_"+ params.get("orderNo").toString() + "_InvoiceDate(" + formattedDate + ").pdf");
+    			}
+
+    			try {
+    				emailReqParam.put("rptParams", mapper.writeValueAsString(rptParam));
+    			} catch (JsonProcessingException e) {
+    				throw new ApplicationException(AppConstants.FAIL,
+    						"Unable to trigger email sender. Please inform IT.");
+    			}
+
+    			//Insert to CBT0006M to be pending generate statement/Invoice, then call batch schedular to send to respective requester
+    			emailReqParam.put("stateType", reqParameter.getStatementType());
+    			emailReqParam.put("orderNo", reqParameter.getOrderNo());
+    			chatbotInboundApiMapper.CBT0006M_insert(emailReqParam);
+
     			params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
     			params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
 
 //    			params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 //				params.put("message", "Not Found");
+
+//    			Map<String, Object> genPdfParam = new HashMap<String, Object>();
+//    			generatePDF(genPdfParam);
     		}else{
     			params.put("statusCode", authorize.get("code"));
     			params.put("message", authorize.get("message").toString());
     		}
- 
+
     		// Return result
     		if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
     			resultValue.put("success", true);
@@ -336,23 +503,225 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     		resultValue.put("message", params.get("message"));
 
 		}catch(Exception ex){
-			resultValue.put("success",false);
+			LOGGER.debug(">>> Exception :" + ex);
+			resultValue.put("message", ex.getMessage() != null ? ex.getMessage() : "");
 		}finally{
     		stopWatch.stop();
     		respTm = stopWatch.toString();
 
     		// Insert log into API0004M
-    		params.put("reqParam", reqParam);
+    		params.put("reqParam", CommonUtils.nvl(reqParam));
     		params.put("ipAddr", CommonUtils.getClientIp(request));
     		params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-    		params.put("respTm", respTm);
-    		params.put("apiUserId", apiUserId);
-    		params.put("respParam", resultValue);
+    		params.put("respTm", CommonUtils.nvl(respTm));
+    		params.put("apiUserId", CommonUtils.nvl(apiUserId));
+    		params.put("respParam", CommonUtils.nvl(resultValue));
     		rtnRespMsg(params);
 
     		return resultValue;
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> getGenPdfList(Map<String, Object> params) throws Exception {
+		List<Map<String, Object>> emailListToSend = chatbotInboundApiMapper.getGenPdfList(params);
+		return emailListToSend;
+	}
+
+	@Override
+	public void update_chatbot(Map<String, Object> params) throws Exception {
+		//update CBT0006M when success generated PDF
+		chatbotInboundApiMapper.update_CBT0006M_Stus(params);
+
+		//Insert email table for schedular batch run
+		String Subject = "COWAY " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
+		String Body = "Dear Valued Customer, <br /><br />Please find attached the " + params.get("requestNameType").toString().toLowerCase() +" for your kind perusal. <br /><br />Thank you. <br /><br />Regards,<br />Coway (Malaysia) Sdn Bhd";
+
+		Map<String,Object> masterEmailDet = new HashMap<String, Object>();
+		masterEmailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
+		masterEmailDet.put("templateName", "");
+		masterEmailDet.put("categoryId", "3");
+		masterEmailDet.put("email", params.get("custEmail"));
+		masterEmailDet.put("emailSentStus", 1);
+		masterEmailDet.put("name", "");
+		masterEmailDet.put("userId", 349);
+		masterEmailDet.put("emailSubject", Subject);
+		masterEmailDet.put("emailParams",Body);
+		masterEmailDet.put("attachment",fileUploadPath + "/RawData/Public/Chatbot Inbound" + "/" + params.get("fileName").toString());
+
+		chatbotInboundApiMapper.insertBatchEmailSender(masterEmailDet);
+	}
+
+	@Override
+	public Map<String, Object> generatePDF(Map<String, Object> params) throws Exception {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		List<Map<String, Object>> emailListToSend = chatbotInboundApiMapper.getGenPdfList(params);
+
+		if(emailListToSend.size() > 0){
+			for(int i =0;i<emailListToSend.size();i++)
+			{
+				Map<String, Object> info = emailListToSend.get(i);
+				Map<String, Object> updParams = createPdfFile(info);
+
+				updParams.put("stusUpdate", 4);
+				update_chatbot(updParams);
+//				info.put("stusUpdate", 4);
+//				int update = chatbotInboundApiMapper.update_CBT0006M_Stus(info);
+			}
+		}
+
+		return resultValue;
+	}
+
+	public Map<String, Object> createPdfFile(Map<String, Object> params) throws Exception {
+        String sFile;
+        ObjectMapper mapper = new ObjectMapper();
+
+        sFile = params.get("fileName").toString();
+
+        LOGGER.info("[START] InboundGenPdf...");
+        Map<String, Object> pdfMap = new HashMap<>();
+        pdfMap.put(REPORT_FILE_NAME, params.get("rptName").toString());// visualcut
+                                                                               // rpt
+                                                                               // file name.
+        pdfMap.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+
+        if(!CommonUtils.nvl(params.get("rptParams")).equals("")){
+			try {
+				Map<String, Object> additionalParam = mapper.readValue(params.get("rptParams").toString(),Map.class);
+				pdfMap.putAll(additionalParam);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+
+        pdfMap.put(AppConstants.REPORT_DOWN_FILE_NAME,
+            "/Chatbot Inbound" + File.separator + params.get("fileName").toString());//pdf
+
+        params.putAll(pdfMap);
+//        this.viewProcedure(null, null, pdfMap);
+        LOGGER.info("[END] InboundGenPdf...");
+
+        // E-mail 전송하기
+        File file = new File(fileUploadPath + "/RawData/Public/Chatbot Inbound" + "/" + sFile);
+        EmailVO email = new EmailVO();
+
+        email.setTo(pdfMap.get("custEmail").toString());
+        email.setHtml(true);
+        String Subject = "";
+
+        Subject = "COWAY " + pdfMap.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + pdfMap.get("date").toString() + ")" ;
+        email.setSubject(Subject);
+        email.setText("Dear Valued Customer, <br /><br />Please find attached the " + pdfMap.get("requestNameType").toString().toLowerCase() +" for your kind perusal. <br /><br />Thank you. <br /><br />Regards,<br />Coway (Malaysia) Sdn Bhd");
+        email.addFile(file);
+
+        String attlong = "C:/works/workspace/etrust/src/main/webapp/resources/WebShare/RawData/Public/Chatbot Inbound/Ledger_2835506_InvoiceDate(09012024).pdf///C:/works/workspace/etrust/src/main/webapp/resources/WebShare/RawData/Public/Chatbot Inbound/TaxInvoice_2835506_InvoiceDate(05042023).pdf";
+        String[] attachmentSplit = attlong.split("///");
+        if(attachmentSplit.length == 1){
+    		File file1 = new File(attlong.toString());
+		    email.addFile(file1);
+    	}else{
+    		List<File> fileList = new ArrayList<>();
+    		for (String attachFile : attachmentSplit){
+    			File file1 = new File(attachFile);
+    			fileList.add(file1);
+    		}
+		    email.addFiles(fileList);
+    	}
+//        File filea = new File("C:/works/workspace/etrust/src/main/webapp/resources/WebShare/RawData/Public/Chatbot Inbound/Ledger_2835506_InvoiceDate(09012024).pdf");
+//        fileList.add(filea);
+//        File fileb = new File("C:/works/workspace/etrust/src/main/webapp/resources/WebShare/RawData/Public/Chatbot Inbound/TaxInvoice_2835506_InvoiceDate(05042023).pdf");
+//        fileList.add(fileb);
+//	    email.addFiles(fileList);
+        adaptorService.sendEmail(email, false);
+        return params;
+      }
+
+	private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
+	    String reportFile = (String) params.get(REPORT_FILE_NAME);
+	    String reportName = reportFilePath + reportFile;
+	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String prodName;
+	    int maxLength = 0;
+	    String msg = "Completed";
+
+	    try {
+	      ReportAppSession ra = new ReportAppSession();
+	      ra.createService(REPORT_CLIENT_DOCUMENT);
+
+	      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
+	      ra.initialize();
+	      ReportClientDocument clientDoc = new ReportClientDocument();
+	      clientDoc.setReportAppServer(ra.getReportAppServer());
+	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+
+	      String connectString = reportUrl;
+	      String driverName = reportDriverClass;
+	      String jndiName = "sp";
+	      String userName = reportUserName;
+	      String password = reportPassword;
+
+	      // Switch all tables on the main report and sub reports
+	      //CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+	      CRJavaHelper.replaceConnection(clientDoc, userName, password, connectString, driverName, jndiName);
+	      // logon to database
+	      CRJavaHelper.logonDataSource(clientDoc, userName, password);
+
+
+	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+
+	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+	      params.put("repProdName", prodName);
+
+	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+	      ReportUtils.setReportParameter(params, paramController, fields);
+	      {
+	        this.viewHandle(request, response, viewType, clientDoc,
+	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+	      }
+	    } catch (Exception ex) {
+	      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
+	      throw new ApplicationException(ex);
+	    } finally{
+	      // Insert Log
+	      endTime = Calendar.getInstance();
+	      params.put("msg", msg);
+	      params.put("startTime", fmt.format(startTime.getTime()));
+	      params.put("endTime", fmt.format(endTime.getTime()));
+	      params.put("userId", 349);
+
+	      reportBatchService.insertLog(params);
+	    }
+	  }
+
+	private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
+		      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+		      throws ReportSDKExceptionBase, IOException {
+
+		String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
+		  		//Tested with switch case, apparently switch case unable to handle viewtype and return error 505 so use if/else
+				if(viewType == ViewType.PDF){
+					ReportUtils.viewPDF(response, clientDoc, downFileName);
+				}
+				else{
+					throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+				}
+		  }
 
 	@Override
 	public EgovMap verifyBasicAuth(HttpServletRequest request){

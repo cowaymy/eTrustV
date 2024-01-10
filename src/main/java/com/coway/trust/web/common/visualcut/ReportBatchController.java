@@ -11,9 +11,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -43,6 +46,7 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be
@@ -82,6 +86,9 @@ public class ReportBatchController {
 
   @Autowired
   private ReportBatchService reportBatchService;
+
+  @Resource(name="chatbotInboundApiService")
+	private ChatbotInboundApiService chatbotInboundApiService;
 
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
@@ -2924,6 +2931,75 @@ public void dataMartReport(HttpServletRequest request) {
 	  this.viewProcedure(null, null, params);*/
   }
   LOGGER.info("[END] DataMartReport...");
+}
+
+@RequestMapping(value = "/InboundGenPdf.do")
+//@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
+public void InboundGenPdf(Map<String, Object> param) {
+  LOGGER.info("[START] InboundGenPdf...");
+  Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, param.get("rptName").toString());// visualcut
+                                                                         // rpt
+                                                                         // file name.
+  params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+  params.put("V_TEMP", "TEMP");
+  params.put("v_statementID", param.get("stateId").toString());
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "Chatbot Inbound" + File.separator + param.get("fileName").toString());//pdf
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] InboundGenPdf...");
+}
+
+@RequestMapping(value = "/InboundGenPdf1.do")
+//@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
+public void InboundGenPdf1(@RequestParam Map<String, Object> param) throws Exception {
+LOGGER.info("[START] InboundGenPdf...");
+ObjectMapper mapper = new ObjectMapper();
+Map<String, Object> params = new HashMap<String, Object>();
+List<Map<String, Object>> emailListToSend = chatbotInboundApiService.getGenPdfList(params);
+
+if(emailListToSend.size() > 0){
+	for(int i =0;i<emailListToSend.size();i++)
+	{
+		Map<String, Object> info = emailListToSend.get(i);
+		Map<String, Object> pdfMap = new HashMap<>();
+        pdfMap.put(REPORT_FILE_NAME, info.get("rptName").toString());// visualcut// rpt// file name.
+        pdfMap.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+
+        if(!CommonUtils.nvl(info.get("rptParams")).equals("")){
+			try {
+				Map<String, Object> additionalParam = mapper.readValue(info.get("rptParams").toString(),Map.class);
+				pdfMap.putAll(additionalParam);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+
+        pdfMap.put(AppConstants.REPORT_DOWN_FILE_NAME,
+                "/Chatbot Inbound" + File.separator + info.get("fileName").toString());//pdf
+//        pdfMap.putAll(param);
+        this.viewProcedure(null, null, pdfMap);
+
+		info.put("stusUpdate", 4);
+		info.putAll(pdfMap);
+		chatbotInboundApiService.update_chatbot(info);
+	}
+}
+
+//Map<String, Object> params = new HashMap<>();
+//params.put(REPORT_FILE_NAME, param.get("rptName").toString());// visualcut
+                                                                       // rpt
+                                                                       // file name.
+//params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+//params.put("V_TEMP", "TEMP");
+//params.put("v_statementID", param.get("stateId").toString());
+//params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+//    "Chatbot Inbound" + File.separator + param.get("fileName").toString());//pdf
+//
+//this.viewProcedure(null, null, params);
+LOGGER.info("[END] InboundGenPdf...");
 }
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)

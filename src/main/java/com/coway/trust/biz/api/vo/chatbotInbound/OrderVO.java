@@ -14,6 +14,7 @@ public class OrderVO implements Serializable{
 	private String productCode;
 	private String productName;
 	private String area;
+	private String appType;
 
 	@SuppressWarnings("unchecked")
 	public static OrderVO create(EgovMap egvoMap) {
@@ -66,5 +67,13 @@ public class OrderVO implements Serializable{
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	public String getAppType() {
+		return appType;
+	}
+
+	public void setAppType(String appType) {
+		this.appType = appType;
 	}
 }

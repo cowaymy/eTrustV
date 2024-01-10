@@ -26,7 +26,7 @@
 		ORDER BY C.CODE_ID
     </select>
 
-    <select id="isCustExist" parameterType="Map">
+    <select id="isCustExist" parameterType="Map" resultType="int">
         SELECT
         COUNT(1)
         FROM SAL0029D
@@ -36,15 +36,159 @@
     </select>
 
     <select id="getOrderList" parameterType="Map" resultType="egovMap">
-        SELECT S01.SALES_ORD_ID, S01.SALES_ORD_NO, S01.CUST_ADD_ID, S26.STK_CODE, S26.STK_DESC, S64.AREA
+        SELECT S01.SALES_ORD_ID order_id
+        , S01.SALES_ORD_NO order_no
+        , S01.CUST_ADD_ID CUST_ADD_ID
+        , S26.STK_CODE product_code
+        , S26.STK_DESC product_name
+        , S64.AREA area
+        , S13.CODE_NAME APP_TYPE
 		  FROM SAL0001D S01
 		  JOIN SAL0002D S02 ON S01.SALES_ORD_ID = S02.SALES_ORD_ID
 		  JOIN SAL0029D S29 ON S29.CUST_ID = S01.CUST_ID
 		  LEFT JOIN SYS0026M S26 ON S02.ITM_STK_ID  = S26.STK_ID
 		  LEFT JOIN SAL0023D S23 ON S23.CUST_ADD_ID = S01.CUST_ADD_ID
 		  LEFT JOIN SYS0064M S64 ON S64.AREA_ID  =S23.AREA_ID
-		  WHERE S29.CUST_ID = 1857021
-		  AND S29.NRIC = '880905435884'
+		  LEFT JOIN SYS0013M S13 ON S13.CODE_ID = S01.APP_TYPE_ID
+		  WHERE S29.CUST_ID = #{custId}
+		  AND S29.NRIC = #{custNric}
 		  AND S01.STUS_CODE_ID <![CDATA[ <> ]]> 10
     </select>
+
+    <insert id="CBT0006M_insert" parameterType="Map">
+        INSERT INTO CBT0006M (
+            REQ_ID
+            ,STATE_ID
+            ,STATE_TYPE
+            ,ORDER_NO
+            ,RPT_NAME
+            ,FILE_NAME
+            ,STUS
+            ,STUS_REM
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,RPT_PARAMS
+            )
+            VALUES (
+            CBT0006M_REQ_ID_SEQ.nextval
+            ,#{stateId}
+            ,#{stateType}
+            ,#{orderNo}
+            ,#{rptName}
+            ,#{fileName}
+            ,1
+            ,NULL
+            ,#{userId}
+            ,SYSDATE
+            ,#{rptParams}
+            )
+     </insert>
+
+    <select id="getSoaDet" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT(Extent1.STATE_ID) AS STATE_ID
+            FROM
+                PAY0025D Extent1
+                INNER JOIN PAY0026D Extent2 ON Extent2.STATE_ID = Extent1.STATE_ID
+                LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_NO = Extent2.STATE_ITM_ORD_NO
+            WHERE
+                1=1
+                AND Extent2.STATE_ITM_ORD_NO = #{orderNo}
+                 AND Extent1.STATE_MONTH  = #{month}
+           AND Extent1.STATE_YEAR = TO_CHAR(SYSDATE,'YYYY')-1
+            ORDER BY Extent2.STATE_ITM_ORD_NO DESC
+    </select>
+
+    <select id="getInvoiceDet" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT(Filter1.TAXINVOICEID1) AS STATE_ID
+            ,TO_CHAR(Filter1.TAX_INVC_REF_DT,'DD/MM/YYYY') AS INVC_DT
+        FROM
+                (
+                SELECT
+                    Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                    Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                    Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                    Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                    Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
+                    Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
+                    Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
+                    Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                    Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
+                    Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
+                    Extent4.CUST_ID TAX_INVC_CUST_ID
+                FROM
+                    PAY0029D Extent1
+                    JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+                WHERE
+                    Extent1.TAX_INVC_BILL_TYPE = 133) Filter1
+                LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
+        WHERE
+            Extent3.ACC_INV_VOID_ID IS NULL
+            AND  Filter1.TAX_INVC_TYPE = '1268'
+             AND  Filter1.INVC_ITM_ORD_NO = #{orderNo}
+             AND Filter1.TAX_INVC_MONTH  = #{month}
+           AND Filter1.TAX_INVC_YEAR = TO_CHAR(SYSDATE,'YYYY')-1
+            and rownum =1
+    </select>
+
+    <select id="getGenPdfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            REQ_ID
+            ,STATE_ID
+            ,STATE_TYPE
+            ,ORDER_NO
+            ,RPT_NAME
+            ,FILE_NAME
+            ,STUS
+            ,STUS_REM
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,RPT_PARAMS
+        FROM CBT0006M WHERE STUS = 1
+    </select>
+
+<insert
+        id="insertBatchEmailSender"
+        parameterType="Map">
+        INSERT INTO MSC0059D
+        (
+        MAIL_ID,
+        EMAIL_TYPE,
+        EMAIL_SUBJECT,
+        EMAIL_PARAMS,
+        TEMPLATE_NAME,
+        EMAIL,
+        NAME,
+        EMAIL_SENT_STUS,
+        CRT_DT,
+        CRT_BY,
+        CATEGORY_ID,
+        ATTACHMENT
+        )
+        VALUES
+        (
+        MSC0059D_MAIL_ID_SEQ.NEXTVAL,
+        #{emailType},
+        #{emailSubject},
+        #{emailParams},
+        #{templateName},
+        #{email},
+        #{name},
+        #{emailSentStus},
+        SYSDATE,
+        #{userId},
+        #{categoryId},
+        #{attachment}
+        )
+    </insert>
+
+    <insert id="update_CBT0006M_Stus" parameterType="Map" >
+            UPDATE CBT0006M
+                   SET  STUS  = #{stusUpdate},
+                          UPD_DT  = SYSDATE,
+                          UPD_USER_ID = 349
+             WHERE  REQ_ID   =#{reqId}
+     </insert>
 </mapper>
