@@ -52,6 +52,13 @@
             $('#advDiscN').prop("checked", true);
         }
 
+        if('${promoInfo.preBook}' == '1') {
+            $('#preBookY').prop("checked", true);
+        }
+        else {
+            $('#preBookN').prop("checked", true);
+        }
+
         if('${promoInfo.voucherPromotion}' == '1') {
             $('#voucherPromotionY').prop("checked", true);
         }
@@ -224,6 +231,7 @@
                 stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
                 voucherPromotion                : $('input:radio[name="voucherPromotion"]:checked').val(),
+				preBook                : $('input:radio[name="preBook"]:checked').val(),
                 chgRemark              :$('#chgRemark').val(),
                 custStatusNew : vCustStatusNew,
                 custStatusDisen : vCustStatusDisen,
@@ -846,10 +854,15 @@
         //Promo Application = Rental
         if(promoAppVal == '2284') {
             $('[name="megaDeal"]').removeAttr("disabled");
+
+            $('[name="preBook"]').removeAttr("disabled");
         }
         else {
             $('[name="megaDeal"]').prop("disabled", true);
             $('#megaDealN').prop("checked", true);
+
+            $('[name="preBook"]').prop("disabled", true);
+            $('#preBookN').prop("checked", true);
         }
     }
 
@@ -1058,6 +1071,11 @@
     <th scope="row">Discount on Billing<span style="color:red">*</span></th>
     <td>
     <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p"></select>
+    </td>
+    <th scope="row">Pre Book Promotion</th>
+    <td>
+        <input id="preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
+        <input id="preBookN" name="preBook" type="radio" value="0" /><span>No</span>
     </td>
 </tr>
 </tbody>
