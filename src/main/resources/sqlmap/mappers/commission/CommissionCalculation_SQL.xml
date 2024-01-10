@@ -2484,11 +2484,11 @@
 	    INSERT INTO CMM0004D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
 			, USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
 			, SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
-			, SYS_MEM_TYPE_ID)
+			, SYS_MEM_TYPE_ID, BONUS_RATE)
 		VALUES(CMM0004D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
 		  ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
 		  ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
-		  ,#{sysMemberTypeID})
+		  ,#{sysMemberTypeID}, #{bonusCandyRate})
    </insert>
 
    <select id="callIncentiveDetail" parameterType="integer">
@@ -2550,7 +2550,9 @@
 		    t1.VALID_REM AS VALID_REM,
 		    t1.USER_MEM_CODE AS USER_MEM_CODE,
 		    t1.USER_REF_CODE AS USER_REF_CODE,
-		    t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+		    <!-- t1.USER_TRGET_AMT AS USER_TRGET_AMT, -->
+		    (CASE t3.UPLOAD_TYPE_ID WHEN 7479 THEN TO_CHAR(t1.BONUS_RATE)
+            ELSE TO_CHAR(t1.USER_TRGET_AMT) END) AS USER_TRGET_AMT,
 		    t1.USER_REF_LVL AS USER_REF_LVL,
 		    t1.SYS_MEM_ID AS SYS_MEM_ID,
 		    t1.SYS_REF_CODE AS SYS_REF_CODE,
@@ -2563,6 +2565,7 @@
 		    CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
 		    CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
 	    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+	    LEFT JOIN CMM0003D t3 on t1.UPLOAD_ID = t3.UPLOAD_ID
 	    LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
 	    LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
 	    WHERE  t1.STUS_ID=1
@@ -3740,4 +3743,8 @@
                 </if>
         )   sub
    </select>
+
+   <select id="selectUploadTypeId" parameterType="Map" resultType="integer">
+        SELECT UPLOAD_TYPE_ID FROM CMM0003D WHERE UPLOAD_ID = #{uploadId}
+    </select>
 </mapper>
