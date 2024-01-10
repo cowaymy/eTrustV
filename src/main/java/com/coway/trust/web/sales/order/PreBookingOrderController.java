@@ -4,9 +4,12 @@
 package com.coway.trust.web.sales.order;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,9 +40,11 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.common.WhatappsApiService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.biz.sales.order.PreOrderService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.PreBookingOrderService;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -49,6 +56,7 @@ import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.Precondition;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -60,8 +68,11 @@ public class PreBookingOrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(PreBookingOrderController.class);
 
-	@Value("${web.resource.upload.file}")
-	private String uploadDir;
+	@Value("${watapps.api.country.code}")
+  private String waApiCountryCode;
+
+	 @Value("${watapps.api.button.webUrl.domains}")
+   private String waApiBtnUrlDomains;
 
 	@Resource(name = "preBookingOrderService")
 	private PreBookingOrderService preBookingOrderService;
@@ -78,8 +89,54 @@ public class PreBookingOrderController {
 	@Resource(name = "preOrderService")
   private PreOrderService preOrderService;
 
+  @Resource(name = "orderDetailService")
+  private OrderDetailService orderDetailService;
+
 	@Autowired
 	private AdaptorService adaptorService;
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private WhatappsApiService whatappsApiService;
+
+
+	@RequestMapping(value = "/preBookingWA.do", method = RequestMethod.GET)
+  public String preBookingWA(@RequestParam Map<String, Object> params, ModelMap model) {
+
+  logger.debug("==================== preBookingWA.do ====================");
+
+  Precondition.checkNotNull(params.get("nric"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "nric" }));
+  Precondition.checkNotNull(params.get("prebookno"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "prebookno" }));
+  Precondition.checkNotNull(params.get("salesOrdNoOld"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "salesOrdNoOld" }));
+  Precondition.checkNotNull(params.get("telno"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "telno" }));
+
+  String nric = ((String) params.get("nric"));
+  String prebookno = ((String) params.get("prebookno"));
+  String salesOrdNoOld = ((String) params.get("salesOrdNoOld"));
+  String telno = ((String) params.get("telno"));
+
+  EgovMap preBookOrderInfo = preBookingOrderService.selectPreBookOrdDtlWA(params);
+
+  Map<String, Object> preBookOrdInfoList = new HashMap<String, Object>();
+  String status = AppConstants.FAIL;
+
+  if(preBookOrderInfo != null){
+      preBookOrdInfoList.put("preBookId", preBookOrderInfo.get("preBookId").toString());
+      preBookOrdInfoList.put("prebookno", preBookOrderInfo.get("preBookNo").toString());
+      preBookOrdInfoList.put("custVerifyStus", "Y");
+      preBookOrdInfoList.put("updUserId", "349");
+
+      status = preBookingOrderService.updatePreBookOrderCustVerifyStus (preBookOrdInfoList);
+
+  }
+
+  logger.info("STATUS :: " + status);
+  model.addAttribute("status", status);
+
+  return "/sales/order/preBookingWARespond";
+}
 
 	@RequestMapping(value = "/preBookingOrderList.do")
 	public String preBookingOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
@@ -162,7 +219,8 @@ public class PreBookingOrderController {
 	 @RequestMapping(value = "/preBookOrderDetailPop.do")
 	  public String preBookOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
 	      throws Exception {
-	    // Search Pre Book Order Info
+
+	   // Search Pre Book Order Info
 	    EgovMap preBookOrderInfo = preBookingOrderService.selectPreBookingOrderInfo(params);
 
 	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -204,17 +262,78 @@ public class PreBookingOrderController {
   }
 
 	 @RequestMapping(value = "/registerPreBooking.do", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> registerPreBooking(@RequestBody PreBookingOrderVO preBookingOrderVO, HttpServletRequest request, Model model, SessionVO sessionVO)
+	  public ResponseEntity<ReturnMessage> registerPreBooking(@RequestBody PreBookingOrderVO preBookingOrderVO, Model model, SessionVO sessionVO)
 	      throws Exception {
+	    ReturnMessage message = new ReturnMessage();
+	    String msg = "";
+
 	    preBookingOrderService.insertPreBooking(preBookingOrderVO, sessionVO);
 	    String preBookingOrderNo = preBookingOrderVO.getPreBookOrdNo();
 
-	    String msg = "";
-	    msg += "Pre-Booking No : " + preBookingOrderNo+ "<br />";
+	    //call the whatapps API - send message
+	    Map<String, Object> preBookList = new HashMap();
+	    preBookList.put("salesOrderId", preBookingOrderVO.getSalesOrdIdOld());
 
-	    ReturnMessage message = new ReturnMessage();
-	    message.setCode(AppConstants.SUCCESS);
-	    message.setMessage(msg);
+	    EgovMap ordDtl = orderDetailService.selectOrderBasicInfo(preBookList, sessionVO);
+	    EgovMap basicInfo = (EgovMap)ordDtl.get("basicInfo");
+	    EgovMap mailingInfo = (EgovMap)ordDtl.get("mailingInfo");
+
+	    if(mailingInfo.get("mailCntTelM") == null){
+    	      msg +="Pre Booking Order Register Failed - Mailing Info - Mobile No is empty.";
+    	      message.setCode(AppConstants.FAIL);
+    	      message.setMessage(msg);
+	    }else{
+	         String telno = waApiCountryCode + mailingInfo.get("mailCntTelM");
+
+		        //message
+      	    Map<String, Object> msgMap = new HashMap();
+      	    msgMap.put("type", "wa_template");
+
+      	    //template
+      	    Map<String, Object> templateMap = new HashMap();
+      	    templateMap.put("template_name", "prebook_uat_04012024_2");
+      	    templateMap.put("language", "en");
+      	    msgMap.put("template", templateMap);
+
+      	    //data
+      	    Map<String, Object> dataMap = new HashMap();
+
+      	    //body_params
+      	    String[] bodyParams = new String[5];
+      	    bodyParams[0] = preBookingOrderNo;
+      	    bodyParams[1] = preBookingOrderVO.getSalesOrdNoOld();
+      	    bodyParams[2] = preBookingOrderVO.getPostCode();
+      	    bodyParams[3] = preBookingOrderVO.getMemCode();
+      	    bodyParams[4] = "3";
+      	    dataMap.put("body_params", bodyParams);
+
+      	    //buttons
+      	    Map<String, Object> buttonsMap = new HashMap();
+      	    String payload = "?nric="+ CommonUtils.nvl(basicInfo.get("custNric")) + "&prebookno=" + preBookingOrderNo + "&salesOrdNoOld=" + preBookingOrderVO.getSalesOrdNoOld()
+      	                            + "&telno=" + telno;
+      	    String type = waApiBtnUrlDomains + "sales/order/preBooking/preBookingWA.do?{{1}}";
+
+      	    buttonsMap.put("type", type);
+      	    buttonsMap.put("payload", payload);
+
+      	    List<Map<String, Object>> btnList = new ArrayList<>();
+            btnList.add(buttonsMap);
+      	    dataMap.put("buttons", btnList);
+
+      	    msgMap.put("data", dataMap);
+
+      	    //body
+            Map<String, Object> bodyMap = new HashMap();
+      	    bodyMap.put("platform", "whatsapp");
+      	    bodyMap.put("user_id", telno);
+      	    bodyMap.put("message", msgMap);
+
+      	    whatappsApiService.preBookWhatappsReqApi(bodyMap);
+
+      	    msg += "Pre-Booking No : " + preBookingOrderNo+ "<br />";
+      	    message.setCode(AppConstants.SUCCESS);
+      	    message.setMessage(msg);
+	    }
 
 	    return ResponseEntity.ok(message);
 	  }
@@ -292,4 +411,5 @@ public class PreBookingOrderController {
 
 	    return ResponseEntity.ok(result);
 	  }
+
 }

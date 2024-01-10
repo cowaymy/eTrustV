@@ -35,6 +35,10 @@ public interface PreBookingOrderService {
 
   EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 
+  public EgovMap selectPreBookOrdDtlWA(Map<String, Object> params);
+
+  public String updatePreBookOrderCustVerifyStus(Map<String, Object> params);
+
   EgovMap selectPreBookOrderEligibleCheck(Map<String, Object> params);
 
 }

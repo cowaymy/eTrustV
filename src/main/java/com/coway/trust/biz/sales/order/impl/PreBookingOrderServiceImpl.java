@@ -75,6 +75,11 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
   }
 
 	@Override
+  public EgovMap selectPreBookOrdDtlWA(Map<String, Object> params) {
+    return preBookingOrderMapper.selectPreBookOrdDtlWA(params);
+  }
+
+	@Override
 	public EgovMap checkOldOrderId(Map<String, Object> params){
 	  EgovMap RESULT = new EgovMap();
     int getOldOrderID = 0;
@@ -158,7 +163,8 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	       // INSERT INTO PRE-BOOK MASTER TABLE - SAL0404M
 	      preBookingOrderMapper.insertPreBooking(preBookingOrderVO);
 
-	       Map<String, Object> smsList = new HashMap<String, Object>();
+
+	  /* Map<String, Object> smsList = new HashMap<String, Object>();
 	      smsList.put("preBookNo", preBookingOrderVO.getPreBookOrdNo());
 	      smsList.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
 	      smsList.put("postCode", preBookingOrderVO.getPostCode());
@@ -172,6 +178,8 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Mailing Info - Mobile No is empty.");
 	      }
 
+	      preBookingOrderVO.setCustContactNumber(CommonUtils.nvl(mailingInfo.get("mailCntTelM")));
+
         SmsVO sms = new SmsVO(sessionVO.getUserId(), 976);
         sms.setMessage(CommonUtils.nvl(smsTemplate));
         sms.setMobiles(CommonUtils.nvl(mailingInfo.get("mailCntTelM")));
@@ -179,7 +187,7 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
         sms.setRefNo(CommonUtils.nvl(preBookingOrderVO.getPreBookOrdNo()));
 
         // SEND SMS TO CUSTOMER VIA VENDOR GI AND INSERT INTO SMS MASTER TABLE - MSC0015D
-        adaptorService.sendSMS4(sms);
+        adaptorService.sendSMS4(sms); */
 
         // Update customer marketing message status(universal between HC/HA)
         Map<String, Object> params1 = new HashMap();
@@ -214,6 +222,20 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	      throw new ApplicationException(AppConstants.FAIL, "Pre-Booking Update Failed.");
 	    }
 	    return rtnCnt;
+	  }
+
+
+	  @Override
+	  public String updatePreBookOrderCustVerifyStus(Map<String, Object> params){
+	     String rtnStatus = AppConstants.FAIL;
+	     int result = 0;
+
+	     result = preBookingOrderMapper.selectPreBookOrdById(params);
+	     if (result > 0) {
+	          preBookingOrderMapper.updatePreBookOrderCustVerifyStus(params);
+	          rtnStatus = AppConstants.SUCCESS;
+	     }
+	     return rtnStatus;
 	  }
 
 	  @Override
