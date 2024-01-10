@@ -120,7 +120,9 @@ public class ePRController {
 				model.put("openDecision", true);
 			}
 			List<EgovMap> spcMembers = ePRService.getSPCMembers();
-			if (finalApprv.get("memId").equals(new BigDecimal(sessionVO.getMemId()))) {
+			if (((List<EgovMap>) request.get("approvals")).stream().filter((a) -> {
+				return a.get("stus").equals("Pending");
+			}).count() == 1) {
 				EgovMap lastSPC = ((List<EgovMap>) request.get("approvals")).stream().filter((a) -> {
 					return a.get("seq").equals(new BigDecimal((((List<EgovMap>) request.get("approvals")).size() - 1)));
 				}).findFirst().get();

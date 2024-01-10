@@ -49,13 +49,11 @@ public class ePRServiceImpl implements ePRService {
 	public int ePRApproval(Map<String, Object> p) {
 		List<Integer> results = new ArrayList();
 		results.add(ePRMapper.ePRApproval(p));
-		if ((int) p.get("stus") == 6 || ePRMapper.getFinalApprv().get("memId").equals((new BigDecimal((String) p.get("memId"))))) {
+		EgovMap currentApprv = ePRMapper.getCurrApprv(p);
+		if (currentApprv == null) {
 			results.add(ePRMapper.updateRequestFinal(p));
-		} else {
-			EgovMap currentApprv = ePRMapper.getCurrApprv(p);
-			if (ePRMapper.getSPCMembers().stream().filter(spcMem -> spcMem.get("memId").toString().equals(currentApprv.get("memId"))).count() > 0) {
-				results.add(ePRMapper.updateRequestSPC(p));
-			}
+		} else if (ePRMapper.getSPCMembers().stream().filter(spcMem -> spcMem.get("memId").toString().equals(currentApprv.get("memId"))).count() > 0) {
+			results.add(ePRMapper.updateRequestSPC(p));
 		}
 		return results.stream().allMatch((i) -> i > 0) ? 1 : 0;
 	}

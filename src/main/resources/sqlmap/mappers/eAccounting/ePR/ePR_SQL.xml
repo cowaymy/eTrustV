@@ -356,10 +356,14 @@
     </update>
 
     <select id="getSPCMembers" resultType="egovMap">
-        SELECT MEM_ID, USER_NAME, MEM_CODE
-        FROM SYS0047M A
-        JOIN ORG0001D B ON B.MEM_CODE = A.HR_CODE
-        WHERE MEM_CODE IN ('P0018', 'P2217', 'P2098', 'P2513', 'P2135')
+        SELECT D.MEM_ID, C.USER_NAME, D.MEM_CODE
+		FROM SYS0044M A
+		LEFT JOIN SYS0045M B ON A.ROLE_ID = B.ROLE_ID
+		LEFT JOIN SYS0047M C ON C.USER_ID = B.USER_ID
+		LEFT JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
+		WHERE B.USER_ID IS NOT NULL
+		START WITH A.ROLE_ID = 509
+		CONNECT BY PRIOR A.ROLE_ID = PARENT_ROLE
     </select>
 
     <select id="getMemberEmail" resultType="String" parameterType="map">
