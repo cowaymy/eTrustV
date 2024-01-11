@@ -29,6 +29,7 @@
   var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
   var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
   var custStatusId = "${orderDetail.basicInfo.custStatusId}";
+  var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
 
   var myFileCaches = {};
   var atchFileGrpId = 0;
@@ -54,6 +55,13 @@
 
     doDefCombo(codeList_562, '0', 'voucherTypeAexc', 'S', 'displayVoucherSectionAexc');    // Voucher Type Code
     doDefCombo(codeList_562, '0', 'voucherTypePrdEx', 'S', 'displayVoucherSectionPrdEx');    // Voucher Type Code
+
+    if(salesOrdIdOld != null || salesOrdIdOld != ''){
+    	checkExtradePreBookEligible(CUST_ID,salesOrdIdOld);
+    }else{
+    	$('#hiddenPreBook').val('0');
+    	$('#hiddenMonthExpired').val('0');
+    }
 
     if (FormUtil.isNotEmpty(TAB_NM)) {
       <c:if test="${callCenterYn != 'Y'}">
@@ -1367,6 +1375,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         srvPacId : $("#srvPacIdAexc").val()
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: custStatusId
+        ,preBook : $('#hiddenPreBook').val()
       }, '', 'cmbPromotionAexc', 'S', 'fn_setDefaultPromotionAexc'); //Common Code
     }
     else {
@@ -1379,6 +1388,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         srvPacId : $("#srvPacIdAexc").val()
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: custStatusId
+        ,preBook : $('#hiddenPreBook').val()
       }, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
     }
   }
@@ -1398,6 +1408,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         srvPacId : srvPacId
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: custStatusId
+        ,preBook : $('#hiddenPreBook').val()
       }, '', 'cmbPromotion', 'S', 'voucherPromotionCheckPrdEx'); //Common Code
     }
     else {
@@ -1410,6 +1421,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         srvPacId : srvPacId
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: custStatusId
+        ,preBook : $('#hiddenPreBook').val()
       }, '', 'cmbPromotion', 'S', 'voucherPromotionCheckPrdEx'); //Common Code
     }
   }
@@ -3567,6 +3579,18 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         }
       }
 	}
+
+  function checkExtradePreBookEligible(custId,salesOrdIdOld){
+	   Common.ajax("GET", "/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+		   if(result == null){
+			   $('#hiddenPreBook').val('0');
+			   $('#hiddenMonthExpired').val('0');
+			   }else{
+			   $('#hiddenPreBook').val('1');
+			   $('#hiddenMonthExpired').val(result.monthExpired);
+			   }
+	   });
+ }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -4087,7 +4111,10 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                       <th scope="row"><spring:message code="sales.extrade" /><span class="must blind">*</span></th>
                       <td>
                         <p><select id="exTradeAexc" name="exTrade" class="w100p"></select></p>
-                        <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+                        <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly />
+                        </p>
+                        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+        				<input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
                       </td>
                     </tr>
                     <tr>
