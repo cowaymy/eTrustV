@@ -238,8 +238,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     			String data = commonApiService.decodeJson(request);
     			Gson g = new Gson();
     			OrderListReqForm reqParameter = g.fromJson(data, OrderListReqForm.class);
-
-    			if(reqParameter.getCustId() < 0){
+    			System.out.print("reqParameter aaa " + CommonUtils.intNvl(reqParameter.getCustId()));
+    			if(CommonUtils.intNvl(reqParameter.getCustId()) < 0){
     				resultValue.put("success", false);
     				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     				resultValue.put("message", "Customer ID is required");
