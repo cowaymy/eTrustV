@@ -2647,7 +2647,7 @@ var userType = '${SESSION_INFO.userTypeId}';
       		if(memInfo == null) {
                   //Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
                   isExist = false;
-                  Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>",btnCnfmOrderClose.click());
+                  Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>");
                   $('#aTabOI').click();
               }else {
               	isExist = true;
@@ -2664,7 +2664,7 @@ var userType = '${SESSION_INFO.userTypeId}';
       		if(memInfo == null) {
                   //Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
                   isExist = false;
-                  Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>",btnCnfmOrderClose.click());
+                  Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Your input member code : "+ memCode +" is not allowed for extrade pre-order.</b>");
                   $('#aTabOI').click();
               } else {
               	isExist = true;
