@@ -3000,24 +3000,6 @@ public void dataMartReport(HttpServletRequest request) {
 
 @RequestMapping(value = "/InboundGenPdf.do")
 //@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
-public void InboundGenPdf(Map<String, Object> param) {
-  LOGGER.info("[START] InboundGenPdf...");
-  Map<String, Object> params = new HashMap<>();
-  params.put(REPORT_FILE_NAME, param.get("rptName").toString());// visualcut
-                                                                         // rpt
-                                                                         // file name.
-  params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-  params.put("V_TEMP", "TEMP");
-  params.put("v_statementID", param.get("stateId").toString());
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "Chatbot Inbound" + File.separator + param.get("fileName").toString());//pdf
-
-  this.viewProcedure(null, null, params);
-  LOGGER.info("[END] InboundGenPdf...");
-}
-
-@RequestMapping(value = "/InboundGenPdf1.do")
-//@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
 public void InboundGenPdf1(@RequestParam Map<String, Object> param) throws Exception {
 LOGGER.info("[START] InboundGenPdf...");
 ObjectMapper mapper = new ObjectMapper();
