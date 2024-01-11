@@ -42,6 +42,7 @@
     var anoOrdId = "${hcOrder.anoOrdId}";
     var isComToPEX = "${isComToPEX}";
     var custStatusId = "${orderDetail.basicInfo.custStatusId}";
+    var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
     var chgPromoNum = '';
 
     var myFileCaches = {};
@@ -69,6 +70,14 @@
 // </c:if>
 //             fn_changeTab(TAB_NM);
 //         }
+
+        if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(CUST_ID,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        	$('#hiddenMonthExpired').val('0');
+        }
+
         doDefCombo(codeList_562, '0', 'voucherTypeAexc', 'S', 'displayVoucherSectionAexc');    // Voucher Type Code
         doDefCombo(codeList_562, '0', 'voucherTypePrdEx', 'S', 'displayVoucherSectionPrdEx');    // Voucher Type Code
 
@@ -1296,9 +1305,9 @@
         if(appTypeVal == '' || exTrade == '') return;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId ,preBook : $('#hiddenPreBook').val()}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), voucherPromotion: voucherAppliedStatus,custStatus: custStatusId ,preBook : $('#hiddenPreBook').val()}, '', 'cmbPromotionAexc', 'S','voucherPromotionCheckAexc'); //Common Code
         }
     }
 
@@ -1311,9 +1320,9 @@
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId ,preBook : $('#hiddenPreBook').val()}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId ,preBook : $('#hiddenPreBook').val()}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         }
     }
 
@@ -3018,6 +3027,18 @@
 	          }
 	        }
 	  	}
+
+	    function checkExtradePreBookEligible(custId,salesOrdIdOld){
+	 	   Common.ajax("GET", "/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+	 		   if(result == null){
+	 			   $('#hiddenPreBook').val('0');
+	 			   $('#hiddenMonthExpired').val('0');
+	 			   }else{
+	 			   $('#hiddenPreBook').val('1');
+	 			   $('#hiddenMonthExpired').val(result.monthExpired);
+	 			   }
+	 	   });
+	  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -3467,7 +3488,10 @@
     </td>
     <th scope="row"><spring:message code="sales.extrade" /><span class="must blind">*</span></th>
     <td><p><select id="exTradeAexc" name="exTrade" class="w100p"></select></p>
-        <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+        <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
+        <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
+        </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.product" /><span class="must">*</span></th>
