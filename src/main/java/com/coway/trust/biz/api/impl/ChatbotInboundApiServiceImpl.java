@@ -264,6 +264,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     			// Get customer info
     			int isCustExist = chatbotInboundApiMapper.isCustExist(params);
 
+    			LOGGER.debug("isCustExist :" + isCustExist);
     			if(isCustExist > 0){
 
 
@@ -305,6 +306,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		}catch(Exception ex){
 			resultValue.put("success",false);
+			ex.printStackTrace();
 			LOGGER.error(">>> Exception :" + ex);
 		}finally{
     		stopWatch.stop();
