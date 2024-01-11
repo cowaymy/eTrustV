@@ -305,6 +305,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		}catch(Exception ex){
 			resultValue.put("success",false);
+			LOGGER.error(">>> Exception :" + ex);
 		}finally{
     		stopWatch.stop();
     		respTm = stopWatch.toString();
@@ -503,7 +504,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     		resultValue.put("message", params.get("message"));
 
 		}catch(Exception ex){
-			LOGGER.debug(">>> Exception :" + ex);
+			LOGGER.error(">>> Exception :" + ex);
 			resultValue.put("message", ex.getMessage() != null ? ex.getMessage() : "");
 		}finally{
     		stopWatch.stop();
@@ -531,6 +532,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	@Override
 	public void update_chatbot(Map<String, Object> params) throws Exception {
 		//update CBT0006M when success generated PDF
+		params.put("stusUpdate", 4);
 		chatbotInboundApiMapper.update_CBT0006M_Stus(params);
 
 		//Insert email table for schedular batch run

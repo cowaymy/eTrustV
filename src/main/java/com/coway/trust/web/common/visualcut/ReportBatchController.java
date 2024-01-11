@@ -3044,10 +3044,8 @@ if(emailListToSend.size() > 0){
 
         pdfMap.put(AppConstants.REPORT_DOWN_FILE_NAME,
                 "/Chatbot Inbound" + File.separator + info.get("fileName").toString());//pdf
-//        pdfMap.putAll(param);
         this.viewProcedure(null, null, pdfMap);
 
-		info.put("stusUpdate", 4);
 		info.putAll(pdfMap);
 		chatbotInboundApiService.update_chatbot(info);
 	}
