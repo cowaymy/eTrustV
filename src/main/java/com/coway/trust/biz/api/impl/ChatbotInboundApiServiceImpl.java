@@ -505,6 +505,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		}catch(Exception ex){
 			LOGGER.error(">>> Exception :" + ex);
+			ex.printStackTrace();
 			resultValue.put("message", ex.getMessage() != null ? ex.getMessage() : "");
 		}finally{
     		stopWatch.stop();
