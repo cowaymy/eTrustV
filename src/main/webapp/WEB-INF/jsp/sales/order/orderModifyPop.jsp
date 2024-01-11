@@ -36,6 +36,7 @@
   var PV_YEAR = "${ordPvYear}";
   var CUST_TYPE_ID = "${typeId}";
   var SOF_NO = "${orderDetail.basicInfo.ordRefNo}";
+  var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
   var myFileCaches = {};
   let editInstallAccess= $("#editInstallAccess").val();
 
@@ -63,6 +64,7 @@
   </c:forEach>
 
   $(document).ready(
+
     function() {
       document.querySelectorAll("#agreement label").forEach(label => {
                 label.onclick = () => {
@@ -75,11 +77,17 @@
                 }
       });
 
+      if(salesOrdIdOld != null || salesOrdIdOld != ''){
+      	checkExtradePreBookEligible(CUST_ID,salesOrdIdOld);
+      }else{
+      	$('#hiddenPreBook').val('0');
+      	$('#hiddenMonthExpired').val('0');
+      }
+
       if ("${memType}" == "2") {
         TAB_NM = 'CNT';
         $("#ordEditType").prop("disabled", true);
       }
-
 
       var paramGrpCode;
       if(ROLE_ID =="345" || ROLE_ID =="346" || ROLE_ID =="349" || ROLE_ID =="350"|| ROLE_ID =="351"|| ROLE_ID =="352"){
@@ -1428,14 +1436,6 @@
                 var custTypeVal = basicInfo.custTypeId;
                 var empChk = basicInfo.empChk;
                 var exTrade = basicInfo.exTrade;
-                var custId = basicInfo.custId;
-                var salesOrdIdOld = basicInfo.salesOrdIdOld;
-                if(salesOrdIdOld != null || salesOrdIdOld != ''){
-                	checkExtradePreBookEligible(custId,salesOrdIdOld);
-                }else{
-                	$('#hiddenPreBook').val('0');
-                	$('#hiddenMonthExpired').val('0');
-                }
 
                 $('#prdName').text(
                     '(' + basicInfo.stockCode + ') '
