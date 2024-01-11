@@ -224,6 +224,7 @@
 		AND T1.CUST_ID = #{custId}
 		AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
 		AND T1.CUST_VERIFY_STUS NOT IN ('N','ACT')
+		AND T1.STUS_ID NOT IN (10)
 		<![CDATA[
 		AND ROWNUM <= 1
 		]]>
