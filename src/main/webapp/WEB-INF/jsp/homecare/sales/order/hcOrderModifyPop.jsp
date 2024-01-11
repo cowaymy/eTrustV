@@ -19,6 +19,7 @@
     var PV_YEAR = "${ordPvYear}";
     var CUST_TYPE_ID = "${typeId}";
     var STK_ID = "${stkId}";
+    var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
 
     var keyValueList = [];
     var modDocGridID;
@@ -44,6 +45,14 @@
     };
 
     $(document).ready(function() {
+
+    	if(salesOrdIdOld != null || salesOrdIdOld != ''){
+        	checkExtradePreBookEligible(CUST_ID,salesOrdIdOld);
+        }else{
+        	$('#hiddenPreBook').val('0');
+        	$('#hiddenMonthExpired').val('0');
+        }
+
         if ("${memType}" == "2") {
             TAB_NM = 'CNT';
             $("#ordEditType").prop("disabled", true);
@@ -1319,16 +1328,6 @@
                 var custTypeVal = basicInfo.custTypeId;
                 var empChk = basicInfo.empChk;
                 var exTrade = basicInfo.exTrade;
-
-                var custId = basicInfo.custId;
-                var salesOrdIdOld = basicInfo.salesOrdIdOld;
-
-                if(salesOrdIdOld != null || salesOrdIdOld != ''){
-                	checkExtradePreBookEligible(custId,salesOrdIdOld);
-                }else{
-                	$('#hiddenPreBook').val('0');
-                	$('#hiddenMonthExpired').val('0');
-                }
 
                 $('#prdName').text('(' + basicInfo.stockCode + ') ' + basicInfo.stockDesc);
                 $('#ordPrice').val(basicInfo.ordAmt);
