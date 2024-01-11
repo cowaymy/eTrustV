@@ -126,7 +126,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       // INSERT INTO SMS TABLE - MSC0015D
       //smsMapper.insertSmsEntry(smsEntry);
 
-      SmsVO sms = new SmsVO(sessionVO.getUserId(), 975);
+   /*   SmsVO sms = new SmsVO(sessionVO.getUserId(), 975);
 
       smsEntry.put("preBookNo", preBookingOrderVO.getPreBookOrdNo());
       smsEntry.put("salesOrdNoOld", preBookingOrderVO.getSalesOrdNoOld());
@@ -147,6 +147,7 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
       sms.setRefNo(CommonUtils.nvl(preBookingOrdNo));
       adaptorService.sendSMS4(sms);
 
+*/
 
       // Update customer marketing message status(universal between HC/HA)
       Map<String, Object> params1 = new HashMap();
@@ -281,4 +282,8 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     return hcPreBookingOrderMapper.selectPreBookConfigurationPerson(params);
   }
 
+  @Override
+  public EgovMap selectPreBookOrdDtlWA(Map<String, Object> params) {
+    return hcPreBookingOrderMapper.selectPreBookOrdDtlWA(params);
+  }
 }

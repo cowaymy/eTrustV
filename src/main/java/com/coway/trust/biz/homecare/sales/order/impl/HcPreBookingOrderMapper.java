@@ -38,4 +38,6 @@ public interface HcPreBookingOrderMapper {
 
 	String getHcPreBookSmsTemplate(Map<String, Object> params);
 
+  EgovMap selectPreBookOrdDtlWA(Map<String, Object> params);
+
 }

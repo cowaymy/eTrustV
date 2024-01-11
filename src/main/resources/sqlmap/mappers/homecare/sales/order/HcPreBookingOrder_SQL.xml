@@ -334,4 +334,56 @@
 		FROM DUAL
 	</select>
 
+    <select id="selectPreBookOrdDtlWA" parameterType="Map" resultType="egovMap">
+      SELECT
+        T1.PRE_BOOK_ID ,
+        T1.PRE_BOOK_NO ,
+        TO_CHAR(T1.PRE_BOOK_DT, 'DD/MM/YYYY') AS PRE_BOOK_DT ,
+        T1.CUST_VERIFY_STUS ,
+        T1.MEM_CODE ,
+        T1.CUST_ID ,
+        T2.NAME AS CUST_NAME ,
+        T10.TEL_M1 AS MOBILE_NO,
+        T1.SALES_ORD_ID_OLD ,
+        T3.STK_DESC ,
+        T4.SALES_ORD_NO ,
+        T5.ITM_STK_ID,
+        T6.STK_DESC AS PREV_STK_DESC ,
+        T7.CODE AS STUS_CODE,
+        T1.UPD_DT,
+        T1.DISC_WAIVE,
+        TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
+        FROM SAL0404M T1
+        LEFT JOIN SAL0029D T2 ON T1.CUST_ID = T2.CUST_ID
+        JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
+        LEFT JOIN SAL0001D T4 ON T1.SALES_ORD_ID_OLD = T4.SALES_ORD_ID
+        LEFT JOIN SAL0002D T5 ON T4.SALES_ORD_ID = T5.SALES_ORD_ID
+        LEFT JOIN SYS0026M T6 ON T5.ITM_STK_ID = T6.STK_ID
+        LEFT JOIN SYS0038M T7 ON T1.STUS_ID = T7.STUS_CODE_ID
+        LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
+        LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
+        LEFT JOIN SAL0027D T10 ON T10.CUST_CNTC_ID = T4.CUST_CNT_ID AND T10.CUST_ID = T4.CUST_ID
+        WHERE 1=1
+        AND T3.STK_CTGRY_ID  IN (SELECT AA.CODE_ID
+                                               FROM SYS0013M AA, SYS0094M BB
+                                               WHERE AA.CODE = BB.CODE
+                                                AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+        <![CDATA[
+        AND TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) <= 3
+        AND T1.STUS_ID = 1
+        AND T1.CUST_VERIFY_STUS <> 'N'
+        ]]>
+        AND T4.STUS_CODE_ID = 4
+       <if test='prebookno != null and prebookno != ""'>
+            AND T1.PRE_BOOK_NO = #{prebookno}
+       </if>
+       <if test='salesOrdNoOld != null and salesOrdNoOld !=""'>
+            AND T4.SALES_ORD_NO = #{salesOrdNoOld}
+       </if>
+       <if test='telno != null and telno !=""'>
+           AND T10.TEL_M1 = SUBSTR(#{telno},2)
+       </if>
+        ORDER BY T1.PRE_BOOK_ID ASC
+  </select>
+
 </mapper>

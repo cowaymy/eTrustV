@@ -47,4 +47,6 @@ public interface HcPreBookingOrderService {
 
 	EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 
+	public EgovMap selectPreBookOrdDtlWA(Map<String, Object> params);
+
 }

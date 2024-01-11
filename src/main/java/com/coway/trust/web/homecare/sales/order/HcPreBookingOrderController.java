@@ -1,6 +1,7 @@
 package com.coway.trust.web.homecare.sales.order;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,11 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.WhatappsApiService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
-//import com.coway.trust.biz.sales.order.PreBookingOrderService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.impl.PreOrderServiceImpl;
 import com.coway.trust.biz.sales.order.vo.PreBookingOrderVO;
@@ -32,6 +37,7 @@ import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
 import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -50,6 +56,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class HcPreBookingOrderController {
   private static Logger logger = LoggerFactory.getLogger(PreOrderServiceImpl.class);
 
+  @Value("${watapps.api.country.code}")
+  private String waApiCountryCode;
+
+   @Value("${watapps.api.button.webUrl.domains}")
+   private String waApiBtnUrlDomains;
+
   @Resource(name = "salesCommonService")
   private SalesCommonService salesCommonService;
 
@@ -59,14 +71,20 @@ public class HcPreBookingOrderController {
   @Resource(name = "hcPreBookingOrderService")
   private HcPreBookingOrderService hcPreBookingOrderService;
 
-/*  @Resource(name = "preBookingOrderService")
-  private PreBookingOrderService preBookingOrderService;
-*/
   @Resource(name = "hcOrderListService")
   private HcOrderListService hcOrderListService;
 
   @Resource(name = "preOrderService")
   private PreOrderService preOrderService;
+
+  @Resource(name = "orderDetailService")
+  private OrderDetailService orderDetailService;
+
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private WhatappsApiService whatappsApiService;
 
   // Homecare Pre OrderList
   @RequestMapping(value = "/hcPreBookingOrderList.do")
@@ -187,14 +205,76 @@ public class HcPreBookingOrderController {
   public ResponseEntity<ReturnMessage> registerHcPreBookingOrder(@RequestBody PreBookingOrderVO preBookingOrderVO,
       SessionVO sessionVO) throws Exception {
 
+    ReturnMessage message = new ReturnMessage();
+    String msg = "";
+
     hcPreBookingOrderService.registerHcPreBookingOrder(preBookingOrderVO, sessionVO);
     String preBookingOrderNo = preBookingOrderVO.getPreBookOrdNo();
 
-    String msg = "Pre-Booking Order No : " + preBookingOrderNo + ".<br />";
+    //call the whatapps API - send message
+    Map<String, Object> preBookList = new HashMap();
+    preBookList.put("salesOrderId", preBookingOrderVO.getSalesOrdIdOld());
 
-    ReturnMessage message = new ReturnMessage();
-    message.setCode(AppConstants.SUCCESS);
-    message.setMessage(msg);
+    EgovMap ordDtl = orderDetailService.selectOrderBasicInfo(preBookList, sessionVO);
+    EgovMap basicInfo = (EgovMap)ordDtl.get("basicInfo");
+    EgovMap mailingInfo = (EgovMap)ordDtl.get("mailingInfo");
+
+    if(mailingInfo.get("mailCntTelM") == null){
+          msg +="Pre Booking Order Register Failed - Mailing Info - Mobile No is empty.";
+          message.setCode(AppConstants.FAIL);
+          message.setMessage(msg);
+    }else{
+         String telno = waApiCountryCode + mailingInfo.get("mailCntTelM");
+
+          //message
+          Map<String, Object> msgMap = new HashMap();
+          msgMap.put("type", "wa_template");
+
+          //template
+          Map<String, Object> templateMap = new HashMap();
+          templateMap.put("template_name", "prebook_uat_04012024_2");
+          templateMap.put("language", "en");
+          msgMap.put("template", templateMap);
+
+          //data
+          Map<String, Object> dataMap = new HashMap();
+
+          //body_params
+          String[] bodyParams = new String[5];
+          bodyParams[0] = preBookingOrderNo;
+          bodyParams[1] = preBookingOrderVO.getSalesOrdNoOld();
+          bodyParams[2] = preBookingOrderVO.getPostCode();
+          bodyParams[3] = preBookingOrderVO.getMemCode();
+          bodyParams[4] = "3";
+          dataMap.put("body_params", bodyParams);
+
+          //buttons
+          Map<String, Object> buttonsMap = new HashMap();
+          String payload = "?nric="+ CommonUtils.nvl(basicInfo.get("custNric")) + "&prebookno=" + preBookingOrderNo + "&salesOrdNoOld=" + preBookingOrderVO.getSalesOrdNoOld()
+                                  + "&telno=" + telno + "&isHomeCare=true";
+          String type = waApiBtnUrlDomains + "sales/order/preBooking/preBookingWA.do?{{1}}";
+
+          buttonsMap.put("type", type);
+          buttonsMap.put("payload", payload);
+
+          List<Map<String, Object>> btnList = new ArrayList<>();
+          btnList.add(buttonsMap);
+          dataMap.put("buttons", btnList);
+
+          msgMap.put("data", dataMap);
+
+          //body
+          Map<String, Object> bodyMap = new HashMap();
+          bodyMap.put("platform", "whatsapp");
+          bodyMap.put("user_id", telno);
+          bodyMap.put("message", msgMap);
+
+          whatappsApiService.preBookWhatappsReqApi(bodyMap);
+
+          msg += "Pre-Booking Order No : " + preBookingOrderNo+ "<br />";
+          message.setCode(AppConstants.SUCCESS);
+          message.setMessage(msg);
+    }
 
     return ResponseEntity.ok(message);
   }

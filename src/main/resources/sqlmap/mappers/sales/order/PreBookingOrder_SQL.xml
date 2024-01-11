@@ -345,9 +345,9 @@
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
         <![CDATA[
         AND TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) <= 3
-        ]]>
         AND T1.STUS_ID = 1
-        AND T1.CUST_VERIFY_STUS = 'ACT'
+        AND T1.CUST_VERIFY_STUS <> 'N'
+        ]]>
         AND T4.STUS_CODE_ID = 4
        <if test='prebookno != null and prebookno != ""'>
             AND T1.PRE_BOOK_NO = #{prebookno}

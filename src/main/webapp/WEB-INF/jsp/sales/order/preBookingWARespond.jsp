@@ -111,37 +111,24 @@ table {
     font-family:Avenir;
     color:#FFFFFF;
 }
+
+.image-container{
+   aspect-ratio: 16 / 9; /* Set the desired aspect ratio */
+}
 </style>
 
 <div id="respondPage" class="respondPage">
     <!-- content start -->
        <input type="hidden" id="clientIp" name="clientIp" value=""/>
-       <!--   <div style="padding-top: 10px;">
-            <img id="logo" width="200px" src="${pageContext.request.contextPath}/resources/images/common/Coway Logo_white-01.png"/>
-        </div> -->
         <div id="divFail" style="padding-top: 1%; padding-left: 5%; padding-right: 5%; display:none">
-             <!--  <div class="logo">
-                <h2>Thank you Message</h2>
-            </div>-->
             <div class="container">
                 <table id="respTable" style="border: none;">
                     <tbody>
-                      <!--  <tr>
-                            <td colspan="2" style="font-size:large;"></td>
-                        </tr>
-                        <br/> -->
                         <tr>
                             <td>
-                                   <span>
-                                        <img id="failedMsg" width="100%"  height="100%" src="${pageContext.request.contextPath}/resources/images/common/whatapp_template/thank_you_message_failed.jpg"/>
+                                   <span class="image-container">
+                                        <img id="failedMsg" width="100%"  height="100%"  src="${pageContext.request.contextPath}/resources/images/common/whatapp_template/thank_you_message_failed.jpg"/>
                                    </span>
-                                   <!--<span>Sorry, your Extrade Pre Booking request had expired.</span>
-                                    <br/>
-                                    <span>Our policy requires responses within 3 days.</span>
-                                    <br/>
-                                    <span>Please contact your Cody for pre Booking request again.</span>
-                                    <br/>
-                                    <span>Thank you.</span>  -->
                             </td>
                         </tr>
                     </tbody>
@@ -153,24 +140,14 @@ table {
         </div>
 
         <div id="divSuccess" style="padding-top: 1%; padding-left: 5%; padding-right: 5%; display:none">
-            <div class="logo">
-                <!--  <h2>Thank you Message</h2> -->
-            </div>
             <div class="container">
                 <table id="respTable" style="border: none;">
                     <tbody>
-                        <tr>
-                            <td colspan="2" style="font-size:large;"></td>
-                        </tr>
-                        <br/>
-                        <tr>
+                       <tr>
                             <td>
-                               <span>
+                               <span class="image-container">
                                   <img id="successMsg" width="100%" height="100%" src="${pageContext.request.contextPath}/resources/images/common/whatapp_template/thank_you_message.jpg"/>
                                 </span>
-                                   <!--<span>Thank you for choosing Coway!</span>
-                                   <br/>
-                                   <span>Your Extrade Pre Booking for this order SUCCEED</span>-->
                             </td>
                         </tr>
                      </tbody>

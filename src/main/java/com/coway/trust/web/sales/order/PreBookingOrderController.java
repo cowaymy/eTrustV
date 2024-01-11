@@ -41,6 +41,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.common.WhatappsApiService;
+import com.coway.trust.biz.homecare.sales.order.HcPreBookingOrderService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.biz.sales.order.PreOrderService;
@@ -77,6 +78,9 @@ public class PreBookingOrderController {
 	@Resource(name = "preBookingOrderService")
 	private PreBookingOrderService preBookingOrderService;
 
+	@Resource(name = "hcPreBookingOrderService")
+  private HcPreBookingOrderService hcPreBookingOrderService;
+
 	@Autowired
 	private PreOrderApplication preOrderApplication;
 
@@ -111,28 +115,38 @@ public class PreBookingOrderController {
   Precondition.checkNotNull(params.get("prebookno"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "prebookno" }));
   Precondition.checkNotNull(params.get("salesOrdNoOld"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "salesOrdNoOld" }));
   Precondition.checkNotNull(params.get("telno"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "telno" }));
+  Precondition.checkNotNull(params.get("isHomeCare"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "isHomeCare" }));
 
   String nric = ((String) params.get("nric"));
   String prebookno = ((String) params.get("prebookno"));
   String salesOrdNoOld = ((String) params.get("salesOrdNoOld"));
   String telno = ((String) params.get("telno"));
+  String isHomeCare = ((String) params.get("isHomeCare"));
 
-  EgovMap preBookOrderInfo = preBookingOrderService.selectPreBookOrdDtlWA(params);
+  EgovMap preBookOrderInfo = null;
+
+  if(isHomeCare.equals("false")){
+       preBookOrderInfo = preBookingOrderService.selectPreBookOrdDtlWA(params);
+  }else{
+       preBookOrderInfo = hcPreBookingOrderService.selectPreBookOrdDtlWA(params);
+  }
 
   Map<String, Object> preBookOrdInfoList = new HashMap<String, Object>();
   String status = AppConstants.FAIL;
 
   if(preBookOrderInfo != null){
-      preBookOrdInfoList.put("preBookId", preBookOrderInfo.get("preBookId").toString());
-      preBookOrdInfoList.put("prebookno", preBookOrderInfo.get("preBookNo").toString());
-      preBookOrdInfoList.put("custVerifyStus", "Y");
-      preBookOrdInfoList.put("updUserId", "349");
+      if(Integer.parseInt(preBookOrderInfo.get("preBookPeriod").toString()) <= 3 && preBookOrderInfo.get("custVerifyStus").toString().equals("ACT")){
+          preBookOrdInfoList.put("preBookId", preBookOrderInfo.get("preBookId").toString());
+          preBookOrdInfoList.put("prebookno", preBookOrderInfo.get("preBookNo").toString());
+          preBookOrdInfoList.put("custVerifyStus", "Y");
+          preBookOrdInfoList.put("updUserId", "349");
 
-      status = preBookingOrderService.updatePreBookOrderCustVerifyStus (preBookOrdInfoList);
-
+          status = preBookingOrderService.updatePreBookOrderCustVerifyStus(preBookOrdInfoList);
+       } else if(Integer.parseInt(preBookOrderInfo.get("preBookPeriod").toString()) <= 3 && preBookOrderInfo.get("custVerifyStus").toString().equals("Y")){
+             status = AppConstants.SUCCESS;
+       }
   }
-
-  logger.info("STATUS :: " + status);
+  logger.info("[PreBookingOrderController - preBookingWA] STATUS :: " + status);
   model.addAttribute("status", status);
 
   return "/sales/order/preBookingWARespond";
@@ -310,7 +324,7 @@ public class PreBookingOrderController {
       	    //buttons
       	    Map<String, Object> buttonsMap = new HashMap();
       	    String payload = "?nric="+ CommonUtils.nvl(basicInfo.get("custNric")) + "&prebookno=" + preBookingOrderNo + "&salesOrdNoOld=" + preBookingOrderVO.getSalesOrdNoOld()
-      	                            + "&telno=" + telno;
+      	                            + "&telno=" + telno + "&isHomeCare=false";
       	    String type = waApiBtnUrlDomains + "sales/order/preBooking/preBookingWA.do?{{1}}";
 
       	    buttonsMap.put("type", type);
