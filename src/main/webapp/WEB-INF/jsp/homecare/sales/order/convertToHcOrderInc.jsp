@@ -377,7 +377,7 @@
 	}
 
 	function checkExtradePreBookEligible(custId,salesOrdIdOld){
-		   Common.ajax("GET", "/homecare/sales/order/preBooking/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+		   Common.ajax("GET", "/homecare/sales/order/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
 			   if(result == null){
 				   $('#hiddenPreBook').val('0');
 				   }else{
