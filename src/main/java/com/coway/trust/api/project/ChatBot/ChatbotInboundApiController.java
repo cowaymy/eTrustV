@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
+import com.coway.trust.biz.api.vo.chatbotInbound.GetOtdReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.GetPayModeReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.VerifyCustIdentityReqForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -35,7 +37,6 @@ public class ChatbotInboundApiController {
 	@ApiOperation(value = "/verifyCustIdentity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/verifyCustIdentity", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> verifyCustIdentity(HttpServletRequest request, @ModelAttribute VerifyCustIdentityReqForm params) throws Exception {
-//		public ResponseEntity<EgovMap> verifyCustIdentity(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
 		return ResponseEntity.ok(chatbotInboundApiService.verifyCustIdentity(request, params));
 	}
 
@@ -53,13 +54,13 @@ public class ChatbotInboundApiController {
 
 	@ApiOperation(value = "/getPaymentMode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/getPaymentMode", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> getPaymentMode(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
+	public ResponseEntity<EgovMap> getPaymentMode(HttpServletRequest request,@ModelAttribute GetPayModeReqForm params) throws Exception {
 		return ResponseEntity.ok(chatbotInboundApiService.getPaymentMode(request, params));
 	}
 
 	@ApiOperation(value = "/getOtd", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/getOtd", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> getOtd(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
+	public ResponseEntity<EgovMap> getOtd(HttpServletRequest request,@ModelAttribute GetOtdReqForm params) throws Exception {
 		return ResponseEntity.ok(chatbotInboundApiService.getOtd(request, params));
 	}
 

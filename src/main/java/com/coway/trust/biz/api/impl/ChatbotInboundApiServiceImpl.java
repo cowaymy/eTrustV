@@ -123,8 +123,6 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public EgovMap verifyCustIdentity(HttpServletRequest request, VerifyCustIdentityReqForm param) throws Exception {
-//		public EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception {
-		LOGGER.debug(">>> file Name >>> ChatbotInboundApiServiceImpl :: verifyCustIdentity");
 
 	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
@@ -139,37 +137,14 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     	    EgovMap authorize = verifyBasicAuth(request);
 
-    	    LOGGER.debug(">>> authorize >>> " + authorize);
-    	    LOGGER.debug(">>> authorize code >>> " + authorize.get("code").toString());
-//    	    LOGGER.debug(">>> request >>> " + request);
-    	    LOGGER.debug(">>> params >>> " + param);
-
     	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
     	    	// Check phone number whether exist or not
-//    	    	String data = commonApiService.decodeJson(request);
-//    	    	Gson g = new Gson();
-//    	    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
-
-
-//    	    	LOGGER.debug(">>> data >>> " + data);
-//    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm >>> " + reqParameter);
-//    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: GetCustPhoneNo >>> " + reqParameter.getCustPhoneNo());
-
-//    	    	if(CommonUtils.isEmpty(reqParameter.getCustPhoneNo())){
-//    	    		resultValue.put("success", false);
-//    	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-//    	    		resultValue.put("message", "Customer phone number is required");
-//    	    		return resultValue;
-//    	    	}
-
     	    	if(CommonUtils.isEmpty(param.getCustPhoneNo())){
     	    		resultValue.put("success", false);
     	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     	    		resultValue.put("message", "Customer phone number is required");
     	    		return resultValue;
     	    	}
-
-    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: custPhoneNo >>> " + param.getCustPhoneNo().toString());
 
     	   	    String custPhoneNo = param.getCustPhoneNo().toString();
     	   	    params.put("custPhoneNo", custPhoneNo);
@@ -178,11 +153,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     	   	    reqParam = gson.toJson(params);
 
     	   	    LOGGER.debug(">>> reqParam :" + reqParam);
-    			LOGGER.debug(">>> Phone Number :" + custPhoneNo);
 
     			apiUserId = authorize.get("apiUserId").toString();
-
-    			LOGGER.debug(">>> VerifyCustIdentityReqForm :: apiUserId >>> " + apiUserId);
 
     		    // Trim country calling code in phone number
     			String custPhoneNoWoutCode = custPhoneNo.substring(1);
@@ -190,8 +162,6 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     		    // Get customer info
     			List<EgovMap> customerVO = chatbotInboundApiMapper.verifyCustIdentity(params);
-
-    			LOGGER.debug(">>> customerVO :" + customerVO);
 
     			if(customerVO.size() > 0){
 
@@ -222,11 +192,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 			throw e;
 
 	 	} finally{
-
-	 		LOGGER.debug(">>> Status Code :" + params.get("statusCode").toString());
-
-
-	 		 // Return result
+	 		// Return result
 	        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
 	        	resultValue.put("success", true);
 	        }else{
@@ -767,11 +733,10 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		  }
 
 	@Override
-	public EgovMap getPaymentMode(HttpServletRequest request, Map<String, Object> params) throws Exception {
-		LOGGER.debug(">>> file Name >>> ChatbotInboundApiServiceImpl :: getPaymentMode");
-
+	public EgovMap getPaymentMode(HttpServletRequest request, GetPayModeReqForm param) throws Exception {
 		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
+		EgovMap params = new EgovMap();
 		EgovMap resultValue = new EgovMap();
 		PaymentVO paymentVO = new PaymentVO();
 		JompayVO jompayVO = new JompayVO();
@@ -784,36 +749,23 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			EgovMap authorize = verifyBasicAuth(request);
 
-			LOGGER.debug(">>> file Name >>> authorize : " + authorize);
-			LOGGER.debug(">>> file Name >>> authorize code ： " + authorize.get("code").toString());
-
 			if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
 				// Check order no, order id and payment mode whether exist or not
-				String data = commonApiService.decodeJson(request);
-				Gson g = new Gson();
-				GetPayModeReqForm reqParameter = g.fromJson(data, GetPayModeReqForm.class);
-
-				LOGGER.debug(">>> data >>> " + data);
-    	    	LOGGER.debug(">>> GetPayModeReqForm >>> " + reqParameter);
-    	    	LOGGER.debug(">>> GetPayModeReqForm :: getOrderNo >>> " + reqParameter.getOrderNo());
-    	    	LOGGER.debug(">>> GetPayModeReqForm :: getOrderId >>> " + reqParameter.getOrderId());
-    	    	LOGGER.debug(">>> GetPayModeReqForm :: getPayMtdType >>> " + reqParameter.getPayMtdType());
-
-				if(reqParameter.getOrderNo().toString().isEmpty()){
+				if(CommonUtils.isEmpty(param.getOrderNo())){
 					resultValue.put("success", false);
 					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 					resultValue.put("message", "Sales order number is required");
 					return resultValue;
 				}
 
-				if(reqParameter.getOrderId() == 0){
+				if(param.getOrderId() == 0){
 					resultValue.put("success", false);
 					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 					resultValue.put("message", "Sales order ID is required");
 					return resultValue;
 				}
 
-				if(reqParameter.getPayMtdType() == 0){
+				if(param.getPayMtdType() == 0){
 					resultValue.put("success", false);
 					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 					resultValue.put("message", "Payment mode is required");
@@ -821,27 +773,20 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 				}
 
 				Gson gson = new GsonBuilder().create();
-				reqParam = gson.toJson(reqParameter);
+				reqParam = gson.toJson(param);
 
 				LOGGER.debug(">>> reqParam :" + reqParam);
-				LOGGER.debug(">>> Sales order no :" + reqParameter.getOrderNo().toString());
-				LOGGER.debug(">>> Sales order id :" + reqParameter.getOrderId());
-				LOGGER.debug(">>> Payment mode :" + reqParameter.getPayMtdType());
 
 				apiUserId = authorize.get("apiUserId").toString();
 
-				LOGGER.debug(">>> apiUserId >>> " + apiUserId);
+				params.put("orderNo", param.getOrderNo().toString());
+				params.put("orderId", param.getOrderId());
+				params.put("paymentMode", param.getPayMtdType());
 
-				params.put("orderNo", reqParameter.getOrderNo().toString());
-				params.put("orderId", reqParameter.getOrderId());
-				params.put("paymentMode", reqParameter.getPayMtdType());
-
-				if(reqParameter.getPayMtdType() == 1){ // Payment Mode Status Request
+				if(param.getPayMtdType() == 1){ // Payment Mode Status Request
 
 					// Get payment info
 					EgovMap pay = chatbotInboundApiMapper.getPaymentMtd(params);
-
-					LOGGER.debug(">>> pay: " + pay);
 
 					if(!CommonUtils.isEmpty(pay)){
 						if(pay.containsKey("appTypeId")){
@@ -920,12 +865,10 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 						params.put("message", "Record not found");
 					}
 
-				}else if(reqParameter.getPayMtdType() == 2){ // Jompay Status Request
+				}else if(param.getPayMtdType() == 2){ // Jompay Status Request
 
 					// Get jomPay info
 					EgovMap jompay = chatbotInboundApiMapper.getJomPayStatus(params);
-
-					LOGGER.debug(">>> jompay : " + jompay);
 
 					if(!CommonUtils.isEmpty(jompay)){
 						// Convert data into Class object
@@ -966,9 +909,6 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 			throw e;
 
 		} finally{
-
-			LOGGER.debug(">>> params : " + params.get("statusCode"));
-
 			// Return result
 			if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
 				resultValue.put("success", true);
@@ -1007,11 +947,10 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 
 	@Override
-	public EgovMap getOtd(HttpServletRequest request, Map<String, Object> params) throws Exception {
-		LOGGER.debug(">>> file Name >>> ChatbotInboundApiServiceImpl :: getOtd");
-
+	public EgovMap getOtd(HttpServletRequest request, GetOtdReqForm param) throws Exception {
 	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
+	    EgovMap params = new EgovMap();
 	    EgovMap resultValue = new EgovMap();
 	 	OutStdVO outStdVO = new OutStdVO();
 	    StopWatch stopWatch = new StopWatch();
@@ -1023,28 +962,16 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     	    EgovMap authorize = verifyBasicAuth(request);
 
-    	    LOGGER.debug(">>> authorize : " + authorize);
-    	    LOGGER.debug(">>> authorize code : " + authorize.get("code").toString());
-
     	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
     	    	// Check phone number whether exist or not
-    	    	String data = commonApiService.decodeJson(request);
-    	    	Gson g = new Gson();
-    	    	GetOtdReqForm reqParameter = g.fromJson(data, GetOtdReqForm.class);
-
-    	    	LOGGER.debug(">>> data >>> " + data);
-    	    	LOGGER.debug(">>> GetOtdReqForm >>> " + reqParameter);
-    	    	LOGGER.debug(">>> GetOtdReqForm :: getOrderNo >>> " + reqParameter.getOrderNo());
-    	    	LOGGER.debug(">>> GetOtdReqForm :: getOrderId >>> " + reqParameter.getOrderId());
-
-    	    	if(reqParameter.getOrderNo().toString().isEmpty()){
+    	    	if(CommonUtils.isEmpty(param.getOrderNo())){
 					resultValue.put("success", false);
 					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 					resultValue.put("message", "Sales order number is required");
 					return resultValue;
 				}
 
-				if(reqParameter.getOrderId() == 0){
+				if(param.getOrderId() == 0){
 					resultValue.put("success", false);
 					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 					resultValue.put("message", "Sales order ID is required");
@@ -1052,27 +979,20 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 				}
 
 				Gson gson = new GsonBuilder().create();
-				reqParam = gson.toJson(reqParameter);
+				reqParam = gson.toJson(param);
 
 				LOGGER.debug(">>> reqParam :" + reqParam);
-				LOGGER.debug(">>> Sales order no :" + reqParameter.getOrderNo().toString());
-				LOGGER.debug(">>> Sales order id :" + reqParameter.getOrderId());
 
 				apiUserId = authorize.get("apiUserId").toString();
 
-				LOGGER.debug(">>> apiUserId : " + apiUserId );
-
-				params.put("orderNo", reqParameter.getOrderNo().toString());
-				params.put("orderId", reqParameter.getOrderId());
-
+				params.put("orderNo", param.getOrderNo().toString());
+				params.put("orderId", param.getOrderId());
 
     		    // Get account status info
     			EgovMap accStusVO = chatbotInboundApiMapper.getAccStus(params);
 
-    			LOGGER.debug(">>> accStusVO : " + accStusVO);
-
     			if(!CommonUtils.isEmpty(accStusVO)){
-    				outStdVO.setOrderNo(reqParameter.getOrderNo().toString());
+    				outStdVO.setOrderNo(param.getOrderNo().toString());
     				outStdVO.setAccountStatus(accStusVO.get("prgrs").toString());
 
     				// Get total due amount = total outstanding + total unbill amount
@@ -1156,9 +1076,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 			throw e;
 
 	 	} finally{
-	 		LOGGER.debug(">>> params: " + params.get("statusCode").toString());
-
-	 		 // Return result
+	 		// Return result
 	        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
 	        	resultValue.put("success", true);
 	        }else{
