@@ -2997,7 +2997,6 @@ public void dataMartReport(HttpServletRequest request) {
   }
   LOGGER.info("[END] DataMartReport...");
 }
-
 @RequestMapping(value = "/InboundGenPdf.do")
 //@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
 public void InboundGenPdf1(@RequestParam Map<String, Object> param) throws Exception {
@@ -3046,6 +3045,128 @@ if(emailListToSend.size() > 0){
 //this.viewProcedure(null, null, params);
 LOGGER.info("[END] InboundGenPdf...");
 }
+
+
+/** Added for new MD report - Sales Analysis Key In Report by Hui Ding, 05/01/2024 **/
+@RequestMapping(value = "/salesAnalysisReport.do")
+//@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
+public void SalesAnalystReport() {
+  LOGGER.info("[START] SalesAnalysisKeyInDST...");
+  Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisKeyInDST.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisKeyInDST" + File.separator + "SalesAnalysisKeyInDST_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisKeyInDST...");
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisKeyInCL...");
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisKeyInCL.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisKeyInCL" + File.separator + "SalesAnalysisKeyInCL_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisKeyInCL...");
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisKeyInCatDST...");
+ // Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisKeyInCatDST.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisKeyInCatDST" + File.separator + "SalesAnalysisKeyInCatDST_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisKeyInCatDST...");
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisKeyInCatCL...");
+ // Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisKeyInCatCL.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisKeyInCatCL" + File.separator + "SalesAnalysisKeyInCatCL_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisKeyInCatCL...");
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisNetDST...");
+  //Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisNetDST.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisNetDST" + File.separator + "SalesAnalysisNetDST_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisNetDST...");
+
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisNetCL...");
+  //Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisNetCL.rpt");// visualcut rpt
+                                                             // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "MDReport/SalesAnalysisNetCL" + File.separator + "SalesAnalysisNetCL_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisNetCL...");
+
+
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisNetCatDST...");
+ // Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisNetCatDST.rpt");// visualcut rpt
+                                                           // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+    "MDReport/SalesAnalysisNetCatDST" + File.separator + "SalesAnalysisNetCatDST_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisNetCatDST...");
+
+
+  params = new HashMap<>();
+
+  LOGGER.info("[START] SalesAnalysisNetCatCL...");
+ // Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisNetCatCL.rpt");// visualcut rpt
+                                                           // file name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+    "MDReport/SalesAnalysisNetCatCL" + File.separator + "SalesAnalysisNetCatCL_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] SalesAnalysisNetCatCL...");
+}
+
+/** End for new RawData report - Mobile Usage Analyst by Hui Ding, 23-04-2020 **/
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
