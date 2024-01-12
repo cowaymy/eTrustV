@@ -142,7 +142,12 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     	    	Gson g = new Gson();
     	    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
 
-    	    	if(reqParameter.getCustPhoneNo().toString().isEmpty()){
+    	    	LOGGER.debug(">>> file Name >>> ChatbotInboundApiServiceImpl :: verifyCustIdentity");
+    	    	LOGGER.debug(">>> data >>> " + data);
+    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm >>> " + reqParameter);
+    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: GetCustPhoneNp >>> " + reqParameter.getCustPhoneNo());
+
+    	    	if(CommonUtils.isEmpty(reqParameter.getCustPhoneNo())){
     	    		resultValue.put("success", false);
     	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     	    		resultValue.put("message", "Customer phone number is required");
@@ -165,6 +170,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     		    // Get customer info
     			List<EgovMap> customerVO = chatbotInboundApiMapper.verifyCustIdentity(params);
+
+    			LOGGER.debug(">>> customerVO :" + customerVO);
 
     			if(customerVO.size() > 0){
 
@@ -191,9 +198,14 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	 	} catch(Exception e){
 	 		params.put("message", e.getMessage() != null ? e.getMessage() : "");
+	 		LOGGER.debug(">>> Error Message :" + e);
 			throw e;
 
 	 	} finally{
+
+	 		LOGGER.debug(">>> Status Code :" + params.get("statusCode").toString());
+
+
 	 		 // Return result
 	        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
 	        	resultValue.put("success", true);
