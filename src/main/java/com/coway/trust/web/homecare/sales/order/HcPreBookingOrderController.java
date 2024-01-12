@@ -62,6 +62,9 @@ public class HcPreBookingOrderController {
    @Value("${watapps.api.button.webUrl.domains}")
    private String waApiBtnUrlDomains;
 
+   @Value("${watapps.api.button.template}")
+   private String waApiBtnTemplate;
+
   @Resource(name = "salesCommonService")
   private SalesCommonService salesCommonService;
 
@@ -232,7 +235,7 @@ public class HcPreBookingOrderController {
 
           //template
           Map<String, Object> templateMap = new HashMap();
-          templateMap.put("template_name", "prebook_uat_04012024_2");
+          templateMap.put("template_name", waApiBtnTemplate);
           templateMap.put("language", "en");
           msgMap.put("template", templateMap);
 

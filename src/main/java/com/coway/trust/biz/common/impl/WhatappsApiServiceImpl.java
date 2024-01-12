@@ -85,6 +85,10 @@ public class WhatappsApiServiceImpl implements WhatappsApiService{
 	@Value("${watapps.api.button.webUrl.domains}")
 	 private String waApiBtnUrlDomains;
 
+	@Value("${watapps.api.button.template}")
+	private String waApiBtnTemplate;
+
+
 	@Override
 	public Map<String, Object> preBookWhatappsReqApi(Map<String, Object> params){
 	  LOGGER.info("[preBookWhatappsReqApi] params :: {} " + params);
