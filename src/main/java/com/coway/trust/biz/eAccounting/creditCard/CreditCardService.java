@@ -1,7 +1,12 @@
 package com.coway.trust.biz.eAccounting.creditCard;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -78,4 +83,10 @@ public interface CreditCardService {
 	List<EgovMap> selectAllowanceCardPicList();
 
 	List<EgovMap> selectExcelListNew(Map<String, Object> params);
+
+	void createCreditCardApprovalLine(Map<String, Object> params, SessionVO sessionVO);
+
+	List<EgovMap> getCreditCardApprovalLineList(Map<String, Object> params);
+
+	void deleteCreditCardApprovalLine(Map<String, Object> params);
 }

@@ -13,10 +13,26 @@ function fn_closePop() {
 }
 
 function fn_approveLineSubmit() {
+	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+
+	if(apprGridList.length==0){
+        Common.alert('Approval Line must have at least 1 record. Please set approval line on credit card management page.');
+       	return false;
+	}
+
+    if(apprGridList.length >= 1) {
+        for(var i = 0; i < apprGridList.length; i++) {
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ". Please set approval line on credit card management page.");
+               	return false;
+                break;
+            }
+        }
+    }
+
 	$("#registMsgPop").remove();
 
 	var newGridList = AUIGrid.getOrgGridData(newGridID);
-	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
     var obj = {
             newGridList : newGridList,
             apprGridList : apprGridList,
@@ -24,19 +40,10 @@ function fn_approveLineSubmit() {
             allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
     };
     console.log(obj);
-
-    Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
-        console.log(resultFinAppr);
-
-        if(resultFinAppr.code == "99") {
-            Common.alert("Please select the relevant final approver.");
-        } else {
-            Common.ajax("POST", "/eAccounting/creditCard/approveLineSubmit.do", obj, function(result) {
-                console.log(result);
-                Common.popupDiv("/eAccounting/creditCard/appvCompletedMsgPop.do", {callType:callType,clmNo:result.data.clmNo}, null, true, "completedMsgPop");
-                //Common.alert("Your authorization request was successful.");
-            });
-        }
+    Common.ajax("POST", "/eAccounting/creditCard/approveLineSubmit.do", obj, function(result) {
+        console.log(result);
+        Common.popupDiv("/eAccounting/creditCard/appvCompletedMsgPop.do", {callType:callType,clmNo:result.data.clmNo}, null, true, "completedMsgPop");
+        //Common.alert("Your authorization request was successful.");
     });
 }
 

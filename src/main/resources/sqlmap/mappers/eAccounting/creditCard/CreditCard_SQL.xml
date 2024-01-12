@@ -1514,4 +1514,49 @@ ORDER BY CRDIT_CARD_USER_NAME
              ORDER BY T.CLM_NO, T.CLM_SEQ
 
 </select>
+
+<select id="selectUserInfo" parameterType="Map" resultType="egovMap">
+	SELECT USER_ID, USER_NAME, HR_CODE AS MEM_CODE
+	FROM SYS0047M WHERE HR_CODE = #{memCode}
+    FETCH FIRST 1 ROWS ONLY
+</select>
+
+<insert id="insertCCApprovalLine" parameterType="Map">
+	INSERT INTO FCM0050D
+	(
+		ID,
+		APPV_LINE_SEQ,
+		APPV_LINE_USER_ID,
+		APPV_LINE_MEM_CODE,
+		APPV_LINE_USER_NAME,
+		CRDIT_CARD_SEQ,
+		CRT_DT,
+		CRT_BY
+	)
+	VALUES
+	(
+	FCM0050D_ID_SEQ.NEXTVAL
+	,#{approveNo}
+	,#{memUserId}
+	,#{memCode}
+	,#{userName}
+	,#{crditCardSeq}
+	,SYSDATE
+	,#{userId}
+	)
+</insert>
+
+<delete id="deleteCCApprovalLine" parameterType="Map">
+	DELETE FROM FCM0050D
+	WHERE CRDIT_CARD_SEQ = #{crditCardSeq}
+</delete>
+
+<select id="selectCCApprovalLineList" parameterType="Map" resultType="egovMap">
+	SELECT A.*, B.USER_FULL_NAME
+	FROM FCM0050D A
+	JOIN SYS0047M B
+	ON A.APPV_LINE_USER_ID = B.USER_ID
+	WHERE A.CRDIT_CARD_SEQ = #{crditCardSeq}
+	ORDER BY A.APPV_LINE_SEQ ASC
+</select>
 </mapper>

@@ -94,4 +94,12 @@ public interface CreditCardMapper {
 	List<EgovMap> selectAllowanceCardPicList();
 
 	List<EgovMap> selectExcelListNew(Map<String, Object> params);
+
+	EgovMap selectUserInfo(Map<String, Object> params);
+
+	void insertCCApprovalLine(Map<String, Object> params);
+
+	List<EgovMap> selectCCApprovalLineList(Map<String, Object> params);
+
+	void deleteCCApprovalLine(Map<String, Object> params);
 }

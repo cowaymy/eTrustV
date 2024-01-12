@@ -1,6 +1,9 @@
 package com.coway.trust.web.eAccounting.creditCard;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,6 +133,7 @@ public class CreditCardController {
 
 		// TODO insert
 		creditCardApplication.insertCreditCardBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+		creditCardService.createCreditCardApprovalLine(params,sessionVO);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -171,6 +175,17 @@ public class CreditCardController {
 		return "eAccounting/creditCard/creditCardManagementViewPop";
 	}
 
+	@RequestMapping(value = "/getCCApprovalLineList.do")
+	public ResponseEntity<ReturnMessage> getCCApprovalLineList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		List<EgovMap> result = creditCardService.getCreditCardApprovalLineList(params);
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/viewRegistMsgPop.do")
 	public String viewRegistMsgPop(ModelMap model) {
 		return "eAccounting/creditCard/creditCardManagementViewRgistPop";
@@ -190,6 +205,11 @@ public class CreditCardController {
 
 		// TODO update
 		creditCardApplication.updateCreditCardBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+
+		/*
+		 * Delete and recreate each time update is being done
+		 */
+		creditCardService.createCreditCardApprovalLine(params,sessionVO);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -225,6 +245,7 @@ public class CreditCardController {
 		params.put("bankCode", crditCardInfo.get("bankCode"));
 
 		creditCardApplication.removeCreditCardBiz(params);
+		creditCardService.deleteCreditCardApprovalLine(params);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

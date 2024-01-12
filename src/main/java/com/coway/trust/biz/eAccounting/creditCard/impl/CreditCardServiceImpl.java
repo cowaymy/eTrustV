@@ -1,7 +1,9 @@
 package com.coway.trust.biz.eAccounting.creditCard.impl;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +17,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.eAccounting.creditCard.CreditCardService;
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -251,19 +260,22 @@ public class CreditCardServiceImpl implements CreditCardService {
 				appvLineUserId.add(hm.get("memCode").toString());
 			}
 
-			params.put("clmType", params.get("clmNo").toString().substring(0, 2));
-            EgovMap e1 = webInvoiceMapper.getFinApprover(params);
-            String memCode = e1.get("apprMemCode").toString();
-            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
-            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-            if(!appvLineUserId.contains(memCode)) {
-                Map mAppr = new HashMap<String, Object>();
-                mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
-                mAppr.put("userId", params.get("userId"));
-                mAppr.put("memCode", memCode);
-                LOGGER.debug("insMissAppr =====================================>>  " + mAppr);
-                webInvoiceMapper.insMissAppr(mAppr);
-            }
+			/*
+			 * Unuse for final approval as now approval line is being defined prior
+			 */
+//			params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+//            EgovMap e1 = webInvoiceMapper.getFinApprover(params);
+//            String memCode = e1.get("apprMemCode").toString();
+//            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+//            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+//            if(!appvLineUserId.contains(memCode)) {
+//                Map mAppr = new HashMap<String, Object>();
+//                mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
+//                mAppr.put("userId", params.get("userId"));
+//                mAppr.put("memCode", memCode);
+//                LOGGER.debug("insMissAppr =====================================>>  " + mAppr);
+//                webInvoiceMapper.insMissAppr(mAppr);
+//            }
 
             // 2019-02-19 - LaiKW - Insert notification for request.
             Map ntf = (HashMap<String, Object>) apprGridList.get(0);
@@ -424,4 +436,45 @@ public class CreditCardServiceImpl implements CreditCardService {
     	// TODO Auto-generated method stub
     	return creditCardMapper.selectExcelListNew(params);
     }
+
+	@Override
+	public void createCreditCardApprovalLine(Map<String,Object> params,SessionVO sessionVO){
+		try{
+			if(params.get("apprGridList") != null){
+	 	        ObjectMapper mapper = new ObjectMapper();
+
+	 	      List<Map<String, Object>> apprGridList = Arrays.asList(mapper.readValue(params.get("apprGridList").toString(),Map[].class));
+
+	 	      if(apprGridList.size() > 0){
+                /*
+                 * Delete any existing approval line record if any before creating new
+                 */
+	 	    	  creditCardMapper.deleteCCApprovalLine(params);
+
+	 	    	  for(int i =0; i < apprGridList.size();i++){
+                     Map<String,Object> info = apprGridList.get(i);
+                     EgovMap user = creditCardMapper.selectUserInfo(info);
+	 	    		 info.put("memUserId", user.get("userId").toString());
+	 	    		 info.put("userName", user.get("userName").toString());
+	 	    		 info.put("userId", sessionVO.getUserId());
+	 	    		 info.put("crditCardSeq", params.get("crditCardSeq"));
+	 	    		 creditCardMapper.insertCCApprovalLine(info);
+	 	    	  }
+	 	      }
+			}
+		}catch (Exception e) {
+			throw new ApplicationException(AppConstants.FAIL,
+					"Credit card approval line creation fail. Please try again.");
+		}
+	}
+
+	@Override
+	public void deleteCreditCardApprovalLine(Map<String,Object> params){
+   	  creditCardMapper.deleteCCApprovalLine(params);
+	}
+
+	@Override
+	public List<EgovMap> getCreditCardApprovalLineList(Map<String,Object> params){
+		return creditCardMapper.selectCCApprovalLineList(params);
+	}
 }

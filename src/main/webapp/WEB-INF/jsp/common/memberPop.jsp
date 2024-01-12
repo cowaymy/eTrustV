@@ -25,7 +25,9 @@
 
       } else if (callPrgm == "PREORD_LIST") {
         fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode"));
-      } else {
+      } else if (callPrgm == "APPROVAL_LINE") {
+    	  fn_loadOrderSalesmanApprovalLine(AUIGrid.getCellValue(myGridID, event.rowIndex, "memId"), AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode"), callPrgm);
+      }else {
         fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID, event.rowIndex, "memId"), AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode"), callPrgm);
       }
 
@@ -83,7 +85,7 @@
       groupingMessage : "Here groupping"
     };
 
-    if (callPrgm == "NRIC_VISIBLE") {
+    if (callPrgm == "NRIC_VISIBLE" || callPrgm == "APPROVAL_LINE") {
       columnLayout[4].visible = false;
     }
 

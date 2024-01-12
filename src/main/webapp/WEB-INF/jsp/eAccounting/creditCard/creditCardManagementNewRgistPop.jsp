@@ -5,7 +5,7 @@
 $(document).ready(function () {
     $("#no_btn").click(fn_closePop);
     $("#yes_btn").click(fn_insertCreditCard);
-    
+
 });
 
 function fn_closePop() {
@@ -14,7 +14,7 @@ function fn_closePop() {
 
 function fn_insertCreditCard() {
     $("#registMsgPop").remove();
-    
+
     var formData = Common.getFormData("form_newMgmt");
     var obj = $("#form_newMgmt").serializeJSON();
     var appvCrditLimit = obj.appvCrditLimit;
@@ -29,6 +29,16 @@ function fn_insertCreditCard() {
     $.each(obj, function(key, value) {
     	formData.append(key, value);
     });
+
+    /*
+    * Approval line data retrieve
+    */
+
+	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+    if(apprGridList.length > 0){
+		formData.append("apprGridList", JSON.stringify(apprGridList));
+    }
+
     Common.ajaxFile("/eAccounting/creditCard/insertCreditCard.do", formData, function(result) {
         console.log(result);
         Common.popupDiv("/eAccounting/creditCard/newCompletedMsgPop.do", null, null, true, "completedMsgPop");
