@@ -122,11 +122,13 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 //	private ReportBatchController reportBatchController;
 
 	@Override
-	public EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception {
+	public EgovMap verifyCustIdentity(HttpServletRequest request, VerifyCustIdentityReqForm param) throws Exception {
+//		public EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception {
 		LOGGER.debug(">>> file Name >>> ChatbotInboundApiServiceImpl :: verifyCustIdentity");
 
 	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
+	    EgovMap params = new EgovMap();
 	    EgovMap resultValue = new EgovMap();
 	 	List<CustomerVO> cust = new ArrayList<>();
 	    StopWatch stopWatch = new StopWatch();
@@ -139,33 +141,41 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     	    LOGGER.debug(">>> authorize >>> " + authorize);
     	    LOGGER.debug(">>> authorize code >>> " + authorize.get("code").toString());
-    	    LOGGER.debug(">>> request >>> " + request);
-    	    LOGGER.debug(">>> params >>> " + params);
+//    	    LOGGER.debug(">>> request >>> " + request);
+    	    LOGGER.debug(">>> params >>> " + param);
 
     	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
     	    	// Check phone number whether exist or not
-    	    	String data = commonApiService.decodeJson(request);
-    	    	Gson g = new Gson();
-    	    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
+//    	    	String data = commonApiService.decodeJson(request);
+//    	    	Gson g = new Gson();
+//    	    	VerifyCustIdentityReqForm reqParameter = g.fromJson(data, VerifyCustIdentityReqForm.class);
 
-    	    	LOGGER.debug(">>> data >>> " + data);
-    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm >>> " + reqParameter);
-    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: GetCustPhoneNo >>> " + reqParameter.getCustPhoneNo());
 
-    	    	if(CommonUtils.isEmpty(reqParameter.getCustPhoneNo())){
+//    	    	LOGGER.debug(">>> data >>> " + data);
+//    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm >>> " + reqParameter);
+//    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: GetCustPhoneNo >>> " + reqParameter.getCustPhoneNo());
+
+//    	    	if(CommonUtils.isEmpty(reqParameter.getCustPhoneNo())){
+//    	    		resultValue.put("success", false);
+//    	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+//    	    		resultValue.put("message", "Customer phone number is required");
+//    	    		return resultValue;
+//    	    	}
+
+    	    	if(CommonUtils.isEmpty(param.getCustPhoneNo())){
     	    		resultValue.put("success", false);
     	    		resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
     	    		resultValue.put("message", "Customer phone number is required");
     	    		return resultValue;
     	    	}
 
-    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: custPhoneNo >>> " + reqParameter.getCustPhoneNo().toString());
+    	    	LOGGER.debug(">>> VerifyCustIdentityReqForm :: custPhoneNo >>> " + param.getCustPhoneNo().toString());
 
-    	   	    String custPhoneNo = reqParameter.getCustPhoneNo().toString();
+    	   	    String custPhoneNo = param.getCustPhoneNo().toString();
     	   	    params.put("custPhoneNo", custPhoneNo);
 
     	   	    Gson gson = new GsonBuilder().create();
-    	   	    reqParam = gson.toJson(reqParameter);
+    	   	    reqParam = gson.toJson(params);
 
     	   	    LOGGER.debug(">>> reqParam :" + reqParam);
     			LOGGER.debug(">>> Phone Number :" + custPhoneNo);
