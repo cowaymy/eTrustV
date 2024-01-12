@@ -235,7 +235,7 @@ public class HcPreBookingOrderController {
 
           //template
           Map<String, Object> templateMap = new HashMap();
-          templateMap.put("template_name", waApiBtnTemplate);
+          templateMap.put("template_name", "prebook_prd_04012024_2");
           templateMap.put("language", "en");
           msgMap.put("template", templateMap);
 
