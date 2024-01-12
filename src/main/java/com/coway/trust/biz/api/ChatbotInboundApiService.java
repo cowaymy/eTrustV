@@ -12,6 +12,8 @@ public interface ChatbotInboundApiService {
 	EgovMap verifyCustIdentity(HttpServletRequest request, Map<String, Object> params) throws Exception;
 	EgovMap getOrderList(HttpServletRequest request, Map<String, Object> params) throws Exception;
 	EgovMap sendStatement(HttpServletRequest request, Map<String, Object> params) throws Exception;
+	EgovMap getPaymentMode(HttpServletRequest request, Map<String, Object> params) throws Exception;
+	EgovMap getOtd(HttpServletRequest request, Map<String, Object> params) throws Exception;
 	void rtnRespMsg(Map<String, Object> params);
 
 	Map<String, Object> generatePDF(Map<String, Object> params) throws Exception;

@@ -19,4 +19,15 @@ public interface ChatbotInboundApiMapper {
 	List<Map<String, Object>> getGenPdfList(Map<String, Object> params);
 	int insertBatchEmailSender(Map<String, Object> params);
 	int update_CBT0006M_Stus(Map<String, Object> params);
+
+	EgovMap getPaymentMtd(Map<String, Object> params);
+//	EgovMap getOutrightPayResult(Map<String, Object> params);
+	EgovMap getDeductionResult(Map<String, Object> params);
+	EgovMap getJomPayStatus(Map<String, Object> params);
+	EgovMap getAccStus(Map<String, Object> params);
+	List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+	String getAppTypeId(Map<String, Object> params);
+	EgovMap getRentalLastPayInfo(Map<String, Object> params);
+//	EgovMap getOutPlusLastPayInfo(Map<String, Object> params);
+//	EgovMap getOthersLastPayInfo(Map<String, Object> params);
 }

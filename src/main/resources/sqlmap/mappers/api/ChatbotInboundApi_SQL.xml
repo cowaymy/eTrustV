@@ -55,7 +55,7 @@
 		  AND S01.STUS_CODE_ID <![CDATA[ <> ]]> 10
     </select>
 
-    <insert id="CBT0006M_insert" parameterType="Map">
+      <insert id="CBT0006M_insert" parameterType="Map">
         INSERT INTO CBT0006M (
             REQ_ID
             ,STATE_ID
@@ -191,4 +191,169 @@
                           UPD_USER_ID = 349
              WHERE  REQ_ID   =#{reqId}
      </insert>
+
+    <select id="getPaymentMtd" parameterType="Map" resultType="egovMap">
+<!--         SELECT   -->
+<!-- 			A.ORD_ID, -->
+<!-- 			A.RENT_PAY_MODE_CODE,  -->
+<!-- 			A.RENT_PAY_MODE_DESC  -->
+<!-- 		FROM PAY1009V A -->
+<!-- 		WHERE A.ORD_ID = #{orderId} -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+        SELECT
+            A.APP_TYPE_ID,
+            C.CODE AS RENT_PAY_MODE_CODE,
+		    C.CODE_NAME AS RENT_PAY_MODE_DESC
+		FROM SAL0001D A
+		LEFT JOIN SAL0074D B ON B.SALES_ORD_ID = A.SALES_ORD_ID <!-- CUSTOMER REGISTERED PAYMENT CHANNEL -->
+		LEFT JOIN SYS0013M C ON C.CODE_ID = B.MODE_ID
+		WHERE
+		      A.STUS_CODE_ID <![CDATA[ <> ]]> 8
+		  AND B.SVC_CNTRCT_ID = 0
+		  AND A.SALES_ORD_ID = #{orderId}
+		  AND A.SALES_ORD_NO = #{orderNo}
+		FETCH FIRST ROWS ONLY
+    </select>
+
+    <select id="getDeductionResult" parameterType="Map" resultType="egovMap">
+		SELECT
+		     T.BANK_DTL_ID
+		     , T.CTRL_STUS_ID
+		     , T.LAST_PAY_DT
+		     , T.BANK_APPV
+		     , CASE WHEN T.CTRL_STUS_ID <![CDATA[ <> ]]> 4 THEN '-'
+		            ELSE T.CODE_NAME END AS IS_APPROVE_STR
+		FROM (
+		    SELECT
+		        T1.BANK_DTL_ID
+		        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+		        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') LAST_PAY_DT
+		        , NVL(T1.BANK_APPV, 0) BANK_APPV
+		        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+		        , GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) CODE_NAME
+		    FROM PAY0042D T1
+		    JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
+		    WHERE T1.SALES_ORD_ID = #{orderId}
+		) T ORDER BY T.BANK_DTL_ID DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+<!--     <select id="getOutrightPayResult" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- 		    A.TRX_ID, -->
+<!-- 		    A.TRX_DT, -->
+<!-- 		    A.PAY_CRT_DT, -->
+<!-- 		    B.STUS_CODE_ID -->
+<!-- 		FROM PAY1001V A -->
+<!-- 		JOIN PAY0064D B ON B.PAY_ID = A.PAY_ID -->
+<!-- 		WHERE -->
+<!-- 		    A.SALES_ORD_NO = #{orderNo} -->
+<!-- 		AND A.SALES_ORD_ID = #{orderId} -->
+<!-- 		ORDER BY TRX_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
+    <select id="getJomPayStatus" parameterType="Map" resultType="egovMap">
+	    SELECT
+		    B.CUST_BILL_PAY_REF_NO1 AS REF1,
+		    A.SALES_ORD_NO AS REF2
+		FROM SAL0001D A
+		JOIN SAL0024D B ON B.CUST_BILL_ID = A.CUST_BILL_ID
+		WHERE A.SALES_ORD_ID = #{orderId}
+		      AND A.SALES_ORD_NO = #{orderNo}
+		      AND A.APP_TYPE_ID <![CDATA[ <> ]]> 5764
+    </select>
+
+    <select id="getAccStus" parameterType="Map" resultType="egovMap">
+	    SELECT
+		    T1.PRGRS_ID,
+		    T2.PRGRS
+		FROM SAL0009D T1
+		JOIN SAL0010M T2 ON T2.PRGRS_ID = T1.PRGRS_ID
+		WHERE T1.SALES_ORD_ID = #{orderId}
+		ORDER BY T1.LOG_ID DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+    <resultMap id="outStndData" type="egovMap" ></resultMap>
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+         {
+               call SP_GET_ORD_OTSTND_INFO ( #{orderId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndData})
+         }
+         ]]>
+    </select>
+
+    <select id="getAppTypeId" parameterType="Map" resultType="String">
+        SELECT APP_TYPE_ID FROM SAL0001D WHERE SALES_ORD_ID = #{orderId} AND SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="getRentalLastPayInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+		    NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT,
+		    (CASE
+		      WHEN A.RENT_AMT <![CDATA[ < ]]> 0 THEN (CASE
+<!-- 		                                   WHEN A.RENT_DOC_NO LIKE '%OR%' THEN (NVL(C.PAY_ITM_AMT, 0) * -1) -->
+		                                   WHEN A.RENT_DOC_NO LIKE '%OR%' THEN TO_CHAR(NVL(C.PAY_ITM_AMT, 0), 'FM9999990.00')
+		                                   ELSE TO_CHAR((NVL(A.RENT_AMT, 0) * -1), 'FM9999990.00')
+		                                 END)
+		      ELSE '0.00'
+		    END) LAST_PAYMENT_AMT
+		FROM PAY0022D A
+		LEFT JOIN PAY0064D B ON B.OR_NO = A.RENT_DOC_NO
+<!-- 		AND (rl.RENT_DOC_NO LIKE '%OR%' OR rl.RENT_DOC_NO LIKE '%BR%')                                                                    -->
+		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID AND C.PAY_ITM_STUS_ID = 1
+		WHERE  TO_CHAR(A.RENT_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR(TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd')
+		AND A.RENT_SO_ID = #{orderId}
+		AND A.RENT_AMT <![CDATA[ <> ]]> 0
+		AND C.PAY_ITM_REF_DT IS NOT NULL
+		ORDER BY A.RENT_RUN_ID  DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+<!--     <select id="getOutPlusLastPayInfo" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- // 		     NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     NVL(TO_CHAR(A.INSTLMT_DT_TM, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     (CASE -->
+<!-- 		      WHEN A.INSTLMT_AMT <![CDATA[ < ]]> 0 THEN (CASE -->
+<!-- 		                                   WHEN A.INSTLMT_DOC_NO LIKE '%OR%' THEN TO_CHAR((NVL(C.PAY_ITM_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- // 		                                   WHEN A.INSTLMT_DOC_NO LIKE '%OR%' THEN NVL(C.PAY_ITM_AMT, 0) -->
+<!-- 		                                   ELSE TO_CHAR((NVL(A.INSTLMT_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- 		                                 END) -->
+<!-- 		      ELSE '0.00' -->
+<!-- 		    END) LAST_PAYMENT_AMT -->
+<!-- 		FROM PAY0010D A -->
+<!-- 		LEFT JOIN PAY0064D B ON B.OR_NO = A.INSTLMT_DOC_NO -->
+<!-- // 		AND A.INSTLMT_DOC_NO LIKE '%OR%' -->
+<!-- 		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID AND C.PAY_ITM_STUS_ID = 1 -->
+<!-- 		WHERE  TO_CHAR(A.INSTLMT_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR( TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd') -->
+<!-- 		AND A.INSTLMT_SO_ID = #{orderId} -->
+<!-- 		AND A.INSTLMT_AMT <![CDATA[ <> ]]> 0 -->
+<!-- 		ORDER BY A.INSTLMT_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
+<!--     <select id="getOthersLastPayInfo" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- // 		     NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     NVL(TO_CHAR(A.TRADE_DT_TM, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     (CASE -->
+<!-- 		      WHEN A.TRADE_AMT <![CDATA[ < ]]> 0 THEN (CASE -->
+<!-- // 		                                   WHEN A.TRADE_DOC_NO LIKE '%OR%' THEN (NVL(C.PAY_ITM_AMT, 0) * -1) -->
+<!-- 		                                   WHEN A.TRADE_DOC_NO LIKE '%OR%' THEN TO_CHAR(NVL(C.PAY_ITM_AMT, 0) , 'FM9999990.00') -->
+<!-- 		                                   ELSE TO_CHAR((NVL(A.TRADE_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- 		                                 END) -->
+<!-- 		      ELSE '0.00' -->
+<!-- 		    END) LAST_PAYMENT_AMT -->
+<!-- 		FROM PAY0035D A -->
+<!-- 		LEFT JOIN PAY0064D B ON B.SALES_ORD_ID = A.TRADE_SO_ID -->
+<!-- 		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID -->
+<!-- 		WHERE  TO_CHAR(A.TRADE_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR( TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd') -->
+<!-- 		AND A.TRADE_SO_ID = #{orderId} -->
+<!-- 		AND A.TRADE_AMT <![CDATA[ <> ]]> 0 -->
+<!-- 		ORDER BY A.TRADE_RUN_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
 </mapper>

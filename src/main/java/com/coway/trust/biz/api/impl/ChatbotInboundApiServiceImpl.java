@@ -36,9 +36,14 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.vo.chatbotInbound.CustomerVO;
+import com.coway.trust.biz.api.vo.chatbotInbound.GetOtdReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.GetPayModeReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.JompayVO;
 import com.coway.trust.biz.api.vo.chatbotInbound.OrderListReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.OrderVO;
+import com.coway.trust.biz.api.vo.chatbotInbound.OutStdVO;
 import com.coway.trust.biz.api.vo.chatbotInbound.StatementReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.PaymentVO;
 import com.coway.trust.biz.api.vo.chatbotInbound.VerifyCustIdentityReqForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
@@ -185,6 +190,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     	    }
 
 	 	} catch(Exception e){
+	 		params.put("message", e.getMessage() != null ? e.getMessage() : "");
 			throw e;
 
 	 	} finally{
@@ -727,6 +733,394 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 					throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
 				}
 		  }
+
+	@Override
+	public EgovMap getPaymentMode(HttpServletRequest request, Map<String, Object> params) throws Exception {
+		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
+
+		EgovMap resultValue = new EgovMap();
+		PaymentVO paymentVO = new PaymentVO();
+		JompayVO jompayVO = new JompayVO();
+		StopWatch stopWatch = new StopWatch();
+
+		try{
+
+			stopWatch.reset();
+			stopWatch.start();
+
+			EgovMap authorize = verifyBasicAuth(request);
+
+			if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
+				// Check order no, order id and payment mode whether exist or not
+				String data = commonApiService.decodeJson(request);
+				Gson g = new Gson();
+				GetPayModeReqForm reqParameter = g.fromJson(data, GetPayModeReqForm.class);
+
+				if(reqParameter.getOrderNo().toString().isEmpty()){
+					resultValue.put("success", false);
+					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("message", "Sales order number is required");
+					return resultValue;
+				}
+
+				if(reqParameter.getOrderId() == 0){
+					resultValue.put("success", false);
+					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("message", "Sales order ID is required");
+					return resultValue;
+				}
+
+				if(reqParameter.getPayMtdType() == 0){
+					resultValue.put("success", false);
+					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("message", "Payment mode is required");
+					return resultValue;
+				}
+
+				Gson gson = new GsonBuilder().create();
+				reqParam = gson.toJson(reqParameter);
+
+				LOGGER.debug(">>> Sales order no :" + reqParameter.getOrderNo().toString());
+				LOGGER.debug(">>> Sales order id :" + reqParameter.getOrderId());
+				LOGGER.debug(">>> Payment mode :" + reqParameter.getPayMtdType());
+
+				apiUserId = authorize.get("apiUserId").toString();
+
+				params.put("orderNo", reqParameter.getOrderNo().toString());
+				params.put("orderId", reqParameter.getOrderId());
+				params.put("paymentMode", reqParameter.getPayMtdType());
+
+				if(reqParameter.getPayMtdType() == 1){ // Payment Mode Status Request
+
+					// Get payment info
+					EgovMap pay = chatbotInboundApiMapper.getPaymentMtd(params);
+
+					if(!CommonUtils.isEmpty(pay)){
+						if(pay.containsKey("appTypeId")){
+							if(pay.get("appTypeId").toString().equals("66")){
+
+								paymentVO.setPaymentMtd(pay.get("rentPayModeDesc").toString());
+
+								if(pay.get("rentPayModeCode").toString().equals("REG")){
+								    respParam = gson.toJson(paymentVO);
+
+								    params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+									params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+									params.put("respParam", respParam.toString());
+
+								}else{
+
+									 EgovMap deductionResult = chatbotInboundApiMapper.getDeductionResult(params);
+
+									 if(!CommonUtils.isEmpty(deductionResult)){
+											// SET LastPayDate
+											if(deductionResult.containsKey("lastPayDt")){ // lastPayDt
+												paymentVO.setLastPayDate(deductionResult.get("lastPayDt").toString());
+
+												// SET PaymentStatus
+												if(deductionResult.containsKey("bankAppv")){
+													if(Integer.parseInt(deductionResult.get("bankAppv").toString()) == 1){
+														paymentVO.setPaymentStatus(AppConstants.DESC_SUCCESS);
+
+													}else{
+														paymentVO.setPaymentStatus(AppConstants.DESC_FAILED);
+													}
+												}else{
+													paymentVO.setPaymentStatus("-");
+												}
+
+												// SET DeductionResult
+												if(deductionResult.containsKey("isApproveStr")){ // isSuccess
+													paymentVO.setDeductionResult(deductionResult.get("isApproveStr").toString());
+
+													// Convert resp to String format
+												    respParam = gson.toJson(paymentVO);
+
+												    params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+													params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+													params.put("respParam", respParam.toString());
+
+												}else{
+													params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+													params.put("message", "Record not found");
+												}
+
+											}else{
+												params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+												params.put("message", "Record not found");
+											}
+
+										}else{
+											params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+											params.put("message", "Record not found");
+										}
+								}
+
+							}else{
+								params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+//								params.put("message", "This order is not a rental order.");
+								params.put("message", "Record not found");
+							}
+
+						}else{
+							params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+							params.put("message", "Record not found");
+						}
+
+					}else{
+						params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+						params.put("message", "Record not found");
+					}
+
+				}else if(reqParameter.getPayMtdType() == 2){ // Jompay Status Request
+
+					// Get jomPay info
+					EgovMap jompay = chatbotInboundApiMapper.getJomPayStatus(params);
+
+					if(!CommonUtils.isEmpty(jompay)){
+						// Convert data into Class object
+						if(jompay.containsKey("ref1") && jompay.containsKey("ref2")){
+							jompayVO.setRef1(jompay.get("ref1").toString());
+							jompayVO.setRef2(jompay.get("ref2").toString());
+
+							// Convert resp to String format
+						    respParam = gson.toJson(jompayVO);
+
+							params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+							params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+							params.put("respParam", respParam.toString());
+
+						} else if(!jompay.containsKey("ref1")){
+							params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+							params.put("message", "Ref1 not found");
+
+						}else if(!jompay.containsKey("ref2")){
+							params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+							params.put("message", "Ref2 not found");
+						}
+
+					}else{
+						params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+						params.put("message", "Record not found");
+					}
+				}
+
+			}else{
+				params.put("statusCode", authorize.get("code"));
+				params.put("message", authorize.get("message").toString());
+			}
+
+		} catch(Exception e){
+			params.put("message", e.getMessage() != null ? e.getMessage() : "");
+			throw e;
+
+		} finally{
+			// Return result
+			if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+				resultValue.put("success", true);
+			}else{
+				resultValue.put("success",false);
+			}
+
+			resultValue.put("statusCode", params.get("statusCode"));
+			resultValue.put("message", params.get("message"));
+
+			if(params.containsKey("respParam")){
+				if(params.get("paymentMode").toString().equals("1")){
+					resultValue.put("payments", paymentVO);
+					resultValue.put("jompay", null);
+
+				}else if (params.get("paymentMode").toString().equals("2")){
+					resultValue.put("payments", null);
+					resultValue.put("jompay", jompayVO);
+				}
+			}
+
+			stopWatch.stop();
+			respTm = stopWatch.toString();
+
+			// Insert log into API0004M
+			params.put("reqParam", reqParam);
+			params.put("ipAddr", CommonUtils.getClientIp(request));
+			params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+			params.put("respTm", respTm);
+			params.put("apiUserId", apiUserId);
+			rtnRespMsg(params);
+		}
+
+		return resultValue;
+	}
+
+
+	@Override
+	public EgovMap getOtd(HttpServletRequest request, Map<String, Object> params) throws Exception {
+	    String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
+
+	    EgovMap resultValue = new EgovMap();
+	 	OutStdVO outStdVO = new OutStdVO();
+	    StopWatch stopWatch = new StopWatch();
+
+	 	try{
+
+    	    stopWatch.reset();
+    	    stopWatch.start();
+
+    	    EgovMap authorize = verifyBasicAuth(request);
+
+    	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
+    	    	// Check phone number whether exist or not
+    	    	String data = commonApiService.decodeJson(request);
+    	    	Gson g = new Gson();
+    	    	GetOtdReqForm reqParameter = g.fromJson(data, GetOtdReqForm.class);
+
+    	    	if(reqParameter.getOrderNo().toString().isEmpty()){
+					resultValue.put("success", false);
+					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("message", "Sales order number is required");
+					return resultValue;
+				}
+
+				if(reqParameter.getOrderId() == 0){
+					resultValue.put("success", false);
+					resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("message", "Sales order ID is required");
+					return resultValue;
+				}
+
+				Gson gson = new GsonBuilder().create();
+				reqParam = gson.toJson(reqParameter);
+
+				LOGGER.debug(">>> Sales order no :" + reqParameter.getOrderNo().toString());
+				LOGGER.debug(">>> Sales order id :" + reqParameter.getOrderId());
+
+				apiUserId = authorize.get("apiUserId").toString();
+
+				params.put("orderNo", reqParameter.getOrderNo().toString());
+				params.put("orderId", reqParameter.getOrderId());
+
+
+    		    // Get account status info
+    			EgovMap accStusVO = chatbotInboundApiMapper.getAccStus(params);
+
+    			if(!CommonUtils.isEmpty(accStusVO)){
+    				outStdVO.setOrderNo(reqParameter.getOrderNo().toString());
+    				outStdVO.setAccountStatus(accStusVO.get("prgrs").toString());
+
+    				// Get total due amount = total outstanding + total unbill amount
+    				List<EgovMap> ordOutInfoList = getOderOutsInfo(params);
+
+    				if(!CommonUtils.isEmpty(ordOutInfoList)){
+
+    					EgovMap ordOutInfo = ordOutInfoList.get(0);
+
+    					String ordTotOtstnd = ordOutInfo.get("ordTotOtstnd").toString().replace(",", "");
+    					String ordUnbillAmt = ordOutInfo.get("ordUnbillAmt").toString().replace(",", "");
+    					Double dueAmt = Double.parseDouble(ordTotOtstnd) + Double.parseDouble(ordUnbillAmt);
+    					outStdVO.setTotalAmtDue(dueAmt.toString());
+    				}
+
+    				// Get last payment info
+    				String appTypeId = chatbotInboundApiMapper.getAppTypeId(params);
+    				EgovMap lastPayInfo = new EgovMap();
+
+    				if(!CommonUtils.isEmpty(appTypeId)){
+    					if(appTypeId.equals("66")){ // RENTAL
+        					lastPayInfo = chatbotInboundApiMapper.getRentalLastPayInfo(params);
+
+        					if(!CommonUtils.isEmpty(lastPayInfo)){
+
+        						if(lastPayInfo.containsKey("lastPaymentDt") && lastPayInfo.containsKey("lastPaymentAmt")){
+        							outStdVO.setLastPayDate(lastPayInfo.get("lastPaymentDt").toString());
+        							outStdVO.setLastPaymentAmt(Double.parseDouble(lastPayInfo.get("lastPaymentAmt").toString()));
+
+                    			    respParam = gson.toJson(outStdVO);
+
+                    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+                    	    		params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+                    	    		params.put("respParam", respParam.toString());
+
+        						}else if(!lastPayInfo.containsKey("lastPaymentDt")){
+        							params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+                    	    		params.put("message", "Last payment date not found");
+
+        						}else if (!lastPayInfo.containsKey("lastPaymentAmt")){
+        							params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+                    	    		params.put("message", "Last payment amount not found");
+        						}
+
+            	    		}else {
+                	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+                	    		params.put("message", "Last payment info not found");
+            	    		}
+
+    					}else{
+    						params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+            	    		params.put("message", "This order is not a rental order.");
+    					}
+
+//        				else if(appTypeId.equals("1412")) { // OUTRIGHT PLUS
+//        					lastPayInfo = chatbotInboundApiMapper.getOutPlusLastPayInfo(params);
+//
+//        				}else{
+//        					lastPayInfo = chatbotInboundApiMapper.getOthersLastPayInfo(params);
+//        				}
+
+
+    				}else{
+        	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+        	    		params.put("message", "Order's app type not found");
+    				}
+
+    			}else{
+    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    	    		params.put("message", "Account status not found");
+    			}
+
+    	    }else{
+        		params.put("statusCode", authorize.get("code"));
+        		params.put("message", authorize.get("message").toString());
+    	    }
+
+	 	} catch(Exception e){
+	 		params.put("message", e.getMessage() != null ? e.getMessage() : "");
+			throw e;
+
+	 	} finally{
+	 		 // Return result
+	        if(params.get("statusCode").toString().equals("200") || params.get("statusCode").toString().equals("201")){
+	        	resultValue.put("success", true);
+	        }else{
+	        	resultValue.put("success",false);
+	        }
+
+	        resultValue.put("statusCode", params.get("statusCode"));
+	        resultValue.put("message", params.get("message"));
+
+		    if(params.containsKey("respParam")){
+	        	resultValue.put("data", outStdVO);
+	        }
+
+		    stopWatch.stop();
+		    respTm = stopWatch.toString();
+
+		    // Insert log into API0004M
+		    params.put("reqParam", reqParam);
+		    params.put("ipAddr", CommonUtils.getClientIp(request));
+		    params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+		    params.put("respTm", respTm);
+		    params.put("apiUserId", apiUserId);
+		    rtnRespMsg(params);
+	 	}
+
+	 	return resultValue;
+	}
+
+	public List<EgovMap> getOderOutsInfo(Map<String, Object> params) {
+		chatbotInboundApiMapper.getOderOutsInfo(params);
+
+		 return (List<EgovMap>) params.get("p1");
+	}
+
 
 	@Override
 	public EgovMap verifyBasicAuth(HttpServletRequest request){
