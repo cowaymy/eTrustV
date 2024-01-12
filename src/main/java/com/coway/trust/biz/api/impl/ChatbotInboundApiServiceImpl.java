@@ -139,6 +139,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     	    LOGGER.debug(">>> authorize >>> " + authorize);
     	    LOGGER.debug(">>> authorize code >>> " + authorize.get("code").toString());
+    	    LOGGER.debug(">>> request >>> " + request);
+    	    LOGGER.debug(">>> params >>> " + params);
 
     	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
     	    	// Check phone number whether exist or not
