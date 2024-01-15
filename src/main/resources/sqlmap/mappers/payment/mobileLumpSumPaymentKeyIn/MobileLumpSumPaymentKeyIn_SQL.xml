@@ -876,7 +876,8 @@
 		<if test='fromDate != null and toDate != null'>
 			<if test='fromDate != "" and toDate != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD') AND TO_DATE(A.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD')
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
 				]]>
 			</if>
 		</if>
