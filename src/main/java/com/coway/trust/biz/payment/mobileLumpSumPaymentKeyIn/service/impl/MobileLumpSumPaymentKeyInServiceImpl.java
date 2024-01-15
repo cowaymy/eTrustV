@@ -204,7 +204,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			List<EgovMap> result = new ArrayList();
 			for (String mobPayGNo : mobPayGroupNo) {
 				EgovMap info = new EgovMap();
-				info.put("mobPayGroupNo", mobPayGNo);
+				info.put("mobPayGroupNo",  "LS"  + String.format("%06d", CommonUtils.intNvl(mobPayGNo)));
 				result.add(info);
 			}
 
@@ -666,22 +666,22 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 						// RENTAL MEMBERSHIP,OUTRIGHT MEMBERSHIP
 
 						if (paymentType.equals("RENTAL PAYMENT")) {
-							formList = rentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+							formList = rentalPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo,
 									trIssDt, iProcSeq, formList);
 						}
 						// need to know if is HT/HA
 						if (paymentType.equals("OUTRIGHT PAYMENT") || paymentType.equals("INSTALLMENT PAYMENT")) {
-							formList = nonRentalPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+							formList = nonRentalPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo,
 									trIssDt, iProcSeq, formList);
 						}
 
 						if (paymentType.equals("OUTRIGHT MEMBERSHIP")) {
-							formList = outrightMembershipPaymentCollection(params, orderDetail, subInfoParam, allowance,
+							formList = outrightMembershipPaymentCollection(formInfo, orderDetail, subInfoParam, allowance,
 									trRefNo, trIssDt, iProcSeq, formList);
 						}
 
 						if (paymentType.equals("AS PAYMENT")) {
-							formList = asPaymentCollection(params, orderDetail, subInfoParam, allowance, trRefNo,
+							formList = asPaymentCollection(formInfo, orderDetail, subInfoParam, allowance, trRefNo,
 									trIssDt, iProcSeq, formList);
 						}
 					}
@@ -735,6 +735,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 					mobileLumpSumPaymentKeyInMapper.updateApproveLumpSumPaymentInfo(formInfo);
 					resultList.addAll(resultReceiptList);
 				} else {
+					List<String> result = new ArrayList();
+					for (String mobPayGNo : mobPayGroupNoArr) {
+						EgovMap info = new EgovMap();
+						result.add("LS"  + String.format("%06d", CommonUtils.intNvl(mobPayGNo)));
+					}
 					throw new ApplicationException(AppConstants.FAIL,
 							"Error generating receipt for MobPayGroupNo: " + String.join(",", mobPayGroupNoList));
 				}
@@ -1187,8 +1192,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		EgovMap result = new EgovMap();
 
 		String mobPayGroupNo = params.get("mobPayGroupNo").toString();
-		String eTRNo = org.apache.commons.lang.StringUtils.leftPad(mobPayGroupNo, 6,"0");
-		result.put("eTRNo", "LS"+eTRNo);
+		String eTRNo = "LS"  + String.format("%06d", CommonUtils.intNvl(mobPayGroupNo));
+		result.put("eTRNo", eTRNo);
 
 		 EgovMap additionalParam = mobileLumpSumPaymentKeyInMapper.getAdditionalEmailDetailInfo(params);
 		 result.putAll(additionalParam);
@@ -1353,6 +1358,10 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	    	      sms.setMobiles(CommonUtils.nvl(smsNo));
 	    	      sms.setRemark("SMS LUMP SUM VIA MOBILE APPS");
 	    	      sms.setRefNo(CommonUtils.nvl(params.get("mobPayGroupNo")));
+	    	      /*
+	    	       * CHANGE ON mobPayGroupNo
+	    	       * "LS"  + String.format("%06d", CommonUtils.intNvl(mobPayGroupNo))
+	    	       */
 	    	      SmsResult smsResult = adaptorService.sendSMS(sms);
 	    	      LOGGER.debug(" lumpsum sms  smsResult : {}", smsResult.getFailReason().toString());
 	    	    }

@@ -438,7 +438,6 @@
 					mergeRef : "mobPayGroupNo",
 					mergePolicy : "restrict",
 			           labelFunction : function(rowIndex, columnIndex, value){
-			        	   debugger;
 			               var maskedEmail = "" , prefix= "", postfix="";
 
 			               if(value){
@@ -754,6 +753,9 @@
 		fn_clearPopDetails();
 		selectedRecord = selectedItems;
 
+		for (var i = 0; i < selectedRecord.length; i++) {
+			selectedRecord[i].mobPayGroupNo = parseInt(selectedRecord[i].mobPayGroupNo.match(/\d+/g).join([]));
+		}
 		//card payment
 		if (isCardTransaction) {
 			for (var i = 0; i < selectedRecord.length; i++) {
@@ -1165,7 +1167,7 @@
 
 		var info = [];
 		for (var i = 0; i < selectedItems.length; i++) {
-			info.push(selectedItems[i].mobPayGroupNo);
+			info.push(parseInt(selectedItems[i].mobPayGroupNo.match(/\d+/g).join([])));
 		}
 
 		var stus = $("#action").val();
