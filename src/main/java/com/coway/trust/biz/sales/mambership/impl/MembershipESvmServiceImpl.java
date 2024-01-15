@@ -200,9 +200,10 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             // Set resultVal = 2, IF "Active" status action
             if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
 
+            int memType = CommonUtils.intNvl(params.get("memType"));
             //CHECK SPECIAL INSTRUCTION IF == 3434/3435 then processing status, Progress Status  remains Processing, else Failed for pending for reuploads
             if("1".equals(params.get("action").toString())){
-                if(!(params.get("specialInstruction").toString().equals("3434") || params.get("specialInstruction").toString().equals("3435"))){
+                if(!(params.get("specialInstruction").toString().equals("3434") || params.get("specialInstruction").toString().equals("3435")) && memType != 2){
                 	params.put("progressStatus", 21);
                 }
                 else{

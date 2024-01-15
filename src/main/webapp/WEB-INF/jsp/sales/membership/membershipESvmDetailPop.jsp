@@ -7,7 +7,7 @@
     var listGiftGridID;
     var update = new Array();
     var remove = new Array();
-    var svmFrFileId = 0;
+    var svmFrId = 0;
     var svmTncFileId = 0;
     var poFileId = 0;
     var nricFrFileId = 0;
@@ -18,8 +18,8 @@
     var otherFileId2 = 0;
     var otherFileId3 = 0;
 
-    var svmFrFileName = "";
-    var svmTncFileName = "";
+    var svmFrName = "";
+    var svmTncName = "";
     var poFileName = "";
     var nricFrFileName = "";
     var nricBcFileName = "";
@@ -129,6 +129,23 @@
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
+
+                if(MEM_TYPE == 2){
+                	$("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
+                    $("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
+                    $("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
+                    //$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
+                    $("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" <c:out value="${paymentInfo.crcName}"/> placeholder="" class="w100p readonly" readyonly  />');
+                    $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                    $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                    $("#unmatchPayment").attr("disabled", true);
+
+                    $("#action").attr("disabled", true);
+                    $("#payment_cardMode").attr("disabled", true);
+                    $("#payment_issuedBank").attr("disabled", true);
+                    $("#payment_cardType").attr("disabled", true);
+                    $("#payment_merchantBank").attr("disabled", true);
+                }
             } else if(stus == '6') {
                 $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
@@ -217,6 +234,20 @@
                     $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                     $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
                 }
+
+                if(MEM_TYPE == 2){
+                	if(specialInst != '') {
+                	$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p readonly" readonly  />');
+                    $("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p readonly" readonly  />');
+                    $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="j_date readonly" readonly" />');
+                    $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                    $("#action").attr("disabled", true);
+                    $("#payment_allowCommFlg").attr("disabled", true);
+                    $("#unmatchPayment").attr("disabled", true);
+                    $("#specialInstruction").attr("disabled", true);
+                    $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                	}
+                }
             } else if (stus == '6') {
                 $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
@@ -286,18 +317,18 @@
 
         $('#svmFrFile').change( function(evt) {
             var file = evt.target.files[0];
-             if(file.name != svmFrFileName) {
+             if(file.name != svmFrName) {
                  myFileCaches[1] = {file:file};
-                 if(svmFrFileName != "") {
-                     update.push(svmFrFileId);
+                 if(svmFrName != "") {
+                     update.push(svmFrId);
                  }
              }
         });
         $('#svmTncFile').change( function(evt) {
             var file = evt.target.files[0];
-            if(file.name != svmTncFileName) {
+            if(file.name != svmTncName) {
                 myFileCaches[2] = {file:file};
-                if(svmTncFileName != "") {
+                if(svmTncName != "") {
                     update.push(svmTncFileId);
                 }
             }
@@ -522,7 +553,8 @@
                 trxId : $("#payment_transactionID").val(),
                 allowCommFlg : $("#payment_allowCommFlg").val(),
                 trRefNo : $("#payment_trRefNo").val(),
-                trIssuedDt : $("#payment_trIssuedDt").val()
+                trIssuedDt : $("#payment_trIssuedDt").val(),
+                memType : MEM_TYPE
         };
 
         // LaiKW - Added unmatch payment handling for non PO

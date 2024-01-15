@@ -30,7 +30,7 @@
           ,BRCNH.CODE || ' ' || BRCNH.NAME AS USER_BRCNH
           , STS1.NAME PROGRESS_STATUS
           , ESVM.STUS_PROGRESS
-          ,'['||UPDUSR.USER_NAME||']'||  ' ' ||TO_CHAR(ESVM.UPD_DT,'DD/MM/YYYY HH:MM AM') || ' -  ' || REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM
+          , REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM
         FROM SAL0298D ESVM
         LEFT JOIN SAL0093D QUO
             ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
@@ -290,6 +290,7 @@
             ESVM.APPV_USER_ID,
             ESVM.APPV_DT,
             REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM,
+            REGEXP_REPLACE('['||UPDUSR.USER_NAME||']'||  ' ' ||TO_CHAR(ESVM.UPD_DT,'DD/MM/YYYY HH:mi AM') || ' -  ' || ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL)  CODY_APPV_REM,
             ESVM.REM,
             ESVM.CRT_USER_ID,
             TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT,
@@ -324,6 +325,8 @@
         LEFT JOIN SAL0095D SM
             ON ESVM.PSM_SRV_MEM_NO = SM.SRV_MEM_NO
             AND ESVM.SVM_QUOT_ID = SM.SRV_MEM_QUOT_ID
+        LEFT JOIN SYS0047M UPDUSR
+        ON UPDUSR.USER_ID = ESVM.UPD_USER_ID
         WHERE PSM_ID = #{psmId}
     </select>
 
@@ -1357,7 +1360,7 @@
             ,A.STUS_PROGRESS
             ,B.CODE || ' - ' || B.RESN_DESC FAIL_REASON
             ,C.NAME STATUS
-            ,'['||D.USER_NAME||']'||  ' ' ||TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH:MM AM') || ' -  ' || A.APPV_REM REMARK
+            ,A.APPV_REM REMARK
             ,D.USER_NAME CREATOR
         FROM SAL0407D A
         LEFT JOIN SYS0032M B ON A.APPV_INSTRCT = B.RESN_ID
