@@ -18,6 +18,12 @@ $(document).ready(function()
         $("#checkMFAPop").remove();
       }, 30000);
 
+    // on enter button send
+    $("#code").keypress(function (event) {
+        if (event.keyCode == 13) {
+        	fn_submitMFA();
+        }
+    });
 
 		});
 
