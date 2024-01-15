@@ -988,36 +988,36 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 				params.put("orderNo", param.getOrderNo().toString());
 				params.put("orderId", param.getOrderId());
 
-    		    // Get account status info
-    			EgovMap accStusVO = chatbotInboundApiMapper.getAccStus(params);
+				//  Get app type
+				String appTypeId = chatbotInboundApiMapper.getAppTypeId(params);
 
-    			if(!CommonUtils.isEmpty(accStusVO)){
-    				outStdVO.setOrderNo(param.getOrderNo().toString());
-    				outStdVO.setAccountStatus(accStusVO.get("prgrs").toString());
+				if(!CommonUtils.isEmpty(appTypeId)){
+					if(appTypeId.equals("66")){ // RENTAL
+						// Get account status info
+		    			EgovMap accStusVO = chatbotInboundApiMapper.getAccStus(params);
 
-    				// Get total due amount = total outstanding + total unbill amount
-    				List<EgovMap> ordOutInfoList = getOderOutsInfo(params);
+		    			if(!CommonUtils.isEmpty(accStusVO)){
+		    				outStdVO.setOrderNo(param.getOrderNo().toString());
+		    				outStdVO.setAccountStatus(accStusVO.get("prgrs").toString());
 
-    				if(!CommonUtils.isEmpty(ordOutInfoList)){
+		    				// Get total due amount = total outstanding + total unbill amount
+		    				List<EgovMap> ordOutInfoList = getOderOutsInfo(params);
 
-    					EgovMap ordOutInfo = ordOutInfoList.get(0);
+		    				if(!CommonUtils.isEmpty(ordOutInfoList)){
 
-    					String ordTotOtstnd = ordOutInfo.get("ordTotOtstnd").toString().replace(",", "");
-    					String ordUnbillAmt = ordOutInfo.get("ordUnbillAmt").toString().replace(",", "");
-    					Double dueAmt = Double.parseDouble(ordTotOtstnd) + Double.parseDouble(ordUnbillAmt);
-    					outStdVO.setTotalAmtDue(dueAmt.toString());
-    				}
+		    					EgovMap ordOutInfo = ordOutInfoList.get(0);
 
-    				// Get last payment info
-    				String appTypeId = chatbotInboundApiMapper.getAppTypeId(params);
-    				EgovMap lastPayInfo = new EgovMap();
+		    					String ordTotOtstnd = ordOutInfo.get("ordTotOtstnd").toString().replace(",", "");
+		    					String ordUnbillAmt = ordOutInfo.get("ordUnbillAmt").toString().replace(",", "");
+		    					Double dueAmt = Double.parseDouble(ordTotOtstnd) + Double.parseDouble(ordUnbillAmt);
+		    					outStdVO.setTotalAmtDue(dueAmt.toString());
+		    				}
 
-    				if(!CommonUtils.isEmpty(appTypeId)){
-    					if(appTypeId.equals("66")){ // RENTAL
+		    				// Get last payment info
+		    				EgovMap lastPayInfo = new EgovMap();
         					lastPayInfo = chatbotInboundApiMapper.getRentalLastPayInfo(params);
 
         					if(!CommonUtils.isEmpty(lastPayInfo)){
-
         						if(lastPayInfo.containsKey("lastPaymentDt") && lastPayInfo.containsKey("lastPaymentAmt")){
         							outStdVO.setLastPayDate(lastPayInfo.get("lastPaymentDt").toString());
         							outStdVO.setLastPaymentAmt(Double.parseDouble(lastPayInfo.get("lastPaymentAmt").toString()));
@@ -1042,10 +1042,20 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
                 	    		params.put("message", "Last payment info not found");
             	    		}
 
-    					}else{
-    						params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-            	    		params.put("message", "This order is not a rental order.");
-    					}
+		    			}else{
+		    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+	        	    		params.put("message", "Account status not found");
+		    			}
+
+					}else{
+	    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+        	    		params.put("message", "This order is not a rental order");
+	    			}
+
+				}else{
+					params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+    	    		params.put("message", "Order's app type not found");
+				}
 
 //        				else if(appTypeId.equals("1412")) { // OUTRIGHT PLUS
 //        					lastPayInfo = chatbotInboundApiMapper.getOutPlusLastPayInfo(params);
@@ -1053,17 +1063,6 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 //        				}else{
 //        					lastPayInfo = chatbotInboundApiMapper.getOthersLastPayInfo(params);
 //        				}
-
-
-    				}else{
-        	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-        	    		params.put("message", "Order's app type not found");
-    				}
-
-    			}else{
-    	    		params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-    	    		params.put("message", "Account status not found");
-    			}
 
     	    }else{
         		params.put("statusCode", authorize.get("code"));
