@@ -105,7 +105,10 @@ public class MobileLumpSumPaymentApiController {
 			result.setResponseCode(1);
 			params.putAll(searchResult);
 
-			mobileLumpSumPaymentKeyInService.sendSms(params);
+			/*
+			 * Temporary dont sent sms due to request, have to update sms message if reopen
+			 */
+			//mobileLumpSumPaymentKeyInService.sendSms(params);
 			mobileLumpSumPaymentKeyInService.sendEmail(params);
 		}
 		else{
