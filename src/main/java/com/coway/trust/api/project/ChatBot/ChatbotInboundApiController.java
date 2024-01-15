@@ -19,6 +19,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.api.vo.chatbotInbound.GetOtdReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.GetPayModeReqForm;
+import com.coway.trust.biz.api.vo.chatbotInbound.OrderListReqForm;
 import com.coway.trust.biz.api.vo.chatbotInbound.VerifyCustIdentityReqForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -42,7 +43,7 @@ public class ChatbotInboundApiController {
 
 	@ApiOperation(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> getOrderList(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
+	public ResponseEntity<EgovMap> getOrderList(HttpServletRequest request,@ModelAttribute OrderListReqForm params) throws Exception {
 		return ResponseEntity.ok(chatbotInboundApiService.getOrderList(request, params));
 	}
 

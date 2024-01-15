@@ -223,12 +223,13 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 
 	@Override
-	public EgovMap getOrderList(HttpServletRequest request, Map<String, Object> params) throws Exception {
+	public EgovMap getOrderList(HttpServletRequest request, OrderListReqForm reqParameter) throws Exception {
 		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 
 		StopWatch stopWatch = new StopWatch();
 		EgovMap resultValue = new EgovMap();
 		List<OrderVO> orderVO = new ArrayList<>();
+		Map<String, Object> params = new HashMap<String, Object>();
 
 		try{
     		stopWatch.reset();
@@ -238,11 +239,6 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
     		if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
 
-    			// Check phone number whether exist or not
-    			String data = commonApiService.decodeJson(request);
-    			Gson g = new Gson();
-    			OrderListReqForm reqParameter = g.fromJson(data, OrderListReqForm.class);
-    			System.out.print("reqParameter aaa " + CommonUtils.intNvl(reqParameter.getCustId()));
     			if(CommonUtils.intNvl(reqParameter.getCustId()) < 0){
     				resultValue.put("success", false);
     				resultValue.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
@@ -272,8 +268,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     			if(isCustExist > 0){
 
 
-    				List<EgovMap> orderListRaw = chatbotInboundApiMapper.getOrderList(params);
-    				for(EgovMap orderRaw : orderListRaw){
+    				List<Map<String, Object>> orderListRaw = chatbotInboundApiMapper.getOrderList(params);
+    				for(Map<String, Object> orderRaw : orderListRaw){
     					OrderVO order = OrderVO.create(orderRaw);
     					orderVO.add(order);
     				}

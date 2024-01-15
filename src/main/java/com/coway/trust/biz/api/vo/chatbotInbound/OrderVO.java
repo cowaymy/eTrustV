@@ -1,6 +1,7 @@
 package com.coway.trust.biz.api.vo.chatbotInbound;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import com.coway.trust.biz.api.vo.SurveyCategoryDto;
 import com.coway.trust.util.BeanConverter;
@@ -17,7 +18,7 @@ public class OrderVO implements Serializable{
 	private String appType;
 
 	@SuppressWarnings("unchecked")
-	public static OrderVO create(EgovMap egvoMap) {
+	public static OrderVO create(Map<String, Object> egvoMap) {
 		return BeanConverter.toBean(egvoMap, OrderVO.class);
 	}
 

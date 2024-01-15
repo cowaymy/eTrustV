@@ -11,7 +11,7 @@ public interface ChatbotInboundApiMapper {
 	EgovMap checkAccess(Map<String, Object> params);
 	List<EgovMap> verifyCustIdentity(Map<String, Object> params);
 	int isCustExist(Map<String, Object> params);
-	List<EgovMap> getOrderList(Map<String, Object> params);
+	List<Map<String, Object>> getOrderList(Map<String, Object> params);
 	int CBT0006M_insert(Map<String, Object> params);
 	EgovMap getSoaDet(Map<String, Object> params);
 	EgovMap getInvoiceDet(Map<String, Object> params);
