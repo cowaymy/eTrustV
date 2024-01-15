@@ -682,7 +682,8 @@
 		<if test='fromDate != null and fromDate != null'>
 			<if test='toDate != "" and toDate != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
+					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY')
+					AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
 				]]>
 			</if>
 		</if>
@@ -876,8 +877,8 @@
 		<if test='fromDate != null and toDate != null'>
 			<if test='fromDate != "" and toDate != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD')
-					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY')
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
 				]]>
 			</if>
 		</if>
