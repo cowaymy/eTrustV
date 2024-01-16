@@ -1090,13 +1090,16 @@
 								var message = "";
 
 								if (result != null
-										&& result.length > 0) {
-									for (i = 0; i < result.length; i++) {
+										&& result.data.length > 0) {
+									for (var i = 0; i < result.data.length; i++) {
 										message += "<font color='red'>"
-												+ result[i].payItmAppvNo
+												+ result.data[i].payItmAppvNo
 												+ " approval no has been uploaded before"
 												+"</font><br>";
 									}
+									Common.alertScroll(
+											message,
+											function() {});
 								}
 								return false;
 							} else {
@@ -1110,12 +1113,12 @@
 														var message = "<spring:message code='pay.alert.successProc'/>";
 
 														if (result != null
-																&& result.length > 0) {
-															for (i = 0; i < result.length; i++) {
+																&& result.data.length > 0) {
+															for (var i = 0; i < result.data.length; i++) {
 																message += "<font color='red'>"
-																		+ result[i].orNo
+																		+ result.data[i].orNo
 																		+ " (Order No: "
-																		+ result[i].salesOrdNo
+																		+ result.data[i].salesOrdNo
 																		+ ")</font><br>";
 															}
 														}

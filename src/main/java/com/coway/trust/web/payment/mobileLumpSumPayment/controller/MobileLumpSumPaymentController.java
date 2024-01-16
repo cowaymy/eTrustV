@@ -128,12 +128,14 @@ public class MobileLumpSumPaymentController {
 		List<EgovMap> result = mobileLumpSumPaymentKeyInService.savePaymentCard(params,sessionVO);
 		ReturnMessage message = new ReturnMessage();
 
-		if(result != null){
+		if(result != null && result.size() > 0){
 		    message.setCode(AppConstants.SUCCESS);
+		    message.setData(result);
 		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
 		else{
 		    message.setCode(AppConstants.FAIL);
+		    message.setData(result);
 		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
 	    return ResponseEntity.ok(message);
@@ -169,6 +171,7 @@ public class MobileLumpSumPaymentController {
 		}
 		else{
 		    message.setCode(AppConstants.SUCCESS);
+		    message.setData(result);
 		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
 

@@ -484,7 +484,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				int currFormSize = dataList.size();
 				EgovMap orderDetail = subDetailList.get(i);
 
-				String salesOrdNo = new BigDecimal(orderDetail.get("salesOrdNo").toString()).toPlainString();
+				String salesOrdNo = orderDetail.get("salesOrdNo").toString();
 				String salesOrdId = new BigDecimal(orderDetail.get("salesOrdId").toString()).toPlainString();
 
 				Map<String, Object> subInfoParam = new HashMap();
@@ -584,7 +584,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		List<Object> gridDataList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
 		List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // FORM OBJECT DATA IMPORT
 
-		List<EgovMap> resultList = null;
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
 		String allowance = "0";
 		String trRefNo = "";
 		String trIssDt = "";
@@ -622,7 +622,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		// Get all detail record of MobPayGroupNo
 		for (int i = 0; i < gridDataList.size(); i++) {
-			List<EgovMap> resultReceiptList = null;
+			List<EgovMap> resultReceiptList = new ArrayList<EgovMap>();
 			int iProcSeq = 1;
 			List<String> mobPayGroupNoList = new ArrayList();
 			String payMode = "";
@@ -649,7 +649,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 					int currFormSize = formList.size();
 					EgovMap orderDetail = subDetails.get(j);
 
-					String salesOrdNo = new BigDecimal(orderDetail.get("salesOrdNo").toString()).toPlainString();
+					String salesOrdNo = orderDetail.get("salesOrdNo").toString();
 					String salesOrdId = new BigDecimal(orderDetail.get("salesOrdId").toString()).toPlainString();
 					Map<String, Object> subInfoParam = new HashMap();
 					subInfoParam.put("salesOrdNo", salesOrdNo);
@@ -725,9 +725,11 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 					formInfo.put("keyInPayType", "107");
 					formInfo.put("keyInPayDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1)); // 임시
 				}
+				formInfo.put("userid", sessionVO.getUserId());
 				formInfo.put("userId", sessionVO.getUserId());
 				// INSERT TO PAY0240T AND PAY0241T AND LATER EXECUTE SP_INST_NORMAL_PAYMENT
-				resultReceiptList.addAll(commonPaymentService.savePayment(formInfo, formList));
+				List<EgovMap> saveResult = commonPaymentService.savePayment(formInfo, formList);
+				resultReceiptList.addAll(saveResult);
 
 				String[] mobPayGroupNoArr = mobPayGroupNoList.toArray(new String[0]);
 				if (resultReceiptList.size() > 0) {
@@ -1000,7 +1002,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		EgovMap psmPay24Info = mobileLumpSumPaymentKeyInMapper.getPay0024D(subInfoParam);
 
 		subInfoParam.put("COLL_MEM_CODE", params.get("memCode"));
-		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
+ 		List<EgovMap> paymentCollectorConfirm = membershipPaymentService.paymentColleConfirm(subInfoParam);
 
 		if (paymentCollectorConfirm.get(0) == null) {
 			throw new ApplicationException(AppConstants.FAIL, "No record found for payment collection's member.");
@@ -1012,7 +1014,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			BigDecimal packageAmt = new BigDecimal(
 					"".equals(CommonUtils.nvl(String.valueOf(psmPay24Info.get("packageAmt")))) ? "0"
 							: String.valueOf(psmPay24Info.get("packageAmt")));
-			if (totRemainAmt.compareTo(packageAmt) >= 0) {
+
+			if(totRemainAmt.compareTo(BigDecimal.ZERO) > 0 && packageAmt.compareTo(BigDecimal.ZERO) > 0) {
 				formMap = new HashMap<String, Object>();
 				formMap.put("procSeq", "1");
 				formMap.put("appType", "OUT_MEM");
@@ -1048,9 +1051,6 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				formList.add(formMap);
 
 				totRemainAmt = totRemainAmt.subtract(packageAmt);
-			} else {
-				throw new ApplicationException(AppConstants.FAIL,
-						"Payment Amount for membership is not equal to the charged amount for order no :" + salesOrdNo);
 			}
 		}
 
@@ -1062,45 +1062,49 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				BigDecimal filterAmt = new BigDecimal(
 						"".equals(CommonUtils.nvl(String.valueOf(psmPay24Info.get("filterAmt")))) ? "0"
 								: String.valueOf(psmPay24Info.get("filterAmt")));
-				if (totRemainAmt.compareTo(filterAmt) >= 0) {
-					formMap = new HashMap<String, Object>();
+				if(filterAmt.compareTo(BigDecimal.ZERO) > 0){
+    					if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
+    						formMap = new HashMap<String, Object>();
 
-					formMap.put("procSeq", "1");
-					formMap.put("appType", "OUT_MEM");
-					formMap.put("advMonth", "0");
-					formMap.put("billGrpId", "0");
-					formMap.put("billId", "0");
-					formMap.put("ordId", salesOrdId);
-					formMap.put("mstRpf", "0");
-					formMap.put("mstRpfPaid", "0");
-					formMap.put("billNo", "0");
-					formMap.put("ordNo", salesOrdNo);
-					formMap.put("billTypeId", "542");
-					formMap.put("billTypeNm", "Filter (1st BS)");
-					formMap.put("installment", "0");
-					formMap.put("billAmt", psmPay24Info.get("filterCharge"));
-					formMap.put("paidAmt", psmPay24Info.get("filterPaid"));
-					formMap.put("targetAmt", psmPay24Info.get("filterAmt"));
-		            formMap.put("billDt", "1900-01-01");
-					formMap.put("assignAmt", "0");
-					formMap.put("billStatus", "");
-					formMap.put("custNm", svmInfo.get("name"));
-					formMap.put("srvcContractID", "0");
-					formMap.put("billAsId", "0");
-					formMap.put("discountAmt", "0");
-					formMap.put("srvMemId", srvMemId);
-					formMap.put("trNo", trRefNo);
-					formMap.put("trDt", trIssDt);
-					formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-					formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-					formMap.put("allowComm", allowance);
+    						formMap.put("procSeq", "1");
+    						formMap.put("appType", "OUT_MEM");
+    						formMap.put("advMonth", "0");
+    						formMap.put("billGrpId", "0");
+    						formMap.put("billId", "0");
+    						formMap.put("ordId", salesOrdId);
+    						formMap.put("mstRpf", "0");
+    						formMap.put("mstRpfPaid", "0");
+    						formMap.put("billNo", "0");
+    						formMap.put("ordNo", salesOrdNo);
+    						formMap.put("billTypeId", "542");
+    						formMap.put("billTypeNm", "Filter (1st BS)");
+    						formMap.put("installment", "0");
+    						formMap.put("billAmt", psmPay24Info.get("filterCharge"));
+    						formMap.put("paidAmt", psmPay24Info.get("filterPaid"));
+    						formMap.put("targetAmt", psmPay24Info.get("filterAmt"));
+    			            formMap.put("billDt", "1900-01-01");
+    						formMap.put("assignAmt", "0");
+    						formMap.put("billStatus", "");
+    						formMap.put("custNm", svmInfo.get("name"));
+    						formMap.put("srvcContractID", "0");
+    						formMap.put("billAsId", "0");
+    						formMap.put("discountAmt", "0");
+    						formMap.put("srvMemId", srvMemId);
+    						formMap.put("trNo", trRefNo);
+    						formMap.put("trDt", trIssDt);
+    						formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+    						formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+    						formMap.put("allowComm", allowance);
 
-					formList.add(formMap);
-				} else {
-					throw new ApplicationException(AppConstants.FAIL,
-							"Payment Amount for membership filter is not enough for order no :" + salesOrdNo);
+    						formList.add(formMap);
+    				}
 				}
 			}
+		}
+
+		if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
+				throw new ApplicationException(AppConstants.FAIL,
+						"Overpay amount exist for order no :" + salesOrdNo + ".");
 		}
 
 		return formList;

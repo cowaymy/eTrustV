@@ -695,7 +695,7 @@
 				AND s0029d.NAME LIKE   '%' || UPPER(#{custCi}) || '%'
 			</if>
 			<if test='custCiType == 3'>
-				AND s0029d.NRIC LIKE   '%' || UPPER(#{custCi}) || '%'
+				AND s0029d.NRIC LIKE   '%' || UPPER(#{custCi}) || '%' OR s0029d.CUST_ID LIKE  '%' || UPPER(#{custCi}) || '%')
 			</if>
 		</if>
         GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME,
