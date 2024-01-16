@@ -551,6 +551,7 @@
 		NAME,
 		EMAIL_SENT_STUS,
 		CATEGORY_ID,
+		ATTACHMENT,
 		CRT_DT,
 		CRT_BY
 		)
@@ -564,7 +565,8 @@
 		#{email},
 		#{name},
 		#{emailSentStus},
-		1
+		#{categoryId},
+		#{attachment},
 		SYSDATE,
 		#{userId}
 		)

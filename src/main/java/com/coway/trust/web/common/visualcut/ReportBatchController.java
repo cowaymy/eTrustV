@@ -45,6 +45,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.attendance.AttendanceService;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.common.ReportBatchService;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
@@ -60,6 +61,7 @@ import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -107,6 +109,8 @@ public class ReportBatchController {
   @Resource(name="chatbotInboundApiService")
 	private ChatbotInboundApiService chatbotInboundApiService;
 
+  @Resource(name = "voucherMapper")
+	private VoucherMapper voucherMapper;
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
@@ -2997,7 +3001,7 @@ public void dataMartReport(HttpServletRequest request) {
   }
   LOGGER.info("[END] DataMartReport...");
 }
-@RequestMapping(value = "/InboundGenPdf.do")
+/*@RequestMapping(value = "/InboundGenPdf.do")
 //@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
 public void InboundGenPdf1(@RequestParam Map<String, Object> param) throws Exception {
 LOGGER.info("[START] InboundGenPdf...");
@@ -3044,21 +3048,27 @@ if(emailListToSend.size() > 0){
 //
 //this.viewProcedure(null, null, params);
 LOGGER.info("[END] InboundGenPdf...");
-}
+}*/
 
 
 /** Added for new MD report - Sales Analysis Key In Report by Hui Ding, 05/01/2024 **/
 @RequestMapping(value = "/salesAnalysisReport.do")
-//@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
+//@Scheduled(cron = "0 30 6 * * *")//Daily (06:30am)
 public void SalesAnalystReport() {
+
+List<String> fileName = new ArrayList<String>();
+String fileNm = "";
+
   LOGGER.info("[START] SalesAnalysisKeyInDST...");
   Map<String, Object> params = new HashMap<>();
   params.put(REPORT_FILE_NAME, "/visualcut/SalesAnalysisKeyInDST.rpt");// visualcut rpt
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisKeyInDST" + File.separator + "SalesAnalysisKeyInDST_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisKeyInDST" + File.separator + "Key-in by DST (HP)_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisKeyInDST...");
@@ -3070,8 +3080,10 @@ public void SalesAnalystReport() {
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisKeyInCL" + File.separator + "SalesAnalysisKeyInCL_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisKeyInCL" + File.separator + "Key-in by CL (CD)_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisKeyInCL...");
@@ -3084,8 +3096,9 @@ public void SalesAnalystReport() {
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisKeyInCatDST" + File.separator + "SalesAnalysisKeyInCatDST_" + CommonUtils.getNowDate() + ".xls");
+  fileNm = "MDReport/SalesAnalysisKeyInCatDST" + File.separator + "Key-in by DST (HP) with product categories_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisKeyInCatDST...");
@@ -3098,8 +3111,10 @@ public void SalesAnalystReport() {
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisKeyInCatCL" + File.separator + "SalesAnalysisKeyInCatCL_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisKeyInCatCL" + File.separator + "Key-in by CL (CD) with product categories_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisKeyInCatCL...");
@@ -3112,8 +3127,10 @@ public void SalesAnalystReport() {
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisNetDST" + File.separator + "SalesAnalysisNetDST_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisNetDST" + File.separator + "Net Sales by DST (HP)_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisNetDST...");
@@ -3127,8 +3144,9 @@ public void SalesAnalystReport() {
                                                              // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "MDReport/SalesAnalysisNetCL" + File.separator + "SalesAnalysisNetCL_" + CommonUtils.getNowDate() + ".xls");
+  fileNm = "MDReport/SalesAnalysisNetCL" + File.separator + "Net Sales by CL (CD)_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisNetCL...");
@@ -3143,8 +3161,10 @@ public void SalesAnalystReport() {
                                                            // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-    "MDReport/SalesAnalysisNetCatDST" + File.separator + "SalesAnalysisNetCatDST_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisNetCatDST" + File.separator + "Net Sales by DST (HP) with product categories_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisNetCatDST...");
@@ -3158,14 +3178,51 @@ public void SalesAnalystReport() {
                                                            // file name.
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("V_TEMP", "TEMP");// parameter
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-    "MDReport/SalesAnalysisNetCatCL" + File.separator + "SalesAnalysisNetCatCL_" + CommonUtils.getNowDate() + ".xls");
+
+  fileNm = "MDReport/SalesAnalysisNetCatCL" + File.separator + "Net Sales by CL (CD) with product categories_" + CommonUtils.getNowDate() + ".xls";
+  fileName.add(fileNm);
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, fileNm);
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] SalesAnalysisNetCatCL...");
+
+
+  // file location
+  String fileLocPath = uploadDirWeb + "/RawData/Public/";
+  String fNameList = "";
+
+  if (fileName != null && fileName.size() > 0){
+	  LOGGER.info("fileName:-------------" + fileName.size());
+	  for (int i = 0; i < fileName.size(); i++) {
+		  if (i == fileName.size()-1) {
+			  fNameList += fileLocPath + fileName.get(i);
+		  } else {
+			  fNameList += fileLocPath + fileName.get(i) + "///";
+		  }
+	  }
+  }
+  // insert batch email table
+  int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
+
+  Map<String,Object> emailDet = new HashMap<String, Object>();
+  		emailDet.put("mailId", mailIDNextVal);
+      emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
+      emailDet.put("attachment", fNameList);
+      emailDet.put("categoryId", 2);
+      emailDet.put("emailParams", "Dear, <br /><br />Good day<br /><br />Kindly refer to the attached files as the daily Sales Analysis Report for "
+    		  									+ CommonUtils.getNowDate() + "<br /><br />Thank you. <br /><br />Regards,<br />Coway (Malaysia) Sdn Bhd");
+       emailDet.put("email", "luis.jeong@coway.com.my;dennis.ko@coway.com.my;jack@coway.com.my;itsd@coway.com.my;planning@coway.com.my");
+      //emailDet.put("email", "huiding.teoh@coway.com.my");
+        emailDet.put("emailSentStus", 1);
+        emailDet.put("name", "");
+        emailDet.put("userId", 349);
+        emailDet.put("emailSubject", "DAILY SALES ANALYSIS REPORT");
+
+    	voucherMapper.insertBatchEmailSender(emailDet);
+
 }
 
-/** End for new RawData report - Mobile Usage Analyst by Hui Ding, 23-04-2020 **/
+/** End for new MD report - Sales Analysis Key In Report by Hui Ding, 05/01/2024 **/
 
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
