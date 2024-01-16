@@ -187,7 +187,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     	    }
 
 	 	} catch(Exception e){
-	 		params.put("message", "Failed to get info.");
+	 		params.put("statusCode", AppConstants.FAIL);
+	 		params.put("message", !CommonUtils.isEmpty(e.getMessage()) ? e.getMessage() : "Failed to get info.");
 			e.printStackTrace();
 	 		LOGGER.debug(">>> Error Message :" + e);
 
@@ -306,7 +307,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		}catch(Exception ex){
 			resultValue.put("success",false);
-			resultValue.put("message", "Failed to get info.");
+			resultValue.put("statusCode", AppConstants.FAIL);
+			resultValue.put("message", !CommonUtils.isEmpty(ex.getMessage()) ? ex.getMessage() : "Failed to get info.");
 			ex.printStackTrace();
 			LOGGER.error(">>> Exception :" + ex);
 		}finally{
@@ -509,7 +511,9 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		}catch(Exception ex){
 			LOGGER.error(">>> Exception :" + ex);
 			ex.printStackTrace();
-			resultValue.put("message", "Failed to get info.");
+			resultValue.put("success",false);
+			resultValue.put("statusCode", AppConstants.FAIL);
+			resultValue.put("message", !CommonUtils.isEmpty(ex.getMessage()) ? ex.getMessage() : "Failed to get info.");
 		}finally{
     		stopWatch.stop();
     		respTm = stopWatch.toString();
@@ -903,7 +907,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		} catch(Exception e){
 			LOGGER.debug(">>> Error message : " + e);
 			e.printStackTrace();
-			params.put("message", "Failed to get info.");
+			params.put("statusCode", AppConstants.FAIL);
+			params.put("message", !CommonUtils.isEmpty(e.getMessage()) ? e.getMessage() : "Failed to get info.");
 
 		} finally{
 			// Return result
@@ -1069,7 +1074,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	 	} catch(Exception e){
 	 		LOGGER.debug(">>> error message : " + e);
 	 		e.printStackTrace();
-	 		params.put("message", "Failed to get info.");
+	 		params.put("statusCode", AppConstants.FAIL);
+	 		params.put("message", !CommonUtils.isEmpty(e.getMessage()) ? e.getMessage() : "Failed to get info.");
 
 	 	} finally{
 	 		// Return result
