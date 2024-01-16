@@ -1241,6 +1241,11 @@
             }
         }
 
+        if($("#srvPacId option:selected").index() <= 0){
+     	   isValid = false;
+            msg += "* Please select a package.<br>";
+        }
+
         if($("#ordProudct option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select a product.<br>";
@@ -1824,9 +1829,9 @@
         $('#installDur').val('');
         $('#ordProudct').val('');
         $('#ordPromo').val('');
-        $('#relatedNo').val('');
-        $('#hiddenMonthExpired').val('');
-        $('#hiddenPreBook').val('');
+        //$('#relatedNo').val('');
+        //$('#hiddenMonthExpired').val('');
+        //$('#hiddenPreBook').val('');
         //$('#isReturnExtrade').prop("checked", true);
         $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
@@ -2286,7 +2291,7 @@
     var exTrade = $("#exTrade").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() ,preBook : $('#hiddenPreBook').val() }, '', 'ordPromo', 'S', '');
     }
 
   function displayVoucherSection(){
