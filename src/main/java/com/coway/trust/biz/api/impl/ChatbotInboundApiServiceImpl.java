@@ -187,9 +187,9 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     	    }
 
 	 	} catch(Exception e){
-	 		params.put("message", e.getMessage() != null ? e.getMessage() : "");
+	 		params.put("message", "Failed to get info.");
+			e.printStackTrace();
 	 		LOGGER.debug(">>> Error Message :" + e);
-			throw e;
 
 	 	} finally{
 	 		// Return result
@@ -210,11 +210,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		    respTm = stopWatch.toString();
 
 		    // Insert log into API0004M
-		    params.put("reqParam", reqParam);
+		    params.put("reqParam", CommonUtils.nvl(reqParam));
 		    params.put("ipAddr", CommonUtils.getClientIp(request));
 		    params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-		    params.put("respTm", respTm);
-		    params.put("apiUserId", apiUserId);
+		    params.put("respTm", CommonUtils.nvl(respTm));
+		    params.put("apiUserId", CommonUtils.nvl(apiUserId));
 		    rtnRespMsg(params);
 	 	}
 
@@ -306,6 +306,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		}catch(Exception ex){
 			resultValue.put("success",false);
+			resultValue.put("message", "Failed to get info.");
 			ex.printStackTrace();
 			LOGGER.error(">>> Exception :" + ex);
 		}finally{
@@ -508,7 +509,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		}catch(Exception ex){
 			LOGGER.error(">>> Exception :" + ex);
 			ex.printStackTrace();
-			resultValue.put("message", ex.getMessage() != null ? ex.getMessage() : "");
+			resultValue.put("message", "Failed to get info.");
 		}finally{
     		stopWatch.stop();
     		respTm = stopWatch.toString();
@@ -901,8 +902,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		} catch(Exception e){
 			LOGGER.debug(">>> Error message : " + e);
-			params.put("message", e.getMessage() != null ? e.getMessage() : "");
-			throw e;
+			e.printStackTrace();
+			params.put("message", "Failed to get info.");
 
 		} finally{
 			// Return result
@@ -930,11 +931,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 			respTm = stopWatch.toString();
 
 			// Insert log into API0004M
-			params.put("reqParam", reqParam);
+			params.put("reqParam",  CommonUtils.nvl(reqParam));
 			params.put("ipAddr", CommonUtils.getClientIp(request));
 			params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-			params.put("respTm", respTm);
-			params.put("apiUserId", apiUserId);
+			params.put("respTm", CommonUtils.nvl(respTm));
+			params.put("apiUserId", CommonUtils.nvl(apiUserId));
 			rtnRespMsg(params);
 		}
 
@@ -1067,8 +1068,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	 	} catch(Exception e){
 	 		LOGGER.debug(">>> error message : " + e);
-	 		params.put("message", e.getMessage() != null ? e.getMessage() : "");
-			throw e;
+	 		e.printStackTrace();
+	 		params.put("message", "Failed to get info.");
 
 	 	} finally{
 	 		// Return result
@@ -1089,11 +1090,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		    respTm = stopWatch.toString();
 
 		    // Insert log into API0004M
-		    params.put("reqParam", reqParam);
+		    params.put("reqParam", CommonUtils.nvl(reqParam));
 		    params.put("ipAddr", CommonUtils.getClientIp(request));
 		    params.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
-		    params.put("respTm", respTm);
-		    params.put("apiUserId", apiUserId);
+		    params.put("respTm", CommonUtils.nvl(respTm));
+		    params.put("apiUserId", CommonUtils.nvl(apiUserId));
 		    rtnRespMsg(params);
 	 	}
 
