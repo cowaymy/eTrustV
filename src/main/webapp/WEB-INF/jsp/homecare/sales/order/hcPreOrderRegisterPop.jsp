@@ -1014,6 +1014,11 @@
             }
         }
 
+        if ($("#srvPacId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select a package.<br>";
+          }
+
         if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select mattress.<br>";
@@ -1569,7 +1574,7 @@
 
     function fn_clearSales() {
         $('#installDur').val('');
-        $('#relatedNo').val('');
+        //$('#relatedNo').val('');
         $('#isReturnExtrade').attr("disabled",true);
 
         $('#ordProduct1').val('');
@@ -2083,7 +2088,7 @@
         var empInd = 0;
         var exTrade = $("#exTrade").val();
 
-        doGetComboData('/sales/order/selectPromoBsdCpntESales.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
+        doGetComboData('/sales/order/selectPromoBsdCpntESales.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, preBook : $('#hiddenPreBook').val() }, '', 'ordPromo'+tagNum, 'S', '');
     }
 
     function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
