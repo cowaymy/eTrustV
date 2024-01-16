@@ -1293,6 +1293,11 @@ var userType = "${userType}";
             }
         }
 
+        if($("#srvPacId option:selected").index() <= 0){
+     	   isValid = false;
+            msg += "* Please select a package.<br>";
+        }
+
         if($("#ordProudct option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select a product.<br>";
@@ -1575,7 +1580,7 @@ var userType = "${userType}";
         var exTrade = $("#exTrade").val();
         var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
-        doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
+        doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, preBook : $('#hiddenPreBook').val()}, '', 'ordPromo', 'S', '');
       }
 
     function fn_closePreOrdModPop() {
