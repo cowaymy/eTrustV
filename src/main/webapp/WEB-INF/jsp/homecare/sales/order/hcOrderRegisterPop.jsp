@@ -2919,7 +2919,7 @@
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, preBook : $('#hiddenPreBook').val() }, '', 'ordPromo'+tagNum, 'S', '');
   }
 
   function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
