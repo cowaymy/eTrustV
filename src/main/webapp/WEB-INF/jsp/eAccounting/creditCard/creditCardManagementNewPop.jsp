@@ -188,6 +188,7 @@
 	* Document Ready section
 	*/
 	$(document).ready(function() {
+				        doGetComboOrder('/common/selectCodeList.do', '569', 'CODE_ID','', 'managementCardLvl','S',''); //Common Code
 						setInputFile2();
 
 						$("#holder_search_btn").click(function() {
@@ -412,6 +413,17 @@
 							<td><input type="text" title="기준년월" placeholder="MM/YYYY"
 								class="j_date2 w100p" id="crditCardExprDt"
 								name="crditCardExprDt" /></td>
+						</tr>
+						<tr>
+							<th scope="row">Management Level</th>
+							<td>
+								<select class="multy_select" id="managementCardLvl"
+									name="managementCardLvl">
+								</select>
+							</td>
+							<th>
+							</th>
+							<td></td>
 						</tr>
 						<tr>
 							<th scope="row"><spring:message

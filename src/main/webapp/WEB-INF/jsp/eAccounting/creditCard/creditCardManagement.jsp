@@ -298,6 +298,11 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
+    if(FormUtil.isEmpty($("#managementCardLvl").val())) {
+        Common.alert('Please choose management level for the card');
+        checkResult = false;
+        return checkResult;
+    }
     return checkResult;
 }
 

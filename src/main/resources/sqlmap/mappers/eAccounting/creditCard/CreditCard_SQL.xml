@@ -161,6 +161,7 @@
         ,ATCH_FILE_GRP_ID
         ,CRDIT_CARD_REM
         ,CRDIT_CARD_STUS
+        ,CARD_MGMT_LVL
         ,CRT_DT
         ,CRT_USER_ID
         ,UPD_DT
@@ -183,6 +184,7 @@
        ,#{fileGroupKey}
        ,#{crditCardRem}
        ,'A'
+       ,#{managementCardLvl}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -255,6 +257,7 @@ SELECT T1.CRDIT_CARD_SEQ
         ,T1.CRT_USER_ID
         ,T1.UPD_DT
         ,T1.UPD_USER_ID
+        ,T1.CARD_MGMT_LVL
 FROM   FCM0016M T1 LEFT JOIN ORG0001D T2
                       ON T1.CHRG_USER_ID = T2.MEM_CODE
 WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
@@ -283,6 +286,7 @@ WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
        ,APPV_CRDIT_LIMIT = #{appvCrditLimit}
        ,CRDIT_CARD_EXPR_DT = TO_DATE(#{crditCardExprDt}, 'MM/YYYY')
        ,CRDIT_CARD_REM = #{crditCardRem}
+       ,CARD_MGMT_LVL = #{managementCardLvl}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CRDIT_CARD_SEQ = #{crditCardSeq}

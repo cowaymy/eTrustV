@@ -267,6 +267,8 @@ function fn_loadApprovalLine(){
  * Document Ready
  */
  $(document).ready(function () {
+	 	doGetComboOrder('/common/selectCodeList.do', '569', 'CODE_ID','${crditCardInfo.cardMgmtLvl}', 'managementCardLvl','S',''); //Common Code
+
 		// 수정시 첨부파일이 없는경우 디폴트 파일태그 생성
 	    console.log(attachmentList);
 	    if(attachmentList.length <= 0) {
@@ -463,6 +465,17 @@ function fn_loadApprovalLine(){
 	<td><input type="text" title="" placeholder="" class="w100p" id="appvCrditLimit" name="appvCrditLimit" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/></td>
 	<th scope="row"><spring:message code="crditCardNewMgmt.expiryDt" /></th>
 	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="crditCardExprDt" name="crditCardExprDt" value="${crditCardInfo.crditCardExprDt}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>/></td>
+</tr>
+<tr>
+	<th scope="row">Management Level</th>
+	<td>
+		<select class="multy_select" id="managementCardLvl"
+			name="managementCardLvl">
+		</select>
+	</td>
+	<th>
+	</th>
+	<td></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
