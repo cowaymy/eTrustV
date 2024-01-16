@@ -2745,11 +2745,34 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      AND B.PRE_BOOK = 0
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
+      <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
+      <if test='preBook == "1" and exTrade == "1"'>
+      UNION
+      SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) C on C.PROMO_ID = B.PROMO_ID
+    WHERE B.E_SALES IN (0,2)
+      AND A.ITM_STK_ID = #{stkId}
+      AND A.APP_TYPE_ID = #{appTyp}
+      AND A.ITM_CPNT_ID = #{cpntId}
+      AND B.EMP_CHK = #{empInd}
+      AND B.EX_TRADE = #{exTrade}
+      AND B.PRE_BOOK = 1
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+      <if test="srvPacId != null and srvPacId != ''">
+        AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+      </if>
+      </if>
+
     </select>
 
     <select id="selectPromoBsdCpntESales" parameterType="Map" resultType="egovMap">
@@ -2763,6 +2786,7 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      AND B.PRE_BOOK = 0
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       union
@@ -2776,8 +2800,27 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      AND B.PRE_BOOK = 0
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+
+      <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
+      <if test='preBook == "1" and exTrade == "1"'>
+      UNION
+      SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    WHERE B.E_SALES IN (1,2)
+      AND A.ITM_STK_ID = #{stkId}
+      AND A.APP_TYPE_ID = #{appTyp}
+      AND A.ITM_CPNT_ID = #{cpntId}
+      AND B.EMP_CHK = #{empInd}
+      AND B.EX_TRADE = #{exTrade}
+      AND B.PRE_BOOK = 1
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+      </if>
     </select>
 
   <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
