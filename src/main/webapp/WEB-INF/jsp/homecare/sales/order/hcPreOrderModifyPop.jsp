@@ -1101,6 +1101,12 @@ var userType = '${SESSION_INFO.userTypeId}';
       }
     }
 
+    if ($("#srvPacId option:selected").index() <= 0) {
+        isValid = false;
+        msg += "* Please select a package.<br>";
+      }
+
+
     if ($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() <= 0) {
       isValid = false;
       msg += "* Please select a product.<br>";
