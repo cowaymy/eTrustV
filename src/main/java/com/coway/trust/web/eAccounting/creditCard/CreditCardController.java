@@ -82,8 +82,10 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 
 		String[] crditCardStus = request.getParameterValues("crditCardStus");
+		String[] mgmtLvl = request.getParameterValues("mgmtLvlFilter");
 
 		params.put("crditCardStus", crditCardStus);
+		params.put("mgmtLvl", mgmtLvl);
 
 		List<EgovMap> mgmtList = creditCardService.selectCrditCardMgmtList(params);
 

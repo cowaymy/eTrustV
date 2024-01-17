@@ -24,7 +24,9 @@
 			       T.UPD_DT,
 			       T.PLAN_AMT,
                    T.CRC_LIMIT_YYYY,
-                   T.CRC_LIMIT_MM
+                   T.CRC_LIMIT_MM,
+                   T.CARD_MGMT_LVL,
+                   T.CARD_MGMT_LVL_DESC
 			FROM   (SELECT T1.CRDIT_CARD_SEQ,
 			               T1.CRDIT_CARD_USER_ID,
 			               T1.CRDIT_CARD_USER_NAME,
@@ -50,7 +52,9 @@
 			               T4.PLAN_AMT,
                            T4.CRC_LIMIT_YYYY,
                            T4.CRC_LIMIT_MM,
-                           T5.USER_ID AS CARDHOLDER_USER_ID
+                           T5.USER_ID AS CARDHOLDER_USER_ID,
+                           T1.CARD_MGMT_LVL,
+                           T6.CODE_NAME AS CARD_MGMT_LVL_DESC
 			        FROM   FCM0016M T1
 			               LEFT JOIN ORG0001D T2
 			                      ON T1.CHRG_USER_ID = T2.MEM_CODE
@@ -92,6 +96,8 @@
                              ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
                              LEFT JOIN SYS0047M T5
                              ON T1.CRDIT_CARD_USER_ID = T5.HR_CODE
+                             LEFT JOIN SYS0013M T6
+                             ON T1.CARD_MGMT_LVL = T6.CODE_ID
 			      <if test="loginUserId != null and loginUserId != ''">
 			        WHERE T1.CRT_USER_ID = #{loginUserId}  OR T5.USER_ID = #{loginUserId}
 			      </if>
@@ -122,6 +128,12 @@
 			<if test="crditCardStus != null and crditCardStus != ''">
 			    AND T.CRDIT_CARD_STUS_CODE IN
 				<foreach item="item" collection="crditCardStus" index="index" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="mgmtLvl != null and mgmtLvl != ''">
+			    AND T.CARD_MGMT_LVL IN
+				<foreach item="item" collection="mgmtLvl" index="index" open="(" separator="," close=")">
 				#{item}
 				</foreach>
 			</if>

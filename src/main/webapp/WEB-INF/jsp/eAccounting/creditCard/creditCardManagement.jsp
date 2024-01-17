@@ -133,6 +133,15 @@ var mgmtColumnLayout = [ {
     headerText : 'Allowance Limit',
     style : "aui-grid-user-custom-left"
 }
+, {
+    dataField : "cardMgmtLvl",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}
+, {
+    dataField : "cardMgmtLvlDesc",
+    headerText : 'Management Lvl',
+    style : "aui-grid-user-custom-left"
+}
 ];
 
 //그리드 속성 설정
@@ -178,7 +187,7 @@ $(document).ready(function () {
             });
 
     $("#crditCardStus").multipleSelect("checkAll");
-
+    loadComboBox();
     fn_setToDay();
 });
 
@@ -346,6 +355,22 @@ function fn_setCostCenterEvent() {
         }
    });
 }
+
+function f_multiCombo() {
+	$(function() {
+		$('#mgmtLvlFilter').change(function() {
+		}).multipleSelect({
+			selectAll : true,
+			width : '80%'
+		});
+	});
+    $("#mgmtLvlFilter").multipleSelect("checkAll");
+
+}
+
+function loadComboBox() {
+	doGetCombo('/common/selectCodeList.do', '569', '', 'mgmtLvlFilter', 'M', 'f_multiCombo');
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -408,6 +433,17 @@ function fn_setCostCenterEvent() {
 		<option value="A"> <spring:message code="crditCardMgmt.active" /></option>
 		<option value="R"> <spring:message code="crditCardMgmt.removed" /></option>
 	</select>
+	</td>
+</tr>
+<tr>
+	<th>
+	</th>
+	<td>
+	</td>
+	<th scope="row">Management Level</th>
+	<td>
+		<select class="multy_select" multiple="multiple" id="mgmtLvlFilter" name="mgmtLvlFilter">
+		</select>
 	</td>
 </tr>
 </tbody>
