@@ -29,11 +29,46 @@
 	        }
 	    }
 
- 		if (fn_checkEmpty()) {
-			console.log("Action");
-			Common.popupDiv("/eAccounting/creditCard/newRegistMsgPop.do", null,
-					null, true, "registMsgPop");
+ 		if(fn_checkEmpty()) {
+ 			fn_checkIfFinalApproverExistInApprovalLine();
  		}
+	}
+
+	function fn_checkIfFinalApproverExistInApprovalLine(){
+		Common.ajax("GET", "/eAccounting/creditCard/getFinalApprover.do", {clmType:"J3"}, function(result) {
+			if(result.code == "00"){
+				if(result.data != null && result.data.apprMemCode !="") {
+					/*
+					* Check final approver exist in approval line
+					*/
+					var finalAppvExist = false;
+			        for(var i = 0; i < AUIGrid.getGridData(approveLineGridID).length; i++) {
+			        	var appvLineMemCode = AUIGrid.getCellValue(approveLineGridID, i, "memCode");
+
+			        	if(appvLineMemCode.toUpperCase() == result.data.apprMemCode.toUpperCase()){
+			        		finalAppvExist  = true;
+			        	}
+			        }
+
+			        if(finalAppvExist){
+			    		Common.popupDiv("/eAccounting/creditCard/newRegistMsgPop.do", null,
+								null, true, "registMsgPop");
+			        }
+			        else{
+			            Common.alert('Final approver is not found in approval line.');
+			            return false;
+			        }
+				}
+				else{
+		            Common.alert('Final approver is not found in system. Please contact IT.');
+		            return false;
+				}
+			}
+			else{
+	            Common.alert('Final approver is not found in system. Please contact IT.');
+	            return false;
+			}
+		});
 	}
 
 	/*
@@ -123,6 +158,7 @@
 		if (rowCount > 8) {
 			Common
 					.alert('Approval lines can be up to 9 levels.');
+			return false;
 		}
 
 		AUIGrid.addRow(approveLineGridID, {}, "first");

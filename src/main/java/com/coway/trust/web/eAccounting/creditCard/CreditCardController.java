@@ -676,4 +676,22 @@ public class CreditCardController {
 
 			return ResponseEntity.ok(excelList);
 		}
+
+		@RequestMapping(value = "/getFinalApprover.do", method = RequestMethod.GET)
+		public ResponseEntity<ReturnMessage> getFinApprover(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+			EgovMap approver = webInvoiceService.getFinApprover(params);
+
+			ReturnMessage message = new ReturnMessage();
+			if(approver != null) {
+		        message.setCode(AppConstants.SUCCESS);
+		        message.setData(approver);
+		        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			}
+			else{
+		        message.setCode(AppConstants.FAIL);
+		        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+
+			return ResponseEntity.ok(message);
+		}
 }
