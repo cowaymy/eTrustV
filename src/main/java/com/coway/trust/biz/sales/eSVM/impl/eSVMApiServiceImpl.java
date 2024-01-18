@@ -123,46 +123,49 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         	  //Special Bypass for Marketing requirement
           }
           else{
-              //Check Configuration CD
-              //Get membership expiry month if any
-              Map<String, Object> configParam = new HashMap<String, Object>();
-              configParam.put("module","SALES");
-              configParam.put("subModule","MEMBERSHIP");
-              configParam.put("paramCode","MEM_TYPE");
+        	  if(rtn.getCustCntId() == 964){
+            	  //Only Individual Customer Order for check
+                  //Check Configuration CD
+                  //Get membership expiry month if any
+                  Map<String, Object> configParam = new HashMap<String, Object>();
+                  configParam.put("module","SALES");
+                  configParam.put("subModule","MEMBERSHIP");
+                  configParam.put("paramCode","MEM_TYPE");
 
-            	List<EgovMap> memType = eSVMApiMapper.selectSystemConfigurationParamVal(configParam);
-            	if(!memType.isEmpty()){
-            		configParam.put("memType", memType);
-            	}
+                	List<EgovMap> memType = eSVMApiMapper.selectSystemConfigurationParamVal(configParam);
+                	if(!memType.isEmpty()){
+                		configParam.put("memType", memType);
+                	}
 
-              configParam.put("salesOrdId", rtn.getSalesOrdId());
-              configParam.put("memCode", param.getUserNm());
-              EgovMap serviceExpiry = eSVMApiMapper.selectSvcExpire(configParam);
+                  configParam.put("salesOrdId", rtn.getSalesOrdId());
+                  configParam.put("memCode", param.getUserNm());
+                  EgovMap serviceExpiry = eSVMApiMapper.selectSvcExpire(configParam);
 
-              if(serviceExpiry == null){
-                  EgovMap salesPerson = eSVMApiMapper.selectSalesPerson(configParam);
-
-                  if(salesPerson == null){
-                	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
-                  }
-              }
-              else{
-            	  int monthExpired = Integer.parseInt(serviceExpiry.get("monthExpired").toString());
-
-            	  if(monthExpired < 2){
-                      EgovMap salesConfigPerson = eSVMApiMapper.selectConfigurationSalesPerson(configParam);
-                      if(salesConfigPerson == null){
-                    	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
-                      }
-            	  }
-            	  else{
+                  if(serviceExpiry == null){
                       EgovMap salesPerson = eSVMApiMapper.selectSalesPerson(configParam);
+
                       if(salesPerson == null){
                     	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
                       }
-            	  }
-              }
-              //Check Configuration CD End
+                  }
+                  else{
+                	  int monthExpired = Integer.parseInt(serviceExpiry.get("monthExpired").toString());
+
+                	  if(monthExpired < 2){
+                          EgovMap salesConfigPerson = eSVMApiMapper.selectConfigurationSalesPerson(configParam);
+                          if(salesConfigPerson == null){
+                        	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
+                          }
+                	  }
+                	  else{
+                          EgovMap salesPerson = eSVMApiMapper.selectSalesPerson(configParam);
+                          if(salesPerson == null){
+                        	  throw new ApplicationException(AppConstants.FAIL, "Your input member code : " + param.getUserNm() + " is not allowed for membership creation.");
+                          }
+                	  }
+                  }
+                  //Check Configuration CD End
+        	  }
           }
 
         // Mode :: New

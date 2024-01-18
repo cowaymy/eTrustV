@@ -132,6 +132,7 @@ public class eSVMApiForm {
         params.put("curAtchFileGrpId", vo.getCurAtchFileGrpId());
         params.put("progressStatus", vo.getProgressStatus());
         params.put("userNm", vo.getUserNm());
+        params.put("custTypeId", vo.getCustTypeId());
         return params;
     }
 
@@ -172,6 +173,7 @@ public class eSVMApiForm {
     private String employee;
     private int appTypeId;
     private String rentalStus;
+    private int custTypeId;
 
     /* New Quotation - Filter Listing */
     private int srvFilterId;
@@ -1243,5 +1245,13 @@ public class eSVMApiForm {
 
 	public void setUserNm(String userNm) {
 		this.userNm = userNm;
+	}
+
+	public int getCustTypeId() {
+		return custTypeId;
+	}
+
+	public void setCustTypeId(int custTypeId) {
+		this.custTypeId = custTypeId;
 	}
 }

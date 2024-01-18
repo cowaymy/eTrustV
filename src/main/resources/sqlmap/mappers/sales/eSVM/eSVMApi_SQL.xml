@@ -188,6 +188,7 @@
                 TO_CHAR(M.SRV_MEM_ITM_PRIOD) HS_FREQ,
                 TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'YYYYMMDD') CVT_LAST_SRV_MEM_EXPR_DATE,
                 TO_CHAR(SYSDATE, 'YYYYMMDD') CVT_NOW_DATE
+                ,D.TYPE_ID AS CUST_TYPE_ID
             FROM SAL0001D A
             JOIN SAL0002D B
                 ON A.SALES_ORD_ID = B.SALES_ORD_ID
