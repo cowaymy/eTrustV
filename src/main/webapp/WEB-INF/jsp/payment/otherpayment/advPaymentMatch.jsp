@@ -8,6 +8,21 @@
 </style>
 <script type="text/javaScript">
 
+const payType = [
+    {id: null, name: "Choose One"},
+    {id: 105, name: "Cash"},
+    {id: 106, name: "Cheque"},
+    {id: 108, name: "Online"}
+]
+
+const bankType = [
+    {id: null, name: "Choose One"},
+    {id: 2728, name: "JomPay"},
+    {id: 2729, name: "MBB CDM"},
+    {id: 2730, name: "VA"},
+    {id: 2731, name: "Others"}
+]
+
 var advKeyInGridId;
 var bankStmtGridId;
 var jompayAutoMatchGridId;
@@ -155,56 +170,88 @@ function fn_chgBankType(){
 function fn_payTypeChange(){
     var payType = $("#payType").val();
 
+    let options = []
+
     if($("#payType").val() == '105'){
-           if($("#bankType").val() == "2728")
-            {
-             fn_chgBankType();
-            }
-            else{
-             doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-            }
+        options = bankType.filter(i => i.id != "2728")
+//         if($("#bankType").val() == "2728")
+//          {
+//           fn_chgBankType();
+//          }
+//          else{
+//           doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+//          }
     }else if($("#payType").val() == '106'){
-           if($("#bankType").val() == "2728")
-            {
-             fn_chgBankType();
-            }
-           else{
-             doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
-            }
+        options = bankType.filter(i => i.id != "2728" && i.id != "2729")
+//         if($("#bankType").val() == "2728")
+//          {
+//           fn_chgBankType();
+//          }
+//         else{
+//           doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
+//          }
     }else if($("#payType").val() == '108'){
-            if($("#bankType").val() == "2728")
-            {
-             fn_chgBankType();
-            }
-            else{
-            doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
-            }
+        options = bankType.filter(i => i.id != "2729")
+//          if($("#bankType").val() == "2728")
+//          {
+//              fn_chgBankType();
+//             }
+//          else{
+//          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
+//             }
     }
+    document.getElementById("bankType").innerHTML = options.map(t => {
+        if (t.id) {
+            return "<option value='" + t.id + "'>" + t.name + "</option>"
+        } else {
+            return "<option>" + t.name + "</option>"
+        }
+    }).join("")
+    fn_bankChange()
 }
 
 function fn_bankChange(){
 
-    var bankType = $("#bankType").val();
+    let options = []
 
-    $("#vaAccount").val('');
-    //$("#bankAcc").val('');
-
-    if($("#bankType").val() != "2730"){
-
-        $("#vaAccount").addClass("readonly");
-        $("#vaAccount").attr('readonly', true);
-        $("#bankAcc").attr('disabled', false);
-        $("#bankAcc").removeClass("disabled");
-        fn_chgBankType();
-
-    }else{
-        $("#vaAccount").removeClass("readonly");
-        $("#vaAccount").attr('readonly', false);
-        $("#bankAcc").attr('disabled', true);
-        $("#bankAcc").addClass("w100p disabled");
-
-
+    if ($("#bankType").val() == "2729") {
+        options = [{id: 84, name: "2710/002 - MBB"}]
+    } else if ($("#bankType").val() == "2730") {
+        options = [{id: 525, name: "2710/010B - CIMB VA"}]
+    } else if ($("#bankType").val() == "2731") {
+        doGetCombo('/common/getAccountList.do', 'OTH','', 'bankAcc', 'S', '(() => {$("#bankAcc").html($("#bankAcc option").filter((i, a) => !a.value || /(2710|2720)(?=\\/)/.test(a.innerHTML)))})' );
+    } else if ($("#bankType").val() == "2728") {
+        options = [{id: null, name: "Choose One"}, {id: 546, name: "2710/010C - CIMB 641"}, {id: 561, name: "2710/208 - ALB 2"}]
     }
+    document.getElementById("bankAcc").innerHTML = options.map(t => {
+        if (t.id) {
+            return "<option value='" + t.id + "'>" + t.name + "</option>"
+        } else {
+            return "<option>" + t.name + "</option>"
+        }
+    }).join("")
+
+//  var bankType = $("#bankType").val();
+
+//  $("#vaAccount").val('');
+//  //$("#bankAcc").val('');
+
+//  if($("#bankType").val() != "2730"){
+
+//      $("#vaAccount").addClass("readonly");
+//      $("#vaAccount").attr('readonly', true);
+//      $("#bankAcc").attr('disabled', false);
+//      $("#bankAcc").removeClass("disabled");
+//      fn_chgBankType();
+
+//  }else{
+//      $("#vaAccount").removeClass("readonly");
+//      $("#vaAccount").attr('readonly', false);
+//      $("#bankAcc").attr('disabled', true);
+//      $("#bankAcc").addClass("w100p disabled");
+
+
+//  }
 
 }
 
@@ -225,6 +272,11 @@ function fn_searchAdvMatchList(){
     if(FormUtil.checkReqValue($("#transDateFr")) ||
         FormUtil.checkReqValue($("#transDateTo"))){
         Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
+        return;
+    }
+
+    if(!$("#payType").val() || !$("#bankType").val() ||!$("#bankAcc").val()){
+        Common.alert("Kindly choose Payment Type, Bank Type, and Bank Account");
         return;
     }
 
@@ -656,18 +708,11 @@ function fn_generateReport(){
                         <th scope="row">Payment Type</th>
                         <td>
                             <select id="payType" name="payType" class="w100p"  onchange="javascript:fn_payTypeChange();">
-                                <option value="105">Cash</option>
-                                <option value="106">Cheque</option>
-                                <option value="108">Online</option>
                             </select>
                         </td>
                         <th scope="row">Bank Type</th>
                         <td>
                             <select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
-                                <option value="2728">JomPay</option>
-                                <option value="2729">MBB CDM</option>
-                                <option value="2730">VA</option>
-                                <option value="2731">Others</option>
                             </select>
                        </td>
                     </tr>
@@ -701,7 +746,7 @@ function fn_generateReport(){
             <dt>Link</dt>
             <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
+                    <!-- <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li> -->
                     <li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
                     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
@@ -1028,3 +1073,13 @@ function fn_generateReport(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
+
+<script>
+    document.getElementById("payType").innerHTML = payType.map(t => {
+        if (t.id) {
+            return "<option value='" + t.id + "'>" + t.name + "</option>"
+        } else {
+            return "<option>" + t.name + "</option>"
+        }
+    }).join("")
+</script>
