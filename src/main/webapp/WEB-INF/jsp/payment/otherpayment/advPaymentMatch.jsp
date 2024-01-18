@@ -8,21 +8,6 @@
 </style>
 <script type="text/javaScript">
 
-const payType = [
-    {id: null, name: "Choose One"},
-    {id: 105, name: "Cash"},
-    {id: 106, name: "Cheque"},
-    {id: 108, name: "Online"}
-]
-
-const bankType = [
-    {id: null, name: "Choose One"},
-    {id: 2728, name: "JomPay"},
-    {id: 2729, name: "MBB CDM"},
-    {id: 2730, name: "VA"},
-    {id: 2731, name: "Others"}
-]
-
 var advKeyInGridId;
 var bankStmtGridId;
 var jompayAutoMatchGridId;
@@ -31,12 +16,12 @@ var advanceAutoMatchGridId;
 var selectedGridValue;
 
 var gridPros2 = {
-	editable : false,				// 편집 가능 여부 (기본값 : false)
-	showRowCheckColumn : true,		// 체크박스 표시 설정
-	rowCheckToRadio : true,			// 체크박스 대신 라디오버튼 출력함
-	softRemoveRowMode:false,
-    headerHeight : 35,				// 기본 헤더 높이 지정
-	showStateColumn : false			// 상태 칼럼 사용
+    editable : false,               // 편집 가능 여부 (기본값 : false)
+    showRowCheckColumn : true,      // 체크박스 표시 설정
+    rowCheckToRadio : true,         // 체크박스 대신 라디오버튼 출력함
+    softRemoveRowMode:false,
+    headerHeight : 35,              // 기본 헤더 높이 지정
+    showStateColumn : false         // 상태 칼럼 사용
 };
 
 
@@ -51,20 +36,20 @@ var gridPros1 = {
 };
 
 var gridPros3 = {
-	    editable : false,               // 편집 가능 여부 (기본값 : false)
-	    headerHeight : 35,              // 기본 헤더 높이 지정
-	    showStateColumn : false         // 상태 칼럼 사용
-	};
+        editable : false,               // 편집 가능 여부 (기본값 : false)
+        headerHeight : 35,              // 기본 헤더 높이 지정
+        showStateColumn : false         // 상태 칼럼 사용
+    };
 
 var advKeyInLayout = [
-	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
-	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
-	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
-	{dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
-	{dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
-	{dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
-	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
-	{dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }
+    {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
+    {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
+    {dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
+    {dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
+    {dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
+    {dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
+    {dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
+    {dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }
 ];
 
 var bankStmtLayout = [
@@ -125,14 +110,14 @@ var advanceMatchLayout = [
 
 $(document).ready(function(){
 
-	//CASH Bank Account combo box setting
-	//doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
+    //CASH Bank Account combo box setting
+    //doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+    doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
 
     fn_chgBankType();
 
-	//Branch Combo 생성
-	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
+    //Branch Combo 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
 
     advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros1);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
@@ -141,127 +126,95 @@ $(document).ready(function(){
 
     advanceAutoMatchGridId = GridCommon.createAUIGrid("advance_grid_wrap", advanceMatchLayout,null,gridPros3);
 
-	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업
-	AUIGrid.bind(advKeyInGridId, "cellDoubleClick", function(event) {
+    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업
+    AUIGrid.bind(advKeyInGridId, "cellDoubleClick", function(event) {
 
-		var groupSeq = AUIGrid.getCellValue(advKeyInGridId , event.rowIndex , "groupSeq");
-		Common.popupDiv('/payment/initDetailGrpPaymentPop.do', {"groupSeq" : groupSeq}, null , true ,'_viewDtlGrpPaymentPop');
+        var groupSeq = AUIGrid.getCellValue(advKeyInGridId , event.rowIndex , "groupSeq");
+        Common.popupDiv('/payment/initDetailGrpPaymentPop.do', {"groupSeq" : groupSeq}, null , true ,'_viewDtlGrpPaymentPop');
 
-	});
+    });
 
 });
 
 
 function fn_chgBankType(){
 
-	 if($("#bankType").val() == "2728")
-	    {
-	     $("#bankAcc option").remove();
-	     $("#bankAcc").append("<option value=''>Choose One</option>");
-	     $("#bankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
-	     $("#bankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
-	     }
-	  else{
-	     $("#bankAcc option").remove();
-	      fn_payTypeChange();
-	     }
+     if($("#bankType").val() == "2728")
+        {
+         $("#bankAcc option").remove();
+         $("#bankAcc").append("<option value=''>Choose One</option>");
+         $("#bankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+         $("#bankAcc").append("<option value='558'>2710/205 - CIMB 7</option>");
+         }
+      else{
+         $("#bankAcc option").remove();
+          fn_payTypeChange();
+         }
 }
 
 function fn_payTypeChange(){
-	var payType = $("#payType").val();
+    var payType = $("#payType").val();
 
-	let options = []
-
-	if($("#payType").val() == '105'){
-		options = bankType.filter(i => i.id != "2728")
-// 		   if($("#bankType").val() == "2728")
-// 	        {
-// 			 fn_chgBankType();
-// 	        }
-// 		    else{
-// 			 doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-// 			}
-	}else if($("#payType").val() == '106'){
-		options = bankType.filter(i => i.id != "2728" && i.id != "2729")
-// 		   if($("#bankType").val() == "2728")
-// 			{
-// 			 fn_chgBankType();
-// 			}
-// 		   else{
-//         	 doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
-//         	}
-	}else if($("#payType").val() == '108'){
-		options = bankType.filter(i => i.id != "2729")
-// 		    if($("#bankType").val() == "2728")
-// 		    {
-//              fn_chgBankType();
-//             }
-// 		    else{
-// 		    doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
-//             }
-	}
-	document.getElementById("bankType").innerHTML = options.map(t => {
-        if (t.id) {
-            return "<option value='" + t.id + "'>" + t.name + "</option>"
-        } else {
-            return "<option>" + t.name + "</option>"
-        }
-    }).join("")
-    fn_bankChange()
+    if($("#payType").val() == '105'){
+           if($("#bankType").val() == "2728")
+            {
+             fn_chgBankType();
+            }
+            else{
+             doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+            }
+    }else if($("#payType").val() == '106'){
+           if($("#bankType").val() == "2728")
+            {
+             fn_chgBankType();
+            }
+           else{
+             doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
+            }
+    }else if($("#payType").val() == '108'){
+            if($("#bankType").val() == "2728")
+            {
+             fn_chgBankType();
+            }
+            else{
+            doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
+            }
+    }
 }
 
 function fn_bankChange(){
 
-	let options = []
+    var bankType = $("#bankType").val();
 
-	if ($("#bankType").val() == "2729") {
-		options = [{id: 84, name: "2710/002 - MBB"}]
-	} else if ($("#bankType").val() == "2730") {
-		options = [{id: 525, name: "2710/010B - CIMB VA"}]
-	} else if ($("#bankType").val() == "2731") {
-		doGetCombo('/common/getAccountList.do', 'OTH','', 'bankAcc', 'S', '(() => {$("#bankAcc").html($("#bankAcc option").filter((i, a) => !a.value || /(2710|2720)(?=\\/)/.test(a.innerHTML)))})' );
-	} else if ($("#bankType").val() == "2728") {
-		options = [{id: null, name: "Choose One"}, {id: 546, name: "2710/010C - CIMB 641"}, {id: 561, name: "2710/208 - ALB 2"}]
-	}
-	document.getElementById("bankAcc").innerHTML = options.map(t => {
-        if (t.id) {
-            return "<option value='" + t.id + "'>" + t.name + "</option>"
-        } else {
-            return "<option>" + t.name + "</option>"
-        }
-    }).join("")
+    $("#vaAccount").val('');
+    //$("#bankAcc").val('');
 
-// 	var bankType = $("#bankType").val();
+    if($("#bankType").val() != "2730"){
 
-// 	$("#vaAccount").val('');
-// 	//$("#bankAcc").val('');
+        $("#vaAccount").addClass("readonly");
+        $("#vaAccount").attr('readonly', true);
+        $("#bankAcc").attr('disabled', false);
+        $("#bankAcc").removeClass("disabled");
+        fn_chgBankType();
 
-// 	if($("#bankType").val() != "2730"){
-
-// 		$("#vaAccount").addClass("readonly");
-// 		$("#vaAccount").attr('readonly', true);
-// 		$("#bankAcc").attr('disabled', false);
-// 		$("#bankAcc").removeClass("disabled");
-// 		fn_chgBankType();
-
-// 	}else{
-// 		$("#vaAccount").removeClass("readonly");
-// 		$("#vaAccount").attr('readonly', false);
-// 		$("#bankAcc").attr('disabled', true);
-// 		$("#bankAcc").addClass("w100p disabled");
+    }else{
+        $("#vaAccount").removeClass("readonly");
+        $("#vaAccount").attr('readonly', false);
+        $("#bankAcc").attr('disabled', true);
+        $("#bankAcc").addClass("w100p disabled");
 
 
-// 	}
+    }
 
 }
 
 
 function fn_bankAccChange(){
 
-	var bankaccType = $("#bankAcc").val();
+    var bankaccType = $("#bankAcc").val();
 
     if(bankaccType  =="546" || bankaccType =="561" ){
-    	   $("#bankType").val('2728');
+           $("#bankType").val('2728');
     }
 
 }
@@ -269,135 +222,69 @@ function fn_bankAccChange(){
 //조회버튼 클릭시 처리
 function fn_searchAdvMatchList(){
 
-	if(FormUtil.checkReqValue($("#transDateFr")) ||
-		FormUtil.checkReqValue($("#transDateTo"))){
-		Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
-		return;
-	}
-
-	if(!$("#payType").val() || !$("#bankType").val() ||!$("#bankAcc").val()){
-        Common.alert("Kindly choose Payment Type, Bank Type, and Bank Account");
+    if(FormUtil.checkReqValue($("#transDateFr")) ||
+        FormUtil.checkReqValue($("#transDateTo"))){
+        Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
         return;
     }
 
-	Common.ajax("POST","/payment/selectPaymentMatchList.do", $("#searchForm").serializeJSON(), function(result){
+    Common.ajax("POST","/payment/selectPaymentMatchList.do", $("#searchForm").serializeJSON(), function(result){
 
-		AUIGrid.setGridData(advKeyInGridId, result.keyInList);
-		AUIGrid.setGridData(bankStmtGridId, result.stateList);
-	});
+        AUIGrid.setGridData(advKeyInGridId, result.keyInList);
+        AUIGrid.setGridData(bankStmtGridId, result.stateList);
+    });
 }
 
 function fn_clear(){
-	$("#searchForm")[0].reset();
+    $("#searchForm")[0].reset();
 }
 
 
 function fn_mapping(){
-	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
-	var bankStmtItem = AUIGrid.getCheckedRowItems(bankStmtGridId);
-	var keyInRowItem;
-	var stateRowItem;
-	var keyInAmount = 0;
-	var stmtAmount =0;
-	var groupSeq =0;
-	var fTrnscId =0;
-	var flag = 'Y';
+    var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
+    var bankStmtItem = AUIGrid.getCheckedRowItems(bankStmtGridId);
+    var keyInRowItem;
+    var stateRowItem;
+    var keyInAmount = 0;
+    var stmtAmount =0;
+    var groupSeq =0;
+    var fTrnscId =0;
+    var flag = 'Y';
 
-	if( advKeyInItems.length < 1 || bankStmtItem.length < 1){
-		Common.alert("<spring:message code='pay.alert.keyInListCheck'/>");
-		return;
-	}else if( advKeyInItems.length == 1 && bankStmtItem.length == 1){
+    if( advKeyInItems.length < 1 || bankStmtItem.length < 1){
+        Common.alert("<spring:message code='pay.alert.keyInListCheck'/>");
+        return;
+    }else if( advKeyInItems.length == 1 && bankStmtItem.length == 1){
 
-		keyInRowItem = advKeyInItems[0];
-		stateRowItem = bankStmtItem[0];
+        keyInRowItem = advKeyInItems[0];
+        stateRowItem = bankStmtItem[0];
 
-		keyInAmount = Number(keyInRowItem.item.totAmt) - Number(keyInRowItem.item.bankChgAmt);
-		keyInAmount = $.number(keyInAmount,2,'.','');
+        keyInAmount = Number(keyInRowItem.item.totAmt) - Number(keyInRowItem.item.bankChgAmt);
+        keyInAmount = $.number(keyInAmount,2,'.','');
 
-		stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
-		stmtAmount = $.number(stmtAmount,2,'.','');
-
-		groupSeq = keyInRowItem.item.groupSeq;
-		fTrnscId = stateRowItem.item.fTrnscId;
-
-		if(keyInAmount != stmtAmount){
-           	Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
-				function (){
-
-					$("#journal_entry_wrap").show();
-					$("#groupSeq").val(groupSeq);
-					$("#fTrnscId").val(fTrnscId);
-					$("#preKeyInAmt").val(keyInAmount);
-					$("#bankStmtAmt").val(stmtAmount);
-					//$("#variance").val(keyInAmount-stmtAmount);
-					$("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
-					$("#accCode").val('');
-					$("#remark").val('');
-				}
-			);
-		} else {
-			$("#groupSeq").val(groupSeq);
-			$("#fTrnscId").val(fTrnscId);
-			$("#preKeyInAmt").val(keyInAmount);
-			$("#bankStmtAmt").val(stmtAmount);
-			//$("#variance").val(keyInAmount-stmtAmount);
-			$("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
-			$("#accCode").val('');
-			$("#remark").val('');
-
-			fn_saveMapping('N');
-		}
-	}
-	// 2019-12-12 - LaiKW - Added many to one checking.
-	else if( advKeyInItems.length > 1 && bankStmtItem.length == 1){
-	    stateRowItem = bankStmtItem[0];
         stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
         stmtAmount = $.number(stmtAmount,2,'.','');
 
+        groupSeq = keyInRowItem.item.groupSeq;
         fTrnscId = stateRowItem.item.fTrnscId;
 
-	    for(var i = 0; i < advKeyInItems.length; i++) {
-	        keyInRowItem = advKeyInItems[i];
-	        keyInAmount += Number(keyInRowItem.item.totAmt);
+        if(keyInAmount != stmtAmount){
+            Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
+                function (){
 
-	        if(keyInRowItem.item.payItmModeNm != stateRowItem.item.fTrnscRem) {
-	            Common.alert("Only same payment mode is allowed!");
-	            return false;
-	        }
-
-	        if(keyInRowItem.item.payItmRefDt != stateRowItem.item.fTrnscDt) {
-	            Common.alert("Only same payment transaction date is allowed!");
-	            flag = 'N';
-                return false;
-	        }
-
-	        if(i == 0) {
-	            groupSeq = keyInRowItem.item.groupSeq;
-	        } else {
-	            groupSeq += "," + keyInRowItem.item.groupSeq;
-	        }
-
-	    }
-
-	    keyInAmount = $.number(keyInAmount,2,'.','');
-	    if(keyInAmount != stmtAmount) {
-	        Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
-	            function (){
-	                $("#journal_entry_wrap").show();
-	                $("#groupSeq").val(groupSeq);
-	                $("#fTrnscId").val(fTrnscId);
-	                $("#preKeyInAmt").val(keyInAmount);
-	                $("#bankStmtAmt").val(stmtAmount);
-	                //$("#variance").val(keyInAmount-stmtAmount);
-	                $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
-	                $("#accCode").val('');
-	                $("#remark").val('');
-	            }
-	        );
-	    }
-
-	    if(flag == "Y") {
-	        $("#groupSeq").val(groupSeq);
+                    $("#journal_entry_wrap").show();
+                    $("#groupSeq").val(groupSeq);
+                    $("#fTrnscId").val(fTrnscId);
+                    $("#preKeyInAmt").val(keyInAmount);
+                    $("#bankStmtAmt").val(stmtAmount);
+                    //$("#variance").val(keyInAmount-stmtAmount);
+                    $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+                    $("#accCode").val('');
+                    $("#remark").val('');
+                }
+            );
+        } else {
+            $("#groupSeq").val(groupSeq);
             $("#fTrnscId").val(fTrnscId);
             $("#preKeyInAmt").val(keyInAmount);
             $("#bankStmtAmt").val(stmtAmount);
@@ -407,61 +294,122 @@ function fn_mapping(){
             $("#remark").val('');
 
             fn_saveMapping('N');
-	    }
-	}
+        }
+    }
+    // 2019-12-12 - LaiKW - Added many to one checking.
+    else if( advKeyInItems.length > 1 && bankStmtItem.length == 1){
+        stateRowItem = bankStmtItem[0];
+        stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
+        stmtAmount = $.number(stmtAmount,2,'.','');
+
+        fTrnscId = stateRowItem.item.fTrnscId;
+
+        for(var i = 0; i < advKeyInItems.length; i++) {
+            keyInRowItem = advKeyInItems[i];
+            keyInAmount += Number(keyInRowItem.item.totAmt);
+
+            if(keyInRowItem.item.payItmModeNm != stateRowItem.item.fTrnscRem) {
+                Common.alert("Only same payment mode is allowed!");
+                return false;
+            }
+
+            if(keyInRowItem.item.payItmRefDt != stateRowItem.item.fTrnscDt) {
+                Common.alert("Only same payment transaction date is allowed!");
+                flag = 'N';
+                return false;
+            }
+
+            if(i == 0) {
+                groupSeq = keyInRowItem.item.groupSeq;
+            } else {
+                groupSeq += "," + keyInRowItem.item.groupSeq;
+            }
+
+        }
+
+        keyInAmount = $.number(keyInAmount,2,'.','');
+        if(keyInAmount != stmtAmount) {
+            Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
+                function (){
+                    $("#journal_entry_wrap").show();
+                    $("#groupSeq").val(groupSeq);
+                    $("#fTrnscId").val(fTrnscId);
+                    $("#preKeyInAmt").val(keyInAmount);
+                    $("#bankStmtAmt").val(stmtAmount);
+                    //$("#variance").val(keyInAmount-stmtAmount);
+                    $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+                    $("#accCode").val('');
+                    $("#remark").val('');
+                }
+            );
+        }
+
+        if(flag == "Y") {
+            $("#groupSeq").val(groupSeq);
+            $("#fTrnscId").val(fTrnscId);
+            $("#preKeyInAmt").val(keyInAmount);
+            $("#bankStmtAmt").val(stmtAmount);
+            //$("#variance").val(keyInAmount-stmtAmount);
+            $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+            $("#accCode").val('');
+            $("#remark").val('');
+
+            fn_saveMapping('N');
+        }
+    }
 }
 
 function fn_saveMapping(withPop){
-	//Journal Entry 팝업을 띄웠을때만 validation check를 한다.
-	if(withPop == 'Y'){
-		if(FormUtil.checkReqValue($("#accCode option:selected"))){
-			Common.alert("<spring:message code='pay.alert.accountCode'/>");
-			return;
-		}
+    //Journal Entry 팝업을 띄웠을때만 validation check를 한다.
+    if(withPop == 'Y'){
+        if(FormUtil.checkReqValue($("#accCode option:selected"))){
+            Common.alert("<spring:message code='pay.alert.accountCode'/>");
+            return;
+        }
 
-		if(FormUtil.checkReqValue($("#remark"))){
-			Common.alert("<spring:message code='pay.alert.inputRemark'/>");
-			return;
-		}
+        if(FormUtil.checkReqValue($("#remark"))){
+            Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+            return;
+        }
 
-		if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-			Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    		return;
-	    }
-	}
+        if( FormUtil.byteLength($("#remark").val()) > 3000 ){
+            Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+            return;
+        }
+    }
 
-	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
-	    Common.ajax("POST", "/payment/saveAdvPaymentMapping.do", $("#entryForm").serializeJSON(), function(result) {
-			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
+    Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+        Common.ajax("POST", "/payment/saveAdvPaymentMapping.do", $("#entryForm").serializeJSON(), function(result) {
+            var message = "<spring:message code='pay.alert.mappingSuccess'/>";
 
-    		Common.alert(message, function(){
-				fn_searchAdvMatchList();
-				$("#journal_entry_wrap").hide();
-    		});
-	    });
-	});
+            Common.alert(message, function(){
+                fn_searchAdvMatchList();
+                $("#journal_entry_wrap").hide();
+            });
+        });
+    });
 }
 
 //Reverse 처리하기
 function fn_requestDCFPop(){
-	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
-	var keyInRowItem;
-	var groupSeq =0;
+    var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
+    var keyInRowItem;
+    var groupSeq =0;
 
-	if( advKeyInItems.length < 1){
-		Common.alert("<spring:message code='pay.alert.checkKeyInList'/>");
-		return;
-	}else{
+    if( advKeyInItems.length < 1){
+        Common.alert("<spring:message code='pay.alert.checkKeyInList'/>");
+        return;
+    }else{
 
-		keyInRowItem = advKeyInItems[0];
-		groupSeq = keyInRowItem.item.groupSeq;
+        keyInRowItem = advKeyInItems[0];
+        groupSeq = keyInRowItem.item.groupSeq;
 
-		Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
-			function (){
-				Common.popupDiv('/payment/initReqDCFWithAppvPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFWithAppvPop');
-			}
-		);
-	}
+        Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
+            function (){
+                Common.popupDiv('/payment/initReqDCFWithAppvPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFWithAppvPop');
+            }
+        );
+    }
 }
 
 function fn_saveReverse(){
@@ -470,78 +418,78 @@ function fn_saveReverse(){
         return;
     }
 
-	if( FormUtil.byteLength($("#revRemark").val()) > 3000 ){
-    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    	return;
+    if( FormUtil.byteLength($("#revRemark").val()) > 3000 ){
+        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+        return;
     }
 
-	//저장처리
-	Common.confirm("<spring:message code='pay.alert.wantToReverse'/>",function (){
-	    Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#reverseForm").serializeJSON(), function(result) {
+    //저장처리
+    Common.confirm("<spring:message code='pay.alert.wantToReverse'/>",function (){
+        Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#reverseForm").serializeJSON(), function(result) {
 
-	        if (result.error) {
-	        	var message = result.error;
-	        } else {
-	            var message = "<spring:message code='pay.alert.successReverse' arguments='"+result.returnKey+"' htmlEscape='false'/>";
-	        }
+            if (result.error) {
+                var message = result.error;
+            } else {
+                var message = "<spring:message code='pay.alert.successReverse' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+            }
 
 
-    		Common.alert(message, function(){
-				fn_searchAdvMatchList();
-				$("#reverse_wrap").hide();
-    		});
-	    });
-	});
+            Common.alert(message, function(){
+                fn_searchAdvMatchList();
+                $("#reverse_wrap").hide();
+            });
+        });
+    });
 }
 
 
 function fn_debtor(){
-	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
-	var keyInRowItem;
-	var keyInAmount = 0;
-	var groupSeq =0;
+    var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
+    var keyInRowItem;
+    var keyInAmount = 0;
+    var groupSeq =0;
 
-	if( advKeyInItems.length < 1){
-		Common.alert("<spring:message code='pay.alert.checkKeyInList'/>");
-		return;
-	}else{
-		keyInRowItem = advKeyInItems[0];
-		keyInAmount = Number(keyInRowItem.item.totAmt) + Number(keyInRowItem.item.bankChgAmt);
-		groupSeq = keyInRowItem.item.groupSeq;
+    if( advKeyInItems.length < 1){
+        Common.alert("<spring:message code='pay.alert.checkKeyInList'/>");
+        return;
+    }else{
+        keyInRowItem = advKeyInItems[0];
+        keyInAmount = Number(keyInRowItem.item.totAmt) + Number(keyInRowItem.item.bankChgAmt);
+        groupSeq = keyInRowItem.item.groupSeq;
 
-		Common.alert("<spring:message code='pay.alert.bankStatementMissing'/>",
-			function (){
-				$("#debtor_wrap").show();
-				$("#debtorGroupSeq").val(groupSeq);
-				$("#debtorRemark").val('');
-			}
-		);
-	}
+        Common.alert("<spring:message code='pay.alert.bankStatementMissing'/>",
+            function (){
+                $("#debtor_wrap").show();
+                $("#debtorGroupSeq").val(groupSeq);
+                $("#debtorRemark").val('');
+            }
+        );
+    }
 }
 
 function fn_saveDebtor(){
 
-	if(FormUtil.checkReqValue($("#debtorRemark"))){
-		Common.alert("<spring:message code='pay.alert.inputRemark'/>");
-		return;
-	}
+    if(FormUtil.checkReqValue($("#debtorRemark"))){
+        Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+        return;
+    }
 
-	if( FormUtil.byteLength($("#debtorRemark").val()) > 3000 ){
-		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-		return;
-	}
+    if( FormUtil.byteLength($("#debtorRemark").val()) > 3000 ){
+        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+        return;
+    }
 
 
-	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
-	    Common.ajax("POST", "/payment/saveAdvPaymentDebtor.do", $("#debtorForm").serializeJSON(), function(result) {
-			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
+    Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+        Common.ajax("POST", "/payment/saveAdvPaymentDebtor.do", $("#debtorForm").serializeJSON(), function(result) {
+            var message = "<spring:message code='pay.alert.mappingSuccess'/>";
 
-    		Common.alert(message, function(){
-				fn_searchAdvMatchList();
-				$("#debtor_wrap").hide();
-    		});
-	    });
-	});
+            Common.alert(message, function(){
+                fn_searchAdvMatchList();
+                $("#debtor_wrap").hide();
+            });
+        });
+    });
 }
 
 function fn_jompayAutoMap(){
@@ -551,8 +499,8 @@ function fn_jompayAutoMap(){
 
 function fn_searchJompayAutoMappingList(){
 
-	if(FormUtil.checkReqValue($("#fileId"))){
-		Common.alert("<spring:message code='sys.msg.necessary' arguments='File ID' htmlEscape='false'/>");
+    if(FormUtil.checkReqValue($("#fileId"))){
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='File ID' htmlEscape='false'/>");
         return;
     }
 
@@ -567,15 +515,15 @@ function fn_searchJompayAutoMappingList(){
 }
 
 function fn_saveJompayAutoMap(){
-	if(AUIGrid.getGridData(jompayAutoMatchGridId).length > 0){
-		Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
-	        Common.ajax("POST", "/payment/saveJompayAutoMap.do", $("#jompayForm").serializeJSON(), function(result) {
-	            Common.alert("<spring:message code='pay.alert.mappingSuccess'/>");
-	        });
-	    });
-	}else{
-		Common.alert("Please match with a File ID and Transaction Date");
-	}
+    if(AUIGrid.getGridData(jompayAutoMatchGridId).length > 0){
+        Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+            Common.ajax("POST", "/payment/saveJompayAutoMap.do", $("#jompayForm").serializeJSON(), function(result) {
+                Common.alert("<spring:message code='pay.alert.mappingSuccess'/>");
+            });
+        });
+    }else{
+        Common.alert("Please match with a File ID and Transaction Date");
+    }
 }
 
 hideViewPopup=function(val){
@@ -583,11 +531,11 @@ hideViewPopup=function(val){
 }
 
 hideAutoMatchViewPopup=function(){
-	$('#jompay_wrap').hide();
-	$("#jompayForm")[0].reset();
-	AUIGrid.clearGridData(jompayAutoMatchGridId);
+    $('#jompay_wrap').hide();
+    $("#jompayForm")[0].reset();
+    AUIGrid.clearGridData(jompayAutoMatchGridId);
 
-	$('#advance_wrap').hide();
+    $('#advance_wrap').hide();
     $("#advanceForm")[0].reset();
     AUIGrid.clearGridData(advanceAutoMatchGridId);
 }
@@ -645,7 +593,7 @@ function fn_generateReport(){
 
     if(dayDiffs <= 30) {
 
-    	var date = new Date().getDate();
+        var date = new Date().getDate();
         if(date.toString().length == 1) date = "0" + date;
 
         $("#reportForm #reportDownFileName").val("Advance_keyin_raw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
@@ -708,11 +656,18 @@ function fn_generateReport(){
                         <th scope="row">Payment Type</th>
                         <td>
                             <select id="payType" name="payType" class="w100p"  onchange="javascript:fn_payTypeChange();">
+                                <option value="105">Cash</option>
+                                <option value="106">Cheque</option>
+                                <option value="108">Online</option>
                             </select>
                         </td>
                         <th scope="row">Bank Type</th>
                         <td>
                             <select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
+                                <option value="2728">JomPay</option>
+                                <option value="2729">MBB CDM</option>
+                                <option value="2730">VA</option>
+                                <option value="2731">Others</option>
                             </select>
                        </td>
                     </tr>
@@ -746,7 +701,7 @@ function fn_generateReport(){
             <dt>Link</dt>
             <dd>
                 <ul class="btns">
-                    <!-- <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li> -->
+                    <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
                     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
@@ -793,8 +748,8 @@ function fn_generateReport(){
 
     <!-- pop_body start -->
     <form name="entryForm" id="entryForm"  method="post">
-	<input type="hidden" id="groupSeq" name="groupSeq" />
-	<input type="hidden" id="fTrnscId" name="fTrnscId" />
+    <input type="hidden" id="groupSeq" name="groupSeq" />
+    <input type="hidden" id="fTrnscId" name="fTrnscId" />
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -810,31 +765,31 @@ function fn_generateReport(){
                     <tr>
                         <th scope="row">Pre Key In Amount (A)</th>
                         <td>
-							<input id="preKeyInAmt" name="preKeyInAmt" type="text" class="readonly" readonly />
+                            <input id="preKeyInAmt" name="preKeyInAmt" type="text" class="readonly" readonly />
                         </td>
                     </tr>
-					<tr>
+                    <tr>
                         <th scope="row">Bank Statement Amount (B)</th>
                         <td>
-							<input id="bankStmtAmt" name="bankStmtAmt" type="text" class="readonly" readonly />
+                            <input id="bankStmtAmt" name="bankStmtAmt" type="text" class="readonly" readonly />
                         </td>
                     </tr>
-					<tr>
+                    <tr>
                         <th scope="row">Variance (Variance = A - B)</th>
                         <td>
-							<input id="variance" name="variance" type="text" class="readonly" readonly />
+                            <input id="variance" name="variance" type="text" class="readonly" readonly />
                         </td>
                     </tr>
-					<tr>
+                    <tr>
                         <th scope="row">Account Code</th>
                         <td>
                             <select id="accCode" name="accCode" class="w100p"></select>
                         </td>
                     </tr>
-					<tr>
+                    <tr>
                         <th scope="row">Remark</th>
                         <td>
-							<textarea id="remark" name="remark"  cols="10" rows="3" placeholder=""></textarea>
+                            <textarea id="remark" name="remark"  cols="10" rows="3" placeholder=""></textarea>
                         </td>
                     </tr>
                    </tbody>
@@ -866,7 +821,7 @@ function fn_generateReport(){
 
     <!-- pop_body start -->
     <form name="debtorForm" id="debtorForm"  method="post">
-	<input type="hidden" id="debtorGroupSeq" name="debtorGroupSeq" />
+    <input type="hidden" id="debtorGroupSeq" name="debtorGroupSeq" />
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -882,7 +837,7 @@ function fn_generateReport(){
                     <tr>
                         <th scope="row">Remark</th>
                         <td>
-							             <textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
+                                         <textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
                         </td>
                     </tr>
                    </tbody>
@@ -1052,7 +1007,7 @@ function fn_generateReport(){
                     <tr>
                       <th scope="row">Advance Type</th>
                       <td>
-                   		<select id="advType" name="advType"  class="w100p">
+                        <select id="advType" name="advType"  class="w100p">
                              <option value="" selected>Select A Type</option>
                              <option value="1">IPAY88</option>
                              <option value="2">EGHL</option>
@@ -1073,13 +1028,3 @@ function fn_generateReport(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
-
-<script>
-	document.getElementById("payType").innerHTML = payType.map(t => {
-	    if (t.id) {
-	        return "<option value='" + t.id + "'>" + t.name + "</option>"
-	    } else {
-	        return "<option>" + t.name + "</option>"
-	    }
-	}).join("")
-</script>
