@@ -663,11 +663,11 @@ function fn_saveValidation(){
     }
     //endregion
 
-    //@AMEER add INCOME TAX
+/*     //@AMEER add INCOME TAX
     if($("#eHPincomeTaxNo").val().length > 0 &&  $("#eHPincomeTaxNo").val().length < 10){
         valid = false;
         message += "* Invalid Income Tax Length.<br/>";
-   }
+   } */
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if(!regIncTax.test($("#eHPincomeTaxNo").val())){
         valid = false;
@@ -1488,7 +1488,7 @@ function fn_selectFailedRemarkList() {
      <tr>
          <th scope="row">Income Tax No</th>
          <td colspan="5">
-         <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13"
+         <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"
          onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
          </td>
      </tr>

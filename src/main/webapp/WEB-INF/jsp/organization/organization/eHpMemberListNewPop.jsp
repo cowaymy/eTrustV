@@ -1076,11 +1076,11 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
 
     }
 
-    //@AMEER add INCOME TAX
+/*     //@AMEER add INCOME TAX
     if($("#eHPincomeTaxNo").val().length > 0 &&  $("#eHPincomeTaxNo").val().length < 10){
         Common.alert("Invalid Income Tax Length");
         return false;
-  }
+  } */
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if(!regIncTax.test($("#eHPincomeTaxNo").val())){
         Common.alert("Invalid Income Tax Format");
@@ -1747,7 +1747,7 @@ function fn_eHPmarritalCallBack(){
                 <tr>
                     <th scope="row">Income Tax No</th>
                     <td colspan="2">
-                    <input type="text" title=""  placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13"
+                    <input type="text" title=""  placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"
                     onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
                     </td>
                 </tr>

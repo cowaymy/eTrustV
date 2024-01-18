@@ -1486,11 +1486,11 @@ function fn_saveValidation(){
         }
     }
 
-    //@AMEER add INCOME TAX
+/*     //@AMEER add INCOME TAX
     if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 10){
         valid = false;
         message += "* Invalid Income Tax Length.<br/>";
-   }
+   } */
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if (!regIncTax.test($("#incomeTaxNo").val())){
         valid = false;
@@ -2300,7 +2300,7 @@ function fn_removeFile(name){
                              <tr>
                                 <th scope="row">Income Tax No</th>
                                 <td colspan="5">
-                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="14"
+                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"
                                 onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;" value="<c:out value="${memberView.incTax}"/>"/>
                                 </td>
                             </tr>
