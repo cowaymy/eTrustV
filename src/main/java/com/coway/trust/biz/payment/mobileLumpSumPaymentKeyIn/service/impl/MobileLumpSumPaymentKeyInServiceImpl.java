@@ -561,6 +561,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			// ONGHC - ADD FOR ONL PAYMENT TYPE
 			formInfo.put("payType", payType);
 			formInfo.put("userid", sessionVO.getUserId());
+			formInfo.put("userId", sessionVO.getUserId());
 
 			/*
 			 * update mobPayGroupNo status
