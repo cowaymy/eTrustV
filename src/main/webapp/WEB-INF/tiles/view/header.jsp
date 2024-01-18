@@ -32,7 +32,7 @@
         <!-- <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li> -->
         <!-- <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
         <!-- <li><span >Accumulated Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li> -->
-        <li><span>WP Sales Key In </span><img id="header_wpFigure" src="${pageContext.request.contextPath}/resources/images/common/icon_grid_detail.png" /></a></li>
+        <li style="display:none;"><span>WP Sales Key In </span><img id="header_wpFigure" src="${pageContext.request.contextPath}/resources/images/common/icon_grid_detail.png" /></a></li>
         <li><span >Notification:</span> <a href="${pageContext.request.contextPath}/notice/notification.do"><span id="header_notification">-</span></a></li>
         </ul>
 		</c:otherwise>
@@ -79,9 +79,10 @@
             fn_selectDailyCount();
 		}
 
-        $("#header_wpFigure").on("click", function() {
+      /*  $("#header_wpFigure").on("click", function() {
             Common.popupDiv("/chart/wpSalesFigurePop.do", null, null, true, "wpSalesFigurePop");
-        });
+        });*/
+
 
 /*
         $("#header_neo").on("click", function(){
@@ -150,7 +151,7 @@
 	}
 
    $(function() {
-
+	   $("#header_wpFigure").hide();
        selectDailyCount(false);
        fn_selectMyMenuProgrmList();
 
