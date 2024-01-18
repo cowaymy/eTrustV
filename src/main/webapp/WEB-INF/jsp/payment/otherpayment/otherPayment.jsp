@@ -3514,7 +3514,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 			          $("#searchBankAcc option").remove();
 			          $("#searchBankAcc").append("<option value=''>Choose One</option>");
 			          $("#searchBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
-			          $("#searchBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+			          $("#searchBankAcc").append("<option value='558'>2710/205 - CIMB 7</option>");
 			        }else{
 			          $("#searchBankAcc option").remove();
 			          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
