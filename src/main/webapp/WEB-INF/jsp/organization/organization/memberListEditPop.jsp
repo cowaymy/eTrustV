@@ -1487,7 +1487,7 @@ function fn_saveValidation(){
     }
 
     //@AMEER add INCOME TAX
-    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 13){
+    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 10){
         valid = false;
         message += "* Invalid Income Tax Length.<br/>";
    }

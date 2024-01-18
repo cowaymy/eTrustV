@@ -1193,7 +1193,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     }
 
     //@AMEER add INCOME TAX
-    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 13){
+    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 10){
          Common.alert("Invalid Income Tax Length");
          return false;
    }
