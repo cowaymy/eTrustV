@@ -2549,7 +2549,7 @@ function fn_bankChange(bankVal){
                 $("#onlineBankAcc option").remove();
                 $("#onlineBankAcc").append("<option value=''>Choose One</option>");
                 $("#onlineBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
-                $("#onlineBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+                $("#onlineBankAcc").append("<option value='558'>2710/205 - CIMB 7</option>");
               }else{
                 $("#onlineBankAcc option").remove();
                 doGetCombo('/common/getAccountList.do', 'ONLINE','', 'onlineBankAcc', 'S', '' );
