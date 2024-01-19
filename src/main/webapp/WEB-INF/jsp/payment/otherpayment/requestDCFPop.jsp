@@ -520,8 +520,9 @@ function fn_bankChange(bankVal){
             $("#onlineVAAccount").attr('readonly', false);
             $("#onlineBankAcc").attr('disabled', false);
             $("#onlineBankAcc").removeClass("disabled");
-
+            console.log('test sini');
             if(onlineBankType == '2728'){
+            	console.log('azimah');
                 $("#onlineBankAcc option").remove();
                 $("#onlineBankAcc").append("<option value=''>Choose One</option>");
                 $("#onlineBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
@@ -1428,6 +1429,7 @@ function setTargetInfo(){
                                    <th scope="row">Bank Type<span class='must'>*</span></th>
                                    <td>
                                         <select id="onlineBankType" name="onlineBankType" class="w100p" onchange="fn_bankChange('ONL');">
+                                           <option value="">Choose One</option>
                                            <option value="2728">JomPay</option>
                                            <option value="2729">MBB CDM</option>
                                            <option value="2730">VA</option>
