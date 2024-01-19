@@ -44,6 +44,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -120,11 +121,11 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     	try{
     		aa = AmazonS3ClientBuilder
                 .standard()
-                .withRegion(Regions.AP_SOUTHEAST_1)
+//                .withRegion(Regions.AP_SOUTHEAST_1)
                 //.withRegion(region)
-//                .withEndpointConfiguration(new EndpointConfiguration(
-//                        "https://s3.eu-west-1.amazonaws.com",
-//                        region))
+                .withEndpointConfiguration(new EndpointConfiguration(
+                        "https://s3.amazonaws.com",
+                        region))
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(accessKey, secretKey)))
                 .build();
