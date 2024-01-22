@@ -391,6 +391,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 
 	@Override
 	public EgovMap moveFileLocal(Map<String, Object> params) {
+		logger.info("emallPymtService moveFileLocal start");
 		EgovMap result = new EgovMap();
 		EgovMap arcRequest = new EgovMap();
 		String fileId = params.get("fileId").toString();
@@ -417,6 +418,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 				result.put("status", "-1");
 			}
 		}finally{
+			logger.info("emallPymtService moveFileLocal end");
 			return result;
 		}
 

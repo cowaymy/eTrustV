@@ -1039,6 +1039,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 	    }
 
 	public EgovMap moveFile(EgovMap request) throws Exception {
+		logger.info("AWSS3 ServiceImpl moveFile start");
 		EgovMap result = new EgovMap();
         String sourceKey = request.get("sourceFile").toString();
         String targetKey = request.get("targetFile").toString();
@@ -1107,6 +1108,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
             // Wait for the transfer to complete
             try {
 				transfer.waitForCompletion();
+				logger.info("AWSS3 ServiceImpl moveFile complete");
 			} catch (AmazonClientException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1121,6 +1123,8 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         } finally {
             transferManager.shutdownNow();
         }
+
+        logger.info("AWSS3 ServiceImpl moveFile end");
         return result;
 	}
 }
