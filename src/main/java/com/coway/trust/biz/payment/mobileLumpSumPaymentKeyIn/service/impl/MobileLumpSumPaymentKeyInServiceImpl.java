@@ -912,6 +912,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 							formMap.put("allowComm", allowance);
 
 							formList.add(formMap);
+							totRemainAmt = totRemainAmt.subtract(targetAmt);
 						}
 					} else {
 						break;
