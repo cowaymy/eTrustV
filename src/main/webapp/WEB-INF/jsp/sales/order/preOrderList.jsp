@@ -855,8 +855,8 @@ console.log("preOrderList");
     <td>
         <select id="entryPoint" name="entryPoint" class="w100p" >
             <option value="">Choose One</option>
-            <option value="0">Web</option>
-            <option value="1">Mobile Apps</option>
+            <option value="1">Web</option>
+            <option value="0">Mobile Apps</option>
         </select>
     </td>
 </tr>
