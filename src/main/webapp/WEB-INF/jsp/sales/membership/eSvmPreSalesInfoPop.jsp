@@ -8,34 +8,38 @@
 
     $(document).ready(function(){
 
-     // Masking pen (display last 4)
-     var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
-     $("#spanNric").html(maskedNric);
-     // Appear NRIC on hover over field
-     $("#spanNric").hover(function() {
-         $("#spanNric").html(oriNric);
-     }).mouseout(function() {
-         $("#spanNric").html(maskedNric);
-     });
-     $("#imgHover").hover(function() {
-         $("#spanNric").html(oriNric);
-     }).mouseout(function() {
-         $("#spanNric").html(maskedNric);
-     });
+    	// Masking pen (display last 4)
+        var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+        $("#spanNric").html(maskedNric);
+    	var maskedAddr = oriMaskAddr1 + " ********** " + oriMaskAddr2;
+        $("#presales_instlAdd").html(maskedAddr);
+    	if(MEM_TYPE == 4){
 
-     var maskedAddr = oriMaskAddr1 + " ********** " + oriMaskAddr2;
-     $("#presales_instlAdd").html(maskedAddr);
-     // Appear NRIC on hover over field
-     $("#presales_instlAdd").hover(function() {
-         $("#presales_instlAdd").html(oriAddr);
-     }).mouseout(function() {
-         $("#presales_instlAdd").html(maskedAddr);
-     });
-     $("#imgHoverAddr").hover(function() {
-         $("#presales_instlAdd").html(oriAddr);
-     }).mouseout(function() {
-         $("#presales_instlAdd").html(maskedAddr);
-     });
+    	     // Appear NRIC on hover over field
+    	     $("#spanNric").hover(function() {
+    	         $("#spanNric").html(oriNric);
+    	     }).mouseout(function() {
+    	         $("#spanNric").html(maskedNric);
+    	     });
+    	     $("#imgHover").hover(function() {
+    	         $("#spanNric").html(oriNric);
+    	     }).mouseout(function() {
+    	         $("#spanNric").html(maskedNric);
+    	     });
+
+    	     // Appear NRIC on hover over field
+    	     $("#presales_instlAdd").hover(function() {
+    	         $("#presales_instlAdd").html(oriAddr);
+    	     }).mouseout(function() {
+    	         $("#presales_instlAdd").html(maskedAddr);
+    	     });
+    	     $("#imgHoverAddr").hover(function() {
+    	         $("#presales_instlAdd").html(oriAddr);
+    	     }).mouseout(function() {
+    	         $("#presales_instlAdd").html(maskedAddr);
+    	     });
+    	}
+
     });
 
 </script>

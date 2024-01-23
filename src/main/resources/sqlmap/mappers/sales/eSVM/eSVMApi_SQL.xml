@@ -989,8 +989,8 @@
                D.NAME CUST_NAME,
                NVL(A.APPV_INSTRCT, 0) RESN_ID,
                NVL((E.CODE || ' - ' || E.RESN_DESC), '') RESN,
-               --NVL(A.APPV_REM, '-') APPV_REM,
-               '['||F.USER_NAME||']'||  ' ' ||TO_CHAR(A.UPD_DT,'DD/MM/YYYY HH:MM AM') || ' -  ' || NVL(A.APPV_REM, '-') APPV_REM,
+               NVL(A.APPV_REM, '-') APPV_REM,
+               --'['||F.USER_NAME||']'||  ' ' ||TO_CHAR(A.UPD_DT,'DD/MM/YYYY HH:MM AM') || ' -  ' || NVL(A.APPV_REM, '-') APPV_REM,
                A.SA_REF,
                TO_CHAR(F.USER_NAME) as UPD_BY,
                TO_CHAR(A.UPD_DT, 'MM/DD/YY HH:MI:SS A.M.') AS UPD_DT

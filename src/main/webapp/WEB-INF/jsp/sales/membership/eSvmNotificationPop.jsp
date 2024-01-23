@@ -39,56 +39,60 @@
       maskedEmail2 =maskedEmail2 +postfix2;
 
       $("#notification_sms1").html(maskedSms1);
-      // Appear NRIC on hover over field
-      $("#notification_sms1").hover(function() {
-          $("#notification_sms1").html(sms1);
-      }).mouseout(function() {
-          $("#notification_sms1").html(maskedSms1);
-      });
-      $("#imgHover1").hover(function() {
-          $("#notification_sms1").html(sms1);
-      }).mouseout(function() {
-          $("#notification_sms1").html(maskedSms1);
-      });
-
       $("#notification_sms2").html(maskedSms2);
-      // Appear NRIC on hover over field
-      $("#notification_sms2").hover(function() {
-          $("#notification_sms2").html(sms2);
-      }).mouseout(function() {
-          $("#notification_sms2").html(maskedSms2);
-      });
-      $("#imgHover2").hover(function() {
-          $("#notification_sms2").html(sms2);
-      }).mouseout(function() {
-          $("#notification_sms2").html(maskedSms2);
-      });
-
       $("#notification_email1").html(maskedEmail1);
-      // Appear NRIC on hover over field
-      $("#notification_email1").hover(function() {
-          $("#notification_email1").html(email1);
-      }).mouseout(function() {
-          $("#notification_email1").html(maskedEmail1);
-      });
-      $("#imgHover3").hover(function() {
-          $("#notification_email1").html(email1);
-      }).mouseout(function() {
-          $("#notification_email1").html(maskedEmail1);
-      });
-
       $("#notification_email2").html(maskedEmail2);
-      // Appear NRIC on hover over field
-      $("#notification_email2").hover(function() {
-          $("#notification_email2").html(email2);
-      }).mouseout(function() {
-          $("#notification_email2").html(maskedEmail2);
-      });
-      $("#imgHover4").hover(function() {
-          $("#notification_email2").html(email2);
-      }).mouseout(function() {
-          $("#notification_email2").html(maskedEmail2);
-      });
+
+      if(MEM_TYPE == 4){
+
+	      // Appear NRIC on hover over field
+	      $("#notification_sms1").hover(function() {
+	          $("#notification_sms1").html(sms1);
+	      }).mouseout(function() {
+	          $("#notification_sms1").html(maskedSms1);
+	      });
+	      $("#imgHover1").hover(function() {
+	          $("#notification_sms1").html(sms1);
+	      }).mouseout(function() {
+	          $("#notification_sms1").html(maskedSms1);
+	      });
+
+	      // Appear NRIC on hover over field
+	      $("#notification_sms2").hover(function() {
+	          $("#notification_sms2").html(sms2);
+	      }).mouseout(function() {
+	          $("#notification_sms2").html(maskedSms2);
+	      });
+	      $("#imgHover2").hover(function() {
+	          $("#notification_sms2").html(sms2);
+	      }).mouseout(function() {
+	          $("#notification_sms2").html(maskedSms2);
+	      });
+
+	      // Appear NRIC on hover over field
+	      $("#notification_email1").hover(function() {
+	          $("#notification_email1").html(email1);
+	      }).mouseout(function() {
+	          $("#notification_email1").html(maskedEmail1);
+	      });
+	      $("#imgHover3").hover(function() {
+	          $("#notification_email1").html(email1);
+	      }).mouseout(function() {
+	          $("#notification_email1").html(maskedEmail1);
+	      });
+
+	      // Appear NRIC on hover over field
+	      $("#notification_email2").hover(function() {
+	          $("#notification_email2").html(email2);
+	      }).mouseout(function() {
+	          $("#notification_email2").html(maskedEmail2);
+	      });
+	      $("#imgHover4").hover(function() {
+	          $("#notification_email2").html(email2);
+	      }).mouseout(function() {
+	          $("#notification_email2").html(maskedEmail2);
+	      });
+      }
     });
 
 </script>

@@ -694,7 +694,9 @@
 		    ESVM.PO_NO = #{PONo},
 		    ESVM.APPV_INSTRCT = #{specialInstruction},
 		    ESVM.APPV_DT = SYSDATE,
-		    ESVM.APPV_REM = REGEXP_REPLACE(#{remark}, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+		    <if test='remark != null '>
+		    ESVM.APPV_REM = '['|| (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = #{userId} )||']'||  ' ' ||TO_CHAR(SYSDATE,'DD/MM/YYYY HH:mi AM') || ' -  ' || REGEXP_REPLACE(#{remark}, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+		    </if>
 		    ESVM.APPV_USER_ID = #{userId},
 		    ESVM.UPD_USER_ID = #{userId},
 		    ESVM.UPD_DT = SYSDATE,
@@ -1390,7 +1392,7 @@
 			,#{action}
 			,NULL
 			,#{specialInstruction}
-			,REGEXP_REPLACE(#{remark}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+			,(SELECT APPV_REM FROM SAL0298D WHERE PSM_ID = #{psmId})
 			,#{userId}
 			,SYSDATE
 			,#{userId}

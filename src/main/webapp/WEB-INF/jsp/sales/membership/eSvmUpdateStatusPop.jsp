@@ -58,7 +58,7 @@
     <th scope="row">Others Remark</th>
     <c:if test="${eSvmInfo.stus eq '1' and SESSION_INFO.userTypeId eq '2' }">
         <td colspan='3'>
-            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000" class="readonly" readonly>${eSvmInfo.codyAppvRem}</textarea>
+            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000" class="readonly" readonly>${eSvmInfo.appvRem}</textarea>
         </td>
     </c:if>
     <c:if test="${eSvmInfo.stus eq '1' and SESSION_INFO.userTypeId ne '2' }">
