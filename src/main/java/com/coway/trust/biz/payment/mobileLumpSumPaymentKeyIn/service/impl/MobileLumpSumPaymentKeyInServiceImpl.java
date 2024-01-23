@@ -876,6 +876,13 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 							if (totRemainAmt.compareTo(targetAmt) < 0) {
 								targetAmt = totRemainAmt;
 							}
+							else{
+								//If total remaining is more than target pay and also is last record of the billRental, we overpay it, 
+								//else just use the target amount
+								if(j+1 == billInfoRentalList.size()){
+									targetAmt = totRemainAmt;
+								}
+							}
 
 							formMap = new HashMap<String, Object>();
 							formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
