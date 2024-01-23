@@ -1093,6 +1093,38 @@ function fn_pushCU(){
     });
 }
 
+function fn_pushCU(){
+
+    let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
+    var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
+    Common.ajax("GET","/organization/selectCntMemSameEmail.do", {email : memEmail}, function(cnt) {
+        if(cnt > 1){
+            Common.alert("Failed request. Duplicate email");
+        }
+        else {
+            Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
+                console.log(result);
+                if(result.message == 'LMS: Successfully create user.'){
+                    Common.alert("Successfully push to CU.");
+                }else{
+                    Common.alert("Failed Request. Invalid parameter");
+                }
+            });
+        }
+    });
+}
+
+function fn_suspendCU(){
+
+    let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
+    var membercode = AUIGrid.getCellValue(myGridID, selRowIndex, "membercode");
+    var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
+    Common.ajax("GET","/organization/suspendCU.do", {username : membercode, email: memEmail, memId: memberId, memCode: membercode}, function(result) {
+        console.log(result);
+        Common.alert(result.message);
+    });
+}
+
 $(function() {
 
     $("#requestToResetMFA").click(function() {
@@ -1466,6 +1498,9 @@ function fn_socialMediaInfo(){
  <c:if test="${PAGE_AUTH.funcUserDefine18 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_pushCU()">Push to CU</a></p></li>
 </c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine18 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_suspendCU()">Request Suspend</a></p></li>
+</c:if>
 
 </ul>
 </aside><!-- title_line end -->
@@ -1637,9 +1672,10 @@ function fn_socialMediaInfo(){
         <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
         <th scope="row">Dept Code</th>
         <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row">Email</th>
+        <td><input type="text" title="Email" placeholder="" class="w100p" id="email" name="email" /></td>
       </tr>
+</tr>
 </tbody>
 </table><!-- table end -->
 

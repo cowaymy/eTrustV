@@ -408,4 +408,6 @@ public interface MemberListMapper {
 
 	List<EgovMap> getMfaResetHist(Map<String, Object> params);
 
+	List<EgovMap> checkEmail(Map<String, Object> params);
+
 }

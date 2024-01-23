@@ -801,6 +801,10 @@ console.log("ready");
          }
      });
 
+     $("#email").blur(function() {
+    	 checkEmail();
+     });
+
      $('#sponsorCd').blur(function() {
          if ($('#sponsorCd').val().length > 0) {
              fn_sponsorCd();
@@ -1460,6 +1464,31 @@ function checkNRICEnter(){
     if(event.keyCode == 13) {
         checkNRIC();
     }
+}
+
+function checkEmailOnEnter() {
+    if(event.keyCode == 13) {
+        checkEmail();
+    }
+}
+
+function checkEmail() {
+    var jsonObj = {
+            "email" : $("#email").val()
+        };
+
+    Common.ajax("GET", "/organization/checkEmail.do", jsonObj, function(result) {
+        console.log("data : " + result);
+        if (result.message != "pass") {
+            Common.alert(result.message);
+            $("#email").val('');
+            returnValue = false;
+            return false;
+        } else {
+             returnValue = true;
+             return true;
+        }
+  });
 }
 
 
@@ -2497,8 +2526,7 @@ function fn_validTerminateFile() {
 <tr>
     <th scope="row" id="emailLbl" name="emailLbl">Email</th>
     <td colspan="5">
-    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
-    </td>
+    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"  onKeyDown="checkEmailOnEnter()"</td>
 </tr>
 <!-- ADDED INCOME TAX NO @AMEER 2021-09-27-->
     <th scope="row">Income Tax No</th>
@@ -2711,7 +2739,7 @@ function fn_validTerminateFile() {
     <th scope="row">Bank Account No<span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
-    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+   />
     </td>
 </tr>
 </tbody>

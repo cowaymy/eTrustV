@@ -3071,4 +3071,36 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public List<EgovMap> getMfaResetHist(Map<String, Object> params) {
         return memberListMapper.getMfaResetHist(params);
     }
+
+	@Override
+    public List<EgovMap> checkEmail(Map<String, Object> params) {
+        return memberListMapper.checkEmail(params);
+    }
+
+	// Added for Enhancement on New Button available to suspend member with email duplicate (for registering new)
+	@Override
+	public Map<String, Object> suspendFromCU(Map<String, Object> params) throws Exception{
+
+		String emailToChange = params.get("email").toString();
+    	String strDt = CommonUtils.getNowDate();
+
+    	Map<String, Object> memMap = new HashMap<String, Object>();
+    	memMap.put("username", params.get("memCode").toString());
+    	emailToChange = strDt + "_" + emailToChange;
+    	memMap.put("email", emailToChange);
+    	memMap.put("memberID", params.get("memId").toString());
+
+    	//update lms site
+    	Map<String, Object> returnVal = lmsApiService.lmsMemberListDeact(memMap);
+    	logger.debug("returnVal status ......." + returnVal.get("status").toString());
+		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.SUCCESS)){
+	    	memberListMapper.updateMemberEmail(memMap);
+		}
+		else {
+			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+			throw new RuntimeException(e1);
+		}
+		return returnVal;
+	}
+
 }

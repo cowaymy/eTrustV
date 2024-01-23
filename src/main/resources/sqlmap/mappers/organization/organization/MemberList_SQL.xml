@@ -642,6 +642,9 @@ FROM (
   <if test="deptCode != null and deptCode != '' ">
     AND EXTENT12.DEPT_CODE = #{deptCode}
   </if>
+  <if test="email != null and email != '' ">
+    AND LOWER(EXTENT1.EMAIL) = LOWER(#{email})
+  </if>
   <!-- <if test="sessionTypeID != 4 and sessionTypeID != 6">
     <choose>
       <when test="memberLevel == 1">
@@ -6353,6 +6356,14 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
             , RESET_BY
             FROM ORG0054H
         WHERE MEM_CODE = #{memCode}
+      </select>
+
+       <select id="checkEmail" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+        SELECT MEM_CODE, EMAIL
+        FROM ORG0001D
+        WHERE LOWER(EMAIL) = LOWER(#{email})
+       ]]>
       </select>
 
 </mapper>

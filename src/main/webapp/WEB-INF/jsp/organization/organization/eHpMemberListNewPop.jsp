@@ -847,6 +847,10 @@ $(".join").hide();
          }
      });
 
+     $('#eHPemail').blur(function() {
+    	 checkEmail();
+     });
+
      $("#eHPmobileNo").blur(function() {
         fmtNumber("#eHPmobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
@@ -1472,6 +1476,31 @@ function checkBankAccNoEnter() {
     }
 }
 
+function checkEmailOnEnter() {
+    if(event.keyCode == 13) {
+    	checkEmail();
+    }
+}
+
+function checkEmail() {
+    var jsonObj = {
+            "email" : $("#eHPemail").val()
+        };
+
+    Common.ajax("GET", "/organization/checkEmail.do", jsonObj, function(result) {
+        console.log("data : " + result);
+        if (result.message != "pass") {
+            Common.alert(result.message);
+            $("#eHPemail").val('');
+            returnValue = false;
+            return false;
+        } else {
+             returnValue = true;
+             return true;
+        }
+  });
+}
+
 function checkBankAccNo() {
     //var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
     var jsonObj = {
@@ -1755,7 +1784,9 @@ function fn_eHPmarritalCallBack(){
                     <tr>
                         <th scope="row" id="eHPemailLbl" name ="emailLbl">Email</th>
                         <td colspan="5">
-                        <input type="text" title="" placeholder="Email" class="w100p" id="eHPemail" name="email" />
+                        <input type="text" title="" placeholder="Email" class="w100p" id="eHPemail" name="email" onKeyDown="checkEmailOnEnter()"
+                    />
+
                         </td>
                     </tr>
                     <tr>

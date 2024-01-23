@@ -297,4 +297,9 @@ public interface MemberListService {
 
 	List<EgovMap> getMfaResetHist(Map<String, Object> params);
 
+	List<EgovMap> checkEmail(Map<String, Object> params);
+
+	Map<String, Object> suspendFromCU(Map<String, Object> params) throws Exception;
+
+
 }

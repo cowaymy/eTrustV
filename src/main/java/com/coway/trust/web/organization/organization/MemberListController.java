@@ -3124,6 +3124,40 @@ public class MemberListController {
         return ResponseEntity.ok(memberListService.getMfaResetHist(params));
     }
 
+	@RequestMapping(value = "/checkEmail.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkEmail(@RequestParam Map<String, Object> params, Model model) {
+
+		List<EgovMap> emailList = memberListService.checkEmail(params);
+
+		ReturnMessage message = new ReturnMessage();
+
+		if (emailList.size() > 0) {
+			message.setMessage("Email is duplicate with another member");
+		} else {
+			message.setMessage("pass");
+		}
+		//logger.debug("message : {}", message);
+
+    	return ResponseEntity.ok(message);
+	}
+
+	  @RequestMapping(value = "/suspendCU.do", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> suspendCU(@RequestParam Map<String, Object> params) throws Exception {
+		  logger.debug("params :: " + params);
+		  Map<String, Object> returnVal = memberListService.suspendFromCU(params);
+
+			ReturnMessage message = new ReturnMessage();
+
+			if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.SUCCESS)) {
+				message.setMessage("Successfully suspended from CU and email updated");
+
+			} else {
+				message.setMessage("Fail to suspend from CU. Please contact administrator");
+			}
+
+		return ResponseEntity.ok(message);
+	  }
+
 
 }
 
