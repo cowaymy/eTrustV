@@ -3,6 +3,73 @@
 <mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.PaymentListMapper">
 
     <select id="selectGroupPaymentList" parameterType="Map" resultType="egovMap">
+        WITH pay AS (
+    SELECT
+        pay_id,
+        group_seq
+    FROM
+        pay0252t
+    WHERE
+        group_seq IN (
+            SELECT DISTINCT
+                a.group_seq
+            FROM
+                     pay0252t a
+                JOIN pay0064d b ON a.pay_id = b.pay_id
+                JOIN pay0065d c ON a.pay_itm_id = c.pay_itm_id
+                LEFT JOIN sal0001d d ON b.sales_ord_id = d.sales_ord_id
+                LEFT JOIN pay0007d e ON b.bill_id = e.bill_id
+                LEFT JOIN sal0001d f ON e.bill_so_id = f.sales_ord_id
+           WHERE 1=1
+                            <if test="ordNo != '' ">
+                            AND (D.SALES_ORD_NO = #{ordNo})
+                            </if>
+                            <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
+                            AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
+                            AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
+                            </if>
+                            <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
+                            AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
+                            AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
+                            </if>
+                            <if test="orNo != null and orNo != '' ">
+                            AND B.OR_NO = #{orNo}
+                            </if>
+                             <if test="trxId != null and trxId != '' ">
+                                    AND A.BANK_STATE_MAPPING_ID = #{trxId}
+                             </if>
+            UNION
+            SELECT DISTINCT
+                a.group_seq
+            FROM
+                     pay0252t a
+                JOIN pay0064d b ON a.pay_id = b.pay_id
+                JOIN pay0065d c ON a.pay_itm_id = c.pay_itm_id
+                LEFT JOIN sal0001d d ON b.sales_ord_id = d.sales_ord_id
+                LEFT JOIN pay0007d e ON b.bill_id = e.bill_id
+            WHERE 1=1
+                                <if test="ordNo != '' ">
+                                     AND E.BILL_SO_ID IN (SELECT F.SALES_ORD_ID FROM SAL0001D F WHERE  F.SALES_ORD_NO = #{ordNo} UNION
+                                     SELECT F1.SRV_ORD_ID FROM SAL0225D F1 WHERE F1.SRV_ORD_NO  = #{ordNo})
+                                </if>
+                                <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
+                                AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
+                                AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
+                                </if>
+                                <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
+                                AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
+                                AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
+                                </if>
+                                <if test="orNo != null and orNo != '' ">
+                                AND B.OR_NO = #{orNo}
+                                </if>
+
+                                <if test="trxId != null and trxId != '' ">
+                                        AND A.BANK_STATE_MAPPING_ID = #{trxId}
+                                </if>
+        )
+)
+
         SELECT
             GROUP_SEQ,
             APP_TYPE,
@@ -105,12 +172,15 @@
 		            LEFT JOIN (
 		                SELECT DISTINCT Z.PAY_ID ,DCF_STUS_ID STUS, DCF_APPV_DT DT FROM PAY0252T Z
 		                JOIN PAY0258D X ON Z.GROUP_SEQ = X.GRP_SEQ
+		                JOIN pay ON pay.pay_id = z.pay_id
 		                UNION
 		                SELECT SRC_PAY_ID PAY_ID, FT_STUS_ID STUS, FT_APPV_DT DT FROM PAY0260D
+		                JOIN pay ON pay.pay_id = src_pay_id
 		                UNION
-		                SELECT PAY_ID, 999 STUS, A.UPD_DT DT FROM PAY0045D A
+		                SELECT b.pay_id, 999 STUS, A.UPD_DT DT FROM PAY0045D A
 		                JOIN PAY0064D B ON A.WOR_NO = B.OR_NO
 		                JOIN PAY0046D C ON C.BATCH_ID = A.BATCH_ID
+		                JOIN pay ON pay.pay_id = b.pay_id
 		                WHERE C.BATCH_STUS_ID IN (1, 4)
 		                UNION
                         <!-- SELECT A.PAY_ID AS PAY_ID,
@@ -131,6 +201,7 @@
                              B.APPV_PRCSS_DT AS DT
                          FROM PAY0345D A
                          JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID
+                         JOIN pay ON pay.pay_id = a.pay_id
 		            ) K ON C.PAY_ID = K.PAY_ID
 		            LEFT JOIN SYS0038M G ON K.STUS = G.STUS_CODE_ID
 		            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
@@ -142,62 +213,9 @@
 		        WHERE
 		            A.GROUP_SEQ IN (
 		                SELECT
-		                    DISTINCT A.GROUP_SEQ
-		                FROM
-		                    PAY0252T A
-		                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-		                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
-		                    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
-		                    LEFT JOIN PAY0007D E ON B.BILL_ID = E.BILL_ID
-		                    LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID
-
-		                WHERE 1=1
-		                    <if test="ordNo != '' ">
-		                    AND (D.SALES_ORD_NO = #{ordNo})
-		                    </if>
-		                    <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
-		                    AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
-		                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
-		                    </if>
-		                    <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
-		                    AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
-		                    AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
-		                    </if>
-		                    <if test="orNo != null and orNo != '' ">
-		                    AND B.OR_NO = #{orNo}
-		                    </if>
-		                     <if test="trxId != null and trxId != '' ">
-                                    AND A.BANK_STATE_MAPPING_ID = #{trxId}
-		                     </if>
-		                    UNION
-		                      SELECT
-			                    DISTINCT A.GROUP_SEQ
-			                FROM
-			                    PAY0252T A
-			                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-			                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
-			                    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
-			                    LEFT JOIN PAY0007D E ON B.BILL_ID = E.BILL_ID
-			                WHERE 1=1
-			                    <if test="ordNo != '' ">
-			                         AND E.BILL_SO_ID IN (SELECT F.SALES_ORD_ID FROM SAL0001D F WHERE  F.SALES_ORD_NO = #{ordNo} UNION
-                                     SELECT F1.SRV_ORD_ID FROM SAL0225D F1 WHERE F1.SRV_ORD_NO  = #{ordNo})
-			                    </if>
-			                    <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
-			                    AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
-			                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
-			                    </if>
-			                    <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
-			                    AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
-			                    AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
-			                    </if>
-			                    <if test="orNo != null and orNo != '' ">
-			                    AND B.OR_NO = #{orNo}
-		                        </if>
-
-		                        <if test="trxId != null and trxId != '' ">
-                                        AND A.BANK_STATE_MAPPING_ID = #{trxId}
-		                        </if>
+                            pay.group_seq
+                        FROM
+                            pay
 		            )
 		        GROUP BY
 		            A.GROUP_SEQ,
