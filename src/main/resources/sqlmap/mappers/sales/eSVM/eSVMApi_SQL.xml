@@ -1249,7 +1249,7 @@
 		    ) T WHERE ROWNUM &lt;= 1
   	</select>
 
-  	<select id="checkActiveESvm" parameterType="Map" resultType="egovMap">
+  	<!-- <select id="checkActiveESvm" parameterType="Map" resultType="egovMap">
         SELECT
             COUNT(*) CNT
         FROM SAL0298D S
@@ -1257,5 +1257,5 @@
             ON S.PSM_SALES_ORD_ID = A.SALES_ORD_ID
         WHERE 1 = S.STUS
             AND A.SALES_ORD_NO = #{ordNo}
-    </select>
+    </select> -->
 </mapper>

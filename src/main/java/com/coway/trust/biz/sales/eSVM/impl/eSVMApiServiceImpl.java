@@ -187,10 +187,10 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
           throw new ApplicationException(AppConstants.FAIL, "This order already has " + hasActiveQuot.get("cnt").toString() + " active quotation. New quotation not allowed.");
         }
 
-        EgovMap hasActiveEsvm = eSVMApiMapper.checkActiveESvm(eSVMApiForm.createMap(param));
+        /*EgovMap hasActiveEsvm = eSVMApiMapper.checkActiveESvm(eSVMApiForm.createMap(param));
         if (Integer.parseInt(hasActiveEsvm.get("cnt").toString()) > 0) {
           throw new ApplicationException(AppConstants.FAIL, "This order already has " + hasActiveEsvm.get("cnt").toString() + " active record in eSVM. New quotation not allowed.");
-        }
+        }*/
 
         // getMaxPeriodEarlyBirdPromo
         if (rtn.getMemExprDate() != null) { // CELESTE
