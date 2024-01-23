@@ -603,12 +603,13 @@ console.log("membershipESvmList");
   <dl class="link_list">
     <dt>Link</dt>
     <dd>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
       <ul class="btns">
         <li><p class="link_btn">
             <a href="#" onclick="javascript:fn_eSvmRaw()" id="eSvmRaw">eSVM Raw</a>
           </p></li>
-        <%-- </c:if> --%>
       </ul>
+      </c:if>
       <ul class="btns">
       </ul>
       <p class="hide_btn">
