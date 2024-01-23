@@ -52,7 +52,7 @@
 		  LEFT JOIN SYS0013M S13 ON S13.CODE_ID = S01.APP_TYPE_ID AND S13.CODE_MASTER_ID = 10
 		  WHERE S29.CUST_ID = #{custId}
 		  AND S29.NRIC = #{custNric}
-		  AND S01.STUS_CODE_ID <![CDATA[ <> ]]> 10
+		  AND S01.STUS_CODE_ID = 4
     </select>
 
       <insert id="CBT0006M_insert" parameterType="Map">
