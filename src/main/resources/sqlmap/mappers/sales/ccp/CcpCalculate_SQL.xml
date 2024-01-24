@@ -1534,6 +1534,11 @@ AND T1.CNT = 1
   JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
                                     MAX(Extent2.CCP_ID)  A1
                               FROM SAL0102D Extent2
+                              <!-- SQL TUNING - ML_JENNIFER5_20240119_salesccpccpEresubmitViewPop.do -->
+                              WHERE CCP_ID IN (SELECT CCP_ID
+                                                          FROM SAL0102D ET1
+                                                           JOIN SAL0001D ET6 ON ET1.CCP_SALES_ORD_ID = ET6.SALES_ORD_ID
+                                                          WHERE ET6.SALES_ORD_ID = #{salesOrderId})
                               GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
          LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
