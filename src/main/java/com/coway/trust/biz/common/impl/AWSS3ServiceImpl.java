@@ -990,7 +990,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 //				// S3Object
 //				s3Object = amazonS3.getObject(getObjectRequest);
 
-				System.out.format("Objects in S3 bucket %s:\n", bucket);
+				logger.info("Objects in S3 bucket %s:\n", bucket);
 				//final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.DEFAULT_REGION).build();
 				ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withPrefix(dirName+ "/").withDelimiter(dirName+ "/");
 				ListObjectsV2Result listing = amazonS3.listObjectsV2(req);
@@ -1013,6 +1013,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 					result.put("status", 0);
 					result.put("message", "no file");
 				}
+				logger.info("AWSS3 ServiceImpl listBucketObjects result : " + result);
 
 //	            ListObjectsRequest listObjects = ListObjectsRequest
 //	                    .builder()
@@ -1090,6 +1091,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     			}
     		}
 
+    		logger.info("AWSS3 ServiceImpl downloadSingleFile exist : " + exist);
     		if(exist){
     			SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyyMMddHHmm");
 				Date currentDate1 = new Date();
