@@ -181,6 +181,8 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 						}else{
 							result = returnResult;
 						}
+					}else{
+						result = dwldResult;
 					}
 				}else{
 					result.put("status", "-1");

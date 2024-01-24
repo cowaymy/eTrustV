@@ -915,6 +915,8 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 			if (s3ObjIs == null) {
 
 				// return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+				result.put("status", "0");
+				result.put("message", "No File.");
 				throw new Exception("No s3ObjIs");
 			}
 
@@ -962,8 +964,8 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 			e.printStackTrace();
 			logger.error("downloadSingleFile1: {}", e.toString());
 			// return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-			result.put("status", "-1");
-			result.put("message", e.getMessage());
+			result.put("status", result.get("status") != null ? result.get("status") : "-1");
+			result.put("message", result.get("message") != null ? result.get("message") : e.getMessage());
 		} finally {
 			// if(s3ObjIs!=null) { try { s3ObjIs.abort(); s3ObjIs.close();}catch (Exception e) {}};
 			logger.error("downloadSingleFile1 finally");
@@ -1104,13 +1106,14 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         	// Copy the object from the source to the target
             Transfer transfer = transferManager.copy(bucket, sourceKey, bucket, targetKey);
 
-            // Delete the source object
-            amazonS3.deleteObject(bucket, sourceKey);
-
+            logger.info("AWSS3 ServiceImpl downloadSingleFile getProgress " + transfer.getProgress());
+            logger.info("AWSS3 ServiceImpl downloadSingleFile getState " + transfer.getState());
             // Wait for the transfer to complete
             try {
 				transfer.waitForCompletion();
 				logger.info("AWSS3 ServiceImpl moveFile complete");
+				logger.info("AWSS3 ServiceImpl downloadSingleFile getProgress " + transfer.getProgress());
+	            logger.info("AWSS3 ServiceImpl downloadSingleFile getState " + transfer.getState());
 			} catch (AmazonClientException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1119,7 +1122,10 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 				e.printStackTrace();
 			}
 
-            System.out.println("File moved successfully to the target folder.");
+         // Delete the source object
+            amazonS3.deleteObject(bucket, sourceKey);
+
+            logger.info("File moved successfully to the target folder.");
         } catch (AmazonServiceException e) {
             e.printStackTrace();
         } finally {
