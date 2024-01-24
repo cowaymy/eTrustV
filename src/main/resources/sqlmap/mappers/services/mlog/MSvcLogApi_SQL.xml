@@ -1411,12 +1411,19 @@
               INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
               INNER JOIN SYS0026M D ON A.STOCK_ID = D.STK_ID
               LEFT OUTER JOIN (SELECT A.*,
-                                      B.RETN_RESULT_ID AS RETN_RESULT_ID
-                               FROM LOG0039D A
-                               INNER JOIN ( SELECT STK_RETN_ID, MAX (STK_RETN_RESULT_ID) AS RETN_RESULT_ID
-                                            FROM LOG0039D
-                                            GROUP BY STK_RETN_ID) B ON A.STK_RETN_ID = B.STK_RETN_ID
-                                                                   AND A.STK_RETN_RESULT_ID = B.RETN_RESULT_ID) E ON A.STK_RETN_ID = E.STK_RETN_ID
+                                                   B.RETN_RESULT_ID AS RETN_RESULT_ID
+                                        FROM LOG0039D A
+                                        INNER JOIN ( SELECT STK_RETN_ID,
+                                                                      MAX (STK_RETN_RESULT_ID) AS RETN_RESULT_ID
+                                                            FROM LOG0039D
+                                                            GROUP BY STK_RETN_ID) B ON A.STK_RETN_ID = B.STK_RETN_ID
+                                                                                                  AND A.STK_RETN_RESULT_ID = B.RETN_RESULT_ID
+                                       /* SQL TUNING ML_AWR_20240118_0kcr0wz4avjn4 */
+                                        WHERE A.STK_RETN_ID IN (SELECT A.STK_RETN_ID
+                                                                               FROM LOG0038D A
+                                                                               INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
+                                                                               WHERE B.MEM_CODE = #{userId})
+                                                                   ) E ON A.STK_RETN_ID = E.STK_RETN_ID
               LEFT OUTER JOIN SAL0029D F ON C.CUST_ID = F.CUST_ID
               LEFT OUTER JOIN SAL0024D G ON C.CUST_BILL_ID = G.CUST_BILL_ID
               LEFT OUTER JOIN ( SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
