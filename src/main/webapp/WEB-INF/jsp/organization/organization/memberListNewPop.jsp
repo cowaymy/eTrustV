@@ -801,7 +801,7 @@ console.log("ready");
          }
      });
 
-     $("#email").blur(function() {
+     $('#email', '#memberAddForm').blur(function() {
     	 checkEmail();
      });
 
@@ -1474,14 +1474,14 @@ function checkEmailOnEnter() {
 
 function checkEmail() {
     var jsonObj = {
-            "email" : $("#email").val()
+            "email" : $('#email', '#memberAddForm').val()
         };
 
     Common.ajax("GET", "/organization/checkEmail.do", jsonObj, function(result) {
         console.log("data : " + result);
         if (result.message != "pass") {
             Common.alert(result.message);
-            $("#email").val('');
+            $('#email', '#memberAddForm').val('');
             returnValue = false;
             return false;
         } else {
@@ -2526,7 +2526,7 @@ function fn_validTerminateFile() {
 <tr>
     <th scope="row" id="emailLbl" name="emailLbl">Email</th>
     <td colspan="5">
-    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"  onKeyDown="checkEmailOnEnter()"</td>
+    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"  onKeyDown="checkEmailOnEnter()"/></td>
 </tr>
 <!-- ADDED INCOME TAX NO @AMEER 2021-09-27-->
     <th scope="row">Income Tax No</th>
