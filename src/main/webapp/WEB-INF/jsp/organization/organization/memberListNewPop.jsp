@@ -1485,6 +1485,7 @@ function checkEmail() {
             returnValue = false;
             return false;
         } else {
+        	 $("#email").val($('#email', '#memberAddForm').val());
              returnValue = true;
              return true;
         }
