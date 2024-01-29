@@ -555,11 +555,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   @Override
   public void sendEmail(Map<String, Object> params) {
 	//Sending attachment
-	params.put(REPORT_FILE_NAME, "/payment/AutoDebitAuthorization.rpt");// visualcut
-    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
-    params.put("V_WHERESQL", "AND p0333m.PAD_ID = " + params.get("padId").toString());// parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate());
+//	params.put(REPORT_FILE_NAME, "/payment/AutoDebitAuthorization.rpt");// visualcut
+//    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+//    params.put("V_WHERESQL", "AND p0333m.PAD_ID = " + params.get("padId").toString());// parameter
+//    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+//        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate());
 
     EmailVO email = new EmailVO();
     String emailSubject = "COWAY: Credit/Debit Card Auto Debit Authorisation";
@@ -586,15 +586,10 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TO, emailNo);
     params.put(EMAIL_TEXT, content);
 
-    try {
     	if(emailNo.size() > 0){
-    		this.view(null, null, params); //Included sending email
+    		adaptorService.sendEmail(email, false);
+    		//this.view(null, null, params); //Included sending email
     	}
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-	      LOGGER.error(" autodebit email result error : {}", e.toString());
-		e.printStackTrace();
-	}
   }
 
 

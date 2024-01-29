@@ -123,7 +123,7 @@ public class AutoDebitApiController {
         int insertResult = Integer.parseInt(resultparams.get("result").toString());
         if(insertResult > 0){
             result.setResponseCode(1);
-			autoDebitService.sendSms(resultparams);
+			//autoDebitService.sendSms(resultparams);
 			autoDebitService.sendEmail(resultparams);
 		 }
         else{
