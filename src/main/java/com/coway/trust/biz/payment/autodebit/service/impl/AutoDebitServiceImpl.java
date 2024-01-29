@@ -587,6 +587,10 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TEXT, content);
 
     	if(emailNo.size() > 0){
+            email.setTo(emailNo);
+            email.setHtml(true);
+            email.setSubject(emailSubject);
+            email.setText(content);
     		adaptorService.sendEmail(email, false);
     		//this.view(null, null, params); //Included sending email
     	}
