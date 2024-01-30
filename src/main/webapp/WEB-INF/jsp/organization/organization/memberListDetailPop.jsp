@@ -1126,8 +1126,12 @@ $("#HP_img").dblclick(function(){
 </tr>
 <tr>
     <th scope="row">Member Name</th>
-    <td colspan="5">
+    <td colspan="3">
     <span><c:out value="${memberView.name1}"/></span>
+    </td>
+    <th scope="row">Join Month</th>
+    <td>
+        <span><c:out value="${memberView.joinMonth}"/></span>
     </td>
 </tr>
 <tr>

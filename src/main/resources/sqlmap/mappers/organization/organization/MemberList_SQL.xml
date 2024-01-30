@@ -904,7 +904,8 @@ FROM (
        Limit1.EMRGCY_CNTC_NO,
        Limit1.EMRGCY_CNTC_INIT,
        Limit1.EMRGCY_CNTC_RLTSHP,
-       Limit1.APLICNT_REG_OPT
+       Limit1.APLICNT_REG_OPT,
+       Limit1.JOIN_MONTH
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -1259,7 +1260,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.EMRGCY_CNTC_NO,
                 Extent34.CODE_NAME EMRGCY_CNTC_INIT,
                 Extent1.EMRGCY_CNTC_RLTSHP,
-                Extent35.CODE_DESC APLICNT_REG_OPT
+                Extent35.CODE_DESC APLICNT_REG_OPT,
+                Extent1.JOIN_MTH JOIN_MONTH
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
