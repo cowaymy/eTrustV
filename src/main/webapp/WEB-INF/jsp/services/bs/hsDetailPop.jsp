@@ -127,6 +127,11 @@
                               headerText : "System Old Serial No",
                               width : 100,
                               visible:false
+                          }, {
+                              dataField : "useFilterBlock",
+                              headerText : "Use Filter Block",
+                              width : 100,
+                              visible:false
                           }
                         ];
 
@@ -518,7 +523,18 @@
               Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
               returnParam = false;
               }
-            }
+
+
+                if(rsnGridDataList[i]["useFilterBlock"] == "Y" && rsnGridDataList[i]["filterSerialUnmatchReason"] == 3453){
+                	if((rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")){
+					// do nothing
+                	}else{
+                	Common.alert("* Please remove Old serial Number for Unmatched reason - 3453 (Used Filter without Scan Lable). ");
+                	returnParam = false;
+                	}
+                }
+                }
+
 
             if(returnParam == false){
                 return returnParam;
