@@ -1246,8 +1246,10 @@
 		Distinct1.SERIAL_CHK,
 		Distinct1.SRV_FILTER_ID,
 		Distinct1.srv_config_id,
-		Distinct1.IS_RETURN
-		,Distinct1.SRV_FILTER_LAST_SERIAL s_old_serial_no
+		Distinct1.IS_RETURN,
+		Distinct1.SRV_FILTER_LAST_SERIAL s_old_serial_no,
+		CASE WHEN Distinct1.DEFECT_CODE IS NOT NULL
+		THEN 'Y' ELSE 'N' END AS USE_FILTER_BLOCK
 		FROM ( SELECT DISTINCT Extent3.STK_ID STK_ID ,
 		Extent3.STK_CODE
 		STK_CODE ,
@@ -1256,8 +1258,9 @@
 		1 C1,
 		Filter1.SRV_FILTER_ID,
 		Filter1.srv_config_id,
-		Filter1.IS_RETURN
-		,Filter1.SRV_FILTER_last_SERIAL
+		Filter1.IS_RETURN,
+		Filter1.SRV_FILTER_last_SERIAL,
+		extent4.DEFECT_CODE
 		FROM (
 		SELECT Extent1.SRV_SO_ID SRV_SO_ID ,
 		Extent2.SRV_FILTER_STK_ID
@@ -1274,7 +1277,12 @@
 		WHERE ( 1 = Extent1.SRV_STUS_ID )
                                    <![CDATA[                       AND ( 443 <> Extent2.SRV_FILTER_ID ) ) Filter1 ]]>
 		JOIN SYS0026M Extent3 ON Filter1.SRV_FILTER_STK_ID = Extent3.STK_ID
+		LEFT JOIN SYS0100M extent4 ON Filter1.SRV_FILTER_STK_ID = extent4.DEFECT_ID
+		AND extent4.DEFECT_TYP = 'UFB'
+		AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+		AND extent4.DEFECT_STATUS = 1
 		WHERE Filter1.SRV_SO_ID = #{salesOrderId} ) Distinct1
+
 
 	</select>
 
@@ -1318,6 +1326,7 @@
                            distinct1.IS_RETURN
                            ,C.FILTER_SRL_UNMATCH_RSN FILTER_SERIAL_UNMATCH_REASON
                            ,c.OLD_FILTER_BARCD_SERIAL_NO AS old_serial_no
+                           ,CASE WHEN D.DEFECT_CODE IS NOT NULL THEN 'Y' ELSE 'N' END AS USE_FILTER_BLOCK
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
@@ -1341,8 +1350,10 @@
                                                                                    GROUP BY X.SCHDUL_ID) Z
                                                                   where  z.RESULT_ID = y.BS_RESULT_ID
                                                                   and z.SCHDUL_ID =#{selSchdulId2}
-                                                                   ) C
+                                                                   ) C,
+                       (SELECT DEFECT_ID , DEFECT_CODE FROM SYS0100M WHERE DEFECT_TYP = 'UFB' AND SYSDATE BETWEEN EFF_DT AND EXP_DT AND DEFECT_STATUS = 1 ) D
                 where distinct1.STK_ID = C.BS_RESULT_PART_ID(+)
+                AND distinct1.STK_ID = D.DEFECT_ID (+)
                 ]]>
 	</select>
 
