@@ -95,7 +95,7 @@
                 1=1
                 AND Extent2.STATE_ITM_ORD_NO = #{orderNo}
                  AND Extent1.STATE_MONTH  = #{month}
-           AND Extent1.STATE_YEAR = TO_CHAR(SYSDATE,'YYYY')-1
+           AND Extent1.STATE_YEAR = #{year}
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
     </select>
 
@@ -129,7 +129,7 @@
             AND  Filter1.TAX_INVC_TYPE = '1268'
              AND  Filter1.INVC_ITM_ORD_NO = #{orderNo}
              AND Filter1.TAX_INVC_MONTH  = #{month}
-           AND Filter1.TAX_INVC_YEAR = TO_CHAR(SYSDATE,'YYYY')-1
+           AND Filter1.TAX_INVC_YEAR = #{year}
             and rownum =1
     </select>
 

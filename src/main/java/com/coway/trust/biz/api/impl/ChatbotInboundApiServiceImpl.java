@@ -412,6 +412,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
         			}else{
         				requestYear = nowYear;
         			}
+        			params.put("year", requestYear);
         			Month month = Month.of(Integer.valueOf(params.get("month").toString()));
         			monthName = month.toString();
     			}
