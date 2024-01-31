@@ -86,6 +86,11 @@
     function fn_setData(salesOrdNo,salesOrdId) {
         $('#relatedOrdNo').val(salesOrdNo);
         $('#txtOldOrderID').val(salesOrdId);
+
+        var memCd = $('#salesmanCd').val().trim();
+        if(FormUtil.isNotEmpty(memCd)) {
+            fn_loadOrderSalesman(0, memCd);
+        }
     }
 
     function createAUIGrid() {
@@ -137,7 +142,7 @@
                 //$('#txtOldOrderID').val(salesOrdId);
                 $('#btnClose').click();
         } else {
-            fn_setData(salesOrdNo)
+            fn_setData(salesOrdNo);
             $('#txtOldOrderID').val(salesOrdId);
             $('#btnClose').click();
         }

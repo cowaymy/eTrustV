@@ -166,6 +166,12 @@
         });
 
         $('#salesmanCd').change(function(event) {
+        	if($('#txtOldOrderID').val() == "" || $('#relatedOrdNo').val() == ""){
+        		Common.alert("Please enter an order before inputing salesman code.");
+        		fn_resetCodyConfigInfo();
+        		return;
+        	}
+
             var memCd = $('#salesmanCd').val().trim();
 
             if(FormUtil.isNotEmpty(memCd)) {
@@ -175,6 +181,12 @@
 
         $('#salesmanCd').keydown(function (event) {
             if (event.which === 13) {    //enter
+            	if($('#txtOldOrderID').val() == "" || $('#relatedOrdNo').val() == ""){
+            		Common.alert("Please enter an order before inputing salesman code.");
+            		fn_resetCodyConfigInfo();
+            		return;
+            	}
+
                 var memCd = $('#salesmanCd').val().trim();
 
                 if(FormUtil.isNotEmpty(memCd)) {
@@ -366,7 +378,10 @@
                 if(memInfo.memCode == "100116" || memInfo.memCode == "100224" || memCode == "678235"){
                     return;
                 }else{
-                     fn_checkPreBookSalesPerson(memId,memCode);
+                	/*
+                	* Only config cody are able to do prebook
+                	*/
+                    fn_checkOrderConfigurationPerson(memId,memCode,$('#txtOldOrderID').val(), $('#relatedOrdNo').val());
                 }
             }
         });
@@ -376,11 +391,19 @@
         Common.ajax("GET", "/sales/order/preBooking/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
             if(memInfo == null) {
                 Common.alert('<b>Your input member code : '+ memCode +' is not allowed for pre-book.</b>');
-                $('#salesmanCd').val('');
-                $('#salesmanNm').val('');
+                fn_resetCodyConfigInfo();
             }
         });
     }
+
+	function fn_checkOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+	    Common.ajax("GET", "/sales/order/preBooking/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+	        if(memInfo == null) {
+                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for pre-book.</b>');
+                fn_resetCodyConfigInfo();
+	          }
+	    });
+	}
 
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text")
@@ -545,7 +568,7 @@
                     $('#memBtn').addClass("blind");
                     $('#salesmanCd').prop("readonly",true).addClass("readonly");;
                     $('#salesmanCd').val("${SESSION_INFO.userName}");
-                    $('#salesmanCd').change();
+                    //$('#salesmanCd').change();
                 }
 
                 if($('#ordProd').val() == null){
@@ -566,7 +589,20 @@
 
     function fn_resetExtradeSales() {
     	$('#txtOldOrderID').val('');
-		$('#relatedNo').val('');
+		$('#relatedOrdNo').val('');
+    }
+
+    function fn_resetCodyConfigInfo(){
+    	fn_resetExtradeSales();
+    	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+            $('#memBtn').addClass("blind");
+            $('#salesmanCd').prop("readonly",true).addClass("readonly");;
+            $('#salesmanCd').val("${SESSION_INFO.userName}");
+        }
+    	else{
+            $('#salesmanCd').val('');
+            $('#salesmanNm').val('');
+    	}
     }
 
 </script>
