@@ -206,7 +206,7 @@
                     FROM SVC0054M T, ORG0001D TT
                    WHERE T.MEM_ID = TT.MEM_ID
                        AND TT.STUS = 1
-                       AND CT_SUB_GRP IN (SELECT  /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_SUB_GRP
+                       AND CT_SUB_GRP IN (SELECT   F.DT_SUB_GRP
                                                        FROM SAL0001D A
                                                                , SAL0045D B
                                                                , SAL0023D E

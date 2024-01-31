@@ -117,6 +117,11 @@
                      , PREINS.REMARK PREINS_REMARK
                      , MA.AREA_ID
                      , TO_CHAR(CE.UPD_DT, 'DD-MM-YYYY') LAST_UPD_CALL_LOG_DT
+                     ,RANK()
+					    OVER(
+					        ORDER BY
+					            hmc.bndl_no DESC, som.sales_ord_no ASC, ie.install_entry_no ASC, ie.install_dt ASC
+					    ) rank_no
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -296,7 +301,7 @@
               #{item}
             </foreach>
         </if>
-        ORDER BY HMC.BNDL_NO DESC, SOM.SALES_ORD_NO ASC, IE.INSTALL_ENTRY_NO ASC, IE.INSTALL_DT ASC
+        ORDER BY rank_no ASC
 	</select>
 
     <select id="getAnotherInstallInfo" parameterType="Map" resultType="egovMap">

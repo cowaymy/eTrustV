@@ -157,7 +157,143 @@
 	                   V.FILE_SUB_PATH ,
 	                   V.ATCH_FILE_NAME ,
 	                   V.PHYSICL_FILE_NAME
-             FROM SAL1007V V
+             FROM (
+                SELECT DISTINCT
+                    r.so_req_id                         req_id,
+                    r.so_req_no                         req_no,
+                    r.so_req_so_id                      ord_id,
+                    r.so_req_stus_id                    req_stus_id,
+                    s1.code                             req_stus_code,
+                    s1.name                             req_stus_name,
+                    nvl(r.so_req_resn_id, 0)            req_resn_id,
+                    nvl(rc.code, ' ')                   req_resn_code,
+                    nvl(to_char(rc.resn_desc),
+                        ' ')                            req_resn_desc,
+                    nvl(r.so_req_prev_call_entry_id, 0) prev_call_entry_id,
+                    nvl(r.so_req_cur_call_entry_id, 0)  call_entry_id,
+                    r.so_req_cur_stus_id                req_stage_id,
+                    s2.name                             req_stage,
+                    r.so_req_cur_stk_id                 stock_id,
+                    stk.stk_code                        stock_code,
+                    stk.stk_desc                        stock_name,
+                    r.so_req_crt_dt                     AS crt_dt,
+                    nvl(r.so_req_crt_user_id, 0)        crt_user_id_id,
+                    nvl(u1.user_name, ' ')              crt_user_id,
+                    r.so_req_upd_dt                     AS upd_dt,
+                    nvl(r.so_req_upd_user_id, 0)        upd_user_id_id,
+                    nvl(u2.user_name, ' ')              upd_user_id,
+                    r.so_req_cur_app_type_id            app_type_id,
+                    apptype.code                        app_type_code,
+                    apptype.code_name                   app_type_name,
+                    r.so_req_cur_amt                    ord_amt,
+                    r.so_req_cur_pv                     ord_pv,
+                    r.so_req_curr_amt                   ord_rent_amt,
+                    r.so_req_cancl_rental_otstnd        ord_otstnd,
+                    r.so_req_cancl_pnalty_amt           pnalty_amt,
+                    r.so_req_cancl_adj_amt              adj_amt,
+                    r.so_req_cancl_tot_otstnd           grand_tot,
+                    r.so_req_cancl_ob_priod             obligt_mth,
+                    r.so_req_cancl_tot_used_priod       used_mth,
+                    r.so_req_cancl_under_cool_priod     is_under_cool_priod,
+                    r.so_req_actual_cancl_dt            actual_cancl_dt,
+                    r.so_reqster                        reqster_id,
+                    nvl(requestor.code_name, ' ')       reqster,
+                    r.so_req_pre_retn_dt                app_retn_dt,
+                    ce.stus_code_id                     call_stus_id,
+                    s3.code                             call_stus_code,
+                    s3.name                             call_stus_name,
+                    ce.call_dt                          call_recall_dt,
+                    i.brnch_id                          dsc_brnch_id,
+                    cust.cust_id                        cust_id,
+                    cust.name                           cust_name,
+                    cust.nric                           cust_ic,
+                    som.sales_ord_no                    ord_no,
+                    nvl(to_char(r.so_req_rem),
+                        ' ')                            req_rem,
+                    nvl(r.so_req_bank_acc, ' ')         bank_acc,
+                    nvl(r.so_req_iss_bank, ' ')         iss_bank,
+                    nvl(r.so_req_acc_name, ' ')         acc_name,
+                    nvl(r.so_req_attach, ' ')           attach,
+                    re.type_id,
+                    ce.doc_id,
+                    re.ref_id,
+                    re.stus_code_id                     rso_stus,
+                    ce.type_id                          call_type_id,
+                    ir.stus_code_id                     instal_stus_id,
+                    CASE
+                        WHEN org.mem_code IS NOT NULL THEN
+                            org.mem_code
+                        ELSE
+                            org2.user_name
+                    END                                 prd_rtn_lst_upd,
+                    re.app_dt                           AS app_dt,
+                    org3.mem_code                       AS assign_ct,
+                    r.rcd_tms                           AS rcd_tms,
+                    stk.stk_ctgry_id                    stk_ctgry_id,
+                    som.bndl_id,
+                    re.retn_no,
+                    r.atch_file_grp_id,
+                    CASE
+                        WHEN r.atch_file_grp_id IS NOT NULL
+                             OR r.atch_file_grp_id != 0 THEN
+                            'DOWN'
+                        ELSE
+                            NULL
+                    END                                 AS attchment_download,
+                    CASE
+                        WHEN r.atch_file_grp_id IS NOT NULL
+                             OR r.atch_file_grp_id != 0 THEN
+                            f.file_sub_path
+                        ELSE
+                            NULL
+                    END                                 AS file_sub_path,
+                    f.atch_file_name                    AS atch_file_name,
+                    f.physicl_file_name                 AS physicl_file_name,
+                    r.so_req_follow_up
+                FROM
+                         sal0020d r
+                    JOIN sal0001d som ON som.sales_ord_id = r.so_req_so_id
+                    JOIN sal0045d i ON i.sales_ord_id = som.sales_ord_id
+                    JOIN sal0029d cust ON cust.cust_id = som.cust_id
+                    JOIN sys0038m s1 ON s1.stus_code_id = r.so_req_stus_id
+                    JOIN sys0038m s2 ON s2.stus_code_id = r.so_req_cur_stus_id
+                    JOIN sys0026m stk ON stk.stk_id = r.so_req_cur_stk_id
+                    JOIN sys0013m apptype ON apptype.code_id = r.so_req_cur_app_type_id
+                    JOIN ccr0006d ce ON ce.call_entry_id = r.so_req_cur_call_entry_id
+                    JOIN sys0038m s3 ON s3.stus_code_id = ce.stus_code_id
+                    LEFT JOIN sys0032m rc ON rc.resn_id = r.so_req_resn_id
+                    LEFT JOIN sys0047m u1 ON u1.user_id = r.so_req_crt_user_id
+                    LEFT JOIN sys0047m u2 ON u2.user_id = r.so_req_upd_user_id
+                    LEFT JOIN sys0013m requestor ON requestor.code_id = r.so_reqster
+                    LEFT JOIN log0038d re ON re.call_entry_id = r.so_req_cur_call_entry_id
+                    LEFT JOIN (
+                        SELECT
+                            MAX(install_entry_id) install_entry_id,
+                            sales_ord_id
+                        FROM
+                            sal0046d
+                        WHERE
+                            sales_ord_id IN (
+                                SELECT
+                                    sales_ord_id
+                                FROM
+                                    sal0001d
+                                WHERE
+                                    sales_ord_no = #{ordNo}
+                            )
+                        GROUP BY
+                            sales_ord_id
+                    )        ie ON som.sales_ord_id = ie.sales_ord_id
+                    LEFT JOIN sal0047d ir ON ie.install_entry_id = ir.entry_id
+                    LEFT JOIN org0001d org ON org.mem_id = re.upd_user_id
+                                              AND org.mem_type > 2
+                    LEFT JOIN sys0047m org2 ON org2.user_id = re.upd_user_id
+                                               AND org2.user_type_id > 2
+                    LEFT JOIN org0001d org3 ON org3.mem_id = re.ct_id
+                    LEFT JOIN sys0070m e ON r.atch_file_grp_id = e.atch_file_grp_id
+                    LEFT JOIN sys0071d f ON e.atch_file_id = f.atch_file_id
+            )        v
+
         LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
              ) A
     LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
