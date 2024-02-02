@@ -335,7 +335,7 @@
 		             , D.CODE_NAME
 		             , B.SALES_ORD_ID
 		             , B.SALES_ORD_NO
-		             , '' AS SRV_EXPR_DT
+		             , NULL AS SRV_EXPR_DT
 		      FROM SAL0404M A
 		      JOIN SAL0001D B
 		      ON A.SALES_ORD_ID_OLD = B.SALES_ORD_ID
