@@ -157,6 +157,16 @@
 				width : 120
 			},
 			{
+                dataField : "svcRemainMth",
+                headerText : "Service Balance Month",
+                width : 120
+            },
+            {
+                dataField : "prebookEntitle",
+                headerText : "Pre-Book Entitled",
+                width : 120
+            },
+            {
 				dataField : "c5",
 				headerText : "Assign Cody",
 				width : 120
@@ -1718,6 +1728,24 @@
 										</div> <!-- date_set end -->
 									</td>
 								</tr>
+                                <tr>
+                                    <th scope="row">Service Balance Month</th>
+                                        <td>
+                                          <select id="svcBalanceMth" name="svcBalanceMth" class="w100p">
+                                            <option value="">Choose One</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                          </select>
+                                        </td>
+                                    <th scope="row">Pre-Book Entitled</th>
+                                    <td><select class="w100p" id="cmbPrebookEntitle" name="cmbPrebookEntitle">
+                                            <option value="">Choose One</option>
+                                            <option value="Y">Y</option>
+                                            <option value="N">N</option>
+                                </tr>
 							</tbody>
 						</table>
 						<!-- table end -->

@@ -698,305 +698,220 @@
 
 
 
-	<select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
-		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER(
-		PARTITION BY no ORDER BY
-		Result DESC) AS DUM_SEQ,
-		Project3.* FROM (
-		SELECT DISTINCT Project2.No
-		No
-		, Project2.HS_DATE HS_DATE
-		, Project2.STUS_CODE_ID STUS_CODE_ID
-		,
-		Project2.Code Code
-		, Project2.SALES_ORD_NO SALES_ORD_NO
-		,
-		Project2.ASSIGN_CODY C5
-		, Project2.ACTION_CODY as ACTN_MEM_ID
-		,
-		Project2.MEM_ID
-		, Project2.Name Name
-		, Project2.cust_id
-		,
-		Project2.cody_status_nm
-		, Project2.BRNCH_ID as BRNCH_ID
-		,
-		Project2.SCHDUL_ID SCHDUL_ID
-		, Project2.SALES_ORD_ID
-		,
-		Project2.branch_cd
-		, Project2.CODY_MANGR_USER_ID
-		, Project2.Result as
-		Result
-		, project2.dept_code
-		, project2.crt_user_id
-		,
-		project2.SERIAL_REQUIRE_CHK_YN
-		, project2.STK_ID
-		, project2.Complete_Dt
-		AS Complete_Dt<!--Added by Keyi 20210923 -->
-		FROM (SELECT
-		DISTINCT
-		hs.no AS no
-		, hs.stus_code_id AS stus_code_id
-		, hs.month || '/' ||
-		hs.year AS hs_date
-		, hs.month
-		, hs.year
-		, st.code
-		, hr.no AS result
-		,
-		so.sales_ord_no
-		, ap.code AS apptype
-		, cu.name
-		, cd.mem_code AS
-		assign_cody
-		, cd.mem_id
-		, ac.mem_code AS action_cody
-		, mg.state
-		, mg.area
-		, cu.cust_id AS cust_id
-		, STUS.CODE AS cody_status_nm
-		, br.brnch_id AS
-		brnch_id
-		, hs.schdul_id schdul_id
-		, so.sales_ord_id
-		, mg.CODY_BRNCH_CODE
-		AS branch_cd
-		, mg.cody_mangr_user_id
-		, og.dept_code
-		, CASE WHEN
-		HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS
-		CRT_USER_ID
-		,
-		LOC.SERIAL_REQUIRE_CHK_YN
-		, SOD.ITM_STK_ID STK_ID
-		,TO_CHAR(hr.SETL_DT,'DD/MM/YYYY') AS Complete_Dt <!--Added
-			by Keyi 20210923 -->
-		FROM SVC0008D hs
-		INNER JOIN SAL0001D so ON so.sales_ord_id =
-		hs.sales_ord_id and so.bndl_id
-		is null
-		LEFT JOIN SAL0002D SOD ON
-		so.SALES_ORD_ID = SOD.SALES_ORD_ID
-		INNER JOIN SAL0045D ins ON
-		ins.sales_ord_id = hs.sales_ord_id
-		INNER JOIN SAL0023D ad ON
-		ad.cust_add_id = ins.add_id
-		INNER JOIN SYS0064M mg ON mg.area_id =
-		ad.area_id
-		LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
-		LEFT
-		JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
-		INNER JOIN
-		SYS0013M ap ON ap.code_id = so.app_type_id
-		INNER JOIN SAL0029D cu ON
-		cu.cust_id = so.cust_id
-		LEFT JOIN ORG0001D cd ON cd.mem_id = hs.cody_id
-		LEFT JOIN SYS0038M STUS ON STUS.stus_code_id = cd.stus
-		LEFT JOIN
-		ORG0001D ac ON ac.mem_id = hs.CODY_ID
-		LEFT JOIN SYS0005M br ON
-		br.brnch_id = ac.brnch
-		LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
-		LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
-		LEFT JOIN
-		SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
-		WHERE
+  <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+    SELECT ROW_NUMBER() OVER(
+    PARTITION BY no ORDER BY
+    Result DESC) AS DUM_SEQ,
+    Project3.* FROM (
+    SELECT DISTINCT Project2.No No
+    , Project2.HS_DATE HS_DATE
+    , Project2.STUS_CODE_ID STUS_CODE_ID
+    , Project2.Code Code
+    , Project2.SALES_ORD_NO SALES_ORD_NO
+    , Project2.ASSIGN_CODY C5
+    , Project2.ACTION_CODY as ACTN_MEM_ID
+    , Project2.MEM_ID
+    , Project2.Name Name
+    , Project2.cust_id
+    , Project2.cody_status_nm
+    , Project2.BRNCH_ID as BRNCH_ID
+    , Project2.SCHDUL_ID SCHDUL_ID
+    , Project2.SALES_ORD_ID
+    , Project2.branch_cd
+    , Project2.CODY_MANGR_USER_ID
+    , Project2.Result as Result
+    , project2.dept_code
+    , project2.crt_user_id
+    , project2.SERIAL_REQUIRE_CHK_YN
+    , project2.STK_ID
+    , project2.Complete_Dt AS Complete_Dt, <!--Added by Keyi 20210923 -->
+    NVL(PROJECT2.SVC_REMAIN_MTH, ''),
+    PROJECT2.PREBOOK_ENTITLE
+    FROM (SELECT
+    DISTINCT
+    hs.no AS no
+    , hs.stus_code_id AS stus_code_id
+    , hs.month || '/' ||
+    hs.year AS hs_date
+    , hs.month
+    , hs.year
+    , st.code
+    , hr.no AS result
+    , so.sales_ord_no
+    , ap.code AS apptype
+    , cu.name
+    , cd.mem_code AS assign_cody
+    , cd.mem_id
+    , ac.mem_code AS action_cody
+    , mg.state
+    , mg.area
+    , cu.cust_id AS cust_id
+    , STUS.CODE AS cody_status_nm
+    , br.brnch_id AS brnch_id
+    , hs.schdul_id schdul_id
+    , so.sales_ord_id
+    , mg.CODY_BRNCH_CODE AS branch_cd
+    , mg.cody_mangr_user_id
+    , og.dept_code
+    , CASE WHEN
+    HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS
+    CRT_USER_ID
+    , LOC.SERIAL_REQUIRE_CHK_YN
+    , SOD.ITM_STK_ID STK_ID
+    ,TO_CHAR(hr.SETL_DT,'DD/MM/YYYY') AS Complete_Dt, <!--Added by Keyi 20210923 -->
+    HS.SVC_REMAIN_MTH,
+    HS.PREBOOK_ENTITLE
+    FROM SVC0008D hs
+    INNER JOIN SAL0001D so ON so.sales_ord_id =
+    hs.sales_ord_id and so.bndl_id
+    is null
+    LEFT JOIN SAL0002D SOD ON
+    so.SALES_ORD_ID = SOD.SALES_ORD_ID
+    INNER JOIN SAL0045D ins ON
+    ins.sales_ord_id = hs.sales_ord_id
+    INNER JOIN SAL0023D ad ON
+    ad.cust_add_id = ins.add_id
+    INNER JOIN SYS0064M mg ON mg.area_id =
+    ad.area_id
+    LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
+    LEFT
+    JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
+    INNER JOIN
+    SYS0013M ap ON ap.code_id = so.app_type_id
+    INNER JOIN SAL0029D cu ON
+    cu.cust_id = so.cust_id
+    LEFT JOIN ORG0001D cd ON cd.mem_id = hs.cody_id
+    LEFT JOIN SYS0038M STUS ON STUS.stus_code_id = cd.stus
+    LEFT JOIN
+    ORG0001D ac ON ac.mem_id = hs.CODY_ID
+    LEFT JOIN SYS0005M br ON
+    br.brnch_id = ac.brnch
+    LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
+    LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
+    LEFT JOIN
+    SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
+    WHERE
 
-		<if test="myBSMonth != null and myBSMonth != ''">
-			HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-			AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-		</if>
+    <if test="myBSMonth != null and myBSMonth != ''">
+      HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+      AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+    </if>
 
-		<choose>
-			<when test="myBSMonth != ''">
-				<if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-					AND HS.NO = #{txtHsOrderNo}
-				</if>
-			</when>
-			<otherwise>
-				<if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-					HS.NO = #{txtHsOrderNo}
-				</if>
-			</otherwise>
-		</choose>
+    <choose>
+      <when test="myBSMonth != ''">
+        <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+          AND HS.NO = #{txtHsOrderNo}
+        </if>
+      </when>
+      <otherwise>
+        <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+          HS.NO = #{txtHsOrderNo}
+        </if>
+      </otherwise>
+    </choose>
 
-		<choose>
-			<when test="myBSMonth != ''">
-				<if test="txtSalesOrder != null and txtSalesOrder != ''">
-					AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
-				</if>
-			</when>
-			<otherwise>
+    <choose>
+      <when test="myBSMonth != ''">
+        <if test="txtSalesOrder != null and txtSalesOrder != ''">
+          AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+        </if>
+      </when>
+      <otherwise>
 
-				<choose>
-					<when test="txtHsOrderNo != ''">
-						<if test="txtSalesOrder != null and txtSalesOrder != ''">
-							AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
-						</if>
-					</when>
-					<otherwise>
-						<if test="txtSalesOrder != null and txtSalesOrder != ''">
-							( SO.SALES_ORD_NO = #{txtSalesOrder})
-						</if>
-					</otherwise>
-				</choose>
+        <choose>
+          <when test="txtHsOrderNo != ''">
+            <if test="txtSalesOrder != null and txtSalesOrder != ''">
+              AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+            </if>
+          </when>
+          <otherwise>
+            <if test="txtSalesOrder != null and txtSalesOrder != ''">
+              ( SO.SALES_ORD_NO = #{txtSalesOrder})
+            </if>
+          </otherwise>
+        </choose>
 
-			</otherwise>
-		</choose>
+      </otherwise>
+    </choose>
 
-		<if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
-			AND CD.MEM_CODE = #{txtAssigncodyCode}
-		</if>
+    <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+      AND CD.MEM_CODE = #{txtAssigncodyCode}
+    </if>
 
-		<if test="txtComcodyCode != null and txtComcodyCode != ''">
-			AND AC.MEM_CODE = #{txtComcodyCode}
-		</if>
+    <if test="txtComcodyCode != null and txtComcodyCode != ''">
+      AND AC.MEM_CODE = #{txtComcodyCode}
+    </if>
 
-		<if test="myInstallMonth != null and myInstallMonth != ''">
-			AND SO.PV_MONTH =
-			TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-		</if>
+    <if test="myInstallMonth != null and myInstallMonth != ''">
+      AND SO.PV_MONTH =
+      TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+    </if>
 
-		<if test="myInstallMonth != null and myInstallMonth != ''">
-			AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth}
-			,'MM/YYYY'),'YYYY')
-		</if>
+    <if test="myInstallMonth != null and myInstallMonth != ''">
+      AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth}
+      ,'MM/YYYY'),'YYYY')
+    </if>
 
-		<if test="cmbStatusType != null and cmbStatusType != ''">
-			AND HS.STUS_CODE_ID = #{cmbStatusType}
-		</if>
+    <if test="cmbStatusType != null and cmbStatusType != ''">
+      AND HS.STUS_CODE_ID = #{cmbStatusType}
+    </if>
 
-		<if test="txtCustomer != null and txtCustomer != ''">
-			AND SO.CUST_ID = #{txtCustomer}
-		</if>
+    <if test="txtCustomer != null and txtCustomer != ''">
+      AND SO.CUST_ID = #{txtCustomer}
+    </if>
 
-		<if test="cmdBranchCode != null and cmdBranchCode != ''">
-			AND ( br.BRNCH_id = #{cmdBranchCode})
-		</if>
+    <if test="cmdBranchCode != null and cmdBranchCode != ''">
+      AND ( br.BRNCH_id = #{cmdBranchCode})
+    </if>
 
-		<if test="cmdCdManager != null and cmdCdManager != ''">
-			AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE
-			MEM_ID =
-			#{cmdCdManager} )
-		</if>
+    <if test="cmdCdManager != null and cmdCdManager != ''">
+      AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE
+      MEM_ID =
+      #{cmdCdManager} )
+    </if>
 
-		<if test="deptCode != null and deptCode != ''">
-			AND OG.DEPT_CODE = #{deptCode}
-		</if>
+    <if test="deptCode != null and deptCode != ''">
+      AND OG.DEPT_CODE = #{deptCode}
+    </if>
 
-		<if test="userType == '3'.toString()">
-			AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE
-			MEM_TYPE = '3'
-			AND STUS = '1')
-		</if>
+    <if test="userType == '3'.toString()">
+      AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE
+      MEM_TYPE = '3'
+      AND STUS = '1')
+    </if>
 
-		<!-- Added by Keyi 20210923 -->
-		<if test="compStartDt != '' and compEndDt != '' ">
+    <!-- Added by Keyi 20210923 -->
+    <if test="compStartDt != '' and compEndDt != '' ">
       <![CDATA[ AND hr.SETL_DT BETWEEN TO_DATE(#{compStartDt}, 'DD/MM/YYYY') AND TO_DATE(#{compEndDt}, 'DD/MM/YYYY') ]]>
-		</if>
-		)Project2
-		) Project3
+    </if>
+
+    <if test="svcRemainMth != null and svcRemainMth != ''">
+      AND ( HS.SVC_REMAIN_MTH = #{svcRemainMth})
+    </if>
+
+    <if test="prebookEntitle != null and prebookEntitle != ''">
+      AND ( HS.PREBOOK_ENTITLE = #{prebookEntitle})
+    </if>
+
+    )Project2
+    ) Project3
     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
 
 
 
 
-		<!-- 전명환선생 요청으로 변경 20171017 SELECT Project2.C1 C1 , Project2.SCHDUL_ID
-			SCHDUL_ID , Project2.No No , Project2.HS_DATE HS_DATE , Project2.CODY_ID
-			CODY_ID, Project2.STUS_CODE_ID STUS_CODE_ID , Project2.Code Code , Project2.SALES_ORD_ID
-			SALES_ORD_ID , Project2.SALES_ORD_NO SALES_ORD_NO , Project2.Code1 Code1
-			, Project2.C2 C2 , Project2.C3 C3 , Project2.C4 C4 , Project2.CODY_ID CODY_ID
-			, Project2.C5 C5 , Project2.C6 C6 , Project2.C7 C7 , Project2.INST_STATE
-			INST_STATE , Project2.INST_AREA INST_AREA , Project2.C8 C8 , Project2.Name
-			Name , Project2.NRIC NRIC , Project2.CODY_STATUS, Project2.cody_status_nm,
-			Project2.BRNCH_ID, Project2.cust_id, Project2.FIRST_INSTALL_DT FROM ( SELECT
-			Project2.SCHDUL_ID SCHDUL_ID , Project2.No No , Project2.HS_DATE HS_DATE
-			, Project2.CODY_ID CODY_ID , Project2.STUS_CODE_ID STUS_CODE_ID , Project2.Code
-			Code , Project2.SALES_ORD_ID SALES_ORD_ID , Project2.SALES_ORD_NO SALES_ORD_NO
-			, Project2.Name Name , Project2.NRIC NRIC , Project2.Code1 Code1 , Project2.INST_STATE
-			INST_STATE , Project2.INST_AREA INST_AREA , Project2.C1 C1 , Project2.C2
-			C2 , Project2.C3 C3 , Project2.C4 C4 , Project2.C5 C5 , Project2.C6 C6 ,
-			Project2.C7 C7 , Project2.C8 C8 , Project2.CODY_STATUS as CODY_STATUS, Project2.cody_status_nm
-			as cody_status_nm, Project2.BRNCH_ID as BRNCH_ID, Project2.cust_id as cust_id,
-			Project2.FIRST_INSTALL_DT, ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID
-			ASC ) row_number FROM ( SELECT Distinct1.SCHDUL_ID SCHDUL_ID , Distinct1.No
-			No , Distinct1.HS_DATE HS_DATE , Distinct1.CODY_ID CODY_ID , Distinct1.STUS_CODE_ID
-			STUS_CODE_ID , Distinct1.Code Code , Distinct1.SALES_ORD_ID SALES_ORD_ID
-			, Distinct1.SALES_ORD_NO SALES_ORD_NO , Distinct1.Name Name , Distinct1.NRIC
-			NRIC , Distinct1.Code1 Code1 , Distinct1.INST_STATE INST_STATE , Distinct1.INST_AREA
-			INST_AREA , Distinct1.C1 C1 , Distinct1.C2 C2 , Distinct1.C3 C3 , Distinct1.C4
-			C4 , Distinct1.C5 C5 , Distinct1.C6 C6 , Distinct1.C7 C7 , Distinct1.C8 C8
-			, Distinct1.CODY_STATUS as CODY_STATUS, Distinct1.cody_status_nm as cody_status_nm,
-			Distinct1.BRNCH_ID as BRNCH_ID, Distinct1.cust_id cust_id, Distinct1.FIRST_INSTALL_DT
-			FROM ( SELECT DISTINCT Extent1.SCHDUL_ID SCHDUL_ID, Extent1.NO NO, Extent1.MONTH
-			|| '/' || Extent1.YEAR HS_DATE, Extent1.CODY_ID CODY_ID, Extent1.STUS_CODE_ID
-			STUS_CODE_ID, Extent2.CODE CODE, Extent3.SALES_ORD_ID SALES_ORD_ID, Extent3.SALES_ORD_NO
-			SALES_ORD_NO, Extent4.NAME NAME, Extent4.NRIC NRIC, Extent5.CODE CODE1, Extent6.INST_STATE
-			INST_STATE, (select code from SYS0038M where 1=1 and stus_code_id = Extent4.STUS_CODE_ID)
-			as cody_status_nm, Extent6.INST_AREA INST_AREA, 1 C1, CASE WHEN (Extent7.RESULT_ID
-			IS NOT NULL) THEN Extent7.RESULT_ID ELSE 0 END C2, CASE WHEN (Extent7.RESULT_ID
-			IS NOT NULL) THEN Extent7.NO ELSE '' END C3, CASE WHEN (Extent8.MEM_ID IS
-			NOT NULL) THEN Extent8.MEM_TYPE ELSE 0 END C4, CASE WHEN (Extent8.MEM_ID
-			IS NOT NULL) THEN Extent8.MEM_CODE ELSE '' END C5, CASE WHEN (Extent8.MEM_ID
-			IS NOT NULL) THEN Extent8.STUS ELSE 0 END C6, CASE WHEN (Extent6.FIRST_INSTALL_DT
-			IS NOT NULL) THEN (Extent6.FIRST_INSTALL_DT) ELSE ('1900-01-01 00:00:00')
-			END C7, CASE WHEN (Extent9.MEM_ID IS NOT NULL) THEN Extent9.MEM_CODE ELSE
-			'' END C8, Extent4.STUS_CODE_ID as CODY_STATUS, Extent3.BRNCH_ID as BRNCH_ID,
-			Extent3.cust_id cust_id, Extent6.FIRST_INSTALL_DT from SVC0008D Extent1 ,SYS0038M
-			Extent2 ,SAL0001D Extent3 ,SAL0029D Extent4 ,SYS0013M Extent5 , (SELECT vOrderInstallationInfo.
-			ORD_ID ORD_ID, vOrderInstallationInfo. INST_STATE INST_STATE, vOrderInstallationInfo.
-			INST_AREA INST_AREA, vOrderInstallationInfo. INST_CNT_NAME INST_CNT_NAME,
-			vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC, vOrderInstallationInfo.INST_CNT_EMAIL
-			INST_CNT_EMAIL, vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M, vOrderInstallationInfo.INST_CNT_TEL_O
-			INST_CNT_TEL_O, vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R, vOrderInstallationInfo.INST_CNT_TEL_F
-			INST_CNT_TEL_F, vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER, vOrderInstallationInfo.FIRST_INSTALL_NO
-			FIRST_INSTALL_NO, vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE,
-			vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME, vOrderInstallationInfo.FIRST_INSTALL_DT
-			FIRST_INSTALL_DT, vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM,
-			vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO, vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO
-			FIRST_INSTALL_SERIAL_NO, vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO,
-			vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE, vOrderInstallationInfo.LAST_INSTALL_CT_NAME
-			LAST_INSTALL_CT_NAME, vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT,
-			vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM, vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO
-			LAST_INSTALL_SIRIM_NO, vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO,
-			vOrderInstallationInfo.DSC_ID DSC_ID, vOrderInstallationInfo.DSC_CODE DSC_CODE,
-			vOrderInstallationInfo.DSC_NAME DSC_NAME, vOrderInstallationInfo.INSTCT INSTCT,
-			vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT, vOrderInstallationInfo.PREFER_INST_TM
-			PREFER_INST_TM, vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID, vOrderInstallationInfo.INSTALL_CNTC_ID
-			INSTALL_CNTC_ID, vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT, vOrderInstallationInfo.INST_CNT_POST
-			INST_CNT_POST, vOrderInstallationInfo.VRIFY_REM VRIFY_REM FROM SAL1010V vOrderInstallationInfo
-			) Extent6 ,SVC0006D Extent7 ,ORG0001D Extent8 ,ORG0001D Extent9 ,ORG0005D
-			Extent10 where Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID and Extent3.SALES_ORD_ID
-			= Extent1.SALES_ORD_ID and Extent4.CUST_ID = Extent3.CUST_ID and Extent5.CODE_ID
-			= Extent3.APP_TYPE_ID and Extent6.ORD_ID = Extent1.SALES_ORD_ID and Extent7.SCHDUL_ID(+)
-			= Extent1.SCHDUL_ID and Extent8.MEM_ID(+) = Extent1.CODY_ID and Extent9.MEM_ID(+)
-			= Extent7.CODY_ID and Extent8.MEM_ID = Extent10.MEM_ID AND 306 = Extent7.TYPE_ID(+)
-			and 1 = Extent7.RESULT_IS_CURR(+) AND Extent1.YEAR = TO_CHAR(to_date(#{myBSMonth}
-			,'MM/YYYY'),'YYYY') AND Extent1.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-			<if test="myInstallMonth != null and myInstallMonth != ''"> and ('MONTH'
-			, case when Extent6.FIRST_INSTALL_DT IS NOT NULL THEN Extent6.FIRST_INSTALL_DT
-			else '1900-01-01' END ) = (('MONTH', #{myInstallMonth})) </if> <if test="myInstallMonth
-			!= null and myInstallMonth != ''"> and ('YEAR' , case when Extent6.FIRST_INSTALL_DT
-			IS NOT NULL THEN Extent6.FIRST_INSTALL_DT else '1900-01-01' END ) = (('YEAR',
-			#{myInstallMonth})) </if> <if test="txtSalesOrder != null and txtSalesOrder
-			!= ''"> AND ( Extent3.SALES_ORD_NO = #{txtSalesOrder}) </if> <if test="txtHsOrderNo
-			!= null and txtHsOrderNo != ''"> AND ( Extent1.No = #{txtHsOrderNo}) </if>
-			<if test="cmdBranchCode != null and cmdBranchCode != ''"> AND ( Extent3.BRNCH_ID
-			= #{cmdBranchCode}) </if> <if test="cmdCdManager != null and cmdCdManager
-			!= ''"> AND Extent10.MEM_UP_ID = #{cmdCdManager} </if> <if test="cmdcodyCode
-			!= null and cmdcodyCode != ''"> AND Extent1.cody_id = #{cmdcodyCode} </if>
-			<if test="cmbStatusType != null and cmbStatusType != ''"> AND Extent1.STUS_CODE_ID
-			= #{cmbStatusType} </if> <if test="txtCustomer != null and txtCustomer !=
-			''"> AND Extent3.cust_id = #{txtCustomer} </if> <if test="txtHsOrderNo !=
-			null and txtHsOrderNo != ''"> AND Extent1.NO = #{txtHsOrderNo} </if> ) Distinct1
-			) Project2 ) Project2 WHERE Project2.row_number > 0 ORDER BY Project2.SCHDUL_ID
-			ASC -->
+    <!-- 전명환선생 요청으로 변경 20171017 SELECT Project2.C1 C1 , Project2.SCHDUL_ID SCHDUL_ID , Project2.No No , Project2.HS_DATE HS_DATE , Project2.CODY_ID CODY_ID, Project2.STUS_CODE_ID STUS_CODE_ID , Project2.Code Code , Project2.SALES_ORD_ID SALES_ORD_ID , Project2.SALES_ORD_NO SALES_ORD_NO , Project2.Code1 Code1 , Project2.C2 C2 , Project2.C3 C3 , Project2.C4 C4 , Project2.CODY_ID CODY_ID , Project2.C5 C5 , Project2.C6 C6 , Project2.C7 C7 , Project2.INST_STATE INST_STATE , Project2.INST_AREA INST_AREA , Project2.C8 C8 , Project2.Name Name , Project2.NRIC NRIC , Project2.CODY_STATUS, Project2.cody_status_nm, Project2.BRNCH_ID, Project2.cust_id, Project2.FIRST_INSTALL_DT FROM ( SELECT Project2.SCHDUL_ID SCHDUL_ID , Project2.No No , Project2.HS_DATE HS_DATE , Project2.CODY_ID CODY_ID , Project2.STUS_CODE_ID STUS_CODE_ID , Project2.Code Code , Project2.SALES_ORD_ID SALES_ORD_ID , Project2.SALES_ORD_NO SALES_ORD_NO , Project2.Name Name , Project2.NRIC NRIC , Project2.Code1 Code1 , Project2.INST_STATE
+      INST_STATE , Project2.INST_AREA INST_AREA , Project2.C1 C1 , Project2.C2 C2 , Project2.C3 C3 , Project2.C4 C4 , Project2.C5 C5 , Project2.C6 C6 , Project2.C7 C7 , Project2.C8 C8 , Project2.CODY_STATUS as CODY_STATUS, Project2.cody_status_nm as cody_status_nm, Project2.BRNCH_ID as BRNCH_ID, Project2.cust_id as cust_id, Project2.FIRST_INSTALL_DT, ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID ASC ) row_number FROM ( SELECT Distinct1.SCHDUL_ID SCHDUL_ID , Distinct1.No No , Distinct1.HS_DATE HS_DATE , Distinct1.CODY_ID CODY_ID , Distinct1.STUS_CODE_ID STUS_CODE_ID , Distinct1.Code Code , Distinct1.SALES_ORD_ID SALES_ORD_ID , Distinct1.SALES_ORD_NO SALES_ORD_NO , Distinct1.Name Name , Distinct1.NRIC NRIC , Distinct1.Code1 Code1 , Distinct1.INST_STATE INST_STATE , Distinct1.INST_AREA INST_AREA , Distinct1.C1 C1 , Distinct1.C2 C2 , Distinct1.C3 C3 , Distinct1.C4 C4 , Distinct1.C5 C5 , Distinct1.C6 C6 , Distinct1.C7 C7 , Distinct1.C8 C8 , Distinct1.CODY_STATUS as CODY_STATUS, Distinct1.cody_status_nm
+      as cody_status_nm, Distinct1.BRNCH_ID as BRNCH_ID, Distinct1.cust_id cust_id, Distinct1.FIRST_INSTALL_DT FROM ( SELECT DISTINCT Extent1.SCHDUL_ID SCHDUL_ID, Extent1.NO NO, Extent1.MONTH || '/' || Extent1.YEAR HS_DATE, Extent1.CODY_ID CODY_ID, Extent1.STUS_CODE_ID STUS_CODE_ID, Extent2.CODE CODE, Extent3.SALES_ORD_ID SALES_ORD_ID, Extent3.SALES_ORD_NO SALES_ORD_NO, Extent4.NAME NAME, Extent4.NRIC NRIC, Extent5.CODE CODE1, Extent6.INST_STATE INST_STATE, (select code from SYS0038M where 1=1 and stus_code_id = Extent4.STUS_CODE_ID) as cody_status_nm, Extent6.INST_AREA INST_AREA, 1 C1, CASE WHEN (Extent7.RESULT_ID IS NOT NULL) THEN Extent7.RESULT_ID ELSE 0 END C2, CASE WHEN (Extent7.RESULT_ID IS NOT NULL) THEN Extent7.NO ELSE '' END C3, CASE WHEN (Extent8.MEM_ID IS NOT NULL) THEN Extent8.MEM_TYPE ELSE 0 END C4, CASE WHEN (Extent8.MEM_ID IS NOT NULL) THEN Extent8.MEM_CODE ELSE '' END C5, CASE WHEN (Extent8.MEM_ID IS NOT NULL) THEN Extent8.STUS ELSE 0 END C6, CASE WHEN (Extent6.FIRST_INSTALL_DT
+      IS NOT NULL) THEN (Extent6.FIRST_INSTALL_DT) ELSE ('1900-01-01 00:00:00') END C7, CASE WHEN (Extent9.MEM_ID IS NOT NULL) THEN Extent9.MEM_CODE ELSE '' END C8, Extent4.STUS_CODE_ID as CODY_STATUS, Extent3.BRNCH_ID as BRNCH_ID, Extent3.cust_id cust_id, Extent6.FIRST_INSTALL_DT from SVC0008D Extent1 ,SYS0038M Extent2 ,SAL0001D Extent3 ,SAL0029D Extent4 ,SYS0013M Extent5 , (SELECT vOrderInstallationInfo. ORD_ID ORD_ID, vOrderInstallationInfo. INST_STATE INST_STATE, vOrderInstallationInfo. INST_AREA INST_AREA, vOrderInstallationInfo. INST_CNT_NAME INST_CNT_NAME, vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC, vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL, vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M, vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O, vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R, vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F, vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER, vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO,
+      vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE, vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME, vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT, vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM, vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO, vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO, vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO, vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE, vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME, vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT, vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM, vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO, vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO, vOrderInstallationInfo.DSC_ID DSC_ID, vOrderInstallationInfo.DSC_CODE DSC_CODE, vOrderInstallationInfo.DSC_NAME DSC_NAME, vOrderInstallationInfo.INSTCT INSTCT, vOrderInstallationInfo.PREFER_INST_DT
+      PREFER_INST_DT, vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM, vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID, vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID, vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT, vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST, vOrderInstallationInfo.VRIFY_REM VRIFY_REM FROM SAL1010V vOrderInstallationInfo ) Extent6 ,SVC0006D Extent7 ,ORG0001D Extent8 ,ORG0001D Extent9 ,ORG0005D Extent10 where Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID and Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID and Extent4.CUST_ID = Extent3.CUST_ID and Extent5.CODE_ID = Extent3.APP_TYPE_ID and Extent6.ORD_ID = Extent1.SALES_ORD_ID and Extent7.SCHDUL_ID(+) = Extent1.SCHDUL_ID and Extent8.MEM_ID(+) = Extent1.CODY_ID and Extent9.MEM_ID(+) = Extent7.CODY_ID and Extent8.MEM_ID = Extent10.MEM_ID AND 306 = Extent7.TYPE_ID(+) and 1 = Extent7.RESULT_IS_CURR(+) AND Extent1.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY') AND Extent1.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+      <if test="myInstallMonth != null and myInstallMonth != ''"> and ('MONTH' , case when Extent6.FIRST_INSTALL_DT IS NOT NULL THEN Extent6.FIRST_INSTALL_DT else '1900-01-01' END ) = (('MONTH', #{myInstallMonth})) </if> <if test="myInstallMonth != null and myInstallMonth != ''"> and ('YEAR' , case when Extent6.FIRST_INSTALL_DT IS NOT NULL THEN Extent6.FIRST_INSTALL_DT else '1900-01-01' END ) = (('YEAR', #{myInstallMonth})) </if> <if test="txtSalesOrder != null and txtSalesOrder != ''"> AND ( Extent3.SALES_ORD_NO = #{txtSalesOrder}) </if> <if test="txtHsOrderNo != null and txtHsOrderNo != ''"> AND ( Extent1.No = #{txtHsOrderNo}) </if> <if test="cmdBranchCode != null and cmdBranchCode != ''"> AND ( Extent3.BRNCH_ID = #{cmdBranchCode}) </if> <if test="cmdCdManager != null and cmdCdManager != ''"> AND Extent10.MEM_UP_ID = #{cmdCdManager} </if> <if test="cmdcodyCode != null and cmdcodyCode != ''"> AND Extent1.cody_id = #{cmdcodyCode} </if> <if test="cmbStatusType != null and cmbStatusType != ''">
+      AND Extent1.STUS_CODE_ID = #{cmbStatusType} </if> <if test="txtCustomer != null and txtCustomer != ''"> AND Extent3.cust_id = #{txtCustomer} </if> <if test="txtHsOrderNo != null and txtHsOrderNo != ''"> AND Extent1.NO = #{txtHsOrderNo} </if> ) Distinct1 ) Project2 ) Project2 WHERE Project2.row_number > 0 ORDER BY Project2.SCHDUL_ID ASC -->
 
 
-	</select>
+  </select>
 
 
 
