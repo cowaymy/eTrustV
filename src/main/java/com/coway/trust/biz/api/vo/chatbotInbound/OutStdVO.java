@@ -2,7 +2,10 @@ package com.coway.trust.biz.api.vo.chatbotInbound;
 
 import java.io.Serializable;
 
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class OutStdVO  implements Serializable{
 	private String orderNo;
@@ -10,6 +13,11 @@ public class OutStdVO  implements Serializable{
 	private String totalAmtDue;
 	private Double lastPaymentAmt;
 	private String lastPayDate;
+
+	@SuppressWarnings("unchecked")
+	public static OutStdVO create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, OutStdVO.class);
+	}
 
 	public String getOrderNo() {
 		return orderNo;

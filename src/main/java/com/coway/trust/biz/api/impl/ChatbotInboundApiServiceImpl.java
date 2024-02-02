@@ -740,7 +740,9 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		EgovMap params = new EgovMap();
 		EgovMap resultValue = new EgovMap();
-		PaymentVO paymentVO = new PaymentVO();
+//		PaymentVO payVO = new PaymentVO();
+		EgovMap payVO = new EgovMap();
+		List<PaymentVO> paymentVO = new ArrayList<PaymentVO>();
 		JompayVO jompayVO = new JompayVO();
 		StopWatch stopWatch = new StopWatch();
 
@@ -794,9 +796,12 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 						if(pay.containsKey("appTypeId")){
 							if(pay.get("appTypeId").toString().equals("66")){
 
-								paymentVO.setPaymentMtd(pay.get("rentPayModeDesc").toString());
+								payVO.put("paymentMtd", pay.get("rentPayModeDesc").toString());
 
 								if(pay.get("rentPayModeCode").toString().equals("REG")){
+									PaymentVO paymentList = PaymentVO.create(payVO);
+									paymentVO.add(paymentList);
+
 								    respParam = gson.toJson(paymentVO);
 
 								    params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
@@ -810,25 +815,28 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 									 if(!CommonUtils.isEmpty(deductionResult)){
 											// SET LastPayDate
 											if(deductionResult.containsKey("lastPayDt")){ // lastPayDt
-												paymentVO.setLastPayDate(deductionResult.get("lastPayDt").toString());
+												payVO.put("lastPayDate", deductionResult.get("lastPayDt").toString());
 
 												// SET PaymentStatus
 												if(deductionResult.containsKey("bankAppv")){
 													if(Integer.parseInt(deductionResult.get("bankAppv").toString()) == 1){
-														paymentVO.setPaymentStatus(AppConstants.DESC_SUCCESS);
+														payVO.put("paymentStatus", AppConstants.DESC_SUCCESS);
 
 													}else{
-														paymentVO.setPaymentStatus(AppConstants.DESC_FAILED);
+														payVO.put("paymentStatus",AppConstants.DESC_FAILED);
 													}
 												}else{
-													paymentVO.setPaymentStatus("-");
+													payVO.put("paymentStatus","-");
 												}
 
 												// SET DeductionResult
 												if(deductionResult.containsKey("isApproveStr")){ // isSuccess
-													paymentVO.setDeductionResult(deductionResult.get("isApproveStr").toString());
+													payVO.put("deductionResult", deductionResult.get("isApproveStr").toString());
 
 													// Convert resp to String format
+													PaymentVO paymentList = PaymentVO.create(payVO);
+													paymentVO.add(paymentList);
+
 												    respParam = gson.toJson(paymentVO);
 
 												    params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
@@ -955,7 +963,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	    EgovMap params = new EgovMap();
 	    EgovMap resultValue = new EgovMap();
-	 	OutStdVO outStdVO = new OutStdVO();
+	    EgovMap outVO = new EgovMap();
+	 	List<OutStdVO> outStdVO = new ArrayList<OutStdVO>();
 	    StopWatch stopWatch = new StopWatch();
 
 	 	try{
@@ -1000,8 +1009,8 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		    			EgovMap accStusVO = chatbotInboundApiMapper.getAccStus(params);
 
 		    			if(!CommonUtils.isEmpty(accStusVO)){
-		    				outStdVO.setOrderNo(param.getOrderNo().toString());
-		    				outStdVO.setAccountStatus(accStusVO.get("prgrs").toString());
+		    				outVO.put("orderNo", param.getOrderNo().toString());
+		    				outVO.put("accountStatus", accStusVO.get("prgrs").toString());
 
 		    				// Get total due amount = total outstanding + total unbill amount
 		    				List<EgovMap> ordOutInfoList = getOderOutsInfo(params);
@@ -1013,7 +1022,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		    					String ordTotOtstnd = ordOutInfo.get("ordTotOtstnd").toString().replace(",", "");
 		    					String ordUnbillAmt = ordOutInfo.get("ordUnbillAmt").toString().replace(",", "");
 		    					Double dueAmt = Double.parseDouble(ordTotOtstnd) + Double.parseDouble(ordUnbillAmt);
-		    					outStdVO.setTotalAmtDue(dueAmt.toString());
+		    					outVO.put("totalAmtDue", dueAmt.toString());
 		    				}
 
 		    				// Get last payment info
@@ -1022,9 +1031,11 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
         					if(!CommonUtils.isEmpty(lastPayInfo)){
         						if(lastPayInfo.containsKey("lastPaymentDt") && lastPayInfo.containsKey("lastPaymentAmt")){
-        							outStdVO.setLastPayDate(lastPayInfo.get("lastPaymentDt").toString());
-        							outStdVO.setLastPaymentAmt(Double.parseDouble(lastPayInfo.get("lastPaymentAmt").toString()));
+        							outVO.put("lastPayDate", lastPayInfo.get("lastPaymentDt").toString());
+        							outVO.put("lastPaymentAmt",Double.parseDouble(lastPayInfo.get("lastPaymentAmt").toString()));
 
+        							OutStdVO outList = OutStdVO.create(outVO);
+        							outStdVO.add(outList);
                     			    respParam = gson.toJson(outStdVO);
 
                     	    		params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
