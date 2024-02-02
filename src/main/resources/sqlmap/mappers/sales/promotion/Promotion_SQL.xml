@@ -509,11 +509,12 @@
              , T3.cust_Status_Disen
              , T3.cust_Status_New
              , T3.cust_Status_en_Wout_WP
+             , T3.cust_Status_en_Wp_6m
              , T1.PROMO_DISC_ON_BILL
              , T1.PRE_BOOK
           FROM SAL0017D T1
           LEFT JOIN (SELECT * FROM (select PROMO_ID,PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0405D a)
-pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP))) T3 on T3.PROMO_ID = T1.PROMO_ID
+pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP,7502 cust_Status_en_Wp_6m))) T3 on T3.PROMO_ID = T1.PROMO_ID
          WHERE T1.PROMO_ID = #{promoId}
     </select>
 
@@ -1155,11 +1156,12 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T3.cust_Status_Disen
              , T3.cust_Status_New
              , T3.cust_Status_en_Wout_WP
+             , T3.cust_Status_en_Wp_6m
              , T1.PROMO_DISC_ON_BILL
           FROM SAL0358M T1
           LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
           LEFT JOIN (SELECT * FROM (select PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0406D a)
-pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP))) T3 on T3.PROMO_REQST_ID = T1.PROMO_REQST_ID
+pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP,7502 cust_Status_en_Wp_6m))) T3 on T3.PROMO_REQST_ID = T1.PROMO_REQST_ID
          WHERE T1.PROMO_REQST_ID = #{promoReqstId}
     </select>
 

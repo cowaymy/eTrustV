@@ -86,6 +86,11 @@
         }else{
             $('#custStatusEnWoutWp').prop("checked", false);
         }
+        if('${promoInfo.custStatusEnWp6m}' == '1') {
+            $('#custStatusEnWp6m').prop("checked", true);
+        }else{
+            $('#custStatusEnWp6m').prop("checked", false);
+        }
     });
 
     function fn_addOption() {
@@ -183,6 +188,7 @@
         var vCustStatusDisen = "";
         var vCustStatusEn = "";
         var vCustStatusEnWoutWp = "";
+        var vCustStatusEnWp6m = "";
         if($('#custStatusNew').is(":checked")) {
             vCustStatusNew = 1;
         }else{
@@ -202,6 +208,11 @@
             vCustStatusEnWoutWp = 1;
         }else{
             vCustStatusEnWoutWp = 0;
+        }
+        if($('#custStatusEnWp6m').is(":checked")) {
+        	vCustStatusEnWp6m = 1;
+        }else{
+        	vCustStatusEnWp6m = 0;
         }
 
         var promotionVO = {
@@ -237,6 +248,7 @@
                 custStatusDisen : vCustStatusDisen,
                 custStatusEn : vCustStatusEn,
                 custStatusEnWoutWp : vCustStatusEnWoutWp,
+                custStatusEnWp6m : vCustStatusEnWp6m,
                 promoDiscOnBill : $('#promoSpecialDisId').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
@@ -968,10 +980,11 @@
 </tr>
 <tr>
 <th scope="row">Customer Status<span class="must">*</span></th>
-    <td colspan = "3">
+    <td colspan = "6">
         <input id="custStatusNew" name="custStatus" type="checkbox" value="7465" disabled/><span>New</span>
         <input id="custStatusEn" name="custStatus" type="checkbox" value="7466" disabled/><span>Engaged</span>
         <input id="custStatusEnWoutWp" name="custStatus" type="checkbox" value="7476" /><span>Engaged (New to WP)</span>
+        <input id="custStatusEnWp6m" name="custStatus" type="checkbox" value="7502" /><span>Engaged (WP more than 6M)</span>
         <input id="custStatusDisen" name="custStatus" type="checkbox" value="7467" disabled/><span>Disengaged</span>
     </td>
 </tr>

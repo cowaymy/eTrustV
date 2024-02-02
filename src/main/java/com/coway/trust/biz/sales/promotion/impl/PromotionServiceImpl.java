@@ -616,7 +616,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 					stusId = salesPromoMVO.getCustStatusEn();
 				}else if(salesPromoCustStatusList.get(i).get("codeId").toString().equals("7476")){
 					stusId = salesPromoMVO.getCustStatusEnWoutWp();
-				}
+    			}else if(salesPromoCustStatusList.get(i).get("codeId").toString().equals("7502")){
+    				stusId = salesPromoMVO.getCustStatusEnWp6m();
+    			}
 				insert.put("stusId", stusId);
 				insert.put("userId", sessionVO.getUserId());
 				custStatusList.add(insert);
