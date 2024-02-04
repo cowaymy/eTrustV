@@ -726,7 +726,7 @@
     , project2.SERIAL_REQUIRE_CHK_YN
     , project2.STK_ID
     , project2.Complete_Dt AS Complete_Dt, <!--Added by Keyi 20210923 -->
-    NVL(PROJECT2.SVC_REMAIN_MTH, ''),
+    NVL(PROJECT2.SVC_REMAIN_MTH, '') SVC_REMAIN_MTH,
     PROJECT2.PREBOOK_ENTITLE
     FROM (SELECT
     DISTINCT
@@ -886,12 +886,12 @@
       <![CDATA[ AND hr.SETL_DT BETWEEN TO_DATE(#{compStartDt}, 'DD/MM/YYYY') AND TO_DATE(#{compEndDt}, 'DD/MM/YYYY') ]]>
     </if>
 
-    <if test="svcRemainMth != null and svcRemainMth != ''">
-      AND ( HS.SVC_REMAIN_MTH = #{svcRemainMth})
+    <if test="svcBalanceMth != null and svcBalanceMth != ''">
+      AND ( HS.SVC_REMAIN_MTH = #{svcBalanceMth})
     </if>
 
-    <if test="prebookEntitle != null and prebookEntitle != ''">
-      AND ( HS.PREBOOK_ENTITLE = #{prebookEntitle})
+    <if test="cmbPrebookEntitle != null and cmbPrebookEntitle != ''">
+      AND ( HS.PREBOOK_ENTITLE = #{cmbPrebookEntitle})
     </if>
 
     )Project2

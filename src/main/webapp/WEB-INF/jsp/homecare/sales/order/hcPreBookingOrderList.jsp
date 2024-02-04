@@ -151,6 +151,7 @@
           , { headerText : "Status", dataField : "stusCode", editable : false, width : '5%'}
           , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : '12%'}
           , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : '8%'}
+          , { headerText : "Eligible Convert Month", dataField : "convertMth", editable : false, width : '8%' }
           , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : '12%'}
           , { headerText : "Customer Info", dataField : "custName", editable : false, width : '15%'}
           , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : '15%'}
@@ -188,6 +189,7 @@
           , { headerText : "Status", dataField : "stusCode", editable : false, width : 200}
           , { headerText : "Pre-Booking Save Date", dataField : "preBookDt", editable : false, width : 200}
           , { headerText : "Customer Verfification Status", dataField : "custVerifyStus", editable : false, width : 200}
+          , { headerText : "Eligible Convert Month", dataField : "convertMth", editable : false, width : 100 }
           , { headerText : "Sales Persom Code", dataField : "memCode", editable : false, width : 200}
           , { headerText : "Customer Info", dataField : "custName", editable : false, width : 300}
           , { headerText : "Previous Product Model", dataField : "prevStkDesc", editable : false, width : 200}
@@ -441,6 +443,10 @@
 			Common.alert("Pre-Booking Missing" + DEFAULT_DELIMITER + "<b>No pre-Booking selected.</b>");
 		}
 	}
+
+	function fn_ClearEliConvertMth(field) {
+		$("#" + field + "").val("");
+	}
 </script>
 
 <section id="content"><!-- content start -->
@@ -537,12 +543,23 @@
     <th scope="row">Dept Code</th>
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
-<tr>
-<th scope="row">Pre-Booking Period</th>
-    <td><select id="_preBookPeriod" name="_preBookPeriod" class="multy_select w100p" multiple="multiple"></select></td>
-</tr>
-
-<tr>
+          <tr>
+            <th scope="row">Pre-Booking Period</th>
+            <td><select id="_preBookPeriod" name="_preBookPeriod" class="multy_select w100p" multiple="multiple"></select></td>
+            <th scope="row">Previous Product Order No</th>
+            <td><input type="text" title="salesOrdNo" id="salesOrdNo" name="salesOrdNo" placeholder="Previous Product Order No" class="w100p" /></td>
+            <th scope="row">Eligible Convert Month</th>
+            <td><p style="width: 70%;">
+                <input id="eliConvertMth" name="eliConvertMth" type="text" placeholder="MM/YYYY" class="j_date2 w100p" />
+              </p>
+              <p class="btn_gray">
+                <a href="#" onclick="fn_ClearEliConvertMth('eliConvertMth')">Clear</a>
+              </p></td>
+          </tr>
+          <tr>
+            <th scope="row" colspan="6"><span class="must"><spring:message code='sales.msg.ordlist.keyinsof' /></span></th>
+          </tr>
+          <tr>
     <%-- <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th> --%>
 </tr>
 </tbody>
