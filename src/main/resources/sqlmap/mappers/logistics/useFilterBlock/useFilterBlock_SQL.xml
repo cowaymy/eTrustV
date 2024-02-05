@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper">
+	<select id="searchUseFilterBlockList" parameterType="Map"
+		resultType="egovMap">
+		/*
+		[com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper.searchUseFilterBlockList]
+		- TOMMY */
+		SELECT A.DEFECT_ID , A.DEFECT_CODE , A.DEFECT_STATUS ,
+		B.STK_ID , B.STK_CODE , B.STK_DESC ,
+		B.STK_CTGRY_ID , B.STK_TYPE_ID ,
+		C.CODE_NAME AS STK_CATEGORY ,
+		D.CODE_NAME AS STK_TYPE ,
+		E.NAME AS STATUS ,
+		A.CRT_USR ,
+		F.USER_NAME ,
+		TO_CHAR(A.CRT_DT,'DD/MM/YYYY') CRT_DT
+		FROM SYS0100M A
+		LEFT JOIN SYS0026M B ON A.DEFECT_ID = B.STK_ID
+		LEFT JOIN SYS0013M C ON B.STK_CTGRY_ID = C.CODE_ID
+		LEFT JOIN SYS0013M D ON B.STK_TYPE_ID = D.CODE_ID
+		LEFT JOIN SYS0038M E ON A.DEFECT_STATUS = E.STUS_CODE_ID
+		LEFT JOIN SYS0047M F ON A.CRT_USR = F.USER_ID
+		WHERE
+		A.DEFECT_TYP = 'UFB'
+
+		<if test='arrProductCtgry != null and arrProductCtgry != ""'>
+             AND B.STK_CTGRY_ID IN
+             <foreach item="item" collection="arrProductCtgry" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrMatType != null and arrMatType != ""'>
+             AND B.STK_TYPE_ID IN
+             <foreach item="item" collection="arrMatType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrStatus != null and arrStatus != ""'>
+             AND A.DEFECT_STATUS IN
+             <foreach item="item" collection="arrStatus" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+			<if test='stkCode != null and stkCode != ""'>
+             AND B.STK_CODE = #{stkCode}
+           </if>
+           <if test='stkDesc != null and stkDesc != ""'>
+             AND B.STK_DESC LIKE UPPER('%' || #{stkDesc} || '%')
+           </if>
+		ORDER BY B.STK_ID
+
+	</select>
+
+	<insert id="addUseFilterBlock" parameterType="Map">
+		/*
+		[com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper.addUseFilterBlock]
+		- TOMMY */
+		INSERT INTO SYS0100M
+		SELECT
+		B.CODE,
+		'UFB',
+		'1',
+		A.STK_ID ,
+		A.STK_CODE ,
+		A.STK_DESC ,
+		#{remark} ,
+		#{status} ,
+		SYSDATE ,
+		TO_DATE('31/12/2099','DD/MM/YYYY')  ,
+		#{crtUserId},
+		SYSDATE ,
+		#{updUserId} ,
+		SYSDATE ,
+		0 ,
+		0 ,
+		0 ,
+		0 ,
+		0
+		FROM SYS0026M A
+		LEFT JOIN SYS0013M B ON A.STK_CTGRY_ID = B.CODE_ID
+		WHERE A.STK_ID = #{stkId}
+
+	</insert>
+
+	<update id="updateUseFilterBlock" parameterType="Map">
+		/*
+		[com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper.updateUseFilterBlock]
+		- TOMMY */
+		UPDATE SYS0100M SET
+		DEFECT_STATUS = #{status},
+		UPD_USR = #{updUserId} ,
+		UPD_DT = SYSDATE
+		WHERE
+		DEFECT_TYP = 'UFB'
+		AND DEFECT_ID = #{stkId}
+
+	</update>
+
+	<select id="selectUseFilterBlockByStkId" parameterType="Map"
+		resultType="String">
+		/*
+		[com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper.selectUseFilterBlockByStkId]
+		- TOMMY */
+		SELECT
+		A.DEFECT_ID , A.DEFECT_CODE , A.DEFECT_STATUS
+		FROM SYS0100M A
+		WHERE
+		A.DEFECT_TYP = 'UFB'
+		AND A.DEFECT_CODE = #{stkId}
+	</select>
+
+	<select id="selectUseFilterBlockInfo" parameterType="Map"
+		resultType="egovMap">
+		/*
+		[com.coway.trust.biz.logistics.useFilterBlock.impl.useFilterBlockMapper.selectUseFilterBlockInfo]
+		- TOMMY */
+		SELECT A.DEFECT_ID , A.DEFECT_CODE , A.DEFECT_STATUS ,
+		B.STK_ID , B.STK_CODE , B.STK_DESC ,
+		B.STK_CTGRY_ID AS STK_CATEGORY_ID,
+		B.STK_TYPE_ID AS STK_TYPE_ID,
+		C.CODE_NAME AS STK_CATEGORY ,
+		D.CODE_NAME AS STK_TYPE ,
+		E.NAME AS STATUS ,
+		A.CRT_USR ,
+		F.USER_NAME ,
+		TO_CHAR(A.CRT_DT,'DD/MM/YYYY') CRT_DT
+		FROM SYS0100M A
+		LEFT JOIN SYS0026M B ON A.DEFECT_ID = B.STK_ID
+		LEFT JOIN SYS0013M C ON B.STK_CTGRY_ID = C.CODE_ID
+		LEFT JOIN SYS0013M D ON B.STK_TYPE_ID = D.CODE_ID
+		LEFT JOIN SYS0038M E ON A.DEFECT_STATUS = E.STUS_CODE_ID
+		LEFT JOIN SYS0047M F ON A.CRT_USR = F.USER_ID
+		WHERE
+		A.DEFECT_TYP = 'UFB'
+		AND A.DEFECT_ID = #{stkId}
+
+	</select>
+
+</mapper>
