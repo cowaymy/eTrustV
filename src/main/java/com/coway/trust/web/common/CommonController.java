@@ -647,4 +647,17 @@ public class CommonController {
     return ResponseEntity.ok(checkInMileageStat);
   }
 
+  @RequestMapping(value = "/selectSystemDefectConfiguration.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectSystemDefectConfiguration(@RequestParam Map<String, Object> params) {
+    EgovMap result = commonService.selectSystemDefectConfiguration(params);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/selectFilterList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectFilterList(@RequestParam Map<String, Object> params) {
+    List<EgovMap> codeList = commonService.selectFilterList(params);
+    return ResponseEntity.ok(codeList);
+  }
+
 }
