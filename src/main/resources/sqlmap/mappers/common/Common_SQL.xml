@@ -2298,4 +2298,46 @@
       AND DISB = 0
   </select>
 
+    <select id="selectSystemDefectConfiguration" parameterType="Map" resultType="egovMap">
+      SELECT DEFECT_CODE
+      FROM SYS0100M
+      WHERE
+      1=1
+      <if test="prodCat != null and prodCat != '' ">
+      AND PROD_CAT = #{prodCat}
+      </if>
+      <if test="defectTyp != null and defectTyp != '' ">
+      AND DEFECT_TYP = #{defectTyp}
+      </if>
+      <if test="defectGrp != null and defectGrp != '' ">
+      AND DEFECT_GRP = #{defectGrp}
+      </if>
+      <if test="defectId != null and defectId != '' ">
+      AND DEFECT_ID = #{defectId}
+      </if>
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+      AND DEFECT_STATUS = 1
+  </select>
+
+  <select id="selectFilterList" parameterType="Map" resultType="egovMap">
+      SELECT
+      STK.STK_ID CODE_ID
+      , STK.STK_CODE ||' - '||STK.STK_DESC CODE_NAME
+      , STK.STK_ID CODE
+      FROM SYS0026M STK
+      LEFT JOIN SYS0013M CD ON STK.STK_TYPE_ID = CD.CODE_ID
+   	  WHERE 1=1
+   		<if test="stkTypeId != null and stkTypeId != '' ">
+   			AND	STK.STK_TYPE_ID = #{stkTypeId}
+   		</if>
+   		<if test="stkCtgryId != null and stkCtgryId != '' ">
+            AND STK.STK_CTGRY_ID = #{stkCtgryId}
+        </if>
+        <if test="stkId != null and stkId != '' ">
+            AND STK.STK_ID = #{stkId}
+        </if>
+       AND STK.STUS_CODE_ID = 1
+       ORDER BY CODE_NAME
+   </select>
+
 </mapper>
