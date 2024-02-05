@@ -156,23 +156,43 @@
 
                 if(memLvl == '2')
                 {
-                    reportFileName = "/commission/SHMCommission_PDF.rpt"; //reportFileName
-                    reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
-                    reportViewType = "PDF"; //viewType
+                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                		reportFileName = "/commission/SHMCommission_PDF_202402.rpt"; //reportFileName
+                        reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
+                	else{
+                		reportFileName = "/commission/SHMCommission_PDF.rpt"; //reportFileName
+                        reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
                 }
                 else if(memLvl == '3')
                 {
-                    reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
-                    reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
-                    reportViewType = "PDF"; //viewType
+                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                		reportFileName = "/commission/HTMCommission_PDF_202402.rpt"; //reportFileName
+                        reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
+                	else{
+                		reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
+                        reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
                 }
                 else
                 {
-                	if (taskID >= 122){ // start from comm month = 03/2023. Added by Hui Ding, 13/04/2023
+                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                		reportFileName = "/commission/HTCommission_PDF_202402.rpt"; //reportFileName
+                        reportViewType = "PDF"; //viewType
+                        reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                	}
+                	else if(taskID >= 122){ // start from comm month = 03/2023. Added by Hui Ding, 13/04/2023
                 		reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
                         reportViewType = "PDF"; //viewType
                         reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
-                	} else {
+                	}
+                	else {
 	                    reportFileName = "/commission/HTCommission_PDF_20230406.rpt"; //reportFileName
 	                    reportViewType = "PDF"; //viewType
 	                    reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
