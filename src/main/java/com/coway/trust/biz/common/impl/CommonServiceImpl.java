@@ -1733,4 +1733,15 @@ public class CommonServiceImpl implements CommonService {
     return commonMapper.selectSystemConfigurationParamValue(params);
   }
 
+  @Override
+  public EgovMap selectSystemDefectConfiguration(Map<String, Object> params) {
+    return commonMapper.selectSystemDefectConfiguration(params);
+  }
+
+  @Override
+  public List<EgovMap> selectFilterList(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return commonMapper.selectFilterList(params);
+  }
+
 }
