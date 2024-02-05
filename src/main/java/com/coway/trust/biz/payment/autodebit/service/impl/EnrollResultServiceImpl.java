@@ -41,7 +41,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Resource(name = "enrollResultMapper")
 	private EnrollResultMapper enrollResultMapper;
-	
+
 	/**
 	 * SearchEnrollment Result List(Master Grid) 조회
 	 * @param params
@@ -60,16 +60,28 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	@Transactional
 	public Map<String, Object> selectEnrollmentInfo(int params) {
-		
+
 		Map<String, Object> returnValue = new HashMap<String, Object>();
 		List<EgovMap> infoList = enrollResultMapper.selectEnrollmentInfo(params);
 		List<EgovMap> itemList = enrollResultMapper.selectEnrollmentItem(params);
 		returnValue.put("info", infoList);
 		returnValue.put("item", itemList);
-		
+
 		return returnValue;
 	}
-	
+
+	/**
+	 * Enrollment 저장
+	 *
+	 * @author HQ-HUIDING
+	 * Jan 24, 2024
+	 */
+	@Override
+	@Transactional
+	public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType) {
+		return saveNewEnrollment(enrollMaster, enrollDList, updateType, null);
+	}
+
 	/**
 	 * Enrollment 저장
 	 * @param params
@@ -77,12 +89,12 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	@Transactional
-	public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType)
+	public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType, String ddType)
 	{
 		int updateId = enrollResultMapper.getPAY0058DSEQ();
 		enrollMaster.setEnrollUpdateId(updateId);
 		enrollResultMapper.insertUpdateMaster(enrollMaster);
-		
+
 		for(EnrollmentUpdateDVO enrollD : enrollDList){
 			enrollD.setEnrollUpdateId(updateId);
 			enrollResultMapper.insertUpdateGrid(enrollD);
@@ -91,13 +103,25 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 		Map mapForPro = new HashMap();
 		mapForPro.put("enrollId", updateId);
 		mapForPro.put("enrollTypeId", updateType);
+		mapForPro.put("ddType", ddType);
 		enrollResultMapper.callEnrollProcedure(mapForPro);
-		
+
 		List<EgovMap> result = enrollResultMapper.selectSuccessInfo(updateId);
-		
+
 		return result;
 	}
-	
+
+	/**
+	 * Select Bank Code
+	 *
+	 * @author HQ-HUIDING
+	 * Jan 24, 2024
+	 */
+	@Override
+	public EgovMap selectBankCode (String bankCode){
+		return enrollResultMapper.selectActiveBankCode(bankCode);
+	}
+
 /*	/**
 	 * Enrollment 저장
 	 * @param params
@@ -106,25 +130,25 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	/*@Override
 	@Transactional*/
 	/*public String saveNewEnrollment(List<Object> gridList, Map<String, Object> formInfo) {
-		
+
 		String message = "";
 		int userId = 98765;
-		
+
 		if(userId > 0){
     		List<CsvFormatVO> csvList = new ArrayList();
     		if(gridList.size() > 1){
             	for(int i=1; i<gridList.size(); i++){
             		Map<String, Object> map = (Map<String, Object>) gridList.get(i);
             		try{
-                		if(CommonUtils.isNumCheck(map.get("1").toString()) && 
+                		if(CommonUtils.isNumCheck(map.get("1").toString()) &&
                 				CommonUtils.isNumCheck(map.get("2").toString())&&
                 				CommonUtils.isNumCheck(map.get("3").toString())){
-                			
+
                 			csvList.add(new CsvFormatVO(
-            	    				map.get("0").toString(), 
-            	    				Integer.parseInt(map.get("1").toString()), 
-            	    				Integer.parseInt(map.get("2").toString()), 
-            	    				Integer.parseInt(map.get("3").toString()), 
+            	    				map.get("0").toString(),
+            	    				Integer.parseInt(map.get("1").toString()),
+            	    				Integer.parseInt(map.get("2").toString()),
+            	    				Integer.parseInt(map.get("3").toString()),
             	    				map.get("4").toString()));
                 		}
                 		else{
@@ -135,17 +159,17 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
             			e.printStackTrace();
             		}
             	}
-            	
+
             	List<EnrollmentUpdateDVO> enrollDList = bindEnrollItemList(csvList, userId);
-        		
+
             	if(formInfo.get("updateType").toString() != null && !formInfo.get("updateType").toString().equals("")){
             		EnrollmentUpdateMVO enrollMaster = getEnrollMaster(enrollDList, formInfo, userId);
-        		
+
             		if(enrollMaster != null){
                 		int updateId = enrollResultMapper.getPAY0058DSEQ();
                 		enrollMaster.setEnrollUpdateId(updateId);
                 		enrollResultMapper.insertUpdateMaster(enrollMaster);
-                		
+
                 		if(enrollDList.size() > 0){
                 			for(EnrollmentUpdateDVO enrollD : enrollDList){
                 				enrollD.setEnrollUpdateId(updateId);
@@ -155,21 +179,21 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
                 			message += "* You must select your CSV file.\n";
                 			return message;
                 		}
-                		
+
                 		Map mapForPro = new HashMap();
                 		mapForPro.put("enrollId", updateId);
                 		mapForPro.put("enrollTypeId", Integer.parseInt(formInfo.get("updateType").toString()));
                 		enrollResultMapper.callEnrollProcedure(mapForPro);
-                		
+
                 		List<EgovMap> result = enrollResultMapper.selectSuccessInfo(updateId);
-                		
+
                 		if(result.size() > 0){
                 			message = "Enrollment information successfully updated.\n";
                 			message += "Update Batch ID : " + result.get(0).get("enrlUpdId") + "\n";
                 			message += "Total Update : " + result.get(0).get("totUpDt") + "\n";
                 			message += "Total Success : " + result.get(0).get("totSucces")+ "\n";
                 			message += "Total Failed : " + result.get(0).get("totFail")+ "";
-                			
+
                 		}
             		}else{
             			message = "<b>Failed to update enrollment result. Please try again later.\n";
@@ -177,21 +201,21 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
             	}else{
             		message += "* You must select your CSV file.\n";
             	}
-            	
+
         	}else{
         		message = "No item found in your CSV.\nEnrollment update is unnecessary.";
         	}
-    		
+
 		}else{
 			message = "<b>Your login session was expired. Please relogin to our system.\n";
 		}
-		
+
 		return message;
 	}*/
-	
+
 	/*private EnrollmentUpdateMVO getEnrollMaster(List<EnrollmentUpdateDVO> enrollDList, Map<String, Object> formInfo, int userId){
 		EnrollmentUpdateMVO enrollMaster = new EnrollmentUpdateMVO();
-		
+
 		enrollMaster.setEnrollUpdateId(0);
 		enrollMaster.setTypeId(Integer.parseInt(formInfo.get("updateType").toString()));
         enrollMaster.setCreated(CommonUtils.getNowDate() + CommonUtils.getNowTime());
@@ -199,10 +223,10 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
         enrollMaster.setTotalUpdate(enrollDList.size());
         enrollMaster.setTotalSuccess(0);
         enrollMaster.setTotalFail(0);
-		
+
 		return enrollMaster;
 	}*/
-	
+
 	/*private List<EnrollmentUpdateDVO> bindEnrollItemList(List<CsvFormatVO> csvList, int userId){
 		List<EnrollmentUpdateDVO> list = new ArrayList();
 		long diffDays = CommonUtils.getDiffDate("20160701");
@@ -211,7 +235,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
     			String ContractNOrderNo = csv.getOrderNo();
     			String SVMContractNo = "";
     			String OrderNo = "";
-    			
+
     			if (ContractNOrderNo.length() > 7)
     			{
     				for (int i = 0; i < 7; i++)
@@ -239,7 +263,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
                          OrderNo = ContractNOrderNo;
                      }
     			}
-                
+
     			EnrollmentUpdateDVO enroll = new EnrollmentUpdateDVO();
     			enroll.setEnrollUpdateDetId(0);
     			enroll.setEnrollUpdateId(0);
@@ -258,7 +282,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
     			enroll.setRejectCodeId(0);
     			enroll.setServiceContractId(0);
     			list.add(enroll);
-    			
+
     		}
 		}
 		return list;

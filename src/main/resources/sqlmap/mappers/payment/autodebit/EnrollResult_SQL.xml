@@ -207,13 +207,23 @@
                  #{inputRejectCode},
                  #{serviceContractId},
                  #{ddPaymentId}
+                 <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
+                 #{accNo},
+                 #{accType},
+                 #{accHolder},
+                 #{issueBank},
+                 #{startDate},
+                 #{rejectDate}
             )
     </update>
 
     <update id="callEnrollProcedure" statementType="CALLABLE" parameterType="Map">
         {call SP_INST_RSC_ENRL_RESULT(#{enrollId},
-                                                        #{enrollTypeId} )}
+                                                        #{enrollTypeId},
+                                                        #{ddType} )}
     </update>
+
+
 
     <select id="selectSuccessInfo" parameterType="java.lang.Integer" resultType="egovMap">
       SELECT Limit1.ENRL_UPD_ID ENRL_UPD_ID  ,
@@ -242,5 +252,11 @@
                     LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
               WHERE  Extent1.ENRL_UPD_ID = #{value} AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
     </select>
+
+    <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
+    <select id="selectBankCode" parameterType="java.lang.String" resultType="egovMap">
+        SELECT * FROM SYS0004M WHERE STUS_CODE_ID = 1 AND CODE = #{bankCode};
+    </select>
+
 
 </mapper>

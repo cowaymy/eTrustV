@@ -132,18 +132,18 @@ public class EnrollResultController {
             				}
 
             				try{
-
+            					// DD paperless upload
                         			csvList.add(new DdCsvFormatVO(
-                    	    				map.get("0").toString(),
-                    	    				map.get("1").toString(),
-                    	    				map.get("2").toString(),
-                    	    				map.get("3").toString(),
-                    	    				map.get("4").toString(),
-                    	    				map.get("5").toString(),
-                    	    				CommonUtils.nvl(map.get("6").toString()),
-                    	    				CommonUtils.nvl(map.get("7").toString()),
-                    	    				CommonUtils.nvl(map.get("8").toString()),
-                    	    				CommonUtils.nvl(map.get("9").toString())));
+                    	    				map.get("0").toString(), // payment ID
+                    	    				map.get("1").toString(), // Type
+                    	    				map.get("2").toString(), // Account No
+                    	    				map.get("3").toString(), // Account Type
+                    	    				map.get("4").toString(), // Account Holder
+                    	    				map.get("5").toString(), // Issue Bank
+                    	    				CommonUtils.nvl(map.get("6").toString()), // Start Date
+                    	    				CommonUtils.nvl(map.get("7").toString()), // Reject Date
+                    	    				CommonUtils.nvl(map.get("8").toString()), // Reject Code
+                    	    				CommonUtils.nvl(map.get("9").toString()))); // Status
 
                         		} catch(Exception e){
                         			message = "Failed to read CSV. Please ensure all the data in your CSV are correct before upload.";
@@ -168,7 +168,7 @@ public class EnrollResultController {
                         		if(enrollDList != null && enrollDList.size() > 0){
                         			EnrollmentUpdateMVO enrollMaster = getEnrollMaster(enrollDList, formInfo, userId);
                         			if(enrollMaster != null){
-                            			List<EgovMap> result = enrollResultService.saveNewEnrollment(enrollMaster, enrollDList, Integer.parseInt(formInfo.get("updateType").toString()));
+                            			List<EgovMap> result = enrollResultService.saveNewEnrollment(enrollMaster, enrollDList, Integer.parseInt(formInfo.get("updateType").toString()), type);
 
                             			if(result.size() > 0){
                                 			message = "DD Enrollment information successfully updated.<br>";
@@ -379,7 +379,6 @@ public class EnrollResultController {
 
 	private List<EnrollmentUpdateDVO> bindDDEnrollItemList(List<DdCsvFormatVO> csvList, int userId) throws Exception{
 		List<EnrollmentUpdateDVO> list = new ArrayList();
-	//	long diffDays = CommonUtils.getDiffDate("20160701");
 
 		try {
     		if(csvList.size() > 0){
@@ -415,6 +414,59 @@ public class EnrollResultController {
         			enroll.setRejectCodeId(0);
         			enroll.setServiceContractId(0);
         			enroll.setDdPaymentId(csv.getPaymentId()); // Added for eMandate-paperless by Hui Ding, 25/08/2023
+
+        			// Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069
+        			if (csv.getAccNo() == null){
+        				enroll.setMessage("Account Number is required.");
+        				enroll.setStatusCodeId(21);
+        				continue;
+        			} else {
+        				enroll.setAccNo(csv.getAccNo().trim());
+        			}
+
+        			if (csv.getAccHolder() == null){
+        				enroll.setMessage("Account Holder is required.");
+        				enroll.setStatusCodeId(21);
+        				continue;
+        			} else {
+        				enroll.setAccHolder(csv.getAccHolder().trim());
+        			}
+
+        			if (csv.getAccType() == null){
+        				enroll.setMessage("Account Type is required.");
+        				enroll.setStatusCodeId(21);
+        				continue;
+        			} else {
+        				if (csv.getAccType().trim().equalsIgnoreCase("Saving Account")) {
+        					enroll.setAccType("SAV");
+        				} else if (csv.getAccType().trim().equalsIgnoreCase("Current Account")) {
+        					enroll.setAccType("CUR");
+        				} else {
+        					enroll.setMessage("Invalid Account Type.");
+            				enroll.setStatusCodeId(21);
+            				continue;
+        				}
+
+        			}
+
+        			if (csv.getIssueBank() == null){
+        				enroll.setMessage("Issue Bank is required.");
+        				enroll.setStatusCodeId(21);
+        				continue;
+        			} else {
+        				EgovMap bank = enrollResultService.selectBankCode(csv.getIssueBank().trim());
+        				if (bank != null && bank.get("bankId") != null) {
+        					enroll.setAccType(bank.get("bankId").toString());
+        				} else {
+        					enroll.setMessage("Invalid Issue Bank.");
+        					enroll.setStatusCodeId(21);
+        					continue;
+        				}
+        			}
+
+        			enroll.setStartDate(csv.getStartDate());
+        			enroll.setRejectDate(csv.getRejectDate());
+
         			list.add(enroll);
 
         		}

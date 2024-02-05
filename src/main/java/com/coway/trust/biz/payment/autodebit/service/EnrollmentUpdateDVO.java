@@ -19,7 +19,51 @@ public class EnrollmentUpdateDVO {
 	private int serviceContractId;
 	// Added for eMandate-paperless by Hui Ding, 25/08/2023
 	private String ddPaymentId;
+	// Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069
+	private String accNo;
+	private String accType;
+	private String accHolder;
+	private String issueBank;
+	private String startDate;
+	private String rejectDate;
 
+
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getRejectDate() {
+		return rejectDate;
+	}
+	public void setRejectDate(String rejectDate) {
+		this.rejectDate = rejectDate;
+	}
+	public String getAccNo() {
+		return accNo;
+	}
+	public void setAccNo(String accNo) {
+		this.accNo = accNo;
+	}
+	public String getAccType() {
+		return accType;
+	}
+	public void setAccType(String accType) {
+		this.accType = accType;
+	}
+	public String getAccHolder() {
+		return accHolder;
+	}
+	public void setAccHolder(String accHolder) {
+		this.accHolder = accHolder;
+	}
+	public String getIssueBank() {
+		return issueBank;
+	}
+	public void setIssueBank(String issueBank) {
+		this.issueBank = issueBank;
+	}
 	public String getDdPaymentId() {
 		return ddPaymentId;
 	}

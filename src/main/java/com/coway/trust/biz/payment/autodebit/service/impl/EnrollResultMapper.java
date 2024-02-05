@@ -27,28 +27,28 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("enrollResultMapper")
 public interface EnrollResultMapper {
-    
+
 	/**
 	 * selectEnrollment Result List(Master Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectEnrollmentResultList(Map<String, Object> params);
-	
+
 	/**
 	 * selectEnrollment Info(Master) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectEnrollmentInfo(int params);
-	
+
 	/**
 	 * selectEnrollment Item(Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectEnrollmentItem(int params);
-	
+
 	/**
 	 * EnrollmentUpdateMaster 저장
 	 * @param params
@@ -62,28 +62,28 @@ public interface EnrollResultMapper {
 	 * @return
 	 */
 	int getPAY0058DSEQ();
-	
+
 	/**
 	 * EnrollmentUpdateMaster값 저장하기
 	 * @param params
 	 * @return
 	 */
 	int insertUpdateMaster(EnrollmentUpdateMVO enrollMaster);
-	
+
 	/**
 	 * EnrollmentUpdateGrid값 저장하기
 	 * @param params
 	 * @return
 	 */
 	int insertUpdateGrid(EnrollmentUpdateDVO enrollGrid);
-	
+
 	/**
 	 * EnrollmentUpdateGrid값 수정하기
 	 * @param params
 	 * @return
 	 */
 	int callEnrollProcedure(Map params);
-	
+
 	/**
 	 * EnrollmentUpdate결과값 조회
 	 * @param params
@@ -91,5 +91,11 @@ public interface EnrollResultMapper {
 	 */
 	List<EgovMap> selectSuccessInfo(int value);
 
+	/**
+	 * Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069
+	 * @author HQ-HUIDING
+	 * Jan 24, 2024
+	 */
+	EgovMap selectActiveBankCode(String bankCode);
 
 }

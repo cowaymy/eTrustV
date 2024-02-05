@@ -14,7 +14,7 @@ public interface EnrollResultService
   	 * @return
   	 */
       List<EgovMap> selectEnrollmentResultrList(Map<String, Object> params);
-      
+
       /**
   	 * Search Enrollment Info(Master Grid) & Item조회
   	 * @param params
@@ -28,6 +28,20 @@ public interface EnrollResultService
      	 * @return
      	 */
      // String saveNewEnrollment(List<Object> gridList, Map<String, Object> formList);
-   
+
       public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType);
+
+	/**
+	 *
+	 * @author HQIT-HUIDING
+	 * Oct 25, 2023
+	 */
+	List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType, String ddType);
+
+	/**
+	 *
+	 * @author HQ-HUIDING
+	 * Jan 24, 2024
+	 */
+	EgovMap selectBankCode(String bankCode);
 }
