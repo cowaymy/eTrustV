@@ -335,6 +335,18 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     if (getOldOrderID <= 0) {
       ROOT_STATE = "ROOT_1";
     } else {
+
+    //Check for Pre-booking
+      params.put("custId", custId);
+      params.put("salesOrdIdOld", getOldOrderID);
+      EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+
+      if(preBookInfo != null){
+        preBook = "1";
+      }else{
+        preBook = "0";
+      }
+
       if (this.isVerifyOldSalesOrderNoValidity(getOldOrderID)) {
 
         // EgovMap resultMap = this.selectSalesOrderM(getOldOrderID,
@@ -440,18 +452,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
                     EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
                     int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
-
-                    //Check for Pre-booking
-                    params.put("custId", custId);
-                    params.put("salesOrdIdOld", getOldOrderID);
-                    EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
-
-                    if(preBookInfo != null){
-                      preBook = "1";
-                    }else{
-                      preBook = "0";
-                    }
-
 
                 	//** Start exTrade Neo to Neo Plus **//
 //                    if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
