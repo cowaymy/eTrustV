@@ -218,4 +218,19 @@ public class SFTPUtil {
 
     }
 
+    public boolean move(String originalPath, String destinationPath, String fileName){
+    	try{
+    		channelSftp.cd(originalPath);
+    		if(channelSftp.get(fileName) != null){
+    			channelSftp.rename(originalPath + fileName, destinationPath + fileName);
+    		}
+
+    		return true;
+    	}catch(Exception e){
+//    		e.printStackTrace();
+    		LOGGER.error("e",e);
+    		return false;
+    	}
+    }
+
 }

@@ -122,13 +122,15 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	@Value("${cbt.api.sftp.surveyResp.rootpath}")
 	private String CBTApiSftpSurveyRespRootpath;
 
+	@Value("${cbt.api.sftp.surveyResp.prcss.rootpath}")
+	private String CBTApiSftpSurveyRespPrcssRootpath;
+
 	@Override
 	public Map<String, Object> pushSurveyQues(Map<String, Object> params, HttpServletRequest request) throws Exception{
 
 		// Third Layer
 		List<EgovMap> surveyCatDto = chatbotSurveyMgmtMapper.getSurveyCategoryList();
 		List<EgovMap> surveyQuesDto = chatbotSurveyMgmtMapper.getSurveyTargetQuesList();
-//		List<EgovMap> surveyAnsDto = chatbotSurveyMgmtMapper.getSurveyTargetAnsList();
 		List<EgovMap> surveyAnsDto = null;
 
 		if(surveyQuesDto.size() > 0){
@@ -147,7 +149,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 		List<SurveyCategoryDto> sCat = new ArrayList<>();
 		for(EgovMap catList : surveyCatDto){
-	 		SurveyCategoryDto surveyCategoryList = SurveyCategoryDto.create(catList);
+			SurveyCategoryDto surveyCategoryList = SurveyCategoryDto.create(catList);
 			sCat.add(surveyCategoryList);
 		}
 
@@ -155,15 +157,15 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		List<SurveyTargetAnsDto> sTargetAns = new ArrayList<>();
 
 		if(surveyQuesDto.size() > 0){
-    		for(EgovMap quesList : surveyQuesDto){
-    			SurveyTargetQuesDto surveyTargetQuesList = SurveyTargetQuesDto.create(quesList);
-    			sTargetQues.add(surveyTargetQuesList);
-    		}
+			for(EgovMap quesList : surveyQuesDto){
+				SurveyTargetQuesDto surveyTargetQuesList = SurveyTargetQuesDto.create(quesList);
+				sTargetQues.add(surveyTargetQuesList);
+			}
 
-    		for(EgovMap ansList : surveyAnsDto){
-    			SurveyTargetAnsDto surveyTargetAnsList = SurveyTargetAnsDto.create(ansList);
-    			sTargetAns.add(surveyTargetAnsList);
-    		}
+			for(EgovMap ansList : surveyAnsDto){
+				SurveyTargetAnsDto surveyTargetAnsList = SurveyTargetAnsDto.create(ansList);
+				sTargetAns.add(surveyTargetAnsList);
+			}
 		}
 
 		// Second Layer
@@ -191,7 +193,7 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		String jsonString = gson.toJson(chatbotVO);
 
 		Gson gson1 = new GsonBuilder().create();
-	    String longJsonString = gson1.toJson(chatbotVO); // without beautify
+		String longJsonString = gson1.toJson(chatbotVO); // without beautify
 
 		LOGGER.debug("Start Calling Chatbot API ....\n");
 
@@ -211,16 +213,16 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 		LOGGER.debug("Start update is_sync ....\n");
 
 		if(resultValue.containsKey("message") && resultValue.get("message").toString().equals("Success")){
-    		EgovMap updInfo = new EgovMap();
-    		updInfo.put("userId", params.get("userId"));
+			EgovMap updInfo = new EgovMap();
+			updInfo.put("userId", params.get("userId"));
 
-    		if(surveyQuesDto.size() > 0){
-    			for(int i = 0; i < surveyQuesDto.size(); i++){
-    				updInfo.put("survId", surveyQuesDto.get(i).get("survId"));
+			if(surveyQuesDto.size() > 0){
+				for(int i = 0; i < surveyQuesDto.size(); i++){
+					updInfo.put("survId", surveyQuesDto.get(i).get("survId"));
 
-    				chatbotSurveyMgmtMapper.updateSync(updInfo);
-    			}
-    		}
+					chatbotSurveyMgmtMapper.updateSync(updInfo);
+				}
+			}
 		}
 
 		LOGGER.debug("End update is_sync ....\n");
@@ -243,10 +245,10 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 //		String authorization = "Basic " + new String(encodedAuth);
 
 		StopWatch stopWatch = new StopWatch();
-	    stopWatch.reset();
-	    stopWatch.start();
+		stopWatch.reset();
+		stopWatch.start();
 
-	    String cbtUrl = params.get("cbtUrl").toString();
+		String cbtUrl = params.get("cbtUrl").toString();
 		String jsonString = params.get("jsonString").toString();
 		String output1 = "";
 
@@ -257,43 +259,43 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 			//insert to api0004m
 			LOGGER.error("Start Calling CBT API .... " + cbtUrl + "......\n");
-	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	        conn.setDoOutput(true);
-	        conn.setRequestMethod("POST");
-	        conn.setRequestProperty("Content-Type", "application/json");
-	        conn.setRequestProperty("ClientId", CBTApiClientUser);
-	        conn.setRequestProperty("ClientAccessToken", CBTApiClientPassword);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("ClientId", CBTApiClientUser);
+			conn.setRequestProperty("ClientAccessToken", CBTApiClientPassword);
 //	        conn.setRequestProperty("Authorization", authorization); // Uncomment if using BASIC AUTH
-	        OutputStream os = conn.getOutputStream();
-	        os.write(jsonString.getBytes());
-	        os.flush();
+			OutputStream os = conn.getOutputStream();
+			os.write(jsonString.getBytes());
+			os.flush();
 
-	        LOGGER.error("Start Calling CBT API return......\n");
-	        LOGGER.error("Start Calling CBT API return" + conn.getResponseMessage() + "......\n");
+			LOGGER.error("Start Calling CBT API return......\n");
+			LOGGER.error("Start Calling CBT API return" + conn.getResponseMessage() + "......\n");
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(
-		                (conn.getInputStream())));
+						(conn.getInputStream())));
 				conn.getResponseMessage();
 
-		        String output = "";
-		        LOGGER.debug("Output from Server .... \n");
-		        while ((output = br.readLine()) != null) {
-		        	output1 = output;
-		        	LOGGER.debug(output);
-		        }
+				String output = "";
+				LOGGER.debug("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					output1 = output;
+					LOGGER.debug(output);
+				}
 
-		        Gson g = new Gson();
-		        p = g.fromJson(output1, CBTApiRespForm.class);
-		        if(p.isSuccess() == true){
-		        	p.setStatusCode(AppConstants.RESPONSE_CODE_SUCCESS);
-		        	resultValue.put("status", AppConstants.SUCCESS);
+				Gson g = new Gson();
+				p = g.fromJson(output1, CBTApiRespForm.class);
+				if(p.isSuccess() == true){
+					p.setStatusCode(AppConstants.RESPONSE_CODE_SUCCESS);
+					resultValue.put("status", AppConstants.SUCCESS);
 					resultValue.put("message", "Success");
-		        }else{
-		        	p.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
-		        	resultValue.put("status", AppConstants.FAIL);
+				}else{
+					p.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("status", AppConstants.FAIL);
 					resultValue.put("message", "Fail");
-		        }
+				}
 
 				conn.disconnect();
 
@@ -313,20 +315,20 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 			resultValue.put("message", "Time Out");
 		}finally{
 			stopWatch.stop();
-		    respTm = stopWatch.toString();
+			respTm = stopWatch.toString();
 
-		    params.put("responseCode", resultValue.get("status") == null ? "" : resultValue.get("status").toString());
-            params.put("responseMessage", resultValue.get("message") == null ? "" : resultValue.get("message").toString());
+			params.put("responseCode", resultValue.get("status") == null ? "" : resultValue.get("status").toString());
+			params.put("responseMessage", resultValue.get("message") == null ? "" : resultValue.get("message").toString());
 //            params.put("reqPrm", jsonString != null ? jsonString.length() >= 2000 ? jsonString.substring(0,2000) : jsonString : jsonString);
 //            params.put("ipAddr", "");
-            params.put("url", cbtUrl);
-            params.put("respTm", respTm);
-            params.put("resPrm", output1);
-            params.put("apiUserId", cbtApiUserId);
-            params.put("longReqPrm", params.get("longJsonString").toString());
+			params.put("url", cbtUrl);
+			params.put("respTm", respTm);
+			params.put("resPrm", output1);
+			params.put("apiUserId", cbtApiUserId);
+			params.put("longReqPrm", params.get("longJsonString").toString());
 //            params.put("refNo", params.get("memCode") == null ? params.get("username").toString() :params.get("memCode").toString());
 
-            rtnRespMsg(params);
+			rtnRespMsg(params);
 		}
 
 		return resultValue;
@@ -334,226 +336,224 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public Map<String,Object> hcSurveyResult(HttpServletRequest request, Map<String, Object> params) throws Exception {
-	    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
+		String respTm = null, apiUserId = "0", sysUserId = "0";
 
-	    Map<String, Object> resultValue = new HashMap<String, Object>();
-		resultValue.put("status", AppConstants.FAIL);
-		resultValue.put("message", "CBT Failed: Please contact Administrator.");
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		StopWatch stopWatch = new StopWatch();
 
-	    StopWatch stopWatch = new StopWatch();
-	    stopWatch.reset();
-	    stopWatch.start();
+		SFTPUtil util = new SFTPUtil();
 
-	    // Check file whether exist or not
-    	String data = commonApiService.decodeJson(request);
-    	Gson g = new Gson();
-    	HcSurveyResultForm p = g.fromJson(data, HcSurveyResultForm.class);
+		try{
 
-    	Exception e1 = null;
-    	if(p.getFileName().toString().isEmpty()){
-    		resultValue.put("status", AppConstants.FAIL);
-    		resultValue.put("message", "file name is required");
-    		return resultValue;
-    	}else if(!p.getFileName().toString().isEmpty() && !p.getFileName().toString().toUpperCase().contains("CSV")){
-    		resultValue.put("status", AppConstants.FAIL);
-    		resultValue.put("message", "file format is invalid");
-    		return resultValue;
-    	}
-    	params.put("reqParam", data);
+			stopWatch.reset();
+			stopWatch.start();
 
-	    EgovMap authorize = verifyBasicAuth(params, request);
+			EgovMap authorize = verifyBasicAuth(params, request);
 
-	    if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
-	    	// Create file in TO DIR
-			String toRootPath = uploadFileDir + "/Chatbot/SurveyResponse"; // to dir
-			String fileName = p.getFileName().toString();
-			LOGGER.debug(">>> FileName :" + fileName);
+			if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())){
 
-			File file = new File(toRootPath + "/");
+				// Check file whether exist or not
+				String data = commonApiService.decodeJson(request);
+				Gson g = new Gson();
+				HcSurveyResultForm p = g.fromJson(data, HcSurveyResultForm.class);
 
-		    if (!file.exists()) {
-                file.mkdirs();
-            }
+				if(p.getFileName().toString().isEmpty()){
+					resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", "file name is required");
+					return resultValue;
+				}else if(!p.getFileName().toString().isEmpty() && !p.getFileName().toString().toUpperCase().contains("CSV")){
+					resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", "file format is invalid");
+					return resultValue;
+				}
+				params.put("reqParam", data);
 
-		    //===========================
-		    // Connect SFTP and download file :: START
-		    //===========================
-		    try{
-    		    // Connect SFTP and get csv file
-    		    // Prepare data to access SFTP
-    	    	String host = CBTApiSftpHost;
-    			int port = CBTApiSftpPort;
-    			String userName = CBTApiSftpUser;
-    			String password = CBTApiSftpPassword;
-    			String fromRootPath = CBTApiSftpSurveyRespRootpath; // from dir
-    			boolean downloadSuccess = true;
+				apiUserId = authorize.get("apiUserId").toString();
 
-    			// Connect sftp
-    			SFTPUtil util = new SFTPUtil();
-    			util.init(host, userName, password, port);
+				// Create file in TO DIR
+				String toRootPath = uploadFileDir + "/Chatbot/SurveyResponse"; // to dir
+				String fileName = p.getFileName().toString();
+				LOGGER.debug(">>> FileName :" + fileName);
 
-    			// download file
-    			String path = toRootPath + "/"+ fileName;
-    			LOGGER.debug(">>> downloadFileName :" + path);
+				File file = new File(toRootPath + "/");
 
-    			boolean bl = util.download(fromRootPath, fileName, path);
-    			if(!bl){
-    				LOGGER.debug("Error file download : " + path);
-    				downloadSuccess = false;
-    			}
+				if (!file.exists()) {
+					file.mkdirs();
+				}
 
-    			// disconnection
-    			util.disconnection();
+				//======================================
+				// Connect SFTP and download file :: START
+				//======================================
+				// Connect SFTP and get csv file
+				// Prepare data to access SFTP
+				String host = CBTApiSftpHost;
+				int port = CBTApiSftpPort;
+				String userName = CBTApiSftpUser;
+				String password = CBTApiSftpPassword;
+				String fromRootPath = CBTApiSftpSurveyRespRootpath; // from dir
+				boolean downloadSuccess = true;
 
-    			if(!downloadSuccess){
-    				resultValue.put("status", AppConstants.FAIL);
-    				resultValue.put("message", "Error download file from SFTP");
-    				return resultValue;
-    			}
-		    }catch(Exception e){
-		    	LOGGER.error("Timeout:");
-				LOGGER.error("[Chatbot API] - Caught Exception: " + e);
-				resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
-				resultValue.put("message", "Unexpected Error");
-				return resultValue;
-		    }
-		    //===========================
-		    // Connect SFTP and download file :: END
-		    //===========================
+				// Connect sftp
+				util.init(host, userName, password, port);
 
-		    //======================================
-		    // Read content of csv file :: START
-		    //======================================
-	    	List<HcSurveyResultCsvVO> hcSurveyResultCsvVO = new ArrayList<>();
+				// download file
+				String path = toRootPath + "/"+ fileName;
+				LOGGER.debug(">>> downloadFileName :" + path);
 
-	    	try{
-    		    FileReader fr = new FileReader(file + "/" + fileName);
+				boolean bl = util.download(fromRootPath, fileName, path);
+				if(!bl){
+					LOGGER.debug("Error file download : " + path);
+					downloadSuccess = false;
+				}
 
-    		    BufferedReader br = new BufferedReader(fr);
+				if(!downloadSuccess){
+					// disconnection
+					util.disconnection();
 
-    		    // Skip first row (Column header)
-    		    br.readLine();
+					resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", "Error download file from SFTP");
+					return resultValue;
 
-    		    String line = "";
+				}else{
+					//======================================
+					// Move file to PROCESSED FOLDER :: START
+					//======================================
+					String toPrcssPath = CBTApiSftpSurveyRespPrcssRootpath;
 
-    		    while ((line = br.readLine()) != null) {
-    		    	String[] items = null;
+					boolean isSuccess = util.move(fromRootPath + "/", toPrcssPath + "/", fileName);
 
-    		    	int startResponse = line.indexOf("\"{\"");
-//    		    	int endResponse = line.indexOf("\"}\"");
+					// disconnection
+					util.disconnection();
 
-//    		    	if(startResponse > 0 && endResponse >0){
-//    		    		String response = line.substring(startResponse, endResponse);
+					if(!isSuccess){
+						resultValue.put("status", AppConstants.FAIL);
+						resultValue.put("message", "Error move file to processed folder.");
+						return resultValue;
+					}
+					//======================================
+					// Move file to PROCESSED FOLDER :: END
+					//======================================
+				}
+				//======================================
+				// Connect SFTP and download file :: END
+				//======================================
 
-    		    	if(startResponse > 0){
-    		    		String response = line.substring(startResponse);
-    		    		String dateList = line.substring(0, startResponse);
-    		    		String[] dateInfo = dateList.split(",");
+				//======================================
+				// Read content of csv file :: START
+				//======================================
+				List<HcSurveyResultCsvVO> hcSurveyResultCsvVO = new ArrayList<>();
 
-    		    		items = Arrays.copyOf(dateInfo, dateInfo.length+1);
-    		    		items[dateInfo.length] = response;
+				FileReader fr = new FileReader(file + "/" + fileName);
 
-    		    	}else{
-    		    		 items = line.split(",");
-    		    	}
+				BufferedReader br = new BufferedReader(fr);
 
-    		    	if(items.length > 0 ){
-        		    	HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(items);
-        		    	hcSurveyResultCsvVO.add(res);
-    		    	} else{
-    		    		LOGGER.error("[Chatbot API] : No record found");
-    					resultValue.put("status", "204");
-    					resultValue.put("message", "No record from survey Response");
-    					return resultValue;
-    		    	}
-    	        }
-    		    br.close();
-	    	}catch (Exception e){
-	    		LOGGER.error("Timeout:");
-				LOGGER.error("[Chatbot API] - Caught Exception: " + e);
-				resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
-				resultValue.put("message", "Unexpected Error");
-				return resultValue;
-	    	}
-		    //======================================
-		    // Read content of csv file :: END
-		    //======================================
+				// Skip first row (Column header)
+				br.readLine();
 
+				String line = "";
 
-	    	//======================================
-		    // Insert into CBT0005D :: START
-		    //======================================
-	    	if(hcSurveyResultCsvVO.size() > 0){
-    	    	for(int i = 0; i < hcSurveyResultCsvVO.size() ; i ++){
-    	    		chatbotSurveyMgmtApiMapper.insertSurveyResp(hcSurveyResultCsvVO.get(i));
-    	    	}
-	    	}
-	    	//======================================
-		    // Insert into CBT0005D :: END
-		    //======================================
+				while ((line = br.readLine()) != null) {
+					String[] items = null;
 
-			resultValue.put("status", AppConstants.SUCCESS);
-			resultValue.put("message", "Download Survey Response successful.");
+					int startResponse = line.indexOf("\"{\"");
 
-	    }
+					if(startResponse > 0){
+						String response = line.substring(startResponse);
+						String dateList = line.substring(0, startResponse);
+						String[] dateInfo = dateList.split(",");
 
-	    return resultValue;
+						items = Arrays.copyOf(dateInfo, dateInfo.length+1);
+						items[dateInfo.length] = response;
 
+					}else{
+						items = line.split(",");
+					}
+
+					if(items.length > 0 ){
+						HcSurveyResultCsvVO res = HcSurveyResultCsvVO.create(items);
+						hcSurveyResultCsvVO.add(res);
+					} else{
+						LOGGER.error("[Chatbot API] : No record found");
+						resultValue.put("status", "204");
+						resultValue.put("message", "No record from survey Response");
+						return resultValue;
+					}
+				}
+				br.close();
+				//======================================
+				// Read content of csv file :: END
+				//======================================
+
+				if(hcSurveyResultCsvVO.size() > 0){
+					//======================================
+					// Insert into CBT0005D :: START
+					//======================================
+					for(int i = 0; i < hcSurveyResultCsvVO.size() ; i ++){
+						chatbotSurveyMgmtApiMapper.insertSurveyResp(hcSurveyResultCsvVO.get(i));
+					}
+					//======================================
+					// Insert into CBT0005D :: END
+					//======================================
+					resultValue.put("status", String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+					resultValue.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+				}
+			}else{
+				resultValue.put("status", authorize.get("code").toString());
+				resultValue.put("message", authorize.get("message").toString());
+			}
+		}catch (Exception e){
+
+			LOGGER.error("Timeout:");
+			LOGGER.error("[Chatbot API] - Caught Exception: " + e);
+			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
+			resultValue.put("message", "Unexpected Error");
+			return resultValue;
+
+		}finally{
+
+			stopWatch.stop();
+		    respTm = stopWatch.toString();
+
+		    // Insert log into API0004M
+		    commonApiService.rtnRespMsg(request, resultValue.get("status").toString(), resultValue.get("message").toString(), respTm, params.get("reqParam").toString(), null, apiUserId);
+		}
+
+		// Return result
+		return resultValue;
 	}
 
 	@Override
 	public EgovMap verifyBasicAuth(Map<String, Object> params, HttpServletRequest request){
 
-		String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
+		String code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
 
-	    StopWatch stopWatch = new StopWatch();
-	    stopWatch.reset();
-	    stopWatch.start();
+		String userName = request.getHeader("userName");
+		String key = request.getHeader("key");
 
-//	    Uncomment this when use Basic Auth
-//    	String authorization = request.getHeader("Authorization");
-//    	String[] values = {"",""};
-//
-//    	if (authorization != null && authorization.startsWith("Basic")) {
-//    		// Authorization: Basic base64credentials
-//    		String base64Credentials = authorization.substring("Basic".length()).trim();
-//    		byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
-//    		String credentials = new String(credDecoded, StandardCharsets.UTF_8);
-//    		// credentials = username:password
-//    		values = credentials.split(":", 2);
-//    	}
+		EgovMap reqPrm = new EgovMap();
+		reqPrm.put("userName", userName);
+		reqPrm.put("key", key);
 
-	    String userName = request.getHeader("userName");
-	    String key = request.getHeader("key");
+		EgovMap access = new EgovMap();
+		access = chatbotSurveyMgmtApiMapper.checkAccess(reqPrm);
 
-    	Exception e1 = null;
+		if(access == null){
+			code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+			message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+		}else{
+			code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+			message = AppConstants.RESPONSE_DESC_SUCCESS;
 
-    	EgovMap access = new EgovMap();
-    	Map<String, Object> reqPrm = new HashMap<>();
-//    	reqPrm.put("userName", values[0]);
-//    	reqPrm.put("key", values[1]);
-    	reqPrm.put("userName", userName);
-    	reqPrm.put("key", key);
+			apiUserId = access.get("apiUserId").toString();
+			sysUserId = access.get("sysUserId").toString();
+			reqPrm.put("apiUserId", apiUserId);
+			reqPrm.put("sysUserId", sysUserId);
+		}
 
-    	access = chatbotSurveyMgmtApiMapper.checkAccess(reqPrm);
+		reqPrm.put("code", code);
+		reqPrm.put("message", message);
 
-    	if(access == null){
-    		code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
-    		message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
-    	}else{
-    		code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
-    		message = AppConstants.RESPONSE_DESC_SUCCESS;
-
-    		apiUserId = access.get("apiUserId").toString();
-    		sysUserId = access.get("sysUserId").toString();
-    		reqPrm.put("apiUserId", apiUserId);
-    		reqPrm.put("sysUserId", sysUserId);
-    	}
-
-    	stopWatch.stop();
-    	respTm = stopWatch.toString();
-
-  		return commonApiService.rtnRespMsg(request, code, message, respTm, params.get("reqParam").toString(), null,apiUserId);
+		return reqPrm;
 	}
 
 
@@ -561,23 +561,18 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 	@Override
 	public void rtnRespMsg(Map<String, Object> param) {
 
-	    EgovMap data = new EgovMap();
-	    Map<String, Object> params = new HashMap<>();
+		EgovMap data = new EgovMap();
+		Map<String, Object> params = new HashMap<>();
 
-	      params.put("respCde", param.get("responseCode"));
-	      params.put("errMsg", param.get("responseMessage"));
-//	      params.put("reqParam", param.get("reqPrm"));
-//	      params.put("ipAddr", "");
-	      params.put("prgPath", param.get("url"));
-	      params.put("respTm", param.get("respTm"));
-	      params.put("respParam", param.get("resPrm"));
-	      params.put("apiUserId", param.get("apiUserId"));
-	      params.put("longReqParam", String.valueOf(param.get("longReqPrm")));
-//	      params.put("refNo", param.get("refNo"));
+		params.put("respCde", param.get("responseCode"));
+		params.put("errMsg", param.get("responseMessage"));
+		params.put("prgPath", param.get("url"));
+		params.put("respTm", param.get("respTm"));
+		params.put("respParam", param.get("resPrm"));
+		params.put("apiUserId", param.get("apiUserId"));
+		params.put("longReqParam", String.valueOf(param.get("longReqPrm")));
 
-//	      commonApiMapper.insertApiAccessLog(params);
-	      chatbotSurveyMgmtApiMapper.insertApiAccessLog(params);
+		chatbotSurveyMgmtApiMapper.insertApiAccessLog(params);
 
-	  }
-
+	}
 }
