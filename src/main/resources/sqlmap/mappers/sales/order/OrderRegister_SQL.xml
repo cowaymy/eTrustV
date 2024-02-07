@@ -2752,6 +2752,9 @@
       <if test="srvPacId != null and srvPacId != ''">
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
+      <if test="custTypeId != null and custTypeId != ''">
+        AND B.PROMO_CUST_TYPE = #{custTypeId}
+      </if>
       <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
       <if test='preBook == "1" and exTrade == "1"'>
       UNION
@@ -2767,11 +2770,13 @@
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
       AND B.PRE_BOOK = 1
-      AND B.PROMO_CUST_TYPE = #{custTypeId}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+      </if>
+      <if test="custTypeId != null and custTypeId != ''">
+        AND B.PROMO_CUST_TYPE = #{custTypeId}
       </if>
       </if>
 
