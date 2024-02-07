@@ -2763,9 +2763,10 @@
     var cpntId = $("#compType").val();
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
+    var custTypeId = $("#typeId").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val() }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, custTypeId:custTypeId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val(), preBook : $('#hiddenPreBook').val() }, '', 'ordPromo', 'S', '');
   }
 
   function fn_setBindComboOrd(ordNo, ordId) {

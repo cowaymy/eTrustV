@@ -2746,6 +2746,7 @@
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
       AND B.PRE_BOOK = 0
+      AND B.PROMO_CUST_TYPE = #{custTypeId}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">
@@ -2766,6 +2767,7 @@
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
       AND B.PRE_BOOK = 1
+      AND B.PROMO_CUST_TYPE = #{custTypeId}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">

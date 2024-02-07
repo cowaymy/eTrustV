@@ -571,7 +571,7 @@
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
 
-            fn_loadProductComponent(appTypeVal, stkIdVal);
+            //fn_loadProductComponent(appTypeVal, stkIdVal);
             setTimeout(function() { fn_check(0) }, 200);
 
         });
@@ -2290,8 +2290,9 @@
     var empInd = 0;
     var exTrade = $("#exTrade").val();
     var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
+    var custTypeId = $("#hiddenTypeId").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() ,preBook : $('#hiddenPreBook').val() }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, custTypeId:custTypeId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId, custStatus: $('#hiddenCustStatusId').val() ,preBook : $('#hiddenPreBook').val() }, '', 'ordPromo', 'S', '');
     }
 
   function displayVoucherSection(){
