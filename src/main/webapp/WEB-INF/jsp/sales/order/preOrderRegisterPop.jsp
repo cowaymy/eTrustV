@@ -571,7 +571,7 @@
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
 
-            //fn_loadProductComponent(appTypeVal, stkIdVal);
+            fn_loadProductComponent(appTypeVal, stkIdVal);
             setTimeout(function() { fn_check(0) }, 200);
 
         });
