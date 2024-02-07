@@ -134,7 +134,7 @@ console.log(year);
 			}
 			else
 			{
-				if(year >= 2024 && month >=1 || year > 2024)
+				if(year >= 2024 && month >=01 || year > 2024)
                 {
                     reportFileName = "/commission/CodyComm_PDF_202402.rpt"; //reportFileName
                 }
