@@ -80,7 +80,7 @@
 			headerText : "Create Date",
 			width : 150,
 			dataType : "date",
-			formatString : "dd-mm-yyyy",
+			formatString : "DD/MM/YYYY",
 			editable : false
 		} ];
 
