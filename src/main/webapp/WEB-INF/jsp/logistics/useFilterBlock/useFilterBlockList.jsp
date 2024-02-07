@@ -197,7 +197,7 @@
 				alt="Home" /></li>
 			<li>Logistics</li>
 			<li>Master Data</li>
-			<li>Use Filter Block Management</li>
+			<li>Used Filter Block Management</li>
 		</ul>
 
 		<aside class="title_line">
@@ -205,7 +205,7 @@
 			<p class="fav">
 				<a href="#" class="click_add_on">My menu</a>
 			</p>
-			<h2>Use Filter Block Management</h2>
+			<h2>Used Filter Block Management</h2>
 			<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 					<li><p class="btn_blue">
@@ -286,11 +286,11 @@
 						<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 							<li><p class="link_btn">
 									<a href="javascript:fn_addEditUseFilterBlock(1)"
-										id="addUseFilterBlock">Add Use Filter Block</a>
+										id="addUseFilterBlock">Add Used Filter Block</a>
 								</p></li>
 							<li><p class="link_btn">
 									<a href="javascript:fn_addEditUseFilterBlock(2)"
-										id="editUseFilterBlock">Edit Use Filter Block</a>
+										id="editUseFilterBlock">Edit Used Filter Block</a>
 								</p></li>
 						</c:if>
 					</ul>
