@@ -734,10 +734,10 @@
   <select id="selectCreditCardDetailByIdPaging" parameterType="Map"
     resultType="egovMap">
     SELECT
-        <if test='ctrlBankId != "17" '>
+        <if test='ctrlBankId != "17" and ctrlBankId != "23" '>
         *
         </if>
-        <if test='ctrlBankId == "17" '>
+        <if test='ctrlBankId == "17" or ctrlBankId == "23" '>
         RNUM,
         PAGENO,
         BANK_DTL_GRP_ID,
@@ -748,7 +748,8 @@
         TRX_DATE,
         RENT_PAY_CRC_EXPR,
         (TOT_AMT * 100) TOT_AMT,
-        TOT_ITM
+        TOT_ITM ,
+        FILEDATE
         </if>
     FROM (
         SELECT
@@ -779,7 +780,7 @@
                     RENT_PAY_CRC_EXPR
                     </when>
                     <otherwise>
-                        <if test='ctrlBankId == "17" '>
+                        <if test='ctrlBankId == "17" or ctrlBankId == "23"'>
                        ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
                         </if>
                        ,NVL( (
