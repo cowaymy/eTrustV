@@ -125,8 +125,8 @@ var prdStatus = [
 	<header class="pop_header">
 		<!-- pop_header start -->
 		<h1>
-			<c:if test="${viewType eq  '1' }"> Add Use Filter Block</c:if>
-			<c:if test="${viewType eq  '2' }"> Edit Use Filter Block</c:if>
+			<c:if test="${viewType eq  '1' }"> Add Used Filter Block</c:if>
+			<c:if test="${viewType eq  '2' }"> Edit Used Filter Block</c:if>
 		</h1>
 		<ul class="right_opt">
 			<li><p class="btn_blue2">
