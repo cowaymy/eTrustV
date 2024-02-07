@@ -1,6 +1,7 @@
 package com.coway.trust.web.common.claim;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,7 @@ public class ECashGrpDeductionFileAMBHandler extends BasicTextDownloadHandler im
   String sEolCharacter = "";
 
   String sTextBtn = "";
+  BigDecimal hunred = new BigDecimal(100);
 
   public ECashGrpDeductionFileAMBHandler(FileInfoVO fileInfoVO, Map<String, Object> params) {
     super(fileInfoVO, params);
@@ -104,13 +106,15 @@ public class ECashGrpDeductionFileAMBHandler extends BasicTextDownloadHandler im
 
   private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
     Map<String, Object> dataRow = result.getResultObject();
+    BigDecimal totA = (BigDecimal)dataRow.get("fileItmAmt");
+    long limit = totA.multiply(hunred).longValue();
 
     bRecordType            = StringUtils.rightPad(String.valueOf("D"),  1, " ");
     bTransactionSeqNumber  = StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 7, "0");
     bCreditCardLength      = StringUtils.rightPad(String.valueOf("16"), 2, " ");
     bTokenId               = StringUtils.rightPad(String.valueOf(dataRow.get("fileItmAccNo")), 36, " ");
     bTransactionDesciption = StringUtils.leftPad(String.valueOf(dataRow.get("fileBatchGrpId")), 40, " ");
-    bTransactionAmount     = StringUtils.leftPad(String.valueOf(dataRow.get("fileItmAmt")), 12, "0");
+    bTransactionAmount     = StringUtils.leftPad(String.valueOf(limit), 12, "0");
     bEppProgramCode        = StringUtils.rightPad(String.valueOf(""), 4, " ");
     bEppTotalAmount        = StringUtils.rightPad(String.valueOf(""), 9, " ");
     bEppDownPaymentAmount  = StringUtils.rightPad(String.valueOf(""), 9, " ");
