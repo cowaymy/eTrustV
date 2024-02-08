@@ -36,7 +36,7 @@
             a.BS_SUCCES_BALNC_WEEK4
         ]]>
         from REP0008S a
-        join (
+        LEFT join (
             select
                 c.MEM_LVL,
                 c.ORG_CODE LAST_ORG_CODE
