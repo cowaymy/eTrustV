@@ -2752,7 +2752,7 @@
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
       <if test="custTypeId != null and custTypeId != ''">
-        AND B.PROMO_CUST_TYPE = #{custTypeId}
+        AND B.PROMO_CUST_TYPE IN (#{custTypeId},'0')
       </if>
       <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
       <if test='preBook == "1" and exTrade == "1"'>
@@ -2775,7 +2775,7 @@
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
       <if test="custTypeId != null and custTypeId != ''">
-        AND B.PROMO_CUST_TYPE = #{custTypeId}
+        AND B.PROMO_CUST_TYPE IN (#{custTypeId},'0')
       </if>
       </if>
 
