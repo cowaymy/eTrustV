@@ -28,14 +28,14 @@
 	</filter-mapping>
 
 
-	<filter>
-	  <filter-name>CORSFilter</filter-name>
-	  <filter-class>com.coway.trust.util.CORSFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	  <filter-name>CORSFilter</filter-name>
-	  <url-pattern>/report/*</url-pattern> <!--모든요청에 매핑-->
-	</filter-mapping>
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>com.coway.trust.util.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/report/*</url-pattern>
+    </filter-mapping>
 
 
 
