@@ -330,6 +330,47 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 					detailList.add(hm);
 					LOGGER.debug(" =========add refno and orderno ========= " +vo.get("doNo").toString() + " : " + orderDet.get("salesOrdNo"));
 				}else{
+					hm.put("disabled", 0);
+					hm.put("creator", 349);
+					hm.put("updator", 349);
+					hm.put("validStatusId", 8);
+					hm.put("validRemark", "No order found. Do No: " + vo.get("doNo").toString().trim());
+					hm.put("userOrderNo", "");
+					hm.put("userTrNo", "");
+					hm.put("userRefNo", vo.get("doNo").toString().trim());
+					hm.put("userAmount", vo.get("trnsAmt").toString().trim());
+					hm.put("userBankAcc", "");
+					hm.put("userChqNo", "");
+					hm.put("userIssueBank", "");
+					hm.put("userRunningNo", "");
+					hm.put("userEftNo", "");
+					hm.put("userRefDate_Month", 0);
+					hm.put("userRefDate_Day", 0);
+					hm.put("userRefDate_Year", 0);
+					hm.put("userBankChargeAmt", "");
+					hm.put("userBankChargeAcc", "");
+					hm.put("sysOrderId", 0);
+					hm.put("sysAppTypeId", 0);
+					hm.put("sysAmount", 0);
+					hm.put("sysBankAccId", 0);
+					hm.put("sysIssBankId", 0);
+					hm.put("sysRefDate", "1900/01/01");
+					hm.put("sysBCAmt", 0);
+					hm.put("sysBCAccId", 0);
+					hm.put("userRemark", "");
+					hm.put("cardNo", "");
+
+					hm.put("cardModeId", cardModeIdEcom);
+					hm.put("approvalCode", "");
+					hm.put("userTrDate", "1900/01/01");
+					hm.put("userCollectorCode", "");
+					hm.put("sysCollectorId", 0);
+					hm.put("paymentType", "");
+					hm.put("PaymentTypeId", 0);
+					hm.put("advanceMonth", 0);
+					hm.put("paymentChnnl", "");
+
+					detailList.add(hm);
 					LOGGER.debug(" =========vo.get(doNo).toString() invalid ref no to find order ========= " +vo.get("doNo").toString() );
 				}
 
