@@ -354,7 +354,7 @@
 		      LEFT JOIN SYS0013M D
 		      ON C.MEM_TYPE = D.CODE_ID
 		      WHERE 1=1
-		      AND STUS_ID IN (4)
+		      AND STUS_ID IN (1)
 		      AND CUST_VERIFY_STUS = 'Y'
 		      <if test='salesOrdId != null and salesOrdId !=0'>
 		          AND B.SALES_ORD_ID = #{salesOrdId}
@@ -375,8 +375,8 @@
 			      </foreach>
 		      </if>
 	      )
-      WHERE 1=1
-      AND ROWNUM = 1
+    <!--   WHERE 1=1
+      AND ROWNUM = 1 -->
     </select>
 
     <select id="getHcPreBookSmsTemplate" parameterType="Map" resultType="String">
