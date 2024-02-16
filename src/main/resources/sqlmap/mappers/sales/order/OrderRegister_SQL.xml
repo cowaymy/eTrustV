@@ -3589,7 +3589,7 @@ WHERE
     </select>
 
     <select id="selectPreBookConfigurationPerson" parameterType="Map" resultType="egovMap">
-    SELECT * FROM (
+    SELECT DISTINCT MEM_CODE  FROM (
 	       SELECT T2.MEM_ID
 	             , T2.MEM_CODE
 	             , T2.NAME
@@ -3667,7 +3667,7 @@ WHERE
 		      </foreach>
 	      </if>
       )
-      <!-- WHERE 1=1
-      AND ROWNUM = 1 -->
+      WHERE 1=1
+       AND MEM_CODE = #{memCode}
     </select>
 </mapper>
