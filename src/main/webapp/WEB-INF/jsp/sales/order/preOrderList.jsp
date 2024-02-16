@@ -859,6 +859,10 @@ console.log("preOrderList");
             <option value="0">Mobile Apps</option>
         </select>
     </td>
+    <th scope="row"><spring:message code='sales.promoCd'/></th>
+    <td>
+    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
+    </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

@@ -765,7 +765,20 @@
     <th scope="row">DT Branch</th>
      <td><select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
 </tr>
-
+<th scope="row">Entry Point</th>
+    <td>
+        <select id="entryPoint" name="entryPoint" class="w100p" >
+            <option value="">Choose One</option>
+            <option value="1">Web</option>
+            <option value="0">Mobile Apps</option>
+        </select>
+    </td>
+    <th scope="row"><spring:message code='sales.promoCd'/></th>
+    <td>
+    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

@@ -129,6 +129,9 @@
          <if test='entryPoint != null and entryPoint != ""'>
             AND T1.CHNNL = #{entryPoint}
          </if>
+         <if test='promoCode != null and promoCode != ""'>
+             AND T14.PROMO_CODE = #{promoCode}
+         </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>
 
