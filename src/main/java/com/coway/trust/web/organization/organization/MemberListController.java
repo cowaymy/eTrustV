@@ -1082,7 +1082,7 @@ public class MemberListController {
 
         int userId = sessionVO.getUserId();
         formMap.put("user_id", userId);
-        //logger.debug("udtparam11111 : {}", params);
+        logger.debug("udtparam : {}", params);
         //logger.debug("udtList : {}", updList);
         //logger.debug("formMap : {}", formMap);
 
@@ -1109,6 +1109,8 @@ public class MemberListController {
         formMap.put("businessType", params.get("businessType"));
         //logger.debug("businessType : {}", params.get("businessType"));
         // LaiKW - Comment ends here
+        //Keyi - bug fix #24033842 - unable update member email
+        formMap.put("emailUpd", params.get("emailUpd"));
 
         String memCode = "";
         String memId = "";

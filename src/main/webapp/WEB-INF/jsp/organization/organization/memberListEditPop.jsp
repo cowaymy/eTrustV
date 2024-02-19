@@ -65,7 +65,6 @@ function fn_memberSave(){
         console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         if("${memberView.atchFileGrpIdDoc}" == ""){
 	        	if(filecount > 0){
-
 		        	Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
 		                console.log(result);
 		                atchFileGrpIdNew = result.data.fileGroupKey;
@@ -113,6 +112,8 @@ function fn_memberSave(){
                     $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
                     $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
                     $.extend(jsonObj, {'businessType' : $("#businessType").val()});
+                    //Keyi - bug fix #24033842 - unable update member email
+                    $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
 
 				    console.log(JSON.stringify(jsonObj));
 				    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -166,6 +167,8 @@ function fn_memberSave(){
                       $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
                       $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
                       $.extend(jsonObj, {'businessType' : $("#businessType").val()});
+                      //Keyi - bug fix #24033842 - unable update member email
+                      $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
 
 	                  console.log(JSON.stringify(jsonObj));
 	                  Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -222,6 +225,8 @@ function fn_memberSave(){
 		            $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
 		            $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
 		            $.extend(jsonObj, {'businessType' : $("#businessType").val()});
+		            //Keyi - bug fix #24033842 - unable update member email
+                    $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
 
 		            console.log(JSON.stringify(jsonObj));
 		            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -275,6 +280,8 @@ function fn_memberSave(){
             $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
             $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
             $.extend(jsonObj, {'businessType' : $("#businessType").val()});
+            //Keyi - bug fix #24033842 - unable update member email
+            $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
 
 	        console.log(JSON.stringify(jsonObj));
 	        Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -617,7 +624,7 @@ $(document).ready(function() {
     // $('#email').change(function() {
         $("#emailUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='emailUpd' id='emailUpd'>");
-        $("#emailUpd").val($("#email").val());
+        $("#emailUpd").val($("#memEmail").val());
     });
 
     //
@@ -887,7 +894,7 @@ function fn_setMemInfo(data){
 
 	    $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
 
-	    $("#email").val(data.email);
+	    $("#memEmail").val(data.email);
 
 	    $("#mobileNo").val(data.telMobile);
 
@@ -1005,7 +1012,7 @@ function fn_setMemInfo(data){
 	            $("#gender_m").prop("checked", true)
 	        }
 
-	        $("#email").val(data.email);
+	        $("#memEmail").val(data.email);
 
 	        $("#mobileNo").val(data.telMobile);
 
@@ -1327,9 +1334,9 @@ function fn_saveValidation(){
     //endregion
 
     //region Check Email
-    if ((jQuery.trim($("#email").val())).length>0)
+    if ((jQuery.trim($("#memEmail").val())).length>0)
     {
-        if (!regEmail.test($("#email").val()))
+        if (!regEmail.test($("#memEmail").val()))
         {
             valid = false;
             message += "* Invalid contact person email.<br/>";
@@ -1480,7 +1487,7 @@ function fn_saveValidation(){
 
     // Cody organization & trainee check for invalid empty email - Enhancement Cody Support : Mandatory Email Address Key In
     if($("#memberType").val() == '2' || $("#memberType").val() == "5") {
-    	if($("#email").val() == "" || $("#email").val() == null) {
+    	if($("#memEmail").val() == "" || $("#memEmail").val() == null) {
             valid = false;
             message = "Please key in email address";
         }
@@ -2356,7 +2363,7 @@ function fn_removeFile(name){
                             <tr id="editRow1_5">
                                 <th scope="row" id="emailLbl" name="emailLbl">Email</th>
                                 <td colspan="5">
-                                   <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
+                                   <input type="text" title="" placeholder="Email" class="w100p" id="memEmail" name="email" />
                                 </td>
                             </tr>
                             <tr id="editRow1_6">
