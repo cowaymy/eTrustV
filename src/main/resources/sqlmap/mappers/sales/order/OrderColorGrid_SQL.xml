@@ -368,7 +368,7 @@
                                   </foreach>
                               </if>
                               <if test="salesmanCode != null and salesmanCode != ''">
-                                AND NVL (mem.MEM_CODE, '') = #{salesmanCode}
+                                AND mem.MEM_CODE = #{salesmanCode}
                               </if>
                               <if test="promoCode != null and promoCode != ''">
                                 AND NVL (promo.PROMO_CODE, '') = #{promoCode}
