@@ -35,22 +35,22 @@ public class EmallPymtController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(EmallPymtController.class);
 
-  /*@RequestMapping(value = "/initJompayRtn.do")
+  @RequestMapping(value = "/initEmall.do")
   public String initUploadBankStatementList(@RequestParam Map<String, Object> params, ModelMap model) {
-    return "payment/otherpayment/jompayRtn";
+    return "payment/otherpayment/emallPayment";
   }
 
-  @RequestMapping(value = "/selectJompayRtnList.do")
-  public ResponseEntity<List<EgovMap>> selectJompayRTNList(@RequestParam Map<String, Object> params, ModelMap model) {
-    List<EgovMap> resultList = jompayRtnService.selectJompayRtnList(params);
+  @RequestMapping(value = "/selectEmallList.do")
+  public ResponseEntity<List<EgovMap>> selectEmallPymtList(@RequestParam Map<String, Object> params, ModelMap model) {
+    List<EgovMap> resultList = emallPymtService.selectEmallPymtList(params);
     return ResponseEntity.ok(resultList);
   }
 
-  @RequestMapping(value = "/selectJompayRtnDetailsList.do")
-  public ResponseEntity<List<EgovMap>> selectJompayRtnDetailsList(@RequestParam Map<String, Object> params, ModelMap model) {
-    List<EgovMap> resultList = jompayRtnService.selectJompayRtnDetailsList(params);
+  @RequestMapping(value = "/selectEmallDetailsList.do")
+  public ResponseEntity<List<EgovMap>> selectEmallPymtDetailsList(@RequestParam Map<String, Object> params, ModelMap model) {
+    List<EgovMap> resultList = emallPymtService.selectEmallPymtDetailsList(params);
     return ResponseEntity.ok(resultList);
-  }*/
+  }
 
   @RequestMapping(value = "/executeAdvPymtTesting.do")
   public ResponseEntity<EgovMap> executeAdvPymtTesting(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) throws Exception {

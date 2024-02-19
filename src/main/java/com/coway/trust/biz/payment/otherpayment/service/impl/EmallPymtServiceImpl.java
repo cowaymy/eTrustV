@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +48,7 @@ import com.coway.trust.biz.api.vo.HcSurveyResultCsvVO;
 import com.coway.trust.biz.common.AWSS3Service;
 import com.coway.trust.biz.payment.otherpayment.service.EmallPymtService;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentService;
+import com.coway.trust.biz.payment.payment.service.impl.BatchPaymentMapper;
 import com.coway.trust.web.common.CommonController;
 import com.coway.trust.web.file.AWSS3Controller;
 import com.coway.trust.web.payment.otherpayment.controller.EmallPymtController;
@@ -76,6 +79,9 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 	@Resource(name = "batchPaymentService")
 	private BatchPaymentService batchPaymentService;
 
+	@Resource(name = "batchPaymentMapper")
+	private BatchPaymentMapper batchPaymentMapper;
+
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
@@ -99,13 +105,16 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmallPymtServiceImpl.class);
 
-	/*
-	 * @Override public List<EgovMap> selectEmallPymtList(Map<String, Object> params) { return
-	 * jompayRtnMapper.selectJompayRtnList(params); }
-	 *
-	 * @Override public List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params) { return
-	 * jompayRtnMapper.selectJompayRtnDetailsList(params); }
-	 */
+
+	@Override
+	public List<EgovMap> selectEmallPymtList(Map<String, Object> params) {
+		return emallPymtMapper.selectEmallPymtList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params) {
+		return emallPymtMapper.selectEmallPymtDetailsList(params);
+	}
 
 	@Override
 	public EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response) throws Exception {
@@ -163,31 +172,33 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 			for (String filePath : fileList) {
 				String[] file = filePath.split("/");
 				String fileId = file[2];
-				request.put("fileId", file[2]);
-				EgovMap dwldResult = awsService.downloadSingleFile1(request);
+				if(!fileId.equals("arhive")){
+					request.put("fileId", file[2]);
+					EgovMap dwldResult = awsService.downloadSingleFile1(request);
 
-				LOGGER.debug("dwldResult : ..........\n" + dwldResult.size());
-				if(dwldResult != null){
-					if(Integer.parseInt(dwldResult.get("status").toString()) > 0){
-						EgovMap returnResult = this.excelFileProcess(request);
+					LOGGER.debug("dwldResult : ..........\n" + dwldResult.size());
+					if(dwldResult != null){
+						if(Integer.parseInt(dwldResult.get("status").toString()) > 0){
+							EgovMap returnResult = this.excelFileProcess(request);
 
-						//success and move the file to archieve
-						if(Integer.parseInt(returnResult.get("status").toString()) >= 0){
-							result = this.moveFileLocal(request);
+							//success and move the file to archieve
+							if(Integer.parseInt(returnResult.get("status").toString()) >= 0){
+								result = this.moveFileLocal(request);
 
-							request.put("sourceFile", dirName + "/" + fileId);
-							request.put("targetFile", dirName + "/arhive/" + fileId);
-							awsService.moveFile(request);
+								request.put("sourceFile", dirName + "/" + fileId);
+								request.put("targetFile", dirName + "/arhive/" + fileId);
+								awsService.moveFile(request);
+							}else{
+								result = returnResult;
+							}
 						}else{
-							result = returnResult;
+							result = dwldResult;
 						}
 					}else{
-						result = dwldResult;
+						result.put("status", "-1");
+						result.put("message", "dwldResult is null");
+						LOGGER.debug("dwldResult : Failed..........\n");
 					}
-				}else{
-					result.put("status", "-1");
-					result.put("message", "dwldResult is null");
-					LOGGER.debug("dwldResult : Failed..........\n");
 				}
 			}
 
@@ -250,6 +261,52 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 			// resultValue.put("message", "Unexpected Error");
 			// return resultValue;
 		}
+
+		int insertEmall = 0;
+		int id= 0;
+		try {
+//    		if (list.size() > 0) {
+    			LOGGER.debug("list.size().........." + list.size() +"\n");
+
+    			String crtUserId = "349";
+    	        id = batchPaymentMapper.getPAY0044DSEQ();
+
+    	        params.put("id", id);
+    	        params.put("fileName", fileId);
+    	        params.put("totalRecord", list.size());
+    	        params.put("stus", 1); // Status
+    	        params.put("crtUserId", crtUserId); // System Admin
+
+    	        emallPymtMapper.insertPay0356M(params);
+
+    	        int size = 500;
+    	        int page = list.size() / size;
+    	        int start;
+    	        int end;
+
+    	        Map<String, Object> bulkMap = new HashMap<>();
+    	        if (list.size() > 0) {
+        	        for (int i = 0; i <= page; i++) {
+        	          start = i * size;
+        	          end = size;
+
+        	          if (i == page)
+        	            end = list.size();
+
+        	          bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+        	          bulkMap.put("id", id);
+        	          bulkMap.put("crtUserId", crtUserId);
+        	          bulkMap.put("stus", 1);
+        	          emallPymtMapper.insertPay0357D(bulkMap);
+
+        	        }
+    	        }
+//    		}
+		} catch (Exception e) {
+			result.put("status", "0");
+			result.put("msg", "Store Procedure Error");
+			LOGGER.error("emall excelFileProcess : " + e.toString());
+	    }
 
 		int insertResult = 0;
 		if (list.size() > 0) {
@@ -379,6 +436,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 			if(detailList.size() > 0){
 				Map<String, Object> master = new HashMap<String, Object>();
 
+				master.put("batchId", id);
 				master.put("payModeId", payModeId);
 				master.put("batchStatusId", 1);
 				master.put("confirmStatusId", 44);
@@ -400,6 +458,8 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 				LOGGER.debug(" ================ master =================== " +master );
 
 				 insertResult = batchPaymentService.saveBatchPaymentUpload(master, detailList);
+
+				 emallPymtMapper.updatePay0357dDetail(master);
 			}else{
 				LOGGER.debug(" =========detailList no records========= ");
 			}
@@ -415,6 +475,11 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 			confirmResult = batchPaymentService.saveConfirmBatch(saveParams);
 
 			if(confirmResult > 0){
+				Map<String, Object> updateParams = new HashMap<String, Object>();
+				updateParams.put("stus", 4);
+				updateParams.put("id", id);
+				emallPymtMapper.updatePay0356mMaster(updateParams);
+
 				result.put("status", "1");
 				LOGGER.debug("saveConfirmBatch : Sucess..........\n");
 			}else{
@@ -422,6 +487,10 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 				LOGGER.debug("saveConfirmBatch : Failed..........\n");
 			}
 		}else if(insertResult == 0){
+			Map<String, Object> updateParams = new HashMap<String, Object>();
+			updateParams.put("stus", 4);
+			updateParams.put("id", id);
+			emallPymtMapper.updatePay0356mMaster(updateParams);
 			result.put("status", "0");
 			LOGGER.debug("saveBatchPaymentUpload : not run..........\n");
 		}else {

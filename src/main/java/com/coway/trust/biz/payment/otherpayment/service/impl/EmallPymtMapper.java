@@ -13,4 +13,15 @@ public interface EmallPymtMapper {
   List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params);
 
   EgovMap getOrderDetail(Map<String, Object> params);
+
+  int selectPay0356M_Seq();
+
+  void insertPay0356M(Map<String, Object> params);
+
+  void insertPay0357D(Map<String, Object> params);
+
+  int updatePay0356mMaster(Map<String, Object> params);
+
+  int updatePay0357dDetail(Map<String, Object> params);
+
 }

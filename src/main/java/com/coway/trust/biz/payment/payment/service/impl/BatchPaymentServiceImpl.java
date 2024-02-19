@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentService;
+import com.coway.trust.util.CommonUtils;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -124,7 +126,12 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public int saveBatchPaymentUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
 		int insResult = 0;
-		int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
+		int mastetSeq = 0;
+		if(master.get("isBatch") != null && master.get("batchId") != null){
+			mastetSeq = Integer.parseInt(master.get("batchId").toString());
+		}else{
+			mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
+		}
 		master.put("batchId", mastetSeq);
 		int mResult = batchPaymentMapper.saveBatchPayMaster(master);
 

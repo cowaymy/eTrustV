@@ -10,9 +10,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface EmallPymtService
 {
-  /*List<EgovMap> selectEmallPymtList(Map<String, Object> params);
+  List<EgovMap> selectEmallPymtList(Map<String, Object> params);
 
-  List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params);*/
+  List<EgovMap> selectEmallPymtDetailsList(Map<String, Object> params);
 
   EgovMap executeAdvPymtTesting(Map<String, Object> params, HttpServletResponse response)  throws Exception;
 
