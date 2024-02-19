@@ -720,13 +720,19 @@ var myDetailGridData = null;
              }
 
                if(rsnGridDataList[i]["useFilterBlock"] == "Y" && rsnGridDataList[i]["filterSerialUnmatchReason"] == 3453){
-               	if((rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")){
-               	// do nothing
-               	}else{
-               	Common.alert("* Please remove Old serial Number for Unmatched reason - 3453 (Used Filter without Scan Lable). ");
-               	returnParam = false;
-               	}
-               }
+                  	if((rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")
+                  			&& (rsnGridDataList[i]["sOldSerialNo"] != null || rsnGridDataList[i]["sOldSerialNo"] != "")){
+                  	Common.alert("* Invalid Reason.</br> Old Serial No. is required for " + rsnGridDataList[i]["stkDesc"] + ".");
+                  	returnParam = false;
+                  	}else if((rsnGridDataList[i]["oldSerialNo"] != null || rsnGridDataList[i]["oldSerialNo"] != "")
+              			&& (rsnGridDataList[i]["sOldSerialNo"] == null || rsnGridDataList[i]["sOldSerialNo"] == "")){
+                  	Common.alert("* Invalid Reason.</br> Old Serial No. is not required for " + rsnGridDataList[i]["stkDesc"] + ".");
+                  	returnParam = false;
+                  	}else{
+                  		Common.alert("* Invalid Reason.</br> Block for Used Filter " + rsnGridDataList[i]["stkDesc"] + " serial Unmatch Reason selection for 3453 - User Filter without scan label.");
+                      	returnParam = false;
+                  	}
+                  }
 
            }
 
