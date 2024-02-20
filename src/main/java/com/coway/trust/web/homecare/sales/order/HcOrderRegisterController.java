@@ -499,4 +499,12 @@ public class HcOrderRegisterController {
 
 	    return "homecare/sales/order/oldOrderPop";
 	  }
+
+	  @RequestMapping(value = "/hcCheckPreBookConfigurationPerson.do", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> hcCheckPreBookConfigurationPerson(@RequestParam Map<String, Object> params) {
+
+	    EgovMap result = orderRegisterService.checkPreBookConfigurationPerson(params);
+
+	    return ResponseEntity.ok(result);
+	  }
 }

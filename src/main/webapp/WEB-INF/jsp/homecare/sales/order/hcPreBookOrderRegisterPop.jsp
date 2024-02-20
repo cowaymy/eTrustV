@@ -442,7 +442,10 @@
                 if(memInfo.memCode == "100116" || memInfo.memCode == "100224" || memInfo.memCode == "678235" ){
                     return;
                 }else{
-                    fn_checkPreBookSalesPerson(memId,memCode);
+                	/*
+                	* Only config cody are able to do prebook
+                	*/
+                	fn_checkOrderConfigurationPerson(memId,memCode,$('#txtOldOrderID').val(), $('#relatedOrdNo').val());
                 }
             }
         });
@@ -462,6 +465,15 @@
             }
     	});
     }
+
+	function fn_checkOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
+	    Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+	        if(memInfo == null) {
+                Common.alert('<b>Your input member code : '+ memCode +' is not allowed for pre-book.</b>');
+                fn_resetCodyConfigInfo();
+	          }
+	    });
+	}
 
     function fn_checkRc(nric) {
         Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
@@ -581,6 +593,19 @@
     function fn_resetExtradeSales() {
     	$('#txtOldOrderID').val('');
 		$('#relatedNo').val('');
+    }
+
+    function fn_resetCodyConfigInfo(){
+    	fn_resetExtradeSales();
+    	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+            $('#memBtn').addClass("blind");
+            $('#salesmanCd').prop("readonly",true).addClass("readonly");;
+            $('#salesmanCd').val("${SESSION_INFO.userName}");
+        }
+    	else{
+            $('#salesmanCd').val('');
+            $('#salesmanNm').val('');
+    	}
     }
 
     function fn_loadInstallAddr(custAddId){

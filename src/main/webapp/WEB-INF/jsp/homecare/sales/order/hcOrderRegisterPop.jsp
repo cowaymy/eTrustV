@@ -3070,7 +3070,7 @@
   }
 
   function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
-  	Common.ajax("GET", "/homecare/sales/order/checkPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+  	Common.ajax("GET", "/homecare/sales/order/hcCheckPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
   		if(memInfo == null) {
               Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
               fn_clearOrderSalesman();
