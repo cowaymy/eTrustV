@@ -3,8 +3,16 @@ package com.coway.trust.biz.api.vo.chatbotInbound;
 import java.io.Serializable;
 
 public class JompayVO implements Serializable{
+	private String billerCode;
 	private String ref1;
 	private String ref2;
+
+	public String getBillerCode() {
+		return billerCode;
+	}
+	public void setBillerCode(String billerCode) {
+		this.billerCode = billerCode;
+	}
 
 	public String getRef1() {
 		return ref1;

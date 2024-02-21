@@ -209,4 +209,6 @@ public class AppConstants {
 
 	//etrust batch template path
 	public static final String E_VOUCHER_RECEIPT_BATCH_TEMPLATE = "template/html/eVoucherReceipt.html";
+
+	public static final String BILLER_CODE = "9928 (COWAY (MALAYSIA) SDN BHD)";
 }

@@ -883,6 +883,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 					if(!CommonUtils.isEmpty(jompay)){
 						// Convert data into Class object
 						if(jompay.containsKey("ref1") && jompay.containsKey("ref2")){
+							jompayVO.setBillerCode(AppConstants.BILLER_CODE);
 							jompayVO.setRef1(jompay.get("ref1").toString());
 							jompayVO.setRef2(jompay.get("ref2").toString());
 
