@@ -13,6 +13,7 @@ public class OrderVO implements Serializable{
 	private String orderNo;
 	private int custAddId;
 	private String productCode;
+	private String productCatName;
 	private String productName;
 	private String area;
 	private String appType;
@@ -52,6 +53,14 @@ public class OrderVO implements Serializable{
 
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
+	}
+
+	public String getProductCatName() {
+		return productCatName;
+	}
+
+	public void setProductCatName(String productCatName) {
+		this.productCatName = productCatName;
 	}
 
 	public String getProductName() {
