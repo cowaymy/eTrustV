@@ -13,7 +13,7 @@
         $("#spanNric").html(maskedNric);
     	var maskedAddr = oriMaskAddr1 + " ********** " + oriMaskAddr2;
         $("#presales_instlAdd").html(maskedAddr);
-    	if(MEM_TYPE == 4){
+    	/* if(MEM_TYPE == 4){
 
     	     // Appear NRIC on hover over field
     	     $("#spanNric").hover(function() {
@@ -38,7 +38,7 @@
     	     }).mouseout(function() {
     	         $("#presales_instlAdd").html(maskedAddr);
     	     });
-    	}
+    	} */
 
     });
 
@@ -67,7 +67,8 @@
 </tr>
 <tr>
     <th scope="row">NRIC / Company No</th>
-    <td><a href="#" class="search_btn" id="imgHover"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+    <td><a href="#" class="search_btn" id="imgHover"><%-- <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /> --%>
+    </a>
         <span id="spanNric"></span>
     </td>
     <!-- <td><input id="presales_nricCompNo" name="presales_nricCompNo" type="text" value="${preSalesInfo.custNric}" title="" placeholder="" class="w100p readonly" readonly /></td>  -->
@@ -116,7 +117,9 @@
 </tr>
 <tr>
     <th scope="row">Installation Address</th>
-    <td colspan=3><a href="#" class="search_btn" id="imgHoverAddr"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+    <td colspan=3><a href="#" class="search_btn" id="imgHoverAddr">
+    <%-- <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /> --%>
+    </a>
         <span id="presales_instlAdd"></span>
     </td>
 </tr>

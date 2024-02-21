@@ -63,7 +63,7 @@
     </c:if>
     <c:if test="${eSvmInfo.stus eq '1' and SESSION_INFO.userTypeId ne '2' }">
         <td colspan='3'>
-            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>
+            <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000"></textarea>
         </td>
     </c:if>
     <c:if test="${eSvmInfo.stus ne '1'}">
