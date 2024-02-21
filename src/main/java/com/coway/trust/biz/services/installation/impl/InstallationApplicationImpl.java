@@ -1,5 +1,7 @@
 package com.coway.trust.biz.services.installation.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,7 @@ public class InstallationApplicationImpl implements InstallationApplication {
 		LOGGER.debug("params XXX=====================================>>  " + params.toString());
 		LOGGER.debug("params YYY=====================================>>  " + list.toString());
 
-		int fileGroupKey = fileMapper.selectFileGroupKey();
+	  int fileGroupKey = fileMapper.selectFileGroupKey();
 		AtomicInteger i = new AtomicInteger(0); // get seq key.
 
 		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
@@ -54,16 +56,20 @@ public class InstallationApplicationImpl implements InstallationApplication {
 	}
 
 	public void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
-        LOGGER.debug("insertFile :: Start");
 
-        LOGGER.debug("params AAA=====================================>>  " + params.toString());
-		LOGGER.debug("params BBB=====================================>>  " + flVO.toString());
+        LOGGER.info("params AAA=====================================>>  " + params.toString());
+		    LOGGER.info("params BBB=====================================>>" + flVO.toString());
 
         int atchFlId = installationMapper.selectNextFileId();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date date1= new Date();
+        String strToday = dateFormat.format(date1);
+
         FileGroupVO fileGroupVO = new FileGroupVO();
+        String fileName = "MOBILE_SVC_" + params.get("InstallEntryNo").toString() + "_" + strToday + "_" + seq + ".jpg";
 
-
+        flVO.setAtchFileName(fileName);
 
         Map<String, Object> flInfo = new HashMap<String, Object>();
         flInfo.put("atchFileId", atchFlId);
@@ -76,9 +82,8 @@ public class InstallationApplicationImpl implements InstallationApplication {
   //      flInfo.put("fileUnqKey", params.get("claimUn"));
   //      flInfo.put("fileKeySeq", seq);
 
-        LOGGER.debug("params flInfo=====================================>>  " + flInfo.toString());
-        LOGGER.debug("getAtchFileName :::::::" + flVO.getAtchFileName());
-
+        LOGGER.info("params flInfo=====================================>>  " + flInfo.toString());
+        LOGGER.info("[InstallationApplicationImpl - insertFile] getAtchFileName :::::::" + flVO.getAtchFileName());
         installationMapper.insertFileDetail(flInfo);
 
         fileGroupVO.setAtchFileGrpId(fileGroupKey);
@@ -86,10 +91,15 @@ public class InstallationApplicationImpl implements InstallationApplication {
         fileGroupVO.setChenalType(flType.getCode());
         fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
         fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
-
         fileMapper.insertFileGroup(fileGroupVO);
 
-        LOGGER.debug("insertFile :: End");
+        //update SAL0045D - attach file group id
+        Map<String, Object> instRstlInfo = new HashMap<String, Object>();
+        instRstlInfo.put("atchFileGrpId", fileGroupKey);
+        instRstlInfo.put("salesOrdId", params.get("salesOrdId").toString());
+        instRstlInfo.put("InstallEntryNo", params.get("InstallEntryNo").toString());
+        instRstlInfo.put("updUserId",Integer.parseInt(params.get("userId").toString()));
+        installationMapper.updateInstallationResultInfo(instRstlInfo);
     }
 
 	@Override

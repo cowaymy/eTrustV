@@ -1711,7 +1711,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   private Map<String, Object> Save_2(boolean isfreepromo, Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
-
     boolean isBillAvb = false;
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -1766,13 +1765,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       tAmt = String.valueOf(CommonUtils.intNvl(ordInfo.get("totAmt"))); //
     }
 
-    double outright35dAmount = Double
-        .parseDouble(String.valueOf(CommonUtils.intNvl(outRightAmount35d.get("SUMTRADE_AMT"))));
+    double outright35dAmount = Double.parseDouble(String.valueOf(CommonUtils.intNvl(outRightAmount35d.get("SUMTRADE_AMT"))));
     double outrightTotalPrice = Double.parseDouble(tAmt == "" ? "0" : tAmt);
     double outrightBalance = outrightTotalPrice - outright35dAmount;
 
-    logger.debug("outrightTotalPrice : " + outrightTotalPrice + ", outright35dAmount : " + outright35dAmount
-        + ", outrightBalance :" + outrightBalance);
+    logger.debug("outrightTotalPrice : " + outrightTotalPrice + ", outright35dAmount : " + outright35dAmount + ", outrightBalance :" + outrightBalance);
     params.put("outrightTotalPrice", outrightTotalPrice);
     params.put("outright35dAmount", outright35dAmount);
     params.put("outrightBalance", outrightBalance);
@@ -1828,6 +1825,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
+    installResult.put("atchFileGrpId", CommonUtils.nvl(params.get("fileGroupKey")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
     //Added by keyi 20220727 Water Source Type Dropdown mobile
     installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
@@ -1847,10 +1845,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("failId", CommonUtils.nvl(params.get("failReasonCode")).toString());
     installResult.put("failLct", CommonUtils.nvl(params.get("failLocCde")).toString());
 
-    installResult.put("instChklstCheckBox",
-        ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
-    installResult.put("instNoteChk",
-            ("Y".equals(CommonUtils.nvl(params.get("instNoteChk")).toString())) ? "Y" : "N");
+    installResult.put("instChklstCheckBox", ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
+    installResult.put("instNoteChk", ("Y".equals(CommonUtils.nvl(params.get("instNoteChk")).toString())) ? "Y" : "N");
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
     //Added by keyi installation note phase1 20220401
@@ -2126,8 +2122,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE", filter_TAXRATE);
 
           if (filter_TAXRATE > 0) {
-            taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS",
-                Double.toString(outrightBalance - (outrightBalance * 100 / 106)));
+            taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString(outrightBalance - (outrightBalance * 100 / 106)));
             taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE", outrightBalance * 100 / 106);
           } else {
             taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
@@ -2318,6 +2313,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     logger.debug("========================INSTALLATION RESULT PRM===========================");*/
 
     // START INSERT
+
     insertInstallation_2(statusId, ApptypeID, installResult, callEntry, callResult, orderLog, TaxinvoiceCompany,
         AccTradeLedger, AccOrderBill, taxInvoiceOutright, taxInvoiceOutrightSub, salesOrderM, isBillAvb);
 
@@ -3068,7 +3064,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     if (sessionVO != null) {
 
-    	//List<EgovMap> add = (List<EgovMap>) params.get("add");
     	List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
     	Map<String, Object> param = (Map<String, Object>)params.get("installForm");
 
@@ -3171,7 +3166,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
                     }
                   }
                 }
-
+                param.put("fileGroupKey", params.get("fileGroupKey"));
                 resultValue = Save_2(true, param, sessionVO);
 
                 // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021

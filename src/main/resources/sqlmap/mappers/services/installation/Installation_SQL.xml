@@ -509,4 +509,12 @@
             </otherwise>
         </choose>
     </update>
+
+   <update id="updateInstallationResultInfo" parameterType="Map">
+          UPDATE SAL0045D
+          SET UPD_DT = SYSDATE
+               , UPD_USER_ID  = #{updUserId}
+               , ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          WHERE SALES_ORD_ID = #{salesOrdId}
+      </update>
 </mapper>

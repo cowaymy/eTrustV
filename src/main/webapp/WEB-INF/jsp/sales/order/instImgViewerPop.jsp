@@ -217,13 +217,13 @@ to {
          <c:choose>
           <c:when test="${list.first}">
            <div class="slideshow-container">
-            <img src="${type}?fileId=${list.atchFileId}" height="800"  style="width: 100%">
+              <img src="${type}?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:when>
           <c:otherwise>
            <div class="mySlides fade">
-            <img src="${type}?fileId=${list.atchFileId}" height="800"  style="width: 100%">
+               <img src="${type}?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:otherwise>

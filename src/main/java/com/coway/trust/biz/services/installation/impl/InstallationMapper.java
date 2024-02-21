@@ -52,4 +52,6 @@ public interface InstallationMapper {
 	int selRcdTms(Map<String, Object> params);
 
 	void updateKeyinSOF(Map<String, Object> params);
+
+	void updateInstallationResultInfo(Map<String, Object> params);
 }

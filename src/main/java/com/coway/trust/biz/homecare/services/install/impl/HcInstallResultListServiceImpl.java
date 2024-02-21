@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
 
@@ -19,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.FileGroupVO;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
@@ -72,10 +76,12 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
    *      com.coway.trust.cmmn.model.SessionVO)
    */
   @Override
-  public ReturnMessage hcInsertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO)
+  public ReturnMessage hcInsertInstallationResultSerial(Map<String, Object> params1, SessionVO sessionVO)
       throws Exception {
     ReturnMessage message = new ReturnMessage();
     String rmsg = "";
+
+    Map<String, Object> params = (Map<String, Object>)params1.get("installForm");
 
     ReturnMessage rtnMsg = insertInstallationResultSerial(params, sessionVO);
 
@@ -103,10 +109,9 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
       hcOrder.put("anoOrdNo", (String) hcOrder.get("salesOrdNo"));
     }
 
-    if (hcOrder != null && !"".equals(CommonUtils.nvl(hcOrder.get("anoOrdNo")))) { // hava
-                                                                                   // another
-                                                                                   // order
+    if (hcOrder != null && !"".equals(CommonUtils.nvl(hcOrder.get("anoOrdNo")))) { // hava another order
       params.put("anoOrdNo", CommonUtils.nvl(hcOrder.get("anoOrdNo")));
+
       EgovMap anotherOrder = hcInstallResultListMapper.getAnotherInstallInfo(params);
       params.put("installEntryId", CommonUtils.nvl(anotherOrder.get("installEntryId")));
       params.put("hidSalesOrderId", CommonUtils.nvl(anotherOrder.get("salesOrdId")));
@@ -119,15 +124,16 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
       /* hidden input Start - KR-JIN */
       EgovMap callType = installationResultListService.selectCallType(anotherOrder);
+
       if (callType != null) {
         params.put("hidCallType", callType.get("typeId"));
       }
 
       EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+
       if (installResult != null) {
         params.put("hidCustomerId", installResult.get("custId"));
-        params.put("hidSirimNo", installResult.get("sirimNo"));
-        // hidSerialNo
+        params.put("hidSirimNo", installResult.get("sirimNo"));  // hidSerialNo
         params.put("hidStockIsSirim", installResult.get("isSirim"));
         params.put("hidStockGrade", installResult.get("stkGrad"));
         params.put("hidSirimTypeId", installResult.get("stkCtgryId"));
@@ -137,18 +143,19 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
         params.put("hidCustContactId", installResult.get("custCntId"));
         params.put("hiddenBillId", installResult.get("custBillId"));
         params.put("hiddenCustomerPayMode", installResult.get("codeName"));
-
         params.put("hidTaxInvDSalesOrderNo", installResult.get("salesOrdNo"));
         params.put("hidTradeLedger_InstallNo", installResult.get("installEntryNo"));
       }
 
       EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
+
       if (stock != null) {
         params.put("hidActualCTMemCode", stock.get("memCode"));
         params.put("hidActualCTId", stock.get("movToLocId"));
       }
 
       EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+
       if (sirimLoc != null) {
         params.put("hidSirimLoc", sirimLoc.get("whLocCode"));
       }
@@ -220,23 +227,17 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
       }
 
       EgovMap promotionView = new EgovMap();
-      List<EgovMap> CheckCurrentPromo = installationResultListService
-          .checkCurrentPromoIsSwapPromoIDByPromoID(promotionId);
-      if (CheckCurrentPromo.size() > 0) {
-        promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId,
-            CommonUtils.intNvl(installResult.get("installStkId")), true);
+      List<EgovMap> CheckCurrentPromo = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(promotionId);
 
+      if (CheckCurrentPromo.size() > 0) {
+        promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), true);
       } else {
         if (promotionId != 0) {
-          promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId,
-              CommonUtils.intNvl(installResult.get("installStkId")), false);
-
+          promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), false);
         } else {
           promotionView.put("promoId", "0");
-          promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")) == "258"
-              ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
-          promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")) == "258"
-              ? CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
+          promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
+          promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
           promotionView.put("swapPromoId", "0");
           promotionView.put("swapPromoPV", "0");
           promotionView.put("swapPormoPrice", "0");
@@ -309,7 +310,6 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
   @Override
   public Map<String, Object> updateAssignCTSerial(Map<String, Object> params) throws Exception {
-
     List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
     Map<String, Object> resultValue = new HashMap<String, Object>();
     List<String> successList = new ArrayList<String>();
@@ -328,8 +328,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
             && (updateMap.get("frmInstallEntryNo").toString()).length() > 0) {
           updateMap.put("salesOrdNo", updateMap.get("frmSalesOrdNo"));
           updateMap.put("installEntryNo", updateMap.get("frmInstallEntryNo"));
-          String sChk = StringUtils.isBlank((String) updateMap.get("frmSerialChk")) ? "N"
-              : (String) updateMap.get("frmSerialChk");
+          String sChk = StringUtils.isBlank((String) updateMap.get("frmSerialChk")) ? "N" : (String) updateMap.get("frmSerialChk");
           updateMap.put("serialChk", sChk);
           updateMap.put("serialRequireChkYn", sChk);
           assignCt(updateMap, successList, failList);
@@ -395,12 +394,10 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
         logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
 
         if ("Y".equals(updateMap.get("serialChk")) && "Y".equals(updateMap.get("serialRequireChkYn"))) {
-
           String delvryGrCmpltYn = installationResultListMapper.selectDelvryGrCmpltYn(updateMap);
 
           if ("N".equals(delvryGrCmpltYn)) {
-            throw new ApplicationException(AppConstants.FAIL,
-                "NOT RECEIPT DATA [ INS Number ::" + updateMap.get("installEntryNo") + " ]");
+            throw new ApplicationException(AppConstants.FAIL, "NOT RECEIPT DATA [ INS Number ::" + updateMap.get("installEntryNo") + " ]");
           }
 
           servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS_SERIAL(transProc);
@@ -414,12 +411,10 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
         ///////////////////////// 물류 호출 END //////////////////////
 
         if (!procResult.equals("000")) {
-          throw new ApplicationException(AppConstants.FAIL,
-              "ERROR Code::" + procResult + ", INS Number :: " + updateMap.get("installEntryNo"));
+          throw new ApplicationException(AppConstants.FAIL, "ERROR Code::" + procResult + ", INS Number :: " + updateMap.get("installEntryNo"));
         }
 
         if (procResult.equals("000")) {
-
           installationResultListMapper.updateAssignCT(updateMap);
           successList.add(updateMap.get("installEntryNo").toString());
         } else {
@@ -463,8 +458,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
         resultValue += result;
       }
     } else {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Failed to update installation result. Please try again later.");
+      throw new ApplicationException(AppConstants.FAIL, "Failed to update installation result. Please try again later.");
     }
     return resultValue;
   }
@@ -481,17 +475,15 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
    */
   private ReturnMessage insertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO)
       throws Exception {
-
     Map<String, Object> resultValue = new HashMap<String, Object>();
     ReturnMessage message = new ReturnMessage();
     Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
     if (sessionVO != null) {
-      int noRcd = installationResultListService.chkRcdTms(params);
+       int noRcd = installationResultListService.chkRcdTms(params);
 
       if (noRcd == 1) {
-        EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
-        logger.debug("INSTALLATION RESULT : {}" + installResult);
+         EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 
         params.put("EXC_CT_ID", installResult.get("ctId"));
 
@@ -500,8 +492,8 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
         locInfoEntry.put("STK_CODE", installResult.get("installStkId"));
 
         // logger.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
-        EgovMap locInfo = (EgovMap) servicesLogisticsPFCMapper.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
 
+        EgovMap locInfo = (EgovMap) servicesLogisticsPFCMapper.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
         // logger.debug("LOC. INFO. : {}" + locInfo);
 
         if (locInfo == null) {
@@ -530,8 +522,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                   && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
                 resultValue.put("logerr", "Y");
                 message.setCode("99");
-                message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): "
-                    + spMap.get("P_RESULT_MSG").toString());
+                message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
               } else { // SUCCESS
                 if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
                   servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
@@ -550,13 +541,13 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                 String ordStat = installationResultListService.getSalStat(params);
 
                 if (!"1".equals(ordStat)) {
-                  if (params.get("hidCallType").equals("258")) {
+                   if (params.get("hidCallType").equals("258")) {
                     int exgCode = installationResultListService.chkExgRsnCde(params);
                     // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
                     if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
                       if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
                         // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                        resultValue = runInstSp(params, sessionVO, "2");
+                       resultValue = runInstSp(params, sessionVO, "2");
 
                         if (null != resultValue) {
                           spMap = (HashMap) resultValue.get("spMap");
@@ -566,8 +557,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                               && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
                             resultValue.put("logerr", "Y");
                             message.setCode("99");
-                            message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): "
-                                + spMap.get("P_RESULT_MSG").toString());
+                            message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
                           } else {
                             servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 
@@ -587,19 +577,16 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                     }
                   }
                 }
-
-                // resultValue = Save_2(true, params, sessionVO);
-                resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
+              //  resultValue = Save_2(true, params, sessionVO);
+               resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
 
                 message.setCode("1");
                 message.setData("Y");
                 String msg = "";
                 if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
-                  msg = "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
-                          + resultValue.get("value") + ". Please proceed to Calllog function.";
+                  msg = "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ". Please proceed to Calllog function.";
                 } else {
-              	  msg = "Installation No. (" + resultValue.get("installEntryNo")
-                    + ") successfully updated to " + resultValue.get("value") + ".";
+              	  msg = "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ".";
 
                   message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
                 }
@@ -641,33 +628,34 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                 params.put("creator", sessionVO.getUserId());
 
 	          	  try{
-	          		  smsResultValue = hcInstallationSendSMS(CommonUtils.nvl(params.get("hidAppTypeId").toString()), params);
+	          		 smsResultValue = hcInstallationSendSMS(CommonUtils.nvl(params.get("hidAppTypeId").toString()), params);
+
 	          	  }catch (Exception e){
 	          		  logger.info("===smsResultValue111===" + smsResultValue.toString());
 	          	  }
+
 	          	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
-	          		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
+	          		    msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
 	          	  }
 
-	          	  logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("checkSend")).toString());
-	         	  logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("hpMsg")).toString());
+  	          	logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("checkSend")).toString());
+  	           logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("hpMsg")).toString());
 
-	         	  try{
-		       		  smsResultValue = hcInstallationSendHPSMS(params);
-		       	  }catch (Exception e){
-		       		  logger.info("===smsResultValue111===" + smsResultValue.toString());
-		       	  }
-		       	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
-		       		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
-		       	  }
+  	         	  try{
+  		       		   smsResultValue = hcInstallationSendHPSMS(params);
+  		       	  }catch (Exception e){
+  		       		  logger.info("===smsResultValue111===" + smsResultValue.toString());
+  		       	  }
 
+  		       	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
+  		       		    msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
+  		       	  }
               }
             }
           }
         }
       } else {
-        message.setMessage(
-            "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+        message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
         message.setCode("99");
       }
     }
@@ -835,8 +823,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
       }
     } else {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Failed to update installation result. Please try again later.");
+      throw new ApplicationException(AppConstants.FAIL, "Failed to update installation result. Please try again later.");
     }
 
     hcInstallResultListMapper.updateInstallResultFail(params);
@@ -858,21 +845,21 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
 	    Map<String, Object> locInfoEntry = new HashMap<String, Object>();
 	    params.put("userId", sessionVO.getUserId());
-		params.put("resultId", CommonUtils.nvl(params.get("resultId")));
-		params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
-		params.put("SalesOrderId", CommonUtils.nvl(params.get("hidSalesOrderId")));
-		params.put("installDt", CommonUtils.nvl(params.get("installdt")));
-		locInfoEntry.put("userId", sessionVO.getUserId());
-		params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
+  		params.put("resultId", CommonUtils.nvl(params.get("resultId")));
+  		params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
+  		params.put("SalesOrderId", CommonUtils.nvl(params.get("hidSalesOrderId")));
+  		params.put("installDt", CommonUtils.nvl(params.get("installdt")));
+  		locInfoEntry.put("userId", sessionVO.getUserId());
+  		params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
 
-		 EgovMap installResult = getFileID (params); ///FileXXX
-		 EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
-
-		 logger.debug("LOC. INFO. : {}" + locInfo);
-		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
-
-		 logger.debug("File RESULT :{}" + installResult);
-		 logger.debug("params ================================>>  " + params);
+  		 EgovMap installResult = getFileID (params); ///FileXXX
+  		 EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
+  
+  		 logger.debug("LOC. INFO. : {}" + locInfo);
+  		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
+  
+  		 logger.debug("File RESULT :{}" + installResult);
+  		 logger.debug("params ================================>>  " + params);
 
 	//	 params.put("EXC_CT_ID", installResult.get("ctId"));
 
@@ -1083,5 +1070,4 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	public EgovMap selectInstallationInfo(Map<String, Object> params) {
 	    return hcInstallResultListMapper.selectInstallationInfo(params);
 	}
-
 }

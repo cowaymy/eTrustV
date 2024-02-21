@@ -1343,8 +1343,7 @@ public class InstallationResultListController {
 
 	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		logger.debug("params111 : {}", params);
+	 	logger.debug("params111 : {}", params);
 		String err = "";
 		String code = "";
 		List<String> seqs = new ArrayList<>();
@@ -1359,16 +1358,14 @@ public class InstallationResultListController {
 			     seqs.add(key);
 			 }
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    		//List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		logger.debug("list.size : {}", list.size());
+    		installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-
-		installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
-
-		params.put("attachFiles", list);
-		code = AppConstants.SUCCESS;
+    		params.put("attachFiles", list);
+    		code = AppConstants.SUCCESS;
 		}catch(ApplicationException e){
 			err = e.getMessage();
 			code = AppConstants.FAIL;
@@ -1643,9 +1640,9 @@ public class InstallationResultListController {
   public ResponseEntity<ReturnMessage> addInstallationSerial(@RequestBody Map<String, Object> params,
       SessionVO sessionVO) throws ParseException {
 
-	  ASManagementListService.insertASResultLog(params.toString(), "/addInstallationSerial.do", null, sessionVO.getUserId());
-
     ReturnMessage message = new ReturnMessage();
+
+	  ASManagementListService.insertASResultLog(params.toString(), "/addInstallationSerial.do", null, sessionVO.getUserId());
 
     logger.debug("==========================/addInstallationSerial.do=================================");
     logger.debug("params : {}", params);

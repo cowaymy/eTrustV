@@ -208,11 +208,11 @@ public class HcInstallResultListController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/hcAddInstallationPopup.do")
 	public String hcAddInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
-		params.put("ststusCodeId", 1);
-		params.put("reasonTypeId", 172);
+		    params.put("ststusCodeId", 1);
+		    params.put("reasonTypeId", 172);
 
-		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
-		List<EgovMap> failParent = installationResultListService.failParent(); //Added by keyi HC Fail INS 20220120
+		    List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+		    List<EgovMap> failParent = installationResultListService.failParent(); //Added by keyi HC Fail INS 20220120
         List<EgovMap> failReason = installationResultListService.selectFailReason(params);
         EgovMap callType = installationResultListService.selectCallType(params);
         EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
@@ -667,6 +667,44 @@ public class HcInstallResultListController {
       } else {
         message.setMessage("Failed to update installation result. Please try again later.");
       }
+
+      return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+      logger.debug("params111 : {}", params);
+      String err = "";
+      String code = "";
+      List<String> seqs = new ArrayList<>();
+
+      try{
+         Set set = request.getFileMap().entrySet();
+         Iterator i = set.iterator();
+
+         while(i.hasNext()) {
+             Map.Entry me = (Map.Entry)i.next();
+             String key = (String)me.getKey();
+             seqs.add(key);
+         }
+
+      //List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+      params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+      installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+
+      params.put("attachFiles", list);
+      code = AppConstants.SUCCESS;
+      }catch(ApplicationException e){
+        err = e.getMessage();
+        code = AppConstants.FAIL;
+      }
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(code);
+      message.setData(params);
+      message.setMessage(err);
 
       return ResponseEntity.ok(message);
     }

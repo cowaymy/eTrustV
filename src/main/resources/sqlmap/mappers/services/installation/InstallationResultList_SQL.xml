@@ -3789,6 +3789,7 @@
                         , BOOSTER_PUMP
                         , AFT_PSI
                         , AFT_LPM
+                        , ATCH_FILE_GRP_ID
                         , TURB_LVL
                         , WATER_SRC_TYPE
                         , INST_NOTECHK
@@ -3834,6 +3835,7 @@
             , #{boosterPump}
             , #{aftPsi}
             , #{aftLpm}
+            , #{atchFileGrpId}
             , #{turbLvl}
             , #{waterSrcType}
             , #{instNoteChk}
