@@ -551,6 +551,14 @@
 		    <if test="reqNo != null and reqNo != '' ">
 		        AND A.DCF_REQ_ID = #{reqNo}
 		    </if>
+
+		    <if test="branchId != null and branchId != '' ">
+		    	AND H.BRNCH_ID = #{branchId}
+		    </if>
+		    <if test="userId != null and userId != '' ">
+		    	AND A.DCF_CRT_USER_ID = #{userId}
+		    </if>
+
 		    <if test="salesOrdNo != null and salesOrdNo != '' ">
 		        AND A.GRP_SEQ IN (
 		            SELECT
@@ -561,14 +569,73 @@
 		            LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID AND B.BILL_ID <![CDATA[ <> ]]> 0
 		            LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
 		            WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
-		            AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo})
+		            <!-- AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo}) -->
+		            AND S1.SALES_ORD_NO = #{salesOrdNo}
 		    )
+
+		      UNION
+
+		    SELECT
+		        A.DCF_REQ_ID
+		        , '-' AS REQ_TYPE
+		        , CAST(A.GRP_SEQ AS VARCHAR2(20)) GRP_SEQ
+		        , A.DCF_RESN
+		        , C.CODE_NAME AS DCF_RESN_NM
+		        , A.DCF_STUS_ID
+		        , B.NAME AS DCF_STUS_NM
+		        , A.DCF_CRT_USER_ID
+		        , D.USER_NAME AS DCF_CRT_USER_NM
+		        , A.DCF_CRT_DT
+		        , NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO
+		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
+		        , I.USER_NAME AS DCF_APPV_USER_NM
+		        , '-' AS APPV_STUS
+		    FROM PAY0258D A
+		    INNER JOIN PAY0252T E ON A.GRP_SEQ = E.GROUP_SEQ
+		    INNER JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID
+		    LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
+		    LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]> 0
+		    LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
+		    LEFT JOIN SYS0038M B ON A.DCF_STUS_ID = B.STUS_CODE_ID
+		    LEFT JOIN SYS0013M C ON A.DCF_RESN = C.CODE_ID
+		    LEFT JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID
+		    LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
+		    LEFT JOIN SYS0047M I ON A.DCF_APPV_USER_ID = I.USER_ID
+		    WHERE 1=1
+		    <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+		        AND A.DCF_CRT_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+		        AND A.DCF_CRT_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+		    </if>
+		    <if test="status != null and status != '' ">
+		        AND A.DCF_STUS_ID = #{status}
+		    </if>
+		    <if test="reason != null and reason != '' ">
+		        AND A.DCF_RESN = #{reason}
+		    </if>
+		    <if test="reqNo != null and reqNo != '' ">
+		        AND A.DCF_REQ_ID = #{reqNo}
 		    </if>
 		    <if test="branchId != null and branchId != '' ">
-		    AND H.BRNCH_ID = #{branchId}
+		        AND H.BRNCH_ID = #{branchId}
 		    </if>
 		    <if test="userId != null and userId != '' ">
-		    AND A.DCF_CRT_USER_ID = #{userId}
+		        AND A.DCF_CRT_USER_ID = #{userId}
+		    </if>
+		    <if test="salesOrdNo != null and salesOrdNo != '' ">
+		        AND A.GRP_SEQ IN (
+		            SELECT
+		                DISTINCT A.GROUP_SEQ
+		            FROM PAY0252T A
+		            INNER JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+		            LEFT JOIN SAL0001D S1 ON B.SALES_ORD_ID = S1.SALES_ORD_ID AND B.BILL_ID = 0
+		            LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID AND B.BILL_ID <![CDATA[ <> ]]> 0
+		            LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
+		            WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
+		            <!-- AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo}) -->
+		            AND S2.SALES_ORD_NO = #{salesOrdNo}
+		    )
+		    </if>
+
 		    </if>
 
 		    UNION
