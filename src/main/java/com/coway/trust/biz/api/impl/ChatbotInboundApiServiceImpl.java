@@ -551,7 +551,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		}else{
 			Subject = "COWAY " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
 		}
-		String Body = "Dear Valued Customer, <br /><br />Please find attached the ledger for your kind perusal. <br /><br />"
+		String Body = "Dear Valued Customer, <br /><br />Please find attached the "+ params.get("requestNameType").toString().toLowerCase() + " for your kind perusal. <br /><br />"
 				+ "Should you require further information or assistance, please contact our Customer Service Representative at 1800-888-111 or you may send your enquiry to "
 				+ "<a href='www.coway.com.my/enquiry'>www.coway.com.my/enquiry</a>.<br /><br />"
 				+ "Thank you and have a wonderful day.<br /><br />COWAY (MALAYSIA) SDN. BHD.<br /><br />"
