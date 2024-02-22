@@ -92,6 +92,11 @@
 	      }).mouseout(function() {
 	          $("#notification_email2").html(maskedEmail2);
 	      });
+      }else{
+          $("#imgHover1").hide();
+          $("#imgHover2").hide();
+          $("#imgHover3").hide();
+          $("#imgHover4").hide();
       }
     });
 
