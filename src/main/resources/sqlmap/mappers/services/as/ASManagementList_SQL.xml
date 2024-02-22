@@ -2993,6 +2993,7 @@
                           , CALL_MEM
                           , REF_REQST
                           , SEGMENT_TYPE
+                          , AS_RQST_REM
       ) VALUES ( #{AS_ID},
                #{AS_NO},
                #{AS_SO_ID},
@@ -3027,7 +3028,8 @@
                #{AS_SESION_CODE},
                #{CALL_MEMBER},
                #{REF_REQUEST},
-               #{SEGMENT_TYPE}
+               #{SEGMENT_TYPE},
+               #{CALL_REM}
                )
         ]]>
   </insert>
