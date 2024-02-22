@@ -13,7 +13,7 @@
         $("#spanNric").html(maskedNric);
     	var maskedAddr = oriMaskAddr1 + " ********** " + oriMaskAddr2;
         $("#presales_instlAdd").html(maskedAddr);
-    	if(MEM_TYPE == 4){
+    	if(MEM_TYPE == 4 || MEM_TYPE == 6){
 
     	     // Appear NRIC on hover over field
     	     $("#spanNric").hover(function() {

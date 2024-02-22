@@ -43,7 +43,7 @@
       $("#notification_email1").html(maskedEmail1);
       $("#notification_email2").html(maskedEmail2);
 
-      if(MEM_TYPE == 4){
+      if(MEM_TYPE == 4 || MEM_TYPE == 6){
 
 	      // Appear NRIC on hover over field
 	      $("#notification_sms1").hover(function() {
