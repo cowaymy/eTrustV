@@ -545,8 +545,17 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		chatbotInboundApiMapper.update_CBT0006M_Stus(params);
 
 		//Insert email table for schedular batch run
-		String Subject = "COWAY " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
-		String Body = "Dear Valued Customer, <br /><br />Please find attached the " + params.get("requestNameType").toString().toLowerCase() +" for your kind perusal. <br /><br />Thank you. <br /><br />Regards,<br />Coway (Malaysia) Sdn Bhd";
+		String Subject = "";
+		if(params.get("requestNameType").toString().equals("LEDGER")){
+			Subject = "COWAY " + params.get("requestNameType").toString() +" - " + params.get("orderNo").toString() ;
+		}else{
+			Subject = "COWAY " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
+		}
+		String Body = "Dear Valued Customer, <br /><br />Please find attached the ledger for your kind perusal. <br /><br />"
+				+ "Should you require further information or assistance, please contact our Customer Service Representative at 1800-888-111 or you may send your enquiry to "
+				+ "<a href='www.coway.com.my/enquiry'>www.coway.com.my/enquiry</a>.<br /><br />"
+				+ "Thank you and have a wonderful day.<br /><br />COWAY (MALAYSIA) SDN. BHD.<br /><br />"
+				+ "*** Note: This email is generated automatically; no response is necessary. ***";
 
 		Map<String,Object> masterEmailDet = new HashMap<String, Object>();
 		masterEmailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
