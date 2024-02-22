@@ -69,11 +69,12 @@ public class InstallationApplicationImpl implements InstallationApplication {
         FileGroupVO fileGroupVO = new FileGroupVO();
         String fileName = "MOBILE_SVC_" + params.get("InstallEntryNo").toString() + "_" + strToday + "_" + seq + ".jpg";
 
-        flVO.setAtchFileName(fileName);
+       // flVO.setAtchFileName(fileName);
 
         Map<String, Object> flInfo = new HashMap<String, Object>();
         flInfo.put("atchFileId", atchFlId);
-        flInfo.put("atchFileName", flVO.getAtchFileName());
+      //  flInfo.put("atchFileName", flVO.getAtchFileName());
+        flInfo.put("atchFileName", fileName);
         flInfo.put("fileSubPath", flVO.getFileSubPath());
         flInfo.put("physiclFileName", flVO.getPhysiclFileName());
         flInfo.put("fileExtsn", flVO.getFileExtsn());

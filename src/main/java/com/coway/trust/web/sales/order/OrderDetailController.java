@@ -248,20 +248,34 @@ public class OrderDetailController {
   @RequestMapping(value = "/getInstImg.do")
   public String getInstImg(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
-
     logger.debug("======================================================");
     logger.debug("= PARAMS : " + params.toString());
     logger.debug("======================================================");
 
     // GET IMAGE PATH
     List<EgovMap> imgLst = null;
+    String type = "";
+    String fileType = "";
+
     if ((CommonUtils.nvl(params.get("insNo")).equals(""))) {
       imgLst = orderDetailService.getInstImg(params);
     } else {
-      imgLst = orderDetailService.getInstImgByInst(params);
+         imgLst = orderDetailService.getInstImgByInst(params);
     }
 
-    String type = CommonUtils.nvl(params.get("type")).equals("preInstallation") ? "/file/fileDown.do" : "/file/fileDownWasMobile.do";
+    if(imgLst !=null && imgLst.size() > 0){
+      for(EgovMap imgInfo : imgLst){
+        fileType = imgInfo.get("fileSubPath").toString().substring(8,11);
+      }
+    }
+
+    //String type = CommonUtils.nvl(params.get("type")).equals("preInstallation") ? "/file/fileDown.do" : "/file/fileDownWasMobile.do";
+    if(CommonUtils.nvl(params.get("type")).equals("preInstallation"))
+      type = "/file/fileDown.do";
+    else if(fileType.equals("web"))
+      type = "/file/fileDownWeb.do";
+    else
+      type = "/file/fileDownWasMobile.do";
 
     model.addAttribute("type", type);
     model.addAttribute("imgLst", imgLst);
