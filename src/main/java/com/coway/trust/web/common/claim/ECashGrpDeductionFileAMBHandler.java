@@ -55,6 +55,8 @@ public class ECashGrpDeductionFileAMBHandler extends BasicTextDownloadHandler im
 
   String sTextBtn = "";
   BigDecimal hunred = new BigDecimal(100);
+  long fLimit = 0;
+  BigDecimal fTotalAmt = null;
 
   public ECashGrpDeductionFileAMBHandler(FileInfoVO fileInfoVO, Map<String, Object> params) {
     super(fileInfoVO, params);
@@ -133,9 +135,12 @@ public class ECashGrpDeductionFileAMBHandler extends BasicTextDownloadHandler im
 
   public void writeFooter() throws IOException {
 
+    fTotalAmt = (BigDecimal)params.get("fileBatchTotAmt");
+    fLimit = fTotalAmt.multiply(hunred).longValue();
+
     sRecordType     = StringUtils.rightPad(String.valueOf("T"),  1, " ");
     sNoOfRecords    = StringUtils.leftPad(String.valueOf(params.get("fileBatchTotRcord")),  6, "0");
-    sTotalAmount    = StringUtils.leftPad(String.valueOf(params.get("fileBatchTotAmt")),  18, "0");
+    sTotalAmount    = StringUtils.leftPad(String.valueOf(fLimit),  18, "0");
     sHashTotal      = StringUtils.rightPad(String.valueOf(""),  18, " ");
     sFiller         = StringUtils.rightPad(String.valueOf(""),  157, " ");
     sEolCharacter   = StringUtils.rightPad(String.valueOf("\\n"),  2, " ");
