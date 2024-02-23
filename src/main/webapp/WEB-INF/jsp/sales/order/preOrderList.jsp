@@ -861,7 +861,7 @@ console.log("preOrderList");
     </td>
     <th scope="row"><spring:message code='sales.promoCd'/></th>
     <td>
-    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
+    <input id="promoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
     </td>
 </tr>
 <tr>
