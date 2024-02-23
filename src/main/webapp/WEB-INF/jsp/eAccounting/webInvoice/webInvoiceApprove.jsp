@@ -558,7 +558,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
             console.log(result);
             if(result.code == "99") {
                 console.log(result.message);
-                Common.alert("The claim No is a document that has been approved or rejected. Please check and select again." + result.data.clmNoArr);
+                Common.alert("This claim no is not been approved or rejected by previous approver. Please check and select again.</br>" + result.data.clmNoArr);
             } else {
                 console.log(result.message);
                 if($("#appvType").val() == "0") {
