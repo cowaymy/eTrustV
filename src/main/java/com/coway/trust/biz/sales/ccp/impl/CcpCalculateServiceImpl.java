@@ -2,9 +2,14 @@ package com.coway.trust.biz.sales.ccp.impl;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +17,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -1118,76 +1127,90 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
         return returnMap;
     }
 
-	@Override
-	public Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params) throws Exception {
+    @Override
+    public Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation( Map<String, Object> params )
+        throws Exception
+    {
+        EgovMap rtnMap = ccpCalculateMapper.getResultRowForCTOSDisplayForCCPCalculation( params );
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if ( rtnMap != null )
+        {
+            if ( rtnMap.get( "resultRaw" ) != null )
+            {
+                /* ___Return Path___ */
+                String subPath = SalesConstants.FICO_CTOS_REPORT_SUBPATH;
+                String fileName = SalesConstants.FICO_CTOS_REPORT_FILENAME;
+                /* ___Result Raw___ */
+                String resultRaw = String.valueOf( rtnMap.get( "resultRaw" ) );
+//                InputStream is = new ByteArrayInputStream( resultRaw.getBytes() );
+//                StreamSource source = new StreamSource( is );  // raw_data xml data
+                /* ___Style Sheet___ */
+                String rePaht = "";
 
-		EgovMap rtnMap = ccpCalculateMapper.getResultRowForCTOSDisplayForCCPCalculation(params);
+                LOGGER.info( "________________________________params : " + params.toString() );
 
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(rtnMap != null){
-			if(rtnMap.get("resultRaw") != null){
-				/*___Return Path___*/
-				String subPath = SalesConstants.FICO_CTOS_REPORT_SUBPATH;
-				String fileName = SalesConstants.FICO_CTOS_REPORT_FILENAME;
+                if ( SalesConstants.FICO_VIEW_TYPE.equals( params.get( "viewType" ) ) )
+                {
+                    rePaht = "template/stylesheet/fico_report.xsl";
 
-				/*___Result Raw___*/
-				String resultRaw = String.valueOf(rtnMap.get("resultRaw"));
-				InputStream is = new ByteArrayInputStream(resultRaw.getBytes());
-				StreamSource source = new StreamSource(is);  // raw_data xml data
+                    LOGGER.info( "_______________________________ FICO VIEW " + params.get( "viewType" ) );
+                }
+                else
+                {
+                    rePaht = "template/stylesheet/ctos_report.xsl";
 
-				/*___Style Sheet___*/
-				String rePaht = "";
+                    LOGGER.info( "_______________________________ CTOS_VIEW " + params.get( "viewType" ) );
+                }
 
-				LOGGER.info("________________________________params : " + params.toString());
-				if(SalesConstants.FICO_VIEW_TYPE.equals(params.get("viewType"))){
-					rePaht = "template/stylesheet/fico_report.xsl";
-					LOGGER.info("_______________________________ FICO VIEW " + params.get("viewType"));
-				}else{
-					rePaht = "template/stylesheet/ctos_report.xsl";
-					LOGGER.info("_______________________________ CTOS_VIEW " + params.get("viewType"));
-				}
-				LOGGER.info("###################### Style Sheet Path :   " + rePaht);
+                LOGGER.info( "###################### Style Sheet Path :   " + rePaht );
 
-				org.springframework.core.io.Resource resource = new ClassPathResource(rePaht);
-				//trim
-				rePaht.trim();
+                org.springframework.core.io.Resource resource = new ClassPathResource( rePaht );
+                //trim
+                rePaht.trim();
+                if ( rePaht.startsWith( "/" ) )
+                {
+                    rePaht = rePaht.substring( 1 );
+                }
+                LOGGER.info( "###################### resource.getFile() :   " + resource.getFile() );
 
-				if(rePaht.startsWith("/")){
-					rePaht = rePaht.substring(1);
-				}
+                //StreamSource stylesource = new StreamSource("C:/works/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/etrust/WEB-INF/classes/template/stylesheet/ctos_report.xsl"); // xsl file...
+//                StreamSource stylesource = new StreamSource( resource.getFile() ); // xsl file...
+//                TransformerFactory factory = TransformerFactory.newInstance();
+//                Transformer transformer = factory.newTransformer( stylesource );
+                //String htPath = resourceLoader.getResource("resources/WebShare/"+subPath+"/"+fileName).getURI().getPath();
+                String htPath = webPath + "/" + subPath + "/" + fileName;
 
-				//StreamSource stylesource = new StreamSource("C:/works/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/etrust/WEB-INF/classes/template/stylesheet/ctos_report.xsl"); // xsl file...
-				StreamSource stylesource = new StreamSource(resource.getFile()); // xsl file...
-				TransformerFactory factory = TransformerFactory.newInstance();
-				Transformer transformer = factory.newTransformer(stylesource);
+                LOGGER.info( "########################### HTML PATH : " + htPath );
 
-				//String htPath = resourceLoader.getResource("resources/WebShare/"+subPath+"/"+fileName).getURI().getPath();
-				String htPath = webPath+"/"+subPath+"/"+fileName;
+                File file = new File( htPath );
+                if ( !file.getParentFile().exists() )
+                {
+                    LOGGER.info( "######## Not Found File!!!!" );
+                    //make dir
+                    file.getParentFile().mkdirs();
+                    // make file
+                    FileWriter fileWriter = new FileWriter( file );
+                    BufferedWriter out = new BufferedWriter( fileWriter );
+                    out.flush();
+                    out.close();
+                }
+//                StreamResult result = new StreamResult( new File( htPath ) ); //result html
 
-				LOGGER.info("########################### HTML PATH : " + htPath);
+                LOGGER.info( "######################## BEFORE doTransformXSLT ");
 
-				File file = new File(htPath);
-				if(!file.getParentFile().exists()){
-					LOGGER.info("######## Not Found File!!!!");
-					//make dir
-					file.getParentFile().mkdirs();
-					// make file
-					FileWriter fileWriter = new FileWriter(file);
-					BufferedWriter out = new BufferedWriter(fileWriter);
-					out.flush();
-					out.close();
-				}
+                doTransformXSLT (rePaht, resultRaw, htPath);
 
-				StreamResult result = new StreamResult(new File(htPath)); //result html
-				transformer.transform(source, result);
+                LOGGER.info( "######################## AFTER doTransformXSLT ");
 
-				resultMap.put("webPath", webPath);
-				resultMap.put("subPath", subPath);
-				resultMap.put("fileName", fileName);
-			}
-		}
-		return resultMap;
-	}
+
+//                transformer.transform( source, result );
+                resultMap.put( "webPath", webPath );
+                resultMap.put( "subPath", subPath );
+                resultMap.put( "fileName", fileName );
+            }
+        }
+        return resultMap;
+    }
 
 	@Override
 	public Map<String, Object> getResultRowForEXPERIANDisplayForCCPCalculation(Map<String, Object> params) throws Exception {
@@ -1493,5 +1516,48 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	public void updateCCPTicket(Map<String, Object> p) throws Exception {
 		ccpCalculateMapper.insertCCPTicketLog(p);
 		ccpCalculateMapper.updateCCPTicket(p);
+	}
+
+    public void doTransformXSLT(String rePaht, String resultRaw, String htPath) throws IOException
+    {
+        try
+        {
+            org.springframework.core.io.Resource resource = new ClassPathResource( rePaht );
+
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+
+            Source xslDoc = new StreamSource( resource.getFile() );
+
+            Source xmlDoc = new StreamSource( new ByteArrayInputStream( resultRaw.getBytes() )) ;
+
+            String outputFileName = htPath;
+
+            LOGGER.info( "######################## IN doTransformXSLT outputFileName : " +outputFileName);
+
+            OutputStream htmlFile = new FileOutputStream( outputFileName );
+            Transformer trasform = tFactory.newTransformer( xslDoc );
+            trasform.transform( xmlDoc, new StreamResult( htmlFile ) );
+        }
+        catch ( FileNotFoundException e )
+        {
+            LOGGER.error( "FileNotFoundException : " +e.getMessage());
+            e.printStackTrace();
+        }
+        catch ( TransformerConfigurationException e )
+        {
+            LOGGER.error( "TransformerConfigurationException : " +e.getMessage());
+            e.printStackTrace();
+        }
+        catch ( TransformerFactoryConfigurationError e )
+        {
+            LOGGER.error( "TransformerFactoryConfigurationError : " +e.getMessage());
+            e.printStackTrace();
+        }
+        catch ( TransformerException e )
+        {
+            LOGGER.error( "TransformerException : " +e.getMessage());
+            e.printStackTrace();
+        }
+
 	}
 }

@@ -4,146 +4,150 @@
                 version="1.0">
 
     <xsl:template name="section_a_template">
-
+        
         <p class="title">
             A: SNAPSHOT
         </p>
-
+        
         <table>
             <tr>
                 <td class="table-left-width" valign="top">
-
+                    
                     <xsl:call-template name="section_a_id_verification_template"/>
 
                     <br/>
 
                     <xsl:call-template name="section_a_analytical_product_template"/>
-
+                    
                     <xsl:call-template name="section_a_credit_info_at_a_glance_template"/>
-
+                    
                     <br/>
-
-                    <xsl:call-template name="section_a_etr_plus_at_a_glass_template"/>
-
-                    <br/>
+                    
                 </td>
                 <td class="table-center-width">
                     <br/>
                 </td>
                 <td class="table-right-width" valign="top">
-
+                    
                     <!--<xsl:call-template name="section_a_sme_financial_health_indicator_template"/>-->
-
-                    <xsl:call-template name="section_a_sme_score_template"/>
-
-                    <xsl:call-template name="section_a_ctos_litigation_index_template"/>
-
-                    <br/>
-
-                    <xsl:call-template name="section_a_stats_template"/>
-
-                    <br/>
-
-                </td>
-            </tr>
-        </table>
-
-        <xsl:call-template name="section_a_directorships_and_business_interests_template"/>
-
-    </xsl:template>
-
-    <xsl:template name="lite_section_a_template">
-
-        <p class="title">
-            A: SNAPSHOT
-        </p>
-
-        <xsl:call-template name="lite_section_a_id_verification_template"/>
-
-        <br/>
-
-        <xsl:call-template name="section_a_analytical_product_template"/>
-
-        <xsl:call-template name="section_a_directorships_and_business_interests_template"/>
-
-    </xsl:template>
-
-    <xsl:template name="fico_section_a_template">
-
-        <p class="title">
-            A: SNAPSHOT
-        </p>
-
-        <table>
-            <tr>
-                <td class="table-left-width" valign="top">
-
-                    <xsl:call-template name="section_a_id_verification_template"/>
-
-                    <br/>
-
-                    <xsl:call-template name="section_a_analytical_product_template"/>
-
-                    <xsl:call-template name="section_a_credit_info_at_a_glance_template"/>
-
-                    <br/>
-
-                    <xsl:call-template name="section_a_etr_plus_at_a_glass_template"/>
-
-                    <br/>
-                </td>
-                <td class="table-center-width">
-                    <br/>
-                </td>
-                <td class="table-right-width" valign="top">
-
+                    
                     <xsl:call-template name="section_a_fico_score_template"/>
-
-                    <br/>
-
-                    <!--<xsl:call-template name="section_a_sme_financial_health_indicator_template"/>-->
-
-                    <!--<xsl:call-template name="section_a_sme_score_template"/>-->
-
-                    <!-- <br/> -->
-
-<!--                    <xsl:call-template name="section_a_fico_probability_template"/>
-
-                    <br/>-->
-
-<!--                    <xsl:call-template name="section_a_fico_credit_template"/>
-
-                    <br/>-->
-
+                   
+                      <!-- sme score -->
+                    <xsl:call-template name="section_a_sme_score_template"/>
+                   
                     <xsl:call-template name="section_a_ctos_litigation_index_template"/>
-
+                    
                     <br/>
-
+                    
                     <xsl:call-template name="section_a_stats_template"/>
-
+                    
                     <br/>
-
+                    
                 </td>
             </tr>
         </table>
-
+        
         <xsl:call-template name="section_a_directorships_and_business_interests_template"/>
-
+        
     </xsl:template>
+    
+    <xsl:template name="lite_section_a_template">
+        
+        <p class="title">
+            A: SNAPSHOT
+        </p>
+        
+        <xsl:call-template name="lite_section_a_id_verification_template"/>
+        
+        <br/>                        
+        
+        <xsl:call-template name="section_a_directorships_and_business_interests_template"/>
+        
+    </xsl:template>
+    
+    <xsl:template name="fico_section_a_template">
+        
+        <p class="title">
+            A: SNAPSHOT
+        </p>
+        
+        <table>
+            <tr>
+                <td class="table-left-width" valign="top">
+                    
+                    <xsl:call-template name="section_a_id_verification_template"/>
 
+                    <br/>                                        
+                    
+                    <xsl:call-template name="section_a_credit_info_at_a_glance_template"/>
+                    
+                    <br/>
+                    
+                </td>
+                <td class="table-center-width">
+                    <br/>
+                </td>
+                <td class="table-right-width" valign="top">
+                    
+                    <xsl:call-template name="section_a_fico_score_template"/>
+                    
+                    <br/>
+                    
+                    <!--<xsl:call-template name="section_a_sme_financial_health_indicator_template"/>-->
+                    
+                    <!--<xsl:call-template name="section_a_sme_score_template"/>-->
+                    
+                    <br/>
+                    
+<!--                    <xsl:call-template name="section_a_fico_probability_template"/>
+                    
+                    <br/>-->                                       
+                    
+<!--                    <xsl:call-template name="section_a_fico_credit_template"/>
+                    
+                    <br/>-->
+                    
+                    <xsl:call-template name="section_a_ctos_litigation_index_template"/>
+                    
+                    <br/>
+                    
+                    <xsl:call-template name="section_a_stats_template"/>
+                    
+                    <br/>
+                    
+                </td>
+            </tr>
+        </table>
+        
+        <xsl:call-template name="section_a_directorships_and_business_interests_template"/>
+        
+    </xsl:template>
+    
     <!-- start section_a_id_verification_template -->
     <xsl:template name="section_a_id_verification_template">
-
+        
+        <xsl:variable name="seq">
+            <xsl:value-of select="@seq"/>
+        </xsl:variable>
+        
         <p class="title">
             ID Verification
         </p>
-
-        <xsl:call-template name="section_a_individual_id_verification_template"/>
-        <xsl:call-template name="section_a_business_id_verification_template"/>
-        <xsl:call-template name="section_a_commercial_id_verification_template"/>
-
+        
+        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype='I']">
+            <xsl:call-template name="section_a_individual_id_verification_template"/> 
+        </xsl:if>
+        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype='B' or @ptype='L']">
+            <xsl:call-template name="section_a_business_id_verification_template"/>
+        </xsl:if>
+        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype='C']">
+            <xsl:call-template name="section_a_commercial_id_verification_template"/>    
+        </xsl:if>
+        
+        
     </xsl:template>
-    <!-- finish section_a_id_verification_template -->
+    <!-- finish section_a_id_verification_template -->        
 
     <!-- start section_a_analytical_product_template -->
     <xsl:template name="section_a_analytical_product_template">
@@ -217,80 +221,77 @@
 
     <!-- start section_a_credit_info_at_a_glance_template -->
     <xsl:template name="section_a_credit_info_at_a_glance_template">
-
+        
+        <xsl:variable name="seq">
+            <xsl:value-of select="@seq"/>
+        </xsl:variable>
+        
         <p class="title">
             Credit Info at a Glance
         </p>
-
-        <xsl:call-template name="section_a_individual_credit_info_at_a_glance_template"/>
-        <xsl:call-template name="section_a_commercial_and_business_credit_info_at_a_glance_template"/>
-
+        
+        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype='I']">
+            <xsl:call-template name="section_a_individual_credit_info_at_a_glance_template"/>
+        </xsl:if>
+                      
+        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype='C'] or ../r:summary/r:enq_sum[@seq = $seq][@ptype='B' or @ptype='L']">
+            <xsl:call-template name="section_a_commercial_and_business_credit_info_at_a_glance_template"/>
+        </xsl:if>
+        
     </xsl:template>
     <!-- finish section_a_credit_info_at_a_glance_template -->
 
-    <!-- start section_a_etr_plus_at_a_glass_template -->
-    <xsl:template name="section_a_etr_plus_at_a_glass_template">
-
-        <p class="title">
-            eTR Plus at a Glance
-        </p>
-
-        <xsl:call-template name="section_a_individual_business_section_a_etr_plus_at_a_glass_template"/>
-
-    </xsl:template>
-    <!-- finish section_a_etr_plus_at_a_glass_template -->
-
     <!-- start section_a_individual_id_verification_template -->
     <xsl:template name="section_a_individual_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='I']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='I']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="section_a_individual_id_verification_sub_template_top"/>
-
+                    
                 <xsl:if test="r:section_a[@data = 'true']">
 
-                    <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                    <xsl:for-each select="r:section_a/r:record">
+                            
                         <xsl:if test="@rpttype = 'Id' or @rpttype = 'Ie' or @rpttype = 'If'">
-
+                        
                             <xsl:call-template name="section_a_individual_id_verification_sub_template_bottom"/>
-
+                        
                         </xsl:if>
-
+                            
                     </xsl:for-each>
-
+                
                 </xsl:if>
-
+                
                 <xsl:if test="r:section_a[@data = 'false']">
-
+                        
                     <xsl:call-template name="section_a_individual_id_verification_sub_template_bottom"/>
-
+   
                 </xsl:if>
-
+                
             </table>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish section_a_individual_id_verification_template -->
 
     <!-- start section_a_individual_id_verification_sub_template_top -->
     <xsl:template name="section_a_individual_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Name (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -298,27 +299,27 @@
             <th class="caption-left">New ID / Old ID (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="join_string_with_delimiter">
-                    <xsl:with-param name="value1" select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
-                    <xsl:with-param name="value2" select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                    <xsl:with-param name="value1" select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                    <xsl:with-param name="value2" select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                     <xsl:with-param name="delimiter" select="'/'"/>
                 </xsl:call-template>
                 <!--                /
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:call-template>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish section_a_individual_id_verification_sub_template_top -->
 
     <!-- start section_a_individual_id_verification_sub_template_bottom -->
     <xsl:template name="section_a_individual_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Name</th>
             <td class="long-content-left">
@@ -333,7 +334,7 @@
                 <xsl:call-template name="check_empty_string">
                     <xsl:with-param name="value" select="r:nic_brno"/>
                 </xsl:call-template>
-            </td>
+            </td>                        
         </tr>
         <tr>
             <th class="caption-left">Old ID</th>
@@ -357,11 +358,11 @@
                 <xsl:call-template name="check_empty_string">
                     <xsl:with-param name="value" select="r:nationality"/>
                 </xsl:call-template>
-                <xsl:if test="r:source and r:source != ''">
+                <xsl:if test="r:source and r:source != ''"> 
                     Source: <xsl:value-of select="r:source"/>
                 </xsl:if>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption-left">Address 1</th>
             <td class="long-content-left">
@@ -377,14 +378,14 @@
             <th class="caption-left">Address 2</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:addr1"/>
+                    <xsl:with-param name="value" select="r:addr1"/>                                    
                 </xsl:call-template>
-
+                
                 <xsl:if test="r:addr1 and r:addr1 != ''"> <!-- and r:addr1 and r:addr1 != ''"> -->
                     <br/>Source: <xsl:value-of select="r:source"/>
                 </xsl:if>
             </td>
-        </tr>
+        </tr>           
         <tr>
             <th class="caption-left">Ref No.</th>
             <td class="long-content-left">
@@ -393,7 +394,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                              
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -408,66 +409,66 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- start section_a_individual_id_verification_sub_template_bottom -->
 
     <!-- start section_a_business_id_verification_template -->
     <xsl:template name="section_a_business_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="section_a_business_id_verification_sub_template_top"/>
-
+                
                 <xsl:if test="r:section_a[@data = 'true']">
-
+                        
                     <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                            
                         <xsl:if test="@rpttype = 'CJ' or @rpttype = 'Ir'">
-
+                        
                             <xsl:call-template name="section_a_business_id_verification_sub_template_bottom"/>
-
+                            
                         </xsl:if>
-
+                        
                         <xsl:if test="@rpttype = 'Id'">
-
+                            
                             <xsl:call-template name="section_a_individual_id_verification_sub_template_bottom"/>
-
+                            
                         </xsl:if>
-
+                        
                     </xsl:for-each>
-
+                    
                 </xsl:if>
-
+                
                 <xsl:if test="r:section_a[@data = 'false']">
-
+                        
                     <xsl:call-template name="section_a_business_id_verification_sub_template_bottom"/>
-
+                        
                 </xsl:if>
-
+                
             </table>
-
+            
         </xsl:if>
     </xsl:template>
     <!-- finish section_a_business_id_verification_template -->
 
     <!-- start section_a_business_id_verification_sub_template_top -->
     <xsl:template name="section_a_business_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Business Name (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -475,30 +476,30 @@
             <th class="caption-left">Registration No (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:call-template>
-                <!--                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                <!--                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish section_a_business_id_verification_sub_template_top -->
 
     <!-- start section_a_business_id_verification_sub_template_bottom -->
     <xsl:template name="section_a_business_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Business Name</th>
             <td class="long-content-left">
@@ -514,8 +515,8 @@
                     <xsl:with-param name="reg_num_1" select="r:register_no" />
                     <xsl:with-param name="reg_num_2" select="r:additional_registration_no" />
                 </xsl:call-template>
-            </td>
-        </tr>
+            </td>                        
+        </tr> 
         <tr>
             <th class="caption-left">Business Address</th>
             <td class="long-content-left">
@@ -528,7 +529,7 @@
             <th class="caption-left">Registration Date</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:reg_date"/>
+                    <xsl:with-param name="value" select="r:reg_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -550,7 +551,7 @@
             <th class="caption-left">Business Type</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:business_nature"/>
+                    <xsl:with-param name="value" select="r:business_nature"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -574,7 +575,7 @@
             <th class="caption-left">Business Commenced</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:business_commenced"/>
+                    <xsl:with-param name="value" select="r:business_commenced"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -582,7 +583,7 @@
             <th class="caption-left">Last Changed Date</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:last_change_date"/>
+                    <xsl:with-param name="value" select="r:last_change_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -590,7 +591,7 @@
             <th class="caption-left">Rob Search Date</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:cpo_date"/>
+                    <xsl:with-param name="value" select="r:cpo_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -598,15 +599,7 @@
             <th class="caption-left">Current Registration Expiry Date</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:expiry_date"/>
-                </xsl:call-template>
-            </td>
-        </tr>
-        <tr>
-            <th class="caption">Business Status</th>
-            <td class="long-content">
-                <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:status"/>
+                    <xsl:with-param name="value" select="r:expiry_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -614,7 +607,7 @@
             <th class="caption-left">Remark</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:remark"/>
+                    <xsl:with-param name="value" select="r:remark"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -626,7 +619,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                                       
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -641,65 +634,65 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish section_a_business_id_verification_sub_template_bottom -->
 
     <!-- start section_a_commercial_id_verification_template -->
     <xsl:template name="section_a_commercial_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='C']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='C']">
+        
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="section_a_commercial_id_verification_sub_template_top"/>
-
-                <xsl:if test="r:section_a[@data = 'true']">
-
-                    <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                    
+                <xsl:if test="r:section_a[@data = 'true']">                                       
+                    
+                    <xsl:for-each select="r:section_a/r:record">
+                            
                         <xsl:if test="@rpttype = 'CE' or @rpttype = 'Cr'">
-
+                        
                             <xsl:call-template name="section_a_commercial_id_verification_sub_template_bottom"/>
-
+                        
                         </xsl:if>
-
+                            
                     </xsl:for-each>
-
+                    
                 </xsl:if>
-
+                    
                 <xsl:if test="r:section_a[@data = 'false']">
-
+                        
                     <xsl:call-template name="section_a_commercial_id_verification_sub_template_bottom"/>
-
+                        
                 </xsl:if>
-
+                
             </table>
-
+            
             <br/>
-
+            
             <xsl:call-template name="section_a_financial_and_shareholders_template"/>
-
+            
         </xsl:if>
     </xsl:template>
-    <!-- finish section_a_commercial_id_verification_template -->
+    <!-- finish section_a_commercial_id_verification_template -->    
 
 
     <!-- start section_a_commercial_id_verification_sub_template_top -->
     <xsl:template name="section_a_commercial_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Company Name (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -707,30 +700,30 @@
             <th class="caption-left">Registration No (Your Input)</th>
             <td class="long-content-left">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:call-template>
-                <!--                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                <!--                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish section_a_commercial_id_verification_sub_template_top -->
 
     <!-- start section_a_commercial_id_verification_sub_template_bottom -->
     <xsl:template name="section_a_commercial_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption-left">Company Name</th>
             <td class="long-content-left">
@@ -777,7 +770,7 @@
                     <xsl:with-param name="value" select="r:addr"/>
                 </xsl:call-template>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption-left">Business Address</th>
             <td class="long-content-left">
@@ -785,7 +778,7 @@
                     <xsl:with-param name="value" select="r:addr1"/>
                 </xsl:call-template>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption-left">Business Sector</th>
             <td class="long-content-left">
@@ -826,7 +819,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                                        
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -841,25 +834,25 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish section_a_commercial_id_verification_sub_template_bottom -->
 
     <!-- start section_a_financial_and_shareholders_template -->
     <xsl:template name="section_a_financial_and_shareholders_template">
-
+        
         <xsl:if test="r:section_a/r:record[@rpttype = 'CE'] or r:section_a/r:record[@rpttype = 'Cr']">
-
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <p class="title">
                 Financials and Shareholders
             </p>
-
-            <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+            
+            <xsl:for-each select="r:section_a/r:record">
+        
                 <table class="table">
                     <tr>
                         <th class="caption-left">Last Updated</th>
@@ -875,10 +868,10 @@
                             <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                 <xsl:choose>
                                     <xsl:when test="r:exempted and r:exempted = 'true'">
-                                        Yes
+                                        Yes 
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        No
+                                        No 
                                     </xsl:otherwise>
                                 </xsl:choose>
                                 <xsl:if test="r:pldd and r:pldd != ''">
@@ -891,43 +884,43 @@
                         <th class="caption-left">Previous Name Change</th>
                         <td class="long-content-left">
                             <xsl:for-each select="r:previous_names/r:previous_name[@seq = '1']">
-                                <xsl:if test="r:name and r:name != ''">
-                                    <xsl:value-of select="r:name"/>
-                                </xsl:if>
-                                <xsl:if test="r:change_date and r:change_date != ''">
-                                    <br/>
-                                    (<xsl:value-of select="r:change_date"/>)
-                                </xsl:if>
+                            	<xsl:if test="r:name and r:name != ''">
+                            		<xsl:value-of select="r:name"/>
+                            	</xsl:if>
+	                            <xsl:if test="r:change_date and r:change_date != ''">
+	                                <br/>
+	                                (<xsl:value-of select="r:change_date"/>)
+	                            </xsl:if>
                             </xsl:for-each>
                         </td>
-                    </tr>
+                    </tr>                                        
                     <tr>
                         <th class="caption-left">Revenue (RM)</th>
-                        <td class="long-content-left">
+                        <td class="long-content-left">                            
                             <xsl:if test="r:ic_lcno and r:ic_lcno != ''">
-
+                                    
                                 <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                     <xsl:if test="r:turnover and r:turnover != ''">
-
+                                                                        
                                         <xsl:call-template name="check_empty_number">
                                             <xsl:with-param name="number" select="r:turnover"/>
                                         </xsl:call-template>
-
-                                    </xsl:if>
-
+                                    
+                                    </xsl:if>                                
+                                
                                     <xsl:if test="not(r:turnover) or r:turnover = ''">
-
+                                    
                                         Refer to FS Latest Year
-
+                                    
                                     </xsl:if>
                                 </xsl:for-each>
-
+                                    
                             </xsl:if>
                             <xsl:if test="not(r:ic_lcno) or r:ic_lcno = ''">
-
+                                    
                                 -
-
-                            </xsl:if>
+                                    
+                            </xsl:if>                            
                         </td>
                     </tr>
                     <tr>
@@ -935,17 +928,17 @@
                         <td class="long-content-left">
                             <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                 <xsl:if test="r:plnpat and r:plnpat != ''">
-
+                                                                        
                                     <xsl:call-template name="check_empty_number">
                                         <xsl:with-param name="number" select="r:plnpat"/>
                                     </xsl:call-template>
-
+                                    
                                 </xsl:if>
-
+                                
                                 <xsl:if test="not(r:plnpat) or r:plnpat = ''">
-
+                                    
                                     -
-
+                                    
                                 </xsl:if>
                             </xsl:for-each>
                         </td>
@@ -957,17 +950,17 @@
                                 <xsl:choose>
                                     <xsl:when test="r:exempted and r:exempted = 'false'">
                                         <xsl:if test="r:totass and r:totass != ''">
-
+                                                                        
                                             <xsl:call-template name="check_empty_number">
                                                 <xsl:with-param name="number" select="r:totass"/>
                                             </xsl:call-template>
-
+                                    
                                         </xsl:if>
-
+                                
                                         <xsl:if test="not(r:totass) or r:totass = ''">
-
+                                    
                                             -
-
+                                    
                                         </xsl:if>
                                     </xsl:when>
                                     <xsl:otherwise>
@@ -996,7 +989,7 @@
                     <tr>
                         <th class="caption-left">Directorship</th>
                         <td class="long-content-left">
-                            <xsl:for-each select="r:directors/r:director[r:position = 'DO' or r:position = 'DS' or r:position = 'AD' or r:position = 'AS']">
+                            <xsl:for-each select="r:directors/r:director[r:position = 'DO' or r:position = 'DS' or r:position = 'AD'  or r:position = 'AS']">
                                 <xsl:if test="position() &lt; '6'">
                                     <xsl:call-template name="check_empty_string">
                                         <xsl:with-param name="value" select="r:name"/>
@@ -1031,24 +1024,24 @@
                             </xsl:for-each>
                         </td>
                     </tr>
-
+                    
                 </table>
-
+                
             </xsl:for-each>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish section_a_financial_and_shareholders_template -->
 
     <!-- start section_a_individual_credit_info_at_a_glance_template -->
     <xsl:template name="section_a_individual_credit_info_at_a_glance_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='I']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='I']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
                 <tr>
                     <td class="header" width="70%">Credit Info</td>
@@ -1084,7 +1077,7 @@
                         CTOS
                     </td>
                     <td>
-
+                        
                         <xsl:if test="r:section_summary/r:ctos/r:legal_personal_capacity and r:section_summary/r:ctos/r:legal">
                             <xsl:call-template name="check_null">
                                 <xsl:with-param name="value" select="r:section_summary/r:ctos/r:legal_personal_capacity/@total"/>
@@ -1105,7 +1098,7 @@
                 </tr>
                 <tr>
                     <td>
-
+                        
                         <xsl:if test="r:section_summary/r:ctos/r:legal_personal_capacity and r:section_summary/r:ctos/r:legal">
                             <xsl:call-template name="check_null">
                                 <xsl:with-param name="value" select="r:section_summary/r:ctos/r:legal_personal_capacity/@value"/>
@@ -1138,7 +1131,7 @@
                         CTOS
                     </td>
                     <td>
-
+                        
                         <xsl:if test="r:section_summary/r:ctos/r:legal_non_personal_capacity">
                             <xsl:call-template name="check_null">
                                 <xsl:with-param name="value" select="r:section_summary/r:ctos/r:legal_non_personal_capacity/@total"/>
@@ -1147,12 +1140,12 @@
                         <xsl:if test="not(r:section_summary/r:ctos/r:legal_non_personal_capacity)">
                             NO
                         </xsl:if>
-
+                        
                     </td>
                 </tr>
                 <tr>
                     <td>
-
+                        
                         <xsl:if test="r:section_summary/r:ctos/r:legal_non_personal_capacity">
                             <xsl:call-template name="check_null">
                                 <xsl:with-param name="value" select="r:section_summary/r:ctos/r:legal_non_personal_capacity/@value"/>
@@ -1170,10 +1163,10 @@
                     </th>
                     <td>
                         BNM
-                    </td>
+                    </td>                    
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:if test="r:section_ccris and r:section_ccris/r:summary/r:legal">
                                     <xsl:if test="r:section_ccris/@data = 'true' and r:section_ccris/r:summary/r:legal/@status = '1'">
                                         YES
@@ -1201,10 +1194,18 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
-                                <xsl:call-template name="convert_value_to_boolean1">
-                                    <xsl:with-param name="value" select="r:section_summary/r:ccris/r:special_attention/@accounts"/>
-                                </xsl:call-template>
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                                <xsl:if test="r:section_ccris and r:section_ccris/r:summary/r:special_attention">
+                                    <xsl:if test="r:section_ccris/@data = 'true' and r:section_ccris/r:summary/r:special_attention/@status = '1'">
+                                        YES
+                                    </xsl:if>
+                                    <xsl:if test="r:section_ccris/@data = 'false' or r:section_ccris/r:summary/r:special_attention/@status = '0'">
+                                        NO
+                                    </xsl:if>
+                                </xsl:if>
+                                <xsl:if test="not(r:section_ccris) or not(r:section_ccris/r:summary/r:special_attention)">
+                                    NO
+                                </xsl:if>
                             </xsl:when>
                             <xsl:otherwise>
                                 NOT SELECTED
@@ -1227,7 +1228,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@total"/>
                                 </xsl:call-template>
@@ -1241,7 +1242,7 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_empty_and_format_currency">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@value"/>
                                 </xsl:call-template>
@@ -1255,7 +1256,7 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="convert_value_to_boolean1">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@arrears"/>
                                 </xsl:call-template>
@@ -1265,7 +1266,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
-                </tr>
+                </tr>                
                 <tr>
                     <th rowspan="3" class="caption">
                         Credit applications in past 15 months
@@ -1281,7 +1282,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@total"/>
                                 </xsl:call-template>
@@ -1291,11 +1292,11 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
-                </tr>
+                </tr>                
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@approved"/>
                                 </xsl:call-template>
@@ -1309,7 +1310,7 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@pending"/>
                                 </xsl:call-template>
@@ -1320,7 +1321,7 @@
                         </xsl:choose>
                     </td>
                 </tr>
-                <!--
+                <!--                
                 <tr>
                     <th class="caption">
                         Availability of Trade Referee Listing
@@ -1342,12 +1343,12 @@
 
     <!-- start section_a_commercial_and_business_credit_info_at_a_glance_template -->
     <xsl:template name="section_a_commercial_and_business_credit_info_at_a_glance_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='C'] or //r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='C'] or ../r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
                 <tr>
                     <td class="header" width="70%">Credit Info</td>
@@ -1485,10 +1486,10 @@
                             </xsl:call-template>
                         </xsl:if>
                         <xsl:if test="not(r:section_summary/r:ctos/r:related_parties/r:legal_personal_capacity) and not(r:section_summary/r:ctos/r:related_parties/r:legal)">
-                            NO
+                            NO 
                         </xsl:if>
                     </td>
-                </tr>
+                </tr>                
                 <tr>
                     <th rowspan="2" class="caption">
                         Legal records in past 24 months
@@ -1574,7 +1575,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:if test="r:section_summary/r:section_ccris/r:summary/r:legal">
                                     <xsl:if test="r:section_summary/r:section_ccris/r:summary/r:legal/@status = '0'">
                                         NO
@@ -1594,7 +1595,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 NO
                             </xsl:when>
                             <xsl:otherwise>
@@ -1612,7 +1613,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="convert_value_to_boolean1">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:special_attention/@accounts"/>
                                 </xsl:call-template>
@@ -1624,7 +1625,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="convert_value_to_boolean1">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:special_attention/@accounts"/>
                                 </xsl:call-template>
@@ -1650,7 +1651,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@total"/>
                                 </xsl:call-template>
@@ -1662,7 +1663,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:facility/@total"/>
                                 </xsl:call-template>
@@ -1676,7 +1677,7 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_empty_and_format_currency">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@value"/>
                                 </xsl:call-template>
@@ -1688,7 +1689,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_empty_and_format_currency">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:facility/@value"/>
                                 </xsl:call-template>
@@ -1700,9 +1701,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td>  
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">                      
                                 <xsl:call-template name="convert_value_to_boolean1">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:facility/@arrears"/>
                                 </xsl:call-template>
@@ -1714,7 +1715,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="convert_value_to_boolean1">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:facility/@arrears"/>
                                 </xsl:call-template>
@@ -1724,7 +1725,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
-                </tr>
+                </tr>                
                 <tr>
                     <th rowspan="3" class="caption">
                         Credit applications in past 12 months
@@ -1740,7 +1741,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@total"/>
                                 </xsl:call-template>
@@ -1752,7 +1753,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:application/@total"/>
                                 </xsl:call-template>
@@ -1762,11 +1763,11 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </td>
-                </tr>
+                </tr>                
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@approved"/>
                                 </xsl:call-template>
@@ -1778,7 +1779,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:application/@approved"/>
                                 </xsl:call-template>
@@ -1792,7 +1793,7 @@
                 <tr>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:application/@pending"/>
                                 </xsl:call-template>
@@ -1804,7 +1805,7 @@
                     </td>
                     <td>
                         <xsl:choose>
-                            <xsl:when test="//r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
+                            <xsl:when test="../r:summary/r:enq_sum[@seq = $seq]/r:include_ccris = '1'">
                                 <xsl:call-template name="check_null">
                                     <xsl:with-param name="value" select="r:section_summary/r:ccris/r:related_parties/r:application/@pending"/>
                                 </xsl:call-template>
@@ -1848,8 +1849,8 @@
 
     <!-- start section_a_directorships_and_business_interests_template -->
     <xsl:template name="section_a_directorships_and_business_interests_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype != 'C'] and r:section_c[@data = 'true']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype != 'C'] and r:section_c[@data = 'true']">
+        
             <p class="title">
                 Top 5 Directorships &amp; Business Interests
             </p>
@@ -1866,7 +1867,7 @@
                     <td class="header text-center" width="8%">Status</td>
                     <td class="header text-center" width="8%">Shareholding (%)</td>
                 </tr>
-
+                            
                 <xsl:for-each select="r:section_c/r:record[@seq &lt; '6']">
                     <tr>
                         <td class="text-center">
@@ -1890,8 +1891,8 @@
                             </xsl:call-template>
                         </td>
                         <td class="text-right">
-                            <xsl:call-template name="check_empty_string">
-                                <xsl:with-param name="value" select="r:protif_after_tax"/>
+                            <xsl:call-template name="check_empty_number">
+                                <xsl:with-param name="number" select="r:protif_after_tax"/>
                             </xsl:call-template>
                         </td>
                         <td class="text-center">
@@ -1908,225 +1909,174 @@
                             <xsl:call-template name="check_empty_string">
                                 <xsl:with-param name="value" select="r:total_shares_percentage"/>
                             </xsl:call-template>
-<!--                            <xsl:call-template name="calcShareholding">
-                                <xsl:with-param name="num1" select="r:shares"/>
-                                <xsl:with-param name="num2" select="r:paidup"/>
-                            </xsl:call-template>-->
                         </td>
                     </tr>
                 </xsl:for-each>
-            </table>
-
+            </table>  
+            
             <br/>
-
+                                 
         </xsl:if>
     </xsl:template>
     <!-- finish section_a_directorships_and_business_interests_template -->
 
     <!-- start section_a_fico_score_template -->
     <xsl:template name="section_a_fico_score_template">
-
-        <!-- <p class="title text-center">
-            CTOS Score
-        </p> -->
-
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
 
-        <xsl:variable name="fico_score">
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '300' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
-                <xsl:value-of select="(((//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score - '300') div '550') * '100')"/>
-            </xsl:if>
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '300'">
-                <xsl:value-of select="'1'"/>
-            </xsl:if>
-            <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
-                <xsl:value-of select="'25'"/>
-            </xsl:if>
-        </xsl:variable>
-
-        <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 0px 0px 0px;" width="100%">
-            <tr>
-                <td colspan="2" class="text-center" valign="top">
-                    <img style="width: 50%; height: 20px">
-                        <xsl:attribute name="src">
-                            <xsl:call-template name="image_template">
-                                <xsl:with-param name="image" select="'ctos_score_logo.png'"/>
-                            </xsl:call-template>
-                        </xsl:attribute>
-                    </img>
-                </td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <table style="border-spacing: 0px; border: 0px; padding: 0px 0px 0px 0px;" width="90%">
-                        <tr class="table-center-height">
-                        </tr>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '744' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '850'">
+        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_code[@code = 4]">        
+            <p class="title text-center">
+                CTOS Score
+            </p>
+        
+            
+            <xsl:variable name="fico_score">
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '300' and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
+                    <xsl:value-of select="(((../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score - '300') div '550') * '100')"/>
+                </xsl:if>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '300'">
+                    <xsl:value-of select="'1'"/>
+                </xsl:if>
+                <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
+                    <xsl:value-of select="'25'"/>
+                </xsl:if>
+            </xsl:variable>
+        
+            <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 0px 0px 0px;" width="100%">
+                <tr>
+                    <td>
+                        <br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <table style="border-spacing: 0px; border: 0px; padding: 0px 0px 0px 0px;" width="90%">
                             <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_excellent_744_850.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
+                                <td colspan="2">
+                                    <table style="border-spacing: 0px; border: 0px; padding: 0px 0px 0px 0px;" width="100%">
+                                        <tr>
+                                            <td>
+                                                <xsl:attribute name="width">
+                                                    <xsl:value-of select="concat(format-number($fico_score, '##0'), '%')" />
+                                                </xsl:attribute>
+                                            </td>
+                                            <td class="text-left" valign="bottom">
+                                                <p style="font-size: 5pt;">
+                                                    <b>                                                    
+                                                        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
+                                                        &#160;
+                                                            <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
+                                                        </xsl:if>
+                                                    </b>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>                                        
+                                            <td>
+                                                <xsl:attribute name="width">
+                                                    <xsl:value-of select="concat(format-number($fico_score, '##0'), '%')" />
+                                                </xsl:attribute>
+                                            </td>
+                                            <td class="text-left" valign="bottom">
+                                                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
+                                                    <img style="width: 20px; height: 8px">
+                                                        <xsl:attribute name="src">
+                                                            <xsl:call-template name="image_template">
+                                                                <xsl:with-param name="image" select="'arrow_down.png'"/>
+                                                            </xsl:call-template>
+                                                        </xsl:attribute>
+                                                    </img>
+                                                </xsl:if>
+                                                <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
+                                                    <p style="font-size: 8pt;">
+                                                        No Score Generated
+                                                    </p>
+                                                </xsl:if>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '718' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '743'">
+                            </tr>                        
                             <tr>
                                 <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_very_good_718_743.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '697' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '717'">
-                            <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_good_697_717.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
-
-                                </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '651' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '696'">
-                            <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_fair_651_696.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '529' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '650'">
-                            <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_low_529_650.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &gt;= '300' and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score &lt;= '528'">
-                            <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <div class="image">
-                                        <img style="width: 100%; height: 115px">
-                                            <xsl:attribute name="src">
-                                                <xsl:call-template name="image_template">
-                                                    <xsl:with-param name="image" select="'ctos_score_dial_poor_300_528.png'"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </img>
-                                        <div class="score-centered-text bold">
-                                            <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </xsl:if>
-                        <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
-                            <tr>
-                                <td colspan="2" class="text-center" valign="top">
-                                    <img style="width: 100%; height: 115px">
+                                    <img style="width: 100%; height: 26px">
                                         <xsl:attribute name="src">
                                             <xsl:call-template name="image_template">
-                                                <xsl:with-param name="image" select="'ctos_score_dial_no_score.png'"/>
+                                                <xsl:with-param name="image" select="'dog_bone.png'"/>
                                             </xsl:call-template>
                                         </xsl:attribute>
                                     </img>
                                 </td>
                             </tr>
-                        </xsl:if>
-                    </table>
-                </td>
-            </tr>
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
-                <xsl:call-template name="section_a_fico_factor_template"/>
-            </xsl:if>
-            <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
-                <tr colspan="2">
-                    <td>
-                        <table style="border-spacing: 0px; border: 0px; padding: 0px 0px 5px 40px;" width="80%">
                             <tr>
-                                <td class="text-center">
-                                    <p style="font-size: 8pt;">
-                                        <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor/."/>
-                                    </p>
+                                <td class="text-left">
+                                    <p style="font-size: 5pt;">&#160;&#160;&#160;300</p>
                                 </td>
-                            </tr>
+                                <td class="text-right">
+                                    <p style="font-size: 5pt;">850&#160;&#160;&#160;</p>
+                                </td>
+                            </tr>                        
                         </table>
                     </td>
                 </tr>
-            </xsl:if>
-
-        </table>
-
+                <tr>
+                    <td>
+                        <br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <img style="width: 90%">
+                            <xsl:attribute name="src">
+                                <xsl:call-template name="image_template">
+                                    <xsl:with-param name="image" select="'score_table.png'"/>
+                                </xsl:call-template>
+                            </xsl:attribute>
+                        </img>
+                    </td>
+                </tr>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
+                    <xsl:call-template name="section_a_fico_factor_template"/>
+                </xsl:if>
+                <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index) or ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '0'">
+                    <tr colspan="2">                    
+                        <td>
+                            <table style="border-spacing: 0px; border: 0px; padding: 0px 0px 5px 40px;" width="80%">
+                                <tr>
+                                    <td class="text-center">
+                                        <p style="font-size: 8pt;">
+                                            <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor/."/>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </xsl:if>
+            
+            </table>
+            <br/>
+        </xsl:if>
     </xsl:template>
     <!-- finish section_a_fico_score_template -->
 
     <!-- start section_a_sme_financial_health_indicator_template -->
     <xsl:template name="section_a_sme_financial_health_indicator_template">
-
+            
         <xsl:if test="r:section_a/r:record[@rpttype = 'CE']">
-
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:include_sfi and //r:summary/r:enq_sum[@seq = $seq]/r:include_sfi = '1'">
-
+            
+            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:include_sfi and //r:summary/r:enq_sum[@seq = $seq]/r:include_sfi = '1' and //r:summary/r:enq_sum[@seq = $seq]/r:enq_code[@code != 11]">
+        
                 <p class="title text-center">CTOS SME Financial Health Indicator</p>
-
+                
                 <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                
                     <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 10px 0px 10px;" width="100%">
                         <tr>
                             <td>
@@ -2176,8 +2126,8 @@
                                                 <xsl:attribute name="height">100%</xsl:attribute>
                                                 <xsl:attribute name="width">100%</xsl:attribute>
                                             </img>
-                                        </td>
-                                    </tr>
+                                        </td>                   
+                                    </tr>                    
                                     <tr>
                                         <td>
                                             <p class="text-justify" style="font-size: 8pt;">
@@ -2188,7 +2138,7 @@
                                 </table>
                                 <table style="border-spacing: 0px; border: 0px solid #000000; padding: 5px 0px 5px 0px;" width="100%">
                                     <tr>
-                                        <td width="30%">
+                                        <td width="30%">                                                           
                                             <img>
                                                 <xsl:attribute name="src">
                                                     <xsl:call-template name="image_template">
@@ -2199,7 +2149,7 @@
                                                 <xsl:attribute name="width">65</xsl:attribute>
                                             </img>
                                         </td>
-                                        <td width="70%">
+                                        <td width="70%">                                
                                             <p class="text-left bold" style="font-size: 8pt;">
                                     &#160;
                                                 <xsl:call-template name="check_empty_string">
@@ -2219,21 +2169,21 @@
                             </td>
                         </tr>
                     </table>
-
+                    
                 </xsl:for-each>
-
+                                
                 <br/>
-
+            
             </xsl:if>
-
+        
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish section_a_sme_financial_health_indicator_template -->
 
     <!-- start section_a_fico_probability_template -->
     <xsl:template name="section_a_fico_probability_template">
-
+        
         <p class="title text-center">
             Probability of Default: 10%
         </p>
@@ -2248,7 +2198,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">
+                            <td colspan="2">                                
                                 <div style="background-color: white; border: solid 1px black;">
                                     <div style="background-color: gray; width: 10%; text-align: center; color: white;">
                                         <br/>
@@ -2282,7 +2232,7 @@
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <td>
                 <br/>
@@ -2296,13 +2246,13 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <table style="border-spacing: 0px; border: 0px; padding: 2px 20px 2px 20px;" width="100%">
+            <td>                    
+                <table style="border-spacing: 0px; border: 0px; padding: 2px 20px 2px 20px" width="100%">                        
                     <tr>
                         <td>
-                            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
+                            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
                                 <ol start="1">
-                                    <xsl:for-each select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor">
+                                    <xsl:for-each select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor[@code !='']">
                                         <li style="font-size: 8pt; text-align: justify;">
                                             <xsl:value-of select="."/>
                                         </li>
@@ -2312,43 +2262,43 @@
                                     </xsl:for-each>
                                 </ol>
                             </xsl:if>
-                            <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
+                            <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor[@code !=''])">
                                 -
                             </xsl:if>
                         </td>
-                    </tr>
+                    </tr>                        
                 </table>
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish section_a_fico_factor_template -->
 
     <!-- start section_a_fico_credit_template -->
     <xsl:template name="section_a_fico_credit_template">
-
+        
         <p class="title text-center">
             FICO Credit Capacity Index
         </p>
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <xsl:variable name="credit_index">
-            <!--            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index and //r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '300'">
-                <xsl:value-of select="(((//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score - '1') div '8') * '100')"/>
+            <!--            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '300'">
+                <xsl:value-of select="(((../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score - '1') div '8') * '100')"/>
             </xsl:if>
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '300'">
+            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score = '300'">
                 <xsl:value-of select="'1'"/>
             </xsl:if>
-            <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
+            <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
                 <xsl:value-of select="'50'"/>
             </xsl:if>-->
-
+            
             <xsl:value-of select="((('4' - '1') div '8') * '100')"/>
         </xsl:variable>
-
+        
         <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 0px 0px 0px;" width="100%">
             <tr>
                 <td align="center">
@@ -2364,20 +2314,20 @@
                                         </td>
                                         <td class="text-left" valign="bottom">
                                             <p style="font-size: 5pt;">
-                                                <b>
-                                                    <xsl:if test="not(//r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
+                                                <b>                                                    
+                                                    <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
                                                         &#160;&#160;&#160;-
                                                     </xsl:if>
-                                                    <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
+                                                    <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
                                                         &#160;&#160;&#160;
-                                                        <!--<xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>-->
+                                                        <!--<xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>-->
                                                         4
                                                     </xsl:if>
                                                 </b>
                                             </p>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr>                                        
                                         <td>
                                             <xsl:attribute name="width">
                                                 <xsl:value-of select="concat(format-number($credit_index, '##0'), '%')" />
@@ -2395,7 +2345,7 @@
                                     </tr>
                                 </table>
                             </td>
-                        </tr>
+                        </tr>                        
                         <tr>
                             <td colspan="2" class="text-center" valign="top">
                                 <img style="width: 100%; height: 26px">
@@ -2414,27 +2364,27 @@
                             <td class="text-right">
                                 <p style="font-size: 5pt;">9&#160;&#160;&#160;&#160;&#160;&#160;</p>
                             </td>
-                        </tr>
+                        </tr>                        
                     </table>
                 </td>
             </tr>
         </table>
-
+        
     </xsl:template>
     <!-- finish section_a_fico_credit_template -->
-
+    
     <!-- start section_a_sme_score_template -->
     <xsl:template name="section_a_sme_score_template">
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
-        </xsl:variable>
+        </xsl:variable> 
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_code[@code = 11]">
             <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 5px 0px 5px;" width="100%">
                 <!-- start SME score business -->
                 <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype = 'B']">
                     <tr>
                         <td align="center" colspan="2">
-                            <table style="border-spacing: 0px; border: 0px; padding: 0px 10px 5px 10px;" width="90%">
+                            <table style="border-spacing: 0px; border: 0px; padding: 0px 10px 5px 10px;" width="90%">                     
                                 <tr>
                                     <td colspan="2" class="text-center" valign="top">
                                         <img style="width: 70%; height: 20px">
@@ -2465,15 +2415,20 @@
                                             </xsl:call-template>
                                         </td>
                                         <td class="text-center">
-                                            <xsl:value-of select="r:fico_index/@score" />
+                                            <xsl:if test="r:fico_index/@score != '' or r:fico_index/@score != '0'">
+                                                <xsl:value-of select="r:fico_index/@score" />
+                                            </xsl:if>
+                                            <xsl:if test="not(r:fico_index/@score) or r:fico_index/@score = ''">
+                                                -
+                                            </xsl:if>
                                         </td>
                                         <xsl:call-template name="sme_range_business">
                                             <xsl:with-param name="range" select="r:fico_index/@score"/>
                                         </xsl:call-template>
                                     </tr>
                                 </xsl:for-each>
-                            </table>
-                        </td>
+                            </table> 
+                        </td> 
                     </tr>
                     <tr>
                         <td align="center" colspan="2">
@@ -2507,10 +2462,11 @@
                             <xsl:call-template name="sme_range_company">
                                 <xsl:with-param name="range" select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
                             </xsl:call-template>
-
+                            
                             <xsl:call-template name="sme_range_company_details">
                                 <xsl:with-param name="range" select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score"/>
                             </xsl:call-template>
+                             
                         </td>
                     </tr>
                     <!--                <tr>
@@ -2519,38 +2475,40 @@
                         </td>
                     </tr>-->
                     <tr>
-                        <tr>
-                            <td style="font-size: 8pt; padding: 5px 0px 2px 0px;">
-                                <b>
-                                    <u>Factors that influence the Score</u>
-                                </b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="padding: 5px 10px 25px 10px; width=100%">
-                                    <tr>
-                                        <td>
-                                            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
-                                                <ol start="1">
-                                                    <xsl:for-each select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor[@code !='']">
-                                                        <li style="font-size: 7pt; text-align: justify; margin-top: 3px; margin-bottom: -20px;">
-                                                            <xsl:value-of select="."/>
-                                                        </li>
-                                                        <xsl:if test="position() != last()">
-                                                            <br/>
-                                                        </xsl:if>
-                                                    </xsl:for-each>
-                                                </ol>
-                                            </xsl:if>
-                                            <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
-                                                -
-                                            </xsl:if>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
+                        <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/@score != '0'">
+                            <tr>
+                                <td style="font-size: 8pt; padding: 5px 0px 2px 0px;">
+                                    <b>
+                                        <u>Factors that influence the Score</u>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>                    
+                                    <table style="padding: 5px 10px 25px 10px; width=100%">                        
+                                        <tr>
+                                            <td>
+                                                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index">
+                                                    <ol start="1">
+                                                        <xsl:for-each select="../r:summary/r:enq_sum[@seq = $seq]/r:fico_index/r:fico_factor[@code !='']">
+                                                            <li style="font-size: 8pt; text-align: justify; margin-top: 3px; margin-bottom: -19px;">
+                                                                <xsl:value-of select="."/>
+                                                            </li>
+                                                            <xsl:if test="position() != last()">
+                                                                <br/>
+                                                            </xsl:if>
+                                                        </xsl:for-each>
+                                                    </ol>
+                                                </xsl:if>
+                                                <xsl:if test="not(../r:summary/r:enq_sum[@seq = $seq]/r:fico_index)">
+                                                    -
+                                                </xsl:if>
+                                            </td>
+                                        </tr>                        
+                                    </table>
+                                </td>
+                            </tr>
+                        </xsl:if>
                     </tr>
                 </xsl:if>
                 <!-- end SME score company -->
@@ -2558,33 +2516,33 @@
             <br/>
         </xsl:if>
     </xsl:template>
-
+    
     <!-- end section_a_sme_score_template -->
 
 
     <!-- start section_a_ctos_litigation_index_template -->
     <xsl:template name="section_a_ctos_litigation_index_template">
-
+        
         <p class="title text-center">
             CTOS Litigation Index
         </p>
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <xsl:variable name="litigation_index">
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index != '----'">
-                <xsl:value-of select="('100' - (//r:summary/r:enq_sum[@seq = $seq]/r:dd_index div '9999') * '100')"/>
+            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index != '----'">
+                <xsl:value-of select="('100' - (../r:summary/r:enq_sum[@seq = $seq]/r:dd_index div '9999') * '100')"/>
             </xsl:if>
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '9999'">
+            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '9999'">
                 <xsl:value-of select="'1'"/>
             </xsl:if>
-            <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '----'">
+            <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '----'">
                 <xsl:value-of select="'50'"/>
             </xsl:if>
         </xsl:variable>
-
+        
         <table style="border-spacing: 0px; border: 1px solid #000000; padding: 0px 0px 0px 0px;" width="100%">
             <tr>
                 <td>
@@ -2605,18 +2563,18 @@
                                         </td>
                                         <td class="text-left" valign="bottom">
                                             <p style="font-size: 5pt;">
-                                                <b>
-                                                    <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '----'">
+                                                <b>                                                    
+                                                    <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index = '----'">
                                                         &#160;&#160;----
                                                     </xsl:if>
-                                                    <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index != '----'">
-                                                        <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:dd_index"/>
+                                                    <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index != '----'">
+                                                        <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:dd_index"/>
                                                     </xsl:if>
                                                 </b>
                                             </p>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr>                                        
                                         <td>
                                             <xsl:attribute name="width">
                                                 <xsl:value-of select="concat(format-number($litigation_index, '##0'), '%')" />
@@ -2634,7 +2592,7 @@
                                     </tr>
                                 </table>
                             </td>
-                        </tr>
+                        </tr>                        
                         <tr>
                             <td colspan="2" class="text-center" valign="top">
                                 <img style="width: 100%; height: 26px">
@@ -2671,58 +2629,58 @@
             </tr>
             <tr>
                 <td style="font-size: 8pt; padding: 2px 20px 2px 10px;" width="5%" valign="top">
-                    <xsl:value-of select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
+                    <xsl:value-of select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
                 </td>
                 <td style="font-size: 8pt; padding: 2px 0px 2px 5px;" width="95%">
-                    <xsl:if test="//r:summary/r:enq_sum[@seq = $seq][@ptype = 'C']">
+                    <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype = 'C']">
                         <xsl:call-template name="company_record_type_index">
-                            <xsl:with-param name="index" select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
+                            <xsl:with-param name="index" select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
                         </xsl:call-template>
                     </xsl:if>
-                    <xsl:if test="//r:summary/r:enq_sum[@seq = $seq][@ptype != 'C']">
+                    <xsl:if test="../r:summary/r:enq_sum[@seq = $seq][@ptype != 'C']">
                         <xsl:call-template name="individual_record_type_index">
-                            <xsl:with-param name="index" select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
+                            <xsl:with-param name="index" select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 2)"/>
                         </xsl:call-template>
                     </xsl:if>
                 </td>
             </tr>
             <tr>
                 <td style="font-size: 8pt; padding: 2px 20px 2px 10px;" width="5%" valign="top">
-                    <xsl:value-of select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
+                    <xsl:value-of select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
                 </td>
                 <td style="font-size: 8pt; padding: 2px 0px 2px 5px;" width="95%">
-                    <xsl:if test="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 1) = '4'">
+                    <xsl:if test="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 1) = '4'">
                         <xsl:call-template name="weightage_settlement_index">
-                            <xsl:with-param name="index" select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
+                            <xsl:with-param name="index" select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
                         </xsl:call-template>
                     </xsl:if>
-                    <xsl:if test="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 1) != '4'">
+                    <xsl:if test="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 1, 1) != '4'">
                         <xsl:call-template name="weightage_index">
-                            <xsl:with-param name="index" select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
+                            <xsl:with-param name="index" select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 3, 1)"/>
                         </xsl:call-template>
                     </xsl:if>
                 </td>
             </tr>
             <tr>
                 <td style="font-size: 8pt; padding: 2px 20px 2px 10px;" width="5%" valign="top">
-                    <xsl:value-of select="substring(//r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 4, 1)"/>
+                    <xsl:value-of select="substring(../r:summary/r:enq_sum[@seq = $seq]/r:dd_index, 4, 1)"/>
                 </td>
                 <td style="font-size: 8pt; padding: 2px 0px 2px 5px;" width="95%">
                     Number of records
                 </td>
             </tr>
         </table>
-
+        
     </xsl:template>
     <!-- finish section_a_ctos_litigation_index_template -->
-
+    
     <!-- start section_a_stats_template -->
     <xsl:template name="section_a_stats_template">
-
+        
         <p class="title text-center">
             Section Summary
         </p>
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
@@ -2730,75 +2688,75 @@
         <xsl:call-template name="displaySectionASectionSummary">
             <xsl:with-param name="seq" select="$seq"/>
         </xsl:call-template>
-
+        
     </xsl:template>
     <!-- start section_a_stats_template -->
 
     <!-- start lite_section_a_id_verification_template -->
     <xsl:template name="lite_section_a_id_verification_template">
-
+        
         <p class="title">
             ID Verification
         </p>
-
+                      
         <xsl:call-template name="lite_section_a_individual_id_verification_template"/>
         <xsl:call-template name="lite_section_a_business_id_verification_template"/>
         <xsl:call-template name="lite_section_a_commercial_id_verification_template"/>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_id_verification_template -->
 
     <!-- start lite_section_a_individual_id_verification_template -->
     <xsl:template name="lite_section_a_individual_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='I']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='I']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="lite_section_a_individual_id_verification_sub_template_top"/>
-
+                
                 <xsl:if test="r:section_a/r:record[@rpttype = 'Id'] or r:section_a/r:record[@rpttype = 'Ie'] or r:section_a/r:record[@rpttype = 'If'] or r:section_a[@data = 'false']">
-
+                    
                     <xsl:if test="r:section_a[@data = 'true']">
-
+                    
                         <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                        
                             <xsl:call-template name="lite_section_a_individual_id_verification_sub_template_bottom"/>
-
+                        
                         </xsl:for-each>
-
+                    
                     </xsl:if>
-
+                    
                     <xsl:if test="r:section_a[@data = 'false']">
-
+                        
                         <xsl:call-template name="lite_section_a_individual_id_verification_sub_template_bottom"/>
-
+                        
                     </xsl:if>
-
+                    
                 </xsl:if>
-
+                
             </table>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_individual_id_verification_template -->
 
     <!-- start lite_section_a_individual_id_verification_sub_template_top -->
     <xsl:template name="lite_section_a_individual_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Name (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -2806,32 +2764,32 @@
             <th class="caption">New ID / Old ID (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="join_string_with_delimiter">
-                    <xsl:with-param name="value1" select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
-                    <xsl:with-param name="value2" select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                    <xsl:with-param name="value1" select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                    <xsl:with-param name="value2" select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                     <xsl:with-param name="delimiter" select="'/'"/>
                 </xsl:call-template>
-                <!--                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                <!--                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_individual_id_verification_sub_template_top -->
 
     <!-- start lite_section_a_individual_id_verification_sub_template_bottom -->
     <xsl:template name="lite_section_a_individual_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Name</th>
             <td class="long-content">
@@ -2846,7 +2804,7 @@
                 <xsl:call-template name="check_empty_string">
                     <xsl:with-param name="value" select="r:nic_brno"/>
                 </xsl:call-template>
-            </td>
+            </td>                        
         </tr>
         <tr>
             <th class="caption">Old ID</th>
@@ -2870,11 +2828,11 @@
                 <xsl:call-template name="check_empty_string">
                     <xsl:with-param name="value" select="r:nationality"/>
                 </xsl:call-template>
-                <xsl:if test="r:source and r:source != ''">
+                <xsl:if test="r:source and r:source != ''"> 
                     Source: <xsl:value-of select="r:source"/>
                 </xsl:if>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption">Address 1</th>
             <td class="long-content">
@@ -2890,7 +2848,7 @@
             <th class="caption">Address 2</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:addr1"/>
+                    <xsl:with-param name="value" select="r:addr1"/>                                    
                 </xsl:call-template>
                 <xsl:if test="r:source and r:source != '' and r:addr1 and r:addr1 != ''">
                     Source: <xsl:value-of select="r:source"/>
@@ -2913,7 +2871,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                                        
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -2928,61 +2886,61 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_individual_id_verification_sub_template_bottom -->
 
     <!-- start lite_section_a_business_id_verification_template -->
     <xsl:template name="lite_section_a_business_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='B' or @ptype='L']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="lite_section_a_business_id_verification_sub_template_top"/>
-
+                
                 <xsl:if test="r:section_a/r:record[@rpttype = 'CJ'] or r:section_a/r:record[@rpttype = 'Ir'] or r:section_a[@data = 'false']">
-
+                    
                     <xsl:if test="r:section_a[@data = 'true']">
-
+                    
                         <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                        
                             <xsl:call-template name="lite_section_a_business_id_verification_sub_template_bottom"/>
-
+                        
                         </xsl:for-each>
-
+                    
                     </xsl:if>
-
+                    
                     <xsl:if test="r:section_a[@data = 'false']">
-
+                        
                         <xsl:call-template name="lite_section_a_business_id_verification_sub_template_bottom"/>
-
+                        
                     </xsl:if>
-
+                    
                 </xsl:if>
-
+                
             </table>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_business_id_verification_template -->
 
     <!-- start lite_section_a_business_id_verification_sub_template_top -->
     <xsl:template name="lite_section_a_business_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Business Name (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -2990,30 +2948,30 @@
             <th class="caption">Registration No (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:call-template>
-                <!--                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                <!--                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_business_id_verification_sub_template_top -->
 
     <!-- start lite_section_a_business_id_verification_sub_template_bottom -->
     <xsl:template name="lite_section_a_business_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Business Name</th>
             <td class="long-content">
@@ -3029,8 +2987,8 @@
                     <xsl:with-param name="reg_num_1" select="r:register_no" />
                     <xsl:with-param name="reg_num_2" select="r:additional_registration_no" />
                 </xsl:call-template>
-            </td>
-        </tr>
+            </td>                        
+        </tr> 
         <tr>
             <th class="caption">Business Address</th>
             <td class="long-content">
@@ -3043,7 +3001,7 @@
             <th class="caption">Registration Date</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:reg_date"/>
+                    <xsl:with-param name="value" select="r:reg_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3065,7 +3023,7 @@
             <th class="caption">Business Type</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:business_nature"/>
+                    <xsl:with-param name="value" select="r:business_nature"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3089,7 +3047,7 @@
             <th class="caption">Business Commenced</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:business_commenced"/>
+                    <xsl:with-param name="value" select="r:business_commenced"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3097,7 +3055,7 @@
             <th class="caption">Last Changed Date</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:last_change_date"/>
+                    <xsl:with-param name="value" select="r:last_change_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3105,7 +3063,7 @@
             <th class="caption">Rob Search Date</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:cpo_date"/>
+                    <xsl:with-param name="value" select="r:cpo_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3113,15 +3071,7 @@
             <th class="caption">Current Registration Expiry Date</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:expiry_date"/>
-                </xsl:call-template>
-            </td>
-        </tr>
-        <tr>
-            <th class="caption">Business Status</th>
-            <td class="long-content">
-                <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:status"/>
+                    <xsl:with-param name="value" select="r:expiry_date"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3129,7 +3079,7 @@
             <th class="caption">Remark</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:remark"/>
+                    <xsl:with-param name="value" select="r:remark"/>                                    
                 </xsl:call-template>
             </td>
         </tr>
@@ -3149,7 +3099,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                                        
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -3164,66 +3114,66 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_business_id_verification_sub_template_bottom -->
 
     <!-- start lite_section_a_commercial_id_verification_template -->
     <xsl:template name="lite_section_a_commercial_id_verification_template">
-        <xsl:if test="//r:summary/r:enq_sum[@ptype='C']">
-
+        <xsl:if test="../r:summary/r:enq_sum[@ptype='C']">
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <table class="table">
-
+                
                 <xsl:call-template name="lite_section_a_commercial_id_verification_sub_template_top"/>
-
+                
                 <xsl:if test="r:section_a/r:record[@rpttype = 'CE'] or r:section_a/r:record[@rpttype = 'Cr'] or r:section_a[@data = 'false']">
-
+                    
                     <xsl:if test="r:section_a[@data = 'true']">
-
+                    
                         <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+                        
                             <xsl:call-template name="lite_section_a_commercial_id_verification_sub_template_bottom"/>
-
+                        
                         </xsl:for-each>
-
+                    
                     </xsl:if>
-
+                    
                     <xsl:if test="r:section_a[@data = 'false']">
-
+                
                         <xsl:call-template name="lite_section_a_commercial_id_verification_sub_template_bottom"/>
-
-                    </xsl:if>
-
+                                
+                    </xsl:if>        
+                    
                 </xsl:if>
-
+                
             </table>
-
+            
             <br/>
-
-            <!--<xsl:call-template name="lite_section_a_sme_financial_health_indicator_template"/>-->
-
+            
+            <xsl:call-template name="lite_section_a_sme_financial_health_indicator_template"/>
+            
             <xsl:call-template name="lite_section_a_financial_and_shareholders_template"/>
-
+            
         </xsl:if>
     </xsl:template>
-    <!-- finish lite_section_a_commercial_id_verification_template -->
+    <!-- finish lite_section_a_commercial_id_verification_template -->    
 
     <!-- start lite_section_a_commercial_id_verification_sub_template_top -->
     <xsl:template name="lite_section_a_commercial_id_verification_sub_template_top">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Company Name (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:name"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:name"/>
                 </xsl:call-template>
             </td>
         </tr>
@@ -3231,30 +3181,30 @@
             <th class="caption">Registration No (Your Input)</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                    <xsl:with-param name="value" select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:call-template>
-                <!--                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
+                <!--                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno = ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno = '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>
-                <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and //r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
-                    <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="//r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
+                <xsl:if test="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno != '' and ../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno != ''">
+                    <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:nic_brno"/> / <xsl:value-of select="../r:summary/r:enq_sum[@seq = $seq]/r:ic_lcno"/>
                 </xsl:if>-->
             </td>
         </tr>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_commercial_id_verification_sub_template_top -->
 
     <!-- start lite_section_a_commercial_id_verification_sub_template_bottom -->
     <xsl:template name="lite_section_a_commercial_id_verification_sub_template_bottom">
-
+        
         <xsl:variable name="seq">
             <xsl:value-of select="@seq"/>
         </xsl:variable>
-
+        
         <tr>
             <th class="caption">Company Name</th>
             <td class="long-content">
@@ -3282,26 +3232,13 @@
             </td>
         </tr>
         <tr>
-            <th class="caption">Type of Company</th>
-            <td class="long-content">
-                <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:comp_category"/>
-                </xsl:call-template>
-                <br/>
-                <xsl:text> </xsl:text>
-                <xsl:call-template name="check_empty_string">
-                    <xsl:with-param name="value" select="r:comp_type"/>
-                </xsl:call-template>
-            </td>
-        </tr>
-        <tr>
             <th class="caption">Registration Address</th>
             <td class="long-content">
                 <xsl:call-template name="check_empty_string">
                     <xsl:with-param name="value" select="r:addr"/>
                 </xsl:call-template>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption">Business Address</th>
             <td class="long-content">
@@ -3309,7 +3246,7 @@
                     <xsl:with-param name="value" select="r:addr1"/>
                 </xsl:call-template>
             </td>
-        </tr>
+        </tr> 
         <tr>
             <th class="caption">Business Sector</th>
             <td class="long-content">
@@ -3349,7 +3286,7 @@
                     <xsl:with-param name="value" select="//r:summary/r:enq_sum[@seq = $seq]/r:mdi_status"/>
                 </xsl:call-template>
             </td>
-        </tr>
+        </tr>        
         <tr>
             <th class="caption">Ref No.</th>
             <td class="long-content">
@@ -3358,7 +3295,7 @@
                 </xsl:call-template>
             </td>
         </tr>
-
+                        
         <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:enq_status[@code != '1']">
             <tr>
                 <th class="caption">
@@ -3373,25 +3310,25 @@
                 </td>
             </tr>
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_commercial_id_verification_sub_template_bottom -->
 
     <!-- start lite_section_a_financial_and_shareholders_template -->
     <xsl:template name="lite_section_a_financial_and_shareholders_template">
-
+        
         <xsl:if test="r:section_a/r:record[@rpttype = 'CE'] or r:section_a/r:record[@rpttype = 'Cr']">
-
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <p class="title">
                 Financials and Shareholders
             </p>
-
+            
             <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+        
                 <table class="table">
                     <tr>
                         <th class="caption">Last Updated</th>
@@ -3407,10 +3344,10 @@
                             <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                 <xsl:choose>
                                     <xsl:when test="r:exempted and r:exempted = 'true'">
-                                        Yes
+                                        Yes 
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        No
+                                        No 
                                     </xsl:otherwise>
                                 </xsl:choose>
                                 <xsl:if test="r:pldd and r:pldd != ''">
@@ -3423,43 +3360,43 @@
                         <th class="caption">Previous Name Change</th>
                         <td class="long-content">
                             <xsl:for-each select="r:previous_names/r:previous_name[@seq = '1']">
-                                <xsl:if test="r:name and r:name != ''">
-                                    <xsl:value-of select="r:name"/>
-                                </xsl:if>
-                                <xsl:if test="r:change_date and r:change_date != ''">
-                                    <br/>
-                                    (<xsl:value-of select="r:change_date"/>)
-                                </xsl:if>
+                            	<xsl:if test="r:name and r:name != ''">
+                            		<xsl:value-of select="r:name"/>
+                            	</xsl:if>
+	                            <xsl:if test="r:change_date and r:change_date != ''">
+	                                <br/>
+	                                (<xsl:value-of select="r:change_date"/>)
+	                            </xsl:if>
                             </xsl:for-each>
                         </td>
-                    </tr>
+                    </tr>                                        
                     <tr>
                         <th class="caption">Revenue (RM)</th>
-                        <td class="long-content">
+                        <td class="long-content">                            
                             <xsl:if test="r:ic_lcno and r:ic_lcno != ''">
-
+                                    
                                 <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                     <xsl:if test="r:turnover and r:turnover != ''">
-
+                                                                        
                                         <xsl:call-template name="check_empty_number">
                                             <xsl:with-param name="number" select="r:turnover"/>
                                         </xsl:call-template>
-
-                                    </xsl:if>
-
+                                    
+                                    </xsl:if>                                
+                                
                                     <xsl:if test="not(r:turnover) or r:turnover = ''">
-
+                                    
                                         Refer to FS Latest Year
-
+                                    
                                     </xsl:if>
                                 </xsl:for-each>
-
+                                    
                             </xsl:if>
                             <xsl:if test="not(r:ic_lcno) or r:ic_lcno = ''">
-
+                                    
                                 -
-
-                            </xsl:if>
+                                    
+                            </xsl:if>                            
                         </td>
                     </tr>
                     <tr>
@@ -3467,17 +3404,17 @@
                         <td class="long-content">
                             <xsl:for-each select="r:accounts/r:account[@seq = '1']">
                                 <xsl:if test="r:plnpat and r:plnpat != ''">
-
+                                                                        
                                     <xsl:call-template name="check_empty_number">
                                         <xsl:with-param name="number" select="r:plnpat"/>
                                     </xsl:call-template>
-
+                                    
                                 </xsl:if>
-
+                                
                                 <xsl:if test="not(r:plnpat) or r:plnpat = ''">
-
+                                    
                                     -
-
+                                    
                                 </xsl:if>
                             </xsl:for-each>
                         </td>
@@ -3486,20 +3423,20 @@
                         <th class="caption">Total Assets (RM)</th>
                         <td class="long-content">
                             <xsl:for-each select="r:accounts/r:account[@seq = '1']">
-                                <xsl:choose>
+                                <xsl:choose>                                
                                     <xsl:when test="r:exempted and r:exempted = 'false'">
                                         <xsl:if test="r:totass and r:totass != ''">
-
+                                                                        
                                             <xsl:call-template name="check_empty_number">
                                                 <xsl:with-param name="number" select="r:totass"/>
                                             </xsl:call-template>
-
+                                    
                                         </xsl:if>
-
+                                
                                         <xsl:if test="not(r:totass) or r:totass = ''">
-
+                                    
                                             -
-
+                                    
                                         </xsl:if>
                                     </xsl:when>
                                     <xsl:otherwise>
@@ -3563,33 +3500,33 @@
                             </xsl:for-each>
                         </td>
                     </tr>
-
+                    
                 </table>
-
+                
             </xsl:for-each>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_financial_and_shareholders_template -->
 
     <!-- start lite_section_a_sme_financial_health_indicator_template -->
     <xsl:template name="lite_section_a_sme_financial_health_indicator_template">
-
+        
         <xsl:if test="r:section_a/r:record[@rpttype = 'CE'] or r:section_a/r:record[@rpttype = 'Cr']">
-
+            
             <xsl:variable name="seq">
                 <xsl:value-of select="@seq"/>
             </xsl:variable>
-
+            
             <xsl:if test="//r:summary/r:enq_sum[@seq = $seq]/r:include_sfi and //r:summary/r:enq_sum[@seq = $seq]/r:include_sfi = '1'">
-
+            
                 <p class="title">
                     SME Financial Health Indicator
                 </p>
-
+            
                 <xsl:for-each select="r:section_a/r:record[@seq = $seq]">
-
+        
                     <table class="table">
                         <tr>
                             <th class="caption">Risk Indicator</th>
@@ -3649,7 +3586,7 @@
                                                 </xsl:attribute>
                                                 <xsl:attribute name="height">15</xsl:attribute>
                                                 <xsl:attribute name="width">15</xsl:attribute>
-                                            </img>
+                                            </img>                                            
                                         </xsl:when>
                                         <xsl:when test="r:sme_financial_score/r:health[@code = 'F']">
                                             <img class="vertical-center">
@@ -3660,7 +3597,7 @@
                                                 </xsl:attribute>
                                                 <xsl:attribute name="height">15</xsl:attribute>
                                                 <xsl:attribute name="width">15</xsl:attribute>
-                                            </img>
+                                            </img>                                            
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <img class="vertical-center">
@@ -3689,134 +3626,19 @@
                                     <xsl:with-param name="value" select="r:sme_financial_score/r:limit"/>
                                 </xsl:call-template>
                             </td>
-                        </tr>
-
+                        </tr>                    
+                    
                     </table>
-
+                
                 </xsl:for-each>
-
+            
                 <br/>
-
+            
             </xsl:if>
-
+            
         </xsl:if>
-
+        
     </xsl:template>
     <!-- finish lite_section_a_financial_and_shareholders_template -->
-
-    <!-- start section_a_individual_business_section_a_etr_plus_at_a_glass_template -->
-    <xsl:template name="section_a_individual_business_section_a_etr_plus_at_a_glass_template">
-
-
-            <xsl:variable name="seq">
-                <xsl:value-of select="@seq"/>
-            </xsl:variable>
-
-            <table class="table">
-            <xsl:choose>
-            <xsl:when test="(//r:summary/r:enq_sum/r:include_etr_plus = '2')">
-                    <td class="vertical-center">
-                        This section is for eTR Plus contributor only. To find out how you can contribute to get access, please contact us at
-                        <a href = "mailto: etrplus@ctos.com.my">etrplus@ctos.com.my</a>.
-                    </td>
-            </xsl:when>
-            <xsl:when test="(//r:summary/r:enq_sum/r:include_etr_plus = '0')">
-                    <td class="vertical-center">
-                        Not Selected
-                    </td>
-            </xsl:when>
-            <xsl:when test="(//r:summary/r:enq_sum/r:include_etr_plus = '1') and (//r:enquiry/r:section_etr_plus[@data = 'true'])">
-                <tr>
-                    <td class="caption" width="60%" nowrap="caption">
-                        Credit account
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:creditAccount"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        &#160;- Active
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:active"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        &#160;- Outstanding
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:outStanding"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        &#160;- Closed
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:closed"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        Outstanding Amount Overdue
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="format-number(//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:outStandingOverDue, '#,##0')"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        Previous Outstanding Amount Overdue
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="format-number(//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:prevOutStandingOverDue, '#,##0')"/>
-                        </xsl:call-template>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        No. of days in average due
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:avgDueDays"/>
-                        </xsl:call-template>
-                        Days
-                    </td>
-                </tr>
-                <tr>
-                    <td class="caption" nowrap="caption">
-                        Percentage of Payment Made on Time
-                    </td>
-                    <td class="vertical-center">
-                        <xsl:call-template name="check_empty_string">
-                            <xsl:with-param name="value" select="//r:enquiry/r:section_etr_plus/r:etrPlusSummary/r:ontimePayPercentage"/>
-                        </xsl:call-template>
-                        <xsl:text>%</xsl:text>
-                    </td>
-                </tr>
-                </xsl:when>
-                <xsl:when test="(//r:summary/r:enq_sum/r:include_etr_plus != '2') and (//r:enquiry/r:section_etr_plus[@data = 'false']) or not(//r:summary/r:enq_sum/r:include_etr_plus)">
-                    <td class="vertical-center">
-                        No Information Available
-                    </td>
-                </xsl:when>
-                </xsl:choose>
-            </table>
-    </xsl:template>
-    <!-- finish section_a_individual_business_section_a_etr_plus_at_a_glass_template -->
 
 </xsl:stylesheet>
