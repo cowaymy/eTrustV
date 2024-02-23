@@ -547,14 +547,21 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		//Insert email table for schedular batch run
 		String Subject = "";
 		if(params.get("requestNameType").toString().equals("LEDGER")){
-			Subject = "COWAY " + params.get("requestNameType").toString() +" - " + params.get("orderNo").toString() ;
+			Subject = "COWAY MALAYSIA " + params.get("requestNameType").toString() +" - " + params.get("orderNo").toString() ;
 		}else{
-			Subject = "COWAY " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
+			Subject = "COWAY MALAYSIA " + params.get("requestNameType").toString() +" - (" + params.get("orderNo").toString() + " / " + params.get("date").toString() + ")" ;
 		}
-		String Body = "Dear Valued Customer, <br /><br />Please find attached the "+ params.get("requestNameType").toString().toLowerCase() + " for your kind perusal. <br /><br />"
+
+		String statementName = "";
+		if(params.get("requestNameType").toString().equals("LEDGER")){
+			statementName = params.get("requestNameType").toString().toLowerCase() ;
+		}else{
+			statementName = params.get("requestNameType").toString().toLowerCase() + " ( " + params.get("date").toString().substring(0, 1) + params.get("date").toString().substring(1).toLowerCase() + ")" ;
+		}
+		String Body = "Dear Valued Customer, <br /><br />Please find attached the "+ statementName + " for your kind perusal. <br /><br />"
 				+ "Should you require further information or assistance, please contact our Customer Service Representative at 1800-888-111 or you may send your enquiry to "
 				+ "<a href='www.coway.com.my/enquiry'>www.coway.com.my/enquiry</a>.<br /><br />"
-				+ "Thank you and have a wonderful day.<br /><br />COWAY (MALAYSIA) SDN. BHD.<br /><br />"
+				+ "Thank you and have a wonderful day.<br /><br /><b>COWAY (MALAYSIA) SDN. BHD.</b><br /><br />"
 				+ "*** Note: This email is generated automatically; no response is necessary. ***";
 
 		Map<String,Object> masterEmailDet = new HashMap<String, Object>();
