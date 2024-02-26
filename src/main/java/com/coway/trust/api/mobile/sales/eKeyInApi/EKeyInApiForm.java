@@ -62,7 +62,7 @@ public class EKeyInApiForm {
 		params.put("voucherCode", vo.getVoucherCode());
 		params.put("voucherEmail", vo.getVoucherEmail());
 		params.put("voucherPromotion", vo.getVoucherPromotion());
-		params.put("custStatusId", vo.getCustStatusId());
+		params.put("customerStatusCode", vo.getCustomerStatusCode());
 		return params;
 	}
 
@@ -98,7 +98,7 @@ public class EKeyInApiForm {
 	private String voucherCode;
 	private String voucherEmail;
 	private int voucherPromotion;
-	private int custStatusId;
+	private int customerStatusCode;
 
 	public int getStusCodeId() {
 		return stusCodeId;
@@ -356,12 +356,11 @@ public class EKeyInApiForm {
 		this.voucherPromotion = voucherPromotion;
 	}
 
-	public int getCustStatusId() {
-		return custStatusId;
-	}
+  public int getCustomerStatusCode() {
+    return customerStatusCode;
+  }
 
-	public void setCustStatusId(int custStatusId) {
-		this.custStatusId = custStatusId;
-	}
-
+  public void setCustomerStatusCode(int customerStatusCode) {
+    this.customerStatusCode = customerStatusCode;
+  }
 }
