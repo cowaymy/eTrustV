@@ -476,8 +476,8 @@ SELECT A.CUST_ID AS CUST_ID
       ]]>
      </if>
 
-     <if test='custStatusId != null || custStatusId != ""'>
-        JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{custStatusId} AND C.STUS_ID = 1
+     <if test='customerStatusCode != null || customerStatusCode != ""'>
+        JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{customerStatusCode} AND C.STUS_ID = 1
      </if>
 
     <![CDATA[
@@ -1647,8 +1647,8 @@ SELECT A.CUST_ID AS CUST_ID
            B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
     FROM SAL0237M A
     JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-    <if test='custStatusId != null || custStatusId != ""'>
-      JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{custStatusId} AND C.STUS_ID = 1
+    <if test='customerStatusCode != null || customerStatusCode != ""'>
+      JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{customerStatusCode} AND C.STUS_ID = 1
     </if>
     WHERE B.E_SALES IN (1,2)
       AND A.ITM_STK_ID = #{itmStkId}
@@ -1666,8 +1666,8 @@ SELECT A.CUST_ID AS CUST_ID
            B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
     FROM SAL0237M A
     JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-    <if test='custStatusId != null || custStatusId != ""'>
-      JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{custStatusId} AND C.STUS_ID = 1
+    <if test='customerStatusCode != null || customerStatusCode != ""'>
+      JOIN SAL0405D C ON B.PROMO_ID = C.PROMO_ID AND C.ITM_VALUE = #{customerStatusCode} AND C.STUS_ID = 1
     </if>
     WHERE B.PROMO_ID = 31723
       AND A.ITM_STK_ID = #{itmStkId}
