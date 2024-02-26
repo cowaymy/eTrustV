@@ -124,8 +124,8 @@ SELECT A.CUST_ID AS CUST_ID
                , CASE WHEN TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
                          ELSE TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
                , B.RECEIVING_MARKETING_MSG_STATUS
-               , B.IS_EXST_CUST CUSTOMER_STATUS_CODE
-               , W.CODE_NAME CUSTOMER_STATUS
+               , TO_CHAR(B.IS_EXST_CUST) CUSTOMER_STATUS_CODE
+               , TO_CHAR(W.CODE_NAME) CUSTOMER_STATUS
     --CONTACT-----------------------------------------------------------------------
                , A.PRE_ORD_ID AS PRE_ORD_ID
                , UPPER(C.NAME) AS NAME
