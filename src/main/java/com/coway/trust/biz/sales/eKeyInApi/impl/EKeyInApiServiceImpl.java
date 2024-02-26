@@ -268,6 +268,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     param.setPromoId(selectData.getPromoId());
     param.setItmStkId(selectData.getItmStkId());
     param.setPromoDt(selectData.getReqstDt());
+    param.setCustomerStatusCode(selectData.getCustomerStatusCode());
     if ((yyyy == 2019 && mm >= 7) || (yyyy >= 2020)) {
       List<EgovMap> selectPromotionByAppTypeStockESales = selectPromotionByAppTypeStockESales(param);
       List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
