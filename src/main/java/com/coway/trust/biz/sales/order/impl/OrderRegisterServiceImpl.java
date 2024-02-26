@@ -1974,9 +1974,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     	  int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));
         int discWaive = CommonUtils.intNvl(preBookInfo.get("discWaive"));
         String custVerifyStus = CommonUtils.nvl(preBookInfo.get("custVerifyStus"));
-        int preBookPeriod = CommonUtils.intNvl(preBookInfo.get("preBookPeriod"));
+        //int preBookPeriod = CommonUtils.intNvl(preBookInfo.get("preBookPeriod"));
 
-        if (preBookPeriod <= 30 && custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
+        if (custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
           params.put("module", "PRE_BOOK");
           params.put("subModule", "PRE_BOOK");
           if (discWaive == 4) {
