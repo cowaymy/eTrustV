@@ -255,7 +255,6 @@ public class EKeyInApiDto {
   private String voucherEmail;
   private String customerStatusCode;
   private String customerStatus;
-  private String customerStatusId;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -2007,13 +2006,5 @@ public class EKeyInApiDto {
 
   public void setCustomerStatus(String customerStatus) {
     this.customerStatus = customerStatus;
-  }
-
-  public String getCustomerStatusId() {
-    return customerStatusId;
-  }
-
-  public void setCustomerStatusId(String customerStatusId) {
-    this.customerStatusId = customerStatusId;
   }
 }
