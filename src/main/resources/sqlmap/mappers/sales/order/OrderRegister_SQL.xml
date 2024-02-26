@@ -404,7 +404,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -452,39 +452,9 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
 
-                  <!--Add Pre-Book Promotion into list if preBook is 1 and Extrade is 1-->
-               <if test='preBook == "1" and exTrade == "1"'>
-               UNION
-               SELECT DISTINCT T2.PROMO_ID PROMO_ID
-                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
-                    , T2.PROMO_DT_FROM
-                 FROM SAL0018D T1
-                 JOIN SAL0017D T2
-                   ON T2.PROMO_ID = T1.PROMO_ID
-                  AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                  AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-                  AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
-                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND T2.EMP_CHK = #{empChk}
-                  AND T2.EX_TRADE = #{exTrade}
-                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
-                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
-                  AND T1.PROMO_ITM_STUS_ID = 1
-                  AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 1
-                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
-                  AND T2.VOUCHER_PROMOTION = 1
-                  </if>
-                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
-                  AND T2.VOUCHER_PROMOTION = 0
-                  </if>
-               </if>
+
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
@@ -513,7 +483,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -563,39 +533,8 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
 
-                  <!--Add Pre-Book Promotion into list if preBook is 1 and Extrade is 1-->
-               <if test='preBook == "1" and exTrade == "1"'>
-               UNION
-               SELECT DISTINCT T2.PROMO_ID PROMO_ID
-                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
-                    , T2.PROMO_DT_FROM
-                 FROM SAL0018D T1
-                 JOIN SAL0017D T2
-                   ON T2.PROMO_ID = T1.PROMO_ID
-                  AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                  AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-                  AND T2.PROMO_TYPE_ID IN( 2282, 1034) <!-- Discount -->
-                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND T2.EMP_CHK = #{empChk}
-                  AND T2.EX_TRADE = #{exTrade}
-                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                  JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
-                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
-                  AND T1.PROMO_ITM_STUS_ID = 1
-                  AND T2.E_SALES in (0,2)
-                  AND T2.PRE_BOOK = 1
-                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
-                  AND T2.VOUCHER_PROMOTION = 1
-                  </if>
-                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
-                  AND T2.VOUCHER_PROMOTION = 0
-               </if>
-               </if>
 
 
              ) T
@@ -626,7 +565,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -678,7 +617,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   OR T2.PROMO_ID = 31723
                   </if>
@@ -707,7 +646,7 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (1,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -757,46 +696,12 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (0,1,2)
-                  AND T2.PRE_BOOK = 0
+                  AND T2.PRE_BOOK = #{preBook}
 	                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
 	                  OR T2.PROMO_ID = 31723
 	                  </if>
                   </if>
 
-				<!--Add Pre-Book Promotion into list if preBook is 1 and Extrade is 1-->
-               <if test='preBook == "1" and exTrade == "1"'>
-               UNION
-               SELECT DISTINCT T2.PROMO_ID PROMO_ID
-                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
-                    , T2.PROMO_DT_FROM
-                 FROM SAL0018D T1
-                 JOIN SAL0017D T2
-                   ON T2.PROMO_ID = T1.PROMO_ID
-                  AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                  AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-                  AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
-                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND T2.EMP_CHK = #{empChk}
-                  AND T2.EX_TRADE = #{exTrade}
-                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
-                   JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) T3 on T3.PROMO_ID = T2.PROMO_ID
-                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
-                  AND T1.PROMO_ITM_STUS_ID = 1
-                  AND T2.E_SALES in (1,2)
-                  AND T2.PRE_BOOK = 1
-                  <if test='voucherPromotion != null and voucherPromotion == "1"'>
-                  AND T2.VOUCHER_PROMOTION = 1
-                  </if>
-                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
-                  AND T2.VOUCHER_PROMOTION = 0
-                  OR T2.PROMO_ID = 31723
-                  </if>
-                  OR T2.PROMO_ID = 31723
-
-               </if>
 
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
@@ -2745,7 +2650,7 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
-      AND B.PRE_BOOK = 0
+      AND B.PRE_BOOK = #{preBook}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">
@@ -2754,30 +2659,7 @@
       <if test="custTypeId != null and custTypeId != ''">
         AND B.PROMO_CUST_TYPE IN (#{custTypeId},'0')
       </if>
-      <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
-      <if test='preBook == "1" and exTrade == "1"'>
-      UNION
-      SELECT A.PROMO_ID CODE,
-           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
-    FROM SAL0237M A
-    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-    JOIN (select * from SAL0405D where ITM_VALUE = #{custStatus} and stus_id = 1) C on C.PROMO_ID = B.PROMO_ID
-    WHERE B.E_SALES IN (0,2)
-      AND A.ITM_STK_ID = #{stkId}
-      AND A.APP_TYPE_ID = #{appTyp}
-      AND A.ITM_CPNT_ID = #{cpntId}
-      AND B.EMP_CHK = #{empInd}
-      AND B.EX_TRADE = #{exTrade}
-      AND B.PRE_BOOK = 1
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
-      <if test="srvPacId != null and srvPacId != ''">
-        AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-      </if>
-      <if test="custTypeId != null and custTypeId != ''">
-        AND B.PROMO_CUST_TYPE IN (#{custTypeId},'0')
-      </if>
-      </if>
+
 
     </select>
 
@@ -2792,7 +2674,7 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
-      AND B.PRE_BOOK = 0
+      AND B.PRE_BOOK = #{preBook}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       union
@@ -2806,27 +2688,11 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
-      AND B.PRE_BOOK = 0
+      AND B.PRE_BOOK = #{preBook}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
 
-      <!--Add PreBook Promotion if preBook = 1 and exTrade = 1 -->
-      <if test='preBook == "1" and exTrade == "1"'>
-      UNION
-      SELECT A.PROMO_ID CODE,
-           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
-    FROM SAL0237M A
-    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-    WHERE B.E_SALES IN (1,2)
-      AND A.ITM_STK_ID = #{stkId}
-      AND A.APP_TYPE_ID = #{appTyp}
-      AND A.ITM_CPNT_ID = #{cpntId}
-      AND B.EMP_CHK = #{empInd}
-      AND B.EX_TRADE = #{exTrade}
-      AND B.PRE_BOOK = 1
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
-      </if>
+
     </select>
 
   <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
