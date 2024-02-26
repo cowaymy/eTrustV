@@ -132,6 +132,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     EKeyInApiDto selecteKeyInDetail = EKeyInApiDto.create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
     selecteKeyInDetail.setCustomerStatusId(selecteKeyInDetail.getCustomerStatusCode());
 
+    logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+    logger.debug(" " + selecteKeyInDetail.getCustomerStatusCode());
+    logger.debug(" " + selecteKeyInDetail.getCustomerStatusId());
+    logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+
     selecteKeyInDetail.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
     List<EgovMap> selectBankList = selectBankList();
     List<EKeyInApiDto> bankList = selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
