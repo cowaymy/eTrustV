@@ -130,12 +130,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, " Pre Order ID value does not exist.");
     }
     EKeyInApiDto selecteKeyInDetail = EKeyInApiDto.create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
-    selecteKeyInDetail.setCustomerStatusId(selecteKeyInDetail.getCustomerStatusCode());
-
-    logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    logger.debug(" " + selecteKeyInDetail.getCustomerStatusCode());
-    logger.debug(" " + selecteKeyInDetail.getCustomerStatusId());
-    logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
     selecteKeyInDetail.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
     List<EgovMap> selectBankList = selectBankList();
@@ -376,7 +370,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getItmStkId())) {
       throw new ApplicationException(AppConstants.FAIL, " Item Stock ID  value does not exist.");
     }
-    if (CommonUtils.isEmpty(param.getCustStatusId())) {
+    if (CommonUtils.isEmpty(param.getCustomerStatusCode())) {
         throw new ApplicationException(AppConstants.FAIL, " Customer Status ID  value does not exist.");
       }
     return eKeyInApiMapper.selectPromotionByAppTypeStockESales(EKeyInApiForm.createMap(param));
