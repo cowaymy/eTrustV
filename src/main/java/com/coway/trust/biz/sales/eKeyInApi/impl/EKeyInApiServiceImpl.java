@@ -130,6 +130,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, " Pre Order ID value does not exist.");
     }
     EKeyInApiDto selecteKeyInDetail = EKeyInApiDto.create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
+    selecteKeyInDetail.setCustomerStatusId(selecteKeyInDetail.getCustomerStatusCode());
 
     selecteKeyInDetail.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
     List<EgovMap> selectBankList = selectBankList();
