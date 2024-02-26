@@ -326,7 +326,7 @@
   </select>
 
   <select id="selectRentAmt" parameterType="int" resultType="java.math.BigDecimal">
-    SELECT SUM(T1.RENT_AMT) RENT_AMT
+    SELECT NVL(SUM(T1.RENT_AMT),0) RENT_AMT
     FROM PAY0022D T1
     WHERE T1.RENT_SO_ID = #{value}
   </select>
