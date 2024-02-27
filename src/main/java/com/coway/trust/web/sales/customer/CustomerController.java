@@ -2820,4 +2820,17 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> searchCreditCardNoExp(@RequestParam Map<String, Object>params, ModelMap model){
 		return ResponseEntity.ok(customerService.searchCreditCardNoExp(params));
 	}
+
+	  @RequestMapping(value = "/selectCustomerStatusHistoryLogJsonList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCustomerStatusHistoryLogJsonList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+//#{custId}
+	    List<EgovMap> custStusHistLog = null;
+
+	    LOGGER.info("##### custStusHistLog START #####");
+	    custStusHistLog = customerService.selectCustomerStatusHistoryLogList(params);
+
+	    // 데이터 리턴.
+	    return ResponseEntity.ok(custStusHistLog);
+	  }
 }

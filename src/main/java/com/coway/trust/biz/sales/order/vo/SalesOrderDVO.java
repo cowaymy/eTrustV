@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0002D database table.
- * 
+ *
  */
 public class SalesOrderDVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -41,8 +41,10 @@ public class SalesOrderDVO implements Serializable {
 	private Date updDt;
 
 	private int updUserId;
-	
+
 	private int itmCompId;
+
+	private int isExstCust;
 
 	public SalesOrderDVO() {
 	}
@@ -166,7 +168,7 @@ public class SalesOrderDVO implements Serializable {
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
-	
+
 	public int getItmCompId() {
 		return itmCompId;
 	}
@@ -175,4 +177,11 @@ public class SalesOrderDVO implements Serializable {
 		this.itmCompId = itmCompId;
 	}
 
+	public int getIsExstCust() {
+		return isExstCust;
+	}
+
+	public void setIsExstCust(int isExstCust) {
+		this.isExstCust = isExstCust;
+	}
 }

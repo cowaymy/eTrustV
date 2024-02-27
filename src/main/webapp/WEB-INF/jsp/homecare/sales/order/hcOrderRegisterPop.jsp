@@ -1814,6 +1814,7 @@
                 itmPv                        : $('#ordPv1').val().trim(),
                 itmStkId                    : $('#ordProduct1').val(),
                 itmCompId                : $('#compType1').val(),
+                isExstCust : $("#hiddenCustStatusId").val(),
             },
             salesOrderDVO2 : {
                 itmPrc                       : $('#ordPrice2').val().trim(),
@@ -1821,6 +1822,7 @@
                 itmPv                        : $('#ordPv2').val().trim(),
                 itmStkId                    : $('#ordProduct2').val(),
                 itmCompId                : $('#compType2').val(),
+                isExstCust : $("#hiddenCustStatusId").val(),
             },
             installationVO : {
                 addId                       : $('#hiddenCustAddId').val(),

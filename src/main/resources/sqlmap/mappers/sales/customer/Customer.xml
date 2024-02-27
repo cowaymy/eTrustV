@@ -3242,4 +3242,13 @@
         AND A.CUST_CRC_NO LIKE #{grp1} ||'%' || #{grp2}
   </select>
 
+  <select id="selectCustomerStatusHistoryLogList" parameterType="Map" resultType="egovMap">
+  		SELECT A.*,B.CODE_NAME, C.NAME, TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CREATE_DT FROM SAL0412D A
+		JOIN SYS0013M B
+		ON A.IS_EXST_CUST = B.CODE_ID
+		JOIN SAL0029D C
+		ON A.CUST_ID = C.CUST_ID
+		WHERE A.CUST_ID = #{custId}
+		ORDER BY A.CRT_DT DESC
+  </select>
 </mapper>

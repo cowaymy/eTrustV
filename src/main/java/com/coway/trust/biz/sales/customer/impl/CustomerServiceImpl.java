@@ -47,6 +47,12 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return customerMapper.selectCustomerList(params);
   }
 
+  @Override
+  public List<EgovMap> selectCustomerStatusHistoryLogList(Map<String, Object> params) {
+
+    return customerMapper.selectCustomerStatusHistoryLogList(params);
+  }
+
   /**
    * 상세화면 조회한다.(Basic Info)
    *

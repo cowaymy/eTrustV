@@ -1696,6 +1696,7 @@
                 itmPv                   : $('#ordPv').val().trim(),
                 itmStkId                : $('#ordProudct').val(),
                 itmCompId               : $('#compType').val(),
+                isExstCust : $("#hiddenCustStatusId").val(),
             },
             installationVO : {
                 addId                   : $('#hiddenCustAddId').val(),

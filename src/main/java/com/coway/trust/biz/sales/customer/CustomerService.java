@@ -609,4 +609,6 @@ public interface CustomerService {
 
   List<EgovMap> searchCreditCardNoExp(Map<String, Object> params);
 
+List<EgovMap> selectCustomerStatusHistoryLogList(Map<String, Object> params);
+
 }

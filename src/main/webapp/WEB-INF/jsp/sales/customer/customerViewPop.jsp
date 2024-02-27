@@ -11,6 +11,7 @@
     var ownOrderGridID; // own order list
     var thirdPartyGridID; // third party list
     var cowayRewardsGridID; // coway rewards list
+    var custStusHistGridID; //customer status history log list
 
     $(document).ready(function(){
 
@@ -21,6 +22,7 @@
     	createOwnOrderGrid();
     	createThirdPartyGrid();
     	createCowayRewardsGrid();
+    	createCustStusHistGrid();
 
         //Call Ajax
         fn_getCustomerAddressAjax(); // address list
@@ -30,6 +32,7 @@
         fn_getCustomerOwnOrderAjax(); // own order list
         fn_getCustomerThirdPartyAjax(); // third party list
         fn_getCustomerCowayRewardsAjax(); // coway rewards list
+        fn_getCustStatusHistoryLogAjax(); // customer status history log list
     });
 
     function createAddrGrid(){
@@ -359,6 +362,33 @@
         cowayRewardsGridID = GridCommon.createAUIGrid("#cowayrewards_grid_wrap", cowayRewardsColumnLayout,'',gridPros);// coway Rewards list
     }
 
+    function createCustStusHistGrid(){
+        // Coway Rewards Column
+        var custStusHistColumnLayout = [
+             {dataField : "name",headerText : '<spring:message code="sal.text.custName" />', width : '40%'},
+             {dataField : "codeName", headerText : '<spring:message code="sal.text.custStus" />', width : '30%'},
+             {dataField : "createDt", headerText : '<spring:message code="sal.text.updateDate" />', width : '30%'},
+        ];
+
+        var gridPros = {
+
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                fixedColumnCount    : 1,
+                showStateColumn     : true,
+                displayTreeOpen     : false,
+  //              selectionMode       : "singleRow",  //"multipleCells",
+                headerHeight        : 30,
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true
+            };
+
+        custStusHistGridID = GridCommon.createAUIGrid("#cust_stus_hist_grid_wrap", custStusHistColumnLayout,'',gridPros);// customer status history log
+    }
+
     // ajax View 조회.
     // address Ajax
     function fn_getCustomerAddressAjax() {
@@ -406,6 +436,12 @@
     function fn_getCustomerCowayRewardsAjax (){
         Common.ajax("GET", "/sales/customer/selectCustomerCowayRewardsJsonList",$("#getParamForm").serialize(), function(result) {
             AUIGrid.setGridData(cowayRewardsGridID, result);
+        });
+    }
+
+    function fn_getCustStatusHistoryLogAjax() {
+        Common.ajax("GET", "/sales/customer/selectCustomerStatusHistoryLogJsonList",$("#getParamForm").serialize(), function(result) {
+            AUIGrid.setGridData(custStusHistGridID, result);
         });
     }
 
@@ -669,6 +705,13 @@
     </section><!-- tap_wrap end -->
     </dd>
     <!-- ######### Tab Area #########  -->
+    <!-- ######### Customer Status History Log List ######### -->
+     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, custStusHistGridID)"><spring:message code="sal.title.custStusHistLog" /></a></dt>
+    <dd>
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="cust_stus_hist_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
+    </dd>
     <!-- ######### Customer Address List ######### -->
     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, addrGridID)"><spring:message code="sal.title.custAddrList" /></a></dt>
     <dd>
