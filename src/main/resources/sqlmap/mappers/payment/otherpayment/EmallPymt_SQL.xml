@@ -111,14 +111,16 @@
     </insert>
 
   <select id="getOrderDetail" parameterType="Map" resultType="egovMap">
-    SELECT
+    SELECT * FROM (SELECT
     SAL.SALES_ORD_ID
     , SAL.SALES_ORD_NO
     , APPCD.CODE APP_CODE
     FROM SAL0001D SAL
     LEFT JOIN SYS0013M APPCD ON APPCD.CODE_ID = SAL.APP_TYPE_ID
     WHERE SAL.REF_NO =  #{doNo}
-
+    ORDER BY SAL.STUS_CODE_ID
+    )
+    WHERE ROWNUM = 1
   </select>
 
     <update id="updatePay0356mMaster" parameterType="Map">
