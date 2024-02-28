@@ -271,7 +271,7 @@
             msg = "* Please select an individual customer<br>";
         }
 
-        if($('#hiddenCustStatusId').val() == '7466' || $('#hiddenCustStatusId').val() == '7476') {
+        if($('#hiddenCustStatusId').val() == '7466' || $('#hiddenCustStatusId').val() == '7476' || $('#hiddenCustStatusId').val() == '7502') {
 
         }else{
             isValid = false;
