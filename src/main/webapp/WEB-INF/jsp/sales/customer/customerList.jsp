@@ -145,6 +145,11 @@
                 width : 170,
                 editable : false
             }, {
+                dataField : "custStatus",
+                headerText : '<spring:message code="sal.text.custStus" />',
+                width : 170,
+                editable : false
+            }, {
                 dataField : "custTier",
                 headerText : '<spring:message code="sal.title.text.custTier" />',
                 width : 170,

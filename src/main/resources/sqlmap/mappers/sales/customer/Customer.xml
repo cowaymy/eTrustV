@@ -3243,7 +3243,8 @@
   </select>
 
   <select id="selectCustomerStatusHistoryLogList" parameterType="Map" resultType="egovMap">
-  		SELECT A.*,B.CODE_NAME, C.NAME, TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CREATE_DT FROM SAL0412D A
+  		SELECT A.*,B.CODE_NAME, C.NAME, TO_CHAR(A.CRT_DT,'DD/MM/YYYY')|| ' ' || CRT_TM  AS CREATE_DT
+  		FROM SAL0412D A
 		JOIN SYS0013M B
 		ON A.IS_EXST_CUST = B.CODE_ID
 		JOIN SAL0029D C
