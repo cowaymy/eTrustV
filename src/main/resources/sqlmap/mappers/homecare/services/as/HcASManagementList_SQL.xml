@@ -733,64 +733,95 @@
         ) A ORDER BY CODE_NAME ASC
     </select>
 
-	<select id="assignCtList" parameterType="Map" resultType="egovMap">
-	/* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.assignCtList] - KR.JIN */
-	  SELECT DISTINCT C.MEM_ID CT_ID
-                    , C.MEM_CODE CT_CODE
-                    , B.BRNCH_ID BRNCH_ID
-                    , B.CODE BRANCH_CODE
-                    , B.NAME BRANCH_NAME
-                    , C.STUS CT_STUS
-                    , C.NAME CT_NAME
-                    <!-- , D.DT_SUB_GRP CT_SUB_GRP -->
-                    <choose>
-                            <when test="brnchType eq 'DSC'">
-                                , D.CT_SUB_GRP CT_SUB_GRP
-                            </when>
-                            <otherwise>
-                                ,D.DT_SUB_GRP CT_SUB_GRP
-                            </otherwise>
-                        </choose>
-                    , S28.SERIAL_REQUIRE_CHK_YN
-      FROM ORG0005D A ,
-           SYS0005M B ,
-           ORG0001D C ,
-           SYS0064M D ,
-           SVC0054M E ,
-           SYS0028M S28
-           <choose>
-	           <when test="brnchType eq 'DSC'">
-	               , SYS0045M S45
-	           , sys0047m S47
-	           </when>
-           </choose>
-      WHERE A.BRNCH_ID = #{BRNCH_ID}
-        AND A.BRNCH_ID = B.BRNCH_ID
-        AND B.BRNCH_ID = C.BRNCH
-        AND B.TYPE_ID in (SELECT CODE_ID FROM SYS0013M
-                          WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE in ('HDC','DSC'))  -- 5754
-        AND E.MEM_ID = C.MEM_ID
-        AND C.MEM_TYPE in (5758,3,6672)              -- homecare/CT
-        AND A.MEM_LVL IN ('3','4')
-        <!-- AND B.CODE = D.DT_BRNCH_CODE
-        AND E.CT_SUB_GRP = D.DT_SUB_GRP -->
-        <choose>
-           <when test="brnchType eq 'DSC'">
-               AND B.CODE = D.ct_BRNCH_CODE
-               AND E.CT_SUB_GRP = D.CT_SUB_GRP
-			AND S47.USER_NAME = C.MEM_CODE
-			AND S45.USER_ID = S47.USER_ID
-			ANd s45.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
-           </when>
-           <otherwise>
-               AND B.CODE = D.DT_BRNCH_CODE
-               AND E.CT_SUB_GRP = D.DT_SUB_GRP
-           </otherwise>
-       </choose>
-        AND C.MEM_CODE = S28.WH_LOC_CODE
-        AND C.STUS = 1
-        AND E.MAJOR_GRP = '1'
-	</select>
+  <select id="assignCtList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.assignCtList] - KR.JIN */
+    SELECT S.CT_ID,
+               S.CT_CODE,
+               S.BRNCH_ID,
+               S.BRANCH_CODE,
+               S.BRANCH_NAME,
+               S.CT_STUS,
+               S.CT_NAME,
+               S.CT_SUB_GRP,
+               S.SERIAL_REQUIRE_CHK_YN
+    FROM ( SELECT DISTINCT C.MEM_ID CT_ID
+                                      , C.MEM_CODE CT_CODE
+                                      , B.BRNCH_ID BRNCH_ID
+                                      , B.CODE BRANCH_CODE
+                                      , B.NAME BRANCH_NAME
+                                      , C.STUS CT_STUS
+                                      , C.NAME CT_NAME
+
+                                     <!-- , D.DT_SUB_GRP CT_SUB_GRP -->
+                                     <choose>
+                                       <when test="brnchType eq 'DSC'">
+                                         , D.CT_SUB_GRP CT_SUB_GRP
+                                       </when>
+                                       <otherwise>
+                                         , D.DT_SUB_GRP CT_SUB_GRP
+                                       </otherwise>
+                                     </choose>
+                                     , S28.SERIAL_REQUIRE_CHK_YN
+                                     , ROW_NUMBER() OVER(PARTITION BY C.MEM_ID,
+                                                                                            C.MEM_CODE,
+                                                                                            B.BRNCH_ID,
+                                                                                            B.NAME,
+                                                                                            C.STUS,
+                                                                                            C.NAME,
+                                                                                            D.DT_SUB_GRP,
+                                                                                            S28.SERIAL_REQUIRE_CHK_YN
+                                                                       ORDER BY 1) AS ROW_NUM
+
+                FROM ORG0005D A ,
+                         SYS0005M B ,
+                         ORG0001D C ,
+                         SYS0064M D ,
+                         SVC0054M E ,
+                         SYS0028M S28
+
+                         <choose>
+                           <when test="brnchType eq 'DSC'">
+                             , SYS0045M S45
+                             , SYS0047M S47
+	                         </when>
+                         </choose>
+
+                WHERE A.BRNCH_ID = #{BRNCH_ID}
+                    AND A.BRNCH_ID = B.BRNCH_ID
+                    AND B.BRNCH_ID = C.BRNCH
+                    AND B.TYPE_ID IN ( SELECT CODE_ID
+                                                 FROM SYS0013M
+                                                 WHERE CODE_MASTER_ID = '45'
+                                                     AND DISAB = '0'
+                                                     AND CODE in ('HDC', 'DSC'))
+                    AND E.MEM_ID = C.MEM_ID
+                    AND C.MEM_TYPE IN (5758, 3, 6672)
+                    AND A.MEM_LVL IN ('3','4')
+
+                   <!-- AND B.CODE = D.DT_BRNCH_CODE
+                         AND E.CT_SUB_GRP = D.DT_SUB_GRP -->
+
+                   <choose>
+                     <when test="brnchType eq 'DSC'">
+                       AND B.CODE = D.ct_BRNCH_CODE
+                       AND E.CT_SUB_GRP = D.CT_SUB_GRP
+                       AND S47.USER_NAME = C.MEM_CODE
+                       AND S45.USER_ID = S47.USER_ID
+                       AND S45.ROLE_ID IN ( SELECT TO_NUMBER(CODE)
+                                                       FROM SYS0094M C
+                                                       WHERE C.IND = 'ACI_ROLE')
+                     </when>
+                     <otherwise>
+                       AND B.CODE = D.DT_BRNCH_CODE
+                       AND E.CT_SUB_GRP = D.DT_SUB_GRP
+                     </otherwise>
+                   </choose>
+
+                   AND C.MEM_CODE = S28.WH_LOC_CODE
+                   AND C.STUS = 1
+                   AND E.MAJOR_GRP = '1'
+    ) S WHERE S.ROW_NUM = 1
+  </select>
 
 	<select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
 	/* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.assignCtOrderList] - KR.JIN */
