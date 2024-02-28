@@ -281,153 +281,129 @@
   </select>
 
   <select id="getASOrderInfo" parameterType="Map" resultType="egovMap">
+    WITH T1 AS ( SELECT *
+                        FROM SAL1014V S
+                        WHERE S.ORD_ID = #{ORD_ID}
+    ), T2 AS ( SELECT *
+                  FROM T1
+                  WHERE T1.ORD_ID = #{ORD_ID}
+                      AND T1.ORD_ID IS NOT NULL
+                      AND T1.CONFIG_SETT_INS IS NOT NULL
+                      AND T1.CONFIG_SETT_BS IS NOT NULL
+                      AND T1.CONFIG_SETT_AS IS NOT NULL
+                      AND T1.CONFIG_BS_GEN IS NOT NULL
+                      AND T1.CONFIG_BS_MEM_ID IS NOT NULL
+                      AND T1.CONFIG_BS_WEEK IS NOT NULL
+                      AND T1.CONFIG_BS_REM IS NOT NULL
+                      AND T1.SRV_MEM_ID IS NOT NULL
+                      AND T1.SRV_MEM_NO IS NOT NULL
+                      AND T1.SRV_MEM_BILL_NO IS NOT NULL
+                      AND T1.SRV_MEM_PAC_ID IS NOT NULL
+                      AND T1.SRV_MEM_PAC_CODE IS NOT NULL
+                      AND T1.SRV_MEM_PAC_NAME IS NOT NULL
+                      AND T1.SRV_MEM_FREQ IS NOT NULL
+                      AND T1.SRV_MEM_DUR IS NOT NULL
+                      AND T1.SRV_MEM_SALESMAN_CODE IS NOT NULL
+                      AND T1.SRV_MEM_SALESMAN_NAME IS NOT NULL
+    )
     SELECT S.ORD_ID ,
-           S.ORD_NO ,
-           S.APP_TYPE_CODE ,
-           TO_CHAR(S.ORD_DT,'dd/mm/yyyy') C1 ,
-           S.ORD_STUS_CODE ,
-           S.RENTAL_STUS ,
-           S.CUST_NAME ,
-           S.CUST_NRIC ,
-           S.INST_CNT_NAME ,
-           S.INST_CNT_TEL_M ,
-           S.INST_CNT_TEL_O ,
-           S.INST_CNT_TEL_R ,
-           S.INST_ADDR1 ,
-           S.INST_ADDR2 ,
-           S.INST_ADDR3 ,
-           S.INST_POST_CODE ,
-           S.INST_AREA ,
-           S.INST_STATE ,
-           S.INST_CNTY ,
-           S.STOCK_CODE ,
-           S.STOCK_DESC ,
-           S.LAST_INSTALL_SIRIM_NO ,
-           S.LAST_INSTALL_SERIAL_NO ,
-           CASE WHEN ( S.CODE_ID IS NOT NULL )
-                THEN S.CODE_NAME
-                ELSE '-'
-           END C2 ,
-           S.LAST_INSTALL_NO ,
-           S.LAST_INSTALL_DT C3 ,
-           S.LAST_INSTALL_CT_CODE ,
-           S.LAST_INSTALL_CT_NAME ,
-           S.INSTCT ,
-           CASE WHEN ( NOT ( ( S.ORDERID1 IS NULL )
-                 AND ( S.CONFIG_SETT_INS IS NULL )
-                 AND ( S.CONFIG_SETT_BS IS NULL )
-                 AND ( S.CONFIG_SETT_AS IS NULL )
-                 AND ( S.CONFIG_BS_GEN IS NULL )
-                 AND ( S.CONFIG_BS_MEM_ID IS NULL )
-                 AND ( S.CONFIG_BS_WEEK IS NULL )
-                 AND ( S.CONFIG_BS_REM IS NULL )
-                 AND ( S.SRV_MEM_ID IS NULL )
-                 AND ( S.SRV_MEM_NO IS NULL )
-                 AND ( S.SRV_MEM_BILL_NO IS NULL )
-                 AND ( S.SRV_MEM_PAC_ID IS NULL )
-                 AND ( S.SRV_MEM_PAC_CODE IS NULL )
-                 AND ( S.SRV_MEM_PAC_NAME IS NULL )
-                 AND ( S.SRV_MEM_FREQ IS NULL )
-                 AND ( S.SRV_MEM_DUR IS NULL )
-                 AND ( S.SRV_MEM_SALESMAN_CODE IS NULL )
-                 AND ( S.SRV_MEM_SALESMAN_NAME IS NULL ) ) )
-                   THEN S.SRV_MEM_PAC_CODE
-                   ELSE ' '
-           END C4 ,
-           CASE WHEN ( NOT ( ( S.ORDERID1 IS NULL )
-                 AND ( S.CONFIG_SETT_INS IS NULL )
-                 AND ( S.CONFIG_SETT_BS IS NULL )
-                 AND ( S.CONFIG_SETT_AS IS NULL )
-                 AND ( S.CONFIG_BS_GEN IS NULL )
-                 AND ( S.CONFIG_BS_MEM_ID IS NULL )
-                 AND ( S.CONFIG_BS_WEEK IS NULL )
-                 AND ( S.CONFIG_BS_REM IS NULL )
-                 AND ( S.SRV_MEM_ID IS NULL )
-                 AND ( S.SRV_MEM_NO IS NULL )
-                 AND ( S.SRV_MEM_BILL_NO IS NULL )
-                 AND ( S.SRV_MEM_PAC_ID IS NULL )
-                 AND ( S.SRV_MEM_PAC_CODE IS NULL )
-                 AND ( S.SRV_MEM_PAC_NAME IS NULL )
-                 AND ( S.SRV_MEM_FREQ IS NULL )
-                 AND ( S.SRV_MEM_DUR IS NULL )
-                 AND ( S.SRV_MEM_SALESMAN_CODE IS NULL )
-                 AND ( S.SRV_MEM_SALESMAN_NAME IS NULL ) ) )
-                   THEN S.SRV_MEM_PAC_NAME
-                   ELSE ' '
-           END C5 ,
-           TO_CHAR(S.SRV_MEM_EXPR_DT ,'dd/mm/yyyy') C6,
-           S.USER_FULL_NAME,
-           S.INST_ADDR_DTL
+               S.ORD_NO ,
+               S.APP_TYPE_CODE ,
+               TO_CHAR(S.ORD_DT,'dd/mm/yyyy') C1 ,
+               S.ORD_STUS_CODE ,
+               S.RENTAL_STUS ,
+               S.CUST_NAME ,
+               S.CUST_NRIC ,
+               S.INST_CNT_NAME ,
+               S.INST_CNT_TEL_M ,
+               S.INST_CNT_TEL_O ,
+               S.INST_CNT_TEL_R ,
+               S.INST_ADDR1 ,
+               S.INST_ADDR2 ,
+               S.INST_ADDR3 ,
+               S.INST_POST_CODE ,
+               S.INST_AREA ,
+               S.INST_STATE ,
+               S.INST_CNTY ,
+               S.STOCK_CODE ,
+               S.STOCK_DESC ,
+               S.LAST_INSTALL_SIRIM_NO ,
+               S.LAST_INSTALL_SERIAL_NO ,
+               CASE WHEN ( S.CODE_ID IS NOT NULL )
+                       THEN S.CODE_NAME
+               ELSE '-' END C2 ,
+               S.LAST_INSTALL_NO ,
+               S.LAST_INSTALL_DT C3 ,
+               S.LAST_INSTALL_CT_CODE ,
+               S.LAST_INSTALL_CT_NAME ,
+               S.INSTCT ,
+               CASE WHEN ( NOT ( ( S.SRV_MEM_PAC_CODE IS NULL ) ) )
+                       THEN S.SRV_MEM_PAC_CODE
+                       ELSE ' ' END C4,
+               CASE WHEN ( NOT ( ( S.SRV_MEM_PAC_NAME IS NULL ) ) )
+                       THEN S.SRV_MEM_PAC_NAME
+                       ELSE ' ' END C5,
+               TO_CHAR(S.SRV_MEM_EXPR_DT, 'dd/mm/yyyy') C6,
+               S.USER_FULL_NAME,
+               S.INST_ADDR_DTL,
+               S.CODE_ID AS C2CODE,
+               S.AS_TYPE_ID
     FROM ( SELECT E.ORD_ID ORD_ID ,
-                  E.ORD_NO ORD_NO ,
-                  E.RENTAL_STUS RENTAL_STUS ,
-                  E.ORD_STUS_CODE ORD_STUS_CODE ,
-                  E.ORD_DT
-                  ORD_DT ,
-                  E.APP_TYPE_CODE APP_TYPE_CODE ,
-                  E.STOCK_CODE STOCK_CODE ,
-                  E.STOCK_DESC STOCK_DESC ,
-                  E.CUST_NAME CUST_NAME ,
-                  E.CUST_NRIC
-                  CUST_NRIC ,
-                  '' INST_ADDR1 ,
-                  '' INST_ADDR2 ,
-                  '' INST_ADDR3 ,
-                  '' INST_CNTY ,
-                  '' INST_STATE ,
-                  '' INST_AREA ,
-                  '' INST_POST_CODE ,
-                  E2.INST_ADDR_DTL
-                  INST_ADDR_DTL,
-                  E2.INST_CNT_NAME INST_CNT_NAME ,
-                  E2.INST_CNT_TEL_M
-                  INST_CNT_TEL_M ,
-                  E2.INST_CNT_TEL_O INST_CNT_TEL_O ,
-                  E2.INST_CNT_TEL_R
-                  INST_CNT_TEL_R ,
-                  E2.LAST_INSTALL_NO LAST_INSTALL_NO ,
-                  E2.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
-                  E2.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
-                  E2.LAST_INSTALL_DT
-                  LAST_INSTALL_DT ,
-                  E2.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
-                  E2.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
-                  E2.INSTCT INSTCT ,
-                  E4.ORD_ID ORDERID1 ,
-                  E4.CONFIG_SETT_INS CONFIG_SETT_INS ,
-                  E4.CONFIG_SETT_BS CONFIG_SETT_BS ,
-                  E4.CONFIG_SETT_AS CONFIG_SETT_AS ,
-                  E4.CONFIG_BS_GEN CONFIG_BS_GEN ,
-                  E4.CONFIG_BS_MEM_ID CONFIG_BS_MEM_ID ,
-                  E4.CONFIG_BS_WEEK CONFIG_BS_WEEK ,
-                  E4.CONFIG_BS_REM CONFIG_BS_REM ,
-                  E4.SRV_MEM_ID SRV_MEM_ID ,
-                  E4.SRV_MEM_NO SRV_MEM_NO ,
-                  E4.SRV_MEM_BILL_NO SRV_MEM_BILL_NO ,
-                  E4.SRV_MEM_PAC_ID SRV_MEM_PAC_ID ,
-                  E4.SRV_MEM_PAC_CODE SRV_MEM_PAC_CODE ,
-                  E4.SRV_MEM_PAC_NAME
-                  SRV_MEM_PAC_NAME ,
-                  E4.SRV_MEM_EXPR_DT SRV_MEM_EXPR_DT ,
-                  E4.SRV_MEM_FREQ SRV_MEM_FREQ ,
-                  E4.SRV_MEM_DUR SRV_MEM_DUR ,
-                  E4.SRV_MEM_SALESMAN_CODE SRV_MEM_SALESMAN_CODE ,
-                  E4.SRV_MEM_SALESMAN_NAME SRV_MEM_SALESMAN_NAME ,
-                  E5.CODE_ID CODE_ID ,
-                  E5.CODE_NAME CODE_NAME,
-                  E6.USER_FULL_NAME
-           FROM ( SELECT vOrderBasicInfo.*
-                  FROM SAL1006V vOrderBasicInfo ) E
-                  JOIN ( SELECT vOrderInstallationInfo.*
+                          E.ORD_NO ORD_NO ,
+                          E.RENTAL_STUS RENTAL_STUS ,
+                          E.ORD_STUS_CODE ORD_STUS_CODE ,
+                          E.ORD_DT
+                          ORD_DT ,
+                          E.APP_TYPE_CODE APP_TYPE_CODE ,
+                          E.STOCK_CODE STOCK_CODE ,
+                          E.STOCK_DESC STOCK_DESC ,
+                          E.CUST_NAME CUST_NAME ,
+                          E.CUST_NRIC
+                          CUST_NRIC ,
+                          '' INST_ADDR1 ,
+                          '' INST_ADDR2 ,
+                          '' INST_ADDR3 ,
+                          '' INST_CNTY ,
+                          '' INST_STATE ,
+                          '' INST_AREA ,
+                          '' INST_POST_CODE ,
+                          E2.INST_ADDR_DTL
+                          INST_ADDR_DTL,
+                          E2.INST_CNT_NAME INST_CNT_NAME ,
+                          E2.INST_CNT_TEL_M
+                          INST_CNT_TEL_M ,
+                          E2.INST_CNT_TEL_O INST_CNT_TEL_O ,
+                          E2.INST_CNT_TEL_R
+                          INST_CNT_TEL_R ,
+                          E2.LAST_INSTALL_NO LAST_INSTALL_NO ,
+                          E2.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
+                          E2.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
+                          E2.LAST_INSTALL_DT
+                          LAST_INSTALL_DT ,
+                          E2.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
+                          E2.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
+                          E2.INSTCT INSTCT ,
+                          ( SELECT SRV_MEM_EXPR_DT
+                            FROM T1 ) SRV_MEM_EXPR_DT,
+                          ( SELECT SRV_MEM_PAC_CODE
+                            FROM T2 ) SRV_MEM_PAC_CODE,
+                          ( SELECT SRV_MEM_PAC_NAME
+                            FROM T2 ) SRV_MEM_PAC_NAME,
+                          E5.CODE_ID CODE_ID ,
+                          E5.CODE_NAME CODE_NAME,
+                          E6.USER_FULL_NAME,
+                          E7.AS_TYPE_ID
+               FROM ( SELECT vOrderBasicInfo.*
+                          FROM SAL1006V vOrderBasicInfo ) E
+               JOIN ( SELECT vOrderInstallationInfo.*
                          FROM SAL1010V vOrderInstallationInfo ) E2 ON E.ORD_ID = E2.ORD_ID
-                  JOIN SYS0026M Extent3 ON ( E.STOCK_CODE = Extent3.STK_CODE )
+               JOIN SYS0026M Extent3 ON ( E.STOCK_CODE = Extent3.STK_CODE )
                                         OR ( ( E.STOCK_CODE IS NULL )
                                         AND ( Extent3.STK_CODE IS NULL ) )
-                  LEFT JOIN ( SELECT vOrderSrvMemConfigInfo.*
-                              FROM SAL1014V vOrderSrvMemConfigInfo ) E4 ON E.ORD_ID = E4.ORD_ID
-                  LEFT JOIN SYS0013M E5 ON Extent3.STK_CTGRY_ID = E5.CODE_ID
-                  LEFT JOIN SYS0047M E6 ON E.UPD_USER_ID = E6.USER_NAME
-                  WHERE E.ORD_ID = #{ORD_ID} AND ROWNUM <![CDATA[ <= ]]> 1 ) S
+               LEFT JOIN SYS0013M E5 ON Extent3.STK_CTGRY_ID = E5.CODE_ID
+               LEFT JOIN SYS0047M E6 ON E.UPD_USER_ID = E6.USER_NAME
+               LEFT JOIN SVC0001D E7 ON E7.AS_SO_ID = E.ORD_ID
+               WHERE E.ORD_ID = #{ORD_ID} AND ROWNUM <![CDATA[ <= ]]> 1 ) S
   </select>
 
  <select id="getASEvntsInfo" parameterType="Map" resultType="egovMap">
