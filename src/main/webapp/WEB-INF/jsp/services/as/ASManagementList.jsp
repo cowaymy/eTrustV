@@ -503,18 +503,16 @@
         Common.alert(result.message);
         return;
       } else {
-        console.log(salesOrdId);
-        console.log(asId);
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
-        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+        /*var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
+        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');*/
 
         // TEMP
-        /*var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
+        var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
                            "indicator" : "AS",
                            "ordId" : salesOrdId,
                            "key" : asId,
                            "popId" : "_newASResultDiv1"};
-         Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');*/
+         Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
       }
     });
   }
