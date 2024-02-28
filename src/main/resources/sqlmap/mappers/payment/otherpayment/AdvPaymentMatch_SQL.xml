@@ -384,91 +384,110 @@
   </update>
 
   <select id="selectAdvanceMatchList" parameterType="Map" resultType="egovMap">
-  SELECT * FROM
-  (
-  SELECT DISTINCT P43.BATCH_ID, M.*
-  FROM (
-  SELECT
-  TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
-  A.GROUP_SEQ,
-  A.PAY_ITM_MODE_ID,
-  E.CODE AS PAY_ITM_MODE_NM,
-  <if test="advType == 1">
-  NVL(SUM (A.PAY_ITM_AMT),0) TOT_AMT,
-  </if>
-  <if test="advType == 2">
-  NVL(SUM (A.PAY_ITM_AMT),0) - NVL(SUM (C.PAY_ITM_BANK_CHRG_AMT),0) TOT_AMT,
-  </if>
-  NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
-  C.PAY_ITM_REF_NO AS REF_DTL,
-  MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
-  MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM
-  FROM
-  PAY0252T A
-  JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-  JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
-  LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
-  LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
-  WHERE 1=1
-  AND A.BANK_STATE_MAPPING_STUS_ID = 1
-  AND A.BANK_CHG_MAPPING_STUS_ID = 1
-  AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
-  AND C.PAY_ITM_MODE_ID = '108'
-  AND A.KEY_IN_SCRN = 'BAT'
+    SELECT *
+    FROM ( SELECT DISTINCT P43.BATCH_ID,
+                                        M.PAY_ITM_REF_DT,
+                                        M.GROUP_SEQ,
+                                        M.PAY_ITM_MODE_ID,
+                                        M.PAY_ITM_MODE_NM,
+                                        M.TOT_AMT,
+                                        M.BANK_CHG_AMT,
+                                        M.REF_DTL,
+                                        M.PAY_ITM_BANK_ACC_ID,
+                                        M.PAY_ITM_BANK_ACC_NM
+               FROM ( SELECT P.*,
+                                     ROW_NUMBER()
+                                     OVER(PARTITION BY P.PAY_ITM_REF_DT,
+                                                                   P.GROUP_SEQ,
+                                                                   P.PAY_ITM_MODE_ID,
+                                                                   P.PAY_ITM_MODE_NM,
+                                                                   P.TOT_AMT,
+                                                                   P.BANK_CHG_AMT,
+                                                                   P.REF_DTL,
+                                                                   P.PAY_ITM_BANK_ACC_ID,
+                                                                   P.PAY_ITM_BANK_ACC_NM
+                                     ORDER BY 1
+                                     ) AS ROW_NUM
+                          FROM ( SELECT TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+                                                A.GROUP_SEQ,
+                                                A.PAY_ITM_MODE_ID,
+                                                E.CODE AS PAY_ITM_MODE_NM,
 
-  <if test="TransDateFr != null and TransDateFr != '' ">
-    AND PAY_ITM_REF_DT <![CDATA[ >= ]]>
-    TO_DATE(#{TransDateFr},'DD/MM/YYYY')
-  </if>
-  <if test="TransDateTo != null and TransDateTo != '' ">
-    AND PAY_ITM_REF_DT <![CDATA[ <= ]]>
-    TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
-  </if>
-  GROUP BY
-  A.GROUP_SEQ,
-  C.PAY_ITM_REF_NO,
-  TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
-  A.PAY_ITM_MODE_ID,
-  E.CODE
-  ) M
-  JOIN PAY0043D P43 ON P43.USER_REF_NO = M.REF_DTL
-  WHERE 1=1
-  <if test="batchId != null or batchId != ' ' ">
-    AND P43.BATCH_ID = #{batchId}
-  </if>
-  <if test="advType == 1">
-  	AND P43.PAY_CHANNEL = 'IPAY88'
-  </if>
-  <if test="advType == 2">
-  	AND P43.PAY_CHANNEL = 'EGHL'
-  </if>
-  ) adv
-  JOIN
-  (
-  SELECT
-  TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
-  B.F_TRNSC_REF4,
-  B.F_TRNSC_CRDIT_AMT
-  FROM
-  PAY0079D A
-  JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
-  LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
-  LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
-  WHERE
-  B.OTH_KEYIN_STUS_ID = 1
-  AND B.OTH_KEYIN_BC_STUS_ID = 1
+                                                <if test="advType == 1">
+                                                  NVL(SUM (A.PAY_ITM_AMT),0) TOT_AMT,
+                                                </if>
 
-  <if test="TransDateFr != null and TransDateFr != '' ">
-    AND A.TRNSC_DT <![CDATA[ >= ]]>
-    TO_DATE(#{TransDateFr},'DD/MM/YYYY')
-  </if>
-  <if test="TransDateTo != null and TransDateTo != '' ">
-    AND A.TRNSC_DT <![CDATA[ <= ]]>
-    TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
-  </if>
+                                                <if test="advType == 2">
+                                                  NVL(SUM (A.PAY_ITM_AMT),0) - NVL(SUM (C.PAY_ITM_BANK_CHRG_AMT),0) TOT_AMT,
+                                                </if>
 
-  ) bnk ON bnk.F_TRNSC_REF4 = adv.REF_DTL AND bnk.F_TRNSC_CRDIT_AMT = adv.TOT_AMT
-  ORDER BY GROUP_SEQ
+                                                NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
+                                                C.PAY_ITM_REF_NO AS REF_DTL,
+                                                MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
+                                                MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM
+                                     FROM PAY0252T A
+                                     JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                                     JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                                     LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+                                     LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+                                     WHERE 1=1
+                                         AND A.BANK_STATE_MAPPING_STUS_ID = 1
+                                         AND A.BANK_CHG_MAPPING_STUS_ID = 1
+                                         AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
+                                         AND C.PAY_ITM_MODE_ID = '108'
+                                         AND A.KEY_IN_SCRN = 'BAT'
+
+                                         <if test="TransDateFr != null and TransDateFr != '' ">
+                                           AND PAY_ITM_REF_DT <![CDATA[ >= ]]> TO_DATE(#{TransDateFr},'DD/MM/YYYY')
+                                         </if>
+
+                                         <if test="TransDateTo != null and TransDateTo != '' ">
+                                           AND PAY_ITM_REF_DT <![CDATA[ <= ]]> TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
+                                         </if>
+
+                                     GROUP BY A.GROUP_SEQ,
+                                                    C.PAY_ITM_REF_NO,
+                                                    TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+                                                    A.PAY_ITM_MODE_ID,
+                                                    E.CODE
+                          ) P
+               ) M JOIN PAY0043D P43 ON P43.USER_REF_NO = M.REF_DTL
+               WHERE 1 = 1
+
+               <if test="batchId != null or batchId != ' ' ">
+                 AND P43.BATCH_ID = #{batchId}
+               </if>
+
+               <if test="advType == 1">
+                 AND P43.PAY_CHANNEL = 'IPAY88'
+               </if>
+
+               <if test="advType == 2">
+  	             AND P43.PAY_CHANNEL = 'EGHL'
+               </if>
+
+               AND M.ROW_NUM = 1
+
+    ) ADV JOIN ( SELECT TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
+                                 B.F_TRNSC_REF4,
+                                 B.F_TRNSC_CRDIT_AMT
+                      FROM PAY0079D A
+                      JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                      LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+                      LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+                      WHERE B.OTH_KEYIN_STUS_ID = 1
+                          AND B.OTH_KEYIN_BC_STUS_ID = 1
+
+                      <if test="TransDateFr != null and TransDateFr != '' ">
+                        AND A.TRNSC_DT <![CDATA[ >= ]]> TO_DATE(#{TransDateFr},'DD/MM/YYYY')
+                      </if>
+
+                      <if test="TransDateTo != null and TransDateTo != '' ">
+                        AND A.TRNSC_DT <![CDATA[ <= ]]> TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
+                      </if>
+
+    ) BNK ON bnk.F_TRNSC_REF4 = ADV.REF_DTL AND BNK.F_TRNSC_CRDIT_AMT = ADV.TOT_AMT
+    ORDER BY GROUP_SEQ
 </select>
 
 <resultMap id="resultAdvanceMap" type="egovMap" />
