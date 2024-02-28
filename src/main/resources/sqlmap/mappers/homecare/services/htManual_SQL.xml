@@ -570,7 +570,7 @@ FROM
 
 
   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
- 
+
 SELECT * FROM
     (
         SELECT
@@ -1129,7 +1129,7 @@ SELECT * FROM
                   </when>
                   <otherwise>
                     <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      Project2.NO = #{txtHsOrderNo}
+                      AND Project2.NO = #{txtHsOrderNo}
                     </if>
                   </otherwise>
                 </choose>
