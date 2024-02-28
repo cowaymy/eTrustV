@@ -1150,7 +1150,7 @@ SELECT * FROM
                       </when>
                       <otherwise>
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( Project2.SALES_ORD_NO = #{txtSalesOrder})
+                          AND ( Project2.SALES_ORD_NO = #{txtSalesOrder})
                         </if>
                       </otherwise>
                     </choose>
