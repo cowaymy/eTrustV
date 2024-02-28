@@ -1410,7 +1410,6 @@
              , ITM_ID
              , ITM_CALL_ENTRY_ID
              , CPNT_ID
-             , IS_EXST_CUST
              )
         VALUES
              ( #{salesOrdId}
@@ -1427,7 +1426,6 @@
              , #{itmId}
              , #{itmCallEntryId}
              , #{itmCompId}
-             , #{isExstCust}
              )
     </insert>
 
