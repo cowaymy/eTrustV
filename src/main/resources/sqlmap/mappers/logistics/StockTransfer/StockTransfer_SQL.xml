@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper">
 
-    <select id="selectStockTransferSeq" resultType="String">
+  <select id="selectStockTransferSeq" resultType="String">
 <!--     SELECT -->
 <!--           'STO' -->
 <!--           ||TO_CHAR (SYSDATE, 'YYMMDD') -->
@@ -10,117 +10,184 @@
 <!--      FROM LOG0047M -->
 <!--       WHERE SUBSTR (REQST_NO, 1, 9) =  'STO'||TO_CHAR (SYSDATE, 'YYMMDD') -->
         SELECT  'STO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(STO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
-    </select>
-    <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
-        select ROWNUM rnum , l47.REQST_STUS     status
-            -- ,(case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
-                , (case l47.REQST_STUS
-                        when 'O' then 'Open'
-                        when 'P' then 'Pending'
-                        when 'C' then 'Completed'
-                    end) staname
-             <!-- , reqs.code_name     staname -->
-             , l47.reqst_no       reqstno
-             , l48.reqst_no_itm   reqitmno
-             , l47.trnsc_type     ttype
-             , tran.code_name     ttext
-             , l47.trnsc_type_dtl mtype
-             , trand.code_name    mtext
-             , decode(l47.PRIDIC_FRQNCY , 'A' , 'Auto' , 'M' , 'Manual' ,l47.PRIDIC_FRQNCY) froncy
-             , to_char(l47.reqst_crt_dt , 'yyyy-mm-dd')     crtdt
-             , to_char(l47.reqst_require_dt , 'yyyy-mm-dd') reqdt
-             , l47.REF_DOC_NO docno
-             , l47.DOC_HDER_TXT headtitle
-             , l47.GOODS_RCIPT grcipt
-             , l47.RCIV_CDC_RDC rcvloc
-             , s28c.wh_loc_code rcvlocnm
-             , s28c.wh_loc_code ||'-'|| DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
-             , l47.reqst_cdc_rdc reqloc
-             , s28q.wh_loc_code  reqlocnm
-             , s28q.wh_loc_code ||'-'|| DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
-             , l48.itm_code      itmcd
-             , (select SERIAL_CHK from sys0026m where stk_code = l48.itm_code) serialchk
-             , l48.itm_name      itmname
-             , l48.reqst_qty     reqstqty
-             , NVL (l55.DELVRY_QTY, 0) AS delyqty
-             , nvl(l55.RCIPT_QTY , 0) as rciptqty
-             , l48.uom
-             , uomt.code_name uomnm
-             , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l47.CRT_USER_ID),l47.CRT_USER_ID) user_Name
-             ,case when s13h.stk_id is not null then 'HC' else 'HA' end stk_catgry
-          from log0047m l47
-             , log0048d l48
-             , (select * from sys0013m where code_master_id = 306) tran
-             , (select * from sys0013m where code_master_id = 308) trand
-             , (select * from sys0013m where code_master_id = 42) uomt
-             , (select * from sys0013m where code_master_id = 309) reqs
-             , sys0028m s28c
-             , sys0028m s28q
-             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY
-                 from log0055d WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
-                 group by reqst_no , itm_code )l55
-              ,(SELECT * FROM sys0026m M WHERE stk_ctgry_id IN ( SELECT code_id FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) ) s13h
-         where 1 =1
-           and l47.reqst_no       = l48.reqst_no
-           and l47.trnsc_type     = tran.code(+)
-           and l47.trnsc_type_dtl = trand.code(+)
-           and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
-           and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
-           and l48.uom            = uomt.code_id
-           AND l48.reqst_no       = l55.reqst_no(+)
-           AND l48.itm_code       = l55.itm_code(+)
-           and l47.reqst_stus     = reqs.code(+)
-           and l48.itm_code = s13h.stk_code(+)
-           AND NVL(l48.REQST_DEL , 'N') = 'N'
-           <!-- Added for solving removed SMO/STO still appear in search list issue. By Hui Ding, 01/10/2019 -->
-           AND NVL(l47.REQST_DEL , 'N') = 'N'
-           <if test="streq !=null and streq !=''">
-              and l47.reqst_no LIKE #{streq}||'%'
-           </if>
-           <if test="smtype !=null and smtype !=''">
-              and l47.trnsc_type_dtl = #{smtype}
-           </if>
-           <if test="sttype !=null and sttype !=''">
-              and l47.trnsc_type = #{sttype}
-           </if>
-           <if test="flocation !=null and flocation !=''">
-              and (l47.reqst_cdc_rdc = #{flocation} or s28q.wh_loc_desc like '%'||#{flocationnm}||'%')
-           </if>
-           <if test="tlocation !=null and tlocation !=''">
-              and (l47.rciv_cdc_rdc = #{tlocation} or s28c.wh_loc_desc like '%'||#{tlocationnm}||'%')
-           </if>
-           <if test="refdocno !=null and refdocno !=''">
-              and l47.REF_DOC_NO LIKE #{refdocno}||'%'
-           </if>
-           <if test="sam !=null and sam !=''">
-              and l47.PRIDIC_FRQNCY = #{sam}
-           </if>
-           <if test="crtsdt !=null and crtsdt !=''">
-              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
-           </if>
-           <if test="crtedt !=null and crtedt !=''">
-              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
-           </if>
-            <if test="reqsdt !=null and reqsdt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
-           </if>
-           <if test="reqedt !=null and reqedt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
-           </if>
-           <if test="sstatus !=null and sstatus !=''">
-              and l47.reqst_stus = #{sstatus}
-           </if>
-           <if test="userId == 71469">
-              and (l47.reqst_cdc_rdc in (1532,90865) or l47.rciv_cdc_rdc in (1532,90865))
-           </if>
-           <if test="userId == 71473">
-              and (l47.reqst_cdc_rdc in (46,90148,90865) or l47.rciv_cdc_rdc in (46,90148,90865))
-           </if>
-           <if test="userId == 71471">
-              and (l47.reqst_cdc_rdc in (90865) or l47.rciv_cdc_rdc in (90865))
-           </if>
-           ORDER BY l47.reqst_no DESC
-    </select>
+  </select>
+
+  <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
+    SELECT RNUM
+             , STATUS
+             , STANAME
+             , REQSTNO
+             , REQITMNO
+             , TTYPE
+             , TTEXT
+             , MTYPE
+             , MTEXT
+             , FRONCY
+             , CRTDT
+             , REQDT
+             , DOCNO
+             , HEADTITLE
+             , GRCIPT
+             , RCVLOC
+             , RCVLOCNM
+             , RCVLOCDESC
+             , REQLOC
+             , REQLOCNM
+             , REQLOCDESC
+             , ITMCD
+             , SERIALCHK
+             , ITMNAME
+             , REQSTQTY
+             , DELYQTY
+             , RCIPTQTY
+             , UOM
+             , UOMNM
+             , USER_NAME
+             , STK_CATGRY
+    FROM ( SELECT ROWNUM RNUM
+                        , L47.REQST_STUS STATUS
+                        <!-- , (CASE WHEN L48.FINAL_CMPLT = 'Y' THEN 'COMPLETE' ELSE 'OPEN' END) STANAME -->
+                        , (CASE L47.REQST_STUS
+                           WHEN 'O' THEN 'OPEN'
+                           WHEN 'P' THEN 'PENDING'
+                           WHEN 'C' THEN 'COMPLETED' END) STANAME
+                        <!-- , REQS.CODE_NAME     STANAME -->
+                        , L47.REQST_NO REQSTNO
+                        , L48.REQST_NO_ITM REQITMNO
+                        , L47.TRNSC_TYPE TTYPE
+                        , TRAN.CODE_NAME TTEXT
+                        , L47.TRNSC_TYPE_DTL MTYPE
+                        , TRAND.CODE_NAME MTEXT
+                        , DECODE(L47.PRIDIC_FRQNCY , 'A' , 'AUTO' , 'M' , 'MANUAL' ,L47.PRIDIC_FRQNCY) FRONCY
+                        , TO_CHAR(L47.REQST_CRT_DT , 'YYYY-MM-DD') CRTDT
+                        , TO_CHAR(L47.REQST_REQUIRE_DT , 'YYYY-MM-DD') REQDT
+                        , L47.REF_DOC_NO DOCNO
+                        , L47.DOC_HDER_TXT HEADTITLE
+                        , L47.GOODS_RCIPT GRCIPT
+                        , L47.RCIV_CDC_RDC RCVLOC
+                        , S28C.WH_LOC_CODE RCVLOCNM
+                        , S28C.WH_LOC_CODE ||'-'|| DBMS_LOB.SUBSTR (S28C.WH_LOC_DESC, 4000) RCVLOCDESC
+                        , L47.REQST_CDC_RDC REQLOC
+                        , S28Q.WH_LOC_CODE  REQLOCNM
+                        , S28Q.WH_LOC_CODE ||'-'|| DBMS_LOB.SUBSTR (S28Q.WH_LOC_DESC, 4000) REQLOCDESC
+                        , L48.ITM_CODE ITMCD
+                        , (SELECT SERIAL_CHK FROM SYS0026M WHERE STK_CODE = L48.ITM_CODE) SERIALCHK
+                        , L48.ITM_NAME ITMNAME
+                        , L48.REQST_QTY REQSTQTY
+                        , NVL (L55.DELVRY_QTY, 0) AS DELYQTY
+                        , NVL(L55.RCIPT_QTY , 0) AS RCIPTQTY
+                        , L48.UOM
+                        , UOMT.CODE_NAME UOMNM
+                        , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = L47.CRT_USER_ID),L47.CRT_USER_ID) USER_NAME
+                        , CASE WHEN S13H.STK_ID IS NOT NULL THEN 'HC' ELSE 'HA' END STK_CATGRY
+                        , RANK() OVER( ORDER BY L47.REQST_NO ASC )  RANK_NO
+               FROM LOG0047M L47
+                      , LOG0048D L48
+                      , ( SELECT *
+                          FROM SYS0013M
+                          WHERE CODE_MASTER_ID = 306) TRAN
+                      , ( SELECT *
+                          FROM SYS0013M
+                          WHERE CODE_MASTER_ID = 308) TRAND
+                      , ( SELECT *
+                          FROM SYS0013M
+                          WHERE CODE_MASTER_ID = 42) UOMT
+                      , ( SELECT *
+                          FROM SYS0013M
+                          WHERE CODE_MASTER_ID = 309) REQS
+                      , SYS0028M S28C
+                      , SYS0028M S28Q
+                      , ( SELECT REQST_NO
+                                   , ITM_CODE
+                                   , SUM(DELVRY_QTY) DELVRY_QTY
+                                   , SUM(RCIPT_QTY) RCIPT_QTY
+                          FROM LOG0055D
+                          WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
+                          GROUP BY REQST_NO , ITM_CODE ) L55
+                      , ( SELECT *
+                          FROM SYS0026M M
+                          WHERE STK_CTGRY_ID IN ( SELECT CODE_ID
+                                                                 FROM SYS0013M
+                                                                 WHERE CODE IN ( SELECT CODE
+                                                                                           FROM SYS0094M
+                                                                                           WHERE IND = 'HOMECARE')) ) S13H
+    WHERE 1 =1
+        AND L47.REQST_NO = L48.REQST_NO
+        AND L47.TRNSC_TYPE = TRAN.CODE(+)
+        AND L47.TRNSC_TYPE_DTL = TRAND.CODE(+)
+        AND L47.RCIV_CDC_RDC = S28C.WH_LOC_ID(+)
+        AND L47.REQST_CDC_RDC = S28Q.WH_LOC_ID(+)
+        AND L48.UOM  = UOMT.CODE_ID
+        AND L48.REQST_NO = L55.REQST_NO(+)
+        AND L48.ITM_CODE = L55.ITM_CODE(+)
+        AND L47.REQST_STUS = REQS.CODE(+)
+        AND L48.ITM_CODE = S13H.STK_CODE(+)
+        AND NVL(L48.REQST_DEL , 'N') = 'N'
+
+       <!-- Added for solving removed SMO/STO still appear in search list issue. By Hui Ding, 01/10/2019 -->
+       AND NVL(l47.REQST_DEL , 'N') = 'N'
+       <if test="streq !=null and streq !=''">
+          AND L47.REQST_NO LIKE #{streq}||'%'
+       </if>
+
+       <if test="smtype !=null and smtype !=''">
+          AND L47.TRNSC_TYPE_DTL = #{smtype}
+       </if>
+
+       <if test="sttype !=null and sttype !=''">
+          AND L47.TRNSC_TYPE = #{sttype}
+       </if>
+
+       <if test="flocation !=null and flocation !=''">
+          AND (L47.REQST_CDC_RDC = #{flocation} OR S28Q.WH_LOC_DESC LIKE '%'||#{flocationnm}||'%')
+       </if>
+
+       <if test="tlocation !=null and tlocation !=''">
+          AND (L47.RCIV_CDC_RDC = #{tlocation} OR S28C.WH_LOC_DESC LIKE '%'||#{tlocationnm}||'%')
+       </if>
+
+       <if test="refdocno !=null and refdocno !=''">
+          AND L47.REF_DOC_NO LIKE #{refdocno}||'%'
+       </if>
+
+       <if test="sam !=null and sam !=''">
+          AND L47.PRIDIC_FRQNCY = #{sam}
+       </if>
+
+       <if test="crtsdt !=null and crtsdt !=''">
+          AND TO_CHAR(L47.REQST_CRT_DT , 'yyyymmdd') <![CDATA[>=]]> TO_CHAR(TO_DATE(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>
+
+       <if test="crtedt !=null and crtedt !=''">
+          AND TO_CHAR(L47.REQST_CRT_DT , 'yyyymmdd') <![CDATA[<=]]> TO_CHAR(TO_DATE(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+       </if>
+
+       <if test="reqsdt !=null and reqsdt !=''">
+         AND L47.REQST_REQUIRE_DT <![CDATA[ >= ]]> TO_DATE(#{reqsdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+
+       <if test="reqedt !=null and reqedt !=''">
+         AND L47.REQST_REQUIRE_DT <![CDATA[ <= ]]> TO_DATE(#{reqedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+
+       <if test="sstatus !=null and sstatus !=''">
+         AND L47.REQST_STUS = #{sstatus}
+       </if>
+
+       <if test="userId == 71469">
+         AND (L47.REQST_CDC_RDC IN (1532,90865) OR L47.RCIV_CDC_RDC IN (1532,90865))
+       </if>
+
+       <if test="userId == 71473">
+         AND (L47.REQST_CDC_RDC IN (46,90148,90865) OR L47.RCIV_CDC_RDC IN (46,90148,90865))
+       </if>
+
+       <if test="userId == 71471">
+         AND (L47.REQST_CDC_RDC IN (90865) OR L47.RCIV_CDC_RDC IN (90865))
+        </if>
+
+    ) ORDER BY RANK_NO DESC
+  </select>
 
     <insert id="insStockTransfer" parameterType="Map">
         MERGE INTO LOG0048D A
