@@ -3001,9 +3001,10 @@ public void dataMartReport(HttpServletRequest request) {
   }
   LOGGER.info("[END] DataMartReport...");
 }
+
 @RequestMapping(value = "/InboundGenPdf.do")
 //@Scheduled(cron = "0 0 3 * * *")//Daily (03:00am)
-public void InboundGenPdf1(@RequestParam Map<String, Object> param) throws Exception {
+public void InboundGenPdf1() throws Exception {
 LOGGER.info("[START] InboundGenPdf...");
 ObjectMapper mapper = new ObjectMapper();
 Map<String, Object> params = new HashMap<String, Object>();
