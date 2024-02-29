@@ -176,7 +176,9 @@
            WHERE T1.CUST_ID = #{custId}
            AND T1.STUS_CODE_ID = 4
            AND T1.APP_TYPE_ID IN (66,67,68,1412)
-       	   AND CEIL(MONTHS_BETWEEN(TO_DATE(LAST_DAY(T5.SRV_EXPR_DT)),TO_DATE(SYSDATE))) BETWEEN 1 AND 4
+       	   AND MONTHS_BETWEEN(
+       	   FN_GET_FIRST_DAY_MONTH(ADD_MONTHS(SRV_EXPR_DT,1)),
+            FN_GET_FIRST_DAY_MONTH(SYSDATE)) BETWEEN 1 AND 4
     </select>
 
     <select id="selectPreBookingOrderInfo" parameterType="Map" resultType="egovMap">
