@@ -772,9 +772,14 @@
                             }
                         }
                         if(fileId != null) {
-                            if(stus == '1' && (progressStus == '1' || progressStus == '21' || progressStus == '104')){
-                                fn_atchViewDown(fileGrpId, fileId);
+                            if(MEM_TYPE != 2){
+                            	fn_atchViewDown(fileGrpId, fileId);
+                            }else{
+                            	if(stus == '1' && progressStus == '21'){
+                                    fn_atchViewDown(fileGrpId, fileId);
+                                }
                             }
+
                         }
                     });
                 }
