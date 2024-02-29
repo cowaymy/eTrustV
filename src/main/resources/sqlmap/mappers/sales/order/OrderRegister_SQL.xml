@@ -2855,7 +2855,7 @@
          SELECT SUM(T3.INSTLMT_AMT) RENT_AMT
           FROM PAY0010D T3
          WHERE T3.INSTLMT_SO_ID = #{value})
-         WHERE RENT_AMT > 0
+         WHERE RENT_AMT >= 1
     </select>
 
     <select id="selectOutrightPlusOutstandingAmt" parameterType="int" resultType="egovMap">
