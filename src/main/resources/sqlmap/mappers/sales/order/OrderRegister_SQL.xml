@@ -404,7 +404,13 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
+
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -452,7 +458,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
 
 
              ) T
@@ -483,7 +494,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -533,7 +549,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
 
 
 
@@ -565,7 +586,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -617,7 +643,12 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (1,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   OR T2.PROMO_ID = 31723
                   </if>
@@ -646,7 +677,12 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (1,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
                   <if test='voucherPromotion != null and voucherPromotion == "1"'>
                   AND T2.VOUCHER_PROMOTION = 1
                   </if>
@@ -696,7 +732,12 @@
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
                   AND T2.E_SALES in (0,1,2)
+                  <if test='preBook != null and preBook != ""'>
                   AND T2.PRE_BOOK = #{preBook}
+                  </if>
+                  <if test='preBook == null or preBook == ""'>
+                  AND T2.PRE_BOOK = 0
+                  </if>
 	                  <if test='voucherPromotion == null or voucherPromotion == "0"'>
 	                  OR T2.PROMO_ID = 31723
 	                  </if>
@@ -2652,7 +2693,12 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      <if test='preBook != null and preBook != ""'>
       AND B.PRE_BOOK = #{preBook}
+      </if>
+      <if test='preBook == null or preBook == ""'>
+      AND B.PRE_BOOK = 0
+      </if>
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       <if test="srvPacId != null and srvPacId != ''">
@@ -2676,7 +2722,12 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      <if test='preBook != null and preBook != ""'>
       AND B.PRE_BOOK = #{preBook}
+      </if>
+      <if test='preBook == null or preBook == ""'>
+      AND B.PRE_BOOK = 0
+      </if>
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
       union
@@ -2690,7 +2741,12 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
+      <if test='preBook != null and preBook != ""'>
       AND B.PRE_BOOK = #{preBook}
+      </if>
+      <if test='preBook == null or preBook == ""'>
+      AND B.PRE_BOOK = 0
+      </if>
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
 
