@@ -772,7 +772,7 @@
                             }
                         }
                         if(fileId != null) {
-                            if(stus == '1' && (progressStus == '21' || progressStus == '104')){
+                            if(stus == '1' && (progressStus == '1' || progressStus == '21' || progressStus == '104')){
                                 fn_atchViewDown(fileGrpId, fileId);
                             }
                         }
