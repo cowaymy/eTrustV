@@ -94,6 +94,9 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 	@Value("${com.file.upload.path}")
 	private String fileUploadPath;
 
+	@Value("${web.resource.upload.file}")
+	private String webResourseUploadPath;
+
 	@Autowired
 	  private AdaptorService adaptorService;
 	@Autowired
@@ -574,7 +577,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 		masterEmailDet.put("userId", 349);
 		masterEmailDet.put("emailSubject", Subject);
 		masterEmailDet.put("emailParams",Body);
-		masterEmailDet.put("attachment",fileUploadPath + "/RawData/Public/Chatbot Inbound" + "/" + params.get("fileName").toString());
+		masterEmailDet.put("attachment",webResourseUploadPath + "/RawData/Public/Chatbot Inbound" + "/" + params.get("fileName").toString());
 
 		chatbotInboundApiMapper.insertBatchEmailSender(masterEmailDet);
 	}
