@@ -149,6 +149,7 @@
             ,CRT_DT
             ,RPT_PARAMS
         FROM CBT0006M WHERE STUS = 1
+        and TRUNC(crt_dt) <![CDATA[ < ]]> TRUNC(SYSDATE)
     </select>
 
 <insert
