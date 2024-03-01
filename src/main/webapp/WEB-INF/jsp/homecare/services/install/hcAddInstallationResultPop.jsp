@@ -429,12 +429,14 @@
 	    var formData = new FormData();
 	    var fileContentsObj = {};
 	    var fileContentsArr = [];
+	    var newfileGrpId = 0;
 
 	    $.each(myFileCaches, function(n, v) {
 	        fileContentsObj = {};
 	        formData.append(n, v.file);
 	        formData.append("salesOrdId",$("#hidSalesOrderId").val());
 	        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+	        formData.append("atchFileGrpId", newfileGrpId);
 
 	        fileContentsObj = { seq : n,
 	                                    contentsType :v.contentsType,
@@ -443,14 +445,14 @@
 	        fileContentsArr.push(fileContentsObj);
 	      });
 
-	     Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {	       
-	        if(result != 0 && result.code == 00) {	         
+	     Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
+	        if(result != 0 && result.code == 00) {
 	              // KR-OHK Serial Check add
 	          var saveForm = {
                       "installForm" : $("#addInstallForm").serializeJSON(),
                       "fileGroupKey": result.data.fileGroupKey
                 };
-         
+
          		Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
         	        Common.alert(result.message, fn_saveclose);
         	        $("#popup_wrap").remove();
@@ -462,7 +464,6 @@
 	    }, function(result){
 	        Common.alert("Upload Failed. Please check with System Administrator.");
 	    });
-
     }
 
 	function fn_saveclose() {

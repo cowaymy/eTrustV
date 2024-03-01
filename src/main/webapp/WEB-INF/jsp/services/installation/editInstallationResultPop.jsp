@@ -74,16 +74,86 @@ var fileGroupKey ="";
       });
     });
 
-    $('#photo1').change(function(evt) {
+ // Attachment picture
+    $('#attch1').change(function(evt) {
         var file = evt.target.files[0];
-        console.log("file:::" + file);
         if(file == null && myFileCaches[1] != null){
             delete myFileCaches[1];
         }else if(file != null){
-            myFileCaches[1] = {file:file};
+          myFileCaches[1] = {file:file, contentsType:"attch1"};
         }
         console.log(myFileCaches);
-    });
+      });
+
+      $('#attch2').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[2] != null){
+            delete myFileCaches[2];
+        }else if(file != null){
+          myFileCaches[2] = {file:file, contentsType:"attch2"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch3').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[3] != null){
+            delete myFileCaches[3];
+        }else if(file != null){
+          myFileCaches[3] = {file:file, contentsType:"attch3"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch4').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[4] != null){
+            delete myFileCaches[4];
+        }else if(file != null){
+          myFileCaches[4] = {file:file, contentsType:"attch4"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch5').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[5] != null){
+            delete myFileCaches[5];
+        }else if(file != null){
+          myFileCaches[5] = {file:file, contentsType:"attch5"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch6').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[6] != null){
+            delete myFileCaches[6];
+        }else if(file != null){
+          myFileCaches[6] = {file:file, contentsType:"attch6"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch7').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[7] != null){
+            delete myFileCaches[7];
+        }else if(file != null){
+          myFileCaches[7] = {file:file, contentsType:"attch7"};
+        }
+        console.log(myFileCaches);
+      });
+
+      $('#attch8').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[8] != null){
+            delete myFileCaches[8];
+        }else if(file != null){
+          myFileCaches[8] = {file:file, contentsType:"attch8"};
+        }
+        console.log(myFileCaches);
+      });
 
  // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
@@ -250,20 +320,53 @@ function notMandatoryForAP(){
 
   function fn_saveInstall() {
     if (fn_validate()) {
+    	 var fileGrpId = '${installInfo.atchFileGrpId}' == "" ? 0 : '${installInfo.atchFileGrpId}';
+    	 var orderVO = {
+                 SalesOrderId        :  $('#hidSalesOrderId').val(),
+                 hidStkId               : $('#editInstallForm #hidStkId').val().trim(),
+                 resultId                :  $("#editInstallForm #resultId").val().trim(),
+                 atchFileGrpId        :  fileGrpId,
+                 installdt               :  $('#editInstallForm #installdt').val(),
+                 installEntryId        : $('#entryId').val(),
+                 InstallEntryNo       :'${installInfo.c14}'
+        };
 
     	var formData = new FormData();
-        formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
-        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-        $.each(myFileCaches, function(n, v) {
-            console.log(v.file);
-            formData.append(n, v.file);
 
-            if (v.file > 0 || v.file != null) {
-            fn_doSavePreOrder();
-            }
+        $.each(myFileCaches, function(n, v) {
+             formData.append(n, v.file);
+             formData.append("atchFileGrpId", fileGrpId);
+             formData.append("InstallEntryNo", '${installInfo.c14}');
+             formData.append("salesOrdId", $('#hidSalesOrderId').val());
+             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+             formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        });
+
+        Common.ajaxFile("/services/attachFileUploadEdit.do", formData, function(result) {
+            var resultId = ${installInfo.resultId};
+            fileGroupKey = result.data.fileGroupKey;
+
+            $("#editInstallForm #resultId").val(resultId);
+            $("#editInstallForm #fileGroupKey").val(fileGroupKey);
+
+            if(result != 0 && result.code == 00){
+                Common.ajax("POST", "/services/updateFileKey.do", orderVO, function(result) {
+                        Common.alert(result.message);
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                      try {
+                          Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                          Common.removeLoader();
+                      }
+                      catch (e) {
+                          console.log(e);
+                      }
+                  });
+            }else{
+                  Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+           }
+        },function(result){
+            Common.alert("Upload Failed. Please check with System Administrator.");
         });
 
         // KR-OHK Serial Check add
@@ -278,70 +381,12 @@ function notMandatoryForAP(){
       Common.ajax("POST", url, $("#editInstallForm").serializeJSON(), function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
-          $("#popup_wrap").remove();
-          fn_installationListSearch();
-        }
+            $("#popup_wrap").remove();
+            fn_installationListSearch();
+          }
       });
     }
   }
-
-  function fn_doSavePreOrder() {
-
-	  var orderVO = {
-			  SalesOrderId       :  $('#hidSalesOrderId').val(),
-			  hidStkId               : $('#editInstallForm #hidStkId').val().trim(),
-              resultId               : $("#editInstallForm #resultId").val().trim(),
-              atchFileGrpId        : '${installInfo.atchFileGrpId}',
-              installdt              : $('#editInstallForm #installdt').val(),
-              installEntryId        : $('#entryId').val()
-          };
-
-	        var formData = new FormData();
-	        formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
-	        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-	        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-	        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-	        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
-	        $.each(myFileCaches, function(n, v) {
-	            console.log(v.file);
-	            formData.append(n, v.file);
-	        });
-
-	        Common.ajaxFile("/services/attachFileUploadEdit.do", formData, function(result) {
-
-
-	        var resultId = ${installInfo.resultId}
-	        fileGroupKey = result.data.fileGroupKey
-
-	        console.log ("resultId value :" + resultId );
-	        console.log ("fileGroupKey value :" + fileGroupKey );
-
-	        $("#editInstallForm #resultId").val(resultId);
-	        $("#editInstallForm #fileGroupKey").val(fileGroupKey);
-
-	        if(result != 0 && result.code == 00){
-
-	        	Common.ajax("POST", "/services/updateFileKey.do", orderVO, function(result) {
-
-	        	        Common.alert(result.message);
-	        	},
-	        	function(jqXHR, textStatus, errorThrown) {
-                    try {
-                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                        Common.removeLoader();
-                    }
-                    catch (e) {
-                        console.log(e);
-                    }
-                });
-	        }else{
-                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            }
-	        },function(result){
-	            Common.alert("Upload Failed. Please check with System Administrator.");
-	        });
-	    }
 
   function fn_validate() {
     var msg = "";
@@ -494,10 +539,36 @@ function notMandatoryForAP(){
   function fnSerialSearchResult(data) {
       data.forEach(function(dataRow) {
           $("#editInstallForm #serialNo").val(dataRow.serialNo);
-          //console.log("serialNo : " + dataRow.serialNo);
       });
   }
 
+  function fn_removeFile(name){
+      if(name == "attch1") {
+         $("#attch1").val("");
+         $('#attch1').change();
+      }else if(name == "attch2"){
+          $("#attch2").val("");
+          $('#attch2').change();
+      }else if(name == "attch3"){
+          $("#attch3").val("");
+          $('#attch3').change();
+      }else if(name == "attch4"){
+          $("#attch4").val("");
+          $('#attch4').change();
+      }else if(name == "attch5"){
+          $("#attch5").val("");
+          $('#attch5').change();
+      }else if(name == "attch6"){
+          $("#attch6").val("");
+          $('#attch6').change();
+      }else if(name == "attch7"){
+          $("#attch7").val("");
+          $('#attch7').change();
+      }else if(name == "attch8"){
+          $("#attch8").val("");
+          $('#attch8').change();
+      }
+   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -536,7 +607,14 @@ function notMandatoryForAP(){
       </form>
       <br />
       <form action="#" id="editInstallForm" method="post">
-        <input type="hidden" name="hidStkId" id="hidStkId" value="${installInfo.installStkId}"><input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" /> <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" /> <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" /> <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
+        <input type="hidden" name="hidStkId" id="hidStkId" value="${installInfo.installStkId}">
+        <input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" />
+        <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" />
+        <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+        <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" />
+        <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" />
+        <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
+        <input type="hidden" value="<c:out value="${installInfo.atchFileGrpId}"/>" id="atchFileGrpId" name="atchFileGrpId" />
         <table class="type1 mb1m">
           <!-- table start -->
           <caption>table</caption>
@@ -688,7 +766,7 @@ function notMandatoryForAP(){
 
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
-            <tr>
+    <%--<tr>
             <th scope="row">Attach Picture</th>
             <td>
                 <div class="auto_file2 auto_file3">
@@ -703,13 +781,11 @@ function notMandatoryForAP(){
             </tr>
             <tr>
             <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
-            </tr>
-
+            </tr>--%>
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
               <td colspan="3">
-                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%;
-  height: 100px"><c:out value="${installInfo.rem}" /></textarea>
+                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%; height: 100px"><c:out value="${installInfo.rem}" /></textarea>
               </td>
             </tr>
             <tr>
@@ -719,6 +795,128 @@ function notMandatoryForAP(){
             </tr>
           </tbody>
         </table>
+
+      <aside class="title_line">
+        <h2>
+          <spring:message code='service.text.attachment' />
+         </h2>
+      </aside>
+      <table class="type1" id="completedHide3">
+        <caption>table</caption>
+        <colgroup>
+          <col style="width: 130px" />
+          <col style="width: *" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #1</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch1" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #2</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch2" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #3</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch3" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #4</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch4" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch4")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #5</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch5" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch5")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #6</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch6" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch6")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+            <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #7</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch7" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch7")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+            <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #8</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch8" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+          </tr>
+        </tbody>
+      </table>
         <!-- table end -->
       </form>
       <br />

@@ -590,8 +590,7 @@ public class HcInstallResultListController {
 
 
     @RequestMapping(value = "/hceditInstallationSerial.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params,
-        SessionVO sessionVO) throws Exception {
+    public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
       ReturnMessage message = new ReturnMessage();
       int resultValue = 0;
 
@@ -600,7 +599,7 @@ public class HcInstallResultListController {
       logger.debug("params : {}", params);
 
       resultValue = hcInstallResultListService.hcEditInstallationResultSerial(params, sessionVO);
-
+      
       if (resultValue > 0) {
         message.setMessage("Installation result successfully updated.");
       } else {
@@ -711,8 +710,7 @@ public class HcInstallResultListController {
 
     @RequestMapping(value = "/attachFileUploadEdit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUploadEdit(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		String err = "";
+    String err = "";
 		String code = "";
 		List<String> seqs = new ArrayList<>();
 
@@ -725,17 +723,16 @@ public class HcInstallResultListController {
 			     String key = (String)me.getKey();
 			     seqs.add(key);
 			 }
+	
+			 List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+		   logger.debug("list.size : {}", list.size());
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installationComp", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+		   params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		logger.debug("list.size : {}", list.size());
+		   installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-
-		installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
-
-		params.put("attachFiles", list);
-		code = AppConstants.SUCCESS;
+		    params.put("attachFiles", list);
+		    code = AppConstants.SUCCESS;
 		}catch(ApplicationException e){
 			err = e.getMessage();
 			code = AppConstants.FAIL;
@@ -751,7 +748,7 @@ public class HcInstallResultListController {
 
     @RequestMapping(value = "/updateFileKey.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> updateFileKey(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
-	    ReturnMessage message = new ReturnMessage();
+      ReturnMessage message = new ReturnMessage();
 	    int resultValue = 0;
 
 	    EgovMap fileID = new EgovMap();
@@ -776,7 +773,7 @@ public class HcInstallResultListController {
 	    logger.debug("params ================================>>  " + params);
 
 	    resultValue = hcInstallResultListService.updateInstallFileKey(params, sessionVO);
-
+	    
 	    return ResponseEntity.ok(message);
 	  }
 

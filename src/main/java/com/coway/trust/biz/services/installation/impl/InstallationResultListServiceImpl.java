@@ -2892,7 +2892,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     } else {
       params.put("isreqsms", 0);
     }
-
+    
     int resultValue = installationResultListMapper.updateInstallResultEdit(params);
     installationResultListMapper.updateInstallEntryEdit(params);
 
@@ -2910,48 +2910,48 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 	    Map<String, Object> locInfoEntry = new HashMap<String, Object>();
 	    params.put("userId", sessionVO.getUserId());
-		params.put("resultId", CommonUtils.nvl(params.get("resultId")));
-		params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
-		params.put("SalesOrderId", CommonUtils.nvl(params.get("hidSalesOrderId")));
-		params.put("installDt", CommonUtils.nvl(params.get("installdt")));
-		locInfoEntry.put("userId", sessionVO.getUserId());
-		params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
+  		params.put("resultId", CommonUtils.nvl(params.get("resultId")));
+  		params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
+  		params.put("SalesOrderId", CommonUtils.nvl(params.get("hidSalesOrderId")));
+  		params.put("installDt", CommonUtils.nvl(params.get("installdt")));
+  		locInfoEntry.put("userId", sessionVO.getUserId());
+  		params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
 
-		 EgovMap installResult = getFileID (params); ///FileXXX
-		 EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
+  		EgovMap installResult = getFileID (params); ///FileXXX
+  		EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
 
-		 logger.debug("LOC. INFO. : {}" + locInfo);
-		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
+  		 logger.debug("LOC. INFO. : {}" + locInfo);
+  		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
 
-		 logger.debug("File RESULT :{}" + installResult);
-		 logger.debug("params ================================>>  " + params);
+  		 logger.debug("File RESULT :{}" + installResult);
+  		 logger.debug("params ================================>>  " + params);
 
-	//	 params.put("EXC_CT_ID", installResult.get("ctId"));
-
-
-	    if (allowCom.equals("on")) {
-	      params.put("allowCom", 1);
-	    } else {
-	      params.put("allowCom", 0);
-	    }
-	    if (istrade.equals("on")) {
-	      params.put("istrade", 1);
-	    } else {
-	      params.put("istrade", 0);
-	    }
-	    if (isreqsms.equals("on")) {
-	      params.put("isreqsms", 1);
-	    } else {
-	      params.put("isreqsms", 0);
-	    }
-
-	    logger.debug("resultId: " + resultId);
+  	//	 params.put("EXC_CT_ID", installResult.get("ctId"));
 
 
-	    int resultValue = installationResultListMapper.updateInstallFileKey(params);
-	 //   installationResultListMapper.updateInstallEntryEdit(params);
+  	    if (allowCom.equals("on")) {
+  	      params.put("allowCom", 1);
+  	    } else {
+  	      params.put("allowCom", 0);
+  	    }
+  	    if (istrade.equals("on")) {
+  	      params.put("istrade", 1);
+  	    } else {
+  	      params.put("istrade", 0);
+  	    }
+  	    if (isreqsms.equals("on")) {
+  	      params.put("isreqsms", 1);
+  	    } else {
+  	      params.put("isreqsms", 0);
+  	    }
 
-	    return resultValue;
+  	    logger.debug("resultId: " + resultId);
+
+
+  	    int resultValue = installationResultListMapper.updateInstallFileKey(params);
+  	 //   installationResultListMapper.updateInstallEntryEdit(params);
+
+  	    return resultValue;
 	  }
 
   @Override
@@ -3246,7 +3246,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     } else {
       params.put("isreqsms", 0);
     }
-
+    
     int resultValue = installationResultListMapper.updateInstallResultEdit(params);
     installationResultListMapper.updateInstallEntryEdit(params);
 

@@ -102,9 +102,7 @@
 	                  IR.ATCH_FILE_GRP_ID ,
 	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN 'DOWN' ELSE NULL END AS ATTCHMENT_DOWNLOAD,
 	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN AT2.FILE_SUB_PATH ELSE NULL END AS FILE_SUB_PATH,
-	                  AT2.ATCH_FILE_NAME AS ATCH_FILE_NAME,
-	                  AT2.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
-	                  ,HPDET.name HP_NAME
+	                   HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
                      ,exchg.SO_CUR_STUS_ID ord_stus_code_id
                     ,delvrSts.DELVRY_GR_CMPLT delvry_gr

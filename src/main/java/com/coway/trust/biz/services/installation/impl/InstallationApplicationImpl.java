@@ -23,6 +23,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.services.installation.InstallationApplication;
+import com.coway.trust.util.CommonUtils;
 
 @Service("InstallationApplication")
 public class InstallationApplicationImpl implements InstallationApplication {
@@ -48,7 +49,7 @@ public class InstallationApplicationImpl implements InstallationApplication {
 		LOGGER.debug("params XXX=====================================>>  " + params.toString());
 		LOGGER.debug("params YYY=====================================>>  " + list.toString());
 
-	  int fileGroupKey = fileMapper.selectFileGroupKey();
+	  int fileGroupKey = fileMapper.selectFileGroupKey();  
 		AtomicInteger i = new AtomicInteger(0); // get seq key.
 
 		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
@@ -59,9 +60,9 @@ public class InstallationApplicationImpl implements InstallationApplication {
 
         LOGGER.info("params AAA=====================================>>  " + params.toString());
 		    LOGGER.info("params BBB=====================================>>" + flVO.toString());
-
+       
         int atchFlId = installationMapper.selectNextFileId();
-
+      
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date1= new Date();
         String strToday = dateFormat.format(date1);
@@ -69,11 +70,8 @@ public class InstallationApplicationImpl implements InstallationApplication {
         FileGroupVO fileGroupVO = new FileGroupVO();
         String fileName = "MOBILE_SVC_" + params.get("InstallEntryNo").toString() + "_" + strToday + "_" + seq + ".jpg";
 
-       // flVO.setAtchFileName(fileName);
-
         Map<String, Object> flInfo = new HashMap<String, Object>();
         flInfo.put("atchFileId", atchFlId);
-      //  flInfo.put("atchFileName", flVO.getAtchFileName());
         flInfo.put("atchFileName", fileName);
         flInfo.put("fileSubPath", flVO.getFileSubPath());
         flInfo.put("physiclFileName", flVO.getPhysiclFileName());
@@ -87,7 +85,13 @@ public class InstallationApplicationImpl implements InstallationApplication {
         LOGGER.info("[InstallationApplicationImpl - insertFile] getAtchFileName :::::::" + flVO.getAtchFileName());
         installationMapper.insertFileDetail(flInfo);
 
-        fileGroupVO.setAtchFileGrpId(fileGroupKey);
+         int atchFileGrpId = Integer.parseInt(params.get("atchFileGrpId").toString());
+    
+        if(atchFileGrpId != 0){
+             fileGroupVO.setAtchFileGrpId(atchFileGrpId);
+        }else{
+             fileGroupVO.setAtchFileGrpId(fileGroupKey);
+        }
         fileGroupVO.setAtchFileId(atchFlId);
         fileGroupVO.setChenalType(flType.getCode());
         fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
@@ -96,7 +100,11 @@ public class InstallationApplicationImpl implements InstallationApplication {
 
         //update SAL0045D - attach file group id
         Map<String, Object> instRstlInfo = new HashMap<String, Object>();
-        instRstlInfo.put("atchFileGrpId", fileGroupKey);
+        if(atchFileGrpId != 0){
+            instRstlInfo.put("atchFileGrpId", atchFileGrpId);
+        }else{
+            instRstlInfo.put("atchFileGrpId", fileGroupKey);
+        }
         instRstlInfo.put("salesOrdId", params.get("salesOrdId").toString());
         instRstlInfo.put("InstallEntryNo", params.get("InstallEntryNo").toString());
         instRstlInfo.put("updUserId",Integer.parseInt(params.get("userId").toString()));
@@ -106,19 +114,16 @@ public class InstallationApplicationImpl implements InstallationApplication {
 	@Override
 	public void updateInstallationAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs) {
 		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params.toString());
-		LOGGER.debug("list.size : {}", list.size());
 		String update = (String) params.get("update");
 		String remove = (String) params.get("remove");
 		String[] updateList = null;
 		String[] removeList = null;
+
 		if(!StringUtils.isEmpty(update)) {
 			updateList = params.get("update").toString().split(",");
-			LOGGER.debug("updateList.length : {}", updateList.length);
 		}
 		if(!StringUtils.isEmpty(remove)) {
 			removeList = params.get("remove").toString().split(",");
-			LOGGER.debug("removeList.length : {}", removeList.length);
 		}
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {

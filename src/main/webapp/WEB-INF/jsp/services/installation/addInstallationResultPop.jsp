@@ -681,12 +681,14 @@
     var formData = new FormData();
     var fileContentsObj = {};
     var fileContentsArr = [];
+    var newfileGrpId = 0;
 
     $.each(myFileCaches, function(n, v) {
         fileContentsObj = {};
         formData.append(n, v.file);
         formData.append("salesOrdId",$("#hidSalesOrderId").val());
         formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+        formData.append("atchFileGrpId", newfileGrpId);
 
         fileContentsObj = { seq : n,
                                     contentsType :v.contentsType,
@@ -2327,6 +2329,9 @@
                 <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
               </div>
             </td>
+          </tr>
+          <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
           </tr>
         </tbody>
       </table>

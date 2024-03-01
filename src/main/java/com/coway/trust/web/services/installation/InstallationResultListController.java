@@ -1240,11 +1240,9 @@ public class InstallationResultListController {
   @RequestMapping(value = "/editInstallationPopup.do")
   public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
-
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
-    logger.debug("param param param " + installInfo);
-
+    
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
     model.put("codeId", params.get("codeId"));
@@ -1302,8 +1300,7 @@ public class InstallationResultListController {
   }
 
   @RequestMapping(value = "/editInstallation.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> editInstallationResult(@RequestBody Map<String, Object> params,
-      SessionVO sessionVO) throws ParseException {
+  public ResponseEntity<ReturnMessage> editInstallationResult(@RequestBody Map<String, Object> params,  SessionVO sessionVO) throws ParseException {
     ReturnMessage message = new ReturnMessage();
     int resultValue = 0;
 
@@ -1381,49 +1378,43 @@ public class InstallationResultListController {
 
 	@RequestMapping(value = "/attachFileUploadEdit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUploadEdit(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		String err = "";
+    String err = "";
 		String code = "";
 		List<String> seqs = new ArrayList<>();
 
 		try{
-			 Set set = request.getFileMap().entrySet();
-			 Iterator i = set.iterator();
+    			 Set set = request.getFileMap().entrySet();
+    			 Iterator i = set.iterator();
+    
+    			 while(i.hasNext()) {
+    			     Map.Entry me = (Map.Entry)i.next();
+    			     String key = (String)me.getKey();
+    			     seqs.add(key);
+    			 }
+    
+            List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+      	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-			 while(i.hasNext()) {
-			     Map.Entry me = (Map.Entry)i.next();
-			     String key = (String)me.getKey();
-			     seqs.add(key);
-			 }
+    		    installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installationComp", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    		   params.put("attachFiles", list);
+    		   code = AppConstants.SUCCESS;
+    		}catch(ApplicationException e){
+    			err = e.getMessage();
+    			code = AppConstants.FAIL;
+    		}
 
-		logger.debug("list.size : {}", list.size());
+    		ReturnMessage message = new ReturnMessage();
+    		message.setCode(code);
+    		message.setData(params);
+    		message.setMessage(err);
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-
-		installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
-
-		params.put("attachFiles", list);
-		code = AppConstants.SUCCESS;
-		}catch(ApplicationException e){
-			err = e.getMessage();
-			code = AppConstants.FAIL;
-		}
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(code);
-		message.setData(params);
-		message.setMessage(err);
-
-		return ResponseEntity.ok(message);
+    		return ResponseEntity.ok(message);
 	}
 
 
 	@RequestMapping(value = "/attachFileUpdate.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		logger.debug("params =====================================>>  " + params);
 		String err = "";
 		String code = "";
 		List<String> seqs = new ArrayList<>();
@@ -1439,8 +1430,7 @@ public class InstallationResultListController {
 			 }
 
 			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
-			logger.debug("list.size : {}", list.size());
-			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+      params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 			installationApplication.updateInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
 
@@ -1530,11 +1520,7 @@ public class InstallationResultListController {
 	    locInfoEntry.put("userId", sessionVO.getUserId());
 
 	    EgovMap locInfo = (EgovMap) installationResultListService.getFileID(locInfoEntry);
-
-	    logger.debug("params : {}", params);
-	    logger.debug("params ================================>>  " + locInfo);
-	    params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
-	    logger.debug("params ================================>>  " + params);
+      params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
 
 	    resultValue = installationResultListService.updateInstallFileKey(params, sessionVO);
 
