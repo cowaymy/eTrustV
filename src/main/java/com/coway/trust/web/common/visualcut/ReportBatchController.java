@@ -3003,7 +3003,7 @@ public void dataMartReport(HttpServletRequest request) {
 }
 
 @RequestMapping(value = "/InboundGenPdf.do")
-//@Scheduled(cron = "0 0 3 * * *")//Daily (03:00am)
+//@Scheduled(cron = "0 05 0 * * *")//Daily (12:05am)
 public void InboundGenPdf1() throws Exception {
 LOGGER.info("[START] InboundGenPdf...");
 ObjectMapper mapper = new ObjectMapper();
