@@ -877,7 +877,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 								targetAmt = totRemainAmt;
 							}
 							else{
-								//If total remaining is more than target pay and also is last record of the billRental, we overpay it, 
+								//If total remaining is more than target pay and also is last record of the billRental, we overpay it,
 								//else just use the target amount
 								if(j+1 == billInfoRentalList.size()){
 									targetAmt = totRemainAmt;
@@ -1149,7 +1149,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			for (int i = 0; i < asBillResult.size(); i++) {
 				EgovMap asDetail = asBillResult.get(i);
 
-				if (asDetail.get("billIsPaid").toString().toUpperCase() == "FALSE") {
+				if (asDetail.get("billIsPaid").toString().toUpperCase().equals("FALSE")) {
 					BigDecimal billAmt = new BigDecimal(
 							"".equals(CommonUtils.nvl(String.valueOf(asDetail.get("billAmt")))) ? "0"
 									: String.valueOf(asDetail.get("billAmt")));
