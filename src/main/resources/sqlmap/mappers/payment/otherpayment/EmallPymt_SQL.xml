@@ -139,10 +139,12 @@
 	            , USER_REF_NO userRefNo
 	            , VALID_REM validRemark
 	            , VALID_STUS_ID stus
+                , USER_REM
+                , CARD_NO
 	            FROM PAY0043D
 	            WHERE BATCH_ID = #{batchId}
             ) N
-            ON (  C.FILE_ID = N.batchId and c.REF_NO = n.userRefNo)
+            ON (  C.FILE_ID = N.batchId and c.REF_NO = n.userRefNo and c.EMALL_ORD_NO = n.USER_REM and c.CARD_NO = n.CARD_NO)
             WHEN MATCHED THEN
             UPDATE
             SET  C.stus = N.stus
