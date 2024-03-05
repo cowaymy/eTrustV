@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.attendance.AttendanceService;
+//import com.coway.trust.biz.attendance.AttendanceService;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
@@ -79,8 +79,8 @@ public class ReportBatchController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportBatchController.class);
 
-  @Resource(name = "AttendanceService")
-  private AttendanceService attendanceService;
+//  @Resource(name = "AttendanceService")
+//  private AttendanceService attendanceService;
 
   @Value("${report.datasource.driver-class-name}")
   private String reportDriverClass;
@@ -2837,29 +2837,29 @@ this.viewProcedure(null, null, params);
 LOGGER.info("[END] etrSummaryList...");
 }
 
-@RequestMapping(value="/attendanceRaw.do")
-//@Scheduled(cron = "0 0 0 * * *")
-public void attendanceRaw() throws ParseException, IOException {
-	Map<String, Object> params = new HashMap();
-	params.put("memCode", "ALL");
-	String date = new SimpleDateFormat("yyyyMM").format(new Date());
-	params.put("calMonthYear", date);
-	List<String> cols = Arrays.asList("date", "time", "day", "orgCode", "grpCode", "deptCode", "hpCode", "hpType", "QR - A0001", "Public Holiday - A0002", "State Holiday - A0003", "RFA - A0004", "Waived - A0005", "late");
-	XSSFWorkbook wb1 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
-	Calendar cal = Calendar.getInstance();
-	cal.add(Calendar.MONTH, -1);
-	Date date2 = cal.getTime();
-	params.put("calMonthYear", new SimpleDateFormat("yyyyMM").format(date2));
-	XSSFWorkbook wb2 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
-	File raw = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + date + "_" + CommonUtils.getNowDate() + ".xlsx");
-	raw.getParentFile().mkdirs();
-	raw.createNewFile();
-	wb1.write(new FileOutputStream(raw, false));
-	File raw2 = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + new SimpleDateFormat("yyyyMM").format(date2) + "_" + CommonUtils.getNowDate() + ".xlsx");
-	raw2.getParentFile().mkdirs();
-	raw2.createNewFile();
-	wb2.write(new FileOutputStream(raw2, false));
-}
+//@RequestMapping(value="/attendanceRaw.do")
+////@Scheduled(cron = "0 0 0 * * *")
+//public void attendanceRaw() throws ParseException, IOException {
+//	Map<String, Object> params = new HashMap();
+//	params.put("memCode", "ALL");
+//	String date = new SimpleDateFormat("yyyyMM").format(new Date());
+//	params.put("calMonthYear", date);
+//	List<String> cols = Arrays.asList("date", "time", "day", "orgCode", "grpCode", "deptCode", "hpCode", "hpType", "QR - A0001", "Public Holiday - A0002", "State Holiday - A0003", "RFA - A0004", "Waived - A0005", "late");
+//	XSSFWorkbook wb1 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
+//	Calendar cal = Calendar.getInstance();
+//	cal.add(Calendar.MONTH, -1);
+//	Date date2 = cal.getTime();
+//	params.put("calMonthYear", new SimpleDateFormat("yyyyMM").format(date2));
+//	XSSFWorkbook wb2 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
+//	File raw = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + date + "_" + CommonUtils.getNowDate() + ".xlsx");
+//	raw.getParentFile().mkdirs();
+//	raw.createNewFile();
+//	wb1.write(new FileOutputStream(raw, false));
+//	File raw2 = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + new SimpleDateFormat("yyyyMM").format(date2) + "_" + CommonUtils.getNowDate() + ".xlsx");
+//	raw2.getParentFile().mkdirs();
+//	raw2.createNewFile();
+//	wb2.write(new FileOutputStream(raw2, false));
+//}
 
 private XSSFWorkbook genExcel(List<Map<String, Object>> datas, List<String> cols) {
 	XSSFWorkbook wb = new XSSFWorkbook();
