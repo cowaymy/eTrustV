@@ -202,6 +202,7 @@ public class AppConstants {
 
 	public static final String DESC_SUCCESS = "Success";
 	public static final String DESC_FAILED = "Failed";
+	public static final String DESC_INPROGRESS = "In-Progress";
 
 	//batch email
 	public static final int EMAIL_TYPE_TEMPLATE = 1;

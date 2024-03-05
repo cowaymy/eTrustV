@@ -836,21 +836,29 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 											if(deductionResult.containsKey("lastPayDt")){ // lastPayDt
 												payVO.put("lastPayDate", deductionResult.get("lastPayDt").toString());
 
-												// SET PaymentStatus
-												if(deductionResult.containsKey("bankAppv")){
-													if(Integer.parseInt(deductionResult.get("bankAppv").toString()) == 1){
-														payVO.put("paymentStatus", AppConstants.DESC_SUCCESS);
-
-													}else{
-														payVO.put("paymentStatus",AppConstants.DESC_FAILED);
-													}
-												}else{
-													payVO.put("paymentStatus","-");
-												}
 
 												// SET DeductionResult
 												if(deductionResult.containsKey("isApproveStr")){ // isSuccess
 													payVO.put("deductionResult", deductionResult.get("isApproveStr").toString());
+
+													// SET PaymentStatus
+													if(deductionResult.get("isApproveStr").equals("-")){
+														payVO.put("paymentStatus",AppConstants.DESC_INPROGRESS);
+
+													}else{
+
+    													if(deductionResult.containsKey("bankAppv")){
+    														if(Integer.parseInt(deductionResult.get("bankAppv").toString()) == 1){
+    															payVO.put("paymentStatus", AppConstants.DESC_SUCCESS);
+
+    														}else{
+    															payVO.put("paymentStatus",AppConstants.DESC_FAILED);
+    														}
+    													}else{
+    														payVO.put("paymentStatus","-");
+    													}
+													}
+
 
 													// Convert resp to String format
 													PaymentVO paymentList = PaymentVO.create(payVO);
@@ -864,24 +872,55 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
 
 												}else{
 													params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-													params.put("message", "Record not found");
+													params.put("message", "Deduction result not found");
 												}
+
+//												// SET PaymentStatus
+//												if(deductionResult.containsKey("bankAppv")){
+//													if(Integer.parseInt(deductionResult.get("bankAppv").toString()) == 1){
+//														payVO.put("paymentStatus", AppConstants.DESC_SUCCESS);
+//
+//													}else{
+//														payVO.put("paymentStatus",AppConstants.DESC_FAILED);
+//													}
+//												}else{
+//													payVO.put("paymentStatus","-");
+//												}
+//
+//												// SET DeductionResult
+//												if(deductionResult.containsKey("isApproveStr")){ // isSuccess
+//													payVO.put("deductionResult", deductionResult.get("isApproveStr").toString());
+//
+//													// Convert resp to String format
+//													PaymentVO paymentList = PaymentVO.create(payVO);
+//													paymentVO.add(paymentList);
+//
+//												    respParam = gson.toJson(paymentVO);
+//
+//												    params.put("statusCode", AppConstants.RESPONSE_CODE_SUCCESS);
+//													params.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+//													params.put("respParam", respParam.toString());
+//
+//												}else{
+//													params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+//													params.put("message", "Record not found");
+//												}
 
 											}else{
 												params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-												params.put("message", "Record not found");
+												params.put("message", "Last pay date not found");
 											}
 
 										}else{
 											params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
-											params.put("message", "Record not found");
+											params.put("message", "Deduction result list not found");
 										}
 								}
 
 							}else{
 								params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
 //								params.put("message", "This order is not a rental order.");
-								params.put("message", "Record not found");
+								params.put("message", "Rental order not found");
 							}
 
 						}else{
