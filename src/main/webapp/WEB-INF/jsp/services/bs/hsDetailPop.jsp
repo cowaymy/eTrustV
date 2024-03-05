@@ -542,6 +542,12 @@
                			 if(rsnGridDataList[i]["sOldSerialNo"] != rsnGridDataList[i]["oldSerialNo"]){
                				 Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is unmatch.");
                	                returnParam = false;
+               			 }else{
+               				 if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" || rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
+               					Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is match. Unmatch Reason is not allowed.");
+               					AUIGrid.setCellValue(myDetailGridID, i, "filterSerialUnmatchReason", "");
+               	                returnParam = false;
+               				 }
                			 }
                		 }
                	}
@@ -549,6 +555,12 @@
                		if(rsnGridDataList[i]["sOldSerialNo"] != rsnGridDataList[i]["oldSerialNo"]){
       				 Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is unmatch.");
       	                returnParam = false;
+      			 	}else{
+      			 		if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" || rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
+           					Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is match. Unmatch Reason is not allowed.");
+           					AUIGrid.setCellValue(myDetailGridID, i, "filterSerialUnmatchReason", "");
+           	                returnParam = false;
+           				 }
       			 	}
                	}
 				// End
@@ -868,7 +880,7 @@ function fnSerialSearchResult(data) {
 <tr>
     <th scope="row">HS Status<span class="must">*</span></th>
     <td>
-    <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType"  onchange="onChangeStatusType(this.value)"" >
+    <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType"  onchange="onChangeStatusType(this.value)" >
     </select>
     </td>
     <th scope="row" style="width: 119px; ">Settle Date</th>
