@@ -408,25 +408,25 @@
            <if test='isECommerce != null and isECommerce != ""'>
              AND S1.ECOMM_ORD_ID > 0
            </if>
-           <if test='isSelectAll == null or isSelectAll == ""'>
+<!--            <if test='isSelectAll == null or isSelectAll == ""'>
 
-            <!--
+
             AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                           WHERE AA.CODE = BB.CODE
                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
                                                              AND BB.CODE = 'FRM')
-            --> -- Mattress, Frame
+
                   AND v1.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67)
-           </if>
+           </if> -->
            <if test = 'memID != null and memID != ""'>
            AND V1.SALESMAN_MEM_ID = #{memID}
            </if>
-           <if test='arrAppType != null and arrAppType != ""'>
+<!--            <if test='arrAppType != null and arrAppType != ""'>
                  AND V1.APP_TYPE_ID IN
                  <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
                #{item}
              </foreach>
-           </if>
+           </if> -->
            <if test='arrOrdStusId != null and arrOrdStusId != ""'>
              AND V1.ORD_STUS_ID IN
              <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
@@ -440,6 +440,29 @@
      WHERE 1=1
            <if test='ordNo != null and ordNo != ""'>
              AND T.ORD_NO = #{ordNo}
+             AND EXISTS(
+             SELECT
+				A.SALES_ORD_ID
+             FROM SAL0001D A
+             WHERE
+             A.SALES_ORD_NO = #{ordNo}
+             <if test='isSelectAll == null or isSelectAll == ""'>
+             AND A.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67)
+             </if>
+             <if test='arrAppType != null and arrAppType != ""'>
+                 AND A.APP_TYPE_ID IN
+                 <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+             AND A.BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+
+             )
            </if>
            <if test='ordId != null and ordId != ""'>
            /*29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time*/
@@ -449,12 +472,12 @@
              </foreach>
            </if>
 
-           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+           <!-- <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
              AND T.KEYIN_BRNCH_ID IN
              <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                #{item}
              </foreach>
-           </if>
+           </if> -->
            <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
              AND T.DSC_BRNCH_ID IN
              <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
