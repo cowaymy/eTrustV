@@ -611,6 +611,7 @@ public class CommonController {
     }
 
     info.put("path", params.get("path"));
+    info.put("jObj", params.get("jObj"));
 
     List<EgovMap> timePick = commonService.selectTimePick();
     model.addAttribute("timePick", timePick);
