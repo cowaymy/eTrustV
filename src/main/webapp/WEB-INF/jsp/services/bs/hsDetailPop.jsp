@@ -543,7 +543,7 @@
                				 Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is unmatch.");
                	                returnParam = false;
                			 }else{
-               				 if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" || rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
+               				 if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" && rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
                					Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is match. Unmatch Reason is not allowed.");
                					AUIGrid.setCellValue(myDetailGridID, i, "filterSerialUnmatchReason", "");
                	                returnParam = false;
@@ -556,7 +556,7 @@
       				 Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is unmatch.");
       	                returnParam = false;
       			 	}else{
-      			 		if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" || rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
+      			 		if(rsnGridDataList[i]["filterSerialUnmatchReason"] != "" && rsnGridDataList[i]["filterSerialUnmatchReason"] != null ){
            					Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is match. Unmatch Reason is not allowed.");
            					AUIGrid.setCellValue(myDetailGridID, i, "filterSerialUnmatchReason", "");
            	                returnParam = false;
