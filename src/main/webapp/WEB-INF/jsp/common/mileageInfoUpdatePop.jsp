@@ -75,7 +75,13 @@
         console.log(JSON.stringify(result[0].status));
         if (JSON.stringify(result[0].status)) {
           $("#_commonMileageDiv").remove();
-          Common.popupDiv('${params.path}' , "", null, "false", '${params.popId}' );
+          var jObj = "";
+          if ('${params.jObj}' != "" && '${params.jObj}' != null ) {
+             jObj = JSON.parse('${params.jObj}');
+          } else {
+             jObj = "";
+          }
+          Common.popupDiv('${params.path}' , jObj, null, "false", '${params.popId}' );
         } else {
           msg = "Fail to Insert Mileage Information.";
           Common.alert(msg);
