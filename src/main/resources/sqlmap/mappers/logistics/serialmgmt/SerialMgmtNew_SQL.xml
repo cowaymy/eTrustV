@@ -405,10 +405,8 @@
 
     <select id="selectSerialInfo" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialInfo] - HLTANG */
-            SELECT X.*
-              FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
-                         , A.SERIAL_NO
+					SELECT
+             			  A.SERIAL_NO
                          , A.SCAN_NO
                          , A.ITM_CODE
                          , A.SCAN_STUS_CODE
@@ -420,14 +418,21 @@
                          , A.TO_LOC_ID                  -- TO CDC
                          , A.TRNSC_TYPE                 -- (HP)
                          , A.IO_TYPE
-                      FROM LOG0099D A
-                   ) X
-              WHERE X.RN = 1
-                AND (X.DELVRY_NO = #{reqstNo} or X.REQST_NO = #{reqstNo})
-                <if test="zIoType !=null and zIoType !=''">
-                and X.IO_TYPE = #{zIoType}
-               </if>
+			FROM
+    			LOG0099D A
+			WHERE
+    			(A.SERIAL_NO, A.SCAN_NO) IN (
+    					SELECT B.SERIAL_NO
+         					, MAX(B.SCAN_NO) AS MAX_SCAN_NO
+    			FROM LOG0099D B
+    				GROUP BY B.SERIAL_NO)
 
+    			AND ( A.DELVRY_NO =  #{reqstNo}
+          			OR A.REQST_NO =  #{reqstNo})
+
+          		<if test="zIoType !=null and zIoType !=''">
+                AND A.IO_TYPE = #{zIoType}
+               </if>
     </select>
 
     <update id="updateDeliveryGrDetail" parameterType="Map">
