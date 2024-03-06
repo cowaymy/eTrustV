@@ -2372,7 +2372,7 @@
 
   <select id="selectinstallationInfo" parameterType="Map"
     resultType="egovMap">
-    SELECT Extent1.ORD_ID ORD_ID
+    SELECT DISTINCT Extent1.ORD_ID ORD_ID
        --, Extent1.INST_ADDR1 INST_ADDR1
        --, Extent1.INST_ADDR2 INST_ADDR2
        --, Extent1.INST_ADDR3 INST_ADDR3

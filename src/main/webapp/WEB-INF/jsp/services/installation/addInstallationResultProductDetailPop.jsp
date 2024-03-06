@@ -11,6 +11,7 @@
  -->
 
 <script type="text/javaScript">
+var myFileCaches = {};
   $(document).ready(
     function() {
       var instChkLst_view;
@@ -269,7 +270,9 @@
                 $("#installDate").val('');
               }
             });
-       });$("#addInstallForm #installStatus").change(
+       });
+
+      $("#addInstallForm #installStatus").change(
          function() {
            if ($("#addInstallForm #installStatus").val() == 4) {
              notMandatoryForAP();
@@ -431,6 +434,87 @@
         if ("${orderInfo.stkCtgryId}" == "55"){
             notMandatoryForAP();
         }
+
+        // Attachment picture
+        $('#attch1').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[1] != null){
+                delete myFileCaches[1];
+            }else if(file != null){
+              myFileCaches[1] = {file:file, contentsType:"attch1"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch2').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[2] != null){
+                delete myFileCaches[2];
+            }else if(file != null){
+              myFileCaches[2] = {file:file, contentsType:"attch2"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch3').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[3] != null){
+                delete myFileCaches[3];
+            }else if(file != null){
+              myFileCaches[3] = {file:file, contentsType:"attch3"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch4').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[4] != null){
+                delete myFileCaches[4];
+            }else if(file != null){
+              myFileCaches[4] = {file:file, contentsType:"attch4"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch5').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[5] != null){
+                delete myFileCaches[5];
+            }else if(file != null){
+              myFileCaches[5] = {file:file, contentsType:"attch5"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch6').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[6] != null){
+                delete myFileCaches[6];
+            }else if(file != null){
+              myFileCaches[6] = {file:file, contentsType:"attch6"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch7').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[7] != null){
+                delete myFileCaches[7];
+            }else if(file != null){
+              myFileCaches[7] = {file:file, contentsType:"attch7"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch8').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[8] != null){
+                delete myFileCaches[8];
+            }else if(file != null){
+              myFileCaches[8] = {file:file, contentsType:"attch8"};
+            }
+            console.log(myFileCaches);
+          });
   });
 
   function notMandatoryForAP(){
@@ -599,18 +683,45 @@
       url = "/services/addInstallation_2.do";
     }
 
-    var saveForm = {
-            "installForm" : $("#addInstallForm").serializeJSON(),
-            "add" : addedRowItems
-      }
+    var formData = new FormData();
+    var fileContentsObj = {};
+    var fileContentsArr = [];
+    var newfileGrpId = 0;
 
-    //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
-    Common.ajax("POST", url, saveForm,
-      function(result) {
-        Common.alert(result.message, fn_saveclose);
-        $("#popup_wrap").remove();
-        fn_installationListSearch();
+    $.each(myFileCaches, function(n, v) {
+        fileContentsObj = {};
+        formData.append(n, v.file);
+        formData.append("salesOrdId",$("#hidSalesOrderId").val());
+        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+        formData.append("atchFileGrpId", newfileGrpId);
+
+        fileContentsObj = { seq : n,
+                                    contentsType :v.contentsType,
+                                    fileName : v.file.name};
+
+        fileContentsArr.push(fileContentsObj);
       });
+
+    Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+        console.log("[Save] Upload result :: " + JSON.stringify(result));
+        if(result != 0 && result.code == 00) {
+            var saveForm = {
+                      "installForm" : $("#addInstallForm").serializeJSON(),
+                      "add" : addedRowItems,
+                      "fileGroupKey": result.data.fileGroupKey
+            };
+
+            Common.ajax("POST", url, saveForm, function(result) {
+      	        Common.alert(result.message, fn_saveclose);
+      	        $("#popup_wrap").remove();
+      	        fn_installationListSearch();
+           });
+        }else {
+            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+        }
+    }, function(result){
+        Common.alert("Upload Failed. Please check with System Administrator.");
+    });
   }
 
   function fn_saveclose() {
@@ -961,6 +1072,35 @@
     doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
     }
   }
+
+  function fn_removeFile(name){
+      if(name == "attch1") {
+         $("#attch1").val("");
+         $('#attch1').change();
+      }else if(name == "attch2"){
+          $("#attch2").val("");
+          $('#attch2').change();
+      }else if(name == "attch3"){
+          $("#attch3").val("");
+          $('#attch3').change();
+      }else if(name == "attch4"){
+          $("#attch4").val("");
+          $('#attch4').change();
+      }else if(name == "attch5"){
+          $("#attch5").val("");
+          $('#attch5').change();
+      }else if(name == "attch6"){
+          $("#attch6").val("");
+          $('#attch6').change();
+      }else if(name == "attch7"){
+          $("#attch7").val("");
+          $('#attch7').change();
+      }else if(name == "attch8"){
+          $("#attch8").val("");
+          $('#attch8').change();
+      }
+   }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -1020,31 +1160,24 @@
       <tbody>
        <tr>
         <th scope="row">Install Type</th>
-        <td><span><c:out
-           value="${viewDetail.installationInfo.codeName}" /></span></td>
+        <td><span><c:out value="${viewDetail.installationInfo.codeName}" /></span></td>
         <th scope="row">Install Number</th>
-        <td><span><c:out
-           value="${viewDetail.installationInfo.installEntryNo}" /></span></td>
+        <td><span><c:out value="${viewDetail.installationInfo.installEntryNo}" /></span></td>
         <th scope="row">Request Install Date</th>
-        <td><span><fmt:formatDate
-           value="${viewDetail.installationInfo.installDt}"
-           pattern="dd-MM-yyyy " /></span></td>
+        <td><span><fmt:formatDate value="${viewDetail.installationInfo.installDt}" pattern="dd-MM-yyyy " /></span></td>
        </tr>
        <tr>
         <th scope="row">Assigned Technician</th>
-        <td colspan="3"><span><c:out
-           value=" (${installResult.ctMemCode}) ${installResult.ctMemName}" /></span></td>
+        <td colspan="3"><span><c:out value=" (${installResult.ctMemCode}) ${installResult.ctMemName}" /></span></td>
         <th scope="row">Result Status</th>
-        <td><span><c:out
-           value="${viewDetail.installationInfo.name}" /></span></td>
+        <td><span><c:out value="${viewDetail.installationInfo.name}" /></span></td>
        </tr>
        <tr>
         <th scope="row">Stock Category</th>
         <td><span><c:out
            value="${viewDetail.installationInfo.codename1}" /></span></td>
         <th scope="row">Install Stock</th>
-        <td colspan="3"><span><c:out
-           value="( ${viewDetail.installationInfo.stkCode} ) ${viewDetail.installationInfo.stkDesc}" /></span></td>
+        <td colspan="3"><span><c:out value="( ${viewDetail.installationInfo.stkCode} ) ${viewDetail.installationInfo.stkDesc}" /></span></td>
        </tr>
       </tbody>
      </table>
@@ -1073,9 +1206,7 @@
         <td><span><c:out
            value="${viewDetail.exchangeInfo.c1}" /></span></td>
         <th scope="row">Create Date</th>
-        <td><span><fmt:formatDate
-           value="${viewDetail.exchangeInfo.soExchgCrtDt}"
-           pattern="dd-MM-yyyy hh:mm a " /></span></td>
+        <td><span><fmt:formatDate value="${viewDetail.exchangeInfo.soExchgCrtDt}" pattern="dd-MM-yyyy hh:mm a " /></span></td>
        </tr>
        <tr>
         <th scope="row">Order Number</th>
@@ -2008,106 +2139,68 @@
   <!-- title_line end -->
   <form action="#" id="addInstallForm" method="post">
    <input type="hidden" name="hidStkId" id=hidStkId" value="${installResult.installStkId}">
-   <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>"
-    id="installEntryId" name="installEntryId" /> <input type="hidden"
-    value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input
-    type="hidden" value="${installResult.installEntryId}"
-    id="hidEntryId" name="hidEntryId" /> <input type="hidden"
-    value="${installResult.custId}" id="hidCustomerId"
-    name="hidCustomerId" /> <input type="hidden"
-    value="${installResult.salesOrdId}" id="hidSalesOrderId"
-    name="hidSalesOrderId" /> <input type="hidden"
-    value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" />
-   <input type="hidden" value="${installResult.serialNo}"
-    id="hidSerialNo" name="hidSerialNo" /> <input type="hidden"
-    value="${installResult.isSirim}" id="hidStockIsSirim"
-    name="hidStockIsSirim" /> <input type="hidden"
-    value="${installResult.stkGrad}" id="hidStockGrade"
-    name="hidStockGrade" /> <input type="hidden"
-    value="${installResult.stkCtgryId}" id="hidSirimTypeId"
-    name="hidSirimTypeId" /> <input type="hidden"
-    value="${installResult.codeId}" id="hidAppTypeId"
-    name="hidAppTypeId" /> <input type="hidden"
-    value="${installResult.installStkId}" id="hidProductId"
-    name="hidProductId" /> <input type="hidden"
-    value="${installResult.custAddId}" id="hidCustAddressId"
-    name="hidCustAddressId" /> <input type="hidden"
-    value="${installResult.custCntId}" id="hidCustContactId"
-    name="hidCustContactId" /> <input type="hidden"
-    value="${installResult.custBillId}" id="hiddenBillId"
-    name="hiddenBillId" /> <input type="hidden"
-    value="${installResult.codeName}" id="hiddenCustomerPayMode"
-    name="hiddenCustomerPayMode" /> <input type="hidden"
-    value="${installResult.installEntryNo}" id="hiddeninstallEntryNo"
-    name="hiddeninstallEntryNo" /> <input type="hidden" value=""
-    id="hidActualCTMemCode" name="hidActualCTMemCode" /> <input
-    type="hidden" value="" id="hidActualCTId" name="hidActualCTId" /> <input
-    type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc"
-    name="hidSirimLoc" /> <input type="hidden" value=""
-    id="hidCategoryId" name="hidCategoryId" /> <input type="hidden"
-    value="" id="hidPromotionId" name="hidPromotionId" /> <input
-    type="hidden" value="" id="hidPriceId" name="hidPriceId" /> <input
-    type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
-   <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice"
-    name="hiddenOriPrice" /> <input type="hidden" value=""
-    id="hiddenOriPV" name="hiddenOriPV" /> <input type="hidden"
-    value="" id="hiddenCatogory" name="hiddenCatogory" /> <input
-    type="hidden" value="" id="hiddenProductItem"
-    name="hiddenProductItem" /> <input type="hidden" value=""
-    id="hidPERentAmt" name="hidPERentAmt" /> <input type="hidden"
-    value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" /> <input
-    type="hidden" value="" id="hidInstallStatusCodeId"
-    name="hidInstallStatusCodeId" /> <input type="hidden" value=""
-    id="hidPEPreviousStatus" name="hidPEPreviousStatus" /> <input
-    type="hidden" value="" id="hidDocId" name="hidDocId" /> <input
-    type="hidden" value="" id="hidOldPrice" name="hidOldPrice" /> <input
-    type="hidden" value="" id="hidExchangeAppTypeId"
-    name="hidExchangeAppTypeId" /> <input type="hidden" value=""
-    id="hiddenCustomerType" name="hiddenCustomerType" /> <input
-    type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" />
-   <input type="hidden" value="" id="hiddenCountryName"
-    name="hiddenCountryName" /> <input type="hidden" value=""
-    id="hiddenStateName" name="hiddenStateName" /> <input type="hidden"
-    value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" />
-   <input type="hidden" value="${promotionView.promoPrice}"
-    id="hidPromoPrice" name="hidPromoPrice" /> <input type="hidden"
-    value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" />
-   <input type="hidden" value="${promotionView.swapPromoId}"
-    id="hidSwapPromoId" name="hidSwapPromoId" /> <input type="hidden"
-    value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice"
-    name="hidSwapPromoPrice" /> <input type="hidden"
-    value="${promotionView.swapPromoPV}" id="hidSwapPromoPV"
-    name="hidSwapPromoPV" /> <input type="hidden" value=""
-    id="hiddenInstallPostcode" name="hiddenInstallPostcode" /> <input
-    type="hidden" value="" id="hiddenInstallPostcode"
-    name="hiddenInstallPostcode" /> <input type="hidden" value=""
-    id="hiddenInstallStateName" name="hiddenInstallStateName" /> <input
-    type="hidden" value="${customerInfo.name}" id="hidCustomerName"
-    name="hidCustomerName" /> <input type="hidden"
-    value="${customerContractInfo.telM1}" id="hidCustomerContact"
-    name="hidCustomerContact" /> <input type="hidden"
-    value="${installResult.salesOrdNo}" id="hidTaxInvDSalesOrderNo"
-    name="hidTaxInvDSalesOrderNo" /> <input type="hidden"
-    value="${installResult.installEntryNo}"
-    id="hidTradeLedger_InstallNo" name="hidTradeLedger_InstallNo" />
+   <input type="hidden"  value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" />
+   <input type="hidden"  value="${callType.typeId}" id="hidCallType" name="hidCallType" />
+   <input type="hidden"  value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" />
+   <input type="hidden"  value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" />
+   <input type="hidden"  value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" />
+   <input type="hidden"  value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" />
+   <input type="hidden"  value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" />
+   <input type="hidden"  value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" />
+   <input type="hidden"  value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
+   <input type="hidden"  value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" />
+   <input type="hidden"  value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" />
+   <input type="hidden"  value="${installResult.installStkId}" id="hidProductId" name="hidProductId" />
+   <input type="hidden"  value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" />
+   <input type="hidden"  value="${installResult.custCntId}" id="hidCustContactId"  name="hidCustContactId" />
+   <input type="hidden"  value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" />
+   <input type="hidden"  value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
+   <input type="hidden"  value="${installResult.installEntryNo}" id="hiddeninstallEntryNo"  name="hiddeninstallEntryNo" />
+   <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
+   <input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
+   <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
+   <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
+   <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
+   <input type="hidden" value="" id="hidPriceId" name="hidPriceId" />
+   <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
+   <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" />
+   <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" />
+   <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" />
+   <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" />
+   <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" />
+   <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" />
+   <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" />
+   <input type="hidden" value="" id="hidPEPreviousStatus" name="hidPEPreviousStatus" />
+   <input type="hidden" value="" id="hidDocId" name="hidDocId" />
+   <input type="hidden" value="" id="hidOldPrice" name="hidOldPrice" />
+   <input type="hidden" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" />
+   <input type="hidden" value="" id="hiddenCustomerType" name="hiddenCustomerType" />
+   <input type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" />
+   <input type="hidden" value="" id="hiddenCountryName" name="hiddenCountryName" />
+   <input type="hidden" value="" id="hiddenStateName" name="hiddenStateName" />
+   <input type="hidden" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" />
+   <input type="hidden" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" />
+   <input type="hidden" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" />
+   <input type="hidden" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" />
+   <input type="hidden" value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice" />
+   <input type="hidden" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" />
+   <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+   <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+   <input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
+   <input type="hidden" value="${customerInfo.name}" id="hidCustomerName"  name="hidCustomerName" />
+   <input type="hidden" value="${customerContractInfo.telM1}" id="hidCustomerContact"  name="hidCustomerContact" />
+   <input type="hidden" value="${installResult.salesOrdNo}" id="hidTaxInvDSalesOrderNo" name="hidTaxInvDSalesOrderNo" />
+   <input type="hidden" value="${installResult.installEntryNo}" id="hidTradeLedger_InstallNo" name="hidTradeLedger_InstallNo" />
    <c:if test="${installResult.codeid1  == '257' }">
-    <input type="hidden" value="${orderInfo.c5}" id="hidOutright_Price"
-     name="hidOutright_Price" />
+    <input type="hidden" value="${orderInfo.c5}" id="hidOutright_Price" name="hidOutright_Price" />
    </c:if>
    <c:if test="${installResult.codeid1  == '258' }">
-    <input type="hidden" value=" ${orderInfo.c12}"
-     id="hidOutright_Price" name="hidOutright_Price" />
+    <input type="hidden" value=" ${orderInfo.c12}" id="hidOutright_Price" name="hidOutright_Price" />
    </c:if>
-   <input type="hidden" value="${installation.Address}"
-    id="hidInstallation_AddDtl" name="hidInstallation_AddDtl" /> <input
-    type="hidden" value="${installation.areaId}"
-    id="hidInstallation_AreaID" name="hidInstallation_AreaID" /> <input
-    type="hidden" value="${customerContractInfo.name}"
-    id="hidInatallation_ContactPerson"
-    name="hidInatallation_ContactPerson" />
-    <input type="hidden"
-    value="${installResult.rcdTms}"
-    id="rcdTms" name="rcdTms" />
+   <input type="hidden" value="${installation.Address}" id="hidInstallation_AddDtl" name="hidInstallation_AddDtl" />
+   <input type="hidden" value="${installation.areaId}"  id="hidInstallation_AreaID" name="hidInstallation_AreaID" />
+   <input type="hidden" value="${customerContractInfo.name}" id="hidInatallation_ContactPerson" name="hidInatallation_ContactPerson" />
+    <input type="hidden" value="${installResult.rcdTms}" id="rcdTms" name="rcdTms" />
     <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
     <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
     <input type="hidden" value="${viewDetail.basicInfo.custType}" id="custType" name="custType" />
@@ -2123,17 +2216,14 @@
     <tbody>
      <tr>
         <th scope="row">Before Stock</th>
-        <td colspan="3"><span><c:out
-           value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
+        <td colspan="3"><span><c:out value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
            <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.exchReturnSerialNo}" class="readonly" readonly/>
             <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
         </td>
        </tr>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
-      <td><select class="w100p" id="installStatus"
-       name="installStatus">
+      <th scope="row"><spring:message code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
+      <td><select class="w100p" id="installStatus" name="installStatus">
                 <c:forEach var="list" items="${installStatus}" varStatus="status">
                   <c:choose>
                     <c:when test="${list.codeId=='4'}">
@@ -2149,18 +2239,14 @@
       </select></td>
       <th scope="row"><spring:message
         code='service.title.ActualInstalledDate' /><span name="m2" id="m2" class="must">*</span></th>
-      <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate"
-       name="installDate" /></td>
+      <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate" name="installDate" /></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
-      <td colspan="3"><input type="text" title=""
-       value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>"
-       placeholder="" class="readonly" style="width: 100%;" id="ctCode"
-       readonly="readonly" name="ctCode" /> <input type="hidden"
-       title="" value="${installResult.ctId}" placeholder="" class=""
-       style="width: 200px;" id="CTID" name="CTID" /> <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
+      <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>"
+       placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" />
+       <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
+       <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
        <%-- <th scope="row"><spring:message code='service.title.CTName' /></th>
               <td><input type="text" title="" placeholder=""
                 class="readonly w100p" readonly="readonly" id="ctName"
@@ -2272,7 +2358,128 @@
      </tr>
     </tbody>
    </table>
-   <aside class="title_line mt30">
+         <aside class="title_line">
+        <h2>
+          <spring:message code='service.text.attachment' />
+         </h2>
+      </aside>
+      <table class="type1" id="completedHide3">
+        <caption>table</caption>
+        <colgroup>
+          <col style="width: 130px" />
+          <col style="width: *" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #1</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch1" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #2</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch2" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #3</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch3" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #4</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch4" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch4")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #5</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch5" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch5")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #6</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch6" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch6")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+            <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #7</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch7" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch7")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+            <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #8</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch8" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <aside class="title_line mt30">
         <!-- title_line start -->
         <h2 id="m17" name="m17">
           <spring:message code='service.text.instChkLst' />
@@ -2281,9 +2488,7 @@
       <!-- title_line end -->
       <article class="grid_wrap">
         <!-- grid_wrap start -->
-        <div id="grid_wrap_instChk_view" style="width: 100%;
-  height: 170px;
-  margin: 90 auto;" class="hide"></div>
+        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px;  margin: 90 auto;" class="hide"></div>
       </article>
       <!-- grid_wrap end -->
       <tr>
@@ -2308,22 +2513,22 @@
     </colgroup>
     <tbody>
      <tr>
-      <td colspan="2"><label><input type="checkbox"
-        id="checkSend" name="checkSend" /><span><spring:message
-          code='service.title.SendSMSToSalesPerson' /></span></label></td>
+      <td colspan="2"><label><input type="checkbox"  id="checkSend" name="checkSend" /><span><spring:message code='service.title.SendSMSToSalesPerson' /></span></label></td>
      </tr>
      <tr>
       <th scope="row" rowspan="2"><spring:message
         code='service.title.Message' /></th>
-      <td><textarea cols="20" rows="5" readonly="readonly"
-        class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
-Install Status: Completed
-Order No: ${viewDetail.exchangeInfo.salesOrdNo}
-Name: ${orderInfo.name2}</textarea></td>
+      <td>
+        <textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">
+                  RM0.00 COWAY DSC
+                  Install Status: Completed
+                  Order No: ${viewDetail.exchangeInfo.salesOrdNo}
+                  Name: ${orderInfo.name2}
+        </textarea>
+        </td>
      </tr>
      <tr>
-      <td><input type="text" title="" placeholder="Remark" class="w100p"
-       value="Remark:" id="msgRemark" name="msgRemark" /></td>
+      <td><input type="text" title="" placeholder="Remark" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
    </table>

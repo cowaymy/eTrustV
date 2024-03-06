@@ -10,9 +10,9 @@
 
 <script type="text/javaScript">
 var serialGubun = "1";
+var myFileCaches = {};
 
-  $(document).ready(
-    function() {
+  $(document).ready(function() {
 
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
@@ -119,23 +119,18 @@ var serialGubun = "1";
             $("#addInstallForm #checkCommission").prop("checked", true);
             $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
                     + " \nInstall Status: Completed");
-
             $("#addInstallForm #m6").hide();
             $("#addInstallForm #m7").hide();
-
             $("#addInstallForm #m2").show();
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
-
           } else {
             $("#addInstallForm #checkCommission").prop("checked", false);
             $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
                     + " \nInstall Status: Failed");
-
             $("#addInstallForm #m2").hide();
             $("#addInstallForm #m4").hide();
             $("#addInstallForm #m5").hide();
-
             $("#addInstallForm #m6").show();
             $("#addInstallForm #m7").show();
           }
@@ -181,16 +176,97 @@ var serialGubun = "1";
             $("#frm2").hide();
             $("#frmSerialNo").attr("disabled", true).addClass("readonly");
         }
+
+        // Attachment picture
+        $('#attch1').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[1] != null){
+                delete myFileCaches[1];
+            }else if(file != null){
+              myFileCaches[1] = {file:file, contentsType:"attch1"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch2').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[2] != null){
+                delete myFileCaches[2];
+            }else if(file != null){
+              myFileCaches[2] = {file:file, contentsType:"attch2"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch3').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[3] != null){
+                delete myFileCaches[3];
+            }else if(file != null){
+              myFileCaches[3] = {file:file, contentsType:"attch3"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch4').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[4] != null){
+                delete myFileCaches[4];
+            }else if(file != null){
+              myFileCaches[4] = {file:file, contentsType:"attch4"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch5').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[5] != null){
+                delete myFileCaches[5];
+            }else if(file != null){
+              myFileCaches[5] = {file:file, contentsType:"attch5"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch6').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[6] != null){
+                delete myFileCaches[6];
+            }else if(file != null){
+              myFileCaches[6] = {file:file, contentsType:"attch6"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch7').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[7] != null){
+                delete myFileCaches[7];
+            }else if(file != null){
+              myFileCaches[7] = {file:file, contentsType:"attch7"};
+            }
+            console.log(myFileCaches);
+          });
+
+          $('#attch8').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[8] != null){
+                delete myFileCaches[8];
+            }else if(file != null){
+              myFileCaches[8] = {file:file, contentsType:"attch8"};
+            }
+            console.log(myFileCaches);
+          });
   });
 
-  function fn_installProductExchangeSave() {
+/*  function fn_installProductExchangeSave() {
     Common.ajax("POST", "/services/saveInstallationProductExchange.do", $("#insertPopupForm").serializeJSON(), function(result) {
       Common.alert("Saved", fn_saveDetailclose);
     });
-  }
+  }*/
 
   function fn_saveInstall() {
-    var msg = "";
+	var msg = "";
     var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
     var chkMobileNo = custMobileNo.substring(0, 2);
     if (chkMobileNo == '60'){
@@ -259,19 +335,48 @@ var serialGubun = "1";
       }
     }
 
+    var formData = new FormData();
+    var fileContentsObj = {};
+    var fileContentsArr = [];
+    var newfileGrpId = 0;
+
+    $.each(myFileCaches, function(n, v) {
+        fileContentsObj = {};
+        formData.append(n, v.file);
+        formData.append("salesOrdId",$("#hidSalesOrderId").val());
+        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+        formData.append("atchFileGrpId", newfileGrpId);
+
+        fileContentsObj = { seq : n,
+                                    contentsType :v.contentsType,
+                                    fileName : v.file.name};
+
+        fileContentsArr.push(fileContentsObj);
+      });
+
     // KR-OHK Serial Check add
     var url = "";
-    Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do",
-        $("#addInstallForm").serializeJSON(), function(result) {
-          Common.alert(result.message, fn_saveDetailclose);
 
-          $("#popup_wrap").remove();
-          fn_installationListSearch();
-          /* if (result.code == 'Y') {
+    Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
+        if(result != 0 && result.code == 00) {
+              // KR-OHK Serial Check add
+          var saveForm = {
+                  "installForm" : $("#addInstallForm").serializeJSON(),
+                  "fileGroupKey": result.data.fileGroupKey
+            };
+
+         Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
+              Common.alert(result.message, fn_saveDetailclose);
+
               $("#popup_wrap").remove();
               fn_installationListSearch();
-          } */
         });
+    }else {
+            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+      }
+    }, function(result){
+        Common.alert("Upload Failed. Please check with System Administrator.");
+    });
   }
 
   function fn_saveDetailclose() {
@@ -295,7 +400,6 @@ var serialGubun = "1";
   }
 
   function fn_PopSerialChangeClose(obj){
-
       console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
       $("#stockSerialNo").val(obj.asIsSerialNo);
@@ -307,7 +411,6 @@ var serialGubun = "1";
 
   //팝업에서 호출하는 조회 함수
   function SearchListAjax(obj){
-
     console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
     $("#stockSerialNo").val(obj.asIsSerialNo);
@@ -351,6 +454,34 @@ var serialGubun = "1";
       Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
   }
 
+  function fn_removeFile(name){
+      if(name == "attch1") {
+          $("#attch1").val("");
+          $('#attch1').change();
+       }else if(name == "attch2"){
+           $("#attch2").val("");
+           $('#attch2').change();
+       }else if(name == "attch3"){
+           $("#attch3").val("");
+           $('#attch3').change();
+       }else if(name == "attch4"){
+           $("#attch4").val("");
+           $('#attch4').change();
+       }else if(name == "attch5"){
+           $("#attch5").val("");
+           $('#attch5').change();
+       }else if(name == "attch6"){
+           $("#attch6").val("");
+           $('#attch6').change();
+       }else if(name == "attch7"){
+           $("#attch7").val("");
+           $('#attch7').change();
+       }else if(name == "attch8"){
+           $("#attch8").val("");
+           $('#attch8').change();
+       }
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -384,7 +515,7 @@ var serialGubun = "1";
 	    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
 	    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
   </form>
-  <form id="insertPopupForm" method="post">
+    <!--  <form id="insertPopupForm" method="post"> -->
    <section class="tap_wrap">
     <!-- tap_wrap start -->
     <ul class="tap_type1">
@@ -447,83 +578,59 @@ var serialGubun = "1";
       <tbody>
        <tr>
         <th scope="row">Type</th>
-        <td><span><c:out
-           value="${viewDetail.exchangeInfo.codeName}" /></span></td>
+        <td><span><c:out value="${viewDetail.exchangeInfo.codeName}" /></span></td>
         <th scope="row">Creator</th>
-        <td><span><c:out
-           value="${viewDetail.exchangeInfo.c1}" /></span></td>
+        <td><span><c:out value="${viewDetail.exchangeInfo.c1}" /></span></td>
         <th scope="row">Create Date</th>
-        <td><span><fmt:formatDate
-           value="${viewDetail.exchangeInfo.soExchgCrtDt}"
-           pattern="dd-MM-yyyy hh:mm a " /></span></td>
+        <td><span><fmt:formatDate value="${viewDetail.exchangeInfo.soExchgCrtDt}" pattern="dd-MM-yyyy hh:mm a " /></span></td>
        </tr>
        <tr>
         <th scope="row">Order Number</th>
-        <td><span><c:out
-           value="${viewDetail.exchangeInfo.salesOrdNo}" /></span></td>
+        <td><span><c:out value="${viewDetail.exchangeInfo.salesOrdNo}" /></span></td>
         <th scope="row">Request Status</th>
-        <td><span><c:out
-           value="${viewDetail.exchangeInfo.name2}" /></span></td>
+        <td><span><c:out value="${viewDetail.exchangeInfo.name2}" /></span></td>
         <th scope="row">Request Stage</th>
-        <td><span><c:out
-           value="${viewDetail.exchangeInfo.name1}" /></span></td>
+        <td><span><c:out value="${viewDetail.exchangeInfo.name1}" /></span></td>
        </tr>
        <tr>
         <th scope="row">Reason</th>
-        <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c2} - ${viewDetail.exchangeInfo.c3} " /></span></td>
+        <td colspan="5"><span><c:out value="${viewDetail.exchangeInfo.c2} - ${viewDetail.exchangeInfo.c3} " /></span></td>
        </tr>
        <tr>
         <th scope="row">Product (From)</th>
-        <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
-
-        </td>
+        <td colspan="5"><span><c:out value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span></td>
        </tr>
        <tr>
         <th scope="row">Product (To)</th>
-        <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c5} - ${viewDetail.exchangeInfo.c6} " /></span></td>
+        <td colspan="5"><span><c:out value="${viewDetail.exchangeInfo.c5} - ${viewDetail.exchangeInfo.c6} " /></span></td>
        </tr>
        <tr>
         <th scope="row">Price / RPF (From)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgOldPrc}"
-           type="number" pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgOldPrc}" type="number" pattern=".00" /></span></td>
         <th scope="row">PV (From)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgOldPv}" pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgOldPv}" pattern=".00" /></span></td>
         <th scope="row">Rental Fees (From)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgOldRentAmt}"
-           pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgOldRentAmt}" pattern=".00" /></span></td>
        </tr>
        <tr>
         <th scope="row">Price / RPF (To)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgNwPrc}" pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgNwPrc}" pattern=".00" /></span></td>
         <th scope="row">PV (To)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgNwPv}" pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgNwPv}" pattern=".00" /></span></td>
         <th scope="row">Rental Fees (To)</th>
-        <td><span><fmt:formatNumber
-           value="${viewDetail.exchangeInfo.soExchgNwRentAmt}"
-           pattern=".00" /></span></td>
+        <td><span><fmt:formatNumber value="${viewDetail.exchangeInfo.soExchgNwRentAmt}" pattern=".00" /></span></td>
        </tr>
        <tr>
         <th scope="row">Promotion (From)</th>
-        <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c7} - ${viewDetail.exchangeInfo.c8} " /></span></td>
+        <td colspan="5"><span><c:out value="${viewDetail.exchangeInfo.c7} - ${viewDetail.exchangeInfo.c8} " /></span></td>
        </tr>
        <tr>
         <th scope="row">Promotion (To)</th>
-        <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c12} - ${viewDetail.exchangeInfo.c13} " /></span></td>
+        <td colspan="5"><span><c:out value="${viewDetail.exchangeInfo.c12} - ${viewDetail.exchangeInfo.c13} " /></span></td>
        </tr>
        <tr>
         <th scope="row">Remark</th>
-        <td colspan="5"><c:out
-          value="${viewDetail.exchangeInfo.c15}" /></td>
+        <td colspan="5"><c:out value="${viewDetail.exchangeInfo.c15}" /></td>
        </tr>
       </tbody>
      </table>
@@ -539,7 +646,7 @@ var serialGubun = "1";
      <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
-
+  </section>
   <aside class="title_line">
    <!-- title_line start -->
    <h2>
@@ -738,6 +845,127 @@ var serialGubun = "1";
     </tbody>
    </table>
    <!-- table end -->
+   <aside class="title_line">
+        <h2>
+          <spring:message code='service.text.attachment' />
+         </h2>
+    </aside>
+    <table class="type1" id="completedHide3">
+      <caption>table</caption>
+      <colgroup>
+        <col style="width: 130px" />
+        <col style="width: *" />
+      </colgroup>
+      <tbody>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #1</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch1" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #2</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch2" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #3</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch3" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #4</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch4" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch4")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #5</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch5" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch5")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #6</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch6" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch6")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+          <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #7</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch7" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch7")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+          <tr>
+          <th scope="row"><spring:message code='service.text.attachment' /> #8</th>
+          <td>
+            <div class="auto_file2">
+              <input type="file" title="" id="attch8" accept="image/*" />
+              <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+              </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+          </tr>
+      </tbody>
+    </table>
    <aside class="title_line" id="completedHide1">
     <!-- title_line start -->
     <h2>
@@ -766,15 +994,16 @@ var serialGubun = "1";
         <spring:message code='service.title.Message' />
       </th>
       <td>
-        <textarea cols="20" rows="5" readonly="readonly" class="readonly" id=hpMsg name="hpMsg">RM0.00 COWAY DSC
-Install Status: Completed
-Order No: ${viewDetail.exchangeInfo.salesOrdNo}
-Name: ${orderInfo.name2}</textarea>
+        <textarea cols="20" rows="5" readonly="readonly" class="readonly" id=hpMsg name="hpMsg">
+                RM0.00 COWAY DSC
+                Install Status: Completed
+                Order No: ${viewDetail.exchangeInfo.salesOrdNo}
+                Name: ${orderInfo.name2}
+          </textarea>
       </td>
      </tr>
      <tr>
-      <td><input type="text" title="" placeholder="Remark" class="w100p"
-       value="Remark:" id="msgRemark" name="msgRemark" /></td>
+      <td><input type="text" title="" placeholder="Remark" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
    </table>
@@ -837,7 +1066,7 @@ Name: ${orderInfo.name2}</textarea>
     <li><p class="btn_blue2 big"><a href="#none" onclick="fn_installProductExchangeSave()">Save</a></p></li>
 </ul> -->
   <!-- </form> -->
- </section>
+
  <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
