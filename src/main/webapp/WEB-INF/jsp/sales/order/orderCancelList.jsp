@@ -392,10 +392,12 @@
 
         // TEMP
         var prm = { "path" : "/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
+                          "jObj" : JSON.stringify($("#detailForm").serializeJSON()),
                           "indicator" : "PR",
                           "ordId" : salesOrdId1,
                           "key" : $("#callEntryId").val(),
                           "popId" : "addInstallationPopupId"};
+
         Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
       }
     });
