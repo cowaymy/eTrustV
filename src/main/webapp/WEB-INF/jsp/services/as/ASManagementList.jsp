@@ -481,6 +481,7 @@
     var refReqst = selectedItems[0].item.refReqst;
     var rcdTms = selectedItems[0].item.rcdTms;
     var asRst = selectedItems[0].item.c3;
+    var memCode = selectedItems[0].item.memCode;
 
     //if (asRst != '-') {
       //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
@@ -503,16 +504,18 @@
         Common.alert(result.message);
         return;
       } else {
-        /*var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
-        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');*/
-
+        if (memCode == '-' || memCode == '') {
+          var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
+          Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+        } else {
         // TEMP
-        var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
-                           "indicator" : "AS",
-                           "ordId" : salesOrdId,
-                           "key" : asId,
-                           "popId" : "_newASResultDiv1"};
-         Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
+          var prm = { "path" : "/services/as/ASNewResultPop.do" +"?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms,
+                             "indicator" : "AS",
+                             "ordId" : salesOrdId,
+                             "key" : asId,
+                             "popId" : "_newASResultDiv1"};
+           Common.popupDiv("/common/mileageInfoUpdatePop.do", prm , null, true, '_commonMileageDiv');
+        }
       }
     });
   }
