@@ -23,40 +23,40 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("enrollMapper")
 public interface EnrollMapper {
 
-	
+
 	/**
 	 * EnrollmentList 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectEnrollmentList(Map<String, Object> params);
-	
+
 	/**
 	 * 글 상세조회를 한다. Enroll Info
-	 * 
+	 *
 	 * @param pstRequestVO
 	 *            - 조회할 정보가 담긴 VO
-	 * @return 
+	 * @return
 	 * @exception Exception
 	 */
 	EgovMap selectViewEnrollment(Map<String, Object> params);
-	
+
 	/**
 	 * 글 상세조회를 한다. Enroll Info List
 	 * @param params
 	 * @return
 	 */
     List<EgovMap> selectViewEnrollmentList(Map<String, Object> params);
-    
+
     /**
 	 * Save Enroll
-	 * 
-	 * @param 
-	 * @return 
+	 *
+	 * @param
+	 * @return
 	 * @exception Exception
 	 */
     Map<String, Object> saveEnroll(Map<String, Object> param);
-    
+
     /**
 	 * EnrollmentDetView
 	 * @param params

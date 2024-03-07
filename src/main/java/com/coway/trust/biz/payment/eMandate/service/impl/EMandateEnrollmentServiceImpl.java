@@ -304,11 +304,12 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 	 }
 
 	 @Override
-	 public String getOrderIdByPaymentId (String paymentId){
+	 public Map<String, Object> getEnrollInfoByPaymentId (String paymentId){
 
 		 Map<String, Object> param = new HashMap<String, Object>();
 		 param.put("paymentId", paymentId);
 
-		 return eMandateMapper.getOrderNoByPaymentId(param);
+		 return eMandateMapper.getEnrollInfoByPaymentId(param);
 	 }
+
 }

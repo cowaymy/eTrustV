@@ -384,17 +384,23 @@ public class EnrollResultController {
     		if(csvList.size() > 0){
        		for(DdCsvFormatVO csv : csvList){
 
-
-       			SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+       			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
        			Calendar c = Calendar.getInstance();
        			c.setTime(df.parse(csv.getStartDate()));
 
-       			// get order no from payment id
-       			String orderNo = eMandateService.getOrderIdByPaymentId(csv.getPaymentId());
+       			String orderNo = null;
+       			String submitDate = null;
+       			// get dd-paperless enrollment info
+       			Map<String, Object> ddEnroll = eMandateService.getEnrollInfoByPaymentId(csv.getPaymentId());
+       			if (ddEnroll != null) {
+       				orderNo = ddEnroll.get("salesOrdNo").toString();
+       				submitDate = ddEnroll.get("submitDate") != null ? CommonUtils.getFormattedString("yyyyMMdd", (Date)ddEnroll.get("submitDate")) : null;
+       				System.out.println(submitDate);
+       			}
 
        			if (CommonUtils.nvl(orderNo) == null){
        				continue;
-       			}
+       			} else {
 
         			EnrollmentUpdateDVO enroll = new EnrollmentUpdateDVO();
         			enroll.setEnrollUpdateDetId(0);
@@ -414,6 +420,7 @@ public class EnrollResultController {
         			enroll.setRejectCodeId(0);
         			enroll.setServiceContractId(0);
         			enroll.setDdPaymentId(csv.getPaymentId()); // Added for eMandate-paperless by Hui Ding, 25/08/2023
+        			enroll.setSubmitDate(submitDate);
 
         			// Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069
         			if (csv.getAccNo() == null){
@@ -438,9 +445,9 @@ public class EnrollResultController {
         				continue;
         			} else {
         				if (csv.getAccType().trim().equalsIgnoreCase("Saving Account")) {
-        					enroll.setAccType("SAV");
+        					enroll.setAccType("125");
         				} else if (csv.getAccType().trim().equalsIgnoreCase("Current Account")) {
-        					enroll.setAccType("CUR");
+        					enroll.setAccType("126");
         				} else {
         					enroll.setMessage("Invalid Account Type.");
             				enroll.setStatusCodeId(21);
@@ -456,7 +463,7 @@ public class EnrollResultController {
         			} else {
         				EgovMap bank = enrollResultService.selectBankCode(csv.getIssueBank().trim());
         				if (bank != null && bank.get("bankId") != null) {
-        					enroll.setAccType(bank.get("bankId").toString());
+        					enroll.setIssueBank(bank.get("bankId").toString());
         				} else {
         					enroll.setMessage("Invalid Issue Bank.");
         					enroll.setStatusCodeId(21);
@@ -470,6 +477,7 @@ public class EnrollResultController {
         			list.add(enroll);
 
         		}
+       		}
     		}
 		} catch(Exception e){
 			throw e;

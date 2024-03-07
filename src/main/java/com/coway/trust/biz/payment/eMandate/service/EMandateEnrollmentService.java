@@ -37,5 +37,5 @@ public interface EMandateEnrollmentService {
 	 * @author HQIT-HUIDING
 	 * Aug 24, 2023
 	 */
-	String getOrderIdByPaymentId(String paymentId);
+	Map<String, Object> getEnrollInfoByPaymentId(String paymentId);
 }

@@ -188,7 +188,16 @@
                 MSG,
                 INPUT_REJCT_CODE,
                 SVC_CNTRCT_ID,
-                DD_PAYMENT_ID
+                DD_PAYMENT_ID,
+                ACC_NO,
+		        ACC_TYPE,
+		        ACC_HOLDER_NAME,
+		        ISSUE_BANK_ID,
+		        START_DATE,
+		        <if test="rejectDate != '' and rejectDate != null">
+                     REJECT_DATE,
+                 </if>
+		        SUBMIT_DATE
             )
             VALUES(
                  #{enrollUpdateDetId},
@@ -206,14 +215,17 @@
                  #{message},
                  #{inputRejectCode},
                  #{serviceContractId},
-                 #{ddPaymentId}
+                 #{ddPaymentId},
                  <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
                  #{accNo},
                  #{accType},
                  #{accHolder},
                  #{issueBank},
-                 #{startDate},
-                 #{rejectDate}
+                 TO_DATE(#{startDate},'YYYYMMDD'),
+                 <if test="rejectDate != '' and rejectDate != null">
+                     TO_DATE(#{rejectDate},'YYYYMMDD'),
+                 </if>
+                 TO_DATE(#{submitDate},'YYYYMMDD')
             )
     </update>
 
@@ -254,8 +266,8 @@
     </select>
 
     <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
-    <select id="selectBankCode" parameterType="java.lang.String" resultType="egovMap">
-        SELECT * FROM SYS0004M WHERE STUS_CODE_ID = 1 AND CODE = #{bankCode};
+    <select id="selectActiveBankCode" parameterType="java.lang.String" resultType="egovMap">
+        SELECT * FROM SYS0004M WHERE STUS_CODE_ID = 1 AND CODE = #{bankCode}
     </select>
 
 

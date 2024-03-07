@@ -26,8 +26,15 @@ public class EnrollmentUpdateDVO {
 	private String issueBank;
 	private String startDate;
 	private String rejectDate;
+	private String submitDate;
 
 
+	public String getSubmitDate() {
+		return submitDate;
+	}
+	public void setSubmitDate(String submitDate) {
+		this.submitDate = submitDate;
+	}
 	public String getStartDate() {
 		return startDate;
 	}

@@ -445,11 +445,11 @@ function fn_clear(){
                 <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="#" onclick="javascript:showViewPopup()"><spring:message code='pay.btn.link.viewEnrollmentResult'/></a></p></li>
-                        <!-- Added for E-mandate paperless, Hui Ding 11/09/2023 -->
-                        <li><p class="link_btn"><a href="#" onclick="javascript:showDDNewPopup()"><spring:message code='pay.btn.link.newDDEnrollmentResult'/></a></p></li>
                     </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()"><spring:message code='pay.btn.link.newEnrollmentResult'/></a></p></li>
+                        <!-- Added for E-mandate paperless, Hui Ding 11/09/2023 -->
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showDDNewPopup()"><spring:message code='pay.btn.link.newDDEnrollmentResult'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
@@ -574,9 +574,9 @@ function fn_clear(){
 
 <div id="new_dd_wrap" class="popup_wrap" style="display:none;">
     <header class="pop_header">
-        <h1>Enrollment Result Update</h1>
+        <h1>New DD Paperless  Enrollment Result Update</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDDNewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
 
