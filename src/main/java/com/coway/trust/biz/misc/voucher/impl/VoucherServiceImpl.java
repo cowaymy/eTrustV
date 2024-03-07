@@ -342,6 +342,7 @@ public class VoucherServiceImpl implements VoucherService {
 			masterEmailDet.put("emailSentStus", 1);
 			masterEmailDet.put("name", "");
 			masterEmailDet.put("userId", userId);
+			masterEmailDet.put("categoryId", 1);
 			masterEmailDet.put("emailSubject", "[COWAY] E-VOUCHER VERIFICATION CODE");
 
 			voucherMapper.insertBatchEmailSender(masterEmailDet);
