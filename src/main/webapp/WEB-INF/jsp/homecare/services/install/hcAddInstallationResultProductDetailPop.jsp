@@ -797,7 +797,7 @@ var myFileCaches = {};
         <spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span>
       </th>
       <td>
-        <input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p" id="serialNo" name="serialNo" />
+        <input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p" id="serialNo" name="serialNo" />
        <c:if test="${installResult.serialRequireChkYn == 'Y' }">
         <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </c:if>
@@ -822,8 +822,8 @@ var myFileCaches = {};
      </tr>
      <tr>
         <th scope="row">Mobile</th>
-        <td>
-            <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
+        <td  colspan="3">
+            <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:30%;" />
             <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
         </td>
      </tr>
