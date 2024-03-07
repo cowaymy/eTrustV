@@ -273,7 +273,37 @@ public class AfterServiceJobDto_b {
 
   private String waterSrcType;
 
-  public String getWaterSrcType() {
+  private int ntu;
+
+  private String instAccs;
+
+  private String instAccsVal;
+
+  public int getNtu() {
+	return ntu;
+}
+
+public String getInstAccs() {
+	return instAccs;
+}
+
+public String getInstAccsVal() {
+	return instAccsVal;
+}
+
+public void setNtu(int ntu) {
+	this.ntu = ntu;
+}
+
+public void setInstAccs(String instAccs) {
+	this.instAccs = instAccs;
+}
+
+public void setInstAccsVal(String instAccsVal) {
+	this.instAccsVal = instAccsVal;
+}
+
+public String getWaterSrcType() {
 	return waterSrcType;
 }
 
