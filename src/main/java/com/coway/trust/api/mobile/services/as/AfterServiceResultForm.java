@@ -101,7 +101,38 @@ public class AfterServiceResultForm {
 
   private String memCode;
 
-  public String getMemCode() {
+  private String ntu;
+
+  private String instAccs;
+
+  private int instAccsVal;
+
+
+  public String getNtu() {
+	return ntu;
+}
+
+public String getInstAccs() {
+	return instAccs;
+}
+
+public int getInstAccsVal() {
+	return instAccsVal;
+}
+
+public void setNtu(String ntu) {
+	this.ntu = ntu;
+}
+
+public void setInstAccs(String instAccs) {
+	this.instAccs = instAccs;
+}
+
+public void setInstAccsVal(int instAccsVal) {
+	this.instAccsVal = instAccsVal;
+}
+
+public String getMemCode() {
 	return memCode;
 }
 
