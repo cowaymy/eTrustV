@@ -3172,7 +3172,10 @@
                            REWORK_PROJ,
                            AS_TRANSFER_TO_DT,
                            ATCH_FILE_GRP_ID,
-                           PARTNER_CODE
+                           PARTNER_CODE,
+                           NTU,
+                           INST_ACCS,
+                           INST_ACCS_VAL
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3236,7 +3239,10 @@
                #{REWORK_PROJ},
                NVL(#{AS_TRANSFER_TO_DT},0),
                #{ATTACHMENT},
-               #{PARTNER_CODE}
+               #{PARTNER_CODE},
+               #{NTU},
+               #{INST_ACCS},
+               #{INST_ACCS_VAL}
     )
   </insert>
 
