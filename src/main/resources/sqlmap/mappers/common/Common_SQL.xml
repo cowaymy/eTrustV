@@ -2202,7 +2202,22 @@
                TO_CHAR(C.NAME) AS NAME,
                TO_CHAR(E.LATITUDE) AS LATITUDE,
                TO_CHAR(E.LONGITUDE) AS LONGITUDE,
-               INITCAP(TO_CHAR(E.ADDR_DTL) || ', ' || TO_CHAR(E.STREET) || ', ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE || ', ' || F.COUNTRY) AS ADDRESS
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
     FROM SAL0046D A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
@@ -2222,7 +2237,22 @@
                TO_CHAR(C.NAME) AS NAME,
                TO_CHAR(E.LATITUDE) AS LATITUDE,
                TO_CHAR(E.LONGITUDE) AS LONGITUDE,
-               INITCAP(TO_CHAR(E.ADDR_DTL) || ', ' || TO_CHAR(E.STREET) || ', ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE || ', ' || F.COUNTRY) AS ADDRESS
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
     FROM SVC0001D A
     JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
     JOIN ORG0001D C ON A.AS_MEM_ID = C.MEM_ID
@@ -2242,7 +2272,22 @@
                TO_CHAR(C.NAME) AS NAME,
                TO_CHAR(E.LATITUDE) AS LATITUDE,
                TO_CHAR(E.LONGITUDE) AS LONGITUDE,
-               INITCAP(TO_CHAR(E.ADDR_DTL) || ', ' || TO_CHAR(E.STREET) || ', ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE || ', ' || F.COUNTRY) AS ADDRESS
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
     FROM LOG0038D A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
@@ -2262,7 +2307,22 @@
                TO_CHAR(C.NAME) AS NAME,
                TO_CHAR(E.LATITUDE) AS LATITUDE,
                TO_CHAR(E.LONGITUDE) AS LONGITUDE,
-               INITCAP(TO_CHAR(E.ADDR_DTL) || ', ' || TO_CHAR(E.STREET) || ', ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE || ', ' || F.COUNTRY) AS ADDRESS
+                              UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
     FROM SVC0008D A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     JOIN ORG0001D C ON A.CODY_ID = C.MEM_ID
