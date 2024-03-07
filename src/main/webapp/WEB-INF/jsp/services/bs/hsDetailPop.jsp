@@ -524,8 +524,8 @@
               returnParam = false;
               }
 				//Project Id : 5119854476 - [Ad Hoc] HS Used Filter Reason Selection Logic Enhancement - TPY
-                if((rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "") && rsnGridDataList[i]["useFilterBlock"] == "Y"){
-               	 if((rsnGridDataList[i]["sOldSerialNo"] != null || rsnGridDataList[i]["sOldSerialNo"] != "")){
+                if((rsnGridDataList[i]["oldSerialNo"] == null && rsnGridDataList[i]["oldSerialNo"] == "") && rsnGridDataList[i]["useFilterBlock"] == "Y"){
+               	 if((rsnGridDataList[i]["sOldSerialNo"] != null && rsnGridDataList[i]["sOldSerialNo"] != "")){
                		 if(rsnGridDataList[i]["filterSerialUnmatchReason"] == 3453){
                			Common.alert("* Invalid Reason.</br> Block for Used Filter " + rsnGridDataList[i]["stkDesc"] + " serial Unmatch Reason selection for 3453 - User Filter without scan label.");
                           	returnParam = false;
@@ -533,8 +533,8 @@
                	}
                }
 
-                if((rsnGridDataList[i]["oldSerialNo"] != null || rsnGridDataList[i]["oldSerialNo"] != "") && rsnGridDataList[i]["useFilterBlock"] == "Y"){
-               	 if((rsnGridDataList[i]["sOldSerialNo"] != null || rsnGridDataList[i]["sOldSerialNo"] != "")){
+                if((rsnGridDataList[i]["oldSerialNo"] != null && rsnGridDataList[i]["oldSerialNo"] != "") && rsnGridDataList[i]["useFilterBlock"] == "Y"){
+               	 if((rsnGridDataList[i]["sOldSerialNo"] != null && rsnGridDataList[i]["sOldSerialNo"] != "")){
                		 if(rsnGridDataList[i]["filterSerialUnmatchReason"] == 3453){
                			Common.alert("* Invalid Reason.</br> Block for Used Filter " + rsnGridDataList[i]["stkDesc"] + " serial Unmatch Reason selection for 3453 - User Filter without scan label.");
                           	returnParam = false;
@@ -551,7 +551,7 @@
                			 }
                		 }
                	}
-               }else if((rsnGridDataList[i]["oldSerialNo"] != null || rsnGridDataList[i]["oldSerialNo"] != "") && rsnGridDataList[i]["useFilterBlock"] == "N"){
+               }else if((rsnGridDataList[i]["oldSerialNo"] != null && rsnGridDataList[i]["oldSerialNo"] != "") && rsnGridDataList[i]["useFilterBlock"] == "N"){
                		if(rsnGridDataList[i]["sOldSerialNo"] != rsnGridDataList[i]["oldSerialNo"]){
       				 Common.alert("* Invalid Reason.</br> Used Filter " + rsnGridDataList[i]["stkDesc"] + " Old serial no. scanned is unmatch.");
       	                returnParam = false;
