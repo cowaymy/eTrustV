@@ -603,7 +603,7 @@ function fn_clear(){
                                 <select name="updateType" id="updateType"  style="width:100%">
                                     <!-- <option value="978">Submit Date</option> -->
                                     <option value="979">Start Date</option>
-                                    <option value="980">Reject Date</option>
+                                    <!-- <option value="980">Reject Date</option> --> <!--  Removed as currently not using. Hui Ding, 11/03/2024 -->
                                 </select>
                             </td>
                         </tr>
