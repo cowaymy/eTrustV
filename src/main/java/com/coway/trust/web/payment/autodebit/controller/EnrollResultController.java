@@ -383,7 +383,7 @@ public class EnrollResultController {
 		try {
     		if(csvList.size() > 0){
        		for(DdCsvFormatVO csv : csvList){
-
+       			
        			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
        			Calendar c = Calendar.getInstance();
        			c.setTime(df.parse(csv.getStartDate()));
