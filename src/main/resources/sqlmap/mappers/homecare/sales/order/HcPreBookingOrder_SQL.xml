@@ -300,41 +300,53 @@
     </select>
 
     <select id="selectPreBookConfigurationPerson" parameterType="Map" resultType="egovMap">
-       SELECT T2.MEM_ID
-             , T2.MEM_CODE
-             , T2.NAME
-             , T2.NRIC
-             , T2.MEM_TYPE
-             , T3.CODE_NAME
-             , T5.SALES_ORD_ID
-             , T5.SALES_ORD_NO
-             , T4.SRV_EXPR_DT
-      FROM SAL0090D T1
-      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
-      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
-      LEFT JOIN SAL0095D T4 ON T4.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SRV_SO_ID,'1')
-      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
-      WHERE
-      T1.SRV_STUS_ID = 1
-      AND T4.SRV_STUS_CODE_ID = 4
-      <if test='salesOrdId != null and salesOrdId !=0'>
-                AND T5.SALES_ORD_ID = #{salesOrdId}
-      </if>
-      <if test='salesOrdNo != null and salesOrdNo !=""'>
-                AND T5.SALES_ORD_NO = #{salesOrdNo}
-      </if>
-      <if test='memId != null and memId !=0'>
-                AND T2.MEM_ID = #{memId}
-      </if>
-      <if test='memCode != null and memCode !=""'>
-                AND T2.MEM_CODE = #{memCode}
-      </if>
-      <if test='memType != null and !memType.isEmpty()'>
-      AND T2.MEM_TYPE IN
-      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
-                #{item.paramVal, jdbcType=INTEGER}
-      </foreach>
-      </if>
+       SELECT * FROM ORG1001V T7
+       WHERE T7.GRP_CODE IN (
+	       SELECT
+	<!--        			T2.MEM_ID -->
+	<!--              , T2.MEM_CODE -->
+	<!--              , T2.NAME -->
+	<!--              , T2.NRIC -->
+	<!--              , T2.MEM_TYPE -->
+	<!--              , T3.CODE_NAME -->
+	<!--              , T5.SALES_ORD_ID -->
+	<!--              , T5.SALES_ORD_NO -->
+	<!--              , T4.SRV_EXPR_DT -->
+	              T6.GRP_CODE
+	      FROM SAL0090D T1
+	      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
+	      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
+	      LEFT JOIN SAL0095D T4 ON T4.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SRV_SO_ID,'1')
+	      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
+	      LEFT JOIN ORG1001V T6 ON T6.MEM_ID = T2.MEM_ID
+	      WHERE
+	      T1.SRV_STUS_ID = 1
+	      AND T4.SRV_STUS_CODE_ID = 4
+	      <if test='salesOrdId != null and salesOrdId !=0'>
+	                AND T5.SALES_ORD_ID = #{salesOrdId}
+	      </if>
+	      <if test='salesOrdNo != null and salesOrdNo !=""'>
+	                AND T5.SALES_ORD_NO = #{salesOrdNo}
+	      </if>
+	<!--       <if test='memId != null and memId !=0'> -->
+	<!--                 AND T2.MEM_ID = #{memId} -->
+	<!--       </if> -->
+	<!--       <if test='memCode != null and memCode !=""'> -->
+	<!--                 AND T2.MEM_CODE = #{memCode} -->
+	<!--       </if> -->
+	      <if test='memType != null and !memType.isEmpty()'>
+	      AND T2.MEM_TYPE IN
+	      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+	                #{item.paramVal, jdbcType=INTEGER}
+	      </foreach>
+	      </if>
+	  )
+	  	   <if test='memId != null and memId !=0'>
+	                AND T7.MEM_ID = #{memId}
+	      </if>
+	      <if test='memCode != null and memCode !=""'>
+	                AND T7.MEM_CODE = #{memCode}
+	      </if>
     </select>
 
     <select id="getHcPreBookSmsTemplate" parameterType="Map" resultType="String">

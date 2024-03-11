@@ -3513,21 +3513,26 @@ WHERE
     </select>
 
     <select id="selectPreBookConfigurationPerson" parameterType="Map" resultType="egovMap">
-    SELECT DISTINCT MEM_CODE  FROM (
-	       SELECT T2.MEM_ID
-	             , T2.MEM_CODE
-	             , T2.NAME
-	             , T2.NRIC
-	             , T2.MEM_TYPE
-	             , T3.CODE_NAME
-	             , T5.SALES_ORD_ID
-	             , T5.SALES_ORD_NO
-	             , T4.SRV_EXPR_DT
+    SELECT *
+    FROM ORG1001V Z
+    WHERE Z.GRP_CODE IN (
+	       SELECT
+<!-- 	       		T2.MEM_ID -->
+<!-- 	             , T2.MEM_CODE -->
+<!-- 	             , T2.NAME -->
+<!-- 	             , T2.NRIC -->
+<!-- 	             , T2.MEM_TYPE -->
+<!-- 	             , T3.CODE_NAME -->
+<!-- 	             , T5.SALES_ORD_ID -->
+<!-- 	             , T5.SALES_ORD_NO -->
+<!-- 	             , T4.SRV_EXPR_DT -->
+	              T6.GRP_CODE
 	      FROM SAL0090D T1
 	      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
 	      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
 	      LEFT JOIN SAL0095D T4 ON T4.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SRV_SO_ID,'1')
 	      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
+	      LEFT JOIN ORG1001V T6 ON T6.MEM_ID = T2.MEM_ID
 	      WHERE
 	      T1.SRV_STUS_ID = 1
 	      AND T4.SRV_STUS_CODE_ID = 4
@@ -3537,12 +3542,12 @@ WHERE
 	      <if test='salesOrdNo != null and salesOrdNo !=""'>
 	                AND T5.SALES_ORD_NO = #{salesOrdNo}
 	      </if>
-	      <if test='memId != null and memId !=0'>
-	                AND T2.MEM_ID = #{memId}
-	      </if>
-	      <if test='memCode != null and memCode !=""'>
-	                AND T2.MEM_CODE = #{memCode}
-	      </if>
+<!-- 	      <if test='memId != null and memId !=0'> -->
+<!-- 	                AND T2.MEM_ID = #{memId} -->
+<!-- 	      </if> -->
+<!-- 	      <if test='memCode != null and memCode !=""'> -->
+<!-- 	                AND T2.MEM_CODE = #{memCode} -->
+<!-- 	      </if> -->
 	      <if test='memType != null and !memType.isEmpty()'>
 	      AND T2.MEM_TYPE IN
 	      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
@@ -3552,16 +3557,17 @@ WHERE
 
 	      UNION ALL
 
-	      SELECT
-	      		C.MEM_ID
-	             , C.MEM_CODE
-	             , C.NAME
-	             , C.NRIC
-	             , C.MEM_TYPE
-	             , D.CODE_NAME
-	             , B.SALES_ORD_ID
-	             , B.SALES_ORD_NO
-	             , NULL AS SRV_EXPR_DT
+	      SELECT DISTINCT
+<!-- 	      		C.MEM_ID -->
+<!-- 	             , C.MEM_CODE -->
+<!-- 	             , C.NAME -->
+<!-- 	             , C.NRIC -->
+<!-- 	             , C.MEM_TYPE -->
+<!-- 	             , D.CODE_NAME -->
+<!-- 	             , B.SALES_ORD_ID -->
+<!-- 	             , B.SALES_ORD_NO -->
+<!-- 	             , NULL AS SRV_EXPR_DT -->
+	              E.GRP_CODE
 	      FROM SAL0404M A
 	      JOIN SAL0001D B
 	      ON A.SALES_ORD_ID_OLD = B.SALES_ORD_ID
@@ -3569,6 +3575,7 @@ WHERE
 	      ON A.MEM_CODE = C.MEM_CODE
 	      LEFT JOIN SYS0013M D
 	      ON C.MEM_TYPE = D.CODE_ID
+	      LEFT JOIN ORG1001V E ON E.MEM_ID = C.MEM_ID
 	      WHERE 1=1
 	      AND STUS_ID IN (1)
 	      AND CUST_VERIFY_STUS = 'Y'
@@ -3578,12 +3585,12 @@ WHERE
 	      <if test='salesOrdNo != null and salesOrdNo !=""'>
 	          AND B.SALES_ORD_NO = #{salesOrdNo}
 	      </if>
-	      <if test='memId != null and memId !=0'>
-	          AND C.MEM_ID = #{memId}
-	      </if>
-	      <if test='memCode != null and memCode !=""'>
-	          AND C.MEM_CODE = #{memCode}
-	      </if>
+<!-- 	      <if test='memId != null and memId !=0'> -->
+<!-- 	          AND C.MEM_ID = #{memId} -->
+<!-- 	      </if> -->
+<!-- 	      <if test='memCode != null and memCode !=""'> -->
+<!-- 	          AND C.MEM_CODE = #{memCode} -->
+<!-- 	      </if> -->
 	      <if test='memType != null and !memType.isEmpty()'>
 		      AND C.MEM_TYPE IN
 		      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
@@ -3591,7 +3598,11 @@ WHERE
 		      </foreach>
 	      </if>
       )
-      WHERE 1=1
-       AND MEM_CODE = #{memCode}
+     <if test='memId != null and memId !=0'>
+               AND Z.MEM_ID = #{memId}
+     </if>
+     <if test='memCode != null and memCode !=""'>
+               AND Z.MEM_CODE = #{memCode}
+     </if>
     </select>
 </mapper>
