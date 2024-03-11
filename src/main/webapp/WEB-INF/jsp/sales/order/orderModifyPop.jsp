@@ -1523,6 +1523,7 @@
 
             else if (rsltInfo.payModeId == '132') {
               $('#scPC_DirectDebit').removeClass("blind");
+              $('#ddPaperless').attr("checked", true);
               fn_loadBankAccount(rsltInfo.bankAccId);
             }
 
