@@ -583,7 +583,7 @@ public class CrcLimitController {
 
 	    	if (documentNumberList.size() > 0) {
 	    		params.put("documentNumberList", documentNumberList);
-		        //;;crcLimitService.saveApprovalLineBulk(params, sessionVO);
+		        crcLimitService.saveApprovalLineBulk(params, sessionVO);
 	    	}
 	        if(documentNumberList.size() > 0) {
 	            message.setCode(AppConstants.SUCCESS);
