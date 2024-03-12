@@ -66,7 +66,7 @@ public class AWSS3Controller {
     private Gson gson = new Gson();
 
 
-    @RequestMapping(value= "/upload", method = RequestMethod.POST)
+    /*@RequestMapping(value= "/upload", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(
     		          @RequestParam(value= "dirName") String dirName,
     		          @RequestPart(value= "file")  MultipartFile multipartFile,
@@ -89,9 +89,9 @@ public class AWSS3Controller {
             return new ResponseEntity<>(rtnJson.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     	}
 
-    }
+    }*/
 
-    @RequestMapping(value= "/uploadByBase64", method = RequestMethod.POST)
+    /*@RequestMapping(value= "/uploadByBase64", method = RequestMethod.POST)
     public ResponseEntity<String> uploadBase64Pdf(
     		 HttpServletRequest  req
 			, RequestEntity<String> requestEntity
@@ -142,7 +142,7 @@ public class AWSS3Controller {
             return new ResponseEntity<>(rtnJson.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     	}
 
-    }
+    }*/
 
     @RequestMapping(value= "/download-single-file", method = RequestMethod.POST)
     public ResponseEntity<byte[]> postDownloadFile(

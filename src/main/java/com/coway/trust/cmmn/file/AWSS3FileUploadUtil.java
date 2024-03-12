@@ -61,10 +61,10 @@ public class AWSS3FileUploadUtil{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
+	/*public List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
 			final long maxFileSize) throws Exception {
 		return uploadFiles(request, uploadPath, subPath, maxFileSize, false);
-	}
+	}*/
 
 	/**
 	 * 파일을 Upload 처리한다.
@@ -79,7 +79,7 @@ public class AWSS3FileUploadUtil{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
+	/*public List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
 			final long maxFileSize, boolean addExtension) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<>();
 
@@ -242,7 +242,7 @@ public class AWSS3FileUploadUtil{
 			return list;
 		}
 
-	}
+	}*/
 
 	public static String getPhysicalFileName() {
 		return UUIDGenerator.get().toUpperCase();
