@@ -9,7 +9,7 @@
     // 20190925 KR-OHK Moblie Popup Setting
     Common.setMobilePopup(false, false, '');
 
-    $('#txtCustName_RW').text($('#name').val());
+    $('#txtCustName_RW').text($('#name').text());
     $('#txtCustNRIC_RW').text($('#nric').val());
     $('#txtProduct_RW').text($("#ordProudct option:selected").text());
     $('#txtPromotion_RW').text($("#ordPromo option:selected").text());
