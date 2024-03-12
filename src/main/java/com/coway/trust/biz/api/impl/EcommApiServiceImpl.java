@@ -220,6 +220,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
             EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
             EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(custAdd);
+            EgovMap custStusInfo = ecommApiMapper.getCustStatusId(custInfo);
 
             SessionVO sessionVO = new SessionVO();
             sessionVO.setUserId(Integer.parseInt(sysUserId));
@@ -270,6 +271,10 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
             salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
             salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
+
+            if(CommonUtils.nvl(custStusInfo.get("isExstCust")).equals("") == false){
+                salesOrderDVO.setIsExstCust(Integer.valueOf(custStusInfo.get("isExstCust").toString()));
+            }
             orderVO.setSalesOrderDVO(salesOrderDVO);
 
             // SAL0045D

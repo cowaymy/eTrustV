@@ -34,4 +34,6 @@ public interface EcommApiMapper {
   int checkDuplicateOrder(Map<String, Object> params);
 
   List<EgovMap> selectHCProdId(Map<String, Object> params);
+
+  EgovMap getCustStatusId(Map<String, Object> params);
 }

@@ -218,4 +218,8 @@
                SELECT CODE_ID FROM SYS0013M WHERE CODE IN (
                        SELECT CODE FROM SYS0094M WHERE IND = 'HOMECARE'))
 </select>
+
+<select id="getCustStatusId" parameterType="Map" resultType="egovMap">
+	SELECT IS_EXST_CUST FROM SAL0029D WHERE CUST_ID = #{custid}
+</select>
 </mapper>
