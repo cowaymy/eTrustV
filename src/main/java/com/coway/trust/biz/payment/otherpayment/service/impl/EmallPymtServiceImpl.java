@@ -100,6 +100,9 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 	@Value("${emall.s3.com.file.upload.path}")
 	private String uploadPath;
 
+	@Value("${emall.s3.com.file.directory}")
+	private String fileDirectory;
+
 	@Resource(name = "awsService")
 	private AWSS3Service awsService;
 
@@ -146,7 +149,7 @@ public class EmallPymtServiceImpl extends EgovAbstractServiceImpl implements Ema
 
         //String fileId = "Sale_CapturePayment_2023101001.xls";
 //        String dirName = "PaymentTransaction/" + "20231010";
-        String dirName = "PaymentTransaction/" + todayFormattedDate;
+        String dirName = fileDirectory + todayFormattedDate;
         if(params.get("dirName") != null && !params.get("dirName").toString().isEmpty()){
         	dirName = params.get("dirName").toString();
         }

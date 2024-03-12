@@ -59,9 +59,9 @@ public class EmallPymtController {
   }
 
   @RequestMapping(value = "/executeAdvPymt.do")
-  public ResponseEntity<EgovMap> executeAdvPymt(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) throws Exception {
-    EgovMap result = emallPymtService.executeAdvPymt(params,response);
-    return ResponseEntity.ok(result);
+  public ResponseEntity<String> executeAdvPymt(@RequestParam Map<String, Object> params, ModelMap model, HttpServletResponse response) throws Exception {
+	  Map<String, Object> result = emallPymtService.executeAdvPymt(params,response);
+    return ResponseEntity.ok(result.toString());
   }
 
 }
