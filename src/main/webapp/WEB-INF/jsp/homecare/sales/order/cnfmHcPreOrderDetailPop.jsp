@@ -8,7 +8,7 @@
 	    // 20190925 KR-OHK Moblie Popup Setting
 	    Common.setMobilePopup(false, false, '');
 
-	    $('#txtCustName_RW').text($('#name').val());
+	    $('#txtCustName_RW').text($('#name').text());
 	    $('#txtCustNRIC_RW').text($('#nric').val());
 	    // Mattress
 	    if(FormUtil.isNotEmpty($('#ordProduct1 option:selected').val().trim())) {
