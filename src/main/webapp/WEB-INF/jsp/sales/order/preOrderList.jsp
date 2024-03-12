@@ -111,7 +111,7 @@ console.log("preOrderList");
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doDefCombo(actData, '' ,'_action', 'S', '');
         doGetComboDataStatus('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '' , '_brnchId', 'M', 'fn_multiComboBranch'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
         if (memTypeFiltered) {
@@ -658,13 +658,6 @@ console.log("preOrderList");
             width: '100%'
         });
         $('#_stusId').multipleSelect("checkAll");
-        $('#_brnchId').change(function() {
-            //console.log($(this).val());
-        }).multipleSelect({
-            selectAll: true, // 전체선택
-            width: '100%'
-        });
-        $('#_brnchId').multipleSelect("checkAll");
         $('#_typeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
@@ -672,7 +665,26 @@ console.log("preOrderList");
             width: '100%'
         });
         $('#_typeId').multipleSelect("checkAll");
+    }
 
+    function fn_multiComboBranch(){
+        if ($("#_brnchId option[value='${SESSION_INFO.userBranchId}']").val() === undefined) {
+            $('#_brnchId').change(function() {
+                //console.log($(this).val());
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '100%'
+            }).multipleSelect("enable");
+           $('#_brnchId').multipleSelect("checkAll");
+        } else {
+            $('#_brnchId').change(function() {
+                //console.log($(this).val());
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '100%'
+            }).multipleSelect("disable");
+            $("#_brnchId").multipleSelect("setSelects", ['${SESSION_INFO.userBranchId}']);
+        }
     }
 
     $.fn.clearForm = function() {
