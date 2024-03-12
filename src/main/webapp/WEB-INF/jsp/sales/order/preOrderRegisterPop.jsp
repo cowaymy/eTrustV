@@ -2931,6 +2931,10 @@
     $('#ordPromo option').remove();
   }
 
+  function fn_resetSales() {
+    // $("#appType").change()
+  }
+
   function fn_maskingData(ind, obj) {
     var maskedVal = (obj.val()).substr(-4).padStart((obj.val()).length, '*');
       $("#span" + ind).html(maskedVal);
