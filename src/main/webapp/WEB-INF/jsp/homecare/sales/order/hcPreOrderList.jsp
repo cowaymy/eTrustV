@@ -116,7 +116,7 @@
 
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
 //         doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiComboBranch'); //Branch Code
         doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
         if (memTypeFiltered) {
             doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
@@ -159,6 +159,26 @@
 
            $('#_ordProudctList').multipleSelect("checkAll");
            $('#listDscBrnchId').multipleSelect("checkAll");
+    }
+
+    function fn_multiComboBranch(){
+        if ($("#_brnchId option[value='${SESSION_INFO.userBranchId}']").val() === undefined) {
+            $('#_brnchId').change(function() {
+                //console.log($(this).val());
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '100%'
+            }).multipleSelect("enable");
+           $('#_brnchId').multipleSelect("checkAll");
+        } else {
+            $('#_brnchId').change(function() {
+                //console.log($(this).val());
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '100%'
+            }).multipleSelect("disable");
+            $("#_brnchId").multipleSelect("setSelects", ['${SESSION_INFO.userBranchId}']);
+        }
     }
 
 
@@ -561,7 +581,7 @@
 
         var maxBranches = 25;
 
-        $('#_brnchId').change(function() {
+        /*$('#_brnchId').change(function() {
             var selectedBranches = $(this).multipleSelect('getSelects');
 
             if (selectedBranches.length > maxBranches) {
@@ -572,7 +592,7 @@
         }).multipleSelect({
             selectAll: false, // Disable the "Select All" option
             width: '100%'
-        });
+        });*/
 
         $('#_typeId').change(function() {
             //console.log($(this).val());
