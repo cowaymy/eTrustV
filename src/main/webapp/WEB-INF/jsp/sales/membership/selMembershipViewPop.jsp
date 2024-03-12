@@ -2,12 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
   <script type="text/javascript">
-    var quot = $("#QUOT_ID").val();
 
-    if(quot >0){
-       fn_getMembershipQuotInfoAjax();
-       fn_getMembershipQuotInfoFilterAjax();
-    }
   </script>
 
   <form id="getParamForm" method="get">
@@ -53,6 +48,11 @@
   </div>
   <!-- popup_wrap end -->
 
-  <!-- <script>
+  <script>
+    var quot = $("#QUOT_ID").val();
 
-  </script> -->
+    if(quot >0){
+       fn_getMembershipQuotInfoAjax();
+       fn_getMembershipQuotInfoFilterAjax();
+    }
+  </script>
