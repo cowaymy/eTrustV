@@ -58,7 +58,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
+//import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -166,7 +166,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     // @Async annotation ensures that the method is executed in a different background thread
     // but not consume the main thread.
-    @Async
+    /*@Async
     public JsonObject uploadFile( String dirName, MultipartFile multipartFile) {
     	return uploadFile(  dirName,  multipartFile,new  HashMap<String,String>() , UUID.randomUUID().toString().toUpperCase());
 
@@ -182,9 +182,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     public JsonObject uploadFile( String dirName, MultipartFile multipartFile,HashMap<String,String> tagMap) {
     	return uploadFile(  dirName,  multipartFile, tagMap, UUID.randomUUID().toString().toUpperCase());
 
-    }
+    }*/
 
-    @Async
+    /*@Async
     public JsonObject uploadFile( String dirName, MultipartFile multipartFile,  HashMap<String,String> tagMap , String fileId) {
     	logger.info("File upload in progress.");
     	File file = null;
@@ -232,9 +232,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         	if(file!=null) {file.delete();};
         }
 
-    }
+    }*/
 
-    @Async
+    /*@Async
     public JsonObject uploadStream(String dirName, String fileName, InputStream is,
             HashMap<String,String> tagMap) {
     	return uploadStream(  dirName,  fileName, is, tagMap,  UUID.randomUUID().toString().toUpperCase());
@@ -289,9 +289,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
 
 
-    }
+    }*/
 
-    @Async
+    /*@Async
     public JsonObject uploadStream( String dirName, String fileName, InputStream is,
     		                       HashMap<String,String> tagMap , String fileId) {
     	logger.info("File upload in progress.");
@@ -340,7 +340,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         	if(file!=null) {file.delete();};
         }
 
-    }
+    }*/
 
     @Async
     public S3ObjectInputStream  downloadSingleFile( String dirName, String fileId) {
@@ -465,18 +465,18 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 //    }
 
 
-    private File convertMultiPartFileToFile(MultipartFile multipartFile) throws IOException {
+    /*private File convertMultiPartFileToFile(MultipartFile multipartFile) throws IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") +
                 multipartFile.getOriginalFilename());
                 multipartFile.transferTo(convFile);
         return convFile;
-      }
+      }*/
 
-    private JsonObject uploadFileToS3Bucket( String bucketName, String dirName,  File file, String fileId) {
+    /*private JsonObject uploadFileToS3Bucket( String bucketName, String dirName,  File file, String fileId) {
     	return uploadFileToS3Bucket( bucketName,  dirName, file, new HashMap<String, String>(), fileId );
-    }
+    }*/
 
-    private JsonObject uploadFileToS3Bucket(String bucketName, String dirName, File file, Map<String, String> tagMap, String fileId ) {
+    /*private JsonObject uploadFileToS3Bucket(String bucketName, String dirName, File file, Map<String, String> tagMap, String fileId ) {
     	JsonObject rtnJson = new JsonObject();
     	try {
             //final String uniqueFileName = LocalDateTime.now() + "_" + file.getName();
@@ -554,13 +554,13 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     		return rtnJson;
     	}
 
-    }
+    }*/
 
-    private JsonObject uploadStreamToS3Bucket( String bucketName, String dirName, String fileName, InputStream is,  String fileId) {
+    /*private JsonObject uploadStreamToS3Bucket( String bucketName, String dirName, String fileName, InputStream is,  String fileId) {
     	return uploadStreamToS3Bucket( bucketName,  dirName, fileName, is , new HashMap<String, String>(), fileId );
-    }
+    }*/
 
-    private JsonObject uploadStreamToS3Bucket(String bucketName, String dirName, String fileName, InputStream is, Map<String, String> tagMap, String fileId ) {
+    /*private JsonObject uploadStreamToS3Bucket(String bucketName, String dirName, String fileName, InputStream is, Map<String, String> tagMap, String fileId ) {
     	JsonObject rtnJson = new JsonObject();
     	try {
             //final String uniqueFileName = LocalDateTime.now() + "_" + file.getName();
@@ -638,13 +638,13 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     	}
 
     }
+*/
 
-
-    private PutObjectResult upload(String filePath, String uploadKey) throws Exception {
+    /*private PutObjectResult upload(String filePath, String uploadKey) throws Exception {
         return upload(new FileInputStream(filePath), uploadKey);
-    }
+    }*/
 
-    private PutObjectResult upload(InputStream inputStream, String uploadKey) throws Exception {
+    /*private PutObjectResult upload(InputStream inputStream, String uploadKey) throws Exception {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadKey, inputStream, new ObjectMetadata());
 
         putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
@@ -660,9 +660,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         IOUtils.closeQuietly(inputStream);
 
         return putObjectResult;
-    }
+    }*/
 
-    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) throws IOException {
+    /*public List<PutObjectResult> upload(MultipartFile[] multipartFiles) throws IOException {
         List<PutObjectResult> putObjectResults = new ArrayList<>();
 
         Arrays.stream(multipartFiles)
@@ -677,9 +677,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
                 });
 
         return putObjectResults;
-    }
+    }*/
 
-    public ResponseEntity<byte[]> download(String key) throws Exception {
+    /*public ResponseEntity<byte[]> download(String key) throws Exception {
 
 
 
@@ -709,9 +709,9 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         httpHeaders.setContentDispositionFormData("attachment", fileName);
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
-    }
+    }*/
 
-    public List<S3ObjectSummary> list() throws Exception {
+    /*public List<S3ObjectSummary> list() throws Exception {
         AmazonS3 amazonS3 = null;
 		try {
 			amazonS3 = this.amazonS3Client();
@@ -724,7 +724,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
         List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
 
         return s3ObjectSummaries;
-    }
+    }*/
 
     public JsonObject copyFile( String fromDirName, String toDirName, String fileId ) {
     	JsonObject rtnJson = new JsonObject();
