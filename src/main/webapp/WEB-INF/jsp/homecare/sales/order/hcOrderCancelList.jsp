@@ -16,8 +16,12 @@
 	    createAUIGrid();
 
 	    // DT Branch CodeList 조회
-/* 	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '', 'listDscBranchId', 'M', 'fn_multiCombo'); //Branch Code
- */	    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '',   'listDscBranchId', 'M', 'fn_multiCombo');
+ 	    //doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '', 'listDscBranchId', 'M', 'fn_multiCombo'); //Branch Code
+
+        //doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '',   'listDscBranchId', 'M', 'fn_multiCombo');
+
+        doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '',   'listDscBranchId', 'M', 'fn_multiCombo');
+ 	    doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'listDscBranchId2', 'M', 'fn_multiCombo');
 	    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
 	    doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M', 'f_multiCombo'); // Application Type Combo Box
 
@@ -76,6 +80,13 @@
 
     function fn_multiCombo(){
         $('#listDscBranchId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+
+        $('#listDscBranchId2').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택
@@ -190,11 +201,17 @@
 	            editable : false
 	        },
 	        {
-	            dataField : 'dsc',
-	            headerText : 'DSC',
+	            dataField : 'hdc',
+	            headerText : 'HDC',
 	            width : 100,
 	            editable : false
 	        },
+	        {
+                dataField : 'dsc',
+                headerText : 'DSC',
+                width : 100,
+                editable : false
+            },
 	        {
 	          dataField : 'prdRtnLstUpd',
 	          headerText : 'Update By',
@@ -571,21 +588,18 @@
 						<td><input type="text" title="" id="custId" name="custId" placeholder="Customer ID(Number Only)" class="w100p" /></td>
 						<th scope="row"><spring:message code="sal.text.custName" /></th>
 						<td><input type="text" title="" id="custName" name="custName" placeholder="Customer Name" class="w100p" /></td>
-						<th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
-						<td><input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" /></td>
+						<th scope="row">DSC Branch</th>
+                        <td>
+                            <select id="listDscBranchId2" name="cmbDscBranchId2" class="multy_select w100p" multiple="multiple"></select>
+                        </td>
 					</tr>
 					<tr>
 						<th scope="row"><spring:message code="sal.text.creator" /></th>
 						<td><input type="text" title="" id="crtUserId" name="crtUserId" placeholder="Creator(UserName)" class="w100p" /></td>
                         <th scope="row">Bundle Number</th>
                         <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-
-                        <th scope="row">Product Return Reason</th>
-                        <td><select id="cmbproductRetReasonId" name="cmbproductRetReasonId" class="multy_select w100p" multiple="multiple">
-                        <c:forEach var="list" items="${productRetReasonList }">
-                        <option value="${list.resnId }">${list.resnDesc }</option>
-                        </c:forEach>
-                        </select></td>
+                        <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
+                        <td><input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" /></td>
 					</tr>
 					<tr>
                     <th scope="row">RSO Status</th>
@@ -596,8 +610,12 @@
                     </select></td>
                     <th scope="row"><spring:message code='sales.prod' /></th>
                         <td><select id="listProductId" name="productId" class="w100p"></select></td>
-                     <th scope="row"></th>
-                      <td></td>
+                     <th scope="row">Product Return Reason</th>
+                        <td><select id="cmbproductRetReasonId" name="cmbproductRetReasonId" class="multy_select w100p" multiple="multiple">
+                        <c:forEach var="list" items="${productRetReasonList }">
+                        <option value="${list.resnId }">${list.resnDesc }</option>
+                        </c:forEach>
+                        </select></td>
                     </tr>
 				</tbody>
 			</table>

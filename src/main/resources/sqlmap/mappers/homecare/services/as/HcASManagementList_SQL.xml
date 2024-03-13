@@ -159,6 +159,8 @@
 	           S.AS_BRNCH_ID ,
 	           S.AS_MEM_ID,
 	           NVL((SELECT CODE FROM SYS0005M H WHERE H.BRNCH_ID = AS_BRNCH_ID), '-') BRNCH_CODE,
+	           DSC_BRNCH_ID , <!-- Added for HA and HC branch merging. Hui Ding, 13/03/2024 -->
+	           DSC_BRNCH_CODE , <!-- Added for HA and HC branch merging. Hui Ding, 13/03/2024 -->
 	           S.AS_SLUTN_RESN_ID,
 	           S.IN_HUSE_REPAIR_REPLACE_YN,
 	           S.REF_REQST,
@@ -214,6 +216,8 @@
 	                           END C5 ,
 	                           E.AS_RESULT_ID ,
 	                           E.AS_BRNCH_ID,
+	                           E.DSC_BRNCH_ID, <!-- Added for HA and HC branch merging, Hui Ding, 13/03/2024  -->
+	                           E.DSC_BRNCH_CODE, <!-- Added for HA and HC branch merging, Hui Ding, 13/03/2024  -->
 	                           E.AS_MEM_ID,
 	                           E.AS_SLUTN_RESN_ID,
 	                           E.IN_HUSE_REPAIR_REPLACE_YN,
@@ -252,6 +256,8 @@
 	                         Extent7.AS_RESULT_NO AS_RESULT_NO ,
 	                         Extent7.AS_TOT_AMT AS_TOT_AMT ,
 	                         Extent1.AS_BRNCH_ID,
+	                         dsc.brnch_id DSC_BRNCH_ID,
+	                         dsc.code DSC_BRNCH_CODE,
 	                         Extent1.AS_MEM_ID ,
 	                         Extent7.AS_SLUTN_RESN_ID,
 	                         Extent7.IN_HUSE_REPAIR_REPLACE_YN,
@@ -335,6 +341,7 @@
                      JOIN sal0045d SAL ON SAL.sales_ord_id = Extent4.sales_ord_id
                      LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
                      LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
+                     LEFT JOIN SYS0005M dsc on dsc.code = ma1.CT_BRNCH_CODE <!-- Added for HA and HC Branch merging, Hui Ding, 13/03/2024 -->
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
 
                         AND Extent9.TYPE_ID IN (42,43,5754,48)
@@ -361,12 +368,18 @@
 	                 </if>
 
 	                 <if test="cmbbranchId != null and cmbbranchId != '' ">
-	                   AND Extent9.CODE IN #{cmbbranchId}
+	                   AND Extent1.AS_BRNCH_ID IN #{cmbbranchId}
 	                 </if>
+	                 <if test="cmbbranchId2 != null and cmbbranchId2 != '' ">
+                       AND dsc.brnch_id IN #{cmbbranchId2}
+                     </if>
 
-	                 <if test="cmbctId != null and cmbctId != '' ">
+	                 <!-- <if test="cmbctId != null and cmbctId != '' ">
 	                   AND Extent8.MEM_CODE IN #{cmbctId}
-	                 </if>
+	                 </if> -->
+	                 <if test="cmbctId != null and cmbctId != ''">
+			            AND ((CASE WHEN (Extent8.MEM_ID IS NOT NULL) THEN Extent8.MEM_CODE ELSE '' END) = #{cmbctId})
+			        </if>
 
 	                 <if test='deptCode != null and deptCode != " " and deptCode != ""'>
 			             AND V.DEPT_CODE = #{deptCode}

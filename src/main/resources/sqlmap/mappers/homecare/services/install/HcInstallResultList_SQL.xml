@@ -79,6 +79,8 @@
 		              , CE.DOC_ID C1
 		              , I.BRNCH_ID
 		              , BRANCH.CODE BRNCH_CODE
+		              , BRANCH2.BRNCH_ID BRNCH_ID2
+		              , BRANCH2.CODE BRNCH_CODE2
 		              , CASE WHEN ORG1.MEM_CODE IS NOT NULL
 		                       THEN ORG1.MEM_CODE
 		                       ELSE ORG2.USER_NAME END AS LST_UPD
@@ -143,6 +145,7 @@
 		LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = MEM.MEM_CODE
 		LEFT JOIN SAL0027D CN ON CN.CUST_CNTC_ID = SOM.CUST_CNT_ID
 		LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
+		LEFT JOIN SYS0005M BRANCH2 ON BRANCH2.CODE = MA.CT_BRNCH_CODE /** Added for HA and HC Branch merging, Hui Ding, 12/03/2024 **/
         LEFT JOIN SYS0070M AT ON IR.ATCH_FILE_GRP_ID = AT.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D AT2 ON AT.ATCH_FILE_ID = AT2.ATCH_FILE_ID
         LEFT JOIN ORG1001V V ON V.MEM_ID = MEM.MEM_ID
@@ -237,6 +240,13 @@
 			  #{item}
 			</foreach>
 		</if>
+		<if test="dscCodeList2 != null and dscCodeList2 != ''"> <!-- Added for HA and HC Branch merging, Hui Ding, 12/03/2024 -->
+            AND BRANCH2.BRNCH_ID IN
+            <foreach item="item" collection="dscCodeList2" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
 		<if test="customerId != null and customerId != ''">
             AND CUST.CUST_ID = #{customerId}
 		</if>

@@ -67,6 +67,9 @@
                    CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
                             THEN A.DSC_BRNCH_ID
                     ELSE 0 END DSC_BRNCH_ID ,
+                    CASE WHEN ( A.DSC_BRNCH_ID2 IS NOT NULL )
+                            THEN A.DSC_BRNCH_ID2
+                    ELSE 0 END DSC_BRNCH_ID2 ,
                    CASE WHEN ( A.UPD_DT IS NOT NULL )
                             THEN A.UPD_DT
                     ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
@@ -81,7 +84,8 @@
                     ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
                    A.ASSIGN_CT,
                    A.RCD_TMS,
-                   B.CODE AS DSC,
+                   B.CODE AS HDC,
+                   A.DSC_BRNCH_CODE2 AS DSC,
                    A.BNDL_NO,
                    A.ATCH_FILE_GRP_ID ,
                    A.ATTCHMENT_DOWNLOAD ,
@@ -133,6 +137,8 @@
                        V.CALL_STUS_NAME ,
                        V.CALL_RECALL_DT ,
                        V.DSC_BRNCH_ID ,
+                       V.DSC_BRNCH_ID2 ,
+                       V.DSC_BRNCH_CODE2 ,
                        V.CUST_ID ,
                        V.CUST_NAME ,
                        V.CUST_IC ,
@@ -204,6 +210,8 @@
                     s3.name                             call_stus_name,
                     ce.call_dt                          call_recall_dt,
                     i.brnch_id                          dsc_brnch_id,
+                    dsc.brnch_id                          dsc_brnch_id2,
+                    dsc.code                                dsc_brnch_code2,
                     cust.cust_id                        cust_id,
                     cust.name                           cust_name,
                     cust.nric                           cust_ic,
@@ -261,6 +269,9 @@
                     JOIN sys0013m apptype ON apptype.code_id = r.so_req_cur_app_type_id
                     JOIN ccr0006d ce ON ce.call_entry_id = r.so_req_cur_call_entry_id
                     JOIN sys0038m s3 ON s3.stus_code_id = ce.stus_code_id
+                    JOIN SAL0023D CUSTADD ON CUSTADD.CUST_ADD_ID = I.ADD_ID
+                    LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
+                    LEFT JOIN SYS0005M dsc ON dsc.CODE = MA.CT_BRNCH_CODE
                     LEFT JOIN sys0032m rc ON rc.resn_id = r.so_req_resn_id
                     LEFT JOIN sys0047m u1 ON u1.user_id = r.so_req_crt_user_id
                     LEFT JOIN sys0047m u2 ON u2.user_id = r.so_req_upd_user_id
@@ -327,6 +338,12 @@
 	            #{item}
 	        </foreach>
 	    </if>
+	    <if test="branchList2 != null and branchList2 != ''"> <!--  added for HA and HC Branch Merging, Hui Ding,  13/03/2024-->
+            AND A.DSC_BRNCH_ID2 IN
+            <foreach item="item" collection="branchList2" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 	       <if test="productRetReasonList != null and productRetReasonList != ''">
       AND A.REQ_RESN_ID IN
         <foreach item="item" collection="productRetReasonList" index="index" open="(" separator="," close=")">
@@ -407,7 +424,7 @@
 	               <if test="cancellationType == 'CAN'">
 	                     AND REQ_STUS_ID IN (1,19)
 	               </if>
-	               <if test="cancellationType == 'PR'">
+	               <if test="cancellationType == 'PR'">/
 	                     AND REQ_STUS_ID IN (32)
 	               </if>
             </if>

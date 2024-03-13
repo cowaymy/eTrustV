@@ -58,11 +58,14 @@ var branchDs = [];
 
         asManagementGrid();
         //doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
-        doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
+        //doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
 
-        $("#cmbbranchId").change(function() {
+        doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '',   'cmbbranchId', 'S', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'cmbbranchId2', 'S', 'fn_multiCombo');
+
+        /* $("#cmbbranchId").change(function() {
             doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
-        }); // INCHARGE CT
+        });  */// INCHARGE CT
 
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun : 'HC'}, '', 'asProduct', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
 
@@ -245,6 +248,11 @@ var branchDs = [];
           headerText : "<spring:message code='service.title.ASBrch'/>",
           width : 100
         },
+        {
+            dataField : "dscBrnchCode",
+            headerText : "<spring:message code='service.title.DSCBranch'/>",
+            width : 100
+          },
         {
           dataField : "instCity",
           headerText : "City",
@@ -1174,27 +1182,23 @@ var branchDs = [];
       <td><input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber'/>"
        class="w100p" id="orderNum" name="orderNum" /></td>
      </tr>
+
      <tr>
       <th scope="row"><spring:message code='service.title.ASBrch'/></th>
       <td><select id="cmbbranchId" name="cmbbranchId" class="w100p">
       </select></td>
-      <th scope="row"><spring:message code='home.lbl.dtCode'/></th>
-      <td><select id="cmbctId" name="cmbctId" class="w100p">
-        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      <th scope="row"><spring:message code='service.title.DSCBranch'/></th>
+      <td><select id="cmbbranchId2" name="cmbbranchId2" class="w100p">
       </select></td>
-      <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
+      <th scope="row"><spring:message code='home.lbl.dtCode'/></th>
       <td>
-       <div class="date_set w100p">
-        <p>
-         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtFrm" name="appDtFrm" />
-        </p>
-        <span><spring:message code='pay.text.to'/></span>
-        <p>
-         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtTo" name="appDtTo" />
-        </p>
-       </div>
+      <%-- <select id="cmbctId" name="cmbctId" class="w100p">
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      </select> --%>
+      <input type="text" title="" placeholder="DT/CT code" class="w100p" id=cmbctId name="cmbctId" />
       </td>
      </tr>
+
      <tr>
       <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
       <td>
@@ -1226,8 +1230,26 @@ var branchDs = [];
             </p>
        </div>
       </td>
-      <th scope="row">Bundle Number</th>
-      <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+      <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
+      <td>
+       <div class="date_set w100p">
+        <p>
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtFrm" name="appDtFrm" />
+        </p>
+        <span><spring:message code='pay.text.to'/></span>
+        <p>
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtTo" name="appDtTo" />
+        </p>
+       </div>
+      </td>
+     </tr>
+     <tr>
+        <th scope="row">Bundle Number</th>
+        <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+        <th></th>
+        <td></td>
+        <th></th>
+        <td></td>
      </tr>
     </tbody>
    </table>

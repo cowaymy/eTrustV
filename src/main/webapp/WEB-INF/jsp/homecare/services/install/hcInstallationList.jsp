@@ -7,11 +7,15 @@
     $(document).ready(function() {
 	    //doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
 	    doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'product', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
-	    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
+	    //doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
+	    doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
+        // added for HA & HC branch code enhancement - Hui Ding, 11/3/2024
+	    doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode2', 'M', 'fn_multiCombo'); //Branch Code
 
 	    createInstallationListAUIGrid();
 
 	    console.log('isAC' + '${SESSION_INFO.isAC} ');
+	    console.log("${SESSION_INFO.memberLevel}: " + '${SESSION_INFO.memberLevel}');
 	    if('${SESSION_INFO.isAC}' == 1){
             if("${SESSION_INFO.memberLevel}" =="1"){
                 $("#orgCode").val('${SESSION_INFO.orgCode}');
@@ -83,6 +87,13 @@
 
     function fn_multiCombo() {
         $('#dscCode').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+
+        $('#dscCode2').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택
@@ -206,6 +217,8 @@
 	        {dataField : "telO",headerText : '<spring:message code="service.title.ResidenceNo" />',width : 130},
 	        {dataField : "telR",headerText : '<spring:message code="service.title.OfficeNo" />',width : 130},
 	        {dataField : "areaId",headerText : 'Area ID',width : 130},
+	        {dataField : "brnchCode2", headerText : '<spring:message code="service.title.DSCBranch" />'}, // added for HA & HC branch code enhancement - Hui Ding, 5/3/2024
+	        {dataField : "brnchId" , width : 0, visible: false}, // added for HA & HC branch code enhancement - Hui Ding, 5/3/2024
 	        {dataField : "lastUpdCallLogDt",headerText : 'Last Updated Call Log Date',width : 200},
 	        {dataField : "hpName",headerText : '<spring:message code="sal.text.salPersonName" />',width : 150},
 	        {dataField : "hpContact",headerText : '<spring:message code="sal.text.salPersonPhone" />',width : 150},
@@ -414,6 +427,7 @@
 		$("#installStatus").val("");
 		$("#ctCode").val("");
 		$("#dscCode").val("");
+		$("#dscCode2").val("");
 		$("#customerId").val("");
 		$("#customerName").val("");
 		$("#customerIc").val("");
@@ -674,31 +688,26 @@
       </td>
      </tr>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.CustomerID' /></th>
-      <td><input type="text" class="w100p forPdf" title="Customer ID" placeholder="Customer ID"
-       id="customerId" name="customerId" /></td>
-      <th scope="row"><spring:message
-        code='service.title.CustomerName' /></th>
-      <td><input type="text" class="w100p forPdf" title="Customer Name" placeholder="Customer Name"
-       id="customerName" name="customerName" /></td>
-      <th scope="row"><spring:message
-        code='service.title.CustomerIC_CompanyNo' /></th>
-      <td><input type="text" class="w100p forPdf" title="NRIC/BRIC" placeholder="NRIC/BRIC"
-       id="customerIc" name="customerIc" /></td>
+      <th scope="row"><spring:message code='service.title.CustomerID' /></th>
+      <td><input type="text" class="w100p forPdf" title="Customer ID" placeholder="Customer ID" id="customerId" name="customerId" /></td>
+      <th scope="row"><spring:message code='service.title.CustomerName' /></th>
+      <td><input type="text" class="w100p forPdf" title="Customer Name" placeholder="Customer Name" id="customerName" name="customerName" /></td>
+      <th scope="row">DSC Branch</th>
+      <td>
+        <select class="multy_select w100p forPdf" multiple="multiple" id="dscCode2" name="dscCode2">
+      </select>
      </tr>
 	<tr>
         <th scope="row"><spring:message code='service.title.SIRIMNo' /></th>
         <td><input type="text" class="w100p forPdf" title="SIRIM No." placeholder="SIRIM No." id="sirimNo" name="sirimNo" /></td>
 	    <th scope="row"><spring:message code='service.title.SerialNo' /></th>
 	    <td><input type="text" class="w100p forPdf" title="Serial No." placeholder="Serial No." id="serialNo" name="serialNo" /></td>
-	    <th scope="row">Bundle No</th>
-        <td><input type="text" class="w100p forPdf" title="Bundle No." placeholder="Bundle No." id="bndlNo" name="bndlNo" /></td>
+	    <th scope="row"><spring:message code='service.title.CustomerIC_CompanyNo' /></th>
+	    <td><input type="text" class="w100p forPdf" title="NRIC/BRIC" placeholder="NRIC/BRIC" id="customerIc" name="customerIc" /></td>
 	</tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Product' /></th>
-      <td ><select class="w100p forPdf" id="product"
-       name="product"></select></td>
+      <td ><select class="w100p forPdf" id="product" name="product"></select></td>
        <th scope="row">Stock Out GR</th>
      <td>
           <select id="listDelvryGr" name="delvryGr" class="multy_select w100p forPdf" multiple="multiple">
@@ -707,14 +716,8 @@
               <option value="B">Blank</option>
           </select>
      </td>
-     <th scope="row">Stock Return GR</th>
-     <td>
-          <select id="listReturnGr" name="returnGr" class="multy_select w100p forPdf" multiple="multiple">
-              <option value="Y">Yes</option>
-              <option value="N">No</option>
-              <option value="B">Blank</option>
-          </select>
-     </td>
+     <th scope="row">Bundle No</th>
+        <td><input type="text" class="w100p forPdf" title="Bundle No." placeholder="Bundle No." id="bndlNo" name="bndlNo" /></td>
      </tr>
      <tr>
            <th>Pre-Installation Check :</th>
@@ -725,8 +728,14 @@
                     <option value="0">Blank</option>
             </select>
            </td>
-           <th></th>
-           <td></td>
+           <th scope="row">Stock Return GR</th>
+		     <td>
+		          <select id="listReturnGr" name="returnGr" class="multy_select w100p forPdf" multiple="multiple">
+		              <option value="Y">Yes</option>
+		              <option value="N">No</option>
+		              <option value="B">Blank</option>
+		          </select>
+		     </td>
            <th></th>
            <td></td>
      </tr>

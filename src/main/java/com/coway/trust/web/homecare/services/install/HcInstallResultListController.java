@@ -128,6 +128,7 @@ public class HcInstallResultListController {
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
 		String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
+		String[] dscCodeList2 = request.getParameterValues("dscCode2"); // added for HA & HC branch code enhancement - Hui Ding, 11/3/2024
 		String[] productList = request.getParameterValues("product"); //added by frango
 		String[] delvryGrList = request.getParameterValues("delvryGr"); //
 		String[] returnGrList = request.getParameterValues("returnGr"); //
@@ -138,6 +139,7 @@ public class HcInstallResultListController {
 		params.put("appTypeList", appTypeList);
 		/* KV- DSC Code */
 		params.put("dscCodeList", dscCodeList);
+		params.put("dscCodeList2", dscCodeList2);// added for HA & HC branch code enhancement - Hui Ding, 11/3/2024
 		params.put("productList", productList); //added by frango
 		params.put("delvryGrList", delvryGrList);
 		params.put("returnGrList", returnGrList);
@@ -599,7 +601,7 @@ public class HcInstallResultListController {
       logger.debug("params : {}", params);
 
       resultValue = hcInstallResultListService.hcEditInstallationResultSerial(params, sessionVO);
-      
+
       if (resultValue > 0) {
         message.setMessage("Installation result successfully updated.");
       } else {
@@ -723,7 +725,7 @@ public class HcInstallResultListController {
 			     String key = (String)me.getKey();
 			     seqs.add(key);
 			 }
-	
+
 			 List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 		   logger.debug("list.size : {}", list.size());
 
@@ -773,7 +775,7 @@ public class HcInstallResultListController {
 	    logger.debug("params ================================>>  " + params);
 
 	    resultValue = hcInstallResultListService.updateInstallFileKey(params, sessionVO);
-	    
+
 	    return ResponseEntity.ok(message);
 	  }
 

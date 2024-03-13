@@ -204,11 +204,13 @@ public class HcASManagementListController {
     String[] productList = request.getParameterValues("asProduct");
 
     String cmbbranchId = request.getParameter("cmbbranchId");
+    String cmbbranchId2 = request.getParameter("cmbbranchId2");
     String cmbctId = request.getParameter("cmbctId");
 
     params.put("asTypeList", asTypeList);
     params.put("asStatusList", asStatusList);
     params.put("cmbbranchId", cmbbranchId);
+    params.put("cmbbranchId2", cmbbranchId2);
     params.put("cmbctId", cmbctId);
     params.put("productList", productList);
 

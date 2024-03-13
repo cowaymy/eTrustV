@@ -120,6 +120,7 @@ public class HcOrderCancelController {
 		String[] callStusId = request.getParameterValues("callStusId");
 		String[] reqStageId = request.getParameterValues("reqStageId");
 		String[] dscBranchId = request.getParameterValues("cmbDscBranchId");
+		String[] dscBranchId2 = request.getParameterValues("cmbDscBranchId2");
 		String[] productRetReasonId = request.getParameterValues("cmbproductRetReasonId");
 		String[] rsoStatusId = request.getParameterValues("cmbrsoStatusId");
 		String[] arrProdId     = request.getParameterValues("productId");
@@ -128,6 +129,7 @@ public class HcOrderCancelController {
 		params.put("stusIdList", callStusId);
 		params.put("reqStageList", reqStageId);
 		params.put("branchList", dscBranchId);
+		params.put("branchList2", dscBranchId2);
 		params.put("productRetReasonList", productRetReasonId);
 		params.put("rsoStatusList", rsoStatusId);
 		params.put("arrProd", arrProdId);

@@ -23,11 +23,17 @@
 						doGetComboOrder('/common/selectCodeList.do', '10',
 								'CODE_ID', '', 'listAppType', 'M',
 								'fn_multiCombo'); //Common Code
+						// HDC CODE
+						doGetComboSepa('/common/selectBranchCodeList.do',
+                                '6672', ' - ', '', 'listDSCCode', 'M',
+                                'fn_multiCombo'); //Branch Code
 						// DSC CODE
-						//doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'listDSCCode', 'S', 'fn_multiCombo'); //Branch Code
-						doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',
+						doGetComboSepa('/common/selectBranchCodeList.do',
+                                '11', ' - ', '', 'listDSCCode2', 'M',
+                                'fn_multiCombo');
+						/* doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',
 								'', ' - ', '', 'listDSCCode', 'M',
-								'fn_multiCombo'); //Branch Code
+								'fn_multiCombo'); */  //Branch Code
 						// STATE CODE
 						doGetCombo('/callCenter/getstateList.do', '', '',
 								'ordStatus', 'S', '');
@@ -166,6 +172,13 @@
 		});
 
 		$('#listDSCCode').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '100%'
+        });
+
+		$('#listDSCCode2').change(function() { // Added by Hui Ding
 
         }).multipleSelect({
             selectAll : true, // 전체선택
@@ -365,7 +378,12 @@
 			headerText : '<spring:message code="service.grid.Branch" />',
 			editable : false,
 			width : 150
-		}, {
+		},{ // added for HA & HC branch code enhancement - Hui Ding, 5/3/2024
+            dataField : "dscCode2",
+            headerText : '<spring:message code="service.title.DSCBranch" />',
+            editable : false,
+            width : 150
+        }, {
 			dataField : "isWaitCancl",
 			headerText : '<spring:message code="service.grid.WaitCancel" />',
 			editable : false,
@@ -626,11 +644,13 @@
 									</c:choose>
 								</c:forEach>
 						</select></td>
+						<th scope="row">DSC Code</th>
+                        <td><select class="select w100p" id="listDSCCode2"
+                            name="DSCCode2"></select></td>
 						<th scope="row">Bundle Number</th>
 						<td><input type="text" title="bndlNo" id="bndlNo"
 							name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-						<th scope="row"></th>
-						<td></td>
+
 					</tr>
 					<tr>
 						<th scope="row">Promotion Code</th> <!-- Added by Keyi  -->

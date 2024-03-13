@@ -106,6 +106,7 @@ public class HcOrderCallListController {
 		String[] callLogTypeList = request.getParameterValues("callLogType");
 		String[] callLogStatusList = request.getParameterValues("callLogStatus");//added by keyi
 		String[] DSCCodeList = request.getParameterValues("DSCCode");
+		String[] DSCCodeList2 = request.getParameterValues("DSCCode2");// added for HA & HC Branch code enhancement by Hui Ding, 5/3/2024
 		String[] promotionListSp = request.getParameterValues("promotion"); //added by keyi
 		String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode"); //added by keyi
 		String[] productList = request.getParameterValues("product"); //added by frango
@@ -114,6 +115,7 @@ public class HcOrderCallListController {
 		params.put("callLogTypeList", callLogTypeList);
 		params.put("callLogStatusList", callLogStatusList); //added by keyi
 		params.put("DSCCodeList", DSCCodeList);
+		params.put("DSCCodeList2", DSCCodeList2);
 		params.put("promotionListSp", promotionListSp); //added by keyi
 		params.put("searchFeedBackCode", searchFeedBackCode); //added by keyi
 		params.put("productList", productList); //added by frango

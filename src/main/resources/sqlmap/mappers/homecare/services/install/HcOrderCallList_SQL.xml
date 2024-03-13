@@ -286,6 +286,7 @@
 		  , Extent1.RCD_TMS
 		  , Extent1.POSTCODE
 		  , Extent1.DSC_CODE
+		  , Extent1.DSC_CODE_2
 		  , Extent1.CALL_LOG_DT
 		  , Extent1.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
 		  , Extent1.PROMO_ID <!-- Added by keyi  20210920-->
@@ -320,6 +321,7 @@
 		      , vCallLogOrderCall.INSTALL_AREA_NAME INSTALL_AREA_NAME
 		      , vCallLogOrderCall.CALL_LOG_DT CALL_LOG_DT
 		      , vCallLogOrderCall.DSC_BRNCH_ID DSC_BRNCH_ID
+		      , vCallLogOrderCall.DSC_BRNCH_ID2 DSC_BRNCH_ID2 <!-- Added for HA & HC Branch code enhancement by Hui Ding, 5/3/2024 -->
 		      , vCallLogOrderCall.PO_NO PO_NO
 		      , vCallLogOrderCall.INSTALL_TEL_M INSTALL_TEL_M
 		      , vCallLogOrderCall.INSTALL_TEL_O INSTALL_TEL_O
@@ -342,6 +344,7 @@
 		      , vCallLogOrderCall.AREA
 		      , vCallLogOrderCall.POSTCODE
 		      , vCallLogOrderCall.DSC_CODE
+		      , vCallLogOrderCall.DSC_CODE2 DSC_CODE_2 <!-- Added for HA & HC Branch code enhancement by Hui Ding, 5/3/2024 -->
 		      , vCallLogOrderCall.BNDL_NO
 		      , vCallLogOrderCall.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
 		      , vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID
@@ -424,6 +427,16 @@
                 #{item}
             </foreach>
         </if>
+         <!-- Added for HA & HC Branch code enhancement by Hui Ding, 5/3/2024 -->
+        <if test="DSCCodeList2 != null and DSCCodeList2 != '' ">
+            AND Extent1.DSC_BRNCH_ID2 IN
+            <foreach item="item" collection="DSCCodeList2" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+         <!-- End for HA & HC Branch code enhancement by Hui Ding, 5/3/2024 -->
+
         <if test="createDate != '' ">
           <![CDATA[ AND Extent1.SALES_ORD_DT >= TO_DATE(#{createDate} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') ]]>
         </if>
