@@ -580,7 +580,6 @@ function chgTab(tabNm) {
  function fn_displayReport(viewType){
 
     var isRe = false;
-    var rptURL = "";
     if (viewType == "FICO_VIEW"){
     	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
             console.log("result : " + result);
@@ -615,36 +614,6 @@ function chgTab(tabNm) {
 
  function fn_installationArea(){
 	 Common.popupDiv("/sales/ccp/ccpCalInstallationAreaPop.do", null, null, true, "_instPopDiv");
- }
-
- function fn_openCTOSreport(rptURL){
-	 console.log("in fn_openCTOSreport " +rptURL);
-
-	 $("#_ctosHtml").val(rptURL);
-
-	  var ctosRpt = window.open(rptURL, 'report' , "width=800, height=600","_blank");
-	 ctosRpt.location.reload();
-	 console.log("reload : " +ctosRpt);
-	 //window.open("ccpCTOSreport.jsp", 'report' , "width=800, height=600","_blank");
-/*
-	 Common.ajax("GET", "/sales/ccp/getCTOSreport", rptURL, function(jqXHR, textStatus, errorThrown) {
-         //Common.alert("실패하였습니다.");
-         console.log("getCTOSreport");
-         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-
-         alert("error : " +jqXHR.responseJSON.message);
-         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-
-     });
-
- */
- var option = {
-	        width: "800", // 창 가로 크기
-	        height: "600" // 창 세로 크기
-	         }
-
-	 Common.popupWin('_detailForm', "/sales/ccp/getCTOSreport.do", option);
-
  }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
@@ -701,10 +670,6 @@ function chgTab(tabNm) {
 
     <!-- cust ID  -->
     <input type="hidden"  id="_editCustId" value="${orderDetail.basicInfo.custId}">
-</form>
-<form id="_detailForm">
-    <input type="hidden" name="ctosHtml" id="_ctosHtml">
-
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
