@@ -1979,7 +1979,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         if (custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
           params.put("module", "PRE_BOOK");
           params.put("subModule", "PRE_BOOK");
-          params.put("paramCode", "DISC_WAIVE");
+          params.put("paramCode", "DISC_WAIVE_6MTH");
 //          if (discWaive == 4) {
 //            params.put("paramCode", "DISC_WAIVE_4MTH");
 //          } else if (discWaive == 3) {
