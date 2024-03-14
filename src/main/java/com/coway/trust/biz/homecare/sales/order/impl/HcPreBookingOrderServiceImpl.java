@@ -78,30 +78,24 @@ public class HcPreBookingOrderServiceImpl extends EgovAbstractServiceImpl implem
     try {
 
       // GET MEMBERSHIP LAST EXPIRE DATE
-//      EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
-//      int discWaive = 0;
-//      if (GetExpDate != null) {
-//        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
-//        logger.info("[HcPreBookingOrderServiceImpl - registerHcPreBookingOrder] discWaive :: " + discWaive);
-//        if(discWaive >= 5 || discWaive <= 0){
-//          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
-//        }
-//      } else {
-//        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
-//      }
-    	Map<String,Object> params = new HashMap();
-        params.put("module", "PRE_BOOK");
-        params.put("subModule", "PRE_BOOK");
-        params.put("paramCode", "DISC_WAIVE");
-        // GET DISCOUNT PERIOD FROM SYS0098M
-        int discountPeriod = commonMapper.selectSystemConfigurationParamValue(params);
+      EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
+      int discWaive = 0;
+      if (GetExpDate != null) {
+        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
+        logger.info("[HcPreBookingOrderServiceImpl - registerHcPreBookingOrder] discWaive :: " + discWaive);
+        if(discWaive >= 5 || discWaive <= 0){
+          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
+        }
+      } else {
+        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
+      }
 
       // GET PRE BOOKING ORDER NO
       String preBookingOrdNo = commonMapper.selectDocNo("195");
       preBookingOrderVO.setPreBookOrdNo(preBookingOrdNo);
       preBookingOrderVO.setCrtUserId(sessionVO.getUserId());
       preBookingOrderVO.setUpdUserId(sessionVO.getUserId());
-      preBookingOrderVO.setDiscWaive(discountPeriod);
+      preBookingOrderVO.setDiscWaive(discWaive);
       preBookingOrderVO.setCustVerifyStus(SalesConstants.STATUS_CODE_NAME_ACT); // Default ACT
       preBookingOrderVO.setStusId(SalesConstants.STATUS_ACTIVE); // Default ACT
 
