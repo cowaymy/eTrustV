@@ -130,16 +130,22 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
   public void insertPreBooking(PreBookingOrderVO preBookingOrderVO, SessionVO sessionVO){
      try{
         EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(preBookingOrderVO.getSalesOrdIdOld());
-	      int discWaive = 0;
-	      if (GetExpDate != null) {
-	        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
-	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] discWaive :: " + discWaive);
-	        if(discWaive >= 5 || discWaive <= 0){
-	          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
-	        }
-	      } else{
-	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
-	      }
+//	      int discWaive = 0;
+//	      if (GetExpDate != null) {
+//	        discWaive = GetExpDate.get("monthBeforeExpired") != null ? ((BigDecimal) GetExpDate.get("monthBeforeExpired")).intValue() : 0;
+//	        logger.info("[PreBookingOrderServiceImpl - insertPreBooking] discWaive :: " + discWaive);
+//	        if(discWaive >= 5 || discWaive <= 0){
+//	          throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Promotion discount entitlement.");
+//	        }
+//	      } else{
+//	        throw new ApplicationException(AppConstants.FAIL,"Pre Booking Order Register Failed - Membership warranty.");
+//	      }
+    	Map<String,Object> params = new HashMap();
+        params.put("module", "PRE_BOOK");
+        params.put("subModule", "PRE_BOOK");
+        params.put("paramCode", "DISC_WAIVE");
+        // GET DISCOUNT PERIOD FROM SYS0098M
+        int discountPeriod = commonMapper.selectSystemConfigurationParamValue(params);
 
 //	      String preBookingNo = preBookingOrderMapper.selectNextPreBookingNo();
 //
@@ -156,7 +162,7 @@ public class PreBookingOrderServiceImpl extends EgovAbstractServiceImpl implemen
 	      preBookingOrderVO.setPreBookOrdNo(preBookingOrdNo);
 	      preBookingOrderVO.setCrtUserId(sessionVO.getUserId());
 	      preBookingOrderVO.setUpdUserId(sessionVO.getUserId());
-	      preBookingOrderVO.setDiscWaive(discWaive);
+	      preBookingOrderVO.setDiscWaive(discountPeriod);
 	      preBookingOrderVO.setCustVerifyStus(SalesConstants.STATUS_CODE_NAME_ACT); // Default ACT
 	      preBookingOrderVO.setStusId(SalesConstants.STATUS_ACTIVE); // Default ACT
 

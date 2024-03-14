@@ -1979,18 +1979,19 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         if (custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
           params.put("module", "PRE_BOOK");
           params.put("subModule", "PRE_BOOK");
-          if (discWaive == 4) {
-            params.put("paramCode", "DISC_WAIVE_4MTH");
-          } else if (discWaive == 3) {
-            params.put("paramCode", "DISC_WAIVE_3MTH");
-          } else if (discWaive == 2) {
-            params.put("paramCode", "DISC_WAIVE_2MTH");
-          } else if (discWaive == 1) {
-            params.put("paramCode", "DISC_WAIVE_1MTH");
-          } else{
-            // NOT ELIGIBLE FOR PRE BOOK PROMOTION DISCOUNT
-            params.put("paramCode", "DISC_WAIVE_0MTH");
-          }
+          params.put("paramCode", "DISC_WAIVE");
+//          if (discWaive == 4) {
+//            params.put("paramCode", "DISC_WAIVE_4MTH");
+//          } else if (discWaive == 3) {
+//            params.put("paramCode", "DISC_WAIVE_3MTH");
+//          } else if (discWaive == 2) {
+//            params.put("paramCode", "DISC_WAIVE_2MTH");
+//          } else if (discWaive == 1) {
+//            params.put("paramCode", "DISC_WAIVE_1MTH");
+//          } else{
+//            // NOT ELIGIBLE FOR PRE BOOK PROMOTION DISCOUNT
+//            params.put("paramCode", "DISC_WAIVE_0MTH");
+//          }
           // GET DISCOUNT PERIOD FROM SYS0098M
           int discountPeriod = commonMapper.selectSystemConfigurationParamValue(params);
 
