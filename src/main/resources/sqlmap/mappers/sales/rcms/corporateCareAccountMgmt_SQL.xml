@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.rcms.impl.CorporateCareAccountMgmtMapper">
+
+<select id="selectNextFileId" resultType="int">
+ SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+</select>
+
+<insert id="insertFileDetail" parameterType="Map">
+    INSERT INTO SYS0071D (
+    ATCH_FILE_ID
+    , ATCH_FILE_NAME
+    , FILE_SUB_PATH
+    , PHYSICL_FILE_NAME
+    , FILE_EXTSN
+    , FILE_SIZE
+    , FILE_PASSWORD
+    , FILE_UNQ_KEY
+    , FILE_KEY_SEQ
+    )VALUES (
+    #{atchFileId}
+    ,#{atchFileName}
+    ,#{fileSubPath}
+    ,#{physiclFileName}
+    ,#{fileExtsn}
+    ,#{fileSize}
+    ,#{filePassword}
+    ,#{fileUnqKey}
+    ,#{fileKeySeq}
+    )
+</insert>
+
+<insert id="insertFileGroup" parameterType="fileGroupVO">
+     INSERT INTO SYS0070M (
+     ATCH_FILE_GRP_ID
+     , ATCH_FILE_ID
+     , CHENAL_TYPE
+     , CRT_USER_ID
+     , CRT_DT
+     , UPD_USER_ID
+     , UPD_DT
+     )VALUES (
+     #{atchFileGrpId}
+     ,#{atchFileId}
+     ,#{chenalType}
+     ,#{crtUserId}
+     ,SYSDATE
+     ,#{crtUserId}
+     ,SYSDATE
+     )
+</insert>
+
+<select id="selectPortalStusList" parameterType="Map" resultType="egovMap">
+    SELECT
+        STUS_CODE_ID AS CODE_ID,
+        CODE,
+        NAME AS CODE_NAME
+    FROM
+        SYS0038M
+    WHERE
+        STUS_CODE_ID IN (1,8)
+</select>
+
+<select id="selectPICList" parameterType="Map" resultType="egovMap">
+    SELECT
+         AGENT_ID,
+         AGENT_GRP_ID,
+         AGENT_TYPE,
+         AGENT_NAME,
+         STUS_ID,
+         USER_ID,
+         CRT_USER_ID,
+         TO_CHAR(CRT_DT , 'DD/MM/YYYY') CRT_DT,
+         UPD_USER_ID,
+         TO_CHAR(UPD_DT , 'DD/MM/YYYY') UPD_DT
+     FROM SAL0148M
+     WHERE 1 = 1
+     AND STUS_ID = 1
+</select>
+
+<select id="selectDocNo" parameterType="String" resultType="egovMap">
+ <![CDATA[
+     SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+           CASE
+                WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+           ELSE ''
+              END C1  ,
+           CASE
+                WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+           ELSE ''
+              END C2
+      FROM SYS0022C Extent1
+     WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+]]>
+</select>
+
+ <update id="updateDocNo" parameterType="Map">
+    UPDATE SYS0022C
+        SET DOC_NO = #{nextDocNo}
+    WHERE  ( DOC_NO_ID = #{docNoId} )
+</update>
+
+
+<insert id="addPortal" parameterType="Map">
+	INSERT INTO SAL0409M (
+	    PORTAL_ID
+	    ,PORTAL_CODE
+	    ,PORTAL_NAME
+	    ,PORTAL_STUS
+	    ,CORP_TYPE
+	    ,INV_METHOD
+	    ,LOGIN_ID
+	    ,PORTAL_PASS
+	    ,PORTAL_URL
+	    ,PAYMENT_TERM
+	    ,REG_PERIOD_MONTH
+	    ,REG_PERIOD_YEAR
+	    ,REMARK
+	    ,RENEWAL_PERIOD
+	    ,RENEWAL_FEE
+	    ,CCD_PIC1
+	    ,CCD_PIC2
+	    ,CCD_PIC3
+
+	    ,CRT_USER_ID
+	    ,CRT_DT
+	)
+	VALUES (
+	    SAL0409M_PORTAL_ID_SEQ.NEXTVAL
+	    ,#{portalCode}
+	    ,#{portalName}
+	    ,#{portalStus}
+	    ,#{corpType}
+	    ,#{invMethod}
+	    ,#{loginId}
+	    ,#{portalPass}
+	    ,#{portalUrl}
+	    ,#{paymentTerm}
+	    ,#{regMonth}
+        ,#{regYear}
+	    ,#{remark}
+	    ,#{renewPeriod}
+	    ,#{renewFee}
+	    ,#{ccdPic1}
+	    ,#{ccdPic2}
+	    ,#{ccdPic3}
+
+	    ,#{creator}
+	    ,SYSDATE
+	)
+</insert>
+
+<update id="updatePortal" parameterType="Map">
+    UPDATE SAL0409M
+    SET
+        PORTAL_NAME        = #{portalName}
+        ,PORTAL_STUS        = #{portalStus}
+        ,CORP_TYPE          = #{corpType}
+        ,INV_METHOD         = #{invMethod}
+        ,LOGIN_ID           = #{loginId}
+        ,PORTAL_PASS        = #{portalPass}
+        ,PORTAL_URL         = #{portalUrl}
+        ,PAYMENT_TERM       = #{paymentTerm}
+        ,REG_PERIOD_MONTH   = #{regMonth}
+        ,REG_PERIOD_YEAR    = #{regYear}
+        ,REMARK             = #{remark}
+        ,RENEWAL_PERIOD     = #{renewPeriod}
+        ,RENEWAL_FEE        = #{renewFee}
+        ,CCD_PIC1           = #{ccdPic1}
+        ,CCD_PIC2           = #{ccdPic2}
+        ,CCD_PIC3           = #{ccdPic3}
+
+        ,UPD_USER_ID        = #{updator}
+        ,UPD_DT             = SYSDATE
+    WHERE PORTAL_ID = #{portalId}
+</update>
+
+<select id="selectPortalList" parameterType="Map" resultType="egovMap">
+    SELECT
+        A.PORTAL_ID
+        ,A.PORTAL_CODE
+        ,A.PORTAL_NAME
+        ,A.PORTAL_STUS AS PORTAL_STUS_ID
+        ,D.CODE AS PORTAL_STUS
+        ,A.CORP_TYPE AS CORP_TYPE_ID
+        ,E.CODE_NAME AS CORP_TYPE
+        ,A.INV_METHOD AS INV_METHOD_ID
+        ,F.CODE_NAME AS INV_METHOD
+        ,A.LOGIN_ID
+        ,A.PORTAL_PASS
+        ,A.PORTAL_URL
+        ,A.PAYMENT_TERM
+        ,A.REG_PERIOD_MONTH
+        ,A.REG_PERIOD_YEAR
+        ,A.REMARK
+        ,A.RENEWAL_PERIOD
+        ,A.RENEWAL_FEE
+        ,A.CCD_PIC1 AS MAIN_PIC_ID
+        ,G.AGENT_NAME AS PORTAL_PIC
+        ,B.ATCH_FILE_GRP_ID
+        ,C.ATCH_FILE_ID
+        ,A.CRT_USER_ID
+        ,H.USER_NAME AS CREATOR
+        ,A.CRT_DT
+        ,A.UPD_USER_ID
+        ,I.USER_NAME AS UPDATOR
+        ,A.UPD_DT
+
+    FROM SAL0409M A
+    LEFT JOIN SYS0070M B ON B.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+    LEFT JOIN SYS0071D C ON C.ATCH_FILE_ID = B.ATCH_FILE_ID
+    LEFT JOIN SYS0038M D ON A.PORTAL_STUS = D.STUS_CODE_ID
+    LEFT JOIN SYS0013M E ON A.CORP_TYPE = E.CODE_ID
+    LEFT JOIN SYS0013M F ON A.INV_METHOD = F.CODE_ID
+    LEFT JOIN SAL0148M G ON A.CCD_PIC1 = G.AGENT_ID
+    LEFT JOIN SYS0047M H ON A.CRT_USER_ID = H.USER_ID
+    LEFT JOIN SYS0047M I ON A.UPD_USER_ID = I.USER_ID
+</select>
+
+<select id="selectPortalNameList" parameterType="Map" resultType="egovMap">
+    SELECT
+        PORTAL_ID AS CODE_ID,
+        PORTAL_CODE　AS CODE,
+        PORTAL_NAME AS CODE_NAME
+    FROM SAL0409M
+    WHERE PORTAL_STUS = 1
+</select>
+
+<select id="selectPortalDetails" parameterType="Map" resultType="egovMap">
+    SELECT
+        A.PORTAL_ID
+        ,A.PORTAL_CODE
+        ,A.PORTAL_NAME
+        ,A.PORTAL_STUS
+        ,A.CORP_TYPE
+        ,A.INV_METHOD
+        ,A.LOGIN_ID
+        ,A.PORTAL_PASS
+        ,A.PORTAL_URL
+        ,A.PAYMENT_TERM
+        ,A.REG_PERIOD_MONTH
+        ,A.REG_PERIOD_YEAR
+        ,A.REMARK
+        ,A.RENEWAL_PERIOD
+        ,A.RENEWAL_FEE
+        ,A.CCD_PIC1
+        ,A.CCD_PIC2
+        ,A.CCD_PIC3
+        ,B.ATCH_FILE_GRP_ID
+        ,C.ATCH_FILE_ID
+        ,A.CRT_USER_ID
+        ,A.CRT_DT
+        ,A.UPD_USER_ID
+        ,A.UPD_DT
+
+    FROM SAL0409M A
+    LEFT JOIN SYS0070M B ON B.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+    LEFT JOIN SYS0071D C ON C.ATCH_FILE_ID = B.ATCH_FILE_ID
+    WHERE 1=1
+    <if test=" portalId != null and portalId != '' ">
+        AND A.PORTAL_ID = #{portalId}
+    </if>
+</select>
+
+<update id="updatePortalStatus" parameterType="Map">
+        UPDATE SAL0409M
+        SET
+            PORTAL_STUS = #{updStus},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{updator}
+        WHERE PORTAL_ID = #{portalId}
+      </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<select id="selectCareAccMgmtList" parameterType="Map" resultType="egovMap">
+</select>
+
+</mapper>
