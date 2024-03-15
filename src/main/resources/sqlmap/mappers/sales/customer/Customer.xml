@@ -32,23 +32,22 @@
              , T1.GST_RGIST_NO
           FROM SAL0029D T1
          WHERE 1 = 1
-
          <if test='basicNric != null  and basicNric != "0".toString() and basicNric !=""'>
            AND T1.NRIC = #{basicNric}
            AND T1.NRIC not in (#{basicNricOld})
            AND T1.STUS_CODE_ID = 1
          </if>
-
     </select>
-
-
 
   <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
         <if test="name != null and name !=''">
-                 WITH AA AS
-                 (SELECT
-                    CUST_ID
-                 FROM SAL0029D T WHERE UPPER(T.NAME) LIKE '%'|| UPPER(#{name}) || '%'
+        WITH AA AS
+                 ( SELECT CUST_ID
+                   FROM SAL0029D T
+                   WHERE UPPER(T.NAME) LIKE '%'|| UPPER(#{name}) || '%'
+                   <if test="custId != null and custId !=''">
+                       AND T.CUST_ID = #{custId}
+                   </if>
                  )
         </if>
         SELECT
@@ -60,7 +59,7 @@
                 P2.CORP_TYPE_ID AS CORP_TYPE_ID,
                 P2.CODE AS CODE,
                 P2.CODE_NAME AS CODE_NAME,
-                P2.Name1 AS Name,
+                P2.NAME1 AS NAME,
                 P2.NRIC AS NRIC,
                 P2.CODE_NAME1 AS CODE_NAME1,
                 P2.TYPE_ID AS TYPE_ID,
@@ -68,7 +67,7 @@
                 P2.EMAIL AS EMAIL,
                 P2.GENDER AS GENDER,
                 P2.NATION AS NATION,
-                P2.Name2 AS Name2,
+                P2.NAME2 AS NAME2,
                 P2.RACE_ID AS RACE_ID,
                 P2.CODE_NAME2 AS CODE_NAME2,
                 P2.REM AS REM,
@@ -82,152 +81,226 @@
                 P2.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
                 P2.VISA_EXPR AS VISA_EXPR,
                 P2.CUST_VA_NO AS CUST_VA_NO,
-                P2.GST_RGIST_NO AS GST_RGIST_NO
-                ,P2.CUST_TIER AS CUST_TIER
-                ,P2.RECEIVING_MARKETING_MSG_STATUS
-                ,P2.cust_status_id
-                ,P2.cust_status
-                FROM ( SELECT P1.CUST_ID, P1.Name1, P1.NRIC, P1.REM, P1.TYPE_ID, P1.PAS_SPORT_EXPR,
-                                P1.VISA_EXPR, P1.C1, P1.CRT_USER_ID, P1.USER_NAME1,
-                                P1.CRT_DT, P1.CORP_TYPE_ID, P1.CODE, P1.CODE_NAME,
-                                P1.CODE_NAME1, P1.DOB, P1.EMAIL, P1.GENDER,
-                                P1.NATION, P1.Name2, P1.RACE_ID, P1.CODE_NAME2,
-                                P1.STUS_CODE_ID, P1.UPD_USER_ID, P1.UPD_DT, P1.USER_NAME2,
-                                P1.CUST_ADD_ID, P1.CUST_CNTC_ID, P1.CUST_CARE_CNT_ID, P1.CUST_VA_NO,
+                P2.GST_RGIST_NO AS GST_RGIST_NO,
+                P2.CUST_TIER AS CUST_TIER,
+                P2.RECEIVING_MARKETING_MSG_STATUS,
+                P2.CUST_STATUS_ID,
+                P2.CUST_STATUS
+                FROM ( SELECT P1.CUST_ID,
+                                P1.NAME1,
+                                P1.NRIC,
+                                P1.REM,
+                                P1.TYPE_ID,
+                                P1.PAS_SPORT_EXPR,
+                                P1.VISA_EXPR,
+                                P1.C1,
+                                P1.CRT_USER_ID,
+                                P1.USER_NAME1,
+                                P1.CRT_DT,
+                                P1.CORP_TYPE_ID,
+                                P1.CODE,
+                                P1.CODE_NAME,
+                                P1.CODE_NAME1,
+                                P1.DOB,
+                                P1.EMAIL,
+                                P1.GENDER,
+                                P1.NATION,
+                                P1.NAME2,
+                                P1.RACE_ID,
+                                P1.CODE_NAME2,
+                                P1.STUS_CODE_ID,
+                                P1.UPD_USER_ID,
+                                P1.UPD_DT,
+                                P1.USER_NAME2,
+                                P1.CUST_ADD_ID,
+                                P1.CUST_CNTC_ID,
+                                P1.CUST_CARE_CNT_ID,
+                                P1.CUST_VA_NO,
                                 P1.GST_RGIST_NO,
                                 P1.CUST_TIER,
                                 P1.RECEIVING_MARKETING_MSG_STATUS,
-                                P1.cust_status_id,
-                                P1.cust_status,
-                                row_number() OVER (ORDER BY P1.CUST_ID ASC) AS row_number
-                        FROM ( SELECT
-                                D1.CUST_ID AS CUST_ID,
-                                D1.Name1 AS Name1,
-                                D1.NRIC AS NRIC,
-                                D1.REM AS REM,
-                                D1.TYPE_ID AS TYPE_ID,
-                                TO_CHAR(D1.PAS_SPORT_EXPR, 'DD/MM/YYYY') AS PAS_SPORT_EXPR,
-                                TO_CHAR(D1.VISA_EXPR, 'DD/MM/YYYY') AS VISA_EXPR,
-                                D1.C1 AS C1,
-                                D1.CRT_USER_ID AS CRT_USER_ID,
-                                D1.USER_NAME1 AS USER_NAME1,
-                                D1.CRT_DT AS CRT_DT,
-                                D1.CORP_TYPE_ID AS CORP_TYPE_ID,
-                                D1.CODE AS CODE,
-                                D1.CODE_NAME AS CODE_NAME,
-                                D1.CODE_NAME1 AS CODE_NAME1,
-                                TO_CHAR(D1.DOB, 'DD/MM/YYYY') AS DOB,
-                                D1.EMAIL AS EMAIL,
-                                D1.GENDER AS GENDER,
-                                D1.NATION AS NATION,
-                                D1.Name2 AS Name2,
-                                D1.RACE_ID AS RACE_ID,
-                                D1.CODE_NAME2 AS CODE_NAME2,
-                                D1.STUS_CODE_ID AS STUS_CODE_ID,
-                                D1.UPD_USER_ID AS UPD_USER_ID,
-                                D1.UPD_DT AS UPD_DT,
-                                D1.USER_NAME2 AS USER_NAME2,
-                                D1.CUST_ADD_ID AS CUST_ADD_ID,
-                                D1.CUST_CNTC_ID AS CUST_CNTC_ID,
-                                D1.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID,
-                                D1.CUST_VA_NO AS CUST_VA_NO,
-                                D1.GST_RGIST_NO AS GST_RGIST_NO
-                                ,D1.CUST_TIER AS CUST_TIER
-                                ,D1.RECEIVING_MARKETING_MSG_STATUS
-                                ,D1.cust_status_id
-                                ,D1.cust_status
-                                FROM ( SELECT DISTINCT
-                                            S1.CUST_ID1 AS CUST_ID,
-                                            S1.Name1 AS Name1,
-                                            S1.NRIC1 AS NRIC,
-                                            S1.REM,
-                                            S1.TYPE_ID AS TYPE_ID,
-                                            S1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
-                                            S1.VISA_EXPR AS VISA_EXPR,
-                                            1 AS C1,
-                                            CASE WHEN (S1.CRT_USER_ID1 IS NOT NULL) THEN S1.CRT_USER_ID1 ELSE 0 END AS CRT_USER_ID,
-                                            CASE WHEN (S1.USER_ID1 IS NOT NULL) THEN S1.USER_NAME1 ELSE '' END AS USER_NAME1,
-                                            CASE WHEN ((S1.CRT_DT1 IS NOT NULL) AND (S1.CRT_DT1 <![CDATA[ > ]]>  TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.CRT_DT1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS CRT_DT,
-                                            CASE WHEN (S1.CORP_TYPE_ID IS NOT NULL) THEN S1.CORP_TYPE_ID ELSE 0 END AS CORP_TYPE_ID,
-                                            CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.Code ELSE '' END AS CODE,
-                                            CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.CODE_NAME ELSE '' END AS CODE_NAME,
-                                            CASE WHEN (S1.CODE_ID1 IS NOT NULL) THEN S1.CODE_NAME1 ELSE '' END AS CODE_NAME1,
-                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN TO_DATE('1900-01-01','YYYY-MM-DD') WHEN ((S1.DOB1 IS NOT NULL) AND (S1.DOB1 <![CDATA[ > ]]> TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.DOB1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS DOB,
-                                            CASE WHEN (S1.Email1 IS NOT NULL) THEN S1.Email1 ELSE '' END AS EMAIL,
-                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN '' WHEN (S1.Gender1 IS NOT NULL) THEN S1.Gender1 ELSE '' END AS GENDER,
-                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0 WHEN (S1.NATION IS NOT NULL) THEN   S1.NATION ELSE 0 END AS NATION,
-                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN '' WHEN (S1.CNTY_ID1 IS NOT NULL) THEN S1.Name2 ELSE '' END AS Name2,
-                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0 WHEN (S1.RACE_ID1 IS NOT NULL) THEN   S1.RACE_ID1 ELSE 0 END AS RACE_ID,
-                                            CASE WHEN (964  <![CDATA[ <> ]]> S1.TYPE_ID) THEN '' WHEN (S1.CODE_ID2 IS NOT NULL) THEN S1.CODE_NAME2 ELSE '' END AS CODE_NAME2,
-                                            CASE WHEN (S1.STUS_CODE_ID1 IS NOT NULL) THEN   S1.STUS_CODE_ID1 ELSE 0 END AS STUS_CODE_ID,
-                                            CASE WHEN (S1.UPD_USER_ID1 IS NOT NULL) THEN S1.UPD_USER_ID1 ELSE 0 END AS UPD_USER_ID,
-                                            CASE WHEN S1.UPD_DT1 IS NOT NULL THEN  TO_CHAR(S1.UPD_DT1,'YYYYMMDDHH24MISS') ELSE '01/01/1900' END AS UPD_DT,
-                                            CASE WHEN (S1.USER_ID2 IS NOT NULL) THEN S1.USER_NAME2 ELSE '' END AS USER_NAME2,
-                                            CASE WHEN (S1.CUST_ADD_ID IS NOT NULL) THEN S1.CUST_ADD_ID ELSE 0 END AS CUST_ADD_ID,
-                                            CASE WHEN (S1.CUST_CNTC_ID IS NOT NULL) THEN S1.CUST_CNTC_ID ELSE 0 END AS CUST_CNTC_ID,
-                                            CASE WHEN (S1.CUST_CARE_CNT_ID IS NOT NULL) THEN S1.CUST_CARE_CNT_ID ELSE 0 END AS CUST_CARE_CNT_ID,
-                                            CASE WHEN (S1.CUST_VA_NO IS NOT NULL) THEN S1.CUST_VA_NO ELSE '' END AS CUST_VA_NO,
-                                            CASE WHEN (S1.GST_RGIST_NO IS NOT NULL) THEN S1.GST_RGIST_NO ELSE '' END AS GST_RGIST_NO
-                                            ,S1.CUST_TIER
-                                            ,S1.RECEIVING_MARKETING_MSG_STATUS
-                                            ,S1.cust_status_id
-                                            ,S1.cust_status
-                                            FROM   (SELECT T1.CUST_ID AS CUST_ID1, T1.Name AS Name1, T1.NRIC AS NRIC1, DBMS_LOB.SUBSTR (T1.REM, 4000) AS REM, T1.TYPE_ID AS TYPE_ID, T1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
-                                                        T1.VISA_EXPR AS VISA_EXPR,
-                                                        T1.CRT_USER_ID AS CRT_USER_ID1, T2.USER_ID AS USER_ID1, T2.USER_NAME AS USER_NAME1, T1.CRT_DT AS CRT_DT1, T1.CORP_TYPE_ID AS CORP_TYPE_ID, T9.CODE_ID AS CODE_ID1,
-                                                        T9.CODE_NAME AS CODE_NAME1, T1.DOB AS DOB1, T1.Email AS Email1, T1.Gender AS Gender1, T1.NATION AS NATION, T4.Name AS Name2, T4.CNTY_ID AS CNTY_ID1, T1.RACE_ID AS RACE_ID1,
-                                                        T5.CODE_ID AS CODE_ID2, T5.CODE_NAME AS CODE_NAME2, T1.STUS_CODE_ID AS STUS_CODE_ID1, T1.UPD_DT AS UPD_DT1, T1.UPD_USER_ID AS UPD_USER_ID1, T3.USER_ID AS USER_ID2, T3.USER_NAME AS USER_NAME2,
-                                                        T6.CUST_ADD_ID AS CUST_ADD_ID, T7.CUST_CNTC_ID AS CUST_CNTC_ID, T8.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID, T1.CUST_VA_NO AS CUST_VA_NO, T1.GST_RGIST_NO AS GST_RGIST_NO
-                                                        ,T11.CODE CUST_TIER,T1.RECEIVING_MARKETING_MSG_STATUS, T1.IS_EXST_CUST cust_status_id,T12.code_name cust_status
+                                P1.CUST_STATUS_ID,
+                                P1.CUST_STATUS,
+                                ROW_NUMBER() OVER (ORDER BY P1.CUST_ID ASC) AS ROW_NUMBER
+                        FROM ( SELECT D1.CUST_ID AS CUST_ID,
+                                              D1.NAME1 AS NAME1,
+                                              D1.NRIC AS NRIC,
+                                              D1.REM AS REM,
+                                              D1.TYPE_ID AS TYPE_ID,
+                                              TO_CHAR(D1.PAS_SPORT_EXPR, 'DD/MM/YYYY') AS PAS_SPORT_EXPR,
+                                              TO_CHAR(D1.VISA_EXPR, 'DD/MM/YYYY') AS VISA_EXPR,
+                                              D1.C1 AS C1,
+                                              D1.CRT_USER_ID AS CRT_USER_ID,
+                                              D1.USER_NAME1 AS USER_NAME1,
+                                              D1.CRT_DT AS CRT_DT,
+                                              D1.CORP_TYPE_ID AS CORP_TYPE_ID,
+                                              D1.CODE AS CODE,
+                                              D1.CODE_NAME AS CODE_NAME,
+                                              D1.CODE_NAME1 AS CODE_NAME1,
+                                              TO_CHAR(D1.DOB, 'DD/MM/YYYY') AS DOB,
+                                              D1.EMAIL AS EMAIL,
+                                              D1.GENDER AS GENDER,
+                                              D1.NATION AS NATION,
+                                              D1.NAME2 AS NAME2,
+                                              D1.RACE_ID AS RACE_ID,
+                                              D1.CODE_NAME2 AS CODE_NAME2,
+                                              D1.STUS_CODE_ID AS STUS_CODE_ID,
+                                              D1.UPD_USER_ID AS UPD_USER_ID,
+                                              D1.UPD_DT AS UPD_DT,
+                                              D1.USER_NAME2 AS USER_NAME2,
+                                              D1.CUST_ADD_ID AS CUST_ADD_ID,
+                                              D1.CUST_CNTC_ID AS CUST_CNTC_ID,
+                                              D1.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID,
+                                              D1.CUST_VA_NO AS CUST_VA_NO,
+                                              D1.GST_RGIST_NO AS GST_RGIST_NO,
+                                              D1.CUST_TIER AS CUST_TIER,
+                                              D1.RECEIVING_MARKETING_MSG_STATUS,
+                                              D1.CUST_STATUS_ID,
+                                              D1.CUST_STATUS
+                                FROM ( SELECT DISTINCT S1.CUST_ID1 AS CUST_ID,
+                                                      S1.NAME1 AS NAME1,
+                                                      S1.NRIC1 AS NRIC,
+                                                      S1.REM,
+                                                      S1.TYPE_ID AS TYPE_ID,
+                                                      S1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
+                                                      S1.VISA_EXPR AS VISA_EXPR,
+                                                      1 AS C1,
+                                                      CASE WHEN (S1.CRT_USER_ID1 IS NOT NULL) THEN S1.CRT_USER_ID1
+                                                             ELSE 0 END AS CRT_USER_ID,
+                                                      CASE WHEN (S1.USER_ID1 IS NOT NULL) THEN S1.USER_NAME1
+                                                              ELSE '' END AS USER_NAME1,
+                                                      CASE WHEN ((S1.CRT_DT1 IS NOT NULL) AND (S1.CRT_DT1 <![CDATA[ > ]]>  TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN S1.CRT_DT1
+                                                              ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS CRT_DT,
+                                                      CASE WHEN (S1.CORP_TYPE_ID IS NOT NULL) THEN S1.CORP_TYPE_ID
+                                                              ELSE 0 END AS CORP_TYPE_ID,
+                                                      CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.Code
+                                                              ELSE '' END AS CODE,
+                                                      CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.CODE_NAME
+                                                              ELSE '' END AS CODE_NAME,
+                                                      CASE WHEN (S1.CODE_ID1 IS NOT NULL) THEN S1.CODE_NAME1
+                                                              ELSE '' END AS CODE_NAME1,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN TO_DATE('1900-01-01','YYYY-MM-DD')
+                                                              WHEN ((S1.DOB1 IS NOT NULL) AND (S1.DOB1 <![CDATA[ > ]]> TO_DATE('1900-01-01','YYYY-MM-DD')))
+                                                                        THEN S1.DOB1
+                                                              ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS DOB,
+                                                      CASE WHEN (S1.EMAIL1 IS NOT NULL) THEN S1.EMAIL1
+                                                              ELSE '' END AS EMAIL,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN ''
+                                                              WHEN (S1.GENDER1 IS NOT NULL) THEN S1.GENDER1
+                                                              ELSE '' END AS GENDER,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0
+                                                              WHEN (S1.NATION IS NOT NULL) THEN S1.NATION
+                                                              ELSE 0 END AS NATION,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN ''
+                                                              WHEN (S1.CNTY_ID1 IS NOT NULL) THEN S1.NAME2
+                                                              ELSE '' END AS NAME2,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0
+                                                              WHEN (S1.RACE_ID1 IS NOT NULL) THEN   S1.RACE_ID1
+                                                              ELSE 0 END AS RACE_ID,
+                                                      CASE WHEN (964  <![CDATA[ <> ]]> S1.TYPE_ID) THEN ''
+                                                              WHEN (S1.CODE_ID2 IS NOT NULL) THEN S1.CODE_NAME2
+                                                              ELSE '' END AS CODE_NAME2,
+                                                      CASE WHEN (S1.STUS_CODE_ID1 IS NOT NULL) THEN S1.STUS_CODE_ID1
+                                                              ELSE 0 END AS STUS_CODE_ID,
+                                                      CASE WHEN (S1.UPD_USER_ID1 IS NOT NULL) THEN S1.UPD_USER_ID1
+                                                              ELSE 0 END AS UPD_USER_ID,
+                                                      CASE WHEN S1.UPD_DT1 IS NOT NULL THEN TO_CHAR(S1.UPD_DT1,'YYYYMMDDHH24MISS')
+                                                              ELSE '01/01/1900' END AS UPD_DT,
+                                                      CASE WHEN (S1.USER_ID2 IS NOT NULL) THEN S1.USER_NAME2
+                                                              ELSE '' END AS USER_NAME2,
+                                                      CASE WHEN (S1.CUST_ADD_ID IS NOT NULL) THEN S1.CUST_ADD_ID
+                                                              ELSE 0 END AS CUST_ADD_ID,
+                                                      CASE WHEN (S1.CUST_CNTC_ID IS NOT NULL) THEN S1.CUST_CNTC_ID
+                                                              ELSE 0 END AS CUST_CNTC_ID,
+                                                      CASE WHEN (S1.CUST_CARE_CNT_ID IS NOT NULL) THEN S1.CUST_CARE_CNT_ID
+                                                              ELSE 0 END AS CUST_CARE_CNT_ID,
+                                                      CASE WHEN (S1.CUST_VA_NO IS NOT NULL) THEN S1.CUST_VA_NO
+                                                              ELSE '' END AS CUST_VA_NO,
+                                                      CASE WHEN (S1.GST_RGIST_NO IS NOT NULL) THEN S1.GST_RGIST_NO
+                                                              ELSE '' END AS GST_RGIST_NO
+                                                      ,S1.CUST_TIER
+                                                      ,S1.RECEIVING_MARKETING_MSG_STATUS
+                                                      ,S1.CUST_STATUS_ID
+                                                      ,S1.CUST_STATUS
+                                            FROM   (SELECT T1.CUST_ID AS CUST_ID1,
+                                                                   T1.NAME AS NAME1,
+                                                                   T1.NRIC AS NRIC1,
+                                                                   DBMS_LOB.SUBSTR (T1.REM, 4000) AS REM,
+                                                                   T1.TYPE_ID AS TYPE_ID,
+                                                                   T1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
+                                                                    T1.VISA_EXPR AS VISA_EXPR,
+                                                                    T1.CRT_USER_ID AS CRT_USER_ID1,
+                                                                    T2.USER_ID AS USER_ID1,
+                                                                    T2.USER_NAME AS USER_NAME1,
+                                                                    T1.CRT_DT AS CRT_DT1,
+                                                                    T1.CORP_TYPE_ID AS CORP_TYPE_ID,
+                                                                    T9.CODE_ID AS CODE_ID1,
+                                                                    T9.CODE_NAME AS CODE_NAME1,
+                                                                    T1.DOB AS DOB1,
+                                                                    T1.EMAIL AS EMAIL1,
+                                                                    T1.GENDER AS GENDER1,
+                                                                    T1.NATION AS NATION,
+                                                                    T4.NAME AS NAME2,
+                                                                    T4.CNTY_ID AS CNTY_ID1,
+                                                                    T1.RACE_ID AS RACE_ID1,
+                                                                    T5.CODE_ID AS CODE_ID2,
+                                                                    T5.CODE_NAME AS CODE_NAME2,
+                                                                    T1.STUS_CODE_ID AS STUS_CODE_ID1,
+                                                                    T1.UPD_DT AS UPD_DT1,
+                                                                    T1.UPD_USER_ID AS UPD_USER_ID1,
+                                                                    T3.USER_ID AS USER_ID2,
+                                                                    T3.USER_NAME AS USER_NAME2,
+                                                                    T6.CUST_ADD_ID AS CUST_ADD_ID,
+                                                                    T7.CUST_CNTC_ID AS CUST_CNTC_ID,
+                                                                    T8.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID,
+                                                                    T1.CUST_VA_NO AS CUST_VA_NO,
+                                                                    T1.GST_RGIST_NO AS GST_RGIST_NO,
+                                                                    T11.CODE CUST_TIER,
+                                                                    T1.RECEIVING_MARKETING_MSG_STATUS,
+                                                                    T1.IS_EXST_CUST CUST_STATUS_ID,
+                                                                    T12.CODE_NAME CUST_STATUS
                                                     FROM SAL0029D T1
                                                     LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
                                                     LEFT OUTER JOIN SYS0047M T3 ON T3.USER_ID = T1.UPD_USER_ID
-                                                    LEFT OUTER JOIN SYS0015M T4 ON T4.CNTY_ID =  T1.NATION
-                                                    LEFT OUTER JOIN SYS0013M T5 ON T5.CODE_ID =  T1.RACE_ID
-                                                    LEFT OUTER JOIN (SELECT
-                                                                                 ADDT.CUST_ID,
-                                                                                 ADDT.CUST_ADD_ID,
-                                                                                 ADDT.CNT
+                                                    LEFT OUTER JOIN SYS0015M T4 ON T4.CNTY_ID = T1.NATION
+                                                    LEFT OUTER JOIN SYS0013M T5 ON T5.CODE_ID = T1.RACE_ID
+                                                    LEFT OUTER JOIN (SELECT ADDT.CUST_ID,
+                                                                                         ADDT.CUST_ADD_ID,
+                                                                                         ADDT.CNT
                                                                                 FROM
                                                                                 (
-                                                                                SELECT
-                                                                                    T.CUST_ID,
-                                                                                    T.CUST_ADD_ID,
-                                                                                    ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
-                                                                                FROM
-                                                                                   SAL0023D T
-                                                                                   <if test="name != null and name !=''">
-                                                                                   JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
-                                                                                   </if>
-                                                                                WHERE
-                                                                                    9 = T.STUS_CODE_ID
+                                                                                    SELECT
+                                                                                        T.CUST_ID,
+                                                                                        T.CUST_ADD_ID,
+                                                                                        ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
+                                                                                    FROM SAL0023D T
+                                                                                       <if test="name != null and name !=''">
+                                                                                            JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
+                                                                                       </if>
+                                                                                    WHERE 9 = T.STUS_CODE_ID
                                                                                 )ADDT
                                                                                 WHERE ADDT.CNT = 1
-                                                                                        ) T6 ON T6.CUST_ID = T1.CUST_ID
-                                                    LEFT OUTER JOIN (SELECT
-                                                                                CNTC.CUST_CNTC_ID,
-                                                                                CNTC.CUST_ID
+                                                    ) T6 ON T6.CUST_ID = T1.CUST_ID
+                                                    LEFT OUTER JOIN (SELECT CNTC.CUST_CNTC_ID,
+                                                                                         CNTC.CUST_ID
                                                                              FROM(
-                                                                                     SELECT
-                                                                                        T.CUST_CNTC_ID,
-                                                                                        T.CUST_ID,
-                                                                                        ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
-                                                                                     FROM
-                                                                                        SAL0027D T
-                                                                                        <if test="name != null and name !=''">
-                                                                                        JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
-                                                                                        </if>
-                                                                                     WHERE
-                                                                                        9 = STUS_CODE_ID
+                                                                                     SELECT T.CUST_CNTC_ID,
+                                                                                                T.CUST_ID,
+                                                                                                ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
+                                                                                     FROM SAL0027D T
+                                                                                     <if test="name != null and name !=''">
+                                                                                              JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
+                                                                                     </if>
+                                                                                     WHERE 9 = STUS_CODE_ID
                                                                                     )CNTC
                                                                               WHERE CNTC.CNT = 1
-                                                                               ) T7 ON T7.CUST_ID = T1.CUST_ID
+                                                    ) T7 ON T7.CUST_ID = T1.CUST_ID
                                                     LEFT OUTER JOIN SAL0026D T8 ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
                                                     LEFT OUTER JOIN SYS0013M T9 ON T9.CODE_ID = T1.TYPE_ID
                                                     LEFT OUTER JOIN SAL0333M T10 ON T10.CUST_ID = T1.CUST_ID
                                                     LEFT JOIN SYS0013M T11 ON T11.CODE_ID = T10.TIER_RANK AND T11.CODE_MASTER_ID = 538
                                                     LEFT JOIN SYS0013M T12 ON T12.CODE_ID = T1.IS_EXST_CUST AND T12.CODE_MASTER_ID = 566
-                                                   WHERE (8  <![CDATA[ <> ]]>    T1.STUS_CODE_ID)
+                                                   WHERE (8 <![CDATA[ <> ]]> T1.STUS_CODE_ID)
                                                    ) S1
                                              LEFT OUTER JOIN SYS0013M T10 ON T10.CODE_ID = S1.CORP_TYPE_ID AND S1.CORP_TYPE_ID IS NOT NULL
                                          WHERE 1=1
@@ -278,7 +351,6 @@
     ) P2
     WHERE P2.row_number > 0
     ORDER BY P2.CUST_ID DESC
-
   </select>
   <!-- Customer basic Info(Customer View) -->
   <!-- <resultMap type="egovMap" id="basicClobMap"> <result property="REM"
