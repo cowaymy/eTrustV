@@ -103,7 +103,9 @@ public class eSVMApiDto {
   private int hiddenHasPackage;
   private String bsFreq;
   private int hiddenNormalPrice;
+  private int hiddenNormalTaxPrice;
   private int packagePrice;
+  private int packageTaxPrice;
   private String zeroRatYn;
   private String eurCertYn;
   private String hiddenBsFreq;
@@ -746,6 +748,14 @@ public class eSVMApiDto {
     this.hiddenNormalPrice = hiddenNormalPrice;
   }
 
+  public int getHiddenNormalTaxPrice() {
+    return hiddenNormalTaxPrice;
+  }
+
+  public void setHiddenNormalTaxPrice(int hiddenNormalTaxPrice) {
+    this.hiddenNormalTaxPrice = hiddenNormalTaxPrice;
+  }
+
   public int getPackagePrice() {
     return packagePrice;
   }
@@ -754,7 +764,15 @@ public class eSVMApiDto {
     this.packagePrice = packagePrice;
   }
 
-  public String getZeroRatYn() {
+  public int getPackageTaxPrice() {
+	return packageTaxPrice;
+}
+
+public void setPackageTaxPrice(int packageTaxPrice) {
+	this.packageTaxPrice = packageTaxPrice;
+}
+
+public String getZeroRatYn() {
     return zeroRatYn;
   }
 
