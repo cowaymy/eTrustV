@@ -456,6 +456,7 @@
             S.SRV_MEM_ITM_PRIOD,
             CASE WHEN (S.SRV_MEM_DUR IS NOT NULL) THEN S.SRV_MEM_DUR ELSE 0 END C1,
             S.SRV_MEM_ITM_PRC,
+            S.SRV_MEM_ITM_LBR_AMT,
             S.SRV_MEM_ITM_PV
         FROM (
             SELECT
@@ -463,6 +464,7 @@
                 V.SRV_MEM_DUR,
                 M.SRV_MEM_ITM_STK_ID,
                 M.SRV_MEM_ITM_PRC,
+                M.SRV_MEM_ITM_LBR_AMT,
                 M.SRV_MEM_ITM_PV,
                 M.SRV_MEM_ITM_PRIOD
             FROM SAL0091M V
