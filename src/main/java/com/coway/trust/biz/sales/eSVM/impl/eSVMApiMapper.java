@@ -35,6 +35,8 @@ public interface eSVMApiMapper {
 
     int getDfltPromo(Map<String, Object> params); // Default Promo ID for Filter Details
 
+    int getTaxRate();
+
     EgovMap getSVMFilterCharge(Map<String, Object> params); // Filter Details
 
     EgovMap getPromoDisc(Map<String, Object> params); // On change package information get discount
