@@ -339,26 +339,26 @@ public class eSVMApiServiceImpl
       logger.debug( "srvMemItmPrc :: " + packageInfo.get( "srvMemItmPrc" ).toString() );
       int year = param.getSubYear() / 12;
       int pkgPrice = Math.round( Integer.parseInt( packageInfo.get( "srvMemItmPrc" ).toString() ) * year );
-      int pkgTaxPrice = Math.round( Integer.parseInt( packageInfo.get( "srvMemItmLbrAmt" ).toString() ) * year );
+      //int pkgTaxPrice = Math.round( Integer.parseInt( packageInfo.get( "srvMemItmLbrAmt" ).toString() ) * year );
       rtn.setZeroRatYn( zeroRatYn );
       rtn.setEurCertYn( eurCertYn );
       rtn.setHiddenHasPackage( 1 );
       rtn.setBsFreq( packageInfo.get( "srvMemItmPriod" ).toString() + " month(s)" );
       rtn.setHiddenBsFreq( packageInfo.get( "srvMemItmPriod" ).toString() );
       rtn.setHiddenNormalPrice( pkgPrice );
-      rtn.setHiddenNormalTaxPrice( pkgTaxPrice );
+      //rtn.setHiddenNormalTaxPrice( pkgTaxPrice );
       rtn.setSrvMemPacId( Integer.parseInt( packageInfo.get( "srvMemPacId" ).toString() ) );
       if ( "N".equals( eurCertYn ) ) {
         rtn.setPackagePrice( (int) Math.floor( pkgPrice ) );
         rtn.setHiddenNormalPrice( (int) Math.floor( pkgPrice ) );
-        rtn.setPackageTaxPrice( (int) Math.floor( pkgTaxPrice ) );
-        rtn.setHiddenNormalTaxPrice( (int) Math.floor( pkgTaxPrice ) );
+        //rtn.setPackageTaxPrice( (int) Math.floor( pkgTaxPrice ) );
+        //rtn.setHiddenNormalTaxPrice( (int) Math.floor( pkgTaxPrice ) );
       }
       else {
         rtn.setPackagePrice( pkgPrice );
         rtn.setHiddenNormalPrice( pkgPrice );
-        rtn.setPackageTaxPrice( pkgTaxPrice );
-        rtn.setHiddenNormalTaxPrice( pkgTaxPrice );
+        //rtn.setPackageTaxPrice( pkgTaxPrice );
+        //rtn.setHiddenNormalTaxPrice( pkgTaxPrice );
       }
       // mNewQuotationPop.jsp :: fn_setDefaultFilterPromo
       // mNewQuotationPop.jsp :: fn_getFilterChargeList
