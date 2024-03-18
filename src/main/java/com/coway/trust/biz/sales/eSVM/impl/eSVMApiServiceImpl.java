@@ -525,10 +525,10 @@ public class eSVMApiServiceImpl
     boolean boolEurCert = "Y".equals( param.getEurCertYn() ) ? true : false;
     boolean boolZeroRat = "Y".equals( param.getZeroRatYn() ) ? true : false;
     // if ( !boolEurCert ) {
-    if ( !boolEurCert || !boolZeroRat ) {
-      param.setSrvMemPacTaxes( "0" );
-    }
-    else {
+    //if ( !boolEurCert || !boolZeroRat ) {
+    //  param.setSrvMemPacTaxes( "0" );
+    //}
+    //else {
       double srvMemPacAmt = 0;
       double srvMemPacNetAmt = 0;
       double cvtMemPacNetAmt = 0;
@@ -539,7 +539,7 @@ public class eSVMApiServiceImpl
       srvMemPacNetAmt = cvtMemPacNetAmt / 100;
       param.setSrvMemPacNetAmt( String.valueOf( srvMemPacNetAmt ) );
       param.setSrvMemPacTaxes( String.valueOf( srvMemPacAmt - srvMemPacNetAmt ) );
-    }
+    //}
     if ( !boolEurCert || !boolZeroRat ) {
       param.setSrvMemBSTaxes( "0" );
     }
