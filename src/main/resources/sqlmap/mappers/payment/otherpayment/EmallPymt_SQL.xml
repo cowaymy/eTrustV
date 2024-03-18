@@ -98,7 +98,7 @@
             , #{item.doNo}
             , #{item.cardNo}
             , #{item.apprCd}
-            , TO_DATE(#{item.trnsDt},'DD/MM/YYYY HH:MI:SS AM')
+            , TO_DATE(#{item.trnsDt},'MM/DD/YYYY HH:MI:SS AM')
             , #{item.appType}
             , #{item.trnsAmt}
             , SYSDATE
