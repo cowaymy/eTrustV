@@ -3221,15 +3221,11 @@
                WHEN ( Limit1.ALLOW_COMM IS NOT NULL ) THEN Limit1.ALLOW_COMM
                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
              END C1
-           , TO_char( Limit1.CRT_DT , 'dd/mm/yyyy' ) CRT_DT
-
+           , TO_CHAR( Limit1.CRT_DT , 'dd/mm/yyyy' ) CRT_DT
            , EXTRACT(DAY FROM Limit1.CRT_DT) AS DAYC
            , EXTRACT(MONTH FROM Limit1.CRT_DT) AS MONC
            , EXTRACT(YEAR FROM Limit1.CRT_DT) AS YEARC
-
-
-
-           , TO_char( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT
+           , TO_CHAR( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT
            , CASE
                WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
                ELSE 'N'
@@ -3304,7 +3300,6 @@
            , WATER_SRC_TEMP WATER_SRC_TEMP
            , ADPT_USED ADPT_USED
            , STK_ID STK_ID
-
            , FAIL_LOC FAIL_LOC
            , BOOSTER_PUMP BOOSTER_PUMP
            , AFT_PSI AFT_PSI
@@ -3316,7 +3311,6 @@
            , Limit1.TOT_WIRE
            , Limit1.GAS_PRES_BEF
            , Limit1.GAS_PRES_AFT
-
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3358,22 +3352,20 @@
                   , Extent3.ROOM_TEMP ROOM_TEMP
                   , Extent3.WATER_SRC_TEMP WATER_SRC_TEMP
                   , Extent3.ADPT_USED ADPT_USED
-
                   , Extent3.FAIL_LOC FAIL_LOC
                   , Extent3.BOOSTER_PUMP BOOSTER_PUMP
                   , Extent3.AFT_PSI AFT_PSI
                   , Extent3.AFT_LPM AFT_LPM
                   , Extent3.WATER_SRC_TYPE
                   , CASE
-                        WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID || '_' || Extent1.INSTALL_ENTRY_NO || '_WEB'
-                        ELSE ''
+                        WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID
+                        ELSE NULL
                         END ATCH_FILE_GRP_ID
                   , NVL(Extent3.DISMANTLE,0) DISMANTLE
                   , NVL(Extent3.TOT_PIPE,0) TOT_PIPE
                   , NVL(Extent3.TOT_WIRE,0) TOT_WIRE
                   , NVL(Extent3.GAS_PRES_BEF,0) GAS_PRES_BEF
                   , NVL(Extent3.GAS_PRES_AFT,0) GAS_PRES_AFT
-
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
