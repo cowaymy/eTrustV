@@ -565,9 +565,7 @@
                                       prodCat AS prodCat,
                                       PARTNER_CODE AS PARTNER_CODE,
                                       MEM_CODE as MEM_CODE,
-                                      NTU AS NTU,
-                                      INST_ACCS AS INST_ACCS,
-                                      INST_ACCS_VAL as INST_ACCS_VAL
+                                      NTU AS NTU
 
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -667,9 +665,7 @@
                                            CASE WHEN SVC0004d.PARTNER_CODE IS NOT NULL
                                            THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SVC0004d.PARTNER_CODE)
                                            ELSE '' END AS MEM_CODE,
-                                           NVL (SVC0004d.NTU, '') AS NTU,
-                                           TO_CHAR (SVC0004D.INST_ACCS) AS INST_ACCS,
-                                           TO_CHAR (SVC0004D.INST_ACCS_VAL) AS INST_ACCS_VAL
+                                           NVL (SVC0004d.NTU, '') AS NTU
 
                                     FROM sal0001d,
                                          sal0002d,
@@ -1829,9 +1825,7 @@
            LATITUDE AS LATITUDE,
            LONGITUDE AS LONGITUDE,
            PARTNER_CODE AS PARTNER_CODE,
-           NTU AS NTU,
-           TO_CHAR(INST_ACCS) AS INST_ACCS,
-           TO_CHAR(INST_ACCS_VAL) AS INST_ACCS_VAL
+           NTU AS NTU
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
