@@ -486,6 +486,17 @@
         AND CODE_NAME = #{codeName}
     </select>
 
+    <select id="getTaxRate" parameterType="Map" resultType="Integer">
+      SELECT TAX_RATE
+      FROM FCM0007C
+      WHERE TAX_CODE = (SELECT PARAM_VAL
+                                     FROM SYS0098M
+                                     WHERE MODULE = 'PAYMENT'
+                                         AND SUB_MODULE = 'PAYMENT'
+                                         AND PARAM_CODE = 'PAY_TAX'
+                                         AND SYSDATE BETWEEN EFF_DT AND EXP_DT);
+    </select>
+
     <resultMap id="svmFilterCharge" type="egovMap"></resultMap>
     <select id="getSVMFilterCharge" parameterType="Map" statementType="CALLABLE">
         <![CDATA[
