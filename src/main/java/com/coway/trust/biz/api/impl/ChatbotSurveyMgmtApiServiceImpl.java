@@ -494,8 +494,22 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 					//======================================
 					// Insert into CBT0005D :: END
 					//======================================
+
+					// Start Happy Call Point Calculation
+					params.put("apiUserId", 349);
+					chatbotSurveyMgmtApiMapper.SP_INST_CHATBOT_HAPPY_CALL_RESULT(params);
+
 					resultValue.put("status", String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
 					resultValue.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+
+					if(params.get("outStatus").toString().equals("1")){
+    					resultValue.put("status", String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+    					resultValue.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+					}
+					else{
+						resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
+						resultValue.put("message", params.get("outResult").toString());
+					}
 				}
 			}else{
 				resultValue.put("status", authorize.get("code").toString());
@@ -574,5 +588,10 @@ public class ChatbotSurveyMgmtApiServiceImpl extends EgovAbstractServiceImpl imp
 
 		chatbotSurveyMgmtApiMapper.insertApiAccessLog(params);
 
+	}
+
+	@Override
+	public EgovMap SP_INST_CHATBOT_HAPPY_CALL_RESULT(Map<String, Object> params) {
+		return chatbotSurveyMgmtApiMapper.SP_INST_CHATBOT_HAPPY_CALL_RESULT(params);
 	}
 }

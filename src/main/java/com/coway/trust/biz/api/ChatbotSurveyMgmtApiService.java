@@ -18,4 +18,6 @@ public interface ChatbotSurveyMgmtApiService {
 
 	void rtnRespMsg(Map<String, Object> params);
 
+	Map<String, Object> SP_INST_CHATBOT_HAPPY_CALL_RESULT(Map<String, Object> params);
+
 }
