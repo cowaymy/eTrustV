@@ -524,7 +524,8 @@ public class eSVMApiServiceImpl
     // MembershipQuotationServiceImpl.insertQuotationInfo
     boolean boolEurCert = "Y".equals( param.getEurCertYn() ) ? true : false;
     boolean boolZeroRat = "Y".equals( param.getZeroRatYn() ) ? true : false;
-    if ( !boolEurCert ) {
+    // if ( !boolEurCert ) {
+    if ( !boolEurCert || !boolZeroRat ) {
       param.setSrvMemPacTaxes( "0" );
     }
     else {
