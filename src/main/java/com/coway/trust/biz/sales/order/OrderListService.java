@@ -75,4 +75,8 @@ public interface OrderListService {
 	Map<String, Object> getOderOutsInfo(Map<String, Object> params);
 
 	public EgovMap selectOrderId(Map<String, Object> params) throws Exception;
+
+	EgovMap selectHeaderInfo(Map<String, Object> params);
+
+	List<EgovMap> selectHistInfo(Map<String, Object> params);
 }

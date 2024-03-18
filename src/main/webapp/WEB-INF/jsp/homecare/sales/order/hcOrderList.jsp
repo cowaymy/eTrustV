@@ -302,6 +302,36 @@
             fn_report();
             //Common.alert('The program is under development.');
         });
+
+        $('#btnAutoDebitMatrix').click(function(){
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+            if(selIdx > -1) {
+// //                 var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "homecare");
+
+// //                 if(prodCat ==  1) {
+// //                     Common.alert('* Please proceed to HC Module for this action');
+// //                 }
+// //                 else{
+
+//                     $('#ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+//                     Common.popupWin("_frmAutoDebit", "/sales/order/autoDebitMatrixPop.do" , {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+// //                 }
+
+                var appTypeId = AUIGrid.getSelectedItems(listMyGridID)[0].item.appTypeId;
+
+                  if(appTypeId == '66'){
+                     $('#ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+                     Common.popupWin("_frmAutoDebit", "/sales/order/autoDebitMatrixPop.do" , {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+
+                  }else {
+                      Common.alert('* Not available for Auto Debit Matrix.');
+                  }
+            }
+            else {
+                Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+            }
+      });
     });
 
     function fn_letter_report() {
@@ -885,7 +915,9 @@
                                     <a href="#" id="btnOrderOverview">Order Overview</a>
                                 </p></li>
                         </c:if>
-
+                        <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
+                           <li><p class="link_btn type2"><a href="#" id="btnAutoDebitMatrix">Auto Debit Matrix</a></p></li>
+                        </c:if>
                     </ul>
                     <p class="hide_btn">
                         <a href="#"><img
@@ -917,3 +949,8 @@
 
 </section>
 <!-- content end -->
+
+<!-- Auto Debit Matrix Form -->
+<form id="_frmAutoDebit" name="_frmAutoDebit" action="#" method="post">
+    <input id="ordId" name="ordId" type="hidden" value="" />
+</form>

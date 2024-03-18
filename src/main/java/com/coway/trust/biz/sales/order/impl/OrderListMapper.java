@@ -125,4 +125,8 @@ public interface OrderListMapper {
 	List<EgovMap> getOderOutsInfo(Map<String, Object> params);
 
 	EgovMap selectOrderId(Map<String, Object> params); // Basic Info
+
+	EgovMap selectHeaderInfo(Map<String, Object> params);
+
+	List<EgovMap> selectHistInfo(Map<String, Object> params);
 }

@@ -5,9 +5,12 @@ package com.coway.trust.web.sales.order;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -803,5 +806,24 @@ public class OrderListController {
 		return ResponseEntity.ok(result);
 	}
 
+	@RequestMapping(value="/autoDebitMatrixPop.do")
+	public String autoDebitMatrixPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request){
 
+		logger.debug("params ======================================>>> " + params);
+
+		EgovMap headerInfo = orderListService.selectHeaderInfo(params);
+		model.addAttribute("headerInfo", headerInfo);
+
+		List<EgovMap> histInfo = orderListService.selectHistInfo(params);
+		model.addAttribute("histInfo", new Gson().toJson(histInfo));
+
+		model.addAttribute("ordId", params.get("ordId").toString());
+
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+		model.addAttribute("today", today);
+
+		return "sales/order/autoDebitMatrixPop";
+	}
 }

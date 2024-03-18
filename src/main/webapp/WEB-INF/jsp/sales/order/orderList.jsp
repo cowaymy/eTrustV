@@ -357,6 +357,34 @@
             Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationFormPop.do",null,
             		null , true);
           });
+
+        $('#btnAutoDebitMatrix').click(function(){
+        	  var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+              if(selIdx > -1) {
+
+                  var appTypeId = AUIGrid.getSelectedItems(listMyGridID)[0].item.appTypeId;
+
+                  if(appTypeId == '66'){
+
+	                  var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "homecare");
+
+	                  if(prodCat ==  1) {
+	                      Common.alert('* Please proceed to HC Module for this action');
+	                  }
+	                  else{
+	                	  $('#ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+	                      Common.popupWin("_frmAutoDebit", "/sales/order/autoDebitMatrixPop.do" , {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+	                  }
+                  }else {
+                	  Common.alert('* Not available for Auto Debit Matrix.');
+                  }
+
+              }
+              else {
+                  Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+              }
+        });
     });
 
     function fn_letter_report() {
@@ -751,6 +779,11 @@
     <input type="hidden" id="_CustId_V2" name="@CustID" />
 </form>
 
+<!-- Auto Debit Matrix Form -->
+<form id="_frmAutoDebit" name="_frmAutoDebit" action="#" method="post">
+    <input id="ordId" name="ordId" type="hidden" value="" />
+</form>
+
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
     <input id="editInstallAccess" name="editInstallAccess" type="hidden" value='${PAGE_AUTH.funcUserDefine28}'/>
@@ -960,6 +993,9 @@
             <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnOutstndLetter">Outstanding Letter</a></p></li>
       </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine27 == 'Y'}">
+	       <li><p class="link_btn type2"><a href="#" id="btnAutoDebitMatrix">Auto Debit Matrix</a></p></li>
+	   </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
