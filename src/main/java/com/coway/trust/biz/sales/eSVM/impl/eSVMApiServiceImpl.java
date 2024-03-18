@@ -254,6 +254,8 @@ public class eSVMApiServiceImpl
         rtn.setSrvMemPacAmt( Integer.parseInt( smqDet.get( "srvMemPacAmt" ).toString() ) );
         rtn.setSrvMemBsAmt( Integer.parseInt( smqDet.get( "srvMemBsAmt" ).toString() ) );
         rtn.setPaymentAmt( Integer.parseInt( smqDet.get( "paymentAmt" ).toString() ) );
+        rtn.setPackageTaxPrice( Integer.parseInt( smqDet.get( "srvMemPacTxs" ).toString() ) );
+        rtn.setTaxRate( CommonUtils.nvl( eSVMApiMapper.getTaxRate() ) );
         // Get SMQ Filter details (SAL0094D)
         // EgovMap smqFilterDet = new EgovMap();
         // smqFilterDet = eSVMApiMapper.selectSmqFilterDetail(eSVMApiForm.createMap(param));
