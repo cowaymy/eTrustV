@@ -534,11 +534,17 @@ public class eSVMApiServiceImpl
       double cvtMemPacNetAmt = 0;
       srvMemPacAmt = CommonUtils.intNvl( param.getSrvMemPacAmt() );
       srvMemPacNetAmt = CommonUtils.intNvl( param.getSrvMemPacNetAmt() );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
       srvMemPacNetAmt = srvMemPacAmt * 100;
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt100>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
       cvtMemPacNetAmt = Math.round( srvMemPacNetAmt );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>cvtMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  cvtMemPacNetAmt );
       srvMemPacNetAmt = cvtMemPacNetAmt / 100;
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
       param.setSrvMemPacNetAmt( String.valueOf( srvMemPacNetAmt ) );
       param.setSrvMemPacTaxes( String.valueOf( srvMemPacAmt - srvMemPacNetAmt ) );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> :: " +  String.valueOf( srvMemPacAmt - srvMemPacNetAmt ) );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacTaxes() );
     //}
     if ( !boolEurCert || !boolZeroRat ) {
       param.setSrvMemBSTaxes( "0" );
