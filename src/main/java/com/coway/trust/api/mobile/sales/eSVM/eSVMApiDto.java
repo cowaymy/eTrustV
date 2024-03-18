@@ -14,125 +14,217 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "eSVMApiDto", description = "eSVMApiDto")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class eSVMApiDto {
-
   @SuppressWarnings("unchecked")
-  public static eSVMApiDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, eSVMApiDto.class);
+  public static eSVMApiDto create( EgovMap egvoMap ) {
+    return BeanConverter.toBean( egvoMap, eSVMApiDto.class );
   }
 
   private int svmQuotId;
+
   private int psmId;
+
   private int salesOrdId;
+
   private String regId;
+
   private String custName;
+
   private String salesOrdNo;
+
   private String reqstDt;
+
   private String quotNo;
+
   private String psmNo;
+
   private String orderType;
+
   private String custType;
+
   private String status;
+
   private int statusId;
+
   private int stkId;
+
   private String ordNo;
+
   private String nric;
+
   private int ordOtdstnd;
+
   private int asOtstnd;
+
   private String areaId;
+
   private String instAddress;
+
   private String stkName;
+
   private String memExprDate;
+
   private int expint;
+
   private String coolingPrd;
+
   private String hsFreq;
+
   private String cvtLastSrvMemExprDate;
+
   private String cvtNowDate;
+
   private String trm;
+
   private int hiddenIsCharge;
+
   private int hiddenHasFilterCharge;
+
   private int billMonth;
+
   private int appTypeId;
+
   private String rentalStus;
+
   private String msg;
+
   private String strprmodt;
+
   private int custCntId;
+
   private String userId;
+
   private String resn;
+
   private int resnId;
+
   private int payMode;
+
   private String appvRem;
+
   private String saRef;
+
+  private String taxRate;
+
   // private Boolean svmAllowFlg;
   private int errorCode;
+
   private String errorHeader;
+
   private String errorMsg;
 
   /* Filter Listing */
   private int srvFilterId;
+
   private int srvFilterStkId;
+
   private String stkCode;
+
   private String stkDesc;
+
   private String c2;
+
   private String c3;
+
   private int srvFilterStusId;
+
   private String srvFilterPrvChgDt;
+
   private int srvFilterPriod;
+
   private String code;
+
   private int c5;
+
   private int c6;
+
   private String expiredateint;
+
   private String todaydateint;
+
   private int stus;
+
   private String stusName;
 
   /* Type of Package */
   private int pkgComboId;
+
   private String pkgComboName;
 
   /* Package Promotion */
   private int packagePromoId;
+
   private String packagePromoName;
+
   private int promoDiscType;
+
   private int promoRpfDiscAmt;
 
   /* Filter Promotion */
   private int filterPromoId;
+
   private String filterPromoName;
 
   /* Membership Tab values */
   private int hiddenHasPackage;
+
   private String bsFreq;
+
   private int hiddenNormalPrice;
+
   private int hiddenNormalTaxPrice;
+
   private int packagePrice;
+
   private int packageTaxPrice;
+
   private String zeroRatYn;
+
   private String eurCertYn;
+
   private String hiddenBsFreq;
+
   private int srvMemPacId;
+
   private int filterCharge;
+
   private int memLvl;
 
   /* Package change/Filter change */
   private int promoPrcPrcnt;
+
   private int promoAddDiscPrc;
+
   private int productId;
+
   private int filterId;
+
   private int prc;
+
   private int oriPrc;
+
   private int lifePriod;
+
   private Date lastChngDt;
+
   private String filterCode;
+
   private String filterDesc;
 
   /* SMQ Request Validations */
   private int rentInstNo;
+
   private String rentInstDt;
+
   private int rentInstTypeId;
+
   private int rentInstAmt;
+
   private int rentInstInsertMonth;
+
   private int rentInstInsertYear;
+
   private int rentInstId;
+
   private String nowDate;
 
   /* SMQ Request Insert */
@@ -140,43 +232,64 @@ public class eSVMApiDto {
 
   /* SMQ retrive - Detail View */
   private int srvDur;
+
   private String empChk;
+
   private int srvMemPacAmt;
+
   private int srvMemBsAmt;
+
   private int paymentAmt;
+
   private String packageDesc;
+
   private String packageInfoDesc;
+
   private String filterPromoDesc;
 
   /* SMQ convert sales */
   private int atchFileGrpId;
+
   private String subPath;
+
   private String fileKeySeq;
 
   /* PSM Attachment */
   private int atchFileId;
+
   private String atchFileName;
+
   private String fileSubPath;
+
   private String physiclFileName;
+
   private String fileExtsn;
+
   private String saveFlag;
+
   private int curAtchFileGrpId;
 
   private String updBy;
+
   private String updDt;
 
   private List<eSVMApiDto> productFilterList;
+
   private List<eSVMApiDto> packageComboList;
+
   private List<eSVMApiDto> packagePromoList;
+
   private List<eSVMApiDto> filterPromoList;
+
   private List<eSVMApiDto> svmFilterList;
+
   private List<eSVMApiDto> attachment;
 
   public int getSvmQuotId() {
     return svmQuotId;
   }
 
-  public void setSvmQuotId(int svmQuotId) {
+  public void setSvmQuotId( int svmQuotId ) {
     this.svmQuotId = svmQuotId;
   }
 
@@ -184,7 +297,7 @@ public class eSVMApiDto {
     return psmId;
   }
 
-  public void setPsmId(int psmId) {
+  public void setPsmId( int psmId ) {
     this.psmId = psmId;
   }
 
@@ -192,7 +305,7 @@ public class eSVMApiDto {
     return salesOrdId;
   }
 
-  public void setSalesOrdId(int salesOrdId) {
+  public void setSalesOrdId( int salesOrdId ) {
     this.salesOrdId = salesOrdId;
   }
 
@@ -200,7 +313,7 @@ public class eSVMApiDto {
     return regId;
   }
 
-  public void setRegId(String regId) {
+  public void setRegId( String regId ) {
     this.regId = regId;
   }
 
@@ -208,7 +321,7 @@ public class eSVMApiDto {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -216,7 +329,7 @@ public class eSVMApiDto {
     return salesOrdNo;
   }
 
-  public void setSalesOrdNo(String salesOrdNo) {
+  public void setSalesOrdNo( String salesOrdNo ) {
     this.salesOrdNo = salesOrdNo;
   }
 
@@ -224,7 +337,7 @@ public class eSVMApiDto {
     return reqstDt;
   }
 
-  public void setReqstDt(String reqstDt) {
+  public void setReqstDt( String reqstDt ) {
     this.reqstDt = reqstDt;
   }
 
@@ -232,7 +345,7 @@ public class eSVMApiDto {
     return quotNo;
   }
 
-  public void setQuotNo(String quotNo) {
+  public void setQuotNo( String quotNo ) {
     this.quotNo = quotNo;
   }
 
@@ -240,7 +353,7 @@ public class eSVMApiDto {
     return psmNo;
   }
 
-  public void setPsmNo(String psmNo) {
+  public void setPsmNo( String psmNo ) {
     this.psmNo = psmNo;
   }
 
@@ -248,7 +361,7 @@ public class eSVMApiDto {
     return orderType;
   }
 
-  public void setOrderType(String orderType) {
+  public void setOrderType( String orderType ) {
     this.orderType = orderType;
   }
 
@@ -256,7 +369,7 @@ public class eSVMApiDto {
     return custType;
   }
 
-  public void setCustType(String custType) {
+  public void setCustType( String custType ) {
     this.custType = custType;
   }
 
@@ -264,7 +377,7 @@ public class eSVMApiDto {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus( String status ) {
     this.status = status;
   }
 
@@ -272,7 +385,7 @@ public class eSVMApiDto {
     return statusId;
   }
 
-  public void setStatusId(int statusId) {
+  public void setStatusId( int statusId ) {
     this.statusId = statusId;
   }
 
@@ -280,7 +393,7 @@ public class eSVMApiDto {
     return stkId;
   }
 
-  public void setStkId(int stkId) {
+  public void setStkId( int stkId ) {
     this.stkId = stkId;
   }
 
@@ -288,7 +401,7 @@ public class eSVMApiDto {
     return ordNo;
   }
 
-  public void setOrdNo(String ordNo) {
+  public void setOrdNo( String ordNo ) {
     this.ordNo = ordNo;
   }
 
@@ -296,7 +409,7 @@ public class eSVMApiDto {
     return nric;
   }
 
-  public void setNric(String nric) {
+  public void setNric( String nric ) {
     this.nric = nric;
   }
 
@@ -304,7 +417,7 @@ public class eSVMApiDto {
     return ordOtdstnd;
   }
 
-  public void setOrdOtdstnd(int ordOtdstnd) {
+  public void setOrdOtdstnd( int ordOtdstnd ) {
     this.ordOtdstnd = ordOtdstnd;
   }
 
@@ -312,7 +425,7 @@ public class eSVMApiDto {
     return asOtstnd;
   }
 
-  public void setAsOtstnd(int asOtstnd) {
+  public void setAsOtstnd( int asOtstnd ) {
     this.asOtstnd = asOtstnd;
   }
 
@@ -320,7 +433,7 @@ public class eSVMApiDto {
     return areaId;
   }
 
-  public void setAreaId(String areaId) {
+  public void setAreaId( String areaId ) {
     this.areaId = areaId;
   }
 
@@ -328,7 +441,7 @@ public class eSVMApiDto {
     return instAddress;
   }
 
-  public void setInstAddress(String instAddress) {
+  public void setInstAddress( String instAddress ) {
     this.instAddress = instAddress;
   }
 
@@ -336,7 +449,7 @@ public class eSVMApiDto {
     return stkName;
   }
 
-  public void setStkName(String stkName) {
+  public void setStkName( String stkName ) {
     this.stkName = stkName;
   }
 
@@ -344,7 +457,7 @@ public class eSVMApiDto {
     return memExprDate;
   }
 
-  public void setMemExprDate(String memExprDate) {
+  public void setMemExprDate( String memExprDate ) {
     this.memExprDate = memExprDate;
   }
 
@@ -352,7 +465,7 @@ public class eSVMApiDto {
     return expint;
   }
 
-  public void setExpint(int expint) {
+  public void setExpint( int expint ) {
     this.expint = expint;
   }
 
@@ -360,7 +473,7 @@ public class eSVMApiDto {
     return coolingPrd;
   }
 
-  public void setCoolingPrd(String coolingPrd) {
+  public void setCoolingPrd( String coolingPrd ) {
     this.coolingPrd = coolingPrd;
   }
 
@@ -368,7 +481,7 @@ public class eSVMApiDto {
     return hsFreq;
   }
 
-  public void setHsFreq(String hsFreq) {
+  public void setHsFreq( String hsFreq ) {
     this.hsFreq = hsFreq;
   }
 
@@ -376,7 +489,7 @@ public class eSVMApiDto {
     return cvtLastSrvMemExprDate;
   }
 
-  public void setCvtLastSrvMemExprDate(String cvtLastSrvMemExprDate) {
+  public void setCvtLastSrvMemExprDate( String cvtLastSrvMemExprDate ) {
     this.cvtLastSrvMemExprDate = cvtLastSrvMemExprDate;
   }
 
@@ -384,7 +497,7 @@ public class eSVMApiDto {
     return cvtNowDate;
   }
 
-  public void setCvtNowDate(String cvtNowDate) {
+  public void setCvtNowDate( String cvtNowDate ) {
     this.cvtNowDate = cvtNowDate;
   }
 
@@ -392,7 +505,7 @@ public class eSVMApiDto {
     return trm;
   }
 
-  public void setTrm(String trm) {
+  public void setTrm( String trm ) {
     this.trm = trm;
   }
 
@@ -400,7 +513,7 @@ public class eSVMApiDto {
     return hiddenIsCharge;
   }
 
-  public void setHiddenIsCharge(int hiddenIsCharge) {
+  public void setHiddenIsCharge( int hiddenIsCharge ) {
     this.hiddenIsCharge = hiddenIsCharge;
   }
 
@@ -408,7 +521,7 @@ public class eSVMApiDto {
     return hiddenHasFilterCharge;
   }
 
-  public void setHiddenHasFilterCharge(int hiddenHasFilterCharge) {
+  public void setHiddenHasFilterCharge( int hiddenHasFilterCharge ) {
     this.hiddenHasFilterCharge = hiddenHasFilterCharge;
   }
 
@@ -416,7 +529,7 @@ public class eSVMApiDto {
     return billMonth;
   }
 
-  public void setBillMonth(int billMonth) {
+  public void setBillMonth( int billMonth ) {
     this.billMonth = billMonth;
   }
 
@@ -424,7 +537,7 @@ public class eSVMApiDto {
     return appTypeId;
   }
 
-  public void setAppTypeId(int appTypeId) {
+  public void setAppTypeId( int appTypeId ) {
     this.appTypeId = appTypeId;
   }
 
@@ -432,7 +545,7 @@ public class eSVMApiDto {
     return rentalStus;
   }
 
-  public void setRentalStus(String rentalStus) {
+  public void setRentalStus( String rentalStus ) {
     this.rentalStus = rentalStus;
   }
 
@@ -440,7 +553,7 @@ public class eSVMApiDto {
     return msg;
   }
 
-  public void setMsg(String msg) {
+  public void setMsg( String msg ) {
     this.msg = msg;
   }
 
@@ -448,7 +561,7 @@ public class eSVMApiDto {
     return strprmodt;
   }
 
-  public void setStrprmodt(String strprmodt) {
+  public void setStrprmodt( String strprmodt ) {
     this.strprmodt = strprmodt;
   }
 
@@ -456,7 +569,7 @@ public class eSVMApiDto {
     return custCntId;
   }
 
-  public void setCustCntId(int custCntId) {
+  public void setCustCntId( int custCntId ) {
     this.custCntId = custCntId;
   }
 
@@ -464,7 +577,7 @@ public class eSVMApiDto {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId( String userId ) {
     this.userId = userId;
   }
 
@@ -472,7 +585,7 @@ public class eSVMApiDto {
     return resn;
   }
 
-  public void setResn(String resn) {
+  public void setResn( String resn ) {
     this.resn = resn;
   }
 
@@ -480,7 +593,7 @@ public class eSVMApiDto {
     return resnId;
   }
 
-  public void setResnId(int resnId) {
+  public void setResnId( int resnId ) {
     this.resnId = resnId;
   }
 
@@ -488,7 +601,7 @@ public class eSVMApiDto {
     return payMode;
   }
 
-  public void setPayMode(int payMode) {
+  public void setPayMode( int payMode ) {
     this.payMode = payMode;
   }
 
@@ -496,7 +609,7 @@ public class eSVMApiDto {
     return appvRem;
   }
 
-  public void setAppvRem(String appvRem) {
+  public void setAppvRem( String appvRem ) {
     this.appvRem = appvRem;
   }
 
@@ -504,7 +617,7 @@ public class eSVMApiDto {
     return srvFilterId;
   }
 
-  public void setSrvFilterId(int srvFilterId) {
+  public void setSrvFilterId( int srvFilterId ) {
     this.srvFilterId = srvFilterId;
   }
 
@@ -512,7 +625,7 @@ public class eSVMApiDto {
     return srvFilterStkId;
   }
 
-  public void setSrvFilterStkId(int srvFilterStkId) {
+  public void setSrvFilterStkId( int srvFilterStkId ) {
     this.srvFilterStkId = srvFilterStkId;
   }
 
@@ -520,7 +633,7 @@ public class eSVMApiDto {
     return stkCode;
   }
 
-  public void setStkCode(String stkCode) {
+  public void setStkCode( String stkCode ) {
     this.stkCode = stkCode;
   }
 
@@ -528,7 +641,7 @@ public class eSVMApiDto {
     return stkDesc;
   }
 
-  public void setStkDesc(String stkDesc) {
+  public void setStkDesc( String stkDesc ) {
     this.stkDesc = stkDesc;
   }
 
@@ -536,7 +649,7 @@ public class eSVMApiDto {
     return c2;
   }
 
-  public void setC2(String c2) {
+  public void setC2( String c2 ) {
     this.c2 = c2;
   }
 
@@ -544,7 +657,7 @@ public class eSVMApiDto {
     return c3;
   }
 
-  public void setC3(String c3) {
+  public void setC3( String c3 ) {
     this.c3 = c3;
   }
 
@@ -552,7 +665,7 @@ public class eSVMApiDto {
     return srvFilterStusId;
   }
 
-  public void setSrvFilterStusId(int srvFilterStusId) {
+  public void setSrvFilterStusId( int srvFilterStusId ) {
     this.srvFilterStusId = srvFilterStusId;
   }
 
@@ -560,7 +673,7 @@ public class eSVMApiDto {
     return srvFilterPrvChgDt;
   }
 
-  public void setSrvFilterPrvChgDt(String srvFilterPrvChgDt) {
+  public void setSrvFilterPrvChgDt( String srvFilterPrvChgDt ) {
     this.srvFilterPrvChgDt = srvFilterPrvChgDt;
   }
 
@@ -568,7 +681,7 @@ public class eSVMApiDto {
     return srvFilterPriod;
   }
 
-  public void setSrvFilterPriod(int srvFilterPriod) {
+  public void setSrvFilterPriod( int srvFilterPriod ) {
     this.srvFilterPriod = srvFilterPriod;
   }
 
@@ -576,7 +689,7 @@ public class eSVMApiDto {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode( String code ) {
     this.code = code;
   }
 
@@ -584,7 +697,7 @@ public class eSVMApiDto {
     return c5;
   }
 
-  public void setC5(int c5) {
+  public void setC5( int c5 ) {
     this.c5 = c5;
   }
 
@@ -592,7 +705,7 @@ public class eSVMApiDto {
     return c6;
   }
 
-  public void setC6(int c6) {
+  public void setC6( int c6 ) {
     this.c6 = c6;
   }
 
@@ -600,7 +713,7 @@ public class eSVMApiDto {
     return expiredateint;
   }
 
-  public void setExpiredateint(String expiredateint) {
+  public void setExpiredateint( String expiredateint ) {
     this.expiredateint = expiredateint;
   }
 
@@ -608,7 +721,7 @@ public class eSVMApiDto {
     return todaydateint;
   }
 
-  public void setTodaydateint(String todaydateint) {
+  public void setTodaydateint( String todaydateint ) {
     this.todaydateint = todaydateint;
   }
 
@@ -616,7 +729,7 @@ public class eSVMApiDto {
     return stus;
   }
 
-  public void setStus(int stus) {
+  public void setStus( int stus ) {
     this.stus = stus;
   }
 
@@ -624,7 +737,7 @@ public class eSVMApiDto {
     return stusName;
   }
 
-  public void setStusName(String stusName) {
+  public void setStusName( String stusName ) {
     this.stusName = stusName;
   }
 
@@ -632,7 +745,7 @@ public class eSVMApiDto {
     return productFilterList;
   }
 
-  public void setProductFilterList(List<eSVMApiDto> productFilterList) {
+  public void setProductFilterList( List<eSVMApiDto> productFilterList ) {
     this.productFilterList = productFilterList;
   }
 
@@ -640,7 +753,7 @@ public class eSVMApiDto {
     return pkgComboId;
   }
 
-  public void setPkgComboId(int pkgComboId) {
+  public void setPkgComboId( int pkgComboId ) {
     this.pkgComboId = pkgComboId;
   }
 
@@ -648,7 +761,7 @@ public class eSVMApiDto {
     return pkgComboName;
   }
 
-  public void setPkgComboName(String pkgComboName) {
+  public void setPkgComboName( String pkgComboName ) {
     this.pkgComboName = pkgComboName;
   }
 
@@ -656,7 +769,7 @@ public class eSVMApiDto {
     return packageComboList;
   }
 
-  public void setPackageComboList(List<eSVMApiDto> packageComboList) {
+  public void setPackageComboList( List<eSVMApiDto> packageComboList ) {
     this.packageComboList = packageComboList;
   }
 
@@ -664,7 +777,7 @@ public class eSVMApiDto {
     return packagePromoId;
   }
 
-  public void setPackagePromoId(int packagePromoId) {
+  public void setPackagePromoId( int packagePromoId ) {
     this.packagePromoId = packagePromoId;
   }
 
@@ -672,7 +785,7 @@ public class eSVMApiDto {
     return packagePromoName;
   }
 
-  public void setPackagePromoName(String packagePromoName) {
+  public void setPackagePromoName( String packagePromoName ) {
     this.packagePromoName = packagePromoName;
   }
 
@@ -680,7 +793,7 @@ public class eSVMApiDto {
     return promoDiscType;
   }
 
-  public void setPromoDiscType(int promoDiscType) {
+  public void setPromoDiscType( int promoDiscType ) {
     this.promoDiscType = promoDiscType;
   }
 
@@ -688,7 +801,7 @@ public class eSVMApiDto {
     return promoRpfDiscAmt;
   }
 
-  public void setPromoRpfDiscAmt(int promoRpfDiscAmt) {
+  public void setPromoRpfDiscAmt( int promoRpfDiscAmt ) {
     this.promoRpfDiscAmt = promoRpfDiscAmt;
   }
 
@@ -696,7 +809,7 @@ public class eSVMApiDto {
     return packagePromoList;
   }
 
-  public void setPackagePromoList(List<eSVMApiDto> packagePromoList) {
+  public void setPackagePromoList( List<eSVMApiDto> packagePromoList ) {
     this.packagePromoList = packagePromoList;
   }
 
@@ -704,7 +817,7 @@ public class eSVMApiDto {
     return filterPromoId;
   }
 
-  public void setFilterPromoId(int filterPromoId) {
+  public void setFilterPromoId( int filterPromoId ) {
     this.filterPromoId = filterPromoId;
   }
 
@@ -712,7 +825,7 @@ public class eSVMApiDto {
     return filterPromoName;
   }
 
-  public void setFilterPromoName(String filterPromoName) {
+  public void setFilterPromoName( String filterPromoName ) {
     this.filterPromoName = filterPromoName;
   }
 
@@ -720,7 +833,7 @@ public class eSVMApiDto {
     return filterPromoList;
   }
 
-  public void setFilterPromoList(List<eSVMApiDto> filterPromoList) {
+  public void setFilterPromoList( List<eSVMApiDto> filterPromoList ) {
     this.filterPromoList = filterPromoList;
   }
 
@@ -728,7 +841,7 @@ public class eSVMApiDto {
     return hiddenHasPackage;
   }
 
-  public void setHiddenHasPackage(int hiddenHasPackage) {
+  public void setHiddenHasPackage( int hiddenHasPackage ) {
     this.hiddenHasPackage = hiddenHasPackage;
   }
 
@@ -736,7 +849,7 @@ public class eSVMApiDto {
     return bsFreq;
   }
 
-  public void setBsFreq(String bsFreq) {
+  public void setBsFreq( String bsFreq ) {
     this.bsFreq = bsFreq;
   }
 
@@ -744,7 +857,7 @@ public class eSVMApiDto {
     return hiddenNormalPrice;
   }
 
-  public void setHiddenNormalPrice(int hiddenNormalPrice) {
+  public void setHiddenNormalPrice( int hiddenNormalPrice ) {
     this.hiddenNormalPrice = hiddenNormalPrice;
   }
 
@@ -752,7 +865,7 @@ public class eSVMApiDto {
     return hiddenNormalTaxPrice;
   }
 
-  public void setHiddenNormalTaxPrice(int hiddenNormalTaxPrice) {
+  public void setHiddenNormalTaxPrice( int hiddenNormalTaxPrice ) {
     this.hiddenNormalTaxPrice = hiddenNormalTaxPrice;
   }
 
@@ -760,23 +873,23 @@ public class eSVMApiDto {
     return packagePrice;
   }
 
-  public void setPackagePrice(int packagePrice) {
+  public void setPackagePrice( int packagePrice ) {
     this.packagePrice = packagePrice;
   }
 
   public int getPackageTaxPrice() {
-	return packageTaxPrice;
-}
+    return packageTaxPrice;
+  }
 
-public void setPackageTaxPrice(int packageTaxPrice) {
-	this.packageTaxPrice = packageTaxPrice;
-}
+  public void setPackageTaxPrice( int packageTaxPrice ) {
+    this.packageTaxPrice = packageTaxPrice;
+  }
 
-public String getZeroRatYn() {
+  public String getZeroRatYn() {
     return zeroRatYn;
   }
 
-  public void setZeroRatYn(String zeroRatYn) {
+  public void setZeroRatYn( String zeroRatYn ) {
     this.zeroRatYn = zeroRatYn;
   }
 
@@ -784,7 +897,7 @@ public String getZeroRatYn() {
     return eurCertYn;
   }
 
-  public void setEurCertYn(String eurCertYn) {
+  public void setEurCertYn( String eurCertYn ) {
     this.eurCertYn = eurCertYn;
   }
 
@@ -792,7 +905,7 @@ public String getZeroRatYn() {
     return hiddenBsFreq;
   }
 
-  public void setHiddenBsFreq(String hiddenBsFreq) {
+  public void setHiddenBsFreq( String hiddenBsFreq ) {
     this.hiddenBsFreq = hiddenBsFreq;
   }
 
@@ -800,7 +913,7 @@ public String getZeroRatYn() {
     return srvMemPacId;
   }
 
-  public void setSrvMemPacId(int srvMemPacId) {
+  public void setSrvMemPacId( int srvMemPacId ) {
     this.srvMemPacId = srvMemPacId;
   }
 
@@ -808,7 +921,7 @@ public String getZeroRatYn() {
     return filterCharge;
   }
 
-  public void setFilterCharge(int filterCharge) {
+  public void setFilterCharge( int filterCharge ) {
     this.filterCharge = filterCharge;
   }
 
@@ -816,7 +929,7 @@ public String getZeroRatYn() {
     return promoPrcPrcnt;
   }
 
-  public void setPromoPrcPrcnt(int promoPrcPrcnt) {
+  public void setPromoPrcPrcnt( int promoPrcPrcnt ) {
     this.promoPrcPrcnt = promoPrcPrcnt;
   }
 
@@ -824,7 +937,7 @@ public String getZeroRatYn() {
     return promoAddDiscPrc;
   }
 
-  public void setPromoAddDiscPrc(int promoAddDiscPrc) {
+  public void setPromoAddDiscPrc( int promoAddDiscPrc ) {
     this.promoAddDiscPrc = promoAddDiscPrc;
   }
 
@@ -832,7 +945,7 @@ public String getZeroRatYn() {
     return productId;
   }
 
-  public void setProductId(int productId) {
+  public void setProductId( int productId ) {
     this.productId = productId;
   }
 
@@ -840,7 +953,7 @@ public String getZeroRatYn() {
     return filterId;
   }
 
-  public void setFilterId(int filterId) {
+  public void setFilterId( int filterId ) {
     this.filterId = filterId;
   }
 
@@ -848,7 +961,7 @@ public String getZeroRatYn() {
     return prc;
   }
 
-  public void setPrc(int prc) {
+  public void setPrc( int prc ) {
     this.prc = prc;
   }
 
@@ -856,7 +969,7 @@ public String getZeroRatYn() {
     return oriPrc;
   }
 
-  public void setOriPrc(int oriPrc) {
+  public void setOriPrc( int oriPrc ) {
     this.oriPrc = oriPrc;
   }
 
@@ -864,7 +977,7 @@ public String getZeroRatYn() {
     return lifePriod;
   }
 
-  public void setLifePriod(int lifePriod) {
+  public void setLifePriod( int lifePriod ) {
     this.lifePriod = lifePriod;
   }
 
@@ -872,7 +985,7 @@ public String getZeroRatYn() {
     return lastChngDt;
   }
 
-  public void setLastChngDt(Date lastChngDt) {
+  public void setLastChngDt( Date lastChngDt ) {
     this.lastChngDt = lastChngDt;
   }
 
@@ -880,7 +993,7 @@ public String getZeroRatYn() {
     return filterCode;
   }
 
-  public void setFilterCode(String filterCode) {
+  public void setFilterCode( String filterCode ) {
     this.filterCode = filterCode;
   }
 
@@ -888,7 +1001,7 @@ public String getZeroRatYn() {
     return filterDesc;
   }
 
-  public void setFilterDesc(String filterDesc) {
+  public void setFilterDesc( String filterDesc ) {
     this.filterDesc = filterDesc;
   }
 
@@ -896,7 +1009,7 @@ public String getZeroRatYn() {
     return rentInstNo;
   }
 
-  public void setRentInstNo(int rentInstNo) {
+  public void setRentInstNo( int rentInstNo ) {
     this.rentInstNo = rentInstNo;
   }
 
@@ -904,7 +1017,7 @@ public String getZeroRatYn() {
     return rentInstDt;
   }
 
-  public void setRentInstDt(String rentInstDt) {
+  public void setRentInstDt( String rentInstDt ) {
     this.rentInstDt = rentInstDt;
   }
 
@@ -912,7 +1025,7 @@ public String getZeroRatYn() {
     return rentInstTypeId;
   }
 
-  public void setRentInstTypeId(int rentInstTypeId) {
+  public void setRentInstTypeId( int rentInstTypeId ) {
     this.rentInstTypeId = rentInstTypeId;
   }
 
@@ -920,7 +1033,7 @@ public String getZeroRatYn() {
     return rentInstAmt;
   }
 
-  public void setRentInstAmt(int rentInstAmt) {
+  public void setRentInstAmt( int rentInstAmt ) {
     this.rentInstAmt = rentInstAmt;
   }
 
@@ -928,7 +1041,7 @@ public String getZeroRatYn() {
     return rentInstInsertMonth;
   }
 
-  public void setRentInstInsertMonth(int rentInstInsertMonth) {
+  public void setRentInstInsertMonth( int rentInstInsertMonth ) {
     this.rentInstInsertMonth = rentInstInsertMonth;
   }
 
@@ -936,7 +1049,7 @@ public String getZeroRatYn() {
     return rentInstInsertYear;
   }
 
-  public void setRentInstInsertYear(int rentInstInsertYear) {
+  public void setRentInstInsertYear( int rentInstInsertYear ) {
     this.rentInstInsertYear = rentInstInsertYear;
   }
 
@@ -944,7 +1057,7 @@ public String getZeroRatYn() {
     return rentInstId;
   }
 
-  public void setRentInstId(int rentInstId) {
+  public void setRentInstId( int rentInstId ) {
     this.rentInstId = rentInstId;
   }
 
@@ -952,7 +1065,7 @@ public String getZeroRatYn() {
     return nowDate;
   }
 
-  public void setNowDate(String nowDate) {
+  public void setNowDate( String nowDate ) {
     this.nowDate = nowDate;
   }
 
@@ -960,7 +1073,7 @@ public String getZeroRatYn() {
     return docno;
   }
 
-  public void setDocno(String docno) {
+  public void setDocno( String docno ) {
     this.docno = docno;
   }
 
@@ -968,7 +1081,7 @@ public String getZeroRatYn() {
     return srvDur;
   }
 
-  public void setSrvDur(int srvDur) {
+  public void setSrvDur( int srvDur ) {
     this.srvDur = srvDur;
   }
 
@@ -976,7 +1089,7 @@ public String getZeroRatYn() {
     return empChk;
   }
 
-  public void setEmpChk(String empChk) {
+  public void setEmpChk( String empChk ) {
     this.empChk = empChk;
   }
 
@@ -984,7 +1097,7 @@ public String getZeroRatYn() {
     return srvMemPacAmt;
   }
 
-  public void setSrvMemPacAmt(int srvMemPacAmt) {
+  public void setSrvMemPacAmt( int srvMemPacAmt ) {
     this.srvMemPacAmt = srvMemPacAmt;
   }
 
@@ -992,7 +1105,7 @@ public String getZeroRatYn() {
     return srvMemBsAmt;
   }
 
-  public void setSrvMemBsAmt(int srvMemBsAmt) {
+  public void setSrvMemBsAmt( int srvMemBsAmt ) {
     this.srvMemBsAmt = srvMemBsAmt;
   }
 
@@ -1000,7 +1113,7 @@ public String getZeroRatYn() {
     return paymentAmt;
   }
 
-  public void setPaymentAmt(int paymentAmt) {
+  public void setPaymentAmt( int paymentAmt ) {
     this.paymentAmt = paymentAmt;
   }
 
@@ -1008,7 +1121,7 @@ public String getZeroRatYn() {
     return packageDesc;
   }
 
-  public void setPackageDesc(String packageDesc) {
+  public void setPackageDesc( String packageDesc ) {
     this.packageDesc = packageDesc;
   }
 
@@ -1016,7 +1129,7 @@ public String getZeroRatYn() {
     return packageInfoDesc;
   }
 
-  public void setPackageInfoDesc(String packageInfoDesc) {
+  public void setPackageInfoDesc( String packageInfoDesc ) {
     this.packageInfoDesc = packageInfoDesc;
   }
 
@@ -1024,7 +1137,7 @@ public String getZeroRatYn() {
     return filterPromoDesc;
   }
 
-  public void setFilterPromoDesc(String filterPromoDesc) {
+  public void setFilterPromoDesc( String filterPromoDesc ) {
     this.filterPromoDesc = filterPromoDesc;
   }
 
@@ -1032,7 +1145,7 @@ public String getZeroRatYn() {
     return svmFilterList;
   }
 
-  public void setSvmFilterList(List<eSVMApiDto> svmFilterList) {
+  public void setSvmFilterList( List<eSVMApiDto> svmFilterList ) {
     this.svmFilterList = svmFilterList;
   }
 
@@ -1040,7 +1153,7 @@ public String getZeroRatYn() {
     return atchFileGrpId;
   }
 
-  public void setAtchFileGrpId(int atchFileGrpId) {
+  public void setAtchFileGrpId( int atchFileGrpId ) {
     this.atchFileGrpId = atchFileGrpId;
   }
 
@@ -1048,7 +1161,7 @@ public String getZeroRatYn() {
     return subPath;
   }
 
-  public void setSubPath(String subPath) {
+  public void setSubPath( String subPath ) {
     this.subPath = subPath;
   }
 
@@ -1056,7 +1169,7 @@ public String getZeroRatYn() {
     return fileKeySeq;
   }
 
-  public void setFileKeySeq(String fileKeySeq) {
+  public void setFileKeySeq( String fileKeySeq ) {
     this.fileKeySeq = fileKeySeq;
   }
 
@@ -1064,7 +1177,7 @@ public String getZeroRatYn() {
     return attachment;
   }
 
-  public void setAttachment(List<eSVMApiDto> attachment) {
+  public void setAttachment( List<eSVMApiDto> attachment ) {
     this.attachment = attachment;
   }
 
@@ -1072,7 +1185,7 @@ public String getZeroRatYn() {
     return atchFileId;
   }
 
-  public void setAtchFileId(int atchFileId) {
+  public void setAtchFileId( int atchFileId ) {
     this.atchFileId = atchFileId;
   }
 
@@ -1080,7 +1193,7 @@ public String getZeroRatYn() {
     return atchFileName;
   }
 
-  public void setAtchFileName(String atchFileName) {
+  public void setAtchFileName( String atchFileName ) {
     this.atchFileName = atchFileName;
   }
 
@@ -1088,7 +1201,7 @@ public String getZeroRatYn() {
     return fileSubPath;
   }
 
-  public void setFileSubPath(String fileSubPath) {
+  public void setFileSubPath( String fileSubPath ) {
     this.fileSubPath = fileSubPath;
   }
 
@@ -1096,7 +1209,7 @@ public String getZeroRatYn() {
     return physiclFileName;
   }
 
-  public void setPhysiclFileName(String physiclFileName) {
+  public void setPhysiclFileName( String physiclFileName ) {
     this.physiclFileName = physiclFileName;
   }
 
@@ -1104,7 +1217,7 @@ public String getZeroRatYn() {
     return fileExtsn;
   }
 
-  public void setFileExtsn(String fileExtsn) {
+  public void setFileExtsn( String fileExtsn ) {
     this.fileExtsn = fileExtsn;
   }
 
@@ -1112,7 +1225,7 @@ public String getZeroRatYn() {
     return saveFlag;
   }
 
-  public void setSaveFlag(String saveFlag) {
+  public void setSaveFlag( String saveFlag ) {
     this.saveFlag = saveFlag;
   }
 
@@ -1120,7 +1233,7 @@ public String getZeroRatYn() {
     return curAtchFileGrpId;
   }
 
-  public void setCurAtchFileGrpId(int curAtchFileGrpId) {
+  public void setCurAtchFileGrpId( int curAtchFileGrpId ) {
     this.curAtchFileGrpId = curAtchFileGrpId;
   }
 
@@ -1128,7 +1241,7 @@ public String getZeroRatYn() {
     return memLvl;
   }
 
-  public void setMemLvl(int memLvl) {
+  public void setMemLvl( int memLvl ) {
     this.memLvl = memLvl;
   }
 
@@ -1136,8 +1249,16 @@ public String getZeroRatYn() {
     return saRef;
   }
 
-  public void setSaRef(String saRef) {
+  public void setSaRef( String saRef ) {
     this.saRef = saRef;
+  }
+
+  public String getTaxRate() {
+    return taxRate;
+  }
+
+  public void setTaxRate( String taxRate ) {
+    this.taxRate = taxRate;
   }
 
   // public Boolean getSvmAllowFlg() {
@@ -1147,12 +1268,11 @@ public String getZeroRatYn() {
   // public void setSvmAllowFlg(Boolean svmAllowFlg) {
   // this.svmAllowFlg = svmAllowFlg;
   // }
-
   public int getErrorCode() {
     return errorCode;
   }
 
-  public void setErrorCode(int errorCode) {
+  public void setErrorCode( int errorCode ) {
     this.errorCode = errorCode;
   }
 
@@ -1160,7 +1280,7 @@ public String getZeroRatYn() {
     return errorHeader;
   }
 
-  public void setErrorHeader(String errorHeader) {
+  public void setErrorHeader( String errorHeader ) {
     this.errorHeader = errorHeader;
   }
 
@@ -1168,7 +1288,7 @@ public String getZeroRatYn() {
     return errorMsg;
   }
 
-  public void setErrorMsg(String errorMsg) {
+  public void setErrorMsg( String errorMsg ) {
     this.errorMsg = errorMsg;
   }
 
@@ -1176,7 +1296,7 @@ public String getZeroRatYn() {
     return updBy;
   }
 
-  public void setUpdBy(String updBy) {
+  public void setUpdBy( String updBy ) {
     this.updBy = updBy;
   }
 
@@ -1184,7 +1304,7 @@ public String getZeroRatYn() {
     return updDt;
   }
 
-  public void setUpdDt(String updDt) {
+  public void setUpdDt( String updDt ) {
     this.updDt = updDt;
   }
 }
