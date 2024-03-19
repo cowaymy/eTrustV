@@ -1150,9 +1150,9 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 				EgovMap asDetail = asBillResult.get(i);
 
 				BigDecimal billAmt = new BigDecimal("".equals(CommonUtils.nvl(String.valueOf(asDetail.get("billAmt"))))
-						? "0" : String.valueOf(orderDetail.get("billAmt")));
+						? "0" : String.valueOf(asDetail.get("billAmt")));
 				BigDecimal paidAmtAsDetail = new BigDecimal("".equals(CommonUtils.nvl(String.valueOf(asDetail.get("paidAmt"))))
-						? "0" : String.valueOf(orderDetail.get("paidAmt")));
+						? "0" : String.valueOf(asDetail.get("paidAmt")));
 
 				if (billAmt.compareTo(paidAmtAsDetail) > 0) {
 					if (totRemainAmt.compareTo(billAmt) >= 0) {
