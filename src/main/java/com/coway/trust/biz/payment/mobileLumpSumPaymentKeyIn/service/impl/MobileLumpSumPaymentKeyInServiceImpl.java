@@ -1149,11 +1149,12 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 			for (int i = 0; i < asBillResult.size(); i++) {
 				EgovMap asDetail = asBillResult.get(i);
 
-				if (asDetail.get("billIsPaid").toString().toUpperCase().equals("FALSE")) {
-					BigDecimal billAmt = new BigDecimal(
-							"".equals(CommonUtils.nvl(String.valueOf(asDetail.get("billAmt")))) ? "0"
-									: String.valueOf(asDetail.get("billAmt")));
+				BigDecimal billAmt = new BigDecimal("".equals(CommonUtils.nvl(String.valueOf(asDetail.get("billAmt"))))
+						? "0" : String.valueOf(orderDetail.get("billAmt")));
+				BigDecimal paidAmtAsDetail = new BigDecimal("".equals(CommonUtils.nvl(String.valueOf(asDetail.get("paidAmt"))))
+						? "0" : String.valueOf(orderDetail.get("paidAmt")));
 
+				if (billAmt.compareTo(paidAmtAsDetail) > 0) {
 					if (totRemainAmt.compareTo(billAmt) >= 0) {
 						Map<String, Object> formMap = new HashMap<String, Object>();
 						formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
