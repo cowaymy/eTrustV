@@ -724,7 +724,7 @@
 
     <update id="cancelSal93" parameterType="Map">
         UPDATE SAL0093D
-        SET SRV_QUOT_STUS_ID = 21,
+        SET SRV_QUOT_STUS_ID = 8,
             SRV_UPD_USER_ID = #{regId},
             SRV_UPD_DT = SYSDATE
         WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
