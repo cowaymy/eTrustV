@@ -1744,4 +1744,10 @@ public class CommonServiceImpl implements CommonService {
     return commonMapper.selectFilterList(params);
   }
 
+    @Override
+    public int getSstTaxRate( Map<String, Object> params )
+    {
+        return CommonUtils.intNvl( commonMapper.getSstTaxRate( params ) );
+    }
+
 }
