@@ -379,11 +379,23 @@
 	                     #{item}
 	                   </foreach>
 	                 </if>
-	                 <if test="cmbbranchId != null and cmbbranchId != '' ">
+	                 <!-- <if test="cmbbranchId != null and cmbbranchId != '' ">
 	                   AND Extent1.AS_BRNCH_ID IN #{cmbbranchId}
 	                 </if>
 	                 <if test="cmbbranchId2 != null and cmbbranchId2 != '' ">
                        AND DSC.BRNCH_ID IN #{cmbbranchId2}
+                     </if>-->
+                     <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+                       AND Extent1.AS_BRNCH_ID IN
+                       <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+                         #{item}
+                       </foreach>
+                     </if>
+                     <if test="cmbbranchIdList2 != null and cmbbranchIdList2 != '' ">
+                       AND DSC.BRNCH_ID IN
+                       <foreach item="item" collection="cmbbranchIdList2" index="index" open="(" separator="," close=")">
+                         #{item}
+                       </foreach>
                      </if>
 	                 <!-- <if test="cmbctId != null and cmbctId != '' ">
 	                   AND Extent8.MEM_CODE IN #{cmbctId}

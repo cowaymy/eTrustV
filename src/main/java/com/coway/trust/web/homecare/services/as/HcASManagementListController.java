@@ -203,14 +203,17 @@ public class HcASManagementListController {
     String[] asStatusList = request.getParameterValues("asStatus");
     String[] productList = request.getParameterValues("asProduct");
 
-    String cmbbranchId = request.getParameter("cmbbranchId");
-    String cmbbranchId2 = request.getParameter("cmbbranchId2");
+    /**String cmbbranchId = request.getParameter("cmbbranchId");  Removed for HA and HC branch merging, Hui Ding, 13/03/2024
+    String cmbbranchId2 = request.getParameter("cmbbranchId2"); Removed for HA and HC branch merging, Hui Ding, 13/03/2024 **/
+
+    String[] cmbbranchId = request.getParameterValues("cmbbranchId"); /**Added for HA and HC branch merging, Hui Ding, 13/03/2024 **/
+    String[] cmbbranchId2 = request.getParameterValues("cmbbranchId2"); /**Added for HA and HC branch merging, Hui Ding, 13/03/2024 **/
     String cmbctId = request.getParameter("cmbctId");
 
     params.put("asTypeList", asTypeList);
     params.put("asStatusList", asStatusList);
-    params.put("cmbbranchId", cmbbranchId);
-    params.put("cmbbranchId2", cmbbranchId2);
+    params.put("cmbbranchIdList", cmbbranchId);
+    params.put("cmbbranchIdList2", cmbbranchId2);
     params.put("cmbctId", cmbctId);
     params.put("productList", productList);
 

@@ -60,8 +60,8 @@ var branchDs = [];
         //doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
         //doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
 
-        doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '',   'cmbbranchId', 'S', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'cmbbranchId2', 'S', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '',   'cmbbranchId', 'M', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'cmbbranchId2', 'M', 'fn_multiCombo');
 
         /* $("#cmbbranchId").change(function() {
             doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
@@ -105,6 +105,20 @@ var branchDs = [];
       }).multipleSelect({
           selectAll : true, // 전체선택
           width : '100%'
+      });
+
+      $('#cmbbranchId').change(function() {
+          //console.log($(this).val());
+      }).multipleSelect({
+          selectAll: true, // 전체선택
+          width: '100%'
+      });
+
+      $('#cmbbranchId2').change(function() {
+          //console.log($(this).val());
+      }).multipleSelect({
+          selectAll: true, // 전체선택
+          width: '100%'
       });
   }
 
