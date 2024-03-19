@@ -47,8 +47,12 @@ import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerTierPointApiDto;
+import com.coway.trust.api.project.eCommerce.EComApiCustCatForm;
+import com.coway.trust.api.project.eCommerce.EComApiCustCatto;
 import com.coway.trust.api.project.eCommerce.EComApiDto;
 import com.coway.trust.api.project.eCommerce.EComApiForm;
 
@@ -645,4 +649,95 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
+
+  @Override
+  public Map<String, Object> getCustomerCategory(HttpServletRequest request, EComApiCustCatForm eComApiForm) throws Exception {
+	  String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+
+	  StopWatch stopWatch = new StopWatch();
+	  stopWatch.reset();
+	  stopWatch.start();
+
+	  Map<String, Object> resultValue = new HashMap<String, Object>();
+	  Map<String, Object> respParam = new HashMap<String, Object>();
+	  EgovMap access = new EgovMap();
+	  Map<String, Object> reqPrm = new HashMap<String, Object>();//Maps.filterValues(EComApiCustCatForm.createMap(eComApiForm),Objects::nonNull);
+
+	  Map<String, Object> cnvCustCat = new HashMap<String, Object>();
+	  try{
+
+		  Map<String, Object> keyPrm = new HashMap<>();
+		  String key = request.getHeader("key");
+		  keyPrm.put("key", key);
+
+		  access = commonApiMapper.checkAccess(keyPrm);
+		  if(access == null){
+			  resultValue.put("success", false);
+			  resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED));
+			  resultValue.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED);
+		  }
+	      else if(CommonUtils.isEmpty(eComApiForm.getCustNric())){
+	        resultValue.put("success", false);
+	        resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+	        resultValue.put("message", "NRIC not found.");
+	      }
+		  else {
+			  apiUserId = access.get("apiUserId").toString();
+			  reqPrm.put("apiUserId", apiUserId);
+			  reqPrm.put("custNric", eComApiForm.getCustNric());
+
+			  EgovMap custCat = ecommApiMapper.getCustomerCat(reqPrm);
+
+			  respParam.put("custCatCode", custCat.get("custCatCode").toString());
+			  respParam.put("custCatNm", custCat.get("custCatNm").toString());
+			  respParam.put("success", true);
+			  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_SUCCESS);
+			  respParam.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+
+			  resultValue.put("respParam", respParam);
+
+			  EComApiCustCatto custTierDto = EComApiCustCatto.create(respParam);
+
+			  ObjectMapper oMapper = new ObjectMapper();
+			  respParam = oMapper.convertValue(custTierDto, Map.class);
+
+			  resultValue.put("success", true);
+		      resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+		      resultValue.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+
+		  }
+	  }catch(Exception e){
+		  resultValue.put("success", false);
+		  resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		  resultValue.put("message", StringUtils.substring(e.getMessage(), 0, 4000));
+	  } finally{
+		  stopWatch.stop();
+		  respTm = stopWatch.toString();
+
+		  resultValue.put("reqParam", CommonUtils.nvl(reqPrm));
+		  resultValue.put("ipAddr", CommonUtils.getClientIp(request));
+		  resultValue.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
+		  resultValue.put("respTm", CommonUtils.nvl(respTm));
+		  resultValue.put("apiUserId", CommonUtils.nvl(apiUserId));
+		  rtnRespMsg(resultValue);
+	  }
+
+
+	  return respParam;
+  }
+
+	private void rtnRespMsg(Map<String, Object> param) {
+		Map<String, Object> params = new HashMap<>();
+
+		params.put("respCde", param.get("statusCode"));
+		params.put("errMsg", param.get("message"));
+		params.put("reqParam", param.get("reqParam").toString());
+		params.put("ipAddr", param.get("ipAddr"));
+		params.put("prgPath", param.get("prgPath"));
+		params.put("respTm", param.get("respTm"));
+		params.put("respParam", param.containsKey("respParam") ? param.get("respParam").toString().length() >= 4000 ? param.get("respParam").toString().substring(0,4000) : param.get("respParam").toString() : "");
+    	params.put("apiUserId", param.get("apiUserId") );
+
+    	commonApiMapper.insertApiAccessLog(params);
+	}
 }

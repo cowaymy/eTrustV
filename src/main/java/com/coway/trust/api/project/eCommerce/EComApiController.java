@@ -16,6 +16,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,4 +73,9 @@ public class EComApiController {
     return ResponseEntity.ok(eCommApiService.cancelOrder(request, params));
   }
 
+  @ApiOperation(value = "/getCustomerCategory", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getCustomerCategory", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> getCustomerCategory(HttpServletRequest request,@ModelAttribute EComApiCustCatForm params) throws Exception {
+	  return ResponseEntity.ok(eCommApiService.getCustomerCategory(request, params));
+  }
 }
