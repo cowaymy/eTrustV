@@ -1162,7 +1162,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 						formMap.put("advMonth", 0);
 						formMap.put("mstRpf", "0");
 						formMap.put("mstRpfPaid", "0");
-						formMap.put("assignAmt", billAmt);
+						formMap.put("assignAmt", 0);
 						formMap.put("billAmt", billAmt);
 						formMap.put("billDt", asDetail.get("billDt"));
 						formMap.put("billGrpId", 0);
