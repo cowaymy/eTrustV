@@ -336,5 +336,5 @@ public interface CommonMapper
 
     List<EgovMap> selectFilterList( Map<String, Object> params );
 
-    int getSstTaxRate( Map<String, Object> params );
+    String getSstTaxRate();
 }

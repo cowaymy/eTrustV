@@ -1745,9 +1745,9 @@ public class CommonServiceImpl implements CommonService {
   }
 
     @Override
-    public int getSstTaxRate( Map<String, Object> params )
+    public int getSstTaxRate()
     {
-        return CommonUtils.intNvl( commonMapper.getSstTaxRate( params ) );
+        return CommonUtils.intNvl(commonMapper.getSstTaxRate());
     }
 
 }

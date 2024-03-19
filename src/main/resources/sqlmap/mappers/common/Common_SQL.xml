@@ -2404,7 +2404,7 @@
        ORDER BY CODE_NAME
    </select>
 
-  <select id="getSstTaxRate" parameterType="Map" resultType="Integer">
+  <select id="getSstTaxRate" parameterType="Map" resultType="String">
     SELECT TAX_RATE
     FROM FCM0007C
     WHERE TAX_CODE =
