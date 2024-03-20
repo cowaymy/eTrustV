@@ -175,7 +175,7 @@ public class eSVMApiDto {
 
   private int packagePrice;
 
-  private int packageTaxPrice;
+  private double packageTaxPrice;
 
   private String zeroRatYn;
 
@@ -239,7 +239,9 @@ public class eSVMApiDto {
 
   private int srvMemBsAmt;
 
-  private int paymentAmt;
+  private int srvMemPacTaxes;
+
+  private double paymentAmt;
 
   private String packageDesc;
 
@@ -877,11 +879,11 @@ public class eSVMApiDto {
     this.packagePrice = packagePrice;
   }
 
-  public int getPackageTaxPrice() {
+  public double getPackageTaxPrice() {
     return packageTaxPrice;
   }
 
-  public void setPackageTaxPrice( int packageTaxPrice ) {
+  public void setPackageTaxPrice( double packageTaxPrice ) {
     this.packageTaxPrice = packageTaxPrice;
   }
 
@@ -1109,11 +1111,19 @@ public class eSVMApiDto {
     this.srvMemBsAmt = srvMemBsAmt;
   }
 
-  public int getPaymentAmt() {
+  public int getSrvMemPacTaxes() {
+    return srvMemPacTaxes;
+  }
+
+  public void setSrvMemPacTaxes( int srvMemPacTaxes ) {
+    this.srvMemPacTaxes = srvMemPacTaxes;
+  }
+
+  public double getPaymentAmt() {
     return paymentAmt;
   }
 
-  public void setPaymentAmt( int paymentAmt ) {
+  public void setPaymentAmt( double paymentAmt ) {
     this.paymentAmt = paymentAmt;
   }
 
