@@ -672,14 +672,14 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
 		  access = commonApiMapper.checkAccess(keyPrm);
 		  if(access == null){
-			  resultValue.put("success", false);
-			  resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED));
-			  resultValue.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED);
+			  respParam.put("success", false);
+			  respParam.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED));
+			  respParam.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED);
 		  }
 	      else if(CommonUtils.isEmpty(eComApiForm.getCustNric())){
-	        resultValue.put("success", false);
-	        resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-	        resultValue.put("message", "NRIC not found.");
+	    	  respParam.put("success", false);
+	    	  respParam.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+	    	  respParam.put("message", "NRIC not found.");
 	      }
 		  else {
 			  apiUserId = access.get("apiUserId").toString();
@@ -705,19 +705,21 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 					  respParam.put("custCatNm", custCat.get(0).get("custCatNm").toString());
 				  }
 			  }
-
-			  resultValue.put("respParam", respParam);
-
 //			  EComApiCustCatto custTierDto = EComApiCustCatto.create(respParam);
 //
 //			  ObjectMapper oMapper = new ObjectMapper();
 //			  respParam = oMapper.convertValue(custTierDto, Map.class);
 
 		  }
+
+		  resultValue.put("respParam", respParam);
+
 	  }catch(Exception e){
-		  resultValue.put("success", false);
-		  resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-		  resultValue.put("message", StringUtils.substring(e.getMessage(), 0, 4000));
+		  respParam.put("success", false);
+		  respParam.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		  respParam.put("message", StringUtils.substring(e.getMessage(), 0, 4000));
+
+		  resultValue.put("respParam", respParam);
 	  } finally{
 		  stopWatch.stop();
 		  respTm = stopWatch.toString();
