@@ -48,6 +48,8 @@ public class InstallFailJobRequestForm {
 
   private String turbLvl;
 
+  private String ntu;
+
   private String failLocCde;
 
   private String nxtCallDate;
@@ -66,7 +68,15 @@ public class InstallFailJobRequestForm {
 
   private String custMobileNo;
 
-  public String getTurbLvl() {
+  public String getNtu() {
+	return ntu;
+}
+
+public void setNtu(String ntu) {
+	this.ntu = ntu;
+}
+
+public String getTurbLvl() {
 	return turbLvl;
 }
 
