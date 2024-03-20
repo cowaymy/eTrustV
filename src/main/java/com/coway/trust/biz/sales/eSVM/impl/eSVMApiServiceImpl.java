@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.eSVM.impl;
 
+import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.ibm.icu.math.BigDecimal;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -529,26 +531,27 @@ public class eSVMApiServiceImpl
     //  param.setSrvMemPacTaxes( "0" );
     //}
     //else {
-      double srvMemPacAmt = 0;
-      double srvMemPacNetAmt = 0;
-      double cvtMemPacNetAmt = 0;
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacAmt() );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacNetAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacNetAmt() );
-      srvMemPacAmt = CommonUtils.intNvl( param.getSrvMemPacAmt() );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>CommonUtils.intNvl( param.getSrvMemPacAmt() )>>>>>>>>>>>>>>>>>>>>>> :: " +  CommonUtils.intNvl( param.getSrvMemPacAmt() ) );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>CommonUtils.intNvl( param.getSrvMemPacNetAmt() )>>>>>>>>>>>>>>>>>>>>>> :: " +  CommonUtils.intNvl( param.getSrvMemPacNetAmt() ) );
-      srvMemPacNetAmt = CommonUtils.intNvl( param.getSrvMemPacNetAmt() );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
-      srvMemPacNetAmt = srvMemPacAmt * 100;
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt100>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
-      cvtMemPacNetAmt = Math.round( srvMemPacNetAmt );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>cvtMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  cvtMemPacNetAmt );
-      srvMemPacNetAmt = cvtMemPacNetAmt / 100;
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
+      //double srvMemPacAmt = 0;
+      //double srvMemPacNetAmt = 0;
+      //double cvtMemPacNetAmt = 0;
+
+      BigDecimal srvMemPacAmt = BigDecimal.ZERO;
+      BigDecimal srvMemPacNetAmt = BigDecimal.ZERO;
+      BigDecimal cvtMemPacNetAmt = BigDecimal.ZERO;
+
+      srvMemPacAmt = CommonUtils.nvl( param.getSrvMemPacAmt() ) != "" ? new BigDecimal (param.getSrvMemPacAmt()) : BigDecimal.ZERO;
+      srvMemPacNetAmt = CommonUtils.nvl( param.getSrvMemPacNetAmt() ) != "" ? new BigDecimal (param.getSrvMemPacNetAmt()) : BigDecimal.ZERO;
+      srvMemPacNetAmt = srvMemPacAmt.multiply( new BigDecimal("100") );
+      cvtMemPacNetAmt = srvMemPacNetAmt.setScale( 2 );
+      srvMemPacNetAmt = srvMemPacAmt.divide( new BigDecimal("100") );
+
+      // srvMemPacAmt = CommonUtils.intNvl( param.getSrvMemPacAmt() );
+      // srvMemPacNetAmt = CommonUtils.intNvl( param.getSrvMemPacNetAmt() );
+      // srvMemPacNetAmt = srvMemPacAmt * 100;
+      // cvtMemPacNetAmt = Math.round( srvMemPacNetAmt );
+      // srvMemPacNetAmt = cvtMemPacNetAmt / 100;
       param.setSrvMemPacNetAmt( String.valueOf( srvMemPacNetAmt ) );
-      param.setSrvMemPacTaxes( String.valueOf( srvMemPacAmt - srvMemPacNetAmt ) );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> :: " +  String.valueOf( srvMemPacAmt - srvMemPacNetAmt ) );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacTaxes() );
+      param.setSrvMemPacTaxes( String.valueOf( srvMemPacAmt.subtract(srvMemPacNetAmt) ) );
     //}
     if ( !boolEurCert || !boolZeroRat ) {
       param.setSrvMemBSTaxes( "0" );
