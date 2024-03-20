@@ -338,5 +338,5 @@ public interface CommonMapper
 
     String getSstTaxRate();
 
-    List<EgovMap> getSstRelatedInfo();
+    EgovMap getSstRelatedInfo();
 }

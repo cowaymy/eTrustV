@@ -472,5 +472,5 @@ public interface CommonService
 
     int getSstTaxRate();
 
-    List<EgovMap> getSstRelatedInfo();
+    EgovMap getSstRelatedInfo();
 }

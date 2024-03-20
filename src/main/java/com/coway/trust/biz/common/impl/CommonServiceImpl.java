@@ -1541,7 +1541,7 @@ public class CommonServiceImpl
         return CommonUtils.intNvl( commonMapper.getSstTaxRate() );
     }
 
-    public List<EgovMap> getSstRelatedInfo()
+    public EgovMap getSstRelatedInfo()
     {
         // TODO Auto-generated method stub
         return commonMapper.getSstRelatedInfo();
