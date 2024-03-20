@@ -85,6 +85,7 @@ public class InstallationResultForm {
   private String aftPsi;
   private String aftLpm;
   private String turbLvl;
+  private int ntu;
   private String waterSrcType;
 
   private String chkCrtAs;
@@ -103,6 +104,14 @@ public class InstallationResultForm {
 
 
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
+public int getNtu() {
+	return ntu;
+}
+
+public void setNtu(int ntu) {
+	this.ntu = ntu;
+}
 
 public String getChkCrtAs() {
 	return chkCrtAs;
