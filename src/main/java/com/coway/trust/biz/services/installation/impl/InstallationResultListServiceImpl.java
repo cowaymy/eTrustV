@@ -1827,6 +1827,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("atchFileGrpId", CommonUtils.nvl(params.get("fileGroupKey")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
+    installResult.put("ntu", CommonUtils.nvl(params.get("ntu")).toString());
     //Added by keyi 20220727 Water Source Type Dropdown mobile
     installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
 
