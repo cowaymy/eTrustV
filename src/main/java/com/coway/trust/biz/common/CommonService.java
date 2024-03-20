@@ -471,4 +471,6 @@ public interface CommonService
     List<EgovMap> selectFilterList( Map<String, Object> params );
 
     int getSstTaxRate();
+
+    List<EgovMap> getSstRelatedInfo();
 }
