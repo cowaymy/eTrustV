@@ -503,6 +503,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("roomTemp", String.valueOf(params.get("roomTemp")));
       params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
       params.put("turbLvl", String.valueOf(params.get("turbLvl")));
+      params.put("ntu", String.valueOf(params.get("ntu")));
 
       params.put("customerType", String.valueOf(installResult.get("custType")));
       params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
