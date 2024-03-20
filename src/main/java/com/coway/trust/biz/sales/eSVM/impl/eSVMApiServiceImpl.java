@@ -532,6 +532,8 @@ public class eSVMApiServiceImpl
       double srvMemPacAmt = 0;
       double srvMemPacNetAmt = 0;
       double cvtMemPacNetAmt = 0;
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacAmt() );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacNetAmt() );
       srvMemPacAmt = CommonUtils.intNvl( param.getSrvMemPacAmt() );
       srvMemPacNetAmt = CommonUtils.intNvl( param.getSrvMemPacNetAmt() );
       logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
