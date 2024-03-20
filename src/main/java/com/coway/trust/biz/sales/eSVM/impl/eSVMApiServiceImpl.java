@@ -533,8 +533,10 @@ public class eSVMApiServiceImpl
       double srvMemPacNetAmt = 0;
       double cvtMemPacNetAmt = 0;
       logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacAmt() );
-      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacNetAmt() );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>param.getSrvMemPacNetAmt()>>>>>>>>>>>>>>>>>>>>>> :: " +  param.getSrvMemPacNetAmt() );
       srvMemPacAmt = CommonUtils.intNvl( param.getSrvMemPacAmt() );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>CommonUtils.intNvl( param.getSrvMemPacAmt() )>>>>>>>>>>>>>>>>>>>>>> :: " +  CommonUtils.intNvl( param.getSrvMemPacAmt() ) );
+      logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>CommonUtils.intNvl( param.getSrvMemPacNetAmt() )>>>>>>>>>>>>>>>>>>>>>> :: " +  CommonUtils.intNvl( param.getSrvMemPacNetAmt() ) );
       srvMemPacNetAmt = CommonUtils.intNvl( param.getSrvMemPacNetAmt() );
       logger.debug( "saveQuotationReq :: >>>>>>>>>>>>>>>>>>>srvMemPacNetAmt>>>>>>>>>>>>>>>>>>>>>> :: " +  srvMemPacNetAmt );
       srvMemPacNetAmt = srvMemPacAmt * 100;
