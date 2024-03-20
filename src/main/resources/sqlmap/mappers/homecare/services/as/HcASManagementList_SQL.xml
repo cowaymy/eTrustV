@@ -160,7 +160,7 @@
 	           S.AS_MEM_ID,
 	           NVL((SELECT CODE
                        FROM SYS0005M H
-                       WHERE H.BRNCH_ID = AS_BRNCH_ID), '-') BRNCH_CODE,
+                       WHERE H.BRNCH_ID = AS_BRNCH_ID AND H.STUS_ID = 1), '-') BRNCH_CODE,
 	           DSC_BRNCH_ID , <!-- Added for HA and HC branch merging. Hui Ding, 13/03/2024 -->
 	           DSC_BRNCH_CODE , <!-- Added for HA and HC branch merging. Hui Ding, 13/03/2024 -->
 	           S.AS_SLUTN_RESN_ID,
@@ -305,7 +305,7 @@
 	                  JOIN SYS0013M Extent5 ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
 	                  JOIN SAL0029D Extent6 ON Extent4.CUST_ID = Extent6.CUST_ID
 	                  LEFT JOIN ORG0001D Extent8 ON Extent1.AS_MEM_ID = Extent8.MEM_ID
-	                  JOIN SYS0005M Extent9 ON Extent9.BRNCH_ID = Extent8.BRNCH
+	                  JOIN SYS0005M Extent9 ON Extent9.BRNCH_ID = Extent8.BRNCH AND Extent9.STUS_ID = 1
 	                  LEFT JOIN (SELECT AS_RESULT_ID,
         	                                     AS_RESULT_NO,
         	                                     AS_TOT_AMT,
@@ -357,7 +357,7 @@
                      JOIN SAL0045D SAL ON SAL.SALES_ORD_ID = Extent4.SALES_ORD_ID
                      LEFT JOIN SAL0023D CA1 ON CA1.CUST_ADD_ID = SAL.ADD_ID
                      LEFT JOIN SYS0064M MA1 ON MA1.AREA_ID = CA1.AREA_ID
-                     LEFT JOIN SYS0005M DSC on DSC.CODE = MA1.CT_BRNCH_CODE <!-- Added for HA and HC Branch merging, Hui Ding, 13/03/2024 -->
+                     LEFT JOIN SYS0005M DSC on DSC.CODE = MA1.CT_BRNCH_CODE AND DSC.STUS_ID = 1 <!-- Added for HA and HC Branch merging, Hui Ding, 13/03/2024 -->
 	                 WHERE (8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID)
                      AND Extent9.TYPE_ID IN (42,43,5754,48)
                       <!-- AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
@@ -391,9 +391,9 @@
                          #{item}
                        </foreach>
                      </if>
-                     <if test="cmbbranchIdList2 != null and cmbbranchIdList2 != '' ">
+                     <if test="cmbbranchIdList3 != null and cmbbranchIdList3 != '' ">
                        AND DSC.BRNCH_ID IN
-                       <foreach item="item" collection="cmbbranchIdList2" index="index" open="(" separator="," close=")">
+                       <foreach item="item" collection="cmbbranchIdList3" index="index" open="(" separator="," close=")">
                          #{item}
                        </foreach>
                      </if>

@@ -61,7 +61,7 @@ var branchDs = [];
         //doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '6672', ' - ', '',   'cmbbranchId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'cmbbranchId2', 'M', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'cmbbranchId3', 'M', 'fn_multiCombo');
 
         /* $("#cmbbranchId").change(function() {
             doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
@@ -114,7 +114,7 @@ var branchDs = [];
           width: '100%'
       });
 
-      $('#cmbbranchId2').change(function() {
+      $('#cmbbranchId3').change(function() {
           //console.log($(this).val());
       }).multipleSelect({
           selectAll: true, // 전체선택
@@ -1202,7 +1202,7 @@ var branchDs = [];
       <td><select id="cmbbranchId" name="cmbbranchId" class="w100p">
       </select></td>
       <th scope="row"><spring:message code='service.title.DSCBranch'/></th>
-      <td><select id="cmbbranchId2" name="cmbbranchId2" class="w100p">
+      <td><select id="cmbbranchId3" name="cmbbranchId3" class="w100p">
       </select></td>
       <th scope="row"><spring:message code='home.lbl.dtCode'/></th>
       <td>
