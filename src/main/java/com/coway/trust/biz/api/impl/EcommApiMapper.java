@@ -37,5 +37,5 @@ public interface EcommApiMapper {
 
   EgovMap getCustStatusId(Map<String, Object> params);
 
-  EgovMap getCustomerCat(Map<String, Object> param);
+  List<EgovMap> getCustomerCat(Map<String, Object> param);
 }

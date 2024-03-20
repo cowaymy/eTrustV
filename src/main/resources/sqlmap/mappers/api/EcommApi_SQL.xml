@@ -223,7 +223,7 @@
 	SELECT IS_EXST_CUST FROM SAL0029D WHERE CUST_ID = #{custid}
 </select>
 
-    <select id="getCustomerCat" parameterType="Map" resultType="EgovMap">
+    <select id="getCustomerCat" parameterType="Map" resultType="egovMap">
     SELECT
             CUST.CUST_ID
             ,CUST_STATUS.CODE_NAME CUST_CAT_NM
