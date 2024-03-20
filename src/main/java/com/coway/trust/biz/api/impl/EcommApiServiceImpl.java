@@ -686,24 +686,32 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 			  reqPrm.put("apiUserId", apiUserId);
 			  reqPrm.put("custNric", eComApiForm.getCustNric());
 
-			  EgovMap custCat = ecommApiMapper.getCustomerCat(reqPrm);
+			  List<EgovMap> custCat = ecommApiMapper.getCustomerCat(reqPrm);
 
-			  respParam.put("custCatCode", custCat.get("custCatCode").toString());
-			  respParam.put("custCatNm", custCat.get("custCatNm").toString());
-			  respParam.put("success", true);
-			  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_SUCCESS);
-			  respParam.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+			  if(custCat.isEmpty()){
+				  respParam.put("success", false);
+				  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_INVALID);
+				  respParam.put("message", "Customer Not Found. Please contact admin or agent.");
+			  }else{
+				  if(custCat.size() > 1){
+					  respParam.put("success", false);
+					  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_INVALID);
+					  respParam.put("message", AppConstants.RESPONSE_DESC_DUP + ". Please contact admin or agent.");
+				  }else{
+					  respParam.put("success", true);
+					  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_SUCCESS);
+					  respParam.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+					  respParam.put("custCatCode", custCat.get(0).get("custCatCode").toString());
+					  respParam.put("custCatNm", custCat.get(0).get("custCatNm").toString());
+				  }
+			  }
 
 			  resultValue.put("respParam", respParam);
 
-			  EComApiCustCatto custTierDto = EComApiCustCatto.create(respParam);
-
-			  ObjectMapper oMapper = new ObjectMapper();
-			  respParam = oMapper.convertValue(custTierDto, Map.class);
-
-			  resultValue.put("success", true);
-		      resultValue.put("statusCode", String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
-		      resultValue.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+//			  EComApiCustCatto custTierDto = EComApiCustCatto.create(respParam);
+//
+//			  ObjectMapper oMapper = new ObjectMapper();
+//			  respParam = oMapper.convertValue(custTierDto, Map.class);
 
 		  }
 	  }catch(Exception e){
