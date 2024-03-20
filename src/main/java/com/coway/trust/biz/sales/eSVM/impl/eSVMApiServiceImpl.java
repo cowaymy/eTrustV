@@ -541,7 +541,7 @@ public class eSVMApiServiceImpl
 
       srvMemPacAmt = CommonUtils.nvl( param.getSrvMemPacAmt() ) != "" ? new BigDecimal (param.getSrvMemPacAmt()) : BigDecimal.ZERO;
       srvMemPacNetAmt = CommonUtils.nvl( param.getSrvMemPacNetAmt() ) != "" ? new BigDecimal (param.getSrvMemPacNetAmt()) : BigDecimal.ZERO;
-      srvMemPacNetAmt = srvMemPacAmt.multiply( new BigDecimal("100") );
+      srvMemPacNetAmt = srvMemPacNetAmt.multiply( new BigDecimal("100") );
       cvtMemPacNetAmt = srvMemPacNetAmt.setScale( 2 );
       srvMemPacNetAmt = srvMemPacAmt.divide( new BigDecimal("100") );
 
