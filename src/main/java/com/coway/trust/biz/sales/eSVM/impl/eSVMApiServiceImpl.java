@@ -42,6 +42,7 @@ import com.ibm.icu.math.BigDecimal;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import com.coway.trust.biz.common.CommonService;
 
 @Service("eSVMApiService")
 public class eSVMApiServiceImpl
@@ -51,6 +52,9 @@ public class eSVMApiServiceImpl
 
   @Resource(name = "eSVMApiMapper")
   private eSVMApiMapper eSVMApiMapper;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Autowired
   private LoginMapper loginMapper;
@@ -257,7 +261,7 @@ public class eSVMApiServiceImpl
         rtn.setSrvMemBsAmt( Integer.parseInt( smqDet.get( "srvMemBsAmt" ).toString() ) );
         rtn.setPaymentAmt( Double.parseDouble ( smqDet.get( "paymentAmt" ).toString() ) );
         rtn.setPackageTaxPrice( Double.parseDouble( smqDet.get( "srvMemPacTxs" ).toString() ) );
-        rtn.setTaxRate( CommonUtils.nvl( eSVMApiMapper.getTaxRate() ) );
+        rtn.setTaxRate( CommonUtils.nvl( commonService.getSstTaxRate() ) );
         // Get SMQ Filter details (SAL0094D)
         // EgovMap smqFilterDet = new EgovMap();
         // smqFilterDet = eSVMApiMapper.selectSmqFilterDetail(eSVMApiForm.createMap(param));
@@ -377,7 +381,7 @@ public class eSVMApiServiceImpl
         logger.debug( "promoId :: " + Integer.toString( promoId ) );
         param.setPromoId( promoId );
         rtn.setFilterPromoId( promoId );
-        String taxRate = CommonUtils.nvl( eSVMApiMapper.getTaxRate() );
+        String taxRate = CommonUtils.nvl( commonService.getSstTaxRate() );
         rtn.setTaxRate( taxRate );
         logger.debug( "========== getFilterChargeList_m ==========" );
         logger.debug( "param : {}", eSVMApiForm.createMap( param ) );
