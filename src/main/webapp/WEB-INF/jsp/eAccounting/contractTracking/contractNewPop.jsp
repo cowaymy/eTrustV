@@ -469,35 +469,34 @@ function fn_attachmentInsertUpdate(st) {
     }); */
 
     var formData = new FormData();
-    var noFile = true;
 
-    $.each(myFileCaches, function(n, v) {
-        formData.append(n, v.file);
-    });
-
-    if (noFile) {
-        console.log("no file.");
-    }
-
-
-    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
-    Common.ajaxFile("/eAccounting/contract/attachContractFileUpdate.do", formData, function(result) {
-        console.log(result);
-        $("#atchFileGrpId").val(result.data.fileGroupKey);
-
-        if(st == 'new') {
-        	fn_insertContractInfo(st);
+	if(myFileCaches[0] == null || myFileCaches[0] == ''){
+		if(st == 'new') {
+            fn_insertContractInfo(st);
         }else{
-        	fn_updateContractInfo(st);
+            fn_updateContractInfo(st);
         }
+	}else{
+		$.each(myFileCaches, function(n, v) {
+	        formData.append(n, v.file);
+	    });
 
-    });
+	    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+	    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+	    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
 
+	    Common.ajaxFile("/eAccounting/contract/attachContractFileUpdate.do", formData, function(result) {
+	        console.log(result);
+	        $("#atchFileGrpId").val(result.data.fileGroupKey);
 
+	        if(st == 'new') {
+	            fn_insertContractInfo(st);
+	        }else{
+	            fn_updateContractInfo(st);
+	        }
 
+	    });
+	}
 }
 
 function fn_updateContractInfo(st) {
