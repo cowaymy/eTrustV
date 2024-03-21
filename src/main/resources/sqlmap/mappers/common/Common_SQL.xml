@@ -2404,34 +2404,4 @@
        ORDER BY CODE_NAME
    </select>
 
-  <select id="getSstTaxRate" parameterType="Map" resultType="String">
-    SELECT TAX_RATE
-    FROM FCM0007C
-    WHERE INDUSTRY_CODE =
-    (
-    SELECT PARAM_VAL
-    FROM SYS0098M
-    WHERE MODULE = 'PAYMENT'
-    AND SUB_MODULE = 'PAYMENT'
-    AND PARAM_CODE = 'PAY_TAX'
-    AND SYSDATE BETWEEN EFF_DT AND EXP_DT
-    )
-  </select>
-
-  <select id="getSstRelatedInfo" parameterType="Map" resultType="egovMap">
-  SELECT S46.CODE_ID, F7.TAX_RATE, F7.TAX_CODE
-  FROM FCM0007C F7
-  JOIN SYS0046D S46 ON S46.CODE = F7.INDUSTRY_CODE
-  WHERE F7.INDUSTRY_CODE =
-  (
-  SELECT PARAM_VAL
-  FROM SYS0098M
-  WHERE MODULE = 'PAYMENT'
-  AND SUB_MODULE = 'PAYMENT'
-  AND PARAM_CODE = 'PAY_TAX'
-  AND SYSDATE BETWEEN EFF_DT AND EXP_DT
-  )
-  AND S46.INACT = 'N'
-  </select>
-
 </mapper>
