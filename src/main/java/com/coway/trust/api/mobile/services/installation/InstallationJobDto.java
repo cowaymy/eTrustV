@@ -291,7 +291,17 @@ public class InstallationJobDto {
 
   private BigDecimal longitude;
 
-  public String getCustMobileNo() {
+  private int ntu;
+
+  public int getNtu() {
+	return ntu;
+}
+
+public void setNtu(int ntu) {
+	this.ntu = ntu;
+}
+
+public String getCustMobileNo() {
 	return custMobileNo;
   }
 
