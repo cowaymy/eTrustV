@@ -609,7 +609,8 @@
             SRV_ORD_STK_ID,
             SRV_FREQ,
             SRV_PAC_PROMO_ID,
-            EMP_CHK
+            EMP_CHK,
+            SRV_MEM_PAC_SST
         ) VALUES (
             #{sal93Seq},
             #{srvSalesOrderId},
@@ -639,7 +640,8 @@
             #{srvOrderStkId},
             #{srvFreq},
             #{srvPacPromoId},
-            #{empChk}
+            #{empChk},
+            #{taxRate}
         )
     </insert>
 
