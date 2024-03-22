@@ -749,15 +749,20 @@
              , (
                 SELECT COUNT(1)
                   FROM (
-                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-                            , REQST_NO
-                            , REQST_NO_ITM
-                            , DELVRY_NO
-                            , DELVRY_NO_ITM
-                            , ITM_CODE
-                            , SCAN_STUS_CODE
-                            , IO_TYPE
+                       SELECT REQST_NO
+                                , REQST_NO_ITM
+                                , DELVRY_NO
+                                , DELVRY_NO_ITM
+                                , ITM_CODE
+                                , SCAN_STUS_CODE
+                                , IO_TYPE
                          FROM LOG0099D
+                         WHERE (SERIAL_NO, SCAN_NO) IN (
+                                                                                SELECT B.SERIAL_NO,
+                                                                                           MAX(B.SCAN_NO) AS MAX_SCAN_NO
+                                                                                FROM LOG0099D B
+                                                                                GROUP BY B.SERIAL_NO
+                                                                          )
                       ) Z1
                WHERE 1 = 1
                  AND Z1.DELVRY_NO = B.DELVRY_NO
@@ -765,14 +770,13 @@
                  AND Z1.ITM_CODE = B.ITM_CODE
                  AND Z1.SCAN_STUS_CODE = 'D'
                  AND Z1.IO_TYPE = 'O'
-                 AND Z1.RN = 1
-               ) AS SCAN_QTY
+             ) AS SCAN_QTY
              , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
           FROM LOG0054M A
-             , LOG0055D B
-             , LOG0047M C
-             , SYS0028M S28  -- LOCATION
-             , SYS0026M S26  -- ITEM
+                 , LOG0055D B
+                 , LOG0047M C
+                 , SYS0028M S28  -- LOCATION
+                 , SYS0026M S26  -- ITEM
          WHERE A.DELVRY_NO = B.DELVRY_NO
            AND B.REQST_NO = C.REQST_NO
            AND C.REQST_CDC_RDC  = S28.WH_LOC_ID

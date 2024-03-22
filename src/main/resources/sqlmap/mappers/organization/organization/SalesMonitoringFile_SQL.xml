@@ -115,7 +115,7 @@
             ELSE '' END CRS_CODE
           , POSITION
           , YEAR
-          ,TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
+          , TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
           , PRODUCTCTGRY
           , PRODUCTNAME
           , NVL(KEYIN_W1,0) KEYIN_W1
@@ -147,13 +147,14 @@
           , TARGETATMT_SHI
           , NVL(DIRECT_RECRUIT,0) DIRECT_RECRUIT
             FROM (
-               SELECT * FROM
+               SELECT *
+               FROM
                         (
-                        WITH TARGETCOLLECTION AS(
+                          WITH TARGETCOLLECTION AS(
                           SELECT
                                     DISTINCT PV_YEAR, PV_MONTH,MEM_ID,MAX(TARGETATMT_SHI)TARGETATMT_SHI
-                            FROM ORG0044T
-                            WHERE TARGETATMT_SHI IS NOT NULL
+                           FROM ORG0044T
+                           WHERE TARGETATMT_SHI IS NOT NULL
 
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
                             AND ORG_CODE = #{orgCode}
@@ -172,7 +173,8 @@
                          </if>
 
                          <if test="netSalesMonth != null and netSalesMonth != ''">
-                            AND TO_CHAR(PV_YEAR || PV_MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY')))
+                            AND PV_YEAR = EXTRACT( YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND PV_MONTH = EXTRACT( MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
                          </if>
                          GROUP BY PV_YEAR, PV_MONTH,MEM_ID
                         )
@@ -184,10 +186,10 @@
                                 , CASE WHEN A.ORG_CODE = ' ' THEN 'CRS0002' ELSE A.ORG_CODE END ORG_CODE
                                 , A.MEM_LVL
                                 , CASE WHEN A.MEM_LVL = 0 THEN 'SGM'
-                                WHEN A.MEM_LVL = 1 THEN 'GM'
-                                WHEN A.MEM_LVL = 2 THEN 'SM'
-                                WHEN A.MEM_LVL = 3 THEN 'HM'
-                                WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
+                                          WHEN A.MEM_LVL = 1 THEN 'GM'
+                                          WHEN A.MEM_LVL = 2 THEN 'SM'
+                                          WHEN A.MEM_LVL = 3 THEN 'HM'
+                                          WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
                                 , A.TYPE
                                 , A.YEAR
                                 , A.MONTH
@@ -252,7 +254,8 @@
                          </if>
 
                          <if test="netSalesMonth != null and netSalesMonth != ''">
-                            AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY')))
+                            AND A.YEAR = EXTRACT( YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND A.MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
                          </if>
                          <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                            AND B.STK_CTGRY_ID IN
@@ -271,8 +274,12 @@
                         )
                         PIVOT
                         (
-                        SUM(W1) AS W1,  SUM(W2) AS W2 , SUM(W3) AS W3, SUM(W4) AS W4, SUM(TOTAL_AMT) AS TOTAL_AMT
-                        FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES, '6606' AS ACTHP, '6607' AS RECRUIT, '6608' AS SHI)
+                              SUM(W1) AS W1,
+                              SUM(W2) AS W2 ,
+                              SUM(W3) AS W3,
+                              SUM(W4) AS W4,
+                              SUM(TOTAL_AMT) AS TOTAL_AMT
+                              FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES, '6606' AS ACTHP, '6607' AS RECRUIT, '6608' AS SHI)
                         )
              )
              WHERE ROWNUM <![CDATA[ <= ]]> 20000
