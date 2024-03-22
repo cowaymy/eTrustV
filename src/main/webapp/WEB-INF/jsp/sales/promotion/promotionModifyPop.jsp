@@ -1085,8 +1085,10 @@
     <td>
     <select id="promoSpecialDisId" name="promoSpecialDisId" class="w100p"></select>
     </td>
-    <th scope="row">Pre Book Promotion</th>
+    <th>
     <td>
+    <th scope="row" style="display:none;">Pre Book Promotion</th>
+    <td style="display:none;">
         <input id="preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
         <input id="preBookN" name="preBook" type="radio" value="0" /><span>No</span>
     </td>

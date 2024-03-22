@@ -6,8 +6,9 @@
         var _CUST_ID = '${preOrderInfo.custId}';
         var custId = '${preOrderInfo.custId}';
         var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
-        if(salesOrdIdOld != null || salesOrdIdOld != ''){
-        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+        	//checkExtradePreBookEligible(custId,salesOrdIdOld); //REMOVE PREBOOK
+        	$('#hiddenPreBook').val('0');
         }else{
         	$('#hiddenPreBook').val('0');
         }
@@ -172,7 +173,6 @@
                         ,promoId:'${preOrderInfo.promoId}'
                         ,voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        ,preBook : $('#hiddenPreBook').val()}
                         , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
@@ -185,7 +185,7 @@
                         ,srvPacId:'${preOrderInfo.srvPacId}'
                         ,voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        ,preBook : $('#hiddenPreBook').val()}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                        }, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
 
 

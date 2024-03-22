@@ -6,8 +6,9 @@
         var _CUST_ID = '${orderInfo.basicInfo.custId}';
         var custId = '${preOrderInfo.custId}';
         var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
-        if(salesOrdIdOld != null || salesOrdIdOld != ''){
-        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+        	//checkExtradePreBookEligible(custId,salesOrdIdOld); //REMOVE PREBOOK
+        	$('#hiddenPreBook').val('0');
         }else{
         	$('#hiddenPreBook').val('0');
         }
@@ -154,8 +155,7 @@
                 	    ,promoId:'${orderInfo.basicInfo.ordPromoId}'
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        ,preBook : $('#hiddenPreBook').val()}
-                	    ,'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                        },'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
                 {
@@ -168,7 +168,7 @@
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                               , voucherPromotion: voucherAppliedStatus
                               ,custStatus: $('#hiddenCustStatusId').val()
-                              ,preBook : $('#hiddenPreBook').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              }, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
 
                 	 }
                 	 else{
@@ -181,7 +181,7 @@
                               ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
                               , voucherPromotion: voucherAppliedStatus
                               ,custStatus: $('#hiddenCustStatusId').val()
-                              ,preBook : $('#hiddenPreBook').val()}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                              }, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 	 }
 
 

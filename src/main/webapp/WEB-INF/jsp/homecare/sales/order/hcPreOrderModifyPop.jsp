@@ -75,8 +75,9 @@ var userType = '${SESSION_INFO.userTypeId}';
 
     var custId = '${preOrderInfo.custId}';
     var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
-    if(salesOrdIdOld != null || salesOrdIdOld != ''){
-    	checkExtradePreBookEligible(custId,salesOrdIdOld);
+    if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+    	//checkExtradePreBookEligible(custId,salesOrdIdOld); //REMOVE PREBOOK
+    	checkOldOrderServiceExpiryMonth(custId,salesOrdIdOld);
     }else{
     	$('#hiddenPreBook').val('0');
     	$('#hiddenMonthExpired').val('0');
@@ -1548,7 +1549,6 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        isSrvPac : 'Y'
 		        , voucherPromotion: voucherAppliedStatus
 		        ,custStatus: $('#hiddenCustStatusId').val()
-		        ,preBook : $('#hiddenPreBook').val()
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    } else { // AppType : Rental
 		      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1560,7 +1560,6 @@ var userType = '${SESSION_INFO.userTypeId}';
 		        srvPacId : $('#srvPacId').val()
 		        , voucherPromotion: voucherAppliedStatus
 		        ,custStatus: $('#hiddenCustStatusId').val()
-		        ,preBook : $('#hiddenPreBook').val()
 		      }, '', 'ordPromo' + tagNum, 'S', 'voucherPromotionCheck'); //Common Code
 		    }
     }
@@ -1576,7 +1575,6 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        isSrvPac : 'Y'
 		    , voucherPromotion: voucherAppliedStatus
 		    ,custStatus: $('#hiddenCustStatusId').val()
-		    ,preBook : $('#hiddenPreBook').val()
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    } else { // AppType : Rental
 	      doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {
@@ -1588,7 +1586,6 @@ var userType = '${SESSION_INFO.userTypeId}';
 	        srvPacId : $('#srvPacId').val()
 	        , voucherPromotion: voucherAppliedStatus
 	        ,custStatus: $('#hiddenCustStatusId').val()
-	        ,preBook : $('#hiddenPreBook').val()
 	      }, '', 'ordPromo' + tagNum, 'S', ''); //Common Code
 	    }
     }
@@ -2005,7 +2002,6 @@ var userType = '${SESSION_INFO.userTypeId}';
         isSrvPac:('${preMatOrderInfo.appTypeId}' == 66 ? 'Y' : '')
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: $('#hiddenCustStatusId').val()
-        ,preBook : $('#hiddenPreBook').val()
       }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', 'voucherPromotionCheck'); //Common Code
 
 
@@ -2055,7 +2051,6 @@ var userType = '${SESSION_INFO.userTypeId}';
         isSrvPac:('${preFrmOrderInfo.appTypeId}' == 5764 ? 'Y' : '')
         , voucherPromotion: voucherAppliedStatus
         ,custStatus: $('#hiddenCustStatusId').val()
-        ,preBook : $('#hiddenPreBook').val()
       }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', 'voucherPromotionCheck'); //Common Code
 
       $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
@@ -2708,6 +2703,18 @@ var userType = '${SESSION_INFO.userTypeId}';
    			   $('#hiddenMonthExpired').val(result.monthExpired);
    			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
    			   }
+   	   });
+      }
+
+      function checkOldOrderServiceExpiryMonth(custId,salesOrdIdOld){
+   	   Common.ajax("GET", "/sales/order/checkOldOrderServiceExpiryMonth.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+   		    if(result == null){
+   			   $('#hiddenMonthExpired').val('0');
+   			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+   			}else{
+   			   $('#hiddenMonthExpired').val(result.monthExpired);
+   			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+   		    }
    	   });
       }
 </script>

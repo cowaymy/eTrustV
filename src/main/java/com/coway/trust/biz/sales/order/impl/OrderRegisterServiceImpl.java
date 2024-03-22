@@ -1953,9 +1953,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       EgovMap params = new EgovMap();
       params.put("custId", salesOrderMVO.getCustId());
       params.put("salesOrdIdOld", salesOrderMVO.getSalesOrdIdOld());
-      EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+      //EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
 
-    	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo == null){
+    	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02){
     		EgovMap map1 = new EgovMap();
     		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
     		map1.put("fromPeriod",2);
@@ -1969,61 +1969,61 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     		orderRegisterMapper.insertSalesSpecialPromotion(map1);
 
-    	//SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING (PRE-BOOK EXTRADE)
-    	}else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo != null){
-    	  int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));
-        int discWaive = CommonUtils.intNvl(preBookInfo.get("discWaive"));
-        String custVerifyStus = CommonUtils.nvl(preBookInfo.get("custVerifyStus"));
-        //int preBookPeriod = CommonUtils.intNvl(preBookInfo.get("preBookPeriod"));
-
-        if (custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
-          params.put("module", "PRE_BOOK");
-          params.put("subModule", "PRE_BOOK");
-          if (discWaive == 4) {
-            params.put("paramCode", "DISC_WAIVE_4MTH");
-          } else if (discWaive == 3) {
-            params.put("paramCode", "DISC_WAIVE_3MTH");
-          } else if (discWaive == 2) {
-            params.put("paramCode", "DISC_WAIVE_2MTH");
-          } else if (discWaive == 1) {
-            params.put("paramCode", "DISC_WAIVE_1MTH");
-          } else{
-            // NOT ELIGIBLE FOR PRE BOOK PROMOTION DISCOUNT
-            params.put("paramCode", "DISC_WAIVE_0MTH");
-          }
-          // GET DISCOUNT PERIOD FROM SYS0098M
-          int discountPeriod = commonMapper.selectSystemConfigurationParamValue(params);
-
-          if(discountPeriod != 0){
-          EgovMap params2 = new EgovMap();
-          params2.put("salesOrdId",salesOrderMVO.getSalesOrdId());
-          params2.put("fromPeriod",2);
-          params2.put("toPeriod",discountPeriod + 1);
-          params2.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
-          params2.put("percentage",50);
-          BigDecimal cnAmt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
-          params2.put("cnAmt",cnAmt);
-          params2.put("status",SalesConstants.STATUS_ACTIVE);
-          params2.put("userId",salesOrderMVO.getCrtUserId());
-
-          // INSERT INTO SAL0408D FOR RENT DISCOUNT
-          orderRegisterMapper.insertSalesSpecialPromotion(params2);
-
-          params.put("updUserId", salesOrderMVO.getCrtUserId());
-          params.put("stusId", SalesConstants.STATUS_COMPLETED);
-          params.put("preBookId", preBookId);
-          params.put("rem", "Complete extrade with New Sales Order No :" + salesOrderMVO.getSalesOrdNo());
-          // UPDATE SAL0404M STUS TO COMPLETE
-          int rtnCnt = 0;
-          rtnCnt = hcPreBookingOrderMapper.updateHcPreBookOrderStatus(params);
-
-          if (rtnCnt <= 0) { // not updated
-            throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Pre Book");
-          }
-        }
-       }
-
     	}
+    	//SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING (PRE-BOOK EXTRADE)
+//    	else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo != null){
+//    		int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));
+//            int discWaive = CommonUtils.intNvl(preBookInfo.get("discWaive"));
+//            String custVerifyStus = CommonUtils.nvl(preBookInfo.get("custVerifyStus"));
+//            //int preBookPeriod = CommonUtils.intNvl(preBookInfo.get("preBookPeriod"));
+//
+//            if (custVerifyStus.equals("Y") && salesOrderMVO.getAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL ) {
+//              params.put("module", "PRE_BOOK");
+//              params.put("subModule", "PRE_BOOK");
+//              if (discWaive == 4) {
+//                params.put("paramCode", "DISC_WAIVE_4MTH");
+//              } else if (discWaive == 3) {
+//                params.put("paramCode", "DISC_WAIVE_3MTH");
+//              } else if (discWaive == 2) {
+//                params.put("paramCode", "DISC_WAIVE_2MTH");
+//              } else if (discWaive == 1) {
+//                params.put("paramCode", "DISC_WAIVE_1MTH");
+//              } else{
+//                // NOT ELIGIBLE FOR PRE BOOK PROMOTION DISCOUNT
+//                params.put("paramCode", "DISC_WAIVE_0MTH");
+//              }
+//              // GET DISCOUNT PERIOD FROM SYS0098M
+//              int discountPeriod = commonMapper.selectSystemConfigurationParamValue(params);
+//
+//              if(discountPeriod != 0){
+//              EgovMap params2 = new EgovMap();
+//              params2.put("salesOrdId",salesOrderMVO.getSalesOrdId());
+//              params2.put("fromPeriod",2);
+//              params2.put("toPeriod",discountPeriod + 1);
+//              params2.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+//              params2.put("percentage",50);
+//              BigDecimal cnAmt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
+//              params2.put("cnAmt",cnAmt);
+//              params2.put("status",SalesConstants.STATUS_ACTIVE);
+//              params2.put("userId",salesOrderMVO.getCrtUserId());
+//
+//              // INSERT INTO SAL0408D FOR RENT DISCOUNT
+//              orderRegisterMapper.insertSalesSpecialPromotion(params2);
+//
+//              params.put("updUserId", salesOrderMVO.getCrtUserId());
+//              params.put("stusId", SalesConstants.STATUS_COMPLETED);
+//              params.put("preBookId", preBookId);
+//              params.put("rem", "Complete extrade with New Sales Order No :" + salesOrderMVO.getSalesOrdNo());
+//              // UPDATE SAL0404M STUS TO COMPLETE
+//              int rtnCnt = 0;
+//              rtnCnt = hcPreBookingOrderMapper.updateHcPreBookOrderStatus(params);
+//
+//              if (rtnCnt <= 0) { // not updated
+//                throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Pre Book");
+//              }
+//            }
+//           }
+//    	}
     }
   }
 
@@ -2576,5 +2576,19 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     params.put("memType", memType);
     }
     return orderRegisterMapper.selectPreBookConfigurationPerson(params);
+  }
+
+  @Override
+  public EgovMap checkOldOrderServiceExpiryMonth(Map<String, Object> params){
+	    int getOldOrderID = 0;
+	    EgovMap ordInfo = orderRegisterMapper.selectOldOrderId((String) params.get("salesOrdNo"));
+
+	    if (ordInfo != null) {
+	      getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
+	    }
+
+	    EgovMap orderExpiryMonth = orderRegisterMapper.selectSvcExpire(getOldOrderID);
+
+	    return orderExpiryMonth;
   }
 }

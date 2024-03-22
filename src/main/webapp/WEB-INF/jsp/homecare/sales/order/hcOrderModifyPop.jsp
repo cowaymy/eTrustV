@@ -46,8 +46,9 @@
 
     $(document).ready(function() {
 
-    	if(salesOrdIdOld != null || salesOrdIdOld != ''){
-        	checkExtradePreBookEligible(CUST_ID,salesOrdIdOld);
+    	if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+        	//checkExtradePreBookEligible(CUST_ID,salesOrdIdOld); //REMOVE PREBOOK
+        	checkOldOrderServiceExpiryMonth(CUST_ID,salesOrdIdOld);
         }else{
         	$('#hiddenPreBook').val('0');
         	$('#hiddenMonthExpired').val('0');
@@ -1355,7 +1356,6 @@
                         isSrvPac : 'Y'
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: basicInfo.custStatusId
-                        ,preBook : $('#hiddenPreBook').val()
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
                 } else
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
@@ -1368,7 +1368,6 @@
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: basicInfo.custStatusId
-                        ,preBook : $('#hiddenPreBook').val()
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
                  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
@@ -2889,6 +2888,17 @@ console.log(salesOrderMVO);
     	   });
        }
 
+    function checkOldOrderServiceExpiryMonth(custId,salesOrdIdOld){
+ 	   Common.ajax("GET", "/sales/order/checkOldOrderServiceExpiryMonth.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
+ 		    if(result == null){
+ 			   $('#hiddenMonthExpired').val('0');
+ 			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+ 			}else{
+ 			   $('#hiddenMonthExpired').val(result.monthExpired);
+ 			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+ 		    }
+ 	   });
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->

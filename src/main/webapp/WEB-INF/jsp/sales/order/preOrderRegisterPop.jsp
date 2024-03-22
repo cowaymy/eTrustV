@@ -2139,8 +2139,7 @@
       srvPacId : $('#srvPacId').val(),
       isSrvPac : isSrvPac,
       voucherPromotion : voucherAppliedStatus,
-      custStatus : $('#hiddenCustStatusId').val(),
-      preBook : $('#hiddenPreBook').val()
+      custStatus : $('#hiddenCustStatusId').val()
     }, '', 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
   }
 
@@ -2789,8 +2788,7 @@
       empInd : empInd,
       exTrade : exTrade,
       srvPacId : srvPacId,
-      custStatus : $('#hiddenCustStatusId').val(),
-      preBook : $('#hiddenPreBook').val()
+      custStatus : $('#hiddenCustStatusId').val()
     }, '', 'ordPromo', 'S', '');
   }
 

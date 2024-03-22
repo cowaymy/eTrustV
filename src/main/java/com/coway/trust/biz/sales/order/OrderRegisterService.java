@@ -101,4 +101,6 @@ public interface OrderRegisterService {
   EgovMap checkPreBookSalesPerson(Map<String, Object> params);
 
   EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
+
+  EgovMap checkOldOrderServiceExpiryMonth(Map<String, Object> params);
 }

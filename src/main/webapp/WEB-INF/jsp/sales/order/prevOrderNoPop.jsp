@@ -63,7 +63,7 @@
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
-                    $('#hiddenPreBook').val(RESULT.preBook);
+                    $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_5') {
@@ -74,14 +74,14 @@
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
-                    $('#hiddenPreBook').val(RESULT.preBook);
+                    $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     Common.alert('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_7') {
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
-                    $('#hiddenPreBook').val(RESULT.preBook);
+                    $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
                     //fn_popOrderDetail();
                     //$('#oldOrderCloseBtn').click();

@@ -889,4 +889,12 @@ public class OrderRegisterController {
     return ResponseEntity.ok(result);
   }
 
+
+  @RequestMapping(value = "/checkOldOrderServiceExpiryMonth.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkOldOrderServiceExpiryMonth(@RequestParam Map<String, Object> params) {
+
+    EgovMap result = orderRegisterService.checkOldOrderServiceExpiryMonth(params);
+
+    return ResponseEntity.ok(result);
+  }
 }

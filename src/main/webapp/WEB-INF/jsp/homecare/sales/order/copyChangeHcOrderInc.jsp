@@ -6,8 +6,9 @@
         var _CUST_ID = '${orderInfo.basicInfo.custId}';
         var custId = '${preOrderInfo.custId}';
         var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
-        if(salesOrdIdOld != null || salesOrdIdOld != ''){
-        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+        	//checkExtradePreBookEligible(custId,salesOrdIdOld); //REMOVE PREBOOK
+        	$('#hiddenPreBook').val('0');
         }else{
         	$('#hiddenPreBook').val('0');
         }
@@ -166,7 +167,7 @@
                              , promoId:'${orderInfo.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
                              ,custStatus: '${orderDetail.basicInfo.custStatusId}'
-                             ,preBook : $('#hiddenPreBook').val()}
+                             }
                              , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
                              , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
@@ -192,7 +193,7 @@
                              , promoId:'${orderInfo2.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
                              ,custStatus: '${orderDetail.basicInfo.custStatusId}'
-                             ,preBook : $('#hiddenPreBook').val()}
+                             }
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
@@ -250,7 +251,7 @@
                              , promoId:'${orderInfo2.basicInfo.ordPromoId}'
                              , voucherPromotion: voucherAppliedStatus
                              ,custStatus: '${orderDetail.basicInfo.custStatusId}'
-                             ,preBook : $('#hiddenPreBook').val()}
+                             }
                              , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
                              , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 

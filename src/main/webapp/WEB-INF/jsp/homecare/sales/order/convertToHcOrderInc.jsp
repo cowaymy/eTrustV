@@ -6,8 +6,9 @@
         var _CUST_ID = '${preOrderInfo.custId}';
         var custId = '${preOrderInfo.custId}';
         var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
-        if(salesOrdIdOld != null || salesOrdIdOld != ''){
-        	checkExtradePreBookEligible(custId,salesOrdIdOld);
+        if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
+        	//checkExtradePreBookEligible(custId,salesOrdIdOld); //REMOVE PREBOOK
+        	$('#hiddenPreBook').val('0');
         }else{
         	$('#hiddenPreBook').val('0');
         }
@@ -148,8 +149,7 @@
                         , promoId:'${preMatOrderInfo.promoId}'
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        ,preBook : $('#hiddenPreBook').val()}
-                        , '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
+                        }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
                     $('#promoDiscPeriodTp1').val('${preMatOrderInfo.promoDiscPeriodTp}');
@@ -174,8 +174,7 @@
                         , promoId:'${preFrmOrderInfo.promoId}'
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        ,preBook : $('#hiddenPreBook').val()}
-                        , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
+                        }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
                     $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
                     $('#orgOrdRentalFees2').val('${preFrmOrderInfo.discRntFee}');
