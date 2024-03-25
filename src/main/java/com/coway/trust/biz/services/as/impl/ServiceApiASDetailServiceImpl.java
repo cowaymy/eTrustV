@@ -27,6 +27,7 @@ import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.util.CommonUtils;
+import com.ibm.icu.text.DecimalFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -626,6 +627,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public ResponseEntity<AfterServiceResultDto> asDtResultProc(Map<String, Object> insApiresult) throws Exception {
+		DecimalFormat df = new DecimalFormat("#0.00");
 		String transactionId = "";
 		String serviceNo = "";
 
@@ -671,7 +673,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		List<Map<String, Object>> paramsDetailCvt = new ArrayList<Map<String, Object>>();
 
-        		long totPrc = 0;
+        		double totPrc = 0;
 
         		logger.debug("### AS PART SIZE : " + paramsDetail.size());
         		for (int x = 0; x < paramsDetail.size(); x++) {
@@ -770,9 +772,9 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			}
 
         			int qty = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
-        			long filterPrice = Long.parseLong(String.valueOf(paramsDetail.get(x).get("salesPrice")));
+        			double filterPrice = Double.parseDouble(df.format(String.valueOf(paramsDetail.get(x).get("salesPrice"))));
 
-        			long amt = 0;
+        			double amt = 0.00;
 
         			if (foc == 0) {
         				amt = qty * filterPrice;
@@ -900,12 +902,12 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("AS_ACSRS_AMT", 0);
         		params.put("AS_FILTER_AMT", totPrc);
 
-        		long totamt = 0;
+        		double totamt = 0.00;
         		try {
-        			totamt = Long.parseLong(String.valueOf(insApiresult.get("labourCharge")));
+        			totamt = Double.parseDouble(df.format(String.valueOf(insApiresult.get("labourCharge"))));
         		}
         		catch (Exception e) {
-        			totamt = 0;
+        			totamt = 0.00;
         		}
 
         		params.put("AS_TOT_AMT", totPrc + totamt);
@@ -1006,7 +1008,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("AS_SETL_TM", curTime);
 
         		if (insApiresult.get("labourCharge") != null) {
-        			params.put("AS_WORKMNSH", String.valueOf(insApiresult.get("labourCharge")));
+        			params.put("AS_WORKMNSH", Double.parseDouble(df.format(String.valueOf(insApiresult.get("labourCharge")))));
         		}
         		else {
         			params.put("AS_WORKMNSH", "");
