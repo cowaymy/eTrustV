@@ -97,6 +97,9 @@ public class InstallationResultForm {
 
   private String partnerCode;
   private String memCode;
+
+  private String type;
+  private int insAccPartId;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
   @ApiModelProperty(value = "partList")
@@ -113,6 +116,21 @@ public void setNtu(int ntu) {
 	this.ntu = ntu;
 }
 
+public String getType() {
+	return type;
+}
+
+public void setType(String type) {
+	this.type = type;
+}
+
+public int getInsAccPartId() {
+	return insAccPartId;
+}
+
+public void setInsAccPartId(int insAccPartId) {
+	this.insAccPartId = insAccPartId;
+}
 public String getChkCrtAs() {
 	return chkCrtAs;
 }
