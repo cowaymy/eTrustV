@@ -214,14 +214,20 @@ function fn_generateReport(){
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF.rpt');
             }
         }else if(miscType == 118) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+        	if( parseInt(year)*100 + parseInt(month) >= 202403){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST_202404.rpt');
+            }
+        	else if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF.rpt');
             }
         }else if(miscType == 119) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+        	if( parseInt(year)*100 + parseInt(month) >= 202403){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST_202404.rpt');
+            }
+            else if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST.rpt');
             }
             else{

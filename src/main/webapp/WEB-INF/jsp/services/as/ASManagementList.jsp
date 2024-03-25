@@ -1040,7 +1040,7 @@
         $("#reportForm #v_serviceNo").val(asrNo);
         $("#reportForm #v_invoiceType").val(118);
         //$("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
-        if(asmonth >= 04 && asyear >= 2024){
+        if(asmonth >= 03 && asyear >= 2024){
         	$("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
         }else{
             $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');

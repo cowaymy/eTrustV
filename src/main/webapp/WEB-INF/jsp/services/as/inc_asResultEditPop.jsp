@@ -27,6 +27,7 @@
   var asRslt;
   var ops;
   var matchMatDefCode = [];
+  var isSet = 0;
 
   $(document).ready(function() {
     createCFilterAUIGrid();
@@ -372,6 +373,7 @@
     $("#ddlDSCCode").val(result[0].asBrnchId);
     $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlDSCCodeText").val(result[0].c5);
+    isSet = 1;
 
     $("#ddlWarehouse").val(result[0].asWhId);
     $("#txtRemark").val(result[0].asResultRem);
@@ -549,7 +551,7 @@
       $("#ddlFailReason").attr("disabled", true);
     }
 
-    if (typeof myGridID !== 'undefined') {
+    if (typeof myGridID !== 'undefined' && isSet == 0) {
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
       $("#ddlCTCode").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
@@ -2653,7 +2655,7 @@
             </tr>
             <tr>
               <th scope="row"></th>
-              <td></td>
+              <td><i class="red_text"><spring:message code='sys.common.sst.msg.incld' /></i></td>
               <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
               <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' class='readonly' readonly /></td>
             </tr>

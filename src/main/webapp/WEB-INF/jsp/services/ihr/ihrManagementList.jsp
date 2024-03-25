@@ -908,7 +908,7 @@
         Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
         $("#reportForm #V_RESULTID").val(asrId);
-        if(asmonth >= 04 && asyear >= 2024){
+        if(asmonth >= 03 && asyear >= 2024){
         	$("#reportForm #reportFileName").val('/services/IHInvoice_2024.rpt');
         }else{
             $("#reportForm #reportFileName").val('/services/IHInvoice.rpt');

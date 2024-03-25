@@ -94,8 +94,11 @@ function fn_generateInvoice(){
                 }
                 break;
             case 118 :
-                if( parseInt(year)*100 + parseInt(month) >= 201809){
-                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+                if( parseInt(year)*100 + parseInt(month) >= 202403){
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
+                }
+                else if( parseInt(year)*100 + parseInt(month) >= 201809){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
                 }
                 else {
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF.rpt');

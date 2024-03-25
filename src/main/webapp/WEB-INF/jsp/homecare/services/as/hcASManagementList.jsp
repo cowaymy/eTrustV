@@ -997,7 +997,7 @@ var branchDs = [];
     var asrNo = selectedItems[0].item.c3;
     var asTotalAmt = selectedItems[0].item.c5;
     var asCrtDt = selectedItems[0].item.strAsCrtDt;
-    console.log("asCrtDt" + asCrtDt);
+    console.log("strAsCrtDt" + asCrtDt);
     var asmonth = Number(asCrtDt.substring(3, 5));
     var asyear = Number(asCrtDt.substring(6, 10));
     console.log("asmonth" + asmonth + "asyear" + asyear);
