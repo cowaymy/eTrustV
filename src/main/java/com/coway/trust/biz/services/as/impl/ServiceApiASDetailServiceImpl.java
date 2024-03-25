@@ -627,7 +627,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public ResponseEntity<AfterServiceResultDto> asDtResultProc(Map<String, Object> insApiresult) throws Exception {
-		DecimalFormat df = new DecimalFormat("#0.00");
 		String transactionId = "";
 		String serviceNo = "";
 
@@ -772,7 +771,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			}
 
         			int qty = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
-        			double filterPrice = Double.parseDouble(df.format(String.valueOf(paramsDetail.get(x).get("salesPrice"))));
+        			double filterPrice = Double.parseDouble(String.valueOf(paramsDetail.get(x).get("salesPrice")));
 
         			double amt = 0.00;
 
@@ -904,7 +903,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		double totamt = 0.00;
         		try {
-        			totamt = Double.parseDouble(df.format(String.valueOf(insApiresult.get("labourCharge"))));
+        			totamt = Double.parseDouble(String.valueOf(insApiresult.get("labourCharge")));
         		}
         		catch (Exception e) {
         			totamt = 0.00;
@@ -1008,7 +1007,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("AS_SETL_TM", curTime);
 
         		if (insApiresult.get("labourCharge") != null) {
-        			params.put("AS_WORKMNSH", Double.parseDouble(df.format(String.valueOf(insApiresult.get("labourCharge")))));
+        			params.put("AS_WORKMNSH", Double.parseDouble(String.valueOf(insApiresult.get("labourCharge"))));
         		}
         		else {
         			params.put("AS_WORKMNSH", "");
