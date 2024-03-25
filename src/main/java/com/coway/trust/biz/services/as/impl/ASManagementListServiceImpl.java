@@ -1,7 +1,7 @@
 package com.coway.trust.biz.services.as.impl;
 
 	import java.math.BigDecimal;
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +22,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
@@ -77,6 +78,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Resource(name = "asFromCodyApiServiceMapper")
   private AsFromCodyApiServiceMapper asFromCodyApiServiceMapper;
 
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Override
   public List<EgovMap> selectASManagementList(Map<String, Object> params) {
@@ -1113,6 +1116,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         pay32dMap.put("invcItmSerialNo", "");
         pay32dMap.put("invcItmQty", vo.getAsChargeQty());
         pay32dMap.put("invcItmUnitPrc", "");
+        pay32dMap.put("invcItmTaxCodeId", vo.getGstCode());
         pay32dMap.put("invcItmGstRate", vo.getGstRate());
         pay32dMap.put("invcItmGstTxs", vo.getSpareTaxes());
         pay32dMap.put("invcItmChrg", vo.getSpareCharges());
@@ -1559,13 +1563,23 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         double txtLabourCharge = Double.parseDouble((String) svc0004dmap.get("AS_WORKMNSH"));
         double t_SpareCharges = 0.00;
 
+        EgovMap sstInfo = commonService.getSstRelatedInfo();
+
+        if(sstInfo != null){
+        	package_TAXRATE = Integer.parseInt(sstInfo.get("taxRate").toString()) ;
+        }
+        
         if (package_TAXRATE > 0) {
-          t_SpareCharges = (txtLabourCharge * 100 / 106);
+            package_TAXCODE = Integer.parseInt(sstInfo.get("codeId").toString()) ;
+            DecimalFormat df = new DecimalFormat("#0.00");
+            double roundedNumber = Double.parseDouble(df.format((txtLabourCharge / (100 + package_TAXRATE)  )*100));
+            t_SpareCharges = roundedNumber;
         } else {
-          t_SpareCharges = txtLabourCharge;
+          t_SpareCharges = txtLabourCharge;//
         }
 
         double t_SpareTaxes = txtLabourCharge - t_SpareCharges;
+        t_SpareTaxes = Math.round(t_SpareTaxes * 100.0) / 100.0;
 
         LOGGER.debug("== LABOUR CHARGE = " + txtLabourCharge);
         LOGGER.debug("== SPARE PART CHARGE = " + t_SpareCharges);
@@ -1840,7 +1854,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       this.setPay0007dData(vewList, svc0004dmap, isBillIsPaid == true ? "1" : "0");
 
       if (labourTaxes > 0) {
-        svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "32");
+        svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", package_TAXCODE);//sys0046d
       } else {
         svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "0");
       }
@@ -2057,7 +2071,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     String NEW_AS_RESULT_ID = null;
     String NEW_AS_RESULT_NO = null;
 
-    int asTotAmt = 0;
+    double asTotAmt = 0;
 
     svc0004dmap = (LinkedHashMap) params.get("asResultM");
 
@@ -2092,7 +2106,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     EgovMap emp = (EgovMap) resultMList.get(0);
     svc0004dmap.put("AS_RESULT_ID", String.valueOf(emp.get("asResultId")));
     svc0004dmap.put("AS_RESULT_NO", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
-    asTotAmt = Integer.parseInt(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
+    asTotAmt = Double.parseDouble(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
 
     LOGGER.debug("== OLD SVC0004D'S RECORD : " + resultMList.toString());
     LOGGER.debug("== OLD TOTAL AMOUNT : " + asTotAmt);
@@ -3430,8 +3444,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
-  public List<EgovMap> selectLbrFeeChr() {
-    return ASManagementListMapper.selectLbrFeeChr();
+  public List<EgovMap> selectLbrFeeChr(Map<String, Object> params) {
+    return ASManagementListMapper.selectLbrFeeChr(params);
   }
 
   @Override

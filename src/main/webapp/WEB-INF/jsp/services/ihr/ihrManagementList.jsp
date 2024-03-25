@@ -98,6 +98,10 @@
           width : 200
         },
         {
+            dataField : "strAsCrtDt",
+            visible : false
+        },
+        {
           dataField : "asReqstDt",
           headerText : "<spring:message code='service.grid.ReqstDt'/>",
           editable : false,
@@ -884,6 +888,11 @@
     var AS_NO = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var asrId = selectedItems[0].item.asResultId;
+    var asCrtDt = selectedItems[0].item.strAsCrtDt;
+    console.log("asCrtDt" + asCrtDt);
+    var asmonth = Number(asCrtDt.substring(3, 5));
+    var asyear = Number(asCrtDt.substring(6, 10));
+    console.log("asmonth" + asmonth + "asyear" + asyear);
     var asTotalAmt = selectedItems[0].item.c5;
     var date = new Date();
     var month = date.getMonth() + 1;
@@ -899,7 +908,11 @@
         Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
         $("#reportForm #V_RESULTID").val(asrId);
-        $("#reportForm #reportFileName").val('/services/IHInvoice.rpt');
+        if(asmonth >= 04 && asyear >= 2024){
+        	$("#reportForm #reportFileName").val('/services/IHInvoice_2024.rpt');
+        }else{
+            $("#reportForm #reportFileName").val('/services/IHInvoice.rpt');
+        }
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #reportDownFileName").val("IHInvoice_" + day + month + date.getFullYear());
 

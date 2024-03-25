@@ -140,6 +140,7 @@
 	    SELECT S.AS_ID ,
 	           S.AS_NO ,
 	           S.AS_SO_ID ,
+	           TO_CHAR(S.AS_CRT_DT ,'DD/MM/YYYY') AS STR_AS_CRT_DT,
 	           S.AS_REQST_DT ,
 	           S.AS_APPNT_DT,
 	           S.AS_STUS_ID ,
@@ -1229,8 +1230,9 @@
 
     <select id="selectLbrFeeChr"  parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.selectLbrFeeChr] - KR.JIN */
-      SELECT CODE AS CODE_ID
-           , CODE_NAME AS CODE_NAME
+      SELECT
+            TO_NUMBER(CODE)*((#{taxRate}/100)+1) as CODE_ID,
+            TRIM(TO_CHAR(CODE*((#{taxRate}/100)+1),'9999999990.99')) as CODE_NAME
         FROM SYS0094M
        WHERE IND = 'HC_AS_LBR'
          AND DISB = '0'

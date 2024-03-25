@@ -1,6 +1,7 @@
 package com.coway.trust.biz.services.as.impl;
 
 	import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.services.as.InHouseRepairService;
@@ -52,6 +54,9 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "posMapper")
   private PosMapper posMapper;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Override
   public List<EgovMap> selInhouseList(Map<String, Object> params) {
@@ -146,8 +151,8 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
   }
 
   @Override
-  public List<EgovMap> selectLbrFeeChr() {
-    return inHouseRepairMapper.selectLbrFeeChr();
+  public List<EgovMap> selectLbrFeeChr(Map<String, Object> params) {
+    return inHouseRepairMapper.selectLbrFeeChr(params);
   }
 
   @Override
@@ -1124,6 +1129,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
         pay32dMap.put("invcItmSerialNo", "");
         pay32dMap.put("invcItmQty", vo.getAsChargeQty());
         pay32dMap.put("invcItmUnitPrc", "");
+        pay32dMap.put("invcItmTaxCodeId", vo.getGstCode());
         pay32dMap.put("invcItmGstRate", vo.getGstRate());
         pay32dMap.put("invcItmGstTxs", vo.getSpareTaxes());
         pay32dMap.put("invcItmChrg", vo.getSpareCharges());
@@ -1581,13 +1587,23 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
         double txtLabourCharge = Double.parseDouble((String) SVC0109Dmap.get("AS_WORKMNSH"));
         double t_SpareCharges = 0.00;
 
+        EgovMap sstInfo = commonService.getSstRelatedInfo();
+
+        if(sstInfo != null){
+        	package_TAXRATE = Integer.parseInt(sstInfo.get("taxRate").toString()) ;
+        }
+
         if (package_TAXRATE > 0) {
-          t_SpareCharges = (txtLabourCharge * 100 / 106);
+        	package_TAXCODE = Integer.parseInt(sstInfo.get("codeId").toString()) ;
+            DecimalFormat df = new DecimalFormat("#0.00");
+            double roundedNumber = Double.parseDouble(df.format((txtLabourCharge / (100 + package_TAXRATE)  )*100));
+            t_SpareCharges = roundedNumber;
         } else {
           t_SpareCharges = txtLabourCharge;
         }
 
         double t_SpareTaxes = txtLabourCharge - t_SpareCharges;
+        t_SpareTaxes = Math.round(t_SpareTaxes * 100.0) / 100.0;
 
         LOGGER.debug("== LABOUR CHARGE = " + txtLabourCharge);
         LOGGER.debug("== SPARE PART CHARGE = " + t_SpareCharges);
@@ -1860,7 +1876,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
       this.setPay0007dData(vewList, SVC0109Dmap, isBillIsPaid == true ? "1" : "0");
 
       if (labourTaxes > 0) {
-        SVC0109Dmap.put("AS_WORKMNSH_TAX_CODE_ID", "32");
+        SVC0109Dmap.put("AS_WORKMNSH_TAX_CODE_ID", package_TAXCODE);//sys0046d
       } else {
         SVC0109Dmap.put("AS_WORKMNSH_TAX_CODE_ID", "0");
       }
@@ -2025,7 +2041,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     String NEW_AS_RESULT_ID = null;
     String NEW_AS_RESULT_NO = null;
 
-    int asTotAmt = 0;
+    double asTotAmt = 0;
 
     SVC0109Dmap = (LinkedHashMap) params.get("asResultM");
 
@@ -2059,7 +2075,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     EgovMap emp = (EgovMap) resultMList.get(0);
     SVC0109Dmap.put("AS_RESULT_ID", String.valueOf(emp.get("asResultId")));
     SVC0109Dmap.put("AS_RESULT_NO", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
-    asTotAmt = Integer.parseInt(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
+    asTotAmt = Double.parseDouble(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
 
     LOGGER.debug("== OLD SVC0109D'S RECORD : " + resultMList.toString());
     LOGGER.debug("== OLD TOTAL AMOUNT : " + asTotAmt);

@@ -6,6 +6,7 @@
     SELECT S.AS_ID ,
            S.AS_NO ,
            S.AS_SO_ID ,
+           TO_CHAR(S.AS_CRT_DT ,'DD/MM/YYYY') STR_AS_CRT_DT,
            S.AS_REQST_DT ,
            S.AS_APPNT_DT,
            S.AS_STUS_ID ,
@@ -42,6 +43,7 @@
     FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
                            E.AS_NO AS_NO ,
                            E.ASSOID1 AS_SO_ID ,
+                           E.AS_CRT_DT AS_CRT_DT,
                            E.AS_REQST_DT AS_REQST_DT ,
                            E.AS_APPNT_DT AS_APPNT_DT,
                            E.AS_STUS_ID AS_STUS_ID ,
@@ -93,6 +95,7 @@
            FROM ( SELECT Extent1.AS_ID AS_ID ,
                          Extent1.AS_NO AS_NO ,
                          Extent1.AS_SO_ID ASSOID1 ,
+                         Extent1.AS_CRT_DT AS_CRT_DT,
                          Extent1.AS_REQST_DT AS_REQST_DT ,
                          Extent1.AS_APPNT_DT AS_APPNT_DT ,
                          Extent1.AS_STUS_ID AS_STUS_ID ,
@@ -1252,8 +1255,9 @@
   </select>
 
   <select id="selectLbrFeeChr"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
+    SELECT
+        TO_NUMBER(CODE)*((#{taxRate}/100)+1) as CODE_ID,
+        TRIM(TO_CHAR(CODE*((#{taxRate}/100)+1),'9999999990.99')) as CODE_NAME
     FROM SYS0094M
     WHERE IND = 'AS_LBR_CHR'
       AND DISB = '0'
@@ -3620,6 +3624,7 @@
                            INVC_ITM_SERIAL_NO,
                            INVC_ITM_QTY,
                            INVC_ITM_UNIT_PRC,
+                           INVC_ITM_TAX_CODE_ID,
                            INVC_ITM_GST_RATE,
                            INVC_ITM_GST_TXS,
                            INVC_ITM_CHRG,
@@ -3649,6 +3654,7 @@
                #{invcItmSerialNo},
                #{invcItmQty},
                #{invcItmUnitPrc},
+               #{invcItmTaxCodeId},
                #{invcItmGstRate},
                #{invcItmGstTxs},
                #{invcItmChrg},

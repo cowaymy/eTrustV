@@ -2491,7 +2491,7 @@ function SearchListAjax(obj){
       </tr>
       <tr>
        <th scope="row"></th>
-       <td></td>
+       <td><i class="red_text"><spring:message code='sys.common.sst.msg.incld' /></i></td>
        <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
        <td>
          <input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' class='readonly' readonly/></td>

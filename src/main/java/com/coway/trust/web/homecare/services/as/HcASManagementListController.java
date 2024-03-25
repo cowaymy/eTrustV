@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.services.as.HcASManagementListService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
@@ -71,6 +72,9 @@ public class HcASManagementListController {
 
     @Resource(name = "hsManualService")
     private HsManualService hsManualService;
+
+    @Resource(name = "commonService")
+    private CommonService commonService;
 
     @Autowired
     private SessionHandler sessionHandler;
@@ -373,8 +377,9 @@ public class HcASManagementListController {
     List<EgovMap> timePick = ASManagementListService.selectTimePick();
     model.addAttribute("timePick", timePick);
 
+    EgovMap sstInfo = commonService.getSstRelatedInfo();
     //List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
-    List<EgovMap> lbrFeeChr =  hcASManagementListService.selectLbrFeeChr();
+    List<EgovMap> lbrFeeChr =  hcASManagementListService.selectLbrFeeChr(sstInfo);
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
     // fltQty : 1
@@ -485,8 +490,9 @@ public class HcASManagementListController {
     List<EgovMap> timePick = ASManagementListService.selectTimePick();
     model.addAttribute("timePick", timePick);
 
+    EgovMap sstInfo = commonService.getSstRelatedInfo();
     //List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
-    List<EgovMap> lbrFeeChr =  hcASManagementListService.selectLbrFeeChr();
+    List<EgovMap> lbrFeeChr =  hcASManagementListService.selectLbrFeeChr(sstInfo);
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
     List<EgovMap> fltQty = ASManagementListService.selectFltQty();

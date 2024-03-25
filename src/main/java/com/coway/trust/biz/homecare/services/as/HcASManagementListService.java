@@ -56,7 +56,7 @@ public interface HcASManagementListService {
 
 	public int updateAssignCT(Map<String, Object> params) throws Exception;
 
-	public List<EgovMap> selectLbrFeeChr() throws Exception;
+	public List<EgovMap> selectLbrFeeChr(Map<String, Object> params) throws Exception;
 
 	// serial Y/N check
 	public String selectSerialYnSearch(Map<String, Object> params) throws Exception;

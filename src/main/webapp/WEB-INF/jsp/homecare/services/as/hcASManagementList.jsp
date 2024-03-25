@@ -207,6 +207,10 @@ var branchDs = [];
           width : 200
         },
         {
+            dataField : "strAsCrtDt",
+            visible : false
+        },
+        {
           dataField : "asReqstDt",
           headerText : "<spring:message code='service.grid.ReqstDt'/>",
           editable : false,
@@ -992,6 +996,11 @@ var branchDs = [];
     var asrId = selectedItems[0].item.asResultId;
     var asrNo = selectedItems[0].item.c3;
     var asTotalAmt = selectedItems[0].item.c5;
+    var asCrtDt = selectedItems[0].item.strAsCrtDt;
+    console.log("asCrtDt" + asCrtDt);
+    var asmonth = Number(asCrtDt.substring(3, 5));
+    var asyear = Number(asCrtDt.substring(6, 10));
+    console.log("asmonth" + asmonth + "asyear" + asyear);
     var date = new Date();
     var month = date.getMonth() + 1;
     var day = date.getDate();
@@ -1008,7 +1017,11 @@ var branchDs = [];
       } else {
         $("#reportForm #V_SERVICENO").val(asrNo);
         $("#reportForm #V_INVOICETYPE").val(118)
-        $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+        if(asmonth >= 03 && asyear >= 2024){
+            $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
+        }else{
+            $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+        }
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #reportDownFileName").val("ASInvoice_" + day + month + date.getFullYear());
 

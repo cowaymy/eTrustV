@@ -427,7 +427,8 @@ public class InstallationResultListController {
     model.put("orderDetail", orderDetail);
 
     // Added Labour charge (like AS) by Hui Ding, 2021-03-11
-    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    EgovMap sstInfo = commonService.getSstRelatedInfo();
+    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr(sstInfo);
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
   //List<EgovMap> fltPmtTyp = new ArrayList<EgovMap>();

@@ -174,8 +174,8 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
     }
 
     @Override
-    public List<EgovMap> selectLbrFeeChr() throws Exception{
-    	return hcASManagementListMapper.selectLbrFeeChr();
+    public List<EgovMap> selectLbrFeeChr(Map<String, Object> params) throws Exception{
+    	return hcASManagementListMapper.selectLbrFeeChr(params);
     }
 
     // serial Y/N check
@@ -350,7 +350,7 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
         String NEW_AS_RESULT_ID = null;
         String NEW_AS_RESULT_NO = null;
 
-        int asTotAmt = 0;
+        double asTotAmt = 0;
 
         svc0004dmap = (LinkedHashMap) params.get("asResultM");
 
@@ -384,7 +384,7 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
         EgovMap emp = (EgovMap) resultMList.get(0);
         svc0004dmap.put("AS_RESULT_ID", String.valueOf(emp.get("asResultId")));
         svc0004dmap.put("AS_RESULT_NO", (String) ((EgovMap) resultMList.get(0)).get("asResultNo"));
-        asTotAmt = Integer.parseInt(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
+        asTotAmt = Double.parseDouble(String.valueOf(((EgovMap) resultMList.get(0)).get("asTotAmt")));
 
         LOGGER.debug("== OLD SVC0004D'S RECORD : " + resultMList.toString());
         LOGGER.debug("== OLD TOTAL AMOUNT : " + asTotAmt);

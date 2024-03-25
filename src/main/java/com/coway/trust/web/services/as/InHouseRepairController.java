@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
@@ -60,6 +61,9 @@ public class InHouseRepairController {
   @Resource(name = "ASManagementListService")
   private ASManagementListService asManagementListService;
 
+  @Resource(name = "commonService")
+  private CommonService commonService;
+  
   @Autowired
   private MessageSourceAccessor messageAccessor;
 
@@ -140,7 +144,8 @@ public class InHouseRepairController {
     List<EgovMap> timePick = inHouseRepairService.selectTimePick();
     model.addAttribute("timePick", timePick);
 
-    List<EgovMap> lbrFeeChr = inHouseRepairService.selectLbrFeeChr();
+    EgovMap sstInfo = commonService.getSstRelatedInfo();
+    List<EgovMap> lbrFeeChr = inHouseRepairService.selectLbrFeeChr(sstInfo);
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
     List<EgovMap> fltQty = inHouseRepairService.selectFltQty();
@@ -393,7 +398,8 @@ public class InHouseRepairController {
     List<EgovMap> timePick = inHouseRepairService.selectTimePick();
     model.addAttribute("timePick", timePick);
 
-    List<EgovMap> lbrFeeChr = inHouseRepairService.selectLbrFeeChr();
+    EgovMap sstInfo = commonService.getSstRelatedInfo();
+    List<EgovMap> lbrFeeChr = inHouseRepairService.selectLbrFeeChr(sstInfo);
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
     List<EgovMap> fltQty = inHouseRepairService.selectFltQty();

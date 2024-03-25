@@ -326,7 +326,7 @@ public interface ASManagementListMapper {
 
   List<EgovMap> selectTimePick();
 
-  List<EgovMap> selectLbrFeeChr();
+  List<EgovMap> selectLbrFeeChr(Map<String, Object> params);
 
   List<EgovMap> selectFltQty();
 
