@@ -1007,7 +1007,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("AS_SETL_TM", curTime);
 
         		if (insApiresult.get("labourCharge") != null) {
-        			params.put("AS_WORKMNSH", Double.parseDouble(String.valueOf(insApiresult.get("labourCharge"))));
+        			params.put("AS_WORKMNSH", String.valueOf(insApiresult.get("labourCharge")));
         		}
         		else {
         			params.put("AS_WORKMNSH", "");
