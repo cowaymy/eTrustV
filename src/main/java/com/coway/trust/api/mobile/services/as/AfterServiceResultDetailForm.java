@@ -26,7 +26,7 @@ public class AfterServiceResultDetailForm {
 	private int exchangeId;
 
 	@ApiModelProperty(value = "filter price")
-	private int salesPrice;
+	private double salesPrice;
 
 	@ApiModelProperty(value = "필터 교체 수량")
 	private int filterChangeQty;
@@ -68,11 +68,11 @@ public class AfterServiceResultDetailForm {
 		this.exchangeId = exchangeId;
 	}
 
-	public int getSalesPrice() {
+	public double getSalesPrice() {
 		return salesPrice;
 	}
 
-	public void setSalesPrice(int salesPrice) {
+	public void setSalesPrice(double salesPrice) {
 		this.salesPrice = salesPrice;
 	}
 

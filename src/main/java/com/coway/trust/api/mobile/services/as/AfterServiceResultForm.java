@@ -27,7 +27,7 @@ public class AfterServiceResultForm {
   private String serviceNo;
 
   @ApiModelProperty(value = "0/60/120")
-  private int labourCharge;
+  private double labourCharge;
 
   @ApiModelProperty(value = "")
   private int defectId;
@@ -390,11 +390,11 @@ public String getAsUnmatchReason() {
     this.serviceNo = serviceNo;
   }
 
-  public int getLabourCharge() {
+  public double getLabourCharge() {
     return labourCharge;
   }
 
-  public void setLabourCharge(int labourCharge) {
+  public void setLabourCharge(double labourCharge) {
     this.labourCharge = labourCharge;
   }
 
