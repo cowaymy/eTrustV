@@ -104,7 +104,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		List<Map<String, Object>> paramsDetailCvt = new ArrayList<Map<String, Object>>();
 
-        		long totPrc = 0;
+        		double totPrc = 0.00;
 
         		logger.debug("### AS PART SIZE : " + paramsDetail.size());
         		for (int x = 0; x < paramsDetail.size(); x++) {
@@ -209,9 +209,9 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			}
 
         			int qty = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
-        			long filterPrice = Long.parseLong(String.valueOf(paramsDetail.get(x).get("salesPrice")));
+        			double filterPrice = Double.parseDouble(String.valueOf(paramsDetail.get(x).get("salesPrice")));
 
-        			long amt = 0;
+        			double amt = 0.00;
 
         			if (foc == 0) {
         				amt = qty * filterPrice;
@@ -322,12 +322,12 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("AS_ACSRS_AMT", 0);
         		params.put("AS_FILTER_AMT", totPrc);
 
-        		long totamt = 0;
+        		double totamt = 0.00;
         		try {
-        			totamt = Long.parseLong(String.valueOf(insApiresult.get("labourCharge")));
+        			totamt = Double.parseDouble(String.valueOf(insApiresult.get("labourCharge")));
         		}
         		catch (Exception e) {
-        			totamt = 0;
+        			totamt = 0.00;
         		}
 
         		params.put("AS_TOT_AMT", totPrc + totamt);
@@ -672,7 +672,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		List<Map<String, Object>> paramsDetailCvt = new ArrayList<Map<String, Object>>();
 
-        		double totPrc = 0;
+        		double totPrc = 0.00;
 
         		logger.debug("### AS PART SIZE : " + paramsDetail.size());
         		for (int x = 0; x < paramsDetail.size(); x++) {
