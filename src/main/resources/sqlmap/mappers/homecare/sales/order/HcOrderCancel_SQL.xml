@@ -424,7 +424,7 @@
 	               <if test="cancellationType == 'CAN'">
 	                     AND REQ_STUS_ID IN (1,19)
 	               </if>
-	               <if test="cancellationType == 'PR'">/
+	               <if test="cancellationType == 'PR'">
 	                     AND REQ_STUS_ID IN (32)
 	               </if>
             </if>
