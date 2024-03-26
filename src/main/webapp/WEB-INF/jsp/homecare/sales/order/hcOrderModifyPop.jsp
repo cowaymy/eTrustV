@@ -2892,10 +2892,8 @@ console.log(salesOrderMVO);
  	   Common.ajax("GET", "/sales/order/checkOldOrderServiceExpiryMonth.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
  		    if(result == null){
  			   $('#hiddenMonthExpired').val('0');
- 			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
  			}else{
  			   $('#hiddenMonthExpired').val(result.monthExpired);
- 			   fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
  		    }
  	   });
     }
