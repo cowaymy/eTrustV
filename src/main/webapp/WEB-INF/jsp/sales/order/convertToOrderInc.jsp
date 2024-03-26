@@ -173,7 +173,7 @@
                         ,promoId:'${preOrderInfo.promoId}'
                         ,voucherPromotion: voucherAppliedStatus
                         ,custStatus: $('#hiddenCustStatusId').val()
-                        , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                    	}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
                 {
