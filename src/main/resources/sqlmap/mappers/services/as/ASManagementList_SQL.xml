@@ -2842,8 +2842,8 @@
 
   <select id="selectLbrFeeChr"  parameterType="Map" resultType="egovMap">
     SELECT
-        TO_NUMBER(CODE)*((#{taxRate}/100)+1) as CODE_ID,
-        TRIM(TO_CHAR(CODE*((#{taxRate}/100)+1),'9999999990.99')) as CODE_NAME
+        TO_NUMBER(CODE)*((NVL(#{taxRate},0)/100)+1) as CODE_ID,
+        TRIM(TO_CHAR(CODE*((NVL(#{taxRate},0)/100)+1),'9999999990.99')) as CODE_NAME
     FROM SYS0094M
     WHERE IND = 'AS_LBR_CHR'
       AND DISB = '0'
