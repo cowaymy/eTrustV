@@ -198,7 +198,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
 		EgovMap getSstRelatedInfo = commonMapper.getSstRelatedInfo();
 
-		if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+		if(getSstRelatedInfo != null){
 
 	 		 package_TAXRATE  = Integer.parseInt(getSstRelatedInfo.get("taxRate").toString());
 	 		 package_TAXCODE = Integer.parseInt(getSstRelatedInfo.get("codeId").toString());
@@ -328,7 +328,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		     ////////////////////Invoice  sum////////////////////
 		     //totalCharges       =totalCharges +   packageCharge  -   ( packageCharge - (packageCharge  *  100 / 106)); -- without GST 6% edited by TPY 23/05/2018
 		     //totalTaxes          = totalTaxes   +   (packageCharge  -  (packageCharge  *  100 / 106)); -- without GST 6% edited by TPY 23/05/2018
-		     if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+		     if(getSstRelatedInfo != null){
 		    	 totalCharges = srvMemPacNetAmt;
 		    	 totalTaxes = Double.parseDouble(df.format(srvMemPacNetAmt * (package_TAXRATE / 100.00))) ;
     		 }else{
@@ -393,7 +393,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
       	    pay0016dMap.put("accBillTaxCodeId",package_TAXCODE);
       	    pay0016dMap.put("accBillTaxRate"   ,package_TAXRATE);
 
-      	    if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+      	    if(getSstRelatedInfo != null){
       	    	pay0016dMap.put("accBillTxsAmt",Double.toString(totalTaxes));
 
       	    }else{
@@ -553,7 +553,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
 	     if(hasBill  ==false){
 	  	     ////////////////Invoice////////////////////
-	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE, Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()));
+	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE,
+	 	    		getSstRelatedInfo != null ? Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) : 0 );
 	 	     ////////////////Invoice////////////////////
 	 	 }
 	}

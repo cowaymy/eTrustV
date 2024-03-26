@@ -242,7 +242,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		 }*/
 
 
-		int sstValue = Integer.parseInt(commonMapper.getSstTaxRate());
+		int sstValue = CommonUtils.intNvl(commonMapper.getSstTaxRate());
 		params.put("srvMemPacSst", sstValue);
 
 		if(sstValue > 0 ){
