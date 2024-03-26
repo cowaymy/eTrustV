@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
@@ -53,6 +54,9 @@ public class  MembershipQuotationController {
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
 
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 	@RequestMapping(value = "/membershipQuotationList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
@@ -74,6 +78,7 @@ public class  MembershipQuotationController {
 			model.put("deptCode", result.get("deptCode"));
 			model.put("memCode", result.get("memCode"));
 		}
+
 
 		return "sales/membership/membershipQuotationList";
 	}
@@ -107,6 +112,8 @@ public class  MembershipQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
+		int sstValue = commonService.getSstTaxRate();
+		model.put("sstValue", sstValue);
 
 		return "sales/membership/mNewQuotationPop";
 	}

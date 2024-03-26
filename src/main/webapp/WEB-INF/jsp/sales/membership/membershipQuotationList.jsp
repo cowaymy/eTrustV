@@ -9,7 +9,6 @@
     //AUIGrid 생성 후 반환 ID
     var  gridID;
 
-
     $(document).ready(function(){
         $("#table1").hide();
 
@@ -281,7 +280,6 @@ function fn_clear(){
 
 
 function fn_doPrint(){
-
 	var selectedItems = AUIGrid.getSelectedItems(gridID);
 
 	if(selectedItems ==""){
@@ -303,8 +301,17 @@ function fn_doPrint(){
 
 
     $("#V_QUOTID").val(selectedItems[0].item.quotId);
-    Common.report("reportInvoiceForm", option);
 
+		var today = new Date(selectedItems[0].item.crtDt);
+		var sstDate = new Date(2024, 3, 1); //yyyy,mm,dd -- mm need minus one
+
+		if(today >= sstDate){
+		     $("#reportFileName").val("/membership/MembershipQuotation_20240401.rpt");
+		}else{
+
+            $("#reportFileName").val("/membership/MembershipQuotation_20150401.rpt");
+		}
+        Common.report("reportInvoiceForm", option);
     }
 
     function fn_updateStus(){
@@ -327,7 +334,7 @@ function fn_doPrint(){
 
 
 <form id="reportInvoiceForm" method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/membership/MembershipQuotation_20150401.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_QUOTID" name="V_QUOTID"  value=""/>
 </form>

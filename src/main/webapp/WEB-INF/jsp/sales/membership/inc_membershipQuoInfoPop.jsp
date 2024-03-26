@@ -41,9 +41,9 @@
 			</tr>
 			<tr>
 				<th scope="row"><spring:message code="sal.text.totAmt" /></th>
-				<td><span id="inc_totAmt">${quotInfo.totAmt}</span></td>
+				<td><span id="inc_totAmt">${quotInfo.totAmt}</span><span class='sstText' style="font-style: italic;color: red;"> <spring:message code='sys.common.sst.msg.incld' /></span></td>
 				<th scope="row"><spring:message code="sal.text.pacAmt" /></th>
-				<td><span id="inc_pacAmt">${quotInfo.pacAmt}</span></td>
+				<td><span id="inc_pacAmt">${quotInfo.pacAmt}</span><span class='sstText' style="font-style: italic;color: red;"> <spring:message code='sys.common.sst.msg.incld' /></span></td>
 				<th scope="row"><spring:message code="sal.text.filAmt" /></th>
 				<td><span id="inc_filterAmt">${quotInfo.filterAmt}</span></td>
 			</tr>

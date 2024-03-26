@@ -107,8 +107,8 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                    $("#convt_dur").html(result[0].dur+" <spring:message code="sal.text.month" /> ");
 
                    $("#convt_package").html(result[0].pacDesc);
-                   $("#convt_totAmt").html(result[0].totAmt);
-                   $("#convt_pakAmt").html(result[0].pacAmt);
+                   $("#convt_totAmt").html(result[0].totAmt + "<span class='sstText' style='font-style: italic;color: red;'> <spring:message code='sys.common.sst.msg.incld' /></span>");
+                   $("#convt_pakAmt").html(result[0].pacAmt + "<span class='sstText' style='font-style: italic;color: red;'> <spring:message code='sys.common.sst.msg.incld' /></span>");
                    $("#convt_filterAmt").html(result[0].filterAmt);
                    $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
                    $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);

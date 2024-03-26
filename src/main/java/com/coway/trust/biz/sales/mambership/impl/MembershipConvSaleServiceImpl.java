@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.util.CommonUtils;
@@ -42,6 +44,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
 
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 
 
 
@@ -106,6 +110,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			 //master
 		     params.put("srvMemQuotId",  String.valueOf(sal0093dData.get("srvMemQuotId")));
 		     params.put("srvMemSalesMemId",  String.valueOf(sal0093dData.get("srvSalesMemId")));
+		     params.put("srvMemPacNetAmt",  String.valueOf(sal0093dData.get("srvMemPacNetAmt")));
 			 o = membershipConvSaleMapper.SAL0095D_insert(params) ;
 			/////////////////////////////////////////////////////
 
@@ -187,8 +192,21 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
  		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
 
  		 //int package_TAXRATE  =6; -- without GST 6% edited by TPY 23/05/2018
- 		 int package_TAXRATE  =0;
- 		 int package_TAXCODE = 32;
+
+		int package_TAXRATE = 0;
+		int package_TAXCODE = 0;
+
+		EgovMap getSstRelatedInfo = commonMapper.getSstRelatedInfo();
+
+		if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+
+	 		 package_TAXRATE  = Integer.parseInt(getSstRelatedInfo.get("taxRate").toString());
+	 		 package_TAXCODE = Integer.parseInt(getSstRelatedInfo.get("codeId").toString());
+
+		}else{
+	 		 package_TAXRATE  =0;
+	 		 package_TAXCODE = 32;
+		}
 
  		 //int  filter_TAXRATE  =6; -- without GST 6% edited by TPY 23/05/2018
  		 int  filter_TAXRATE  =0;
@@ -245,6 +263,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
          double srvMemBsAmt   =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemBsAmt")));
          double srvMemPacAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacAmt")));
+         double srvMemPacNetAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacNetAmt")));
 
          if(srvMemBsAmt> 0 && (srvMemBsAmt >srvMemPacAmt)){
         	filterCharge  =  (srvMemBsAmt - srvMemPacAmt);
@@ -304,13 +323,18 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			  int  pay0007dMapCnt =membershipConvSaleMapper.PAY0007D_insert(pay0007dMap);
 		     logger.debug("package pay0007dMapCnt  ==>"+pay0007dMapCnt);
 
-
+		     DecimalFormat df = new DecimalFormat("#0.00");
 
 		     ////////////////////Invoice  sum////////////////////
 		     //totalCharges       =totalCharges +   packageCharge  -   ( packageCharge - (packageCharge  *  100 / 106)); -- without GST 6% edited by TPY 23/05/2018
 		     //totalTaxes          = totalTaxes   +   (packageCharge  -  (packageCharge  *  100 / 106)); -- without GST 6% edited by TPY 23/05/2018
-		     totalCharges       =totalCharges +   packageCharge  -   ( packageCharge - (packageCharge));
-		     totalTaxes          = totalTaxes   +   (packageCharge  -  (packageCharge));
+		     if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+		    	 totalCharges = srvMemPacNetAmt;
+		    	 totalTaxes = Double.parseDouble(df.format(srvMemPacNetAmt * (package_TAXRATE / 100.00))) ;
+    		 }else{
+    			 totalCharges = totalCharges +   packageCharge  -   ( packageCharge - (packageCharge));
+    			 totalTaxes = totalTaxes   +   (packageCharge  -  (packageCharge));
+    		 }
 		     totalAmountDue  = totalAmountDue + packageCharge ;
 		     ////////////////////Invoice  sum////////////////////
 
@@ -369,11 +393,16 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
       	    pay0016dMap.put("accBillTaxCodeId",package_TAXCODE);
       	    pay0016dMap.put("accBillTaxRate"   ,package_TAXRATE);
 
-      	    if(package_TAXRATE ==6){
-              	  //pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); -- without GST 6% edited by TPY 23/05/2018
-      	    	pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge)));
+      	    if(Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) > 0){
+      	    	pay0016dMap.put("accBillTxsAmt",Double.toString(totalTaxes));
+
       	    }else{
-      	    	pay0016dMap.put("accBillTxsAmt","0");
+      	    	 if(package_TAXRATE ==6){
+                 	  //pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); -- without GST 6% edited by TPY 23/05/2018
+         	    	pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge)));
+         	    }else{
+         	    	pay0016dMap.put("accBillTxsAmt","0");
+         	    }
       	    }
 
       	    pay0016dMap.put("accBillAcctCnvr","0");
@@ -524,7 +553,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
 	     if(hasBill  ==false){
 	  	     ////////////////Invoice////////////////////
-	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE );
+	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE, Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()));
 	 	     ////////////////Invoice////////////////////
 	 	 }
 	}
@@ -540,7 +569,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 											 int package_TAXRATE ,
 											 int package_TAXCODE ,
 											 int  filter_TAXRATE ,
-											 int  filter_TAXCODE){
+											 int  filter_TAXCODE,
+											 int sstValue){
 
 
 
@@ -601,7 +631,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	     logger.debug("in Invoice master   Cnt  ==>"+masterCnt);
 
 
-     	     //detail
+      	     //detail
      	     if(masterCnt >0){
          	         double srvMemBsAmt   =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemBsAmt")));
          	         double srvMemPacAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacAmt")));
@@ -626,8 +656,14 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
   		    		     //pay32dMap.put("invcItmGstTxs", Double.toString( srvMemPacAmt - ( srvMemPacAmt  * 100 / 106))); - without GST 6% edited by TPY 23/05/2018
   		    		     //pay32dMap.put("invcItmChrg",   Double.toString(srvMemPacAmt  * 100 / 106 ) ); - without GST 6% edited by TPY 23/05/2018
 
-  		    		     pay32dMap.put("invcItmGstTxs", Double.toString( srvMemPacAmt - ( srvMemPacAmt )));
-		    		     pay32dMap.put("invcItmChrg",   Double.toString(srvMemPacAmt));
+
+	    				if(sstValue > 0){
+	    					pay32dMap.put("invcItmGstTxs", Double.toString(totalTaxes));
+			    		    pay32dMap.put("invcItmChrg",   Double.toString(totalCharges));
+	    				}else{
+	    					pay32dMap.put("invcItmGstTxs", Double.toString( srvMemPacAmt - ( srvMemPacAmt )));
+			    		    pay32dMap.put("invcItmChrg",   Double.toString(srvMemPacAmt));
+	    				}
 
   		    		     pay32dMap.put("invcItmAmtDue",Double.toString(srvMemPacAmt) );
   		    		     pay32dMap.put("invcItmAdd1", "");

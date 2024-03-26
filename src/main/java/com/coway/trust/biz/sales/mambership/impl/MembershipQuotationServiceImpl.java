@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
@@ -42,6 +44,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Resource(name = "membershipConvSaleMapper")
 	private MembershipConvSaleMapper membershipConvSaleMapper;
+
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 
 	@Override
 	public List<EgovMap> quotationList(Map<String, Object> params) {
@@ -237,39 +242,65 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		 }*/
 
 
-		if(!isVerifyGSTEURCertificate ){
+		int sstValue = Integer.parseInt(commonMapper.getSstTaxRate());
+		params.put("srvMemPacSst", sstValue);
 
-    		 	//params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
-    		 	params.put("srvMemPacAmt", params.get("srvMemPacAmt"));
-    		 	params.put("srvMemPacNetAmt", params.get("srvMemPacNetAmt"));
-    		    params.put("srvMemPacTaxes", "0");
-		/*
-//		 }else if(verifyGSTZeroRateLocation){
-
-			 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
-			    params.put("srvMemPacTaxes", "0");
-			    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
-			    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
-			    params.put("srvMemBSTaxes", "0");*/
-
-		 }else {
+		if(sstValue > 0 ){
+			 DecimalFormat df = new DecimalFormat("#0.00");
 
 			 double   srvMemPacAmt =  0;
 			 double   srvMemPacNetAmt  =  0;
 			 double   cvtMemPacNetAmt = 0;
 
-			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
-			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
+			 srvMemPacAmt 	  	= params.containsKey("srvMemPacAmt") ? Double.parseDouble(params.get("srvMemPacAmt").toString()) : 0.00;
+			 srvMemPacNetAmt 	= params.containsKey("srvMemPacNetAmt") ? Double.parseDouble(params.get("srvMemPacNetAmt").toString()): 0.00;
 
-			 //srvMemPacNetAmt = (srvMemPacAmt  * 100 / 106  ) *100; -- without GST 6% edited by TPY 23/05/2018
-			 srvMemPacNetAmt = srvMemPacAmt  * 100 ;
-			 cvtMemPacNetAmt = Math.round(srvMemPacNetAmt);
+			 srvMemPacAmt 	= Double.parseDouble(df.format((srvMemPacAmt)));
+			 srvMemPacNetAmt 	= Double.parseDouble(df.format((srvMemPacNetAmt)));
 
-			 srvMemPacNetAmt  = cvtMemPacNetAmt / 100;
+	         double taxAmt = Double.parseDouble(df.format((srvMemPacAmt - srvMemPacNetAmt)));
 
+			 params.put("srvMemPacAmt", srvMemPacAmt);
 			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
-			 params.put("srvMemPacTaxes", srvMemPacAmt - srvMemPacNetAmt);
-		 }
+			 params.put("srvMemPacTaxes", taxAmt);
+
+
+		}else{
+
+    			if(!isVerifyGSTEURCertificate ){
+
+        		 	//params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
+        		 	params.put("srvMemPacAmt", params.get("srvMemPacAmt"));
+        		 	params.put("srvMemPacNetAmt", params.get("srvMemPacNetAmt"));
+        		    params.put("srvMemPacTaxes", "0");
+    		/*
+    //		 }else if(verifyGSTZeroRateLocation){
+
+    			 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
+    			    params.put("srvMemPacTaxes", "0");
+    			    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
+    			    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
+    			    params.put("srvMemBSTaxes", "0");*/
+
+    		 }else {
+
+    			 double   srvMemPacAmt =  0;
+    			 double   srvMemPacNetAmt  =  0;
+    			 double   cvtMemPacNetAmt = 0;
+
+    			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
+    			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
+
+    			 //srvMemPacNetAmt = (srvMemPacAmt  * 100 / 106  ) *100; -- without GST 6% edited by TPY 23/05/2018
+    			 srvMemPacNetAmt = srvMemPacAmt  * 100 ;
+    			 cvtMemPacNetAmt = Math.round(srvMemPacNetAmt);
+
+    			 srvMemPacNetAmt  = cvtMemPacNetAmt / 100;
+
+    			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
+    			 params.put("srvMemPacTaxes", srvMemPacAmt - srvMemPacNetAmt);
+    		 }
+		}
 
 
 		if(!isVerifyGSTEURCertificate || !verifyGSTZeroRateLocation){

@@ -40,7 +40,7 @@
                T.DUR,
                T.REM,
                T.VALID_DT,
-               T.CRT_DT,
+               TO_DATE(TO_CHAR(T.CRT_DT,'YYYY/MM/DD'),'YYYY-MM-DD') CRT_DT,
                T.CRT_USER_ID,
                T.QUOT_STUS_ID,
                T.QUOT_STUS_CODE,
@@ -778,7 +778,8 @@
 							                      SRV_ORD_STK_ID,
 							                      SRV_FREQ,
 							                      SRV_PAC_PROMO_ID,
-							                      EMP_CHK)
+							                      EMP_CHK,
+							                      SRV_MEM_PAC_SST)
 			  VALUES   (             #{SAL0093D_SEQ},
 			                               #{srvSalesOrderId},
 								            #{srvMemQuotNo}  ,
@@ -807,7 +808,8 @@
 								            #{srvOrderStkId},
 								            #{srvFreq},
 								            #{srvPacPromoId} ,
-								            #{empChk}
+								            #{empChk},
+								            #{srvMemPacSst}
 			            )
 
          </insert>

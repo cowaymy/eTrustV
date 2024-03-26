@@ -13,6 +13,9 @@
     color:#22741C;
 }
 </style>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
+
 <script type="text/javaScript" language="javascript">
 
 var oListGridID;
@@ -23,6 +26,7 @@ var resultSrvconfigObject;
 var resultInstallationObject;
 var defaultcTPackage = "9";
 
+var SSTValue = "${sstValue}";
 
 $(document).ready(function(){
 
@@ -564,42 +568,91 @@ $(document).ready(function(){
 
 						if (result[0].promoDiscType == "0") { //%
 
-							$("#txtPackagePrice").html("");
-							// $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
+	                        if(Number(SSTValue) > 0){
+								$("#txtPackagePrice").html("");
+	                            // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
-							//var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
-							var t1 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
-							var t2 = 0;
-							if ($("#eurCertYn").val() == "N") {
-								//t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
-								t2 = (t1 - promoAddDiscPrc)
-								$("#hiddenNomalPrice").val(Number(Math.floor(t1)));
-							}
-							else {
-								t2 = t1 - promoAddDiscPrc;
-							}
-							var t3 = Math.floor(t2);
-							$("#txtPackagePrice").html(Number(t3));
+	                            //var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+                                var t1 = FormUtil.roundNumber(((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100)),2);
 
+
+	                            var t2 = 0;
+	                            if ($("#eurCertYn").val() == "N") {
+	                                //t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
+	                                t2 = (t1 - promoAddDiscPrc)
+	                                $("#hiddenNomalPrice").val(Number(FormUtil.roundNumber(t1,2)));
+
+	                            }
+	                            else {
+	                                t2 = t1 - promoAddDiscPrc;
+	                            }
+
+	                            var t3 = FormUtil.roundNumber(t2,2);
+	                            $("#txtPackagePrice").html(Number(t3));
+
+                            }else{ // else of fn_SstStart
+
+                            	$("#txtPackagePrice").html("");
+                                // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
+
+                                //var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+                                var t1 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
+
+                                var t2 = 0;
+                                if ($("#eurCertYn").val() == "N") {
+                                    //t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
+                                    t2 = (t1 - promoAddDiscPrc)
+                                    $("#hiddenNomalPrice").val(Number(Math.floor(t1)));
+
+                                }
+                                else {
+                                    t2 = t1 - promoAddDiscPrc;
+                                }
+
+                                var t3 = Math.floor(t2);
+                                $("#txtPackagePrice").html(Number(t3));
+                            }
 						}
 						else if (result[0].promoDiscType == "1") { //amt
 
-							var t1 = ((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc;
-							var t2 = 0;
+	                        if(Number(SSTValue) > 0){
+	                            var t1 = ((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc;
+	                            var t2 = 0;
 
-							if ($("#eurCertYn").val() == "N") {
-								//t2 = t1 *100 / 106; -- without GST 6% edited by TPY 23/05/2018
-								t2 = t1;
-								$("#hiddenNomalPrice").val(Number(Math.floor(t1)));
-							}
-							else {
-								t2 = t1;
-							}
-							var t3 = Math.floor(t2);
+	                            if ($("#eurCertYn").val() == "N") {
+	                                //t2 = t1 *100 / 106; -- without GST 6% edited by TPY 23/05/2018
+	                                t2 = t1;
+	                                $("#hiddenNomalPrice").val(Number(FormUtil.roundNumber(t1,2)));
 
-							$("#txtPackagePrice").html(Number(t3));
-							// $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  )));
+	                            }
+	                            else {
+	                                t2 = t1;
+	                            }
 
+	                            var t3 = FormUtil.roundNumber(t2,2);
+
+	                            $("#txtPackagePrice").html(Number(t3));
+	                            // $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  )));
+                            }else{
+
+                                var t1 = ((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc;
+                                var t2 = 0;
+
+                                if ($("#eurCertYn").val() == "N") {
+                                    //t2 = t1 *100 / 106; -- without GST 6% edited by TPY 23/05/2018
+                                    t2 = t1;
+
+                                    $("#hiddenNomalPrice").val(Number(Math.floor(t1)));
+                                }
+                                else {
+                                    t2 = t1;
+                                }
+
+                                var t3 = Math.floor(t2);
+
+                                $("#txtPackagePrice").html(Number(t3));
+                                // $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  )));
+                            }
 						}
 						else {
 							Common.alert('<spring:message code="sal.alert.promDiscountTypeError" /> ');
@@ -642,7 +695,13 @@ $(document).ready(function(){
 			else {
 
 				var pacYear = parseInt($("#DUR").val(), 10) / 12;
-				var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+
+	            if(Number(SSTValue) > 0){
+					var pacPrice = FormUtil.roundNumber(((result.packageInfo.srvMemItmPrc * (100 + Number(SSTValue)) /100) * pacYear) , 2);
+				}else{
+					var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+				}
+
 				$("#zeroRatYn").val(result.packageInfo.zeroRatYn);
 				$("#eurCertYn").val(result.packageInfo.eurCertYn);
 
@@ -657,8 +716,14 @@ $(document).ready(function(){
 				if ($("#eurCertYn").val() == "N") {
 					//$("#txtPackagePrice").html(Math.floor(pacPrice *100/106)); -- without GST 6% edited by TPY 23/05/2018
 					//$("#hiddenPacOriPrice").val(Math.floor(pacPrice *100/106)); -- without GST 6% edited by TPY 23/05/2018
-					$("#txtPackagePrice").html(Math.floor(pacPrice));
-					$("#hiddenPacOriPrice").val(Math.floor(pacPrice));
+
+	                if(Number(SSTValue) > 0){
+                    	$("#txtPackagePrice").html(FormUtil.roundNumber(pacPrice, 2));
+                        $("#hiddenPacOriPrice").val(FormUtil.roundNumber(pacPrice, 2));
+                    }else{
+	                     $("#txtPackagePrice").html(Math.floor(pacPrice));
+	                     $("#hiddenPacOriPrice").val(Math.floor(pacPrice));
+                    }
 				}
 				else {
 					$("#txtPackagePrice").html(pacPrice);
@@ -1440,7 +1505,14 @@ $(document).ready(function(){
 		$("#srvMemQuotNo").val("");
 		$("#srvMemPacId").val();
 
-		$("#srvMemPacNetAmt").val($("#txtPackagePrice").text()); //
+	    if(Number(SSTValue) > 0){
+	    	var pacPriceB4Sst = FormUtil.roundNumber((Number($("#txtPackagePrice").text()) / (100 + Number(SSTValue)) * 100 ) , 2);
+
+        	$("#srvMemPacNetAmt").val(pacPriceB4Sst);  // nomalAmt
+        }else{
+        	$("#srvMemPacNetAmt").val($("#txtPackagePrice").text()); //
+        }
+
 		//$("#srvMemPacNetAmt").val($("#hiddenNomalPrice").text());  // nomalAmt
 		//$("#srvMemPacAmt").val($("#hiddenNomalPrice").val()); //srvMemPacNetAmt
 		$("#srvMemPacAmt").val($("#txtPackagePrice").text()); //srvMemPacNetAmt
@@ -1464,7 +1536,7 @@ $(document).ready(function(){
 		else
 			$("#srvPromoId").val(0);
 
-		$("#srvQuotCustCntId").val($("SAVE_CUST_CNTC_ID").val());
+		$("#srvQuotCustCntId").val($("#SAVE_CUST_CNTC_ID").val());
 		$("#srvMemQty").val(1);
 		$("#srvSalesMemId").val($("#hiddenSalesPersonID").val());
 		$("#srvMemId").val(0);
@@ -1730,6 +1802,7 @@ $(document).ready(function(){
     <input type="text" name="ORD_DATE"  id="ORD_DATE"/>
     <input type="text" name="MBSH_EXP_DT"  id="MBSH_EXP_DT"/>
     <input type="text" name="CUST_TYPE_ID" id="CUST_TYPE_ID"/>
+    <input type="text" name="SAVE_CUST_CNTC_ID"  id="SAVE_CUST_CNTC_ID"/>
 
     <!--Type of Package  -->
     <input type="text" name="SELPACKAGE_ID"  id="SELPACKAGE_ID"/>
@@ -2062,7 +2135,11 @@ $(document).ready(function(){
                     <select   id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
             </td>
             <th scope="row"><spring:message code="sal.text.packPrice" /></th>
-            <td  colspan="3"><span id='txtPackagePrice'></span></td>
+            <td  colspan="3">
+                    <span id='txtPackagePrice'></span>
+                    <span class='sstText' style="font-style: italic;color: red;"> <spring:message code='sys.common.sst.msg.incld' /></span>
+            </td>
+
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.text.filterPromo" /></th>
