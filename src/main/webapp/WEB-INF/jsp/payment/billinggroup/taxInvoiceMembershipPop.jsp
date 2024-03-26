@@ -77,7 +77,7 @@ function fn_generateInvoice(){
         var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
         var reportDownFileName = ""; //Added by keyi 20211013
 
-        if(parseInt(year)*100 + parseInt(month) >= 202401){
+        if(parseInt(year)*100 + parseInt(month) >= 202404){
         	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_3.rpt');
         }else if(parseInt(year)*100 + parseInt(month) >= 201809){
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
