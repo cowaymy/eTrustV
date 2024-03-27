@@ -553,8 +553,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
 	     if(hasBill  ==false){
 	  	     ////////////////Invoice////////////////////
-	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE,
-	 	    		getSstRelatedInfo != null ? Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) : 0 );
+	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,package_TAXRATE ,  package_TAXCODE ,  filter_TAXRATE , filter_TAXCODE);
+//	 	    		getSstRelatedInfo != null ? Integer.parseInt(getSstRelatedInfo.get("taxRate").toString()) : 0 );
 	 	     ////////////////Invoice////////////////////
 	 	 }
 	}
@@ -570,8 +570,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 											 int package_TAXRATE ,
 											 int package_TAXCODE ,
 											 int  filter_TAXRATE ,
-											 int  filter_TAXCODE,
-											 int sstValue){
+											 int  filter_TAXCODE
+											){
 
 
 
@@ -658,7 +658,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
   		    		     //pay32dMap.put("invcItmChrg",   Double.toString(srvMemPacAmt  * 100 / 106 ) ); - without GST 6% edited by TPY 23/05/2018
 
 
-	    				if(sstValue > 0){
+	    				if(package_TAXRATE > 0){
 	    					pay32dMap.put("invcItmGstTxs", Double.toString(totalTaxes));
 			    		    pay32dMap.put("invcItmChrg",   Double.toString(totalCharges));
 	    				}else{
