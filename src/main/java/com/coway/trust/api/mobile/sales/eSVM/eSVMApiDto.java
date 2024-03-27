@@ -235,11 +235,11 @@ public class eSVMApiDto {
 
   private String empChk;
 
-  private int srvMemPacAmt;
+  private double srvMemPacAmt;
 
   private int srvMemBsAmt;
 
-  private int srvMemPacTaxes;
+  private double srvMemPacTaxes;
 
   private double paymentAmt;
 
@@ -1095,11 +1095,11 @@ public class eSVMApiDto {
     this.empChk = empChk;
   }
 
-  public int getSrvMemPacAmt() {
+  public double getSrvMemPacAmt() {
     return srvMemPacAmt;
   }
 
-  public void setSrvMemPacAmt( int srvMemPacAmt ) {
+  public void setSrvMemPacAmt( double srvMemPacAmt ) {
     this.srvMemPacAmt = srvMemPacAmt;
   }
 
@@ -1111,11 +1111,11 @@ public class eSVMApiDto {
     this.srvMemBsAmt = srvMemBsAmt;
   }
 
-  public int getSrvMemPacTaxes() {
+  public double getSrvMemPacTaxes() {
     return srvMemPacTaxes;
   }
 
-  public void setSrvMemPacTaxes( int srvMemPacTaxes ) {
+  public void setSrvMemPacTaxes( double srvMemPacTaxes ) {
     this.srvMemPacTaxes = srvMemPacTaxes;
   }
 

@@ -257,7 +257,7 @@ public class eSVMApiServiceImpl
         rtn.setEmpChk( smqDet.get( "empChk" ).toString() );
         // rtn.setSrvPacPromoId(smqDet.get("srvPacPromoId"));
         // rtn.setSrvPromoId(smqDet.get("srvPromoId"));
-        rtn.setSrvMemPacAmt( Integer.parseInt( smqDet.get( "srvMemPacAmt" ).toString() ) );
+        rtn.setSrvMemPacAmt( Double.parseDouble( smqDet.get( "srvMemPacAmt" ).toString() ) );
         rtn.setSrvMemBsAmt( Integer.parseInt( smqDet.get( "srvMemBsAmt" ).toString() ) );
         rtn.setPaymentAmt( Double.parseDouble ( smqDet.get( "paymentAmt" ).toString() ) );
         rtn.setPackageTaxPrice( Double.parseDouble( smqDet.get( "srvMemPacTxs" ).toString() ) );
