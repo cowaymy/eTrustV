@@ -237,11 +237,13 @@ public class eSVMApiDto {
 
   private double srvMemPacAmt;
 
-  private int srvMemBsAmt;
-
   private double srvMemPacTaxes;
 
+  private double srvMemPacNetAmt;
+
   private double paymentAmt;
+
+  private int srvMemBsAmt;
 
   private String packageDesc;
 
@@ -1317,4 +1319,12 @@ public class eSVMApiDto {
   public void setUpdDt( String updDt ) {
     this.updDt = updDt;
   }
+
+public double getSrvMemPacNetAmt() {
+	return srvMemPacNetAmt;
+}
+
+public void setSrvMemPacNetAmt(double srvMemPacNetAmt) {
+	this.srvMemPacNetAmt = srvMemPacNetAmt;
+}
 }
