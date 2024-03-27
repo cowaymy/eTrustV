@@ -381,12 +381,13 @@ public class eSVMApiServiceImpl
         logger.debug( "promoId :: " + Integer.toString( promoId ) );
         param.setPromoId( promoId );
         rtn.setFilterPromoId( promoId );
-        String taxRate = CommonUtils.nvl( commonService.getSstTaxRate() );
-        rtn.setTaxRate( taxRate );
         logger.debug( "========== getFilterChargeList_m ==========" );
         logger.debug( "param : {}", eSVMApiForm.createMap( param ) );
         rtn.setFilterCharge( this.getFilterChargeList_m( eSVMApiForm.createMap( param ) ) );
       }
+
+      String taxRate = CommonUtils.nvl( commonService.getSstTaxRate() );
+      rtn.setTaxRate( taxRate );
     }
     return rtn;
   }
