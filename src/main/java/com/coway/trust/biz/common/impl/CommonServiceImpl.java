@@ -1543,7 +1543,19 @@ public class CommonServiceImpl
 
     public EgovMap getSstRelatedInfo()
     {
+    	EgovMap sstInfo = commonMapper.getSstRelatedInfo();
+
+    	if (sstInfo != null && !sstInfo.isEmpty()){
+    		return sstInfo;
+    	} else {
+    		sstInfo = new EgovMap(); // default a 0 value set to avoid calculation burst.
+    		sstInfo.put("codeId", "32"); //SR	Supply - Goods And Services Tax (Malaysia)
+    		sstInfo.put("taxRate", "0");
+    		sstInfo.put("taxCode", "SR"); //SR	Supply - Goods And Services Tax (Malaysia)
+
+    		return sstInfo;
+    	}
         // TODO Auto-generated method stub
-        return commonMapper.getSstRelatedInfo();
+       // return commonMapper.getSstRelatedInfo();
     }
 }
