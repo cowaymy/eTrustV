@@ -13,7 +13,7 @@
            S.AS_NO ,
            S.AS_SO_ID ,
            S.AS_REQST_DT ,
-           TO_CHAR(S.AS_CRT_DT ,'DD/MM/YYYY') AS STR_AS_CRT_DT,
+           TO_CHAR(S.AS_SETL_DT ,'DD/MM/YYYY') AS STR_AS_SETL_DT,
            S.AS_APPNT_DT,
            S.AS_STUS_ID ,
            S.AS_TYPE_ID ,

@@ -207,7 +207,7 @@ var branchDs = [];
           width : 200
         },
         {
-            dataField : "strAsCrtDt",
+            dataField : "strAsSetlDt",
             visible : false
         },
         {
@@ -996,10 +996,10 @@ var branchDs = [];
     var asrId = selectedItems[0].item.asResultId;
     var asrNo = selectedItems[0].item.c3;
     var asTotalAmt = selectedItems[0].item.c5;
-    var asCrtDt = selectedItems[0].item.strAsCrtDt;
-    console.log("strAsCrtDt" + asCrtDt);
-    var asmonth = Number(asCrtDt.substring(3, 5));
-    var asyear = Number(asCrtDt.substring(6, 10));
+    var asSeltDt = selectedItems[0].item.strAsSetlDt;
+    console.log("strAsSetlDt" + asSeltDt);
+    var asmonth = Number(asSeltDt.substring(3, 5));
+    var asyear = Number(asSeltDt.substring(6, 10));
     console.log("asmonth" + asmonth + "asyear" + asyear);
     var date = new Date();
     var month = date.getMonth() + 1;

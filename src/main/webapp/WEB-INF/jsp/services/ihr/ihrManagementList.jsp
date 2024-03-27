@@ -98,7 +98,7 @@
           width : 200
         },
         {
-            dataField : "strAsCrtDt",
+            dataField : "strAsSetlDt",
             visible : false
         },
         {
@@ -888,10 +888,10 @@
     var AS_NO = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var asrId = selectedItems[0].item.asResultId;
-    var asCrtDt = selectedItems[0].item.strAsCrtDt;
-    console.log("asCrtDt" + asCrtDt);
-    var asmonth = Number(asCrtDt.substring(3, 5));
-    var asyear = Number(asCrtDt.substring(6, 10));
+    var asSeltDt = selectedItems[0].item.strAsSetlDt;
+    console.log("asSeltDt" + asSeltDt);
+    var asmonth = Number(asSeltDt.substring(3, 5));
+    var asyear = Number(asSeltDt.substring(6, 10));
     console.log("asmonth" + asmonth + "asyear" + asyear);
     var asTotalAmt = selectedItems[0].item.c5;
     var date = new Date();
