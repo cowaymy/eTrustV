@@ -126,9 +126,13 @@
   <select id="installationResultList" parameterType="Map" resultType="egovMap">
   WITH INS AS (
                   SELECT
-                        DISTINCT INSTALL_ENTRY_NO
+                        DISTINCT A.INSTALL_ENTRY_NO
                   FROM SAL0046D A
                   JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                  LEFT JOIN sal0046d ie ON ie.sales_ord_id = b.sales_ord_id
+                  AND ie.call_entry_id <![CDATA[<> ]]>0
+                  JOIN sys0026m stk ON stk.stk_id = ie.install_stk_id
+
                   WHERE B.BNDL_ID IS NULL
 
                   <if test="installNo != null and installNo != ''">
@@ -173,6 +177,10 @@
 
                 <if test="orderDate != null and orderDate != ''">
                     AND B.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
+                </if>
+
+                <if test="product != null and product != ''">
+                    AND STK.STK_CODE = #{product}
                 </if>
 
           )
