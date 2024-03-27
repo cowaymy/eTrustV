@@ -506,6 +506,45 @@ FROM (
                 GROUP BY COURS_MEM_ID
 
           )
+
+          SELECT
+    memberid,
+    membercode,
+    membertype,
+    name,
+    nric,
+    status,
+    updated,
+    codename,
+    status_name,
+    brnch_id,
+    ct_sub_grp,
+    trainee_type,
+    position_name,
+    test_result,
+    approved_by,
+    branch,
+    crt_dt,
+    address,
+    grp_code,
+    last_act_dt,
+    vaccine_status,
+    reason_id,
+    neo_pro_status,
+    hp_type,
+    atch_file_grp_id,
+    uniform_size,
+    muslimah_scarft,
+    inner_type,
+    emrgcy_cntc_name,
+    emrgcy_cntc_no,
+    emrgcy_cntc_init,
+    trm_rejoin,
+    email,
+    join_dt
+
+FROM
+    (
           SELECT
           Extent1.MEM_ID MemberID,
           Extent1.MEM_CODE MemberCode,
@@ -564,7 +603,13 @@ FROM (
           Extent1.EMRGCY_CNTC_INIT,
           Extent1.TRM_REJOIN,
           Extent1.EMAIL,
-          TO_CHAR(Extent1.JOIN_DT,'DD-MM-YYYY') JOIN_DT
+          TO_CHAR(Extent1.JOIN_DT,'DD-MM-YYYY') JOIN_DT,
+          RANK()
+            OVER(
+                ORDER BY
+                    extent1.mem_code
+            ) rank_no
+
           FROM ORG0001D Extent1
             JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
             JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID
@@ -663,7 +708,8 @@ FROM (
       </when>
     </choose>
   </if> -->
-  ORDER BY Extent1.MEM_CODE ASC
+ ) ORDER BY rank_no ASC
+ <!--  Extent1.MEM_CODE ASC -->
 </select>
 
 <!-- CYC select HP Applicant -->
