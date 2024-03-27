@@ -161,11 +161,21 @@ var fileGroupKey ="";
         }
         console.log(myFileCaches);
       });
+
+      $('#attch9').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[9] != null){
+              delete myFileCaches[9];
+          }else if(file != null){
+            myFileCaches[9] = {file:file, contentsType:"attch9"};
+          }
+          console.log(myFileCaches);
+       });
   });
 
   function fn_saveInstall() {
+	var totalUpdPhoto = 0;
     if (fn_validate()) {
-
     	var hidDismantle = $("input[type=radio][name=dismantle]:checked").val();
         $("#hidDismantle").val(hidDismantle);
 
@@ -441,6 +451,9 @@ var fileGroupKey ="";
       }else if(name == "attch8"){
           $("#attch8").val("");
           $('#attch8').change();
+      }else if(name == "attch9"){
+          $("#attch9").val("");
+          $('#attch9').change();
       }
    }
 
@@ -752,6 +765,19 @@ var fileGroupKey ="";
                   <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
                 </label>
                 <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #9</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch9" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch9")'><spring:message code='sys.btn.remove' /></a></span>
               </div>
             </td>
           </tr>

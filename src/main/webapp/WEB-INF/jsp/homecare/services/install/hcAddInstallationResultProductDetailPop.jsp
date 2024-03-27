@@ -257,6 +257,16 @@ var myFileCaches = {};
             }
             console.log(myFileCaches);
           });
+
+          $('#attch9').change(function(evt) {
+              var file = evt.target.files[0];
+              if(file == null && myFileCaches[9] != null){
+                  delete myFileCaches[9];
+              }else if(file != null){
+                myFileCaches[9] = {file:file, contentsType:"attch9"};
+              }
+              console.log(myFileCaches);
+            });
   });
 
 /*  function fn_installProductExchangeSave() {
@@ -339,6 +349,7 @@ var myFileCaches = {};
     var fileContentsObj = {};
     var fileContentsArr = [];
     var newfileGrpId = 0;
+    var isValid = false;
 
     $.each(myFileCaches, function(n, v) {
         fileContentsObj = {};
@@ -354,29 +365,38 @@ var myFileCaches = {};
         fileContentsArr.push(fileContentsObj);
       });
 
+    if(fileContentsArr.length < 3){
+        isValid = false;
+    }else{
+        isValid = true;
+    }
+
     // KR-OHK Serial Check add
     var url = "";
+    if(isValid == true)  {
+          Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
+              if(result != 0 && result.code == 00) {
+                    // KR-OHK Serial Check add
+                var saveForm = {
+                        "installForm" : $("#addInstallForm").serializeJSON(),
+                        "fileGroupKey": result.data.fileGroupKey
+                  };
 
-    Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
-        if(result != 0 && result.code == 00) {
-              // KR-OHK Serial Check add
-          var saveForm = {
-                  "installForm" : $("#addInstallForm").serializeJSON(),
-                  "fileGroupKey": result.data.fileGroupKey
-            };
+               Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
+                    Common.alert(result.message, fn_saveDetailclose);
 
-         Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
-              Common.alert(result.message, fn_saveDetailclose);
-
-              $("#popup_wrap").remove();
-              fn_installationListSearch();
-        });
-    }else {
-            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-      }
-    }, function(result){
-        Common.alert("Upload Failed. Please check with System Administrator.");
-    });
+                    $("#popup_wrap").remove();
+                    fn_installationListSearch();
+              });
+          }else {
+                  Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+            }
+          }, function(result){
+              Common.alert("Upload Failed. Please check with System Administrator.");
+          });
+     }else{
+    	 Common.alert("Upload Failed. Please upload more than 2 attachment");
+     }
   }
 
   function fn_saveDetailclose() {
@@ -479,6 +499,9 @@ var myFileCaches = {};
        }else if(name == "attch8"){
            $("#attch8").val("");
            $('#attch8').change();
+       }else if(name == "attch9"){
+           $("#attch9").val("");
+           $('#attch9').change();
        }
   }
 
@@ -960,6 +983,19 @@ var myFileCaches = {};
               <span class='label_text'><a href='#' onclick='fn_removeFile("attch8")'><spring:message code='sys.btn.remove' /></a></span>
             </div>
           </td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code='service.text.attachment' /> #9</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch9" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch9")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
         </tr>
         <tr>
             <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
