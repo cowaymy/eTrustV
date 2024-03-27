@@ -91,6 +91,12 @@
     <td><input id="presales_packAmt" name="presales_packAmt" type="text" value="RM ${preSalesInfo.packageAmt}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
+    <th scope="row">SST Tax Rate</th>
+    <td><input id="presales_sstRate" name="presales_orderOutstd" type="text" value="${preSalesInfo.srvMemPacSst}%" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <th scope="row">SST Charge Amount</th>
+    <td><input id="presales_sstAmt" name="presales_packAmt" type="text" value="RM ${preSalesInfo.srvMemPacTxs}" title="" placeholder="" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
     <th scope="row">AS Outstanding</th>
     <td><input id=presales_asOutstd name="presales_asOutstd" type="text" value="RM ${preSalesInfo.asOtstnd}" title="" placeholder="" class="w100p readonly" readonly /></td>
     <th scope="row">Package Promotion</th>
