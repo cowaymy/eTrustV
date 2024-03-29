@@ -484,6 +484,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             //////// InvoiceNum 채번 ////////////////
         }
 
+        DecimalFormat df = new DecimalFormat("#0.00");
         double filterCharge = 0.00;
         double filterPaid = 0.00;
 
@@ -492,7 +493,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         double srvMemPacNetAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacNetAmt")));
 
         if (srvMemBsAmt > 0 && (srvMemBsAmt > srvMemPacAmt)) {
-            filterCharge = (srvMemBsAmt - srvMemPacAmt);
+            filterCharge = Double.parseDouble(df.format(srvMemBsAmt - srvMemPacAmt));
         }
 
         // --------------------------------------------------------------------//
@@ -545,7 +546,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             int pay0007dMapCnt = membershipESvmMapper.PAY0007D_insert(pay0007dMap);
             logger.debug("package pay0007dMapCnt  ==>" + pay0007dMapCnt);
 
-		    DecimalFormat df = new DecimalFormat("#0.00");
+//		    DecimalFormat df = new DecimalFormat("#0.00");
 
             //////////////////// Invoice sum////////////////////
             // totalCharges =totalCharges + packageCharge - ( packageCharge -

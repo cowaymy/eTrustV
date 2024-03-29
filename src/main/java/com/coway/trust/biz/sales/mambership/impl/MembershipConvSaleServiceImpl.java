@@ -257,7 +257,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
  			////////	 InvoiceNum  채번 ////////////////
 	 	 }
 
-
+	     DecimalFormat df = new DecimalFormat("#0.00");
 		 double filterCharge = 0.00;
          double filterPaid = 0.00;
 
@@ -266,7 +266,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
          double srvMemPacNetAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacNetAmt")));
 
          if(srvMemBsAmt> 0 && (srvMemBsAmt >srvMemPacAmt)){
-        	filterCharge  =  (srvMemBsAmt - srvMemPacAmt);
+        	filterCharge  =  Double.parseDouble(df.format(srvMemBsAmt - srvMemPacAmt));
          }
 
 
@@ -323,7 +323,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			  int  pay0007dMapCnt =membershipConvSaleMapper.PAY0007D_insert(pay0007dMap);
 		     logger.debug("package pay0007dMapCnt  ==>"+pay0007dMapCnt);
 
-		     DecimalFormat df = new DecimalFormat("#0.00");
+//		     DecimalFormat df = new DecimalFormat("#0.00");
 
 		     ////////////////////Invoice  sum////////////////////
 		     //totalCharges       =totalCharges +   packageCharge  -   ( packageCharge - (packageCharge  *  100 / 106)); -- without GST 6% edited by TPY 23/05/2018
