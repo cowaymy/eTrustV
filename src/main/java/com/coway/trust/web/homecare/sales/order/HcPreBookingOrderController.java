@@ -189,7 +189,7 @@ public class HcPreBookingOrderController {
       dayTo = checkExtradeSchedule.get("endDate").toString();
     } else {
       dayFrom = "20"; // default 20-{month-1}
-      dayTo = "02"; // default 2-{month}
+ 	  dayTo = "31"; // default LAST DAY OF THE MONTH
     }
 
     String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
