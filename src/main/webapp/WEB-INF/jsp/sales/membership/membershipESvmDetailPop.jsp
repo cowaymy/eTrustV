@@ -524,6 +524,7 @@
                 srvMemQuotCustName:"${preSalesInfo.custName}",
                 srvMemPacId: '${quotInfo.pacId}',
                 srvMemPacAmt: '${quotInfo.pacAmt}',
+                srvMemPacNetAmt: '${preSalesInfo.packageAmt}',
                 srvMemBsAmt: '${quotInfo.totAmt}',
                 srvMemPv: '0',
                 srvFreq: '${quotInfo.bsFreq}',

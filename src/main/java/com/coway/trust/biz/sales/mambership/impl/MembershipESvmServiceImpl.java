@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.payment.billing.service.impl.AdvRentalBillingMapper;
 import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
@@ -52,6 +53,9 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
     @Resource(name = "commonPaymentService")
     private CommonPaymentService commonPaymentService;
+
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 
     private static Logger logger = LoggerFactory.getLogger(MembershipConvSaleServiceImpl.class);
 
@@ -429,9 +433,19 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         int zeroRat = membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
         int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
 
-        // int package_TAXRATE =6; -- without GST 6% edited by TPY 23/05/2018
-        int package_TAXRATE = 0;
-        int package_TAXCODE = 32;
+		int package_TAXRATE = 0;
+		int package_TAXCODE = 0;
+
+		EgovMap getSstRelatedInfo = commonMapper.getSstRelatedInfo();
+
+		if(getSstRelatedInfo != null){
+	 		 package_TAXRATE  = Integer.parseInt(getSstRelatedInfo.get("taxRate").toString());
+	 		 package_TAXCODE = Integer.parseInt(getSstRelatedInfo.get("codeId").toString());
+
+		}else{
+	 		 package_TAXRATE  =0;
+	 		 package_TAXCODE = 32;
+		}
 
         // int filter_TAXRATE =6; -- without GST 6% edited by TPY 23/05/2018
         int filter_TAXRATE = 0;
@@ -475,6 +489,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
         double srvMemBsAmt = Double.parseDouble(CommonUtils.nvl(params.get("srvMemBsAmt")));
         double srvMemPacAmt = Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacAmt")));
+        double srvMemPacNetAmt =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemPacNetAmt")));
 
         if (srvMemBsAmt > 0 && (srvMemBsAmt > srvMemPacAmt)) {
             filterCharge = (srvMemBsAmt - srvMemPacAmt);
@@ -530,6 +545,8 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             int pay0007dMapCnt = membershipESvmMapper.PAY0007D_insert(pay0007dMap);
             logger.debug("package pay0007dMapCnt  ==>" + pay0007dMapCnt);
 
+		    DecimalFormat df = new DecimalFormat("#0.00");
+
             //////////////////// Invoice sum////////////////////
             // totalCharges =totalCharges + packageCharge - ( packageCharge -
             //////////////////// (packageCharge * 100 / 106)); -- without GST 6%
@@ -537,9 +554,14 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             // totalTaxes = totalTaxes + (packageCharge - (packageCharge * 100 /
             //////////////////// 106)); -- without GST 6% edited by TPY
             //////////////////// 23/05/2018
-            totalCharges = totalCharges + packageCharge - (packageCharge - (packageCharge));
-            totalTaxes = totalTaxes + (packageCharge - (packageCharge));
-            totalAmountDue = totalAmountDue + packageCharge;
+            if(getSstRelatedInfo != null){
+		    	 totalCharges = srvMemPacNetAmt;
+		    	 totalTaxes = Double.parseDouble(df.format(srvMemPacNetAmt * (package_TAXRATE / 100.00))) ;
+       		 }else{
+       			 totalCharges = totalCharges +   packageCharge  -   ( packageCharge - (packageCharge));
+       			 totalTaxes = totalTaxes   +   (packageCharge  -  (packageCharge));
+       		 }
+		     totalAmountDue  = totalAmountDue + packageCharge ;
             //////////////////// Invoice sum////////////////////
 
             // Ledger
@@ -590,14 +612,17 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             pay0016dMap.put("accBillTaxCodeId", package_TAXCODE);
             pay0016dMap.put("accBillTaxRate", package_TAXRATE);
 
-            if (package_TAXRATE == 6) {
-                // pay0016dMap.put("accBillTxsAmt",Double.toString(
-                // packageCharge - (packageCharge * 100 / 106))); -- without GST
-                // 6% edited by TPY 23/05/2018
-                pay0016dMap.put("accBillTxsAmt", Double.toString(packageCharge - (packageCharge)));
-            } else {
-                pay0016dMap.put("accBillTxsAmt", "0");
-            }
+      	    if(getSstRelatedInfo != null){
+      	    	pay0016dMap.put("accBillTxsAmt",Double.toString(totalTaxes));
+
+      	    }else{
+      	    	 if(package_TAXRATE ==6){
+                 	  //pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); -- without GST 6% edited by TPY 23/05/2018
+         	    	pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge)));
+         	    }else{
+         	    	pay0016dMap.put("accBillTxsAmt","0");
+         	    }
+      	    }
 
             pay0016dMap.put("accBillAcctCnvr", "0");
             pay0016dMap.put("accBillCntrctId", "0");
@@ -814,8 +839,13 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
                 pay32dMap.put("invcItmUnitPrc", "");
                 pay32dMap.put("invcItmGstRate", package_TAXRATE);
 
-                pay32dMap.put("invcItmGstTxs", Double.toString(srvMemPacAmt - (srvMemPacAmt)));
-                pay32dMap.put("invcItmChrg", Double.toString(srvMemPacAmt));
+				if(package_TAXRATE > 0){
+					pay32dMap.put("invcItmGstTxs", Double.toString(totalTaxes));
+	    		    pay32dMap.put("invcItmChrg",   Double.toString(totalCharges));
+				}else{
+					pay32dMap.put("invcItmGstTxs", Double.toString( srvMemPacAmt - ( srvMemPacAmt )));
+	    		    pay32dMap.put("invcItmChrg",   Double.toString(srvMemPacAmt));
+				}
 
                 pay32dMap.put("invcItmAmtDue", Double.toString(srvMemPacAmt));
                 pay32dMap.put("invcItmAdd1", "");
@@ -896,7 +926,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         result = 97;
         int userId = sessionVO.getUserId();
         int taskCount = 1; // 20211201 - Cater only for single order basis; Can be changed to cater >1 order
-        int taskTotalAmount = Integer.parseInt(params.get("srvMemPacAmt").toString()) + Integer.parseInt(params.get("srvMemBsAmt").toString());
+        double taskTotalAmount = Double.parseDouble(params.get("srvMemPacAmt").toString()) + Double.parseDouble(params.get("srvMemBsAmt").toString());
 
         Map<String, Object> taskOrderMap = new HashMap<String, Object>();
 
