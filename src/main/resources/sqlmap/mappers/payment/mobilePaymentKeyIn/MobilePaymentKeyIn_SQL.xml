@@ -23,7 +23,15 @@
                             Extent1.CHEQUE_NO CHEQUE_NO,
                             Extent1.ISSU_BANK_ID ISSU_BANK_ID,
                             Extent6.NAME BANK_NM,
-                            TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT,
+                            CASE
+                                    WHEN REGEXP_LIKE(extent1.cheque_dt, '\d{2}/\d{2}/\d{4}')
+                                    THEN
+                                        TO_CHAR(TO_DATE(extent1.cheque_dt, 'DD/MM/YYYY'),
+                                        'DD/MM/YYYY'
+                                    )
+                                    ELSE
+                                        NULL
+                            END AS cheque_dt ,
                             Extent1.UPLOAD_IMG UPLOAD_IMG,
                             CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
                               THEN 'DOWN'
@@ -153,10 +161,10 @@
 
                <where>
                  <if test="_reqstStartDt != null and _reqstStartDt != '' ">
-                   AND Extent1.CRT_DT <![CDATA[>= ]]> TO_DATE (#{_reqstStartDt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                   AND TO_CHAR(extent1.crt_dt,'DD/MM/YYYY') <![CDATA[>= ]]> #{_reqstStartDt}
                  </if>
                  <if test="_reqstEndDt != null and _reqstEndDt != '' ">
-                   AND Extent1.CRT_DT <![CDATA[<= ]]> TO_DATE (#{_reqstEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                   AND TO_CHAR(extent1.crt_dt,'DD/MM/YYYY') <![CDATA[<= ]]> #{_reqstEndDt}
                  </if>
                  <if test="ticketNo != null and ticketNo != '' ">
                    AND Extent5.MOB_TICKET_NO = #{ticketNo}
