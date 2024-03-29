@@ -303,7 +303,7 @@ function fn_doPrint(){
     $("#V_QUOTID").val(selectedItems[0].item.quotId);
 
 		var today = new Date(selectedItems[0].item.crtDt);
-		var sstDate = new Date(2024, 2, 1); //yyyy,mm,dd -- mm need minus one
+		var sstDate = new Date(2024, 3, 1); //yyyy,mm,dd -- mm need minus one
 
 		if(today >= sstDate){
 		     $("#reportFileName").val("/membership/MembershipQuotation_20240401.rpt");

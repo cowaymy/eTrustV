@@ -1017,7 +1017,7 @@ var branchDs = [];
       } else {
         $("#reportForm #V_SERVICENO").val(asrNo);
         $("#reportForm #V_INVOICETYPE").val(118)
-        if(asmonth >= 03 && asyear >= 2024){
+        if(asmonth >= 04 && asyear >= 2024){
             $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
         }else{
             $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
