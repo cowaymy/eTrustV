@@ -491,7 +491,7 @@ var userType = "${userType}";
                     console.log("blockDtFrom : " + blockDtFrom);
                     console.log("blockDtTo : " + blockDtTo);
 
-                     if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                     if(todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
                          var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                          return;
