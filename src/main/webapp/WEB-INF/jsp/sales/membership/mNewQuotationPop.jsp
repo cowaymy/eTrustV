@@ -562,7 +562,8 @@ $(document).ready(function(){
 						// var oriprice                = Number($("#hiddenPacOriPrice").val()) ;
 						//pacYear Added by Kit - 20180619
 						var pacYear = parseInt($("#DUR").val(), 10) / 12;
-						var oriprice = Number($("#hiddenNomalPrice").val()) / pacYear;
+// 						var oriprice = Number($("#hiddenNomalPrice").val()) / pacYear;
+						var oriprice = Number($("#hiddenPacPriceB4Sst").val()) / pacYear;
 						var promoPrcPrcnt = Number(result[0].promoPrcPrcnt);
 						var promoAddDiscPrc = Number(result[0].promoAddDiscPrc);
 
@@ -572,8 +573,9 @@ $(document).ready(function(){
 								$("#txtPackagePrice").html("");
 	                            // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
-	                            //var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
-                                var t1 = FormUtil.roundNumber(((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100)),2);
+// 	                            var t0 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+	                            var t0 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
+                                var t1 = FormUtil.roundNumber((t0 * (100 + Number(SSTValue)) / 100), 2);
 
 
 	                            var t2 = 0;
@@ -616,7 +618,7 @@ $(document).ready(function(){
 						else if (result[0].promoDiscType == "1") { //amt
 
 	                        if(Number(SSTValue) > 0){
-	                            var t1 = ((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc;
+	                            var t1 = (((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc) * ((100 + SSTValue) / 100);
 	                            var t2 = 0;
 
 	                            if ($("#eurCertYn").val() == "N") {
@@ -695,6 +697,8 @@ $(document).ready(function(){
 			else {
 
 				var pacYear = parseInt($("#DUR").val(), 10) / 12;
+
+			    $("#hiddenPacPriceB4Sst").val(Math.round((result.packageInfo.srvMemItmPrc * pacYear)));
 
 	            if(Number(SSTValue) > 0){
 					var pacPrice = FormUtil.roundNumber(((result.packageInfo.srvMemItmPrc * (100 + Number(SSTValue)) /100) * pacYear) , 2);
@@ -1828,6 +1832,7 @@ $(document).ready(function(){
     <input type="text" name="hiddentxtBSFreq"  id="hiddentxtBSFreq"/>
     <input type="text" name="hiddenEarlyBirdPromo"  id="hiddenEarlyBirdPromo"/>
     <input type="text" name="hiddenMonthExpired" id="hiddenMonthExpired"/>
+    <input type="text" name="hiddenPacPriceB4Sst" id="hiddenPacPriceB4Sst"/>
 </div>
 </form>
 
