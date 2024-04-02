@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.common.type.FileType;
@@ -69,6 +70,9 @@ public class InvoiceAdjController {
 
 	@Resource(name = "webInvoiceService")
     private WebInvoiceService webInvoiceService;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
 
 	/******************************************************
 	 *   AdjustmentCNDN
@@ -310,7 +314,9 @@ public class InvoiceAdjController {
 
 		LOGGER.debug("params : {} " , params);
 
+		EgovMap sstInfo = commonService.getSstRelatedInfo();
 		model.addAttribute("refNo", params.get("refNo"));
+		model.addAttribute("taxRate", sstInfo.get("taxRate"));
 
 		return "payment/invoice/newAdj";
 	}
@@ -361,6 +367,7 @@ public class InvoiceAdjController {
 		String memoReason = String.valueOf(formData.get("adjReason"));
 		String memoRemark = String.valueOf(formData.get("remark"));
 		String atchFileGrpId = String.valueOf(formData.get("atchFileGrpId"));
+		String adjustedTaxAmount = String.valueOf(formData.get("totalAdjustmentTax"));
 		int conversion = Integer.parseInt(String.valueOf(formData.get("hiddenAccountConversion")));
 
 		//parameter 변수 선언
@@ -394,6 +401,7 @@ public class InvoiceAdjController {
 					continue;
 				}
 
+				EgovMap sstInfo = commonService.getSstRelatedInfo();
 				detailParamMap = createAdjustmentDetailData(conversion,
 																						itemAdjsutment,
 																						String.valueOf(gridMap.get("txinvoiceitemtypeid")),
@@ -409,7 +417,7 @@ public class InvoiceAdjController {
 				//	totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
 				//}
 
-				totalAmount += itemAdjsutment;
+				totalAmount += (itemAdjsutment * 100 / (100 + Integer.parseInt(String.valueOf(gridMap.get("billitemtaxrate")))));
 
 				//리스트에 추가
 				detailParamList.add(detailParamMap);
@@ -417,8 +425,13 @@ public class InvoiceAdjController {
 			}
 		}
 
-		masterParamMap.put("memoAdjustTaxesAmount", 0);
+		//masterParamMap.put("memoAdjustTaxesAmount", 0);
+		masterParamMap.put("memoAdjustTaxesAmount", adjustedTaxAmount);
 		masterParamMap.put("memoAdjustTotalAmount", totalAmount);
+
+		LOGGER.debug("params =====================================>>  " + masterParamMap);
+		LOGGER.debug("params =====================================>>  " + detailParamList);
+		LOGGER.debug("params =====================================>>  " + apprGridList);
 
 		//저장처리
 		String returnStr = invoiceService.saveNewAdjList(false,Integer.parseInt(memoTypeId), masterParamMap, detailParamList, apprGridList);
@@ -999,8 +1012,8 @@ public class InvoiceAdjController {
             returnParam.put("memoItemTaxCodeID", Integer.parseInt(billItemTaxCodeId));
             returnParam.put("memoItemStatusID", 1);
             returnParam.put("memoItemRemark", "");
-            returnParam.put("memoItemGSTRate", 0);
-            returnParam.put("memoItemAmount", itemAdjsutment);
+            returnParam.put("memoItemGSTRate", billItemTaxRate);
+            //returnParam.put("memoItemAmount", itemAdjsutment);
 
            // if (Double.parseDouble(billItemCharges) > 0 && Integer.parseInt(billItemTaxRate) == 6){
            // 	returnParam.put("memoItemCharges", itemAdjsutment * 100 / 106);
@@ -1009,8 +1022,16 @@ public class InvoiceAdjController {
             	//totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
 
             //} else {
-            	returnParam.put("memoItemCharges", itemAdjsutment);
-            	returnParam.put("memoItemTaxes",0);
+            EgovMap sstInfo = commonService.getSstRelatedInfo();
+            double totalTaxes = 0.00;
+            if (Integer.parseInt(billItemTaxRate) > 0){
+            	totalTaxes = itemAdjsutment- (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate)));
+            	returnParam.put("memoItemTaxCodeID", sstInfo.get("codeId").toString());
+            }
+            returnParam.put("memoItemTaxes", totalTaxes);
+            returnParam.put("memoItemCharges", (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate))));
+            returnParam.put("memoItemAmount", (itemAdjsutment));
+        	//returnParam.put("memoItemTaxes",0);
            // }
 
             //totalAmount += itemAdjsutment;

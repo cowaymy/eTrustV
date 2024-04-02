@@ -7,7 +7,7 @@
 	var memType = '${SESSION_INFO.userTypeId}';  //1=HP, 2=CD, 4=Staff, 7=HT
 	var memLevel = '${SESSION_INFO.memberLevel}';
 
-	function createAUIGrid() {
+//	function createAUIGrid() {
 		var happyCallResultColumnLayout = [{
 			dataField : "transactionId",
 	        headerText : "Transaction ID",
@@ -52,7 +52,7 @@
 	                $("#selectedGrpCode").val(item.grpCode);
 	                $("#selectedOrgCode").val(item.orgCode);
 
-	                Common.popupDiv("/services/chatbot/selectHappyCallResultHistList.do", $("#searchForm").serializeJSON(), null, true, "happyCallResultHistory");
+	                Common.popupDiv("/services/chatbot/selectHappyCallResultHistList.do", $("#searchForm").serializeJSON(), null, true, "happyCallResultHistoryPop");
 	            }
 	        },
 	        editable : false
@@ -66,19 +66,17 @@
 		    showRowAllCheckBox : false
 		};
 
-		happyCallResultGridId = AUIGrid.create("#grid_wrap_happyCall", happyCallResultColumnLayout, happyCallResultGridPros);
-	}
+		//happyCallResultGridId = AUIGrid.create("#grid_wrap_happyCall", happyCallResultColumnLayout, happyCallResultGridPros);
+	//}
 
 	$(document).ready(function () {
-		//happyCallResultGridId = AUIGrid.create("#grid_wrap_happyCall", happyCallResultColumnLayout, happyCallResultGridPros);
+		happyCallResultGridId = AUIGrid.create("#grid_wrap_happyCall", happyCallResultColumnLayout, happyCallResultGridPros);
 
-		createAUIGrid();
+		fn_setToDay();
 
-
-		   AUIGrid.bind(happyCallResultGridId, "cellClick", function( event ) {
-               console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-               //selectRowIdx = event.rowIndex;
-           });
+		/* AUIGrid.bind(happyCallResultGridId, "cellClick", function( event ) {
+			console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+		}); */
 
 		//Auto Populate Dept/Grp/Org Code based on Login ID
 		if(memType == "1" || memType == "2" || memType == "3" || memType == "7" ){
@@ -139,13 +137,66 @@
 	});
 
 	function fn_searchHappyCallResultList() {
-        Common.ajax("GET", "/services/chatbot/selectHappyCallResultList.do", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(happyCallResultGridId, result);
-        });
+		if(fn_checkMandatory()){
+			Common.ajax("GET", "/services/chatbot/selectHappyCallResultList.do", $("#searchForm").serialize(), function(result) {
+	            AUIGrid.setGridData(happyCallResultGridId, result);
+	        });
+		}
     }
+
+	function fn_checkMandatory() {
+		if(FormUtil.isEmpty($("#periodMonth").val())) {
+            Common.alert("Please select Period Month.");
+            return false;
+        }
+		return true;
+	}
+
+	function fn_setToDay() {
+	    var today = new Date();
+
+	    var mm = today.getMonth() + 1;
+	    var yyyy = today.getFullYear();
+
+	    if(mm < 10){
+	        mm = "0" + mm
+	    }
+
+	    today = mm + "/" + yyyy;
+
+	    $("#periodMonth").val(today)
+	}
 
 	function fn_clear() {
 
+		fn_setToDay();
+		if(memType == "1" || memType == "2" || memType == "3" || memType == "7" ){
+
+			if(memLevel=="1"){
+
+                $("#grpCode").val("");
+                $("#deptCode").val("");
+                $("#agentCode").val("");
+
+            }else if(memLevel=="2"){
+
+            	$("#deptCode").val("");
+                $("#agentCode").val("");
+
+            }else if(memLevel=="3"){
+
+            	$("#agentCode").val("");
+
+            }else if(memLevel=="4"){
+
+            }
+		}else{
+
+			$("#orgCode").val("");
+			$("#grpCode").val("");
+            $("#deptCode").val("");
+            $("#agentCode").val("");
+		}
 	}
 
 </script>
@@ -215,7 +266,7 @@
             <td>
               <input id="agentCode" name="agentCode" type="text" title="" placeholder="Agent Code" class="w100p" />
             </td>
-            <th scope="row">Period Month</th>
+            <th scope="row">Period Month <span class="must">*</span></th>
             <td>
               <input type="text" title="Period Month" placeholder="MM/YYYY" class="j_date2 w100p" id="periodMonth" name="periodMonth"/>
             </td>

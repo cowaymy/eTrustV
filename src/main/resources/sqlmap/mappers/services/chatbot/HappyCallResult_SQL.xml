@@ -23,7 +23,8 @@
 			        ORG.GRP_CODE AS GRP_CODE,
 			        ORG.ORG_CODE AS ORG_CODE,
 			        CCRM.TOTAL_POINT AS TOTAL_MARK,
-                    NVL(CCRM.PCNT, '0%') AS PCNT,
+                    <!--  NVL(CCRM.PCNT, '0%') AS PCNT,-->
+                    TRUNC(NVL(CCRM.PCNT, 0), 2) || '%' AS PCNT,
                     CCRM.CNT
         FROM CBT0004M HCM
         <!-- JOIN CBT0005D HCR ON HCR.TXN_ID = HCM.TXN_ID -->
@@ -38,7 +39,7 @@
                         SUM(D.TOTAL_POINT) AS TOTAL_POINT,
                         SUM(D.CNT) AS CNT,
                         SUM(D.MAX_MARK) AS MAX_MARK,
-                        ((SUM(D.TOTAL_POINT) / SUM((D.MAX_MARK))) * 100) || '%' AS PCNT
+                        ((SUM(D.TOTAL_POINT) / SUM((D.MAX_MARK))) * 100) AS PCNT
                 FROM CBT0004M C
                 LEFT JOIN (
                     SELECT A.HC_ID CCR_HC_ID, SUM(A.HC_ITM_POINT) TOTAL_POINT, COUNT(A.HC_ID) CNT, SUM(E.MAX_POINT) MAX_MARK

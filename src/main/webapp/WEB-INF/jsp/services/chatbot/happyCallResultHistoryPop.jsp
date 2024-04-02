@@ -75,6 +75,13 @@
 		$('#excelDown').click(function() {
 		       GridCommon.exportTo("grid_wrap_happyCallHist", 'xlsx', "Survey Listing History");
 		    });
+
+		$('#closeBtn').click(function() {
+			$("#selectedMemCode").val("");
+			$("#selectedDeptCode").val("");
+			$("#selectedGrpCode").val("");
+			$("#selectedOrgCode").val("");
+		});
 	});
 
 	function fn_excelDown(){
