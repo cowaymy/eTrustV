@@ -161,10 +161,10 @@
 
                <where>
                  <if test="_reqstStartDt != null and _reqstStartDt != '' ">
-                   AND TO_CHAR(extent1.crt_dt,'DD/MM/YYYY') <![CDATA[>= ]]> #{_reqstStartDt}
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
                  </if>
                  <if test="_reqstEndDt != null and _reqstEndDt != '' ">
-                   AND TO_CHAR(extent1.crt_dt,'DD/MM/YYYY') <![CDATA[<= ]]> #{_reqstEndDt}
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
                  </if>
                  <if test="ticketNo != null and ticketNo != '' ">
                    AND Extent5.MOB_TICKET_NO = #{ticketNo}
