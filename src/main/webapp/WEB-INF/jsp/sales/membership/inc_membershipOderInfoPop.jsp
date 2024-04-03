@@ -10,7 +10,7 @@
     function fn_maskingData(ind, val) {
       var maskedVal = (val).substr(-4).padStart((val).length, '*');
       $("#span" + ind).html(maskedVal);
-      $("#span" + ind).hover(function() {
+      /*$("#span" + ind).hover(function() {
         $("#span" + ind).html(val);
       }).mouseout(function() {
         $("#span" + ind).html(maskedVal);
@@ -19,7 +19,7 @@
         $("#span" + ind).html(val);
       }).mouseout(function() {
         $("#span" + ind).html(maskedVal);
-      });
+      });*/
     }
   </script>
 
@@ -77,7 +77,7 @@
           <th scope="row"><spring:message code="sal.text.insAddr" /></th>
           <td colspan="5">
             <!-- <span id="ins_full_address">${contactInfoTab.fullAddr}</span> -->
-            <a href="#" class="search_btn" id="imgHoverInsAddr"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+            <!-- <a href="#" class="search_btn" id="imgHoverInsAddr"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a> -->
             <span id="spanInsAddr" name='spanInsAddr' style="word-wrap:break-all;display:block;width:95%;"></span>
           </td>
         </tr>
