@@ -574,7 +574,7 @@ $(document).ready(function(){
 	                            // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
 // 	                            var t0 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
-	                            var t0 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
+	                            var t0 = Math.floor((oriprice * pacYear) * (100 - promoPrcPrcnt)/100);
                                 var t1 = FormUtil.roundNumber((t0 * (100 + Number(SSTValue)) / 100), 2);
 
 
@@ -597,8 +597,8 @@ $(document).ready(function(){
                             	$("#txtPackagePrice").html("");
                                 // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
-                                //var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
-                                var t1 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
+//                                 var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+                                var t1 = Math.floor((oriprice * pacYear) * (100 - promoPrcPrcnt)/100);
 
                                 var t2 = 0;
                                 if ($("#eurCertYn").val() == "N") {
