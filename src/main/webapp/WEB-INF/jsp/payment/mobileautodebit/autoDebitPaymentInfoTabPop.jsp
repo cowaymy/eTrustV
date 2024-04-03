@@ -45,11 +45,11 @@
             <input id="txtThrdPartyNric" name="txtThrdPartyNric" type="text" title="" placeholder="Third Party ID" class="" readonly style="display:none"/>
             <table id="pThrdPartyNric">
                 <tr>
-                  <td width="5%">
+                  <!-- <td width="5%">
                     <a href="#" class="search_btn" id="imgHoverThrdPartyNric">
                       <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                      </a>
-                   </td>
+                   </td> -->
                    <td><span id="spanThrdPartyNric"></span></td>
                  </tr>
                </table>
