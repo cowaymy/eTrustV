@@ -2420,7 +2420,7 @@
   function fn_maskingData(ind, obj) {
     var maskedVal = (obj.val()).substr(-4).padStart((obj.val()).length, '*');
       $("#span" + ind).html(maskedVal);
-      $("#span" + ind).hover(function() {
+      /*$("#span" + ind).hover(function() {
           $("#span" + ind).html(obj.val());
       }).mouseout(function() {
           $("#span" + ind).html(maskedVal);
@@ -2429,7 +2429,7 @@
           $("#span" + ind).html(obj.val());
       }).mouseout(function() {
           $("#span" + ind).html(maskedVal);
-      });
+      });*/
   }
 </script>
 
@@ -2489,11 +2489,11 @@
                 <input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""' />
                 <table id="pNric" style="display:none">
                  <tr>
-                   <td width="3%">
+                   <!-- <td width="3%">
                      <a href="#" class="search_btn" id="imgHover_NRIC">
                        <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                      </a>
-                   </td>
+                   </td> -->
                    <td><span id="span_NRIC"></span></td>
                  </tr>
                </table>
@@ -2505,11 +2505,11 @@
               <input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width:150px" maxlength="20" value=""'/>
                  <table id="pSofNo" style="display:none">
                  <tr>
-                   <td width="3%">
+                   <!-- <td width="3%">
                      <a href="#" class="search_btn" id="imgHover_SOFNO">
                        <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                      </a>
-                   </td>
+                   </td> -->
                    <td><span id="span_SOFNO"></span></td>
                  </tr>
                </table>
@@ -2667,11 +2667,11 @@
                  <input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                  <table id="pCustEmail" style="display:none">
                         <tr>
-                         <td width="3%">
+                         <!-- <td width="3%">
                            <a href="#" class="search_btn" id="imgHover_CUSTEMAIL">
                              <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                            </a>
-                         </td>
+                         </td> -->
                          <td><span id="span_CUSTEMAIL"></span></td>
                        </tr>
                       </table>
@@ -2792,11 +2792,11 @@
                     <input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                     <table id="pCustCntcTelM" style="display:none">
                         <tr>
-                         <td width="3%">
+                         <!-- <td width="3%">
                            <a href="#" class="search_btn" id="imgHover_CUSTCNTCTELM">
                              <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                            </a>
-                         </td>
+                         </td> -->
                          <td><span id="span_CUSTCNTCTELM"></span></td>
                        </tr>
                       </table>
@@ -2808,11 +2808,11 @@
                     <input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                     <table id="pCustCntcTelR" style="display:none">
                         <tr>
-                         <td width="3%">
+                         <!-- <td width="3%">
                            <a href="#" class="search_btn" id="imgHover_CUSTCNTCTELR">
                              <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                            </a>
-                         </td>
+                         </td> -->
                          <td><span id="span_CUSTCNTCTELR"></span></td>
                        </tr>
                       </table>
@@ -2824,11 +2824,11 @@
                     <input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                     <table id="pCustCntcTelO" style="display:none">
                         <tr>
-                         <td width="3%">
+                         <!-- <td width="3%">
                            <a href="#" class="search_btn" id="imgHover_CUSTCNTCTELO">
                              <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                            </a>
-                         </td>
+                         </td> -->
                          <td><span id="span_CUSTCNTCTELO"></span></td>
                        </tr>
                       </table>
@@ -2840,11 +2840,11 @@
                     <input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                       <table id="pCustCntcTelF" style="display:none">
                           <tr>
-                             <td width="3%">
+                             <!-- <td width="3%">
                                <a href="#" class="search_btn" id="imgHover_CUSTCNTCTELF">
                                  <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                                </a>
-                             </td>
+                             </td> -->
                              <td><span id="span_CUSTCNTCTELF"></span></td>
                            </tr>
                          </table>
@@ -2863,11 +2863,11 @@
                     <input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly style="display:none"/>
                       <table id="pCntcEmail" style="display:none">
                           <tr>
-                             <td width="3%">
+                             <!-- <td width="3%">
                                <a href="#" class="search_btn" id="imgHover_CNTCEMAIL">
                                  <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                                </a>
-                             </td>
+                             </td> -->
                              <td><span id="span_CNTCEMAIL"></span></td>
                            </tr>
                          </table>
@@ -2904,11 +2904,11 @@
                  <input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly style="display:none"/>
                  <table id="pInstAddrDtl" style="display:none">
                    <tr>
-                     <td width="3%">
+                     <!-- <td width="3%">
                        <a href="#" class="search_btn" id="imgHover_INSTADDRDTL">
                          <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                        </a>
-                     </td>
+                     </td> -->
                      <td><span id="span_INSTADDRDTL"></span></td>
                    </tr>
                  </table>
@@ -3646,11 +3646,11 @@
                 <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly style="display:none"/>
                 <table id="pBillAddrDtl" style="display:none">
                   <tr>
-                    <td width="3%">
+                    <!-- <td width="3%">
                       <a href="#" class="search_btn" id="imgHover_BILLADDRDTL">
                       <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                       </a>
-                    </td>
+                    </td> -->
                     <td><span id="span_BILLADDRDTL"></span></td>
                   </tr>
                 </table>
