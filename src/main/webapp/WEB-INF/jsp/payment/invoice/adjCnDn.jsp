@@ -79,8 +79,9 @@ var winPopOption = {
 function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
     //location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
 
-    $('#_searchInvoice').hide();
+    //$('#_searchInvoice').hide(); //commented due to page does not refresh
     Common.popupWin("searchForm", "/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"), winPopOption);
+    $('#_searchInvoice').remove();
 }
 
 function fn_openWinPop(val){

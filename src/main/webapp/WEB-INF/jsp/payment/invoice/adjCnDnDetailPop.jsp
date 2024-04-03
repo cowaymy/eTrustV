@@ -10,7 +10,8 @@ var myPopLayout = [
     { dataField:"billItmType" ,headerText:"Sales Type",width: 200 , editable : false},
     { dataField:"billItmRefNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>",width: 200 , editable : false},
     { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.amount'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-    { dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.gst'/>", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+    //{ dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.gst'/>", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+    { dataField:"memoItmTxs" ,headerText:"Tax Amount", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
     { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.total'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
 
     ];
@@ -114,7 +115,7 @@ function selectAdjustmentDetailPop(adjId, invNo){
             });
 
             $("#totalChrg").text("Total Charges: RM" + totalChrg.toFixed(2));
-            $("#totalGST").text("Total GST: RM" + totalGST.toFixed(2));
+            $("#totalGST").text("Total Tax Amount: RM" + totalGST.toFixed(2));
             $("#totalAmt").text("Total Amount: RM" + totalAmt.toFixed(2));
 
             attachList = result.attachList;

@@ -391,6 +391,7 @@ public class InvoiceAdjController {
 		double totalTaxes = 0.0D;
 		double totalAmount = 0.0D;
 
+
 		//Detail 데이터 세팅
 		if (gridList.size() > 0) {
 			for (int i = 0; i < gridList.size(); i++) {

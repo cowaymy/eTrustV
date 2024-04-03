@@ -5,6 +5,7 @@
 
     var newAdjGridID, approveLineGridID;
     var selectRowIdx;
+    var taxRate = "${taxRate}";
 
     //Default Combo Data
     var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
@@ -18,20 +19,20 @@
     var columnLayout=[
         { dataField:"txinvoiceitemid" ,headerText:"<spring:message code='pay.head.taxInvoiceItemId'/>" ,editable : false, visible:false },
         { dataField:"txinvoiceitemtypeid" ,headerText:"<spring:message code='pay.head.taxInvoiceTypeId'/>" ,editable : false, visible:false },
-        { dataField:"billitemtaxcodeid" ,headerText:"<spring:message code='pay.head.billItemTaxCodeId'/>" ,editable : false, visible:false },
+        { dataField:"billitemtaxcodeid" ,headerText:"<spring:message code='pay.head.billItemTaxCodeId'/>" ,editable : false, visible:false},
         { dataField:"billitemtype" ,headerText:"<spring:message code='pay.head.billType'/>" ,editable : false ,width : 120},
         { dataField:"billitemrefno" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false ,width : 120 },
         { dataField:"billitemunitprice" ,headerText:"<spring:message code='pay.head.unitPrice'/>" ,editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 120},
-        { dataField:"billitemtaxrate" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , postfix : "%" ,width : 120},
+        { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 100},
+        { dataField:"billitemtaxrate" ,headerText:"Tax Rate" ,editable : false , postfix : "%" ,width : 100},
         { dataField:"billitemcharges" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemtaxes" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"billitemtaxes" ,headerText:"Tax Amount" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         { dataField:"billitemamount" ,headerText:"<spring:message code='pay.head.total'/>" ,editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         {
             dataField : "totamount",
             headerText : "<spring:message code='pay.head.totalAdjustmentAmount'/>",
             dataType : "numeric",
-            width : 220,
+            width : 200,
             formatString : "#,##0.00",
             style : "input_style",
             editRenderer : {
@@ -42,6 +43,40 @@
                 allowNegative : false, // 마이너스 부호(-) 허용 여부
                 textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
                 autoThousandSeparator : true // 천단위 구분자 삽입 여부
+            }
+        }, {
+        	dataField:"billTaxAmount" ,
+        	headerText:"Total Adjustment Tax Amount" ,
+        	editable : false ,
+        	visible:false,
+        	dataType : "numeric",
+        	formatString : "#,##0.00" ,
+        	width : 210,
+        	expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+
+                var taxAmt = 0;
+
+                if(item.billitemtaxes > 0){
+                	taxAmt = item.totamount - (item.totamount / (100 + Number(taxRate)) * 100);
+                }
+                return taxAmt;
+        	}
+        }, {
+        	dataField:"billNoTaxAmount" ,
+            headerText:"Total Adjustment Non Tax Amount" ,
+            editable : false ,
+            visible:false,
+            dataType : "numeric",
+            formatString : "#,##0.00" ,
+            width : 250,
+            expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+
+                var noTaxAmt = 0;
+
+                if(item.billitemtaxes > 0){
+                	noTaxAmt = item.totamount - item.billTaxAmount;
+                }
+                return noTaxAmt;
             }
         }];
 
@@ -143,6 +178,7 @@
 
             //그리드에서 수정된 총 금액 계산
             auiGridSelectionChangeHandler(event);
+            auiGridSelectionChangeHandlerTax(event);
         });
 
         //초기화면 로딩시 조회
@@ -201,7 +237,9 @@
     function auiGridSelectionChangeHandler(event) {
         var allList = AUIGrid.getGridData(newAdjGridID);
         var val;
+        //var val2;
         var sum = 0;
+        var oriTaxAmt = 0;
 
         if(allList.length < 1) {
             $('#totAdjustment').text("0.00");
@@ -209,16 +247,57 @@
         }
 
         for(i=0; i<allList.length; i++) {
-            val = String(AUIGrid.getCellValue(newAdjGridID, i, "totamount")).replace(",", ""); // 컴마 모두 제거
+        	oriTaxAmt = AUIGrid.getCellValue(newAdjGridID, i, "billitemtaxes");
+
+       		val = String(AUIGrid.getCellValue(newAdjGridID, i, "totamount")).replace(",", ""); // 컴마 모두 제거
             val = Number(val);
+
+           /*  val2 = String(AUIGrid.getCellValue(newAdjGridID, i, "billTaxAmount")).replace(",", ""); // 컴마 모두 제거
+            val2 = Number(val2); */
 
             if(isNaN(val)) {
                 continue;
             }
+
+            /* if(isNaN(val2)) {
+                continue;
+            } */
+
+            /* val += val2; */
             sum += val;
+
         }
 
-        $('#totAdjustment').text(sum);
+        //$('#totAdjustment').text(sum.toFixed(2));
+        $('#totAdjustment').text(FormUtil.roundNumber(Number(sum),Number(2)).toFixed(2));
+    }
+
+    //Total Adjustment Tax Amount 계산
+    function auiGridSelectionChangeHandlerTax(event) {
+        var allList = AUIGrid.getGridData(newAdjGridID);
+        var val3;
+        var sum3 = 0;
+
+        if(allList.length < 1) {
+            $('#totalAdjustmentTax').val("0.00");
+            return;
+        }
+
+        for(i=0; i<allList.length; i++) {
+
+        	val3 = String(AUIGrid.getCellValue(newAdjGridID, i, "billTaxAmount")).replace(",", ""); // 컴마 모두 제거
+        	val3 = Number(val3);
+
+            if(isNaN(val3)) {
+                continue;
+            }
+
+            sum3 += val3;
+
+        }
+
+        //$('#totAdjustment').text(sum.toFixed(2));
+        $('#totalAdjustmentTax').val(FormUtil.roundNumber(Number(sum3),Number(2)).toFixed(2));
     }
 
 
@@ -463,6 +542,13 @@
     </aside>
     <!-- title_line end -->
 
+    <style>
+        .tab {
+            margin-left: 5px;
+            margin-top: 2px;
+        }
+    </style>
+
     <!-- search_table start -->
     <section class="search_table">
         <!-- title_line start -->
@@ -474,6 +560,8 @@
             <input type="hidden" id="hiddenInvoiceType" name="hiddenInvoiceType" />
             <input type="hidden" id="hiddenAccountConversion" name="hiddenAccountConversion" />
             <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
+            <input type="hidden" id="totalAdjustmentTax" name="totalAdjustmentTax" />
+            <input type="hidden" id="totalAdjustmentWithoutTax" name="totalAdjustmentWithoutTax" />
 
             <!-- table start -->
             <table class="type1">
@@ -547,10 +635,10 @@
 	                <tr>
 	                    <th scope="row">Total Amount(RM)</th>
 	                    <td id="tOverdue"></td>
-	                    <th scope="row">GST Amount(RM)</th>
+	                    <th scope="row">Tax Amount(RM)</th>
 	                    <td id="tTaxes"></td>
 	                    <th scope="row">Amount Due(RM)</th>
-	                    <td id="tDue"></td>
+	                    <td><span id ="tDue"></span> <i class="red_text tab"><spring:message code='sys.common.sst.msg.incld' /></i></td>
 	                </tr>
 	            </tbody>
 	        </table>
@@ -564,7 +652,7 @@
 	            <caption>table</caption>
 	            <colgroup>
 	                <col style="width:200px" />
-	                <col style="width:*" />
+                    <col style="width:*" />
 	            </colgroup>
 	            <tbody>
 	                <tr>
@@ -587,6 +675,7 @@
 	                </tr>
 	                <tr>
 	                    <th scope="row">Total Adjustment(RM)</th>
+	                    <%-- <td><span id ="totAdjustment">0.00</span> <i class="red_text tab"><spring:message code='sys.common.sst.msg.incld' /></i></td> --%>
 	                    <td id="totAdjustment">0.00</td>
 	                </tr>
 	                <tr>
