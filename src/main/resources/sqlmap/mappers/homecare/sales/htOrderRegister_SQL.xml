@@ -58,6 +58,7 @@
                 WHERE T1.SRV_SALES_ORD_ID = #{value}
                  AND 4 = T1.SRV_STUS_CODE_ID
                  AND SRV_EXPR_DT IS NOT NULL
+                 AND (SRV_MEM_PAC_ID <![CDATA[ <> ]]> 27 AND (NVL(SRV_REM,' ')) NOT LIKE 'MCO%')
                 ORDER BY T1.SRV_EXPR_DT DESC
              ) T
          WHERE ROWNUM &lt;= 1
