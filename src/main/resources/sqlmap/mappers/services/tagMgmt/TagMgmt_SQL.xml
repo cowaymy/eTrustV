@@ -2,119 +2,136 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.tagMgmt.impl.TagMgmtMapper">
   <select id="selectTagStatus" parameterType="Map" resultType="egovMap">
-    SELECT Z.Counseling_No,
-           Z.Customer_No,
-           Z.classify_mem,
-           Z.Customer_name,
-           Z.Main_inquiry,
-           Z.Sub_inquiry,
-           Z.Feedback_code,
-           z.CMGROUP,
-           Z.MAIN_DEPT,
-           Z.SUB_DEPT,
-           Z.DEPT_CODE,
-           Z.SUB_DEPT_CDE,
-           Z.Status,
-           <!-- TO_CHAR(Z.Reg_date, 'YYYY-MM-DD') Reg_date, -->
-           TO_CHAR( to_date(Substr(REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD') Reg_date,
-           z.ord_no,z.hc_mem_id,
-           z.CNSL_LRGCLAS_CD,
-           z.CNSL_MEDCLAS_CD,
-           --TO_CHAR(Z.UPD_DT, 'YYYY-MM-DD') UPD_DT,
-           Z.UPD_DT,
-           z.LST_UPD_ID,
-           Z.CALL_REM
-    FROM ( SELECT A.CUR_SEQNO Counseling_No
-                , A.CUST_NO as Customer_No
-                , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS classify_mem
-                , A.CUST_NM Customer_name
-                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS Main_inquiry
-                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry
-                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
-                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE)
-                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT
-                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE)
-                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
-                , T4.DEPT_CODE as CMGROUP
-                , CASE WHEN B.MAIN_DEPT IS NULL
-                    THEN A.DEPT_CODE
-                    ELSE B.MAIN_DEPT END DEPT_CODE
-                , CASE WHEN B.SUB_DEPT IS NULL
-                    THEN A.SUB_DEPT_CDE
-                    ELSE B.SUB_DEPT END SUB_DEPT_CDE
-                , A.Ord_no
-                , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
-                , DECODE(B.STUS_CODE_ID, NULL, 1, B.STUS_CODE_ID) STUS_CODE_ID
-                <!-- , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date -->
-                , a.REG_DTM
-                , NVL((SELECT TO_CHAR(LST_UPD_DTM,'YYYY/MM/DD') FROM (
-                                SELECT CUR_SEQNO
-                                         , LST_UPD_DTM
-                                         , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
-                                FROM (  SELECT CUR_SEQNO
-                                                     , TO_DATE(substr(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
-                                             FROM CALLCENTERUSER.T_RMK_HIST D
-                                             UNION
-                                             SELECT A.CUR_SEQ_NO CUR_SEQNO
-                                                      , CALL_CRT_DT LST_UPD_DTM
-                                              FROM GBSLCVD.CCR0006D A
-                                              JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
-                                              WHERE CUR_SEQ_NO IS NOT NULL
-                                          )
-                                     ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') UPD_DT
-                , a.hc_mem_id , A.CNSL_LRGCLAS_CD,  A.CNSL_MEDCLAS_CD
-                , BRNCH_ID
-                , A.LST_UPD_ID
-                , NVL((SELECT CALL_REM FROM (
-                                SELECT CUR_SEQNO
-                                         , CALL_REM
-                                         , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
-                                FROM (  SELECT CUR_SEQNO
-                                                     , MEMO CALL_REM
-                                                     , TO_DATE(substr(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
-                                             FROM CALLCENTERUSER.T_RMK_HIST D
-                                             UNION
-                                             SELECT A.CUR_SEQ_NO CUR_SEQNO
-                                                      , cast(SUBSTR(B.CALL_REM,0,2000) AS nvarchar2(2000)) CALL_REM
-                                                      , CALL_CRT_DT LST_UPD_DTM
-                                              FROM GBSLCVD.CCR0006D A
-                                              JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
-                                              WHERE CUR_SEQ_NO IS NOT NULL
-                                          )
-                                     ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') CALL_REM
-           FROM CALLCENTERUSER.T_CUR_HIST A
-           LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
-          LEFT JOIN GBSLCVD.SYS0047M usr ON b.UPD_USER_ID = usr.USER_ID
-          LEFT JOIN GBSLCVD.SYS0005M brnch ON usr.USER_BRNCH_ID = brnch.BRNCH_ID
-          -- Added cmgroup by Hui Ding, 2020-12-17
-          LEFT JOIN sal0090D C on C.SRV_SO_ID = A.ord_id AND C.SRV_STUS_ID = 1
-          --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
-          LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
-                      , V1.MEM_CODE MEM_CODE
-                      , V1.MEM_LVL MEM_LVL
-                      , V1.DEPT_CODE DEPT_CODE
-                      , V1.GRP_CODE GRP_CODE
-                      , V1.ORG_CODE ORG_CODE
-                      , V1.TOP_ORG_CODE TOP_ORG_CODE
-                      , V1.MEM_UP_ID MEM_UP_ID
-                      , V1.LVL3_UP_ID LVL3_UP_ID
-                      , V1.LVL2_UP_ID LVL2_UP_ID
-                      , V1.LVL1_UP_ID LVL1_UP_ID
-                      , V1.LVL0_UP_ID LVL0_UP_ID
-                 FROM ORG1001V V1 ) T4 ON T4.MEM_ID = C.SRV_CODY_ID
-          <if test="isCD != null and isCD != '' ">
-               JOIN (
-                   SELECT DISTINCT DEPT_CODE FROM ORG0005D A JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
-                   START WITH B.MEM_CODE = #{isCD}
-                   CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
-               ) CD_FILTER ON T4.DEPT_CODE = CD_FILTER.DEPT_CODE AND 'MD08' IN (A.DEPT_CODE, B.MAIN_DEPT)
-          </if>
+    SELECT Z.COUNSELING_NO,
+               Z.CUSTOMER_NO,
+               Z.CLASSIFY_MEM,
+               Z.CUSTOMER_NAME,
+               Z.MAIN_INQUIRY,
+               Z.SUB_INQUIRY,
+               Z.FEEDBACK_CODE,
+               Z.CMGROUP,
+               Z.MAIN_DEPT,
+               Z.SUB_DEPT,
+               Z.DEPT_CODE,
+               Z.SUB_DEPT_CDE,
+               Z.STATUS,
+               <!-- TO_CHAR(Z.REG_DATE, 'YYYY-MM-DD') REG_DATE, -->
+               TO_CHAR( TO_DATE(SUBSTR(REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD') REG_DATE,
+               Z.ORD_NO,Z.HC_MEM_ID,
+               Z.CNSL_LRGCLAS_CD,
+               Z.CNSL_MEDCLAS_CD,
+               --TO_CHAR(Z.UPD_DT, 'YYYY-MM-DD') UPD_DT,
+               Z.UPD_DT,
+               Z.LST_UPD_ID,
+               Z.CALL_REM
+    FROM ( SELECT A.CUR_SEQNO COUNSELING_NO
+                        , A.CUST_NO AS CUSTOMER_NO
+                        , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS CLASSIFY_MEM
+                        , A.CUST_NM CUSTOMER_NAME
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS MAIN_INQUIRY
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS SUB_INQUIRY
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS FEEDBACK_CODE
+                        , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE)
+                        , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT
+                        , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE)
+                        , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
+                        , T4.DEPT_CODE AS CMGROUP
+                        , CASE WHEN B.MAIN_DEPT IS NULL
+                                  THEN A.DEPT_CODE
+                                  ELSE B.MAIN_DEPT END DEPT_CODE
+                        , CASE WHEN B.SUB_DEPT IS NULL
+                                  THEN A.SUB_DEPT_CDE
+                                  ELSE B.SUB_DEPT END SUB_DEPT_CDE
+                        , A.ORD_NO
+                        , DECODE(B.STUS_CODE_ID, '', 'ACTIVE', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) AS STATUS
+                        , DECODE(B.STUS_CODE_ID, NULL, 1, B.STUS_CODE_ID) STUS_CODE_ID
+                       <!-- , TO_DATE(SUBSTR(A.REG_DTM, 1, 8 ),'YYYY/MM/DD') REG_DATE -->
+                        , A.REG_DTM
+                        , NVL((SELECT TO_CHAR(LST_UPD_DTM,'YYYY/MM/DD')
+                                  FROM ( SELECT CUR_SEQNO
+                                                      , LST_UPD_DTM
+                                                      , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
+                                             FROM (  SELECT CUR_SEQNO
+                                                                  , TO_DATE(SUBSTR(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
+                                                         FROM CALLCENTERUSER.T_RMK_HIST D
+                                                         UNION
+                                                         SELECT A.CUR_SEQ_NO CUR_SEQNO
+                                                                  , CALL_CRT_DT LST_UPD_DTM
+                                                         FROM GBSLCVD.CCR0006D A
+                                                         JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+                                                         WHERE CUR_SEQ_NO IS NOT NULL
+                                             )
+                                  ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') UPD_DT
+                        , A.HC_MEM_ID
+                        , A.CNSL_LRGCLAS_CD
+                        , A.CNSL_MEDCLAS_CD
+                        , BRNCH_ID
+                        , A.LST_UPD_ID
+                        , NVL((SELECT CALL_REM
+                                  FROM ( SELECT CUR_SEQNO
+                                                      , CALL_REM
+                                                      , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
+                                             FROM ( SELECT CUR_SEQNO
+                                                                 , MEMO CALL_REM
+                                                                 , TO_DATE(SUBSTR(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
+                                                        FROM CALLCENTERUSER.T_RMK_HIST D
+                                                        UNION
+                                                        SELECT A.CUR_SEQ_NO CUR_SEQNO
+                                                                 , CAST(SUBSTR(B.CALL_REM,0,2000) AS NVARCHAR2(2000)) CALL_REM
+                                                                 , CALL_CRT_DT LST_UPD_DTM
+                                                        FROM GBSLCVD.CCR0006D A
+                                                        JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+                                                        WHERE CUR_SEQ_NO IS NOT NULL
+                                             )
+                                  ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') CALL_REM
+
+             FROM CALLCENTERUSER.T_CUR_HIST A
+             LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
+             LEFT JOIN GBSLCVD.SYS0047M USR ON B.UPD_USER_ID = USR.USER_ID
+             LEFT JOIN GBSLCVD.SYS0005M BRNCH ON USR.USER_BRNCH_ID = BRNCH.BRNCH_ID
+
+             -- ADDED CMGROUP BY HUI DING, 2020-12-17
+             LEFT JOIN SAL0090D C ON C.SRV_SO_ID = A.ORD_ID AND C.SRV_STUS_ID = 1
+             --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
+             LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                                       , V1.MEM_CODE MEM_CODE
+                                       , V1.MEM_LVL MEM_LVL
+                                       , V1.DEPT_CODE DEPT_CODE
+                                       , V1.GRP_CODE GRP_CODE
+                                       , V1.ORG_CODE ORG_CODE
+                                       , V1.TOP_ORG_CODE TOP_ORG_CODE
+                                       , V1.MEM_UP_ID MEM_UP_ID
+                                       , V1.LVL3_UP_ID LVL3_UP_ID
+                                       , V1.LVL2_UP_ID LVL2_UP_ID
+                                       , V1.LVL1_UP_ID LVL1_UP_ID
+                                       , V1.LVL0_UP_ID LVL0_UP_ID
+                              FROM ORG1001V V1
+
+                              <if test="isCD != null and isCD != '' ">
+                                JOIN ( SELECT DISTINCT DEPT_CODE
+                                          FROM ORG0005D A
+                                          JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+                                          START WITH B.MEM_CODE = #{isCD}
+                                          CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
+                                ) CD_FILTER ON V1.DEPT_CODE = CD_FILTER.DEPT_CODE
+                              </if>
+                              ) T4 ON T4.MEM_ID = C.SRV_CODY_ID
+
+             <if test="isCD != null and isCD != '' ">
+                JOIN ( SELECT DISTINCT DEPT_CODE
+                          FROM ORG0005D A
+                          JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+                          START WITH B.MEM_CODE = #{isCD}
+                          CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
+                ) CD_FILTER ON T4.DEPT_CODE = CD_FILTER.DEPT_CODE
+                                AND 'MD08' IN (A.DEPT_CODE, B.MAIN_DEPT)
+             </if>
           WHERE A.TR_DVCD = 'T'
     ) Z
     WHERE 1=1
 
     <if test="customer != null and customer != '' ">
-      AND Z.Customer_name = upper(#{customer})
+      AND Z.CUSTOMER_NAME = UPPER(#{customer})
     </if>
 
     <if test="main_inquiry != null and main_inquiry != '' ">
@@ -126,7 +143,7 @@
     </if>
 
     <if test="counseling_no != null and counseling_no != '' ">
-      AND LOWER(Z.Counseling_No)= LOWER(#{counseling_no})
+      AND LOWER(Z.COUNSELING_NO)= LOWER(#{counseling_no})
     </if>
 
     <if test="main_department != null and main_department != '' ">
@@ -140,6 +157,7 @@
             #{item}
         </foreach>
     </if>
+
     <if test="cmGroup != null and cmGroup !='' ">
         AND Z.CMGROUP IN
         <foreach item="item" collection="cmGroup" index="index"
@@ -154,12 +172,12 @@
 
     <if test="regStartDt != null and regStartDt != '' ">
       <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ >= ]]> TO_CHAR(TO_DATE (#{regStartDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
-      AND Z.REG_DTM <![CDATA[ >= ]]> concat(TO_CHAR(TO_DATE(#{regStartDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'000000')
+      AND Z.REG_DTM <![CDATA[ >= ]]> CONCAT(TO_CHAR(TO_DATE(#{regStartDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'000000')
     </if>
 
     <if test="regEndDt != null and regEndDt != '' ">
       <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ <= ]]> TO_CHAR(TO_DATE (#{regEndDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
-      AND Z.REG_DTM <![CDATA[ <= ]]> concat(TO_CHAR(TO_DATE(#{regEndDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'235959')
+      AND Z.REG_DTM <![CDATA[ <= ]]> CONCAT(TO_CHAR(TO_DATE(#{regEndDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'235959')
     </if>
 
     <if test="listStatus != null and listStatus != '' ">
@@ -170,7 +188,7 @@
         #{item}
       </foreach>
     </if>
-    ORDER BY Reg_date
+    ORDER BY REG_DATE
   </select>
 
   <select id="selectDetailTagStatus" parameterType="Map" resultType="egovMap">
