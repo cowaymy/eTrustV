@@ -439,9 +439,14 @@
 
                              <![CDATA[
                             LEFT JOIN
-                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY
+                                FROM LOG0075M
+                                WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'
+                                AND REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N')  <>  'Y')
+                                GROUP BY LOC_ID , ITM_CODE ) Extent4
                                  ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
                              ]]>
+                             <!-- bug fix ticket 24033963 - POS logic not same with Total stock  -->
                          ) Project1
                     WHERE   1 = 1
                     <if test=" null != stkId and stkId.length > 0">
