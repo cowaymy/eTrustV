@@ -85,10 +85,14 @@
             $("#addInstallForm #m2").hide();
             $("#addInstallForm #m4").hide();
             $("#addInstallForm #m5").hide();
+            $("#addInstallForm #attachmentTitle").hide();
+            $("#addInstallForm #attachmentArea").hide();
         } else {
             $("#addInstallForm #m6").hide();
             $("#addInstallForm #m7").hide();
             $("#addInstallForm #m8").hide();
+            $("#addInstallForm #attachmentTitle").show();
+            $("#addInstallForm #attachmentArea").show();
         }
 
         $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -99,11 +103,14 @@
                 $("#checkCommission").prop("checked", true);
                 $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
                 		+ " \nInstall Status: Completed");
-
+                $("#addInstallForm #attachmentTitle").show();
+                $("#addInstallForm #attachmentArea").show();
             } else {
                 $("#checkCommission").prop("checked", false);
                 $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
                         + " \nInstall Status: Failed");
+                $("#addInstallForm #attachmentTitle").hide();
+                $("#addInstallForm #attachmentArea").hide();
             }
         });
 
@@ -137,6 +144,8 @@
                 $("#addInstallForm #m2").show();
                 $("#addInstallForm #m4").show();
                 $("#addInstallForm #m5").show();
+                $("#addInstallForm #attachmentTitle").show();
+                $("#addInstallForm #attachmentArea").show();
 
             } else {
                 $("#addInstallForm #checkCommission").prop("checked", false);
@@ -146,6 +155,8 @@
                 $("#addInstallForm #m6").show();
                 $("#addInstallForm #m7").show();
                 $("#addInstallForm #m8").show();
+                $("#addInstallForm #attachmentTitle").hide();
+                $("#addInstallForm #attachmentArea").hide();
             }
 
             $("#addInstallForm #installDate").val("");
@@ -408,6 +419,56 @@
 	        Common.alert(msg);
 	        return;
 	      }
+
+	        var formData = new FormData();
+	        var fileContentsObj = {};
+	        var fileContentsArr = [];
+	        var newfileGrpId = 0;
+	        var isValid = false;
+
+	        $.each(myFileCaches, function(n, v) {
+	            fileContentsObj = {};
+	            formData.append(n, v.file);
+	            formData.append("salesOrdId",$("#hidSalesOrderId").val());
+	            formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+	            formData.append("atchFileGrpId", newfileGrpId);
+
+	            fileContentsObj = { seq : n,
+	                                        contentsType :v.contentsType,
+	                                        fileName : v.file.name};
+
+	            fileContentsArr.push(fileContentsObj);
+	          });
+
+	        if(fileContentsArr.length < 3){
+	             isValid = false;
+	         }else{
+	             isValid = true;
+	         }
+
+	        if(isValid == true)  {
+	             Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
+	                if(result != 0 && result.code == 00) {
+	                      // KR-OHK Serial Check add
+	                  var saveForm = {
+	                          "installForm" : $("#addInstallForm").serializeJSON(),
+	                          "fileGroupKey": result.data.fileGroupKey
+	                    };
+
+	                    Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
+	                        Common.alert(result.message, fn_saveclose);
+	                        $("#popup_wrap").remove();
+	                        fn_installationListSearch();
+	                    });
+	                }else {
+	                    Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+	                }
+	            }, function(result){
+	                Common.alert("Upload Failed. Please check with System Administrator.");
+	            });
+	       }else{
+	           Common.alert("Upload Failed. Please upload more than 2 attachment");
+	       }
 	    }
 
 	    if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
@@ -434,57 +495,17 @@
 	        Common.alert(msg);
 	        return;
 	      }
+
+	      var saveInsFailedForm = {
+                  "installForm" : $("#addInstallForm").serializeJSON()
+           };
+
+            Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveInsFailedForm, function(result) {
+                Common.alert(result.message, fn_saveclose);
+                $("#popup_wrap").remove();
+                fn_installationListSearch();
+            });
 	    }
-
-	    var formData = new FormData();
-	    var fileContentsObj = {};
-	    var fileContentsArr = [];
-	    var newfileGrpId = 0;
-	    var isValid = false;
-
-	    $.each(myFileCaches, function(n, v) {
-	        fileContentsObj = {};
-	        formData.append(n, v.file);
-	        formData.append("salesOrdId",$("#hidSalesOrderId").val());
-	        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
-	        formData.append("atchFileGrpId", newfileGrpId);
-
-	        fileContentsObj = { seq : n,
-	                                    contentsType :v.contentsType,
-	                                    fileName : v.file.name};
-
-	        fileContentsArr.push(fileContentsObj);
-	      });
-
-	    if(fileContentsArr.length < 3){
-	         isValid = false;
-	     }else{
-	         isValid = true;
-	     }
-
-	    if(isValid == true)  {
-    	     Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
-    	        if(result != 0 && result.code == 00) {
-    	              // KR-OHK Serial Check add
-    	          var saveForm = {
-                          "installForm" : $("#addInstallForm").serializeJSON(),
-                          "fileGroupKey": result.data.fileGroupKey
-                    };
-
-             		Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", saveForm, function(result) {
-            	        Common.alert(result.message, fn_saveclose);
-            	        $("#popup_wrap").remove();
-            	        fn_installationListSearch();
-            	    });
-    	        }else {
-    	            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-    	        }
-    	    }, function(result){
-    	        Common.alert("Upload Failed. Please check with System Administrator.");
-    	    });
-	   }else{
-		   Common.alert("Upload Failed. Please upload more than 2 attachment");
-	   }
     }
 
 	function fn_saveclose() {
@@ -1303,12 +1324,12 @@
    </table>
    <!-- table end -->
 
-      <aside class="title_line">
+      <aside class="title_line"  id="attachmentTitle">
         <h2>
           <spring:message code='service.text.attachment' />
          </h2>
       </aside>
-      <table class="type1" id="completedHide3">
+      <table class="type1" id="attachmentArea">
         <caption>table</caption>
         <colgroup>
           <col style="width: 130px" />

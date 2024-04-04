@@ -47,7 +47,8 @@ var myFileCaches = {};
               $("#addInstallForm #instChklstDesc").hide();
             }
             $("#nextCallDate").val("");
-
+            $("#addInstallForm #attachmentTitle").show();
+            $("#addInstallForm #attachmentArea").show();
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
@@ -79,7 +80,8 @@ var myFileCaches = {};
             $("#addInstallForm #m16").show();
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
-
+            $("#addInstallForm #attachmentTitle").hide();
+            $("#addInstallForm #attachmentArea").hide();
             var currDt = new Date(),
             month = '' + (currDt.getMonth()+1),
             day = '' + (currDt.getDate()+1),
@@ -201,6 +203,9 @@ var myFileCaches = {};
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+
+        $("#addInstallForm #attachmentTitle").hide();
+        $("#addInstallForm #attachmentArea").hide();
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -229,6 +234,8 @@ var myFileCaches = {};
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+        $("#addInstallForm #attachmentTitle").show();
+        $("#addInstallForm #attachmentArea").show();
       }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -238,6 +245,8 @@ var myFileCaches = {};
             if ($("#addInstallForm #installStatus").val() == 4) {
               $("#checkCommission").prop("checked", true);
               $("#addInstallForm #m18").show();
+              $("#addInstallForm #attachmentTitle").show();
+              $("#addInstallForm #attachmentArea").show();
             }
             else {
               var currDt = new Date(),
@@ -256,6 +265,8 @@ var myFileCaches = {};
               $("#nextCallDate").val(currentDate);
               $("#checkCommission").prop("checked", false);
               $("#addInstallForm #m18").hide();
+              $("#addInstallForm #attachmentTitle").hide();
+              $("#addInstallForm #attachmentArea").hide();
             }
       });
 
@@ -546,9 +557,18 @@ var myFileCaches = {};
   function fn_saveInstall() {
     console.log("addInstallationResultProductDetailPop :: fn_saveInstall");
     var msg = "";
-    var addedRowItems;
     var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
     var chkMobileNo = custMobileNo.substring(0, 2);
+    var addedRowItems;
+    // KR-OHK Serial Check add
+    var url = "";
+
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+      url = "/services/addInstallationSerial.do";
+    } else {
+      url = "/services/addInstallation_2.do";
+    }
+
     if (chkMobileNo == '60'){
         custMobileNo = custMobileNo.substring(1);
     }
@@ -626,6 +646,57 @@ var myFileCaches = {};
         Common.alert(msg);
         return;
       }
+
+      var formData = new FormData();
+      var fileContentsObj = {};
+      var fileContentsArr = [];
+      var newfileGrpId = 0;
+      var isValid = false;
+
+      $.each(myFileCaches, function(n, v) {
+          fileContentsObj = {};
+          formData.append(n, v.file);
+          formData.append("salesOrdId",$("#hidSalesOrderId").val());
+          formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+          formData.append("atchFileGrpId", newfileGrpId);
+
+          fileContentsObj = { seq : n,
+                                      contentsType :v.contentsType,
+                                      fileName : v.file.name};
+
+          fileContentsArr.push(fileContentsObj);
+        });
+
+      if(fileContentsArr.length < 3){
+          isValid = false;
+      }else{
+          isValid = true;
+      }
+
+      if(isValid == true){
+          Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+              console.log("[Save] Upload result :: " + JSON.stringify(result));
+              if(result != 0 && result.code == 00) {
+                  var saveForm = {
+                            "installForm" : $("#addInstallForm").serializeJSON(),
+                            "add" : addedRowItems,
+                            "fileGroupKey": result.data.fileGroupKey
+                  };
+
+                  Common.ajax("POST", url, saveForm, function(result) {
+                      Common.alert(result.message, fn_saveclose);
+                      $("#popup_wrap").remove();
+                      fn_installationListSearch();
+                 });
+              }else {
+                  Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+              }
+          }, function(result){
+              Common.alert("Upload Failed. Please check with System Administrator.");
+          });
+      }else{
+           Common.alert("Upload Failed. Please upload more than 2 attachment");
+      }
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
@@ -682,66 +753,16 @@ var myFileCaches = {};
         Common.alert(msg);
         return;
       }
-    }
 
-    // KR-OHK Serial Check add
-    var url = "";
+      var saveInsFailedForm = {
+              "installForm" : $("#addInstallForm").serializeJSON()
+     };
 
-    if ($("#hidSerialRequireChkYn").val() == 'Y') {
-      url = "/services/addInstallationSerial.do";
-    } else {
-      url = "/services/addInstallation_2.do";
-    }
-
-    var formData = new FormData();
-    var fileContentsObj = {};
-    var fileContentsArr = [];
-    var newfileGrpId = 0;
-    var isValid = false;
-
-    $.each(myFileCaches, function(n, v) {
-        fileContentsObj = {};
-        formData.append(n, v.file);
-        formData.append("salesOrdId",$("#hidSalesOrderId").val());
-        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
-        formData.append("atchFileGrpId", newfileGrpId);
-
-        fileContentsObj = { seq : n,
-                                    contentsType :v.contentsType,
-                                    fileName : v.file.name};
-
-        fileContentsArr.push(fileContentsObj);
+      Common.ajax("POST", url, saveInsFailedForm, function(result) {
+         Common.alert(result.message, fn_saveclose);
+         $("#popup_wrap").remove();
+         fn_installationListSearch();
       });
-
-    if(fileContentsArr.length < 3){
-        isValid = false;
-    }else{
-        isValid = true;
-    }
-
-    if(isValid == true){
-        Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
-            console.log("[Save] Upload result :: " + JSON.stringify(result));
-            if(result != 0 && result.code == 00) {
-                var saveForm = {
-                          "installForm" : $("#addInstallForm").serializeJSON(),
-                          "add" : addedRowItems,
-                          "fileGroupKey": result.data.fileGroupKey
-                };
-
-                Common.ajax("POST", url, saveForm, function(result) {
-          	        Common.alert(result.message, fn_saveclose);
-          	        $("#popup_wrap").remove();
-          	        fn_installationListSearch();
-               });
-            }else {
-                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            }
-        }, function(result){
-            Common.alert("Upload Failed. Please check with System Administrator.");
-        });
-    }else{
-    	 Common.alert("Upload Failed. Please upload more than 2 attachment");
     }
   }
 
@@ -2382,12 +2403,12 @@ var myFileCaches = {};
      </tr>
     </tbody>
    </table>
-         <aside class="title_line">
+      <aside class="title_line"  id="attachmentTitle">
         <h2>
           <spring:message code='service.text.attachment' />
          </h2>
       </aside>
-      <table class="type1" id="completedHide3">
+      <table class="type1" id="attachmentArea">
         <caption>table</caption>
         <colgroup>
           <col style="width: 130px" />

@@ -110,6 +110,10 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+
+        $("#addInstallForm #attachmentTitle").hide();
+        $("#addInstallForm #attachmentArea").hide();
+
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -137,6 +141,9 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+
+        $("#addInstallForm #attachmentTitle").show();
+        $("#addInstallForm #attachmentArea").show();
       }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -145,6 +152,8 @@
           function() {
             if ($("#addInstallForm #installStatus").val() == 4) {
               $("#checkCommission").prop("checked", true);
+              $("#addInstallForm #attachmentTitle").show();
+              $("#addInstallForm #attachmentArea").show();
             }
             else {
               var currDtt = new Date();
@@ -165,6 +174,8 @@
               var currentDate =  [day, month, year].join('/');
               $("#nextCallDate").val(currentDate);
               $("#checkCommission").prop("checked", false);
+              $("#addInstallForm #attachmentTitle").hide();
+              $("#addInstallForm #attachmentArea").hide();
             }
       });
 
@@ -469,16 +480,27 @@
   }
 
   function fn_saveInstall() {
-    console.log("addInstallationResultPop :: fn_saveInstall");
+
     var msg = "";
     var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
     var chkMobileNo = custMobileNo.substring(0, 2);
+    var url = "";
+
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+      url = "/services/addInstallationSerial.do";
+    } else {
+      url = "/services/addInstallation_2.do";
+    }
+
+    $("#hiddenFailReasonCode").val( $("#failReasonCode option:selected").text() );
+
     if (chkMobileNo == '60'){
         custMobileNo = custMobileNo.substring(1);
     }
     $("#custMobileNo").val(custMobileNo);
 
     if ($("#addInstallForm #installStatus").val() == 4) {
+
       // COMPLETED
       if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
         Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
@@ -599,9 +621,60 @@
         Common.alert(msg);
         return;
       }
+
+      var formData = new FormData();
+      var fileContentsObj = {};
+      var fileContentsArr = [];
+      var newfileGrpId = 0;
+      var isValid = false;
+
+      $.each(myFileCaches, function(n, v) {
+          fileContentsObj = {};
+          formData.append(n, v.file);
+          formData.append("salesOrdId",$("#hidSalesOrderId").val());
+          formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+          formData.append("atchFileGrpId", newfileGrpId);
+
+          fileContentsObj = { seq : n,
+                                      contentsType :v.contentsType,
+                                      fileName : v.file.name};
+
+          fileContentsArr.push(fileContentsObj);
+      });
+
+      if(fileContentsArr.length < 3){
+          isValid = false;
+      }else{
+          isValid = true;
+      }
+
+        if(isValid == true)  {
+            Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+                if(result != 0 && result.code == 00) {
+                    var saveForm = {
+                              "installForm" : $("#addInstallForm").serializeJSON(),
+                              "add" : addedRowItems,
+                              "fileGroupKey": result.data.fileGroupKey
+                    };
+
+                    Common.ajax("POST", url, saveForm, function(result) {
+                         Common.alert(result.message, fn_saveclose);
+                         $("#popup_wrap").remove();
+                         fn_installationListSearch();
+                   });
+                }else {
+                    Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+                }
+            }, function(result){
+                Common.alert("Upload Failed. Please check with System Administrator.");
+            });
+          }else{
+              Common.alert("Upload Failed. Please upload more than 2 attachment");
+          }
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
+
         if ($("#failLocCde").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Location' htmlEscape='false'/> </br>";
         }
@@ -675,68 +748,17 @@
         Common.alert(msg);
         return;
       }
+
+      var saveInsFailedForm = {
+              "installForm" : $("#addInstallForm").serializeJSON()
+     };
+
+      Common.ajax("POST", url, saveInsFailedForm, function(result) {
+         Common.alert(result.message, fn_saveclose);
+         $("#popup_wrap").remove();
+         fn_installationListSearch();
+      });
     }
-
-    // KR-OHK Serial Check add
-    var url = "";
-
-    if ($("#hidSerialRequireChkYn").val() == 'Y') {
-      url = "/services/addInstallationSerial.do";
-    } else {
-      url = "/services/addInstallation_2.do";
-    }
-
-    $("#hiddenFailReasonCode").val( $("#failReasonCode option:selected").text() );
-
-    var formData = new FormData();
-    var fileContentsObj = {};
-    var fileContentsArr = [];
-    var newfileGrpId = 0;
-    var isValid = false;
-
-    $.each(myFileCaches, function(n, v) {
-        fileContentsObj = {};
-        formData.append(n, v.file);
-        formData.append("salesOrdId",$("#hidSalesOrderId").val());
-        formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
-        formData.append("atchFileGrpId", newfileGrpId);
-
-        fileContentsObj = { seq : n,
-                                    contentsType :v.contentsType,
-                                    fileName : v.file.name};
-
-        fileContentsArr.push(fileContentsObj);
-    });
-
-     if(fileContentsArr.length < 3){
-    	 isValid = false;
-     }else{
-    	 isValid = true;
-     }
-
-     if(isValid == true)  {
-        Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
-            if(result != 0 && result.code == 00) {
-                var saveForm = {
-                          "installForm" : $("#addInstallForm").serializeJSON(),
-                          "add" : addedRowItems,
-                          "fileGroupKey": result.data.fileGroupKey
-                };
-
-                Common.ajax("POST", url, saveForm, function(result) {
-                     Common.alert(result.message, fn_saveclose);
-                     $("#popup_wrap").remove();
-                     fn_installationListSearch();
-               });
-            }else {
-                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            }
-        }, function(result){
-            Common.alert("Upload Failed. Please check with System Administrator.");
-        });
-      }else{
-    	  Common.alert("Upload Failed. Please upload more than 2 attachment");
-      }
   }
 
   function fn_saveclose() {
@@ -2237,12 +2259,12 @@
           </dl>
         </article>
 
-      <aside class="title_line">
+      <aside class="title_line"  id="attachmentTitle">
         <h2>
           <spring:message code='service.text.attachment' />
          </h2>
       </aside>
-      <table class="type1" id="completedHide3">
+      <table class="type1"  id="attachmentArea">
         <caption>table</caption>
         <colgroup>
           <col style="width: 130px" />
