@@ -112,6 +112,16 @@
       headerText : "<spring:message code='service.grid.UpdateBy'/>",
       width : 150,
       height : 80
+    },{
+    	dataField : "tagSettleDate",
+        headerText : "TAG Settle Date",
+        width : 150,
+        height : 80
+    },{
+    	dataField : "tagSettleBy",
+        headerText : "TAG Settle By",
+        width : 150,
+        height : 80
     }, {
       dataField : "status",
       headerText : "<spring:message code='service.grid.Status'/>",
@@ -470,7 +480,10 @@
             <option value="10">Cancelled</option> -->
 
           </select></td>
-          <th></th><td></td>
+          <th scope="row"><spring:message code='service.title.OrderNo' /></th>
+          <td>
+              <input type="text" class="w100p" title="Order No." placeholder="Order No." id="orderNo" name="orderNo" />
+          </td>
           <th></th><td></td>
      </tr>
     </tbody>

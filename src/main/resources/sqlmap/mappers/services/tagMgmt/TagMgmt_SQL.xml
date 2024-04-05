@@ -23,6 +23,8 @@
                --TO_CHAR(Z.UPD_DT, 'YYYY-MM-DD') UPD_DT,
                Z.UPD_DT,
                Z.LST_UPD_ID,
+               Z.TAG_SETTLE_DATE,
+               Z.TAG_SETTLE_BY,
                Z.CALL_REM
     FROM ( SELECT A.CUR_SEQNO COUNSELING_NO
                         , A.CUST_NO AS CUSTOMER_NO
@@ -67,6 +69,12 @@
                         , A.CNSL_MEDCLAS_CD
                         , BRNCH_ID
                         , A.LST_UPD_ID
+                        , CASE WHEN B.STUS_CODE_ID = 34
+                              THEN TO_CHAR(B.UPD_DT,'YYYY/MM/DD')
+                           ELSE NULL END AS TAG_SETTLE_DATE
+                        , CASE WHEN B.STUS_CODE_ID = 34
+                              THEN usr.USER_NAME
+                           ELSE NULL END AS TAG_SETTLE_BY
                         , NVL((SELECT CALL_REM
                                   FROM ( SELECT CUR_SEQNO
                                                       , CALL_REM
@@ -89,7 +97,6 @@
              LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
              LEFT JOIN GBSLCVD.SYS0047M USR ON B.UPD_USER_ID = USR.USER_ID
              LEFT JOIN GBSLCVD.SYS0005M BRNCH ON USR.USER_BRNCH_ID = BRNCH.BRNCH_ID
-
              -- ADDED CMGROUP BY HUI DING, 2020-12-17
              LEFT JOIN SAL0090D C ON C.SRV_SO_ID = A.ORD_ID AND C.SRV_STUS_ID = 1
              --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
@@ -188,7 +195,12 @@
         #{item}
       </foreach>
     </if>
+
+    <if test="orderNo != null and orderNo != '' ">
+       AND Z.ORD_NO = #{orderNo}
+    </if>
     ORDER BY REG_DATE
+
   </select>
 
   <select id="selectDetailTagStatus" parameterType="Map" resultType="egovMap">
@@ -402,11 +414,11 @@
   </update>
 
   <select id="selectTagRemarks" parameterType="Map" resultType="egovMap">
-    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.DEPT_CODE) AS main_department
-         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT_CDE) AS sub_department
-         , TO_CHAR(T2.MEMO) AS remark_cont
-         , TO_CHAR('Active') as status_Nm
-         , TO_CHAR( to_date(Substr(T2.REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD' )AS crt_Date
+    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.DEPT_CODE) AS MAIN_DEPARTMENT
+         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT_CDE) AS SUB_DEPARTMENT
+         , TO_CHAR(T2.MEMO) AS REMARK_CONT
+         , TO_CHAR('Active') AS STATUS_NM
+         , TO_CHAR(TO_DATE(T2.REG_DTM, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS')  AS CRT_DATE
          , TO_CHAR(T2.REG_NM) AS REG_NM
     FROM CALLCENTERUSER.T_CUR_HIST T1
     LEFT JOIN CALLCENTERUSER.T_RMK_HIST T2 ON T1.CUR_SEQNO = T2.CUR_SEQNO
@@ -414,14 +426,15 @@
 
     UNION ALL
 
-    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.MAIN_DEPT ) main_department
-         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT) sub_department, TO_CHAR( T1.CALL_REM ) remark_cont
-         , TO_CHAR(CALLCENTERUSER.FN_ERP_GET_STUS_NM(T1.CALL_STUS_ID)) status_Nm
-         , TO_CHAR(T1.CALL_CRT_DT,'YYYY-MM-DD') crt_Date
+    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.MAIN_DEPT ) MAIN_DEPARTMENT
+         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT) SUB_DEPARTMENT
+         , TO_CHAR( T1.CALL_REM ) REMARK_CONT
+         , TO_CHAR(CALLCENTERUSER.FN_ERP_GET_STUS_NM(T1.CALL_STUS_ID)) STATUS_NM
+         , TO_CHAR(TO_DATE(T1.CALL_CRT_DT, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS')  AS CRT_DATE
          , T2.USER_FULL_NAME AS REG_NM
     FROM GBSLCVD.CCR0007D T1
     LEFT OUTER JOIN GBSLCVD.SYS0047M T2 ON T1.CALL_CRT_USER_ID = T2.USER_ID
-    WHERE Call_stus_id in (1,10,34,35,36,44)
+    WHERE CALL_STUS_ID IN (1,10,34,35,36,44)
       AND CALL_ENTRY_ID = #{callEntryId}
   </select>
 
