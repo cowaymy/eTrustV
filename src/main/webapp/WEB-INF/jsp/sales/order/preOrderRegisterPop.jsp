@@ -2437,7 +2437,7 @@
         $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
         $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
         $("#pBillAddrDtl").show();
-        fn_maskingData("_BILLADDRDTL", $("#billAddrDtl"));
+        fn_maskingDataAddr("_BILLADDRDTL", $("#billAddrDtl"));
 
         // $("#billStreet").val(billCustInfo.street); //Street
         $("#billStreet").text(billCustInfo.street); //Street
@@ -2470,7 +2470,7 @@
         $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
         $("#instAddrDtl").val(custInfo.addrDtl); //Address
         $("#pInstAddrDtl").show();
-        fn_maskingData("_INSTADDRDTL", $("#instAddrDtl"));
+        fn_maskingDataAddr("_INSTADDRDTL", $("#instAddrDtl"));
 
         // $("#instStreet").val(custInfo.street); //Street
         $("#instStreet").text(custInfo.street); //Street
@@ -2934,6 +2934,22 @@
 
   function fn_maskingData(ind, obj) {
     var maskedVal = (obj.val()).substr(-4).padStart((obj.val()).length, '*');
+      $("#span" + ind).html(maskedVal);
+      // Appear NRIC on hover over field
+      /*$("#span" + ind).hover(function() {
+          $("#span" + ind).html(obj.val());
+      }).mouseout(function() {
+          $("#span" + ind).html(maskedVal);
+      });
+      $("#imgHover" + ind).hover(function() {
+          $("#span" + ind).html(obj.val());
+      }).mouseout(function() {
+          $("#span" + ind).html(maskedVal);
+      });*/
+  }
+
+  function fn_maskingDataAddr(ind, obj) {
+    var maskedVal = (obj.val()).substr(-20).padStart((obj.val()).length, '*');
       $("#span" + ind).html(maskedVal);
       // Appear NRIC on hover over field
       /*$("#span" + ind).hover(function() {
