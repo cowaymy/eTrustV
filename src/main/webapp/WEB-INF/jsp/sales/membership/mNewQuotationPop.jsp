@@ -618,8 +618,10 @@ $(document).ready(function(){
 						else if (result[0].promoDiscType == "1") { //amt
 
 	                        if(Number(SSTValue) > 0){
-	                            var t1 = (((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc) * ((100 + SSTValue) / 100);
+	                            //var t1 = (((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc) * ((100 + SSTValue) / 100);
 	                            var t2 = 0;
+
+	                            var t1 = Math.floor((((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc)) * ((100 + SSTValue) / 100);
 
 	                            if ($("#eurCertYn").val() == "N") {
 	                                //t2 = t1 *100 / 106; -- without GST 6% edited by TPY 23/05/2018
