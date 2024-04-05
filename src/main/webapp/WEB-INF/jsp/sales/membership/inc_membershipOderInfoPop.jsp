@@ -8,7 +8,8 @@
     });
 
     function fn_maskingData(ind, val) {
-      var maskedVal = (val).substr(-4).padStart((val).length, '*');
+      //var maskedVal = (val).substr(-4).padStart((val).length, '*');
+      var maskedVal = (val).replace("${contactInfoTab.instAddrDtl}", "**********");
       $("#span" + ind).html(maskedVal);
       /*$("#span" + ind).hover(function() {
         $("#span" + ind).html(val);
