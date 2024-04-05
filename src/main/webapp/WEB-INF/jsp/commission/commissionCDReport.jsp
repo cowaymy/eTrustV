@@ -136,7 +136,7 @@ console.log(year);
 			{
 				if(year >= 2024 && month >=03 || year > 2024)
                 {
-                    reportFileName = "/commission/CodyComm_PDF_202403.rpt"; //reportFileName
+                    reportFileName = "/commission/CodyComm_PDF_202403.rpt"; //100%Extrade
                 }
 				else if(year >= 2024 && month >=01 || year > 2024)
                 {

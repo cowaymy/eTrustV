@@ -141,7 +141,7 @@
 				}else{
 					if(year >= 2024 && month >=03|| year > 2024)
                     {
-                        reportFileName = "/commission/HPComm_PDF_202403.rpt"; //reportFileName
+                        reportFileName = "/commission/HPComm_PDF_202403.rpt"; //100% Extrade + 36 Months Government
                     }
 					else if(year >= 2024 && month >=01|| year > 2024)
                     {
