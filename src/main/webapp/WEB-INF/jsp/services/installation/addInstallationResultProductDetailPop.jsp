@@ -47,8 +47,6 @@ var myFileCaches = {};
               $("#addInstallForm #instChklstDesc").hide();
             }
             $("#nextCallDate").val("");
-            $("#addInstallForm #attachmentTitle").show();
-            $("#addInstallForm #attachmentArea").show();
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
@@ -80,8 +78,7 @@ var myFileCaches = {};
             $("#addInstallForm #m16").show();
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
-            $("#addInstallForm #attachmentTitle").hide();
-            $("#addInstallForm #attachmentArea").hide();
+
             var currDt = new Date(),
             month = '' + (currDt.getMonth()+1),
             day = '' + (currDt.getDate()+1),
@@ -204,8 +201,6 @@ var myFileCaches = {};
           $("#addInstallForm #instChklstDesc").show();
         }
 
-        $("#addInstallForm #attachmentTitle").hide();
-        $("#addInstallForm #attachmentArea").hide();
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -234,8 +229,7 @@ var myFileCaches = {};
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
-        $("#addInstallForm #attachmentTitle").show();
-        $("#addInstallForm #attachmentArea").show();
+
       }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -245,8 +239,6 @@ var myFileCaches = {};
             if ($("#addInstallForm #installStatus").val() == 4) {
               $("#checkCommission").prop("checked", true);
               $("#addInstallForm #m18").show();
-              $("#addInstallForm #attachmentTitle").show();
-              $("#addInstallForm #attachmentArea").show();
             }
             else {
               var currDt = new Date(),
@@ -265,8 +257,6 @@ var myFileCaches = {};
               $("#nextCallDate").val(currentDate);
               $("#checkCommission").prop("checked", false);
               $("#addInstallForm #m18").hide();
-              $("#addInstallForm #attachmentTitle").hide();
-              $("#addInstallForm #attachmentArea").hide();
             }
       });
 
@@ -754,14 +744,44 @@ var myFileCaches = {};
         return;
       }
 
-      var saveInsFailedForm = {
-              "installForm" : $("#addInstallForm").serializeJSON()
-     };
+      var formData = new FormData();
+      var fileContentsObj = {};
+      var fileContentsArr = [];
+      var newfileGrpId = 0;
 
-      Common.ajax("POST", url, saveInsFailedForm, function(result) {
-         Common.alert(result.message, fn_saveclose);
-         $("#popup_wrap").remove();
-         fn_installationListSearch();
+      $.each(myFileCaches, function(n, v) {
+          fileContentsObj = {};
+          formData.append(n, v.file);
+          formData.append("salesOrdId",$("#hidSalesOrderId").val());
+          formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+          formData.append("atchFileGrpId", newfileGrpId);
+
+          fileContentsObj = { seq : n,
+                                      contentsType :v.contentsType,
+                                      fileName : v.file.name};
+
+          fileContentsArr.push(fileContentsObj);
+        });
+
+      Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+          console.log("[Save] Upload result :: " + JSON.stringify(result));
+          if(result != 0 && result.code == 00) {
+              var saveInsFailedForm = {
+                        "installForm" : $("#addInstallForm").serializeJSON(),
+                        "add" : addedRowItems,
+                        "fileGroupKey": result.data.fileGroupKey
+              };
+
+              Common.ajax("POST", url, saveInsFailedForm, function(result) {
+                  Common.alert(result.message, fn_saveclose);
+                  $("#popup_wrap").remove();
+                  fn_installationListSearch();
+             });
+          }else {
+              Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+          }
+      }, function(result){
+          Common.alert("Upload Failed. Please check with System Administrator.");
       });
     }
   }

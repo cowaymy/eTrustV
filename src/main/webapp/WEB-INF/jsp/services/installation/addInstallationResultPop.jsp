@@ -110,10 +110,6 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
-
-        $("#addInstallForm #attachmentTitle").hide();
-        $("#addInstallForm #attachmentArea").hide();
-
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -141,9 +137,6 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
-
-        $("#addInstallForm #attachmentTitle").show();
-        $("#addInstallForm #attachmentArea").show();
       }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -152,8 +145,6 @@
           function() {
             if ($("#addInstallForm #installStatus").val() == 4) {
               $("#checkCommission").prop("checked", true);
-              $("#addInstallForm #attachmentTitle").show();
-              $("#addInstallForm #attachmentArea").show();
             }
             else {
               var currDtt = new Date();
@@ -174,8 +165,6 @@
               var currentDate =  [day, month, year].join('/');
               $("#nextCallDate").val(currentDate);
               $("#checkCommission").prop("checked", false);
-              $("#addInstallForm #attachmentTitle").hide();
-              $("#addInstallForm #attachmentArea").hide();
             }
       });
 
@@ -749,14 +738,43 @@
         return;
       }
 
-      var saveInsFailedForm = {
-              "installForm" : $("#addInstallForm").serializeJSON()
-     };
+      var formData = new FormData();
+      var fileContentsObj = {};
+      var fileContentsArr = [];
+      var newfileGrpId = 0;
 
-      Common.ajax("POST", url, saveInsFailedForm, function(result) {
-         Common.alert(result.message, fn_saveclose);
-         $("#popup_wrap").remove();
-         fn_installationListSearch();
+      $.each(myFileCaches, function(n, v) {
+          fileContentsObj = {};
+          formData.append(n, v.file);
+          formData.append("salesOrdId",$("#hidSalesOrderId").val());
+          formData.append("InstallEntryNo",$("#hiddeninstallEntryNo").val());
+          formData.append("atchFileGrpId", newfileGrpId);
+
+          fileContentsObj = { seq : n,
+                                      contentsType :v.contentsType,
+                                      fileName : v.file.name};
+
+          fileContentsArr.push(fileContentsObj);
+      });
+
+      Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+          if(result != 0 && result.code == 00) {
+              var saveInsFailedForm = {
+                        "installForm" : $("#addInstallForm").serializeJSON(),
+                        "add" : addedRowItems,
+                        "fileGroupKey": result.data.fileGroupKey
+              };
+
+              Common.ajax("POST", url, saveInsFailedForm, function(result) {
+                   Common.alert(result.message, fn_saveclose);
+                   $("#popup_wrap").remove();
+                   fn_installationListSearch();
+             });
+          }else {
+              Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+          }
+      }, function(result){
+          Common.alert("Upload Failed. Please check with System Administrator.");
       });
     }
   }
