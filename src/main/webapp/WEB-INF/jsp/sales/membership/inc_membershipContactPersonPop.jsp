@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <th scope="row"><spring:message code="sales.NRIC" /></th>
-        <11<td colspan="3">
+        <td colspan="3">
           <!-- <span  id="inc_cntNric">${membershipInfoTab.cntNric}</span> -->
           <!-- <a href="#" class="search_btn" id="imgHoverNric"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a> -->
           <span id="spanNric" name='spanNric'></span>
