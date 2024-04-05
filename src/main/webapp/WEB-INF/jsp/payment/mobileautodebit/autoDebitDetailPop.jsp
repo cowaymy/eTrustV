@@ -611,7 +611,7 @@
     var maskedVal = (obj.val()).substr(-4).padStart((obj.val()).length, '*');
       $("#span" + ind).html(maskedVal);
       // Appear NRIC on hover over field
-      /*$("#span" + ind).hover(function() {
+      $("#span" + ind).hover(function() {
           $("#span" + ind).html(obj.val());
       }).mouseout(function() {
           $("#span" + ind).html(maskedVal);
@@ -620,7 +620,7 @@
           $("#span" + ind).html(obj.val());
       }).mouseout(function() {
           $("#span" + ind).html(maskedVal);
-      });*/
+      });
   }
 //Attachments
 </script>
@@ -702,11 +702,11 @@
               <input type="text" id="nricCompanyNumber" class="readonly w100p" readonly style="display:none"/>
               <table id="pCompanyNumber" style="display:none">
                 <tr>
-                  <!-- <td width="5%">
+                  <td width="5%">
                     <a href="#" class="search_btn" id="imgHoverCompanyNumber">
                       <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
                      </a>
-                   </td> -->
+                   </td>
                    <td><span id="spanCompanyNumber"></span></td>
                  </tr>
                </table>
