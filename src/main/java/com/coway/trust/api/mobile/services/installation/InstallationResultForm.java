@@ -100,6 +100,11 @@ public class InstallationResultForm {
 
   private String type;
   private int insAccPartId;
+
+
+  @ApiModelProperty(value = "installAccList")
+  private List<InstallationResultDetailForm> installAccList;
+
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
   @ApiModelProperty(value = "partList")
