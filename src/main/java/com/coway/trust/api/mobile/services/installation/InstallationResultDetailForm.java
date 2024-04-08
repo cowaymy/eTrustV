@@ -42,6 +42,52 @@ public class InstallationResultDetailForm {
 
 	private String isSmo;
 	private String isSerialReplace;
+	
+	private String resultNo; // INS or ASR
+	private int resultSoId; 
+	private int insAccPartId; 
+	private String remark; 
+	private String crtUserId; 
+
+	public String getResultNo() {
+		return resultNo;
+	}
+
+	public int getResultSoId() {
+		return resultSoId;
+	}
+
+	public int getInsAccPartId() {
+		return insAccPartId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public String getCrtUserId() {
+		return crtUserId;
+	}
+
+	public void setResultNo(String resultNo) {
+		this.resultNo = resultNo;
+	}
+
+	public void setResultSoId(int resultSoId) {
+		this.resultSoId = resultSoId;
+	}
+
+	public void setInsAccPartId(int insAccPartId) {
+		this.insAccPartId = insAccPartId;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setCrtUserId(String crtUserId) {
+		this.crtUserId = crtUserId;
+	}
 
 	public String getFilterCode() {
 		return filterCode;
