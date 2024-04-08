@@ -7,6 +7,13 @@
     var myFileCaches = {};
 
     $(document).ready(function() {
+    	var maxDate = new Date();
+    	var pickerOpts={
+    	        maxDate: maxDate,
+    	        dateFormat: "dd/mm/yy"
+    	};
+    	$(".j_date").datepicker(pickerOpts);
+
         var myGridID_view;
         var callType = "${callType.typeId}";
         if("${installResult.preinstalltionStus}"){
@@ -119,12 +126,25 @@
         $("#installDate").change(function() {
             var checkMon = $("#installDate").val();
 
-            Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ', function(result) {
-                if (result.message == "Please choose this month only") {
-                    Common.alert(result.message);
-                    $("#installDate").val('');
-                }
-            });
+            var day = checkMon.substr(0,2);
+            var month = Number(checkMon.substr(3,2));
+            var year = checkMon.substr(6);
+
+            var selectedDate = new Date(year,month-1,day);
+            var currDate = new Date();
+
+            if(selectedDate > currDate) {
+                Common.alert("Installation Date should not be future dates");
+                $("#installDate").val('');
+                return;
+            }
+
+//             Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ', function(result) {
+//                 if (result.message == "Please choose this month only") {
+//                     Common.alert(result.message);
+//                     $("#installDate").val('');
+//                 }
+//             });
         });
 
         $("#addInstallForm #installStatus").change(function() {
