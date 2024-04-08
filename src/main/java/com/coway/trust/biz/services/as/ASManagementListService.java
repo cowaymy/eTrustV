@@ -232,4 +232,6 @@ public interface ASManagementListService {
 
 	EgovMap selectSubmissionRecords(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectInstallAccWithAsEntryId(Map<String, Object> params);
+
 }
