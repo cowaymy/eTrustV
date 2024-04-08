@@ -6,6 +6,10 @@
 
     var histGridID;
     var histInfo;
+    var matrixGridID;
+    var matrixInfo;
+    var accLinkGridID;
+    var accLinkInfo;
 
     ordNo = "${headerInfo.ordNo}";
     ordId = "${ordId}";
@@ -18,11 +22,23 @@
 
 	$(document).ready(function(){
 		 if('${histInfo}'=='' || '${histInfo}' == null){
-	       }else{
-	    	   histInfo = JSON.parse('${histInfo}');
-	       }
+	     }else{
+	    	 histInfo = JSON.parse('${histInfo}');
+	     }
+
+		 if('${matrixInfo}'=='' || '${matrixInfo}' == null){
+	     }else{
+	    	 matrixInfo = JSON.parse('${matrixInfo}');
+	     }
+
+		 if('${accLinkInfo}'=='' || '${accLinkInfo}' == null){
+	     }else{
+	    	 accLinkInfo = JSON.parse('${accLinkInfo}');
+	     }
 
 		createAUIGrid();
+		createMatrixAUIGrid();
+		createAccLinkAUIGrid();
 
 		var maskedMobileNo = oriMailMobileNo.substr(0,3) + oriMailMobileNo.substr(3,oriMailMobileNo.length-7).replace(/[0-9]/g, "*") + oriMailMobileNo.substr(-4);
 		var maskedFaxNo = oriMailFaxNo.substr(0,3) + oriMailFaxNo.substr(3,oriMailFaxNo.length-7).replace(/[0-9]/g, "*") + oriMailFaxNo.substr(-4);
@@ -117,6 +133,84 @@
 	      }
     }
 
+    function createMatrixAUIGrid(){
+        //AUIGrid 칼럼 설정
+        var matrixLayout = [
+            { headerText : "Type",          dataField : "type"  }
+            , { headerText : "Current Month", dataField : "curMonth",     width : 120 }
+            , { headerText : "prev1Month",    dataField : "prev1Month",   width : 120 }
+            , { headerText : "prev2Month",    dataField : "prev2Month",   width : 120 }
+            , { headerText : "prev3Month",    dataField : "prev3Month",   width : 120 }
+            , { headerText : "prev4Month",    dataField : "prev4Month",   width : 120 }
+            , { headerText : "prev5Month",    dataField : "prev5Month",   width : 120 }
+            , { headerText : "prev6Month",    dataField : "prev5Month",   width : 120 }
+        ];
+
+	     //그리드 속성 설정
+	     var matrixGridPros = {
+	         usePaging           : false,             //페이징 사용
+	         //pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	         editable                : false,
+	         showStateColumn     : false,
+	         showRowNumColumn    : false,
+	         showHeader          : false,
+	         headerHeight        : 30,
+	         noDataMessage       : "No order found."
+	       //selectionMode       : "singleRow"  //"multipleCells",
+	     };
+
+	     matrixGridID = GridCommon.createAUIGrid("matrix_grid", matrixLayout, "", matrixGridPros);
+
+
+	      if(matrixInfo != '' ){
+	          AUIGrid.setGridData(matrixGridID, matrixInfo);
+	      }
+    }
+
+    function createAccLinkAUIGrid(){
+        //AUIGrid 칼럼 설정
+        var accLinkLayout = [
+          {   dataField : "orderNo", headerText : 'Order No <br> Order Status', width : 100, height: 100,
+        	   labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
+        		   return item.orderNo + "\n" + item.orderStatus;
+        	   }
+          }
+         ,{   dataField : "orderStatus", headerText : 'Order Status', width : 300, visible: false, height: 100}
+         ,{   dataField : "customerName", headerText : 'Customer Name', width : 300 , height: 100}
+         ,{   dataField : "custAccNo", headerText : 'Crc / Acc No',  width : 150 , height: 100}
+         ,{   dataField : "thirdParty", headerText : '3rd Party', width : 90 , height: 100}
+         ,{   dataField : "stkDesc", headerText : 'Product <br> Rental Fees', width : 300, height: 100,
+// 		       labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
+// 		    	    return item.stkDesc + '\n'  + item.rentalFee;
+// 		       }
+        	 listTemplateFunction : function(rowIndex, columnIndex, value, item, dataField, listItem) {
+        		  return item.stkDesc + '\n'  + item.rentalFee;
+        	 }
+         }
+         ,{   dataField : "rentalFee", headerText : 'Rental Fees', width : 150, visible: false, height: 100 }
+         ,{   dataField : "paymodeUpdDt", headerText : 'Paymode <br> Update Date', width : 100 , height: 100}
+        ];
+
+	     //그리드 속성 설정
+	     var accLinkGridPros = {
+	         usePaging           : false,             //페이징 사용
+	         //pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	         editable                : false,
+	         showStateColumn     : false,
+	         showRowNumColumn    : false,
+	         headerHeight : 35,
+	         htmlEncode : false
+	       //selectionMode       : "singleRow"  //"multipleCells",
+	     };
+
+	     accLinkGridID = GridCommon.createAUIGrid("accLink_grid", accLinkLayout, "", accLinkGridPros);
+
+
+	      if(accLinkInfo != '' ){
+	          AUIGrid.setGridData(accLinkGridID, accLinkInfo);
+	      }
+    }
+
     function fn_matrixRptPop(){
         var reportDownFileName = ""; //download report name
         var reportFileName = ""; //reportFileName
@@ -128,7 +222,7 @@
         $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
 
         reportFileName = "/sales/AutoDebitMatrixReport.rpt"; //reportFileName
-        reportDownFileName = "AD_Report_" + ordNo + "_" + today;  //report name
+        reportDownFileName = "AD_Matrix_" + ordNo + "_" + today;  //report name
         reportViewType = "PDF"; //viewType
 
         //set parameters
@@ -218,8 +312,8 @@
 		<tr>
 		    <th scope="row">M2 Status</th>
 		    <td><span>${headerInfo.m2Stus}</span></td>
-		     <th scope="row">Jom Pay Ref 1</th>
-            <td><span>${headerInfo.jompay}</span></td>
+<!-- 		     <th scope="row">Jom Pay Ref 1</th> -->
+<%--             <td><span>${headerInfo.jompay}</span></td> --%>
 		</tr>
 		<tr>
             <th scope="row">Customer Type</th>
@@ -247,6 +341,22 @@
 		<article class="grid_wrap"><!-- grid_wrap start -->
 		    <div id="hist_grid" style="width:100%; height:230px; margin:0 auto;"></div>
 		</article><!-- grid_wrap end -->
+
+		<aside class="mt40 mb10"><!-- title_line start -->
+            <div style="font-size:20px; color:#808080;text-decoration:underline;">Auto Debit Matrix</div>
+        </aside><!-- title_line end -->
+
+		<article class="grid_wrap"><!-- grid_wrap start -->
+            <div id="matrix_grid" style="width:100%; height:230px; margin:0 auto;"></div>
+        </article><!-- grid_wrap end -->
+
+        <aside class="mt40 mb10"><!-- title_line start -->
+            <div style="font-size:20px; color:#808080;text-decoration:underline;">Current CRC / ACC No Linked Order(s)</div>
+        </aside><!-- title_line end -->
+
+        <article class="grid_wrap"><!-- grid_wrap start -->
+            <div id="accLink_grid" style="width:100%; height:230px; margin:0 auto;"></div>
+        </article><!-- grid_wrap end -->
 
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

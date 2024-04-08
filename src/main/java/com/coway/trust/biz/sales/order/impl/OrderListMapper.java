@@ -129,4 +129,8 @@ public interface OrderListMapper {
 	EgovMap selectHeaderInfo(Map<String, Object> params);
 
 	List<EgovMap> selectHistInfo(Map<String, Object> params);
+
+	List<EgovMap> selectMatrixInfo(Map<String, Object> params);
+
+	List<EgovMap> selectAccLinkInfo(Map<String, Object> params);
 }

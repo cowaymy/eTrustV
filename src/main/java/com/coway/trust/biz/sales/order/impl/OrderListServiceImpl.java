@@ -664,4 +664,14 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	  public List<EgovMap> selectHistInfo(Map<String, Object> params) {
 		  return orderListMapper.selectHistInfo(params);
 	  };
+
+	  @Override
+	  public List<EgovMap> selectMatrixInfo(Map<String, Object> params) {
+		  return orderListMapper.selectMatrixInfo(params);
+	  };
+
+	  @Override
+	  public List<EgovMap> selectAccLinkInfo(Map<String, Object> params) {
+		  return orderListMapper.selectAccLinkInfo(params);
+	  };
 }

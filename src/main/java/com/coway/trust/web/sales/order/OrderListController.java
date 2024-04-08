@@ -817,6 +817,12 @@ public class OrderListController {
 		List<EgovMap> histInfo = orderListService.selectHistInfo(params);
 		model.addAttribute("histInfo", new Gson().toJson(histInfo));
 
+		List<EgovMap> matrixInfo = orderListService.selectMatrixInfo(params);
+		model.addAttribute("matrixInfo", new Gson().toJson(matrixInfo));
+
+		List<EgovMap> accLinkInfo = orderListService.selectAccLinkInfo(params);
+		model.addAttribute("accLinkInfo", new Gson().toJson(accLinkInfo));
+
 		model.addAttribute("ordId", params.get("ordId").toString());
 
 		Date date = new Date();

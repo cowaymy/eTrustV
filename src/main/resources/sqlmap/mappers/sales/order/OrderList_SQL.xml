@@ -1988,7 +1988,7 @@
                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (CP1.TELF, ' ')
                 ELSE NVL (CP2.TELF, ' ')
              END MAIL_CNT_TEL_F
-            , JOMPAY.CUST_BILL_PAY_REF_NO1 JOMPAY
+<!--             , JOMPAY.CUST_BILL_PAY_REF_NO1 JOMPAY -->
 <!--            , NVL(CA1.ADDR_DTL, ' ') MAIL_ADDR_DTL -->
 <!--            , NVL(CA1.STREET, ' ') MAIL_STREET -->
 <!--            , NVL(MA1.CITY, ' ') MAIL_CITY -->
@@ -2051,7 +2051,7 @@
 <!--         LEFT JOIN SAL0023D CA2 ON CA2.CUST_ADD_ID = SOM.CUST_ADD_ID AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66 -->
 <!--         LEFT JOIN SYS0064M MA2 ON MA2.AREA_ID = CA2.AREA_ID -->
         LEFT JOIN SAL0027D CP2 ON CP2.CUST_CNTC_ID = SOM.CUST_CNT_ID AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
-        LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID
+<!--         LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID -->
         <!-- ==================================================================== -->
         <!--  M2 STATUS + OPENING & CURRENT PAYMODE + OPENING & CURRENT CARD TYPE -->
         <!-- ==================================================================== -->
@@ -2197,7 +2197,7 @@
 		            END DT,
 		             CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN
 		               CASE WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
-		                  THEN Extent3.CUST_ACC_NO
+		                  THEN '************' || SUBSTR (Extent3.CUST_ACC_NO , 8, 4)
 		                  ELSE ' '
 		               END
 		             ELSE
@@ -2217,7 +2217,10 @@
 		                WHEN (Extent6.BANK_ID IS NOT NULL) THEN Extent6.CODE
 		                ELSE ' '
 		             END ISSUER_BANK,
-		             Extent10.CODE_NAME AS CARD_TYPE,
+<!-- 		             Extent10.CODE_NAME AS CARD_TYPE, -->
+                     CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN ' '
+                        ELSE Extent10.CODE_NAME
+                     END CARD_TYPE,
 		             'Update' AS TRANSACTION_TYPE,
 		             '' AS RESULT,
 		             NULL AS TRX_AMT,
@@ -2251,7 +2254,7 @@
 		                  ELSE '-'
 		               END DT,
 		               CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN
-		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN Ext3.CUST_ACC_NO
+		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN  '************' || SUBSTR (Ext3.CUST_ACC_NO, 8, 4)
 		                        ELSE ' '
 		                     END
 		                  ELSE ' '
@@ -2270,7 +2273,10 @@
 		                WHEN (Ext6.BANK_ID IS NOT NULL)THEN Ext6.CODE
 		                  ELSE ' '
 		               END ISSUER_BANK,
-		               Ext10.CODE_NAME AS CARD_TYPE,
+<!-- 		               Ext10.CODE_NAME AS CARD_TYPE, -->
+                       CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN ' '
+                        ELSE Ext10.CODE_NAME
+                       END CARD_TYPE,
 		               'Update' AS TRANSACTION_TYPE,
 		               '' AS RESULT,
 		               NULL AS TRX_AMT,
@@ -2301,6 +2307,261 @@
 		    WHERE C.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND C.UPD_DT
 		)
 		ORDER BY TO_DATE(DT,'DD/MM/YYYY') DESC
+    </select>
+
+    <select id="selectMatrixInfo" parameterType="Map" resultType="egovMap">
+        WITH DUMMY_TITLE AS (
+		      SELECT '1' AS TYPE FROM DUAL
+		    ),
+		    INFO AS(
+		        SELECT * FROM (
+		            SELECT * FROM (
+		                SELECT
+		                      T.CRT_DT_MM AS DT
+		                      , CASE WHEN T.CTRL_STUS_ID = 4 AND T.CODE_NAME = 'Success' THEN 'Success'
+		                           ELSE ''
+		                        END AS DEDUCTION
+		                      , T6.CODE AS PAYMODE
+		                      , T.CRT_DT
+		                      , T.SALES_ORD_ID
+		                      , 'AUTO DEBIT' TYPE
+		                FROM (
+		                    SELECT
+		                        T2.CTRL_ID
+		                        , TO_CHAR(T2.CRT_DT, 'MM/YYYY') CRT_DT_MM
+		                        , CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'CRC'
+		                                  WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
+		                                  ELSE 'FPX'
+		                          END BATCH_MODE
+		                        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+		                        , T2.CRT_DT
+		                        , T1.SALES_ORD_ID
+		                        , T1.BANK_DTL_ID
+		                        , T1.BANK_APPV
+		                        , CASE WHEN T6.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
+		                            WHEN T6.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+		                            WHEN T6.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+		                            WHEN T6.IND = 'CHGCARD' THEN
+		                                                        CASE WHEN T2.CTRL_IS_CRC = 1 THEN
+		                                                            CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
+		                                                        ELSE  'Change Account' END
+		                            WHEN T6.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+		                            ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END)
+		                            END CODE_NAME
+		                   FROM PAY0042D T1
+		                   JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
+		                   LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+		                   WHERE 1=1
+		                   AND T1.SALES_ORD_ID = #{ordId}
+		                   AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+		                ) T
+		                LEFT JOIN SYS0013M T6 ON T6.CODE = T.BATCH_MODE AND T6.CODE_MASTER_ID = 19
+		                ORDER BY T.BANK_DTL_ID DESC
+		            ) A
+
+		            UNION ALL
+
+		            SELECT * FROM (
+		                SELECT
+		                TO_CHAR(A.FILE_ITM_CRT, 'MM/YYYY') AS DT
+		                ,  CASE WHEN A.FILE_ITM_STUS_ID = 4 THEN 'Success'
+		                    ELSE ''
+		                  END DEDUCTION
+		                , E.CODE AS PAYMODE
+		                , A.FILE_ITM_CRT
+		                , A.FILE_ITM_ORD_ID
+		                , 'ECASH' TYPE
+		            FROM SAL0152M A
+		            JOIN SAL0001D B ON B.SALES_ORD_ID = A.FILE_ITM_ORD_ID
+		            LEFT JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID AND C.CUST_ID = B.CUST_ID
+		            LEFT JOIN SYS0013M E ON E.CODE_ID = C.MODE_ID
+		            WHERE 1=1
+		                AND A.FILE_ITM_ORD_ID = #{ordId}
+		                AND C.MODE_ID = 131
+		                AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
+		            ) B
+		        ) D
+		    ),
+		    PAYMODE AS(
+		        SELECT * FROM (
+		            SELECT
+		                MODE_ID
+		                , SALES_ORD_ID
+		                , DD_APPLY_DT
+		            FROM SAL0074D
+
+		            UNION
+
+		            SELECT
+		                MODE_ID
+		                , SALES_ORD_ID
+		                , DD_APPLY_DT
+		            FROM SAL0074D
+		        )A
+		        WHERE A.SALES_ORD_ID = #{ordId}
+		    )
+		    SELECT
+		        'Month' AS TYPE
+		        , 'Current' AS CUR_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'MM/YYYY') AS PREV_1_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'MM/YYYY') AS PREV_2_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'MM/YYYY') AS PREV_3_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'MM/YYYY') AS PREV_4_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'MM/YYYY') AS PREV_5_MONTH
+		        , TO_CHAR(ADD_MONTHS(SYSDATE, - 6), 'MM/YYYY') AS PREV_6_MONTH
+		    FROM DUAL
+
+		    UNION ALL
+
+		    SELECT
+		        TYPE
+		        , NVL(MAX(CUR_MONTH), '') AS CUR_MONTH
+		        , NVL(MAX(PREV_1_MONTH), '') AS PREV_1_MONTH
+		        , NVL(MAX(PREV_2_MONTH), '') AS PREV_2_MONTH
+		        , NVL(MAX(PREV_3_MONTH), '') AS PREV_3_MONTH
+		        , NVL(MAX(PREV_4_MONTH), '') AS PREV_4_MONTH
+		        , NVL(MAX(PREV_5_MONTH), '') AS PREV_5_MONTH
+		        , NVL(MAX(PREV_6_MONTH), '') AS PREV_6_MONTH
+		    FROM (
+		    SELECT * FROM (
+		        SELECT 'Deduction' AS TYPE
+		               , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(SYSDATE, 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS CUR_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_1_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_2_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_3_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_4_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_5_MONTH
+		                , CASE WHEN TO_CHAR(TO_DATE(I.DT,'MM-YYYY'), 'MM-YYYY') = TO_CHAR(ADD_MONTHS(SYSDATE, - 6), 'MM-YYYY') THEN MAX(I.DEDUCTION)
+		                          ELSE '' END AS PREV_6_MONTH
+		        FROM INFO I
+		        GROUP BY I.DT, 'Deduction'
+		        ORDER BY TO_DATE(I.DT,'MM/YYYY') DESC
+		    ) AA
+
+		    UNION
+
+		        SELECT NVL('Deduction','Deduction') AS TYPE
+		                ,  ''  AS CUR_MONTH
+		                ,  ''  AS PREV_1_MONTH
+		                , ''  AS PREV_2_MONTH
+		                ,  ''  AS PREV_3_MONTH
+		                , ''  AS PREV_4_MONTH
+		                ,  ''  AS PREV_5_MONTH
+		                ,  ''  AS PREV_6_MONTH
+		        FROM DUAL
+
+		    ) GROUP  BY TYPE
+
+		    UNION ALL
+
+		     SELECT
+		        TYPE
+		        , NVL(MAX(CUR_MONTH), '') AS CUR_MONTH
+		        , NVL(MAX(PREV_1_MONTH), '') AS PREV_1_MONTH
+		        , NVL(MAX(PREV_2_MONTH), '') AS PREV_2_MONTH
+		        , NVL(MAX(PREV_3_MONTH), '') AS PREV_3_MONTH
+		        , NVL(MAX(PREV_4_MONTH), '') AS PREV_4_MONTH
+		        , NVL(MAX(PREV_5_MONTH), '') AS PREV_5_MONTH
+		        , NVL(MAX(PREV_6_MONTH), '') AS PREV_6_MONTH
+		    FROM (
+		        SELECT 'Rental Paymode' AS TYPE
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS CUR_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_1_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_2_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_3_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_4_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_5_MONTH
+		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 6), 'YYYY-MM')
+		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
+		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
+		                            ELSE '' END
+		                END AS PREV_6_MONTH
+		        FROM PAYMODE PAY
+		    )
+		    GROUP BY TYPE
+    </select>
+
+    <select id="selectAccLinkInfo" parameterType="Map" resultType="egovMap">
+		<!-- WITH VALID_MEMBERSHIP AS-->
+		<!--(-->
+		<!--    SELECT SRV_SALES_ORD_ID,MIN(SRV_START_DT)SRV_START_DT, MAX(SRV_EXPR_DT) AS SRV_EXPR_DT-->
+		<!--    FROM SAL0095D-->
+		<!--    WHERE 1 = 1-->
+		<!--    AND SRV_STUS_CODE_ID = 4-->
+		<!--    AND SYSDATE BETWEEN SRV_START_DT AND SRV_EXPR_DT-->
+		<!--    GROUP BY SRV_SALES_ORD_ID-->
+		<!--)-->
+		SELECT * FROM (
+			SELECT
+				EXT2.CUST_CRC_TOKEN CUST_TOKEN_ID
+				,EXT3.SALES_ORD_NO ORDER_NO
+				,EXT10.CODE ORDER_STATUS
+				,EXT4.NAME CUSTOMER_NAME
+				,CASE WHEN EXT1.MODE_ID = '131' THEN '************' || SUBSTR (EXT2.CUST_ORI_CRC_NO, 13, 4)
+				        <!--ELSE '************' || SUBSTR (EXT13.CUST_ACC_NO, 13, 4) -->
+				        ELSE ' '
+				     END AS CUST_ACC_NO
+				,EXT7.AREA AREA
+				,CASE WHEN EXT1.IS_3RD_PARTY = 1 THEN 'YES' WHEN EXT1.IS_3RD_PARTY = 0 THEN 'NO' END THIRD_PARTY
+				, EXT12.STK_DESC
+				,'RM ' || EXT3.MTH_RENT_AMT RENTAL_FEE
+				,CASE WHEN (EXT1.UPD_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd'))
+				    THEN TO_CHAR(EXT1.UPD_DT, 'DD/MM/YYYY')
+				      ELSE '-'
+				 END PAYMODE_UPD_DT
+				 , EXT1.SALES_ORD_ID
+			FROM SAL0074D EXT1
+			JOIN SAL0028D EXT2 ON EXT1.CUST_CRC_ID = EXT2.CUST_CRC_ID
+			JOIN SAL0001D EXT3 ON EXT1.SALES_ORD_ID = EXT3.SALES_ORD_ID
+			JOIN SAL0029D EXT4 ON EXT3.CUST_ID = EXT4.CUST_ID
+			JOIN SAL0045D EXT5 ON EXT3.SALES_ORD_ID = EXT5.SALES_ORD_ID
+			JOIN SAL0023D EXT6 ON EXT5.ADD_ID = EXT6.CUST_ADD_ID
+			LEFT JOIN SYS0064M EXT7 ON EXT6.AREA_ID = EXT7.AREA_ID
+			<!--JOIN VALID_MEMBERSHIP EXT9 ON EXT9.SRV_SALES_ORD_ID = EXT3.SALES_ORD_ID-->
+			LEFT JOIN SYS0038M EXT10 ON EXT10.STUS_CODE_ID = EXT3.STUS_CODE_ID
+			JOIN SAL0002D EXT11 ON EXT11.SALES_ORD_ID = EXT3.SALES_ORD_ID
+			JOIN SYS0026M EXT12 ON EXT12.STK_ID = EXT11.ITM_STK_ID
+			WHERE 1 = 1
+				AND EXT2.CUST_CRC_TOKEN = (SELECT CUST_CRC_TOKEN
+				FROM SAL0074D A
+				JOIN SAL0028D B ON B.CUST_CRC_ID = A.CUST_CRC_ID
+				WHERE A.SALES_ORD_ID = #{ordId})
+				AND EXT1.MODE_ID = 131
+				AND EXT3.APP_TYPE_ID = 66
+				AND EXT3.STUS_CODE_ID = 4
+			ORDER BY EXT3.SALES_ORD_NO ASC
+		) A
+        WHERE A.SALES_ORD_ID <![CDATA[ <> ]]> #{ordId}
     </select>
 
 </mapper>
