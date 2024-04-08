@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -137,6 +136,19 @@ public class InstallationResultListController {
     EgovMap resultInfo = installationResultListService.getInstallationResultInfo(params);
     model.addAttribute("resultInfo", resultInfo);
     logger.debug("viewInstallation : {}", resultInfo);
+
+    List<EgovMap> installAcc = installationResultListService.selectInstallAccWithInstallEntryId(params);
+
+    List<String> installAccValues = new ArrayList<>();
+
+    for (EgovMap map : installAcc) {
+        Object value = map.get("insAccPartId");
+        if (value != null) {
+            installAccValues.add(value.toString());
+        }
+    }
+
+    model.put("installAccValues", installAccValues);
 
     // 호출될 화면
     return "services/installation/installationResultPop";
@@ -743,6 +755,7 @@ public class InstallationResultListController {
     Map<String, Object> param = (Map<String, Object>)params.get("installForm");
 
     List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
+    List<String> installAccList = (List<String>) params.get("installAccList");
 
     int noRcd = installationResultListService.chkRcdTms(param);
 
@@ -862,6 +875,16 @@ public class InstallationResultListController {
 
             		  installationResultListService.saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
             	  }
+
+            	  if (param.get("chkInstallAcc") != null && (param.get("chkInstallAcc").toString().equals("on") || param.get("chkInstallAcc").toString().equals("Y"))){
+                  try {
+                    installationResultListService.insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+                  } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                }
+
               }
               // End of inserting charge out filters and spare parts at AS
 
@@ -1241,9 +1264,10 @@ public class InstallationResultListController {
   @RequestMapping(value = "/editInstallationPopup.do")
   public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
+    logger.debug("params : {}", params);
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
-    
+
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
     model.put("codeId", params.get("codeId"));
@@ -1257,6 +1281,19 @@ public class InstallationResultListController {
     }
 
     model.put("orderInfo", orderInfo);
+
+    List<EgovMap> installAcc = installationResultListService.selectInstallAccWithInstallEntryId(params);
+
+    List<String> installAccValues = new ArrayList<>();
+
+    for (EgovMap map : installAcc) {
+        Object value = map.get("insAccPartId");
+        if (value != null) {
+            installAccValues.add(value.toString());
+        }
+    }
+
+    model.put("installAccValues", installAccValues);
 
     // 호출될 화면
     return "services/installation/editInstallationResultPop";
@@ -1386,13 +1423,13 @@ public class InstallationResultListController {
 		try{
     			 Set set = request.getFileMap().entrySet();
     			 Iterator i = set.iterator();
-    
+
     			 while(i.hasNext()) {
     			     Map.Entry me = (Map.Entry)i.next();
     			     String key = (String)me.getKey();
     			     seqs.add(key);
     			 }
-    
+
             List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "service/web/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
       	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
@@ -1854,6 +1891,17 @@ public class InstallationResultListController {
     message = installationResultListService.installationSendEmail(params);
 
     return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/installationAccessoriesRawPop.do")
+  public String installationAccessoriesRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+    List<EgovMap> dscCodeList = installationResultListService.selectDscCode();
+
+    model.addAttribute("installStatus", installStatus);
+    model.addAttribute("dscCodeList", dscCodeList);
+    return "services/installation/installationAccessoriesRawPop";
   }
 
 }
