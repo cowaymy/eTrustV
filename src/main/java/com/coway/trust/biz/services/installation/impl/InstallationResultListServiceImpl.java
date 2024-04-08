@@ -1822,6 +1822,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
 
+    //Added by Tommy 20240224 for NTU
+    installResult.put("ntu", CommonUtils.nvl(SalesConstants.STATUS_COMPLETED).toString().equals(CommonUtils.nvl(params.get("installStatus")).toString()) ? CommonUtils.nvl(params.get("ntuCom")).toString() : CommonUtils.nvl(params.get("ntuFail")).toString());
+
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
@@ -2893,9 +2896,23 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     } else {
       params.put("isreqsms", 0);
     }
-    
+
     int resultValue = installationResultListMapper.updateInstallResultEdit(params);
     installationResultListMapper.updateInstallEntryEdit(params);
+
+    List<String> installAccList = (List<String>) params.get("installAccList");
+    params.put("installEntryId", params.get("entryId"));
+    EgovMap installResult = getInstallResultByInstallEntryID(params);
+    // disable old installation accessories
+    installationResultListMapper.disbleInstallAccWithInstallEntryId(params);
+    if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+      try {
+        insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
 
     return resultValue;
   }
@@ -3066,6 +3083,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     if (sessionVO != null) {
 
     	List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
+    	List<String> installAccList = (List<String>) params.get("installAccList");
     	Map<String, Object> param = (Map<String, Object>)params.get("installForm");
 
       int noRcd = chkRcdTms(param);
@@ -3176,6 +3194,16 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               	  if (param.get("chkCrtAS") != null && (param.get("chkCrtAS").toString().equals("on") || param.get("chkCrtAS").toString().equals("Y"))){
               		  saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
               	  }
+
+              	  if (param.get("chkInstallAcc") != null && (param.get("chkInstallAcc").toString().equals("on") || param.get("chkInstallAcc").toString().equals("Y"))){
+              	    try {
+                      insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+                    } catch (Exception e) {
+                      // TODO Auto-generated catch block
+                      e.printStackTrace();
+                    }
+              	  }
+
                 }
 
                 message.setCode("1");
@@ -3247,7 +3275,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     } else {
       params.put("isreqsms", 0);
     }
-    
+
     int resultValue = installationResultListMapper.updateInstallResultEdit(params);
     installationResultListMapper.updateInstallEntryEdit(params);
 
@@ -3982,4 +4010,35 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   	public List<EgovMap> getInstallDtPairByCtCode(Map<String, Object> params) {
   		return installationResultListMapper.getInstallDtPairByCtCode(params);
   	}
+
+    public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
+    try {
+
+      if (!installAccList.isEmpty()){
+        logger.info("### addInstallAccList : " + installAccList.toString());
+
+        installResult.put("entryId", installResult.get("installEntryId"));
+        EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
+
+        for (String installAcc : installAccList) {
+              // insert into SVC0140D - Installation Accessories Listing table
+              EgovMap param = new EgovMap();
+              param.put("resultNo", entry.get("installEntryNo"));
+              param.put("resultSoId", entry.get("salesOrdId"));
+              param.put("insAccPartId", installAcc);
+              param.put("remark", "Add installation accessories through eTrust - INS");
+              param.put("crtUserId", userId);
+
+              installationResultListMapper.insertInstallationAccessories(param);
+          }
+        }
+    } catch (Exception e) {
+      logger.error("An error occurred during insertion of installation accessories.", e);
+        }
+    }
+
+    @Override
+    public List<EgovMap> selectInstallAccWithInstallEntryId(Map<String, Object> params) {
+      return installationResultListMapper.selectInstallAccWithInstallEntryId(params);
+    }
 }
