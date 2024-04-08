@@ -324,4 +324,10 @@ public interface InstallationResultListMapper {
 
  void updateEmailSentCount(Map<String, Object> params);
 
+ void insertInstallationAccessories(Map<String, Object> params);
+
+ List<EgovMap> selectInstallAccWithInstallEntryId(Map<String, Object> params);
+
+ void disbleInstallAccWithInstallEntryId(Map<String, Object> params);
+
 }
