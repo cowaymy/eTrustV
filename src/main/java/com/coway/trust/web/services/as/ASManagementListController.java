@@ -30,6 +30,7 @@ import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
@@ -143,6 +144,21 @@ public class ASManagementListController {
 
     List<EgovMap> reworkProj = ASManagementListService.selectReworkProj();
     model.addAttribute("reworkProj", reworkProj);
+
+    params.put("asEntryId", params.get("as_Id"));
+    params.put("salesOrderId", params.get("ord_Id"));
+    List<EgovMap> installAcc = ASManagementListService.selectInstallAccWithAsEntryId(params);
+
+    List<String> installAccValues = new ArrayList<>();
+
+    for (EgovMap map : installAcc) {
+        Object value = map.get("insAccPartId");
+        if (value != null) {
+            installAccValues.add(value.toString());
+        }
+    }
+
+    model.put("installAccValues", installAccValues);
 
     return "services/as/inc_asResultEditPop";
   }
@@ -786,6 +802,7 @@ public class ASManagementListController {
     logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
+    params.put("chkInstallAcc", params.get("INS_ACC_CHK"));
 
     LinkedHashMap asResultM = (LinkedHashMap) params.get("asResultM");
     List<EgovMap> add = (List<EgovMap>) params.get("add");
@@ -1094,6 +1111,7 @@ public class ASManagementListController {
     params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
     params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
     params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
+    params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
 
     int noRcd = ASManagementListService.chkRcdTms(params);
 
@@ -1552,6 +1570,7 @@ public class ASManagementListController {
     logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
+    params.put("chkInstallAcc", params.get("INS_ACC_CHK"));
 
     LinkedHashMap asResultM = (LinkedHashMap) params.get("asResultM");
     List<EgovMap> add = (List<EgovMap>) params.get("add");
