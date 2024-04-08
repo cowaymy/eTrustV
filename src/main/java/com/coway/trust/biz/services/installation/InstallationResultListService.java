@@ -160,4 +160,8 @@ public interface InstallationResultListService {
 
   ReturnMessage installationSendEmail(Map<String, Object> params);
 
+  void insertInstallationAccessories(List<String> installAccList , EgovMap installResult, int userId);
+
+  List<EgovMap> selectInstallAccWithInstallEntryId(Map<String, Object> params);
+
 }
