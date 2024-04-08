@@ -27,6 +27,7 @@ import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -80,6 +81,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Resource(name = "commonService")
   private CommonService commonService;
+
+  @Resource(name = "installationResultListMapper")
+  private InstallationResultListMapper installationResultListMapper;
+
+
 
   @Override
   public List<EgovMap> selectASManagementList(Map<String, Object> params) {
@@ -1568,7 +1574,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         if(sstInfo != null){
         	package_TAXRATE = Integer.parseInt(sstInfo.get("taxRate").toString()) ;
         }
-        
+
         if (package_TAXRATE > 0) {
             package_TAXCODE = Integer.parseInt(sstInfo.get("codeId").toString()) ;
             DecimalFormat df = new DecimalFormat("#0.00");
@@ -1917,6 +1923,26 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       logPram.put("P_RESULT_TYPE", "AS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
       ///////////////////////// LOGISTIC SP CALL END //////////////////////
+
+      // Insert SVC0140D for Installation Accessory - TPY
+      List<String> installAccList = (List<String>) params.get("installAccList");
+      EgovMap installResult = new EgovMap();
+      installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
+      installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
+      params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
+      params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
+      params.put("user_id", params.get("updator"));
+      // disable old installation accessories
+      ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
+      if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+        try {
+          insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
     }
     // LOGISTIC REQUEST END HERE
 
@@ -3481,6 +3507,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
     params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
     params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
+    params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
 
     int noRcd = this.chkRcdTms(params);
 
@@ -4272,4 +4299,33 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   public EgovMap selectSubmissionRecords(Map<String, Object> params) {
     return ASManagementListMapper.selectSubmissionRecords(params);
   }
+
+  public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
+  try {
+
+    if (!installAccList.isEmpty()){
+      LOGGER.info("### addInstallAccList : " + installAccList.toString());
+
+      for (String installAcc : installAccList) {
+            // insert into SVC0140D - Installation Accessories Listing table
+            EgovMap param = new EgovMap();
+            param.put("resultNo", installResult.get("asEntryNo"));
+            param.put("resultSoId", installResult.get("salesOrdId"));
+            param.put("insAccPartId", installAcc);
+            param.put("remark", "Add installation accessories through eTrust - AS");
+            param.put("crtUserId", userId);
+
+            installationResultListMapper.insertInstallationAccessories(param);
+        }
+      }
+  } catch (Exception e) {
+    LOGGER.error("An error occurred during insertion of installation accessories.", e);
+      }
+  }
+
+  @Override
+  public List<EgovMap> selectInstallAccWithAsEntryId(Map<String, Object> params) {
+    return ASManagementListMapper.selectInstallAccWithAsEntryId(params);
+  }
+
 }
