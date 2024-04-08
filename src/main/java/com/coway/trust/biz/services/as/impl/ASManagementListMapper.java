@@ -363,4 +363,8 @@ void insertASResultLog(Map<String, Object> p);
 
 EgovMap selectSubmissionRecords(Map<String, Object> params);
 
+void disbleInstallAccWithAsEntryId(Map<String, Object> params);
+
+List<EgovMap> selectInstallAccWithAsEntryId(Map<String, Object> params);
+
 }
