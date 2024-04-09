@@ -2302,120 +2302,126 @@
         Common.removeLoader();
 
         if (result.length > 0) {
-          $('#scPreOrdArea').removeClass("blind");
-          var custInfo = result[0];
-          var dob = custInfo.dob;
-          var dobY = dob.split("/")[2];
-          var nowDt = new Date();
-          var nowDtY = nowDt.getFullYear();
-          if (!nric.startsWith("TST")) {
-            if (dobY != 1900) {
-              if ((nowDtY - dobY) < 18) {
-                Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
-                $('#scPreOrdArea').addClass("blind");
-                return false;
+          Common.confirm( '<b>* This customer is an existing customer.<br>Do you want to proceed for key-in?</b>',
+            function(){
+             $('#scPreOrdArea').removeClass("blind");
+              var custInfo = result[0];
+              var dob = custInfo.dob;
+              var dobY = dob.split("/")[2];
+              var nowDt = new Date();
+              var nowDtY = nowDt.getFullYear();
+              if (!nric.startsWith("TST")) {
+                if (dobY != 1900) {
+                  if ((nowDtY - dobY) < 18) {
+                    Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
+                    $('#scPreOrdArea').addClass("blind");
+                    return false;
+                  }
+                }
+
               }
-            }
 
-          }
+              $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
+              // $("#custId").val(custInfo.custId); //Customer ID
 
-          $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
-          // $("#custId").val(custInfo.custId); //Customer ID
+              // $("#custTypeNm").val(custInfo.codeName1); //Customer Name
+              $("#custTypeNm").text(custInfo.codeName1);
 
-          // $("#custTypeNm").val(custInfo.codeName1); //Customer Name
-          $("#custTypeNm").text(custInfo.codeName1);
+              $("#hiddenTypeId").val(custInfo.typeId); //Type
+              // $("#name").val(custInfo.name); //Name
+              $("#name").text(custInfo.name); //Name
+              $("#nric").val(custInfo.nric); //NRIC/Company No
 
-          $("#hiddenTypeId").val(custInfo.typeId); //Type
-          // $("#name").val(custInfo.name); //Name
-          $("#name").text(custInfo.name); //Name
-          $("#nric").val(custInfo.nric); //NRIC/Company No
+              // $("#nationNm").val(custInfo.name2); //Nationality
+              $("#nationNm").text(custInfo.name2); //Nationality
+              // $("#raceId").val(custInfo.raceId); //Nationality
+              // $("#race").val(custInfo.codeName2); //
+              $("#race").text(custInfo.codeName2); //
+              // $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
+              $("#dob").text(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
+              // $("#gender").val(custInfo.gender); //Gender
+               $("#gender").text(custInfo.gender); //Gender
+              // $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+               $("#pasSportExpr").text(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+              // $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+              $("#visaExpr").text(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+              $("#custEmail").val(custInfo.email); //Email
+              $("#pCustEmail").show();
+              fn_maskingData("_CUSTEMAIL", $("#custEmail"));
+              $("#custEmail").text(custInfo.email); //Email
+              $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+              //$("#custStatus").val(custInfo.custStatus); //Customer Status
+              $("#custStatus").text(custInfo.custStatus); //Customer Status
+              // $("#custRem").val(custInfo.rem); //Remark
+              // $("#gstChk").val('0').prop("disabled", true);
 
-          // $("#nationNm").val(custInfo.name2); //Nationality
-          $("#nationNm").text(custInfo.name2); //Nationality
-          // $("#raceId").val(custInfo.raceId); //Nationality
-          // $("#race").val(custInfo.codeName2); //
-          $("#race").text(custInfo.codeName2); //
-          // $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
-          $("#dob").text(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
-          // $("#gender").val(custInfo.gender); //Gender
-           $("#gender").text(custInfo.gender); //Gender
-          // $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
-           $("#pasSportExpr").text(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
-          // $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
-          $("#visaExpr").text(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
-          $("#custEmail").val(custInfo.email); //Email
-          $("#pCustEmail").show();
-          fn_maskingData("_CUSTEMAIL", $("#custEmail"));
-          $("#custEmail").text(custInfo.email); //Email
-          $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
-          //$("#custStatus").val(custInfo.custStatus); //Customer Status
-          $("#custStatus").text(custInfo.custStatus); //Customer Status
-          // $("#custRem").val(custInfo.rem); //Remark
-          // $("#gstChk").val('0').prop("disabled", true);
+              if (custInfo.receivingMarketingMsgStatus == 1) {
+                $("#marketMessageYes").prop("checked", true);
+              } else {
+                $("#marketMessageNo").prop("checked", true);
+              }
 
-          if (custInfo.receivingMarketingMsgStatus == 1) {
-            $("#marketMessageYes").prop("checked", true);
-          } else {
-            $("#marketMessageNo").prop("checked", true);
-          }
+              if (custInfo.corpTypeId > 0) {
+                $("#corpTypeNm").val(custInfo.codeName); //Industry Code
+              } else {
+                $("#corpTypeNm").val(""); //Industry Code
+              }
 
-          if (custInfo.corpTypeId > 0) {
-            $("#corpTypeNm").val(custInfo.codeName); //Industry Code
-          } else {
-            $("#corpTypeNm").val(""); //Industry Code
-          }
+              /*
+               if($('#hiddenTypeId').val() == '965') { //Company
+                 $('#sctBillPrefer').removeClass("blind");
+               } else {
+                 $('#sctBillPrefer').addClass("blind");
+               }
+              */
 
-          /*
-           if($('#hiddenTypeId').val() == '965') { //Company
-             $('#sctBillPrefer').removeClass("blind");
-           } else {
-             $('#sctBillPrefer').addClass("blind");
-           }
-          */
+              if (custInfo.custAddId > 0) {
+                //----------------------------------------------------------
+                // [Billing Detail] : Billing Address SETTING
+                //----------------------------------------------------------
+                // $('#billAddrForm').clearForm();
+                fn_loadBillAddr(custInfo.custAddId);
 
-          if (custInfo.custAddId > 0) {
-            //----------------------------------------------------------
-            // [Billing Detail] : Billing Address SETTING
-            //----------------------------------------------------------
-            // $('#billAddrForm').clearForm();
-            fn_loadBillAddr(custInfo.custAddId);
+                //----------------------------------------------------------
+                // [Installation] : Installation Address SETTING
+                //----------------------------------------------------------
+                // fn_clearInstallAddr();
+                fn_loadInstallAddr(custInfo.custAddId);
+              }
 
-            //----------------------------------------------------------
-            // [Installation] : Installation Address SETTING
-            //----------------------------------------------------------
-            // fn_clearInstallAddr();
-            fn_loadInstallAddr(custInfo.custAddId);
-          }
+              if (custInfo.custCntcId > 0) {
+                //----------------------------------------------------------
+                // [Master Contact] : Owner & Purchaser Contact
+                //                           Additional Service Contact
+                //----------------------------------------------------------
+                // $('#custCntcForm').clearForm(); // KR-OHK
+                // $('#liMstCntcNewAddr').addClass("blind");
+                // $('#liMstCntcSelAddr').addClass("blind");
+                // $('#liMstCntcNewAddr2').addClass("blind");
+                // $('#liMstCntcSelAddr2').addClass("blind");
 
-          if (custInfo.custCntcId > 0) {
-            //----------------------------------------------------------
-            // [Master Contact] : Owner & Purchaser Contact
-            //                           Additional Service Contact
-            //----------------------------------------------------------
-            // $('#custCntcForm').clearForm(); // KR-OHK
-            // $('#liMstCntcNewAddr').addClass("blind");
-            // $('#liMstCntcSelAddr').addClass("blind");
-            // $('#liMstCntcNewAddr2').addClass("blind");
-            // $('#liMstCntcSelAddr2').addClass("blind");
+                fn_loadMainCntcPerson(custInfo.custCntcId);
+                fn_loadCntcPerson(custInfo.custCntcId);
+                // fn_loadSrvCntcPerson(custInfo.custCareCntId);
+                // ----------------------------------------------------------
+                //  [Installation] : Installation Contact Person
+                // ----------------------------------------------------------
+                // $('#instCntcForm').clearForm();
+                // fn_loadInstallationCntcPerson(custInfo.custCntcId);
+              }
 
-            fn_loadMainCntcPerson(custInfo.custCntcId);
-            fn_loadCntcPerson(custInfo.custCntcId);
-            // fn_loadSrvCntcPerson(custInfo.custCareCntId);
-            // ----------------------------------------------------------
-            //  [Installation] : Installation Contact Person
-            // ----------------------------------------------------------
-            // $('#instCntcForm').clearForm();
-            // fn_loadInstallationCntcPerson(custInfo.custCntcId);
-          }
-
-          if (custInfo.codeName == 'Government') {
-            Common.alert('<b>Goverment Customer</b>');
-          }
-
+              if (custInfo.codeName == 'Government') {
+                Common.alert('<b>Goverment Customer</b>');
+              }
+            }, fn_closePreOrdRegPop2);
         } else {
           Common.confirm( '<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop2);
         }
       });
+  }
+
+  function fn_showExistingCust() {
+
   }
 
   function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType,
