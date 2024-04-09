@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.EcommApiService;
 import com.coway.trust.biz.application.impl.FileApplicationImpl;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
@@ -84,6 +85,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
   @Resource(name = "hcOrderRegisterMapper")
 	private HcOrderRegisterMapper hcOrderRegisterMapper;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Override
   public EgovMap registerOrder(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
@@ -689,9 +693,16 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 			  List<EgovMap> custCat = ecommApiMapper.getCustomerCat(reqPrm);
 
 			  if(custCat.isEmpty()){
-				  respParam.put("success", false);
-				  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_INVALID);
-				  respParam.put("message", "Customer Not Found. Please contact admin or agent.");
+				  Map<String, Object> codeParams = new HashMap<>();
+				  codeParams.put("groupCode", 566);
+				  codeParams.put("likeValue", "NEW");
+				  List<EgovMap> newStatusList = commonService.selectCodeList(codeParams);
+
+				  respParam.put("success", true);
+				  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_SUCCESS);
+				  respParam.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
+				  respParam.put("custCatCode", newStatusList.get(0).get("codeName").toString());
+				  respParam.put("custCatNm", newStatusList.get(0).get("description").toString());
 			  }else{
 				  if(custCat.size() > 1){
 					  respParam.put("success", false);
