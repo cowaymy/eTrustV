@@ -85,7 +85,7 @@ public class InstallationResultForm {
   private String aftPsi;
   private String aftLpm;
   private String turbLvl;
-  private int ntu;
+  private String ntu;
 
   public String getChkInstallAcc() {
 	return chkInstallAcc;
@@ -131,17 +131,16 @@ private String waterSrcType;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
 
+public String getType() {
+	return type;
+}
 
-public int getNtu() {
+public String getNtu() {
 	return ntu;
 }
 
-public void setNtu(int ntu) {
+public void setNtu(String ntu) {
 	this.ntu = ntu;
-}
-
-public String getType() {
-	return type;
 }
 
 public void setType(String type) {
