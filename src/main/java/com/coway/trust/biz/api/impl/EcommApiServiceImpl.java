@@ -701,8 +701,8 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 				  respParam.put("success", true);
 				  respParam.put("statusCode", (int)AppConstants.RESPONSE_CODE_SUCCESS);
 				  respParam.put("message", AppConstants.RESPONSE_DESC_SUCCESS);
-				  respParam.put("custCatCode", newStatusList.get(0).get("codeName").toString());
-				  respParam.put("custCatNm", newStatusList.get(0).get("description").toString());
+				  respParam.put("custCatCode", newStatusList.get(0).get("code").toString());
+				  respParam.put("custCatNm", newStatusList.get(0).get("codeName").toString());
 			  }else{
 				  if(custCat.size() > 1){
 					  respParam.put("success", false);
