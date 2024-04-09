@@ -86,7 +86,24 @@ public class InstallationResultForm {
   private String aftLpm;
   private String turbLvl;
   private int ntu;
-  private String waterSrcType;
+
+  public String getChkInstallAcc() {
+	return chkInstallAcc;
+}
+
+public List<InstallationResultDetailForm> getInstallAccList() {
+	return installAccList;
+}
+
+public void setChkInstallAcc(String chkInstallAcc) {
+	this.chkInstallAcc = chkInstallAcc;
+}
+
+public void setInstallAccList(List<InstallationResultDetailForm> installAccList) {
+	this.installAccList = installAccList;
+}
+
+private String waterSrcType;
 
   private String chkCrtAs;
 
@@ -100,7 +117,7 @@ public class InstallationResultForm {
 
   private String type;
   private int insAccPartId;
-
+  private String chkInstallAcc;
 
   @ApiModelProperty(value = "installAccList")
   private List<InstallationResultDetailForm> installAccList;
@@ -112,6 +129,8 @@ public class InstallationResultForm {
 
 
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
+
 
 public int getNtu() {
 	return ntu;
