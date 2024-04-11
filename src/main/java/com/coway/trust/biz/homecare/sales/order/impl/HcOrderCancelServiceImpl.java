@@ -125,7 +125,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 				params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
 				params.put("paramStockId", CommonUtils.nvl(callEntryMap.get("stockId")));
         params.put("salesOrdId", paramAnoOrdId);
-      
+
 				if(params.get("callStusId") == "4" && paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.ACI)){
 	        orderCancelMapper.updateCancelSAL0349D(params);
 	     }
@@ -152,6 +152,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		params.put("brnchId", sessionVO.getUserBranchId());
 		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
 		params.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));
+		EgovMap partnerCode = hcOrderCancelMapper.getPartnerMemCode(params);
+	  	params.put("partnerCodeId", partnerCode.get("memId"));
+
 		// return - Matress Product
 		EgovMap rtnMat = orderListService.insertProductReturnResultSerial(params);
 		/*if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnMat.get("rtnCode")))) { // return Fail

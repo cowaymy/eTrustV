@@ -3241,6 +3241,7 @@
                #{REWORK_PROJ},
                NVL(#{AS_TRANSFER_TO_DT},0),
                #{ATTACHMENT},
+               #{PARTNER_CODE_ID}
                #{PARTNER_CODE},
                #{NTU}
     )

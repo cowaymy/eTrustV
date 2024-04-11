@@ -201,6 +201,12 @@
 	            editable : false
 	        },
 	        {
+	            dataField : "partnerCode",
+	            headerText : "Partner Code",
+	            editable : false,
+	            width : 100
+	          },
+	        {
 	            dataField : 'hdc',
 	            headerText : 'HDC',
 	            width : 100,

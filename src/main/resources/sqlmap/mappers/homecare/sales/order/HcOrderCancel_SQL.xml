@@ -83,6 +83,7 @@
                             THEN A.APP_DT
                     ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
                    A.ASSIGN_CT,
+                   A.PARTNER_CODE,
                    A.RCD_TMS,
                    B.CODE AS HDC,
                    A.DSC_BRNCH_CODE2 AS DSC,
@@ -155,6 +156,7 @@
                        NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
                        V.APP_DT AS APP_DT,
                        V.ASSIGN_CT,
+                       V.PARTNER_CODE,
                        V.RCD_TMS,
                        V.STK_CTGRY_ID,
                        D1.BNDL_NO,
@@ -236,6 +238,7 @@
                     END                                 prd_rtn_lst_upd,
                     re.app_dt                           AS app_dt,
                     org3.mem_code                       AS assign_ct,
+                    org4.mem_code                       AS PARTNER_CODE,
                     r.rcd_tms                           AS rcd_tms,
                     stk.stk_ctgry_id                    stk_ctgry_id,
                     som.bndl_id,
@@ -277,6 +280,7 @@
                     LEFT JOIN sys0047m u2 ON u2.user_id = r.so_req_upd_user_id
                     LEFT JOIN sys0013m requestor ON requestor.code_id = r.so_reqster
                     LEFT JOIN log0038d re ON re.call_entry_id = r.so_req_cur_call_entry_id
+                    LEFT JOIN log0039d rer ON re.STK_RETN_ID = rer.STK_RETN_ID
                     LEFT JOIN (
                         SELECT
                             MAX(install_entry_id) install_entry_id,
@@ -303,6 +307,7 @@
                     LEFT JOIN org0001d org3 ON org3.mem_id = re.ct_id
                     LEFT JOIN sys0070m e ON r.atch_file_grp_id = e.atch_file_grp_id
                     LEFT JOIN sys0071d f ON e.atch_file_id = f.atch_file_id
+                    LEFT JOIN org0001d org4 ON org4.mem_id = rer.PARTNER_CODE
             )        v
 
         LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
@@ -430,6 +435,13 @@
             </if>
         </where>
 
+  </select>
+
+  <select id="getPartnerMemCode" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID
+         , MEM_CODE
+    FROM ORG0001D
+    WHERE MEM_CODE = #{partnerCodeText}
   </select>
 
 </mapper>

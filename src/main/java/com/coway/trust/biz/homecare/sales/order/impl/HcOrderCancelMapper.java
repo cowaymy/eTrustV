@@ -39,4 +39,7 @@ public interface HcOrderCancelMapper {
 	 */
 	public EgovMap getCallEntryId(Map<String, Object> params);
 
+	public EgovMap getPartnerMemCode(Map<String, Object> params);
+
+
 }

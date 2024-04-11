@@ -70,6 +70,8 @@
 	    }
 	    $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
 	    $("#checkCommission").prop("checked",true);
+	    $("#addInstallForm #partnerCodeText").prop("readonly" , false);
+	    $("#addInstallForm #partnerCodeText").attr("disabled", false);
 
 	    $("#addInstallForm #installStatus").change(function () {
 	        if($("#addInstallForm #installStatus").val() == 4) {
@@ -77,7 +79,8 @@
 	                $("#addInstallForm #installDate").prop("readonly" , false);
 	                $("#addInstallForm #installDate").attr("class" , "j_date w100p hasDatepicker");
 	                $("#addInstallForm #installDate").attr("placeholder" , "DD/MM/YYYY");
-
+	                $("#addInstallForm #partnerCodeText").prop("readonly" , false);
+	                $("#addInstallForm #partnerCodeText").attr("disabled", false);
 	        } else {
 	            $("#checkCommission").prop("checked",false);
 	            $("#addInstallForm #installDate").val("");
@@ -85,6 +88,8 @@
 	            $("#addInstallForm #installDate").attr("readonly" , true);
 	            $("#addInstallForm #installDate").attr("class" , "disabled");
 	            $("#addInstallForm #installDate").attr("placeholder" , "only complete case");
+	            $("#addInstallForm #partnerCodeText").prop("readonly" , true);
+	            $("#addInstallForm #partnerCodeText").attr("disabled", true);
 	        }
 	    });
 
@@ -231,12 +236,14 @@
 	function createInstallationViewAUIGrid() {
 	    //AUIGrid 칼럼 설정
 	    var columnLayout = [
-            {dataField : "retnNo",                     headerText : 'ReturnNum',                                                         width : 130},
-            {dataField : "code",                        headerText : '<spring:message code="service.grid.Status" />',        width : 180},
-            {dataField : "reqstDt",                     headerText : 'Return Date',                                                        width : 180},
+            {dataField : "retnNo",                  headerText : 'ReturnNum',                                                         width : 130},
+            {dataField : "code",                    headerText : '<spring:message code="service.grid.Status" />',        width : 180},
+            {dataField : "reqstDt",                 headerText : 'Return Date',                                                        width : 180},
             {dataField : "memCode",                 headerText : 'DT Code',      width : 250},
-            {dataField : "name",                        headerText : 'DT Name',     width : 180},
-            {dataField : "serialRequireChkYn",      headerText : 'SERIAL_REQUIRE_CHK_YN',                                      width : 0}
+            {dataField : "name",                    headerText : 'DT Name',     width : 180},
+            {dataField : "partnerCode",             headerText : 'Partner Code',      width : 250},
+            {dataField : "partnerCodeName",         headerText : 'Partner Name',     width : 180},
+            {dataField : "serialRequireChkYn",      headerText : 'SERIAL_REQUIRE_CHK_YN', width : 0}
         ];
 
 	    // 그리드 속성 설정
@@ -448,7 +455,6 @@
 					    <th scope="row"><spring:message code='service.title.AssignedCT'/></th>
 					    <td colspan="3"><span><c:out value="(${stock.memCode}) ${stock.name}"/></span></td>
 					</tr>
-					<tr>
 					    <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress'/></th>
 					    <td colspan="5"><span><c:out value="${installation.Address}"/></span></td>
 					</tr>
@@ -675,8 +681,13 @@
 			</tr>
 			<tr>
 			    <th scope="row">DT Code</th>
-			    <td colspan="3"><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
-			    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+			    <td><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
+			    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" id="CTID" name="CTID" />
+			    <th scope="row">DT Partner Code<span id='m7' name='m7' class="must" style="display:none">*</span></th>
+		        <td>
+			        <input type="hidden" title="" placeholder="partner code" class="" id='partnerCode' name='partnerCode' />
+			        <input type="text" title="" style="width:100%;" placeholder="" disabled="disabled" id='partnerCodeText' name='partnerCodeText' />
+		        </td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
