@@ -3796,7 +3796,7 @@
                         , AFT_LPM
                         , ATCH_FILE_GRP_ID
                         , TURB_LVL
-                        <!-- , NTU -->
+                        , NTU
                         , WATER_SRC_TYPE
                         , INST_NOTECHK
                         , SGN_DT
@@ -3843,7 +3843,7 @@
             , #{aftLpm}
             , #{atchFileGrpId}
             , #{turbLvl}
-            <!-- , #{ntu} -->
+            , #{ntu}
             , #{waterSrcType}
             , #{instNoteChk}
             , #{signData}
