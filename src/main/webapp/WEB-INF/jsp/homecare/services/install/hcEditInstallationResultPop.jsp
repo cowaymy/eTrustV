@@ -18,6 +18,15 @@ var fileGroupKey ="";
 
   $(document).ready(
     function() {
+   	var today = new Date();
+   	var minDate = new Date(today.getFullYear(), today.getMonth(), 1);
+   	var pickerOpts={
+   	        minDate: minDate,
+   	        maxDate: today,
+   	        dateFormat: "dd/mm/yy"
+   	};
+   	$(".j_dateHc").datepicker(pickerOpts);
+
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
@@ -44,12 +53,24 @@ var fileGroupKey ="";
     $("#installdt").change( function() {
       var checkMon = $("#installdt").val();
 
-      Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
-        if (result.message == "Please choose this month only") {
-          Common.alert(result.message);
+      var day = checkMon.substr(0,2);
+      var month = Number(checkMon.substr(3,2));
+      var year = checkMon.substr(6);
+
+      var selectedDate = new Date(year,month-1,day);
+      var currDate = new Date();
+
+      if(selectedDate > currDate) {
+          Common.alert("Installation Date should not be future dates");
           $("#installdt").val('');
-        }
-      });
+          return;
+      }
+//       Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
+//         if (result.message == "Please choose this month only") {
+//           Common.alert(result.message);
+//           $("#installdt").val('');
+//         }
+//       });
     });
 
     if(js.String.isEmpty( $("#hidFrmOrdNo").val() )){

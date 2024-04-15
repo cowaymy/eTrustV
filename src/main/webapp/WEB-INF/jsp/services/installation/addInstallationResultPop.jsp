@@ -21,9 +21,11 @@
   var myFileCaches = {};
 
   $(document).ready(function() {
-	var maxDate = new Date();
+  	var today = new Date();
+	var minDate = new Date(today.getFullYear(), today.getMonth(), 1);
 	var pickerOpts={
-	        maxDate: maxDate,
+	        minDate: minDate,
+	        maxDate: today,
 	        dateFormat: "dd/mm/yy"
 	};
 	$(".j_date").datepicker(pickerOpts);
@@ -192,13 +194,13 @@
               return;
           }
 
-          Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ',
-            function(result) {
-              if (result.message == "Please choose this month only") {
-                Common.alert(result.message);
-                $("#installDate").val('');
-              }
-            });
+//           Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ',
+//             function(result) {
+//               if (result.message == "Please choose this month only") {
+//                 Common.alert(result.message);
+//                 $("#installDate").val('');
+//               }
+//             });
        });
 
       $("#addInstallForm #installStatus").change(
