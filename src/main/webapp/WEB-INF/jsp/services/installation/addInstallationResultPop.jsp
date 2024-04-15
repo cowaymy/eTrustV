@@ -186,22 +186,19 @@
           var selectedDate = new Date(year,month-1,day);
           var currDate = new Date();
 
-          console.log(selectedDate);
-          console.log(currDate);
-
           if(selectedDate > currDate) {
               Common.alert("Installation Date should not be future dates");
               $("#installDate").val('');
               return;
           }
 
-//           Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ',
-//             function(result) {
-//               if (result.message == "Please choose this month only") {
-//                 Common.alert(result.message);
-//                 $("#installDate").val('');
-//               }
-//             });
+          Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ',
+            function(result) {
+              if (result.message == "Please choose this month only") {
+                Common.alert(result.message);
+                $("#installDate").val('');
+              }
+            });
        });
 
       $("#addInstallForm #installStatus").change(
