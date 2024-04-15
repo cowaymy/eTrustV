@@ -646,6 +646,20 @@ public List<Map<String, Object>> createMaps(InstallationResultForm installationR
     }
     /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
+    /////////////////////////////// installAccList /////////////////////////////////////
+
+    if (installAccList != null && installAccList.size() > 0) {
+    	for (InstallationResultDetailForm dtl : partList) {
+    	map.put("resultNo", dtl.getResultNo());
+        map.put("resultSoId", dtl.getResultSoId());
+        map.put("insAccPartId", dtl.getInsAccPartId());
+        map.put("remark", dtl.getRemark());
+        map.put("crtUserId", dtl.getCrtUserId());
+    	}
+    }
+
+    /////////////////////////////// installAccList /////////////////////////////////////
+
     list.add(map);
 
     return list;
