@@ -30,127 +30,138 @@
                AND S08.NO = #{param}
 </insert>
 
-    <select id="returnPartsList" parameterType="Map" resultType="egovMap">
-        SELECT
-        ROWNUM rnum,
-        l82.SEQ,
-        l82.SVC_ORD_ID service_order,
-        s01.SALES_ORD_NO order_no,
-        l82.CUST_ID customer,
-        s29.NAME customer_name,
+  <select id="returnPartsList" parameterType="Map" resultType="egovMap">
+    SELECT ROWNUM RNUM,
+               L82.SEQ,
+               L82.SVC_ORD_ID SERVICE_ORDER,
+               S01.SALES_ORD_NO ORDER_NO,
+               L82.CUST_ID CUSTOMER,
+               S29.NAME CUSTOMER_NAME,
+               TO_CHAR(S06.SETL_DT, 'YYYY/MM/DD')  SERVICE_DATE,
+               ( SELECT STK_CODE
+                 FROM SYS0026M
+                 WHERE STK_ID = L82.STK_ID
+               ) MATERIAL_CODE,
+               S26.STK_CODE MATERIAL_CODE_ACTUAL,
+               S26.STK_DESC MATERIAL_NAME,
+               L82.STK_ID,
+               L82.OLD_SERIAL SERIAL_NUMBER,
+               L82.QTY QTY,
+               L82.COMMENTS TEXT,
+               L82.CMPLT_YN RETURN_COMPLETE,
+               TO_CHAR(L82.CMPLT_DT, 'YYYY/MM/DD') RETURN_COMPLETE_DATE,
+               L82.RESN_CODE NO_PARTS_RETURN,
+               L82.CRT_DT,
+               L82.CRT_USER_ID,
+               L82.UPD_DT,
+               L82.UPD_USER_ID,
+               CASE WHEN S26.STK_TYPE_ID = 61 THEN
+                CASE WHEN S26.SERIAL_CHK = 'Y'
+                           AND S28.SERIAL_PD_CHK = 'Y'
+                           AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                        ELSE 'N' END
+                WHEN S26.STK_TYPE_ID = 62 THEN
+                  CASE WHEN S26.SERIAL_CHK = 'Y'
+                             AND S28.SERIAL_FT_CHK = 'Y'
+                             AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                          ELSE 'N' END
+                  WHEN S26.STK_TYPE_ID = 63 THEN
+                    CASE WHEN S26.SERIAL_CHK = 'Y'
+                               AND S28.SERIAL_PT_CHK = 'Y'
+                               AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                          ELSE 'N' END
+                    ELSE 'N' END SERIAL_CHK,
+                S26.STK_TYPE_ID,
+                L82.STK_ID_NEW,
+                O01.BRNCH,
+                O01.MEM_CODE,
+                O01.NAME,
+                ( SELECT CODE
+                  FROM SYS0005M
+                  WHERE BRNCH_ID = O01.BRNCH ) CODE,
+                ( SELECT NAME
+                  FROM SYS0005M
+                  WHERE BRNCH_ID = O01.BRNCH ) BRNCH_NAME,
+                S13.CODE_ID UNMATCH_ID,
+                S13.CODE_NAME UNMATCH_REASON,
+                S38.NAME PEND_SCAN_NAME,
+                CASE WHEN L82.PEND_SCAN = '44' THEN 'Y'
+                  ELSE '' END  PEND_SCAN
+    FROM LOG0082M L82
+    JOIN SAL0029D S29 ON L82.CUST_ID = S29.CUST_ID
+    JOIN SYS0026M S26 ON L82.STK_ID = S26.STK_ID
+    JOIN ORG0001D O01 ON L82.MEM_ID = O01.MEM_ID
+    JOIN SVC0008D S08 ON L82.SVC_ORD_ID = S08.NO
+    JOIN SAL0001D S01 ON S08.SALES_ORD_ID = S01.SALES_ORD_ID
+    JOIN SVC0006D S06 ON S06.RESULT_ID = L82.RESULT_ID
+    JOIN SVC0007D S07 ON S07.BS_RESULT_ID = S06.RESULT_ID
+                               AND S07.BS_RESULT_PART_ID = L82.STK_ID
+    LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S07.FILTER_SRL_UNMATCH_RSN)
+                                      AND S13.CODE_MASTER_ID = '511'
+    LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = L82.PEND_SCAN
+    LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = O01.MEM_CODE
+    JOIN LOG0082M SM ON SM.RESULT_ID = ( SELECT RESULT_ID
+                                                               FROM ( SELECT RESULT_ID,
+                                                                                     ROW_NUMBER()
+                                                                                     OVER(PARTITION BY AA.SVC_ORD_ID ORDER BY AA.RESULT_ID DESC ) AS RN
+                                                                          FROM  LOG0082M AA
+                                                                          WHERE AA.SVC_ORD_ID = SM.SVC_ORD_ID
+                                                               ) SUB_QUERY WHERE RN = 1
+    ) AND SM.SEQ = L82.SEQ
+    LEFT JOIN ORG1001V O01V ON O01V.MEM_ID = L82.MEM_ID
+    WHERE 1 = 1
+        AND EXISTS ( SELECT WW.RESULT_ID,
+                                       SUM(WW.QTY)
+                            FROM LOG0082M WW
+                            WHERE RESULT_ID = SM.RESULT_ID
+                            GROUP BY WW.RESULT_ID
+                            HAVING SUM(WW.QTY) <> 0
+    )
 
-        TO_CHAR(s06.SETL_DT,'YYYY/MM/DD') service_date,
-
-        (select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
-        s26.STK_CODE material_code_actual,
-        s26.STK_DESC material_name,
-        l82.STK_ID,
-        <!-- l82.OLD_SERIAL serial_number,
-        l82.NEW_SERIAL serial, -->
-        l82.OLD_SERIAL serial_number,
-        l82.QTY qty,
-        l82.COMMENTS text,
-        l82.CMPLT_YN return_complete,
-
-        TO_CHAR(l82.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
-
-        l82.RESN_CODE no_parts_return,
-        l82.CRT_DT,
-        l82.CRT_USER_ID,
-        l82.UPD_DT,
-        l82.UPD_USER_ID,
-        <!-- S26.SERIAL_CHK, -->
-        case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
-                      when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y'  then 'Y' else 'N' end
-                      when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
-                      else 'N' end SERIAL_CHK,
-        S26.STK_TYPE_ID,
-        l82.STK_ID_NEW,
-        o01.BRNCH,
-        o01.MEM_CODE,
-        o01.NAME,
-       (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
-       (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name
-       ,s13.code_id unmatch_id
-       ,s13.code_name unmatch_reason
-       ,s38.NAME pend_scan_name
-       ,case when l82.pend_scan = '44' then 'Y' else '' end pend_scan
-       from LOG0082M l82
-        join sal0029d s29 on l82.CUST_ID=s29.CUST_ID
-        join sys0026m s26 on l82.STK_ID=s26.STK_ID
-        join org0001d o01 on l82.MEM_ID = o01.MEM_ID
-        join SVC0008D s08 on l82.SVC_ORD_ID=s08.NO
-        join SAL0001D s01 on s08.SALES_ORD_ID=s01.SALES_ORD_ID
-        join SVC0006D s06 on s06.RESULT_ID=l82.RESULT_ID
-        join SVC0007D s07 on s07.bs_result_id = s06.RESULT_ID and s07.BS_RESULT_PART_ID = l82.STK_ID
-        left join sys0013m s13 on s13.code = to_char(s07.FILTER_SRL_UNMATCH_RSN) and s13.code_master_id='511'
-        left join sys0038m s38 on s38.stus_code_id = l82.pend_scan
-        left join sys0028m s28 on s28.wh_loc_code = o01.MEM_code
-
-        JOIN LOG0082M SM ON SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID) from LOG0082M aa where  aa.SVC_ORD_ID =  SM.SVC_ORD_ID) AND SM.SEQ = l82.SEQ
-        left join ORG1001V o01v on o01v.MEM_ID = l82.MEM_ID
-       <!-- JOIN (select * from LOG0082M SM
-                        where SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID)
-                                               from LOG0082M aa
-                                                where
-                                                aa.SVC_ORD_ID =  SM.SVC_ORD_ID ))SM
-                                                on (SM.SEQ = l82.SEQ)
-        JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
-       group by WW.RESULT_ID
-       having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID) -->
-       where 1=1
-       AND EXISTS  (   <!--   by leo.ham 26-06-2020  -->
-             select
-                    WW.RESULT_ID, sum(WW.qty)
-                from LOG0082M WW
-                  WHERE RESULT_ID = SM.RESULT_ID
-                group by WW.RESULT_ID having sum(WW.qty) <![CDATA[<>]]>  0
-        )
-
-       <if test="searchBranch != null and searchBranch !=''">
-            and o01.BRNCH = #{searchBranch}
-         </if>
-       <if test="searchCM != null and searchCM !=''">
-            and o01v.DEPT_CODE = (select dept_code from org0005d where mem_id = #{searchCM})
-         </if>
-        <if test="searchLoc != null and searchLoc !=''">
-            and l82.MEM_id = #{searchLoc}
-         </if>
-        <if test="searchSerialChk != null and searchSerialChk !=''">
-            and NVL(trim(s26.SERIAL_CHK),'N') = #{searchSerialChk}
-         </if>
-         <if test="searchSerialSts != null and searchSerialSts !=''">
-            and l82.pend_scan = #{searchSerialSts}
-         </if>
-       <if test="servicesdt !=null and servicesdt !=''">
-            AND l82.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-       </if>
-       <if test="serviceedt !=null and serviceedt !=''">
-            AND l82.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-       </if>
-         <if test="searchOder != null and searchOder !=''">
-           AND l82.SVC_ORD_ID = #{searchOder}
-       </if>
-         <if test="searchComplete != null and searchComplete !=''">
-             <choose>
-             <when test='searchComplete == "Y" '>
-                 AND l82.CMPLT_YN= #{searchComplete}
-             </when>
-             <otherwise>
-             AND l82.CMPLT_YN is null
-             </otherwise>
-           </choose>
-       </if>
-         <if test="searchMaterialCode != null and searchMaterialCode !=''">
-           AND s26.STK_CODE = #{searchMaterialCode}
-       </if>
-         <if test="searchUsedSerial != null and searchUsedSerial !=''">
-           AND l82.OLD_SERIAL = #{searchUsedSerial}
-       </if>
-         <if test="sUnmatchReason != null and sUnmatchReason !=''">
-           AND s13.code = #{sUnmatchReason}
-       </if>
-    </select>
+    <if test="searchBranch != null and searchBranch !=''">
+      AND O01.BRNCH = #{searchBranch}
+    </if>
+    <if test="searchCM != null and searchCM !=''">
+      AND O01V.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{SEARCHCM})
+    </if>
+    <if test="searchLoc != null and searchLoc !=''">
+       AND L82.MEM_ID = #{searchLoc}
+    </if>
+    <if test="searchSerialChk != null and searchSerialChk !=''">
+       AND NVL(TRIM(S26.SERIAL_CHK),'N') = #{searchSerialChk}
+    </if>
+    <if test="searchSerialSts != null and searchSerialSts !=''">
+       AND L82.PEND_SCAN = #{searchSerialSts}
+    </if>
+    <if test="servicesdt !=null and servicesdt !=''">
+      AND L82.SVC_DT <![CDATA[>=]]>  TO_DATE(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    <if test="serviceedt !=null and serviceedt !=''">
+       AND L82.SVC_DT <![CDATA[<=]]>  TO_DATE(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    <if test="searchOder != null and searchOder !=''">
+       AND L82.SVC_ORD_ID = #{searchOder}
+    </if>
+    <if test="searchComplete != null and searchComplete !=''">
+      <choose>
+        <when test='searchComplete == "Y" '>
+           AND L82.CMPLT_YN = #{searchComplete}
+         </when>
+         <otherwise>
+           AND L82.CMPLT_YN IS NULL
+         </otherwise>
+       </choose>
+     </if>
+    <if test="searchMaterialCode != null and searchMaterialCode !=''">
+      AND S26.STK_CODE = #{searchMaterialCode}
+    </if>
+    <if test="searchUsedSerial != null and searchUsedSerial !=''">
+       AND L82.OLD_SERIAL = #{searchUsedSerial}
+    </if>
+     <if test="sUnmatchReason != null and sUnmatchReason !=''">
+       AND S13.CODE = #{sUnmatchReason}
+    </if>
+  </select>
 
 	<update id="upReturnParts" parameterType="Map">
 		UPDATE LOG0082M
