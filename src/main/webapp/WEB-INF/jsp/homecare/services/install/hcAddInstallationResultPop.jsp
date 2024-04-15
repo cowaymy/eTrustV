@@ -139,12 +139,12 @@
                 return;
             }
 
-//             Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ', function(result) {
-//                 if (result.message == "Please choose this month only") {
-//                     Common.alert(result.message);
-//                     $("#installDate").val('');
-//                 }
-//             });
+            Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ', function(result) {
+                if (result.message == "Please choose this month only") {
+                    Common.alert(result.message);
+                    $("#installDate").val('');
+                }
+            });
         });
 
         $("#addInstallForm #installStatus").change(function() {
