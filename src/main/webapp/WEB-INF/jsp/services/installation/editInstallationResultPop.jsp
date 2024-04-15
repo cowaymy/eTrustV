@@ -29,6 +29,7 @@ var fileGroupKey ="";
 	        dateFormat: "dd/mm/yy"
 	};
 	$(".j_date").datepicker(pickerOpts);
+	checkInstallDateDisable();
 
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
@@ -605,6 +606,25 @@ function notMandatoryForAP(){
           $('#attch9').change();
       }
    }
+
+  function checkInstallDateDisable() {
+	  var currentDt = new Date();
+      var installDt = $("#installdt").val();
+
+      var day = installDt.substr(0,2);
+      var month = Number(installDt.substr(3,2));
+      var year = installDt.substr(6);
+
+      var currStartMonth = new Date(currentDt.getFullYear(),currentDt.getMonth(),1);
+      var currSelectedDate = new Date(year,month-1,day);
+
+      if(currSelectedDate < currStartMonth) {
+    	  $("#installdt").attr("disabled", true);
+      }
+      else{
+    	  $("#installdt").attr("disabled", false);
+      }
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
