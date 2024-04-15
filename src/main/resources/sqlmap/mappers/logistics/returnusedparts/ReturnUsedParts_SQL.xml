@@ -115,7 +115,7 @@
                             FROM LOG0082M WW
                             WHERE RESULT_ID = SM.RESULT_ID
                             GROUP BY WW.RESULT_ID
-                            HAVING SUM(WW.QTY) <> 0
+                            HAVING SUM(WW.QTY) <![CDATA[<>]]> 0
     )
 
     <if test="searchBranch != null and searchBranch !=''">
