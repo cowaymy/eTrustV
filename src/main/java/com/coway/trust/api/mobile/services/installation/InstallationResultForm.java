@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.coway.trust.api.mobile.services.ServiceApiController;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.util.BeanConverter;
@@ -12,6 +15,8 @@ import com.coway.trust.util.BeanConverter;
 import io.swagger.annotations.ApiModelProperty;
 
 public class InstallationResultForm {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InstallationResultForm.class);
 
   @ApiModelProperty(value = "사용자 ID (예_CT123456)")
   private String userId;
@@ -647,6 +652,8 @@ public List<Map<String, Object>> createMaps(InstallationResultForm installationR
     /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
     /////////////////////////////// installAccList /////////////////////////////////////
+
+    LOGGER.debug("=====installAccList===== :" + installAccList.size() );
 
     if (installAccList != null && installAccList.size() > 0) {
     	for (InstallationResultDetailForm dtl : partList) {
