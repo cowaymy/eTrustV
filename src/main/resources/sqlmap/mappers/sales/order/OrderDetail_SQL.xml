@@ -935,7 +935,7 @@
     ]]>
   </select>
 
-  <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
+ <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
     SELECT T.BANK_DTL_ID
              , T.BANK_DTL_AMT
              , T.CTRL_ID
@@ -945,7 +945,8 @@
              , T.CODE
              , CASE WHEN t.ctrl_stus_id  <![CDATA[<>]]>  4 THEN '-'
                        ELSE T.CODE_NAME END AS is_approve_str
-                       ,T.BANK_DTL_APPR_CODE
+             , T.BANK_DTL_APPR_CODE
+             , T.DESC_CODE
     FROM ( SELECT T1.BANK_DTL_ID
                         , T1.BANK_DTL_AMT
                         , T2.CTRL_ID
@@ -972,10 +973,13 @@
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)'
                         ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' ELSE 'Change Account' END) END CODE_NAME -->
                         , FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) CODE_NAME
+                        , T4.DESC_CODE
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
                LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+               LEFT JOIN SYS0115M T4 ON T1.BANK_DTL_APPR_CODE = T4.RESP_CODE AND T4.STUS_ID=1
+               LEFT JOIN SYS0013M T5 ON T4.GRP_REASON_CODE = T5.CODE AND T5.CODE_MASTER_ID = 570
                <!-- LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD') -->
                WHERE T1.SALES_ORD_ID = #{salesOrderId}
     ) T ORDER BY T.BANK_DTL_ID DESC
@@ -991,11 +995,15 @@
                ELSE '-' END IS_SUCCESS
              , T1.FILE_ITM_STUS_ID
              , T1.FILE_ITM_REM
+             , T1.FILE_ITM_RESPNS_CODE
+             , T3.DESC_CODE
     FROM SAL0152M T1
            , SYS0013M T2
+           , SYS0115M T3
     WHERE T1.FILE_ITM_ORD_ID = #{salesOrderId}
         AND T1.FILE_ITM_STUS_ID != 8
         AND T1.FILE_ITM_TYPE_ID = T2.CODE_ID
+        AND COALESCE(T3.RESP_CODE, 'EMP') = COALESCE(T1.FILE_ITM_RESPNS_CODE, 'EMP') AND T3.STUS_ID=1
     ORDER BY T1.FILE_ITM_ID DESC
   </select>
 
