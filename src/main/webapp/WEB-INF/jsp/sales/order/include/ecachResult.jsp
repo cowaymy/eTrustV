@@ -9,16 +9,27 @@
         displayEcashValidity();
     });
 
+
     function createAUIGrid9() {
 
+     	var hasPrivilege = Boolean("${PAGE_AUTH.funcUserDefine1}");
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.deductDt" />',  dataField : "fileItmCrt",    width : 120 }
           , { headerText : '<spring:message code="sal.title.payType" />',  dataField : "codeName" }
-          , { headerText : '<spring:message code="sal.title.amount" />',   dataField : "fileItmAmt",    width : 120 }
-          , { headerText : '<spring:message code="sal.text.isSuccess" />', dataField : "isSuccess",     width : 120 }
+          , { headerText : '<spring:message code="sal.title.amount" />',   dataField : "fileItmAmt",    width : 100 }
+          , { headerText : '<spring:message code="sal.text.isSuccess" />', dataField : "isSuccess",     width : 80 }
           , { headerText : '<spring:message code="sal.text.reason" />',    dataField : "fileItmRem",    width : 260 }
           ];
+
+         if (hasPrivilege) {
+
+        	 document.getElementById('downloadButtonContainer').style.display = 'block';
+            columnLayout.push(
+            { headerText : '<spring:message code="sal.text.fileItmRespnsCode" />',    dataField : "fileItmRespnsCode",    width : 120 }
+          , { headerText : '<spring:message code="sal.text.descCode" />',    dataField : "descCode",    width : 260 }
+            );
+        }
 
         ecashGridID = GridCommon.createAUIGrid("grid_ecash_wrap", columnLayout, "", gridPros);
     }
@@ -44,9 +55,20 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-
 <div id="ecashValidityPeriod"></div>
 <br/>
+<div id="downloadButtonContainer" style="display: none;">
+  <ul class="left_opt">
+    <li>
+      <h1 style="display: inline;">Bank Response Code: </h1>
+      <a href="${pageContext.request.contextPath}/resources/download/sales/BankFullResponseCode.pdf" download>
+        <button>Download</button>
+      </a>
+    </li>
+  </ul>
+</div>
+
+</br>
 <div id="grid_ecash_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="left_opt">
