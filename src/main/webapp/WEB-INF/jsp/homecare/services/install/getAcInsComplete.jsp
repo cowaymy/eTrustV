@@ -749,7 +749,7 @@
                     const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
                     let uploadFlag = false;
 
-                    const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text() ;
+                    const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text(), newfileGrpId = 0;
 
 
                     if(sirimUploadInput.files[0]){
@@ -778,6 +778,7 @@
                     if(uploadFlag){
 	                    $.each(container.files, function(n, v) {
 	                    	      formData.append("InstallEntryNo",insNo);
+	                    	      formData.append("atchFileGrpId", newfileGrpId);
 	                              formData.append(n, v);
 	                    });
 

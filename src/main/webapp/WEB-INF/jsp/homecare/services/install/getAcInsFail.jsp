@@ -611,7 +611,7 @@
             	   const formData = new FormData();
                    const container = new DataTransfer();
                    const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
-                   const insNo = "${insNo}";
+                   const insNo = "${insNo}", newfileGrpId = 0;
                    let uploadFlag = false;
 
                    for(let i = 0; i < installUploadContainer.length; i++){
@@ -624,6 +624,7 @@
                    if(uploadFlag){
                        $.each(container.files, function(n, v) {
                     	   formData.append("InstallEntryNo",insNo);
+                    	   formData.append("atchFileGrpId", newfileGrpId);
                            formData.append(n, v);
                        });
 
