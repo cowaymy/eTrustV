@@ -1114,4 +1114,85 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 public int selectUploadTypeId(Map<String, Object> params){
 		return commissionCalculationMapper.selectUploadTypeId(params);
 	}
+
+
+
+
+	@Override
+	public List<EgovMap> advIncentiveType(Map<String, Object> params) {
+		return commissionCalculationMapper.advIncentiveType(params);
+	}
+	@Override
+	public List<EgovMap> advIncentiveSample(Map<String, Object> params) {
+		return commissionCalculationMapper.advIncentiveSample(params);
+	}
+	@Override
+	public void insertAdvIncentiveMaster(Map<String, Object> params) {
+		commissionCalculationMapper.insertAdvIncentiveMaster(params);
+	}
+	@Override
+	public String selectAdvIncentiveUploadId(Map<String, Object> params) {
+		return commissionCalculationMapper.selectAdvIncentiveUploadId(params);
+	}
+	@Override
+	public void insertAdvIncentiveDetail(Map<String, Object> params) {
+		commissionCalculationMapper.insertAdvIncentiveDetail(params);
+	}
+	@Override
+	public void callAdvIncentiveDetail(int uploadId) {
+		commissionCalculationMapper.callAdvIncentiveDetail(uploadId);
+	}
+	@Override
+	public int cntAdvIncentiveUploadBatch(Map<String, Object> params) {
+		return commissionCalculationMapper.cntAdvIncentiveUploadBatch(params);
+	}
+	@Override
+	 public Map<String, Object> advIncentiveMasterDetail(int uploadId){
+		return commissionCalculationMapper.advIncentiveMasterDetail(uploadId);
+	}
+	@Override
+	 public int advIncentiveItemCnt(Map<String, Object> params){
+		return commissionCalculationMapper.advIncentiveItemCnt(params);
+	}
+	@Override
+	public List<EgovMap> advIncentiveItemList(Map<String, Object> params) {
+		return commissionCalculationMapper.advIncentiveItemList(params);
+	}
+	@Override
+	 public int cntUploadAdvIncentiveMemberCheck(Map<String, Object> params){
+		return commissionCalculationMapper.cntUploadAdvIncentiveMemberCheck(params);
+	}
+	@Override
+	public Map<String, Object> advIncentiveUploadMember(Map<String, Object> params){
+		return commissionCalculationMapper.advIncentiveUploadMember(params);
+	}
+	@Override
+	public void advIncentiveItemUpdate(Map<String, Object> params){
+		commissionCalculationMapper.advIncentiveItemUpdate(params);
+	}
+	@Override
+	public void advIncentiveItemInsert(Map<String, Object> params){
+		commissionCalculationMapper.advIncentiveItemInsert(params);
+	}
+	@Override
+	public void removeAdvIncentiveItem(Map<String, Object> params) {
+		commissionCalculationMapper.removeAdvIncentiveItem(params);
+	}
+	@Override
+	public int advIncentiveDeactivateCheck(String uploadId){
+		return commissionCalculationMapper.advIncentiveDeactivateCheck(uploadId);
+	}
+	@Override
+	public void advIncentiveDeactivate(Map<String, Object> params){
+		commissionCalculationMapper.advIncentiveDeactivate(params);
+	}
+	@Override
+	public void callAdvIncentiveConfirm(Map<String, Object> params){
+		commissionCalculationMapper.callAdvIncentiveConfirm(params);
+	}
+	@Override
+	public List<EgovMap> advIncentiveTargetList(Map<String, Object> params) {
+		return commissionCalculationMapper.advIncentiveTargetList(params);
+	}
+
 }

@@ -316,4 +316,26 @@ public interface CommissionCalculationService
     void callNonIncentiveConfirm(Map<String, Object> params);
     int cntNonIncentiveUploadBatch(Map<String, Object> params);
     int selectUploadTypeId(Map<String, Object> params);
+
+    List<EgovMap> advIncentiveType(Map<String, Object> params);
+    List<EgovMap> advIncentiveSample(Map<String, Object> params);
+    void insertAdvIncentiveMaster(Map<String, Object> params);
+    String selectAdvIncentiveUploadId(Map<String, Object> params);
+    void insertAdvIncentiveDetail(Map<String, Object> params);
+    void callAdvIncentiveDetail(int uploadId);
+    int cntAdvIncentiveUploadBatch(Map<String, Object> params);
+    Map<String, Object> advIncentiveMasterDetail(int uploadId);
+    int advIncentiveItemCnt(Map<String, Object> params);
+    List<EgovMap> advIncentiveItemList(Map<String, Object> params);
+    int cntUploadAdvIncentiveMemberCheck(Map<String, Object> params);
+    Map<String, Object> advIncentiveUploadMember(Map<String, Object> params);
+    void advIncentiveItemUpdate(Map<String, Object> params);
+    void advIncentiveItemInsert(Map<String, Object> params);
+    void removeAdvIncentiveItem(Map<String, Object> params);
+    int advIncentiveDeactivateCheck(String uploadId);
+    void advIncentiveDeactivate(Map<String, Object> params);
+    void callAdvIncentiveConfirm(Map<String, Object> params);
+    List<EgovMap> advIncentiveTargetList(Map<String, Object> params);
+
+
 }

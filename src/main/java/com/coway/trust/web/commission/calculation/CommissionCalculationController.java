@@ -3617,4 +3617,431 @@ public class CommissionCalculationController {
 		List memType = commissionCalculationService.nonIncentiveType(params);
 		return ResponseEntity.ok(memType);
 	}
+
+	/**
+	 * Non Monetary Incentive Upload
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/commAdvanceIncentiveUpload.do")
+	public String commAdvIncentiveUpload(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("mstCodeNm", "Cody/HP/HT Advance Incentive");
+		List type = commissionCalculationService.advIncentiveType(params);
+		model.addAttribute("type", type);
+		// 호출될 화면
+		return "commission/commAdvanceIncentiveUpload";
+	}
+
+	/**
+	 * Non Monetary Incentive upload new pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advanceUploadNewPop.do")
+	public String commAdvIncentiveUploadNewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List type = commissionCalculationService.advIncentiveType(params);
+		List memType = commissionCalculationService.nonIncentiveType(params);
+		model.addAttribute("type", type);
+		model.addAttribute("memType", memType);
+		// 호출될 화면
+		return "commission/commissionAdvanceUploadNewPop";
+	}
+
+	/**
+	 * Incentive Upload Sample Pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advanceUploadSamplePop.do")
+	public String commAdvIncentiveUploadSample(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "commission/commissionAdvanceUploadSamplePop";
+	}
+
+	/**
+	 * Sample HP List
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advanceSampleHpList")
+	public ResponseEntity<List<EgovMap>> advIncntivSampleHpList(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("mstCode",CommissionConstants.COMIS_ADV_SAMPLE_HP);
+		List sampleList = commissionCalculationService.advIncentiveSample(params);
+		// 호출될 화면
+		return ResponseEntity.ok(sampleList);
+	}
+	/**
+	 * Sample CD List
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advanceSampleCdList")
+	public ResponseEntity<List<EgovMap>> advIncntivSampleCdList(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("mstCode",CommissionConstants.COMIS_ADV_SAMPLE_CD);
+		List sampleList = commissionCalculationService.advIncentiveSample(params);
+		// 호출될 화면
+		return ResponseEntity.ok(sampleList);
+	}
+	/**
+	 * Sample HT List
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advanceSampleHtList")
+	public ResponseEntity<List<EgovMap>> advIncntivSampleHtList(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("mstCode",CommissionConstants.COMIS_ADV_SAMPLE_HT);
+		List sampleList = commissionCalculationService.advIncentiveSample(params);
+		// 호출될 화면
+		return ResponseEntity.ok(sampleList);
+	}
+
+	/**
+	 * Csv File Overlap Count Search
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/csvFileOverlapCntAdvIncnt")
+	public ResponseEntity<Integer> csvFileOverlapCntAdvIncnt(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("statusId", CommissionConstants.COMIS_NONMON_INCENTIVE_ACTIVE);
+		int cnt = commissionCalculationService.cntAdvIncentiveUploadBatch(params);
+		return ResponseEntity.ok(cnt);
+	}
+
+	/**
+	 * non incentive view pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/commAdvIncntivViewPop.do")
+	public String commAdvIncntivViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		Map detail = commissionCalculationService.advIncentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+		model.addAttribute("detail", detail);
+
+		Map map = new HashMap<>();
+		map.put("uploadId", params.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalCnt", totalCnt);
+
+		map.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalValid", totalValid);
+
+		map.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalInvalid", totalInvalid);
+
+		model.addAttribute("uploadId", params.get("uploadId"));
+		// 호출될 화면
+		return "commission/commissionAdvIncentiveViewPop";
+	}
+
+	/**
+	 * non Incentive Confirm pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/commAdvIncntiveConfirmPop.do")
+	public String commAdvIncentiveConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		Map detail = commissionCalculationService.advIncentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+		model.addAttribute("detail", detail);
+
+		Map map = new HashMap<>();
+		map.put("uploadId", params.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalCnt", totalCnt);
+
+		map.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalValid", totalValid);
+
+		map.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.advIncentiveItemCnt(map);
+		model.addAttribute("totalInvalid", totalInvalid);
+
+		model.addAttribute("uploadId", params.get("uploadId"));
+		model.addAttribute("typeId", params.get("typeId"));
+
+		// 호출될 화면
+		return "commission/commissionAdvIncentiveConfirmPop";
+	}
+
+	/**
+	 * incentive item add pop
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/commAdvInctivItemAddPop.do")
+	public String commAdvInctivItemAddPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("uploadId", params.get("uploadId"));
+		model.addAttribute("uploadTypeId", params.get("uploadTypeId"));
+		model.addAttribute("typeCd", params.get("typeCd"));
+		// 호출될 화면
+		return "commission/commissionAdvIncentiveAddItemPop";
+	}
+
+	@RequestMapping(value = "/advIncentiveItemValid", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> advIncentiveItemValid(@RequestParam Map<String, Object> params, Model model) {
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.FAIL);
+
+		String msg = "";
+
+		Map memMap = commissionCalculationService.nonIncentiveItemAddMem(params);
+		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
+			msg = "Invalid member.";
+		}else{
+            if( ("1".equals(memMap.get("MEM_TYPE").toString())) ||  ("2".equals(memMap.get("MEM_TYPE").toString())) ){
+            	if(!(params.get("uploadTypeCd").toString()).equals(memMap.get("MEM_TYPE").toString())){
+            		msg="Invalid member type.";
+            	}else if( !("1".equals(memMap.get("STUS").toString())) ){
+            		msg = "This member is not active.";
+            	}else{
+            		params.put("statusId", CommissionConstants.COMIS_NONMON_INCENTIVE_ACTIVE);
+            		params.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+            		params.put("memId", memMap.get("MEM_ID"));
+            		int cnt = commissionCalculationService.cntNonIncentiveMem(params);
+            		if(cnt > 0){
+            			msg = "This member is existing in the upload batch";
+            		}else{
+            			message.setCode(AppConstants.SUCCESS);
+            			message.setData(memMap);
+            		}
+            	}
+            }else{
+            	msg="Invalid member type.";
+            }
+		}
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * non Incentive item insert
+	 * @param params
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 */
+	@RequestMapping(value = "/advIncentiveItemInsert", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> advIncentiveItemInsert(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		ReturnMessage msg = new ReturnMessage();
+		msg.setCode(AppConstants.SUCCESS);
+		int loginId = sessionVO.getUserId();
+
+		params.put("loginId", loginId);
+		params.put("statusId", CommissionConstants.COMIS_NONMON_INCENTIVE_ACTIVE);
+		params.put("vStatusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+		int memCnt = commissionCalculationService.cntUploadAdvIncentiveMemberCheck(params);
+
+		if(memCnt > 0){
+			//update
+			Map memMap = commissionCalculationService.advIncentiveUploadMember(params);
+
+			params.put("updateDetId", memMap.get("UPLOAD_DET_ID"));
+
+			commissionCalculationService.advIncentiveItemUpdate(params);
+		}else{
+			//insert
+			commissionCalculationService.advIncentiveItemInsert(params);
+		}
+
+
+		params.put("vStusId", null);
+		int totalCnt = commissionCalculationService.advIncentiveItemCnt(params);
+		params.put("totalCnt", totalCnt);
+
+		params.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.advIncentiveItemCnt(params);
+		params.put("totalValid", totalValid);
+
+		params.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.advIncentiveItemCnt(params);
+		params.put("totalInvalid", totalInvalid);
+
+
+		// 결과 만들기.
+    	message = AppConstants.MSG_SUCCESS;
+
+		msg.setMessage(message);
+		msg.setData(params);
+        return ResponseEntity.ok(msg);
+	}
+
+	/**
+	 * remove non incentive item update
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/removeAdvIncentiveItem.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> removeAdvIncentiveItem(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map iMap = null;
+
+		for (Object map : checkList) {
+			iMap = (HashMap<String, Object>) map;
+			iMap.put("statusId", CommissionConstants.COMIS_NONMON_INCENTIVE_REMOVE);
+			iMap.put("loginId", loginId);
+
+			if( "1".equals(iMap.get("remove")) ){
+				commissionCalculationService.removeAdvIncentiveItem(iMap);;
+			}
+		}
+		Map cntMap = new HashMap();
+		cntMap.put("uploadId", iMap.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.advIncentiveItemCnt(cntMap);
+		cntMap.put("totalCnt", totalCnt);
+
+		cntMap.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.advIncentiveItemCnt(cntMap);
+		cntMap.put("totalValid", totalValid);
+
+		cntMap.put("vStusId", CommissionConstants.COMIS_NONMON_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.advIncentiveItemCnt(cntMap);
+		cntMap.put("totalInvalid", totalInvalid);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(cntMap);
+
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * non Incentive deactivate Check
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advIncentiveDeactivateCheck")
+	public ResponseEntity<Integer> advIncentiveDeactivateCheck(@RequestParam Map<String, Object> params, ModelMap model) {
+		int cnt = commissionCalculationService.advIncentiveDeactivateCheck(params.get("uploadId").toString());
+		return ResponseEntity.ok(cnt);
+	}
+
+	/**
+	 * non incentive Deactivate Update
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advIncentiveDeactivate")
+	public ResponseEntity<ReturnMessage> advIncentiveDeactivate(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+		params.put("statusId", CommissionConstants.COMIS_NONMON_INCENTIVE_REMOVE);
+
+		commissionCalculationService.advIncentiveDeactivate(params);
+
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * non incentive confirm
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advIncentiveConfirm")
+	public ResponseEntity<ReturnMessage> advIncentiveConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		commissionCalculationService.callAdvIncentiveConfirm(params);
+
+		String msg = null;
+		if(params.get("v_sqlcode") != null)
+			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
+		System.out.println("##msg : "+msg);
+		Map detail = commissionCalculationService.advIncentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+
+		message.setData(detail);
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * select incentive target list
+	 * @param params
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAdvIncentiveTargetList", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectAdvIncentiveTargetList(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+
+		List<Object> type = (List<Object>) params.get("typeList");
+		List<Object> memberType = (List<Object>) params.get("memberTypeList");
+		List<Object> status = (List<Object>) params.get("statusList");
+
+		//TODO 조건 변경하기.
+		if(type !=null){
+			String typeTemp ="";
+			for(int i = 0; i < type.size() ; i++){
+				typeTemp+=type.get(i)+",";
+			}
+			params.put("typeList", typeTemp.substring(0,typeTemp.length()-1));
+		}
+		if(memberType !=null){
+			String memberTypeTemp ="";
+			for(int i = 0; i < memberType.size() ; i++){
+				memberTypeTemp+=memberType.get(i)+",";
+			}
+			params.put("memberTypeList", memberTypeTemp.substring(0,memberTypeTemp.length()-1));
+		}
+		if(status !=null){
+			String statusTemp ="";
+			for(int i = 0; i < status.size() ; i++){
+				statusTemp+=status.get(i)+",";
+			}
+			params.put("statusList", statusTemp.substring(0,statusTemp.length()-1));
+		}
+		// 조회.
+		List<EgovMap> itemList = commissionCalculationService.advIncentiveTargetList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(itemList);
+	}
+
+	/**
+	 * non Incentive valid / invalid list search
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/advIncentiveItemList")
+	public ResponseEntity<List<EgovMap>> advIncentiveItemList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List itemList = commissionCalculationService.advIncentiveItemList(params);
+
+		// 호출될 화면
+		return ResponseEntity.ok(itemList);
+	}
+
 }

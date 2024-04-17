@@ -27,6 +27,8 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.commission.CommissionConstants;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 @RestController
 @RequestMapping("/commission/csv")
 public class CommisssionUploadCsvController {
@@ -291,6 +293,64 @@ public class CommisssionUploadCsvController {
 			commissionCalculationService.insertIncentiveDetail(map);
 		}
 		commissionCalculationService.callIncentiveDetail(Integer.parseInt(uploadId));
+
+		return ResponseEntity.ok(uploadId);
+	}
+
+	@RequestMapping(value = "/uploadAdvIncnt", method = RequestMethod.POST)
+	public ResponseEntity<String> readAdvIncntExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+		//ReturnMessage message = new ReturnMessage();
+
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+
+		List<AdvIncentiveDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, AdvIncentiveDataVO::create);
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = String.valueOf(sessionVO.getUserId());
+
+		//master
+		Map mMap = new HashMap();
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("code",request.getParameter("type"));
+//		List<EgovMap> sampleList = commissionCalculationService.advIncentiveSample(params);
+
+		mMap.put("uploadID",request.getParameter("type"));
+		mMap.put("statusID","1");
+		if(("adv").equals(request.getParameter("type"))){
+			String dt = CommonUtils.getCalMonth(-1);
+			mMap.put("actionDate",dt.substring(0,6));
+		}
+		mMap.put("creator",loginId);
+		mMap.put("updator",loginId);
+		mMap.put("memberTypeID",request.getParameter("memberType"));
+
+		commissionCalculationService.insertAdvIncentiveMaster(mMap);
+		String uploadId = commissionCalculationService.selectAdvIncentiveUploadId(mMap);
+
+		for (AdvIncentiveDataVO vo : vos) {
+			/*det.Updated = DateTime.Now;*/
+			Map map = new HashMap();
+			map.put("uploadID",uploadId);
+			map.put("statusID","1");
+			map.put("validStatusID","1");
+			String requestDay = String.format("%02d", Integer.valueOf(vo.getDay()));
+			String requestMonth = String.format("%02d", Integer.valueOf(vo.getMonth()));
+			String rqstDt = (String.valueOf(requestDay) + '/' + String.valueOf(requestMonth) + '/' + vo.getYear());
+			map.put("advDt",rqstDt);
+			map.put("userMemberCode",vo.getMemberCode());
+			map.put("userRefCode",vo.getRefCode());
+			map.put("userTargetAmt",vo.getTargetAmt());
+			map.put("userRefLvl",vo.getLevel());
+			map.put("sysMemberID","0");
+			map.put("sysTargetAmt","0");
+			map.put("sysRefLvl","0");
+			map.put("updated",loginId);
+			map.put("sysMemberTypeID","0");
+
+			commissionCalculationService.insertAdvIncentiveDetail(map);
+		}
+		commissionCalculationService.callAdvIncentiveDetail(Integer.parseInt(uploadId));
 
 		return ResponseEntity.ok(uploadId);
 	}

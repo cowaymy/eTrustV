@@ -200,4 +200,7 @@ public class CommissionConstants {
 	public static final String COMIS_NONMON_INCENTIVE_VALID = "4";
 	public static final String COMIS_NONMON_INCENTIVE_INVALID = "21";
 
+	public static final String COMIS_ADV_SAMPLE_HP = "ADVINVHP";
+	public static final String COMIS_ADV_SAMPLE_HT = "ADVINVHT";
+	public static final String COMIS_ADV_SAMPLE_CD = "ADVINVCD";
 }
