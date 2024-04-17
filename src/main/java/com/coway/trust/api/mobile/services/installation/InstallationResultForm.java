@@ -656,7 +656,7 @@ public List<Map<String, Object>> createMaps(InstallationResultForm installationR
     LOGGER.debug("=====installAccList===== :" + installAccList.size() );
 
     if (installAccList != null && installAccList.size() > 0) {
-    	for (InstallationResultDetailForm dtl : partList) {
+    	for (InstallationResultDetailForm dtl : installAccList) {
     	map.put("resultNo", dtl.getResultNo());
         map.put("resultSoId", dtl.getResultSoId());
         map.put("insAccPartId", dtl.getInsAccPartId());
