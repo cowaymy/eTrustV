@@ -777,6 +777,7 @@
 
                     if(uploadFlag){
 	                    $.each(container.files, function(n, v) {
+	                    	      formData.append("InstallEntryNo",insNo);
 	                              formData.append(n, v);
 	                    });
 
