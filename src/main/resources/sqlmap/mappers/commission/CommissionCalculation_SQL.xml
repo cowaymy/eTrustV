@@ -3762,7 +3762,7 @@
         JOIN sys0012M T2 ON T2.CODE_MASTER_ID = T1.CODE_MASTER_ID
         WHERE
         1=1
-        <if test="mstCodeNm != null and mstCodeNm != ''">
+        <if test="mstCode != null and mstCode != ''">
             AND t2.CODE_MASTER_NAME = #{mstCode}
         </if>
         <if test="code != null and code != ''">
