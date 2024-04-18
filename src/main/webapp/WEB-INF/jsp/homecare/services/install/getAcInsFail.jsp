@@ -612,6 +612,7 @@
                    const container = new DataTransfer();
                    const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
                    const insNo = "${insNo}", newfileGrpId = 0;
+                   const salesOrdId = "${installationInfo.salesOrdId}" == "" ? "" : "${installationInfo.salesOrdId}";
                    let uploadFlag = false;
 
                    for(let i = 0; i < installUploadContainer.length; i++){
@@ -623,9 +624,10 @@
 
                    if(uploadFlag){
                        $.each(container.files, function(n, v) {
+                    	   formData.append(n, v);
+                    	   formData.append("salesOrdId", salesOrdId);
                     	   formData.append("InstallEntryNo",insNo);
                     	   formData.append("atchFileGrpId", newfileGrpId);
-                           formData.append(n, v);
                        });
 
                        fetch("/homecare/services/install/uploadInsImage.do", {

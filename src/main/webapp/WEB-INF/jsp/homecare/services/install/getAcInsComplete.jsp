@@ -750,7 +750,7 @@
                     let uploadFlag = false;
 
                     const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text(), newfileGrpId = 0;
-
+                    const salesOrdId = "${installationInfo.salesOrdId}" == "" ? "" : "${installationInfo.salesOrdId}";
 
                     if(sirimUploadInput.files[0]){
                     	uploadFlag=true;
@@ -777,9 +777,11 @@
 
                     if(uploadFlag){
 	                    $.each(container.files, function(n, v) {
+	                    	      formData.append(n, v);
+	                    	      formData.append("salesOrdId", salesOrdId);
 	                    	      formData.append("InstallEntryNo",insNo);
 	                    	      formData.append("atchFileGrpId", newfileGrpId);
-	                              formData.append(n, v);
+
 	                    });
 
 	                    fetch("/homecare/services/install/uploadInsImage.do", {
