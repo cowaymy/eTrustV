@@ -19,7 +19,6 @@
         var myGridID_view;
         var callType = "${callType.typeId}";
 
-        alert("${installResult.preinstalltionStus}");
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
