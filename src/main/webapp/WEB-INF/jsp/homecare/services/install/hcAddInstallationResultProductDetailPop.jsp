@@ -345,10 +345,14 @@ var myFileCaches = {};
           fileContentsArr.push(fileContentsObj);
         });
 
-      if(fileContentsArr.length < 3){
+      if ("${installResult.preinstalltionStus}") {
+        isValid = true;
+      } else {
+        if(fileContentsArr.length < 3){
           isValid = false;
-      }else{
+        } else {
           isValid = true;
+        }
       }
 
       // KR-OHK Serial Check add
