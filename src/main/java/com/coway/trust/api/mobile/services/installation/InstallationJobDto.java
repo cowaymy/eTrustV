@@ -291,13 +291,13 @@ public class InstallationJobDto {
 
   private BigDecimal longitude;
 
-  private double ntu;
+  private BigDecimal ntu;
 
-  public double getNtu() {
+  public BigDecimal getNtu() {
 	return ntu;
 }
 
-public void setNtu(double ntu) {
+public void setNtu(BigDecimal ntu) {
 	this.ntu = ntu;
 }
 
