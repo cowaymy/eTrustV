@@ -18,6 +18,8 @@
 
         var myGridID_view;
         var callType = "${callType.typeId}";
+
+        alert("${installResult.preinstalltionStus}");
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
@@ -449,11 +451,15 @@
 	            fileContentsArr.push(fileContentsObj);
 	          });
 
-	        if(fileContentsArr.length < 3){
-	             isValid = false;
-	         }else{
-	             isValid = true;
-	         }
+	        if ("${installResult.preinstalltionStus}") {
+	          isValid = true;
+	        } else {
+	            if(fileContentsArr.length < 3){
+	                 isValid = false;
+	             }else{
+	                 isValid = true;
+	             }
+	        }
 
 	        if(isValid == true)  {
 	             Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
