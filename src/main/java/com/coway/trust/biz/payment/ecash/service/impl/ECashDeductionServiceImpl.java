@@ -136,5 +136,10 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 	  return eCashDeductionMapper.selectMstConf(params);
 	}
 
+	@Override
+	public List<EgovMap> selectSubConf(Map<String, Object> params) {
+		  return eCashDeductionMapper.selectSubConf(params);
+	}
+
 
 }

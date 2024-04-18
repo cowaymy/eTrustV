@@ -25,6 +25,7 @@ import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileAMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileHSBCHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
@@ -396,6 +397,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
   @Override
   public void downLoadECashGrpDeductionFileAMB(Object parameter, ECashGrpDeductionFileAMBHandler eCashGrpDeductionFileAMBHandler) {
     this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileAMBHandler);
+  }
+
+  @Override
+  public void downLoadECashGrpDeductionFileHSBC(Object parameter, ECashGrpDeductionFileHSBCHandler eCashGrpDeductionFileHSBCHandler) {
+    this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileHSBCHandler);
   }
 
 }

@@ -114,4 +114,5 @@ public interface ECashDeductionMapper {
 	EgovMap selectECashBankResult(Map<String, Object> params);
 
 	EgovMap selectMstConf(Map<String, Object> params);
+	List<EgovMap> selectSubConf(Map<String, Object> params);
 }

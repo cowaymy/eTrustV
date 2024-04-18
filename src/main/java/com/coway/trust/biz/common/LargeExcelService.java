@@ -20,6 +20,7 @@ import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileHSBCHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileAMBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
@@ -173,5 +174,8 @@ public interface LargeExcelService {
   void downloadCreditCardFileAMB(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
 
   void downLoadECashGrpDeductionFileAMB(Object parameter, ECashGrpDeductionFileAMBHandler downloadHandler);
+
+  void downLoadECashGrpDeductionFileHSBC(Object parameter,
+		ECashGrpDeductionFileHSBCHandler eCashGrpDeductionFileHSBCHandler);
 
 }

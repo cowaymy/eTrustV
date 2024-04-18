@@ -53,9 +53,13 @@
                 AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
                 AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') +1
             </if>
-            <if test="issueBank != null and issueBank != ''">
-                AND Extent1.FILE_BATCH_BANK_ID = #{issueBank}
-            </if>
+            <if test='issueBank != null and issueBank != ""'>
+	             AND Extent1.FILE_BATCH_BANK_ID IN
+	             <foreach item="item" collection="issueBank" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
             <if test="batchName != null and batchName != ''">
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
             </if>
@@ -372,6 +376,7 @@
                             ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
                             ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
                             ,TO_CHAR(SYSDATE, 'YYYYMMDD') AS FILEDATE
+                            ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
          from (
             SELECT
                 EXTENT1.FILE_BATCH_GRP_ID,
@@ -446,4 +451,25 @@
         ORDER BY CTRL_SET
   </select>
 
+  <select id="selectSubConf" parameterType="Map" resultType="egovMap">
+    SELECT
+    CTRL_DAT_TYP
+    , CTRL_DAT_LGTH
+    , CTRL_DAT_FMT
+    , CTRL_DAT
+    ,
+    CTRL_DELIMETER
+    , CTRL_PAD
+    , CTRL_PAD_VAL
+    , CTRL_RMK
+    FROM
+    PAY0290M
+    WHERE
+    ID
+    = #{id}
+    AND CTRL_PART = #{part}
+    AND DISB = 0
+    ORDER BY
+    CTRL_SEQ
+  </select>
 </mapper>

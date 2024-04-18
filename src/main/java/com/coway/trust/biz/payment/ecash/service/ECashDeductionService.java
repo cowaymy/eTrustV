@@ -42,4 +42,6 @@ public interface ECashDeductionService
 
 	EgovMap selectMstConf(Map<String, Object> params);
 
+	List<EgovMap> selectSubConf(Map<String, Object> params);
+
 }

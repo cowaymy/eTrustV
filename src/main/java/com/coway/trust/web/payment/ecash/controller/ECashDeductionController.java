@@ -62,6 +62,7 @@ import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileAMBHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileHSBCHandler;
 import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.FileInfoVO;
 import com.coway.trust.web.common.claim.FormDef;
@@ -420,6 +421,7 @@ public class ECashDeductionController {
 	      claimMap.put("subPath", fileInfoConf.get("ctrlSubPath"));
 	      claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
 	      claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
+          claimMap.put("ctrlConfId", fileInfoConf.get("id"));
 
 	      isZip  = fileInfoConf.get("ctrlZip").toString();
 	    }
@@ -472,8 +474,22 @@ public class ECashDeductionController {
                       this.createECashGrpDeductionFileAMB(claimMap);
                     }
                   }
-                    }
+              }
+                else if ("17".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
+                    int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
+                    //int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
+                    int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
 
+                    if (pageCnt > 0){
+                      for(int i = 1 ; i <= pageCnt ; i++){
+                        claimMap.put("pageNo", i);
+                        claimMap.put("rowCount", 60000);
+                        //claimMap.put("batchNo", totBatToday);
+                        claimMap.put("pageCnt", pageCnt);
+                        this.createECashGrpDeductionFileHSBC(claimMap);
+                      }
+                    }
+                }
     		}
     		/*else{
                 //CIMB
@@ -815,11 +831,19 @@ public class ECashDeductionController {
     	LOGGER.debug("new_merchantBank : {}", eCashDeduction.get("new_merchantBank"));
     	LOGGER.debug("cardType : {}", eCashDeduction.get("new_cardType"));
     	LOGGER.debug("newDeductSales : {}", eCashDeduction.get("newDeductSales"));
+    	String hiddenIssueBank = CommonUtils.nvl(String.valueOf(eCashDeduction.get("hiddenIssueBank")));
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+    	}
 
     	int isGrp = eCashDeduction.get("v_isGrp") != null ? 1 : 0;
 		// HasActiveBatch : 동일한 bankId, eCashDeduction Type 에 해당하는 active 건이 있는지 확인한다.
 		searchMap = new HashMap<String, Object>();
-		searchMap.put("issueBank", eCashDeduction.get("new_issueBank"));
+
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+    		searchMap.put("issueBank", hiddenIssueBankList);
+    	}
 		//searchMap.put("claimType", eCashDeduction.get("claimType"));
 		searchMap.put("status", "1");
 
@@ -1263,5 +1287,55 @@ public class ECashDeductionController {
       }
     }
 
+    private ECashGrpDeductionFileHSBCHandler getTextDownloadHSBCGrpHandler(String fileName, String[] columns, String[] titles, String path,
+            String subPath, Map<String, Object> params) {
+          FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+          excelDownloadVO.setFilePath(path);
+          excelDownloadVO.setSubFilePath(subPath);
 
+          Map<String, Object> confPrm = new HashMap<String, Object>();
+          confPrm.put("id", params.get("ctrlConfId").toString());
+          confPrm.put("part", "H");
+
+          List<EgovMap> headerInfo = eCashDeductionService.selectSubConf(confPrm); // HEADER
+
+          confPrm.put("part", "D");
+          List<EgovMap> datailInfo = eCashDeductionService.selectSubConf(confPrm); // DETAIL
+
+          confPrm.put("part", "T");
+          List<EgovMap> trailerInfo = eCashDeductionService.selectSubConf(confPrm); // FOOTER
+
+          return new ECashGrpDeductionFileHSBCHandler(excelDownloadVO, headerInfo, datailInfo, trailerInfo, params);
+        }
+
+    public void createECashGrpDeductionFileHSBC(EgovMap claimMap) throws Exception {
+
+    	ECashGrpDeductionFileHSBCHandler downloadHandler = null;
+
+        try {
+          String inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+          String todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+          String fileName = claimMap.get("batchName").toString();
+          String subPath =  claimMap.get("subPath").toString() + inputDate + "/";
+          String ext = claimMap.get("ext").toString();
+          String batchNo = claimMap.get("fileBatchId").toString();
+
+          String sFile = fileName + todayDate + "_" + batchNo + "." + ext;
+
+          downloadHandler = getTextDownloadHSBCGrpHandler(sFile, claimFileColumns, null, filePath, subPath , claimMap);
+          largeExcelService.downLoadECashGrpDeductionFileHSBC(claimMap, downloadHandler);
+          //downloadHandler.writeFooter();
+
+        } catch (Exception ex) {
+          throw new ApplicationException(ex, AppConstants.FAIL);
+        } finally {
+          if (downloadHandler != null) {
+            try {
+              downloadHandler.close();
+            } catch (Exception ex) {
+              LOGGER.info(ex.getMessage());
+            }
+          }
+        }
+      }
 }
