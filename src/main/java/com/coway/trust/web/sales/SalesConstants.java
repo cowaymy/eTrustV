@@ -125,6 +125,7 @@ public class SalesConstants {
                                                                   // Filter
                                                                   // (Rental
                                                                   // SVM)
+  public static final int PROMO_APP_TYPE_CODE_ID_EDU = 7553; // Education
 
   // Promotion Period Type
   public static final int PROMO_DISC_TYPE_EQUAL = 2293; // EQUAL
