@@ -4028,12 +4028,12 @@
 		,SRV_FILTER_UPD_DT = sysdate
 		,SRV_FILTER_UPD_USER_ID = #{ResultCreator}
 		,SRV_FILTER_LAST_SERIAL= #{lastSerialNo}
-        , SRV_FILTER_PREV_SERIAL =
-        (SELECT SRV_FILTER_LAST_SERIAL
+        , SRV_FILTER_PREV_SERIAL = #{oldSerialNo}
+     <!--    (SELECT SRV_FILTER_LAST_SERIAL
         FROM SAL0087D
         WHERE SRV_CONFIG_ID =
         #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID}
-         and SRV_FILTER_STUS_ID = 1)
+         and SRV_FILTER_STUS_ID = 1) -->
 		where SRV_CONFIG_ID = #{SrvConfigID}
 		and SRV_FILTER_STUS_ID = 1
 		and
