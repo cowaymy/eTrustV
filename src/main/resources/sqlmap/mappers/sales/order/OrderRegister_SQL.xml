@@ -392,7 +392,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -426,7 +426,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -482,7 +482,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID IN( 2282, 1034) <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -515,7 +515,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   <if test='isSrvPac != null and isSrvPac == "Y"'>
                       AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   </if>
@@ -574,7 +574,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -609,7 +609,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   <if test='isSrvPac != null and isSrvPac == "Y"'>
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   </if>
@@ -664,7 +664,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -699,7 +699,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -800,7 +800,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
@@ -841,7 +841,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE
            T1.PROMO_ITM_STUS_ID = 1
@@ -882,7 +882,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
