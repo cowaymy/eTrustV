@@ -2455,6 +2455,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
           qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
           qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
+          qryFilter_param.put("oldSerialNo", String.valueOf(bsResultDet.get(i).get("oldSerialNo")));
           hsManualMapper.updateQryFilter(qryFilter_param);
 
           ItemNo = ItemNo + 1;
