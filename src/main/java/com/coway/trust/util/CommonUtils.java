@@ -1103,7 +1103,9 @@ public final class CommonUtils {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS;
 		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_FREE_TRIAL ) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_FREE_TRIAL ;
-		}
+		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_EDUCATION ) {
+      iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_EDU;
+    }
 
 		return iPromoAppTypeId;
 	}
