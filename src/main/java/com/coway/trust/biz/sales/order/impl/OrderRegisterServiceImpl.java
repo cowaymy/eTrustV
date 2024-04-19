@@ -165,7 +165,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     int apptypeid = Integer.parseInt((String) params.get("appTypeId"));
 
-    if (apptypeid == 144 || apptypeid == 145) {
+    if (apptypeid == 145) {
       params.put("appTypeId", apptypeid);
 
     } else {
@@ -265,8 +265,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         } else {
 
 
-        	// App Type == AUX
-        	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+        	// App Type == AUX & EDU
+        	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX || ordAppType == SalesConstants.APP_TYPE_CODE_ID_EDUCATION ) {
         		priceInfo = new EgovMap();
         	   	 logger.info("0000000");
         		priceInfo.put("orderPricePromo", "0.00");
