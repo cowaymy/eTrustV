@@ -223,6 +223,14 @@
 		        WHERE T1.SRV_MEM_STUS_ID = 1
 		          AND T1.PAC_TYPE = '1'
 		          AND '4' = #{selType}
+		        UNION ALL
+		        SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+		            , T1.SRV_MEM_DESC AS CODE_NAME
+		         FROM SAL0091M T1
+		        WHERE T1.SRV_MEM_STUS_ID = 1
+		          AND T1.PAC_TYPE = '0'
+                  AND T1.SRV_MEM_PAC_ID IN (10)
+		          AND '6' = #{selType}
 		     )
 		 ORDER BY CODE_ID
     </select>
