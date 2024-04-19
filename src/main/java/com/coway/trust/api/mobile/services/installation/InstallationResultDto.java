@@ -7,28 +7,20 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "InstallationResultDto", description = "InstallationResultDto")
 public class InstallationResultDto {
+  @ApiModelProperty(value = "결과값")
+  private String transactionId;
 
+  public String getTransactionId() {
+    return transactionId;
+  }
 
-	@ApiModelProperty(value = "결과값")
-	private String transactionId;
-	
-	public String getTransactionId() {
-		return transactionId;
-	}
+  public void setTransactionId( String transactionId ) {
+    this.transactionId = transactionId;
+  }
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	
-	
-	
-	public static InstallationResultDto create(String transactionId) {
-		InstallationResultDto dto = new InstallationResultDto();
-		dto.setTransactionId(transactionId);
-		
-		return dto;
-	}
-	
-	
+  public static InstallationResultDto create( String transactionId ) {
+    InstallationResultDto dto = new InstallationResultDto();
+    dto.setTransactionId( transactionId );
+    return dto;
+  }
 }
