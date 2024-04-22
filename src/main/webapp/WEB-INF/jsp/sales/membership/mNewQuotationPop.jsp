@@ -1762,7 +1762,7 @@ $(document).ready(function(){
 	}
 
 	function checkSalesPersonValidForCreation(memId,memCode){
-		if(memCode == "100116" || memCode == "100224" || memCode == "CT100049"){
+		if(memCode == "ASPLKW"){
 			return;
 		}
 

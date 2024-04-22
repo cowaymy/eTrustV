@@ -2771,7 +2771,7 @@ var userType = "${userType}";
       }
 
      function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-    	 if(memCode == "100116" || memCode == "100224" || memCode == "678235"){
+    	 if(memCode == "ASPLKW"){
              return fn_doSavePreOrder();
          }else{
             if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
