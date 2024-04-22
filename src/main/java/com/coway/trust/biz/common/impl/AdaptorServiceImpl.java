@@ -248,12 +248,17 @@ public class AdaptorServiceImpl implements AdaptorService {
 			int statusId;
 			String body;
 
-			if (response.getStatus() == 200) {
-				body = output;
+			if (response.getStatus() == AppConstants.RESPONSE_CODE_SUCCESS) {
+				body = output.trim();
+
+				LOGGER.debug("SMS response.getStatus() >>>>>>>>>>>>>>>>{}" ,response.getStatus());
 
 				if (GENSUITE_SUCCESS.equals(body)) {
 					statusId = 4;
 					result.setSuccessCount(result.getSuccessCount() + 1);
+
+					LOGGER.debug("SMS GENSUITE_SUCCESS >>>>>>>>>>>>>>>>{}" ,body);
+
 				} else {
 					statusId = 21;
 					result.setFailCount(result.getFailCount() + 1);
@@ -319,6 +324,8 @@ public class AdaptorServiceImpl implements AdaptorService {
                 throw new ApplicationException(e, AppConstants.FAIL);
             }
 
+            LOGGER.debug("SMS 2 URL >>>>>>>>>>>>>>>>{}" ,smsUrl);
+
             Client client = Client.create();
             WebResource webResource = client.resource(smsUrl);
             ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
@@ -327,12 +334,17 @@ public class AdaptorServiceImpl implements AdaptorService {
             int statusId;
             String body;
 
-            if (response.getStatus() == 200) {
-                body = output;
+            if (response.getStatus() == AppConstants.RESPONSE_CODE_SUCCESS) {
+                body = output.trim();
+
+                LOGGER.debug("SMS 2 response.getStatus()  >>>>>>>>>>>>>>>>{}" ,response.getStatus());
 
                 if (GENSUITE_SUCCESS.equals(body)) {
                     statusId = 4;
                     result.setSuccessCount(result.getSuccessCount() + 1);
+
+                    LOGGER.debug("SMS 2 GENSUITE_SUCCESS  >>>>>>>>>>>>>>>>{}" ,body);
+
                 } else {
                     statusId = 21;
                     result.setFailCount(result.getFailCount() + 1);
