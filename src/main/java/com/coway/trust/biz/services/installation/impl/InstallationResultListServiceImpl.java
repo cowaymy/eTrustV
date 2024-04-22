@@ -3189,7 +3189,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
                 param.put("fileGroupKey", params.get("fileGroupKey"));
                 resultValue = Save_2(true, param, sessionVO);
 
-                logger.debug("resultValue ====>> " + resultValue.get("value").toString());
+                logger.debug("resultValue ===========>> " + resultValue.get("value").toString());
                 // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
                 if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
 
