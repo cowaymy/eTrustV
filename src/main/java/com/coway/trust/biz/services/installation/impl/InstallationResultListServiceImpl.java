@@ -2905,6 +2905,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     EgovMap installResult = getInstallResultByInstallEntryID(params);
     // disable old installation accessories
     installationResultListMapper.disbleInstallAccWithInstallEntryId(params);
+
     if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
       try {
         insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
@@ -3188,6 +3189,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
                 param.put("fileGroupKey", params.get("fileGroupKey"));
                 resultValue = Save_2(true, param, sessionVO);
 
+                logger.debug("resultValue ====>> " + resultValue.get("value").toString());
                 // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
                 if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
 
@@ -3195,8 +3197,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               		  saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
               	  }
 
+              	logger.debug("chkInstallAcc ====>> " + param.get("chkInstallAcc").toString());
+
               	  if (param.get("chkInstallAcc") != null && (param.get("chkInstallAcc").toString().equals("on") || param.get("chkInstallAcc").toString().equals("Y"))){
               	    try {
+              	    	logger.debug("==== insertInstallationAccessories ====");
                       insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
                     } catch (Exception e) {
                       // TODO Auto-generated catch block
@@ -4013,6 +4018,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
     try {
+    	logger.info("### addInstallAccList : " + installAccList.toString());
 
       if (!installAccList.isEmpty()){
         logger.info("### addInstallAccList : " + installAccList.toString());
