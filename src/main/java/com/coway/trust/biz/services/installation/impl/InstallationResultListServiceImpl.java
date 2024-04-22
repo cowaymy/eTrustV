@@ -3187,6 +3187,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
                   }
                 }
                 param.put("fileGroupKey", params.get("fileGroupKey"));
+
+                logger.debug("====== Save_2 ===========>> ");
+
                 resultValue = Save_2(true, param, sessionVO);
 
                 logger.debug("resultValue ===========>> " + resultValue.get("value").toString());
