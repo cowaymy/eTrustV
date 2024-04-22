@@ -128,6 +128,14 @@ public class ECashDeductionController {
 	public ResponseEntity<List<EgovMap>> selectECashDeductList(@ModelAttribute("searchVO") SampleDefaultVO searchVO
 				, @RequestParam Map<String, Object> params, ModelMap model) {
 		// 조회.
+    	String hiddenIssueBank = CommonUtils.nvl(String.valueOf(params.get("issueBank")));
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+    	}
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+        	params.put("issueBank", hiddenIssueBankList);
+    	}
         List<EgovMap> resultList = eCashDeductionService.selectECashDeductList(params);
 
         // 조회 결과 리턴.
@@ -163,9 +171,18 @@ public class ECashDeductionController {
     	int isGrp = eCashDeduction.get("v_isGrp") != null ? 1 : 0;
 		// HasActiveBatch : 동일한 bankId, eCashDeduction Type 에 해당하는 active 건이 있는지 확인한다.
 		searchMap = new HashMap<String, Object>();
-		searchMap.put("issueBank", eCashDeduction.get("new_issueBank"));
+		//searchMap.put("issueBank", eCashDeduction.get("new_issueBank"));
 		//searchMap.put("claimType", eCashDeduction.get("claimType"));
 		searchMap.put("status", "1");
+
+    	String hiddenIssueBank = CommonUtils.nvl(String.valueOf(eCashDeduction.get("new_issueBank")));
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+    	}
+    	if(hiddenIssueBank.isEmpty() == false){
+        	String[] hiddenIssueBankList = hiddenIssueBank.split(",");
+        	searchMap.put("issueBank", hiddenIssueBankList);
+    	}
 
         List<EgovMap> isActiveBatchList = eCashDeductionService.selectECashDeductList(searchMap);
 
