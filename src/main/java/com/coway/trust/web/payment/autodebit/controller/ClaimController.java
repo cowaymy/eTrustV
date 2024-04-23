@@ -616,7 +616,7 @@ public class ClaimController {
           Map<String, Object> map = BeanConverter.toMap(r);
 
           map.put("refCode", CommonUtils.nvl(r.getApprCode()).equals("A") ? "00" : r.getRefCode());
-          map.put("apprCode", r.getApprCode());
+          map.put("apprCode", !CommonUtils.nvl(r.getApprCode()).equals("A") ? "0" : r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
 
