@@ -2,6 +2,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var ecashGridID;
+    let tabAutoDebitandEcash= $("#tabAutoDebitandEcash").val();
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
@@ -12,7 +13,7 @@
 
     function createAUIGrid9() {
 
-     	var hasPrivilege = Boolean("${PAGE_AUTH.funcUserDefine1}");
+    	console.log("Value of authValue 2:", tabAutoDebitandEcash);
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.deductDt" />',  dataField : "fileItmCrt",    width : 120 }
@@ -22,9 +23,9 @@
           , { headerText : '<spring:message code="sal.text.reason" />',    dataField : "fileItmRem",    width : 260 }
           ];
 
-         if (hasPrivilege) {
+        if (tabAutoDebitandEcash=="Y") {
 
-        	 document.getElementById('downloadButtonContainer').style.display = 'block';
+        	 document.getElementById('downloadButtonContainer2').style.display = 'block';
             columnLayout.push(
             { headerText : '<spring:message code="sal.text.fileItmRespnsCode" />',    dataField : "fileItmRespnsCode",    width : 120 }
           , { headerText : '<spring:message code="sal.text.descCode" />',    dataField : "descCode",    width : 260 }
@@ -57,7 +58,7 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="ecashValidityPeriod"></div>
 <br/>
-<div id="downloadButtonContainer" style="display: none;">
+<div id="downloadButtonContainer2" style="display: none;">
   <ul class="left_opt">
     <li>
       <h1 style="display: inline;">Bank Response Code: </h1>
