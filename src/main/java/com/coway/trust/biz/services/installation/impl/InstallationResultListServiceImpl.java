@@ -1712,6 +1712,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   private Map<String, Object> Save_2(boolean isfreepromo, Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
     boolean isBillAvb = false;
+    List<String> installAccList = (List<String>) params.get("installAccList");
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> callEntry = new HashMap<String, Object>();
@@ -1889,6 +1890,22 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 	}else{
 		installResult.put("checkSend", "N");
 	}
+
+    logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
+    if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+
+    logger.debug("installAccList Size ====>> " + installAccList.size());
+    if (installAccList != null || installAccList.size() >= 0) {
+    		try {
+    			logger.debug("==== insertInstallationAccessories ====");
+    			insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+    	}	catch (Exception err) {
+    			err.printStackTrace();
+    	}
+    	}
+    }
+
+
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
@@ -3188,13 +3205,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
                 }
                 param.put("fileGroupKey", params.get("fileGroupKey"));
 
-                logger.debug("====== Save_2 ===========>> ");
-
                 resultValue = Save_2(true, param, sessionVO);
-
-                logger.debug("resultValue ===========>> " + resultValue.get("value").toString());
-
-                logger.debug("====== Save_3 ===========>> ");
 
                 // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
                 if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
@@ -3203,11 +3214,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               		  saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
               	  }
 
-              	logger.debug("chkInstallAcc ====>> " + param.get("chkInstallAcc").toString());
-
               	  if (param.get("chkInstallAcc") != null && (param.get("chkInstallAcc").toString().equals("on") || param.get("chkInstallAcc").toString().equals("Y"))){
               	    try {
-              	    	logger.debug("==== insertInstallationAccessories ====");
                       insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
                     } catch (Exception e) {
                       // TODO Auto-generated catch block
