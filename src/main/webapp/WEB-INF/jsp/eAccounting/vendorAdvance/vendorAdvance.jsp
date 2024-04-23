@@ -283,8 +283,8 @@
     }, {
         dataField : "approvalDate",
         headerText : "Approval Date",
-        dataType : "date",
-        formatString : "dd/mm/yyyy",
+        //dataType : "date",
+        //formatString : "dd/mm/yyyy",
         editable : false,
         width : "15%"
     }, {
@@ -532,6 +532,32 @@
         $("#editRejBtn").click(fn_editRejected);
 
 
+        $(".input_text").dblclick(function(e) {
+            e.preventDefault();
+
+            console.log("BUTTON TRIGGER!!!!!!");
+
+            var data = {
+                    atchFileGrpId : attachmentList[0].atchFileGrpId,
+                    atchFileId : attachmentList[0].atchFileId
+            };
+            console.log("DATA AFTER TRIGGER" + data);
+
+            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(flResult) {
+                console.log(flResult);
+                if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
+                    // TODO View
+                    var fileSubPath = flResult.fileSubPath;
+                    fileSubPath = fileSubPath.replace('\', '/'');
+                    window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
+
+                } else {
+                    var fileSubPath = flResult.fileSubPath;
+                    fileSubPath = fileSubPath.replace('\', '/'');
+                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
+                }
+            });
+        });
 
     });
 
@@ -849,7 +875,7 @@
                 $("#reqFileSelector").html();
                 $("#reqFileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
                 $(".input_text").val(result.data.attachList[0].atchFileName);
-                $(".input_text").dblclick(function() {
+                /* $(".input_text").dblclick(function() {
                     var data = {
                             atchFileGrpId : result.data.attachList[0].atchFileGrpId,
                             atchFileId : result.data.attachList[0].atchFileId
@@ -869,7 +895,7 @@
                             window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
                         }
                     });
-                });
+                }); */
             });
             // Grid Double Click Trigger - End
 
@@ -1128,13 +1154,21 @@
                     $("#settlementCurrency").val(result.data.settlementItems[0].currency);
 
                     // Settlement file selector
+                   /*  gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
+                    attachmentList = result.data.attachList[0]; */
+
                     gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
-                    attachmentList = result.data.attachList[0];
+                    var atchObj = {
+                            atchFileGrpId : result.data.attachList[0].atchFileGrpId,
+                            atchFileId : result.data.attachList[0].atchFileId,
+                            atchFileName : result.data.attachList[0].atchFileName
+                    };
+                    attachmentList.push(atchObj);
 
                     $("#settlementFileSelector").html();
                     $("#settlementFileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
                     $(".input_text").val(result.data.attachList[0].atchFileName);
-                    $(".input_text").dblclick(function() {
+                    /* $(".input_text").dblclick(function() {
                         var data = {
                                 atchFileGrpId : result.data.attachList[0].atchFileGrpId,
                                 atchFileId : result.data.attachList[0].atchFileId
@@ -1154,7 +1188,7 @@
                                 window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
                             }
                         });
-                    });
+                    }); */
                    // console.log("crtdt: " +result.data.crtDt );
                     var data2 = {
                     		clmNo : advGridClmNo,
@@ -1218,7 +1252,7 @@
     function fn_saveValidation() {
         console.log("fn_saveValidation");
         var flag = true;
-        var regExpSpecChar = /^[^*|\":<>[\]{}`\\()';@&$]+$/;
+        var regExpSpecChar = /^[^*|\":<>[\]{}`\\();@&$]+$/;
         var regExpSpecCharFile = /^[^*|\"<>[\]{}`()';@&$]+$/;
 
         if($("#advReqPop").is(":visible")) {

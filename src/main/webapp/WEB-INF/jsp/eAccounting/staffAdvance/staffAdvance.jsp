@@ -1243,6 +1243,24 @@
 
         if(fn_checkRefund()) {
             if(mode != "DRAFT") {
+
+            	if(FormUtil.isEmpty($("#trvAdvBankInDate").val())) {
+                    Common.alert("Please select the Bank In Date.");
+                    return false;
+                }
+
+                if(mode != "DRAFT") {
+                    if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
+                        Common.alert("Please attach supporting document zipped files!")
+                        return false;
+                    }
+                }
+
+                if($("#trvRepayRem").val() == "" || $("#trvRepayRem").val() == null) {
+                    Common.alert("Remarks required.");
+                    return false;
+                }
+
                 var formData = Common.getFormData("advRepayForm");
                 Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpload.do", formData, function(result) {
                    console.log(result);
