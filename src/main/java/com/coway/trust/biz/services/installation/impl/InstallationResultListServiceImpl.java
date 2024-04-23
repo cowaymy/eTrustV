@@ -4037,7 +4037,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       if (!installAccList.isEmpty()){
         logger.info("### addInstallAccList : " + installAccList.toString());
 
+        logger.info("### installResult.installEntryId : " + installResult.get("installEntryId"));
+
         installResult.put("entryId", installResult.get("installEntryId"));
+
+        logger.info("### installResult.entryId : " + installResult.get("entryId"));
+
         EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
 
         for (String installAcc : installAccList) {
