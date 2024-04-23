@@ -755,6 +755,7 @@
 <form id="dataForm2">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/OrderOverview.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input id="tabAutoDebitandEcash" name=""tabAutoDebitandEcash"" type="hidden" value='${PAGE_AUTH.funcUserDefine30}'/>
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
 
     <!-- params -->
