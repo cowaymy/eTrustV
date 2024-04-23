@@ -58,7 +58,7 @@ public class SrvMembershipBillingServiceImpl extends EgovAbstractServiceImpl imp
     			taskCount = taskCount + 1;
     			taskTotalAmount = taskTotalAmount + Double.parseDouble(String.valueOf(hm.get("totalAmt")));
 
-    			double billAmt =  hm.get("totalAmt") != null ? (double)hm.get("totalAmt") : 0;
+    			double billAmt =  hm.get("totalAmt") != null ? Double.parseDouble(String.valueOf(hm.get("totalAmt"))) : 0;
 
     			taskOrderMap.put("salesOrdId", String.valueOf(hm.get("salesOrdId")));
     			taskOrderMap.put("taskReferenceNo", String.valueOf(formData.get("poNo")).replace("'","''"));
