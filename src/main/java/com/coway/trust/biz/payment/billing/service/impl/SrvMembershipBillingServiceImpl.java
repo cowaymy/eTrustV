@@ -40,7 +40,8 @@ public class SrvMembershipBillingServiceImpl extends EgovAbstractServiceImpl imp
 
 		int userId = sessionVO.getUserId();
 		int taskCount = 0;
-    	int taskTotalAmount = 0;
+
+    	double taskTotalAmount = 0.00;
     	int resultVal = 97;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
 
@@ -55,8 +56,9 @@ public class SrvMembershipBillingServiceImpl extends EgovAbstractServiceImpl imp
     			hm = (HashMap) taskBillList.get(i);
 
     			taskCount = taskCount + 1;
-    			taskTotalAmount = taskTotalAmount + Integer.parseInt(String.valueOf(hm.get("totalAmt")));
-    			int billAmt =  hm.get("totalAmt") != null ? (int)hm.get("totalAmt") : 0;
+    			taskTotalAmount = taskTotalAmount + Double.parseDouble(String.valueOf(hm.get("totalAmt")));
+
+    			double billAmt =  hm.get("totalAmt") != null ? (double)hm.get("totalAmt") : 0;
 
     			taskOrderMap.put("salesOrdId", String.valueOf(hm.get("salesOrdId")));
     			taskOrderMap.put("taskReferenceNo", String.valueOf(formData.get("poNo")).replace("'","''"));
