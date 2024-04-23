@@ -167,7 +167,7 @@ var itemGridID;
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADVANCE INCENTIVE UPLOAD - CONFIRM UPLOAD BATCH</h1>
+<h1>ADVANCE COMMISSION UPLOAD - CONFIRM UPLOAD BATCH</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#" id="clearComfirm"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>

@@ -161,7 +161,7 @@
 
 	//incentive new upload pop
 	function newUploadPop(){
-		var valTemp = {"mstCodeNm" : "Cody/HP/HT Advance Incentive"};
+		var valTemp = {"mstCodeNm" : "Cody/HP/HT Advance Commission"};
 		Common.popupDiv("/commission/calculation/advanceUploadNewPop.do",valTemp);
 	}
 
@@ -205,7 +205,7 @@
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 		<li>Commission</li>
-		<li>Non-Monetary Incentive</li>
+		<li>Advance Commission</li>
 	</ul>
 
 	<aside class="title_line">
@@ -213,7 +213,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Advance Incentive</h2>
+		<h2>Advance Commission</h2>
 		<ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
@@ -253,7 +253,7 @@
 						<td>
 						<!-- <select class="multy_select w100p" multiple="multiple" name="typeList[]" id="typeList">
 						</select> -->
-						<select class="multy_select w100p" multiple="multiple" id="typeList" name="typeList">
+						<select class="multy_select w100p" multiple="multiple" id="typeList" name="typeList[]">
                               <c:forEach var="list" items="${type}" varStatus="status">
                                   <option value="${list.cdid}">${list.cdnm}</option>
                               </c:forEach>

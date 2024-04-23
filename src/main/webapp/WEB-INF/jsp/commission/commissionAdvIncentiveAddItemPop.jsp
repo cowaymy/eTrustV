@@ -104,7 +104,7 @@
 <div id="popup_wrap" class="popup_wrap size_mid" ><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADVANCE INCENTIVE UPLOAD BATCH - NEW ITEM</h1>
+<h1>ADVANCE COMMISSION UPLOAD BATCH - NEW ITEM</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>

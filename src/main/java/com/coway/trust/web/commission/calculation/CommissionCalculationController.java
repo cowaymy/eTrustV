@@ -3626,7 +3626,7 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/commAdvanceIncentiveUpload.do")
 	public String commAdvIncentiveUpload(@RequestParam Map<String, Object> params, ModelMap model) {
-		params.put("mstCodeNm", "Cody/HP/HT Advance Incentive");
+		params.put("mstCodeNm", "Cody/HP/HT Advance Commission");
 		List type = commissionCalculationService.advIncentiveType(params);
 		model.addAttribute("type", type);
 		// 호출될 화면

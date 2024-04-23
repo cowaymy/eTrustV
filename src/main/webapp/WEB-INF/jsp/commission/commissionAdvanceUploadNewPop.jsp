@@ -86,7 +86,7 @@ $(document).on(//인풋파일 삭제
 <div id="popup_wrap" class="popup_wrap size_mid">
 
 	<header class="pop_header">
-		<h1>Advance Incentive Upload - NEW UPLOAD</h1>
+		<h1>Advance Commission Upload - NEW UPLOAD</h1>
 		<ul class="right_opt">
 			<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
@@ -143,7 +143,7 @@ $(document).on(//인풋파일 삭제
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_uploadCsvFile();"><spring:message code='commission.button.uploadFile'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_sampleFormat($('#cmbType').val());"><spring:message code='commission.button.sampleFormat'/></a></p></li>
-			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/AdvanceIncentiveUploadFormat.csv"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
+			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/AdvanceCommissionUploadFormat.csv"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
 		</ul>
 
 	</section>
