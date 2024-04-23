@@ -1102,7 +1102,7 @@ public class ECashDeductionController {
 		          Map<String, Object> map = BeanConverter.toMap(r);
 		          map.put("itmCnt", r.getItmCnt());
 		          map.put("itmId", r.getItmId());
-		          map.put("appvCode", !CommonUtils.nvl(r.getAppvCode()).equals("A") ? "0000" : r.getAppvCode());
+		          map.put("appvCode", !CommonUtils.nvl(r.getAppvCode()).equals("A") ? "0" : r.getRespnsCode());
 		          map.put("respnsCode", CommonUtils.nvl(r.getAppvCode()).equals("A") ? "00" : r.getRespnsCode());
 		          map.put("settleDate",today);
 		          return map;
