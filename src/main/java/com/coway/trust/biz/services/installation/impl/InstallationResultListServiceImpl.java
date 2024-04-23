@@ -1825,6 +1825,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     //Added by Tommy 20240224 for NTU
     installResult.put("ntu", CommonUtils.nvl(SalesConstants.STATUS_COMPLETED).toString().equals(CommonUtils.nvl(params.get("installStatus")).toString()) ? CommonUtils.nvl(params.get("ntuCom")).toString() : CommonUtils.nvl(params.get("ntuFail")).toString());
+    installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
 
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
