@@ -1127,7 +1127,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           logger.debug("INSSMS11111 :" + params.toString());
           resultValue = Save_2(true, params, sessionVO);
 
-          List<String> installAccList = (List<String>) params.get("installAccList");
+          List<String> installAccList = (List<String>) params.get("instAccLst");
           EgovMap installResult = new EgovMap();
 
           installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
@@ -1139,9 +1139,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           logger.debug("salesOrdId ====>> " +  params.get("hidSalesOrderId").toString());
           logger.debug("getUserId ====>> " +  sessionVO.getUserId());
           logger.debug("installAccList ====>> " +  installAccList);
-
-
-
+          logger.debug("instAccLst ====>> " +  params.get("instAccLst").toString());
 
 
 
@@ -1747,7 +1745,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   private Map<String, Object> Save_2(boolean isfreepromo, Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
     boolean isBillAvb = false;
-    List<String> installAccList = (List<String>) params.get("installAccList");
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> callEntry = new HashMap<String, Object>();
@@ -1860,7 +1857,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     //Added by Tommy 20240224 for NTU
     installResult.put("ntu", CommonUtils.nvl(SalesConstants.STATUS_COMPLETED).toString().equals(CommonUtils.nvl(params.get("installStatus")).toString()) ? CommonUtils.nvl(params.get("ntuCom")).toString() : CommonUtils.nvl(params.get("ntuFail")).toString());
-    installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
+
 
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
@@ -1926,22 +1923,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 	}else{
 		installResult.put("checkSend", "N");
 	}
-
-/*    logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
-    if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
-
-    logger.debug("installAccList Size ====>> " + installAccList.size());
-    if (installAccList != null || installAccList.size() >= 0) {
-    		try {
-    			logger.debug("==== insertInstallationAccessories ====");
-    			insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
-    	}	catch (Exception err) {
-    			err.printStackTrace();
-    	}
-    	}
-    }*/
-
-
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
