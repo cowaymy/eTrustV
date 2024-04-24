@@ -1125,7 +1125,33 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           }
 
           logger.debug("INSSMS11111 :" + params.toString());
-          Save_2(true, params, sessionVO);
+          resultValue = Save_2(true, params, sessionVO);
+
+          List<String> installAccList = (List<String>) params.get("installAccList");
+          EgovMap installResult = new EgovMap();
+
+          installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
+          installResult.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")).toString());
+
+
+          logger.debug("resultValue ====>> " +  resultValue.get("value").toString());
+
+          if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
+
+        	  logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
+
+          	  if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+          	    try {
+
+          	    	logger.debug("==== insertInstallationAccessories ====");
+
+                  insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+                } catch (Exception e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+          	  }
+            }
         }
       }
     } else {
@@ -1892,7 +1918,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 		installResult.put("checkSend", "N");
 	}
 
-    logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
+/*    logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
     if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
 
     logger.debug("installAccList Size ====>> " + installAccList.size());
@@ -1904,7 +1930,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     			err.printStackTrace();
     	}
     	}
-    }
+    }*/
 
 
 
