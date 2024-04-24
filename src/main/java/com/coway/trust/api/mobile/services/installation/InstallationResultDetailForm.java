@@ -46,7 +46,7 @@ public class InstallationResultDetailForm {
 
   private int resultSoId;
 
-  private String insAccPartId;
+  private int insAccPartId;
 
   private String remark;
 
@@ -68,11 +68,11 @@ public class InstallationResultDetailForm {
     this.resultSoId = resultSoId;
   }
 
-  public String getInsAccPartId() {
+  public int getInsAccPartId() {
     return insAccPartId;
   }
 
-  public void setInsAccPartId( String insAccPartId ) {
+  public void setInsAccPartId( int insAccPartId ) {
     this.insAccPartId = insAccPartId;
   }
 
