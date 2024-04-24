@@ -1264,8 +1264,9 @@ public class HsAccConfigController {
 
     // UPDATE SAL0090D - SRV_MEM_ID
     // UPDATE SVC0008D - MEM_ID
-
     int resultValue = hsAccConfigService.updateHsAccConfigBasicMultiple(params, sessionVO);
+
+    /*int resultValue = hsAccConfigService.updateHsAccConfigBasicMultiple_backup(params, sessionVO);
 
     logger.debug("check 000:: " + params.get("TODAY_DD"));
 
@@ -1276,7 +1277,7 @@ public class HsAccConfigController {
 
     logger.debug("check 111 :: " + params.get("TODAY_DD"));
 
-    }
+    }*/
 
 
     if (resultValue > 0) {

@@ -190,4 +190,6 @@ public interface HsAccConfigService {
 
   void updateDisinfecSrv(Map<String, Object> params);
 
+  int updateHsAccConfigBasicMultiple_backup(Map<String, Object> params, SessionVO sessionVO);
+
 }

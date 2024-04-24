@@ -95,7 +95,7 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
   }
 
 	 @Override
-	  public int updateHsAccConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO) {
+	  public int updateHsAccConfigBasicMultiple_backup(Map<String, Object> params, SessionVO sessionVO) {
 	    // TODO Auto-generated method stub
 	    int cnt = 0;
 
@@ -115,6 +115,28 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
 	    hsAccConfigMapper.updateHSAccConfigBasicMultiple1_5(params);
 /*	    hsAccConfigMapper.updateAssignHTMultiple(params);*/
 
+	 }
+
+	 @Override
+	  public int updateHsAccConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO) {
+	    // TODO Auto-generated method stub
+	    int cnt = 0;
+	    params.put("updUserId", sessionVO.getUserId());
+
+	    try{
+	    	cnt = hsAccConfigMapper.updateHSAccConfigBasicMultiple(params);
+	    	if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03")
+	        		|| params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
+
+	    		hsAccConfigMapper.updateHSAccConfigBasicMultiple1_5(params);
+
+	        logger.debug("check 111 :: " + params.get("TODAY_DD"));
+	    	}
+	    }
+		catch(Exception e){
+			throw e;
+		}
+	    return cnt;
 	 }
 
   @Override
