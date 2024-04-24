@@ -847,6 +847,14 @@
 
 //          $('#sctPromoDetail').removeClass("blind");
         }
+        else if(promoAppVal == '7553'){
+            $('#promoDiscType').removeAttr("disabled");
+            $('#promoRpfDiscAmt').removeAttr("disabled");
+            $('#promoDiscPeriodTp').val('').prop("disabled", true);
+            $('#promoDiscPeriod').val('').prop("disabled", true);
+            $('#promoAddDiscPv').removeAttr("disabled");
+			$('#sctPromoDetail').removeClass("blind");
+        }
         else {
             console.log('etc');
 
