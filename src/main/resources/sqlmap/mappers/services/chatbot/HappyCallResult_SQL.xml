@@ -110,6 +110,7 @@
                     HCM.HC_ID AS HC_ID,
                     CCR.POINTS AS POINTS,
                     CCR.MAX_POINTS AS MAX_POINTS,
+                    RATE.RATINGS,
                     COMM.ANSW AS COMM
 		FROM CBT0004M HCM
 		JOIN CBT0005D HCR ON HCR.TXN_ID = HCM.TXN_ID
@@ -147,6 +148,17 @@
                     WHERE TMPL_TYPE IN ('7362') <!-- Get question that is comment type only-->
             ) QA ON QA.SURV_ID = T.QUES_ID
         ) COMM ON COMM.HC_ID = HCM.HC_ID
+        LEFT JOIN
+        (
+            SELECT TXN_ID,
+                   REPLACE(REPLACE(REGEXP_REPLACE(SUBSTR(RATINGS, 1, INSTR(RATINGS , ',', -1)-1), '\d:',''),'yes', '5'),'no', '1') AS RATINGS
+            FROM(
+                SELECT TXN_ID, SUBSTR(REGEXP_REPLACE(RATINGS, '"', ''), 1, INSTR(REGEXP_REPLACE(RATINGS, '"', '') , ':', -1)-1) AS RATINGS
+                FROM (
+                    SELECT TXN_ID as TXN_ID, REGEXP_REPLACE(RESPONSE, '"{|}"', '"') AS RATINGS FROM CBT0005D
+                 )
+            )
+        ) RATE ON RATE.TXN_ID = HCR.TXN_ID
 		WHERE 1=1
 		AND HCM.TXN_STUS_ID = 121
 		AND HCR.RESPONSE IS NOT NULL
