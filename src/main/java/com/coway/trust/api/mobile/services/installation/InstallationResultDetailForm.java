@@ -50,7 +50,7 @@ public class InstallationResultDetailForm {
 
   private String remark;
 
-  private String crtUserId;
+  private int crtUserId;
 
   public String getResultNo() {
     return resultNo;
@@ -84,11 +84,11 @@ public class InstallationResultDetailForm {
     this.remark = remark;
   }
 
-  public String getCrtUserId() {
+  public int getCrtUserId() {
     return crtUserId;
   }
 
-  public void setCrtUserId( String crtUserId ) {
+  public void setCrtUserId( int crtUserId ) {
     this.crtUserId = crtUserId;
   }
 
