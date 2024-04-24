@@ -1133,8 +1133,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
           installResult.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")).toString());
 
-
           logger.debug("resultValue ====>> " +  resultValue.get("value").toString());
+
+          logger.debug("installEntryId ====>> " +  params.get("installEntryId").toString());
+          logger.debug("salesOrdId ====>> " +  params.get("hidSalesOrderId").toString());
+          logger.debug("getUserId ====>> " +  sessionVO.getUserId());
+          logger.debug("installAccList ====>> " +  installAccList);
+
+
+
+
+
 
           if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
 
