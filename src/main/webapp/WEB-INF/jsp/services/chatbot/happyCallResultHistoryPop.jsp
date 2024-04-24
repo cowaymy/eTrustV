@@ -5,6 +5,7 @@
 
 	var happyCallResulthHistGridId;
 	var myHappyCallData = ${happyCallResultHistoryList};
+	var userDefine1 = "${userDefine1}";
 
 	var happyCallResultHistColumnLayout = [{
 		dataField : "transactionId",
@@ -53,10 +54,13 @@
 	    dataField : "satisfaction",
 	    headerText : "Satisfaction (%)"
 	}, {
-	    dataField : "comm",
-	    headerText : "Comment"
-
-	}];
+        dataField : "ratings",
+        headerText : "Ratings",
+        visible : false
+    }, {
+        dataField : "comm",
+        headerText : "Comment"
+    }];
 
 	var happyCallResultHistGridPros = {
 	    usePaging : true,
@@ -71,6 +75,15 @@
 		console.log("hi");
 		happyCallResulthHistGridId = AUIGrid.create("#grid_wrap_happyCallHist", happyCallResultHistColumnLayout, happyCallResultHistGridPros);
 		AUIGrid.setGridData(happyCallResulthHistGridId, myHappyCallData);
+
+		// Show / Hide Rating Column[s]
+		if(userDefine1 == "Y"){
+			AUIGrid.showColumnByDataField(happyCallResulthHistGridId, "ratings");
+		}else {
+            AUIGrid.hideColumnByDataField(happyCallResulthHistGridId, "ratings");
+        }
+
+		// Show / Hide Rating Column[e]
 
 		$('#excelDown').click(function() {
 		       GridCommon.exportTo("grid_wrap_happyCallHist", 'xlsx', "Survey Listing History");

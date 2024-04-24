@@ -74,6 +74,7 @@ public class HappyCallResultController {
 		List<EgovMap> happyCallResultHistoryList = happyCallResultService.selectHappyCallResultHistList(params);
 
 		model.addAttribute("happyCallResultHistoryList", new Gson().toJson(happyCallResultHistoryList));
+		model.addAttribute("userDefine1", params.get("userDefine1").toString());
 
 		return "services/chatbot/happyCallResultHistoryPop";
 	}
