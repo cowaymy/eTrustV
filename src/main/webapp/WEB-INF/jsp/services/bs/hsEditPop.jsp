@@ -844,6 +844,7 @@ var myDetailGridData = null;
 
     //Installation checklist
     form.instChklstCheckBox = $("#instChklstCheckBox").val();
+    form.srvBsWeek = $(':input[name=srvBsWeek]:radio:checked').val();
 
     jsonObj.form = form;
     console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
@@ -1147,11 +1148,11 @@ function SearchListAjax(obj){
 <tr>
     <th scope="row">Prefer Service Week</th>
     <td colspan="1">
-    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
-    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 1}">checked</c:if> /><span>Week1</span></label>
-    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 2}">checked</c:if> /><span>Week2</span></label>
-    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 3}">checked</c:if> /><span>Week3</span></label>
-    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> /><span>Week4</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek" value="0" <c:if test="${basicinfo.srvBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek" value="1" <c:if test="${basicinfo.srvBsWeek == 1}">checked</c:if> /><span>Week1</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek" value="2" <c:if test="${basicinfo.srvBsWeek == 2}">checked</c:if> /><span>Week2</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek" value="3" <c:if test="${basicinfo.srvBsWeek == 3}">checked</c:if> /><span>Week3</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek" value="4" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> /><span>Week4</span></label>
 
  <%--    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label> --%>
     </td>
