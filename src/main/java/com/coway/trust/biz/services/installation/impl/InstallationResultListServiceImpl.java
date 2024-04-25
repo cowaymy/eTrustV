@@ -4066,6 +4066,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
         EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
 
+        logger.info("### installResult.remark : " + (installResult.get("remark")).toString());
+
         for (String installAcc : installAccList) {
               // insert into SVC0140D - Installation Accessories Listing table
               EgovMap param = new EgovMap();
@@ -4073,8 +4075,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               param.put("resultSoId", entry.get("salesOrdId"));
               param.put("insAccPartId", installAcc);
               param.put("crtUserId", userId);
+              param.put("remark", "Add installation accessories through eTrust - INS");
 
-              if (!CommonUtils.nvl(installResult.get("mobileYn")).toString().equals(null)){
+              /*if (!CommonUtils.nvl(installResult.get("mobileYn")).toString().equals(null)){
               	if (CommonUtils.nvl(installResult.get("mobileYn")).toString()== "Y"){
               		param.put("remark", installResult.get("remark").toString());
               	} else{
@@ -4082,7 +4085,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               	}
               } else {
             	  param.put("remark", "Add installation accessories through eTrust - INS");
-              }
+              }*/
 
               installationResultListMapper.insertInstallationAccessories(param);
           }
