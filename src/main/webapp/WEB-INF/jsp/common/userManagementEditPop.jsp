@@ -282,13 +282,20 @@ function fn_editUser(){
     var saveParam = "";
 
     if(popDivCd == "branch"){
-    	saveParam = "userId="+$("#userEditForm #userId").val()+"&userBrnchId="+$("#userEditForm #userBrnchId").val();
+    	var userName = $("#userEditForm #userName").text();
+    	saveParam = "userId="+$("#userEditForm #userId").val()+"&userBrnchId="+$("#userEditForm #userBrnchId").val() + "&userName=" + encodeURIComponent(userName) + "&hrCode=" + $("#userEditForm #hrCode").val() ;
     }else{
-    	saveParam = $("#userEditForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl;
+    	var userName = $("#userEditForm #userName").text();
+    	saveParam = $("#userEditForm").serialize() + "&userName=" + encodeURIComponent(userName) + "&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl + "&hrCode=" +  $("#userEditForm #hrCode").val() ;
     }
 //debugger;
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+
+    	console.log($("#userEditForm #userName").text());
+    	console.log($("#userEditForm #hrCode").text());
+    	console.log(saveParam);
+
         Common.ajax(
                 "GET",
                 "/common/userManagement/editUserManagementList.do",
@@ -354,7 +361,7 @@ function fn_updateUserPasswd(){
                 //UserPasswdLastUpdDt doesn't matter anything for updating
                 //"userId="+$("#userEditForm #userId").val()+"&userPasswd="+$("#passwdEditForm #userPasswdConfirm").val()+"&userPasswdLastUpdDt=today"+"&userDfltPassWd="+$("#passwdEditForm #userPasswdConfirm").val() ,
                 {"userId" : $("#userEditForm #userId").val(),
-                	"username" : $("#userEditForm #userName").text(),
+                	"userName" : $("#userEditForm #userName").text(),
                 	"userType" : $("#userEditForm #userTypeId").val(),
                     "userPasswd" : $("#passwdEditForm #userPasswdConfirm").val(),
                     "userDfltPassWd" : $("#passwdEditForm #userPasswdConfirm").val()} ,
@@ -525,6 +532,7 @@ $(document).ready(function(){
 <!-- hidden -->
 <input id="userId" type="text" name="userId" style="display:none;" title="" placeholder="" class="" />
 <input id="userStusId" type="text" name="userStusId" style="display:none;" title="" placeholder="" class="" />
+<input id="hrCode" type="text" name="hrCode" style="display:none;" title="" placeholder="" class="" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -553,7 +561,7 @@ $(document).ready(function(){
 </tr>
 <tr>
     <th scope="row">User Name<span class="must">*</span></th>
-    <td><span id="userName">text</span></td>
+    <td><span id="userName" name="userName">text</span></td>
     <th scope="row">Full Name<span class="must">*</span></th>
     <td>
     <input id="userFullName" type="text" name="userFullName" title="" placeholder="Full Name" class="w100p" />
