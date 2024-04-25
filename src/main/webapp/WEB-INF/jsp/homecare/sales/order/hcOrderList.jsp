@@ -709,6 +709,7 @@
                 value="/sales/OrderOverview.rpt" />
             <!-- Report Name  -->
             <input type="hidden" id="viewType" name="viewType" value="PDF" />
+            <input id="tabHcAutoDebitandEcash" name="tabHcAutoDebitandEcash" type="hidden" value='${PAGE_AUTH.funcUserDefine30}'/>
             <!-- View Type  -->
             <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> -->
             <!-- Download Name -->
