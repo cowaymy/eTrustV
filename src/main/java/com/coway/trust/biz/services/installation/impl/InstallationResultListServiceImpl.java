@@ -1133,8 +1133,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
           installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
           installResult.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")).toString());
+          installResult.put("mobileYn", CommonUtils.nvl(params.get("mobileYn")).toString());
 
-          logger.debug("resultValue ====>> " +  resultValue2.get("value").toString());
 
           logger.debug("installEntryId ====>> " +  params.get("installEntryId").toString());
           logger.debug("salesOrdId ====>> " +  params.get("hidSalesOrderId").toString());
@@ -1150,9 +1150,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
           	  if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
           	    try {
-
-          	    	logger.debug("==== insertInstallationAccessories ====");
-
                   insertInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
                 } catch (Exception e) {
                   // TODO Auto-generated catch block
@@ -1856,8 +1853,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
 
-    //Added by Tommy 20240224 for NTU
+    if (!CommonUtils.nvl(params.get("mobileYn")).toString().equals(null)){
+    	if (CommonUtils.nvl(params.get("mobileYn")).toString()== "Y"){
+    		//NTU from Mobile
+    		installResult.put("ntu", CommonUtils.nvl(params.get("ntu")).toString());
+    	} else{
+    		 installResult.put("ntu", CommonUtils.nvl(SalesConstants.STATUS_COMPLETED).toString().equals(CommonUtils.nvl(params.get("installStatus")).toString()) ? CommonUtils.nvl(params.get("ntuCom")).toString() : CommonUtils.nvl(params.get("ntuFail")).toString());
+    	}
+    } else {
+    //Added by Tommy 20240224 for NTU From ETRUST
     installResult.put("ntu", CommonUtils.nvl(SalesConstants.STATUS_COMPLETED).toString().equals(CommonUtils.nvl(params.get("installStatus")).toString()) ? CommonUtils.nvl(params.get("ntuCom")).toString() : CommonUtils.nvl(params.get("ntuFail")).toString());
+    }
 
 
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
@@ -1865,7 +1871,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("atchFileGrpId", CommonUtils.nvl(params.get("fileGroupKey")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
-    installResult.put("ntu", CommonUtils.nvl(params.get("ntu")).toString());
+
     //Added by keyi 20220727 Water Source Type Dropdown mobile
     installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
 
@@ -4053,13 +4059,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     	logger.info("### addInstallAccList : " + installAccList.toString());
 
       if (!installAccList.isEmpty()){
-        logger.info("### addInstallAccList : " + installAccList.toString());
 
         logger.info("### installResult.installEntryId : " + installResult.get("installEntryId"));
 
         installResult.put("entryId", installResult.get("installEntryId"));
-
-        logger.info("### installResult.entryId : " + installResult.get("entryId"));
 
         EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
 
@@ -4069,8 +4072,17 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               param.put("resultNo", entry.get("installEntryNo"));
               param.put("resultSoId", entry.get("salesOrdId"));
               param.put("insAccPartId", installAcc);
-              param.put("remark", "Add installation accessories through eTrust - INS");
               param.put("crtUserId", userId);
+
+              if (!CommonUtils.nvl(installResult.get("mobileYn")).toString().equals(null)){
+              	if (CommonUtils.nvl(installResult.get("mobileYn")).toString()== "Y"){
+              		param.put("remark", installResult.get("remark").toString());
+              	} else{
+              		param.put("remark", "Add installation accessories through eTrust - INS");
+              	}
+              } else {
+            	  param.put("remark", "Add installation accessories through eTrust - INS");
+              }
 
               installationResultListMapper.insertInstallationAccessories(param);
           }
