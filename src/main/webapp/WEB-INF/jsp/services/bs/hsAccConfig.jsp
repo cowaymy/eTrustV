@@ -1153,7 +1153,7 @@
 
 
        //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 7 ))  { // temp change to 8th of the month. Hui Ding, 2021-10-06
-        /* if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
+        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
         }
@@ -1179,15 +1179,15 @@
 
         ////////////////////////////////////////////////////////  RESTRICTION /////////////////////////////////////////////////
 
-       /*  else if (radioVal == 2) {
+        else if (radioVal == 2) {
              Common.alert('Not allow to Assign HT in Manual CS');
               return;
         }
         /*  else if (checkedItems[0]["code"] != "ACT") {
           Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
           return;
-        }
-        else { */
+        }  */
+        else {
           var str = "";
           var custStr = "";
           var rowItem;
@@ -1212,7 +1212,7 @@
                   schdulId +=",";
                 }
             }
-          //}
+          }
 
         console.log('schdulId Test..::' + schdulId);
         console.log('todayDD Test..::' + TODAY_DD);
