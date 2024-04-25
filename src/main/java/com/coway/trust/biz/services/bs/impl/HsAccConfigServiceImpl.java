@@ -124,13 +124,17 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
 	    params.put("updUserId", sessionVO.getUserId());
 
 	    try{
-	    	cnt = hsAccConfigMapper.updateHSAccConfigBasicMultiple(params);
-	    	if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03")
-	        		|| params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
+	    	cnt = hsAccConfigMapper.updateHSAccConfigBasicMultiple(params); //SAL0090D
+	    	logger.debug("1111===" + params.get("schdulId"));
 
-	    		hsAccConfigMapper.updateHSAccConfigBasicMultiple1_5(params);
+	    	if (!params.get("schdulId").equals("")) {
+		    	if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03")
+		        		|| params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
 
-	        logger.debug("check 111 :: " + params.get("TODAY_DD"));
+		    		hsAccConfigMapper.updateHSAccConfigBasicMultiple1_5(params); //SVC0008D
+
+		        logger.debug("check 111 :: " + params.get("TODAY_DD"));
+		    	}
 	    	}
 	    }
 		catch(Exception e){
