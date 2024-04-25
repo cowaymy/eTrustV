@@ -221,8 +221,10 @@ USING (
       , #{userIsPartTm} AS user_is_part_tm
       , #{userIsExtrnl} AS user_is_extrnl
       , #{callcenterUseYn} AS callcenter_use_yn
-      , UPPER(#{userName}) AS hr_code
-    FROM dual
+      , NVL(UPPER(b.mem_code),UPPER(#{userName})) AS hr_code
+    FROM  dual A, ORG0001D B
+    where B.nric = #{userNric}
+    and b.stus=1
 ) b
 ON ( a.user_id = b.user_id )
 WHEN MATCHED THEN
@@ -306,7 +308,7 @@ UPDATE SET
     <if test="callcenterUseYn != null and callcenterUseYn !=''">
     , a.callcenter_use_yn       = b.callcenter_use_yn
     </if>
-    <if test="hrCode != null and hrCode !=''">
+     <if test="hrCode != null and hrCode !=''">
     , a.hr_code          = b.hr_code
     </if>
    WHEN NOT MATCHED THEN
