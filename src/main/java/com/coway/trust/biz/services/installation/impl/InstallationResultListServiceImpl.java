@@ -4066,7 +4066,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
         EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
 
-        logger.info("### installResult.remark : " + (installResult.get("remark")).toString());
+      //  logger.info("### installResult.remark : " + (installResult.get("remark")).toString());
 
         for (String installAcc : installAccList) {
               // insert into SVC0140D - Installation Accessories Listing table
@@ -4074,8 +4074,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               param.put("resultNo", entry.get("installEntryNo"));
               param.put("resultSoId", entry.get("salesOrdId"));
               param.put("insAccPartId", installAcc);
-              param.put("crtUserId", userId);
               param.put("remark", "Add installation accessories through eTrust - INS");
+              param.put("crtUserId", userId);
+
 
               /*if (!CommonUtils.nvl(installResult.get("mobileYn")).toString().equals(null)){
               	if (CommonUtils.nvl(installResult.get("mobileYn")).toString()== "Y"){
@@ -4089,6 +4090,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
               installationResultListMapper.insertInstallationAccessories(param);
           }
+
+
+
+
         }
     } catch (Exception e) {
       logger.error("An error occurred during insertion of installation accessories.", e);
