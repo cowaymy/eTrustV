@@ -1071,6 +1071,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
     Map<String, Object> resultValue = new HashMap<String, Object>();
+    Map<String, Object> resultValue2 = new HashMap<String, Object>();
 
     if (sessionVO != null) {
       // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
@@ -1125,7 +1126,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           }
 
           logger.debug("INSSMS11111 :" + params.toString());
-          resultValue = Save_2(true, params, sessionVO);
+          resultValue2 = Save_2(true, params, sessionVO);
 
           List<String> installAccList = (List<String>) params.get("instAccLst");
           EgovMap installResult = new EgovMap();
@@ -1133,7 +1134,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           installResult.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")).toString());
           installResult.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")).toString());
 
-          logger.debug("resultValue ====>> " +  resultValue.get("value").toString());
+          logger.debug("resultValue ====>> " +  resultValue2.get("value").toString());
 
           logger.debug("installEntryId ====>> " +  params.get("installEntryId").toString());
           logger.debug("salesOrdId ====>> " +  params.get("hidSalesOrderId").toString());
@@ -1143,7 +1144,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
 
 
-          if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
+          if (resultValue2.get("value") != null && resultValue2.get("value").equals("Completed")){
 
         	  logger.debug("chkInstallAcc ====>> " + params.get("chkInstallAcc").toString());
 
