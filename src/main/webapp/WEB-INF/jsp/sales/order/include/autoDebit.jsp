@@ -3,6 +3,8 @@
     //AUIGrid 생성 후 반환 ID
     var autoDebitGridID;
      let tabAutoDebitandEcash= $("#tabAutoDebitandEcash").val();
+     let tabHcAutoDebitandEcash= $("#tabHcAutoDebitandEcash").val();
+     let tabCdAutoDebitandEcash= $("#tabCdAutoDebitandEcash").val();
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
@@ -13,6 +15,8 @@
     function createAUIGrid7() {
 
          console.log("Value of authValue:", tabAutoDebitandEcash);
+         console.log("Value of authValue HC:", tabHcAutoDebitandEcash);
+         console.log("Value of authValue CD:", tabCdAutoDebitandEcash);
 
         //AUIGrid 칼럼 설정
         var columnLayout = [
@@ -24,7 +28,7 @@
           , { headerText : '<spring:message code="sal.text.isSuccess" />',  dataField : "isApproveStr", width : "20%" }
           ];
 
-         if (tabAutoDebitandEcash=="Y") {
+         if (tabAutoDebitandEcash=="Y" || tabHcAutoDebitandEcash=="Y" || tabCdAutoDebitandEcash=="Y") {
 
         	 document.getElementById('downloadButtonContainer').style.display = 'block';
             columnLayout.push(
