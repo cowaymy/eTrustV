@@ -242,8 +242,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
      // INST. ACCS LIST START
         List<Map<String, Object>> paramsDetailInstAccLst = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("installAccList"));
         logger.debug("### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString());
-        List lstStr = null;
+        //List lstStr = null;
+        List<String> lstStr = new ArrayList<>();
         for (Map<String, Object> accLst : paramsDetailInstAccLst) {
+
+        	logger.debug("accLst : " + accLst.size());
           if (accLst != null) {
             lstStr.add(String.valueOf(accLst.get("insAccPartId")));
             logger.debug("### insAccPartIdT : " + String.valueOf(accLst.get("insAccPartId")));
