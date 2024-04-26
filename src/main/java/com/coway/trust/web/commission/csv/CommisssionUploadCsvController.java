@@ -317,10 +317,14 @@ public class CommisssionUploadCsvController {
 
 		mMap.put("uploadID",request.getParameter("type"));
 		mMap.put("statusID","1");
-		if(("adv").equals(request.getParameter("type"))){
-			String dt = CommonUtils.getCalMonth(-1);
-			mMap.put("actionDate",dt.substring(0,6));
-		}
+//		if(("adv").equals(request.getParameter("type"))){
+			String requestMonth = String.format("%02d", Integer.valueOf(vos.get(0).getMonth()));
+			String rqstDt = //(String.valueOf(requestDay)
+					(vos.get(0).getYear() + String.valueOf(requestMonth) );
+
+			//String dt = CommonUtils.getCalMonth(-1);
+			mMap.put("actionDate",rqstDt);
+//		}
 		mMap.put("creator",loginId);
 		mMap.put("updator",loginId);
 		mMap.put("memberTypeID",request.getParameter("memberType"));
@@ -334,10 +338,6 @@ public class CommisssionUploadCsvController {
 			map.put("uploadID",uploadId);
 			map.put("statusID","1");
 			map.put("validStatusID","1");
-			String requestMonth = String.format("%02d", Integer.valueOf(vo.getMonth()));
-			String rqstDt = //(String.valueOf(requestDay)
-					("01"+ '/' + String.valueOf(requestMonth) + '/' + vo.getYear());
-			map.put("rqstDt",rqstDt);
 			map.put("userMemberCode",vo.getMemberCode());
 			map.put("userRefCode",vo.getRefCode());
 			map.put("userTargetAmt",vo.getTargetAmt());
