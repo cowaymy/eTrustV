@@ -24,7 +24,7 @@
                             Extent1.ISSU_BANK_ID ISSU_BANK_ID,
                             Extent6.NAME BANK_NM,
                             CASE
-                                    WHEN REGEXP_LIKE(extent1.cheque_dt, '\d{2}/\d{2}/\d{4}')
+                                    WHEN REGEXP_LIKE(extent1.cheque_dt, '\d{2}\d{2}\d{4}')
                                     THEN
                                         TO_CHAR(TO_DATE(extent1.cheque_dt, 'DD/MM/YYYY'),
                                         'DD/MM/YYYY'
@@ -32,6 +32,7 @@
                                     ELSE
                                         NULL
                             END AS cheque_dt ,
+                            <!-- TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT, -->
                             Extent1.UPLOAD_IMG UPLOAD_IMG,
                             CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
                               THEN 'DOWN'
