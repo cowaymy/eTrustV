@@ -4,38 +4,25 @@ import org.apache.commons.csv.CSVRecord;
 
 public class AdvIncentiveDataVO {
 
-	//  TODO : 각 변수는 타입에 맞게 다시 선언해 주세요~~~ ^^..  타입에 맞게 선언 처리 되었으면, 이 주석은 삭제해 주세요.
-	private String day;
 	private String month;
 	private String year;
 	private String memberCode;
 	private String targetAmt;
 	private String refCode;
 	private String level;
-
+	private String advDt;
 
 	public static AdvIncentiveDataVO create(CSVRecord CSVRecord) {
 		AdvIncentiveDataVO vo = new AdvIncentiveDataVO();
-		vo.setDay(CSVRecord.get(0));
-		vo.setMonth(CSVRecord.get(1));
-		vo.setYear(CSVRecord.get(2));
-		vo.setMemberCode(CSVRecord.get(3));
-		vo.setTargetAmt(CSVRecord.get(4));
-		vo.setRefCode(CSVRecord.get(5));
-		vo.setLevel(CSVRecord.get(6));
+		vo.setMonth(CSVRecord.get(0));
+		vo.setYear(CSVRecord.get(1));
+		vo.setMemberCode(CSVRecord.get(2));
+		vo.setTargetAmt(CSVRecord.get(3));
+		vo.setRefCode(CSVRecord.get(4));
+		vo.setLevel(CSVRecord.get(5));
+		vo.setAdvDt(CSVRecord.get(6));
 		return vo;
 	}
-
-
-	public String getDay() {
-		return day;
-	}
-
-
-	public void setDay(String day) {
-		this.day = day;
-	}
-
 
 	public String getMonth() {
 		return month;
@@ -94,5 +81,15 @@ public class AdvIncentiveDataVO {
 
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+
+	public String getAdvDt() {
+		return advDt;
+	}
+
+
+	public void setAdvDt(String advDt) {
+		this.advDt = advDt;
 	}
 }

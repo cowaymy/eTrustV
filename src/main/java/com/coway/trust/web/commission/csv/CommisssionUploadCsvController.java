@@ -334,10 +334,10 @@ public class CommisssionUploadCsvController {
 			map.put("uploadID",uploadId);
 			map.put("statusID","1");
 			map.put("validStatusID","1");
-			String requestDay = String.format("%02d", Integer.valueOf(vo.getDay()));
 			String requestMonth = String.format("%02d", Integer.valueOf(vo.getMonth()));
-			String rqstDt = (String.valueOf(requestDay) + '/' + String.valueOf(requestMonth) + '/' + vo.getYear());
-			map.put("advDt",rqstDt);
+			String rqstDt = //(String.valueOf(requestDay)
+					("01"+ '/' + String.valueOf(requestMonth) + '/' + vo.getYear());
+			map.put("rqstDt",rqstDt);
 			map.put("userMemberCode",vo.getMemberCode());
 			map.put("userRefCode",vo.getRefCode());
 			map.put("userTargetAmt",vo.getTargetAmt());
@@ -347,6 +347,7 @@ public class CommisssionUploadCsvController {
 			map.put("sysRefLvl","0");
 			map.put("updated",loginId);
 			map.put("sysMemberTypeID","0");
+			map.put("advDt",vo.getAdvDt());
 
 			commissionCalculationService.insertAdvIncentiveDetail(map);
 		}
