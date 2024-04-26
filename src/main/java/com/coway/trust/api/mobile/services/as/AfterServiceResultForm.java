@@ -8,14 +8,19 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 
 import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
+import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApiModel(value = "AfterServiceResultForm", description = "AfterServiceResultForm")
 public class AfterServiceResultForm {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AfterServiceResultForm.class);
 
   @ApiModelProperty(value = "사용자 ID (예_CT123456)")
   private String userId;
@@ -107,8 +112,29 @@ public class AfterServiceResultForm {
 
   private int instAccsVal;
 
+  private String type;
 
-  public String getNtu() {
+  private int insAccPartId;
+
+  private String chkInstallAcc;
+
+  public String getType() {
+	return type;
+}
+
+public int getInsAccPartId() {
+	return insAccPartId;
+}
+
+public void setType(String type) {
+	this.type = type;
+}
+
+public void setInsAccPartId(int insAccPartId) {
+	this.insAccPartId = insAccPartId;
+}
+
+public String getNtu() {
 	return ntu;
 }
 
@@ -254,18 +280,40 @@ public String getAsUnmatchReason() {
     this.checkInGps = checkInGps;
   }
 
-  @ApiModelProperty(value = "partList")
+  public String getChkInstallAcc() {
+	return chkInstallAcc;
+}
+
+public List<AfterServiceResultDetailForm> getInstallAccList() {
+	return installAccList;
+}
+
+public void setChkInstallAcc(String chkInstallAcc) {
+	this.chkInstallAcc = chkInstallAcc;
+}
+
+public void setInstallAccList(List<AfterServiceResultDetailForm> installAccList) {
+	this.installAccList = installAccList;
+}
+
+@ApiModelProperty(value = "partList")
   private List<AfterServiceResultDetailForm> partList;
+
+  @ApiModelProperty(value = "installAccList")
+  private List<AfterServiceResultDetailForm> installAccList;
+
 
   public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
+    Map<String, Object> map;
+
+    map = BeanConverter.toMap(afterServiceResultForm, "signData", "partList");
+    map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
 
     if (partList != null && partList.size() > 0) {
-      Map<String, Object> map;
+
       for (AfterServiceResultDetailForm dtl : partList) {
-        map = BeanConverter.toMap(afterServiceResultForm, "signData", "partList");
-        map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
 
         // as Dtails
         map.put("filterCode", dtl.getFilterCode());
@@ -277,10 +325,24 @@ public String getAsUnmatchReason() {
         map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
         map.put("retSmoSerialNo", dtl.getRetSmoSerialNo());
 
-        list.add(map);
+      //  list.add(map);
       }
 
     }
+
+    LOGGER.debug("=====installAccList===== :" + installAccList.size() );
+
+    if (installAccList != null && installAccList.size() > 0) {
+    	for (AfterServiceResultDetailForm dtl : installAccList) {
+    	map.put("resultNo", dtl.getResultNo());
+        map.put("resultSoId", dtl.getResultSoId());
+        map.put("insAccPartId", dtl.getInsAccPartId());
+        map.put("remark", dtl.getRemark());
+        map.put("crtUserId", dtl.getCrtUserId());
+    	}
+    }
+
+    list.add(map);
     return list;
   }
 
