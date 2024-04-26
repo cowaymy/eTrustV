@@ -1141,6 +1141,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           logger.debug("getUserId ====>> " +  sessionVO.getUserId());
           logger.debug("installAccList ====>> " +  installAccList);
           logger.debug("instAccLst ====>> " +  params.get("instAccLst").toString());
+          logger.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
 
 
 
@@ -4061,6 +4062,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       if (!installAccList.isEmpty()){
 
         logger.info("### installResult.installEntryId : " + installResult.get("installEntryId"));
+        logger.info("### installResult.remark : " + installResult.get("remark"));
 
         installResult.put("entryId", installResult.get("installEntryId"));
 
