@@ -443,6 +443,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
                 params.put("NTU", insApiresult.get("ntu"));
                 params.put("INST_ACCS", insApiresult.get("instAccs"));
                 params.put("INST_ACCS_VAL", insApiresult.get("instAccsVal"));
+                //params.put("CHK_INSTALL_ACC", insApiresult.get("chkInstallAcc"));
 
         		if (insApiresult.get("inHouseRepairRemark") != null) {
         			params.put("IN_HUSE_REPAIR_REM", String.valueOf(insApiresult.get("inHouseRepairRemark")));
@@ -515,6 +516,24 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		params.put("SGN_DT", insApiresult.get("signData")); // asTransLogs
 
         		params.put("SERIAL_REQUIRE_CHK_YN", String.valueOf( insApiresult.get("serialRequireChkYn")));
+
+        		// INST. ACCS LIST START
+                List<Map<String, Object>> paramsDetailInstAccLst = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) insApiresult.get("installAccList"));
+                logger.debug("### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString());
+                //List lstStr = null;
+                List<String> lstStr = new ArrayList<>();
+                for (Map<String, Object> accLst : paramsDetailInstAccLst) {
+
+                	logger.debug("accLst : " + accLst.size());
+                  if (accLst != null) {
+                    lstStr.add(String.valueOf(accLst.get("insAccPartId")));
+                    logger.debug("### insAccPartIdT : " + String.valueOf(accLst.get("insAccPartId")));
+                  }
+                }
+                logger.debug("### INST ACCS LIST SIZE : " + lstStr.size());
+
+                params.put("instAccLst", lstStr);
+                // INST. ACCS LIST END
 
         		logger.debug("### AS PARAM [AFTER]: ", params);
 
