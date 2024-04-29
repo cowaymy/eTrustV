@@ -298,7 +298,7 @@ let stusToData = [ {"codeId" : "PNP", "codeName" : "PNP RPS"}, {"codeId" : "REG"
                      <div class="auto_file">
                          <input type="file" title="file add"  id="fileSelector" name="fileSelector"/>
                      </div><!-- auto_file end -->
-                     <p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/paymodeConversionRequest_Format.csv">Download CSV Format</a></p>
+                     <p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/paymodeConversionRequestPNP_Format.csv">Download CSV Format</a></p>
                 </td>
             </tr>
             </tbody>
