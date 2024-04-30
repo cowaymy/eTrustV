@@ -171,6 +171,15 @@
             }).multipleSelect("enable");
            $('#_brnchId').multipleSelect("checkAll");
         } else {
+          if ("${PAGE_AUTH.funcUserDefine5}" == "Y") {
+              $('#_brnchId').change(function() {
+                  //console.log($(this).val());
+              }).multipleSelect({
+                  selectAll: true, // 전체선택
+                  width: '100%'
+              }).multipleSelect("enable");
+             $('#_brnchId').multipleSelect("checkAll");
+          } else {
             $('#_brnchId').change(function() {
                 //console.log($(this).val());
             }).multipleSelect({
@@ -178,6 +187,7 @@
                 width: '100%'
             }).multipleSelect("disable");
             $("#_brnchId").multipleSelect("setSelects", ['${SESSION_INFO.userBranchId}']);
+          }
         }
     }
 
