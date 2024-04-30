@@ -707,7 +707,7 @@
 
     let attachment = 0;
     const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
-    	const regexp = [';', ':', '&', '#', '@', '!', '|', '\\', '?','"'];
+    	const regexp = [';', ':', '#', '@', '!', '|', '\\','"'];
 
     	if(event.key ==='Enter' || regexp.includes(event.key)){
     		event.preventDefault();
