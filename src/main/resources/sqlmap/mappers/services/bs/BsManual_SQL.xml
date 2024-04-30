@@ -2251,7 +2251,7 @@
                          Filter1.CODE CODE  ,
                          1 C1  ,
                          Filter1.MEM_CODE MEM_CODE  ,
-                         Extent4.USER_NAME USER_NAME
+                         Extent5.MEM_CODE USER_NAME
          FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
                        Extent1.NO NO  ,
                        Extent1.SCHDUL_ID SCHDUL_ID  ,
@@ -2267,7 +2267,7 @@
                        LEFT JOIN ORG0001D Extent3   ON Extent1.CODY_ID = Extent3.MEM_ID
                  WHERE  8 <> Extent1.RESULT_STUS_CODE_ID
                   and Extent1.RESULT_IS_CURR = '1' ) Filter1
-                LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
+                LEFT JOIN ORG0001D Extent5   ON Filter1.RESULT_CRT_USER_ID = Extent5.MEM_ID
           WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
 
 
