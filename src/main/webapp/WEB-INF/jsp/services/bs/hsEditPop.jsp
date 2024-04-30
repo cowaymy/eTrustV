@@ -689,6 +689,11 @@ var myDetailGridData = null;
         return false;
       }
 
+      if ($(':input[name=srvBsWeek]:radio:checked').val() == '' || $(':input[name=srvBsWeek]:radio:checked').val() == null ) { ///aaaaaaa
+          Common.alert("Please Select 'Prefer Service Week'");
+          return false;
+          }
+
       //Installation checklist
        if(stkCtgry == 54){
     	   if(stkId1 == 1735){
@@ -844,7 +849,8 @@ var myDetailGridData = null;
 
     //Installation checklist
     form.instChklstCheckBox = $("#instChklstCheckBox").val();
-    form.srvBsWeek = $(':input[name=srvBsWeek]:radio:checked').val();
+    //form.srvBsWeek = $(':input[name=srvBsWeek]:radio:checked').val();
+    form.srvBsWeek = $(':input[name=srvBsWeek]:radio:checked').val() == null ? '0' : $(':input[name=srvBsWeek]:radio:checked').val();
 
     jsonObj.form = form;
     console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
