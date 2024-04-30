@@ -573,8 +573,16 @@
 
 
     let attachment = 0;
+    const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
+        const regexp = [';', ':', '&', '#', '@', '!', '|', '\\', '?','"'];
+
+        if(event.key ==='Enter' || regexp.includes(event.key)){
+            event.preventDefault();
+        }
+    });
+
     const insertPreInsFail = () => {
-    	const insNo = "${insNo}", failLoc = document.querySelector("#failLoc").value, failReason = $("#failReason").val() , remark = document.querySelector("#remark").value;
+    	const insNo = "${insNo}", failLoc = document.querySelector("#failLoc").value, failReason = $("#failReason").val() , remark = document.querySelector("#remark").value.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
         fetch("/homecare/services/install/insertPreInsFail.do", {
             method: "POST",
             headers: {

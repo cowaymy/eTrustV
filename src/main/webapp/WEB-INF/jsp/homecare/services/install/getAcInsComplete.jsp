@@ -706,8 +706,16 @@
 	}
 
     let attachment = 0;
+    const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
+    	const regexp = [';', ':', '&', '#', '@', '!', '|', '\\', '?','"'];
+
+    	if(event.key ==='Enter' || regexp.includes(event.key)){
+    		event.preventDefault();
+    	}
+    });
+
 	const insertPreInsComplete = () => {
-        const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text() , remark = document.querySelector("#remark").value;
+        const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text(), remark = document.querySelector("#remark").value;
 
         fetch("/homecare/services/install/insertPreInsCompleted.do", {
             method: "POST",
