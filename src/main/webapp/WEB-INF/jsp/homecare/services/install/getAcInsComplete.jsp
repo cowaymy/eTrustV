@@ -706,12 +706,25 @@
 	}
 
     let attachment = 0;
-    const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
-    	const regexp = [';', ':', '#', '@', '!', '|', '\\','"'];
 
+    // [Bug Fix:#24037555] - validate the special symbol in text area field
+    const regexp = [';', ':', '#', '@', '!', '|', '\\','"'];
+    const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
     	if(event.key ==='Enter' || regexp.includes(event.key)){
     		event.preventDefault();
     	}
+    });
+
+    const textAreaRemark = document.getElementById("remark").addEventListener('input',function(event){
+        if(event.data ==='\n' || regexp.includes(event.data)){
+        	var txtareaRmk = event.target;
+            var selectionStart = txtareaRmk.selectionStart;
+            var selectionEnd = txtareaRmk.selectionEnd;
+            var textBeforeCursor = txtareaRmk.value.substring(0, selectionStart - 1);
+            var textAfterCursor = txtareaRmk.value.substring(selectionEnd);
+            txtareaRmk.value = textBeforeCursor + textAfterCursor;
+            txtareaRmk.setSelectionRange(selectionStart - 1, selectionStart - 1);
+        }
     });
 
 	const insertPreInsComplete = () => {
