@@ -494,6 +494,11 @@
         return false;
       }
 
+      if($(':input[name=srvBsWeek]:radio:checked').val() == '' || $(':input[name=srvBsWeek]:radio:checked').val() == null ){
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='Prefer Service Week'/>");
+          return false;
+      }
+
      //Installation checklist
         if(stkCtgry == 54){
         	if(stkId1 == 1735 ){
@@ -599,11 +604,6 @@
         }
     */
 
-    /* if("" == $("#srvBsWeek").val() || null == $("#srvBsWeek").val()){
-         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Week Type'/>");
-         return false;
-       }  */
-
     // 시리얼넘버체크
     //수정된 행 아이템들(배열)
     var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
@@ -653,6 +653,7 @@
     console.log("fn_saveHsResult :: resultList :: " + resultList);
     $("input[name='settleDate']").removeAttr('disabled');
     $("select[name=cmbCollectType]").removeAttr('disabled');
+    $('#srvBsWeek').val($(':input[name=srvBsWeek]:radio:checked').val() == null ? '0' : $(':input[name=srvBsWeek]:radio:checked').val());
     jsonObj.form = $("#addHsForm").serializeJSON();
 
     if (updIsReturnList != null){
@@ -943,11 +944,11 @@ function fnSerialSearchResult(data) {
 <tr>
     <th scope="row" style="width: 65px; ">Prefer Service Week</th>
     <td colspan="1">
-    <label><input type="radio" name="srvBsWeek"  value="0"/><span>None</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="1"/><span>Week 1</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="2"/><span>Week 2</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek"  value="0"/><span>None</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek"  value="1"/><span>Week 1</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek"  value="2"/><span>Week 2</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
+    <label><input type="radio" id="srvBsWeek" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
     </td>
         <th scope="row" style="width: 91px; ">Cancel Request Number</th>
     <td style="width: 242px; ">
