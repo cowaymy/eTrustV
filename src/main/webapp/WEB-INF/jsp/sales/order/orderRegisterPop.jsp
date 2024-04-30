@@ -2380,7 +2380,7 @@
                     $('#grpCd').removeClass("readonly");
                     $('#orgCd').removeClass("readonly");
 
-                    if(memCode == "ASPLKW"){
+                    if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
                         return;
                     }else{
                           if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {

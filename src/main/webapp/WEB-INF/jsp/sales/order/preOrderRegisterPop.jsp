@@ -2053,7 +2053,7 @@
   }
 
   function checkSalesPerson(memCode, salesOrdId, salesOrdNo) {
-    if (memCode == "ASPLKW") {
+    if (memCode == "100116" || memCode == "100224" || memCode == "ASPLKW") {
       return true;
     } else {
       if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'
