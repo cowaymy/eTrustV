@@ -6,6 +6,8 @@
     var newAdjGridID, approveLineGridID;
     var selectRowIdx;
     var taxRate = "${taxRate}";
+    var invoiceDt;
+    var oriTaxRate;
 
     //Default Combo Data
     var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
@@ -24,9 +26,57 @@
         { dataField:"billitemrefno" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false ,width : 120 },
         { dataField:"billitemunitprice" ,headerText:"<spring:message code='pay.head.unitPrice'/>" ,editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 100},
-        { dataField:"billitemtaxrate" ,headerText:"Tax Rate" ,editable : false , postfix : "%" ,width : 100},
-        { dataField:"billitemcharges" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemtaxes" ,headerText:"Tax Amount" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"billitemtaxrate" ,
+        	headerText:"Tax Rate" ,editable : false , postfix : "%" ,width : 100,
+        	expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+
+                var taxRate = item.billitemtaxrate;
+                oriTaxRate = item.billitemtaxrate;
+
+                var newInvoiceDt = new Date(invoiceDt);
+                var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
+                var newSstRate = 0;
+
+                if(newInvoiceDt < newSstStartDt && item.billitemtaxrate > 0){
+                	taxRate = newSstRate;
+                }
+
+                return taxRate;
+            }
+        },
+        { dataField:"billitemcharges" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120,
+        	expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+
+                var itemBillCharge = item.billitemcharges;
+
+                var newInvoiceDt = new Date(invoiceDt);
+                var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
+
+                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0){
+                	itemBillCharge = item.billitemamount;
+                }
+
+                return itemBillCharge;
+            }
+        },
+        { dataField:"billitemtaxes" ,headerText:"Tax Amount" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120,
+
+        	expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+
+                var billItemTaxes = item.billitemtaxes;
+
+                var newInvoiceDt = new Date(invoiceDt);
+                var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
+                var newBillItemTaxes = 0.00;
+
+                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0){
+                	billItemTaxes = newBillItemTaxes;
+                }
+
+                return billItemTaxes;
+            }
+
+        },
         { dataField:"billitemamount" ,headerText:"<spring:message code='pay.head.total'/>" ,editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         {
             dataField : "totamount",
@@ -196,7 +246,7 @@
     function getAdjustmentInfo(refNo){
 
         //데이터 조회 (초기화면시 로딩시 조회)
-        Common.ajax("GET", "/payment/selectNewAdjList.do", {"refNo":refNo}, function(result) {
+        Common.ajaxSync("GET", "/payment/selectNewAdjList.do", {"refNo":refNo}, function(result) {
             if(result != 'undefined'){
                 $("#reselect").attr("disabled", true);
                 $("#invoiceNo").attr("readonly", "readonly");
@@ -209,6 +259,7 @@
                 //Master데이터 출력
                 $("#tInvoiceNo").text(result.master.brNo);
                 $("#tInvoiceDt").text(result.master.taxInvcDt);
+                invoiceDt = result.master.taxInvcDt;
                 $("#tInvoiceType").text(result.master.invoicetype);
                 $("#tGroupNo").text(result.master.txinvoicetypeid);
                 $("#tOrderNo").text(result.master.ordNo);
