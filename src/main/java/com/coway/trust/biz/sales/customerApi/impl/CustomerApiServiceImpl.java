@@ -332,7 +332,7 @@ public class CustomerApiServiceImpl
     }
 
     /* SAL0416D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustTinNo. */
-    customerMap.put( "eInvFlg", 'Y');
+    customerMap.put( "eInvFlg", param.geteInvFlg());
     customerMap.put( "tinNo", param.getTinNo() );
     saveCnt = customerApiMapper.insertCustomerTin( customerMap );
     if ( saveCnt != 1 ) {
