@@ -200,12 +200,53 @@
     ]]>
   </select>
 
-  <insert id="insertCustomer" parameterType="Map">
-    <selectKey keyProperty="custId" resultType="int" order="BEFORE">
+  <select id="selectTelCheck" parameterType="Map" resultType="Integer">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectTelCheck] 20190916 - KR JAEMAJEM */
+    SELECT COUNT(1)
+    FROM ORG0001D
+    WHERE MEM_TYPE IN (1,2)
+    AND '0342809553' IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+    ]]>
+  </select>
+
+  <select id="getCustId" parameterType="Map" resultType="Integer">
       SELECT SAL0029D_CUST_ID_SEQ.NEXTVAL AS custId
       FROM DUAL
-    </selectKey>
+  </select>
 
+  <select id="getTinId" parameterType="Map" resultType="Integer">
+      SELECT SAL0416D_TIN_ID.NEXTVAL AS tinId
+      FROM DUAL
+  </select>
+
+  <insert id="insertCustomerTin" parameterType="Map">
+    <![CDATA[
+    INSERT INTO SAL0416D ( TIN_ID
+                                      , CUST_ID
+                                      , CUST_TIN
+                                      , STATUS
+                                      , E_INV_FLG
+                                      , REM
+                                      , CRT_DT
+                                      , CRT_USER_ID
+                                      , UPD_DT
+                                      , UPD_USER_ID
+    ) VALUES ( #{tinId}
+                  , #{custId}
+                  , #{tinNo}
+                  , 1
+                  , #{eInvFlg}
+                  , ''
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+    )
+    ]]>
+  </insert>
+
+  <insert id="insertCustomer" parameterType="Map">
     <![CDATA[
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.insertCustomer] 20190919 - KR JAEMAJEM */
     INSERT INTO SAL0029D ( CUST_ID
@@ -234,6 +275,7 @@
                                       , CTOS_DT
                                       , FICO_SCRE
                                       , OLD_IC
+                                      , RECEIVING_MARKETING_MSG_STATUS
                                       , TIN_ID
                                       , SST_RGIST_NO
     ) VALUES ( #{custId}
@@ -263,7 +305,7 @@
                   , NULL
                   , #{oldIc}
                   , #{receivingMarketingMsgStatus}
-                  , #{tinNo}
+                  , #{tinId}
                   , #{sstRegNo}
     )
     ]]>
