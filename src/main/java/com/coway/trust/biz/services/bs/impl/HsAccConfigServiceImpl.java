@@ -127,7 +127,7 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
 	    	cnt = hsAccConfigMapper.updateHSAccConfigBasicMultiple(params); //SAL0090D
 	    	logger.debug("1111===" + params.get("schdulId"));
 
-	    	if (!params.get("schdulId").equals("")) {
+	    	if (!params.get("schdulId").equals("undefined")) {
 		    	if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03")
 		        		|| params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
 
