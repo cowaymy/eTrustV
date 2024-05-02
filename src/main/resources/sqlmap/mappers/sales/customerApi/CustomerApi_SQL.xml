@@ -200,16 +200,6 @@
     ]]>
   </select>
 
-  <select id="selectTelCheck" parameterType="Map" resultType="Integer">
-    <![CDATA[
-    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectTelCheck] 20190916 - KR JAEMAJEM */
-    SELECT COUNT(1)
-    FROM ORG0001D
-    WHERE MEM_TYPE IN (1,2)
-    AND '0342809553' IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    ]]>
-  </select>
-
   <select id="getCustId" parameterType="Map" resultType="Integer">
       SELECT SAL0029D_CUST_ID_SEQ.NEXTVAL AS custId
       FROM DUAL
