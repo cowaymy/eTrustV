@@ -208,33 +208,34 @@
 
     <![CDATA[
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.insertCustomer] 20190919 - KR JAEMAJEM */
-    INSERT INTO SAL0029D ( CUST_ID                                                                  -- ASIS_COLUMN : CustomerID
-                                      , NAME                                                                      -- ASIS_COLUMN : Name
-                                      , NRIC                                                                       -- ASIS_COLUMN : NRIC
-                                      , NATION                                                                   -- ASIS_COLUMN : Nationality
-                                      , DOB                                                                        -- ASIS_COLUMN : DOB
-                                      , GENDER                                                                   -- ASIS_COLUMN : Gender
-                                      , RACE_ID                                                                  -- ASIS_COLUMN : RaceID
-                                      , EMAIL                                                                      -- ASIS_COLUMN : Email
-                                      , REM                                                                        -- ASIS_COLUMN : Remark
-                                      , STUS_CODE_ID                                                         -- ASIS_COLUMN : StatusCodeID
-                                      , UPD_USER_ID                                                           -- ASIS_COLUMN : Updator
-                                      , UPD_DT                                                                   -- ASIS_COLUMN : Updated
-                                      , REN_GRP                                                                 -- ASIS_COLUMN : RenGrp
-                                      , PST_TERMS                                                              -- ASIS_COLUMN : PSTTerms
-                                      , ID_OLD                                                                   -- ASIS_COLUMN : IDOld
-                                      , CRT_USER_ID                                                           -- ASIS_COLUMN : Creator
-                                      , CRT_DT                                                                   -- ASIS_COLUMN : Created
-                                      , TYPE_ID                                                                  -- ASIS_COLUMN : TypeID
-                                      , PAS_SPORT_EXPR                                                     -- ASIS_COLUMN : PassportExpire
-                                      , VISA_EXPR                                                              -- ASIS_COLUMN : VisaExpire
-                                      , CUST_VA_NO                                                           -- ASIS_COLUMN : CustVano
-                                      , CORP_TYPE_ID                                                        -- ASIS_COLUMN : CorpTypeID
-                                      , GST_RGIST_NO                                                        -- ASIS_COLUMN : GSTRegistrationNo
-                                      , CTOS_DT                                                                 -- ASIS_COLUMN : CTOSDate
-                                      , FICO_SCRE                                                              -- ASIS_COLUMN : FicoScore
-                                      , OLD_IC                                                                   --Old IC
-                                      , RECEIVING_MARKETING_MSG_STATUS							-- Marketing Message Receiving
+    INSERT INTO SAL0029D ( CUST_ID
+                                      , NAME
+                                      , NRIC
+                                      , NATION
+                                      , DOB
+                                      , GENDER
+                                      , RACE_ID
+                                      , EMAIL
+                                      , REM
+                                      , STUS_CODE_ID
+                                      , UPD_USER_ID
+                                      , UPD_DT
+                                      , REN_GRP
+                                      , PST_TERMS
+                                      , ID_OLD
+                                      , CRT_USER_ID
+                                      , CRT_DT
+                                      , TYPE_ID
+                                      , PAS_SPORT_EXPR
+                                      , VISA_EXPR
+                                      , CUST_VA_NO
+                                      , CORP_TYPE_ID
+                                      , GST_RGIST_NO
+                                      , CTOS_DT
+                                      , FICO_SCRE
+                                      , OLD_IC
+                                      , TIN_ID
+                                      , SST_RGIST_NO
     ) VALUES ( #{custId}
                   , #{name}
                   , TRIM(#{nric})
@@ -262,6 +263,8 @@
                   , NULL
                   , #{oldIc}
                   , #{receivingMarketingMsgStatus}
+                  , #{tinNo}
+                  , #{sstRegNo}
     )
     ]]>
   </insert>
