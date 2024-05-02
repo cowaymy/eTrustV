@@ -50,7 +50,7 @@
         dataField : "invcDt",
         headerText : "Invoice Date",
         dataType : "date",
-        /* formatString : "dd/mm/yyyy", */
+        formatString : "dd/mm/yyyy",
         editRenderer : {
             type : "CalendarRenderer",
             openDirectly : true,
