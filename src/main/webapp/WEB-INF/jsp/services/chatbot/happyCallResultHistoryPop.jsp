@@ -6,6 +6,7 @@
 	var happyCallResulthHistGridId;
 	var myHappyCallData = ${happyCallResultHistoryList};
 	var userDefine1 = "${userDefine1}";
+	var userPrint = "${userPrint}";
 
 	var happyCallResultHistColumnLayout = [{
 		dataField : "transactionId",
@@ -121,9 +122,11 @@
     <header class="pop_header"><!-- pop_header start -->
     <h1>SURVEY LISTING - HISTORY</h1>
     <ul class="right_opt">
-            <li>
-                <p class="btn_blue2"><a href="#" id="excelDown">Generate</a></p>
-            </li>
+            <c:if test="${userPrint == 'Y'}">
+	            <li>
+	                <p class="btn_blue2"><a href="#" id="excelDown">Generate</a></p>
+	            </li>
+            </c:if>
             <li><p class="btn_blue2"><a href="#" id="closeBtn">CLOSE</a></p></li>
     </ul>
     </header><!-- pop_header end -->

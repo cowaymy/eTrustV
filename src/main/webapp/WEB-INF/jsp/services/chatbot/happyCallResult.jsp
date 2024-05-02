@@ -7,6 +7,7 @@
 	var memType = '${SESSION_INFO.userTypeId}';  //1=HP, 2=CD, 4=Staff, 7=HT
 	var memLevel = '${SESSION_INFO.memberLevel}';
 	var userDefine1 = "${PAGE_AUTH.funcUserDefine1}";
+	var userPrint = "${PAGE_AUTH.funcPrint}";
 
 //	function createAUIGrid() {
 		var happyCallResultColumnLayout = [{
@@ -75,6 +76,7 @@
 
 		fn_setToDay();
 		$("#userDefine1").val(userDefine1);
+		$("#userPrint").val(userPrint);
 
 		/* AUIGrid.bind(happyCallResultGridId, "cellClick", function( event ) {
 			console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -232,6 +234,7 @@
       <input type="hidden" name="selectedGrpCode" id="selectedGrpCode"/>
       <input type="hidden" name="selectedOrgCode" id="selectedOrgCode"/>
       <input type="hidden" name="userDefine1" id="userDefine1"/>
+      <input type="hidden" name="userPrint" id="userPrint"/>
 
       <table class="type1">
         <caption>table</caption>

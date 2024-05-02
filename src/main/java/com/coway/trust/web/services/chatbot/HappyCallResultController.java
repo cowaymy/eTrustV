@@ -75,6 +75,7 @@ public class HappyCallResultController {
 
 		model.addAttribute("happyCallResultHistoryList", new Gson().toJson(happyCallResultHistoryList));
 		model.addAttribute("userDefine1", params.get("userDefine1").toString());
+		model.addAttribute("userPrint", params.get("userPrint").toString());
 
 		return "services/chatbot/happyCallResultHistoryPop";
 	}
