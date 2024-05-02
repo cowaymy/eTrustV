@@ -54,4 +54,10 @@ public interface CustomerApiMapper {
   List<EgovMap> selectCustomerTierOtherDet(Map<String, Object> params);
 
   List<EgovMap> selectCustomerTierCatgryList(Map<String, Object> params);
+
+  int getCustId();
+
+  int getTinId();
+
+  int insertCustomerTin(Map<String, Object> param);
 }
