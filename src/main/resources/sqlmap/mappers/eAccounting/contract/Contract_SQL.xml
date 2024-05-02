@@ -214,6 +214,7 @@
 	       ,#{vendorName} VEN_NAME
 	       ,#{vendorNric} VEN_NRIC
 	       ,#{vendorType} VEN_TYPE
+	       ,#{vendorOtherRem} VEN_TYPE_OTHER
 	       ,#{vendorPicName} VEN_PIC_NAME
 	       ,#{vendorPicEmail} VEN_PIC_EMAIL
 	       ,#{vendorPicNo} VEN_PIC_NO
@@ -233,6 +234,7 @@
 			,TARG.VEN_NAME = SOURC.VEN_NAME
 			,TARG.VEN_NRIC = SOURC.VEN_NRIC
 			,TARG.VEN_TYPE = SOURC.VEN_TYPE
+			,TARG.VEN_TYPE_OTHER = SOURC.VEN_TYPE_OTHER
 			,TARG.VEN_PIC_NAME = SOURC.VEN_PIC_NAME
 			,TARG.VEN_PIC_EMAIL = SOURC.VEN_PIC_EMAIL
 			,TARG.VEN_PIC_NO = SOURC.VEN_PIC_NO
@@ -249,6 +251,7 @@
            ,VEN_NAME
            ,VEN_NRIC
            ,VEN_TYPE
+           ,VEN_TYPE_OTHER
            ,VEN_PIC_NAME
            ,VEN_PIC_EMAIL
            ,VEN_PIC_NO
@@ -265,6 +268,7 @@
 	        ,SOURC.VEN_NAME
 	        ,SOURC.VEN_NRIC
 	        ,SOURC.VEN_TYPE
+	        ,SOURC.VEN_TYPE_OTHER
 	        ,SOURC.VEN_PIC_NAME
 	        ,SOURC.VEN_PIC_EMAIL
 	        ,SOURC.VEN_PIC_NO
@@ -333,7 +337,9 @@
 				,RENEWAL_EXP_DT
 				,RENEWAL_TERM
 				,RENEWAL_CUTOFF_DT
+				<if test="contractRenewDt != null and contractRenewDt != '' ">
 				,CONT_RENEWAL_DT
+				</if>
 				,ATCH_FILE_GRP_ID
                 ,CRT_DT
                 ,CRT_USER_ID
@@ -342,11 +348,13 @@
             (
                 #{contTrackId}
 				,#{seq}
-				,TO_DATE(#{contractCommDt}, 'YYYY/MM/DD')
-				,TO_DATE(#{contractCommExpDt}, 'YYYY/MM/DD')
+				,TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
+				,TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
 				,#{contractTerm}
-				,TO_DATE(#{noticePeriod}, 'YYYY/MM/DD')
-				,TO_DATE(#{contractRenewDt}, 'YYYY/MM/DD')
+				,TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
+				<if test="contractRenewDt != null and contractRenewDt != '' ">
+				,TO_DATE(#{contractRenewDt}, 'DD/MM/YYYY')
+				</if>
 				,#{atchFileGrpId}
                 ,SYSDATE
                 ,#{userId}
@@ -381,6 +389,7 @@
         ,DET.VEN_NAME
         ,DET.VEN_NRIC
         ,DET.VEN_TYPE
+        ,DET.VEN_TYPE_OTHER
         ,DET.VEN_PIC_NAME
         ,DET.VEN_PIC_EMAIL
         ,DET.VEN_PIC_NO
@@ -416,7 +425,9 @@
 			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
 			,RENEWAL_TERM = #{contractTerm}
 			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
+			<if test="contractRenewDt != null and contractRenewDt != '' ">
 			,CONT_RENEWAL_DT = TO_DATE(#{contractRenewDt}, 'DD/MM/YYYY')
+			</if>
 			,ATCH_FILE_GRP_ID = #{atchFileGrpId}
 			,UPD_DT = SYSDATE
 			,UPD_USER_ID = #{userId}

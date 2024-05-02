@@ -3,21 +3,25 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript" language="javascript">
-var vendorType =  [{"codeId": "965","codeName": "Entity"},{"codeId": "964","codeName": "Individual"}];
+var vendorType = [];
+<c:forEach var="obj" items="${vendorType}">
+vendorType.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+</c:forEach>
 var contractType = [];
 <c:forEach var="obj" items="${contractType}">
 contractType.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
 </c:forEach>
 $(document).ready(function(){
-	doDefCombo(vendorType, '', 'rVendorType', 'M', 'fn_multiCombo');
+	doDefCombo(vendorType, '', 'rListVendorType', 'M', 'fn_multiCombo');
 	console.log('contractType' + contractType);
 	doDefCombo(contractType, '', 'rListContractType', 'M', 'fn_multiCombo');
+
 
 	//fn_setToDay();
 });
 
 function fn_multiCombo(){
-    $('#rVendorType').change(function() {
+    $('#rListVendorType').change(function() {
         //console.log($(this).val());
     }).multipleSelect({
         selectAll: true, // 전체선택
@@ -222,10 +226,7 @@ function fn_genReport(){
 <tr>
     <th scope="row">Type of Vendor</th>
     <td>
-	    <select class="multy_select" multiple="multiple" id="rVendorType" name="rVendorType">
-		    <option value="1">Entity</option>
-		    <option value="2">Individual</option>
-	    </select>
+	    <select id="rListVendorType" name="rVendorType" class="multy_select w100p" multiple="multiple"></select>
     </td>
 </tr>
 <tr>

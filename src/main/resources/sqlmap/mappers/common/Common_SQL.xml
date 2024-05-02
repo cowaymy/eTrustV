@@ -928,6 +928,9 @@
         <if test="likeValue != null and likeValue !=''">
            AND CODE LIKE #{likeValue}||'%'
         </if>
+        <if test="codeMasterNameVal != null and codeMasterNameVal !=''">
+          and CODE_MASTER_ID = (select code_master_id from sys0012m where CODE_MASTER_NAME = #{codeMasterNameVal})
+        </if>
         <if test="notlike != null and notlike !=''">
            AND CODE NOT LIKE #{notlike}||'%'
         </if>

@@ -104,15 +104,15 @@ function fn_searchContractTrackingList() {
 }
 
 function fn_newContract() {
-    Common.popupDiv("/eAccounting/contract/contractNewPop.do", {callType:'new',groupCode :'577',orderValue:'code_id'}, null, true, "_contractNewPop");
+    Common.popupDiv("/eAccounting/contract/contractNewPop.do", {callType:'new'}, null, true, "_contractNewPop");
 }
 
 function fn_viewEditContract(contTrackId) {
-    Common.popupDiv("/eAccounting/contract/getContractTrackingView.do", {contTrackId:contTrackId,callType:'view',groupCode :'577',orderValue:'code_id'}, null, true, "_contractViewPop");
+    Common.popupDiv("/eAccounting/contract/getContractTrackingView.do", {contTrackId:contTrackId,callType:'view'}, null, true, "_contractViewPop");
 }
 
 function fn_contractRaw() {
-    Common.popupDiv("/eAccounting/contract/contractRawPop.do",  {groupCode :'577',orderValue:'code_id'}, null, true, '');
+    Common.popupDiv("/eAccounting/contract/contractRawPop.do", null, null, true, '');
 }
 </script>
 
@@ -217,7 +217,7 @@ function fn_contractRaw() {
                     <td><input type="text" placeholder="" class="w100p" id="sDeptPic" name="sDeptPic" /></td>
                  </tr>
                  <tr>
-                    <th scope="row">Vendor's Name<span class="must">*</span></th>
+                    <th scope="row">Vendor's Name</th>
                     <td><input type="text" placeholder="" class="w100p" id="sVendorName" name="sVendorName" /></td>
                     <th scope="row">Vendor's Company Registration No.</th>
                     <td><input type="text" placeholder="" class="w100p" id="sVendorNric" name="sVendorNric" /></td>

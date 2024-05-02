@@ -112,8 +112,13 @@ public class ContractController {
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("action", params.get("callType").toString());
+		params.put("orderValue", "code");
+		params.put("codeMasterNameVal", "Contract Agreement Type");
 		List<EgovMap> codeList = commonService.selectCodeList(params);
 		model.addAttribute("contractType", codeList);
+		params.put("codeMasterNameVal", "Contract Vendor Type");
+		List<EgovMap> vendorCodeList = commonService.selectCodeList(params);
+		model.addAttribute("vendorType", vendorCodeList);
 
 		return "eAccounting/contractTracking/contractNewPop";
 	}
@@ -171,11 +176,16 @@ public class ContractController {
 
 		EgovMap result = contractService.selectContractTrackingViewDetails(params);
 		List<EgovMap> cycleResult = contractService.selectContractCycleDetails(params);
+		params.put("orderValue", "code");
+		params.put("codeMasterNameVal", "Contract Agreement Type");
 		List<EgovMap> codeList = commonService.selectCodeList(params);
+		params.put("codeMasterNameVal", "Contract Vendor Type");
+		List<EgovMap> vendorCodeList = commonService.selectCodeList(params);
 
 		model.put("contTrackId", params.get("contTrackId"));
 		model.put("details", result);
 		model.put("contractType", codeList);
+		model.put("vendorType", vendorCodeList);
 		model.put("cycleResult", cycleResult);
 
 		return "eAccounting/contractTracking/contractNewPop";
@@ -282,9 +292,14 @@ public class ContractController {
 	@RequestMapping(value = "/contractRawPop.do")
 	  public String contractRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		params.put("orderValue", "code");
+		params.put("codeMasterNameVal", "Contract Agreement Type");
 		List<EgovMap> codeList = commonService.selectCodeList(params);
+		params.put("codeMasterNameVal", "Contract Vendor Type");
+		List<EgovMap> vendorCodeList = commonService.selectCodeList(params);
 
 		model.put("contractType", codeList);
+		model.put("vendorType", vendorCodeList);
 
 	    return "eAccounting/contractTracking/contractRawPop";
 	  }
