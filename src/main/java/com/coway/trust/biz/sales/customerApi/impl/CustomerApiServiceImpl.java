@@ -129,10 +129,10 @@ public class CustomerApiServiceImpl
     if ( null == param ) {
       throw new ApplicationException( AppConstants.FAIL, "Parameter value does not exist." );
     }
-
     if ( CommonUtils.isEmpty( param.getTypeId() ) ) {
       throw new ApplicationException( AppConstants.FAIL, "(Customer Type) Customer type value does not exist." );
-    } else {
+    }
+    else {
       if ( param.getTypeId() == 964 ) {
         if ( CommonUtils.isEmpty( param.getContactCustInitial() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
@@ -156,8 +156,9 @@ public class CustomerApiServiceImpl
         if ( CommonUtils.isEmpty( param.getRaceId() ) ) {
           throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Race value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.getTinNo()) ) {
-          throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Tax Identification No. value does not exist." );
+        if ( CommonUtils.isEmpty( param.getTinNo() ) ) {
+          throw new ApplicationException( AppConstants.FAIL,
+                                          "(Basic Info) Tax Identification No. value does not exist." );
         }
       }
       else if ( param.getTypeId() == 965 ) {
@@ -171,8 +172,9 @@ public class CustomerApiServiceImpl
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) SST Registration No. value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.getTinNo()) ) {
-          throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Tax Identification No. value does not exist." );
+        if ( CommonUtils.isEmpty( param.getTinNo() ) ) {
+          throw new ApplicationException( AppConstants.FAIL,
+                                          "(Basic Info) Tax Identification No. value does not exist." );
         }
         if ( CommonUtils.isEmpty( param.getReceivingMarketingMsgStatus() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
@@ -250,18 +252,23 @@ public class CustomerApiServiceImpl
     if ( CommonUtils.isEmpty( param.getAddressAddrDtl() ) ) {
       throw new ApplicationException( AppConstants.FAIL, "(Installation Address) Please key in the Address Line 1." );
     }
-
     Map<String, Object> loginInfoMap = new HashMap<String, Object>();
     loginInfoMap.put( "_USER_ID", param.getRegId() );
     LoginVO loginVO = loginMapper.selectLoginInfoById( loginInfoMap );
-
     if ( null == loginVO || CommonUtils.isEmpty( loginVO.getUserId() ) ) {
       throw new ApplicationException( AppConstants.FAIL, "User ID value does not exist." );
     }
-
     /* SAL0029D --ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer */
     Map<String, Object> customerMap = new HashMap<String, Object>();
     // customerMap.put("custId", );
+    // customerMap.put("stusCodeId", param.getStusCodeId());
+    // customerMap.put("updDt", );
+    // customerMap.put("renGrp", param.getRenGrp());
+    // customerMap.put("pstTerms", param.getPstTerms());
+    // customerMap.put("idOld", param.getIdOld());
+    // customerMap.put("crtDt", );
+    // customerMap.put("custVaNo", param.getCustVaNo());
+    // customerMap.put("ficoScre", param.getFicoScre());
     customerMap.put( "name", param.getName() );
     customerMap.put( "nric", param.getNric() );
     customerMap.put( "nation", param.getNation() );
@@ -270,22 +277,14 @@ public class CustomerApiServiceImpl
     customerMap.put( "raceId", param.getRaceId() );
     customerMap.put( "email", param.getEmail() );
     customerMap.put( "rem", param.getRem() );
-    // customerMap.put("stusCodeId", param.getStusCodeId());
     customerMap.put( "updUserId", loginVO.getUserId() );
-    // customerMap.put("updDt", );
-    // customerMap.put("renGrp", param.getRenGrp());
-    // customerMap.put("pstTerms", param.getPstTerms());
-    // customerMap.put("idOld", param.getIdOld());
     customerMap.put( "crtUserId", loginVO.getUserId() );
-    // customerMap.put("crtDt", );
     customerMap.put( "typeId", param.getTypeId() );
     customerMap.put( "pasSportExpr", param.getPasSportExpr() );
     customerMap.put( "visaExpr", param.getVisaExpr() );
-    // customerMap.put("custVaNo", param.getCustVaNo());
     customerMap.put( "corpTypeId", param.getCorpTypeId() );
     customerMap.put( "gstRgistNo", param.getGstRgistNo() );
     customerMap.put( "ctosDt", param.getCtosDt() );
-    // customerMap.put("ficoScre", param.getFicoScre());
     customerMap.put( "oldIc", param.getOldIc() );
     customerMap.put( "sstRegNo", param.getSstRegNo() );
     customerMap.put( "tinNo", param.getTinNo() );
@@ -322,13 +321,18 @@ public class CustomerApiServiceImpl
     /* SAL0027D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustContact */
     Map<String, Object> contactMap = new HashMap<String, Object>();
     // contactMap.put("custCntcId", param.getCustCntcId());
-    contactMap.put( "custId", customerMap.get( "custId" ) ); // <---SAL0029D
+    // contactMap.put("contactPos", param.getContactPos());
+    // contactMap.put("contactTelM2", param.getContactTelM2());
+    // contactMap.put("contactStusCodeId", param.getContactStusCodeId());
+    // contactMap.put("updDt", );
+    // contactMap.put("contactIdOld", param.getContactIdOld());
+    // contactMap.put("contactDcm", param.getContactDcm());
+    // contactMap.put("crtDt", );
+    contactMap.put( "custId", customerMap.get( "custId" ) );
     contactMap.put( "contactName", param.getContactName() );
     contactMap.put( "contactCustInitial", param.getContactCustInitial() );
     contactMap.put( "contactNric", param.getContactNric() );
-    // contactMap.put("contactPos", param.getContactPos());
     contactMap.put( "contactTelM1", param.getContactTelM1() );
-    // contactMap.put("contactTelM2", param.getContactTelM2());
     contactMap.put( "contactTelO", param.getContactTelO() );
     contactMap.put( "contactTelR", param.getContactTelR() );
     contactMap.put( "contactTelf", param.getContactTelf() );
@@ -336,13 +340,8 @@ public class CustomerApiServiceImpl
     contactMap.put( "contactGender", param.getContactGender() );
     contactMap.put( "contactRaceId", param.getContactRaceId() );
     contactMap.put( "contactEmail", param.getContactEmail() );
-    // contactMap.put("contactStusCodeId", param.getContactStusCodeId());
-    // contactMap.put("updDt", );
     contactMap.put( "updUserId", loginVO.getUserId() );
-    // contactMap.put("contactIdOld", param.getContactIdOld());
     contactMap.put( "contactDept", param.getContactDept() );
-    // contactMap.put("contactDcm", param.getContactDcm());
-    // contactMap.put("crtDt", );
     contactMap.put( "crtUserId", loginVO.getUserId() );
     contactMap.put( "contactExt", param.getContactExt() );
     saveCnt = customerApiMapper.insertCustContact( contactMap ); // CustomerApi_SQL.xml
@@ -354,7 +353,11 @@ public class CustomerApiServiceImpl
      */
     Map<String, Object> custCareContactMap = new HashMap<String, Object>();
     // custCareContactMap.put("custCareCntId", param.getCustCareCntId());
-    custCareContactMap.put( "custId", customerMap.get( "custId" ) ); // <---SAL0029D
+    // custCareContactMap.put("careCntStusCodeId",
+    // param.getCareCntStusCodeId());
+    // contactMap.put("crtDt", );
+    // contactMap.put("updDt", );
+    custCareContactMap.put( "custId", customerMap.get( "custId" ) );
     custCareContactMap.put( "careCntName", param.getCareCntName() );
     custCareContactMap.put( "careCntCustInitial", param.getCareCntCustInitial() );
     custCareContactMap.put( "careCntTelM", param.getCareCntTelM() );
@@ -362,12 +365,8 @@ public class CustomerApiServiceImpl
     custCareContactMap.put( "careCntTelR", param.getCareCntTelR() );
     custCareContactMap.put( "careCntExt", param.getCareCntExt() );
     custCareContactMap.put( "careCntEmail", param.getCareCntEmail() );
-    // custCareContactMap.put("careCntStusCodeId",
-    // param.getCareCntStusCodeId());
     custCareContactMap.put( "crtUserId", loginVO.getUserId() );
-    // contactMap.put("crtDt", );
     custCareContactMap.put( "updUserId", loginVO.getUserId() );
-    // contactMap.put("updDt", );
     custCareContactMap.put( "careCntTelf", param.getCareCntTelf() );
     saveCnt = customerApiMapper.insertCustCareContact( custCareContactMap ); // CustomerApi_SQL.xml
     if ( saveCnt != 1 ) {
@@ -376,23 +375,14 @@ public class CustomerApiServiceImpl
     /* SAL0023D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustAddress */
     Map<String, Object> custAddressMap = new HashMap<String, Object>();
     // custAddressMap.put("custAddId", param.getCustAddId());
-    custAddressMap.put( "custId", customerMap.get( "custId" ) ); // <---SAL0029D
-    custAddressMap.put( "addressNric", param.getAddressNric() );
     // custAddressMap.put("addressTel", param.getAddressTel());
     // custAddressMap.put("addressFax", param.getAddressFax());
     // custAddressMap.put("addressStusCodeId", param.getAddressStusCodeId());
-    custAddressMap.put( "addressRem", param.getAddressRem() );
-    custAddressMap.put( "updUserId", loginVO.getUserId() );
     // custAddressMap.put("updDt", );
     // custAddressMap.put("addressIdOld", param.getAddressIdOld());
     // custAddressMap.put("addressSoId", param.getAddressSoId());
     // custAddressMap.put("addressIdcm", param.getAddressIdcm());
-    custAddressMap.put( "crtUserId", loginVO.getUserId() );
     // custAddressMap.put("crtDt", );
-    custAddressMap.put( "addressAreaId", param.getAddressAreaId() );
-    custAddressMap.put( "addressAddrDtl", param.getAddressAddrDtl() );
-    custAddressMap.put( "addressStreet", param.getAddressStreet() );
-    custAddressMap.put( "addressAdd1", param.getAddressAdd1() );
     // custAddressMap.put("addressAdd2", param.getAddressAdd2());
     // custAddressMap.put("addressAdd3", param.getAddressAdd3());
     // custAddressMap.put("addressAdd4", param.getAddressAdd4());
@@ -402,6 +392,15 @@ public class CustomerApiServiceImpl
     // custAddressMap.put("addressArea", param.getAddressArea());
     // custAddressMap.put("addressAtateid", param.getAddressAtateid());
     // custAddressMap.put("addressCountryid", param.getAddressCountryid());
+    custAddressMap.put( "custId", customerMap.get( "custId" ) );
+    custAddressMap.put( "addressNric", param.getAddressNric() );
+    custAddressMap.put( "addressRem", param.getAddressRem() );
+    custAddressMap.put( "updUserId", loginVO.getUserId() );
+    custAddressMap.put( "crtUserId", loginVO.getUserId() );
+    custAddressMap.put( "addressAreaId", param.getAddressAreaId() );
+    custAddressMap.put( "addressAddrDtl", param.getAddressAddrDtl() );
+    custAddressMap.put( "addressStreet", param.getAddressStreet() );
+    custAddressMap.put( "addressAdd1", param.getAddressAdd1() );
     saveCnt = customerApiMapper.insertCustAddress( custAddressMap ); // CustomerApi_SQL.xml
     if ( saveCnt != 1 ) {
       throw new ApplicationException( AppConstants.FAIL, "CustAddress Exception." );
