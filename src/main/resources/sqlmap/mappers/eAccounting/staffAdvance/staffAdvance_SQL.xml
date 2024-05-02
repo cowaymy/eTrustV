@@ -452,7 +452,7 @@
             B.COST_CENTR,
             B.COST_CENTR_NAME,
             F.NAME BANK,
-            C.BANK_ACC_NO,
+            TO_CHAR(C.BANK_ACC_NO) AS BANK_ACC_NO,
             B.PAY_DUE_DT,
             TO_CHAR(C.ADV_PRD_FR, 'DD/MM/YYYY') ADV_PRD_FR,
             TO_CHAR(C.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
