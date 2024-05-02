@@ -258,9 +258,19 @@ public class CustomerApiServiceImpl
     if ( null == loginVO || CommonUtils.isEmpty( loginVO.getUserId() ) ) {
       throw new ApplicationException( AppConstants.FAIL, "User ID value does not exist." );
     }
+
+    int custId = customerApiMapper.getCustId();
+    if ( CommonUtils.isEmpty( custId ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "Fail to get Customer ID." );
+    }
+
+    int tinId = customerApiMapper.getTinId();
+    if ( CommonUtils.isEmpty( tinId ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "Fail to get TIN ID." );
+    }
+
     /* SAL0029D --ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer */
     Map<String, Object> customerMap = new HashMap<String, Object>();
-    // customerMap.put("custId", );
     // customerMap.put("stusCodeId", param.getStusCodeId());
     // customerMap.put("updDt", );
     // customerMap.put("renGrp", param.getRenGrp());
@@ -269,6 +279,8 @@ public class CustomerApiServiceImpl
     // customerMap.put("crtDt", );
     // customerMap.put("custVaNo", param.getCustVaNo());
     // customerMap.put("ficoScre", param.getFicoScre());
+    customerMap.put( "custId", custId);
+    customerMap.put( "isMobile", '1');
     customerMap.put( "name", param.getName() );
     customerMap.put( "nric", param.getNric() );
     customerMap.put( "nation", param.getNation() );
@@ -287,7 +299,7 @@ public class CustomerApiServiceImpl
     customerMap.put( "ctosDt", param.getCtosDt() );
     customerMap.put( "oldIc", param.getOldIc() );
     customerMap.put( "sstRegNo", param.getSstRegNo() );
-    customerMap.put( "tinNo", param.getTinNo() );
+    customerMap.put( "tinId", tinId );
     customerMap.put( "receivingMarketingMsgStatus", param.getReceivingMarketingMsgStatus() );
     int checkCnt = 0;
     if ( ( ( param.getNric() ).toUpperCase() ).contains( "TST" ) ) {
@@ -318,6 +330,15 @@ public class CustomerApiServiceImpl
     if ( saveCnt != 1 || CommonUtils.isEmpty( customerMap.get( "custId" ) ) ) {
       throw new ApplicationException( AppConstants.FAIL, "Customer Exception." );
     }
+
+    /* SAL0416D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustTinNo. */
+    customerMap.put( "eInvFlg", 'Y');
+    customerMap.put( "tinNo", param.getTinNo() );
+    saveCnt = customerApiMapper.insertCustomerTin( customerMap );
+    if ( saveCnt != 1 ) {
+      throw new ApplicationException( AppConstants.FAIL, "Customer Tin Exception." );
+    }
+
     /* SAL0027D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustContact */
     Map<String, Object> contactMap = new HashMap<String, Object>();
     // contactMap.put("custCntcId", param.getCustCntcId());
