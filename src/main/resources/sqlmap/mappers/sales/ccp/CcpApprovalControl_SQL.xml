@@ -105,6 +105,11 @@
       ,'REN_STATUS'
       ,'TERMINATE_OS'
       ,'AVERAGE_OS'
+      ,'BAD_DEBT'
+      ,'NO_RENTAL'
+      ,'ROOT'
+      ,'EXCEED_6'
+
   )
   AND STUS = 1
   ORDER BY CHS_RSN
