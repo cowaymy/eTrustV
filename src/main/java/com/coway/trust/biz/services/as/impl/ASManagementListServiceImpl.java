@@ -1935,13 +1935,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       // Insert SVC0140D for Installation Accessory - TPY
      // List<String> installAccList = (List<String>) params.get("installAccList");
       List<String> installAccList = (List<String>) params.get("instAccLst");
-
       EgovMap installResult = new EgovMap();
+
       installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
       installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
       params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
+
+      LOGGER.debug("asEntryNo ====>> " +  svc0004dmap.get("AS_RESULT_NO").toString());
+      LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
+      LOGGER.debug("user_id ====>> " +  params.get("updator"));
+      LOGGER.debug("user_id ====>> " +  CommonUtils.intNvl(params.get("updator")));
+      LOGGER.debug("installAccList ====>> " +  installAccList);
+      LOGGER.debug("instAccLst ====>> " +  params.get("instAccLst").toString());
+    //  LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
+
       // disable old installation accessories
       //ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
       //if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
@@ -4312,6 +4321,8 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 
   public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
   try {
+
+	  LOGGER.info("### addInstallAccList size: " + installAccList.size());
 
     if (!installAccList.isEmpty()){
       LOGGER.info("### addInstallAccList : " + installAccList.toString());
