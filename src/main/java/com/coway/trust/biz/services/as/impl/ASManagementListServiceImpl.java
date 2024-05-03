@@ -1933,7 +1933,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
 
       // Insert SVC0140D for Installation Accessory - TPY
-     // List<String> installAccList = (List<String>) params.get("installAccList");
+      List<String> installAccList2 = (List<String>) params.get("installAccList");
       List<String> installAccList = (List<String>) params.get("instAccLst");
       EgovMap installResult = new EgovMap();
 
@@ -1947,8 +1947,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
       LOGGER.debug("user_id ====>> " +  params.get("updator"));
       LOGGER.debug("user_id ====>> " +  CommonUtils.intNvl(params.get("updator")));
+      LOGGER.debug("installAccList22 ====>> " +  installAccList2.toString());
+      LOGGER.debug("installAccList ====>> " +  installAccList.toString());
+      LOGGER.debug("installAccList22 ====>> " +  installAccList2);
       LOGGER.debug("installAccList ====>> " +  installAccList);
-      LOGGER.debug("instAccLst ====>> " +  params.get("instAccLst").toString());
+      LOGGER.debug("instAccLst ====>> " +  svc0004dmap.get("instAccLst").toString());
     //  LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
 
       // disable old installation accessories
