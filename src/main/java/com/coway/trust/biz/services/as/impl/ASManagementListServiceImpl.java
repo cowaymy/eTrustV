@@ -1933,7 +1933,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
 
       // Insert SVC0140D for Installation Accessory - TPY
-      List<String> installAccList = (List<String>) params.get("installAccList");
+     // List<String> installAccList = (List<String>) params.get("installAccList");
+      List<String> installAccList = (List<String>) params.get("instAccLst");
+
       EgovMap installResult = new EgovMap();
       installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
       installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
