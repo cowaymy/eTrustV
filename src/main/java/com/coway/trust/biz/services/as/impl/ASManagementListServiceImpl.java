@@ -1926,9 +1926,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
       ///////////////////////// LOGISTIC SP CALL END //////////////////////
 
-      LOGGER.debug("AS_RESULT_NO :: " + svc0004dmap.get("AS_RESULT_NO"));
+      LOGGER.debug("AS_RESULT_NO XX :: " + svc0004dmap.get("AS_RESULT_NO"));
       LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
-      LOGGER.debug("INS_ACC_CHK :: " + svc0004dmap.get("INS_ACC_CHK"));
+      LOGGER.debug("INS_ACC_CHK XX:: " + svc0004dmap.get("INS_ACC_CHK"));
       LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
       LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
 
@@ -1942,14 +1942,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       params.put("user_id", params.get("updator"));
       // disable old installation accessories
       ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
-      if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+      //if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
         try {
           insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
         } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      }
+      //}
 
     }
     // LOGISTIC REQUEST END HERE
