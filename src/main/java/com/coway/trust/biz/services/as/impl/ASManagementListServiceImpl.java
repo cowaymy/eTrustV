@@ -1920,9 +1920,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
       // KR-OHK Serial check add end
 
+      LOGGER.debug("Installation Accessory ======");
+
       logPram.put("P_RESULT_TYPE", "AS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
       ///////////////////////// LOGISTIC SP CALL END //////////////////////
+
+      LOGGER.debug("AS_RESULT_NO :: " + svc0004dmap.get("AS_RESULT_NO"));
+      LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
+      LOGGER.debug("INS_ACC_CHK :: " + svc0004dmap.get("INS_ACC_CHK"));
+      LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
+      LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
 
       // Insert SVC0140D for Installation Accessory - TPY
       List<String> installAccList = (List<String>) params.get("installAccList");
