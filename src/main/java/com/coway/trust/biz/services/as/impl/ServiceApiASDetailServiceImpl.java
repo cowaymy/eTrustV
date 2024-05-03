@@ -532,7 +532,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
                 }
                 logger.debug("### INST ACCS LIST SIZE : " + lstStr.size());
 
-                params.put("instAccLst", lstStr);
+                params.put("instAccLst", lstStr); // remind of param instAccLst or
                 // INST. ACCS LIST END
 
         		logger.debug("### AS PARAM [AFTER]: ", params);
@@ -541,6 +541,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		asResultInsert.put("asResultM", params);
         		asResultInsert.put("updator", getAsBasic.get("updUsrId"));
         		asResultInsert.put("add", paramsDetailCvt); // FILTER LIST
+        		asResultInsert.put("mobileYn", "Y");
 
         		logger.debug("### AS INSERT : " + asResultInsert.toString());
 
