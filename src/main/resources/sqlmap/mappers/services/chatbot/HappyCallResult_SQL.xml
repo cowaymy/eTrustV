@@ -151,7 +151,7 @@
         LEFT JOIN
         (
             SELECT TXN_ID,
-                   REPLACE(REPLACE(REGEXP_REPLACE(SUBSTR(RATINGS, 1, INSTR(RATINGS , ',', -1)-1), '\d:',''),'yes', '5'),'no', '1') AS RATINGS
+                   REPLACE(REPLACE(REGEXP_REPLACE(SUBSTR(RATINGS, 1, INSTR(RATINGS , ',', -1)-1), '.\d:',''),'yes', '5'),'no', '1') AS RATINGS
             FROM(
                 SELECT TXN_ID, SUBSTR(REGEXP_REPLACE(RATINGS, '"', ''), 1, INSTR(REGEXP_REPLACE(RATINGS, '"', '') , ':', -1)-1) AS RATINGS
                 FROM (
