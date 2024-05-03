@@ -1943,7 +1943,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
       // disable old installation accessories
-      ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
+      //ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
       //if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
         try {
           insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
