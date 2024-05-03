@@ -101,6 +101,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 	@Value("${sms.preccp.gensuite.client.id}")
 	private String preccpGensuiteClientId;
 
+	@Value("${sms.preccp.gensuite.user.name}")
+	private String preccpGensuiteUserName;
+
 	@Value("${sms.preccp.gensuite.password}")
 	private String preccpGensuitePassword;
 
@@ -548,7 +551,7 @@ public class AdaptorServiceImpl implements AdaptorService {
             String smsUrl;
             try {
                 smsUrl = "https://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + preccpGensuiteClientId + "&Username="
-                        + gensuiteUserName + "&Password=" + preccpGensuitePassword + "&Type=" + gensuiteType + "&Message="
+                        + preccpGensuiteUserName + "&Password=" + preccpGensuitePassword + "&Type=" + gensuiteType + "&Message="
                         + URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
                         + "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo
                         + "&Concatenated=1&MsgID=" + msgId;
