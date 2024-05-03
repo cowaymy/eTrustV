@@ -568,7 +568,7 @@ public class AdaptorServiceImpl implements AdaptorService {
             String body;
 
             if (response.getStatus() == 200) {
-                body = output;
+                body = output.trim();
 
                 if (GENSUITE_SUCCESS.equals(body)) {
                     statusId = 4;
