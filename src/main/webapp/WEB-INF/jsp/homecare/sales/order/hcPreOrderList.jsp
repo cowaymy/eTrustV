@@ -158,19 +158,19 @@
             });
 
            $('#_ordProudctList').multipleSelect("checkAll");
-           $('#listDscBrnchId').multipleSelect("checkAll");
+         //  $('#listDscBrnchId').multipleSelect("checkAll"); --remove the select all checkbox in dropdown list to fix unable to search issue on 03052024
     }
 
     function fn_multiComboBranch(){
-        if ($("#_brnchId option[value='${SESSION_INFO.userBranchId}']").val() === undefined) {
+      if ($("#_brnchId option[value='${SESSION_INFO.userBranchId}']").val() === undefined) {
             $('#_brnchId').change(function() {
                 //console.log($(this).val());
             }).multipleSelect({
                 selectAll: true, // 전체선택
                 width: '100%'
             }).multipleSelect("enable");
-           $('#_brnchId').multipleSelect("checkAll");
-        } else {
+           //$('#_brnchId').multipleSelect("checkAll"); --remove the select all checkbox in dropdown list to fix unable to search issue on 03052024
+       } else {
           if ("${PAGE_AUTH.funcUserDefine5}" == "Y") {
               $('#_brnchId').change(function() {
                   //console.log($(this).val());
@@ -178,7 +178,7 @@
                   selectAll: true, // 전체선택
                   width: '100%'
               }).multipleSelect("enable");
-             $('#_brnchId').multipleSelect("checkAll");
+           //  $('#_brnchId').multipleSelect("checkAll"); --remove the select all checkbox in dropdown list to fix unable to search issue on 03052024
           } else {
             $('#_brnchId').change(function() {
                 //console.log($(this).val());
