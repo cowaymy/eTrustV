@@ -1634,9 +1634,8 @@
            S.WATER_SRC_TYPE,
            S.AS_UNMATCH_REASON,
            S.REWORK_PROJ,
-           S.CODE_NAME AS REWORK_PROJ_NAME
-<!--            ,
-           S.NTU -->
+           S.CODE_NAME AS REWORK_PROJ_NAME,
+           S.NTU
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
                   E.AS_ENTRY_ID ,
@@ -1710,9 +1709,8 @@
                   E.WATER_SRC_TYPE,
                   E.AS_UNMATCH_REASON,
                   E.REWORK_PROJ,
-                  E5.CODE_NAME
-<!--                   ,
-                  E.NTU -->
+                  E5.CODE_NAME,
+                  E.NTU
            FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
            LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
            LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
@@ -3178,9 +3176,8 @@
                            REWORK_PROJ,
                            AS_TRANSFER_TO_DT,
                            ATCH_FILE_GRP_ID,
-                           PARTNER_CODE
-<!--                            ,
-                           NTU -->
+                           PARTNER_CODE,
+                           NTU
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3244,10 +3241,8 @@
                #{REWORK_PROJ},
                NVL(#{AS_TRANSFER_TO_DT},0),
                #{ATTACHMENT},
-               #{PARTNER_CODE}
-<!--                #{PARTNER_CODE_ID}
                #{PARTNER_CODE},
-               #{NTU} -->
+               #{NTU}
     )
   </insert>
 
@@ -5106,7 +5101,7 @@
     ]]>
   </select>
 
-<!--     <update id="disbleInstallAccWithAsEntryId" parameterType="Map">
+  <update id="disbleInstallAccWithAsEntryId" parameterType="Map">
     UPDATE SVC0140D SET UPD_DT = SYSDATE
                       , UPD_USER_ID = #{user_id}
                       , DISB = 1
@@ -5122,6 +5117,6 @@
 		B.AS_ENTRY_ID = #{asEntryId}
 		AND A.RESULT_SO_ID = #{salesOrderId}
 		AND A.DISB = 0
-</select> -->
+</select>
 
 </mapper>
