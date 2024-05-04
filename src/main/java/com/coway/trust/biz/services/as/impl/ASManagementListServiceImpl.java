@@ -1471,6 +1471,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public EgovMap asResult_insert(Map<String, Object> params) {
     LOGGER.debug("================asResult_insert - START ================");
+    LOGGER.debug("asResult_insert11111 :" + params.toString());
 
     String m = "";
     Map svc0004dmap = (Map) params.get("asResultM");
@@ -1943,6 +1944,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
 
+      LOGGER.debug("chkInstallAcc ====>> " +  svc0004dmap.get("chkInstallAcc").toString());
       LOGGER.debug("asEntryNo ====>> " +  svc0004dmap.get("AS_RESULT_NO").toString());
       LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
       LOGGER.debug("user_id ====>> " +  params.get("updator"));
@@ -1951,7 +1953,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
       LOGGER.debug("installAccList22 ====>> " +  installAccList2);
       LOGGER.debug("installAccList ====>> " +  installAccList);
-      LOGGER.debug("installAccList ====>> " +  installAccList.toString());
 
       LOGGER.debug("instAccLst ====>> " +  svc0004dmap.get("instAccLst").toString());
 
