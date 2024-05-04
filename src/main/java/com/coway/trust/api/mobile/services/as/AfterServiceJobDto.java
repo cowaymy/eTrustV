@@ -273,14 +273,14 @@ public class AfterServiceJobDto {
 
   private String waterSrcType;
 
-  private int ntu;
+  private BigDecimal ntu;
 
   private String instAccs;
 
   private String instAccsVal;
-  
 
-  public int getNtu() {
+
+  public BigDecimal getNtu() {
 	return ntu;
 }
 
@@ -292,7 +292,7 @@ public String getInstAccsVal() {
 	return instAccsVal;
 }
 
-public void setNtu(int ntu) {
+public void setNtu(BigDecimal ntu) {
 	this.ntu = ntu;
 }
 
