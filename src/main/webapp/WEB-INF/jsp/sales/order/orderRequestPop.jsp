@@ -3538,9 +3538,14 @@ console.log("result.lastbillmth;"+result.lastbillmth);
 
 	   	//reload promotion
 	   	var stkIdVal = $("#cmbOrderProduct").val();
-        if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68) {
-          SRV_PAC_ID = 0;
-        }
+
+	   	// add only combo will reset pac id. ticket 24035325
+	   	if(stkIdVal != null){
+	        if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68) {
+	            SRV_PAC_ID = 0;
+	          }
+	   	}
+
 		fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
   	}
 
