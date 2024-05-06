@@ -97,7 +97,7 @@ public class ContractServiceImpl implements ContractService {
 				hm = (HashMap<String, Object>) map;
 				hm.put("contTrackId", params.get("contTrackId"));
 				int contractSeq = contractMapper.selectNextContractSeq((int) params.get("contTrackId"));
-				hm.put("seq", contractSeq);
+				//hm.put("seq", params.get("seq"));
 				hm.put("userId", params.get("userId"));
 				LOGGER.debug("insertContractCycleDetails ============>>  " + params);
 				contractMapper.insertContractCycleDetails(hm);
@@ -150,7 +150,7 @@ public class ContractServiceImpl implements ContractService {
 				hm = (HashMap<String, Object>) map;
 				int contractSeq = contractMapper.selectNextContractSeq(Integer.parseInt(params.get("contTrackId").toString()));
 				hm.put("contTrackId", params.get("contTrackId"));
-				hm.put("seq", contractSeq);
+				//hm.put("seq", params.get("seq"));
 				hm.put("userId", params.get("userId"));
 				LOGGER.debug("insertContractCycleDetails addList============>>  " + params);
 				contractMapper.insertContractCycleDetails(hm);

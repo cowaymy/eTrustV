@@ -104,7 +104,8 @@
               ,#{contractName} CONT_NAME
               ,TO_DATE(#{_contractDt}, 'DD/MM/YYYY') CONT_DATE
               ,#{atchFileGrpId} ATCH_FILE_GRP_ID
-			  ,#{contractTerm} CONT_TERM
+			  ,#{contractTermY} CONT_TERM_YEAR
+			  ,#{contractTermM} CONT_TERM_MONTH
               ,TO_DATE(#{_contractCommDt}, 'DD/MM/YYYY') CONT_COMM_DT
               ,TO_DATE(#{_contractExpDt}, 'DD/MM/YYYY') CONT_EXPIRY_DT
               ,#{contractStus} CONT_STATUS
@@ -126,7 +127,8 @@
 				,TARG.CONT_NAME = SOURC.CONT_NAME
 				,TARG.CONT_DATE = SOURC.CONT_DATE
 				,TARG.ATCH_FILE_GRP_ID = SOURC.ATCH_FILE_GRP_ID
-				,TARG.CONT_TERM = SOURC.CONT_TERM
+				,TARG.CONT_TERM_YEAR = SOURC.CONT_TERM_YEAR
+				,TARG.CONT_TERM_MONTH = SOURC.CONT_TERM_MONTH
 	            ,TARG.CONT_COMM_DT = SOURC.CONT_COMM_DT
 	            ,TARG.CONT_EXPIRY_DT = SOURC.CONT_EXPIRY_DT
 	            ,TARG.CONT_STATUS = SOURC.CONT_STATUS
@@ -146,7 +148,8 @@
                 ,CONT_NAME
                 ,CONT_DATE
                 ,ATCH_FILE_GRP_ID
-	           ,CONT_TERM
+	           ,CONT_TERM_YEAR
+	           ,CONT_TERM_MONTH
 	           ,CONT_COMM_DT
 	           ,CONT_EXPIRY_DT
 	           ,CONT_STATUS
@@ -165,7 +168,8 @@
                 ,SOURC.CONT_NAME
                 ,SOURC.CONT_DATE
                 ,SOURC.ATCH_FILE_GRP_ID
-	            ,SOURC.CONT_TERM
+	            ,SOURC.CONT_TERM_YEAR
+	            ,SOURC.CONT_TERM_MONTH
 	            ,SOURC.CONT_COMM_DT
 	            ,SOURC.CONT_EXPIRY_DT
 	            ,SOURC.CONT_STATUS
@@ -335,7 +339,8 @@
 				,SEQ
 				,RENEWAL_COMM_DT
 				,RENEWAL_EXP_DT
-				,RENEWAL_TERM
+				,RENEWAL_TERM_YEAR
+				,RENEWAL_TERM_MONTH
 				,RENEWAL_CUTOFF_DT
 				<if test="contractRenewDt != null and contractRenewDt != '' ">
 				,CONT_RENEWAL_DT
@@ -350,7 +355,8 @@
 				,#{seq}
 				,TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
 				,TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
-				,#{contractTerm}
+				,#{contractTermY}
+				,#{contractTermM}
 				,TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
 				<if test="contractRenewDt != null and contractRenewDt != '' ">
 				,TO_DATE(#{contractRenewDt}, 'DD/MM/YYYY')
@@ -376,7 +382,8 @@
         ,TO_CHAR(MAIN.UPD_DT,'DD/MM/YYYY') UPD_DT
         ,MAIN.UPD_USER_ID
         ,MAIN.ATCH_FILE_GRP_ID
-        ,MAIN.CONT_TERM
+        ,MAIN.CONT_TERM_YEAR
+        ,MAIN.CONT_TERM_MONTH
         ,TO_CHAR(MAIN.CONT_COMM_DT,'DD/MM/YYYY') COMM_DT
         ,TO_CHAR(MAIN.CONT_EXPIRY_DT,'DD/MM/YYYY') EXP_DT
         ,MAIN.CONT_STATUS
@@ -406,7 +413,8 @@
         ,SEQ
         ,TO_CHAR(RENEWAL_COMM_DT,'DD/MM/YYYY') contract_Comm_Dt
         ,TO_CHAR(RENEWAL_EXP_DT,'DD/MM/YYYY') contract_Comm_Exp_Dt
-        ,RENEWAL_TERM contract_Term
+        ,RENEWAL_TERM_YEAR contract_Term_y
+        ,RENEWAL_TERM_MONTH contract_Term_m
         ,TO_CHAR(RENEWAL_CUTOFF_DT,'DD/MM/YYYY') notice_Period
         ,TO_CHAR(CONT_RENEWAL_DT,'DD/MM/YYYY') contract_Renew_Dt
         ,ATCH_FILE_GRP_ID
@@ -423,7 +431,8 @@
         update SAL0415D SET
 			RENEWAL_COMM_DT = TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
 			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
-			,RENEWAL_TERM = #{contractTerm}
+			,RENEWAL_TERM_YEAR = #{contractTermY}
+			,RENEWAL_TERM_MOTH = #{contractTermM}
 			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
 			<if test="contractRenewDt != null and contractRenewDt != '' ">
 			,CONT_RENEWAL_DT = TO_DATE(#{contractRenewDt}, 'DD/MM/YYYY')
