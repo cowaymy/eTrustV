@@ -4357,8 +4357,11 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     if (!installAccList.isEmpty()){
       LOGGER.info("### addInstallAccList : " + installAccList.toString());
 
+      LOGGER.info("mobileYn..22" + CommonUtils.nvl(installResult.get("mobileYn")));
+      LOGGER.info("mobileYn..11" + installResult.get("mobileYn").toString().equals("Y"));
+
       String mobileYn = "";
-      if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y") {
+      if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y" || installResult.get("mobileYn").toString().equals("Y")) {
       	installResult.put("mobileYn", "Mobile Entry");
       } else {
       	installResult.put("mobileYn", "Add installation accessories through eTrust - AS");
