@@ -1921,46 +1921,70 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
       // KR-OHK Serial check add end
 
-      LOGGER.debug("Installation Accessory ======");
-
       logPram.put("P_RESULT_TYPE", "AS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
       ///////////////////////// LOGISTIC SP CALL END //////////////////////
 
-      LOGGER.debug("AS_RESULT_NO XX :: " + svc0004dmap.get("AS_RESULT_NO"));
-      LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
-      LOGGER.debug("INS_ACC_CHK XX:: " + svc0004dmap.get("INS_ACC_CHK"));
-      LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
-      LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
-
       // Insert SVC0140D for Installation Accessory - TPY
-      List<String> installAccList2 = (List<String>) params.get("installAccList");
-      //List<String> installAccList = (List<String>) params.get("instAccLst");
-      List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
+
+      LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
+
+      if (params.get("mobileYn").toString() == "Y") {
+    	  // from mobile
+
+    	  LOGGER.debug("AS_RESULT_NO XX :: " + svc0004dmap.get("AS_RESULT_NO"));
+          LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
+          LOGGER.debug("INS_ACC_CHK XX:: " + svc0004dmap.get("INS_ACC_CHK"));
+          LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
+          LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
+
+
+          List<String> installAccList2 = (List<String>) params.get("installAccList");
+          //List<String> installAccList = (List<String>) params.get("instAccLst");
+          List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
+          EgovMap installResult = new EgovMap();
+
+          installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
+          installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
+          installResult.put("mobileYn", svc0004dmap.get("mobileYn"));
+          params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
+          params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
+          params.put("user_id", params.get("updator"));
+
+          LOGGER.debug("chkInstallAcc ====>> " +  svc0004dmap.get("chkInstallAcc").toString());
+          LOGGER.debug("asEntryNo ====>> " +  svc0004dmap.get("AS_RESULT_NO").toString());
+          LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
+          LOGGER.debug("user_id ====>> " +  params.get("updator"));
+          LOGGER.debug("user_id ====>> " +  CommonUtils.intNvl(params.get("updator")));
+         // LOGGER.debug("installAccList22 ====>> " +  installAccList2.toString());
+          LOGGER.debug("installAccList22 ====>> " +  installAccList2);
+          LOGGER.debug("installAccList ====>> " +  installAccList);
+
+          LOGGER.debug("instAccLst ====>> " +  svc0004dmap.get("instAccLst").toString());
+
+          if (svc0004dmap.get("chkInstallAcc").toString() == "Y"){
+              try {
+                insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
+              } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+            }
+
+      } else {
+    	  // from eTrust
+
+      List<String> installAccList = (List<String>) params.get("installAccList");
       EgovMap installResult = new EgovMap();
 
       installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
       installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
-      installResult.put("mobileYn", svc0004dmap.get("mobileYn"));
       params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
 
-      LOGGER.debug("chkInstallAcc ====>> " +  svc0004dmap.get("chkInstallAcc").toString());
-      LOGGER.debug("asEntryNo ====>> " +  svc0004dmap.get("AS_RESULT_NO").toString());
-      LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
-      LOGGER.debug("user_id ====>> " +  params.get("updator"));
-      LOGGER.debug("user_id ====>> " +  CommonUtils.intNvl(params.get("updator")));
-     // LOGGER.debug("installAccList22 ====>> " +  installAccList2.toString());
-      LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
-      LOGGER.debug("installAccList22 ====>> " +  installAccList2);
-      LOGGER.debug("installAccList ====>> " +  installAccList);
-
-      LOGGER.debug("instAccLst ====>> " +  svc0004dmap.get("instAccLst").toString());
-
-
       // disable old installation accessories
-      //ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
+      ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
       if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
         try {
           insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
@@ -1969,6 +1993,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           e.printStackTrace();
         }
       }
+
+      }
+
+
     }
     // LOGISTIC REQUEST END HERE
 
