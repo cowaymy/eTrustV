@@ -1938,7 +1938,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
           installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
           installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
-          installResult.put("mobileYn", svc0004dmap.get("mobileYn"));
+          installResult.put("mobileYn", params.get("mobileYn"));
           params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
@@ -1974,6 +1974,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
       installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
+      installResult.put("mobileYn", params.get("mobileYn"));
       params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
@@ -4358,7 +4359,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
       LOGGER.info("### addInstallAccList : " + installAccList.toString());
 
       LOGGER.info("mobileYn..22" + CommonUtils.nvl(installResult.get("mobileYn")));
-      LOGGER.info("mobileYn..11" + installResult.get("mobileYn").toString().equals("Y"));
+      LOGGER.info("mobileYn..11" + installResult.get("mobileYn").toString());
 
       String mobileYn = "";
       if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y" || installResult.get("mobileYn").toString().equals("Y")) {
