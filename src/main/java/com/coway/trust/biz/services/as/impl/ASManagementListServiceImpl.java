@@ -1932,14 +1932,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       if (params.get("mobileYn").toString() == "Y") {
     	  // from mobile
 
-    	  LOGGER.debug("AS_RESULT_NO XX :: " + svc0004dmap.get("AS_RESULT_NO"));
-          LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
-          LOGGER.debug("INS_ACC_CHK XX:: " + svc0004dmap.get("INS_ACC_CHK"));
-          LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
-          LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
-
-
-          List<String> installAccList2 = (List<String>) params.get("installAccList");
+          //List<String> installAccList2 = (List<String>) params.get("installAccList");
           //List<String> installAccList = (List<String>) params.get("instAccLst");
           List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
           EgovMap installResult = new EgovMap();
@@ -1951,19 +1944,31 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
 
+    	  LOGGER.debug("AS_RESULT_NO XX :: " + svc0004dmap.get("AS_RESULT_NO"));
+          LOGGER.debug("AS_SO_ID :: " + svc0004dmap.get("AS_SO_ID"));
+          LOGGER.debug("INS_ACC_CHK XX:: " + svc0004dmap.get("INS_ACC_CHK"));
+          LOGGER.debug("updator :: " + svc0004dmap.get("updator"));
+          LOGGER.debug("AS_ENTRY_ID :: " + svc0004dmap.get("AS_ENTRY_ID"));
+
           LOGGER.debug("chkInstallAcc ====>> " +  svc0004dmap.get("chkInstallAcc").toString());
           LOGGER.debug("asEntryNo ====>> " +  svc0004dmap.get("AS_RESULT_NO").toString());
           LOGGER.debug("salesOrdId ====>> " +  svc0004dmap.get("AS_SO_ID").toString());
           LOGGER.debug("user_id ====>> " +  params.get("updator"));
           LOGGER.debug("user_id ====>> " +  CommonUtils.intNvl(params.get("updator")));
          // LOGGER.debug("installAccList22 ====>> " +  installAccList2.toString());
-          LOGGER.debug("installAccList22 ====>> " +  installAccList2);
+          //LOGGER.debug("installAccList22 ====>> " +  installAccList2);
           LOGGER.debug("installAccList ====>> " +  installAccList);
 
           LOGGER.debug("instAccLst ====>> " +  svc0004dmap.get("instAccLst").toString());
 
-          if (svc0004dmap.get("chkInstallAcc").toString() == "Y"){
+          if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
+
+        	  LOGGER.debug("installAccList ====>> " +  installAccList);
+
               try {
+
+            	  LOGGER.debug("installAccList ====>> " +  installResult);
+
                 insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
               } catch (Exception e) {
                 // TODO Auto-generated catch block
