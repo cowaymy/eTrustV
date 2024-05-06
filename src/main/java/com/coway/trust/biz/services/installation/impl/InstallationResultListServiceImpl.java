@@ -1135,15 +1135,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           installResult.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")).toString());
           installResult.put("mobileYn", CommonUtils.nvl(params.get("mobileYn")).toString());
 
-
-          logger.debug("installEntryId ====>> " +  params.get("installEntryId").toString());
-          logger.debug("salesOrdId ====>> " +  params.get("hidSalesOrderId").toString());
-          logger.debug("getUserId ====>> " +  sessionVO.getUserId());
-          logger.debug("installAccList ====>> " +  installAccList);
-          logger.debug("instAccLst ====>> " +  params.get("instAccLst").toString());
           logger.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
-
-
 
           if (resultValue2.get("value") != null && resultValue2.get("value").equals("Completed")){
 
@@ -4061,18 +4053,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
       if (!installAccList.isEmpty()){
 
-        logger.info("### installResult.installEntryId : " + installResult.get("installEntryId"));
-        logger.info("### installResult.remark : " + CommonUtils.nvl(installResult.get("mobileYn")).toString());
-
         String mobileYn = "";
         if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y") {
         	installResult.put("mobileYn", "Mobile Entry");
         } else {
         	installResult.put("mobileYn", "Add installation accessories through eTrust - INS");
         }
-
-        logger.info("### mobileYn : " + installResult.get("mobileYn"));
-
 
         installResult.put("entryId", installResult.get("installEntryId"));
         EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
