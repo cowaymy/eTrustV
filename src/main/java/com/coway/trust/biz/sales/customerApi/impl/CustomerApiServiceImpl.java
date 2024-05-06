@@ -156,9 +156,9 @@ public class CustomerApiServiceImpl
         if ( CommonUtils.isEmpty( param.getRaceId() ) ) {
           throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Race value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.getTinNo() ) ) {
+        if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
-                                          "(Basic Info) Tax Identification No. value does not exist." );
+                                          "(Basic Info) eInvoice Indicator value does not exist." );
         }
       }
       else if ( param.getTypeId() == 965 ) {
@@ -168,10 +168,6 @@ public class CustomerApiServiceImpl
         if ( CommonUtils.isEmpty( param.getNric() ) ) {
           throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Company number value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.getSstRegNo() ) ) {
-          throw new ApplicationException( AppConstants.FAIL,
-                                          "(Basic Info) SST Registration No. value does not exist." );
-        }
         if ( CommonUtils.isEmpty( param.getTinNo() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) Tax Identification No. value does not exist." );
@@ -179,6 +175,10 @@ public class CustomerApiServiceImpl
         if ( CommonUtils.isEmpty( param.getReceivingMarketingMsgStatus() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) Receiving Marketing Message value does not exist." );
+        }
+        if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
+          throw new ApplicationException( AppConstants.FAIL,
+                                          "(Basic Info) eInvoice Indicator value does not exist." );
         }
       }
       else {
