@@ -19,6 +19,7 @@
  -->
 <script type="text/javaScript">
   var myFileCaches = {};
+  var installAccTypeId = 579;
 
   $(document).ready(function() {
   	var today = new Date();
@@ -37,7 +38,8 @@
     createCFilterAUIGrid();
     fn_viewInstallResultSearch();
     fn_viewInstallationChkViewSearch();
-
+    $("#addInstallForm #m29").hide();
+    doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
     var callType = "${callType.typeId}";
 
       if (callType == 0) {
@@ -141,10 +143,14 @@
           $("#addInstallForm #grid_wrap_instChk_view").hide();
           $("#addInstallForm #instChklstCheckBox").hide();
           $("#addInstallForm #instChklstDesc").hide();
+          $("#addInstallForm #m28").hide();
+        } else if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+          $("#addInstallForm #m28").show();
         } else {
           $("#addInstallForm #grid_wrap_instChk_view").show();
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
+          $("#addInstallForm #m28").hide();
         }
       }
 
@@ -203,11 +209,25 @@
 //             });
        });
 
+      $("#failReasonCode").change(
+    	function(){
+    		if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+    		if($("#failReasonCode").val() == 8009 ){
+    			$("#addInstallForm #m29").show();
+    		}else {
+    			$("#addInstallForm #m29").hide();
+    		}
+    		}
+
+      });
+
       $("#addInstallForm #installStatus").change(
         function() {
           if ($("#addInstallForm #installStatus").val() == 4) {
             notMandatoryForAP();
             $("#addInstallForm #checkCommission").prop("checked", true);
+            $("#addInstallForm #chkInstallAcc").prop("checked", true);
+            doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
 
             $("#addInstallForm #m6").hide();
             $("#addInstallForm #m7").hide();
@@ -215,20 +235,26 @@
             $("#addInstallForm #m16").hide();
             $("#addInstallForm #failDeptChk").hide();
             $("#addInstallForm #failDeptChkDesc").hide();
+            $("#addInstallForm #m29").hide();
 
             $("#addInstallForm #m2").show();
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
             $("#addInstallForm #m17").show();
             $("#addInstallForm #m18").show();
-            if ("${orderInfo.stkCtgryId}" == "54") {
+
+            if ("${orderInfo.stkCtgryId}" == "54") { // WP
               $("#addInstallForm #grid_wrap_instChk_view").show();
               $("#addInstallForm #instChklstCheckBox").show();
               $("#addInstallForm #instChklstDesc").show();
+              $("#addInstallForm #m28").show();
+            } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
+              $("#addInstallForm #m28").show();
             } else {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
               $("#addInstallForm #instChklstDesc").hide();
+              $("#addInstallForm #m28").hide();
             }
             $("#nextCallDate").val("");
 
@@ -238,6 +264,8 @@
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
+            $("#addInstallForm #chkInstallAcc").prop("checked", false);
+            doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
 
             $("#addInstallForm #m2").hide();
             $("#addInstallForm #m4").hide();
@@ -252,8 +280,10 @@
             $("#addInstallForm #m17").hide();
             $("#addInstallForm #m24").hide();
             $("#addInstallForm #m18").hide();
+            $("#addInstallForm #m28").hide();
+            $("#addInstallForm #m29").hide();
 
-            if ("${orderInfo.stkCtgryId}" == "54") {
+            if ("${orderInfo.stkCtgryId}" == "54") { // WP
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
               $("#addInstallForm #instChklstDesc").hide();
@@ -488,6 +518,7 @@
       $("#addInstallForm #m13").hide();
       $("#addInstallForm #m14").hide();
       $("#addInstallForm #m24").hide();
+      $("#addInstallForm #m28").hide();
   }
 
   function fn_saveInstall() {
@@ -628,6 +659,23 @@
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
       }
 
+      // NTU Checking for Complete status
+      if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+    	  if($("#ntuCom").val() == ""){
+    		  msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+    	  }else{
+    		  if ($("#ntuCom").val() >= 10) {
+    		      msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+    		    }
+    	  }
+      }
+
+      // Installation Accessory checking for Complete status
+      if($("#addInstallForm #chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+    	  msg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+      }
+
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -755,6 +803,19 @@
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
       }
 
+   		// NTU Checking for Failed status
+      if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+    	  if($("#failReasonCode").val() == 8009){ // IF48-High Turbidity (NTU)
+    	  if($("#ntuFail").val() == ""){
+    		  msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+    	  }else{
+    		  if ($("#ntuFail").val() >= 10) {
+    		      msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+    		    }
+    	  }
+    	}
+      }
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -784,6 +845,7 @@
               var saveInsFailedForm = {
                         "installForm" : $("#addInstallForm").serializeJSON(),
                         "add" : addedRowItems,
+                        "installAccList" : $("#installAcc").val() ,
                         "fileGroupKey": result.data.fileGroupKey
               };
 
@@ -1350,11 +1412,11 @@
   function fn_chkCrtAS(chk){
 
 	 // doGetComboData('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + ${orderInfo.stkCode}, '', 'ddlFilterCode', 'ddlFilterCode', 'S', '');
-
+	  var stkCode = ${orderInfo.stkCode};
 	  console.log("chk: " + chk);
 	  if (chk.checked){
 		    $("#chrFee_div").attr("style", "display:block");
-		    doGetComboAndGroup2('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + ${orderInfo.stkCode}, '', 'stkId', 'ddlFilterCode', 'S', 'fn_setOptGrpClass');
+		    doGetComboAndGroup2('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + stkCode , '', 'stkId', 'ddlFilterCode', 'S', 'fn_setOptGrpClass');
 	  } else{
 		    $("#chrFee_div").attr("style", "display:none");
 		    $("#ddlFilterCode").empty();
@@ -1658,6 +1720,25 @@
 	          $('#attch9').change();
 	      }
 	}
+
+	function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        });
+	    });
+	}
+
+	  function fn_InstallAcc_CheckedChanged(_obj) {
+		    if (_obj.checked) {
+		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+		    } else {
+		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+		    }
+		  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -2019,7 +2100,7 @@
       <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input id="pLocationCode" name="pLocationCode" type="hidden" value="" /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input id="pStatus" name="pStatus" type="hidden" value="" /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
     </form>
     <form action="#" id="addInstallForm" method="post">
-      <input type="hidden" name="hidStkId" id=hidStkId " value="${installResult.installStkId}">
+      <input type="hidden" name="hidStkId" id="hidStkId" value="${installResult.installStkId}">
       <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" />
       <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" />
       <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" />
@@ -2140,14 +2221,14 @@
             <td><input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' /></td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span> <p class="link_btn"><a href="${pageContext.request.contextPath}/resources/download/service/Turbidity.pptx"> <u>Guideline </u><img src="${pageContext.request.contextPath}/resources/AUIGrid/images/help_ico.png"</a></p></th>
+            <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span> <p class="link_btn"><a href="${pageContext.request.contextPath}/resources/download/service/Turbidity.pptx"> <u>Guideline </u><img src="${pageContext.request.contextPath}/resources/AUIGrid/images/help_ico.png"></a></p></th>
             <td><input type="text" title="" placeholder="<spring:message code='service.title.TurbidityLevel' />" class="w100p" id="turbLvl" name="turbLvl" onkeypress='validate(event)' onblur='validate2(this);' /></td>
             <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
             <td><select class="w100p" id="waterSrcType" name="waterSrcType">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${waterSrcType}" varStatus="status">
                    <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach></td>
+                </c:forEach>
             </select></td>
           </tr>
           <%-- <tr>
@@ -2167,6 +2248,21 @@
 	          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
 	          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
 	        </td>
+          </tr>
+          <tr>
+           <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must">*</span></th>
+           <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+           </td>
+			<th scope="row"></th>
+			<td></td>
+          </tr>
+          <tr>
+          <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
           </tr>
         </tbody>
       </table>
@@ -2501,8 +2597,8 @@
                 <c:forEach var="list" items="${failParent}" varStatus="status">
                    <%-- <option value="${list.defectId}">${list.defectDesc}</option> --%>
                    <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach></td>
-            </select>
+                </c:forEach>
+            </select></td>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
             <input type="hidden" value="" id="hiddenFailReasonCode" name="hiddenFailReasonCode" />
             <td><select class="w100p" id="failReasonCode" name="failReasonCode">
@@ -2553,8 +2649,9 @@
           <tr>
             <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
             <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
-            <th scope="row"></th>
-            <td></td>
+            <th scope="row"><spring:message code='service.title.ntu'/><span name="m29" id="m29" class="must">*</span></th>
+           <td><input type="text" title="NTU" class="w100p" id="ntuFail" name="ntuFail" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+           </td>
           </tr>
         </tbody>
       </table>
