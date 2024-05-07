@@ -44,6 +44,14 @@ var photo1Name = "";
       $("#reqsms").prop("checked", true);
     }
 
+    if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+		if($("#failReasonCode").val() == 8009 ){
+			$("#editInstallForm #m29").show();
+		}else {
+			$("#editInstallForm #m29").hide();
+		}
+	}
+
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
@@ -71,6 +79,17 @@ var photo1Name = "";
         }
         console.log(myFileCaches);
     });
+
+    $("#failReasonCode").change(
+    	    function(){
+    	    	if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+    	    		if($("#failReasonCode").val() == 8009 ){
+    	    			$("#editInstallForm #m29").show();
+    	    		}else {
+    	    			$("#editInstallForm #m29").hide();
+    	    		}
+    	    	}
+    	      });
 
  // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
@@ -478,6 +497,20 @@ function notMandatoryForAP(){
         msg += validationForGlaze();
     }
 
+	// NTU Checking for Failed status
+    if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+  	  if($("#failReasonCode").val() == 8009){ // IF48-High Turbidity (NTU)
+  	  if($("#ntuFail").val() == ""){
+  		  msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+  	  }else{
+  		  if ($("#ntuFail").val() >= 10) {
+  		      msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+  		    }
+  	  }
+  	}
+    }
+
+
     if (msg != "") {
       Common.alert(msg);
       return false;
@@ -728,8 +761,8 @@ function notMandatoryForAP(){
                 <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
                   <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach></td>
-            </select>
+                </c:forEach>
+            </select></td>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
             <td><select class="w100p" id="failReasonCode" name="failReasonCode">
                 <option value="" ><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -738,7 +771,13 @@ function notMandatoryForAP(){
                 </c:forEach>
             </select></td>
             </tr>
-
+			<tr>
+ 			<th scope="row"><spring:message code='service.title.ntu'/><span id="m29" class="must">*</span></th>
+           <td><input type="text" title="NTU" class="w100p" id="ntuFail" name="ntuFail" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' value="<c:out value="${installInfo.ntu}"/>" />
+           </td>
+           <th></th>
+           <td></td>
+			</tr>
             <tr>
             <th scope="row">Attach Picture</th>
             <td>
@@ -778,5 +817,6 @@ function notMandatoryForAP(){
       </ul>
     </section>
     <!-- pop_body end -->
+    </section>
 </div>
 <!-- popup_wrap end -->
