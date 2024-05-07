@@ -2,6 +2,7 @@ package com.coway.trust.web.homecare.services.as;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -500,6 +501,21 @@ public class HcASManagementListController {
 
     List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
     model.addAttribute("fltPmtTyp", fltPmtTyp);
+
+    params.put("asEntryId", params.get("as_Id"));
+    params.put("salesOrderId", params.get("ord_Id"));
+    List<EgovMap> installAcc = ASManagementListService.selectInstallAccWithAsEntryId(params);
+
+    List<String> installAccValues = new ArrayList<>();
+
+    for (EgovMap map : installAcc) {
+        Object value = map.get("insAccPartId");
+        if (value != null) {
+            installAccValues.add(value.toString());
+        }
+    }
+
+    model.put("installAccValues", installAccValues);
 
     return "homecare/services/as/hcInc_asResultEditPop";
   }
