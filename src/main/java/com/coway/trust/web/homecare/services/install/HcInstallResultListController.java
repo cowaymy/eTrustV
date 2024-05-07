@@ -165,6 +165,19 @@ public class HcInstallResultListController {
 	  model.addAttribute("resultInfo", resultInfo);
 	  logger.debug("viewInstallation : {}", resultInfo);
 
+	  List<EgovMap> installAcc = installationResultListService.selectInstallAccWithInstallEntryId(params);
+
+    List<String> installAccValues = new ArrayList<>();
+
+    for (EgovMap map : installAcc) {
+        Object value = map.get("insAccPartId");
+        if (value != null) {
+            installAccValues.add(value.toString());
+        }
+    }
+
+    model.put("installAccValues", installAccValues);
+
 	  // 호출될 화면
 	  return "homecare/services/install/hcInstallationResultPop";
 	}
@@ -459,6 +472,7 @@ public class HcInstallResultListController {
 	 */
 	@RequestMapping(value = "/hcAddInstallationSerial.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> hcAddInstallationSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+	  logger.debug("hcAddInstallationSerial - params :" + params);
 		ReturnMessage message = hcInstallResultListService.hcInsertInstallationResultSerial(params, sessionVO);
 
 		return ResponseEntity.ok(message);
@@ -585,6 +599,19 @@ public class HcInstallResultListController {
     	  hcFrmOrder.put("frmSerial", frmSerial);
       }
       model.addAttribute("frameInfo", hcFrmOrder);
+
+      List<EgovMap> installAcc = installationResultListService.selectInstallAccWithInstallEntryId(params);
+
+      List<String> installAccValues = new ArrayList<>();
+
+      for (EgovMap map : installAcc) {
+          Object value = map.get("insAccPartId");
+          if (value != null) {
+              installAccValues.add(value.toString());
+          }
+      }
+
+      model.put("installAccValues", installAccValues);
 
       // 호출될 화면
       return "homecare/services/install/hcEditInstallationResultPop";
