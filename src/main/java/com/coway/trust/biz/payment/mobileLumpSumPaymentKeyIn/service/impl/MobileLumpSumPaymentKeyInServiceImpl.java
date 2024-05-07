@@ -1026,7 +1026,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 			if(totRemainAmt.compareTo(BigDecimal.ZERO) > 0 && packageAmt.compareTo(BigDecimal.ZERO) > 0) {
 				formMap = new HashMap<String, Object>();
-				formMap.put("procSeq", "1");
+				formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
 				formMap.put("appType", "OUT_MEM");
 				formMap.put("advMonth", "0");
 				formMap.put("billGrpId", "0");
@@ -1075,7 +1075,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
     					if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
     						formMap = new HashMap<String, Object>();
 
-    						formMap.put("procSeq", "1");
+    						formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
     						formMap.put("appType", "OUT_MEM");
     						formMap.put("advMonth", "0");
     						formMap.put("billGrpId", "0");
