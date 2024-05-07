@@ -432,7 +432,7 @@
 			RENEWAL_COMM_DT = TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
 			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
 			,RENEWAL_TERM_YEAR = #{contractTermY}
-			,RENEWAL_TERM_MOTH = #{contractTermM}
+			,RENEWAL_TERM_MONTH = #{contractTermM}
 			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
 			<if test="contractRenewDt != null and contractRenewDt != '' ">
 			,CONT_RENEWAL_DT = TO_DATE(#{contractRenewDt}, 'DD/MM/YYYY')
