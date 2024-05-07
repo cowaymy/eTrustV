@@ -82,6 +82,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     String rmsg = "";
 
     Map<String, Object> params = (Map<String, Object>)params1.get("installForm");
+    List<String> installAccList = (List<String>) params1.get("installAccList");
 
     ReturnMessage rtnMsg = insertInstallationResultSerial(params, sessionVO);
 
@@ -89,6 +90,16 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
       throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
     }
     rmsg = rtnMsg.getMessage();
+
+    EgovMap installRsult = installationResultListService.getInstallResultByInstallEntryID(params);
+
+      if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+        try {
+          insertHcInstallationAccessories(installAccList,installRsult,sessionVO.getUserId());
+        } catch (Exception e) {
+          logger.error("An error occurred during insertion of installation accessories.", e);
+        }
+      }
 
     // another order -- Frame Order Search.
     // params.put("ordNo",
@@ -430,6 +441,19 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
   public int hcEditInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception {
     int resultValue = installationResultListService.editInstallationResultSerial(params, sessionVO);
+    List<String> installAccList = (List<String>) params.get("installAccList");
+    params.put("installEntryId", params.get("entryId"));
+    EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+    // disable old installation accessories
+    installationResultListMapper.disbleInstallAccWithInstallEntryId(params);
+    if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+      try {
+        insertHcInstallationAccessories(installAccList,installResult,sessionVO.getUserId());
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
 
     // check AUX
     if (resultValue > 0) {
@@ -1070,4 +1094,30 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	public EgovMap selectInstallationInfo(Map<String, Object> params) {
 	    return hcInstallResultListMapper.selectInstallationInfo(params);
 	}
+
+	public void insertHcInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
+    try {
+
+      if (!installAccList.isEmpty()){
+        logger.info("### addInstallAccList : " + installAccList.toString());
+
+        installResult.put("entryId", installResult.get("installEntryId"));
+        EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
+
+        for (String installAcc : installAccList) {
+              // insert into SVC0140D - Installation Accessories Listing table
+              EgovMap param = new EgovMap();
+              param.put("resultNo", entry.get("installEntryNo"));
+              param.put("resultSoId", entry.get("salesOrdId"));
+              param.put("insAccPartId", installAcc);
+              param.put("remark", "Add installation accessories through eTrust - INS");
+              param.put("crtUserId", userId);
+
+              installationResultListMapper.insertInstallationAccessories(param);
+          }
+        }
+    } catch (Exception e) {
+      logger.error("An error occurred during insertion of installation accessories.", e);
+        }
+    }
 }
