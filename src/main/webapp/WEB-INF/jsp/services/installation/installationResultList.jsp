@@ -497,6 +497,10 @@
     Common.popupDiv("/services/installationCallLogRawPop.do", null, null,
         true, '');
   }
+  function fn_installAccRawData() {
+	    Common.popupDiv("/services/installationAccessoriesRawPop.do", null, null,
+	        true, '');
+	  }
 
   function fn_InstJobTransLst() {
     Common.popupDiv("/services/installationJobTransListPop.do", null, null,
@@ -1050,6 +1054,10 @@
           <li><p class="link_btn type2">
           <a href="#" onclick="javascript:fn_installCallLogRaw()"><spring:message
             code='service.btn.InstCallLogRaw' /></a>
+         </p></li>
+         <li><p class="link_btn type2">
+          <a href="#" onclick="javascript:fn_installAccRawData()"><spring:message
+            code='service.btn.InstallationAccRawData' /></a>
          </p></li>
 
        </c:if>
