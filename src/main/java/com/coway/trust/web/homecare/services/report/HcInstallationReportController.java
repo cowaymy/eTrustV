@@ -167,7 +167,19 @@ public class HcInstallationReportController {
       return "services/installation/dscReportDataPop";
     }
 
-
+    /**
+     * Installation Report Installation Accessories Raw Data
+     *
+     * @param request
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/hcInstallationAccessoriesRawPop.do")
+    public String hcInstallationAccessoriesRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+      // 호출될 화면
+      return "homecare/services/install/hcInstallationAccessoriesRawPop";
+    }
 
 
 
