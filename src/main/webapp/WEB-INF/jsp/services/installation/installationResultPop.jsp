@@ -4,6 +4,8 @@
 
 <script type="text/javaScript">
 var myGridID3;
+var installAccTypeId = 579;
+var installAccValues = JSON.parse("${installAccValues}");
 
 //Start AUIGrid
 $(document).ready(function() {
@@ -13,24 +15,28 @@ $(document).ready(function() {
     fn_installationResult();
 
     fn_setResultCheck();
-    
-                  
+
+
 });
 
 
     function fn_setResultCheck(){
 	    if(${resultInfo.allowComm} =="1"){
 	            $("#allowCheck").attr("checked",true);
-	    }        
+	    }
 	    if(${resultInfo.isTradeIn} =="1"){
 	            $("#tradeCheck").attr("checked",true);
-	    }        
+	    }
 	    if(${resultInfo.requireSms} =="1"){
 	            $("#smsCheck").attr("checked",true);
-	    }        
+	    }
+	    if(installAccValues != null){
+	    		$("#chkInstallAcc").attr("checked",true);
+	    		doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+	    }
     }
 
-    
+
 function createAUIGrid3() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -103,7 +109,7 @@ function createAUIGrid3() {
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, gridPros);
-    
+
 }
 
 
@@ -116,16 +122,32 @@ function fn_installationResult(){
     var jsonObj = {
             resultId : $("#resultId").val()
        };
-       
+
     Common.ajax("GET", "/services/viewInstallationResult.do",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID3, result);
     });
-    
+
 }
 
+function f_multiCombo(){
+    $(function() {
+        $('#installAcc').change(function() {
+        }).multipleSelect({
+            selectAll: false, // 전체선택
+            width: '80%'
+        }).multipleSelect("setSelects", installAccValues);
+    });
+}
 
+function fn_InstallAcc_CheckedChanged(_obj) {
+    if (_obj.checked) {
+        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+    } else {
+        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+    }
+  }
 
 
 
@@ -156,7 +178,7 @@ function fn_winClose(){
  <input type="hidden" value="<c:out value="${resultInfo.allowComm}"/>" id="resultId"/>
  <input type="hidden" value="<c:out value="${resultInfo.isTradeIn}"/>" id="resultId"/>
  <input type="hidden" value="<c:out value="${resultInfo.requireSms}"/>" id="resultId"/>
- 
+
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
 
@@ -206,7 +228,7 @@ function fn_winClose(){
     <span><input type="checkbox" disabled="disabled" id="tradeCheck"/>Product Trade In ?</span>
     <span><input type="checkbox" disabled="disabled" id="smsCheck"/>Required SMS ?</span>
     </th>
-    
+
 </tr>
 <tr>
     <th scope="row">Remark</th>
@@ -214,6 +236,20 @@ function fn_winClose(){
         <span><c:out value="${resultInfo.rem}"/></span>
     </td>
 </tr>
+<tr>
+<th scope="row"><spring:message code='service.title.ntu'/></th>
+           <td colspan="3">
+        <span><c:out value="${resultInfo.ntu}"/></span>
+    </td>
+</tr>
+<tr>
+           <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
+          </tr>
 <tr>
     <th scope="row">Result Key By</th>
     <td>
