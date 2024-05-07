@@ -27,11 +27,14 @@
   var asRslt;
   var ops;
   var matchMatDefCode = [];
+  var installAccTypeId = 579;
+  var installAccValues = JSON.parse("${installAccValues}");
   var isSet = 0;
 
   $(document).ready(function() {
     createCFilterAUIGrid();
 
+    doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
     doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
     doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
@@ -368,6 +371,7 @@
     $("#lpmRcd").val(result[0].lpm);
     $("#waterSrcType").val(result[0].waterSrcType);
     $("#asNotMatch").val(result[0].asUnmatchReason);
+    $("#ntuCom").val(result[0].ntu);
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
@@ -646,6 +650,7 @@
 
     $("#psiRcd").val(asRslt.psi);
     $("#lpmRcd").val(asRslt.lpm);
+    $("#ntuCom").val(asRslt.ntu);
 
     $('#def_type').val(this.trim(asRslt.c16));
     $('#def_type_text').val(this.trim(asRslt.c17));
@@ -700,6 +705,14 @@
       $("#lpmRcd").attr("disabled", true);
     }
 
+    if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" ){
+    	$("#m28").show();
+        $("#ntuCom").attr("disabled", false);
+    }else{
+    	$("#m28").hide();
+        $("#ntuCom").attr("disabled", true);
+    }
+
     // OPEN MANDATORY
     $("#m2").show();
     $("#m3").hide();
@@ -729,6 +742,7 @@
       $("#iscommission").attr("disabled", true);
       $("#psiRcd").attr("disabled", true);
       $("#lpmRcd").attr("disabled", true);
+      $("#ntuCom").attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -764,6 +778,7 @@
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
       $('#psiRcd').removeAttr("disabled").removeClass("readonly");
       $('#lpmRcd').removeAttr("disabled").removeClass("readonly");
+      $('#ntuCom').removeAttr("disabled").removeClass("readonly");
 
       //$('#iscommission').removeAttr("disabled").removeClass("readonly");
 
@@ -913,6 +928,7 @@
       $("#iscommission").attr("disabled", true);
       $("#psiRcd").attr("disabled", true);
       $("#lpmRcd").attr("disabled", true);
+      $("#ntuCom").attr("disabled", true);
 
       $("#appDate").attr("disabled", true);
       $("#CTSSessionCode").attr("disabled", true);
@@ -955,6 +971,7 @@
       $("#iscommission").attr("disabled", true);
       $('#psiRcd').val("").attr("disabled", true);
       $('#lpmRcd').val("").attr("disabled", true);
+      $('#ntuCom').val("").attr("disabled", true);
 
       $("#appDate").val("");
       $("#CTSSessionCode").val("");
@@ -1492,6 +1509,27 @@
           }
         }
 
+     // NTU Checking for Complete status
+		if($("#ddlStatus").val() == 4 ){
+	      if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
+	    	  if($("#ntuCom").val() == ""){
+	    		  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+	    		  rtnValue = false;
+	    	  }else{
+	    		  if ($("#ntuCom").val() >= 10) {
+	    			  rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+	    		      rtnValue = false;
+	    		    }
+	    	    }
+	    	  }
+	   // Installation Accessory checking for Complete status
+	      if($("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+	    	  rtnValue = false;
+	      		}
+	      }
+
+
         if (FormUtil.checkReqValue($("#tpSettleTime"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Time' htmlEscape='false'/> </br>";
           rtnValue = false;
@@ -1689,6 +1727,8 @@
       AS_LPM : $('#lpmRcd').val(),
       WATER_SRC_TYPE : $('#waterSrcType').val(),
       AS_UNMATCH_REASON : $('#asNotMatch').val(),
+      NTU : $('#ntuCom').val(),
+      INS_ACC_CHK : $('#chkInstallAcc').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1781,7 +1821,8 @@
           "asResultM" : asResultM,
           "add" : addedRowItems,
           "update" : editedRowItems,
-          "remove" : removedRowItems
+          "remove" : removedRowItems,
+          "installAccList" : $("#installAcc").val()
         }
 
         Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
@@ -1797,7 +1838,8 @@
             "asResultM" : asResultM,
             "add" : allRowItems,
             "update" : editedRowItems,
-            "remove" : editedRowItems
+            "remove" : editedRowItems,
+            "installAccList" : $("#installAcc").val()
           // "all" : allRowItems
           }
         } else {
@@ -1805,7 +1847,8 @@
             "asResultM" : asResultM,
             "add" : addedRowItems,
             "update" : editedRowItems,
-            "remove" : removedRowItems
+            "remove" : removedRowItems,
+            "installAccList" : $("#installAcc").val()
           }
         }
 
@@ -2430,6 +2473,25 @@
       //console.log("serialNo : " + dataRow.serialNo);
     });
   }
+
+  function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        }).multipleSelect("setSelects", installAccValues);
+	    });
+	}
+
+	function fn_InstallAcc_CheckedChanged(_obj) {
+		    if (_obj.checked) {
+		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+		    } else {
+		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+		    }
+		  }
+
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
   <input type="hidden" name="pSerialNo" id="pSerialNo" /> <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" /> <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" /> <input type="hidden" name="pRefDocNo" id="pRefDocNo" /> <input type="hidden" name="pItmCode" id="pItmCode" /> <input type="hidden" name="pCallGbn" id="pCallGbn" /> <input type="hidden" name="pMobileYn" id="pMobileYn" />
@@ -2550,7 +2612,6 @@
               <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)'/></td>
               <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display: none"> *</span></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
-              </td>
             </tr>
             <tr>
                 <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
@@ -2558,22 +2619,31 @@
                     <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                     <c:forEach var="list" items="${waterSrcType}" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
-                    </c:forEach></td>
+                    </c:forEach>
                 </select></td>
                 <th scope="row">AS Error Not Match<span name="m19" id="m19" class="must">*</span></th>
                 <td><select class="w100p" id="asNotMatch" name="asNotMatch" >
                     <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                     <c:forEach var="list" items="${asNotMatch}" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
-                    </c:forEach></td>
+                    </c:forEach>
                 </select></td>
            </tr>
            <tr>
               <th scope="row">Rework Project<span id='m100' name='m100' class="must" style="display: none">*</span></th>
               <td><input type="text" title="" placeholder="Rework Project" class="disabled w100p" disabled="disabled" id='reworkProj' name='reworkProj' /></td>
-              <th></th>
-              <td></td>
+              <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
+           	  <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
+           	  </td>
             </tr>
+            <tr>
+          		<th scope="row"><spring:message code="service.title.installation.accessories" />
+          		<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    			<td colspan="3">
+    			<select class="w100p" id="installAcc" name="installAcc">
+    			</select>
+    			</td>
+          	</tr>
             <tr>
               <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>
