@@ -19,6 +19,8 @@ var remove = new Array();
 var photo1ID = 0;
 var photo1Name = "";
 var fileGroupKey ="";
+var installAccTypeId = 579;
+var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(function() {
 	var today = new Date();
@@ -34,6 +36,7 @@ var fileGroupKey ="";
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
+    var stusId = ${installInfo.stusCodeId};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -45,6 +48,14 @@ var fileGroupKey ="";
 
     if (reqsms == 1) {
       $("#reqsms").prop("checked", true);
+    }
+
+    if (stusId == 4){
+      	$("#chkInstallAcc").prop("checked", true);
+      	doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+    }else{
+    	$("#chkInstallAcc").prop("checked", false);
+        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
     }
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
@@ -265,6 +276,7 @@ function notMandatoryForAP(){
     $("#editInstallForm #m8").hide();
     $("#editInstallForm #m9").hide();
     $("#editInstallForm #m10").hide();
+    $("#editInstallForm #m28").hide();
 }
 
   function validate(evt) {
@@ -412,7 +424,10 @@ function notMandatoryForAP(){
             url = "/services/editInstallation.do";
         }
 
-      Common.ajax("POST", url, $("#editInstallForm").serializeJSON(), function(result) {
+        var saveForm = $("#editInstallForm").serializeJSON();
+        saveForm.installAccList = $("#installAcc").val();
+
+      Common.ajax("POST", url, saveForm, function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
             $("#popup_wrap").remove();
@@ -494,6 +509,23 @@ function notMandatoryForAP(){
     if($("#editInstallForm #hidStkId").val() == 1737){
         msg += validationForGlaze();
     }
+
+    // NTU Checking for Complete status
+    if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+  	  if($("#ntuCom").val() == ""){
+  		  msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+  	  }else{
+  		  if ($("#ntuCom").val() > 10) {
+  		      msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+  		    }
+  	  }
+    }
+
+ // Installation Accessory checking for Complete status
+    if($("#addInstallForm #chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+  	  msg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+    }
+
 
     if (msg != "") {
       Common.alert(msg);
@@ -606,6 +638,24 @@ function notMandatoryForAP(){
           $('#attch9').change();
       }
    }
+
+  function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        }).multipleSelect("setSelects", installAccValues);
+	    });
+	}
+
+  function fn_InstallAcc_CheckedChanged(_obj) {
+	    if (_obj.checked) {
+	        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+	    } else {
+	        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+	    }
+	  }
 
   function checkInstallDateDisable() {
 	  var currentDt = new Date();
@@ -802,11 +852,11 @@ function notMandatoryForAP(){
           <tr>
               <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m12" style="display: none;"> *</span></th>
               <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value=" <c:out value="${installInfo.aftPsi}"/>"/>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value="<c:out value="${installInfo.aftPsi}"/>"/>
               </td>
               <th scope="row"><spring:message code='service.title.AfterPumpLpm' /><span class="must" id="m13" style="display: none;"> *</span></th>
               <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value="<c:out value="${installInfo.aftLpm}"/>"/>
               </td>
             </tr>
 
@@ -816,8 +866,19 @@ function notMandatoryForAP(){
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${waterSrcType}" varStatus="status">
                    <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach></td>
+                </c:forEach>
             </select></td>
+             <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
+           <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' value="<c:out value="${installInfo.ntu}"/>" />
+           </td>
+          </tr>
+          <tr>
+           <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
           </tr>
 
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
@@ -994,5 +1055,6 @@ function notMandatoryForAP(){
       </ul>
     </section>
     <!-- pop_body end -->
+    </section>
 </div>
 <!-- popup_wrap end -->
