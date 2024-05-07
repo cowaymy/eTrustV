@@ -677,6 +677,9 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 						}
 
 						if (paymentType.equals("OUTRIGHT MEMBERSHIP")) {
+							if (orderDetail.get("srvMemId") != null) {
+								subInfoParam.put("srvMemId", orderDetail.get("srvMemId").toString());
+							}
 							formList = outrightMembershipPaymentCollection(formInfo, orderDetail, subInfoParam, allowance,
 									trRefNo, trIssDt, iProcSeq, formList);
 						}
