@@ -39,6 +39,7 @@
 	var productCode;
 	var asMalfuncResnId;
 	var matchMatDefCode = [];
+	var installAccTypeId = 579;
 
 	$(document).ready(
 		    function() {
@@ -80,6 +81,7 @@
 
 		fn_getErrMstList('${ORD_NO}');
 
+		doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
 		doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336','', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
 		doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
 		doGetCombo('/services/as/inHouseGetProductMasters.do','', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
@@ -1080,6 +1082,7 @@
 			$("#m14").hide();
 			$("#m15").hide();
 			$("#m16").hide();
+			$("#m28").hide();
 			break;
 		}
 	}
@@ -1216,6 +1219,7 @@
 		$("#m14").show();
 		$("#m15").show();
 		$("#m16").show();
+		$("#m28").show();
 
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1290,6 +1294,17 @@
             $("#reworkProj").attr("disabled", false);
 		}
 
+
+		if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){
+			$("#m28").show();
+			$("#ntuCom").attr("disabled", false);
+		}else{
+			$("#m28").hide();
+			$("#ntuCom").attr("disabled", true);
+		}
+
+
+
 		 if ($('#PROD_CDE').val() == "112098" || $('#PROD_CDE').val() == "112237" || $('#PROD_CDE').val() == "112763" || $('#PROD_CDE').val() == "112789" || $('#PROD_CDE').val() == "113050") { //112098 VILLAEM 1
 			 $("#reworkProj").attr("disabled", false);
 			}else{
@@ -1315,6 +1330,7 @@
 		$("#m16").hide();
 		$("#m18").hide();
 		$("#m19").hide();
+		$("#m28").hide();
 
 		$("#iscommission").attr("disabled", false);
 
@@ -1325,6 +1341,7 @@
 		$("#solut_code").attr("disabled", "disabled");
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
+		$('#ntuCom').attr("disabled", "disabled");
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
 
@@ -1365,6 +1382,7 @@
 		$("#m16").hide();
 		$("#m18").hide();
 		$("#m19").hide();
+		$("#m28").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1373,6 +1391,7 @@
 		$("#solut_code").attr("disabled", "disabled");
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
+		$('#ntuCom').attr("disabled", "disabled");
 		$('#waterSrcType').attr("disabled", "disabled");
 
 	    document.querySelectorAll(".imageFile").forEach(res=>{
@@ -1572,6 +1591,8 @@
 			ATTACHMENT : 0,
 			AS_UNMATCH_REASON : $('#asNotMatch').val(),
 			REWORK_PROJ : $('#reworkProj').val(),
+			NTU : $('#ntuCom').val(),
+			INS_ACC_CHK : $('#chkInstallAcc').val(),
 
 			// AS RECALL ENTRY
 			AS_APP_DT : $("#appDate").val(),
@@ -1628,7 +1649,8 @@
 			"asResultM" : asResultM,
 			"add" : addedRowItems,
 			"update" : editedRowItems,
-			"remove" : removedRowItems
+			"remove" : removedRowItems,
+			"installAccList" : $("#installAcc").val()
 		};
 
         const formData = new FormData();
@@ -1904,6 +1926,26 @@
 	                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='water source Type' htmlEscape='false'/> </br>";
 	                    rtnValue = false;
 	                }
+					// NTU Checking for Complete status
+					if($("#ddlStatus").val() == 4 ){
+				      if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
+				    	  if($("#ntuCom").val() == ""){
+				    		  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+				    		  rtnValue = false;
+				    	  }else{
+				    		  if ($("#ntuCom").val() >= 10) {
+				    			  rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+				    			  rtnValue = false;
+				    		    }
+				    	    }
+				    	  }
+
+				   // Installation Accessory checking for Complete status
+				      if($("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+				    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+				    	  rtnValue = false;
+				      		}
+				      }
 				}
 
 				if ($("#waterSrcType").val() == "6676"){
@@ -2699,6 +2741,24 @@
 				theEvent.preventDefault();
 		}
 	}
+
+	function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        });
+	    });
+	}
+
+	  function fn_InstallAcc_CheckedChanged(_obj) {
+		    if (_obj.checked) {
+		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+		    } else {
+		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+		    }
+		  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
     <!-- popup_wrap start -->
@@ -2859,7 +2919,7 @@
                         <!------------------------------------------------------------------------------
 				          Order Detail Page Include START
 				         ------------------------------------------------------------------------------->
-                        <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+                      <%--   <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
                         <!------------------------------------------------------------------------------
 				        Order Detail Page Include END
 				       ------------------------------------------------------------------------------->
@@ -3016,10 +3076,20 @@
                                                     <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                                                     <c:forEach var="list" items="${reworkProj}" varStatus="status">
                                                     <option value="${list.codeId}">${list.codeName}</option>
-                                                    </c:forEach></td>
-                                    <th></th>
-                                        <td></td>
+                                                    </c:forEach>
+                                                    </select></td>
+                                    <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" name="m28" class="must">*</span></th>
+           							<td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
+           							</td>
                                 </tr>
+                                 <tr>
+          							<th scope="row"><spring:message code="service.title.installation.accessories" />
+          							<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    								<td colspan="3">
+    								<select class="w100p" id="installAcc" name="installAcc">
+    								</select>
+    								</td>
+          						</tr>
                                     <tr>
 							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
 							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled" onChange="fn_waterSrcType_SelectedIndexChanged(this.value)">
@@ -3034,7 +3104,7 @@
                                             <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                                             <c:forEach var="list" items="${asNotMatch}" varStatus="status">
                                                <option value="${list.codeId}">${list.codeName}</option>
-                                            </c:forEach></td>
+                                            </c:forEach>
                                         </select></td>
 							       </tr>
 							       <tr class="imageFile" style="display:none;">
