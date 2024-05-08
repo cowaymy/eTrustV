@@ -61,7 +61,7 @@ var cycleColumnLayout = [
 ,  */
 { headerText : 'Renewal Cycle', dataField : "seq",  width : 110,editable : false}
 ,{ headerText : 'Commencement Date', dataField : "contractCommDt", width : 180//, dataType : "date",formatString : "dd/mm/yyyy"
-	/* ,editable : false,
+	 ,editable : false/*,
     editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true}*/
     }
 , { headerText : 'Contract Expiry Date', dataField : "contractCommExpDt", width : 160 //, dataType : "date", formatString : "dd/mm/yyyy"
@@ -87,8 +87,10 @@ var cycleColumnLayout = [
 	,editable : false,
     /* editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true} */
 }
-, { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date",formatString : "dd/mm/yyyy",editable : true,
-    editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true}
+, { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date"//, dateInputFormat:"dd/mm/yyyy"
+	,editable : true,
+    editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true//,formatString : "dd/mm/yyyy"
+    	}
 }
 , { dataField : "atchFileGrpId", visible : false}
 , { dataField : "atchFileId", visible : false}
@@ -131,9 +133,9 @@ var cycleColumnLayoutView = [
 ,  */
 { headerText : 'Renewal Cycle', dataField : "seq",  width : 110,editable : false}
 ,{ headerText : 'Commencement Date', dataField : "contractCommDt", width : 180, dataType : "date",
-    formatString : "dd-mm-yyyy",editable : false}
+    formatString : "yyyy/mm/dd",editable : false}
 , { headerText : 'Contract Expiry Date', dataField : "contractCommExpDt", width : 160 , dataType : "date"
-    , formatString : "dd-mm-yyyy",editable : false}
+    , formatString : "yyyy/mm/dd",editable : false}
 , { headerText : 'Contract Term', dataField : "contractTerm",  width : 150 ,editable : false,
     labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
         var strY = '';
@@ -150,9 +152,9 @@ var cycleColumnLayoutView = [
 , { dataField : "contractTermM",  visible : false}
 , { dataField : "contractTermY",  visible : false}
 , { headerText : 'Renewal Cut-Off Date', dataField : "noticePeriod",  width : 180, dataType : "date"
-    , formatString : "dd-mm-yyyy",editable : false}
+    , formatString : "yyyy/mm/dd",editable : false}
 , { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date"
-    ,formatString : "dd-mm-yyyy",editable : false}
+    ,formatString : "yyyy/mm/dd",editable : false}
 , { dataField : "atchFileGrpId", visible : false}
 , { dataField : "atchFileId", visible : false}
 , { dataField : "isAttach", visible : false}
@@ -508,7 +510,7 @@ function fn_valid() {
 
     if($("#contractTermM").val() == '' && $("#contractTermY").val() == ''){
         alert("Please fill in the mandatory.");
-        return false;
+        isValid = false;
     }
 
 
@@ -562,7 +564,7 @@ function fn_attachmentInsertUpdate(st) {
 
     var formData = new FormData();
 
-	if(myFileCaches[0] == null || myFileCaches[0] == ''){
+	if(myFileCaches == null || myFileCaches == ''){
 		if(st == 'new') {
             fn_insertContractInfo(st);
         }else{
@@ -574,12 +576,15 @@ function fn_attachmentInsertUpdate(st) {
 	    });
 
 	    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+	    formData.append("fileGroupKey", $("#atchFileGrpId").val());
 	    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
 	    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
 
 	    Common.ajaxFile("/eAccounting/contract/attachContractFileUpdate.do", formData, function(result) {
-	        console.log(result);
-	        $("#atchFileGrpId").val(result.data.fileGroupKey);
+	        console.log("fileupdate " + result.data);
+	        //if(result.data.fileGroupKey != ''){
+	        	   $("#atchFileGrpId").val(result.data.fileGroupKey);
+	        //}
 
 	        if(st == 'new') {
 	            fn_insertContractInfo(st);
@@ -649,10 +654,12 @@ function fn_loadAtchment(atchFileGrpId,action) {
                     }
             	}else{
             		for ( var i = 0 ; i < result.length ; i++ ) {
-            			fileId = result[i].atchFileId;
-                        fileName = result[i].atchFileName;
-                        AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "atchFileId", fileId);
-            			AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "selectedFile", fileName);
+            			if(result[i].fileKeySeq > 0){
+	            			fileId = result[i].atchFileId;
+	                        fileName = result[i].atchFileName;
+	                        AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "atchFileId", fileId);
+	            			AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "selectedFile", fileName);
+            			}
                     }
             		cycleResult = AUIGrid.getGridData(cycleGridID);
             	}
@@ -730,7 +737,10 @@ function fn_addCycleGridRow() {
 	    }
 
 		var cutOffDur = $("#aRenewalDur").val() ;
+		var commDtSplit = $("#_contractCommDt").val().split("/");
+		var commDtRevert = commDtSplit[2] + "/" + commDtSplit [1] + "/" + commDtSplit[0];
 		var parts = $("#_contractExpDt").val().split("/");
+		var expDtRevert = parts[2] + "/" + parts [1] + "/" + parts[0];
 		var dayExp = parseInt(parts[0]);
         var monthExp = parseInt(parts[1]) - 1; // Months are zero-indexed in JavaScript
         var yearExp = parseInt(parts[2]);
@@ -741,7 +751,8 @@ function fn_addCycleGridRow() {
         var yearBefore = date.getFullYear();
         var monthBefore = date.getMonth() + 1; // Add 1 since months are zero-indexed
         var dayBefore = date.getDate();
-        dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+        //dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+        dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
 
       //moment(new Date($("#_contractExpDt").val())).format('DD/MM/YYYY')
         var strY = '';
@@ -764,8 +775,8 @@ function fn_addCycleGridRow() {
 		AUIGrid.addRow(cycleGridID,
 	            {
 	           seq:$("#aRenewalCycle").val()
-	           ,contractCommDt:$("#_contractCommDt").val()
-	           ,contractCommExpDt:$("#_contractExpDt").val()
+	           ,contractCommDt:commDtRevert
+	           ,contractCommExpDt:expDtRevert
 	           ,contractTerm:strContTerm
                ,contractTermM:strContM
                ,contractTermY:strContY
@@ -809,11 +820,12 @@ function fn_addCycleGridRow() {
 	    			commMonth = commMonth - 12;
 	    			plusYear++;
 	    		}
-	    		var commYear = parseInt(commParts[2]) + parseInt(AUIGrid.getCellValue(cycleGridID, i, "contractTermY")) + parseInt(plusYear);
+	    		var commYear = parseInt(commParts[0]) + parseInt(AUIGrid.getCellValue(cycleGridID, i, "contractTermY")) + parseInt(plusYear);
 	    		if(commMonth < 10){
 	    			commMonth = "0" + commMonth
 	            }
-	    		contractCommDt = commParts[0] + "/" + commMonth + "/" + commYear;
+	    		//contractCommDt = commParts[0] + "/" + commMonth + "/" + commYear;
+	    		contractCommDt = commYear + "/" + commMonth + "/" + commParts[2];
 
 	    		var expDt = AUIGrid.getCellValue(cycleGridID, i, "contractCommExpDt");
                 var expParts = expDt.split("/");
@@ -824,13 +836,14 @@ function fn_addCycleGridRow() {
                 	expMonth = expMonth - 12;
                 	expPlusYear++;
                 }
-                var year = parseInt(expParts[2]) + parseInt(strContY) + parseInt(expPlusYear);
+                var year = parseInt(expParts[0]) + parseInt(strContY) + parseInt(expPlusYear);
                 if(expMonth < 10){
                 	expMonth = "0" + expMonth
                 }
-                contractCommExpDt = expParts[0] + "/" + expMonth + "/" + year;
+                //contractCommExpDt = expParts[0] + "/" + expMonth + "/" + year;
+                contractCommExpDt =  year + "/" + expMonth + "/" + expParts[2];
 
-	    		var dayExp = parseInt(expParts[0]);
+	    		var dayExp = parseInt(expParts[2]);
 	    		var monthExp = parseInt(expMonth) - 1; // Months are zero-indexed in JavaScript
 	    		var yearExp = parseInt(year);
 	    		// Create a new Date object for the given date
@@ -840,7 +853,8 @@ function fn_addCycleGridRow() {
 	    		var yearBefore = date.getFullYear();
 	    		var monthBefore = date.getMonth() + 1; // Add 1 since months are zero-indexed
 	    		var dayBefore = date.getDate();
-	    		dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+	    		//dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+	    		dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
 
 
 	    		var strContTerm = strY + strM;
