@@ -646,7 +646,94 @@
 				};
 
 				Common.report("reportForm1", option);
-			} else {
+			}  else if ($("#reportType").val() == '8') {
+		         var date = new Date();
+		          var month = date.getMonth() + 1;
+		          var day = date.getDate();
+		          if (date.getDate() < 10) {
+		            day = "0" + date.getDate();
+		          }
+
+		          var whereSql3 = "";
+
+		          if ($("#cmbAsStatus").val() != '' && $("#cmbAsStatus").val() != null) {
+		              var whereAsStatus = " AND AS_STATUS IN ('" + $("#cmbAsStatus").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereAsStatus;
+		          }
+
+		          if ($("#cmbProductCategory").val() != '' && $("#cmbProductCategory").val() != null) {
+		              var wherePrdCat = " AND PRODUCT_CATEGORY IN ('" + $("#cmbProductCategory").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += wherePrdCat;
+		          }
+
+		          if ($("#cmbProductType").val() != '' && $("#cmbProductType").val() != null) {
+		              var wherePrdType = " AND PRODUCT_TYPE IN ('" + $("#cmbProductType").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += wherePrdType;
+		          }
+
+		          if ($("#cmbProductCode").val() != '' && $("#cmbProductCode").val() != null) {
+		              var wherePrdCode = " AND PRODUCT_CODE IN ('" + $("#cmbProductCode").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += wherePrdCode;
+		          }
+
+		          if ($("#cmbAsAging").val() != '' && $("#cmbAsAging").val() != null) {
+		              var whereAsAging = " AND AS_AGING IN ('" + $("#cmbAsAging").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereAsAging;
+		          }
+
+		          if ($("#cmbDefectType").val() != '' && $("#cmbDefectType").val() != null) {
+		              var whereDefType = " AND AS_SOLUTION_LARGE IN ('" + $("#cmbDefectType").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereDefType;
+		          }
+
+		          if ($("#cmbDefectRmk").val() != '' && $("#cmbDefectRmk").val() != null) {
+		              var whereDefRmk = " AND AS_DEFECT_PART_LARGE IN ('" + $("#cmbDefectRmk").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereDefRmk;
+		          }
+
+		          if ($("#cmbDefectDesc").val() != '' && $("#cmbDefectDesc").val() != null) {
+		              var whereDefDesc = " AND AS_DEFECT_PART_SMALL IN ('" + $("#cmbDefectDesc").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereDefDesc;
+		          }
+
+		          if ($("#cmbDefectDescSym").val() != '' && $("#cmbDefectDescSym").val() != null) {
+		              var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE IN ('" + $("#cmbDefectDescSym").val().toString().replace(/,/g, "','") + "') ";
+		              whereSql3 += whereDefDescSym;
+		          }
+
+		          //SP_CR_GEN_AS_INS_ACC_RAW
+		          $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+		          $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+
+		          // Homecare
+		          whereSql += " AND EXISTS( SELECT 1 "
+		                                + "   FROM SAL0001D C "
+		                                + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
+		                                + "    AND C.BNDL_ID IS NOT NULL ) ";
+
+		          $("#reportForm1 #V_SELECTSQL").val(" ");
+		          $("#reportForm1 #V_ORDERBYSQL").val(" ");
+		          $("#reportForm1 #V_FULLSQL").val(" ");
+		          $("#reportForm1 #V_WHERESQL").val(whereSql);
+		          console.log("V_WHERESQL " + toString($("#reportForm1 #V_WHERESQL").val()));
+		          $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+		          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
+		          $("#reportForm1 #V_WHERESQL3").val(whereSql3);
+		          $("#reportForm1 #reportFileName").val('/services/ASInstallationAccessoriesRaw_Excel.rpt');
+		          $("#reportForm1 #viewType").val("EXCEL");
+		          $("#reportForm1 #reportDownFileName").val("ASInstallationAccessoriesRaw_" + day + month + date.getFullYear());
+
+		          var option = {
+		            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+		          };
+
+		          Common.report("reportForm1", option);
+			}else {
 				var date = new Date();
 				var month = date.getMonth() + 1;
 				var day = date.getDate();
@@ -771,6 +858,7 @@
                   <option value="3">After Service (AS) Raw Data (PQC)</option>
                   <!--          <option value="4">After Service (AS) Raw Data (AOAS)</option> -->
                   <option value="6">After Service (AS) Raw Data (AOAS) [New]</option>
+                  <option value="8">After Service (AS) Install Accessories Raw</option>
               </select></td>
               <th scope="row">Date Option<span id='m3' name='m3' class='must'> *</span></th>
               <td><select id="dateType" class="w100p">
