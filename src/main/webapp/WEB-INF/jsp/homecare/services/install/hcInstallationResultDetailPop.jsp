@@ -13,6 +13,8 @@
     function() {
       createInstallationViewAUIGrid();
       fn_viewInstallResultSearch();
+      var installEntryId = $("#installEntryId").val();
+      var salesOrdId = $("#salesOrdId").val();
 
       var callType = "${callType.typeId}";
       if (callType == 0) {
@@ -35,7 +37,7 @@
       AUIGrid.bind(myGridID_view, "cellDoubleClick",
         function(event) {
           var statusCode = AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId");
-          Common.popupDiv("/homecare/services/install/installationResultPop.do?isPop=true&resultId="+ AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId"));
+          Common.popupDiv("/homecare/services/install/installationResultPop.do?isPop=true&resultId="+ AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId") + "&installEntryId=" + installEntryId + "&salesOrderId=" + salesOrdId);
         });
   });
 
@@ -134,6 +136,9 @@
 ------------------------------------------------------------------------------->
 <input type="hidden"
      value="<c:out value="${installResult.installEntryId}"/>"
+     id="installEntryId" />
+<input type="hidden"
+     value="<c:out value="${installResult.salesOrdId}"/>"
      id="installEntryId" />
 
   <!-- pop_body start -->
