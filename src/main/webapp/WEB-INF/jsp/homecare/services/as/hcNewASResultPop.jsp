@@ -21,6 +21,7 @@
   var productCode;
   var asMalfuncResnId;
   var matchMatDefCode = [];
+  var installAccTypeId = 580;
 
   var ddlFilterObj = {};
 
@@ -67,6 +68,7 @@
 
       fn_getErrMstList('${ORD_NO}');
 
+      doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
       doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
       doGetCombo('/homecare/services/as/getBrnchId.do', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
       //doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
@@ -1544,6 +1546,7 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
+      INS_ACC_CHK : $('#chkInstallAcc').val(),
       //PARTNER_CODE_ID : $('#partnerCode').val(),
       PARTNER_CODE : $('#partnerCodeText').val(),
 
@@ -1611,7 +1614,8 @@
       "asResultM" : asResultM,
       "add" : addedRowItems,
       "update" : editedRowItems,
-      "remove" : removedRowItems
+      "remove" : removedRowItems,
+      "installAccList" : $("#installAcc").val()
     }
 
     // SAVE RESULT
@@ -1807,6 +1811,14 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
+
+        // Installation Accessory checking for Complete status
+	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+	    	  rtnValue = false;
+	      		}
+
+
 
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
@@ -2416,6 +2428,24 @@ function fnSerialSearchResult(data) {
     });
 }
 
+function f_multiCombo(){
+    $(function() {
+        $('#installAcc').change(function() {
+        }).multipleSelect({
+            selectAll: false, // 전체선택
+            width: '80%'
+        });
+    });
+}
+
+  function fn_InstallAcc_CheckedChanged(_obj) {
+	    if (_obj.checked) {
+	        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+	    } else {
+	        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+	    }
+	  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2707,6 +2737,14 @@ function fnSerialSearchResult(data) {
           <td>
             <select disabled="disabled" id='ddlWarehouse' name='ddlWarehouse' class="w100p"></select>
           </td>
+         </tr>
+         <tr>
+          	<th scope="row"><spring:message code="service.title.installation.accessories" />
+          	<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
          </tr>
          <tr>
           <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must" style="display:none">*</span></th>
