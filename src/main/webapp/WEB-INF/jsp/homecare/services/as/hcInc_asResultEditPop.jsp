@@ -28,11 +28,13 @@
   var asSolDisable = false;
   var ddlFilterObj = {};
   var selectedHTAndDTObj = {};
+  var installAccTypeId = 580;
+  var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(
     function() {
       createCFilterAUIGrid();
-
+      doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
       doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
       doGetCombo('/homecare/services/as/getBrnchId.do', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
       //doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
@@ -1590,6 +1592,13 @@
           rtnValue = false;
         }
 
+     // Installation Accessory checking for Complete status
+	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+	    	  rtnValue = false;
+	      		}
+
+
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
@@ -1772,6 +1781,7 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
+      INS_ACC_CHK : $('#chkInstallAcc').val(),
       PARTNER_CODE : $('#partnerCodeText').val(),
 
       // AS RECALL ENTRY
@@ -1865,7 +1875,8 @@
           "asResultM" : asResultM,
           "add" : addedRowItems,
           "update" : editedRowItems,
-          "remove" : removedRowItems
+          "remove" : removedRowItems,
+          "installAccList" : $("#installAcc").val()
         }
 
         Common.ajax("POST", "/homecare/services/as/newResultAdd.do", saveForm,
@@ -1882,7 +1893,8 @@
             "asResultM" : asResultM,
             "add" : allRowItems,
             "update" : editedRowItems,
-            "remove" : editedRowItems
+            "remove" : editedRowItems,
+            "installAccList" : $("#installAcc").val()
           // "all" : allRowItems
           }
         } else {
@@ -1890,7 +1902,8 @@
             "asResultM" : asResultM,
             "add" : addedRowItems,
             "update" : editedRowItems,
-            "remove" : removedRowItems
+            "remove" : removedRowItems,
+            "installAccList" : $("#installAcc").val()
           }
         }
 
@@ -2372,6 +2385,24 @@
           //console.log("serialNo : " + dataRow.serialNo);
       });
   }
+
+  function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        }).multipleSelect("setSelects", installAccValues);
+	    });
+	}
+
+	  function fn_InstallAcc_CheckedChanged(_obj) {
+		    if (_obj.checked) {
+		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+		    } else {
+		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+		    }
+		  }
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
     <input type="hidden" name="pSerialNo" id="pSerialNo"/>
@@ -2523,6 +2554,14 @@
          </select>
        </td>
       </tr>
+      <tr>
+          	<th scope="row"><spring:message code="service.title.installation.accessories" />
+          	<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
+         </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must">*</span></th>
        <td colspan="3">
