@@ -15,6 +15,8 @@ var myFileCaches = {};
 var update = new Array();
 var remove = new Array();
 var fileGroupKey ="";
+var installAccTypeId = 580;
+var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(
     function() {
@@ -32,6 +34,7 @@ var fileGroupKey ="";
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
     var dismantle = ${installInfo.dismantle};
+    var stusId = ${installInfo.stusCodeId};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -50,6 +53,14 @@ var fileGroupKey ="";
       }else{
     	  $('input:radio[name=dismantle][value="0"]').attr('checked', true);
       }
+
+    if (stusId == 4){
+      	$("#chkInstallAcc").prop("checked", true);
+      	doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+    }else{
+    	$("#chkInstallAcc").prop("checked", false);
+        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+    }
 
     $("#installdt").change( function() {
       var checkMon = $("#installdt").val();
@@ -258,8 +269,12 @@ var fileGroupKey ="";
                 Common.alert("Upload Failed. Please check with System Administrator.");
         });
 
+
+        var saveForm = $("#editInstallForm").serializeJSON();
+        saveForm.installAccList = $("#installAcc").val();
+
       // KR-OHK Serial Check add
-      Common.ajax("POST", "/homecare/services/install/hceditInstallationSerial.do", $("#editInstallForm").serializeJSON(), function(result) {
+      Common.ajax("POST", "/homecare/services/install/hceditInstallationSerial.do", saveForm, function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
           $("#popup_wrap").remove();
@@ -394,6 +409,11 @@ var fileGroupKey ="";
     }
     //validate aircon serial
 
+ // Installation Accessory checking for Complete status
+    if($("#chkInstallAcc").is(":checked") && $("#installAcc").val == ""){
+  	  msg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+    }
+
     if (msg != "") {
       Common.alert(msg);
       return false;
@@ -497,6 +517,25 @@ var fileGroupKey ="";
     	  $("#installdt").attr("disabled", false);
       }
   }
+
+ function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        }).multipleSelect("setSelects", installAccValues);
+	    });
+	}
+
+function fn_InstallAcc_CheckedChanged(_obj) {
+	    if (_obj.checked) {
+	        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+	    } else {
+	        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+	    }
+	  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -674,6 +713,14 @@ var fileGroupKey ="";
          <span>PSI</span>
        </td>
      </tr>
+     <tr>
+           <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
+          </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /></th>
        <td colspan="3">
