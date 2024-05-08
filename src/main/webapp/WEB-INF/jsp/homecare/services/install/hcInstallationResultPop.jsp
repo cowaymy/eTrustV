@@ -4,6 +4,8 @@
 
 <script type="text/javaScript">
 var myGridID3;
+var installAccTypeId = 580;
+var installAccValues = JSON.parse("${installAccValues}");
 
 //Start AUIGrid
 $(document).ready(function() {
@@ -33,6 +35,10 @@ $(document).ready(function() {
 	      }else{
 	          $('input:radio[name=dismantle][value="0"]').attr('checked', true);
 	      }
+	    if(installAccValues != null){
+    		$("#chkInstallAcc").attr("checked",true);
+    		doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+    	}
     }
 
 
@@ -129,6 +135,24 @@ function fn_installationResult(){
     });
 
 }
+
+function f_multiCombo(){
+    $(function() {
+        $('#installAcc').change(function() {
+        }).multipleSelect({
+            selectAll: false, // 전체선택
+            width: '80%'
+        }).multipleSelect("setSelects", installAccValues);
+    });
+}
+
+function fn_InstallAcc_CheckedChanged(_obj) {
+    if (_obj.checked) {
+        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+    } else {
+        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+    }
+  }
 
 
 
@@ -250,6 +274,15 @@ function fn_winClose(){
         <span><c:out value="${resultInfo.rem}"/></span>
     </td>
 </tr>
+<tr>
+           <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
+          </tr>
+<tr>
 <tr>
     <th scope="row">Result Key By</th>
     <td>
