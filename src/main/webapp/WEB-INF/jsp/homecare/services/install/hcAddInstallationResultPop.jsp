@@ -5,6 +5,7 @@
 <script type="text/javaScript">
     var serialGubun = "1";
     var myFileCaches = {};
+    var installAccTypeId = 580;
 
     $(document).ready(function() {
     	var today = new Date();
@@ -18,7 +19,7 @@
 
         var myGridID_view;
         var callType = "${callType.typeId}";
-
+        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
@@ -159,6 +160,8 @@
                 $("#addInstallForm #m2").show();
                 $("#addInstallForm #m4").show();
                 $("#addInstallForm #m5").show();
+                $("#addInstallForm #chkInstallAcc").prop("checked", true);
+                doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
             } else {
                 $("#addInstallForm #checkCommission").prop("checked", false);
                 $("#addInstallForm #m2").hide();
@@ -167,6 +170,9 @@
                 $("#addInstallForm #m6").show();
                 $("#addInstallForm #m7").show();
                 $("#addInstallForm #m8").show();
+
+                $("#addInstallForm #chkInstallAcc").prop("checked", false);
+                doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
             }
 
             $("#addInstallForm #installDate").val("");
@@ -380,7 +386,6 @@
 	      if($("#ordCtgryCd").val() == "ACI"){
 	    	  var stockCode = "";
 	          stockCode = (js.String.roughScale($("#addInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
-
 	           if(stockCode != "0" && $("#hidStockCode").val() != stockCode){
 	               msg += "* Serial Number NOT match with stock [" + $("#hidStockCode").val() +"] </br>";
 	           }
@@ -423,6 +428,11 @@
 
 	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+	      }
+
+	   // Installation Accessory checking for Complete status
+	      if($("#addInstallForm #chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	    	  msg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
 	      }
 
 	      if (msg != "") {
@@ -535,6 +545,7 @@
                     // KR-OHK Serial Check add
                 var saveInsFailedForm = {
                         "installForm" : $("#addInstallForm").serializeJSON(),
+                        "installAccList" : $("#installAcc").val() ,
                         "fileGroupKey": result.data.fileGroupKey
                   };
 
@@ -703,6 +714,24 @@
             $('#attch9').change();
         }
    }
+
+   function f_multiCombo(){
+	    $(function() {
+	        $('#installAcc').change(function() {
+	        }).multipleSelect({
+	            selectAll: false, // 전체선택
+	            width: '80%'
+	        });
+	    });
+	}
+
+	  function fn_InstallAcc_CheckedChanged(_obj) {
+		    if (_obj.checked) {
+		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+		    } else {
+		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+		    }
+		  }
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -1351,6 +1380,14 @@
          <span>PSI</span>
        </td>
      </tr>
+     <tr>
+          <th scope="row"><spring:message code="service.title.installation.accessories" />
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+    		<td colspan="3">
+    		<select class="w100p" id="installAcc" name="installAcc">
+    		</select>
+    		</td>
+          </tr>
      <tr>
        <td colspan="4">
          <label>
