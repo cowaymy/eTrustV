@@ -362,6 +362,9 @@
   function fn_DscReport() {             // TO-BE : Coming soon ?
     Common.popupDiv("/homecare/services/install/report/installationDscReportPop.do", null, null, true, '');
   }
+  function fn_installAccRawData() {
+	Common.popupDiv("/homecare/services/install/report/hcInstallationAccessoriesRawPop.do", null, null, true, '');
+  }
 
   function fn_editInstallation() {
 
@@ -805,6 +808,10 @@
         <li><p class="link_btn type2">
           <a href="#none" onclick="javascript:fn_DscReport()"><spring:message
             code='service.btn.DSCReport' /></a>
+         </p></li>
+         <li><p class="link_btn type2">
+          <a href="#" onclick="javascript:fn_installAccRawData()"><spring:message
+            code='service.btn.InstallationAccRawData' /></a>
          </p></li>
        </c:if>
       </ul>
