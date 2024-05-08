@@ -2326,6 +2326,7 @@
 
               // $("#custTypeNm").val(custInfo.codeName1); //Customer Name
               $("#custTypeNm").text(custInfo.codeName1);
+              $("#hiddenCustTypeNm").val(custInfo.codeName1); //Customer Type Nm(Hidden)
 
               $("#hiddenTypeId").val(custInfo.typeId); //Type
               // $("#name").val(custInfo.name); //Name
@@ -2666,9 +2667,9 @@
         $('#rentPayMode').change();
         //     $('#rentPayMode').prop("disabled", true);
 
-        console.log('custTypeNm For Third Party: '
-            + $('#custTypeNm').val());
-        if ($('#custTypeNm').val() == 'Company') {
+        console.log('hiddenCustTypeNm For Third Party: '
+            + $('#hiddenCustTypeNm').val());
+        if ($('#hiddenCustTypeNm').val() == 'Company') {
           $('#thrdParty').prop("disabled", false);
         } else {
           $('#thrdParty').prop("disabled", true);
@@ -3094,6 +3095,7 @@
             <!-- search_table start -->
             <form id="frmPreOrdReg" name="frmPreOrdReg" action="#" method="post">
               <input id="hiddenCustId" name="custId" type="hidden" />
+              <input id="hiddenCustTypeNm" name="custTypeNm" type="hidden" />
               <input id="hiddenTypeId" name="typeId" type="hidden" />
               <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
               <input id="hiddenCustAddId" name="custAddId" type="hidden" />
