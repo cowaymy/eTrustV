@@ -15,5 +15,9 @@ public interface AuthMenuMappingService {
 	List<EgovMap> selectAuthMenuMappingList(Map<String, Object> params, SessionVO sessionVO);
 	
 	void saveAuthMenuMappingList(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
-		
+
+	List<EgovMap> selectMultAuthMenuMappingList(Map<String, Object> params, SessionVO sessionVO);
+
+	void saveMultAuthMenuMappingList(Map<String, Object> params, SessionVO sessionVO);
+
 }

@@ -59,5 +59,36 @@ public class AuthMenuMappingServiceImpl implements AuthMenuMappingService {
 			map.put("userId", loginId);
 			authMenuMappingMapper.updateAuthMenuMapping(map);
 		}
-	}	
+	}
+
+	@Override
+	public List<EgovMap> selectMultAuthMenuMappingList(Map<String, Object> params,SessionVO sessionVO) {
+		int loginId = 0;
+		if(sessionVO != null){
+			loginId = sessionVO.getUserId();
+		}
+		params.put("userId", loginId); // session Id Setting
+
+		return authMenuMappingMapper.selectMultAuthMenuMappingList(params);
+	}
+
+	@Override
+	public void saveMultAuthMenuMappingList(Map<String, Object> params,SessionVO sessionVO) {
+		List<Map<String, Object>> gridList = (List<Map<String, Object>>) params.get("gridList");
+		//List<Object> updateList = params.get(AppConstants.AUIGRID_ALL); 	// Get gride UpdateList
+
+		int loginId = 0;
+		if(sessionVO != null){
+			loginId = sessionVO.getUserId();
+		}
+
+		for (int i = 0 ; i < gridList.size() ; i ++){
+			Map<String, Object> map = (Map<String, Object>) gridList.get(i);
+			map.put("userId", loginId);
+			map.put("authCode", params.get("newAuthCode").toString());
+			if(map.get("funcYn").toString().equals("Y")){
+				authMenuMappingMapper.updateAuthMenuMapping(map);
+			}
+		}
+	}
 }

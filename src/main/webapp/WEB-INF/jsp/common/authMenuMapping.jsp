@@ -170,6 +170,10 @@ function fn_detailSave(){
     });
 };
 
+function fn_newAuthAccessCopy(){
+    Common.popupDiv("/common/newAuthAccessCopyPop.do",'', null, true, "_authAccessPop");
+};
+
 /****************************Transaction End**********************************/
 /**************************** Grid setting Start ********************************/
 var gridAuthColumnLayout =
@@ -433,6 +437,9 @@ $(document).ready(function(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Authorization Menu Mapping</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue"><a  onclick="fn_newAuthAccessCopy()">Access Replication</a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a  onclick="fn_detailSave()">Save</a></p></li>
     </c:if>
