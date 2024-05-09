@@ -170,37 +170,49 @@
     function createAccLinkAUIGrid(){
         //AUIGrid 칼럼 설정
         var accLinkLayout = [
-          {   dataField : "orderNo", headerText : 'Order No <br> Order Status', width : 100, height: 100,
-        	   labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
-        		   return item.orderNo + "\n" + item.orderStatus;
-        	   }
+          {   dataField : "orderNo", headerText : 'Order No <br> Order Status', width : 100,
+        	  renderer:{
+              type: "TemplateRenderer"
+	          },
+	          labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
+	               var template = '<div style="margin-top:5px; margin-bottom:10pc">';
+	               template += '<p>' + item.orderNo + '</p>';
+	               template += '<p>' + item.orderStatus + '</p>';
+	               template += '</div>';
+	               return template;
+	          }
           }
-         ,{   dataField : "orderStatus", headerText : 'Order Status', width : 300, visible: false, height: 100}
-         ,{   dataField : "customerName", headerText : 'Customer Name', width : 300 , height: 100}
-         ,{   dataField : "custAccNo", headerText : 'Crc / Acc No',  width : 150 , height: 100}
-         ,{   dataField : "thirdParty", headerText : '3rd Party', width : 90 , height: 100}
-         ,{   dataField : "stkDesc", headerText : 'Product <br> Rental Fees', width : 300, height: 100,
-// 		       labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
-// 		    	    return item.stkDesc + '\n'  + item.rentalFee;
-// 		       }
-        	 listTemplateFunction : function(rowIndex, columnIndex, value, item, dataField, listItem) {
-        		  return item.stkDesc + '\n'  + item.rentalFee;
-        	 }
+         ,{   dataField : "orderStatus", headerText : 'Order Status', width : 300, visible: false}
+         ,{   dataField : "customerName", headerText : 'Customer Name', width : 300}
+         ,{   dataField : "custAccNo", headerText : 'Crc / Acc No',  width : 150}
+         ,{   dataField : "thirdParty", headerText : '3rd Party', width : 90}
+         ,{   dataField : "stkDesc", headerText : 'Product <br> Rental Fees', width : 400,
+        	   renderer:{
+        		   type: "TemplateRenderer"
+        	   },
+		       labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
+		    	    var template = '<div style="margin-top:5px; margin-bottom:10pc">';
+		    	    template += '<p>' + item.stkDesc + '</p>';
+		    	    template += '<p>' + item.rentalFee + '</p>';
+		    	    template += '</div>';
+		    	    return template;
+		       }
          }
-         ,{   dataField : "rentalFee", headerText : 'Rental Fees', width : 150, visible: false, height: 100 }
-         ,{   dataField : "paymodeUpdDt", headerText : 'Paymode <br> Update Date', width : 100 , height: 100}
+         ,{   dataField : "rentalFee", headerText : 'Rental Fees', width : 150, visible: false}
+         ,{   dataField : "paymodeUpdDt", headerText : 'Paymode <br> Update Date', width : 100}
         ];
 
 	     //그리드 속성 설정
 	     var accLinkGridPros = {
-	         usePaging           : false,             //페이징 사용
+	         usePaging           : true,             //페이징 사용
 	         //pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
 	         editable                : false,
 	         showStateColumn     : false,
 	         showRowNumColumn    : false,
 	         headerHeight : 35,
-	         htmlEncode : false
-	       //selectionMode       : "singleRow"  //"multipleCells",
+// 	         htmlEncode : false,
+	         wordWrap : true
+// 	       selectionMode       : "singleRow"  //"multipleCells",
 	     };
 
 	     accLinkGridID = GridCommon.createAUIGrid("accLink_grid", accLinkLayout, "", accLinkGridPros);
@@ -342,12 +354,12 @@
 		    <div id="hist_grid" style="width:100%; height:230px; margin:0 auto;"></div>
 		</article><!-- grid_wrap end -->
 
-		<aside class="mt40 mb10"><!-- title_line start -->
-            <div style="font-size:20px; color:#808080;text-decoration:underline;">Auto Debit Matrix</div>
-        </aside><!-- title_line end -->
+<!-- 		<aside class="mt40 mb10">title_line start -->
+<!--             <div style="font-size:20px; color:#808080;text-decoration:underline;">Auto Debit Matrix</div> -->
+<!--         </aside>title_line end -->
 
-		<article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="matrix_grid" style="width:100%; height:230px; margin:0 auto;"></div>
+		<article class="grid_wrap mt40 mb10"><!-- grid_wrap start -->
+            <div id="matrix_grid" style="width:100%; height:80px; margin:0 auto;"></div>
         </article><!-- grid_wrap end -->
 
         <aside class="mt40 mb10"><!-- title_line start -->
@@ -355,7 +367,7 @@
         </aside><!-- title_line end -->
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="accLink_grid" style="width:100%; height:230px; margin:0 auto;"></div>
+            <div id="accLink_grid" style="width:100%; height:300px; margin:0 auto;"></div>
         </article><!-- grid_wrap end -->
 
 	</section><!-- pop_body end -->
