@@ -1108,12 +1108,32 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		params.put("SERIAL_REQUIRE_CHK_YN", "Y"); // HomeCare Chk "Y"
 
+        		// INST. ACCS LIST START
+                List<Map<String, Object>> paramsDetailInstAccLst = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) insApiresult.get("installAccList"));
+                logger.debug("### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString());
+                //List lstStr = null;
+                List<String> lstStr = new ArrayList<>();
+                for (Map<String, Object> accLst : paramsDetailInstAccLst) {
+
+                	logger.debug("accLst : " + accLst.size());
+                  if (accLst != null) {
+                    lstStr.add(String.valueOf(accLst.get("insAccPartId")));
+                    logger.debug("### insAccPartIdT : " + String.valueOf(accLst.get("insAccPartId")));
+                  }
+                }
+                logger.debug("### INST ACCS LIST SIZE : " + lstStr.size());
+
+                params.put("instAccLst", lstStr); // remind of param instAccLst or
+                // INST. ACCS LIST END
+
+
         		logger.debug("### AS PARAM [AFTER]: ", params);
 
         		Map<String, Object> asResultInsert = new HashMap();
         		asResultInsert.put("asResultM", params);
         		asResultInsert.put("updator", getAsBasic.get("updUsrId"));
         		asResultInsert.put("add", paramsDetailCvt); // FILTER LIST
+        		asResultInsert.put("mobileYn", "Y");
 
         		logger.debug("### AS INSERT : " + asResultInsert.toString());
 
