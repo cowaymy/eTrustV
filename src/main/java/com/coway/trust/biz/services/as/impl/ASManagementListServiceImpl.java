@@ -1927,7 +1927,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
 
-      if (params.get("mobileYn").toString() == "Y") { // from mobile
+      /*if (params.get("mobileYn").toString() == "Y") { // from mobile
 
           List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
           EgovMap installResult = new EgovMap();
@@ -1947,7 +1947,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 e.printStackTrace();
               }
             }
-
       } else {
     	  // // Insert SVC0140D for Installation Accessory - TPY
       List<String> installAccList = (List<String>) params.get("installAccList");
@@ -1970,7 +1969,33 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           e.printStackTrace();
         }
       }
+      }*/
+
+      List<String> installAccList = new ArrayList<>();
+      EgovMap installResult = new EgovMap();
+
+      installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
+      installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
+      installResult.put("mobileYn", params.get("mobileYn"));
+      params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
+      params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
+      params.put("user_id", params.get("updator"));
+
+      if ("Y".equals(params.get("mobileYn"))) {
+          installAccList = (List<String>) svc0004dmap.get("instAccLst");
+      } else {
+          installAccList = (List<String>) params.get("installAccList");
+          ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
       }
+
+      if ("Y".equals(svc0004dmap.get("chkInstallAcc")) || "Y".equals(params.get("chkInstallAcc"))) {
+          try {
+              insertInstallationAccessories(installAccList, installResult, CommonUtils.intNvl(params.get("updator")));
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
+
     }
     // LOGISTIC REQUEST END HERE
 
