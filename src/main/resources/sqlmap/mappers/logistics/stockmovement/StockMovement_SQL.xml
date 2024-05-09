@@ -126,10 +126,10 @@
 <!--               and l47.REQST_TYPE = #{sttype} -->
 <!--            </if> -->
            <if test="flocation !=null and flocation !=''">
-              and (l47.rciv_cdc_rdc = #{flocation} or UPPER(s28c.wh_loc_code) = UPPER(#{flocation}) or UPPER(DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) LIKE '%' || UPPER(#{flocation}) || '%' )
+              and (l47.rciv_cdc_rdc = #{flocation} or UPPER(s28c.wh_loc_code) = UPPER(#{flocation}) or UPPER(s28c.wh_loc_desc) LIKE '%' || UPPER(#{flocation}) || '%' )
            </if>
            <if test="tlocation !=null and tlocation !=''">
-              and (l47.reqst_cdc_rdc = #{tlocation} or UPPER(s28q.wh_loc_code) = UPPER(#{tlocation}) or UPPER(DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) LIKE '%' || UPPER(#{tlocation}) || '%' )
+              and (l47.reqst_cdc_rdc = #{tlocation} or UPPER(s28q.wh_loc_code) = UPPER(#{tlocation}) or UPPER(s28q.wh_loc_desc) LIKE '%' || UPPER(#{tlocation}) || '%' )
            </if>
            <if test="smvpath !=null and smvpath !=''">
               and l47.PRIDIC_FRQNCY = #{smvpath}
@@ -138,10 +138,10 @@
               and l47.PRIDIC_FRQNCY = #{sam}
            </if>
            <if test="crtsdt !=null and crtsdt !=''">
-              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+              and l47.reqst_crt_dt <![CDATA[>=]]> to_date(#{crtsdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
            </if>
            <if test="crtedt !=null and crtedt !=''">
-              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+              and l47.reqst_crt_dt <![CDATA[<=]]> to_date(#{crtedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
            </if>
             <if test="reqsdt !=null and reqsdt !=''">
               and l47.reqst_require_dt <![CDATA[>=]]> to_date(#{reqsdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
