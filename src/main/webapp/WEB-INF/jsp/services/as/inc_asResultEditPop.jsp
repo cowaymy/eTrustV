@@ -706,10 +706,8 @@
     }
 
     if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" ){
-    	$("#m28").show();
         $("#ntuCom").attr("disabled", false);
     }else{
-    	$("#m28").hide();
         $("#ntuCom").attr("disabled", true);
     }
 
@@ -1509,26 +1507,18 @@
           }
         }
 
-     // NTU Checking for Complete status
-		if($("#ddlStatus").val() == 4 ){
-	      if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
-	    	  if($("#ntuCom").val() == ""){
-	    		  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
-	    		  rtnValue = false;
-	    	  }else{
-	    		  if ($("#ntuCom").val() >= 10) {
-	    			  rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-	    		      rtnValue = false;
-	    		    }
-	    	    }
-	    	  }
+	    if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
+	    	rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+	    	rtnValue = false;
+	    }
+
 	   // Installation Accessory checking for Complete status
-	      if($("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	   if($("#ddlStatus").val() == 4 ){
+	      if($("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
 	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
 	    	  rtnValue = false;
 	      		}
 	      }
-
 
         if (FormUtil.checkReqValue($("#tpSettleTime"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Time' htmlEscape='false'/> </br>";
@@ -1728,7 +1718,7 @@
       WATER_SRC_TYPE : $('#waterSrcType').val(),
       AS_UNMATCH_REASON : $('#asNotMatch').val(),
       NTU : $('#ntuCom').val(),
-      INS_ACC_CHK : $('#chkInstallAcc').val(),
+      INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1822,7 +1812,8 @@
           "add" : addedRowItems,
           "update" : editedRowItems,
           "remove" : removedRowItems,
-          "installAccList" : $("#installAcc").val()
+          "installAccList" : $("#installAcc").val(),
+          "mobileYn" : "N"
         }
 
         Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
@@ -1839,7 +1830,8 @@
             "add" : allRowItems,
             "update" : editedRowItems,
             "remove" : editedRowItems,
-            "installAccList" : $("#installAcc").val()
+            "installAccList" : $("#installAcc").val(),
+            "mobileYn" : "N"
           // "all" : allRowItems
           }
         } else {
@@ -1848,7 +1840,8 @@
             "add" : addedRowItems,
             "update" : editedRowItems,
             "remove" : removedRowItems,
-            "installAccList" : $("#installAcc").val()
+            "installAccList" : $("#installAcc").val(),
+            "mobileYn" : "N"
           }
         }
 
@@ -2632,7 +2625,7 @@
            <tr>
               <th scope="row">Rework Project<span id='m100' name='m100' class="must" style="display: none">*</span></th>
               <td><input type="text" title="" placeholder="Rework Project" class="disabled w100p" disabled="disabled" id='reworkProj' name='reworkProj' /></td>
-              <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
+              <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must"></span></th>
            	  <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
            	  </td>
             </tr>
