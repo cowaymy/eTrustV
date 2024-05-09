@@ -1593,7 +1593,7 @@
         }
 
      // Installation Accessory checking for Complete status
-	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
 	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
 	    	  rtnValue = false;
 	      		}
@@ -1781,7 +1781,7 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
-      INS_ACC_CHK : $('#chkInstallAcc').val(),
+      INS_ACC_CHK : $('#chkInstallAcc').prop("checked") ? 'on' : '',
       PARTNER_CODE : $('#partnerCodeText').val(),
 
       // AS RECALL ENTRY
@@ -1876,7 +1876,8 @@
           "add" : addedRowItems,
           "update" : editedRowItems,
           "remove" : removedRowItems,
-          "installAccList" : $("#installAcc").val()
+          "installAccList" : $("#installAcc").val(),
+          "mobileYn" : "N"
         }
 
         Common.ajax("POST", "/homecare/services/as/newResultAdd.do", saveForm,
@@ -1894,7 +1895,8 @@
             "add" : allRowItems,
             "update" : editedRowItems,
             "remove" : editedRowItems,
-            "installAccList" : $("#installAcc").val()
+            "installAccList" : $("#installAcc").val(),
+            "mobileYn" : "N"
           // "all" : allRowItems
           }
         } else {
@@ -1903,7 +1905,8 @@
             "add" : addedRowItems,
             "update" : editedRowItems,
             "remove" : removedRowItems,
-            "installAccList" : $("#installAcc").val()
+            "installAccList" : $("#installAcc").val(),
+            "mobileYn" : "N"
           }
         }
 
