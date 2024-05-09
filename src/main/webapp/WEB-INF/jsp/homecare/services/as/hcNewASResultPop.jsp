@@ -1546,7 +1546,7 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
-      INS_ACC_CHK : $('#chkInstallAcc').val(),
+      INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',      
       //PARTNER_CODE_ID : $('#partnerCode').val(),
       PARTNER_CODE : $('#partnerCodeText').val(),
 
@@ -1615,7 +1615,8 @@
       "add" : addedRowItems,
       "update" : editedRowItems,
       "remove" : removedRowItems,
-      "installAccList" : $("#installAcc").val()
+      "installAccList" : $("#installAcc").val(),
+      "mobileYn" : "N"
     }
 
     // SAVE RESULT
@@ -1813,12 +1814,10 @@
         }
 
         // Installation Accessory checking for Complete status
-	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	      if($("#ddlStatus").val() == 4 && $("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
 	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
 	    	  rtnValue = false;
 	      		}
-
-
 
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
