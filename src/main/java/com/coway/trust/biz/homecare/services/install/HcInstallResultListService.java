@@ -118,4 +118,7 @@ public interface HcInstallResultListService {
 	void insertPreIns(Map<String, Object> p);
 
 	EgovMap selectInstallationInfo(Map<String, Object> params);
+
+	String getOutdoorAcStkCode (Map<String, Object> params);
+
 }

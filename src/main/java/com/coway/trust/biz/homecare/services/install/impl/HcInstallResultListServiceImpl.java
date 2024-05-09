@@ -878,10 +878,10 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
   		 EgovMap installResult = getFileID (params); ///FileXXX
   		 EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
-  
+
   		 logger.debug("LOC. INFO. : {}" + locInfo);
   		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
-  
+
   		 logger.debug("File RESULT :{}" + installResult);
   		 logger.debug("params ================================>>  " + params);
 
@@ -1093,6 +1093,10 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	@Override
 	public EgovMap selectInstallationInfo(Map<String, Object> params) {
 	    return hcInstallResultListMapper.selectInstallationInfo(params);
+	}
+
+	public String getOutdoorAcStkCode(Map<String, Object> params){
+	    return hcInstallResultListMapper.getOutdoorAcStkCode(params);
 	}
 
 	public void insertHcInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){

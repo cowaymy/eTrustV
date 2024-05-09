@@ -864,6 +864,9 @@ public class HcInstallResultListController {
     public String getAcInsComplete(@RequestParam Map<String, Object> params, ModelMap model) {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
+    	params.put("bndlId", ((EgovMap)model.get("installationInfo")).get("bndlId").toString());
+
+    	model.put("outdoorStkCode", hcInstallResultListService.getOutdoorAcStkCode(params));
 
     	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0 && ((BigDecimal) ((EgovMap)model.get("installationInfo")).get("mainStus")).compareTo(new BigDecimal("1")) == 0){
     		return "homecare/services/install/getAcInsComplete";

@@ -87,4 +87,6 @@ public interface HcInstallResultListMapper {
 	void insertPreIns(Map<String, Object> params);
 
 	EgovMap selectInstallationInfo(Map<String, Object> params);
+
+	String getOutdoorAcStkCode (Map<String, Object> params);
 }

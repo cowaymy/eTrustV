@@ -104,13 +104,19 @@
 							    <div id="qr-reader-results"></div>
 							    <h2 id="serialNo"></h2>
 							     <div class="form-group">
-							        <p class="btn btn-primary btn-block btn-lg" id="btnScanBarcode">
+							       <p class="btn btn-primary btn-block btn-lg" id="btnScanBarcode">
 							            <a href="javascript:void(0);" style="color: white">Scan Indoor Barcode</a>
 							        </p>
+                                    <!-- <p>
+                                       <input id="txtIndoorBarcode" name="txtIndoorBarcode" style="width:100%!important;" type="text" placeholder="Indoor Barcode" />
+                                     </p>-->
 							         <h2 id="serialNo2"></h2>
 							         <p class="btn btn-primary btn-block btn-lg" id="btnScanBarcodeOutdoor">
 	                                    <a href="javascript:void(0);" style="color: white">Scan Outdoor Barcode</a>
 	                                </p>
+                                <!-- <p>
+                                         <input id="txtOutdoorBarcode" name="txtOutdoorBarcode" style="width:100%!important;" type="text"  placeholder="Outdoor Barcode" />
+                                    </p>-->
 							    </div>
                             </div>
                             <div id="imageSection"></div>
@@ -312,6 +318,38 @@
 	}
 
 	const openPage2 = () => {
+		//validation for prevent serial number contains special character
+		const indoorStkCode = Number("${installationInfo.stkCode}").toString(36).toUpperCase();
+		const outdoorStkCode = Number("${outdoorStkCode}").toString(36).toUpperCase();
+
+     /*  // Testing purpose for serial number contains special character
+         const serial = document.getElementById("txtIndoorBarcode").value;
+        const serial2 = document.getElementById("txtOutdoorBarcode").value;
+
+        if(serial.length != 18 || serial.indexOf(indoorStkCode) < 0){
+            document.getElementById("MsgAlert").innerHTML = "Indoor Serial Number is invalid.";
+            return false;
+        }
+
+       if(serial2.length != 18 || serial2.indexOf(outdoorStkCode) < 0){
+            document.getElementById("MsgAlert").innerHTML = "Outdoor Serial Number is invalid.";
+            return false;
+        }
+       */
+
+        const serial = $("#serialNo").text();
+        const serial2 = $("#serialNo2").text();
+
+        if(serial.length != 18 || serial.indexOf(indoorStkCode) < 0){
+            document.getElementById("MsgAlert").innerHTML = "Indoor Serial Number is invalid.";
+            return false;
+        }
+
+       if(serial2.length != 18 || serial2.indexOf(outdoorStkCode) < 0){
+            document.getElementById("MsgAlert").innerHTML = "Outdoor Serial Number is invalid.";
+            return false;
+        }
+
 	    document.querySelector("#page1").classList.remove("d-flex");
 	    document.querySelector("#page1").style.display = "none";
 
@@ -520,8 +558,7 @@
         photoDiv.appendChild(aElement);
         imageCont.appendChild(image);
         el.appendChild(upload);
-        el.appendChild(imageCont)
-
+        el.appendChild(imageCont);
 
         aElement.onclick = () => {
             upload.click();
@@ -626,13 +663,13 @@
 
 	let resultContainer = document.getElementById('qr-reader-results');
 	let html5QrcodeScanner = new Html5Qrcode("qr-reader");
-
 	let serialObject = {};
+
 	onScanSuccess = (decodedText, seq , callback) => {
 		document.getElementById("qr-reader-cont").style.display = "none";
 		document.getElementById("qr-reader-cont2").style.display = "none";
         //++countResults
-        if(decodedText.length !=18){
+        if(decodedText.length !=18 || decodedText.indexOf(stkCode1) < 0){
         	return;
         }
 
@@ -648,7 +685,6 @@
             facingMode: "environment",
             zoom: 3
          }}).then(e => {
-
                let devideId = e.getTracks()[0].getSettings().deviceId;
 
                const codeReader = new ZXingBrowser.BrowserMultiFormatReader(null, {delayBetweenScanAttempts: 1, delayBetweenScanSuccess: 1});
@@ -675,15 +711,12 @@
         		{facingMode: 'environment'},
         		{fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
         		(decodedText , decodedResult) => {
-        			onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {
-        				html5QrcodeScanner.stop()
-        			})
+        			onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {html5QrcodeScanner.stop()})
         		}
         );
     });
 
 	const validationCheck = (e) => {
-
         const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
         const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
 
@@ -728,7 +761,7 @@
     });
 
 	const insertPreInsComplete = () => {
-        const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text(), remark = document.querySelector("#remark").value;
+		const insNo = "${insNo}", serial = $("#serialNo").text() , serial2 = $("#serialNo2").text(), remark = document.querySelector("#remark").value;
 
         fetch("/homecare/services/install/insertPreInsCompleted.do", {
             method: "POST",
