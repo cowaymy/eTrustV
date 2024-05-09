@@ -108,7 +108,9 @@
 			  ,#{contractTermM} CONT_TERM_MONTH
               ,TO_DATE(#{_contractCommDt}, 'DD/MM/YYYY') CONT_COMM_DT
               ,TO_DATE(#{_contractExpDt}, 'DD/MM/YYYY') CONT_EXPIRY_DT
+              <if test="contractStus != null and contractStus != '' ">
               ,#{contractStus} CONT_STATUS
+              </if>
               ,#{isOptToRenew} IS_OPT_RENEW
               ,#{numRenewCycle} RENEWAL_CYCLE
               ,SYSDATE CRT_DT
@@ -131,7 +133,9 @@
 				,TARG.CONT_TERM_MONTH = SOURC.CONT_TERM_MONTH
 	            ,TARG.CONT_COMM_DT = SOURC.CONT_COMM_DT
 	            ,TARG.CONT_EXPIRY_DT = SOURC.CONT_EXPIRY_DT
+	            <if test="contractStus != null and contractStus != '' ">
 	            ,TARG.CONT_STATUS = SOURC.CONT_STATUS
+	            </if>
 	            ,TARG.IS_OPT_RENEW = SOURC.IS_OPT_RENEW
 	            ,TARG.RENEWAL_CYCLE = SOURC.RENEWAL_CYCLE
 				,TARG.UPD_DT = SOURC.UPD_DT
@@ -152,7 +156,9 @@
 	           ,CONT_TERM_MONTH
 	           ,CONT_COMM_DT
 	           ,CONT_EXPIRY_DT
+	           <if test="contractStus != null and contractStus != '' ">
 	           ,CONT_STATUS
+	           </if>
 	           ,IS_OPT_RENEW
 	           ,RENEWAL_CYCLE
                 ,CRT_DT
@@ -172,7 +178,9 @@
 	            ,SOURC.CONT_TERM_MONTH
 	            ,SOURC.CONT_COMM_DT
 	            ,SOURC.CONT_EXPIRY_DT
+	            <if test="contractStus != null and contractStus != '' ">
 	            ,SOURC.CONT_STATUS
+	            </if>
 	            ,SOURC.IS_OPT_RENEW
 	            ,SOURC.RENEWAL_CYCLE
                 ,SOURC.CRT_DT

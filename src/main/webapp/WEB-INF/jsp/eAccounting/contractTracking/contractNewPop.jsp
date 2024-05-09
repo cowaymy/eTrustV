@@ -485,6 +485,7 @@ $(function(){
 
         AUIGrid.setCellValue(cycleGridID, recentGridItem.rowIndex, recentGridItem.columnIndex, file.name);
         if(AUIGrid.getCellValue(cycleGridID, recentGridItem.rowIndex, "atchFileId") != null){
+        	remove.push(AUIGrid.getCellValue(cycleGridID, recentGridItem.rowIndex, "atchFileId"));
         	update.push(AUIGrid.getCellValue(cycleGridID, recentGridItem.rowIndex, "atchFileId"));
         }
 
@@ -653,12 +654,23 @@ function fn_loadAtchment(atchFileGrpId,action) {
                         }
                     }
             	}else{
+            		debugger;
             		for ( var i = 0 ; i < result.length ; i++ ) {
             			if(result[i].fileKeySeq > 0){
-	            			fileId = result[i].atchFileId;
+            				var recordSeq = '';
+            				fileId = result[i].atchFileId;
 	                        fileName = result[i].atchFileName;
-	                        AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "atchFileId", fileId);
-	            			AUIGrid.setCellValue(cycleGridID, result[i].fileKeySeq-1, "selectedFile", fileName);
+	                        console.log('fn_loadAtchment fileId ' + fileId);
+	                        for(var j=0 ; j <AUIGrid.getGridData(cycleGridID).length ; j++){
+	                        	var seq = AUIGrid.getCellValue(cycleGridID, j, "seq");
+	                        	if(seq == result[i].fileKeySeq){
+	                        		recordSeq = j;
+	                        		break;
+	                        	}
+	                        }
+
+	                        AUIGrid.setCellValue(cycleGridID, recordSeq, "atchFileId", fileId);
+	            			AUIGrid.setCellValue(cycleGridID, recordSeq, "selectedFile", fileName);
             			}
                     }
             		cycleResult = AUIGrid.getGridData(cycleGridID);
@@ -888,6 +900,11 @@ function fn_addCycleGridRow() {
 
 function fn_removeCycleGridRow() {
 	console.log('delete cycle row selectRowIdxCycle' + selectRowIdxCycle);
+	var removeAtch = AUIGrid.getCellValue(cycleGridID, selectRowIdxCycle, "atchFileId");
+	console.log('delete cycle row selectRowIdxCycle removeAtch ' + removeAtch);
+	if(removeAtch != null){
+		   remove.push(removeAtch);
+	}
     AUIGrid.removeRow(cycleGridID, selectRowIdxCycle);
 
     /* var gridData = GridCommon.getEditData(cycleGridID);
@@ -1073,7 +1090,6 @@ function onlyNumber(obj) {
             <option value="">Choose One</option>
             <option value="1">1</option>
             <option value="2">2</option>
-            <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
@@ -1087,7 +1103,6 @@ function onlyNumber(obj) {
         <select id="contractTermM" name="contractTermM" class=""  style="width: 110px;">
             <option value="">Choose One</option>
             <option value="1">1</option>
-            <option value="2">2</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -1166,7 +1181,6 @@ function onlyNumber(obj) {
             <option value="">Choose One</option>
             <option value="1">1</option>
             <option value="2">2</option>
-            <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
@@ -1180,7 +1194,6 @@ function onlyNumber(obj) {
         <select id="aContractTermM" name="aContractTermM" class=" detManCheck"  style="width: 110px;">
             <option value="">Choose One</option>
             <option value="1">1</option>
-            <option value="2">2</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>

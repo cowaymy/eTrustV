@@ -143,6 +143,19 @@ public class ContractServiceImpl implements ContractService {
 		List<Object> updateList = (List<Object>) gridData.get("update");
 		List<Object> removeList = (List<Object>) gridData.get("remove");
 
+		if (removeList.size() > 0) {
+			Map hm = null;
+			// biz처리
+			for (Object map : removeList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("contTrackId", params.get("contTrackId"));
+				hm.put("userId", params.get("userId"));
+				hm.put("status", 8);
+				LOGGER.debug("updateContractCycleDetails removeList============>>  " + params);
+				contractMapper.removeContractCycleDetails(hm);
+			}
+		}
+
 		if (addList.size() > 0) {
 			Map hm = null;
 			// biz처리
@@ -167,18 +180,7 @@ public class ContractServiceImpl implements ContractService {
 				contractMapper.updateContractCycleDetails(hm);
 			}
 		}
-		if (removeList.size() > 0) {
-			Map hm = null;
-			// biz처리
-			for (Object map : removeList) {
-				hm = (HashMap<String, Object>) map;
-				hm.put("contTrackId", params.get("contTrackId"));
-				hm.put("userId", params.get("userId"));
-				hm.put("status", 8);
-				LOGGER.debug("updateContractCycleDetails removeList============>>  " + params);
-				contractMapper.removeContractCycleDetails(hm);
-			}
-		}
+
 
 		List<EgovMap> numberCycle = contractMapper.selectContractCycleDetails(params);
 		int numberOfCycle = numberCycle.size();
@@ -245,6 +247,15 @@ public class ContractServiceImpl implements ContractService {
 			removeList = params.get("remove").toString().split(",");
 			LOGGER.debug("removeList.length : {}", removeList.length);
 		}
+
+		if(updateList == null && removeList != null && removeList.length > 0){
+			for(String id : removeList){
+				LOGGER.info(id);
+				String atchFileId = id;
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
+			}
+		}
+
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
 			for(int i = 0; i < list.size(); i++) {
@@ -271,13 +282,6 @@ public class ContractServiceImpl implements ContractService {
 					params.put("fileGroupKey", fileGroupId);
 				}
 			}
-    		if(updateList == null && removeList != null && removeList.length > 0){
-    			for(String id : removeList){
-    				LOGGER.info(id);
-    				String atchFileId = id;
-    				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
-    			}
-    		}
 		}
 	}
 
