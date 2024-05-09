@@ -431,7 +431,7 @@
 	      }
 
 	   // Installation Accessory checking for Complete status
-	      if($("#addInstallForm #chkInstallAcc").val() == "on" && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+	      if($("#addInstallForm #chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
 	    	  msg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
 	      }
 
