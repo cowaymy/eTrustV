@@ -69,10 +69,10 @@
                         , A.CNSL_MEDCLAS_CD
                         , BRNCH_ID
                         , A.LST_UPD_ID
-                        , CASE WHEN B.STUS_CODE_ID = 34
+                        , CASE WHEN B.STUS_CODE_ID IN (34, 36)
                               THEN TO_CHAR(B.UPD_DT,'YYYY/MM/DD')
                            ELSE NULL END AS TAG_SETTLE_DATE
-                        , CASE WHEN B.STUS_CODE_ID = 34
+                        , CASE WHEN B.STUS_CODE_ID IN (34, 36)
                               THEN usr.USER_NAME
                            ELSE NULL END AS TAG_SETTLE_BY
                         , NVL((SELECT CALL_REM
