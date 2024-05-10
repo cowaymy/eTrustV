@@ -1927,7 +1927,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
 
-      /*if (params.get("mobileYn").toString() == "Y") { // from mobile
+      if (params.get("mobileYn").toString() == "Y") { // from mobile
 
           List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
           EgovMap installResult = new EgovMap();
@@ -1939,8 +1939,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
 
+          LOGGER.debug("debug 111====" + params.get("mobileYn"));
+
           if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
+
+        	  LOGGER.debug("debug 222====" + params.get("mobileYn"));
+          }
               try {
+
+            	  LOGGER.debug("debug 333====" + params.get("mobileYn"));
                 insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
               } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -1969,9 +1976,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           e.printStackTrace();
         }
       }
-      }*/
+      }
 
-      List<String> installAccList = new ArrayList<>();
+/*      List<String> installAccList = new ArrayList<>();
       EgovMap installResult = new EgovMap();
 
       installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
@@ -1985,28 +1992,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       if ("Y".equals(params.get("mobileYn"))) {
 
     	  LOGGER.debug("debug 111====" + params.get("mobileYn"));
-
           installAccList = (List<String>) svc0004dmap.get("instAccLst");
           LOGGER.debug("debug ###====" + params.get("chkInstallAcc").toString());
           LOGGER.debug("debug 222====" + svc0004dmap.get("chkInstallAcc").toString());
-
           if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
-
         	  LOGGER.debug("debug 333====" );
-
               try {
-
             	  LOGGER.debug("debug 444====" );
-
                 insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
               } catch (Exception e) {
-
-            	  LOGGER.debug("debug 555====" );
+           	  LOGGER.debug("debug 555====" );
                 // TODO Auto-generated catch block
                 e.printStackTrace();
               }
             }
-
       } else {
 
     	  LOGGER.debug("debug XXX====" );
@@ -2023,7 +2022,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               }
             }
       }
-    }
+    }*/
     // LOGISTIC REQUEST END HERE
 
     EgovMap em = new EgovMap();
