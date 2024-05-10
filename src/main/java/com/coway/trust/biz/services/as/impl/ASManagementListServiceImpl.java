@@ -1984,11 +1984,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       if ("Y".equals(params.get("mobileYn"))) {
 
-    	  LOGGER.debug("debug 111====" );
+    	  LOGGER.debug("debug 111====" + params.get("mobileYn"));
 
           installAccList = (List<String>) svc0004dmap.get("instAccLst");
-
-          LOGGER.debug("debug 222====" );
+          LOGGER.debug("debug ###====" + params.get("chkInstallAcc").toString());
+          LOGGER.debug("debug 222====" + svc0004dmap.get("chkInstallAcc").toString());
 
           if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
 
