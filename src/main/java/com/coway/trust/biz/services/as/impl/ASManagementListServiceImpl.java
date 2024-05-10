@@ -1982,31 +1982,47 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       params.put("user_id", params.get("updator"));
 
 
-
-
-      if (params.get("mobileYn").toString() == "Y")
-      {
-    	  LOGGER.debug("debug 111====>> " );
-      }
-
       if ("Y".equals(params.get("mobileYn"))) {
-    	  LOGGER.debug("debug 222====>> " );
+
+    	  LOGGER.debug("debug 111====" );
+
           installAccList = (List<String>) svc0004dmap.get("instAccLst");
+
+          LOGGER.debug("debug 222====" );
+
+          if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
+
+        	  LOGGER.debug("debug 333====" );
+
+              try {
+
+            	  LOGGER.debug("debug 444====" );
+
+                insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
+              } catch (Exception e) {
+
+            	  LOGGER.debug("debug 555====" );
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+            }
+
       } else {
-    	  LOGGER.debug("debug 333====>> " );
+
+    	  LOGGER.debug("debug XXX====" );
+
           installAccList = (List<String>) params.get("installAccList");
           ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
-      }
-           LOGGER.debug("debug 444====>> " + params.get("chkInstallAcc").toString()) ;
-      if ("Y".equals(svc0004dmap.get("chkInstallAcc")) || "Y".equals(params.get("chkInstallAcc"))) {
-          try {
-        	  LOGGER.debug("debug 555====>> " );
-              insertInstallationAccessories(installAccList, installResult, CommonUtils.intNvl(params.get("updator")));
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-      }
 
+          if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
+              try {
+                insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
+              } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+            }
+      }
     }
     // LOGISTIC REQUEST END HERE
 
