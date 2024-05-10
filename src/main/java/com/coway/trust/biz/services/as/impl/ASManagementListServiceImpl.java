@@ -1981,15 +1981,26 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
       params.put("user_id", params.get("updator"));
 
+
+
+
+      if (params.get("mobileYn").toString() == "Y")
+      {
+    	  LOGGER.debug("debug 111====>> " );
+      }
+
       if ("Y".equals(params.get("mobileYn"))) {
+    	  LOGGER.debug("debug 222====>> " );
           installAccList = (List<String>) svc0004dmap.get("instAccLst");
       } else {
+    	  LOGGER.debug("debug 333====>> " );
           installAccList = (List<String>) params.get("installAccList");
           ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
       }
-
+           LOGGER.debug("debug 444====>> " + params.get("chkInstallAcc").toString()) ;
       if ("Y".equals(svc0004dmap.get("chkInstallAcc")) || "Y".equals(params.get("chkInstallAcc"))) {
           try {
+        	  LOGGER.debug("debug 555====>> " );
               insertInstallationAccessories(installAccList, installResult, CommonUtils.intNvl(params.get("updator")));
           } catch (Exception e) {
               e.printStackTrace();
