@@ -9,39 +9,39 @@
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
 	    createAUIGrid();
-	    
+
         doGetCombo('/common/selectCodeList.do', '8', '964', 'cmbTypeId', 'S', ''); //Common Code
         doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
-        
+
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId") , event.item );    //edit by hgham 2017-09-21    event.item 추가 
+            fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId") , event.item );    //edit by hgham 2017-09-21    event.item 추가
         });
 	});
-	
+
     $(function(){
-        $('#_custId').keydown(function (event) {  
+        $('#_custId').keydown(function (event) {
             if (event.which === 13) {    //enter
                 console.log('xxx');
                 fn_selectPstRequestDOListAjax();
                 return false;
-            }  
+            }
         });
-        $('#_nric').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#_nric').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_selectPstRequestDOListAjax();
                 return false;
-            }  
+            }
         });
-        $('#_name').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#_name').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_selectPstRequestDOListAjax();
                 return false;
-            }  
+            }
         });
     });
-	
-	function fn_setData(custId , item) { //edit by hgham 2017-09-21    event.item 추가 
+
+	function fn_setData(custId , item) { //edit by hgham 2017-09-21    event.item 추가
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
 	        fn_loadCustomer(custId);
 	    }
@@ -51,12 +51,17 @@
 	    else if ($('#callPrgm').val() == 'ORD_MODIFY_PAY_3RD_PARTY') {
 	        fn_loadThirdPartyPop(custId);
 	    }
-	    else{   //edit by hgham 2017-09-21    callback function (item) 추가  
+	    else if ($('#callPrgm').val() == 'PRE_ORD') {
+            //fn_loadCustomer(custId);
+             fn_loadThirdParty(custId);
+            console.log('callPrgm 4::: ')
+        }
+	    else{   //edit by hgham 2017-09-21    callback function (item) 추가
 	    	eval(${callPrgm}(item));
 	    }
 	    $('#custPopCloseBtn').click();
 	}
-	
+
     function fn_validSearchCustomer() {
         var isValid = true, msg = "";
 
@@ -69,9 +74,9 @@
 
         return isValid;
     }
-	
+
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "ID",              dataField : "custId",    width : 100 }
@@ -87,21 +92,21 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         myGridID = GridCommon.createAUIGrid("grid_cust_wrap", columnLayout, "", gridPros);
     }
 
@@ -111,7 +116,7 @@
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#custSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
-    }    
+    }
 </script>
 </head>
 
