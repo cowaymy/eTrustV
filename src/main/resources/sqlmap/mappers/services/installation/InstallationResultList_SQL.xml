@@ -709,6 +709,7 @@
        , Extent7.CODE_NAME CODE_NAME
        , Extent8.STK_CTGRY_ID STK_CTGRY_ID
        , Extent9.CODE_NAME CODENAME1
+       , Extent9.CODE CTGRY_CODE <!-- Added for bug fix - unable to GR due to missing serial number for aircond. Hui Ding, 13/05/2024 -->
        , Extent8.STK_ID STK_ID
        , Extent8.STK_CODE STK_CODE
        , Extent8.STK_DESC STK_DESC

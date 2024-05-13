@@ -129,19 +129,34 @@
 		    }
 		}
 
-		if( $("#serialRequireChkYn").val() == "N" ){
-		    /* Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
-		        Common.alert(result.message,fn_saveclose);
-		    }); */
-			Common.alert("Can't return the product. Check the serial RequireYN.");
-            return;
-		} else {
-		    var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
-		    $("#addInstallForm #hidRefDocNo").val(pRetnNo); // Retn No
+		/* Added for bug fix - unable to GR due to missing serial number for aircond. Hui Ding, 02/05/2024
+		    ### REMARK: WHEN AIR CONDITIONER PRODUCT OPEN FOR SERIAL SCAN, PLEASE REMOVE THIS CODE
+		*/
 
-	    	Common.ajax("POST", "/homecare/sales/order/hcAddProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
-	            Common.alert(result.message, fn_saveclose);
+		if ("${orderInfo.ctgryCode}" == 'ACI' || "${orderInfo.ctgryCode}" == "ACO"){
+			Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
+	            Common.alert(result.message,fn_saveclose);
 	        });
+		} else {
+
+        /*
+          ### REMARK: WHEN AIR CONDITIONER PRODUCT OPEN FOR SERIAL SCAN, PLEASE REMOVE THIS CODE
+        */
+			if( $("#serialRequireChkYn").val() == "N" ){
+
+			    /* Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
+			        Common.alert(result.message,fn_saveclose);
+			    }); */
+				Common.alert("Can't return the product. Check the serial RequireYN.");
+	            return;
+			} else {
+			    var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
+			    $("#addInstallForm #hidRefDocNo").val(pRetnNo); // Retn No
+
+		    	Common.ajax("POST", "/homecare/sales/order/hcAddProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
+		            Common.alert(result.message, fn_saveclose);
+		        });
+			}
 		}
 	}
 
