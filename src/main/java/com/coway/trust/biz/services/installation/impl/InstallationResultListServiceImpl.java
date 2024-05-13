@@ -4053,7 +4053,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
       if (!installAccList.isEmpty()){
 
-        String mobileYn = "";
         if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y") {
         	installResult.put("mobileYn", "Mobile Entry");
         } else {
