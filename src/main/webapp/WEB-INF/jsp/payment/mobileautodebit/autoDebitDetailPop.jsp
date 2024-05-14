@@ -83,7 +83,7 @@
   });
 
   function loadThirdPartyCustData(){
-    var custData ='${thirdPartyCustomerInfo}';
+    var custData =`${thirdPartyCustomerInfo}`;
     if(custData != null && custData != ""){
         loadThirdPartyPopData(JSON.parse(custData));
     }
