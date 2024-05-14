@@ -155,12 +155,12 @@
     <th scope="row">Expiry Date<span class="must">*</span></th>
     <td colspan=3><input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p " maxlength=4 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
 </tr>
-<tr>
+ <tr>
     <th scope="row">Transaction Date<span class="must">*</span></th>
     <td colspan=3>
         <!--  <input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p"  />-->
         <div class="date_set w100p">
-            <p><input type="text" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" id="payment_transactionDt" value="${paymentInfo.transactionDate}" name="payment_transactionDt"/></p>
+            <p><input type="text" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" id="payment_transactionDt" value="${paymentInfo.transactionDate}" name="payment_transactionDt" onkeydown="return false;" onpaste="return false;" oninput="return false;"/></p>
         </div>
     </td>
 </tr>
