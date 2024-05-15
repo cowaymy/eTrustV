@@ -31,12 +31,18 @@ public class HappyCallResultServiceImpl implements HappyCallResultService{
 	@Override
     public List<EgovMap> selectHappyCallResultList(Map<String, Object> params) {
 		LOGGER.debug("selectHappyCallResultList=====================================>>  " + params);
+		if(params.get("isAc") != null && params.get("isAc").equals("1")){
+			params.put("memTyp", "3"); // ACI = memType = 3
+		}
         return happyCallResultMapper.selectHappyCallResultList(params);
     }
 
 	@Override
 	public List<EgovMap> selectHappyCallResultHistList(Map<String, Object> params) {
 		LOGGER.debug("selectHappyCallResultHistList=====================================>>  " + params);
+		if(params.get("isAc") != null && params.get("isAc").equals("1")){
+			params.put("memTyp", "3"); // ACI = memType = 3
+		}
 		return happyCallResultMapper.selectHappyCallResultHistList(params);
 	}
 

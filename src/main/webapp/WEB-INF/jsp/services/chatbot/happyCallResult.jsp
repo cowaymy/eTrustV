@@ -138,6 +138,7 @@
             }
         }
 
+
 	});
 
 	function fn_searchHappyCallResultList() {
@@ -154,6 +155,16 @@
             return false;
         }
 		return true;
+	}
+
+	function onChangeMemType(val){
+		console.log("testing: " + val);
+		if($("#memTyp").val() == "ACI"){
+			$("#isAc").val("1");
+		}else{
+			$("#isAc").val("0");
+		}
+		console.log($("#memTyp").val());
 	}
 
 	function fn_setToDay() {
@@ -259,7 +270,7 @@
             </td> --%>
             <th scope="row">Agent Type</th>
             <td>
-              <select id="memTyp" name="memTyp" class="w100p" >
+              <select id="memTyp" name="memTyp" class="w100p" onchange="onChangeMemType(this.value)">
                 <option value="2">CD - Cody</option>
                 <option value="3">CT - Coway Technician</option>
                 <option value="7">HT - Homecare Technician</option>
