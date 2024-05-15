@@ -2437,4 +2437,88 @@
   AND S46.INACT = 'N'
   </select>
 
+  <select id="getReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0115D_EGHL_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="createTokenReqs" parameterType="Map">
+    INSERT INTO SYS0115D ( EGHL_REQ_ID
+                                      , EGHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , EGHL_REQ_MOD
+                                      </if>
+                                      , EGHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                  , #{eGhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateTokenResp" parameterType="Map">
+      UPDATE SYS0115D SET EGHL_RESP_TKN = #{authToken}
+                                    , EGHL_RESP_VAL = #{response}
+                                    , EGHL_RESP_STAT_CDE = #{authStat}
+                                    , EGHL_RESP_STAT_RMK = #{authRmk}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE EGHL_REQ_ID =  #{reqsId}
+  </update>
+
+  <insert id="createPmtLinkReqs" parameterType="Map">
+    INSERT INTO SYS0115D ( EGHL_REQ_ID
+                                      , EGHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , EGHL_REQ_MOD
+                                      </if>
+                                      , EGHL_REQ_PRM
+                                      , EGHL_RESP_TKN
+                                      , EGHL_EMAIL_IND
+                                      , EGHL_RESP_RECIP_NM
+                                      , EGHL_RESP_RECIP_CTNT
+                                      , EGHL_RESP_RECIP_EMAIL
+                                      , EGHL_RESP_ORD_NO
+                                      , EGHL_RESP_ORD_DESC
+                                      , EGHL_RESP_ORD_CURR
+                                      , EGHL_RESP_ORD_AMT
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                  , #{eGhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , #{epltoken}
+                  , #{ordPmtLinkEmailInd}
+                  , #{eplcustomername}
+                  , #{eplcustomercontact}
+                  , #{eplcustomeremail}
+                  , #{eplordernumber}
+                  , #{eplorderdesc}
+                  , #{eplcurrency}
+                  , #{eplamount}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updatePmtLinkResp" parameterType="Map">
+      UPDATE SYS0115D SET EGHL_RESP_PMTLK = #{pmtLink}
+                                    , EGHL_RESP_VAL = #{response}
+                                    , EGHL_RESP_STAT_CDE = #{respCde}
+                                    , EGHL_RESP_STAT_RMK = #{respRmk}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE EGHL_REQ_ID =  #{reqsId}
+  </update>
+
+
 </mapper>
