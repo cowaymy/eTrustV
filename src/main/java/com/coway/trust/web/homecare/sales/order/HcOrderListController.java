@@ -141,6 +141,7 @@ public class HcOrderListController {
 		String[] arrDscBrnchId 		= request.getParameterValues("dscBrnchId"); 	// DSC Branch
 		String[] arrRentStus 		= request.getParameterValues("rentStus"); 		// Rent Status
 		String[] arrProd     = request.getParameterValues("productId");       // Product list
+		String[] arrDscCodeId2		= request.getParameterValues("dscCodeId"); 	// DSC Code
 
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
     	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
@@ -154,6 +155,7 @@ public class HcOrderListController {
 		if(arrDscBrnchId   	!= null && !CommonUtils.containsEmpty(arrDscBrnchId))    	params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrRentStus      	!= null && !CommonUtils.containsEmpty(arrRentStus))        	params.put("arrRentStus", arrRentStus);
 		if(arrProd        != null && !CommonUtils.containsEmpty(arrProd))         params.put("arrProd", arrProd);
+		if(arrDscCodeId2        != null && !CommonUtils.containsEmpty(arrDscCodeId2))         params.put("arrDscCodeId2", arrDscCodeId2);
 
 		if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
 		    params.put("memType", sessionVO.getUserTypeId());
