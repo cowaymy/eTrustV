@@ -339,4 +339,14 @@ public interface CommonMapper
     String getSstTaxRate();
 
     EgovMap getSstRelatedInfo();
+
+    int getReqsId ();
+
+    void createTokenReqs ( Map<String, Object> params );
+
+    void updateTokenResp ( Map<String, Object> params );
+
+    void createPmtLinkReqs ( Map<String, Object> params );
+
+    void updatePmtLinkResp ( Map<String, Object> params );
 }
