@@ -473,4 +473,6 @@ public interface CommonService
     int getSstTaxRate();
 
     EgovMap getSstRelatedInfo();
+
+    EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, b;
 }
