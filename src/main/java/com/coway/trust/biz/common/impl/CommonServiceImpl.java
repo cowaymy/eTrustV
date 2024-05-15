@@ -63,6 +63,12 @@ public class CommonServiceImpl
   @Value("${eghl.pmtLink.merchPassword}")
   private String pmtLinkMerchPassw;
 
+  @Value("${eghl.pmtLink.authToken.url}")
+  private String eGhlAuthTokenUrl;
+
+  @Value("${eghl.pmtLink.pmtLink.url}")
+  private String eGhlPmtLinkUrl;
+
   @Override
   public List<EgovMap> selectCodeList( Map<String, Object> params ) {
     return commonMapper.selectCodeList( params );
@@ -1456,6 +1462,14 @@ public class CommonServiceImpl
       throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR MERCHART LOGIN PASSWROD. PLEASE CHECK FOR MERCHART LOGIN PASSWORD.");
     }
 
+    if ("".equals(CommonUtils.nvl(eGhlAuthTokenUrl))) {
+      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL TOKEN AUTHENTICATION URL. PLEASE CHECK FOR eGHL TOKEN AUTHENTICATION URL.");
+    }
+
+    if ("".equals(CommonUtils.nvl(eGhlPmtLinkUrl))) {
+      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL PAYMENT LINK CREATION URL. PLEASE CHECK FOR PAYMENT LINK CREATION URL.");
+    }
+
     // STEP 2 :: VALIDATE REQUIRED PARAMETER
     if ("".equals( CommonUtils.nvl(params.get( "custNm" )))) {
       throw new ApplicationException(AppConstants.FAIL, "CUSTOMER NAME IS REQUIRED.");
@@ -1495,7 +1509,7 @@ public class CommonServiceImpl
 
     // STEP 3 :: SEND REQUEST TO eGHL FOR AUTHENTICATION TOKEN
     // URL OF THE API ENDPOINT
-    URL reqAuthToken = new URL("https://pay.e-ghl.com/IPGPortalAPI2/api/User/PostUserLogin"); // TOBE MOVE TO PROPERTIES FILE
+    URL reqAuthToken = new URL(eGhlAuthTokenUrl); // TOBE MOVE TO PROPERTIES FILE
     // OPEN A CONNECTION TO THE URL
     HttpURLConnection connection = (HttpURLConnection) reqAuthToken.openConnection();
     // SET THE REQUEST METHOD TO POST
@@ -1598,7 +1612,7 @@ public class CommonServiceImpl
 
     // STEP 4 :: REQUEST PAYMENT LINK
     // CREATE URL OBJECT
-    URL urlReqPntLink = new URL("https://pay.e-ghl.com/IPGPortalAPI2/api/Services/PostSendEmailPaymentLink");
+    URL urlReqPntLink = new URL(eGhlPmtLinkUrl);
     // OPEN CONNECTION
     connection = (HttpURLConnection) urlReqPntLink.openConnection();
     // SET HEADERS
