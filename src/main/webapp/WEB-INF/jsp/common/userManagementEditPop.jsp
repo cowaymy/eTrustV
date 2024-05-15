@@ -323,7 +323,7 @@ function fn_deactiveUser(){
         Common.ajax(
                 "GET",
                 "/common/userManagement/editUserManagementList.do",
-                "userId="+$("#userEditForm #userId").val()+"&userStusId="+_userStatusId, //deactive status is 8, active status is 1
+                "userId="+$("#userEditForm #userId").val()+"&userStusId="+_userStatusId+ "&hrCode=" + $("#userEditForm #hrCode").val(), //deactive status is 8, active status is 1
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
                 },

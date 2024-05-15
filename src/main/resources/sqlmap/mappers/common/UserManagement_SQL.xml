@@ -223,8 +223,7 @@ USING (
       , #{callcenterUseYn} AS callcenter_use_yn
       , NVL(UPPER(b.mem_code),UPPER(#{userName})) AS hr_code
     FROM  dual A, ORG0001D B
-    where B.nric = #{userNric}
-    and b.stus=1
+    where B.mem_code = #{hrCode}
 ) b
 ON ( a.user_id = b.user_id )
 WHEN MATCHED THEN
