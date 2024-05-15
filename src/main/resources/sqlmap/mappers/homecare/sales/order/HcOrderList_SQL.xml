@@ -341,6 +341,12 @@
                          <if test='isECommerce != null and isECommerce != ""'>
 				           AND SAL01.ECOMM_ORD_ID > 0
 				         </if>
+				         <if test='arrDscCodeId2 != null and arrDscCodeId2 != ""'>
+                            AND V1.DSC_CODE_ID2 IN
+                            <foreach item="item" collection="arrDscCodeId2" index="index" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
          ) T
          ORDER BY T.ORD_NO ASC
     </select>

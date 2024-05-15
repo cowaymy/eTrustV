@@ -190,9 +190,11 @@
 </tr> --%>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
-    <td colspan="3"><span>(${orderDetail.installationInfo.dscCode} )${orderDetail.installationInfo.dscName}</span></td>
+    <td><span>(${orderDetail.installationInfo.dscCode} )${orderDetail.installationInfo.dscName}</span></td>
+    <th scope="row">DSC Code</th>
+    <td><span>${orderDetail.installationInfo.dscCode2}</span></td>
     <th scope="row"><spring:message code="sal.title.text.dscRegion" /></th>
-    <td ><span>${orderDetail.installationInfo.dscRegion}</span></td>
+    <td><span>${orderDetail.installationInfo.dscRegion}</span></td>
 </tr>
 <tr>
 <th scope="row"><spring:message code="sal.text.instDt" /></th>

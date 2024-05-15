@@ -98,6 +98,7 @@
         doDefCombo(categoryCdList, '' ,'listRentStus', 'M', 'fn_multiCombo');
 
         doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '11', ' - ', '',   'listDscCodeId', 'M', 'fn_multiCombo'); //DSC Code
 
 //         doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
@@ -511,6 +512,12 @@
         });
         $("#listProductId").multipleSelect("checkAll");
 
+        $('#listDscCodeId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
     }
 
     function fn_multiCombo2(){
@@ -838,6 +845,14 @@
                         <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
                         <th scope="row">is e-Commerce</th>
                         <td><input id="isECommerce" name="isECommerce" type="checkbox"/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row">DSC Code</th>
+                        <td><select id="listDscCodeId" name="dscCodeId" class="multy_select w100p" multiple="multiple"></select></td>
                     </tr>
                     <tr>
                         <th scope="row" colspan="6"><span class="must"><spring:message code='sales.msg.ordlist.keyin' /></span></th>
