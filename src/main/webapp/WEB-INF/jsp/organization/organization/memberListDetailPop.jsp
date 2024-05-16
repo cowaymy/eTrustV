@@ -1075,7 +1075,7 @@ $("#HP_img").dblclick(function(){
 <aside class="title_line"><!-- title_line start -->
     <h2>Basic Information</h2>
     <div class="right_chk">
-        <label for="mobileApp">Supplement Sales Qualification</label>
+        <label for="suppl">Supplement Sales Qualification</label>
         <input type="checkbox" disabled="disabled" id="isSuppl" <c:if test="${memberView.isSuppl eq 'Y'}">checked</c:if>>
 
         <label for="mobileApp">Mobile App</label>
