@@ -23,6 +23,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -625,7 +626,7 @@ public class CommonController {
   }
 
   @RequestMapping(value = "/reqEghlPmtLink.do", method = RequestMethod.GET)
-  public ResponseEntity<EgovMap> reqEghlPmtLink( @RequestParam Map<String, Object> params ) throws IOException, b {
+  public ResponseEntity<EgovMap> reqEghlPmtLink( @RequestParam Map<String, Object> params ) throws IOException, JSONException {
     EgovMap rtnData = commonService.reqEghlPmtLink( params );
     return ResponseEntity.ok( rtnData );
   }
