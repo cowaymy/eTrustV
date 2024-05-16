@@ -641,7 +641,13 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                       attendeeInfo.put("coursMemId", userId.get("memId"));
                       attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
                       attendeeInfo.put("coursTestResult", p.getUserResult().get(user).getTrainingResult());
-                      attendeeInfo.put("supplementInd", supplementInd);
+
+                      if(supplementInd.equals("1")){
+                          attendeeInfo.put("supplementInd", "Y");
+                      }
+                      else{
+                          attendeeInfo.put("supplementInd", "N");
+                      }
                       if(!p.getUserResult().get(user).getCdpPoint().isEmpty()){
                     	  attendeeInfo.put("coursCdpPoint", p.getUserResult().get(user).getCdpPoint());
                       }
@@ -653,7 +659,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                       if(supplementInd.equals("1")){
                     	  Map<String, Object> memInfo = new HashMap<String, Object>();
                     	  memInfo.put("MemberID", userId.get("memId"));
-                          attendeeInfo.put("supplementInd", supplementInd);
+                    	  memInfo.put("supplementInd", "Y");
                     	  lmsApiMapper.updateMemSupplimentFlag(memInfo);
                       }
 
