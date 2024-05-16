@@ -310,7 +310,6 @@
 
     $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlCTCode").val(result[0].c11);
-    $("#partnerCodeText").val(result[0].partnerCode);
     $("#partnerCode").val(result[0].partnerCodeId);
     $("#CTID").val(result[0].c11);
 
@@ -1055,7 +1054,7 @@
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
-    $("#partnerCodeText").val(selectedItems[0].item.partnerCode);
+    doGetCombo('/homecare/services/as/getPartnerMemInfo.do?BRANCH_ID='+ selectedItems[0].item.asBrnchId, '', selectedItems[0].item.partnerCodeId, 'partnerCode', 'S', ''); //DDL PARTNER CODE
     $("#partnerCode").val(selectedItems[0].item.partnerCodeId);
 
     if (selectedItems[0].item.asMalfuncId != "") {
@@ -1270,7 +1269,6 @@
     $('#iscommission').removeAttr("disabled").removeClass("readonly");
     $('#isTransferToDT').removeAttr("disabled").removeClass("readonly");
     $('#partnerCode').removeAttr("disabled").removeClass("readonly");
-    $('#partnerCodeText').removeAttr("disabled").removeClass("readonly");
     //$('#def_type').removeAttr("disabled").removeClass("readonly");
     //$('#def_code').removeAttr("disabled").removeClass("readonly");
     //$('#def_part').removeAttr("disabled").removeClass("readonly");
@@ -1400,7 +1398,6 @@
     $("#iscommission").attr("disabled", true);
     $("#isTransferToDT").attr("disabled", true);
     $('#partnerCode').attr("disabled", true);
-    $('#partnerCodeText').attr("disabled", true);
 
     // AS CHARGES FEES
     fn_clearPanelField_ASChargesFees();
@@ -1547,8 +1544,7 @@
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
       INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',      
-      //PARTNER_CODE_ID : $('#partnerCode').val(),
-      PARTNER_CODE : $('#partnerCodeText').val(),
+      PARTNER_CODE : $('#partnerCode').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1668,7 +1664,6 @@
     $("#iscommission").attr("disabled", true);
     $("#isTransferToDT").attr("disabled", true);
     $("#partnerCode").attr("disabled", true);
-    $('#partnerCodeText').attr("disabled", true);
 
     $("#def_type").attr("disabled", true);
     $("#def_code").attr("disabled", true);
@@ -2727,9 +2722,8 @@ function f_multiCombo(){
           <th scope="row">DT Partner Code<span id='m7' name='m7' class="must" style="display:none">*</span>
           </th>
           <td>
-            <input type="hidden" title="" placeholder="partner code" class="" id='partnerCode' name='partnerCode' />
-            <input type="text" title="" placeholder="" disabled="disabled" id='partnerCodeText' name='partnerCodeText' />
-            </td>
+            <select id='partnerCode' name='partnerCode' class="w100p"></select>
+         </td>
          </tr>
          <tr>
          <th scope="row"><spring:message code='sal.title.warehouse' /></th>

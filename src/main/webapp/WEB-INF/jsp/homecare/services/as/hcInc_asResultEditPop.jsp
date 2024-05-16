@@ -410,7 +410,7 @@
     //$("#ddlCTCodeText").val(result[0].c12);
     $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlDSCCodeText").val(result[0].c5);
-    $("#partnerCodeText").val(result[0].partnerCode);
+    doGetCombo('/homecare/services/as/getPartnerMemInfo.do?BRANCH_ID='+ result[0].asBrnchId, '', result[0].partnerCodeId, 'partnerCode', 'S', ''); //DDL PARTNER CODE
     $("#partnerCode").val(result[0].partnerCodeId);
 
     $("#ddlWarehouse").val(result[0].asWhId);
@@ -602,7 +602,6 @@
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
       $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
       $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
-      $("#partnerCodeText").val(selectedItems[0].item.partnerCode);
       $("#partnerCode").val(selectedItems[0].item.partnerCodeId);
     }
 
@@ -756,7 +755,6 @@
       $("#iscommission").attr("disabled", true);
       $('#isTransferToDT').attr("disabled", true);
       $('#partnerCode').attr("disabled", true);
-      $('#partnerCodeText').attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -792,7 +790,6 @@
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
       //$('#iscommission').removeAttr("disabled").removeClass("readonly");
       $('#partnerCode').removeAttr("disabled").removeClass("readonly");
-      $('#partnerCodeText').removeAttr("disabled").removeClass("readonly");
 
       $("#iscommission").attr("disabled", false);
 
@@ -869,7 +866,6 @@
       $('#ddlFailReason').attr("disabled", true);
       $('#txtRemark').attr("disabled", true);
       $('#partnerCode').attr("disabled", true);
-      $('#partnerCodeText').attr("disabled", true);
 
       $('#appDate').attr("disabled", true);
       $('#CTGroup').attr("disabled", true);
@@ -885,7 +881,6 @@
       $('#CTGroup').removeAttr("disabled").removeClass("readonly");
       $('#callRem').removeAttr("disabled").removeClass("readonly");
       $('#partnerCode').removeAttr("disabled").removeClass("readonly");
-      $('#partnerCodeText').removeAttr("disabled").removeClass("readonly");
 
       // CLEAR DATE
       $('#dpSettleDate').val("");
@@ -967,7 +962,6 @@
       $("#txtFilterCharge").attr("disabled", true);
       $("#txtTotalCharge").attr("disabled", true);
       $('#partnerCode').attr("disabled", true);
-      $('#partnerCodeText').attr("disabled", true);
 
       //$("#promisedDate").attr("disabled", true);
       //$("#productGroup").attr("disabled", true);
@@ -1016,7 +1010,6 @@
       $("#txtFilterCharge").val("0.00").attr("disabled", true);
       $("#txtTotalCharge").val("0.00").attr("disabled", true);
       $('#partnerCode').attr("disabled", true);
-      $('#partnerCodeText').attr("disabled", true);
 
       /*$("input:radio[name='replacement']").removeAttr('checked');
       $("#promisedDate").val("").attr("disabled", "disabled");
@@ -1782,7 +1775,7 @@
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
       INS_ACC_CHK : $('#chkInstallAcc').prop("checked") ? 'on' : '',
-      PARTNER_CODE : $('#partnerCodeText').val(),
+      PARTNER_CODE : $('#partnerCode').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -2545,8 +2538,7 @@
        <th scope="row">DT Partner Code<span id='m7' name='m7' class="must" style="display:none">*</span>
        </th>
        <td>
-        <input type="hidden" title="" placeholder="partner code" class="" id='partnerCode' name='partnerCode' />
-        <input type="text" title="" placeholder="" disabled="disabled" id='partnerCodeText' name='partnerCodeText' />
+        <select id='partnerCode' name='partnerCode' class="w100p"></select>
        </td>
       </tr>
       <tr>
