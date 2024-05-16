@@ -26,6 +26,7 @@ public class ResultForm {
 	private String trainingResult;
 	private String cdpPoint;
 	private String attendDay;
+	private String supplementInd;
 
 	public String getUsername() {
 		return username;
@@ -57,6 +58,11 @@ public class ResultForm {
 	public void setAttendDay(String attendDay) {
 		this.attendDay = attendDay;
 	}
-
+	public String getSupplementInd() {
+		return supplementInd;
+	}
+	public void setSupplementInd(String supplementInd) {
+		this.supplementInd = supplementInd;
+	}
 
 }
