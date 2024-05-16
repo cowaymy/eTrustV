@@ -629,7 +629,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
            		   		  throw e5;
            		   	  }
 
-           		   	  String supplementInd = p.getUserResult().get(user).getTrainingResult();
+           		   	  String supplementInd = p.getUserResult().get(user).getSupplementInd();
                		  if(StringUtil.isBlank(supplementInd)){
      	        		  Exception e6 = new Exception("Supplement Course Indicator is required");
      	        		  throw e6;
