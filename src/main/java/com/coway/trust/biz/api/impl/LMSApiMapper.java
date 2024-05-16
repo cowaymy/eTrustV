@@ -37,4 +37,6 @@ public interface LMSApiMapper {
 	int cntCourseCheck(Map<String, Object> params);
 
 	void updateRookieForHp(Map<String, Object> params);
+
+	void updateMemSupplimentFlag(Map<String, Object> params);
 }

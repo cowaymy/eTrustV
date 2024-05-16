@@ -144,6 +144,9 @@
        <if test="shirtSize != null and shirtSize != ''">
        , COURS_MEM_SHIRT_SIZE = #{shirtSize}
        </if>
+       <if test="supplementInd != null and supplementInd != ''">
+       , SUPPLEMENT_IND = #{supplementInd}
+       </if>
 
     WHERE 1 = 1
 
@@ -178,4 +181,7 @@
         update org0001d set rookie = '1' where mem_id = #{MemberID}
 </update>
 
+<update id="updateMemSupplimentFlag" parameterType="Map">
+        update org0001d set SUPPLEMENT_IND = #{supplementInd} where mem_id = #{MemberID}
+</update>
 </mapper>
