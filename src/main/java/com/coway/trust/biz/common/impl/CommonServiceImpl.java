@@ -26,13 +26,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.businessobjects.report.web.json.JSONObject;
-import com.businessobjects.report.web.json.b;
+import org.codehaus.jettison.json.JSONObject;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommStatusFormVO;
 import com.coway.trust.biz.common.CommonService;
@@ -1434,14 +1433,14 @@ public class CommonServiceImpl
     // return commonMapper.getSstRelatedInfo();
   }
 
-  public EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, b {
+  public EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, JSONException  {
     /*params.put( "custNm", "TESTING" );
     params.put( "custCtnt", "0163200016" );
     params.put( "custEmail", "wayne.ong@coway.com.my" );
     params.put( "ordDesc", "eSOF1021452" );
     params.put( "ordNo", "000001" );
-    params.put( "ordTtlAmt", "1500.50" );
-    params.put( "ordPmtLinkEmailInd", "Y" );
+    params.put( "ordTtlAmt", "1502.50" );
+    params.put( "ordPmtLinkEmailInd", "N" );
     // GET TODAY DATE
     LocalDate today = LocalDate.now();
 
