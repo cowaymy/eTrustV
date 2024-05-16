@@ -1,8 +1,12 @@
 package com.coway.trust.biz.common;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jettison.json.JSONException;
+
+import com.businessobjects.report.web.json.b;
 import com.coway.trust.web.common.CommStatusVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -474,5 +478,5 @@ public interface CommonService
 
     EgovMap getSstRelatedInfo();
 
-    EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, b;
+    EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, JSONException;
 }
