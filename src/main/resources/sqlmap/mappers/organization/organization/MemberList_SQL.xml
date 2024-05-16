@@ -938,6 +938,7 @@ FROM
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.APLICNT_MEETPOINT,
        Limit1.MOBILE_USE_YN,
+       Limit1.IS_SUPPL,
        Limit1.NO_TBB
        ,Limit1.INC_TAX,
        Limit1.FB_LINK,
@@ -1294,6 +1295,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 BANK.NAME AS BANK_NAME,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 Extent1.MOBILE_USE_YN,
+                Extent1.IS_SUPPL,
                 Extent1.NO_TBB
                 ,Extent1.INC_TAX,
                 Extent1.FB_LINK,
