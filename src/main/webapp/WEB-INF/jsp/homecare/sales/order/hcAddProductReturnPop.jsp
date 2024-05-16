@@ -13,6 +13,8 @@
 	$(document).ready(function() {
 	    var myGridID_view;
 
+        doGetCombo('/homecare/sales/order/getPartnerMemInfo.do?ORDER_NO='+ '${installResult.salesOrdNo}', 0, '', 'partnerCode', 'S', ''); //DDL PARTNER CODE
+
 	    createInstallationViewAUIGrid();
 	    fn_viewInstallResultSearch();
 
@@ -70,8 +72,8 @@
 	    }
 	    $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
 	    $("#checkCommission").prop("checked",true);
-	    $("#addInstallForm #partnerCodeText").prop("readonly" , false);
-	    $("#addInstallForm #partnerCodeText").attr("disabled", false);
+	    $("#addInstallForm #partnerCode").prop("readonly" , false);
+	    $("#addInstallForm #partnerCode").attr("disabled", false);
 
 	    $("#addInstallForm #installStatus").change(function () {
 	        if($("#addInstallForm #installStatus").val() == 4) {
@@ -79,8 +81,8 @@
 	                $("#addInstallForm #installDate").prop("readonly" , false);
 	                $("#addInstallForm #installDate").attr("class" , "j_date w100p hasDatepicker");
 	                $("#addInstallForm #installDate").attr("placeholder" , "DD/MM/YYYY");
-	                $("#addInstallForm #partnerCodeText").prop("readonly" , false);
-	                $("#addInstallForm #partnerCodeText").attr("disabled", false);
+	                $("#addInstallForm #partnerCode").prop("readonly" , false);
+	                $("#addInstallForm #partnerCode").attr("disabled", false);
 	        } else {
 	            $("#checkCommission").prop("checked",false);
 	            $("#addInstallForm #installDate").val("");
@@ -88,8 +90,8 @@
 	            $("#addInstallForm #installDate").attr("readonly" , true);
 	            $("#addInstallForm #installDate").attr("class" , "disabled");
 	            $("#addInstallForm #installDate").attr("placeholder" , "only complete case");
-	            $("#addInstallForm #partnerCodeText").prop("readonly" , true);
-	            $("#addInstallForm #partnerCodeText").attr("disabled", true);
+	            $("#addInstallForm #partnerCode").prop("readonly" , true);
+	            $("#addInstallForm #partnerCode").attr("disabled", true);
 	        }
 	    });
 
@@ -700,8 +702,7 @@
 			    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" id="CTID" name="CTID" />
 			    <th scope="row">DT Partner Code<span id='m7' name='m7' class="must" style="display:none">*</span></th>
 		        <td>
-			        <input type="hidden" title="" placeholder="partner code" class="" id='partnerCode' name='partnerCode' />
-			        <input type="text" title="" style="width:100%;" placeholder="" disabled="disabled" id='partnerCodeText' name='partnerCodeText' />
+                    <select id='partnerCode' name='partnerCode' class="w100p"></select>
 		        </td>
 			</tr>
 		</tbody>

@@ -437,11 +437,14 @@
 
   </select>
 
-  <select id="getPartnerMemCode" parameterType="Map" resultType="egovMap">
-    SELECT MEM_ID
-         , MEM_CODE
+  <select id="getPartnerMemInfo" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID AS CODE_ID,
+           MEM_CODE AS CODE_NAME
     FROM ORG0001D
-    WHERE MEM_CODE = #{partnerCodeText}
+    WHERE BRNCH = (SELECT A.BRNCH_ID FROM SAL0045D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE  B.SALES_ORD_NO = #{ORDER_NO})
+    AND MEM_TYPE NOT IN (4)
   </select>
 
 </mapper>

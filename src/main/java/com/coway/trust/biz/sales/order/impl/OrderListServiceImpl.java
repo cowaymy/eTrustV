@@ -358,7 +358,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     	cvMp.put("stkRetnResultIsSynch",   "0");
     	cvMp.put("stkRetnAllowComm",  	"1");
     	cvMp.put("stkRetnCtMemId",  		params.get("CTID"));
-    	cvMp.put("partnerCodeId",  		params.get("partnerCodeId"));
+    	cvMp.put("partnerCode",  		params.get("partnerCode"));
     	cvMp.put("checkinDt",  					String.valueOf( params.get("returnDate") ) );
     	cvMp.put("checkinTm",  				"");
     	cvMp.put("checkinGps",  				"");

@@ -1341,10 +1341,11 @@
     ]]>
   </select>
 
-  <select id="getPartnerMemCode" parameterType="Map" resultType="egovMap">
-    SELECT MEM_ID
-         , MEM_CODE
+  <select id="getPartnerMemInfo" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID AS CODE_ID,
+           MEM_CODE AS CODE_NAME
     FROM ORG0001D
-    WHERE MEM_CODE = #{partnerCode}
+    WHERE BRNCH = #{BRANCH_ID}
+    AND MEM_TYPE NOT IN (4)
   </select>
 </mapper>

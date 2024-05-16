@@ -73,4 +73,6 @@ public interface HcASManagementListService {
 
 	List<EgovMap> getAsDefectEntry(Map<String, Object> params);
 
+	public List<EgovMap> getPartnerMemInfo(Map<String, Object> params) throws Exception;
+
 }

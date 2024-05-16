@@ -413,4 +413,12 @@ public class HcOrderCancelController {
 		return ResponseEntity.ok(rtnMap);
 	}
 
+	@RequestMapping(value = "/getPartnerMemInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getPartnerMemInfo(@RequestParam Map<String, Object> params, HttpServletRequest request,
+        ModelMap model) throws Exception {
+
+  	  List<EgovMap> list = hcOrderCancelService.getPartnerMemInfo(params);
+        return ResponseEntity.ok(list);
+    }
+
 }

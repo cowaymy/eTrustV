@@ -60,7 +60,7 @@ public interface HcASManagementListMapper {
 
 	List<EgovMap> getAsDefectEntry(Map<String, Object> params);
 
-	public EgovMap getPartnerMemCode(Map<String, Object> params);
+	public List<EgovMap> getPartnerMemInfo(Map<String, Object> params);
 
 
 }

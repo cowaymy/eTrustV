@@ -747,7 +747,7 @@
                #{resultIcmobileNo},
                #{resultRptEmailNo},
                #{resultAceptName},
-               #{partnerCodeId}
+               #{partnerCode}
     )
   </insert>
 

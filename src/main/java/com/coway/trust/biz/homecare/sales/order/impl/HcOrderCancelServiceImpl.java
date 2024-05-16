@@ -152,8 +152,6 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		params.put("brnchId", sessionVO.getUserBranchId());
 		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
 		params.put("salesOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));
-		EgovMap partnerCode = hcOrderCancelMapper.getPartnerMemCode(params);
-	  	params.put("partnerCodeId", partnerCode.get("memId"));
 
 		// return - Matress Product
 		EgovMap rtnMat = orderListService.insertProductReturnResultSerial(params);
@@ -237,5 +235,10 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 	    return message;
 	}
+
+	@Override
+    public List<EgovMap> getPartnerMemInfo(Map<String, Object> params){
+    	return hcOrderCancelMapper.getPartnerMemInfo(params);
+    }
 
 }

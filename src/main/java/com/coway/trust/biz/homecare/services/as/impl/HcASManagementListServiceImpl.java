@@ -189,6 +189,11 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
       return hcASManagementListMapper.hcChkRcdTms(params);
     }*/
 
+    @Override
+    public List<EgovMap> getPartnerMemInfo(Map<String, Object> params) throws Exception{
+    	return hcASManagementListMapper.getPartnerMemInfo(params);
+    }
+
     // as result pop save
     @Override
     public ReturnMessage newASInHouseAddSerial(Map<String, Object> params) throws Exception{
@@ -205,8 +210,6 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
   	  params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
 //  	  params.put("asCTId", svc0004dmap.get("AS_CT_ID"));
 //  	  params.put("asBrnchId", svc0004dmap.get("AS_BRNCH_ID"));
-  	  EgovMap partnerCode = hcASManagementListMapper.getPartnerMemCode(params);
-  	  params.put("partnerCodeId", partnerCode.get("memId"));
 
   	  int noRcd = ASManagementListService.chkRcdTms(params);
       //int noRcd = hcASManagementListService.hcChkRcdTms(params);
@@ -361,8 +364,6 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
         String ACC_INVOICE_NO = String.valueOf(svc0004dmap.get("ACC_INVOICE_NO")) != "" ? String.valueOf(svc0004dmap.get("ACC_INVOICE_NO")) : String.valueOf(svc0004dmap.get("AS_RESULT_NO"));
         params.put("ACC_BILL_ID", ACC_BILL_ID);
         params.put("ACC_INVOICE_NO", ACC_INVOICE_NO);
-        EgovMap partnerCode = hcASManagementListMapper.getPartnerMemCode(params);
-    	params.put("partnerCodeId", partnerCode.get("memId"));
 
         seqpay17Map = ASManagementListMapper.getPAY0017SEQ(params);
         ACC_INV_VOID_ID = String.valueOf(seqpay17Map.get("seq"));

@@ -69,4 +69,6 @@ public interface HcOrderCancelService {
 	 */
 	public ReturnMessage saveDTAssignment(Map<String, Object> params, SessionVO sessionVO);
 
+	public List<EgovMap> getPartnerMemInfo(Map<String, Object> params);
+
 }
