@@ -11,4 +11,6 @@ public interface SelfCareHostToHostService {
 
 	List<EgovMap> getSelfCareTransactionDetails(Map<String, Object> params);
 
+	List<EgovMap> getSelfcareBatchDetailReport(Map<String, Object> params);
+
 }

@@ -35,5 +35,9 @@ public class SelfCareHostToHostServiceImpl extends EgovAbstractServiceImpl imple
 	public List<EgovMap> getSelfCareTransactionDetails(Map<String,Object> params){
 		return selfCareHostToHostMapper.getSelfCareTransactionDetails(params);
 	}
+
+	@Override
+	public List<EgovMap> getSelfcareBatchDetailReport(Map<String,Object> params){
+		return selfCareHostToHostMapper.getSelfcareBatchDetailReport(params);
+	}
 }
- 

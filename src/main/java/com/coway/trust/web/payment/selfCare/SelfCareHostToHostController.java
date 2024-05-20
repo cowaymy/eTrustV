@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,22 @@ public class SelfCareHostToHostController {
 			 params.put("statusIdList",status);
 		}
 		List<EgovMap> result = selfCareHostToHostService.getSelfCareTransactionDetails(params);;
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/selfCareReportDetailPop.do")
+	public String selfCareReportDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		model.addAttribute("detail", params);
+		return "payment/selfCare/selfCareReportDetailPop";
+	}
+
+	@RequestMapping(value = "/getSelfcareBatchDetailReport.do")
+	public ResponseEntity<List<EgovMap>> getSelfcareBatchDetailReport(@RequestParam Map<String, Object> params, HttpServletRequest request,ModelMap model, SessionVO sessionVO) {
+
+		String[] statusIdList = request.getParameterValues("payModeStus");
+		 params.put("paymentModeList",statusIdList);
+		List<EgovMap> result = selfCareHostToHostService.getSelfcareBatchDetailReport(params);;
 		return ResponseEntity.ok(result);
 	}
 }

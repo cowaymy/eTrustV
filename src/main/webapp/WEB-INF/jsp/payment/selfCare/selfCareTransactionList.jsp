@@ -34,7 +34,23 @@
 			    	fn_viewSelfCareDetailPop(fileId);
 				}
 	         }
+	      	else{
+	      		Common.alert("No record selected.");
+	      	}
 	    });
+
+	    $("#_generateBtn").click(function() {
+	    	var selIdx = AUIGrid.getSelectedIndex(selfCareGridID)[0];
+	      	if(selIdx > -1) {
+      			var fileId=  AUIGrid.getCellValue(selfCareGridID, selIdx, "fileId")
+				if(fileId != null && fileId > 0){
+					fn_viewSelfCareReportDetailPop(fileId);
+				}
+	         }
+	      	else{
+	      		Common.alert("No record selected.");
+	      	}
+		});
 	});
 
 	function fn_viewSelfCareDetailPop(fileId){
@@ -42,6 +58,13 @@
 				 fileId : fileId
 		    };
 		    Common.popupDiv("/payment/selfCareHostToHost/selfCareDetailPop.do", data, null, true, "selfCareDetailPop");
+	}
+
+	function fn_viewSelfCareReportDetailPop(fileId){
+		 var data = {
+				 fileId : fileId
+		    };
+		    Common.popupDiv("/payment/selfCareHostToHost/selfCareReportDetailPop.do", data, null, true, "selfCareReportDetailPop");
 	}
 
 	function f_multiCombo() {
