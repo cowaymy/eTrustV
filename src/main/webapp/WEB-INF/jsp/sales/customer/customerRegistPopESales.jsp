@@ -325,6 +325,7 @@
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
             $("select[name=cmbCorpTypeId]").addClass("w100p");
             $("#_cmbCorpTypeId_").val('1173');
+            $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
             $("#_cmbNation_").val('');
             $("select[name=cmbNation]").addClass("w100p disabled");
             $("select[name=cmbNation]").attr('disabled', 'disabled');
@@ -383,6 +384,7 @@
             }
 
             $("#_nric_").attr({"disabled" : true , "class" : "w100p"});
+            $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
         }else{
             $("#_oldNric_").val('');
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -407,6 +409,24 @@
         }
 
     }
+
+   function onChangeCorpType(val){
+       if($("#_cmbTypeId_").val() == '965'){
+           //CELESTE - 20240510 - LHDN E-INVOICE [S]
+
+           if($("#_cmbCorpTypeId_ :selected").val() != '1151' ){
+               $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
+           }
+           else{
+               $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+           }
+
+           //CELESTE - 20240510 - LHDN E-INVOICE [E]
+       }
+       else{
+           $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+       }
+   }
 
    function onChangeNation(val){
        if($("#_cmbNation_").val() == '1'){ // MALAYSIAN
@@ -443,6 +463,16 @@
     // save
     function fn_saveNewCustomer(){
 
+    	var eInvValue = 0;
+
+        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
+            eInvValue = 1;
+        }else{
+            eInvValue = 0;
+        }
+
+        console.log("eInvoice Flag: " + eInvValue);
+
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
@@ -468,6 +498,9 @@
                     telO : insBasicForm.telO.value,
                     ext : insBasicForm.ext.value,
                     //rem : insBasicForm.rem.value,
+                    sstRgistNo : insBasicForm.sstRgistNo.value,
+                    tin : insBasicForm.tin.value,
+                    eInvFlg : eInvValue,
 
                     addrDtl : null,//insAddressForm.addrDtl.value,
                     areaId : null, //insAddressForm.areaId.value,
@@ -484,6 +517,8 @@
                     receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 }
             };
+
+            console.log(customerForm);
 
             Common.ajax("POST", "/sales/customer/insCustBasicInfoEkeyin.do", customerForm, function(result) {
 
@@ -810,6 +845,17 @@
             }
         }
 
+        if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
+            if($("#_tin_").val() == "" || $("#_tin_").val() == null){
+                Common.alert("Please enter Company TIN to proceed.");
+                return;
+             }
+        }
+
+        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){
+            Common.alert('Please fill in TIN to receive e-Invoice.');
+            return false;
+        }
 
 
         return true;
@@ -1161,7 +1207,7 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.companyType2" /></th>
-                                <td id="corpTypeForm"><select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" disabled="disabled"></select></td>
+                                <td id="corpTypeForm"><select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" onchange="onChangeCorpType(this.value)" disabled="disabled"></select></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
@@ -1178,6 +1224,14 @@
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
                                 <td><input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18" placeholder="Old IC/Army/Police" class="w100p" disabled="disabled" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="tinTitle"><spring:message code="sal.title.text.tin" /></th>
+                                <td><input type="text" title="" id="_tin_" name="tin" maxlength="18" placeholder="TIN" class="w100p"/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
+                                <td><input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="18" placeholder="SST Registration No" class="w100p" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must foreigner">*</span>
@@ -1252,6 +1306,10 @@
 										</div>
 									</div>
 								</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
+						        <td><input id="isEInvoice" name="isEInvoice" type="checkbox" /></td>
 							</tr>
                             <tr>
                                 <td colspan=2><span class="red_text">No Contain ' - ' in contact numbers</span></td>

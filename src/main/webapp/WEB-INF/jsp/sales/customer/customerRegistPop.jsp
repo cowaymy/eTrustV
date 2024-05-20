@@ -298,6 +298,24 @@
 //       });
 //    }
 
+    function onChangeCorpType(val){
+    	if($("#_cmbTypeId_").val() == '965'){
+            //CELESTE - 20240510 - LHDN E-INVOICE [S]
+
+            if($("#_cmbCorpTypeId_ :selected").val() != '1151' ){
+                $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
+            }
+            else{
+                $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+            }
+
+            //CELESTE - 20240510 - LHDN E-INVOICE [E]
+    	}
+    	else{
+    		$("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+    	}
+    }
+
     // Customer Type 선택시 Company Type 변경 (Basic Info)
     function onChangeCompanyType(val){
 
@@ -306,6 +324,7 @@
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
             $("select[name=cmbCorpTypeId]").addClass("w100p");
             $("#_cmbCorpTypeId_").val('1173');
+            $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
             $("#_cmbNation_").val('');
             $("select[name=cmbNation]").addClass("w100p disabled");
             $("select[name=cmbNation]").attr('disabled', 'disabled');
@@ -342,6 +361,7 @@
             $("input:radio[name='gender']").attr("disabled" , false);
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+            $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
         }else{
         	$("#_oldNric_").val('');
         	$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -395,6 +415,16 @@
 
         var custId;
 
+        var eInvValue = 0;
+
+        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
+        	eInvValue = 1;
+        }else{
+        	eInvValue = 0;
+        }
+
+        console.log("eInvoice Flag: " + eInvValue);
+
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
@@ -420,6 +450,9 @@
                     ext : insBasicForm.ext.value,
                     rem : insBasicForm.rem.value,
                     receivingMarketingMsgStatus: insBasicForm.marketingMessageSelection.value,
+                    sstRgistNo : insBasicForm.sstRgistNo.value,
+                    tin : insBasicForm.tin.value,
+                    eInvFlg : eInvValue,
 
                     addrDtl : insAddressForm.addrDtl.value,
                     areaId : insAddressForm.areaId.value,
@@ -435,6 +468,8 @@
                     asEmail : insContactForm.asEmail.value
                 }
             };
+
+            console.log(customerForm);
 
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
 
@@ -698,6 +733,17 @@
             return false;
         }
 
+        if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
+            if($("#_tin_").val() == "" || $("#_tin_").val() == null){
+                Common.alert("Please enter Company TIN to proceed.");
+                return;
+             }
+        }
+
+        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){
+        	Common.alert('Please fill in TIN to receive e-Invoice.');
+        	return false;
+        }
 
 //      if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
@@ -1062,7 +1108,7 @@
             </td>
             <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
             <td id="corpTypeForm">
-                <select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" disabled="disabled">
+                <select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" onchange="onChangeCorpType(this.value)" disabled="disabled">
                 </select>
             </td>
         </tr>
@@ -1090,6 +1136,16 @@
             <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
             <td>
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
+            </td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
+            <td>
+                <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="30" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+            </td>
+            <th scope="row" id="tinTitle"><spring:message code="sal.title.text.tin" /></th>
+            <td>
+                <input type="text" title="" id="_tin_" name="tin" placeholder="TIN" class="w100p" />
             </td>
         </tr>
         <tr>
@@ -1169,6 +1225,17 @@
 			    </div>
 		    </div>
 			</td>
+		<th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
+	    <td>
+	        <c:choose>
+	        <c:when test="${result.eInvFlg eq '1'}">
+	            <input id="isEInvoice" name="isEInvoice" type="checkbox"  checked />
+	        </c:when>
+	        <c:otherwise>
+	            <input id="isEInvoice" name="isEInvoice" type="checkbox" />
+	        </c:otherwise>
+	        </c:choose>
+	    </td>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.remark" /></th>

@@ -12,6 +12,7 @@
     var thirdPartyGridID; // third party list
     var cowayRewardsGridID; // coway rewards list
     var custStusHistGridID; //customer status history log list
+    var custBasicInfoHistGridID; //customer basic info edit history log list
 
     $(document).ready(function(){
 
@@ -23,6 +24,7 @@
     	createThirdPartyGrid();
     	createCowayRewardsGrid();
     	createCustStusHistGrid();
+    	createCustBasicInfoHistGrid();
 
         //Call Ajax
         fn_getCustomerAddressAjax(); // address list
@@ -33,6 +35,7 @@
         fn_getCustomerThirdPartyAjax(); // third party list
         fn_getCustomerCowayRewardsAjax(); // coway rewards list
         fn_getCustStatusHistoryLogAjax(); // customer status history log list
+        fn_getCustBasicInfoHistoryLogAjax(); // customer basic info edit history log list
     });
 
     function createAddrGrid(){
@@ -389,6 +392,46 @@
         custStusHistGridID = GridCommon.createAUIGrid("#cust_stus_hist_grid_wrap", custStusHistColumnLayout,'',gridPros);// customer status history log
     }
 
+    function createCustBasicInfoHistGrid(){
+        // Coway Rewards Column
+        var custBasicInfoHistColumnLayout = [
+             {dataField : "custName",headerText : '<spring:message code="sal.text.custName" />', width : '30%'},
+             {dataField : "custType", headerText : '<spring:message code="sal.text.custType" />', width : '20%'},
+             {dataField : "corpType", headerText : '<spring:message code="sal.text.companyType" />', width : '20%'},
+             {dataField : "nric",headerText : '<spring:message code="sal.text.nricCompanyNo" />', width : '20%'},
+             {dataField : "email", headerText : '<spring:message code="sal.text.email" />', width : '30%'},
+             {dataField : "nation", headerText : '<spring:message code="sal.text.nationality" />', width : '10%'},
+             {dataField : "gender",headerText : '<spring:message code="sal.text.gender" />', width : '10%'},
+             {dataField : "dob", headerText : '<spring:message code="sal.text.dob" />', width : '10%'},
+             {dataField : "race", headerText : '<spring:message code="sal.text.race" />', width : '10%'},
+             {dataField : "passportExpr", headerText : '<spring:message code="sal.text.passportExpire" />', width : '15%'},
+             {dataField : "visaExpr", headerText : '<spring:message code="sal.text.visaExpire" />', width : '10%'},
+             {dataField : "sstNo", headerText : '<spring:message code="sal.text.sstRegistrationNo" />', width : '20%'},
+             {dataField : "custTin", headerText : '<spring:message code="sal.text.tin" />', width : '30%'},
+             {dataField : "eInvFlg", headerText : '<spring:message code="sal.text.eInvoicFlag" />', width : '10%'},
+             {dataField : "remark", headerText : '<spring:message code="sal.text.remark" />', width : '30%'},
+             {dataField : "updDt", headerText : '<spring:message code="sal.text.updateAt" />', width : '20%'},
+             {dataField : "updUser", headerText : '<spring:message code="sal.text.updateBy" />', width : '20%'},
+        ];
+
+        var gridPros = {
+
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                showStateColumn     : true,
+                displayTreeOpen     : false,
+  //              selectionMode       : "singleRow",  //"multipleCells",
+                headerHeight        : 30,
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true
+            };
+
+        custBasicInfoHistGridID = GridCommon.createAUIGrid("#cust_basic_info_hist_grid_wrap", custBasicInfoHistColumnLayout,'',gridPros);// customer basic info history log list
+    }
+
     // ajax View 조회.
     // address Ajax
     function fn_getCustomerAddressAjax() {
@@ -442,6 +485,12 @@
     function fn_getCustStatusHistoryLogAjax() {
         Common.ajax("GET", "/sales/customer/selectCustomerStatusHistoryLogJsonList",$("#getParamForm").serialize(), function(result) {
             AUIGrid.setGridData(custStusHistGridID, result);
+        });
+    }
+
+    function fn_getCustBasicInfoHistoryLogAjax() {
+        Common.ajax("GET", "/sales/customer/selectCustomerBasicInfoHistoryLogJsonList",$("#getParamForm").serialize(), function(result) {
+            AUIGrid.setGridData(custBasicInfoHistGridID, result);
         });
     }
 
@@ -600,14 +649,30 @@
         <td>${result.onholdPoint}</td>
         <th scope="row"><spring:message code="sal.title.text.expiredPoint" /></th>
         <td>${result.expiredPoint}</td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row"><spring:message code="sal.title.text.tin" /></th>
+        <td>${result.custTin}</td>
+    </tr>
+    <tr>
+        <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
+        <td>${result.sstRgistNo}</td>
+        <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
+        <td>
+	        <c:choose>
+		    <c:when test="${result.eInvFlg eq '1'}">
+		       <input id="isEInvoice" name="isEInvoice" type="checkbox" onClick="return false" checked/>
+		    </c:when>
+		    <c:otherwise>
+		       <input id="isEInvoice" name="isEInvoice" type="checkbox" onClick="return false"/>
+		    </c:otherwise>
+	        </c:choose>
+        </td>
+
+        <th scope="row">Customer Status</th>
+        <td><span>${result.custStatus}</span></td>
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.remark" /></th>
-        <td colspan="3">${result.rem}</td>
-        <th scope="row">Customer Status</th>
-        <td><span>${result.custStatus}</span></td>
+        <td colspan="5">${result.rem}</td>
     </tr>
     </tbody>
     </table><!-- table end -->
@@ -705,6 +770,14 @@
     </section><!-- tap_wrap end -->
     </dd>
     <!-- ######### Tab Area #########  -->
+
+    <!-- ######### Customer Basic Info History List ######### -->
+     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, custBasicInfoHistGridID)"><spring:message code="sal.title.custBasicInfoHistLog" /></a></dt>
+    <dd>
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="cust_basic_info_hist_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
+    </dd>
     <!-- ######### Customer Status History Log List ######### -->
      <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, custStusHistGridID)"><spring:message code="sal.title.custStusHistLog" /></a></dt>
     <dd>

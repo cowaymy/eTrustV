@@ -654,4 +654,14 @@ public interface CustomerMapper {
   List<EgovMap> searchCreditCardNoExp(Map<String, Object> params);
 
   List<EgovMap> selectCustomerStatusHistoryLogList(Map<String, Object> params);
+
+  int getCustTinIdSeq();
+
+  void insertCustomerTinId(Map<String, Object> params);
+
+  void insertCustomerBasicInfoHist(Map<String, Object> params);
+
+  void updateCustomerTinStatus(Map<String, Object> params);
+
+  List<EgovMap> selectCustomerBasicInfoHistoryLogList(Map<String, Object> params);
 }

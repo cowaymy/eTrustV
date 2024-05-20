@@ -811,9 +811,35 @@ public class CustomerController {
       return null;
     }
 
+    // Cust TIN & SST Registration No
+
+    ins29Dmap.put("sstRgistNo", vo.getSstRgistNo());
+
+    Map<String, Object> ins416map = new HashMap();
+
+    if(!vo.getTin().equals(null) && !vo.getTin().equals("")){
+
+        int tempTinSeq = 0;
+        tempTinSeq = customerService.getCustTinIdSeq();
+
+        ins29Dmap.put("custTinId",tempTinSeq);
+
+        ins416map.put("custTinId",tempTinSeq);
+        ins416map.put("basicCustId", tempCustSeq);
+        ins416map.put("basicCustTin", vo.getTin());
+        ins416map.put("status", "1");
+        ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);
+        ins416map.put("userId", sessionVo.getUserId());
+    }
+
+
+
     LOGGER.info("########## ins29Dmap :::::::   " + ins29Dmap.toString());
 
     customerService.insertCustomerInfo(ins29Dmap);
+    if(ins416map != null && !ins416map.isEmpty()){
+    	customerService.insertCustomerTinId(ins416map);
+    }
     customerService.insertAddressInfo(insmap);
     customerService.insertContactInfo(insmap);
     customerService.insertCareContactInfo(insmap);
@@ -1027,6 +1053,27 @@ public class CustomerController {
     ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
     ins29Dmap.put("receivingMarketingMsgStatus",vo.getReceivingMarketingMsgStatus());
 
+    // Cust TIN & SST Registration No
+
+    ins29Dmap.put("sstRgistNo", vo.getSstRgistNo());
+
+    Map<String, Object> ins416map = new HashMap();
+
+    if(!vo.getTin().equals(null) && !vo.getTin().equals("")){
+
+        int tempTinSeq = 0;
+        tempTinSeq = customerService.getCustTinIdSeq();
+
+        ins29Dmap.put("custTinId",tempTinSeq);
+
+        ins416map.put("custTinId",tempTinSeq);
+        ins416map.put("basicCustId", tempCustSeq);
+        ins416map.put("basicCustTin", vo.getTin());
+        ins416map.put("status", "1");
+        ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);
+        ins416map.put("userId", sessionVo.getUserId());
+    }
+
     // Address
     insmap.put("addrDtl", vo.getAddrDtl());
     insmap.put("areaId", vo.getAreaId());
@@ -1081,6 +1128,9 @@ public class CustomerController {
 
     customerService.insertCustomerInfo(ins29Dmap);
     //customerService.insertAddressInfo(insmap);
+    if(ins416map != null && !ins416map.isEmpty()){
+    	customerService.insertCustomerTinId(ins416map);
+    }
     customerService.insertContactInfo(insmap);
     customerService.insertCareContactInfo(insmap);
 
@@ -2832,5 +2882,17 @@ public class CustomerController {
 
 	    // 데이터 리턴.
 	    return ResponseEntity.ok(custStusHistLog);
+	  }
+
+	  @RequestMapping(value = "/selectCustomerBasicInfoHistoryLogJsonList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCustomerBasicInfoHistoryLogJsonList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		  List<EgovMap> custBasicInfoHistLog = null;
+
+		  LOGGER.info("##### custBasicInfoHistLog START #####");
+		  custBasicInfoHistLog = customerService.selectCustomerBasicInfoHistoryLogList(params);
+
+		  // 데이터 리턴.
+		  return ResponseEntity.ok(custBasicInfoHistLog);
 	  }
 }

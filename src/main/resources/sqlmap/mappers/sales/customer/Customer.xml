@@ -397,6 +397,9 @@
             , Extent13.EXPIRED_POINT
             , Extent1.IS_EXST_CUST cust_status_id
             , Extent14.code_name cust_status
+            , TIN.CUST_TIN CUST_TIN
+            , Extent1.SST_RGIST_NO SST_RGIST_NO
+            , TIN.E_INV_FLG E_INV_FLG
         FROM
             SAL0029D Extent1
             LEFT OUTER JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.CRT_USER_ID
@@ -437,6 +440,7 @@
                 )
             ) Extent13 on Extent13.CUST_ID = Extent1.CUST_ID
             LEFT JOIN SYS0013M Extent14 ON Extent14.CODE_ID = Extent1.IS_EXST_CUST AND Extent14.CODE_MASTER_ID = 566
+            LEFT JOIN SAL0416D TIN ON TIN.TIN_ID = Extent1.TIN_ID AND TIN.STATUS = 1
         WHERE
             8 <> Extent1.STUS_CODE_ID AND Extent1.CUST_ID =#{custId}
          AND
@@ -1688,7 +1692,9 @@
     CORP_TYPE_ID,
     GST_RGIST_NO,
     OLD_IC,
-    RECEIVING_MARKETING_MSG_STATUS)
+    RECEIVING_MARKETING_MSG_STATUS,
+    TIN_ID,
+    SST_RGIST_NO)
     VALUES (#{custSeq},
     UPPER(#{custName}),
     #{nric},
@@ -1713,7 +1719,9 @@
     #{cmbCorpTypeId},
     #{gstRgistNo},
     #{oldNric},
-    #{receivingMarketingMsgStatus})
+    #{receivingMarketingMsgStatus},
+    #{custTinId},
+    #{sstRgistNo})
   </insert>
 
   <update id="updateCustomerInfo" parameterType="Map">
@@ -1884,18 +1892,27 @@
     PAS_SPORT_EXPR =TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'),
     VISA_EXPR = TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'),
     EMAIL = #{basicEmail},
-    REM = #{basicRem},
+
     <if test="basicTypeId == 964">
       <!-- DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), -->
       GENDER = #{basicGender},
       RACE_ID = #{basicRaceId},
       DOB = TO_DATE(#{basicDob}, 'DD/MM/YYYY'),
-      NATION = #{basicCmdNationTypeId}
+	      <if test='basicCmdNationTypeId != null and basicCmdNationTypeId !=""'>
+	      NATION = #{basicCmdNationTypeId},
+	      </if>
     </if>
 
     <if test="basicTypeId == 965">
-      CORP_TYPE_ID = #{basicCmbCorpTypeId}
+      CORP_TYPE_ID = #{basicCmbCorpTypeId},
     </if>
+    <if test='custTinId != null and custTinId != ""'>
+      TIN_ID = #{custTinId},
+    </if>
+    <if test='basicSstRegNo != null and basicSstRegNo != ""'>
+      SST_RGIST_NO = #{basicSstRegNo},
+    </if>
+    REM = #{basicRem}
     WHERE CUST_ID = #{basicCustId}
 
     <if test='basicNricOld != null and basicNricOld !=""'>
@@ -3324,4 +3341,132 @@
 		WHERE A.CUST_ID = #{custId}
 		ORDER BY A.CRT_DT DESC
   </select>
+
+  <select id="getCustTinIdSeq" resultType="Integer">
+    SELECT SAL0416D_TIN_ID.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertCustomerTinId" parameterType="Map">
+    INSERT INTO SAL0416D
+    ( TIN_ID
+    , CUST_ID
+    , CUST_TIN
+    , STATUS
+    , E_INV_FLG
+    , REM
+    , CRT_DT
+    , CRT_USER_ID
+    , UPD_DT
+    , UPD_USER_ID
+    )
+    VALUES
+    ( #{custTinId}
+    , #{basicCustId}
+    , #{basicCustTin}
+    , 1
+    , #{isEInvoice}
+    , NULL
+    , SYSDATE
+    , #{userId}
+    , SYSDATE
+    , #{userId}
+    )
+  </insert>
+
+  <update id="updateCustomerTinStatus" parameterType="Map">
+    UPDATE SAL0416D SET
+    STATUS = 8
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID = #{userId}
+    WHERE CUST_ID = #{basicCustId}
+    AND TIN_ID = (SELECT MAX(TIN_ID) FROM SAL0416D WHERE CUST_ID = #{basicCustId} AND STATUS = 1)
+  </update>
+
+  <insert id="insertCustomerBasicInfoHist" parameterType="Map">
+    INSERT INTO SAL0417D
+    ( HIST_ID
+	, CUST_ID
+	, NRIC
+	, TYPE_ID
+	, TYPE_ID_DESC
+	, CORP_TYPE_ID
+	, CORP_TYPE_DESC
+	, CUST_NAME
+	, NATION
+	, GENDER
+	, DOB
+	, PASSPORT_EXPR
+	, VISA_EXPR
+	, RACE_ID
+	, EMAIL
+	, TIN_ID
+	, SST_RGIST_NO
+	, REMARK
+	, STUS_CODE_ID
+	, REM
+	, CRT_DT
+	, CRT_USER_ID
+	, UPD_DT
+	, UPD_USER_ID
+    )
+
+     SELECT SAL0417D_HIST_ID.NEXTVAL
+    , CUST_ID
+    , NRIC
+    , TYPE_ID
+    , DES.CODE_DESC
+    , CORP_TYPE_ID
+    , DES2.CODE_DESC
+    , NAME
+    , NATION
+    , GENDER
+    , DOB
+    , PAS_SPORT_EXPR
+    , VISA_EXPR
+    , RACE_ID
+    , EMAIL
+    , TIN_ID
+    , SST_RGIST_NO
+    , REM
+    , STUS_CODE_ID
+    , NULL
+    , SYSDATE
+    , #{userId}
+    , SYSDATE
+    , #{userId}
+    FROM SAL0029D CUST
+    LEFT JOIN SYS0013M DES ON CUST.TYPE_ID = DES.CODE_ID AND DES.CODE_MASTER_ID = 8
+    LEFT JOIN SYS0013M DES2 ON CUST.CORP_TYPE_ID = DES2.CODE_ID AND DES2.CODE_MASTER_ID = 95
+    WHERE CUST.CUST_ID = #{basicCustId}
+
+  </insert>
+
+  <select id="selectCustomerBasicInfoHistoryLogList" parameterType="Map" resultType="egovMap">
+    SELECT TIN.TIN_ID
+	, HIS.CUST_NAME
+	, HIS.TYPE_ID_DESC AS CUST_TYPE
+	, NVL(HIS.CORP_TYPE_DESC, '-') CORP_TYPE
+	, HIS.NRIC AS NRIC
+	, HIS.EMAIL AS EMAIL
+	, NAT.NAME AS NATION
+	, HIS.GENDER AS GENDER
+	, TO_CHAR(HIS.DOB, 'DD-MM-YYYY') AS DOB
+	, RAC.CODE_DESC AS RACE
+	, NVL(TO_CHAR(HIS.PASSPORT_EXPR, 'DD-MM-YYYY'), '-') AS PASSPORT_EXPR
+    , NVL(TO_CHAR(HIS.VISA_EXPR, 'DD-MM-YYYY'), '-') AS VISA_EXPR
+	, HIS.SST_RGIST_NO AS SST_NO
+	, TIN.CUST_TIN AS CUST_TIN
+	, CASE WHEN (TIN.E_INV_FLG = '1') THEN 'Y' ELSE 'N' END AS E_INV_FLG
+	, HIS.REMARK AS REMARK
+	, TO_CHAR(HIS.UPD_DT, 'DD-MM-YYYY HH:MI:SS') AS UPD_DT
+	, USR.USER_NAME AS UPD_USER
+	FROM SAL0417D HIS
+	LEFT JOIN SYS0015M NAT ON NAT.CNTY_ID = HIS.NATION
+	LEFT JOIN SYS0013M RAC ON RAC.CODE_ID = HIS.RACE_ID
+	LEFT JOIN SYS0047M USR ON USR.USER_ID = HIS.UPD_USER_ID
+	LEFT JOIN SAL0416D TIN ON TIN.TIN_ID = HIS.TIN_ID
+	WHERE HIS.CUST_ID = #{custId}
+	ORDER BY HIST_ID DESC
+  </select>
+
 </mapper>

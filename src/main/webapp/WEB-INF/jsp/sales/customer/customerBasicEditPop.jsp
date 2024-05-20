@@ -180,8 +180,33 @@ $(document).ready(function(){
                     return;
                  }
             }
+
+            // Company TIN
+            if($("#basicCmbCorpTypeId").val() != "1333" && $("#basicCmbCorpTypeId").val() != "1151"){
+            	 if($("#basicCustTin").val() == "" || $("#basicCustTin").val() == null){
+                     Common.alert("Please enter Company TIN to proceed.");
+                     return;
+                  }
+            }
         }
 
+
+        console.log("eInvFlg: " + $('input:checkbox[id="isEInvoice"]').is(":checked"));
+
+        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
+        	if($("#basicCustTin").val() != ''){
+        		$("#isEInvoiceNew").val("1");
+            }else{
+                $("#isEInvoiceNew").val("0");
+                Common.alert('Please fill in TIN to receive e-Invoice.');
+                return;
+            }}
+        else{
+        	$("#isEInvoiceNew").val("0");
+        	}
+
+
+        console.log("eInvFlg: " + $("#isEInvoiceNew").val());
 
         //update
         fn_getCustomerBasicAjax();
@@ -476,6 +501,23 @@ $(document).ready(function(){
     <td>${result.onholdPoint}</td>
     <th scope="row"><spring:message code="sal.title.text.expiredPoint" /></th>
     <td>${result.expiredPoint}</td>
+    <th scope="row"><spring:message code="sal.title.text.tin" /></th>
+    <td>${result.custTin}</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
+    <td>${result.sstRgistNo}</td>
+    <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
+    <td>
+        <c:choose>
+        <c:when test="${result.eInvFlg eq '1'}">
+            <input id="isEInvoiceDisplay" name="isEInvoiceDisplay" type="checkbox" onClick="return false" checked/>
+        </c:when>
+        <c:otherwise>
+            <input id="isEInvoiceDisplay" name="isEInvoiceDisplay" type="checkbox" onClick="return false"/>
+        </c:otherwise>
+        </c:choose>
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -594,6 +636,9 @@ $(document).ready(function(){
 <input type="hidden" value="${result.custId}" name="basicCustId">
 <input type="hidden" value="${result.typeId }" name="basicTypeId">
 <input type="hidden" value="${result.nric}" name="basicNricOld">
+<input type="hidden" value="${result.custTin}" name="basicCustTinOld">
+<input type="hidden" value="${result.eInvFlg}" name="isEInvoiceOld">
+<input type="hidden" id = "isEInvoiceNew" name="isEInvoiceNew">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -682,6 +727,30 @@ $(document).ready(function(){
     <td>
     <input type="text" title="" placeholder="" class="w100p"  value="${result.email}" name="basicEmail" id="basicEmail"/>
     </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.tin" /></th>
+    <td>
+        <input type="text" title="" placeholder="" class="w100p"  value="${result.custTin}" name="basicCustTin" id="basicCustTin" maxlength=14 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/>
+    </td>
+    <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=17 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/></td>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
+    <td>
+        <c:choose>
+        <c:when test="${result.eInvFlg eq '1'}">
+            <input id="isEInvoice" name="isEInvoice" type="checkbox"  checked/>
+        </c:when>
+        <c:otherwise>
+            <input id="isEInvoice" name="isEInvoice" type="checkbox" />
+        </c:otherwise>
+        </c:choose>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>

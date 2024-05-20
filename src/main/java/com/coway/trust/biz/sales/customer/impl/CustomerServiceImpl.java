@@ -395,7 +395,56 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   @Override
   public void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception {
 
-    customerMapper.updateCustomerBasicInfoAf(params);
+	  // CELESTE 08-05-2024: INSERT NEW TIN ID AND INFO AND HISTORY [S]
+	  if(params.containsKey("isEInvoiceNew") && params.get("isEInvoiceNew") != null && params.get("isEInvoiceNew").equals("1")){
+		  params.put("isEInvoice", 1);
+	  }
+	  else {
+		  params.put("isEInvoice", 0);
+	  }
+
+	  if((params.get("basicCustTin").toString() != null && params.get("basicCustTin").toString() != "") ||
+		 (params.get("isEInvoice") != null && params.get("isEInvoice") != "") ) {
+			  if((params.get("basicCustTinOld").toString() != null && !params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString())) ||
+				 (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))	 ){
+				  int custTinId = customerMapper.getCustTinIdSeq();
+				  params.put("custTinId", custTinId);
+				  customerMapper.updateCustomerTinStatus(params);
+				  customerMapper.insertCustomerTinId(params);
+			  }
+			  else if(params.get("basicCustTinOld").toString() == null) {
+				  int custTinId = customerMapper.getCustTinIdSeq();
+				  params.put("custTinId", custTinId);
+				  customerMapper.insertCustomerTinId(params);
+			  }
+	  }
+
+	  customerMapper.insertCustomerBasicInfoHist(params);
+
+	  // CELESTE 08-05-2024:  INSERT NEW TIN ID AND INFO AND HISTORY [E]
+
+	  LOGGER.debug("updateCustomerBasicInfoAf -- Params: " + params);
+	  customerMapper.updateCustomerBasicInfoAf(params);
+  }
+
+  @Override
+  public int getCustTinIdSeq() {
+
+    int getCustTinIdSeq = customerMapper.getCustTinIdSeq();
+
+    return getCustTinIdSeq;
+  }
+
+  @Override
+  public List<EgovMap> selectCustomerBasicInfoHistoryLogList(Map<String, Object> params) {
+
+    return customerMapper.selectCustomerBasicInfoHistoryLogList(params);
+  }
+
+  @Override
+  public void insertCustomerTinId(Map<String, Object> params) {
+
+    customerMapper.insertCustomerTinId(params);
   }
 
   /**
