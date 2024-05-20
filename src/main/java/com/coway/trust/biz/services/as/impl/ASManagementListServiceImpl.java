@@ -1953,8 +1953,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 // TODO Auto-generated catch block
                 e.printStackTrace();
               }
-            }
-      } else {
+       }else {
     	  // // Insert SVC0140D for Installation Accessory - TPY
       List<String> installAccList = (List<String>) params.get("installAccList");
       EgovMap installResult = new EgovMap();
@@ -1976,53 +1975,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           e.printStackTrace();
         }
       }
-      }
-
-/*      List<String> installAccList = new ArrayList<>();
-      EgovMap installResult = new EgovMap();
-
-      installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
-      installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
-      installResult.put("mobileYn", params.get("mobileYn"));
-      params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
-      params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
-      params.put("user_id", params.get("updator"));
-
-
-      if ("Y".equals(params.get("mobileYn"))) {
-
-    	  LOGGER.debug("debug 111====" + params.get("mobileYn"));
-          installAccList = (List<String>) svc0004dmap.get("instAccLst");
-          LOGGER.debug("debug ###====" + params.get("chkInstallAcc").toString());
-          LOGGER.debug("debug 222====" + svc0004dmap.get("chkInstallAcc").toString());
-          if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
-        	  LOGGER.debug("debug 333====" );
-              try {
-            	  LOGGER.debug("debug 444====" );
-                insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
-              } catch (Exception e) {
-           	  LOGGER.debug("debug 555====" );
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
-            }
-      } else {
-
-    	  LOGGER.debug("debug XXX====" );
-
-          installAccList = (List<String>) params.get("installAccList");
-          ASManagementListMapper.disbleInstallAccWithAsEntryId(params);
-
-          if (params.get("chkInstallAcc") != null && (params.get("chkInstallAcc").toString().equals("on") || params.get("chkInstallAcc").toString().equals("Y"))){
-              try {
-                insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
-              } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
-            }
-      }
-    }*/
+    }
+  }
     // LOGISTIC REQUEST END HERE
 
     EgovMap em = new EgovMap();
@@ -4385,11 +4339,10 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     if (!installAccList.isEmpty()){
       LOGGER.info("### addInstallAccList : " + installAccList.toString());
 
-      String mobileYn = "";
       if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y" || installResult.get("mobileYn").toString().equals("Y")) {
-      	installResult.put("mobileYn", "Mobile Entry");
+      	installResult.put("insAccRemark", "Mobile Entry");
       } else {
-      	installResult.put("mobileYn", "Add installation accessories through eTrust - AS");
+      	installResult.put("insAccRemark", "Add installation accessories through eTrust - AS");
       }
 
       for (String installAcc : installAccList) {
@@ -4398,7 +4351,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
             param.put("resultNo", installResult.get("asEntryNo"));
             param.put("resultSoId", installResult.get("salesOrdId"));
             param.put("insAccPartId", installAcc);
-            param.put("remark", installResult.get("mobileYn"));
+            param.put("remark", installResult.get("insAccRemark"));
             param.put("crtUserId", userId);
 
             installationResultListMapper.insertInstallationAccessories(param);
