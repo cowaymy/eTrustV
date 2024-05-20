@@ -4049,14 +4049,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
     try {
-    	logger.info("### addInstallAccList : " + installAccList.toString());
 
       if (!installAccList.isEmpty()){
+        logger.info("### addInstallAccList : " + installAccList.toString());
 
         if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y") {
-        	installResult.put("mobileYn", "Mobile Entry");
+        	installResult.put("insAccRemark", "Mobile Entry");
         } else {
-        	installResult.put("mobileYn", "Add installation accessories through eTrust - INS");
+        	installResult.put("insAccRemark", "Add installation accessories through eTrust - INS");
         }
 
         installResult.put("entryId", installResult.get("installEntryId"));
@@ -4068,7 +4068,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
               param.put("resultNo", entry.get("installEntryNo"));
               param.put("resultSoId", entry.get("salesOrdId"));
               param.put("insAccPartId", installAcc);
-              param.put("remark", installResult.get("mobileYn"));
+              param.put("remark", installResult.get("insAccRemark"));
               param.put("crtUserId", userId);
 
               installationResultListMapper.insertInstallationAccessories(param);
