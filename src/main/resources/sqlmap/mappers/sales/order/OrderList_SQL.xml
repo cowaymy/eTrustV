@@ -2093,7 +2093,7 @@
 		                    P65.PAY_ITM_APPV_NO ||'/'|| P64.OR_NO
 		                FROM PAY0064D P64
 		                JOIN PAY0065D P65 ON P65.PAY_ID = P64.PAY_ID
-		                WHERE  P64.SALES_ORD_ID = #{ordId} <!--'828880' '1928475'-->
+		                WHERE  P64.SALES_ORD_ID = #{ordId}
 		                    AND TO_NUMBER(P65.PAY_ITM_REF_NO) = T.CTRL_ID)
 		                ELSE '-'
 		              END AS APPROVAL_CODE_RECEIPT_NO
@@ -2134,7 +2134,7 @@
 		           LEFT JOIN SAL0028D T4 ON T4.CUST_CRC_ID = T1.CUST_CRC_ID
 		           LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
 		           LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
-		           WHERE T1.SALES_ORD_ID = #{ordId} <!--'828880' '1928475'-->
+		           WHERE T1.SALES_ORD_ID = #{ordId}
 		           AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
 		        ) T
 		        LEFT JOIN SYS0013M T6 ON T6.CODE = T.BATCH_MODE AND T6.CODE_MASTER_ID = 19
@@ -2169,13 +2169,13 @@
 		    FROM SAL0152M A
 		    JOIN SAL0001D B ON B.SALES_ORD_ID = A.FILE_ITM_ORD_ID
 		    LEFT JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID AND C.CUST_ID = B.CUST_ID
-		    LEFT JOIN SAL0028D D ON D.CUST_CRC_ID = C.CUST_CRC_ID <!--AND D.CUST_ORI_CRC_NO = A.FILE_ITM_ACC_NO-->
-		    LEFT JOIN PAY0064D H ON H.SALES_ORD_ID = A.FILE_ITM_ORD_ID <!--AND E.OR_NO = A.FILE_ITM_OR_NO-->
+		    LEFT JOIN SAL0028D D ON D.CUST_CRC_ID = C.CUST_CRC_ID
+		    LEFT JOIN PAY0064D H ON H.SALES_ORD_ID = A.FILE_ITM_ORD_ID
 		    LEFT JOIN PAY0065D I ON I.PAY_ID = H.PAY_ID
 		    LEFT JOIN SYS0013M E ON E.CODE_ID = C.MODE_ID
 		    LEFT JOIN SYS0004M F ON F.BANK_ID = C.BANK_ID
 		    LEFT JOIN SYS0013M G ON G.CODE_ID = D.CARD_TYPE_ID
-		    WHERE 1=1 <!--FILE_ITM_ORD_ID = '1046415' '1248954'  828880 1928475-->
+		    WHERE 1=1
 		        AND A.FILE_ITM_ORD_ID = #{ordId}
 		        AND C.MODE_ID = 131
 		        AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
@@ -2219,7 +2219,6 @@
 		                WHEN (Extent6.BANK_ID IS NOT NULL) THEN Extent6.CODE
 		                ELSE ' '
 		             END ISSUER_BANK,
-<!-- 		             Extent10.CODE_NAME AS CARD_TYPE, -->
                      CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN ' '
                         ELSE Extent10.CODE_NAME
                      END CARD_TYPE,
@@ -2245,7 +2244,7 @@
 		                         AND (Extent1.CUST_CRC_ID <![CDATA[ > ]]> 0)
 		                         AND (Extent4.CUST_CRC_ID <![CDATA[ > ]]> 0)
 		        LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.MODE_ID
-		        WHERE (Extent1.SALES_ORD_ID = #{ordId}) <!--828880 1928475-->
+		        WHERE (Extent1.SALES_ORD_ID = #{ordId})
 		         AND (Extent1.SVC_CNTRCT_ID = '0')
 
 		        UNION ALL
@@ -2259,7 +2258,7 @@
 		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN  '************' || SUBSTR (Ext3.CUST_ACC_NO, 8, 4)
 		                        ELSE ' '
 		                     END
-		                  ELSE ' '
+		                  ELSE '************' || SUBSTR (Ext4.CUST_ORI_CRC_NO, 13, 4)
 		               END CUST_ACC_NO,
 		               CASE WHEN (131 = Ext1.MODE_ID) THEN
 		                     CASE WHEN (Ext4.CUST_CRC_EXPR IS NOT NULL) THEN TO_CHAR(TO_DATE(Ext4.CUST_CRC_EXPR,'MM/YY'),'MM/YY')
@@ -2275,7 +2274,6 @@
 		                WHEN (Ext6.BANK_ID IS NOT NULL)THEN Ext6.CODE
 		                  ELSE ' '
 		               END ISSUER_BANK,
-<!-- 		               Ext10.CODE_NAME AS CARD_TYPE, -->
                        CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN ' '
                         ELSE Ext10.CODE_NAME
                        END CARD_TYPE,
@@ -2301,7 +2299,7 @@
 		                               AND (Ext1.CUST_CRC_ID <![CDATA[ > ]]> 0)
 		                               AND (Ext4.CUST_CRC_ID <![CDATA[ > ]]> 0)
 		            LEFT JOIN SYS0013M Ext10 ON Ext10.CODE_ID = Ext1.MODE_ID
-		            WHERE (Ext1.SALES_ORD_ID = #{ordId}) <!--828880 1928475-->
+		            WHERE (Ext1.SALES_ORD_ID = #{ordId})
 		               AND (Ext1.SVC_CNTRCT_ID = '0')
 		            ORDER BY Ext1.UPD_DT DESC
 		        )
@@ -2514,15 +2512,6 @@
     </select>
 
     <select id="selectAccLinkInfo" parameterType="Map" resultType="egovMap">
-		<!-- WITH VALID_MEMBERSHIP AS-->
-		<!--(-->
-		<!--    SELECT SRV_SALES_ORD_ID,MIN(SRV_START_DT)SRV_START_DT, MAX(SRV_EXPR_DT) AS SRV_EXPR_DT-->
-		<!--    FROM SAL0095D-->
-		<!--    WHERE 1 = 1-->
-		<!--    AND SRV_STUS_CODE_ID = 4-->
-		<!--    AND SYSDATE BETWEEN SRV_START_DT AND SRV_EXPR_DT-->
-		<!--    GROUP BY SRV_SALES_ORD_ID-->
-		<!--)-->
 		SELECT * FROM (
 			SELECT
 				EXT2.CUST_CRC_TOKEN CUST_TOKEN_ID
@@ -2530,7 +2519,6 @@
 				,EXT10.CODE ORDER_STATUS
 				,EXT4.NAME CUSTOMER_NAME
 				,CASE WHEN EXT1.MODE_ID = '131' THEN '************' || SUBSTR (EXT2.CUST_ORI_CRC_NO, 13, 4)
-				        <!--ELSE '************' || SUBSTR (EXT13.CUST_ACC_NO, 13, 4) -->
 				        ELSE ' '
 				     END AS CUST_ACC_NO
 				,EXT7.AREA AREA
@@ -2549,7 +2537,6 @@
 			JOIN SAL0045D EXT5 ON EXT3.SALES_ORD_ID = EXT5.SALES_ORD_ID
 			JOIN SAL0023D EXT6 ON EXT5.ADD_ID = EXT6.CUST_ADD_ID
 			LEFT JOIN SYS0064M EXT7 ON EXT6.AREA_ID = EXT7.AREA_ID
-			<!--JOIN VALID_MEMBERSHIP EXT9 ON EXT9.SRV_SALES_ORD_ID = EXT3.SALES_ORD_ID-->
 			LEFT JOIN SYS0038M EXT10 ON EXT10.STUS_CODE_ID = EXT3.STUS_CODE_ID
 			JOIN SAL0002D EXT11 ON EXT11.SALES_ORD_ID = EXT3.SALES_ORD_ID
 			JOIN SYS0026M EXT12 ON EXT12.STK_ID = EXT11.ITM_STK_ID
