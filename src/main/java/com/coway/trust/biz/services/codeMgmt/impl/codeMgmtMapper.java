@@ -21,8 +21,6 @@ public interface codeMgmtMapper {
 
 	List<EgovMap> chkDupDefectCode(Map<String, Object> params);
 
-	void addSYS0013M(Map<String, Object> params);
-
 	void addDefectCodes(Map<String, Object> params);
 
 	EgovMap selectSvcCodeInfo(Map<String, Object> params);
@@ -33,13 +31,9 @@ public interface codeMgmtMapper {
 
 	void updateCodeStusSYS100(Map<String, Object> params);
 
-	void updateCodeStusSYS13(Map<String, Object> params);
-
 	EgovMap selectCodeMgmtInfo(Map<String, Object> params);
 
 	void updateASReasons(Map<String, Object> params);
-
-	void updateSYS0013M(Map<String, Object> params);
 
 	void updateDefectCodes(Map<String, Object> params);
 
@@ -48,6 +42,14 @@ public interface codeMgmtMapper {
 	EgovMap getDefectId();
 
 	EgovMap getDefectIdParent(Map<String, Object> saveParam);
+
+	List<EgovMap> selectCodeCatList(Map<String, Object> params);
+
+	void updateCodeStusSVC142(Map<String, Object> params);
+
+	void updateSVC0142D(Map<String, Object> params);
+
+	void addSVC0142D(Map<String, Object> params);
 
 
 }

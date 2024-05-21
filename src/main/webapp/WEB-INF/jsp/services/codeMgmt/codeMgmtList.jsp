@@ -31,15 +31,10 @@ $(document).ready(function(){
     getBusinessCat();
     getSvcType();
     getProdCat();
-    getCodeCat();
     getStatus();
 
     doGetCombo('/common/selectCodeList.do', '553', '', 'cmbType', 'S','');
     doGetCombo('/common/selectCodeList.do', '500', '', 'cmbBusiCtgry', 'M','f_multiCombo');
-
-    //"7297" == INS
-    //"7299" == PEX
-    //"7298" ==PR
 
     AUIGrid.bind(largeGridID, "cellDoubleClick", function(event) {
         var selectedItems = AUIGrid.getSelectedItems(largeGridID);
@@ -47,25 +42,22 @@ $(document).ready(function(){
 
         console.log(selectedItems);
         var defectId = selectedItems[0].item.defectId;
+        var prodCat = selectedItems[0].item.prodCat == '-' && selectedItems[0].item.prodCat == '*' ? null : selectedItems[0].item.prodCat;
         var codeCatId = selectedItems[0].item.codeCatId;
+        var defCode = selectedItems[0].item.defectCode;
+        var prodCode = selectedItems[0].item.prodCode;
         var codeCatName = selectedItems[0].item.codeCatName;
         var stkId = selectedItems[0].item.stkId;
-        Common.popupDiv("/services/codeMgmt/addEditCodePop.do?isPop=true&defectId=" + defectId + "&viewType=" + viewType
-                + "&codeCatId=" + codeCatId + "&codeCatName=" + codeCatName + "&stkId=" + stkId);
+        var svcLargeCode = selectedItems[0].item.svcLargeCode == '-' ? null : selectedItems[0].item.svcLargeCode;
+        Common.popupDiv("/services/codeMgmt/addEditCodePop.do?isPop=true&defectId=" + defectId + "&viewType=" + viewType + "&defCode=" + defCode
+                + "&codeCatId=" + codeCatId + "&codeCatName=" + codeCatName + "&stkId=" + stkId+ "&prodCat=" + prodCat + "&svcLargeCode=" + svcLargeCode
+                + "&prodCode=" + prodCode);
     });
 });
 
 $(function(){
     $('#cmbType').change(function() {
-        if($('#cmbType').val() == '7296'){ //AS
-             doGetCombo('/common/selectCodeList.do', '554', '', 'cmbCodeCat', 'M','f_multiCombo');
-        }else if($('#cmbType').val() == '7297'){ //INS
-
-        }else if($('#cmbType').val() == '7299'){ //PEX
-
-        }else { //PR 7298
-
-        }
+             doGetCombo('/services/codeMgmt/selectCodeCatList.do', $('#cmbType').val(), '', 'cmbCodeCat', 'M','f_multiCombo');
     });
 });
 
@@ -238,27 +230,6 @@ function getProdCat(callBack)
       return prodCatList;
   }
 
-function getCodeCat(callBack)
-{
-      Common.ajaxSync("GET", "/common/selectCodeList.do" , "&groupCode=554" , function(result){
-
-    	  codeCatList.push({id:"" ,value:""});
-          for (var i = 0; i < result.length; i++){
-                var list = new Object();
-                list.id = result[i].code;
-                list.value = result[i].codeName ;
-                codeCatList.push(list);
-          }
-
-          if (callBack) {
-           callBack(codeCatList);
-          }
-
-      });
-
-      return codeCatList;
-  }
-
 function getStatus(callBack)
 {
       Common.ajaxSync("GET", "/common/selectStatusCategoryCodeList.do" , "&selCategoryId=32" , function(result){
@@ -300,11 +271,18 @@ function fn_editCode(viewType){
     }
 
     var defectId = selectedItems[0].item.defectId;
+    var prodCat = selectedItems[0].item.prodCat == '-' && selectedItems[0].item.prodCat == '*' ? null : selectedItems[0].item.prodCat;
     var codeCatId = selectedItems[0].item.codeCatId;
+    var defCode = selectedItems[0].item.defectCode;
+    var prodCode = selectedItems[0].item.prodCode;
     var codeCatName = selectedItems[0].item.codeCatName;
     var stkId = selectedItems[0].item.stkId;
-    Common.popupDiv("/services/codeMgmt/addEditCodePop.do?isPop=true&defectId=" + defectId + "&viewType=" + viewType
-    		+ "&codeCatId=" + codeCatId + "&codeCatName=" + codeCatName + "&stkId=" + stkId , "", null, "false", "addNewCodePopupId");
+    var svcLargeCode = selectedItems[0].item.svcLargeCode == '-' ? null : selectedItems[0].item.svcLargeCode;
+    Common.popupDiv("/services/codeMgmt/addEditCodePop.do?isPop=true&defectId=" + defectId + "&viewType=" + viewType + "&defCode=" + defCode
+            + "&codeCatId=" + codeCatId + "&codeCatName=" + codeCatName + "&stkId=" + stkId+ "&prodCat=" + prodCat + "&prodCode=" + prodCode
+            + "&svcLargeCode=" + svcLargeCode
+            , "", null, "false", "addNewCodePopupId");
+
 }
 
 function fn_UpdStatus(){

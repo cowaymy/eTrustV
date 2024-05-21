@@ -53,6 +53,15 @@ public class codeMgmtController {
 	@Resource(name = "accessMonitoringService")
 	private AccessMonitoringService accessMonitoringService;
 
+	@RequestMapping(value = "/selectCodeCatList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCodeCatList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("groupCode : {}", params);
+
+	    List<EgovMap> codeList = codeMgmtService.selectCodeCatList(params);
+	    return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/codeMgmtList.do")
 	public String codeMgmtList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
@@ -160,7 +169,7 @@ public class codeMgmtController {
 	    else //viewtype ==2 Edit, ==3 View
 	    {
 	    	message = codeMgmtService.updateSvcCode(params, sessionVO);
-	    	 if (params.get("codeCtgry").toString().equals("7326")) { //product setting　SYS0026M
+	    	 if (params.get("codeCtgry").toString().equals("19")) { //product setting　SYS0026M
 	 	    	message.setMessage("Successfully update product " + newCodeMap.get("productCode"));
 	    	 }else{
 	 	    	message.setMessage("Successfully update code " + newCodeMap.get("svcCode") + "-" + newCodeMap.get("svcCodeDesc"));
@@ -222,13 +231,8 @@ public class codeMgmtController {
 	    String stus = "";
 	    String actMsg = "";
 
-	    if(params.get("codeCatId").toString().equals("7319") || params.get("codeCatId").toString().equals("7320")){ //SYS0013M
-	    	stus = params.get("stusId").toString().equals("1") ? sys0013Act : active;
-	    	actMsg = stus.equals("0") ?  " activated" : " deactivated";
-	    }else{
-	    	stus = params.get("stusId").toString().equals("1") ? deact : active;
-	    	actMsg = stus.equals("1") ? " activated" : " deactivated";
-	    }
+    	stus = params.get("stusId").toString().equals("1") ? deact : active;
+    	actMsg = stus.equals("1") ? " activated" : " deactivated";
 	    params.put("updStus", stus);
 
 	    codeMgmtService.updateCodeStus(params);
@@ -241,5 +245,7 @@ public class codeMgmtController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+
 
 }

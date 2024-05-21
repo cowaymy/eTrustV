@@ -8,13 +8,13 @@ SET
     STK_LCH_DT = #{prdLaunchDt},
     STK_AS_COMM = #{ctComm},
     STK_AS_COST_PRICE = #{asCost},
-    UPD_DT　= SYSDATE,
-    UPD_USER_ID　= #{updator}
+    UPD_DT = SYSDATE,
+    UPD_USER_ID = #{updator}
 WHERE STK_CODE = #{productCode}
 </update>
 
 <select id="getTypeCode" parameterType="String" resultType="egovMap">
-SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID = #{codeCtgry}
+SELECT CODE FROM SVC0141M WHERE CODE_CTG_ID = #{codeCtgry}
 </select>
 
 <select id="getDefectId" parameterType="String" resultType="egovMap">
@@ -25,9 +25,9 @@ SELECT SYS0100M_DEFECT_ID_SEQ.NEXTVAL AS DEFECT_ID FROM DUAL
 SELECT DISTINCT DEFECT_GRP
 FROM SYS0100M
 WHERE DEFECT_CODE = #{svcLargeCode}
-AND DEFECT_STATUS = 1　
+AND DEFECT_STATUS = 1
 <if test='productCtgry != null and productCtgry != ""'>
-AND PROD_CAT　＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry})
+AND PROD_CAT ＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry})
 </if>
 </select>
 
@@ -64,25 +64,22 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         '1',
         #{creator},
         SYSDATE,
-        TO_DATE('1900/01/01',　'YYYY/MM/DD'),
-        TO_DATE('9999/12/31',　'YYYY/MM/DD')
+        TO_DATE('1900/01/01', 'YYYY/MM/DD'),
+        TO_DATE('9999/12/31', 'YYYY/MM/DD')
     )
 </insert>
 
-<insert id="addSYS0013M" parameterType="Map">
-    INSERT INTO SYS0013M
+<insert id="addSVC0142D" parameterType="Map">
+    INSERT INTO SYS0013M (CODE_ID,CODE_CTG_ID,CODE_NAME,CODE_DESC,STUS,CRT_USER_ID,CRT_DT,CODE)
     VALUES (
-        SYS0013M_CODE_ID_SEQ.NEXTVAL,
-        #{defectCode},
-        #{svcCode},
+        SVC0142D_CODE_ID_SEQ.NEXTVAL,
+        #{codeCtgry},
         #{svcCodeDesc},
         #{svcCodeRmk},
-        '0',
-        SYSDATE,
+        '1',
         #{creator},
         SYSDATE,
-        #{updator},
-        '0'
+        #{defectCode},
     )
 </insert>
 
@@ -156,11 +153,12 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	         WHEN A.DEFECT_TYP IN ('DD','DC','DT','SC') THEN 'HA'
 	         ELSE '-' END AS BUSI_CAT,
 	    A.PROD_CAT,
-	    B.CODE_ID CODE_CAT_ID,
+	    B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
 	    B.CODE_NAME CODE_CAT,
 	    A.DEFECT_TYP,
 	    G.DEFECT_ID AS DEFECT_GRP,
+	    G.DEFECT_CODE AS SVC_LARGE_CODE,
         G.DEFECT_CODE AS DEFECT_GRP_CODE,
 	    A.DEFECT_ID,
 	    A.DEFECT_CODE,
@@ -182,7 +180,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    D.USER_NAME AS UPD_USER,
 	    A.UPD_DT
 	FROM SYS0100M A
-	LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554 AND A.DEFECT_TYP = B.CODE
+	LEFT JOIN SVC0141M B ON A.DEFECT_TYP = B.CODE
 	LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
 	LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
 	LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
@@ -191,7 +189,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
+        AND B.CODE_CTG_ID IN
         <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -225,14 +223,15 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     </if>
 	UNION
 
-	SELECT
+	SELECT DISTINCT
 	    '-' AS BUSI_CAT,
 	    '-' AS PROD_CAT,
-	    B.CODE_ID CODE_CAT_ID,
+	    B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
 	    B.CODE_NAME CODE_CAT,
 	     '-' AS DEFECT_TYP,
 	    A.RESN_TYPE_ID AS DEFECT_GRP,
+	    '-' AS SVC_LARGE_CODE,
 	    '0' AS DEFECT_GRP_CODE,
 	    A.RESN_ID AS DEFECT_ID,
 	    A.CODE AS DEFECT_CODE,
@@ -254,13 +253,13 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    D.USER_NAME AS UPD_USER,
 	    A.UPD_DT
 	FROM SYS0032M A
-	JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND TO_CHAR(A.RESN_TYPE_ID) = B.CODE
-	LEFT　JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
-	LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+	JOIN SVC0141M B ON TO_CHAR(A.RESN_TYPE_ID) = B.CODE
+	LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+	LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
+        AND B.CODE_CTG_ID IN
         <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -285,21 +284,22 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     </if>
     UNION
 
-    SELECT
+    SELECT DISTINCT
         '-' AS BUSI_CAT,
         '-' AS PROD_CAT,
-        A.CODE_ID CODE_CAT_ID,
+        A.CODE_CTG_ID CODE_CAT_ID,
         A.CODE CODE_CAT_NAME,
         A.CODE_NAME CODE_CAT,
         '-' AS DEFECT_TYP,
         0 AS DEFECT_GRP,
+        '-' AS SVC_LARGE_CODE,
         '-' AS DEFECT_GRP_CODE,
         B.CODE_ID AS DEFECT_ID,
         B.CODE AS DEFECT_CODE,
         B.CODE_NAME AS CODE_DESC,
         B.CODE_DESC AS CODE_REMARK,
-        B.DISAB AS STUS_ID,
-        CASE WHEN B.DISAB = 0 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+        B.STUS AS STUS_ID,
+        CASE WHEN B.STUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
 
         0 AS STK_ID,
         '-' AS PROD_CODE,
@@ -313,20 +313,20 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         A.CRT_DT,
         D.USER_NAME AS UPD_USER,
         A.UPD_DT
-    FROM SYS0013M A
-    JOIN SYS0013M B ON A.CODE = B.CODE_MASTER_ID AND A.CODE_ID IN (7319,7320)
+    FROM SVC0141M A
+    JOIN SVC0142D B ON A.CODE_CTG_ID = B.CODE_CTG_ID
     LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
     LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
     <if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND A.CODE_ID IN
+        AND A.CODE_CTG_ID IN
         <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </if>
     <if test='arrCodeStus != null and arrCodeStus != ""'>
-        AND A.DISAB IN
+        AND B.STUS IN
        <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -346,15 +346,16 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     </if>
 	UNION
 
-	SELECT
+	SELECT DISTINCT
 	    CASE WHEN B.CODE IN ('MAT','FRM','MC','ACO','ACI') THEN 'HC'
 	            ELSE 'HA' END AS BUSI_CAT,
 	    C.CODE AS PROD_CAT,
-	    B.CODE_ID CODE_CAT_ID,
+	    B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
         B.CODE_NAME CODE_CAT,
 	    '-' AS DEFECT_TYP,
 	    0 AS DEFECT_GRP,
+	    '-' AS SVC_LARGE_CODE,
 	    '-' AS DEFECT_GRP_CODE,
 	    0 AS DEFECT_ID,
 	    '-' AS DEFECT_CODE,
@@ -376,13 +377,13 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    D.USER_NAME AS UPD_USER,
 	    A.UPD_DT
 	FROM SYS0026M A
-	LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND B.CODE_ID = 7326
-	LEFT　JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
-	LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+	LEFT JOIN SVC0141M B ON B.CODE_CTG_ID = 19
+	LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+	LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
 	WHERE 1=1
 	<if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
+        AND B.CODE_CTG_ID IN
         <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -406,7 +407,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         AND B.CODE = #{defCode}
     </if>
     <if test='defName != null and defName != ""'>
-        AND B.CODE_DESC = #{defName}
+        AND B.CODE_NAME = #{defName}
     </if>
     <if test='stkId != null and stkId != ""'>
         AND A.STK_ID = #{stkId}
@@ -419,7 +420,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 	    DEFECT_STATUS = #{updStus},
 	    UPD_DT = SYSDATE,
 	    UPD_USR = #{updator}
-	WHERE DEFECT_TYP = #{codeCatName}　AND DEFECT_ID = #{defectId}
+	WHERE DEFECT_TYP = #{codeCatName} AND DEFECT_ID = #{defectId}
 </update>
 
 <update id="updateCodeStusSYS32" parameterType="Map">
@@ -428,27 +429,27 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         STUS_CODE_ID = #{updStus},
         UPD_DT = SYSDATE,
         UPD_USER_ID = #{updator}
-    WHERE RESN_TYPE_ID = #{codeCatName}　AND　RESN_ID = #{defectId}
+    WHERE RESN_TYPE_ID = #{codeCatName} AND RESN_ID = #{defectId}
 </update>
 
-<update id="updateCodeStusSYS13" parameterType="Map">
-    UPDATE SYS0013M
+<update id="updateCodeStusSVC142" parameterType="Map">
+    UPDATE SVC0142D
     SET
-        DISAB = #{updStus},
+        STUS = #{updStus},
         UPD_DT = SYSDATE,
         UPD_USER_ID = #{updator}
-    WHERE CODE_MASTER_ID = #{codeCatName}　AND　CODE_ID = #{defectId}
+    WHERE CODE_CTG_ID = #{codeCatId} AND CODE_ID = #{defectId}
 </update>
 
 <select id="selectCodeMgmtInfo" parameterType="Map" resultType="egovMap">
-    SELECT　DISTINCT
+    SELECT DISTINCT
         CASE WHEN A.DEFECT_TYP IN ('HDD','HDC','HDT','HSC') THEN '6666'
              WHEN A.DEFECT_TYP IN ('DD','DC','DT','SC') THEN '6665'
              ELSE '-' END AS BUSI_CAT,
-        B.CODE_MASTER_ID AS TYPE_ID,
+        B.SRV_TYPE AS TYPE_ID,
         F.STK_CTGRY_ID AS PROD_CAT_ID,
         A.PROD_CAT,
-        B.CODE_ID CODE_CAT_ID,
+        B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
         B.CODE_NAME CODE_CAT,
         A.DEFECT_TYP,
@@ -474,7 +475,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         D.USER_NAME AS UPD_USER,
         A.UPD_DT
     FROM SYS0100M A
-    LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554 AND A.DEFECT_TYP = B.CODE
+    LEFT JOIN SVC0141M B ON A.DEFECT_TYP = B.CODE
     LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
     LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
     LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
@@ -482,29 +483,17 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     LEFT JOIN SYS0100M G ON A.DEFECT_GRP = G.DEFECT_ID
 
     WHERE 1=1
-    <if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
-        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID = #{codeCatId}
     </if>
-    <if test='arrProdCat != null and arrProdCat != ""'>
-        AND F.STK_CTGRY_ID IN
-        <foreach item="item" collection="arrProdCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='svcLargeCode != null and svcLargeCode != ""'>
+        AND G.DEFECT_CODE = #{svcLargeCode}
     </if>
-    <if test='arrCodeStus != null and arrCodeStus != ""'>
-        AND A.DEFECT_STATUS IN
-       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='prodCat != null and prodCat != "*"'>
+        AND F.STK_CTGRY_ID = #{prodCat}
     </if>
     <if test='defCode != null and defCode != ""'>
         AND A.DEFECT_CODE = #{defCode}
-    </if>
-    <if test='defName != null and defName != ""'>
-        AND A.DEFECT_DESC = #{defName}
     </if>
     <if test='defectId != null and defectId != ""'>
         AND A.DEFECT_ID = #{defectId}
@@ -514,12 +503,12 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     </if>
     UNION
 
-    SELECT　DISTINCT
+    SELECT DISTINCT
         '-' AS BUSI_CAT,
-        B.CODE_MASTER_ID AS TYPE_ID,
+        B.SRV_TYPE AS TYPE_ID,
         0 AS PROD_CAT_ID,
         '-' AS PROD_CAT,
-        B.CODE_ID CODE_CAT_ID,
+        B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
         B.CODE_NAME CODE_CAT,
          '-' AS DEFECT_TYP,
@@ -545,40 +534,28 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         D.USER_NAME AS UPD_USER,
         A.UPD_DT
     FROM SYS0032M A
-    JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND TO_CHAR(A.RESN_TYPE_ID) = B.CODE
-    LEFT　JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
-    LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+    JOIN SVC0141M B ON TO_CHAR(A.RESN_TYPE_ID) = B.CODE
+    LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
-    <if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
-        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </if>
-    <if test='arrCodeStus != null and arrCodeStus != ""'>
-        AND A.STUS_CODE_ID IN
-       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID =  #{codeCatId}
     </if>
     <if test='defCode != null and defCode != ""'>
         AND A.CODE = #{defCode}
-    </if>
-    <if test='defName != null and defName != ""'>
-        AND A.RESN_DESC = #{defName}
     </if>
     <if test='defectId != null and defectId != ""'>
         AND A.RESN_ID = #{defectId}
     </if>
     UNION
 
-    SELECT　DISTINCT
+    SELECT DISTINCT
         '-' AS BUSI_CAT,
-        B.CODE_MASTER_ID AS TYPE_ID,
+        A.SRV_TYPE AS TYPE_ID,
         0 AS PROD_CAT_ID,
         '-' AS PROD_CAT,
-        A.CODE_ID CODE_CAT_ID,
+        A.CODE_CTG_ID CODE_CAT_ID,
         A.CODE CODE_CAT_NAME,
         A.CODE_NAME CODE_CAT,
         '-' AS DEFECT_TYP,
@@ -588,8 +565,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         B.CODE AS DEFECT_CODE,
         B.CODE_NAME AS CODE_DESC,
         B.CODE_DESC AS CODE_REMARK,
-        B.DISAB AS STUS_ID,
-        CASE WHEN B.DISAB = 0 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+        B.STUS AS STUS_ID,
+        CASE WHEN B.STUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
 
         0 AS STK_ID,
         '-' AS PROD_CODE,
@@ -603,42 +580,30 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         A.CRT_DT,
         D.USER_NAME AS UPD_USER,
         A.UPD_DT
-    FROM SYS0013M A
-    JOIN SYS0013M B ON A.CODE = B.CODE_MASTER_ID AND A.CODE_ID IN (7319,7320)
+    FROM SVC0141M A
+    JOIN SVC0142D B ON A.CODE_CTG_ID = B.CODE_CTG_ID
     LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
     LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
-    <if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND A.CODE_ID IN
-        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </if>
-    <if test='arrCodeStus != null and arrCodeStus != ""'>
-        AND A.DISAB IN
-       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND A.CODE_CTG_ID = #{codeCatId}
     </if>
     <if test='defCode != null and defCode != ""'>
         AND B.CODE = #{defCode}
-    </if>
-    <if test='defName != null and defName != ""'>
-        AND B.CODE_NAME = #{defName}
     </if>
     <if test='defectId != null and defectId != ""'>
         AND B.CODE_ID = #{defectId}
     </if>
     UNION
 
-    SELECT　DISTINCT
+    SELECT DISTINCT
         CASE WHEN B.CODE IN ('MAT','FRM','MC','ACO','ACI') THEN '6666'
                 ELSE '6665' END AS BUSI_CAT,
-        B.CODE_MASTER_ID AS TYPE_ID,
+        B.SRV_TYPE AS TYPE_ID,
         A.STK_CTGRY_ID AS PROD_CAT_ID,
         C.CODE AS PROD_CAT,
-        B.CODE_ID CODE_CAT_ID,
+        B.CODE_CTG_ID CODE_CAT_ID,
         B.CODE CODE_CAT_NAME,
         B.CODE_NAME CODE_CAT,
         '-' AS DEFECT_TYP,
@@ -664,34 +629,19 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         D.USER_NAME AS UPD_USER,
         A.UPD_DT
     FROM SYS0026M A
-    LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = 554　AND B.CODE_ID = 7326
+    LEFT JOIN SVC0141M B ON B.CODE_CTG_ID = 19
     JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
-    LEFT　JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
 
     WHERE 1=1
-    <if test='arrCodeCat != null and arrCodeCat != ""'>
-        AND B.CODE_ID IN
-        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID = #{codeCatId}
     </if>
-    <if test='arrProdCat != null and arrProdCat != ""'>
-        AND A.STK_CTGRY_ID IN
-        <foreach item="item" collection="arrProdCat" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <if test='prodCat != null and  prodCat != "*"'>
+        AND A.STK_CTGRY_ID = #{prodCat}
     </if>
-    <if test='arrCodeStus != null and arrCodeStus != ""'>
-        AND A.STUS_CODE_ID IN
-       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </if>
-    <if test='prodCode != null and prodCode != ""'>
+    <if test='prodCode != "-"'>
         AND A.STK_CODE = #{prodCode}
-    </if>
-    <if test='defName != null and defName != ""'>
-        AND B.CODE_DESC = #{defName}
     </if>
     <if test='stkId != null and stkId != ""'>
         AND A.STK_ID = #{stkId}
@@ -701,37 +651,51 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 <insert id="updateASReasons" parameterType="Map">
     UPDATE SYS0032M
     SET
-        CODE　= #{svcCode},
-        RESN_DESC　= #{svcCodeDesc},
+        CODE = #{svcCode},
+        RESN_DESC = #{svcCodeDesc},
         UPD_USER_ID = #{updator},
-        UPD_DT　= SYSDATE
+        UPD_DT = SYSDATE
     WHERE
-        RESN_ID　= #{hidDefectId}
+        RESN_ID = #{hidDefectId}
 </insert>
 
-<insert id="updateSYS0013M" parameterType="Map">
-    UPDATE　SYS0013M
+<insert id="updateSVC0142D" parameterType="Map">
+    UPDATE SVC0142D
     SET
         CODE = #{svcCode},
-        CODE_NAME　= #{svcCodeDesc},
+        CODE_NAME = #{svcCodeDesc},
         CODE_DESC = #{svcCodeRmk},
         UPD_DT = SYSDATE,
         UPD_USER_ID =  #{updator}
     WHERE
-        CODE_ID　= #{hidDefectId}　AND CODE_MASTER_ID = #{type}
+        CODE_ID = #{hidDefectId} AND CODE_CTG_ID = #{codeCtgry}
 </insert>
 
 <insert id="updateDefectCodes" parameterType="Map">
     UPDATE SYS0100M
     SET
-        PROD_CAT　= (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  　#{productCtgry}),
-        DEFECT_TYP　＝　(SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID =  #{codeCtgry}),
+        PROD_CAT = (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),
+        DEFECT_TYP ＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID =  #{codeCtgry}),
         DEFECT_CODE = #{svcCode},
         DEFECT_DESC = #{svcCodeDesc},
         DEFECT_RMK = #{svcCodeRmk},
         UPD_DT = SYSDATE,
         UPD_USR = #{updator}
     WHERE
-        DEFECT_ID　= #{hidDefectId}　AND DEFECT_TYP = #{hidCodeCatName}
+        DEFECT_ID = #{hidDefectId} AND DEFECT_TYP = #{hidCodeCatName}
 </insert>
+
+<select id="selectCodeCatList" parameterType="Map" resultType="egovMap">
+	SELECT
+	    CODE_CTG_ID CODE_ID ,
+	    CODE ,
+	    CODE_NAME
+	FROM SVC0141M
+	WHERE STUS = 1
+	<if test="groupCode != null and groupCode !=''">
+	   AND SRV_TYPE = #{groupCode}
+	</if>
+</select>
+
+
 </mapper>

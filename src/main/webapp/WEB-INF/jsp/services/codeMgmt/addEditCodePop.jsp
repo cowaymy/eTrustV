@@ -20,23 +20,16 @@ var busiCat = "";
 
 $(document).ready(function(){
 
-	if ('${codeMgmtMap.typeId}' == '554'){ //AS
-		typeId = '7296';
-	}
-	//INS 7297
-	//PEX 7299
-	//PR 7298
-
-	/* if ('${codeMgmtMap.busiCat}' == 'HA'){ //AS
+	if ('${codeMgmtMap.busiCat}' == 'HA'){ //AS
 		busiCat = '6665';
     }else{
     	busiCat = '6666';
-    } */
+    }
 
     doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '${codeMgmtMap.prodCatId}', 'productCtgry', 'S','');
     doGetCombo('/common/selectCodeList.do', '500', '${codeMgmtMap.busiCat}', 'busiCat', 'S','');
-    doGetCombo('/common/selectCodeList.do', '553', typeId, 'type', 'S','');
-    doGetCombo('/common/selectCodeList.do', '554', '${codeMgmtMap.codeCatId}', 'codeCtgry', 'S','');
+    doGetCombo('/common/selectCodeList.do', '553', '${codeMgmtMap.typeId}', 'type', 'S','');
+    doGetCombo('/services/codeMgmt/selectCodeCatList.do', '${codeMgmtMap.typeId}', '${codeMgmtMap.codeCatId}', 'codeCtgry', 'S','');
 
     fn_toggle('${codeMgmtMap.codeCatId}');
     fn_viewType("${viewType}");
@@ -57,7 +50,11 @@ function  fn_viewType(type){
     $("#productCtgry").val('${codeMgmtMap.prodCatId}');
     $("#codeCtgry").val('${codeMgmtMap.codeCatId}');
     $("#svcCode").val('${codeMgmtMap.defectCode}');
-    $("#svcLargeCode").val('${codeMgmtMap.defectGrpCode}');
+    if('${codeMgmtMap.codeCatId}' == '11'){
+        $("#svcLargeCode").val('${codeMgmtMap.svcLargeCode}');
+    }else{
+    	$("#svcLargeCode").val('${codeMgmtMap.defectGrpCode}');
+    }
     $("#svcCodeDesc").val('${codeMgmtMap.codeDesc}');
     $("#svcCodeRmk").val('${codeMgmtMap.codeRemark}');
 
@@ -95,11 +92,11 @@ function  fn_viewType(type){
 }
 
 function fn_toggle(selVal) {
-    if(selVal == '7326') { //Product Setting
+    if(selVal == '18') { //Product Setting
         $(".tr_toggle_display").show();
         $(".tr_toggle_code").hide();
     } else {
-    	if(selVal == '7301' || selVal == '7305' || selVal == '7303' || selVal == '7307'){
+    	if(selVal == '2' || selVal == '4' || selVal == '6' || selVal == '8' || selVal == '11'){
     		$(".tr2_toggle_display").show();
     	}else{
     		$(".tr2_toggle_display").hide();
@@ -107,6 +104,11 @@ function fn_toggle(selVal) {
         $(".tr_toggle_display").hide();
         $(".tr_toggle_code").show();
     }
+}
+
+function fn_changeCodeCat(selVal) {
+    doGetCombo('/services/codeMgmt/selectCodeCatList.do', selVal, '${codeMgmtMap.codeCatId}', 'codeCtgry', 'S','');
+
 }
 
 function fn_save(){
@@ -122,14 +124,14 @@ function fn_save(){
     }
 
     if (type == 1){ // New
-    	if($("#codeCtgry").val() == '7326') {
+    	if($("#codeCtgry").val() == '18') {
             if(fn_chkProductAvail()){
                    flag = true;
                    return;
                }
        }else{
            //SYS0032M
-           if($("#codeCtgry").val() == '7311' || $("#codeCtgry").val() == '7312' || $("#codeCtgry").val() == '7313' || $("#codeCtgry").val() == '7314'){
+           if($("#codeCtgry").val() == '11' || $("#codeCtgry").val() == '12' || $("#codeCtgry").val() == '13' || $("#codeCtgry").val() == '14'){
                if(fn_chkDupReasons()){
                    flag = true;
                    return;
@@ -201,7 +203,7 @@ function fn_validate(){
     var checkRegexResult = true;
     var regExpSpecChar = /^[^*|\":<>[\]{}`\\';@&$]+$/;
 
-    if($("#codeCtgry").val() == '7326') { //Product Setting
+    if($("#codeCtgry").val() == '18') { //Product Setting
 
     	if($("#productCode").val() == ""){
             msg += "* Please enter material code <br>";
@@ -220,7 +222,8 @@ function fn_validate(){
         } */
     } else {
 
-    	if($("#codeCtgry").val() >= 7300 && $("#codeCtgry").val() <= 7303){
+    	//DC, HDD, HDC, DD
+    	if($("#codeCtgry").val() >= 1 && $("#codeCtgry").val() <= 4){
     		if($("#productCtgry").val() == ""){
                 msg += "* Please select a product category <br>";
             }
@@ -230,9 +233,11 @@ function fn_validate(){
             msg += "* Please select a service type <br>";
         }
 
-    	if($("#busiCat").val() == ""){
-            msg += "* Please select a business category <br>";
-        }
+        if($("#codeCtgry").val() >= 1 && $("#codeCtgry").val() <= 9){
+	    	if($("#busiCat").val() == ""){
+	            msg += "* Please select a business category <br>";
+	        }
+    	}
 
     	if($("#codeCtgry").val() == ""){
             msg += "* Please select a code category <br>";
@@ -342,7 +347,7 @@ function fn_saveclose() {
         <tr>
             <th scope="row">Type</th>
             <td>
-                <select class="w100p" id="type" name="type" ></select>
+                <select class="w100p" id="type" name="type" onchange="javascript : fn_changeCodeCat(this.value)" ></select>
             </td>
             <th scope="row">Code Category</th>
             <td>
