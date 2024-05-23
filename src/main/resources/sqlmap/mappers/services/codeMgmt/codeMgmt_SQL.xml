@@ -70,7 +70,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 </insert>
 
 <insert id="addSVC0142D" parameterType="Map">
-    INSERT INTO SYS0013M (CODE_ID,CODE_CTG_ID,CODE_NAME,CODE_DESC,STUS,CRT_USER_ID,CRT_DT,CODE)
+    INSERT INTO SVC0142D (CODE_ID,CODE_CTG_ID,CODE_NAME,CODE_DESC,STUS,CRT_USER_ID,CRT_DT,CODE)
     VALUES (
         SVC0142D_CODE_ID_SEQ.NEXTVAL,
         #{codeCtgry},
@@ -79,7 +79,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
         '1',
         #{creator},
         SYSDATE,
-        #{defectCode},
+        #{defectCode}
     )
 </insert>
 
@@ -489,7 +489,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     <if test='svcLargeCode != null and svcLargeCode != ""'>
         AND G.DEFECT_CODE = #{svcLargeCode}
     </if>
-    <if test='prodCat != null and prodCat != "*"'>
+    <if test='prodCat != "-" and prodCat != "*"'>
         AND F.STK_CTGRY_ID = #{prodCat}
     </if>
     <if test='defCode != null and defCode != ""'>
@@ -637,7 +637,7 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
     <if test='codeCatId != null and codeCatId != ""'>
         AND B.CODE_CTG_ID = #{codeCatId}
     </if>
-    <if test='prodCat != null and  prodCat != "*"'>
+    <if test='prodCat != "-" and prodCat != "*"'>
         AND A.STK_CTGRY_ID = #{prodCat}
     </if>
     <if test='prodCode != "-"'>
@@ -674,8 +674,8 @@ WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
 <insert id="updateDefectCodes" parameterType="Map">
     UPDATE SYS0100M
     SET
-        PROD_CAT = (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),
-        DEFECT_TYP ＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 554 AND CODE_ID =  #{codeCtgry}),
+        PROD_CAT = NVL((SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),'*'),
+        DEFECT_TYP ＝ (SELECT CODE FROM SVC0141M WHERE CODE_CTG_ID =  #{codeCtgry}),
         DEFECT_CODE = #{svcCode},
         DEFECT_DESC = #{svcCodeDesc},
         DEFECT_RMK = #{svcCodeRmk},

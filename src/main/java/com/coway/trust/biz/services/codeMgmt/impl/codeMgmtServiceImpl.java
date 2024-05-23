@@ -98,13 +98,14 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		    	defectId = codeMgmtMapper.getDefectId();
 		    	params.put("defectId", defectId.get("defectId").toString());
 
-		    	if (Integer.parseInt(params.get("codeCtgry").toString()) >=10 && Integer.parseInt(params.get("codeCtgry").toString()) <=16){ //SYS0032M
+		    	if (Integer.parseInt(params.get("codeCtgry").toString()) >=12 && Integer.parseInt(params.get("codeCtgry").toString()) <=16){ //SYS0032M
 			    	codeMgmtMapper.addASReasons(params); //sequence for sys0032m
 			    }else if (saveParam.get("codeCtgry").toString().equals("17") || saveParam.get("codeCtgry").toString().equals("18")){ //SVC0142D
 			    	codeMgmtMapper.addSVC0142D(params); //sequence for SVC0142D
 			    }else{ //SYS0100M
-			    	if (saveParam.get("codeCtgry").toString().equals("1") || saveParam.get("codeCtgry").toString().equals("3")
-				    		|| saveParam.get("codeCtgry").toString().equals("5") || saveParam.get("codeCtgry").toString().equals("7")){ //SMALL
+			    	if (saveParam.get("codeCtgry").toString().equals("2") || saveParam.get("codeCtgry").toString().equals("4")
+				    		|| saveParam.get("codeCtgry").toString().equals("6") || saveParam.get("codeCtgry").toString().equals("7")
+				    		|| saveParam.get("codeCtgry").toString().equals("11")){ //SMALL
 
 			    		defectId = codeMgmtMapper.getDefectIdParent(saveParam);
 
@@ -141,7 +142,7 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		    	typeCode = codeMgmtMapper.getTypeCode(params.get("codeCtgry").toString());
 		    	params.put("defectCode", typeCode.toString());
 
-		    	if (Integer.parseInt(params.get("codeCtgry").toString()) >=10 && Integer.parseInt(params.get("codeCtgry").toString()) <=16){ //SYS0032M
+		    	if (Integer.parseInt(params.get("codeCtgry").toString()) >=12 && Integer.parseInt(params.get("codeCtgry").toString()) <=16){ //SYS0032M
 			    	codeMgmtMapper.updateASReasons(params); //sequence for sys0032m
 			    }else if (params.get("codeCtgry").toString().equals("17") || params.get("codeCtgry").toString().equals("18")){ //SVC0142D
 			    	codeMgmtMapper.updateSVC0142D(params); //sequence for SVC0142D
@@ -159,7 +160,7 @@ public class codeMgmtServiceImpl implements codeMgmtService{
 		 logger.debug(params.toString());
 		 logger.debug(params.get("codeCatId").toString());
 
-		 if(Integer.parseInt(params.get("codeCatId").toString()) >=10 && Integer.parseInt(params.get("codeCatId").toString()) <=16){ //SYS0032M
+		 if(Integer.parseInt(params.get("codeCatId").toString()) >=12 && Integer.parseInt(params.get("codeCatId").toString()) <=16){ //SYS0032M
 			 logger.debug("================sys32 - START ================");
 			 codeMgmtMapper.updateCodeStusSYS32(params);
 		 }else if(params.get("codeCatId").toString().equals("17") || params.get("codeCatId").toString().equals("18")){ //SVC0142D

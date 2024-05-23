@@ -92,7 +92,7 @@ function  fn_viewType(type){
 }
 
 function fn_toggle(selVal) {
-    if(selVal == '18') { //Product Setting
+    if(selVal == '19') { //Product Setting
         $(".tr_toggle_display").show();
         $(".tr_toggle_code").hide();
     } else {
@@ -124,14 +124,14 @@ function fn_save(){
     }
 
     if (type == 1){ // New
-    	if($("#codeCtgry").val() == '18') {
+    	if($("#codeCtgry").val() == '19') {
             if(fn_chkProductAvail()){
                    flag = true;
                    return;
                }
        }else{
            //SYS0032M
-           if($("#codeCtgry").val() == '11' || $("#codeCtgry").val() == '12' || $("#codeCtgry").val() == '13' || $("#codeCtgry").val() == '14'){
+           if($("#codeCtgry").val() >= 12 && $("#codeCtgry").val() <= 16){
                if(fn_chkDupReasons()){
                    flag = true;
                    return;
@@ -202,12 +202,20 @@ function fn_validate(){
     //checkReges
     var checkRegexResult = true;
     var regExpSpecChar = /^[^*|\":<>[\]{}`\\';@&$]+$/;
+    var viewType = "${viewType}";
 
-    if($("#codeCtgry").val() == '18') { //Product Setting
+    if($("#codeCtgry").val() == '19') { //Product Setting
+
+    	if(viewType == "1"){ //New Code
+            msg += "* Product Setting Cannot be added <br>";
+            msg += "* Proceed to Edit Code for product setting <br>";
+        }
 
     	if($("#productCode").val() == ""){
             msg += "* Please enter material code <br>";
         }
+
+
 
     	/* if($("#prdLaunchDt").val() == ""){
             msg += "* Please select product launch date <br>";
