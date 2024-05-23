@@ -31,7 +31,7 @@ public class EpapanApiMagicAddressForm {
 		params.put("groupCode", vo.getGroupCode());
 		params.put("isAllowForDd", vo.getIsAllowForDd());
 		params.put("ddlChnl", vo.getDdlChnl());
-
+		params.put("refId", vo.getRefId());
 
 		return params;
 	}
@@ -85,6 +85,13 @@ public class EpapanApiMagicAddressForm {
 	public void setDdlChnl(String ddlChnl) {
 		this.ddlChnl = ddlChnl;
 	}
+    public String getRefId() {
+		return refId;
+	}
+	public void setRefId(String refId) {
+		this.refId = refId;
+	}
+
 
 
 
@@ -94,6 +101,6 @@ public class EpapanApiMagicAddressForm {
     public String groupCode;
     public String isAllowForDd;
     public String ddlChnl;
-
+	public String refId;
 
 }

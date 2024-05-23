@@ -1,12 +1,14 @@
 package com.coway.trust.api.mobile.sales.epapanApi;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -129,6 +132,63 @@ public class EpapanApiController {
 	  public ResponseEntity<List<EgovMap>> selectCodeList(@ModelAttribute EpapanApiMagicAddressForm param) {
 	    List<EgovMap> codeList = commonService.selectCodeList( EpapanApiMagicAddressForm.createMap(param) );
 	    return ResponseEntity.ok( codeList );
+	  }
+
+	@ApiOperation(value = "selectAccBank", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectAccBank", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectAccBank(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+
+	    List<EgovMap> codeList = customerService.selectAccBank(EpapanApiMagicAddressForm.createMap(param) );
+	    return ResponseEntity.ok(codeList);
+	  }
+
+	@ApiOperation(value = "getTknId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/getTknId", method = RequestMethod.GET)
+	  public ResponseEntity<Map<String, Object>> getTknId(@ModelAttribute EpapanApiMagicAddressForm param)throws Exception {
+
+	      int tknId = 0;
+	      Map<String, Object> result = new HashMap();
+
+	      tknId = (Integer) customerService.getTokenID();
+	      result.put("tknId", tknId);
+	      result.put("tknRef", EpapanApiMagicAddressForm.createMap(param).get("refId") + StringUtils.leftPad(Integer.toString(tknId), 10, "0"));
+
+	      customerService.insertTokenLogging(result);
+
+	      return ResponseEntity.ok(result);
+	  }
+
+	@ApiOperation(value = "getTokenNumber", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/getTokenNumber", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> getTokenNumber(@ModelAttribute EpapanApiMagicAddressForm param)throws Exception {
+
+	      //Map<String, Object> result = new HashMap();
+	      Map<String, Object> result = customerService.getTokenNumber(EpapanApiMagicAddressForm.createMap(param));
+
+	      if(result == null){
+	          customerService.updateTokenStagingF(EpapanApiMagicAddressForm.createMap(param));
+	      }
+
+	      if(result != null && result.get("token") != null){
+	          boolean isCreditCardValid = customerService.checkCreditCardValidity(result.get("token").toString());
+	          if(isCreditCardValid == false) {
+	              customerService.updateTokenStagingF(EpapanApiMagicAddressForm.createMap(param));
+
+	        	  ReturnMessage message = new ReturnMessage();
+	              message.setCode(AppConstants.FAIL);
+	              message.setData(result);
+	              message.setMessage( "This card has marked as \'Transaction Not Allowed\'  <span style='color:red'>(TNA)</span>. Kindly change a new card");
+
+	              return ResponseEntity.ok(message);
+	          }
+	      }
+
+	      ReturnMessage message = new ReturnMessage();
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setData(result);
+	      message.setMessage("Success");
+
+	      return ResponseEntity.ok(message);
 	  }
 
 }
