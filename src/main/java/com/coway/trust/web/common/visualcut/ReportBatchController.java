@@ -1960,7 +1960,7 @@ public class ReportBatchController {
     int genYear = 1;
     int currentYear = LocalDate.now().getYear();
 
-    for (int minYear = 2006; minYear <= currentYear; minYear+=(genYear+1) ) {
+    for (int minYear = 2006; minYear <= currentYear; minYear+=(genYear) ) {
 
       int maxYear = minYear+genYear;
 
@@ -2844,12 +2844,15 @@ public void attendanceRaw() throws ParseException, IOException {
 	params.put("memCode", "ALL");
 	String date = new SimpleDateFormat("yyyyMM").format(new Date());
 	params.put("calMonthYear", date);
-	List<String> cols = Arrays.asList("date", "time", "day", "orgCode", "grpCode", "deptCode", "hpCode", "hpType", "QR - A0001", "Public Holiday - A0002", "State Holiday - A0003", "RFA - A0004", "Waived - A0005", "late");
+	List<String> cols = Arrays.asList("date", "time", "day", "location", "orgCode", "grpCode", "deptCode", "hpCode", "hpType", "QR - A0001", "Public Holiday - A0002", "State Holiday - A0003", "RFA - A0004", "Waived - A0005", "late");
 	XSSFWorkbook wb1 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
 	Calendar cal = Calendar.getInstance();
 	cal.add(Calendar.MONTH, -1);
 	Date date2 = cal.getTime();
 	params.put("calMonthYear", new SimpleDateFormat("yyyyMM").format(date2));
+
+
+
 	XSSFWorkbook wb2 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
 	File raw = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + date + "_" + CommonUtils.getNowDate() + ".xlsx");
 	raw.getParentFile().mkdirs();
@@ -2859,8 +2862,20 @@ public void attendanceRaw() throws ParseException, IOException {
 	raw2.getParentFile().mkdirs();
 	raw2.createNewFile();
 	wb2.write(new FileOutputStream(raw2, false));
+
+
+	Calendar cal2 = Calendar.getInstance();
+	cal2.add(Calendar.MONTH, -2);
+	Date date3 = cal2.getTime();
+	params.put("calMonthYear", new SimpleDateFormat("yyyyMM").format(date3));
+	XSSFWorkbook wb3 = this.genExcel(new Gson().fromJson(attendanceService.getAttendanceRaw(params), new TypeToken<List<Map<String, Object>>>() {}.getType()), cols);
+	File raw3 = new File(uploadDirWeb + "/RawData/Privacy/Attendance" + File.separator + "AttendanceRaw_" + new SimpleDateFormat("yyyyMM").format(date3) + "_" + CommonUtils.getNowDate() + ".xlsx");
+	raw3.getParentFile().mkdirs();
+	raw3.createNewFile();
+	wb3.write(new FileOutputStream(raw3, false));
 }
 */
+
 
 private XSSFWorkbook genExcel(List<Map<String, Object>> datas, List<String> cols) {
 	XSSFWorkbook wb = new XSSFWorkbook();
