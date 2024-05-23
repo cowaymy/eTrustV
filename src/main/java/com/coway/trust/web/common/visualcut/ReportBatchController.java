@@ -1957,12 +1957,12 @@ public class ReportBatchController {
     LOGGER.info("[START] CustomerHealthScoreRaw_Excel...");
 
     Map<String, Object> params = new HashMap<>();
-    int genYear = 1;
+//    int genYear = 1;
     int currentYear = LocalDate.now().getYear();
 
-    for (int minYear = 2006; minYear <= currentYear; minYear+=(genYear) ) {
+    for (int minYear = 2006; minYear <= currentYear; minYear++ ) {
 
-      int maxYear = minYear+genYear;
+      int maxYear = minYear;
 
       params.put("V_STARTYEAR", minYear);
       params.put("V_ENDYEAR", maxYear);
