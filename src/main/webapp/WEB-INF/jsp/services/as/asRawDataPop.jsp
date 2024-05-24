@@ -141,12 +141,12 @@
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
         return false;
       }
-    if (($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') && $("#reportType").val() != '3') {
+    if (($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') && $("#reportType").val() != '3' && $("#reportType").val() != '8' ) {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
       return false;
     }
 
-    if (($("#settleDateFr").val() == '' || $("#settleDateTo").val() == '') && $("#reportType").val() == '3') {
+    if (($("#settleDateFr").val() == '' || $("#settleDateTo").val() == '') && $("#reportType").val() == '3' && $("#reportType").val() == '8') {
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From & To)' htmlEscape='false'/>");
         return false;
     }
@@ -169,7 +169,7 @@
     }
 
     // VALIDATE DATE RANGE OF 7 DAYS OR 31 DAYS
-    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6' || $("#reportType").val() == '7' || $("#reportType").val() == '8') {
+    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6' || $("#reportType").val() == '7') {
       if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
         var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
                           + $("#reqstDateFr").val().substring(0, 2) + "/"
@@ -270,10 +270,15 @@
 
       if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
           && $("#settleDateFr").val() != null
-          && $("#settleDateTo").val() != null) {
+          && $("#settleDateTo").val() != null && $("#reportType").val() != '8') {
           //whereSql2 = " AND B.AS_SETL_DT between to_Date('" + settleDateFrom  + ' 00:00:00'+ "','YYYY-MM-DD HH:MI:SS') AND to_Date('" + settleDateTo + ' 23:59:59'+ "','YYYY-MM-DD HH:MI:SS')";
     	  whereSql2 = " AND B.AS_SETL_DT between trunc(to_Date('" + settleDateFrom + "','YYYY-MM-DD')) AND trunc(to_Date('" + settleDateTo + "','YYYY-MM-DD'))";
-      } else {
+      } else if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
+          && $("#settleDateFr").val() != null
+          && $("#settleDateTo").val() != null && $("#reportType").val() == '8') {
+          //whereSql2 = " AND B.AS_SETL_DT between to_Date('" + settleDateFrom  + ' 00:00:00'+ "','YYYY-MM-DD HH:MI:SS') AND to_Date('" + settleDateTo + ' 23:59:59'+ "','YYYY-MM-DD HH:MI:SS')";
+    	  whereSql2 = " AND G.AS_SETL_DT between trunc(to_Date('" + settleDateFrom + "','YYYY-MM-DD')) AND trunc(to_Date('" + settleDateTo + "','YYYY-MM-DD'))";
+      }else {
           whereSql2LeftJoin = " LEFT ";
       }
 
