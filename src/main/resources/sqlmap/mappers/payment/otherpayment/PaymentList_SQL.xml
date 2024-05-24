@@ -720,7 +720,7 @@
                 AND H.BRNCH_ID = #{branchId}
             </if>
             <if test="userId != null and userId != '' ">
-                AND C.REQST_USER_ID = #{userId}
+                AND C.CRT_USER_ID = #{userId}
             </if>
 		) A
 		ORDER BY A.DCF_REQ_ID
