@@ -76,7 +76,7 @@
       $("#installationRawDataForm #V_WHERESQL_2").val('');
       $("#installationRawDataForm #reportFileName").val('/services/InstallationAccessoriesRawData_Excel.rpt');
       $("#installationRawDataForm #viewType").val("EXCEL");
-      $("#installationRawDataForm #reportDownFileName").val("InstallationRawData_" + day + month + date.getFullYear());
+      $("#installationRawDataForm #reportDownFileName").val("InstallationAccessoriesRawData_" + day + month + date.getFullYear());
 
       var option = {
         isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
