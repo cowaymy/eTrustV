@@ -25,6 +25,11 @@
 			$("#m2").hide(); //hide mandatory indicator (*) for Request Date
 			$("#m3").hide(); //hide mandatory indicator (*) for Date Option
 			$("#m5").show(); //show mandatory indicator (*) for Settle Date
+		}else if (selVal == '8') {
+			$("#reportForm1 .tr_toggle_display").show();
+			$("#m2").hide(); //hide mandatory indicator (*) for Request Date
+			$("#m3").hide(); //hide mandatory indicator (*) for Date Option
+			$("#m5").show(); //show mandatory indicator (*) for Settle Date
 		} else {
 			$("#reportForm1 .tr_toggle_display").hide();
 			$("#m2").show();
@@ -136,14 +141,14 @@
 			return false;
 		}
 		if (($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '')
-				&& $("#reportType").val() != '3') {
+				&& $("#reportType").val() != '3' && $("#reportType").val() != '8') {
 			Common
 					.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
 			return false;
 		}
 
 		if (($("#settleDateFr").val() == '' || $("#settleDateTo").val() == '')
-				&& $("#reportType").val() == '3') {
+				&& $("#reportType").val() == '3' && $("#reportType").val() == '8') {
 			Common
 					.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From & To)' htmlEscape='false'/>");
 			return false;
@@ -228,7 +233,7 @@
 		}
 
 		// VALIDATE AS STATUS ONLY FOR AS RAW (PQC)
-		if ($("#reportType").val() == '3') {
+		if ($("#reportType").val() == '3' || $("#reportType").val() == '3') {
 			if ($("#cmbAsStatus").val() == ''
 					|| $("#cmbAsStatus").val() == null) {
 				Common
@@ -720,7 +725,6 @@
 		          $("#reportForm1 #V_ORDERBYSQL").val(" ");
 		          $("#reportForm1 #V_FULLSQL").val(" ");
 		          $("#reportForm1 #V_WHERESQL").val(whereSql);
-		          console.log("V_WHERESQL " + toString($("#reportForm1 #V_WHERESQL").val()));
 		          $("#reportForm1 #V_WHERESQL2").val(whereSql2);
 		          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
 		          $("#reportForm1 #V_WHERESQL3").val(whereSql3);
