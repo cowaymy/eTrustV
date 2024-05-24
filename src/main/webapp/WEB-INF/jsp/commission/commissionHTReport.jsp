@@ -156,7 +156,12 @@
 
                 if(memLvl == '2')
                 {
-                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                	if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
+                		reportFileName = "/commission/SHMCommission_PDF_202405.rpt"; //reportFileName
+                        reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
+                	else if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
                 		reportFileName = "/commission/SHMCommission_PDF_202402.rpt"; //reportFileName
                         reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
                         reportViewType = "PDF"; //viewType
@@ -169,7 +174,12 @@
                 }
                 else if(memLvl == '3')
                 {
-                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                	if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
+                		reportFileName = "/commission/HTMCommission_PDF_202405.rpt"; //reportFileName
+                        reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                	}
+                	else if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
                 		reportFileName = "/commission/HTMCommission_PDF_202402.rpt"; //reportFileName
                         reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
                         reportViewType = "PDF"; //viewType
