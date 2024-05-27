@@ -186,9 +186,12 @@
            return ;
        }
 
-       $("#MBRSH_ID").val(selectedItems[0].item.memId);
+       /* $("#MBRSH_ID").val(selectedItems[0].item.memId); */
+       $("#MBRSH_ID").val(selectedItems[0].item.cnvrMemId);
        $("#QUOT_ID").val(selectedItems[0].item.quotId);
-       var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId +"&MBRSH_ID="+selectedItems[0].item.memId;
+      /*  var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId +"&MBRSH_ID="+selectedItems[0].item.memId; */
+       var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId +"&MBRSH_ID="+selectedItems[0].item.cnvrMemId;
+       console.log("aziamh" + pram);
        Common.popupDiv("/sales/membership/mViewQuotation.do"+pram ,null, null , true , '_ViewQuotDiv1');
  }
 
@@ -233,10 +236,10 @@ function fn_goConvertSale(){
 	   $("#QUOT_ID").val(selectedItems[0].item.quotId);
 	   $("#ORD_ID").val(selectedItems[0].item.ordId);
 	   $("#PAY_ORD_ID").val(selectedItems[0].item.ordId);
-	   $("#MBRSH_ID").val(selectedItems[0].item.memId);
+	   $("#MBRSH_ID").val(selectedItems[0].item.cnvrMemId);
 
 
-	   var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId +"&MBRSH_ID="+selectedItems[0].item.memId;
+	   var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId +"&MBRSH_ID="+selectedItems[0].item.cnvrMemId;
 	   Common.popupDiv("/sales/membership/mConvSale.do"+pram,null, null , true , '_mConvSaleDiv1');
 
    }
