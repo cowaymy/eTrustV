@@ -1928,17 +1928,11 @@
             , CUSTTYPE.CODE_NAME CUST_TYPE
             , STK.STK_CODE STOCK_CODE
             , STK.STK_DESC STOCK_DESC
-        <!--    , SOM.NOR_RNT_FEE -->
         <!--     =================== -->
         <!--      INST INFO -->
         <!--     =================== -->
-        <!--    , NVL (CADD.ADDR_DTL, ' ') AS INST_ADDR_DTL -->
-        <!--    , NVL (CADD.STREET, ' ') AS INST_STREET -->
             , NVL (MADD.CITY, ' ') AS INST_CITY
             , NVL (MADD.POSTCODE, ' ') AS INST_POSTCODE
-        <!--    , NVL (MADD.AREA, ' ') AS INST_AREA -->
-        <!--    , NVL (MADD.STATE, ' ') AS INST_STATE -->
-        <!--    , NVL (MADD.COUNTRY, ' ') AS INST_COUNTRY -->
             , DECODE (INSTR.INSTALL_DT,
                   NULL, '01/01/1900',
                   TO_CHAR (INSTR.Install_Dt, 'DD/MM/YYYY'))
@@ -1946,34 +1940,6 @@
         <!--     =================== -->
         <!--      MAIL INFO -->
         <!--     =================== -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (CA1.ADDR_DTL, ' ') -->
-<!--                 ELSE NVL (CA2.ADDR_DTL, ' ') -->
-<!--              END MAIL_ADDR_DTL -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (CA1.STREET, ' ') -->
-<!--                 ELSE NVL (CA2.STREET, ' ') -->
-<!--              END MAIL_STREET -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (MA1.CITY, ' ') -->
-<!--                 ELSE NVL (MA2.CITY, ' ') -->
-<!--              END MAIL_CITY -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (MA1.POSTCODE, ' ') -->
-<!--                 ELSE NVL (MA2.POSTCODE, ' ') -->
-<!--              END MAIL_POST_CODE -->
-<!--              , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (MA1.AREA, ' ') -->
-<!--                 ELSE NVL (MA2.AREA, ' ') -->
-<!--              END MAIL_AREA -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (MA1.STATE, ' ') -->
-<!--                 ELSE NVL (MA2.STATE, ' ') -->
-<!--              END MAIL_STATE -->
-<!--             , CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (MA1.COUNTRY, ' ') -->
-<!--                 ELSE NVL (MA2.COUNTRY, ' ') -->
-<!--              END MAIL_CNTY -->
             , CASE
                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (CP1.TEL_M1, ' ')
                 ELSE NVL (CP2.TEL_M1, ' ')
@@ -1990,18 +1956,6 @@
                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL (CP1.TELF, ' ')
                 ELSE NVL (CP2.TELF, ' ')
              END MAIL_CNT_TEL_F
-<!--             , JOMPAY.CUST_BILL_PAY_REF_NO1 JOMPAY -->
-<!--            , NVL(CA1.ADDR_DTL, ' ') MAIL_ADDR_DTL -->
-<!--            , NVL(CA1.STREET, ' ') MAIL_STREET -->
-<!--            , NVL(MA1.CITY, ' ') MAIL_CITY -->
-<!--            , NVL(MA1.POSTCODE, ' ') MAIL_POST_CODE -->
-<!--            , NVL(MA1.AREA, ' ') MAIL_AREA -->
-<!--            , NVL(MA1.STATE, ' ') MAIL_STATE -->
-<!--            , NVL(MA1.COUNTRY, ' ') MAIL_CNTY -->
-<!--            , NVL(CP1.TEL_M1, ' ') MAIL_CNT_TEL_M -->
-<!--            , NVL(CP1.TEL_O, ' ') MAIL_CNT_TEL_O -->
-<!--            , NVL(CP1.TEL_R, ' ') MAIL_CNT_TEL_R -->
-<!--            , NVL(CP1.TELF, ' ') MAIL_CNT_TEL_F -->
         <!-- ==================================================================== -->
         <!--  M2 STATUS + OPENING & CURRENT PAYMODE + OPENING & CURRENT CARD TYPE -->
         <!--==================================================================== -->
@@ -2010,13 +1964,8 @@
             , NVL(CD3.CODE_NAME, ' ') AS OPEN_CRC_TYPE
             , NVL(CD4.CODE_NAME, ' ') AS CURR_CRC_TYPE,
             CASE WHEN CA.MONTH_TYPE = 'M2' AND A.TARGET <![CDATA[ <> ]]> A.COLLECTION THEN CA.MONTH_TYPE
-                ELSE ' No'
+                ELSE 'No'
             END AS M2_STUS
-<!--             CASE -->
-<!--                 WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.MTH_RENT_AMT,0) - NVL(GRB.REBATE_AMT_PER_INSTLMT,0) -->
-<!--                 ELSE 0 -->
-<!--             END ORD_MTH_REN  -->
-            <!-- RENTAL FEE-->
         FROM SAL0001D SOM
         JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
         LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
@@ -2047,17 +1996,11 @@
         <!--  MAIL INFO -->
         <!--=========== -->
         LEFT JOIN SAL0024D BM ON BM.CUST_BILL_ID = SOM.CUST_BILL_ID AND SOM.APP_TYPE_ID = 66 <!-- RENTAL BILL GROUPING MASTER-->
-<!--         LEFT JOIN SAL0023D CA1 ON CA1.CUST_ADD_ID = BM.CUST_BILL_ADD_ID AND SOM.APP_TYPE_ID = 66 CUST ADDRESS -->
-<!--         LEFT JOIN SYS0064M MA1 ON MA1.AREA_ID = CA1.AREA_ID -->
         LEFT JOIN SAL0027D CP1 ON CP1.CUST_CNTC_ID = BM.CUST_BILL_CNT_ID AND SOM.APP_TYPE_ID = 66
-<!--         LEFT JOIN SAL0023D CA2 ON CA2.CUST_ADD_ID = SOM.CUST_ADD_ID AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66 -->
-<!--         LEFT JOIN SYS0064M MA2 ON MA2.AREA_ID = CA2.AREA_ID -->
         LEFT JOIN SAL0027D CP2 ON CP2.CUST_CNTC_ID = SOM.CUST_CNT_ID AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
-<!--         LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID -->
         <!-- ==================================================================== -->
         <!--  M2 STATUS + OPENING & CURRENT PAYMODE + OPENING & CURRENT CARD TYPE -->
         <!-- ==================================================================== -->
-<!--         LEFT JOIN PAY0286D GRB ON GRB.ORD_ID = som.SALES_ORD_ID AND GRB.STUS_ID = 1 -->
         LEFT JOIN PAY0052S P52 ON P52.ACC_DEBT_ORD_ID = SOM.SALES_ORD_ID
         LEFT JOIN REP0087S A ON A.SALES_ORD_ID = som.SALES_ORD_ID
         LEFT JOIN PAY0042D CA ON A.SALES_ORD_ID = CA.SALES_ORD_ID AND A.THSMNTH = CA.BANK_DTL_ID
@@ -2124,7 +2067,7 @@
 	                        WHEN T6.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
 	                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END)
 	                        END CODE_NAME
-		                , '************' || SUBSTR (T4.CUST_ORI_CRC_NO, 13, 4) CUST_ACC_NO
+		                , LPAD(SUBSTR(T4.CUST_ORI_CRC_NO,-4),LENGTH(T4.CUST_ORI_CRC_NO),'*') CUST_ACC_NO
 		                , TO_CHAR(TO_DATE(T4.CUST_CRC_EXPR,'MM/YY'),'MM/YY') AS EXP_DT
 		                , T5.CODE_NAME CARD_TYPE
 		                , T2.CRT_DT
@@ -2181,7 +2124,6 @@
 		        AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
 		    ) B
 
-
 		   <!--===============================-->
 		    <!--        PAYMENT LISTING        -->
 		    <!--===============================-->
@@ -2199,11 +2141,11 @@
 		            END DT,
 		             CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN
 		               CASE WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
-		                  THEN '************' || SUBSTR (Extent3.CUST_ACC_NO , 8, 4)
+		                  THEN LPAD(SUBSTR(Extent3.CUST_ACC_NO,-4),LENGTH(Extent3.CUST_ACC_NO),'*')
 		                  ELSE ' '
 		               END
 		             ELSE
-		                   '************' || SUBSTR (Extent4.CUST_ORI_CRC_NO, 13, 4)
+		                  LPAD(SUBSTR(Extent4.CUST_ORI_CRC_NO,-4),LENGTH(Extent4.CUST_ORI_CRC_NO),'*')
 		             END CUST_ACC_NO,
 		             CASE WHEN (131 = Extent1.MODE_ID) THEN
 		                CASE WHEN (Extent4.CUST_CRC_EXPR IS NOT NULL) THEN TO_CHAR(TO_DATE(Extent4.CUST_CRC_EXPR,'MM/YY'),'MM/YY')
@@ -2255,10 +2197,10 @@
 		                  ELSE '-'
 		               END DT,
 		               CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN
-		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN  '************' || SUBSTR (Ext3.CUST_ACC_NO, 8, 4)
+		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN LPAD(SUBSTR(Ext3.CUST_ACC_NO,-4),LENGTH(Ext3.CUST_ACC_NO),'*')
 		                        ELSE ' '
 		                     END
-		                  ELSE '************' || SUBSTR (Ext4.CUST_ORI_CRC_NO, 13, 4)
+		                  ELSE LPAD(SUBSTR(Ext4.CUST_ORI_CRC_NO,-4),LENGTH(Ext4.CUST_ORI_CRC_NO),'*')
 		               END CUST_ACC_NO,
 		               CASE WHEN (131 = Ext1.MODE_ID) THEN
 		                     CASE WHEN (Ext4.CUST_CRC_EXPR IS NOT NULL) THEN TO_CHAR(TO_DATE(Ext4.CUST_CRC_EXPR,'MM/YY'),'MM/YY')
@@ -2518,7 +2460,7 @@
 				,EXT3.SALES_ORD_NO ORDER_NO
 				,EXT10.CODE ORDER_STATUS
 				,EXT4.NAME CUSTOMER_NAME
-				,CASE WHEN EXT1.MODE_ID = '131' THEN '************' || SUBSTR (EXT2.CUST_ORI_CRC_NO, 13, 4)
+				,CASE WHEN EXT1.MODE_ID = '131' THEN LPAD(SUBSTR(EXT2.CUST_ORI_CRC_NO,-4),LENGTH(EXT2.CUST_ORI_CRC_NO),'*')
 				        ELSE ' '
 				     END AS CUST_ACC_NO
 				,EXT7.AREA AREA
