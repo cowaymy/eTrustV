@@ -3055,6 +3055,27 @@ if(emailListToSend.size() > 0){
 LOGGER.info("[END] InboundGenPdf...");
 }
 
+@RequestMapping(value = "/superCrazyOrderRaw.do")
+//@Scheduled(cron = "0 0 3 3 * *")//Monthly 3rd of the month (3:00am)
+public void superCrazyOrderRaw() {
+  LOGGER.info("[START] superCrazyOrderRaw...");
+  // Get Last Month
+  LocalDate lastMonth = LocalDate.now().minusMonths(1);
+  String month = lastMonth.getMonth().toString();
+  String year = String.valueOf(lastMonth.getYear());
+  String rptDate = month + "_" + year;
+
+  Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/sales/superCrazyOrderRawData_Excel.rpt");
+
+  params.put(REPORT_VIEW_TYPE, "EXCEL");
+  params.put("V_TEMP", "TEMP");
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "superCrazyRawData" + File.separator + "Super Crazy Discount Entitlement Raw_" + rptDate + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] superCrazyOrderRaw...");
+}
 
 /** Added for new MD report - Sales Analysis Key In Report by Hui Ding, 05/01/2024 **/
 @RequestMapping(value = "/salesAnalysisReport.do")
