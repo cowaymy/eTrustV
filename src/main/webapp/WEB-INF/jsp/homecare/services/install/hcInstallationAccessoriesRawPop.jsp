@@ -48,26 +48,26 @@
           && $("#orderStrDt").val() != null
           && $("#orderEndDt").val() != null) {
 
-        whereSql += " AND TO_DATE(SOM.SALES_DT) >= TO_DATE('" + $("#orderStrDt").val() + "', 'DD/MM/YYYY') "
-                  + " AND TO_DATE(SOM.SALES_DT) <= TO_DATE('" + $("#orderEndDt").val() + "', 'DD/MM/YYYY') ";
+        whereSql += " AND TO_DATE(A.SALES_DT) >= TO_DATE('" + $("#orderStrDt").val() + "', 'DD/MM/YYYY') "
+                  + " AND TO_DATE(A.SALES_DT) <= TO_DATE('" + $("#orderEndDt").val() + "', 'DD/MM/YYYY') ";
 
       } else {
-        whereSql += "AND TO_DATE(SOM.SALES_DT) >= TO_DATE(ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(SYSDATE), -2))";
+        whereSql += "AND TO_DATE(A.SALES_DT) >= TO_DATE(ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(SYSDATE), -2))";
       }
 
       if ($("#pvMonth").val() != '' && $("#pvMonth").val() != null) {
-        whereSql += "AND SOM.PV_MONTH = '"
+        whereSql += "AND A.PV_MONTH = '"
                  + $("#pvMonth").val().substring(0, 2)
-                 + "' AND SOM.PV_YEAR = '"
+                 + "' AND A.PV_YEAR = '"
                  + $("#pvMonth").val().substring(3, 7) + "' ";
       }
 
       if ($("#appliType").val() != '' && $("#appliType").val() != null) {
-        whereSql += " AND SOM.APP_TYPE_ID In (" + $("#appliType").val() + ") ";
+        whereSql += " AND A.APP_TYPE_ID In (" + $("#appliType").val() + ") ";
       }
 
       // HomeCare add
-      whereSql += " AND SOM.BNDL_ID IS NOT NULL ";
+      whereSql += " AND A.BNDL_ID IS NOT NULL ";
       //console.log("w " + whereSql);
 
       //SP_CR_GEN_INS_ACC_RAWDATA_EXCEL
