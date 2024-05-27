@@ -261,7 +261,7 @@
       Common.popupDiv("/sales/order/prevOrderNoPop.do", {
         custId : $('#hiddenCustId').val()
       }, null, true);
-      if (MEM_TYPE == "2") {
+      if (MEM_TYPE == "1" || MEM_TYPE == "2") {
         $('#salesmanCd').val("${SESSION_INFO.userName}");
         $('#salesmanCd').change();
       } else {
