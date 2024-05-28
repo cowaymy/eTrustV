@@ -1438,39 +1438,63 @@ public class CommonServiceImpl
 
     // STEP 1 :: VALIDATE MERCHART ID & MERCHART PASSWORD
     if ("".equals(CommonUtils.nvl(pmtLinkMerchId))) {
-      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR MERCHART LOGIN ID. PLEASE CHECK FOR MERCHART LOGIN ID.");
+      //throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR MERCHART LOGIN ID. PLEASE CHECK FOR MERCHART LOGIN ID.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR MERCHART LOGIN ID. PLEASE CHECK FOR MERCHART LOGIN ID." );
+      return rtnStat;
     }
 
     if ("".equals(CommonUtils.nvl(pmtLinkMerchPassw))) {
-      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR MERCHART LOGIN PASSWROD. PLEASE CHECK FOR MERCHART LOGIN PASSWORD.");
+      //throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR MERCHART LOGIN PASSWROD. PLEASE CHECK FOR MERCHART LOGIN PASSWORD.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR MERCHART LOGIN PASSWROD. PLEASE CHECK FOR MERCHART LOGIN PASSWORD." );
+      return rtnStat;
     }
 
     if ("".equals(CommonUtils.nvl(eGhlAuthTokenUrl))) {
-      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL TOKEN AUTHENTICATION URL. PLEASE CHECK FOR eGHL TOKEN AUTHENTICATION URL.");
+      //throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL TOKEN AUTHENTICATION URL. PLEASE CHECK FOR eGHL TOKEN AUTHENTICATION URL.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR eGHL TOKEN AUTHENTICATION URL. PLEASE CHECK FOR eGHL TOKEN AUTHENTICATION URL." );
+      return rtnStat;
     }
 
     if ("".equals(CommonUtils.nvl(eGhlPmtLinkUrl))) {
-      throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL PAYMENT LINK CREATION URL. PLEASE CHECK FOR PAYMENT LINK CREATION URL.");
+      //throw new ApplicationException(AppConstants.FAIL, "NO VALUE FOR eGHL PAYMENT LINK CREATION URL. PLEASE CHECK FOR PAYMENT LINK CREATION URL.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR eGHL PAYMENT LINK CREATION URL. PLEASE CHECK FOR PAYMENT LINK CREATION URL." );
+      return rtnStat;
     }
 
     // STEP 2 :: VALIDATE REQUIRED PARAMETER
     if ("".equals( CommonUtils.nvl(params.get( "custNm" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "CUSTOMER NAME IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER NAME IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "CUSTOMER NAME IS REQUIRED." );
     }
     if ("".equals( CommonUtils.nvl(params.get( "custCtnt" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "CUSTOMER CONTACT NUMBER IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER CONTACT NUMBER IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "CUSTOMER CONTACT NUMBER IS REQUIRED." );
     }
     if ("".equals( CommonUtils.nvl(params.get( "custEmail" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "CUSTOMER EMAIL IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER EMAIL IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "CUSTOMER EMAIL IS REQUIRED." );
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordDesc" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "ORDER DESCRIPTION IS REQUIRED." );
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordNo" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "ORDER DESCRIPTION IS REQUIRED." );
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordTtlAmt" )))) {
-      throw new ApplicationException(AppConstants.FAIL, "ORDER TOTAL AMOUNT IS REQUIRED.");
+      //throw new ApplicationException(AppConstants.FAIL, "ORDER TOTAL AMOUNT IS REQUIRED.");
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "ORDER TOTAL AMOUNT IS REQUIRED." );
     }
 
     Map<String, Object> reqsTokenParam = new HashMap<>();
@@ -1524,7 +1548,9 @@ public class CommonServiceImpl
     JSONObject jsonResponse = new JSONObject(response.toString());
 
     if ("".equals( CommonUtils.nvl(jsonResponse.getString("ulogintoken")) )) {
-      throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN AUTHENTICATION TOKEN FROM eGHL. MESSAGE : " + CommonUtils.nvl(jsonResponse.getString("uremark")));
+      //throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN AUTHENTICATION TOKEN FROM eGHL. MESSAGE : " + CommonUtils.nvl(jsonResponse.getString("uremark")));
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "FAIL TO OBTAIN AUTHENTICATION TOKEN FROM eGHL. MESSAGE : " + CommonUtils.nvl(jsonResponse.getString("uremark")) );
     }
 
     // SET EACH PARAMETER FROM THE RESPONSE
@@ -1636,7 +1662,9 @@ public class CommonServiceImpl
     JSONObject queryResult = jsonResponse.getJSONObject("queryResult");
 
     if ("".equals( CommonUtils.nvl(queryResult.getString("paymentlink")) )) {
-      throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN PAYMENT LINK FROM eGHL. MESSAGE : " + CommonUtils.nvl(queryResult.getString( "respMessage" )));
+      //throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN PAYMENT LINK FROM eGHL. MESSAGE : " + CommonUtils.nvl(queryResult.getString( "respMessage" )));
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "FAIL TO OBTAIN PAYMENT LINK FROM eGHL. MESSAGE : " + CommonUtils.nvl(queryResult.getString( "respMessage" )) );
     }
 
     reqsPmtLinkParam.put( "response", CommonUtils.nvl(response.toString()) );
