@@ -1434,23 +1434,7 @@ public class CommonServiceImpl
   }
 
   public EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, JSONException  {
-    /*params.put( "custNm", "TESTING" );
-    params.put( "custCtnt", "0163200016" );
-    params.put( "custEmail", "wayne.ong@coway.com.my" );
-    params.put( "ordDesc", "eSOF1021452" );
-    params.put( "ordNo", "000001" );
-    params.put( "ordTtlAmt", "1502.50" );
-    params.put( "ordPmtLinkEmailInd", "N" );
-    // GET TODAY DATE
-    LocalDate today = LocalDate.now();
-
-    // ADD 3 DAYS
-    LocalDate futureDate = today.plusDays(3);
-
-    // FORMAT THE DATE
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    String formattedDate = futureDate.format(formatter);
-    params.put( "ordPmtExp", formattedDate );*/
+    EgovMap rtnStat = new EgovMap();
 
     // STEP 1 :: VALIDATE MERCHART ID & MERCHART PASSWORD
     if ("".equals(CommonUtils.nvl(pmtLinkMerchId))) {
@@ -1663,6 +1647,8 @@ public class CommonServiceImpl
     // UPDATE RESPONSE PAYMENT LINK DETAIL
     commonMapper.updatePmtLinkResp( reqsPmtLinkParam );
 
-    return null;
+    rtnStat.put( "status", "000" );
+    rtnStat.put( "message", "" );
+    return rtnStat;
   }
 }
