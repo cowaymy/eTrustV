@@ -1564,7 +1564,15 @@ public class CommonServiceImpl
     reqsPmtLinkParam.put( "eplcustomername", CommonUtils.nvl(params.get( "custNm" )) );
     reqsPmtLinkParam.put( "eplcustomercontact", CommonUtils.nvl(params.get( "custCtnt" )) );
     reqsPmtLinkParam.put( "eplcustomeremail", CommonUtils.nvl(params.get( "custEmail" )) );
-    reqsPmtLinkParam.put( "eplorderdesc", CommonUtils.nvl(params.get( "ordDesc" )) );
+
+    if (CommonUtils.nvl(params.get( "ordDesc" )).length() >= 97) { // MAX LENGTH FOR ORDER DESCRIPTION FOR EGHL IS 99
+      StringBuilder ordDesc = new StringBuilder(CommonUtils.nvl(params.get( "ordDesc" )).substring(0, 97));
+      ordDesc.append( ".." );
+      reqsPmtLinkParam.put( "eplorderdesc", CommonUtils.nvl(ordDesc) );
+    } else {
+      reqsPmtLinkParam.put( "eplorderdesc", CommonUtils.nvl(params.get( "ordDesc" )) );
+    }
+
     reqsPmtLinkParam.put( "eplordernumber", CommonUtils.nvl(params.get( "ordNo" )) );
     if ("".equals( CommonUtils.nvl(params.get( "ordCurr" )) )) {
       reqsPmtLinkParam.put( "eplcurrency", CommonUtils.nvl(reqsTokenParam.get( "merchCurr" )) );
