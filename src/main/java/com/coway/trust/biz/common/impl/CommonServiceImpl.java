@@ -1470,31 +1470,37 @@ public class CommonServiceImpl
       //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER NAME IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "CUSTOMER NAME IS REQUIRED." );
+      return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "custCtnt" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER CONTACT NUMBER IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "CUSTOMER CONTACT NUMBER IS REQUIRED." );
+      return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "custEmail" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER EMAIL IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "CUSTOMER EMAIL IS REQUIRED." );
+      return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordDesc" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "ORDER DESCRIPTION IS REQUIRED." );
+      return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordNo" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "ORDER DESCRIPTION IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "ORDER DESCRIPTION IS REQUIRED." );
+      return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordTtlAmt" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "ORDER TOTAL AMOUNT IS REQUIRED.");
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "ORDER TOTAL AMOUNT IS REQUIRED." );
+      return rtnStat;
     }
 
     Map<String, Object> reqsTokenParam = new HashMap<>();
@@ -1551,6 +1557,7 @@ public class CommonServiceImpl
       //throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN AUTHENTICATION TOKEN FROM eGHL. MESSAGE : " + CommonUtils.nvl(jsonResponse.getString("uremark")));
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "FAIL TO OBTAIN AUTHENTICATION TOKEN FROM eGHL. MESSAGE : " + CommonUtils.nvl(jsonResponse.getString("uremark")) );
+      return rtnStat;
     }
 
     // SET EACH PARAMETER FROM THE RESPONSE
@@ -1665,6 +1672,7 @@ public class CommonServiceImpl
       //throw new ApplicationException(AppConstants.FAIL, "FAIL TO OBTAIN PAYMENT LINK FROM eGHL. MESSAGE : " + CommonUtils.nvl(queryResult.getString( "respMessage" )));
       rtnStat.put( "status", "999" );
       rtnStat.put( "message", "FAIL TO OBTAIN PAYMENT LINK FROM eGHL. MESSAGE : " + CommonUtils.nvl(queryResult.getString( "respMessage" )) );
+      return rtnStat;
     }
 
     reqsPmtLinkParam.put( "response", CommonUtils.nvl(response.toString()) );
