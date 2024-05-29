@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
@@ -162,154 +161,170 @@ public class SupplementSubmissionServiceImpl implements SupplementSubmissionServ
   }
 
   @Override
-  //@Transactional(rollbackFor = ApplicationException.class)
+  // @Transactional(rollbackFor = ApplicationException.class)
   public Map<String, Object> updateSubmissionApprovalStatus(Map<String, Object> params) throws Exception {
-      Map<String, Object> rtnMap = new HashMap<>();
+    Map<String, Object> rtnMap = new HashMap<>();
 
-      String submissionStatus = (String) params.get("stus");
-      SupplementMasterVO supplementMasterVO = new SupplementMasterVO();
-      EgovMap supplementSubm = supplementSubmissionMapper.selectSupplementSubmissionView(params);
-      List<EgovMap> supplementItem = supplementSubmissionMapper.selectSupplementSubmissionItmView(params);
+    String submissionStatus = (String) params.get("stus");
+    SupplementMasterVO supplementMasterVO = new SupplementMasterVO();
+    EgovMap supplementSubm = supplementSubmissionMapper.selectSupplementSubmissionView(params);
+    List<EgovMap> supplementItem = supplementSubmissionMapper.selectSupplementSubmissionItmView(params);
 
-      try {
-          if (submissionStatus.equals(SalesConstants.SUB_APPOVAL_STATUS_APPROVED)) {
-            for (int idx = 0; idx < supplementItem.size(); idx++) {
-              Map<String, Object> itemMap = (Map<String, Object>) supplementItem.get(idx);
-              Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-              locInfoEntry.put("CT_CODE", SalesConstants.SUPPLEMENT_WH_LOC_CODE); // HQ Warehouse location code
-              locInfoEntry.put("STK_CODE", itemMap.get("stkId"));
+    try {
+      if (submissionStatus.equals(SalesConstants.SUB_APPOVAL_STATUS_APPROVED)) {
+        for (int idx = 0; idx < supplementItem.size(); idx++) {
+          Map<String, Object> itemMap = (Map<String, Object>) supplementItem.get(idx);
+          Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+          locInfoEntry.put("CT_CODE", SalesConstants.SUPPLEMENT_WH_LOC_CODE); // HQ Warehouse location code
+          locInfoEntry.put("STK_CODE", itemMap.get("stkId"));
 
-              EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+          EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
 
-              if (locInfo == null) {
-                rtnMap.put("logError", "99");
-                rtnMap.put("message", "Fail to update result. [lack of stock]");
-                return rtnMap;
-              } else {
-                if (Integer.parseInt(locInfo.get("availQty").toString()) < Integer
-                    .parseInt(itemMap.get("inputQty").toString())) {
-                  rtnMap.put("logError", "99");
-                  rtnMap.put("message", "Fail to update result. [lack of stock]");
-                  return rtnMap;
-                }
-              }
-            }
-
-              insertSupplementMaster(supplementMasterVO, supplementSubm, params);
-              insertSupplementDetails(supplementItem, supplementMasterVO.getSupRefId(), params);
-              stockBookingSMO(supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params);
-              sendEGHLRequest(supplementSubm, supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params);
-
-              supplementSubmissionMapper.updateSupplementSubmissionStatus(params);
-              rtnMap.put("logError", "000");
-              rtnMap.put("message", supplementMasterVO.getSupRefNo());
+          if (locInfo == null) {
+            rtnMap.put("logError", "99");
+            rtnMap.put("message", "Fail to update result. [lack of stock]");
+            return rtnMap;
           } else {
-              supplementSubmissionMapper.updateSupplementSubmissionStatus(params);
-              rtnMap.put("logError", "001");
-              rtnMap.put("message", supplementSubm.get("sofNo"));
+            if (Integer.parseInt(locInfo.get("availQty").toString()) < Integer
+                .parseInt(itemMap.get("inputQty").toString())) {
+              rtnMap.put("logError", "99");
+              rtnMap.put("message", "Fail to update result. [lack of stock]");
+              return rtnMap;
+            }
           }
-      } catch (Exception e) {
-          rtnMap.put("logError", "99");
-          rtnMap.put("message", "An error occurred: " + e.getMessage());
-          LOGGER.error("Error updating submission approval status", e);
-      }
+        }
 
-      return rtnMap;
+        insertSupplementMaster(supplementMasterVO, supplementSubm, params);
+        insertSupplementDetails(supplementItem, supplementMasterVO.getSupRefId(), params);
+        stockBookingSMO(supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params);
+        sendEGHLRequest(supplementSubm, supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params);
+
+        supplementSubmissionMapper.updateSupplementSubmissionStatus(params);
+        rtnMap.put("logError", "000");
+        rtnMap.put("message", supplementMasterVO.getSupRefNo());
+      } else {
+        supplementSubmissionMapper.updateSupplementSubmissionStatus(params);
+        rtnMap.put("logError", "001");
+        rtnMap.put("message", supplementSubm.get("sofNo"));
+      }
+    } catch (Exception e) {
+      rtnMap.put("logError", "99");
+      rtnMap.put("message", "An error occurred: " + e.getMessage());
+      LOGGER.error("Error updating submission approval status", e);
+    }
+
+    return rtnMap;
   }
 
-  private void insertSupplementMaster(SupplementMasterVO supplementMasterVO, EgovMap supplementSubm, Map<String, Object> params) {
-      int supRefId = supplementSubmissionMapper.getSeqSUP0001M();
-      String supRefNo = orderRegisterMapper.selectDocNo(199);
+  private void insertSupplementMaster(SupplementMasterVO supplementMasterVO, EgovMap supplementSubm,
+      Map<String, Object> params) {
+    int supRefId = supplementSubmissionMapper.getSeqSUP0001M();
+    String supRefNo = orderRegisterMapper.selectDocNo(199);
 
-      supplementMasterVO.setSupRefId(supRefId);
-      supplementMasterVO.setSupRefNo(supRefNo);
-      supplementMasterVO.setSupSubmSof(String.valueOf(supplementSubm.get("sofNo")));
-      supplementMasterVO.setSupRefStus(SalesConstants.STATUS_ACTIVE);
-      supplementMasterVO.setSupRefStg(SalesConstants.STATUS_ACTIVE);
-      supplementMasterVO.setCustId(CommonUtils.intNvl(supplementSubm.get("custId")));
-      supplementMasterVO.setCustCntcId(CommonUtils.intNvl(supplementSubm.get("custCntcId")));
-      supplementMasterVO.setCustDelAddrId(CommonUtils.intNvl(supplementSubm.get("custDelAddrId")));
-      supplementMasterVO.setCustBillAddrId(CommonUtils.intNvl(supplementSubm.get("custBillAddrId")));
-      supplementMasterVO.setFlAttId(CommonUtils.intNvl(supplementSubm.get("atchFileGrpId")));
-      supplementMasterVO.setMemId(CommonUtils.intNvl(supplementSubm.get("memId")));
-      supplementMasterVO.setMemBrnchId(CommonUtils.intNvl(supplementSubm.get("memBrnchId")));
-      supplementMasterVO.setSupApplTyp(CommonUtils.intNvl(supplementSubm.get("supSubmAppTyp")));
-      supplementMasterVO.setSupTtlAmt(CommonUtils.intNvl(supplementSubm.get("supSubmTtlAmt")));
-      supplementMasterVO.setSupRefRmk(String.valueOf(params.get("remark")));
-      supplementMasterVO.setDelFlg(SalesConstants.SUB_APPOVAL_DEL_FLG_N);
-      supplementMasterVO.setCrtUsrId(CommonUtils.intNvl(params.get("crtUsrId")));
-      supplementMasterVO.setUpdUsrId(CommonUtils.intNvl(params.get("updUsrId")));
+    supplementMasterVO.setSupRefId(supRefId);
+    supplementMasterVO.setSupRefNo(supRefNo);
+    supplementMasterVO.setSupSubmSof(String.valueOf(supplementSubm.get("sofNo")));
+    supplementMasterVO.setSupRefStus(SalesConstants.STATUS_ACTIVE);
+    supplementMasterVO.setSupRefStg(SalesConstants.STATUS_ACTIVE);
+    supplementMasterVO.setCustId(CommonUtils.intNvl(supplementSubm.get("custId")));
+    supplementMasterVO.setCustCntcId(CommonUtils.intNvl(supplementSubm.get("custCntcId")));
+    supplementMasterVO.setCustDelAddrId(CommonUtils.intNvl(supplementSubm.get("custDelAddrId")));
+    supplementMasterVO.setCustBillAddrId(CommonUtils.intNvl(supplementSubm.get("custBillAddrId")));
+    supplementMasterVO.setFlAttId(CommonUtils.intNvl(supplementSubm.get("atchFileGrpId")));
+    supplementMasterVO.setMemId(CommonUtils.intNvl(supplementSubm.get("memId")));
+    supplementMasterVO.setMemBrnchId(CommonUtils.intNvl(supplementSubm.get("memBrnchId")));
+    supplementMasterVO.setSupApplTyp(CommonUtils.intNvl(supplementSubm.get("supSubmAppTyp")));
+    supplementMasterVO.setSupTtlAmt(CommonUtils.intNvl(supplementSubm.get("supSubmTtlAmt")));
+    supplementMasterVO.setSupRefRmk(String.valueOf(params.get("remark")));
+    supplementMasterVO.setDelFlg(SalesConstants.SUB_APPOVAL_DEL_FLG_N);
+    supplementMasterVO.setCrtUsrId(CommonUtils.intNvl(params.get("crtUsrId")));
+    supplementMasterVO.setUpdUsrId(CommonUtils.intNvl(params.get("updUsrId")));
 
-      supplementSubmissionMapper.insertSupplementM(supplementMasterVO);
+    supplementSubmissionMapper.insertSupplementM(supplementMasterVO);
   }
 
   private void insertSupplementDetails(List<EgovMap> supplementItem, int supRefId, Map<String, Object> params) {
-      for (EgovMap item : supplementItem) {
-          SupplementDetailVO supplementDetailVO = new SupplementDetailVO();
-          int supItmId = supplementSubmissionMapper.getSeqSUP0002D();
-          supplementDetailVO.setSupItmId(supItmId);
-          supplementDetailVO.setSupRefId(supRefId);
-          supplementDetailVO.setSupStkId(CommonUtils.intNvl(item.get("stkId")));
-          supplementDetailVO.setSupItmQty(CommonUtils.intNvl(item.get("inputQty")));
-          supplementDetailVO.setSupItmUntprc((BigDecimal) item.get("amt"));
-          supplementDetailVO.setSupItmAmt((BigDecimal) item.get("supSubmItmAmt"));
-          supplementDetailVO.setSupItmTax(BigDecimal.ZERO);
-          supplementDetailVO.setSupTotAmt((BigDecimal) item.get("totalAmt"));
-          supplementDetailVO.setDelFlg(SalesConstants.SUB_APPOVAL_DEL_FLG_N);
-          supplementDetailVO.setCrtUsrId(CommonUtils.intNvl(params.get("crtUsrId")));
-          supplementDetailVO.setUpdUsrId(CommonUtils.intNvl(params.get("updUsrId")));
+    for (EgovMap item : supplementItem) {
+      SupplementDetailVO supplementDetailVO = new SupplementDetailVO();
+      int supItmId = supplementSubmissionMapper.getSeqSUP0002D();
+      supplementDetailVO.setSupItmId(supItmId);
+      supplementDetailVO.setSupRefId(supRefId);
+      supplementDetailVO.setSupStkId(CommonUtils.intNvl(item.get("stkId")));
+      supplementDetailVO.setSupItmQty(CommonUtils.intNvl(item.get("inputQty")));
+      supplementDetailVO.setSupItmUntprc((BigDecimal) item.get("amt"));
+      supplementDetailVO.setSupItmAmt((BigDecimal) item.get("supSubmItmAmt"));
+      supplementDetailVO.setSupItmTax(BigDecimal.ZERO);
+      supplementDetailVO.setSupTotAmt((BigDecimal) item.get("totalAmt"));
+      supplementDetailVO.setDelFlg(SalesConstants.SUB_APPOVAL_DEL_FLG_N);
+      supplementDetailVO.setCrtUsrId(CommonUtils.intNvl(params.get("crtUsrId")));
+      supplementDetailVO.setUpdUsrId(CommonUtils.intNvl(params.get("updUsrId")));
 
-          supplementSubmissionMapper.insertSupplementD(supplementDetailVO);
-      }
+      supplementSubmissionMapper.insertSupplementD(supplementDetailVO);
+    }
   }
 
   private void stockBookingSMO(String supRefNo, int supRefId, Map<String, Object> params) throws Exception {
-      Map<String, Object> logPram = new HashMap<>();
-      params.put("supRefId", supRefId);
-      logPram.put("S_NO", supRefNo);
-      logPram.put("RE_TYPE", "STO");
-      logPram.put("P_LOC", SalesConstants.SUPPLEMENT_WH_LOC_ID); // HQ Warehouse location id
-      logPram.put("P_TYPE", "OD01");
-      logPram.put("P_USER", CommonUtils.intNvl(params.get("crtUsrId")));
+    Map<String, Object> logPram = new HashMap<>();
+    params.put("supRefId", supRefId);
+    logPram.put("S_NO", supRefNo);
+    logPram.put("RE_TYPE", "STO");
+    logPram.put("P_LOC", SalesConstants.SUPPLEMENT_WH_LOC_ID); // HQ Warehouse location id
+    logPram.put("P_TYPE", "OD01");
+    logPram.put("P_USER", CommonUtils.intNvl(params.get("crtUsrId")));
 
-      supplementSubmissionMapper.SP_LOGISTIC_REQUEST_SUPP(logPram);
-      if (!"000".equals(logPram.get("p1"))) {
-        supplementSubmissionMapper.deleteSupplementM(params);
-        supplementSubmissionMapper.deleteSupplementD(params);
-        throw new ApplicationException(AppConstants.FAIL,"SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get("p1"));
-        //throw new Exception("SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get("p1"));
-      }
+    supplementSubmissionMapper.SP_LOGISTIC_REQUEST_SUPP(logPram);
+    if (!"000".equals(logPram.get("p1"))) {
+      rollBackSupplementTransaction(supRefNo, supRefId, params);
+      throw new ApplicationException(AppConstants.FAIL, "SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get("p1"));
+      // throw new Exception("SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get("p1"));
+    }
   }
 
-  private void sendEGHLRequest(EgovMap supplementSubm, String supRefNo, int supRefId, Map<String, Object> params) throws Exception {
-      LocalDate today = LocalDate.now();
-      LocalDate futureDate = today.plusDays(3);
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      String formattedDate = futureDate.format(formatter);
+  private void sendEGHLRequest(EgovMap supplementSubm, String supRefNo, int supRefId, Map<String, Object> params)
+      throws Exception {
+    LocalDate today = LocalDate.now();
+    LocalDate futureDate = today.plusDays(3);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    String formattedDate = futureDate.format(formatter);
 
-      params.put("supRefId", supRefId);
-      EgovMap supItmString = supplementSubmissionMapper.selectSupplementSubmItmList(params);
+    params.put("supRefId", supRefId);
+    EgovMap supItmString = supplementSubmissionMapper.selectSupplementSubmItmList(params);
 
-      Map<String, Object> eGHLPram = new HashMap<>();
-      eGHLPram.put("custNm", supplementSubm.get("custName"));
-      eGHLPram.put("custCtnt", supplementSubm.get("telNo"));
-      eGHLPram.put("custEmail", supplementSubm.get("email"));
-      eGHLPram.put("ordDesc", supItmString.get("itmList"));
-      eGHLPram.put("ordNo", supRefNo);
-      eGHLPram.put("ordTtlAmt", supplementSubm.get("supSubmTtlAmt"));
-      eGHLPram.put("ordPmtExp", formattedDate);
-      eGHLPram.put("ordPmtLinkEmailInd", "Y");
-      eGHLPram.put("reqsMod", "CMN");
+    Map<String, Object> eGHLPram = new HashMap<>();
+    eGHLPram.put("custNm", supplementSubm.get("custName"));
+    // eGHLPram.put("custCtnt", supplementSubm.get("telNo"));
+    eGHLPram.put("custEmail", supplementSubm.get("email"));
+    eGHLPram.put("ordDesc", supItmString.get("itmList"));
+    eGHLPram.put("ordNo", supRefNo);
+    eGHLPram.put("ordTtlAmt", supplementSubm.get("supSubmTtlAmt"));
+    eGHLPram.put("ordPmtExp", formattedDate);
+    eGHLPram.put("ordPmtLinkEmailInd", "Y");
+    eGHLPram.put("reqsMod", "CMN");
 
-      EgovMap rtnData = commonService.reqEghlPmtLink(eGHLPram);
-      if (!"000".equals(rtnData.get("status"))) {
-        supplementSubmissionMapper.deleteSupplementM(params);
-        supplementSubmissionMapper.deleteSupplementD(params);
-        throw new ApplicationException(AppConstants.FAIL,"eGHL - ERRCODE : " + rtnData.get("message"));
-        //throw new Exception("eGHL - ERRCODE : " + rtnData.get("message"));
-      }
+    EgovMap rtnData = commonService.reqEghlPmtLink(eGHLPram);
+    if (!"000".equals(rtnData.get("status"))) {
+      rollBackSupplementTransaction(supRefNo, supRefId, params);
+      throw new ApplicationException(AppConstants.FAIL, "eGHL - ERRCODE : " + rtnData.get("message"));
+      // throw new Exception("eGHL - ERRCODE : " + rtnData.get("message"));
+    }
   }
 
+  private void rollBackSupplementTransaction(String supRefNo, int supRefId, Map<String, Object> params)
+      throws Exception {
+    params.put("supRefId", supRefId);
+    params.put("supRefNo", supRefNo);
+    supplementSubmissionMapper.deleteSupplementM(params);
+    supplementSubmissionMapper.deleteSupplementD(params);
 
+    EgovMap requestNo = supplementSubmissionMapper.selectRequestNoBySupRefNo(params);
+
+    if (requestNo.get("reqstNo") != null) {
+      params.put("reqstNo", requestNo.get("reqstNo"));
+
+      supplementSubmissionMapper.deleteStockBookingSMO(params);
+      supplementSubmissionMapper.updateStockTransferMReq(params);
+      supplementSubmissionMapper.updateStockTransferDReq(params);
+    }
+  }
 
 }
