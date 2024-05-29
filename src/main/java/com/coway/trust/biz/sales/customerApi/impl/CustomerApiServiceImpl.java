@@ -156,10 +156,10 @@ public class CustomerApiServiceImpl
         if ( CommonUtils.isEmpty( param.getRaceId() ) ) {
           throw new ApplicationException( AppConstants.FAIL, "(Basic Info) Race value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
+        /*if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) eInvoice Indicator value does not exist." );
-        }
+        }*/
       }
       else if ( param.getTypeId() == 965 ) {
         if ( CommonUtils.isEmpty( param.getName() ) ) {
@@ -176,10 +176,10 @@ public class CustomerApiServiceImpl
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) Receiving Marketing Message value does not exist." );
         }
-        if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
+        /*if ( CommonUtils.isEmpty( param.geteInvFlg() ) ) {
           throw new ApplicationException( AppConstants.FAIL,
                                           "(Basic Info) eInvoice Indicator value does not exist." );
-        }
+        }*/
       }
       else {
         throw new ApplicationException( AppConstants.FAIL, "(Customer Type) Customer Type value does not exist." );
@@ -332,7 +332,7 @@ public class CustomerApiServiceImpl
     }
 
     /* SAL0416D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustTinNo. */
-    customerMap.put( "eInvFlg", param.geteInvFlg());
+    //customerMap.put( "eInvFlg", param.geteInvFlg());
     customerMap.put( "tinNo", param.getTinNo() );
     saveCnt = customerApiMapper.insertCustomerTin( customerMap );
     if ( saveCnt != 1 ) {
