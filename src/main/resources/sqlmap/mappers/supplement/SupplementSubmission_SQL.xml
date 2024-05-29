@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.supplement.impl.SupplementSubmissionMapper">
+
+    <select id="selectSupplementSubmissionJsonList" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.SUP_SUBM_ID ,
+        TO_CHAR(A.SUP_SUBM_DT, 'DD-MM-YYYY') SUP_SUBM_DT ,
+        A.MEM_ID ,
+        E.MEM_CODE ,
+        E.NAME MEM_NAME ,
+        A.MEM_BRNCH_ID ,
+        B.CODE SUP_SUBM_STUS ,
+        C.CODE||' ' ||C.NAME SUP_SUBM_BRNCH ,
+        A.SUP_SUBM_SOF ,
+        A.SUP_SUBM_TTL_AMT ,
+        A.SUP_REF_ID ,
+        A.CUST_ID ,
+        D.NAME CUST_NAME ,
+        D.NRIC ,
+        A.FL_ATT_ID ATCH_FILE_GRP_ID,
+        A.CRT_USR_ID ,
+        F.USER_NAME CRT_USR ,
+        TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT ,
+        A.UPD_USR_ID ,
+        G.USER_NAME UPD_USR ,
+        TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') UPD_DT ,
+        I.SUP_REF_NO
+        FROM SUP0003M A
+        LEFT JOIN SYS0038M B ON A.SUP_SUBM_STUS = B.STUS_CODE_ID
+        LEFT JOIN SYS0005M C ON A.MEM_BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
+        LEFT JOIN SAL0029D D ON A.CUST_ID = D.CUST_ID
+        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+        LEFT JOIN SYS0047M F ON A.CRT_USR_ID = F.USER_ID
+        LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
+        LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
+        LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF
+        WHERE 1=1
+        AND A.DEL_FLG = 'N'
+		<if test='submissionStartDt != null and submissionStartDt != "" and submissionEndDt != null and submissionEndDt != ""'>
+		   AND A.SUP_SUBM_DT BETWEEN TO_DATE(#{submissionStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{submissionEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+         </if>
+         <if test='statusArray != null and statusArray != ""'>
+           AND A.SUP_SUBM_STUS IN
+	         <foreach item="item" collection="statusArray" index="index" open="(" separator="," close=")">
+	           #{item}
+	         </foreach>
+         </if>
+         <if test='branchArray != null and branchArray != ""'>
+           AND A.SUP_SUBM_CRT_BRNCH IN
+	         <foreach item="item" collection="branchArray" index="index" open="(" separator="," close=")">
+	           #{item}
+	         </foreach>
+         </if>
+          <if test='eSOFNo != null and eSOFNo != ""'>
+		   AND A.SUP_SUBM_SOF = #{eSOFNo}
+         </if>
+         <if test='custName != null and custName != ""'>
+		   AND D.NAME LIKE #{custName}||'%'
+         </if>
+         <if test='custNric != null and custNric != ""'>
+		   AND D.NRIC = #{custNric}
+         </if>
+		 <if test='_memCode != null and _memCode != ""'>
+		   AND E.MEM_CODE = #{_memCode}
+		 </if>
+          <if test="orgCode != '' ">
+           AND H.ORG_CODE = #{orgCode}
+	     </if>
+         <if test="grpCode != '' ">
+           AND H.GRP_CODE = #{grpCode}
+         </if>
+         <if test="deptCode != '' ">
+           AND H.DEPT_CODE = #{deptCode}
+         </if>
+
+        ORDER BY A.SUP_SUBM_ID DESC
+
+    </select>
+
+    <select id="selectSupplementSubmissionItmList" parameterType="Map" resultType="egovMap">
+    	SELECT
+    	A.SUP_SUBM_ITM_ID ,
+    	A.SUP_SUBM_ID ,
+    	A.SUP_SUBM_STK_ID ,
+    	C.STK_CODE ,
+    	C.STK_DESC ,
+    	A.SUP_SUBM_ITM_QTY ,
+    	A.SUP_SUBM_ITM_UNTPRC ,
+    	A.SUP_SUBM_ITM_AMT ,
+    	A.SUP_SUBM_TOT_AMT
+
+    	FROM SUP0004D A
+    	LEFT JOIN SUP0003M B ON A.SUP_SUBM_ID = B.SUP_SUBM_ID
+    	LEFT JOIN SYS0026M C ON A.SUP_SUBM_STK_ID = C.STK_ID
+    	WHERE 1=1
+    	AND A.SUP_SUBM_ID = #{supSubmId}
+    	AND A.DEL_FLG = 'N'
+
+    	ORDER BY A.SUP_SUBM_ID
+
+    </select>
+
+    <select id="selectExistSupplementSubmissionSofNo" parameterType="Map" resultType="int">
+        SELECT SUM(CNT) AS CNT
+          FROM
+             ( SELECT COUNT(1) CNT
+                 FROM SUP0003M
+                WHERE SUP_SUBM_SOF = #{sofNo}
+                  AND SUP_SUBM_STUS NOT IN (10, 21)
+                  AND DEL_FLG = 'N'
+                  AND '1' = #{selType}
+                UNION ALL
+               SELECT COUNT(1) CNT
+                 FROM SUP0001M
+                WHERE SUP_SUBM_SOF = #{sofNo}
+                  AND DEL_FLG = 'N'
+                  AND SUP_REF_STUS != 8
+                  AND ('1' = #{selType} OR '2' = #{selType})
+             )
+    </select>
+
+    <select id="selectSupplementItmList" parameterType="Map" resultType="egovMap">
+        	SELECT
+            Project1.CODE_NAME,
+            Project1.STK_CODE,
+            Project1.CODE_ID,
+            Project1.STK_DESC,
+            Project1.STK_CTGRY_ID,
+            Project1.STK_TYPE_ID,
+            Project1.STK_GRAD,
+            Project1. ALLOW_SALES,
+            Project1.STUS_CODE_ID
+        FROM
+        (SELECT
+                T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
+                T1.STK_ID CODE_ID,
+                T1.STK_CODE,
+                T1.STK_DESC,
+                T1.STK_CTGRY_ID,
+                T1.STK_TYPE_ID,
+                T1.STK_GRAD,
+                T1.ALLOW_SALES,
+                T1.STUS_CODE_ID
+            FROM
+                SYS0026M T1
+                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
+            WHERE
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1
+
+                WHERE
+                     Project1. ALLOW_SALES = 1
+                AND
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                <!-- AND
+                     Project1.STK_TYPE_ID = #{stkTypeId} -->
+
+                ORDER BY Project1.STK_CODE ASC
+     </select>
+
+     <select id="chkSupplementStockList" parameterType="Map" resultType="egovMap">
+				SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        CASE WHEN STK_CTGRY_ID IN (1346,1347,1348) THEN
+                            NVL((SELECT ITEM_INV_QTY FROM LOG0106M WHERE ITEM_CODE =Project1.STK_ID  AND LOC_ID =(SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_ID= #{locId}) ),0 )
+                        ELSE 999 END
+                        QTY,
+                        Project1.MOV_QTY,
+                        NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <![CDATA[
+                                (SELECT
+									     T1.STK_ID, T1.AMT
+									   FROM
+									      (SELECT
+									          STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+									       FROM SAL0016M
+									       WHERE MEM_PAC_ID = 0
+									       AND APP_TYPE_ID = 67
+									       AND STUS_CODE_ID = 1
+									      ) T1
+									WHERE T1.CNT <= 1)
+                                    Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+     <select id="selectMemBrnchByMemberCode" parameterType="Map" resultType="egovMap">
+     SELECT A.MEM_ID ,
+     		A.MEM_CODE ,
+     		A.MEM_TYPE ,
+     		A.NAME ,
+     		B.BRNCH_ID ,
+     		C.CODE || ' - ' || C.NAME AS BRNCH
+		FROM ORG0001D A
+		LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+		LEFT JOIN SYS0005M C ON B.BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
+		WHERE
+		A.MEM_CODE = #{memCode}
+     </select>
+
+     <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        SELECT T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+             , T.IS_SUPPL
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID ,
+                    T1.IS_SUPPL
+               FROM ORG0001D T1
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+              <if test='stus != null and stus !=""'>
+                AND T1.STUS = #{stus}
+              </if>
+              <if test='salesMen != null and salesMen !=""'>
+                AND (MEM_LVL = 4
+                AND MEM_TYPE IN (1,2,7) OR MEM_TYPE IN (4,6) )
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+
+    <select id="getSeqSUP0003M" resultType="java.lang.Integer">
+         SELECT SUP0003M_SUBM_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqSUP0004D" resultType="java.lang.Integer">
+        SELECT SUP0004D_SUBM_ITM_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <select id="getSeqSUP0001M" resultType="java.lang.Integer">
+         SELECT SUP0001M_REF_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqSUP0002D" resultType="java.lang.Integer">
+        SELECT SUP0002D_REF_ITM_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+
+
+     <insert id="insertSupplementSubmissionMaster" parameterType="Map">
+     INSERT INTO SUP0003M (
+     SUP_SUBM_ID ,
+     SUP_SUBM_DT ,
+     CHNNL ,
+     MEM_ID ,
+     MEM_BRNCH_ID ,
+     SUP_SUBM_STUS ,
+     SUP_SUBM_CRT_BRNCH ,
+     SUP_SUBM_SOF ,
+     SUP_SUBM_TTL_AMT ,
+     SUP_REF_ID ,
+     CUST_ID ,
+     CUST_CNTC_ID ,
+     CUST_DEL_ADDR_ID ,
+     SUP_SUBM_APP_TYP ,
+     CUST_BILL_ADDR_ID ,
+     FL_ATT_ID ,
+     SUP_SUBM_RMK ,
+     SUP_SUBM_FAIL_RMK ,
+     DEL_FLG ,
+     CRT_USR_ID ,
+     CRT_DT ,
+     UPD_USR_ID ,
+     UPD_DT
+     )
+     VALUES (
+     #{seqM} ,
+     SYSDATE ,
+     1 ,
+     #{memId} ,
+     #{memBrnchId} ,
+     1 ,
+     #{usrBrnchId} ,
+     #{sofNo} ,
+     #{totAmt} ,
+     '' ,
+     #{custId} ,
+     #{custCntcId} ,
+     #{custAddId} ,
+     99 ,
+     #{custBillAddId} ,
+     #{atchFileGrpId} ,
+     #{remark} ,
+     '' ,
+     'N' ,
+     #{crtUsrId} ,
+     SYSDATE ,
+     #{crtUsrId} ,
+     SYSDATE
+     )
+     </insert>
+
+     <insert id="insertSupplementSubmissionDetail" parameterType="Map">
+     INSERT INTO SUP0004D (
+     SUP_SUBM_ITM_ID ,
+     SUP_SUBM_ID ,
+     SUP_SUBM_STK_ID ,
+     SUP_SUBM_ITM_QTY ,
+     SUP_SUBM_ITM_UNTPRC ,
+     SUP_SUBM_ITM_AMT ,
+     SUP_SUBM_ITM_TAX ,
+     SUP_SUBM_TOT_AMT ,
+     DEL_FLG ,
+     CRT_USR_ID ,
+     CRT_DT ,
+     UPD_USR_ID ,
+     UPD_DT
+     )
+     VALUES (
+     #{seqD} ,
+     #{seqM} ,
+     #{stkId} ,
+     #{inputQty} ,
+     #{amt} ,
+     #{subTotal} ,
+     #{taxes} ,
+     #{totalAmt} ,
+	 'N' ,
+	 #{crtUsrId} ,
+	 SYSDATE ,
+	 #{crtUsrId} ,
+	 SYSDATE
+     )
+     </insert>
+
+	<select id="selectAttachList" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+                   ,T2.FILE_KEY_SEQ
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T2.FILE_KEY_SEQ, T1.UPD_DT
+    </select>
+
+        <select id="selectSupplementSubmissionView" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.SUP_SUBM_ID ,
+        TO_CHAR(A.SUP_SUBM_DT, 'DD-MM-YYYY') SUP_SUBM_DT ,
+        A.MEM_ID ,
+        E.MEM_CODE ,
+        E.NAME MEM_NAME ,
+        A.MEM_BRNCH_ID ,
+        B.CODE SUP_SUBM_STUS ,
+        C.CODE||' ' ||C.NAME SUP_SUBM_BRNCH ,
+        A.SUP_SUBM_SOF SOF_NO,
+        A.SUP_SUBM_TTL_AMT ,
+        A.SUP_REF_ID ,
+        A.CUST_ID ,
+        D.NAME CUST_NAME ,
+        D.NRIC ,
+        D.EMAIL ,
+        I.TEL_M1 TEL_NO ,
+        A.CUST_CNTC_ID ,
+        A.CUST_DEL_ADDR_ID ,
+        A.CUST_BILL_ADDR_ID ,
+        A.SUP_SUBM_RMK ,
+        A.FL_ATT_ID ATCH_FILE_GRP_ID,
+        A.CRT_USR_ID ,
+        A.SUP_SUBM_APP_TYP ,
+        F.USER_NAME CRT_USR ,
+        TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT ,
+        A.UPD_USR_ID ,
+        G.USER_NAME UPD_USR ,
+        TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') UPD_DT
+        FROM SUP0003M A
+        LEFT JOIN SYS0038M B ON A.SUP_SUBM_STUS = B.STUS_CODE_ID
+        LEFT JOIN SYS0005M C ON A.MEM_BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
+        LEFT JOIN SAL0029D D ON A.CUST_ID = D.CUST_ID
+        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+        LEFT JOIN SYS0047M F ON A.CRT_USR_ID = F.USER_ID
+        LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
+        LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
+        LEFT JOIN SAL0027D I ON A.CUST_CNTC_ID = I.CUST_CNTC_ID
+        WHERE 1=1
+        AND A.DEL_FLG = 'N'
+        AND A.SUP_SUBM_ID = #{supSubmId}
+        </select>
+
+    <select id="selectSupplementSubmissionItmView" parameterType="Map" resultType="egovMap">
+    	SELECT
+    	A.SUP_SUBM_ITM_ID ,
+    	A.SUP_SUBM_ID ,
+    	A.SUP_SUBM_STK_ID STK_ID,
+    	C.STK_CODE ,
+    	C.STK_DESC ,
+    	A.SUP_SUBM_ITM_QTY INPUT_QTY,
+    	A.SUP_SUBM_ITM_UNTPRC AMT,
+    	A.SUP_SUBM_ITM_AMT ,
+    	A.SUP_SUBM_TOT_AMT TOTAL_AMT ,
+    	C.STK_TYPE_ID ,
+		B.MEM_BRNCH_ID
+    	FROM SUP0004D A
+    	LEFT JOIN SUP0003M B ON A.SUP_SUBM_ID = B.SUP_SUBM_ID
+    	LEFT JOIN SYS0026M C ON A.SUP_SUBM_STK_ID = C.STK_ID
+    	WHERE 1=1
+    	AND A.SUP_SUBM_ID = #{supSubmId}
+    	AND A.DEL_FLG = 'N'
+
+    	ORDER BY A.SUP_SUBM_ID
+
+    </select>
+
+    <update id="updateSupplementSubmissionStatus" parameterType="Map">
+        UPDATE SUP0003M
+           SET SUP_SUBM_STUS            =
+           CASE
+           WHEN #{stus} = 'APV' THEN 5
+           WHEN #{stus} = 'CAN' THEN 10
+           ELSE 21 END
+             , SUP_SUBM_RMK		        = #{remark}
+             , UPD_USR_ID              = #{updUsrId}
+             , UPD_DT                   = SYSDATE
+             <if test='supRefId != null and supRefId != ""'>
+             , SUP_REF_ID 				= #{supRefId}
+             </if>
+         WHERE SUP_SUBM_ID              = #{supSubmId}
+    </update>
+
+   <select id="SP_LOGISTIC_REQUEST_SUPP" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_SUPP( #{S_NO},#{RE_TYPE},#{P_LOC},#{P_TYPE},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+   </select>
+
+     <insert id="insertSupplementM" parameterType="supplementMasterVO">
+    INSERT
+    INTO SUP0001M ( SUP_REF_ID ,
+    				SUP_REF_NO ,
+    				SUP_SUBM_SOF ,
+    				SUP_REF_DT ,
+    				SUP_REF_STUS ,
+    				SUP_REF_STG ,
+    				CUST_ID ,
+    				CUST_CNTC_ID ,
+    				CUST_DEL_ADDR_ID ,
+    				CUST_BILL_ADDR_ID ,
+    				FL_ATT_ID ,
+    				MEM_ID ,
+    				MEM_BRNCH_ID ,
+    				SUP_APPL_TYP ,
+    				SUP_TTL_AMT ,
+    				SUP_REF_RMK ,
+    				DEL_FLG ,
+    				CRT_USR_ID ,
+    				CRT_DT ,
+    				UPD_USR_ID ,
+    				UPD_DT
+
+    ) VALUES ( #{supRefId}
+             , #{supRefNo}
+             , #{supSubmSof}
+             , SYSDATE
+             , #{supRefStus}
+             , #{supRefStg}
+             , #{custId}
+             , #{custCntcId}
+             , #{custDelAddrId}
+             , #{custBillAddrId}
+             , #{flAttId}
+             , #{memId}
+             , #{memBrnchId}
+             , #{supApplTyp}
+             , #{supTtlAmt}
+             , #{supRefRmk}
+             , #{delFlg}
+             , #{crtUsrId}
+             , SYSDATE
+             , #{updUsrId}
+             , SYSDATE
+     )
+  </insert>
+
+  <insert id="insertSupplementD" parameterType="supplementDetailVO">
+    INSERT
+    INTO SUP0002D ( SUP_ITM_ID ,
+    				SUP_REF_ID ,
+    				SUP_STK_ID ,
+    				SUP_ITM_QTY ,
+    				SUP_ITM_UNTPRC ,
+    				SUP_ITM_AMT ,
+    				SUP_ITM_TAX ,
+    				SUP_TOT_AMT ,
+	  				DEL_FLG ,
+    				CRT_USR_ID ,
+    				CRT_DT ,
+    				UPD_USR_ID ,
+    				UPD_DT
+
+    ) VALUES ( #{supItmId}
+             , #{supRefId}
+             , #{supStkId}
+             , #{supItmQty}
+             , #{supItmUntprc}
+             , #{supItmAmt}
+             , #{supItmTax}
+             , #{supTotAmt}
+             , #{delFlg}
+             , #{crtUsrId}
+             , SYSDATE
+             , #{updUsrId}
+             , SYSDATE
+     )
+  </insert>
+
+  <select id="selectSupplementSubmItmList" parameterType="Map" resultType="egovMap">
+  SELECT LISTAGG(B.STK_DESC|| ' - ' || A.SUP_ITM_QTY, ', ') WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+		FROM SUP0002D A
+	LEFT JOIN SYS0026M B ON A.SUP_STK_ID = B.STK_ID
+	WHERE SUP_REF_ID = #{supRefId}
+	AND DEL_FLG = 'N'
+  </select>
+
+  <delete id="deleteSupplementM" parameterType="Map">
+	    DELETE FROM SUP0001M
+	    WHERE SUP_REF_ID = #{supRefId}
+  </delete>
+
+  <delete id="deleteSupplementD" parameterType="Map">
+	    DELETE FROM SUP0002D
+	    WHERE SUP_REF_ID = #{supRefId}
+  </delete>
+
+</mapper>

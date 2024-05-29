@@ -570,5 +570,19 @@ public class SalesConstants {
                                                                      // DCF
                                                                      // request
                                                                      // record.
+  //submission approval status
+  public static final String SUB_APPOVAL_STATUS_APPROVED = "APV";
+
+  public static final String SUB_APPOVAL_STATUS_FAILED = "FAL";
+
+  public static final String SUB_APPOVAL_STATUS_CANCELLED = "CAN";
+
+  public static final String SUB_APPOVAL_DEL_FLG_N= "N";
+
+  public static final String SUB_APPOVAL_DEL_FLG_Y= "Y";
+
+  public static final String SUPPLEMENT_WH_LOC_CODE = "H000"; // HEAD QUATERS WAREHOUSE LOCATION CODE
+
+  public static final String SUPPLEMENT_WH_LOC_ID = "70574"; // HEAD QUATERS WAREHOUSE LOCATION ID
 
 }

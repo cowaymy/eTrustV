@@ -114,6 +114,10 @@
         <!-- SMS  -->
         <typeAlias alias="smsVO" type="com.coway.trust.cmmn.model.SmsVO"/>
 
+        <!-- Supplement Submission -->
+        <typeAlias alias="supplementMasterVO" type="com.coway.trust.biz.sales.order.vo.SupplementMasterVO" />
+        <typeAlias alias="supplementDetailVO" type="com.coway.trust.biz.sales.order.vo.SupplementDetailVO"/>
+
         <!-- Added for On-Loan module, by Hui Ding, 20-02-2020 -->
         <!-- On-Loan -->
 <!--         <typeAlias alias="loanOrderDVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderDVO"/> -->
