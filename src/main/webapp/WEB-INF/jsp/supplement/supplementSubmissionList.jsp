@@ -95,7 +95,8 @@ function createAUIGrid(){
 
     var supplementColumnLayout =  [
                             {dataField : "supSubmSof", headerText : '<spring:message code="supplement.text.eSOFno" />', width : '8%' , editable : false},
-                            {dataField : "supSubmStus", headerText : '<spring:message code="supplement.text.submissionStatus" />', width : '8%', editable : false},
+                            {dataField : "supSubmStus", headerText : '<spring:message code="supplement.text.submissionStatus" />', width : '8%', editable : false , visible : false},
+                            {dataField : "supSubmStusName", headerText : '<spring:message code="supplement.text.submissionStatus" />', width : '8%', editable : false},
                             {dataField : "supSubmDt", headerText : '<spring:message code="supplement.text.submissionDate" />', width : '8%' , editable : false},
                             {dataField : "supSubmBrnch", headerText : '<spring:message code="supplement.text.submissionBranch" />', width : '8%' , editable : false},
                             {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '8%' , editable : false},
