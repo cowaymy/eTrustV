@@ -108,8 +108,6 @@ public class CustomerApiForm {
 
   private String tinNo;
 
-  private String eInvFlg;
-
   private int receivingMarketingMsgStatus;
 
   /* SAL0027D */
@@ -469,14 +467,6 @@ public class CustomerApiForm {
 
   public void setTinNo( String tinNo ) {
     this.tinNo = tinNo;
-  }
-
-  public String geteInvFlg() {
-    return eInvFlg;
-  }
-
-  public void seteInvFlg( String eInvFlg ) {
-    this.eInvFlg = eInvFlg;
   }
 
   public int getCustCntcId() {
