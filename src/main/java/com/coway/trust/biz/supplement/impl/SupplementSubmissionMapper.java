@@ -3,18 +3,14 @@ package com.coway.trust.biz.supplement.impl;
 import java.util.List;
 import java.util.Map;
 
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.biz.sales.order.vo.SupplementMasterVO;
 import com.coway.trust.biz.sales.order.vo.SupplementDetailVO;
 
-
 /*********************************************************************************************
- * DATE          PIC        VERSION     COMMENT
- *--------------------------------------------------------------------------------------------
- * 14/05/2024    TOMMY      1.0.1       - RE-STRUCTURE SupplementSubmissionMapper
+ * DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 14/05/2024 TOMMY 1.0.1 - RE-STRUCTURE SupplementSubmissionMapper
  *
  *********************************************************************************************/
 
@@ -63,12 +59,20 @@ public interface SupplementSubmissionMapper {
 
   void insertSupplementD(SupplementDetailVO supplementDetailVO);
 
-  Map<String, Object>SP_LOGISTIC_REQUEST_SUPP(Map<String, Object> param);
+  Map<String, Object> SP_LOGISTIC_REQUEST_SUPP(Map<String, Object> param);
 
   EgovMap selectSupplementSubmItmList(Map<String, Object> params);
 
   void deleteSupplementM(Map<String, Object> params);
 
   void deleteSupplementD(Map<String, Object> params);
+
+  EgovMap selectRequestNoBySupRefNo(Map<String, Object> params);
+
+  void deleteStockBookingSMO(Map<String, Object> params);
+
+  void updateStockTransferMReq(Map<String, Object> params);
+
+  void updateStockTransferDReq(Map<String, Object> params);
 
 }
