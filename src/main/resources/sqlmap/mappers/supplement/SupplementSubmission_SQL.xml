@@ -731,4 +731,25 @@
 	    WHERE SUP_REF_ID = #{supRefId}
   </delete>
 
+  <select id="selectRequestNoBySupRefNo" parameterType="Map" resultType="egovMap">
+  SELECT REQST_NO FROM
+  LOG0047M WHERE REQST_DEL IS NULL AND
+  REF_DOC_NO = #{supRefNo}
+  </select>
+
+  <delete id="deleteStockBookingSMO" parameterType="Map">
+	    DELETE FROM LOG0075M
+	    WHERE REQST_NO = #{reqstNo}
+  </delete>
+
+  <update id="updateStockTransferMReq" parameterType="Map">
+  		UPDATE LOG0048D SET REQST_DEL = 'Y'
+  		WHERE REQST_NO = #{reqstNo}
+  </update>
+
+  <update id="updateStockTransferDReq" parameterType="Map">
+  		UPDATE LOG0047M SET REQST_DEL = 'Y'
+  		WHERE REQST_NO = #{reqstNo}
+  </update>
+
 </mapper>
