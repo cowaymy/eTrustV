@@ -368,7 +368,7 @@
 		Common
 				.ajax(
 						"GET",
-						"/sales/order/selectMemberByMemberIDCode.do",
+						"/supplement/selectMemberByMemberIDCode.do",
 						{
 							memId : memId,
 							memCode : memCode
