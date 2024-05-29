@@ -330,36 +330,36 @@ public class SupplementSubmissionController {
     String msg = "";
 
     try {
-    // Retrieve the current session user info
-    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-    params.put("updUsrId", sessionVO.getUserId());
-    params.put("crtUsrId", sessionVO.getUserId());
+      // Retrieve the current session user info
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+      params.put("updUsrId", sessionVO.getUserId());
+      params.put("crtUsrId", sessionVO.getUserId());
 
-    LOGGER.info("############################ updateSubmissionApprovalStatus - params: {}", params);
+      LOGGER.info("############################ updateSubmissionApprovalStatus - params: {}", params);
 
-    Map<String, Object> returnMap = supplementSubmissionService.updateSubmissionApprovalStatus(params);
+      Map<String, Object> returnMap = supplementSubmissionService.updateSubmissionApprovalStatus(params);
 
-    if ("000".equals(returnMap.get("logError"))) {
-      msg += "Supplement Submission status successfully updated.<br />";
-      msg += "Supplement Order No : " + returnMap.get("message") + "<br />";
-      message.setCode(AppConstants.SUCCESS);
-    } else if ("001".equals(returnMap.get("logError"))) {
-      msg += "Supplement Submission status successfully updated.<br />";
-      msg += "SOF No : " + returnMap.get("message") + "<br />";
-      message.setCode(AppConstants.SUCCESS);
-    } else {
-      msg += "Supplement Submission failed to save.<br />";
-      msg += returnMap.get("message") + "<br />";
-      message.setCode(AppConstants.FAIL);
-    }
-    message.setMessage(msg);
+      if ("000".equals(returnMap.get("logError"))) {
+        msg += "Supplement Submission status successfully updated.<br />";
+        msg += "Supplement Order No : " + returnMap.get("message") + "<br />";
+        message.setCode(AppConstants.SUCCESS);
+      } else if ("001".equals(returnMap.get("logError"))) {
+        msg += "Supplement Submission status successfully updated.<br />";
+        msg += "SOF No : " + returnMap.get("message") + "<br />";
+        message.setCode(AppConstants.SUCCESS);
+      } else {
+        msg += "Supplement Submission failed to save.<br />";
+        msg += returnMap.get("message") + "<br />";
+        message.setCode(AppConstants.FAIL);
+      }
+      message.setMessage(msg);
 
     } catch (Exception e) {
       LOGGER.error("Error during updateSubmissionApprovalStatus", e);
       msg += "An unexpected error occurred.<br />";
       message.setCode(AppConstants.FAIL);
       message.setMessage(msg);
-  }
+    }
 
     return ResponseEntity.ok(message);
   }
