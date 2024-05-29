@@ -75,7 +75,7 @@ public class SupplementSubmissionController {
     params.put("userId", sessionVO.getUserId());
     // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
 
-    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3,
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
         SalesConstants.DEFAULT_DATE_FORMAT1);
     String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
