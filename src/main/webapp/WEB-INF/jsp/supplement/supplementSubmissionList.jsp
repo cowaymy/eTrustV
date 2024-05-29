@@ -290,7 +290,20 @@ function fn_getSupplementSubmissionList() {
 
 function fn_loadSupplementSalesman(memCode) {
 
-    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : memCode}, function(memInfo) {
+    Common.ajax("GET", "/supplement/selectMemberByMemberIDCode.do", {memCode : memCode}, function(memInfo) {
+
+        if(memInfo == null) {
+            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        }
+        else {
+            $('#_memCode').val(memInfo.memCode);
+            $('#_memName').val(memInfo.name);            }
+    });
+}
+
+function fn_loadOrderSalesman(memId,memCode) {
+
+    Common.ajax("GET", "/supplement/selectMemberByMemberIDCode.do", {memId : memId , memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
             Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
@@ -461,10 +474,10 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
 <th scope="row"><spring:message code="sal.text.salManCode" /></th>
-	<td>
+	<td colspan = "5" width = "">
 		<p><input id="_memCode" name="_memCode" type="text" title="" placeholder="" style="width:100px;" class="" /></p>
 		<p><a id="_memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
-		<p><input id="_memName" name="_memName" type="text" title="" placeholder="" style="width:250px;" class="readonly" readonly/></p>
+		<p><input id="_memName" name="_memName" type="text" title="" placeholder="" style="width:500px;" class="readonly" readonly/></p>
 	</td>
 </tr>
 <tr>
