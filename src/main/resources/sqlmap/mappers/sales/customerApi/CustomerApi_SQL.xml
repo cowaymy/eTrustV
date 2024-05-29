@@ -206,18 +206,19 @@
   </select>
 
   <select id="getTinId" parameterType="Map" resultType="Integer">
-      SELECT SAL0416D_TIN_ID.NEXTVAL AS tinId
+      SELECT EIV0002M_TIN_ID.NEXTVAL AS tinId
       FROM DUAL
   </select>
 
   <insert id="insertCustomerTin" parameterType="Map">
     <![CDATA[
-    INSERT INTO SAL0416D ( TIN_ID
+    INSERT INTO EIV0002M ( TIN_ID
                                       , CUST_ID
                                       , CUST_TIN
                                       , STATUS
-                                      , E_INV_FLG
                                       , REM
+                                      , TIN_VALID_FR_DT
+                                      , TIN_VALID_TO_DT
                                       , CRT_DT
                                       , CRT_USER_ID
                                       , UPD_DT
@@ -226,8 +227,9 @@
                   , #{custId}
                   , #{tinNo}
                   , 1
-                  , #{eInvFlg}
                   , ''
+                  , SYSDATE
+                  , (TO_DATE('99991231', 'YYYYMMDD'))
                   , SYSDATE
                   , #{crtUserId}
                   , SYSDATE
