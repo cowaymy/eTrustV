@@ -31,6 +31,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.supplement.SupplementSubmissionApplication;
 import com.coway.trust.biz.supplement.SupplementSubmissionService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -64,6 +65,9 @@ public class SupplementSubmissionController {
   @Resource(name = "supplementSubmissionService")
   private SupplementSubmissionService supplementSubmissionService;
 
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
+
   @Autowired
   private SupplementSubmissionApplication supplementSubmissionApplication;
 
@@ -74,6 +78,16 @@ public class SupplementSubmissionController {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
     // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+
+      EgovMap result =  salesCommonService.getUserInfo(params);
+
+      model.put("orgCode", result.get("orgCode"));
+      model.put("grpCode", result.get("grpCode"));
+      model.put("deptCode", result.get("deptCode"));
+      model.put("memCode", result.get("memCode"));
+    }
+
 
     String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
         SalesConstants.DEFAULT_DATE_FORMAT1);
