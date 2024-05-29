@@ -292,7 +292,7 @@ public class SupplementSubmissionServiceImpl implements SupplementSubmissionServ
 
     Map<String, Object> eGHLPram = new HashMap<>();
     eGHLPram.put("custNm", supplementSubm.get("custName"));
-    // eGHLPram.put("custCtnt", supplementSubm.get("telNo"));
+    eGHLPram.put("custCtnt", supplementSubm.get("telNo"));
     eGHLPram.put("custEmail", supplementSubm.get("email"));
     eGHLPram.put("ordDesc", supItmString.get("itmList"));
     eGHLPram.put("ordNo", supRefNo);
