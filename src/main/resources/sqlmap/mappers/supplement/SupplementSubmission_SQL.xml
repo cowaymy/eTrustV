@@ -34,7 +34,7 @@
         LEFT JOIN SYS0047M F ON A.CRT_USR_ID = F.USER_ID
         LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
         LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
-        LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF
+        LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF AND A.SUP_REF_ID = I.SUP_REF_ID
         WHERE 1=1
         AND A.DEL_FLG = 'N'
 		<if test='submissionStartDt != null and submissionStartDt != "" and submissionEndDt != null and submissionEndDt != ""'>
@@ -51,6 +51,9 @@
 	         <foreach item="item" collection="branchArray" index="index" open="(" separator="," close=")">
 	           #{item}
 	         </foreach>
+         </if>
+         <if test="supplementReferenceNo != null and supplementReferenceNo != '' ">
+           AND I.SUP_REF_NO = #{supplementReferenceNo}
          </if>
           <if test='eSOFNo != null and eSOFNo != ""'>
 		   AND A.SUP_SUBM_SOF = #{eSOFNo}
