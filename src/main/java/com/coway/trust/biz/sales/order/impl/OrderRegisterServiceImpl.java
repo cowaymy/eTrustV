@@ -2593,56 +2593,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
 	}
 
-	if(params.get("appTypeId").equals("66") && params.get("extradeId").equals("1")){ //RENTAL APPTYPE WITH EXTRADE ONLY
-		//promoId
-		//oldOrderNo
-		//oldOrdId
-		//extradeId
-		EgovMap promoInfo = orderRegisterMapper.getPromotionInfoExtradeAppType(params);
-		if(promoInfo != null){
-			String promoExtradeAppTypeCode = CommonUtils.nvl(promoInfo.get("code"));
-			if(promoExtradeAppTypeCode == ""){
-				result.setCode("99");
-				result.setMessage("Promotion Extrade App Type is not set. Please contact relavent department");
-				return result;
-			}
-			if(promoExtradeAppTypeCode.equals("1") && !ordInfo.get("appTypeId").toString().equals("66")){
-				result.setCode("99");
-				result.setMessage("Promotion selected is only for extrade rental order");
-				return result;
-			}
-
-			if(promoExtradeAppTypeCode.equals("2") && ordInfo.get("appTypeId").toString().equals("66")){
-				result.setCode("99");
-				result.setMessage("Promotion selected is only for extrade non-rental order");
-				return result;
-			}
-		}
-
-
-		if(ordInfo.get("appTypeId").toString().equals("66")){ //Old order must be rental && promotion extradeAppType = Rental(1)
-			EgovMap eligibleResult = orderRegisterMapper.rentalExtradeEligibility(params);
-
-			if(eligibleResult != null && eligibleResult.get("result").toString().equals("Y")){
-				result.setCode("1");
-				result.setMessage("Extrade can be proceed");
-			}
-			else{
-				result.setCode("99");
-				result.setMessage("Order is not eligible for current promotion selected");
-				return result;
-			}
-		}
-		else{
-			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
-				//svm expired within one month, just able to do extrade, else block.
-
-				result.setCode("99");
-				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
-				return result;
-			}
-		}
-	}else{
+	if(params.get("isHomeCare") != null && params.get("isHomeCare").equals('Y')){
 		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
 			//svm expired within one month, just able to do extrade, else block.
 
@@ -2651,6 +2602,66 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			return result;
 		}
 	}
-	return result;
+	else{
+    	if(params.get("appTypeId").equals("66") && params.get("extradeId").equals("1")){ //RENTAL APPTYPE WITH EXTRADE ONLY
+    		//promoId
+    		//oldOrderNo
+    		//oldOrdId
+    		//extradeId
+    		EgovMap promoInfo = orderRegisterMapper.getPromotionInfoExtradeAppType(params);
+    		if(promoInfo != null){
+    			String promoExtradeAppTypeCode = CommonUtils.nvl(promoInfo.get("code"));
+    			if(promoExtradeAppTypeCode == ""){
+    				result.setCode("99");
+    				result.setMessage("Promotion Extrade App Type is not set. Please contact relavent department");
+    				return result;
+    			}
+    			if(promoExtradeAppTypeCode.equals("1") && !ordInfo.get("appTypeId").toString().equals("66")){
+    				result.setCode("99");
+    				result.setMessage("Promotion selected is only for extrade rental order");
+    				return result;
+    			}
+
+    			if(promoExtradeAppTypeCode.equals("2") && ordInfo.get("appTypeId").toString().equals("66")){
+    				result.setCode("99");
+    				result.setMessage("Promotion selected is only for extrade non-rental order");
+    				return result;
+    			}
+    		}
+
+
+    		if(ordInfo.get("appTypeId").toString().equals("66")){ //Old order must be rental && promotion extradeAppType = Rental(1)
+    			EgovMap eligibleResult = orderRegisterMapper.rentalExtradeEligibility(params);
+
+    			if(eligibleResult != null && eligibleResult.get("result").toString().equals("Y")){
+    				result.setCode("1");
+    				result.setMessage("Extrade can be proceed");
+    			}
+    			else{
+    				result.setCode("99");
+    				result.setMessage("Order is not eligible for current promotion selected");
+    				return result;
+    			}
+    		}
+    		else{
+    			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+    				//svm expired within one month, just able to do extrade, else block.
+
+    				result.setCode("99");
+    				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+    				return result;
+    			}
+    		}
+    	}else{
+    		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+    			//svm expired within one month, just able to do extrade, else block.
+
+    			result.setCode("99");
+    			result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+    			return result;
+    		}
+    	}
+	}
+		return result;
   }
 }

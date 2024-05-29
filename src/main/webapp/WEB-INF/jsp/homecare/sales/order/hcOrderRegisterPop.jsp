@@ -3114,7 +3114,7 @@
 
 	  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
 		  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
-				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId}, function(result) {
+				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId, isHomeCare: 'Y'}, function(result) {
 		        if(result == null) {
 		         	  $('#ordPromo1').val('');
 		         	  $('#ordPromo2').val('');

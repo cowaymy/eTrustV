@@ -1524,7 +1524,7 @@
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
     </td>
-    <th scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <th scope="row">Prev Ex-trade App Type<span class="must">*</span></th>
     <td>
     	<select id="extradeAppType" name="extradeAppType" class="w100p" disabled></select>
     </td>
@@ -1804,7 +1804,7 @@
     <td>
     <select id="v_empChk" name="v_empChk" class="w100p" disabled></select>
     </td>
-    <th scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <th scope="row">Prev Ex-trade App Type<span class="must">*</span></th>
     <td>
     	<select id="v_extradeAppType" name="v_extradeAppType" class="w100p" disabled></select>
     </td>

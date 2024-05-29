@@ -1068,7 +1068,7 @@
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
     </td>
-    <th class="extradeMonth" scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <th class="extradeMonth" scope="row">Prev Ex-trade App Type<span class="must">*</span></th>
     <td class="extradeMonth">
     	<select id="extradeAppType" name="extradeAppType" class="w100p"></select>
     </td>
