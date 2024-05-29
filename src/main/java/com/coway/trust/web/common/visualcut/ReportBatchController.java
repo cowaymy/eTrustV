@@ -3056,7 +3056,7 @@ LOGGER.info("[END] InboundGenPdf...");
 }
 
 @RequestMapping(value = "/superCrazyOrderRaw.do")
-//@Scheduled(cron = "0 0 3 3 * *")//Monthly 3rd of the month (3:00am)
+//@Scheduled(cron = "0 0 3 2 * *")//Monthly 2nd of the month (3:00am)
 public void superCrazyOrderRaw() {
   LOGGER.info("[START] superCrazyOrderRaw...");
   // Get Last Month
