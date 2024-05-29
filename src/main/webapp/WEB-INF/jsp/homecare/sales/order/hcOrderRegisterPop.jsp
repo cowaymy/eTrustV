@@ -3091,7 +3091,9 @@
 	  if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
           return;
       }else{
-    	  fn_checkPreOrderSalesPerson(0,memCode);
+        if($('#exTrade').val() == '1') {
+        	fn_checkPreOrderSalesPerson(0,memCode);
+        }
 //         	 if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
 //               	 fn_checkPreOrderSalesPerson(0,memCode);
 //             }else if ($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){

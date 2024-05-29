@@ -2384,7 +2384,9 @@
                     if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
                         return;
                     }else{
-                    	fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+                     	if($('#exTrade').val() == '1') {
+                     		fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+               			}
 //                           if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
 //                                fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
 //                          }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
