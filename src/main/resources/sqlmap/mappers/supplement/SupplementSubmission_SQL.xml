@@ -10,7 +10,7 @@
         E.MEM_CODE ,
         E.NAME MEM_NAME ,
         A.MEM_BRNCH_ID ,
-        B.CODE SUP_SUBM_STUS ,
+        B.CODE_NAME SUP_SUBM_STUS ,
         C.CODE||' ' ||C.NAME SUP_SUBM_BRNCH ,
         A.SUP_SUBM_SOF ,
         A.SUP_SUBM_TTL_AMT ,
