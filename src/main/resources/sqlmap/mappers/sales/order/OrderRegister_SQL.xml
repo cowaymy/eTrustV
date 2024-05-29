@@ -3609,8 +3609,10 @@ WHERE
 
     <select id="rentalExtradeEligibility" parameterType="Map" resultType="egovMap">
 	       WITH period AS (
-	           SELECT (SELECT MAX(RENT_INST_NO) FROM SAL0070D WHERE SALES_ORD_ID = #{oldOrdId}) AS TOTAL_INST_NO,
-	           (SELECT RENT_INST_NO FROM SAL0070D WHERE TO_CHAR(RENT_INST_DT,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') AND SALES_ORD_ID = #{oldOrdId}) AS CURR_INST_NO
+	           SELECT
+               (SELECT MAX(RENT_INST_NO) FROM SAL0070D WHERE SALES_ORD_ID = #{oldOrdId}) AS TOTAL_INST_NO,
+	           (SELECT RENT_INST_NO FROM SAL0070D WHERE TO_CHAR(RENT_INST_DT,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') AND SALES_ORD_ID = #{oldOrdId}) AS CURR_INST_NO,
+               (SELECT MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(SYSDATE),FN_GET_FIRST_DAY_MONTH(MAX(RENT_INST_DT))) FROM SAL0070D WHERE SALES_ORD_ID = #{oldOrdId}) AS EXPIRED_MONTH
 	           FROM DUAL
 	       ), AMOUNT AS(
 	           SELECT A.EXTRADE_FR , A.EXTRADE_TO
@@ -3618,8 +3620,15 @@ WHERE
 	           WHERE A.PROMO_ID = #{promoId} AND A.EX_TRADE = 1
 	       )
 	       SELECT
-	       CASE WHEN CURR_INST_NO BETWEEN TOTAL_INST_NO + EXTRADE_FR AND TOTAL_INST_NO + EXTRADE_TO THEN 'Y'
-	       ELSE 'N' END RESULT
+	       CASE WHEN CURR_INST_NO IS NULL THEN
+                CASE WHEN TOTAL_INST_NO + EXPIRED_MONTH BETWEEN TOTAL_INST_NO + EXTRADE_FR AND TOTAL_INST_NO + EXTRADE_TO THEN 'Y'
+                ELSE 'N'
+                END
+           ELSE
+                CASE WHEN CURR_INST_NO BETWEEN TOTAL_INST_NO + EXTRADE_FR AND TOTAL_INST_NO + EXTRADE_TO THEN 'Y'
+                ELSE 'N'
+                END
+           END AS RESULT
 	       FROM period, AMOUNT
     </select>
     <select id="getPromotionInfoExtradeAppType" parameterType="Map" resultType="egovMap">

@@ -2628,6 +2628,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     				return result;
     			}
     		}
+    		else{
+				result.setCode("99");
+				result.setMessage("Promotion not found. Please contact relavant department");
+				return result;
+    		}
 
 
     		if(ordInfo.get("appTypeId").toString().equals("66")){ //Old order must be rental && promotion extradeAppType = Rental(1)
