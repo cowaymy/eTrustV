@@ -242,4 +242,7 @@ public interface OrderRegisterMapper {
   EgovMap selectPreBookSalesPerson(Map<String, Object> params);
 
   EgovMap selectPreBookConfigurationPerson(Map<String, Object> params);
+
+  EgovMap rentalExtradeEligibility(Map<String, Object> params);
+  EgovMap getPromotionInfoExtradeAppType(Map<String, Object> params);
 }

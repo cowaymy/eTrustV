@@ -611,6 +611,8 @@ var userType = "${userType}";
             else {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
             }
+
+            fn_checkPromotionExtradeAvail();
         });
         $('#salesmanCd').change(function(event) {
             var memCd = $('#salesmanCd').val().trim();
@@ -2774,15 +2776,16 @@ var userType = "${userType}";
     	 if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
              return fn_doSavePreOrder();
          }else{
-            if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-            	  return fn_checkPreOrderSalesPerson(0,memCode);
-            }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-            	  return fn_checkPreOrderSalesPerson(0,memCode);
-            }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-            	  return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
-            }else{
-            	  return fn_doSavePreOrder();
-            }
+        	 return fn_checkPreOrderSalesPerson(0,memCode);
+//             if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+//             	  return fn_checkPreOrderSalesPerson(0,memCode);
+//             }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+//             	  return fn_checkPreOrderSalesPerson(0,memCode);
+//             }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+//             	  return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+//             }else{
+//             	  return fn_doSavePreOrder();
+//             }
          }
     }
 
@@ -2811,6 +2814,33 @@ var userType = "${userType}";
 		    }
 	   });
    }
+
+   function fn_checkPromotionExtradeAvail(){
+		  var appTypeId = $('#appType option:selected').val();
+	      var oldOrderNo = $('#relatedNo').val();
+	      var promoId = $('#ordPromo option:selected').val();
+	      var extradeId = $('#exTrade option:selected').val();
+		  console.log("OLDORDERNO"+oldOrderNo);
+		  console.log("PROMOID"+promoId);
+
+		  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
+			  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
+					  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId}, function(result) {
+			        if(result == null) {
+			         	  $('#ordPromo').val('');
+			         	  $('#relatedNo').val('');
+			         	  Common.alert("No extrade with promo order found");
+			        }
+			        else{
+			        	if(result.code == "99"){
+				         	  $('#ordPromo').val('');
+				         	  //$('#relatedNo').val('');
+				         	  Common.alert(result.message);
+			        	}
+			        }
+			  });
+		  }
+	  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

@@ -1766,30 +1766,37 @@ $(document).ready(function(){
 			return;
 		}
 
-		//Only Cater for IND customer type
-		var custTypeId= $('#CUST_TYPE_ID').val();
-		var monthExpired =  $('#hiddenMonthExpired').val();
-		var ordId = $("#ORD_ID").val();
-		if(custTypeId == '964'){
-			//ONLY ALLOW CONFIGURATION CD
-			if(parseInt(monthExpired) < 2){
-				Common.ajax("GET", "/sales/membership/checkConfigurationSalesPerson", {memId:memId,memCode:memCode,salesOrdId:ordId}, function(memInfo) {
-					if(memInfo == null){
-						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
-						fn_goSalesPersonReset();
-					}
-				});
+		Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+			if(memInfo == null){
+				Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+				fn_goSalesPersonReset();
 			}
-			//ALLOW ALL CD
-			else{
-				Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
-					if(memInfo == null){
-						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
-						fn_goSalesPersonReset();
-					}
-				});
-			}
-		}
+		});
+
+ 		//Only Cater for IND customer type
+// 		var custTypeId= $('#CUST_TYPE_ID').val();
+// 		var monthExpired =  $('#hiddenMonthExpired').val();
+// 		var ordId = $("#ORD_ID").val();
+// 		if(custTypeId == '964'){
+// 			//ONLY ALLOW CONFIGURATION CD
+// 			if(parseInt(monthExpired) < 2){
+// 				Common.ajax("GET", "/sales/membership/checkConfigurationSalesPerson", {memId:memId,memCode:memCode,salesOrdId:ordId}, function(memInfo) {
+// 					if(memInfo == null){
+// 						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+// 						fn_goSalesPersonReset();
+// 					}
+// 				});
+// 			}
+// 			//ALLOW ALL CD
+// 			else{
+// 				Common.ajax("GET", "/sales/membership/checkSalesPerson", {memId:memId,memCode:memCode}, function(memInfo) {
+// 					if(memInfo == null){
+// 						Common.alert("<b>Your input member code : " + memCode + " is not allowed for membership creation.</b>");
+// 						fn_goSalesPersonReset();
+// 					}
+// 				});
+// 			}
+// 		}
 	}
 </script>
 

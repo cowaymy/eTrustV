@@ -120,7 +120,7 @@ function createAUIGrid() {
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
                             },
-                            { dataField : "exTradePackDur", headerText  : "Ex-trade Package <br> Duration",  width  : 150 , dataType:"numeric", editable: false,
+/*                             { dataField : "exTradePackDur", headerText  : "Ex-trade Package <br> Duration",  width  : 150 , dataType:"numeric", editable: false,
                                 labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
                                     // logic processing
                                     // Return value here, reprocessed or formatted as desired.
@@ -131,7 +131,7 @@ function createAUIGrid() {
                                             return "";
                                        }
                                  }
-                            },
+                            }, */
                             { dataField : "pacType", headerText  : "<spring:message code="sal.title.packType" />",  width  : 150 , editable       : true
                                 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
                                     var retStr = value;

@@ -19,7 +19,7 @@
         doGetCombo('/common/selectCodeList.do', '76',  '${promoInfo.promoTypeId}',       'promoTypeId',       'S'); //Promo Type
         doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${promoInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${promoInfo.exTrade}',              'exTrade',              'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${promoInfo.exTrade}',              'exTrade',              'S','fn_onchange()'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${promoInfo.empChk}',               'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.promoDiscType}',        'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
@@ -30,6 +30,7 @@
         doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : '${promoInfo.promoAppTypeId}'}, '${promoInfo.promoSrvMemPacId}', 'promoSrvMemPacId', 'S'); //Common Code
 
         doDefCombo(stkSizeData, '${promoInfo.stkSize}' ,'stkSize', 'S', '');
+        doGetCombo('/common/selectCodeList.do', '581', '${promoInfo.extradeAppType}', 'extradeAppType', 'S'); //Extrade App Type
 
         fn_chgPageMode('VIEW');
 
@@ -90,6 +91,22 @@
             $('#custStatusEnWp6m').prop("checked", true);
         }else{
             $('#custStatusEnWp6m').prop("checked", false);
+        }
+
+        if('${promoInfo.woHs}' == '1'){
+            $('#woHsY').prop("checked", true);
+        }
+        else{
+            $('#woHsN').prop("checked", true);
+        }
+
+        $('.extradeMonth').attr("hidden", true);
+
+        if('${promoInfo.promoAppTypeId}' == "2284"){
+            $('.extradeMonth').removeAttr("hidden");
+        }
+        else{
+            $('.extradeMonth').attr("hidden", true);
         }
     });
 
@@ -249,7 +266,11 @@
                 custStatusEn : vCustStatusEn,
                 custStatusEnWoutWp : vCustStatusEnWoutWp,
                 custStatusEnWp6m : vCustStatusEnWp6m,
-                promoDiscOnBill : $('#promoSpecialDisId').val()
+                promoDiscOnBill : $('#promoSpecialDisId').val(),
+                extradeFr: $('#extradeMonthFrom').val(),
+                extradeTo: $('#extradeMonthTo').val(),
+                woHs: $('input:radio[name="woHs"]:checked').val(),
+                extradeAppType: $('#extradeAppType').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -498,6 +519,19 @@
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
+        	if($('#exTrade').val() == "1"){
+                $('.extradeMonth').removeAttr("hidden");
+                $('#extradeMonthFrom').prop("disabled", false);
+                $('#extradeMonthTo').prop("disabled", false);
+                $('#extradeAppType').prop("disabled", false);
+        	}
+        	else{
+                $('.extradeMonth').attr("hidden", true);
+                $('#extradeMonthFrom').val('0').prop("disabled", true);
+                $('#extradeMonthTo').val('0').prop("disabled", true);
+                $('#extradeAppType').val('0').prop("disabled", true);
+        	}
+
             fn_calcDiscountPrice();
             fn_calcDiscountRPF();
             fn_calcDiscountPV();
@@ -541,6 +575,10 @@
             $('input[name="custStatus"]').prop("disabled", false);
 
             AUIGrid.setProp(stckGridID, "editable" , true);
+
+//             $('input[name="woHs"]').prop("disabled", true);
+//             $('#extradeMonthFrom').prop("disabled", true);
+//             $('#extradeMonthTo').prop("disabled", true);
         }
         else if(vMode == 'VIEW') {
             $('#btnPromoEdit').removeClass("blind");
@@ -637,6 +675,36 @@
         if(!$('#promoSpecialDisId').is(":disabled") && FormUtil.isEmpty($('#promoSpecialDisId').val())) {
             isValid = false;
             msg += "<spring:message code='sales.promo.msg20'/><br />";
+        }
+
+        if(!$('#extradeAppType').is(":disabled") && FormUtil.isEmpty($('#extradeAppType').val())) {
+            isValid = false;
+            msg += "Extrade App Type must be selected";
+        }
+
+        if($('#exTrade').val() == '1') {
+            if(FormUtil.isEmpty($('#extradeMonthFrom').val()) || FormUtil.isEmpty($('#extradeMonthTo').val())){
+            	isValid = false;
+                msg += "Please enter extrade month. If there is no end month for extrade. Please set it to 999<br />";
+            }
+            else{
+            	var extradeMonthFrom = $('#extradeMonthFrom').val();
+    			var extradeMonthTo = $('#extradeMonthTo').val();
+
+    			var mFrom = extradeMonthFrom.replace("-","");
+    			var mTo = extradeMonthTo.replace("-","");
+
+            	if(FormUtil.onlyNumCheck(mFrom) && FormUtil.onlyNumCheck(mTo)){
+//             		if(mFrom >= mTo){
+//                     	isValid = false;
+//                         msg += "Extrade Month To must be larger or equal value than From<br />";
+//             		}
+            	}
+            	else{
+                	isValid = false;
+                    msg += "Extrade Month are in number format only<br />";
+            	}
+            }
         }
 
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -886,6 +954,9 @@
         }
     }
 
+    function fn_onchange(){
+    	$('#exTrade').trigger("change");
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -981,9 +1052,25 @@
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>
+    <th scope="row"><span class="extradeMonth">Ex-trade Month</span></th>
+	<td colspan="2">
+		<div class="extradeMonth" >
+			<div style="display: flex;">
+			    <p><input style="width: 50px" id="extradeMonthFrom" name="extradeMonthFrom" type="number" title="Extrade Month From" value="${promoInfo.extradeFr}"/></p>
+			    <span style="padding: 5px;">To</span>
+			    <p><input style="width: 50px" id="extradeMonthTo" name="extradeMonthTo" type="number"" title="Extrade Month To" value="${promoInfo.extradeTo}"/></p>
+			</div>
+		</div>
+	</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
+    <th class="extradeMonth" scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <td class="extradeMonth">
+    	<select id="extradeAppType" name="extradeAppType" class="w100p"></select>
     </td>
 </tr>
 <tr>
@@ -1079,6 +1166,13 @@
     <th scope="row">Mattress Size</th>
     <td>
         <select id="stkSize" name="stkSize" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+	<th scope="row">Without HS/CS</th>
+    <td>
+        <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
+        <input id="woHsN" name="woHs" type="radio" value="0"/><span>No</span>
     </td>
 </tr>
 <tr>

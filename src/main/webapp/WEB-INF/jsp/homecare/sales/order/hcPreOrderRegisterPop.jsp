@@ -543,6 +543,8 @@
               } else {
                   fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
               }
+
+              fn_checkPromotionExtradeAvail();
           });
 
           $('#salesmanCd').change(function(event) {
@@ -2095,6 +2097,11 @@
                       if ($("#exTrade").val() == 1) {
 
                           if (todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
+                              $('#isReturnExtrade').attr("disabled",true);
+                              $('#ordProduct1').val('');
+                              $('#ordProduct2').val('');
+                              $('#speclInstct').val('');
+
                                  var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
                                  Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>",'');
                           return;
@@ -2408,15 +2415,16 @@
     	  if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
                return true;
            }else{
-                if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-                  return fn_checkPreOrderSalesPerson(0,memCode);
-                }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-                    return fn_checkPreOrderSalesPerson(0,memCode);
-                }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-                    return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
-                }else{
-                return true;
-                }
+        	   fn_checkPreOrderSalesPerson(0,memCode);
+//                 if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+//                   return fn_checkPreOrderSalesPerson(0,memCode);
+//                 }else if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+//                     return fn_checkPreOrderSalesPerson(0,memCode);
+//                 }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+//                     return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+//                 }else{
+//                 return true;
+//                 }
            }
       }
 
@@ -2448,6 +2456,35 @@
         }).mouseout(function() {
             $("#span" + ind).html(maskedVal);
         });*/
+    }
+
+    function fn_checkPromotionExtradeAvail(){
+  	  var appTypeId = $('#appType option:selected').val();
+        var oldOrderNo = $('#relatedNo').val();
+        var promoId = $('#ordPromo1 option:selected').val();
+        var extradeId = $('#exTrade option:selected').val();
+  	  console.log("OLDORDERNO"+oldOrderNo);
+  	  console.log("PROMOID"+promoId);
+
+  	  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
+  		  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
+  				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId}, function(result) {
+  		        if(result == null) {
+  		         	  $('#ordPromo1').val('');
+  		         	  $('#ordPromo2').val('');
+  		         	  $('#relatedNo').val('');
+  		         	  Common.alert("No extrade with promo order found");
+  		        }
+  		        else{
+  		        	if(result.code == "99"){
+  			         	  $('#ordPromo1').val('');
+  			         	  $('#ordPromo2').val('');
+  			         	  //$('#relatedNo').val('');
+  			         	  Common.alert(result.message);
+  		        	}
+  		        }
+  		  });
+  	  }
     }
 </script>
 

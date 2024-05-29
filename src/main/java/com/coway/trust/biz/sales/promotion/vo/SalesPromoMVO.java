@@ -104,6 +104,11 @@ public class SalesPromoMVO implements Serializable {
 
 	private int preBook;
 
+	private int woHs;
+	private int extradeFr;
+	private int extradeTo;
+	private int extradeAppType;
+
 	public int getPromoId() {
 		return promoId;
 	}
@@ -480,6 +485,38 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setCustStatusEnWp6m(int custStatusEnWp6m) {
 		this.custStatusEnWp6m = custStatusEnWp6m;
+	}
+
+	public int getWoHs() {
+		return woHs;
+	}
+
+	public void setWoHs(int woHs) {
+		this.woHs = woHs;
+	}
+
+	public int getExtradeFr() {
+		return extradeFr;
+	}
+
+	public void setExtradeFr(int extradeFr) {
+		this.extradeFr = extradeFr;
+	}
+
+	public int getExtradeTo() {
+		return extradeTo;
+	}
+
+	public void setExtradeTo(int extradeTo) {
+		this.extradeTo = extradeTo;
+	}
+
+	public int getExtradeAppType() {
+		return extradeAppType;
+	}
+
+	public void setExtradeAppType(int extradeAppType) {
+		this.extradeAppType = extradeAppType;
 	}
 
 }

@@ -32,7 +32,7 @@
   </select>
 
   <select id="selectOldOrderId" parameterType="string" resultType="egovMap">
-    SELECT T1.SALES_ORD_ID
+    SELECT T1.SALES_ORD_ID, APP_TYPE_ID
     FROM SAL0001D T1
     WHERE T1.SALES_ORD_NO = #{value}
         AND ROWNUM &lt;= 1
@@ -3605,5 +3605,27 @@ WHERE
      <if test='memCode != null and memCode !=""'>
                AND Z.MEM_CODE = #{memCode}
      </if>
+    </select>
+
+    <select id="rentalExtradeEligibility" parameterType="Map" resultType="egovMap">
+	       WITH period AS (
+	           SELECT (SELECT MAX(RENT_INST_NO) FROM SAL0070D WHERE SALES_ORD_ID = #{salesOrdId}) AS TOTAL_INST_NO,
+	           (SELECT RENT_INST_NO FROM SAL0070D WHERE TO_CHAR(RENT_INST_DT,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') AND SALES_ORD_ID = #{salesOrdId}) AS CURR_INST_NO
+	           FROM DUAL
+	       ), AMOUNT AS(
+	           SELECT A.EXTRADE_FR , A.EXTRADE_TO
+	           FROM SAL0017D A
+	           WHERE A.PROMO_ID = #{promoId} AND A.EX_TRADE = 1
+	       )
+	       SELECT
+	       CASE WHEN CURR_INST_NO BETWEEN TOTAL_INST_NO + EXTRADE_FR AND TOTAL_INST_NO + EXTRADE_TO THEN 'Y'
+	       ELSE 'N' END RESULT
+	       FROM period, AMOUNT
+    </select>
+    <select id="getPromotionInfoExtradeAppType" parameterType="Map" resultType="egovMap">
+	       SELECT A.*, B.CODE_ID,B.CODE,B.CODE_NAME FROM SAL0017D A
+	       LEFT JOIN SYS0013M B
+	       ON A.EXTRADE_APP_TYPE = B.CODE_ID
+	       WHERE A.PROMO_ID = #{promoId}
     </select>
 </mapper>

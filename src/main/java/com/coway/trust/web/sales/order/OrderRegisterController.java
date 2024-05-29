@@ -897,4 +897,11 @@ public class OrderRegisterController {
 
     return ResponseEntity.ok(result);
   }
+
+  @RequestMapping(value = "/checkExtradeWithPromoOrder.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> checkExtradeWithPromoOrder(@RequestParam Map<String, Object> params) {
+
+	    ReturnMessage result = orderRegisterService.checkExtradeWithPromoOrder(params);
+	    return ResponseEntity.ok(result);
+  }
 }

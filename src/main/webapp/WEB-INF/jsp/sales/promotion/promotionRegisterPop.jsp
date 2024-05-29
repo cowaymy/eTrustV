@@ -26,10 +26,28 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '','eSales','S');
         doDefCombo(stkSizeData, '' ,'stkSize', 'S', '');
         doGetCombo('/common/selectCodeList.do', '568',  '', 'promoSpecialDisId',       'S'); //Discount on billing
+        doGetCombo('/common/selectCodeList.do', '581', '', 'extradeAppType', 'S'); //Extrade App Type
 
         $("#chgRemark").keyup(function(){
             $("#characterCount").text($(this).val().length + " of 100 max characters");
-      });
+      	});
+
+        $('.extradeMonth').attr("hidden", true);
+
+        $('#promoAppTypeId').change(function(){
+        	if($('#promoAppTypeId').val() == "2284"){
+                $('.extradeMonth').removeAttr("hidden");
+                $('#extradeMonthFrom').val('0');
+                $('#extradeMonthTo').val('0');
+                $('#extradeAppType').val('0');
+        	}
+        	else{
+                $('.extradeMonth').attr("hidden", true);
+                $('#extradeMonthFrom').val('0');
+                $('#extradeMonthTo').val('0');
+                $('#extradeAppType').val('0');
+        	}
+        });
     });
 
     function fn_addOption() {
@@ -158,7 +176,11 @@
                 custStatusEn : vCustStatusEn,
                 custStatusEnWoutWp : vCustStatusEnWoutWp,
                 custStatusEnWp6m : vCustStatusEnWp6m,
-                promoDiscOnBill : $('#promoSpecialDisId').val()
+                promoDiscOnBill : $('#promoSpecialDisId').val(),
+                extradeFr: $('#extradeMonthFrom').val(),
+                extradeTo: $('#extradeMonthTo').val(),
+                woHs: $('input:radio[name="woHs"]:checked').val(),
+                extradeAppType: $('#extradeAppType').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -405,6 +427,17 @@
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
+        	if($('#exTrade').val() == "1"){
+                $('#extradeMonthFrom').prop("disabled", false);
+                $('#extradeMonthTo').prop("disabled", false);
+                $('#extradeAppType').prop("disabled", false);
+        	}
+        	else{
+                $('#extradeMonthFrom').val('0').prop("disabled", true);
+                $('#extradeMonthTo').val('0').prop("disabled", true);
+                $('#extradeAppType').val('0').prop("disabled", true);
+        	}
+
             fn_calcDiscountPrice();
             fn_calcDiscountRPF();
             fn_calcDiscountPV();
@@ -496,6 +529,36 @@
             msg += "<spring:message code='sales.promo.msg20'/><br />";
         }
 
+        if(!$('#extradeAppType').is(":disabled") && FormUtil.isEmpty($('#extradeAppType').val())) {
+            isValid = false;
+            msg += "Extrade App Type must be selected";
+        }
+
+        if($('#exTrade').val() == '1') {
+            if(FormUtil.isEmpty($('#extradeMonthFrom').val()) || FormUtil.isEmpty($('#extradeMonthTo').val())){
+            	isValid = false;
+                msg += "Please enter extrade month. If there is no end month for extrade. Please set it to 999<br />";
+            }
+            else{
+            	var extradeMonthFrom = $('#extradeMonthFrom').val();
+    			var extradeMonthTo = $('#extradeMonthTo').val();
+
+    			var mFrom = extradeMonthFrom.replace("-","");
+    			var mTo = extradeMonthTo.replace("-","");
+
+            	if(FormUtil.onlyNumCheck(mFrom) && FormUtil.onlyNumCheck(mTo)){
+//             		if(mFrom >= mTo){
+//                     	isValid = false;
+//                         msg += "Extrade Month To must be larger or equal value than From<br />";
+//             		}
+            	}
+            	else{
+                	isValid = false;
+                    msg += "Extrade Month are in number format only<br />";
+            	}
+            }
+        }
+
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
@@ -569,9 +632,18 @@
         //Promo Application = Rental / Outright / Outright Plus
         if(promoAppVal == '2284'|| promoAppVal == '2285'|| promoAppVal == '2287') {
             $('#exTrade').removeAttr("disabled");
+
+            if($('#exTrade').val() == "1"){
+                $('#extradeMonthFrom').removeAttr("disabled");
+                $('#extradeMonthTo').removeAttr("disabled");
+                $('#extradeAppType').removeAttr("disabled");
+        	}
         }
         else {
             $('#exTrade').val('0').prop("disabled", true);
+            $('#extradeMonthFrom').val('0').prop("disabled", true);
+            $('#extradeMonthTo').val('0').prop("disabled", true);
+            $('#extradeAppType').val('').prop("disabled", true);
         }
 
         //Promo Application = Expired Filter(Outright SVM/Rental SVM)
@@ -819,9 +891,25 @@
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>
+    <th scope="row"><span class="extradeMonth">Ex-trade Month</span></th>
+	<td colspan="2">
+		<div class="extradeMonth" >
+			<div style="display: flex;">
+			    <p><input style="width: 50px" id="extradeMonthFrom" name="extradeMonthFrom" type="number" value="0" title="Extrade Month From" disabled/></p>
+			    <span style="padding: 5px;">To</span>
+			    <p><input style="width: 50px" id="extradeMonthTo" name="extradeMonthTo" type="number" value="0" title="Extrade Month To" disabled/></p>
+			</div>
+		</div>
+	</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
+    <th scope="row" class="extradeMonth">Ex-trade App Type<span class="must">*</span></th>
+    <td class="extradeMonth">
+    	<select id="extradeAppType" name="extradeAppType" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
@@ -917,6 +1005,13 @@
     <th scope="row">Mattress Size</th>
     <td>
         <select id="stkSize" name="stkSize" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+	<th scope="row">Without HS/CS</th>
+    <td>
+        <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
+        <input id="woHsN" name="woHs" type="radio" value="0" checked/><span>No</span>
     </td>
 </tr>
 <tr>

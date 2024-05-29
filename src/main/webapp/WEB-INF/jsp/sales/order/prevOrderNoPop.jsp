@@ -8,6 +8,7 @@
     var busType;
 
     $(document).ready(function(){
+    	console.log('prevOrderNoPop.jsp');
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
@@ -108,6 +109,7 @@
 
     function fn_setData(salesOrdNo) {
         $('#relatedNo').val(salesOrdNo);
+        fn_checkPromotionExtradeAvail();
     }
 
     function createAUIGrid() {
@@ -164,11 +166,8 @@
         //console.log('btnHidden_Valid_Click CALL START');
         //console.log('isInValid :'+isInValid);
 
-
         $('#txtBusType').val(busType);
         if(isInValid == 'InValid') {
-
-
                 fn_setData(salesOrdNo)
                 $('#txtOldOrderID').val(salesOrdId);
                 $('#btnPrevOrderNo').click();

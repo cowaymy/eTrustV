@@ -640,6 +640,10 @@
                   console.log("blockDtTo : " + blockDtTo);
 
                   if (todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
+                      $('#isReturnExtrade').attr("disabled",true);
+                      $('#ordProudct').val('');
+                      $('#speclInstct').val('');
+
                     var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
                     Common.alert(
                         '<spring:message code="sal.alert.msg.actionRestriction" />'
@@ -762,6 +766,8 @@
       } else {
         fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
       }
+
+      fn_checkPromotionExtradeAvail();
     });
     $('#salesmanCd').change(function(event) {
       var memCd = $('#salesmanCd').val().trim();
@@ -2056,24 +2062,25 @@
     if (memCode == "100116" || memCode == "100224" || memCode == "ASPLKW") {
       return true;
     } else {
-      if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'
-          && $('#relatedNo').val() == ''
-          && $('#hiddenMonthExpired').val() != '1') {
-        return fn_checkPreOrderSalesPerson(0, memCode);
-      } else if ($('#exTrade').val() == '1'
-          && $("#hiddenTypeId").val() == '964'
-          && $('#relatedNo').val() != ''
-          && $('#hiddenMonthExpired').val() != '1') {
-        return fn_checkPreOrderSalesPerson(0, memCode);
-      } else if ($('#exTrade').val() == '1'
-          && $("#hiddenTypeId").val() == '964'
-          && $('#relatedNo').val() != ''
-          && $('#hiddenMonthExpired').val() == '1') {
-        return fn_checkPreOrderConfigurationPerson(0, memCode,
-            salesOrdId, salesOrdNo);
-      } else {
-        return true;
-      }
+    	return fn_checkPreOrderSalesPerson(0, memCode);
+//       if ($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964'
+//           && $('#relatedNo').val() == ''
+//           && $('#hiddenMonthExpired').val() != '1') {
+//         return fn_checkPreOrderSalesPerson(0, memCode);
+//       } else if ($('#exTrade').val() == '1'
+//           && $("#hiddenTypeId").val() == '964'
+//           && $('#relatedNo').val() != ''
+//           && $('#hiddenMonthExpired').val() != '1') {
+//         return fn_checkPreOrderSalesPerson(0, memCode);
+//       } else if ($('#exTrade').val() == '1'
+//           && $("#hiddenTypeId").val() == '964'
+//           && $('#relatedNo').val() != ''
+//           && $('#hiddenMonthExpired').val() == '1') {
+//         return fn_checkPreOrderConfigurationPerson(0, memCode,
+//             salesOrdId, salesOrdNo);
+//       } else {
+//         return true;
+//       }
     }
   }
 
@@ -2118,10 +2125,12 @@
         });
   }
 
+  /*Load Promotion*/
   //LoadProductPromotion
   function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal,
       exTrade) {
     var isSrvPac = null;
+    var extradeOrder = $('#relatedNo').val();
     $('#ordPromo').removeAttr("disabled");
 
     if (appTypeVal == "66")
@@ -2969,6 +2978,33 @@
       }).mouseout(function() {
           $("#span" + ind).html(maskedVal);
       });*/
+  }
+
+  function fn_checkPromotionExtradeAvail(){
+	  var appTypeId = $('#appType option:selected').val();
+      var oldOrderNo = $('#relatedNo').val();
+      var promoId = $('#ordPromo option:selected').val();
+      var extradeId = $('#exTrade option:selected').val();
+	  console.log("OLDORDERNO"+oldOrderNo);
+	  console.log("PROMOID"+promoId);
+
+	  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
+		  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
+				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId}, function(result) {
+		        if(result == null) {
+		         	  $('#ordPromo').val('');
+		         	  $('#relatedNo').val('');
+		         	  Common.alert("No extrade with promo order found");
+		        }
+		        else{
+		        	if(result.code == "99"){
+			         	  $('#ordPromo').val('');
+			         	  //$('#relatedNo').val('');
+			         	  Common.alert(result.message);
+		        	}
+		        }
+		  });
+	  }
   }
 </script>
 

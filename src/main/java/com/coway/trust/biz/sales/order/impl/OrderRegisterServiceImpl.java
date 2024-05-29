@@ -59,6 +59,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
@@ -374,50 +375,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             ROOT_STATE = "ROOT_3";
           } else {
             monthExpired = GetExpDate.get("monthExpired").toString();
-
-            /*
-            // 2021-03-02 - LaiKW - Amended for expiry date checking
-            Calendar calNow = Calendar.getInstance();
-
-            int nowYear = calNow.YEAR;
-            int nowMonth = calNow.MONTH + 1;
-            int nowDate = calNow.DATE;
-
-            logger.info("!@#### nowYear :" + nowYear);
-            logger.info("!@#### nowMonth:" + nowMonth);
-            logger.info("!@#### nowDate :" + nowDate);
-
-            Date srvPrdExprDt = (Date) GetExpDate.get("srvPrdExprDt");
-
-            Calendar calExt = Calendar.getInstance();
-
-            calExt.setTime(srvPrdExprDt);
-
-            int expYear = calExt.YEAR;
-            int expMonth = calExt.MONTH + 1;
-
-            calExt.add(Calendar.MONTH, -4);
-
             msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
 
-            if (expYear <= nowYear || (expYear == nowYear && (expMonth - 4) <= nowMonth)
-                || (calExt.compareTo(calNow) <= 0)) {
-              logger.debug("@####:not InValid");
-            } else {
-              logger.debug("@####:InValid");
-
-              isInValid = "InValid";
-            }
-            */
-
-            msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
-
-            if(!"Y".equals(GetExpDate.get("extradeAllowFlg").toString())) {
-            	//svm expired within one month, just able to do extrade, else block.
-                logger.debug("@####:InValid");
-                isInValid = "InValid";
-                ROOT_STATE = "ROOT_3";
-            } else {
+//            if(!"Y".equals(GetExpDate.get("extradeAllowFlg").toString())) {
+//            	//svm expired within one month, just able to do extrade, else block.
+//                logger.debug("@####:InValid");
+//                isInValid = "InValid";
+//                ROOT_STATE = "ROOT_3";
+//            } else {
                 logger.debug("@####:not InValid");
 
                 EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
@@ -448,10 +413,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                       isInValid = "InValid";
                     }
 
-                    EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
+//                    EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
 
-                    EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
-                    int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
+//                    EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
+//                    int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
 
                 	//** Start exTrade Neo to Neo Plus **//
 //                    if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
@@ -474,10 +439,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 //                    }
                 	//** End exTrade Neo to Neo Plus **//
 
-                    EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
-                    int rentalPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
+//                    EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
+//                    int rentalPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
 
-                    int allowToExTrade = rentalPeriod - exTrade_mth;
+//                    int allowToExTrade = rentalPeriod - exTrade_mth;
 
                     /*if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
                     	   msg = msg + " -Not allow early ex-trade before end of contract. <br/>";
@@ -527,7 +492,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                       + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
 
                 }
-            }
+            //}
           }
         }
       } else {
@@ -1970,6 +1935,19 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		orderRegisterMapper.insertSalesSpecialPromotion(map1);
 
     	}
+    	else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 04){
+    		EgovMap map1 = new EgovMap();
+    		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
+    		map1.put("fromPeriod",1);
+    		map1.put("toPeriod",6);
+    		map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+    		map1.put("percentage",50);
+    		BigDecimal CNamt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
+    		map1.put("cnAmt",CNamt);
+    		map1.put("status",1);
+    		map1.put("userId",sessionVO.getUserId());
+    		orderRegisterMapper.insertSalesSpecialPromotion(map1);
+    	}
     	//SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING (PRE-BOOK EXTRADE)
 //    	else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo != null){
 //    		int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));
@@ -2590,5 +2568,89 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	    EgovMap orderExpiryMonth = orderRegisterMapper.selectSvcExpire(getOldOrderID);
 
 	    return orderExpiryMonth;
+  }
+
+  @Override
+  public ReturnMessage checkExtradeWithPromoOrder(Map<String, Object> params){
+	ReturnMessage result = new ReturnMessage();
+	int getOldOrderID = 0;
+
+	EgovMap ordInfo = orderRegisterMapper.selectOldOrderId((String) params.get("oldOrderNo"));
+	if (ordInfo != null) {
+		getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
+		params.put("oldOrdId", getOldOrderID);
+	}
+	else{
+		result.setCode("99");
+		result.setMessage("No Order found for " + params.get("oldOrderNo").toString());
+		return result;
+	}
+
+	EgovMap getExpDate = orderRegisterMapper.selectSvcExpire(getOldOrderID);
+	if (getExpDate == null) {
+		result.setCode("99");
+		result.setMessage("No SVM found for order no. " + params.get("oldOrderNo").toString());
+		return result;
+	}
+
+	if(params.get("appTypeId").equals("66") && params.get("extradeId").equals("1")){ //RENTAL APPTYPE WITH EXTRADE ONLY
+		//promoId
+		//oldOrderNo
+		//oldOrdId
+		//extradeId
+		EgovMap promoInfo = orderRegisterMapper.getPromotionInfoExtradeAppType(params);
+		if(promoInfo != null){
+			String promoExtradeAppTypeCode = CommonUtils.nvl(promoInfo.get("code"));
+			if(promoExtradeAppTypeCode == ""){
+				result.setCode("99");
+				result.setMessage("Promotion Extrade App Type is not set. Please contact relavent department");
+				return result;
+			}
+			if(promoExtradeAppTypeCode.equals("1") && !ordInfo.get("appTypeId").toString().equals("66")){
+				result.setCode("99");
+				result.setMessage("Promotion selected is only for extrade rental order");
+				return result;
+			}
+
+			if(promoExtradeAppTypeCode.equals("2") && ordInfo.get("appTypeId").toString().equals("66")){
+				result.setCode("99");
+				result.setMessage("Promotion selected is only for extrade non-rental order");
+				return result;
+			}
+		}
+
+
+		if(ordInfo.get("appTypeId").toString().equals("66")){ //Old order must be rental && promotion extradeAppType = Rental(1)
+			EgovMap eligibleResult = orderRegisterMapper.rentalExtradeEligibility(params);
+
+			if(eligibleResult != null && eligibleResult.get("result").toString().equals("Y")){
+				result.setCode("1");
+				result.setMessage("Extrade can be proceed");
+			}
+			else{
+				result.setCode("99");
+				result.setMessage("Order is not eligible for current promotion selected");
+				return result;
+			}
+		}
+		else{
+			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+				//svm expired within one month, just able to do extrade, else block.
+
+				result.setCode("99");
+				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+				return result;
+			}
+		}
+	}else{
+		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+			//svm expired within one month, just able to do extrade, else block.
+
+			result.setCode("99");
+			result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+			return result;
+		}
+	}
+	return result;
   }
 }

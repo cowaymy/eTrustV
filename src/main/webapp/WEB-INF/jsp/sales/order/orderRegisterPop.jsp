@@ -1040,7 +1040,6 @@
                //** Start exTrade Neo to Neo Plus **//
                //   $('#relatedNo').val('');
                //** End exTrade Neo to Neo Plus **//
-
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
                 $('#ordProudct').val('');
@@ -1173,11 +1172,11 @@
                     var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
                     var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
 
-                    console.log("todayDD: " + todayDD);
-                    console.log("blockDtFrom : " + blockDtFrom);
-                    console.log("blockDtTo : " + blockDtTo);
-
                      if(todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
+                         $('#isReturnExtrade').attr("disabled",true);
+                         $('#ordProudct').val('');
+                         $('#speclInstct').val('');
+
                          var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                          return;
@@ -1303,6 +1302,8 @@
             else {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
             }
+
+            fn_checkPromotionExtradeAvail();
         });
 
         if (convToOrdYn != 'Y'
@@ -2383,13 +2384,14 @@
                     if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
                         return;
                     }else{
-                          if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-                               fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
-                         }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-                               fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
-                         }else if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-                               fn_checkOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
-                         }
+                    	fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+//                           if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+//                                fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+//                          }else if ($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
+//                                fn_checkOrderSalesPerson(0,$('#salesmanCd').val());
+//                          }else if($('#exTrade').val() == '1' && $('#typeId').val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
+//                                fn_checkOrderConfigurationPerson(0,$('#salesmanCd').val(),$('#txtOldOrderID').val(),$('#relatedNo').val());
+//                          }
                     }
                }
          });
@@ -2911,6 +2913,33 @@
       $('#ordProudct').val('');
    	  $('#ordPromo').val('');
    	  $('#ordPromo option').remove();
+  }
+
+  function fn_checkPromotionExtradeAvail(){
+	  var appTypeId = $('#appType option:selected').val();
+      var oldOrderNo = $('#relatedNo').val();
+      var promoId = $('#ordPromo option:selected').val();
+      var extradeId = $('#exTrade option:selected').val();
+	  console.log("OLDORDERNO"+oldOrderNo);
+	  console.log("PROMOID"+promoId);
+
+	  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
+		  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
+				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId}, function(result) {
+		        if(result == null) {
+		         	  $('#ordPromo').val('');
+		         	  $('#relatedNo').val('');
+		         	  Common.alert("No extrade with promo order found");
+		        }
+		        else{
+		        	if(result.code == "99"){
+			         	  $('#ordPromo').val('');
+			         	  //$('#relatedNo').val('');
+			         	  Common.alert(result.message);
+		        	}
+		        }
+		  });
+	  }
   }
 </script>
 

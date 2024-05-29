@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -103,4 +104,6 @@ public interface OrderRegisterService {
   EgovMap checkPreBookConfigurationPerson(Map<String, Object> params);
 
   EgovMap checkOldOrderServiceExpiryMonth(Map<String, Object> params);
+
+  ReturnMessage checkExtradeWithPromoOrder(Map<String, Object> params);
 }

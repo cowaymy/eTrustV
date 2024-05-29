@@ -432,6 +432,9 @@
                       $("#promoCustType").val(promoInfo.promoCustType);
                       $("#actionTab").val(promoInfo.actionTab);
                       $("#chgRemark").val(promoInfo.chgRemark);
+                      $("#extradeMonthFrom").val(promoInfo.extradeFr);
+                      $("#extradeMonthTo").val(promoInfo.extradeTo);
+                      $("#extradeAppType").val(promoInfo.extradeAppType);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#custStatusNew').prop("checked", true);
@@ -471,6 +474,7 @@
                     //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
                       doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'promoSrvMemPacId', 'S'); //Common Code
                       doGetCombo('/common/selectCodeList.do', '568',  promoInfo.promoDiscOnBill, 'promoSpecialDisId',       'S'); //Discount on billing
+                     doGetCombo('/common/selectCodeList.do', '581', promoInfo.extradeAppType, 'extradeAppType', 'S'); //Extrade App Type
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
 
@@ -500,6 +504,13 @@
                       }
                       else {
                           $('#voucherPromotionN').prop("checked", true);
+                      }
+
+                      if(promoInfo.woHs == '1'){
+                          $('#woHsY').prop("checked", true);
+                      }
+                      else{
+                          $('#woHsN').prop("checked", true);
                       }
 
                       $('#modifyForm').find(':input').prop("disabled", true);
@@ -540,6 +551,9 @@
                       $("#v_appvRemark").val(promoInfo.appvRemark);
                       $("#v_appvStatus").val(promoInfo.appvStatus);
                       $("#v_chgRemark").val(promoInfo.chgRemark);
+                      $("#v_extradeMonthFrom").val(promoInfo.extradeFr);
+                      $("#v_extradeMonthTo").val(promoInfo.extradeTo);
+                      $("#v_extradeAppType").val(promoInfo.extradeAppType);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#v_custStatusNew').prop("checked", true);
@@ -579,6 +593,7 @@
                       doGetCombo('/common/selectCodeList.do', '568',  promoInfo.promoDiscOnBill, 'v_promoSpecialDisId',       'S'); //Discount on billing
                     //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
                       doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : promoInfo.promoAppTypeId}, promoInfo.promoSrvMemPacId, 'v_promoSrvMemPacId', 'S'); //Common Code
+                      doGetCombo('/common/selectCodeList.do', '581', promoInfo.extradeAppType, 'v_extradeAppType', 'S'); //Extrade App Type
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'v_stkSize', 'S', '');
 
@@ -610,6 +625,13 @@
                           $('#v_voucherPromotionN').prop("checked", true);
                       }
 
+                      if(promoInfo.woHs == '1'){
+                          $('#v_woHsY').prop("checked", true);
+                      }
+                      else{
+                          $('#v_woHsN').prop("checked", true);
+                      }
+
                       $('#viewForm').find(':input').prop("disabled", true);
                       $('#v_editForm').find(':input').prop("disabled", true);
 
@@ -625,9 +647,6 @@
                       fn_selectPromotionPrdHistListAjax(promoId);
 
                   }
-
-
-
                 });
               }
 
@@ -1128,7 +1147,10 @@
                   custStatusEn : vCustStatusEn,
                   custStatusEnWoutWp : vCustStatusEnWoutWp,
                   custStatusEnWp6m : vCustStatusEnWp6m,
-                  promoDiscOnBill : $('#promoSpecialDisId').val()
+                  promoDiscOnBill : $('#promoSpecialDisId').val(),
+                  extradeFr: $('#extradeMonthFrom').val(),
+                  extradeTo: $('#extradeMonthTo').val(),
+                  extradeAppType: $('#extradeAppType').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1238,7 +1260,11 @@
               custStatusEn : vCustStatusEn,
               custStatusEnWoutWp : vCustStatusEnWoutWp,
               custStatusEnWp6m : vCustStatusEnWp6m,
-              promoDiscOnBill : $('#promoSpecialDisId').val()
+              promoDiscOnBill : $('#promoSpecialDisId').val(),
+              extradeFr: $('#extradeMonthFrom').val(),
+              extradeTo: $('#extradeMonthTo').val(),
+              woHs: $('input:radio[name="woHs"]:checked').val(),
+              extradeAppType: $('#extradeAppType').val()
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1484,9 +1510,23 @@
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>
+    <th>Ex-trade Month</th>
+	<td colspan="2">
+		<div style="display: flex;">
+		    <p><input style="width: 50px" id="extradeMonthFrom" name="extradeMonthFrom" type="number" title="Extrade Month From" value="${promoInfo.extradeFr}"/></p>
+		    <span style="padding: 5px;">To</span>
+		    <p><input style="width: 50px" id="extradeMonthTo" name="extradeMonthTo" type="number"" title="Extrade Month To" value="${promoInfo.extradeTo}"/></p>
+		</div>
+	</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
+    <th scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <td>
+    	<select id="extradeAppType" name="extradeAppType" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
@@ -1577,6 +1617,13 @@
     <th scope="row">Mattress Size</th>
     <td>
         <select id="stkSize" name="stkSize" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+	<th scope="row">Without HS/CS</th>
+    <td>
+        <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
+        <input id="woHsN" name="woHs" type="radio" value="0"/><span>No</span>
     </td>
 </tr>
 <tr>
@@ -1743,9 +1790,23 @@
     <td>
     <select id="v_exTrade" name="v_exTrade" class="w100p" disabled></select>
     </td>
+    <th>Ex-trade Month</th>
+	<td colspan="2">
+		<div style="display: flex;">
+		    <p><input style="width: 50px" id="v_extradeMonthFrom" name="v_extradeMonthFrom" type="number" title="Extrade Month From" value="${promoInfo.extradeFr}"/></p>
+		    <span style="padding: 5px;">To</span>
+		    <p><input style="width: 50px" id="v_extradeMonthTo" name="v_extradeMonthTo" type="number"" title="Extrade Month To" value="${promoInfo.extradeTo}"/></p>
+		</div>
+	</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="v_empChk" name="v_empChk" class="w100p" disabled></select>
+    </td>
+    <th scope="row">Ex-trade App Type<span class="must">*</span></th>
+    <td>
+    	<select id="v_extradeAppType" name="v_extradeAppType" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
@@ -1836,6 +1897,13 @@
     <th scope="row">Mattress Size</th>
     <td>
         <select id="v_stkSize" name="v_stkSize" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+	<th scope="row">Without HS/CS</th>
+    <td>
+        <input id="v_woHsY" name="v_woHs" type="radio" value="1" /><span>Yes</span>
+        <input id="v_woHsN" name="v_woHs" type="radio" value="0"/><span>No</span>
     </td>
 </tr>
 <tr>
