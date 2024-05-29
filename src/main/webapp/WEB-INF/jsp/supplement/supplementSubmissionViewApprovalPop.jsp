@@ -61,14 +61,17 @@
 					 $('#scSubmissionApproval').show();
 					 $('#btnSaveApproval').show();
 					 $('#btnSaveCancel').hide();
+					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionApproval" />');
 				 }else if(modValue == "cancel"){
 					 $('#scSubmissionApproval').hide();
 					 $('#btnSaveApproval').hide();
 					 $('#btnSaveCancel').show();
+					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionCancel" />');
 				 }else{
 					 $('#scSubmissionApproval').hide();
 					 $('#btnSaveApproval').hide();
 					 $('#btnSaveCancel').hide();
+					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionView" />');
 				 }
 
 
@@ -759,7 +762,7 @@
     <!-- popup_wrap start -->
   <header class="pop_header">
     <!-- pop_header start -->
-    <h1><spring:message code="supplement.text.submissionApproval" /></h1>
+    <h1 id="supSubmHeader"></h1>
     <ul class="right_opt">
       <li>
         <p class="btn_blue2">
@@ -1231,7 +1234,7 @@
               <tr>
                   <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
                   <td>
-                    <input id="salesmanCd" name="salesmanCd" type="text" style="width: 230px;" title="" placeholder="" class="" />
+                    <input id="salesmanCd" name="salesmanCd" type="text" style="width: 230px;" title="" placeholder="" class="" disabled="disabled"/>
                     <a id="memBtn" href="#" class="search_btn">
                       <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                     </a>
