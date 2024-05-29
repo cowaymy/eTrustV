@@ -64,6 +64,7 @@ $(document).ready(function(){
              $("#deptCode").attr("readonly", "readonly");
 
              $("#_memCode").val("${SESSION_INFO.userName}");
+             $("#_memName").val("${SESSION_INFO.userFullname}");
              $("#_memCode").attr("class", "w100p readonly");
              $("#_memCode").attr("readonly", "readonly");
              $("#_memBtn").hide();
