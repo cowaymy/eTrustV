@@ -1084,7 +1084,7 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code="sal.text.nricCompanyNo"/></th>
+            <th scope="row"><spring:message code="sal.text.nricCompanyNo"/><span class="must">**</span></th>
             <td colspan="3">
               <input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" '/>
                <table id="pNric" style="display:none">
@@ -1095,7 +1095,7 @@
              </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.eSOFno" /></th>
+            <th scope="row"><spring:message code="supplement.text.eSOFno" /><span class="must">**</span></th>
             <td colspan="3">
               <input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" '/>
               <table id="pSofNo" style="display:none">
