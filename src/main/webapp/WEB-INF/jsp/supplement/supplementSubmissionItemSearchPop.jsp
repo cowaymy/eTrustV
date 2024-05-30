@@ -48,8 +48,8 @@ $(document).ready(function() {
         for (var idx = 0; idx < basketCodeArray.length; idx++) {
             for (var i = 0; i < values.length; i++) {
 
-                console.log("basketCodeArray[idx] : " + basketCodeArray[idx]);
-                console.log("values[i] : " + values[i]);
+                //console.log("basketCodeArray[idx] : " + basketCodeArray[idx]);
+                //console.log("values[i] : " + values[i]);
 
                 if(basketCodeArray[idx] == values[i]){
                     msg += $("#_purcItems").find("option[value='"+values[i]+"']").text();
