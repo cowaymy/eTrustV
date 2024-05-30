@@ -143,14 +143,20 @@ function createSupplementItmGrid(){
                                 {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false},
                                 {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '60%' , editable : false},
                                 {dataField : "supSubmItmQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%' , editable : false},
-                                {dataField : "supSubmItmUntprc", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false},
-                                {dataField : "supSubmTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                {dataField : "supSubmItmUntprc", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false },
+                                {dataField : "supSubmTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric"
+                                	, formatString : "#,##0.00" , editable : false ,
+                                	expFunction : function(rowIndex, columnIndex, item, dataField) {
+                        				var calObj = fn_calculateAmt(item.supSubmItmUntprc, item.supSubmItmQty);
+                        				return Number(calObj.subTotal);
+                                	}
+                                },
                                	{dataField : "supSubmItmId", visible : false},
                                	{dataField : "supSubmId", visible : false}
                            ];
      //그리드 속성 설정
     var itmGridPros = {
-
+    		showFooter 			: true,
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
             fixedColumnCount    : 1,
@@ -165,6 +171,19 @@ function createSupplementItmGrid(){
     };
 
     supplementItmGridID = GridCommon.createAUIGrid("#supplement_itm_grid_wrap", supplementItmColumnLayout,'', itmGridPros);  // address list
+    AUIGrid.resize(supplementItmGridID, 960, 300);
+    var footerLayout = [ {
+		labelText : "Total",
+		positionField : "#base"
+	}, {
+		dataField : "supSubmTotAmt",
+		positionField : "supSubmTotAmt",
+		operation : "SUM",
+		formatString : "#,##0.00",
+		style : "aui-grid-my-footer-sum-total2"
+	} ];
+
+    AUIGrid.setFooter(supplementItmGridID, footerLayout);
 }
 
 function createExcelAUIGrid() {
@@ -426,6 +445,28 @@ function fn_multiCombo(){
         width: '100%'
     });
     //$('#submissionStatusId').multipleSelect("checkAll");
+
+}
+
+function fn_calculateAmt(amt, qty) {
+
+	var subTotal = 0;
+	var subChanges = 0;
+	var taxes = 0;
+
+	subTotal = amt * qty;
+	subChanges = (subTotal * 100) / 100;
+	subChanges = subChanges.toFixed(2); //소수점2반올림
+	taxes = subTotal - subChanges;
+	taxes = taxes.toFixed(2);
+
+	var retObj = {
+		subTotal : subTotal,
+		subChanges : subChanges,
+		taxes : taxes
+	};
+
+	return retObj;
 
 }
 
