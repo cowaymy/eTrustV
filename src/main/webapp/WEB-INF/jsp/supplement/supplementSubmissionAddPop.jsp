@@ -144,6 +144,10 @@
 
 			if (FormUtil.isNotEmpty(memCd)) {
 				fn_loadOrderSalesman(0, memCd);
+			}else{
+				$('#salesmanNm').val('');
+				$('#salesmanBrnch').text('');
+				$('#hidSalesmanBrnchId').val('');
 			}
 
 		});
@@ -153,6 +157,10 @@
 
 				if (FormUtil.isNotEmpty(memCd)) {
 					fn_loadOrderSalesman(0, memCd);
+				}else{
+					$('#salesmanNm').val('');
+					$('#salesmanBrnch').text('');
+					$('#hidSalesmanBrnchId').val('');
 				}
 				return false;
 			}
@@ -470,7 +478,7 @@
 			Common
 					.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
 							+ DEFAULT_DELIMITER
-							+ "<b>* this Supplement Submission has posted, no amendment allow</b>");
+							+ "<b>* The entered eSOF no. ("+ $('#sofNo').val().trim() + ") already exists in Active or Approved status. Submission creation is not allowed.</b>");
 
 		return isExist;
 	}
