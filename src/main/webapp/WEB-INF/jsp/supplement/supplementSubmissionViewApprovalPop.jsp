@@ -56,7 +56,7 @@
 				fn_loadSupplementSubmissionItem(supSubmId);
 
 				 doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 34, parmDisab : 0}, '', 'subApprovalStatus', 'S', '');
-				 console.log("modValue : " + modValue);
+				 //console.log("modValue : " + modValue);
 				 if(modValue == "approval"){
 					 $('#scSubmissionApproval').show();
 					 $('#btnSaveApproval').show();
@@ -455,7 +455,7 @@
 			myFileCaches[cacheIndex].file['checkFileValid'] = true;
 		}
 
-		console.log(myFileCaches);
+		//console.log(myFileCaches);
 	}
 
 	function fn_removeFile(name) {
@@ -670,15 +670,15 @@
                 atchFileId : fileId
         };
         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-            console.log(result)
+            //console.log(result)
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
 
             if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                //console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                 window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
             } else {
-                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                //console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
             }
         });
@@ -686,7 +686,7 @@
 
     function fn_loadAtchment(atchFileGrpId) {
         Common.ajax("Get", "/supplement/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
-            console.log(result);
+            //console.log(result);
            if(result) {
                 if(result.length > 0) {
                     $("#attachTd").html("");
