@@ -271,7 +271,7 @@
 					Common
 							.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
 									+ DEFAULT_DELIMITER
-									+ "<b>* Member must 18 years old and above.</b>");
+									+ "<b>* Customer must 18 years old and above.</b>");
 					$('#scSupplementSubmissionArea').addClass("blind");
 					return false;
 				}
@@ -326,7 +326,7 @@
 																Common
 																		.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
 																				+ DEFAULT_DELIMITER
-																				+ "<b>* b Member must 18 years old and above.</b>");
+																				+ "<b>* Customer must 18 years old and above.</b>");
 																$(
 																		'#scSupplementSubmissionArea')
 																		.addClass(
@@ -1086,7 +1086,7 @@
           <tr>
             <th scope="row"><spring:message code="sal.text.nricCompanyNo"/><span class="must">**</span></th>
             <td colspan="3">
-              <input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" '/>
+              <input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value=""/>
                <table id="pNric" style="display:none">
                  <tr>
                    <td><span id="span_NRIC"></span></td>
@@ -1097,7 +1097,7 @@
           <tr>
             <th scope="row"><spring:message code="supplement.text.eSOFno" /><span class="must">**</span></th>
             <td colspan="3">
-              <input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" '/>
+              <input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" maxlength="20"/>
               <table id="pSofNo" style="display:none">
                  <tr>
                    <td><span id="span_SOFNO"></span></td>
