@@ -3,6 +3,7 @@
 <script type="text/javascript">
 var supplementGridID;
 var supplementItmGridID;
+var excelListGridID;
 var supplementCategoryId  = "33";
 
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
@@ -12,6 +13,7 @@ var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
 $(document).ready(function(){
 	createAUIGrid();
     createSupplementItmGrid();
+    createExcelAUIGrid();
 
     doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '' , 'submissionBrnchId', 'M', 'fn_multiComboBranch'); //Branch Code
     doGetComboDataStatus('/status/selectStatusCategoryCdList.do', {selCategoryId : supplementCategoryId, parmDisab : 0}, '', 'submissionStatusId', 'M', 'fn_multiCombo'); // Status
@@ -165,6 +167,38 @@ function createSupplementItmGrid(){
     supplementItmGridID = GridCommon.createAUIGrid("#supplement_itm_grid_wrap", supplementItmColumnLayout,'', itmGridPros);  // address list
 }
 
+function createExcelAUIGrid() {
+    //AUIGrid
+    var excelColumnLayout = [
+       {dataField : "supSubmSof", headerText : '<spring:message code="supplement.text.eSOFno" />', width:200 , editable : false},
+       {dataField : "supSubmStus", headerText : '<spring:message code="supplement.text.submissionStatus" />', width:200 , editable : false , visible : false},
+       {dataField : "supSubmStusName", headerText : '<spring:message code="supplement.text.submissionStatus" />', width:200 , editable : false},
+       {dataField : "supSubmDt", headerText : '<spring:message code="supplement.text.submissionDate" />', width:200 , editable : false},
+       {dataField : "supSubmBrnch", headerText : '<spring:message code="supplement.text.submissionBranch" />', width:200 , editable : false},
+       {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width:200 , editable : false},
+       {dataField : "supRefNo", headerText : '<spring:message code="supplement.text.supplementReferenceNo" />', width:200 , editable : false},
+       {dataField : "memCode", headerText : '<spring:message code="sal.title.text.salesman" />', width:200  , editable : false},
+       {dataField : "memName", headerText : '<spring:message code="sal.text.salPersonName" />', width:200 , editable : false},
+       {dataField : "crtUsr", headerText : '<spring:message code="sal.text.createBy" />', width:200 , editable : false},
+       {dataField : "crtDt", headerText : '<spring:message code="sal.text.createDate" />', width:200 , editable : false},
+       {dataField : "updUsr", headerText : '<spring:message code="sal.text.updateBy" />', width:200 , editable : false},
+       {dataField : "updDt", headerText : '<spring:message code="sal.text.updateDate" />', width:200 , editable : false},
+       {dataField : "supSubmId", visible : false}
+   ];
+
+   var excelGridPros = {
+         enterKeyColumnBase : true,
+         useContextMenu : true,
+         enableFilter : true,
+         showStateColumn : true,
+         displayTreeOpen : true,
+         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+         groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+         exportURL : "/common/exportGrid.do"
+     };
+
+    excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
+}
 
 $(function(){
 	$('#_memBtn').click(function() {
@@ -257,6 +291,14 @@ $(function(){
     	}
     });
 
+    $('#excelDown').click(function() {
+        var excelProps = {
+            fileName     : "Supplement Submission List",
+           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
+        };
+        AUIGrid.exportToXlsx(excelListGridID, excelProps);
+    });
+
 });
 
 function fn_validSearchList() {
@@ -316,6 +358,7 @@ function fn_getSupplementSubmissionList() {
 	//console.log($("#searchForm").serialize());
     Common.ajax("GET", "/supplement/selectSupplementSubmissionJsonList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(supplementGridID, result);
+        AUIGrid.setGridData(excelListGridID, result);
     });
 }
 
@@ -578,12 +621,17 @@ $.fn.clearForm = function() {
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code="sal.btn.generate"/></a></p></li>
+</ul>
+</c:if>
 <aside class="title_line"><!-- title_line start -->
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="supplement_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+<div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 <!--item Grid  -->
