@@ -249,10 +249,10 @@
 		var isValid = true, msg = "";
 
 		var nric = $('#nric').val();
-		console.log("nric :: " + nric);
+		//console.log("nric :: " + nric);
 
 		var sofNo = $('#sofNo').val();
-		console.log("sofNo :: " + sofNo);
+		//console.log("sofNo :: " + sofNo);
 
 		if (FormUtil.checkReqValue($('#nric'))) {
 			isValid = false;
@@ -266,7 +266,7 @@
 				var nowDt = new Date();
 				var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
 				var age = nowDtY - dob < 0 ? nowDtY - dob + 100 : nowDtY - dob;
-				console.log(age);
+				//console.log(age);
 				if (age < 18) {
 					Common
 							.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
@@ -463,7 +463,7 @@
 					if (rsltInfo != null) {
 						isExist = rsltInfo.isExist;
 					}
-					console.log('fn_isExistSupplementSubmissionNo:' + isExist);
+					//console.log('fn_isExistSupplementSubmissionNo:' + isExist);
 				});
 
 		if (isExist == 'true')
@@ -647,7 +647,7 @@
 			myFileCaches[cacheIndex].file['checkFileValid'] = true;
 		}
 
-		console.log(myFileCaches);
+		//console.log(myFileCaches);
 	}
 
 	function fn_removeFile(name) {
@@ -901,7 +901,7 @@
         }
 
 		if( null == $("#hidSalesmanBrnchId").val() || '' == $("#hidSalesmanBrnchId").val()){
-			console.log($("#hidSalesmanBrnchId").val());
+			//console.log($("#hidSalesmanBrnchId").val());
 			isValid = false;
 			msg += '<spring:message code="sal.alert.msg.memHasNoBrnch" />';
         }
@@ -971,7 +971,7 @@
 
 	    var formData = new FormData();
 	    $.each(myFileCaches, function(n, v) {
-	      console.log("n : " + n + " v.file : " + v.file);
+	      //console.log("n : " + n + " v.file : " + v.file);
 	      formData.append(n, v.file);
 	    });
 
