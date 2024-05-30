@@ -176,6 +176,8 @@ $(function(){
 
         if(FormUtil.isNotEmpty(memCd)) {
         	fn_loadSupplementSalesman(memCd);
+        }else{
+        	$("#_memName").val('');
         }
     });
     $('#_memCode').keydown(function (event) {
@@ -184,6 +186,8 @@ $(function(){
 
             if(FormUtil.isNotEmpty(memCd)) {
             	fn_loadSupplementSalesman(memCd);
+            }else{
+            	$("#_memName").val('');
             }
             return false;
         }
@@ -275,7 +279,32 @@ function fn_validSearchList() {
 			isValid = false;
 			msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
 		}
-	 }
+	 }else {
+ 	    if(!FormUtil.isEmpty($('#submissionStartDt').val()) && !FormUtil.isEmpty($('#submissionEndDt').val()) ) {
+            var sDate = $('#submissionStartDt').val();
+            var eDate = $('#submissionEndDt').val();
+
+            var dd = "";
+            var mm = "";
+            var yyyy = "";
+
+            var dateArr;
+            dateArr = sDate.split("/");
+            var sDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+            dateArr = eDate.split("/");
+            var eDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+            var dtDiff = new Date(eDt - sDt);
+            var days = dtDiff/1000/60/60/24;
+            console.log("dayDiff :: " + days);
+
+            if(days > 30) {
+                Common.alert('<spring:message code="supplement.alert.submissionDate30Days" />');
+                return false;
+            }
+        }
+	}
 
     if(!isValid) Common.alert('<spring:message code="supplement.text.supplementSubmissionSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
