@@ -621,7 +621,7 @@
            CASE
            WHEN #{stus} = 'APV' THEN 5
            WHEN #{stus} = 'RJT' THEN 6
-           ELSE 21 END
+           ELSE 10 END
              , SUP_SUBM_FAIL_RMK	   = #{remark}
              , UPD_USR_ID              = #{updUsrId}
              , UPD_DT                  = SYSDATE
