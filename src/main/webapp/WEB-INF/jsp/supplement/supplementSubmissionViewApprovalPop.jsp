@@ -33,6 +33,9 @@
 	var cntcId = '${supplement.custCntcId}';
 	var delAddrId = '${supplement.custDelAddrId}';
 	var billAddrId = '${supplement.custBillAddrId}';
+	var subFailRemark = '${supplement.supSubmFailRmk}';
+	var statusName = '${supplement.supSubmStusName}';
+	var userName = '${SESSION_INFO.userName}';
 	var modValue = '${modValue}';
 
 	var sofFileId = 0;
@@ -64,20 +67,27 @@
 					 $('#scSubmissionApproval').show();
 					 $('#btnSaveApproval').show();
 					 $('#btnSaveCancel').hide();
+					 $('#submissionStatusView').hide();
+					 $('#submissionRemarkView').hide();
 					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionApproval" />');
 				 }else if(modValue == "cancel"){
 					 $('#scSubmissionApproval').hide();
 					 $('#btnSaveApproval').hide();
 					 $('#btnSaveCancel').show();
+					 $('#submissionStatusView').hide();
+					 $('#submissionRemarkView').hide();
 					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionCancel" />');
 				 }else{
 					 $('#scSubmissionApproval').hide();
 					 $('#btnSaveApproval').hide();
 					 $('#btnSaveCancel').hide();
 					 $('#supSubmHeader').text('<spring:message code="supplement.text.submissionView" />');
+
+					 $('#submissionStatusView').show();
+					 $('#submissionRemarkView').show();
+					 $('#submissionStatusText').text(statusName);
+					 $('#subApprovalRemarkText').text(subFailRemark);
 				 }
-
-
 			});
 
 
@@ -120,7 +130,7 @@
 		        var data = {
 		            supSubmId: supSubmId,
 		            stus: "CAN",
-		            remark: "Confirm to Cancel"
+		            remark: "Submission Cancel by " + userName
 		        };
 
 		        Common.ajax("POST", "/supplement/updateSubmissionApprovalStatus.do", data, function(result) {
@@ -831,9 +841,21 @@
                </table>
             </td>
           </tr>
-          <tr>
+          <%-- <tr>
             <th scope="row" colspan="4"><span class="must"><spring:message code='sales.msg.ordlist.icvalid' /></span></th>
-          </tr>
+          </tr> --%>
+          <tr id="submissionStatusView">
+				<th scope="row"><spring:message code="supplement.text.approvalStatus"/></th>
+				<td colspan="3"><span id="submissionStatusText" name="submissionStatusText"></span></td>
+				</tr>
+				<tr id="submissionRemarkView">
+    				<th scope="row"><spring:message code="supplement.text.approvalRemark" /></th>
+    				<td colspan="3">
+        			<!-- <input type="text" title="" placeholder="" class="w100p" id="_remark" name="_remark" maxlength = "50" /> -->
+        			<textarea id="subApprovalRemarkText" name="subApprovalRemarkText" cols="20" rows="5" disabled="disabled"></textarea>
+    				</td>
+				</tr>
+
         </tbody>
       </table>
       <!-- table end -->
