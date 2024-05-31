@@ -30,6 +30,9 @@
 	var memId = '${supplement.memId}';
 	var atchFileGrpId = '${supplement.atchFileGrpId}';
 	var subRemark = '${supplement.supSubmRmk}';
+	var cntcId = '${supplement.custCntcId}';
+	var delAddrId = '${supplement.custDelAddrId}';
+	var billAddrId = '${supplement.custBillAddrId}';
 	var modValue = '${modValue}';
 
 	var sofFileId = 0;
@@ -148,6 +151,9 @@
 
 		fn_loadCustomer(custId,null);
 		fn_loadOrderSalesman(memId,null);
+		fn_loadCntcPerson(cntcId);
+		fn_loadBillAddr(billAddrId);
+		fn_loadInstallAddr(delAddrId);
 
 		if(atchFileGrpId != 0){
             fn_loadAtchment(atchFileGrpId);
@@ -236,7 +242,7 @@
 																.val(""); //Industry Code
 													}
 
-													if (custInfo.custAddId > 0) {
+													/* if (custInfo.custAddId > 0) {
 
 														fn_loadBillAddr(custInfo.custAddId);
 														fn_loadInstallAddr(custInfo.custAddId);
@@ -247,7 +253,7 @@
 														fn_loadMainCntcPerson(custInfo.custCntcId);
 														fn_loadCntcPerson(custInfo.custCntcId);
 
-													}
+													} */
 
 
 							}
