@@ -2665,6 +2665,33 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
     			return result;
     		}
+
+    		EgovMap promoInfo = orderRegisterMapper.getPromotionInfoExtradeAppType(params);
+    		if(promoInfo != null){
+    			String promoExtradeAppTypeCode = CommonUtils.nvl(promoInfo.get("code"));
+    			if(promoExtradeAppTypeCode == ""){
+    				result.setCode("99");
+    				result.setMessage("Promotion Extrade App Type is not set. Please contact relavent department");
+    				return result;
+    			}
+    			if(promoExtradeAppTypeCode.equals("1") && !ordInfo.get("appTypeId").toString().equals("66")){
+    				result.setCode("99");
+    				result.setMessage("Promotion selected is only for extrade rental order");
+    				return result;
+    			}
+
+    			if(promoExtradeAppTypeCode.equals("2") && ordInfo.get("appTypeId").toString().equals("66")){
+    				result.setCode("99");
+    				result.setMessage("Promotion selected is only for extrade non-rental order");
+    				return result;
+    			}
+    		}
+    		else{
+				result.setCode("99");
+				result.setMessage("Promotion not found. Please contact relavant department");
+				return result;
+    		}
+
     	}
 	}
 		return result;
