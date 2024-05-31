@@ -182,13 +182,13 @@ public class SupplementSubmissionServiceImpl implements SupplementSubmissionServ
 
           if (locInfo == null) {
             rtnMap.put("logError", "99");
-            rtnMap.put("message", "Fail to update result. [lack of stock]");
+            rtnMap.put("message", "Insufficient stock available in warehouse. Please try again later when the stock is replenished. " + itemMap.get("stkCode") + " - " + itemMap.get("stkDesc"));
             return rtnMap;
           } else {
             if (Integer.parseInt(locInfo.get("availQty").toString()) < Integer
                 .parseInt(itemMap.get("inputQty").toString())) {
               rtnMap.put("logError", "99");
-              rtnMap.put("message", "Fail to update result. [lack of stock]");
+              rtnMap.put("message", "Insufficient stock available in warehouse. Please try again later when the stock is replenished. " + itemMap.get("stkCode") + " - " + itemMap.get("stkDesc"));
               return rtnMap;
             }
           }
