@@ -35,7 +35,7 @@
         LEFT JOIN SYS0047M F ON A.CRT_USR_ID = F.USER_ID
         LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
         LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
-        LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF AND A.SUP_REF_ID = I.SUP_REF_ID
+        LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF AND A.SUP_REF_ID = I.SUP_REF_ID AND I.DEL_FLG = 'N'
         WHERE 1=1
         AND A.DEL_FLG = 'N'
 		<if test='submissionStartDt != null and submissionStartDt != "" and submissionEndDt != null and submissionEndDt != ""'>
@@ -100,6 +100,7 @@
     	WHERE 1=1
     	AND A.SUP_SUBM_ID = #{supSubmId}
     	AND A.DEL_FLG = 'N'
+    	AND B.DEL_FLG = 'N'
 
     	ORDER BY A.SUP_SUBM_ID
 
@@ -111,7 +112,7 @@
              ( SELECT COUNT(1) CNT
                  FROM SUP0003M
                 WHERE SUP_SUBM_SOF = #{sofNo}
-                  AND SUP_SUBM_STUS NOT IN (10, 6)
+                  AND SUP_SUBM_STUS NOT IN (10, 6, 21)
                   AND DEL_FLG = 'N'
                   AND '1' = #{selType}
                 UNION ALL
@@ -610,6 +611,7 @@
     	WHERE 1=1
     	AND A.SUP_SUBM_ID = #{supSubmId}
     	AND A.DEL_FLG = 'N'
+    	AND B.DEL_FLG = 'N'
 
     	ORDER BY A.SUP_SUBM_ID
 
@@ -629,6 +631,7 @@
              , SUP_REF_ID 			   = #{supRefId}
              </if>
          WHERE SUP_SUBM_ID             = #{supSubmId}
+         AND DEL_FLG = 'N'
     </update>
 
    <select id="SP_LOGISTIC_REQUEST_SUPP" parameterType="Map"  statementType="CALLABLE" >
@@ -722,7 +725,7 @@
 		FROM SUP0002D A
 	LEFT JOIN SYS0026M B ON A.SUP_STK_ID = B.STK_ID
 	WHERE SUP_REF_ID = #{supRefId}
-	AND DEL_FLG = 'N'
+	AND A.DEL_FLG = 'N'
   </select>
 
   <delete id="deleteSupplementM" parameterType="Map">
