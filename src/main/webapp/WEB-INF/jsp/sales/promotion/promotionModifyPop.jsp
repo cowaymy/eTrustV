@@ -521,9 +521,9 @@
         $('#exTrade').change(function() {
         	if($('#exTrade').val() == "1"){
                 $('.extradeMonth').removeAttr("hidden");
-                $('#extradeMonthFrom').prop("disabled", false);
+                /* $('#extradeMonthFrom').prop("disabled", false);
                 $('#extradeMonthTo').prop("disabled", false);
-                $('#extradeAppType').prop("disabled", false);
+                $('#extradeAppType').prop("disabled", false); */
         	}
         	else{
                 $('.extradeMonth').attr("hidden", true);
@@ -1058,9 +1058,9 @@
 	<td colspan="2">
 		<div class="extradeMonth" >
 			<div style="display: flex;">
-			    <p><input style="width: 50px" id="extradeMonthFrom" name="extradeMonthFrom" type="number" title="Extrade Month From" value="${promoInfo.extradeFr}"/></p>
+			    <p><input style="width: 50px" id="extradeMonthFrom" name="extradeMonthFrom" type="number" title="Extrade Month From" value="${promoInfo.extradeFr}" disabled/></p>
 			    <span style="padding: 5px;">To</span>
-			    <p><input style="width: 50px" id="extradeMonthTo" name="extradeMonthTo" type="number"" title="Extrade Month To" value="${promoInfo.extradeTo}"/></p>
+			    <p><input style="width: 50px" id="extradeMonthTo" name="extradeMonthTo" type="number"" title="Extrade Month To" value="${promoInfo.extradeTo}" disabled/></p>
 			</div>
 		</div>
 	</td>
@@ -1072,7 +1072,7 @@
     </td>
     <th class="extradeMonth" scope="row">Prev Ex-trade App Type<span class="must">*</span></th>
     <td class="extradeMonth">
-    	<select id="extradeAppType" name="extradeAppType" class="w100p"></select>
+    	<select id="extradeAppType" name="extradeAppType" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
