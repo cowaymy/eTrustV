@@ -99,7 +99,7 @@
 		        var data = {
 		            supSubmId: supSubmId,
 		            stus: $("#subApprovalStatus").val(),
-		            remark: $("#subApprovalRemark").val()
+		            remark: $("#subApprovalRemark").val().replace(/[\r\n]+/g, ' ')
 		        };
 
 		        Common.ajax("POST", "/supplement/updateSubmissionApprovalStatus.do", data, function(result) {
