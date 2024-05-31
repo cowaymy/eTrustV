@@ -181,13 +181,13 @@ public class SupplementSubmissionServiceImpl implements SupplementSubmissionServ
           EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
 
           if (locInfo == null) {
-            rtnMap.put("logError", "99");
+            rtnMap.put("logError", "999");
             rtnMap.put("message", "Insufficient stock available in warehouse. Please try again later when the stock is replenished. " + itemMap.get("stkCode") + " - " + itemMap.get("stkDesc"));
             return rtnMap;
           } else {
             if (Integer.parseInt(locInfo.get("availQty").toString()) < Integer
                 .parseInt(itemMap.get("inputQty").toString())) {
-              rtnMap.put("logError", "99");
+              rtnMap.put("logError", "999");
               rtnMap.put("message", "Insufficient stock available in warehouse. Please try again later when the stock is replenished. " + itemMap.get("stkCode") + " - " + itemMap.get("stkDesc"));
               return rtnMap;
             }
@@ -208,7 +208,7 @@ public class SupplementSubmissionServiceImpl implements SupplementSubmissionServ
         rtnMap.put("message", supplementSubm.get("sofNo"));
       }
     } catch (Exception e) {
-      rtnMap.put("logError", "99");
+      rtnMap.put("logError", "999");
       rtnMap.put("message", "An error occurred: " + e.getMessage());
       LOGGER.error("Error updating submission approval status", e);
     }
