@@ -111,7 +111,7 @@
              ( SELECT COUNT(1) CNT
                  FROM SUP0003M
                 WHERE SUP_SUBM_SOF = #{sofNo}
-                  AND SUP_SUBM_STUS NOT IN (10, 21)
+                  AND SUP_SUBM_STUS NOT IN (10, 6)
                   AND DEL_FLG = 'N'
                   AND '1' = #{selType}
                 UNION ALL
