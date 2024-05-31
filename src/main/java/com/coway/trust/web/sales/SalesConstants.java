@@ -570,12 +570,14 @@ public class SalesConstants {
                                                                      // DCF
                                                                      // request
                                                                      // record.
-  //submission approval status
+  //Supplement Submission Approval
   public static final String SUB_APPOVAL_STATUS_APPROVED = "APV";
 
   public static final String SUB_APPOVAL_STATUS_FAILED = "FAL";
 
   public static final String SUB_APPOVAL_STATUS_CANCELLED = "CAN";
+
+  public static final String SUB_APPOVAL_STATUS_REJECTED = "RJT";
 
   public static final String SUB_APPOVAL_DEL_FLG_N= "N";
 
