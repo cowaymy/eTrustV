@@ -48,7 +48,7 @@
 	         </foreach>
          </if>
          <if test='branchArray != null and branchArray != ""'>
-           AND A.SUP_SUBM_CRT_BRNCH IN
+           AND A.MEM_BRNCH_ID IN
 	         <foreach item="item" collection="branchArray" index="index" open="(" separator="," close=")">
 	           #{item}
 	         </foreach>
