@@ -85,7 +85,7 @@
 		        return false;
 		    }
 
-		    if ($("#subApprovalStatus").val() == "FAL" || $("#subApprovalStatus").val() == "CAN") {
+		    if ($("#subApprovalStatus").val() == "RJT" || $("#subApprovalStatus").val() == "CAN") {
 		        if (FormUtil.checkReqValue($("#subApprovalRemark"))) {
 		            Common.alert("* <spring:message code='sys.msg.necessary' arguments='Submission Remark' htmlEscape='false'/> </br>");
 		            return false;
@@ -1247,7 +1247,7 @@
                 </tr>
 				<tr>
 				<th scope="row"><spring:message code="supplement.text.submissionBranch"/></th>
-				<td>
+				<td colspan="2">
                       <span id="salesmanBrnch" name="salesmanBrnch"></span>
                     </td>
 				</tr>

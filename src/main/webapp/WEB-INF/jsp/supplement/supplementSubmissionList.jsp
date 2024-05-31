@@ -629,7 +629,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
 <th scope="row"><spring:message code="supplement.text.supplementReferenceNo"/></th>
-	<td><input id="supplementReferenceNo" name="supplementReferenceNo" type="text" title="" placeholder="Supplement Reference No" class="w100p" /></td>
+	<td><input id="supplementReferenceNo" name="supplementReferenceNo" type="text" title="" placeholder="Supplement Order No" class="w100p" /></td>
 <th scope="row">
 	<%-- <spring:message code="sal.text.product"/> --%>
 	</th>

@@ -1039,6 +1039,10 @@
 
 	    fn_getSupplementSubmissionList();
 	  }
+
+	function fn_resetSales() {
+
+	  }
 </script>
 
   <div id="popup_wrap" class="popup_wrap">
@@ -1241,7 +1245,7 @@
                 <ul class="right_btns mb10">
                   <li>
                     <p class="btn_grid">
-                      <a id="btnSelCntc" href="#"><spring:message code="sal.btn.selNewContact" /></a>
+                      <a id="btnSelCntc" href="#"><spring:message code="supplement.btn.selectOtherContact" /></a>
                     </p>
                   </li>
                   <li>
@@ -1340,7 +1344,7 @@
             </aside>
                           <ul class="right_btns mb10">
                 <li><p class="btn_grid">
-                    <a id="btnSelInstAddr" href="#"><spring:message code="supplement.btn.selectExistingAddress" /></a>
+                    <a id="btnSelInstAddr" href="#"><spring:message code="supplement.btn.selectOtherAddress" /></a>
                   </p></li>
                 <li><p class="btn_grid">
                     <a id="btnNewInstAddr" href="#"><spring:message code="supplement.btn.addNewAddress" /></a>
@@ -1432,7 +1436,7 @@
               <ul class="right_btns mb10">
                 <li>
                   <p class="btn_grid">
-                    <a id="billSelAddrBtn" href="#"><spring:message code="supplement.btn.selectAnotherAddress" /></a>
+                    <a id="billSelAddrBtn" href="#"><spring:message code="supplement.btn.selectOtherAddress" /></a>
                   </p>
                 </li>
                 <li>
@@ -1540,7 +1544,7 @@
 				</tr> --%>
 				<tr>
 				<th scope="row"><spring:message code="supplement.text.submissionBranch"/></th>
-				<td>
+				<td colspan="2">
                       <span id="salesmanBrnch" name="salesmanBrnch"></span>
                     </td>
 				</tr>
