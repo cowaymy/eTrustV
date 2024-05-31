@@ -960,10 +960,6 @@
 	function fn_SaveSupplementSubmission(){
 	    var prchParam = AUIGrid.getGridData(purchaseGridID);
 	    var totAmt = fn_calcuPurchaseAmt();
-
-	    console.log("remark A : "+ $('#remark').val());
-	    console.log("remark B : "+ $('#remark').val().replace(/[\r\n]+/g, ' '));
-
 	    var orderVO = {
 	    		sofNo : $('#sofNo').val().trim(),
 	    		custId : $('#hiddenCustId').val(),
