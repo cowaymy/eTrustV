@@ -28,7 +28,7 @@
   var asSolDisable = false;
   var ddlFilterObj = {};
   var selectedHTAndDTObj = {};
-  var installAccTypeId = 580;
+  var installAccTypeId = 603;
   var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(

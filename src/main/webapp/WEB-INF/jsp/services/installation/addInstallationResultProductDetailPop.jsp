@@ -12,7 +12,7 @@
 
 <script type="text/javaScript">
 var myFileCaches = {};
-var installAccTypeId = 579;
+var installAccTypeId = 602;
 
   $(document).ready(
     function() {

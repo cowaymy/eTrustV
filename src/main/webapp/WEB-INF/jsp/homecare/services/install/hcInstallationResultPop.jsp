@@ -4,7 +4,7 @@
 
 <script type="text/javaScript">
 var myGridID3;
-var installAccTypeId = 580;
+var installAccTypeId = 603;
 var installAccValues = JSON.parse("${installAccValues}");
 
 //Start AUIGrid

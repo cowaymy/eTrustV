@@ -21,7 +21,7 @@
   var productCode;
   var asMalfuncResnId;
   var matchMatDefCode = [];
-  var installAccTypeId = 580;
+  var installAccTypeId = 603;
 
   var ddlFilterObj = {};
 
@@ -1543,7 +1543,7 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
       AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
-      INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',      
+      INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',
       PARTNER_CODE : $('#partnerCode').val(),
 
       // AS RECALL ENTRY
