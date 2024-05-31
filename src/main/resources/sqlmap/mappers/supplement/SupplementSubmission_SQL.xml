@@ -620,15 +620,15 @@
            SET SUP_SUBM_STUS            =
            CASE
            WHEN #{stus} = 'APV' THEN 5
-           WHEN #{stus} = 'CAN' THEN 10
+           WHEN #{stus} = 'RJT' THEN 6
            ELSE 21 END
-             , SUP_SUBM_RMK		        = #{remark}
+             , SUP_SUBM_FAIL_RMK	   = #{remark}
              , UPD_USR_ID              = #{updUsrId}
-             , UPD_DT                   = SYSDATE
+             , UPD_DT                  = SYSDATE
              <if test='supRefId != null and supRefId != ""'>
-             , SUP_REF_ID 				= #{supRefId}
+             , SUP_REF_ID 			   = #{supRefId}
              </if>
-         WHERE SUP_SUBM_ID              = #{supSubmId}
+         WHERE SUP_SUBM_ID             = #{supSubmId}
     </update>
 
    <select id="SP_LOGISTIC_REQUEST_SUPP" parameterType="Map"  statementType="CALLABLE" >
