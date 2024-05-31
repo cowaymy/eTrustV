@@ -327,7 +327,7 @@ function fn_validSearchList() {
             || (FormUtil.isEmpty($('#submissionStartDt').val()) && !FormUtil.isEmpty($('#submissionEndDt').val())))
            {
                   msg += '<spring:message code="supplement.alert.msg.selectSubmissionDate" /><br/>';
-                  isValid = false
+                  isValid = false;
            }
 
     if(FormUtil.isEmpty($('#_memCode').val())
