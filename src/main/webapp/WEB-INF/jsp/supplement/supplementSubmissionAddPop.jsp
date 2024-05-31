@@ -961,6 +961,9 @@
 	    var prchParam = AUIGrid.getGridData(purchaseGridID);
 	    var totAmt = fn_calcuPurchaseAmt();
 
+	    console.log("remark A : "+ $('#remark').val());
+	    console.log("remark B : "+ $('#remark').val().replace(/[\r\n]+/g, ' '));
+
 	    var orderVO = {
 	    		sofNo : $('#sofNo').val().trim(),
 	    		custId : $('#hiddenCustId').val(),
@@ -971,7 +974,7 @@
 	    		memCode : $('#salesmanCd').val(),
 	    		memBrnchId : $('#hidSalesmanBrnchId').val(),
 	    		usrBrnchId : $('#_memBrnch').val(),
-	    		remark : $('#remark').val(),
+	    		remark : $('#remark').val().replace(/[\r\n]+/g, ' '),
 	    		totAmt : totAmt,
 	    		atchFileGrpId : atchFileGrpId,
 	    		supplementItmList : prchParam
