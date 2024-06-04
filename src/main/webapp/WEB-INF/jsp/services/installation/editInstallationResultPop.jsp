@@ -423,6 +423,10 @@ function notMandatoryForAP(){
             url = "/services/editInstallation.do";
         }
 
+        if ($('#installdt').is(':disabled')) {
+          $("#installdt").attr("disabled", false);
+        }
+
         var saveForm = $("#editInstallForm").serializeJSON();
         saveForm.installAccList = $("#installAcc").val();
 
