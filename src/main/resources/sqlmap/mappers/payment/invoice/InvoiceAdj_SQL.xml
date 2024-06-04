@@ -505,7 +505,7 @@
     </select>
 
     <select id="selectNewAdjMaster" parameterType="Map" resultType="egovMap">
-        SELECT UnionAll2.TXINVOICEID TXINVOICEID  ,
+        SELECT Distinct UnionAll2.TXINVOICEID TXINVOICEID  ,
        UnionAll2.TXINVOICEID1 TXINVOICEID1  ,
        UnionAll2.BR_NO BR_NO  ,
        TO_CHAR(UnionAll2.TAX_INVC_DT, 'DD-MM-YYYY') TAX_INVC_DT  ,
