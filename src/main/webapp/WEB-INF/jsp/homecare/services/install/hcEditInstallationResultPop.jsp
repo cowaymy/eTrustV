@@ -269,6 +269,9 @@ var installAccValues = JSON.parse("${installAccValues}");
                 Common.alert("Upload Failed. Please check with System Administrator.");
         });
 
+        if ($('#installdt').is(':disabled')) {
+            $("#installdt").attr("disabled", false);
+          }
 
         var saveForm = $("#editInstallForm").serializeJSON();
         saveForm.installAccList = $("#installAcc").val();
