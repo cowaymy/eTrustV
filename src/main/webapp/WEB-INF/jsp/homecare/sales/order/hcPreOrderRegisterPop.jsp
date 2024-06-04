@@ -2424,9 +2424,9 @@
 //                     return fn_checkPreOrderSalesPerson(0,memCode);
 //                 }else if($('#exTrade').val() == '1' && $("#hiddenTypeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
 //                     return fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
-//                 }else{
-//                 return true;
-//                 }
+             else{
+             return true;
+             }
            }
       }
 
