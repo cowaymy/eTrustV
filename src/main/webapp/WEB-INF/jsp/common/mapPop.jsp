@@ -35,14 +35,14 @@
     padding: 5px; /* Add padding */
    }
 
-   .leaflet-control-geocoder-result {
-            display: flex;
-            flex-direction: column;
-        }
+  .leaflet-control-geocoder-result {
+    display: flex;
+    flex-direction: column;
+  }
 
-        .leaflet-control-geocoder-search-results {
-            width: 100%;
-        }
+  .leaflet-control-geocoder-search-results {
+    width: 100%;
+  }
 </style>
 
 <!-- BING MAP -->
