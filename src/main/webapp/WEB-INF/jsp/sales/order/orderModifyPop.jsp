@@ -1522,7 +1522,7 @@
 
             else if (rsltInfo.payModeId == '132') {
               $('#scPC_DirectDebit').removeClass("blind");
-              $('#ddPaperless').attr("checked", true);
+//               $('#ddPaperless').attr("checked", true);
               fn_loadBankAccount(rsltInfo.bankAccId);
             }
 
@@ -1556,6 +1556,10 @@
             }
 
             $('#modPayTerm').val(rsltInfo.payTrm);
+
+            if(typeof rsltInfo.ddPaperless != "undefined" && rsltInfo.rentPayModeCode ==  'DD'){
+                $('#ddPaperless').attr("checked", true);
+            }
 
             fn_loadRejectReasonList(rsltInfo.payModeId,
                 rsltInfo.failResnId)
