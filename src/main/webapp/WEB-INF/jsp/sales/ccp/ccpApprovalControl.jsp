@@ -446,7 +446,8 @@
     async function ccpFeedbackCode(){
         const result = await fetch("/sales/ccp/selectReasonCodeFbList");
         keyValueList = await result.json();
-        keyValueList[0] = {codeId:0,codeName :"Choose one"};
+        /* keyValueList[0] = {codeId:0,codeName :"Choose one"}; */
+        keyValueList.unshift({ codeId: 0, codeName: "Choose one" });
     };
 
 </script>
