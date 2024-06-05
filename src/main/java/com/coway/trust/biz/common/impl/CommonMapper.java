@@ -349,4 +349,11 @@ public interface CommonMapper
     void createPmtLinkReqs ( Map<String, Object> params );
 
     void updatePmtLinkResp ( Map<String, Object> params );
+
+    int getGdexReqsId ();
+
+    void createGdexReqs ( Map<String, Object> params );
+
+    void updateGdexResp ( Map<String, Object> params );
+
 }
