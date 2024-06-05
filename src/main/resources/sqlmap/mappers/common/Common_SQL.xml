@@ -2452,7 +2452,7 @@
                                       , CRT_USR_ID
                                       , UPD_USR_ID
     ) VALUES ( #{reqsId}
-                  , #{eGhlTyp}
+                    , #{eGhlTyp}
                   <if test="reqsMod != null and reqsMod != '' ">
                     , #{reqsMod}
                   </if>
@@ -2520,5 +2520,36 @@
       WHERE EGHL_REQ_ID =  #{reqsId}
   </update>
 
+   <select id="getGdexReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0116D_GDEX_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
 
+  <insert id="createGdexReqs" parameterType="Map">
+    INSERT INTO SYS0116D ( GDEX_REQ_ID
+                                      , GDEX_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , GDEX_REQ_MOD
+                                      </if>
+                                      , GDEX_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{gDexTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+    <update id="updateGdexResp" parameterType="Map">
+      UPDATE SYS0116D SET GDEX_RESP_STUS = #{status}
+                                    , GDEX_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE GDEX_REQ_ID =  #{reqsId}
+  </update>
 </mapper>
