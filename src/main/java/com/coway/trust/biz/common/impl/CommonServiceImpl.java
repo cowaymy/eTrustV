@@ -18,14 +18,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +46,7 @@ import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.CommStatusGridData;
 import com.coway.trust.web.common.CommStatusVO;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -67,6 +72,18 @@ public class CommonServiceImpl
 
   @Value("${eghl.pmtLink.pmtLink.url}")
   private String eGhlPmtLinkUrl;
+
+  @Value("${gdex.subscrKey}")
+  private String gDexSubscrKey;
+
+  @Value("${gdex.apiToken}")
+  private String gDexApiToken;
+
+  @Value("${gdex.accId}")
+  private String gDexAccId;
+
+  @Value("${gdex.shptDtl.url}")
+  private String gDexshptDtlUrl;
 
   @Override
   public List<EgovMap> selectCodeList( Map<String, Object> params ) {
@@ -1685,6 +1702,166 @@ public class CommonServiceImpl
 
     rtnStat.put( "status", "000" );
     rtnStat.put( "message", "" );
+    return rtnStat;
+  }
+
+  public EgovMap getGdexShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    params.put( "consNo", "123456789" );
+    params.put( "ordNo", "9854254" );
+
+    EgovMap rtnStat = new EgovMap();
+
+    // STEP 1 :: VALIDATE SUBSCRIPTION KEY & API TOKEN & URL
+    if ("".equals(CommonUtils.nvl(gDexSubscrKey))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR GDEX SUBCRIPTION KEY. PLEASE CHECK FOR GDEX SUBCRIPTION KEY." );
+      return rtnStat;
+    }
+
+    if ("".equals(CommonUtils.nvl(gDexApiToken))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR GDEX API TOKEN. PLEASE CHECK FOR GDEX API TOKEN." );
+      return rtnStat;
+    }
+
+    if ("".equals(CommonUtils.nvl(gDexshptDtlUrl))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR GDEX REQUEST SHIPMENT DETAIL URL. PLEASE CHECK FOR GDEX REQUEST SHIPMENT DETAIL URL." );
+      return rtnStat;
+    }
+
+    // STEP 2 :: VALIDATE REQUIRED PARAMETER
+    if ("".equals( CommonUtils.nvl(params.get( "consNo" )))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "CONSIGNMENT NUMBER IS REQUIRED." );
+      return rtnStat;
+    }
+    if ("".equals( CommonUtils.nvl(params.get( "ordNo" )))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "ORDER NUMBER IS REQUIRED." );
+      return rtnStat;
+    }
+
+    // STEP 3 CALL URL GET CONSIGNMENT DETAIL.
+    String urlString = CommonUtils.nvl(gDexshptDtlUrl) + "?consignmentNumber=" + CommonUtils.nvl(params.get( "consNo" ));
+    urlString += "&orderID=" + CommonUtils.nvl(params.get( "ordNo" ));
+
+    // FORM REQUEST PARAM TO JSON FOR CREATE REQUEST DETAIL
+    Map<String, Object> reqsGDexParam = new HashMap<>();
+    reqsGDexParam.put( "reqsId", commonMapper.getGdexReqsId() );
+    JSONObject parameters = new JSONObject();
+    parameters.put("consignmentNumber", CommonUtils.nvl(params.get( "consNo" )) );
+    parameters.put("orderID", CommonUtils.nvl(params.get( "ordNo" )));
+
+    reqsGDexParam.put( "url", CommonUtils.nvl(urlString));
+    reqsGDexParam.put( "gDexTyp", '1');
+    reqsGDexParam.put( "reqsParam", parameters.toString());
+
+    if (!"".equals( CommonUtils.nvl(params.get( "reqsMod" )))) {
+      reqsGDexParam.put( "reqsMod", CommonUtils.nvl(params.get( "reqsMod" )) ); // REQUEST MODULE - DEFAULT CMN
+    }
+
+    commonMapper.createGdexReqs( reqsGDexParam );
+
+    // STEP 4 CALL URL
+    URL url = new URL(CommonUtils.nvl(urlString));
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+    // SET REQUEST HEADER
+    connection.setRequestProperty("Cache-Control", "no-cache");
+    connection.setRequestProperty("Subscription-Key", CommonUtils.nvl(gDexSubscrKey));
+    connection.setRequestProperty("ApiToken", CommonUtils.nvl(gDexApiToken+"1"));
+
+    connection.setRequestMethod("GET");
+
+    int status = connection.getResponseCode();
+    Map<String, Object> respParam = new HashMap<>();
+
+    if (status == 200) { // SUCCESS
+      // READ RESPONE
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String inputLine;
+      StringBuffer response = new StringBuffer();
+      while ((inputLine = in.readLine()) != null) {
+        response.append(inputLine);
+      }
+      in.close();
+
+      // PARSE RESPONE JSON STRING TO JSONOBJECT
+      JSONObject jsonResponse = new JSONObject(response.toString());
+      JSONObject queryResult = jsonResponse.getJSONObject("r");
+      JSONArray cnDetailStatusList = jsonResponse.getJSONObject("r").getJSONArray("cnDetailStatusList");
+
+      respParam.put( "status", CommonUtils.nvl(status) );
+      respParam.put( "response", response.toString() );
+      respParam.put( "reqsId", reqsGDexParam.get( "reqsId" ) );
+
+      respParam.put( "consignmentNote", CommonUtils.nvl(queryResult.get( "consignmentNote" )) );
+      respParam.put( "latestConsignmentNoteStatus", CommonUtils.nvl(queryResult.get( "latestConsignmentNoteStatus" )) );
+      respParam.put( "latestEnumStatus", CommonUtils.nvl(queryResult.get( "latestEnumStatus" )) );
+      respParam.put( "cnDetailStatusList", cnDetailStatusList.toString() );
+
+      SimpleDateFormat dtFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+      // FIND CURRENT STATUS
+      for (int i = 0; i < cnDetailStatusList.length(); i++) {
+        JSONObject reqDetail = cnDetailStatusList.getJSONObject(i);
+        if (reqDetail.getString("consignmentNoteStatus").equals(CommonUtils.nvl(queryResult.get( "latestConsignmentNoteStatus" )))) {
+            Date date = dtFmt.parse(reqDetail.getString("dateScan"));
+            respParam.put( "latestConsignmentNoteLocation", CommonUtils.nvl(reqDetail.getString("location")));
+            respParam.put( "latestConsignmentNoteDate", CommonUtils.nvl(date));
+        }
+      }
+
+      connection.disconnect();
+
+      // UPDATE RESPONE DETAIL
+      commonMapper.updateGdexResp( respParam );
+
+    } else if (status == 400) { // BAD REQUEST
+      connection.disconnect();
+
+       // UPDATE RESPONE DETAIL
+      respParam.put( "status", CommonUtils.nvl(status) );
+      respParam.put( "response","Bad Request : A non-empty request body is required." );
+      respParam.put( "reqsId", reqsGDexParam.get( "reqsId" ) );
+      commonMapper.updateGdexResp( respParam );
+
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "Bad Request Respone from GDEX" );
+      rtnStat.put( "value", null );
+      return rtnStat;
+    } else if (status == 401) { // UNAUTHORIED
+      connection.disconnect();
+
+      // UPDATE RESPONE DETAIL
+      respParam.put( "status", CommonUtils.nvl(status) );
+      respParam.put( "response","Unauthorized : Access Denied" );
+      respParam.put( "reqsId", reqsGDexParam.get( "reqsId" ) );
+      commonMapper.updateGdexResp( respParam );
+
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "Access Denied Respone from GDEX" );
+      rtnStat.put( "value", null );
+      return rtnStat;
+    } else {
+      connection.disconnect();
+
+      // UPDATE RESPONE DETAIL
+      respParam.put( "status", CommonUtils.nvl(status) );
+      respParam.put( "response","Other: Other Errors" );
+      respParam.put( "reqsId", reqsGDexParam.get( "reqsId" ) );
+      commonMapper.updateGdexResp( respParam );
+
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "Other Respone from GDEX" );
+      rtnStat.put( "value", null );
+      return rtnStat;
+    }
+
+    rtnStat.put( "status", "000" );
+    rtnStat.put( "message", "" );
+    rtnStat.put( "value", respParam );
     return rtnStat;
   }
 }
