@@ -630,4 +630,10 @@ public class CommonController {
     EgovMap rtnData = commonService.reqEghlPmtLink( params );
     return ResponseEntity.ok( rtnData );
   }
+
+  @RequestMapping(value = "/getGdexShptDtl.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getGdexShptDtl( @RequestParam Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    EgovMap rtnData = commonService.getGdexShptDtl( params );
+    return ResponseEntity.ok( rtnData );
+  }
 }
