@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -479,4 +480,6 @@ public interface CommonService
     EgovMap getSstRelatedInfo();
 
     EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, JSONException;
+
+    EgovMap getGdexShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 }
