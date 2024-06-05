@@ -401,6 +401,9 @@
   }
 
   function loadGeneralInfoData(){
+
+	 var custName =`${mobileAutoDebitDetail.name}`;
+
     $('#preAutoDebitNo').val("${mobileAutoDebitDetail.padNo}");
     $('#spanPreAutoDebitNo').text("${mobileAutoDebitDetail.padNo}");
 
@@ -419,8 +422,8 @@
     $('#productName').val("${mobileAutoDebitDetail.stkDesc}");
     $('#spanProductName').text("${mobileAutoDebitDetail.stkDesc}");
 
-    $('#customerName').val("${mobileAutoDebitDetail.name}");
-    $('#spanCustomerName').text("${mobileAutoDebitDetail.name}");
+    $('#customerName').val(custName);
+    $('#spanCustomerName').text(custName);
 
     $('#monthlyRentalFee').val("${mobileAutoDebitDetail.mthRentAmt}");
     $('#spanMonthlyRentalFee').text("${mobileAutoDebitDetail.mthRentAmt}");
