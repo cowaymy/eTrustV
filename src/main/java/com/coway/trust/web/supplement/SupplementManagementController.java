@@ -1,5 +1,6 @@
 package com.coway.trust.web.supplement;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -297,4 +300,17 @@ public class SupplementManagementController {
 
   }
 
+  @RequestMapping(value = "/updOrdDelStat.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updOrdDelStat(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
+    ReturnMessage message = new ReturnMessage();
+    // SET USER ID
+    params.put("userId", sessionVO.getUserId());
+
+    EgovMap rtnData = supplementUpdateService.updOrdDelStat(params);
+    message.setCode( "000" );
+    message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
+
+    return ResponseEntity.ok(message);
+  }
 }
