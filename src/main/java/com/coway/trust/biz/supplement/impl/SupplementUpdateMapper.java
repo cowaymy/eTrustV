@@ -31,4 +31,10 @@ public interface SupplementUpdateMapper {
 
 	int updateRefStgStatus(Map<String, Object> params);
 
+	EgovMap getStoSup(Map<String, Object> params);
+
+	Map<String, Object>SP_STO_PRE_SUPP(Map<String, Object> param);
+
+	void revertStgStus(Map<String, Object> params);
+
 }
