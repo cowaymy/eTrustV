@@ -1,58 +1,44 @@
 package com.coway.trust.biz.supplement;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-
-import com.coway.trust.biz.sales.pos.vo.PosGridVO;
-import com.coway.trust.cmmn.model.SessionVO;
-
+import org.codehaus.jettison.json.JSONException;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SupplementUpdateService {
+  List<EgovMap> selectSupplementList( Map<String, Object> params ) throws Exception;
 
-	List<EgovMap> selectSupplementList(Map<String, Object> params) throws Exception;
+  List<EgovMap> selectSupRefStus();
 
-	List<EgovMap> selectSupRefStus();
+  List<EgovMap> selectSupRefStg();
 
-	List<EgovMap> selectSupRefStg();
+  List<EgovMap> selectSubmBrch();
 
-	List<EgovMap> selectSubmBrch();
+  List<EgovMap> selectWhBrnchList()
+    throws Exception;
 
-	List<EgovMap> selectWhBrnchList() throws Exception;
+  List<EgovMap> getSupplementDetailList( Map<String, Object> params )
+    throws Exception;
 
-	List<EgovMap> getSupplementDetailList(Map<String, Object> params)throws Exception;
+  List<EgovMap> selectPosJsonList( Map<String, Object> params )
+    throws Exception;
 
-	List<EgovMap> selectPosJsonList(Map<String, Object> params) throws Exception;
+  List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params );
 
-	List<EgovMap> checkDuplicatedTrackNo(Map<String, Object> params);
+  EgovMap selectOrderBasicInfo( Map<String, Object> params )
+    throws Exception;
 
-	//public EgovMap selectOrderBasicInfo(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+  Map<String, Object> updateRefStgStatus( Map<String, Object> params )
+    throws Exception;
 
-	EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception;
+  EgovMap updOrdDelStat( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 
-	//void updateRefStgStatus(Map<String, Object> transactionId);
+  EgovMap getStoSup( Map<String, Object> params );
 
-	//int updateRefStgStatus(Map<String, Object> params) throws Exception;
+  Map<String, Object> SP_STO_PRE_SUPP( Map<String, Object> param );
 
-	Map<String, Object> updateRefStgStatus(Map<String, Object> params) throws Exception;
-
-	EgovMap getStoSup(Map<String, Object> params);
-
-	Map<String, Object> SP_STO_PRE_SUPP(Map<String, Object> param);
-
-	void sendEmail();
-
-
-
-
-/*	List<EgovMap> selectPosModuleCodeList(Map<String, Object> params) throws Exception;
-
-	List<EgovMap> selectStatusCodeList(Map<String, Object> params) throws Exception;
-
-	List<EgovMap> selectPosJsonList(Map<String, Object> params) throws Exception;*/
-
-
-
+  void sendEmail();
 
 }
