@@ -386,5 +386,17 @@ WHERE  1=1
         WHERE SUP_REF_ID = #{supRefId} AND DEL_FLG = 'N'
     </update>
 
+  <update id="updOrdDelStat" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_DEL_STUS = #{latestEnumStatus},
 
+                                     <if test=" null != latestConsignmentNoteDate and '' != latestConsignmentNoteDate">
+                                       SUP_REF_DEL_DT = TO_DATE(#{latestConsignmentNoteDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                                     </if>
+
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_REF_NO = #{ordNo}
+               AND SUP_REF_PCL_TRKNO = #{consNo}
+               AND DEL_FLG = 'N'
+  </update>
 </mapper>
