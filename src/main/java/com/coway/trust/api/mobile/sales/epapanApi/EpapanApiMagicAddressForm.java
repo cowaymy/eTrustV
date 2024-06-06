@@ -32,6 +32,13 @@ public class EpapanApiMagicAddressForm {
 		params.put("isAllowForDd", vo.getIsAllowForDd());
 		params.put("ddlChnl", vo.getDdlChnl());
 		params.put("refId", vo.getRefId());
+		params.put("contactNumber", vo.getContactNumber());
+		params.put("callPrgm", vo.getCallPrgm());
+		params.put("custId", vo.getCustId());
+		params.put("searchWord", vo.getSearchWord());
+		params.put("custCntcId", vo.getCustCntcId());
+		params.put("custAddId", vo.getCustAddId());
+
 
 		return params;
 	}
@@ -91,6 +98,42 @@ public class EpapanApiMagicAddressForm {
 	public void setRefId(String refId) {
 		this.refId = refId;
 	}
+	public String getContactNumber() {
+		return contactNumber;
+	}
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+	public String getCallPrgm() {
+		return callPrgm;
+	}
+	public void setCallPrgm(String callPrgm) {
+		this.callPrgm = callPrgm;
+	}
+	public String getCustId() {
+		return custId;
+	}
+	public void setCustId(String custId) {
+		this.custId = custId;
+	}
+	public String getSearchWord() {
+		return searchWord;
+	}
+	public void setSearchWord(String searchWord) {
+		this.searchWord = searchWord;
+	}
+	public String getCustCntcId() {
+		return custCntcId;
+	}
+	public void setCustCntcId(String custCntcId) {
+		this.custCntcId = custCntcId;
+	}
+	public String getCustAddId() {
+		return custAddId;
+	}
+	public void setCustAddId(String custAddId) {
+		this.custAddId = custAddId;
+	}
 
 
 
@@ -102,5 +145,12 @@ public class EpapanApiMagicAddressForm {
     public String isAllowForDd;
     public String ddlChnl;
 	public String refId;
+	public String contactNumber;
+    public String callPrgm;
+	public String custId;
+	public String searchWord;
+    public String custCntcId;
+	public String custAddId;
+
 
 }
