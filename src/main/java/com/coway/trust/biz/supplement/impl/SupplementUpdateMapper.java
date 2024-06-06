@@ -7,34 +7,31 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("supplementUpdateMapper")
 public interface SupplementUpdateMapper {
+  List<EgovMap> selectSupplementList( Map<String, Object> params );
 
+  List<EgovMap> selectPosJsonList( Map<String, Object> params );
 
-	List<EgovMap> selectSupplementList(Map<String, Object> params);
+  List<EgovMap> selectSupRefStus();
 
-	List<EgovMap> selectPosJsonList(Map<String, Object> params);
+  List<EgovMap> selectSupRefStg();
 
-	List<EgovMap> selectSupRefStus();
+  List<EgovMap> selectSubmBrch();
 
-	List<EgovMap> selectSupRefStg();
+  List<EgovMap> selectWhBrnchList();
 
-	List<EgovMap> selectSubmBrch();
+  List<EgovMap> getSupplementDetailList( Map<String, Object> params );
 
-	List<EgovMap> selectWhBrnchList();
+  EgovMap selectOrderBasicInfo( Map<String, Object> params );
 
-	List<EgovMap> getSupplementDetailList(Map<String, Object> params);
+  List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params );
 
-	EgovMap selectOrderBasicInfo(Map<String, Object> params);
+  int updateRefStgStatus( Map<String, Object> params );
 
-	List<EgovMap> checkDuplicatedTrackNo(Map<String, Object> params);
+  int updOrdDelStat( Map<String, Object> params );
 
-	//void updateRefStgStatus(Map<String, Object> transactionId);
+  EgovMap getStoSup( Map<String, Object> params );
 
-	int updateRefStgStatus(Map<String, Object> params);
+  Map<String, Object> SP_STO_PRE_SUPP( Map<String, Object> param );
 
-	EgovMap getStoSup(Map<String, Object> params);
-
-	Map<String, Object>SP_STO_PRE_SUPP(Map<String, Object> param);
-
-	void revertStgStus(Map<String, Object> params);
-
+  void revertStgStus( Map<String, Object> params );
 }
