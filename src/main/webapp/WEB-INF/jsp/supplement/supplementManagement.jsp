@@ -262,7 +262,7 @@
               for (var a=0; a < selectedItems.length; a++) {
                 // CHECK TRACKING NO.
                 if (selectedItems[a].item.parcelTrackNo === "" || selectedItems[a].item.parcelTrackNo === undefined) {
-                    Common.alert("To update the delivery status, a valid parcel tracking number is required for the order " + selectedItems[a].item.supRefNo);
+                    Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supRefNo);
                     return;
                 }
                 var item = {
@@ -273,11 +273,11 @@
                 suppOrds.push(item);
               }
 
-              alert(JSON.stringify(suppOrds));
               // GET & UPDATE DELIVERY STATUS
-              Common.ajax("POST", "/supplement/updOrdDelStat", JSON.stringify(suppOrds), function(result) {
-
+              Common.ajax("POST", "/supplement/updOrdDelStat.do", {ords : suppOrds}, function(result) {
+                Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
               });
+
             });
 
             /*  AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
