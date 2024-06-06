@@ -18,8 +18,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +51,7 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.CommStatusGridData;
 import com.coway.trust.web.common.CommStatusVO;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.TimeZone;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -1706,9 +1711,6 @@ public class CommonServiceImpl
   }
 
   public EgovMap getGdexShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException {
-    params.put( "consNo", "123456789" );
-    params.put( "ordNo", "9854254" );
-
     EgovMap rtnStat = new EgovMap();
 
     // STEP 1 :: VALIDATE SUBSCRIPTION KEY & API TOKEN & URL
@@ -1770,7 +1772,7 @@ public class CommonServiceImpl
     // SET REQUEST HEADER
     connection.setRequestProperty("Cache-Control", "no-cache");
     connection.setRequestProperty("Subscription-Key", CommonUtils.nvl(gDexSubscrKey));
-    connection.setRequestProperty("ApiToken", CommonUtils.nvl(gDexApiToken+"1"));
+    connection.setRequestProperty("ApiToken", CommonUtils.nvl(gDexApiToken));
 
     connection.setRequestMethod("GET");
 
@@ -1796,20 +1798,26 @@ public class CommonServiceImpl
       respParam.put( "response", response.toString() );
       respParam.put( "reqsId", reqsGDexParam.get( "reqsId" ) );
 
-      respParam.put( "consignmentNote", CommonUtils.nvl(queryResult.get( "consignmentNote" )) );
+      respParam.put( "consNo", CommonUtils.nvl(params.get( "consNo" )) );
+      respParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )) );
       respParam.put( "latestConsignmentNoteStatus", CommonUtils.nvl(queryResult.get( "latestConsignmentNoteStatus" )) );
       respParam.put( "latestEnumStatus", CommonUtils.nvl(queryResult.get( "latestEnumStatus" )) );
       respParam.put( "cnDetailStatusList", cnDetailStatusList.toString() );
-
-      SimpleDateFormat dtFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
       // FIND CURRENT STATUS
       for (int i = 0; i < cnDetailStatusList.length(); i++) {
         JSONObject reqDetail = cnDetailStatusList.getJSONObject(i);
         if (reqDetail.getString("consignmentNoteStatus").equals(CommonUtils.nvl(queryResult.get( "latestConsignmentNoteStatus" )))) {
-            Date date = dtFmt.parse(reqDetail.getString("dateScan"));
+
+          if (!CommonUtils.nvl(reqDetail.getString("dateScan")).equals( "" )) {
+            Instant instant = Instant.parse(reqDetail.getString("dateScan"));
+            LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDateTime = dateTime.format(formatter);
+
             respParam.put( "latestConsignmentNoteLocation", CommonUtils.nvl(reqDetail.getString("location")));
-            respParam.put( "latestConsignmentNoteDate", CommonUtils.nvl(date));
+            respParam.put( "latestConsignmentNoteDate", CommonUtils.nvl(formattedDateTime));
+          }
         }
       }
 
