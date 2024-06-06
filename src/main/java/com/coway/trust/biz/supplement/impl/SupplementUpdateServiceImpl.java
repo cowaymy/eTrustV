@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.biz.supplement.SupplementUpdateService;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.pos.PosService;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.supplement.impl.SupplementUpdateMapper;
@@ -38,6 +40,7 @@ import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
 import static com.coway.trust.AppConstants.EMAIL_TEXT;
@@ -70,6 +73,9 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Resource(name = "paymentApiMapper")
   private PaymentApiMapper paymentApiMapper;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Override
   public List<EgovMap> selectPosJsonList(Map<String, Object> params) throws Exception {
@@ -186,7 +192,56 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 	  LOGGER.info("Complete reverted!..");
 	  }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public EgovMap updOrdDelStat( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    if ( CommonUtils.nvl( params.get( "ords" ) ).equals( "" ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
+    }
 
+    // LOOP SELECTED ORDERS
+    List<Map<String, String>> ordsList = (List<Map<String, String>>) params.get( "ords" );
+    int total = ordsList.size();
+    int fail = 0;
+    int success = 0;
+
+    for ( Map<String, String> order : ordsList ) {
+      String ordNo = order.get( "ordNo" ); // SUPPLEMENT ORDER NO.
+      String trckNo = order.get( "trckNo" ); // SUPPLEMENT TRACKING NO.
+
+      Map<String, Object> gDexPram = new HashMap<>();
+      gDexPram.put( "consNo", CommonUtils.nvl( trckNo ) ); // CONSIGNMENT NO.
+      gDexPram.put( "ordNo", CommonUtils.nvl( ordNo ) ); // SUPPLEMENT ORDER NO.
+
+      // CALL GDEX GET DELIVERY STATUS AND DATE.
+      EgovMap rtnData = commonService.getGdexShptDtl( gDexPram );
+      if ( !"000".equals( rtnData.get( "status" ) ) ) {
+        //throw new ApplicationException( AppConstants.FAIL, "gDEX - ERRCODE : " + rtnData.get( "message" ) );
+        fail += 1;
+        continue;
+      }
+
+      // UPDATE DELIVERY STATUS & DATE
+      if ( CommonUtils.nvl( rtnData.get("value") ).equals( "" ) ) {
+        //throw new ApplicationException( AppConstants.FAIL, "GDEX RESPONE DOES NOT CONTAIN VALUE." );
+        fail += 1;
+        continue;
+      }
+      Map<String, Object> extractedValueMap = (Map<String, Object>) rtnData.get("value");
+      extractedValueMap.put( "userId", CommonUtils.nvl(params.get( "userId" )));
+
+      int count = supplementUpdateMapper.updOrdDelStat( extractedValueMap );
+      if (count > 0) {
+        success += 1;
+      }
+      System.out.println( "UPDATE COUNT: " + count );
+    }
+
+    EgovMap message = new EgovMap();
+    message.put( "message", String.format("Total records processed: %d, Successful: %d, Failed: %d", total, success, fail) );
+
+    return message;
+  }
 
   @Override
   public EgovMap getStoSup(Map<String, Object> params) {
