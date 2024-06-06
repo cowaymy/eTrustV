@@ -33,7 +33,15 @@ public interface SupplementUpdateService {
 
 	//void updateRefStgStatus(Map<String, Object> transactionId);
 
-	int updateRefStgStatus(Map<String, Object> params) throws Exception;
+	//int updateRefStgStatus(Map<String, Object> params) throws Exception;
+
+	Map<String, Object> updateRefStgStatus(Map<String, Object> params) throws Exception;
+
+	EgovMap getStoSup(Map<String, Object> params);
+
+	Map<String, Object> SP_STO_PRE_SUPP(Map<String, Object> param);
+
+	void sendEmail();
 
 
 
