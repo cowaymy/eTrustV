@@ -125,7 +125,7 @@ WHERE  1=1
 
    <select id="checkDuplicatedTrackNo"  parameterType="Map" resultType="egovMap">
 
-    SELECT DISTINCT SUP_REF_PCL_TRKNO from SUP0001M WHERE SUP_REF_PCL_TRKNO = #{parcelTrackNo} AND DEL_FLG = 'N'
+    SELECT DISTINCT SUP_REF_PCL_TRKNO from SUP0001M WHERE SUP_REF_PCL_TRKNO = #{inputParcelTrackNo} AND DEL_FLG = 'N'
 
    </select>
 
@@ -136,6 +136,20 @@ WHERE  1=1
     WHERE SUP_REF_ID = #{supRefId} AND DEL_FLG = 'N'
 
   </update>
+
+
+  <select id="getStoSup"  parameterType="Map" resultType="egovMap">
+  <![CDATA[
+  SELECT * FROM (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N') <> 'Y' AND REF_DOC_NO = #{supRefNo} ORDER BY REQST_NO DESC) WHERE ROWNUM = 1
+  ]]>
+  </select>
+
+
+      <select id="SP_STO_PRE_SUPP" parameterType="Map"  statementType="CALLABLE" >
+      {
+             call SP_STO_PRC_SUPP (#{P_STO},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+   </select>
 
     <select id="selectSubmBrch" resultType="egovMap">
            SELECT
@@ -365,6 +379,12 @@ WHERE  1=1
 
                 ORDER BY Extent1.POS_NO DESC
     </select>
+
+
+    <update id="revertStgStus" parameterType="Map">
+        UPDATE SUP0001M SET SUP_REF_STG = '3' , SUP_REF_PCL_TRKNO = ''
+        WHERE SUP_REF_ID = #{supRefId} AND DEL_FLG = 'N'
+    </update>
 
 
 </mapper>
