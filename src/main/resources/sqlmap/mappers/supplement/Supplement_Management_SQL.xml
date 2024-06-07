@@ -243,12 +243,12 @@
                Extent1.SUP_REF_NO AS SUP_REF_NO,
                Extent1.SUP_SUBM_SOF AS SOF_NO,
                Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
-               Extent1.SUP_TTL_AMT AS SUP_TTL_AMT,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
                Extent7.NAME AS SUP_REF_STUS,
                Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
                Extent8.CODE_NAME AS SUP_REF_STG,
                Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
-               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DATE,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
                Extent16.NAME AS SUBM_BRCH,
                Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
                Extent1.PV_YEAR AS PV_YEAR,
@@ -256,8 +256,8 @@
                Extent1.TOT_PV AS TOT_PV,
                Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
                Extent5.USER_NAME AS REF_CREATE_BY,
-               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') AS REF_CREATE_DATE,
-               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY') AS SUP_REF_DEL_DT,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
                Extent3.CUST_ID AS CUST_ID,
                Extent3.NAME AS CUST_NAME,
                Extent3.NRIC AS CUST_NRIC,
@@ -432,4 +432,33 @@
                AND SUP_REF_PCL_TRKNO = #{consNo}
                AND DEL_FLG = 'N'
   </update>
+
+  <update id="updateDelLstDtl" parameterType="Map">
+    UPDATE SUP0005D SET DEL_FLG = 'Y'
+    WHERE SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+        AND SUP_REF_PCL_TRKNO = #{consNo}
+        AND DEL_FLG = 'N'
+  </update>
+
+  <insert id="insertDelLstDtl" parameterType="Map">
+    INSERT INTO SUP0005D ( SUP_DEL_ID
+                                      , SUP_REF_ID
+                                      , SUP_REF_PCL_TRKNO
+                                      , SUP_DEL_SEQ
+                                      , SUP_DEL_DT
+                                      , SUP_DEL_LOC
+                                      , SUP_DEL_RMK
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( SUP0005D_SUP_DEL_SEQ_ID.NEXTVAL
+                    , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+                    , #{consNo}
+                    , #{enumStatus}
+                    , TO_DATE(#{dateScan}, 'YYYY-MM-DD HH24:MI:SS')
+                    , #{location}
+                    , #{statusDetail}
+                    , #{userId}
+                    , #{userId}
+    )
+  </insert>
 </mapper>
