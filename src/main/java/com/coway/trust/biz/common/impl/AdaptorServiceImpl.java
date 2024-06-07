@@ -133,6 +133,10 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return this.sendEmail(email, isTransactional, null, null);
 	}
 
+	public boolean sendEmailSupp(EmailVO email, boolean isTransactional) {
+		return this.sendEmailSupp(email, isTransactional, null, null);
+	}
+
 	@Override
 	public boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
 			Map<String, Object> params) {
@@ -158,6 +162,59 @@ public class AdaptorServiceImpl implements AdaptorService {
 			if (isMultiPart && email.getHasInlineImage()) {
 				try {
 					messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_header.png"));
+				} catch (Exception e) {
+					LOGGER.error(e.toString());
+					throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+				}
+			} else if (isMultiPart) {
+				email.getFiles().forEach(file -> {
+					try {
+						messageHelper.addAttachment(file.getName(), file);
+					} catch (Exception e) {
+						LOGGER.error(e.toString());
+						throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+					}
+				});
+			}
+
+		    mailSender.send(message);
+
+		} catch (Exception e) {
+			isSuccess = false;
+			LOGGER.error(e.getMessage());
+			if (isTransactional) {
+				throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+			}
+		}
+
+		return isSuccess;
+	}
+
+	@Override
+	public boolean sendEmailSupp(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+			Map<String, Object> params) {
+		boolean isSuccess = true;
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			boolean hasFile = email.getFiles().size() == 0 ? false : true;
+			boolean hasInlineImage = email.getHasInlineImage();	//for attaching image in HTML inline
+			boolean isMultiPart = hasFile || hasInlineImage;
+
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
+			messageHelper.setFrom(from);
+			messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
+			messageHelper.setSubject(email.getSubject());
+
+			if (templateType != null) {
+				messageHelper.setText(getMailTextByTemplate(templateType, params), email.isHtml());
+			} else {
+				messageHelper.setText(email.getText(), email.isHtml());
+			}
+
+
+			if (isMultiPart && email.getHasInlineImage()) {
+				try {
+					messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_logo.png"));
 				} catch (Exception e) {
 					LOGGER.error(e.toString());
 					throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
