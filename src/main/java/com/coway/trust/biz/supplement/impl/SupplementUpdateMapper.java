@@ -31,6 +31,10 @@ public interface SupplementUpdateMapper {
 
   int updOrdDelStat( Map<String, Object> params );
 
+  void updateDelLstDtl( Map<String, Object> params );
+
+  void insertDelLstDtl( Map<String, Object> params );
+
   EgovMap getStoSup( Map<String, Object> params );
 
   Map<String, Object> SP_STO_PRE_SUPP( Map<String, Object> param );
