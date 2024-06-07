@@ -23,7 +23,12 @@ public interface AdaptorService {
 	 */
 	boolean sendEmail(EmailVO email, boolean isTransactional);
 
+	boolean sendEmailSupp(EmailVO email, boolean isTransactional);
+
 	boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+			Map<String, Object> params);
+
+	boolean sendEmailSupp(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
 			Map<String, Object> params);
 
 	/**
