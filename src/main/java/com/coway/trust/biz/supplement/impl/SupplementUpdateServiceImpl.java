@@ -97,8 +97,12 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Override
   public List<EgovMap> selectSupRefStg() {
-
     return supplementUpdateMapper.selectSupRefStg();
+  }
+
+  @Override
+  public List<EgovMap> selectSupDelStus() {
+    return supplementUpdateMapper.selectSupDelStus();
   }
 
   @Override
@@ -227,8 +231,14 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
         fail += 1;
         continue;
       }
+
       Map<String, Object> extractedValueMap = (Map<String, Object>) rtnData.get("value");
       extractedValueMap.put( "userId", CommonUtils.nvl(params.get( "userId" )));
+
+      if (extractedValueMap.get( "latestEnumStatus" ).equals( 4 )) {
+        extractedValueMap.put( "ordRefStat", "4");
+        extractedValueMap.put( "ordRefStg", "99");
+      }
 
       int count = supplementUpdateMapper.updOrdDelStat( extractedValueMap );
       if (count > 0) {
