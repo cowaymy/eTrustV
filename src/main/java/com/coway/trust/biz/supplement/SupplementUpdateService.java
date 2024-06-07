@@ -14,6 +14,8 @@ public interface SupplementUpdateService {
 
   List<EgovMap> selectSupRefStg();
 
+  List<EgovMap> selectSupDelStus();
+
   List<EgovMap> selectSubmBrch();
 
   List<EgovMap> selectWhBrnchList()
