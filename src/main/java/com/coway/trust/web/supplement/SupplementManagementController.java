@@ -76,6 +76,7 @@ public class SupplementManagementController {
 
 	List<EgovMap> supRefStus = supplementUpdateService.selectSupRefStus();
 	List<EgovMap> supRefStg = supplementUpdateService.selectSupRefStg();
+	List<EgovMap> supDelStus = supplementUpdateService.selectSupDelStus();
 	List<EgovMap> submBrch = supplementUpdateService.selectSubmBrch();
 
 	 LOGGER.debug("===========================supplementManagementList.do=====================================");
@@ -85,6 +86,7 @@ public class SupplementManagementController {
 
 	 model.addAttribute("supRefStus", supRefStus);
 	 model.addAttribute("supRefStg", supRefStg);
+	 model.addAttribute("supDelStus", supDelStus);
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
@@ -130,12 +132,15 @@ public class SupplementManagementController {
 
     LOGGER.info("############################ selectSupplementList  params.toString :    " + params.toString());
 
-    // params
-    String systemArray[] = request.getParameterValues("posTypeId");
-    String statusArray[] = request.getParameterValues("posStatusId");
+    String[] delStatArray = request.getParameterValues("supDelStus");
+    String[] supRefStgArray = request.getParameterValues("supRefStg");
+    String[] supSubmBrArray = request.getParameterValues("_brnchId");
+    String[] supSubmRefStatArray = request.getParameterValues("supRefStus");
 
-    params.put("systemArray", systemArray);
-    params.put("statusArray", statusArray);
+    params.put("delStatArray", delStatArray);
+    params.put("supRefStgArray", supRefStgArray);
+    params.put("supSubmBrArray", supSubmBrArray);
+    params.put("supSubmRefStatArray", supSubmRefStatArray);
 
     listMap = supplementUpdateService.selectSupplementList(params);
 
