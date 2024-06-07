@@ -236,7 +236,7 @@
                       if (clickChk == null
                           || clickChk.length <= 0) {
                         Common
-                            .alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+                            .alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
                         return;
                       }
 
@@ -265,6 +265,14 @@
                     Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supRefNo);
                     return;
                 }
+
+                // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
+                alert(selectedItems[a].item.supRefDelStus);
+                if (selectedItems[a].item.supRefDelStus >= 4) {
+                    Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
+                    return;
+                }
+
                 var item = {
                   ordNo : selectedItems[a].item.supRefNo,
                   trckNo: selectedItems[a].item.parcelTrackNo
@@ -760,6 +768,17 @@
       width : '15%',
       editable : false
     }, {
+        dataField : "supRefDelStus",
+        headerText : '<spring:message code="supplement.text.delStat" />',
+        width : '5%',
+        editable : false,
+        visible : false
+    }, {
+        dataField : "supDelStus",
+        headerText : '<spring:message code="supplement.text.delStat" />',
+        width : '15%',
+        editable : false
+    }, {
       dataField : "supRefDate",
       headerText :  '<spring:message code="supplement.text.supplementReferenceDate" />',
       width : '15%',
@@ -959,7 +978,7 @@
   }
 
   function fn_getPosListAjax() {
-
+	  console.log($("#searchForm").serialize());
     // Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
     Common.ajax("GET", "/supplement/selectSupplementList", $("#searchForm")
         .serialize(), function(result) {
@@ -1070,6 +1089,10 @@
             </td>
           </tr>
           <tr>
+            <th scope="row"><spring:message code="supplement.text.submissionBranch" /></th>
+            <td>
+              <select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select>
+            </td>
             <th scope="row"><spring:message code="sal.text.createDate" /><span class="must">*</span></th>
             <td>
               <div class="date_set w100p">
@@ -1082,16 +1105,19 @@
                 </p>
               </div>
             </td>
-            <th scope="row"><spring:message code="supplement.text.submissionBranch" /></th>
-            <td>
-              <select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select>
-            </td>
             <th scope="row"><spring:message code="sal.text.createBy" /></th>
             <td>
-              <input type="text" title="" placeholder="Supplement Reference Creator" class="w100p" id="_supRefCreator" " name="supRefCreator" />
+              <input type="text" title="" placeholder="Create By" class="w100p" id="_supRefCreator" " name="supRefCreator" />
             </td>
           </tr>
           <tr>
+            <th scope="row"><spring:message code="supplement.text.delStat" /></th>
+            <td><select class="multy_select w100p" multiple="multiple" id="supDelStus" name="supDelStus">
+                <c:forEach var="list" items="${supDelStus}" varStatus="status_dEL">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
+              </select>
+            </td>
             <th scope="row"><spring:message code="supplement.text.supplementReferenceStage" /></th>
             <td colspan='3'>
               <select class="multy_select w100p" multiple="multiple" id="supRefStg" name="supRefStg">
@@ -1100,8 +1126,6 @@
                 </c:forEach>
               </select>
             </td>
-            <th scope="row"></th>
-            <td></td>
           </tr>
           <tr>
             <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /></th>
