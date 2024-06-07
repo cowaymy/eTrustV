@@ -8,8 +8,11 @@
                Extent1.SUP_SUBM_SOF AS SOF_NO,
                Extent7.NAME AS SUP_REF_STUS,
                Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_DEL_STUS AS SUP_REF_DEL_STUS,
+               Extent9.CODE_NAME AS SUP_DEL_STUS,
                TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DATE ,
-               Extent2.CODE AS SUBM_BRCH,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mm:ss') AS SUP_DEL_DATE ,
+               Extent2.NAME AS SUBM_BRCH,
                Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
                Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
                Extent1.MEM_ID AS SALESMAN_ID,
@@ -29,6 +32,10 @@
     JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
     LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG
                                             AND Extent8.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS
+                                            AND Extent9.CODE_MASTER_ID = '587'
+    LEFT JOIN ORG1001V Extent10 ON Extent1.MEM_ID = Extent10.MEM_ID
+    LEFT JOIN SAL0027D Extent11 ON Extent1.CUST_ID = Extent11.CUST_ID AND Extent1.CUST_CNTC_ID = Extent11.CUST_CNTC_ID
     WHERE 1=1
 
     <if test=" null != supRefNo and '' != supRefNo">
@@ -39,8 +46,28 @@
       AND Extent1.SUP_SUBM_SOF = #{sofNo}
     </if>
 
-    <if test=" null != supRefStus and '' != supRefStus">
-       AND Extent1.SUP_REF_STUS = #{supRefStus}
+    <if test="supSubmRefStatArray != null and supSubmRefStatArray != '' ">
+       AND Extent1.SUP_REF_STUS IN
+     <foreach item="item" collection="supSubmRefStatArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="supSubmBrArray != null and supSubmBrArray != '' ">
+       AND Extent1.MEM_BRNCH_ID IN
+     <foreach item="item" collection="supSubmBrArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="delStatArray != null and delStatArray != '' ">
+       AND Extent1.SUP_REF_DEL_STUS IN
+     <foreach item="item" collection="delStatArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
 
     <if test="sDate != null and sDate != '' ">
@@ -55,8 +82,12 @@
       ]]>
     </if>
 
-    <if test=" null != supRefStg and '' != supRefStg">
-      AND Extent1.SUP_REF_STG = #{supRefStg}
+    <if test="supRefStgArray != null and supRefStgArray != '' ">
+       AND Extent1.SUP_REF_STG IN
+     <foreach item="item" collection="supRefStgArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
 
     <if test=" null != parcelTrackNo and '' != parcelTrackNo">
@@ -68,15 +99,15 @@
     </if>
 
     <if test=" null != orgCode and '' != orgCode">
-      AND Extent1.SUP_REF_PCL_TRKNO = #{orgCode}
+      AND Extent10.ORG_CODE = #{orgCode}
     </if>
 
-    <if test=" null != groupCode and '' != groupCode">
-      AND Extent1.SUP_REF_PCL_TRKNO = #{groupCode}
+    <if test=" null != grpCode and '' != grpCode">
+      AND Extent10.GRP_CODE = #{grpCode}
     </if>
 
-    <if test=" null != departmentCode and '' != departmentCode">
-      AND Extent1.SUP_REF_PCL_TRKNO = #{departmentCode}
+    <if test=" null != deptCode and '' != deptCode">
+      AND Extent10.DEPT_CODE = #{deptCode}
     </if>
 
     <if test=" null != custName and '' != custName">
@@ -88,7 +119,7 @@
     </if>
 
     <if test=" null != custContactNo and '' != custContactNo">
-      AND Extent3.NRIC = #{custContactNo}
+      AND Extent11.TEL_M1 = #{custContactNo}
     </if>
 
     <if test=" null != custEmail and '' != custEmail">
@@ -105,13 +136,23 @@
   </select>
 
   <select id="selectSupRefStg"  parameterType="Map" resultType="egovMap">
-    SELECT CODE_ID AS CODE_ID,
+    SELECT CODE AS CODE_ID,
                CODE AS CODE,
                CODE_NAME AS CODE_NAME
     FROM SYS0013M
     WHERE CODE_MASTER_ID = '586'
     ORDER BY CODE
   </select>
+
+  <select id="selectSupDelStus"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+               CODE AS CODE,
+               CODE_NAME AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '587'
+    ORDER BY CODE
+  </select>
+
 
   <select id="checkDuplicatedTrackNo"  parameterType="Map" resultType="egovMap">
     SELECT DISTINCT SUP_REF_PCL_TRKNO from SUP0001M WHERE SUP_REF_PCL_TRKNO = #{inputParcelTrackNo} AND DEL_FLG = 'N'
@@ -120,6 +161,7 @@
   <update id="updateRefStgStatus" parameterType="Map">
     UPDATE SUP0001M SET SUP_REF_STG = '4'
                                    , SUP_REF_PCL_TRKNO = #{inputParcelTrackNo}
+                                   , SUP_REF_DEL_STUS = 0
     WHERE SUP_REF_ID = #{supRefId}
         AND DEL_FLG = 'N'
   </update>
@@ -200,7 +242,7 @@
     SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
                Extent1.SUP_REF_NO AS SUP_REF_NO,
                Extent1.SUP_SUBM_SOF AS SOF_NO,
-               Extent9.CODE_NAME AS SUP_APPL_TYP,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
                Extent1.SUP_TTL_AMT AS SUP_TTL_AMT,
                Extent7.NAME AS SUP_REF_STUS,
                Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
@@ -216,7 +258,6 @@
                Extent5.USER_NAME AS REF_CREATE_BY,
                TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') AS REF_CREATE_DATE,
                TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY') AS SUP_REF_DEL_DT,
-               Extent1.SUP_REF_DEL_STUS AS SUP_REF_DEL_STUS,
                Extent3.CUST_ID AS CUST_ID,
                Extent3.NAME AS CUST_NAME,
                Extent3.NRIC AS CUST_NRIC,
@@ -249,8 +290,8 @@
     JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
     LEFT JOIN org0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
     JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
-    JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
-    JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_APPL_TYP AND Extent9.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '587'
     LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
     LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
     LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
@@ -376,11 +417,15 @@
 
   <update id="updOrdDelStat" parameterType="Map">
     UPDATE SUP0001M SET SUP_REF_DEL_STUS = #{latestEnumStatus},
-
                                      <if test=" null != latestConsignmentNoteDate and '' != latestConsignmentNoteDate">
                                        SUP_REF_DEL_DT = TO_DATE(#{latestConsignmentNoteDate}, 'YYYY-MM-DD HH24:MI:SS'),
                                      </if>
-
+                                     <if test=" null != ordRefStat and '' != ordRefStat">
+                                       SUP_REF_STUS = #{ordRefStat},
+                                     </if>
+                                     <if test=" null != ordRefStg and '' != ordRefStg">
+                                        SUP_REF_STG = #{ordRefStg},
+                                     </if>
                                      UPD_USR_ID = #{userId},
                                      UPD_DT = SYSDATE
     WHERE SUP_REF_NO = #{ordNo}
