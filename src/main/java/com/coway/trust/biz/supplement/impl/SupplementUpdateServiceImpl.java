@@ -71,9 +71,6 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
   @Autowired
   private AdaptorService adaptorService;
 
-  @Resource(name = "paymentApiMapper")
-  private PaymentApiMapper paymentApiMapper;
-
   @Resource(name = "commonService")
   private CommonService commonService;
 
@@ -134,13 +131,6 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 		return supplementUpdateMapper.checkDuplicatedTrackNo(params);
 }
 
-
-/*  @Override
-	public int updateRefStgStatus(Map<String, Object> params) {
-      int result = supplementUpdateMapper.updateRefStgStatus(params);
-		return result;
-	}*/
-
   public Map<String, Object> updateRefStgStatus (Map<String, Object> params) throws Exception {
 	  Map<String, Object> rtnMap = new HashMap<>();
 	  Map<String, Object> stoEntry = new HashMap<String, Object>();
@@ -148,10 +138,6 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 	  try{
 	  int result = supplementUpdateMapper.updateRefStgStatus(params);
 	  EgovMap stoSup = supplementUpdateMapper.getStoSup(params);
-
-	  LOGGER.debug(" params stoSupNo =========>"+ stoSup.get("reqstNo"));
-	  LOGGER.debug(" params userId =========>"+ params.get("userId"));
-
 
 	  stoEntry.put("custName", params.get("custName"));
 	  stoEntry.put("supRefId", params.get("supRefId"));
@@ -163,9 +149,8 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 	  stoPreSupp(stoEntry);
 	  rtnMap.put("logError", "000");
 
-	  LOGGER.debug("Start send email=========");
 	  this.sendEmail(params);
-	  LOGGER.debug("Done send email=========l");
+
 
 	  } catch (Exception e) {
 	      rtnMap.put("logError", "99");
@@ -270,37 +255,17 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
-    //String emailTitle = paymentApiMapper.getEmailTitle(params);
     //Map<String, Object> params = new HashMap<>();
     String emailTitle = "Track Your Parcel ["+params.get("inputParcelTrackNo")+"] : GDEX Delivery In Progress.";
     String content = "";
 
     LOGGER.info("############################ sendEmail - params: {}", params);
 
-    /*Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
-    params.putAll(additionalParams);*/
-
- //   List<String> emailNo = new ArrayList<String>();
-
-    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my");
-
-/* if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
-      emailNo.add(CommonUtils.nvl(params.get("email1")));
-    }
-
-    if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
-      emailNo.add(CommonUtils.nvl(params.get("email2")));
-    }*/
-
-/*    String text = "";
-    text += "Dear All,\r\n\r\n";
-    text += "Hereby is Hello World";
-    text +=  "Sincere Regards,\r\n";
-    text +=  "IT Department";*/
-
+  //  List<String> emailNo = new ArrayList<String>();
+    List<String> emailNo = Arrays.asList(" "+ params.get("custEmail") +" ");
+  //  List<String> emailNo = Arrays.asList("alex.lau@coway.com.my", " "+ params.get("custEmail") +" ");
 
     if (params.get("emailType") == "1"){
-
     content+="<html>" +
             "<body>" +
             "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/>" +
@@ -334,38 +299,16 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
     email.setText(content);
 
-    params.put(REPORT_FILE_NAME, "/services/mibile_email_test.rpt");// visualcut
-    params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (HP)");
-    params.put(EMAIL_TO, emailNo);
-    params.put(EMAIL_TEXT, email);
-                                                                                  // rpt
-                                                                                  // file
-                                                                                  // name.
-    //params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
-    //params.put("v_Param", " ");// parameter
-    //params.put(AppConstants.REPORT_DOWN_FILE_NAME, "HelloWorld" + CommonUtils.getNowDate() + ".pdf");
+    LOGGER.info("[END] Number of EMAIL SENT...: "+ emailNo.size() +" ");
 
-/*    try {
-		this.view(null, null, params);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}*/
-
-    LOGGER.info("[END] HelloWorld...");
-
-
+    if(emailNo.size() > 0){
     email.setTo(emailNo);
-    //email.setHtml(false);
     email.setHtml(true);
     email.setSubject(emailTitle);
     email.setHasInlineImage(true);
     //email.setText(text);
-
     boolean isResult = false;
-
     isResult = adaptorService.sendEmailSupp(email, false);
+    }
   }
-
 }
