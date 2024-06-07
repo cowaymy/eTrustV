@@ -41,6 +41,6 @@ public interface SupplementUpdateService {
 
   Map<String, Object> SP_STO_PRE_SUPP( Map<String, Object> param );
 
-  void sendEmail();
+  void sendEmail(Map<String, Object> params);
 
 }
