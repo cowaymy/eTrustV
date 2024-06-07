@@ -262,6 +262,7 @@
                Extent3.NAME AS CUST_NAME,
                Extent3.NRIC AS CUST_NRIC,
                Extent3.GENDER AS CUST_GENDER,
+               Extent17.EMAIL AS CUST_EMAIL,
                TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
                TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
                Extent10.CODE_NAME AS CUST_STATUS,
@@ -299,6 +300,7 @@
     LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
     LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
     LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}
