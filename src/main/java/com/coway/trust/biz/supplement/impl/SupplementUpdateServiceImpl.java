@@ -152,16 +152,19 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 	  LOGGER.debug(" params stoSupNo =========>"+ stoSup.get("reqstNo"));
 	  LOGGER.debug(" params userId =========>"+ params.get("userId"));
 
+
+	  stoEntry.put("custName", params.get("custName"));
 	  stoEntry.put("supRefId", params.get("supRefId"));
 	  stoEntry.put("supRefNo", params.get("supRefNo"));
 	  stoEntry.put("reqstNo", stoSup.get("reqstNo"));
 	  stoEntry.put("userId", params.get("userId"));
+	  params.put("emailType", "1");
 
 	  stoPreSupp(stoEntry);
 	  rtnMap.put("logError", "000");
 
 	  LOGGER.debug("Start send email=========");
-	  this.sendEmail();
+	  this.sendEmail(params);
 	  LOGGER.debug("Done send email=========l");
 
 	  } catch (Exception e) {
@@ -265,13 +268,16 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
   @SuppressWarnings("unchecked")
   @Override
-  public void sendEmail() {
+  public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
-   // String emailTitle = paymentApiMapper.getEmailTitle(params);
-    Map<String, Object> params = new HashMap<>();
-    String emailTitle = "Hello World";
+    //String emailTitle = paymentApiMapper.getEmailTitle(params);
+    //Map<String, Object> params = new HashMap<>();
+    String emailTitle = "Track Your Parcel ["+params.get("inputParcelTrackNo")+"] : GDEX Delivery In Progress.";
+    String content = "";
 
-/*    Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
+    LOGGER.info("############################ sendEmail - params: {}", params);
+
+    /*Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
     params.putAll(additionalParams);*/
 
  //   List<String> emailNo = new ArrayList<String>();
@@ -286,11 +292,47 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
       emailNo.add(CommonUtils.nvl(params.get("email2")));
     }*/
 
-    String text = "";
+/*    String text = "";
     text += "Dear All,\r\n\r\n";
     text += "Hereby is Hello World";
     text +=  "Sincere Regards,\r\n";
-    text +=  "IT Department";
+    text +=  "IT Department";*/
+
+
+    if (params.get("emailType") == "1"){
+
+    content+="<html>" +
+            "<body>" +
+            "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/>" +
+            "<h3>Your order is confirm!</h3>" +
+            "Dear "+params.get("custName")+" ,<br/><br/>"+
+          "Thank you for your purchase! Your order "+params.get("supRefNo")+" has successfully been placed.<br/>" +
+
+            "Track your shipment here : "+params.get("inputParcelTrackNo")+" <br/><br/>" +
+    		"https://gdexpress.com/tracking/<br/>" +
+    		"Simply key in the tracking number to track your order.<br/><br/>" +
+    		"<br/><br/>" +
+    		"Best Regards, <br/>" +
+    		"Coway <br/><br/>" ;
+
+    } else if (params.get("emailType") == "2"){
+
+    	content+="<html>" +
+                "<body>" +
+                "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/>" +
+                "<h3>Your package has been delivered!</h3>" +
+                "Dear "+params.get("custName")+" ,<br/><br/>"+
+                "Your order :"+params.get("supRefNo")+"<br/>" +
+
+                "We hope you enjoy our products. Cheers to better health!<br/><br/>" +
+
+        		"Best Regards, <br/>" +
+        		"Coway <br/><br/>" +
+
+				"Please do not reply to this email as this is a computer generated message.<br/>" ;
+    }
+
+    email.setText(content);
 
     params.put(REPORT_FILE_NAME, "/services/mibile_email_test.rpt");// visualcut
     params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (HP)");
@@ -300,10 +342,9 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
                                                                                   // file
                                                                                   // name.
     //params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     //params.put("v_Param", " ");// parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "HelloWorld" + CommonUtils.getNowDate() + ".pdf");
+    //params.put(AppConstants.REPORT_DOWN_FILE_NAME, "HelloWorld" + CommonUtils.getNowDate() + ".pdf");
 
 /*    try {
 		this.view(null, null, params);
@@ -316,14 +357,15 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
 
     email.setTo(emailNo);
-    email.setHtml(false);
+    //email.setHtml(false);
+    email.setHtml(true);
     email.setSubject(emailTitle);
-    email.setHasInlineImage(false);
-    email.setText(text);
+    email.setHasInlineImage(true);
+    //email.setText(text);
 
     boolean isResult = false;
 
-    isResult = adaptorService.sendEmail(email, false);
+    isResult = adaptorService.sendEmailSupp(email, false);
   }
 
 }
