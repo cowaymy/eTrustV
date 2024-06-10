@@ -1,11 +1,9 @@
 <script type="text/javaScript" language="javascript">
 
-    //AUIGrid ���� �� ��ȯ ID
     var custInfoGridID;
     var oriNric = "${orderDetail.basicInfo.custNric}";
 
     $(document).ready(function(){
-
 
      // Masking pen (display last 4)
         if('${orderDetail.basicInfo.custType}' == "Individual") {
@@ -26,8 +24,6 @@
             $("#spanNric").html(oriNric);
         }
     });
-
-
 
 
 </script>
@@ -74,6 +70,20 @@
     <td><span>${orderInfo.custStatus}</span></td>
     <th ></th>
     <td></td>
+</tr>
+ <tr>
+    <th scope="row"><spring:message code="sales.MobileNo" /></th>
+    <td><span>${orderInfo.custMobileNo}</span></td>
+    <th scope="row"><spring:message code="sales.OfficeNo" /></th>
+    <td><span>${orderInfo.custOfficeNo}</span></td>
+    <th scope="row"><spring:message code="supplement.title.text.ResidentNo" /></th>
+    <td><span>${orderInfo.custResidentNo}</span></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="service.title.FaxNo" /></th>
+    <td><span>${orderInfo.custFaxNo}</span></td>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
+    <td colspan="3"><span>${orderInfo.custEmail}</span></td>
 </tr>
 
 </tbody>
