@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,10 @@ import com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
 import static com.coway.trust.AppConstants.EMAIL_TEXT;
@@ -170,18 +176,9 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 	    supplementUpdateMapper.SP_STO_PRE_SUPP(logPram);
 
 	    if (!"000".equals(logPram.get("p1"))) {
-	     // rollBackSupplementTransaction(params);
 	      throw new ApplicationException(AppConstants.FAIL, "SP_STO_PRC_SUPP - ERRCODE : " + logPram.get("p1"));
 	      // throw new Exception("SP_STO_PRC_SUPP - ERRCODE : " + logPram.get("p1"));
 	    }
-	  }
-
-
-  private void rollBackSupplementTransaction( Map<String, Object> params)
-	      throws Exception {
-	  LOGGER.info("############################ rollBackSupplementTransaction - params: {}", params);
-	  supplementUpdateMapper.revertStgStus(params);
-	  LOGGER.info("Complete reverted!..");
 	  }
 
   @SuppressWarnings("unchecked")
@@ -222,8 +219,10 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
       Map<String, Object> extractedValueMap = (Map<String, Object>) rtnData.get("value");
       extractedValueMap.put( "userId", CommonUtils.nvl(params.get( "userId" )));
+      extractedValueMap.put( "ordNo", CommonUtils.nvl(  order.get( "ordNo" ) ));
+      extractedValueMap.put( "consNo", CommonUtils.nvl( order.get( "trckNo" ) ));
 
-      if (extractedValueMap.get( "latestEnumStatus" ).equals( 4 )) {
+      if (extractedValueMap.get( "latestEnumStatus" ).equals( "4" )) {
         extractedValueMap.put( "ordRefStat", "4");
         extractedValueMap.put( "ordRefStg", "99");
       }
@@ -232,13 +231,64 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
       if (count > 0) {
         success += 1;
       }
-      System.out.println( "UPDATE COUNT: " + count );
+
+      // SEND EMAIL TO CUSTOMER
+      Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( extractedValueMap );
+      custEmailDtl.put( "emailType", "2" );
+      this.sendEmail( custEmailDtl );
+
+      // INSERT DELIVERY LISTIN DETAIL HERE
+      this.insertDelListing(extractedValueMap);
     }
 
     EgovMap message = new EgovMap();
     message.put( "message", String.format("Total records processed: %d, Successful: %d, Failed: %d", total, success, fail) );
 
     return message;
+  }
+
+  @SuppressWarnings("null")
+  public void insertDelListing(Map<String, Object> params) throws JSONException {
+    if (params.get( "cnDetailStatusList" ) == null) {
+      // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
+      return;
+    }
+
+    // CONVERT STRING TO JSON ARRAY
+    JSONArray jsonArray = new JSONArray(params.get( "cnDetailStatusList" ).toString());
+    if (jsonArray.length() == 0) {
+      // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
+      return;
+    }
+
+    Map<String, Object> updParam =  new HashMap<>();
+    updParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )));
+    // SOFT REMOVE EXISTING LISTING DETAIL
+    supplementUpdateMapper.updateDelLstDtl( updParam );
+
+    for (int i=0; i < jsonArray.length(); i++) {
+      JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+      Map<String, Object> insertParam =  new HashMap<>();
+
+      insertParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )));
+      insertParam.put( "consNo", CommonUtils.nvl(params.get( "consNo" )));
+      insertParam.put( "enumStatus", jsonObject.getInt("enumStatus"));
+      insertParam.put( "undelCode", jsonObject.getString("undelCode"));
+      insertParam.put( "consignmentNoteStatus", jsonObject.getString("consignmentNoteStatus"));
+      insertParam.put( "statusDetail", jsonObject.getString("statusDetail"));
+      insertParam.put( "location", jsonObject.getString("location"));
+      insertParam.put( "userId", CommonUtils.nvl(params.get( "userId" )));
+
+      // CONVERT DATE TO ORACLE ACCEPTABLE FORMAT
+      Instant instant = Instant.parse(jsonObject.getString("dateScan"));
+      LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      String formattedDateTime = dateTime.format(formatter);
+      insertParam.put( "dateScan", CommonUtils.nvl(formattedDateTime));
+
+      supplementUpdateMapper.insertDelLstDtl( insertParam );
+    }
   }
 
   @Override
@@ -255,50 +305,63 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
-    //Map<String, Object> params = new HashMap<>();
-    String emailTitle = "Track Your Parcel ["+params.get("inputParcelTrackNo")+"] : GDEX Delivery In Progress.";
+    String emailTitle = "";
     String content = "";
 
     LOGGER.info("############################ sendEmail - params: {}", params);
 
-  //  List<String> emailNo = new ArrayList<String>();
-    List<String> emailNo = Arrays.asList(" "+ params.get("custEmail") +" ");
-  //  List<String> emailNo = Arrays.asList("alex.lau@coway.com.my", " "+ params.get("custEmail") +" ");
+    List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
 
-    if (params.get("emailType") == "1"){
-    content+="<html>" +
-            "<body>" +
-            "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/>" +
-            "<h3>Your order is confirm!</h3>" +
-            "Dear "+params.get("custName")+" ,<br/><br/>"+
-          "Thank you for your purchase! Your order "+params.get("supRefNo")+" has successfully been placed.<br/>" +
+    if (CommonUtils.nvl(params.get("emailType")) == "1"){
+      emailTitle = "Your Order Has Been Prepared and Is On Its Way!";
 
-            "Track your shipment here : "+params.get("inputParcelTrackNo")+" <br/><br/>" +
-    		"https://gdexpress.com/tracking/<br/>" +
-    		"Simply key in the tracking number to track your order.<br/><br/>" +
-    		"<br/><br/>" +
-    		"Best Regards, <br/>" +
-    		"Coway <br/><br/>" ;
+      content += "<html>" +
+                      "<body>" +
+                      "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>" +
+                      "Dear " + CommonUtils.nvl(params.get("custName")) + " ,<br/><br/>"+
+                      "We are excited to inform you that your order has been prepared and is ready for delivery. Your parcel will be delivered by GDEX. <br/><br/>" +
+                      "<b><u>Delivery Details:</u></b><br/>" +
+                      "<b>Order No. :</b>" + CommonUtils.nvl(params.get("supRefNo")) + "<br/>" +
+                      "<b>Tracking No. :</b>" + CommonUtils.nvl(params.get("inputParcelTrackNo")) + "<br/>" +
+                      "<b>Delivery Service : </b>GDEX<br/>" +
+                      "You can track the status of your delivery using the following link: https://gdexpress.com/tracking/<br/><br/>" +
+                      "If you have any questions or concerns about your order, please feel free to contact our customer service team at callcenter@coway.com.my or 1800-888-111.<br/>" +
+                      "Thank you for shopping with us. We hope you enjoy your purchase!<br/><br/>" +
+                      "Best Regards, <br/>" +
+                      "Coway <br/><br/>" +
+                      "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>" ;
 
-    } else if (params.get("emailType") == "2"){
+    } else if (CommonUtils.nvl(params.get("emailType")) == "2"){
+      emailTitle = "Your Parcel Has Been Delivered!";
 
-    	content+="<html>" +
-                "<body>" +
-                "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/>" +
-                "<h3>Your package has been delivered!</h3>" +
-                "Dear "+params.get("custName")+" ,<br/><br/>"+
-                "Your order :"+params.get("supRefNo")+"<br/>" +
+      content+="<html>" +
+                     "<body>" +
+                     "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>" +
+                     "Dear " + CommonUtils.nvl(params.get("custName")) + " ,<br/><br/>" +
+                     "We are pleased to inform you that your parcel has been successfully delivered.<br/><br/>" +
+                     "<b><u>Delivery Details:</u></b><br/>" +
+                     "<b>Order No. :</b>" + CommonUtils.nvl(params.get("supRefNo")) + "<br/>" +
+                     "<b>Delivery Address:</b><br/>" + CommonUtils.nvl(params.get("addrLn1")) + ", " + "<br/>";
 
-                "We hope you enjoy our products. Cheers to better health!<br/><br/>" +
+                     if (!CommonUtils.nvl(params.get("addrLn2")).equals( "" )) {
+                       content+= "" + CommonUtils.nvl(params.get("addrLn2")) + ", " + "<br/>";
+                     }
 
-        		"Best Regards, <br/>" +
-        		"Coway <br/><br/>" +
-
-				"Please do not reply to this email as this is a computer generated message.<br/>" ;
+     content+= "" + CommonUtils.nvl(params.get("area")) + ", " + "<br/>" +
+                     "" + CommonUtils.nvl(params.get("postcode")) + ", " + CommonUtils.nvl(params.get("city")) + ", " + "<br/>" +
+                     "" + CommonUtils.nvl(params.get("state")) + ", " + CommonUtils.nvl(params.get("country")) + "" + "<br/>" +
+                     "<b>Date of Delivery :</b>" + CommonUtils.nvl(params.get("delDt")) + "<br/><br/>" +
+                     "If you have any questions or concerns about your order, please feel free to contact our customer service team at callcenter@coway.com.my or 1800-888-111.<br/>" +
+                     "Thank you for shopping with us. We hope you enjoy your purchase!<br/><br/>" +
+                     "Best Regards, <br/>" +
+                     "Coway <br/><br/>" +
+                     "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>" ;
     }
 
     email.setText(content);
 
+    LOGGER.info("[END] emailTitle: "+ emailTitle +" ");
+    LOGGER.info("[END] content "+ content +" ");
     LOGGER.info("[END] Number of EMAIL SENT...: "+ emailNo.size() +" ");
 
     if(emailNo.size() > 0){
@@ -306,7 +369,7 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
     email.setHtml(true);
     email.setSubject(emailTitle);
     email.setHasInlineImage(true);
-    //email.setText(text);
+
     boolean isResult = false;
     isResult = adaptorService.sendEmailSupp(email, false);
     }
