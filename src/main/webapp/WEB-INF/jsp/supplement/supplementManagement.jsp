@@ -267,8 +267,13 @@
                 }
 
                 // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
+
                 if (selectedItems[a].item.supRefDelStus >= 4) {
                     Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
+                    // REFRESH THE GRID
+                    AUIGrid.clearGridData(posGridID);
+                    AUIGrid.clearGridData(posItmDetailGridID);
+                    fn_getPosListAjax();
                     return;
                 }
 
@@ -283,10 +288,6 @@
               // GET & UPDATE DELIVERY STATUS
               Common.ajax("POST", "/supplement/updOrdDelStat.do", {ords : suppOrds}, function(result) {
                 Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
-                // REFRESH THE GRID
-                AUIGrid.clearGridData(posGridID);
-                AUIGrid.clearGridData(posItmDetailGridID);
-                fn_getPosListAjax();
               });
 
             });
@@ -658,7 +659,7 @@
                 $("#hiddenSalesmanPopId").val('');
 
                 //Clear Grid
-                fn_clearAllGrid();
+               // fn_clearAllGrid();
               } else {
                 // console.log("멤버정보 가꼬옴");
                 console.log(memInfo.memId);
@@ -981,7 +982,7 @@
   }
 
   function fn_getPosListAjax() {
-	  console.log($("#searchForm").serialize());
+      console.log($("#searchForm").serialize());
     // Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
     Common.ajax("GET", "/supplement/selectSupplementList", $("#searchForm")
         .serialize(), function(result) {
