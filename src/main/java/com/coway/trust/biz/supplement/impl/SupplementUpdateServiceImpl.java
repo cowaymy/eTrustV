@@ -5,16 +5,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.mail.internet.MimeMessage;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.coway.trust.biz.supplement.SupplementUpdateService;
 import com.coway.trust.AppConstants;
@@ -79,6 +86,15 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Resource(name = "commonService")
   private CommonService commonService;
+
+  @Autowired
+  private JavaMailSender mailSender;
+
+  @Autowired
+  private VelocityEngine velocityEngine;
+
+  @Value("${mail.supplement.config.from}")
+  private String from;
 
   @Override
   public List<EgovMap> selectPosJsonList(Map<String, Object> params) throws Exception {
@@ -365,13 +381,71 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
     LOGGER.info("[END] Number of EMAIL SENT...: "+ emailNo.size() +" ");
 
     if(emailNo.size() > 0){
-    email.setTo(emailNo);
-    email.setHtml(true);
-    email.setSubject(emailTitle);
-    email.setHasInlineImage(true);
+      email.setTo(emailNo);
+      email.setHtml(true);
+      email.setSubject(emailTitle);
+      email.setHasInlineImage(true);
 
-    boolean isResult = false;
-    isResult = adaptorService.sendEmailSupp(email, false);
+      boolean isResult = false;
+      //isResult = adaptorService.sendEmail(email, false, null, null);
+      isResult = this.sendEmail(email, false, null, null);
     }
+  }
+
+  private boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+      Map<String, Object> params) {
+    boolean isSuccess = true;
+    try {
+      MimeMessage message = mailSender.createMimeMessage();
+      boolean hasFile = email.getFiles().size() == 0 ? false : true;
+      boolean hasInlineImage = email.getHasInlineImage(); //for attaching image in HTML inline
+      boolean isMultiPart = hasFile || hasInlineImage;
+
+      MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
+      messageHelper.setFrom(from);
+      messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
+      messageHelper.setSubject(email.getSubject());
+
+      if (templateType != null) {
+        messageHelper.setText(getMailTextByTemplate(templateType, params), email.isHtml());
+      } else {
+        messageHelper.setText(email.getText(), email.isHtml());
+      }
+
+
+      if (isMultiPart && email.getHasInlineImage()) {
+        try {
+          messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_logo.png"));
+        } catch (Exception e) {
+          LOGGER.error(e.toString());
+          throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+        }
+      } else if (isMultiPart) {
+        email.getFiles().forEach(file -> {
+          try {
+            messageHelper.addAttachment(file.getName(), file);
+          } catch (Exception e) {
+            LOGGER.error(e.toString());
+            throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+          }
+        });
+      }
+
+        mailSender.send(message);
+
+    } catch (Exception e) {
+      isSuccess = false;
+      LOGGER.error(e.getMessage());
+      if (isTransactional) {
+        throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+      }
+    }
+
+    return isSuccess;
+  }
+
+  private String getMailTextByTemplate(EmailTemplateType templateType, Map<String, Object> params) {
+    return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateType.getFileName(),
+        AppConstants.DEFAULT_CHARSET, params);
   }
 }
