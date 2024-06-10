@@ -435,6 +435,25 @@
                AND DEL_FLG = 'N'
   </update>
 
+  <select id="getCustEmailDtl"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_NO AS SUP_REF_NO,
+               B.NAME  AS CUST_NAME,
+               UPPER(C.ADDR_DTL) AS ADDR_LN1,
+               UPPER(C.STREET) AS ADDR_LN2,
+               UPPER(D.AREA) AS AREA,
+               UPPER(D.POSTCODE) AS POSTCODE,
+               UPPER(D.CITY) AS CITY,
+               UPPER(D.STATE) AS STATE,
+               UPPER(D.COUNTRY) AS COUNTRY,
+               TO_CHAR(A.SUP_REF_DEL_DT, 'DD/MM/YYYY hh:mm:ss AM') AS DEL_DT,
+               B.EMAIL AS CUST_EMAIL
+    FROM SUP0001M A
+    JOIN SAL0027D B ON B.CUST_ID = A.CUST_ID AND B.CUST_CNTC_ID = A.CUST_CNTC_ID
+    JOIN SAL0023D C ON C.CUST_ID = A.CUST_ID AND C.CUST_ADD_ID = A.CUST_DEL_ADDR_ID
+    LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
+    WHERE A.SUP_REF_NO = #{ordNo}
+  </select>
+
   <update id="updateDelLstDtl" parameterType="Map">
     UPDATE SUP0005D SET DEL_FLG = 'Y'
     WHERE SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
