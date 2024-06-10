@@ -292,30 +292,7 @@ FROM (
                   </if>
 
             ) t1
-            JOIN (
-                SELECT * FROM   log0103m aa
-                WHERE
-                    aa.result_id = (
-                        SELECT
-                            result_id
-                        FROM
-                            (
-                                SELECT
-                                    result_id,
-                                    ROW_NUMBER()
-                                    OVER(PARTITION BY aa.svc_ord_id
-                                         ORDER BY
-                                             aa.result_id DESC
-                                    ) AS rn
-                                FROM
-                                    log0103m bb
-                                WHERE
-                                    aa.svc_ord_id = bb.svc_ord_id
-                            ) sub_query
-                        WHERE
-                            rn = 1
-                    )
-            )        h ON ( t1.seq = h.seq )
+            JOIN (SELECT * FROM  LOG0103M AA WHERE AA.RESULT_ID = (SELECT MAX(bb.result_id) FROM LOG0103M BB WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID))H ON ( T1.SEQ = H.SEQ )
             JOIN sal0046d o ON o.install_entry_id = (
                     SELECT
                         MIN(sal0046d.install_entry_id)
@@ -542,33 +519,7 @@ FROM (
                   </if>
 
             ) t2
-            JOIN (
-                SELECT
-                    *
-                FROM
-                    log0103m aa
-                WHERE
-                    aa.result_id = (
-                        SELECT
-                            result_id
-                        FROM
-                            (
-                                SELECT
-                                    result_id,
-                                    ROW_NUMBER()
-                                    OVER(PARTITION BY aa.svc_ord_id
-                                         ORDER BY
-                                             aa.result_id DESC
-                                    ) AS rn
-                                FROM
-                                    log0103m bb
-                                WHERE
-                                    aa.svc_ord_id = bb.svc_ord_id
-                            ) sub_query
-                        WHERE
-                            rn = 1
-                    )
-            )        h ON ( t2.seq = h.seq )
+            JOIN (SELECT * FROM  LOG0103M AA WHERE AA.RESULT_ID = (SELECT MAX(bb.result_id) FROM LOG0103M BB WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID))H ON ( t2.SEQ = H.SEQ )
             JOIN sal0046d o ON o.install_entry_id = (
                     SELECT
                         MIN(sal0046d.install_entry_id)
