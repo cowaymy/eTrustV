@@ -42,9 +42,7 @@ $(document).ready(function() {
     	var inputParcelTrackNo = $("#parcelTrackNo").val();
     	var supRefNo = $("#_infoSupRefNo").val();
     	var custName = $("#_infoCustName").val();
-
-
-
+    	var custEmail = $("#_infoCustEmail").val();
 
     	if ($("#parcelTrackNo").val() == null || $("#parcelTrackNo").val().trim() == "") {
             Common.alert('Parcel tracking number is required.');
@@ -56,13 +54,9 @@ $(document).ready(function() {
         console.log("_infoSupRefStus :: " + $("#_infoSupRefStus").val());
         console.log("_infoSupRefStg :: " + $("#_infoSupRefStg").val());
 
-    	var param = {parcelTrackNo: parcelTrackNo, supRefId: supRefId, inputParcelTrackNo: inputParcelTrackNo, supRefNo: supRefNo, custName : custName};
+    	var param = {parcelTrackNo: parcelTrackNo, supRefId: supRefId, inputParcelTrackNo: inputParcelTrackNo, supRefNo: supRefNo, custName : custName, custEmail : custEmail};
 
-    	//if (($("#_infoSupRefStus").val() == 1) &&  ($("#_infoSupRefStg").val() == 4)) {
-    	if (!supRefStus == 1 && !supRefStg == 1) {
-    		 Common.alert('Either order status is not Active or Stage Status is not in Return Consignment Number Pending.');
-             return;
-    	} else {
+
     	Common.ajax('GET', "/supplement/checkDuplicatedTrackNo", param, function(result) {
     		console.log("result.length :: " + result.length);
             if(result.length > 0 ){
@@ -80,11 +74,7 @@ $(document).ready(function() {
                  });
             }
       });
-    	}
-    	 /*  var updateEshopData = {
-    	           esnNo : esnNo,
-    	           eshopStatus : 4
-    	       }; */
+
 	});
 });
 
@@ -107,6 +97,7 @@ function fn_bookingAndpopClose(){
 <input type="hidden" id="_infoSupRefId" value="${orderInfo.supRefId}">
 <input type="hidden" id="_infoSupRefNo" value="${orderInfo.supRefNo}">
 <input type="hidden" id="_infoCustName" value="${orderInfo.custName}">
+<input type="hidden" id="_infoCustEmail" value="${orderInfo.custEmail}">
 
 
 <header class="pop_header">

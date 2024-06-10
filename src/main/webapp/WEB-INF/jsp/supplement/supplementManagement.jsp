@@ -213,16 +213,26 @@
 
                       var supplementForm = {
                         supRefId : clickChk[0].item.supRefId,
+                        supRefStus : clickChk[0].item.supRefStus,
+                        supRefStg : clickChk[0].item.supRefStg,
                         ind : "1"
                       };
-                      //Common.popupDiv("/supplement/supplementTrackNoPop.do", {salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null , true , '_insDiv');
-                      Common
-                          .popupDiv(
-                              "/supplement/supplementTrackNoPop.do",
-                              supplementForm,
-                              null, true,
-                              '_insDiv');
 
+                      var supRefId = clickChk[0].item.supRefId;
+                      var supRefStusId = clickChk[0].item.supRefStusId;
+                      var supRefStgId = clickChk[0].item.supRefStgId;
+
+                      console.log ("supplementForm supRefId:: "+ supRefId);
+                      console.log ("supplementForm supRefStusId:: " + supRefStusId);
+                      console.log ("supplementForm supRefStgId:: " + supRefStgId);
+
+                      if (supRefStusId == 1 &&  supRefStgId == 3) {
+                    	//Common.popupDiv("/supplement/supplementTrackNoPop.do", {salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null , true , '_insDiv');
+                    	  Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
+                      }else {
+                    	   Common.alert('Either order status is not Active or Stage Status is not in Tracking Number and GI/GR Process Pending.');
+                    	   return;
+                    	  }
                     });
 
             $("#_viewBtn")
@@ -767,10 +777,20 @@
       width : '15%',
       editable : false
     }, {
+        dataField : "supRefStusId",
+        width : '15%',
+        visible : false,
+        editable : false
+    }, {
       dataField : "supRefStg",
       headerText : '<spring:message code="supplement.text.supplementReferenceStage" />',
       width : '15%',
       editable : false
+    }, {
+        dataField : "supRefStgId",
+        width : '15%',
+        visible : false,
+        editable : false
     }, {
         dataField : "supRefDelStus",
         headerText : '<spring:message code="supplement.text.delStat" />',
