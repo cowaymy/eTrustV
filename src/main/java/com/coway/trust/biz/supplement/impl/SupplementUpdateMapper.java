@@ -31,6 +31,8 @@ public interface SupplementUpdateMapper {
 
   int updOrdDelStat( Map<String, Object> params );
 
+  Map<String, Object> getCustEmailDtl( Map<String, Object> params );
+
   void updateDelLstDtl( Map<String, Object> params );
 
   void insertDelLstDtl( Map<String, Object> params );
