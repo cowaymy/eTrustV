@@ -2629,6 +2629,7 @@
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
                    = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID)
                    BUS_TYPE
+             , T1.REF_NO REF_NO
           FROM SAL0001D T1
           JOIN SAL0002D T2
             ON T2.SALES_ORD_ID = T1.SALES_ORD_ID

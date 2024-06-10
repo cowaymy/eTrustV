@@ -25,7 +25,8 @@
 		   //             }else{
 	       //** End exTrade Neo to Neo Plus **//
 
-            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val(), prodId : $('#prodId').val(), stkId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId")}, function(RESULT) {
+            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val(), prodId : $('#prodId').val(), stkId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId")
+            	,refNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "refNo")}, function(RESULT) {
                 //console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
                 //console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
                 //console.log('RESULT MSG         :'+RESULT.msg);
@@ -117,6 +118,7 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Order No",     dataField : "salesOrdNo", width : 120 }
+          , { headerText : "Sof No",     dataField : "refNo",    width : 120 }
           , { headerText : "App Type",     dataField : "appType",    width : 120 }
           , { headerText : "Product Code", dataField : "stkCode",    width : 120 }
           , { headerText : "Product Name", dataField : "stkDesc"}
