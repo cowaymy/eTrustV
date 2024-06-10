@@ -69,19 +69,14 @@
         AUIGrid.setFooter(posItmDetailGridID, footerLayout);
 
     }
-    //function fn_selectItemList() {
-    var supRefId = $
-    {
-        orderInfo.supRefId
-    };
-    var param = {
-        supRefId : supRefId
-    };
+ //   function fn_selectItemList() {
+    var supRefId = ${orderInfo.supRefId};
+    var param = {supRefId : supRefId };
     Common.ajax("GET", "/supplement/getSupplementDetailList", param, function(
             result) {
         AUIGrid.setGridData(posItmDetailGridID, result);
     })
-    // }
+  //}
 </script>
 <article class="tap_area">
   <!-- tap_area start -->
