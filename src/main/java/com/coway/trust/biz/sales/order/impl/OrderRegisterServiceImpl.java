@@ -461,7 +461,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     ROOT_STATE = "ROOT_4";
 
                     txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                    	+ "(Old No)" + (String) params.get("refNo") + " , "
+                    	+ "(Old Ord Sof No)" + (String) params.get("refNo") + " , "
                         + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
                         + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
                   } else {
@@ -483,14 +483,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                         ROOT_STATE = "ROOT_6";
 
                         txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                            	+ "(Old No)" + (String) params.get("refNo") + " , "
+                            	+ "(Old Ord Sof No)" + (String) params.get("refNo") + " , "
                                 + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
                                 + " , SVM expired : " + (String) GetExpDate.get("srvPrdExprDtMmyy");
                 } else {
                   ROOT_STATE = "ROOT_7";
 
                   txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                      	+ "(Old No)" + (String) params.get("refNo") + " , "
+                      	+ "(Old Ord Sof No)" + (String) params.get("refNo") + " , "
                       + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
                       + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
 
