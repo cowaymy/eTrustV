@@ -20,6 +20,19 @@
 		<if test="fileId != '' and fileId != null">
 			AND A.FILE_ID = #{fileId}
 		</if>
+		<if test='createDateFrom != null and createDateTo != null'>
+			<if test='createDateFrom != "" and createDateTo != ""'>
+				<![CDATA[
+				AND A.CRT_DT BETWEEN TO_DATE(#{createDateFrom},'DD/MM/YYYY') AND TO_DATE(#{createDateTo},'DD/MM/YYYY') + 1
+				]]>
+			</if>
+		</if>
+	    <if test="statusIdList != null and statusIdList != ''">
+	      AND A.PRCSS_STUS_ID in
+	        <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	    </if>
         GROUP BY A.FILE_ID, A.FILE_NAME, A.PRCSS_STUS_ID, B.NAME, A.PRCSS_STUS_REMARK,
 		A.BATCH_ID, TO_CHAR(A.CRT_DT,'DD/MM/YYYY')
         ORDER BY A.FILE_ID DESC

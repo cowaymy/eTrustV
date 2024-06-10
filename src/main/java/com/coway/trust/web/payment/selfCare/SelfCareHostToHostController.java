@@ -42,7 +42,10 @@ public class SelfCareHostToHostController {
 	}
 
 	@RequestMapping(value = "/getSelfCareTransactionList.do")
-	public ResponseEntity<List<EgovMap>> getSelfCareTransactionList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> getSelfCareTransactionList(@RequestParam Map<String, Object> params, HttpServletRequest request,ModelMap model, SessionVO sessionVO) {
+
+		String[] statusIdList = request.getParameterValues("status");
+		 params.put("statusIdList",statusIdList);
 
 		List<EgovMap> result = selfCareHostToHostService.getSelfCareTransactionList(params);;
 		return ResponseEntity.ok(result);

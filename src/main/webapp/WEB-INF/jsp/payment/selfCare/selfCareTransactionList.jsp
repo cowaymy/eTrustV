@@ -21,6 +21,14 @@
 
 	    //Search
 	    $("#_listSearchBtn").click(function() {
+	    	if(FormUtil.isNotEmpty($('#createDateTo').val()) || FormUtil.isNotEmpty($('#createDateFrom').val())){
+	    		if((FormUtil.isNotEmpty($('#createDateTo').val()) && FormUtil.isNotEmpty($('#createDateFrom').val())) == false)
+	    		{
+	    			Common.alert("Please Fill in both From and To Date");
+	    			return;
+	    		}
+	    	}
+
 	      Common.ajax("GET", "/payment/selfCareHostToHost/getSelfCareTransactionList.do", $("#searchForm").serialize(), function(result) {
 	          AUIGrid.setGridData(selfCareGridID, result);
 	        });
@@ -138,6 +146,11 @@
         	      wordWrap : true
         	    };
         selfCareGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    }
+
+    function fn_clear() {
+        $('#searchForm')[0].reset();
+        f_multiCombo();
     }
 </script>
 <section>
