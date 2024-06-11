@@ -23,6 +23,8 @@ public interface SupplementUpdateMapper {
 
   List<EgovMap> getSupplementDetailList( Map<String, Object> params );
 
+  List<EgovMap> getDelRcdLst( Map<String, Object> params );
+
   EgovMap selectOrderBasicInfo( Map<String, Object> params );
 
   List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params );
