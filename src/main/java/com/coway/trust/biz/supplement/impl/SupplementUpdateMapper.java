@@ -44,4 +44,10 @@ public interface SupplementUpdateMapper {
   Map<String, Object> SP_STO_PRE_SUPP( Map<String, Object> param );
 
   void revertStgStus( Map<String, Object> params );
+
+  List<EgovMap> selectDocumentList(Map<String, Object> params); // Document Result
+
+  List<EgovMap> selectPaymentMasterList(Map<String, Object> params); // Payment Listing
+
+  EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params);
 }
