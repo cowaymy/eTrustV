@@ -142,6 +142,12 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
+  public List<EgovMap> getDelRcdLst(Map<String, Object> params) throws Exception {
+
+    return supplementUpdateMapper.getDelRcdLst(params);
+  }
+
+  @Override
   public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception {
 
     return supplementUpdateMapper.selectOrderBasicInfo(params);
