@@ -210,12 +210,18 @@ public class SupplementManagementController {
   }
 
   @RequestMapping(value = "/orderLedgerViewPop.do")
-  public String orderLedgerViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+ // public String orderLedgerViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+  public String orderLedgerViewPop(@RequestParam Map<String, Object>params, ModelMap model, HttpServletRequest request){
+
+	  LOGGER.debug("params ======================================>>> " + params);
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
-    params.put("userId", sessionVO.getUserId());
-    model.put("userBr", sessionVO.getUserBranchId());
+    //params.put("userId", sessionVO.getUserId());
+    //model.put("userBr", sessionVO.getUserBranchId());
+
+    EgovMap orderInfo = supplementUpdateService.selectOrderBasicLedgerInfo(params);
+    model.addAttribute("orderInfo", orderInfo);
 
     return "supplement/orderLedgerPop";
   }
@@ -328,5 +334,32 @@ public class SupplementManagementController {
     message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
 
     return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/selectPaymentJsonList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPaymentJsonList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  LOGGER.debug("!@##############################################################################");
+	  LOGGER.debug("!@###### supRefId : " + params.get("supRefId"));
+	  LOGGER.debug("!@##############################################################################");
+
+    List<EgovMap> memInfoList = supplementUpdateService.selectPaymentMasterList(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(memInfoList);
+  }
+
+  @RequestMapping(value = "/selectDocumentJsonList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectDocumentJsonList(@RequestParam Map<String, Object> params,
+      ModelMap model) {
+
+    LOGGER.debug("!@##############################################################################");
+    LOGGER.debug("!@###### supRefId : " + params.get("supRefId"));
+    LOGGER.debug("!@##############################################################################");
+
+    List<EgovMap> memInfoList = supplementUpdateService.selectDocumentList(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(memInfoList);
   }
 }
