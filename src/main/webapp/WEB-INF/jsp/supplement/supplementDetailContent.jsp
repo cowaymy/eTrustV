@@ -44,12 +44,6 @@
          fn_selectDocumentList();
        }
        break;
-     case 'ledger' :
-       AUIGrid.resize(ordLedgerGridID, 942, 380);
-       if(AUIGrid.getRowCount(docGridID) <= 0) {
-         fn_selectDocumentList();
-       }
-        break;
     }
   }
 </script>
