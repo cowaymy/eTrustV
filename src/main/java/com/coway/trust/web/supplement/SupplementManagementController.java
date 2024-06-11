@@ -159,6 +159,17 @@ public class SupplementManagementController {
 
     return ResponseEntity.ok(detailList);
   }
+  
+  @RequestMapping(value = "/getDelRcdLst")
+  public ResponseEntity<List<EgovMap>> getDelRcdLst(@RequestParam Map<String, Object> params) throws Exception {
+
+    List<EgovMap> detailList = null;
+
+    detailList = supplementUpdateService.getDelRcdLst(params);
+
+    return ResponseEntity.ok(detailList);
+  }
+  
 
   @RequestMapping(value = "/supplementTrackNoPop.do")
   public String supplementTrackNoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
