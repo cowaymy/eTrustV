@@ -105,11 +105,10 @@
                 $("#deptCode").attr("class", "w100p readonly");
                 $("#deptCode").attr("readonly", "readonly");
 
-                $("#_memCode").val("${SESSION_INFO.userName}");
-                $("#_memName").val(
-                    "${SESSION_INFO.userFullname}");
-                $("#_memCode").attr("class", "w100p readonly");
-                $("#_memCode").attr("readonly", "readonly");
+                $("#salesmanCd").val("${SESSION_INFO.userName}");
+                $("#salesmanPopNm").val("${SESSION_INFO.userFullname}");
+                $("#salesmanCd").attr("class", "w100p readonly");
+                $("#salesmanCd").attr("readonly", "readonly");
                 $("#_memBtn").hide();
 
               }
@@ -226,7 +225,8 @@
                       console.log ("supplementForm supRefStusId:: " + supRefStusId);
                       console.log ("supplementForm supRefStgId:: " + supRefStgId);
 
-                      if (supRefStusId == 1 &&  supRefStgId == 3) {
+                      if (supRefStusId != 1 || supRefStgId != 3) {
+                     // if (supRefStusId == 1 && supRefStgId == 3) {
                     	//Common.popupDiv("/supplement/supplementTrackNoPop.do", {salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null , true , '_insDiv');
                     	  Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
                       }else {
@@ -1053,7 +1053,7 @@
           </p>
         </li>
       </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li>
           <p class="btn_blue">
             <a href="#" id="_updateDeliveryStatBtn"><spring:message code="supplement.btn.updDelStat" /></a>
