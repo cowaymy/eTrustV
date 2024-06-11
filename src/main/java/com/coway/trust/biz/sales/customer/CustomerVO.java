@@ -67,7 +67,7 @@ public class CustomerVO implements Serializable {
 	private String oldNric;
 	private int receivingMarketingMsgStatus;
 	private String sstRgistNo;
-	private int eInvFlg;
+	/*private int eInvFlg;*/
 	private String tin;
 
 	public String getOldNric() {
@@ -407,12 +407,12 @@ public class CustomerVO implements Serializable {
 	public void setSstRgistNo(String sstRgistNo) {
 		this.sstRgistNo = sstRgistNo;
 	}
-	public int geteInvFlg() {
+	/*public int geteInvFlg() {
 		return eInvFlg;
 	}
 	public void seteInvFlg(int eInvFlg) {
 		this.eInvFlg = eInvFlg;
-	}
+	}*/
 	public String getTin() {
 		return tin;
 	}

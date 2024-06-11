@@ -1608,6 +1608,7 @@
              , CUST_BILL_WEB_PORTAL_URL
              , CUST_BILL_IS_SMS2
              , CUST_BILL_CUST_CARE_CNT_ID
+             , E_INV_FLG
              )
         VALUES
              ( #{custBillId}
@@ -1635,6 +1636,7 @@
              , #{custBillWebPortalUrl}
              , #{custBillIsSms2}
              , #{custBillCustCareCntId}
+             , #{custBillIsEInv}
              )
     </insert>
 

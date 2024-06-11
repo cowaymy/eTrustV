@@ -828,7 +828,7 @@ public class CustomerController {
         ins416map.put("basicCustId", tempCustSeq);
         ins416map.put("basicCustTin", vo.getTin());
         ins416map.put("status", "1");
-        ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);
+        /*ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);*/
         ins416map.put("userId", sessionVo.getUserId());
     }
 
@@ -1070,7 +1070,7 @@ public class CustomerController {
         ins416map.put("basicCustId", tempCustSeq);
         ins416map.put("basicCustTin", vo.getTin());
         ins416map.put("status", "1");
-        ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);
+        /*ins416map.put("isEInvoice", String.valueOf(vo.geteInvFlg()) != null ? vo.geteInvFlg() : 0);*/
         ins416map.put("userId", sessionVo.getUserId());
     }
 

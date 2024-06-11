@@ -85,7 +85,8 @@
                 P2.CUST_TIER AS CUST_TIER,
                 P2.RECEIVING_MARKETING_MSG_STATUS,
                 P2.CUST_STATUS_ID,
-                P2.CUST_STATUS
+                P2.CUST_STATUS,
+                P2.CUST_TIN
                 FROM ( SELECT P1.CUST_ID,
                                 P1.NAME1,
                                 P1.NRIC,
@@ -121,6 +122,7 @@
                                 P1.RECEIVING_MARKETING_MSG_STATUS,
                                 P1.CUST_STATUS_ID,
                                 P1.CUST_STATUS,
+                                P1.CUST_TIN,
                                 ROW_NUMBER() OVER (ORDER BY P1.CUST_ID ASC) AS ROW_NUMBER
                         FROM ( SELECT D1.CUST_ID AS CUST_ID,
                                               D1.NAME1 AS NAME1,
@@ -156,7 +158,8 @@
                                               D1.CUST_TIER AS CUST_TIER,
                                               D1.RECEIVING_MARKETING_MSG_STATUS,
                                               D1.CUST_STATUS_ID,
-                                              D1.CUST_STATUS
+                                              D1.CUST_STATUS,
+                                              D1.CUST_TIN
                                 FROM ( SELECT DISTINCT S1.CUST_ID1 AS CUST_ID,
                                                       S1.NAME1 AS NAME1,
                                                       S1.NRIC1 AS NRIC,
@@ -222,6 +225,7 @@
                                                       ,S1.RECEIVING_MARKETING_MSG_STATUS
                                                       ,S1.CUST_STATUS_ID
                                                       ,S1.CUST_STATUS
+                                                      ,S1.CUST_TIN
                                             FROM   (SELECT T1.CUST_ID AS CUST_ID1,
                                                                    T1.NAME AS NAME1,
                                                                    T1.NRIC AS NRIC1,
@@ -258,7 +262,8 @@
                                                                     T11.CODE CUST_TIER,
                                                                     T1.RECEIVING_MARKETING_MSG_STATUS,
                                                                     T1.IS_EXST_CUST CUST_STATUS_ID,
-                                                                    T12.CODE_NAME CUST_STATUS
+                                                                    T12.CODE_NAME CUST_STATUS,
+                                                                    TIN.CUST_TIN CUST_TIN
                                                     FROM SAL0029D T1
                                                     LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
                                                     LEFT OUTER JOIN SYS0047M T3 ON T3.USER_ID = T1.UPD_USER_ID
@@ -300,6 +305,8 @@
                                                     LEFT OUTER JOIN SAL0333M T10 ON T10.CUST_ID = T1.CUST_ID
                                                     LEFT JOIN SYS0013M T11 ON T11.CODE_ID = T10.TIER_RANK AND T11.CODE_MASTER_ID = 538
                                                     LEFT JOIN SYS0013M T12 ON T12.CODE_ID = T1.IS_EXST_CUST AND T12.CODE_MASTER_ID = 566
+                                                    LEFT JOIN SAL0024D BG ON T1.CUST_ID = BG.CUST_BILL_CUST_ID
+                                                    LEFT JOIN EIV0002M TIN ON TIN.CUST_ID =  T1.CUST_ID AND TIN.STATUS = 1 AND SYSDATE BETWEEN TIN_VALID_FR_DT AND TIN_VALID_TO_DT
                                                    WHERE (8 <![CDATA[ <> ]]> T1.STUS_CODE_ID)
                                                    ) S1
                                              LEFT OUTER JOIN SYS0013M T10 ON T10.CODE_ID = S1.CORP_TYPE_ID AND S1.CORP_TYPE_ID IS NOT NULL
@@ -399,7 +406,7 @@
             , Extent14.code_name cust_status
             , TIN.CUST_TIN CUST_TIN
             , Extent1.SST_RGIST_NO SST_RGIST_NO
-            , TIN.E_INV_FLG E_INV_FLG
+            , BG.E_INV_FLG E_INV_FLG
         FROM
             SAL0029D Extent1
             LEFT OUTER JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.CRT_USER_ID
@@ -440,7 +447,8 @@
                 )
             ) Extent13 on Extent13.CUST_ID = Extent1.CUST_ID
             LEFT JOIN SYS0013M Extent14 ON Extent14.CODE_ID = Extent1.IS_EXST_CUST AND Extent14.CODE_MASTER_ID = 566
-            LEFT JOIN SAL0416D TIN ON TIN.TIN_ID = Extent1.TIN_ID AND TIN.STATUS = 1
+            LEFT JOIN SAL0024D BG ON Extent1.CUST_ID = BG.CUST_BILL_CUST_ID
+            LEFT JOIN EIV0002M TIN ON TIN.CUST_ID =  Extent1.CUST_ID AND TIN.STATUS = 1
         WHERE
             8 <> Extent1.STUS_CODE_ID AND Extent1.CUST_ID =#{custId}
          AND
@@ -3343,17 +3351,18 @@
   </select>
 
   <select id="getCustTinIdSeq" resultType="Integer">
-    SELECT SAL0416D_TIN_ID.NEXTVAL FROM DUAL
+    SELECT EIV0002M_TIN_ID.NEXTVAL FROM DUAL
   </select>
 
   <insert id="insertCustomerTinId" parameterType="Map">
-    INSERT INTO SAL0416D
+    INSERT INTO EIV0002M
     ( TIN_ID
     , CUST_ID
     , CUST_TIN
     , STATUS
-    , E_INV_FLG
     , REM
+    , TIN_VALID_FR_DT
+    , TIN_VALID_TO_DT
     , CRT_DT
     , CRT_USER_ID
     , UPD_DT
@@ -3364,8 +3373,9 @@
     , #{basicCustId}
     , #{basicCustTin}
     , 1
-    , #{isEInvoice}
     , NULL
+    , SYSDATE
+    , TO_DATE('31-12-9999', 'DD-MM-YYYY')
     , SYSDATE
     , #{userId}
     , SYSDATE
@@ -3374,12 +3384,12 @@
   </insert>
 
   <update id="updateCustomerTinStatus" parameterType="Map">
-    UPDATE SAL0416D SET
+    UPDATE EIV0002M SET
     STATUS = 8
     , UPD_DT = SYSDATE
     , UPD_USER_ID = #{userId}
     WHERE CUST_ID = #{basicCustId}
-    AND TIN_ID = (SELECT MAX(TIN_ID) FROM SAL0416D WHERE CUST_ID = #{basicCustId} AND STATUS = 1)
+    AND TIN_ID = (SELECT MAX(TIN_ID) FROM EIV0002M WHERE CUST_ID = #{basicCustId} AND STATUS = 1)
   </update>
 
   <insert id="insertCustomerBasicInfoHist" parameterType="Map">
@@ -3456,7 +3466,7 @@
     , NVL(TO_CHAR(HIS.VISA_EXPR, 'DD-MM-YYYY'), '-') AS VISA_EXPR
 	, HIS.SST_RGIST_NO AS SST_NO
 	, TIN.CUST_TIN AS CUST_TIN
-	, CASE WHEN (TIN.E_INV_FLG = '1') THEN 'Y' ELSE 'N' END AS E_INV_FLG
+	, CASE WHEN (BG.E_INV_FLG = '1') THEN 'Y' ELSE 'N' END AS E_INV_FLG
 	, HIS.REMARK AS REMARK
 	, TO_CHAR(HIS.UPD_DT, 'DD-MM-YYYY HH:MI:SS') AS UPD_DT
 	, USR.USER_NAME AS UPD_USER
@@ -3464,7 +3474,8 @@
 	LEFT JOIN SYS0015M NAT ON NAT.CNTY_ID = HIS.NATION
 	LEFT JOIN SYS0013M RAC ON RAC.CODE_ID = HIS.RACE_ID
 	LEFT JOIN SYS0047M USR ON USR.USER_ID = HIS.UPD_USER_ID
-	LEFT JOIN SAL0416D TIN ON TIN.TIN_ID = HIS.TIN_ID
+	LEFT JOIN EIV0002M TIN ON TIN.TIN_ID = HIS.TIN_ID
+	LEFT JOIN SAL0024D BG ON HIS.CUST_ID = BG.CUST_BILL_CUST_ID
 	WHERE HIS.CUST_ID = #{custId}
 	ORDER BY HIST_ID DESC
   </select>

@@ -415,15 +415,14 @@
 
         var custId;
 
-        var eInvValue = 0;
+        // [Celeste] 29-05-2024 : move eInvoice flag to bill group
+        /* var eInvValue = 0;
 
         if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
         	eInvValue = 1;
         }else{
         	eInvValue = 0;
-        }
-
-        console.log("eInvoice Flag: " + eInvValue);
+        } */
 
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
@@ -452,7 +451,7 @@
                     receivingMarketingMsgStatus: insBasicForm.marketingMessageSelection.value,
                     sstRgistNo : insBasicForm.sstRgistNo.value,
                     tin : insBasicForm.tin.value,
-                    eInvFlg : eInvValue,
+                    /* eInvFlg : eInvValue, */ /* [Celeste] 29-05-2024 : move eInvoice flag to bill group */
 
                     addrDtl : insAddressForm.addrDtl.value,
                     areaId : insAddressForm.areaId.value,
@@ -1141,11 +1140,12 @@
         <tr>
             <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
             <td>
-                <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="30" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+                <!-- <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="30" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" /> -->
+                <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="17" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
             <th scope="row" id="tinTitle"><spring:message code="sal.title.text.tin" /></th>
             <td>
-                <input type="text" title="" id="_tin_" name="tin" placeholder="TIN" class="w100p" />
+                <input type="text" title="" id="_tin_" name="tin" maxlength="14" placeholder="TIN" class="w100p" />
             </td>
         </tr>
         <tr>
@@ -1225,7 +1225,10 @@
 			    </div>
 		    </div>
 			</td>
-		<th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
+		<th scope="row"></th>
+        <td></td>
+		<!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+		<%-- <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
 	    <td>
 	        <c:choose>
 	        <c:when test="${result.eInvFlg eq '1'}">
@@ -1235,7 +1238,7 @@
 	            <input id="isEInvoice" name="isEInvoice" type="checkbox" />
 	        </c:otherwise>
 	        </c:choose>
-	    </td>
+	    </td> --%>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.remark" /></th>

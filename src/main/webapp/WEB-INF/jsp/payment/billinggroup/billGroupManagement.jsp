@@ -22,16 +22,16 @@ var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false,
         selectionMode : "singleRow"
-        
+
 };
 var gridPros2 = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false,
         selectionMode : "multipleRows"
@@ -40,7 +40,7 @@ var gridPros2 = {
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-    
+
     // 그리드 생성
     groupListGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     esmListGridID = GridCommon.createAUIGrid("grid_wrap2", estmColumnLayout,null,gridPros);
@@ -55,16 +55,16 @@ $(document).ready(function(){
 
 
 // AUIGrid 칼럼 설정
-var columnLayout = [ 
+var columnLayout = [
     { dataField:"history" ,
         width: 30,
-        headerText:" ", 
-       renderer : 
+        headerText:" ",
+       renderer :
                {
               type : "IconRenderer",
               iconTableRef :  {
                   "default" : "${pageContext.request.contextPath}/resources/images/common/icon_gabage_s.png"// default
-              },         
+              },
               iconWidth : 16,
               iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
@@ -76,7 +76,7 @@ var columnLayout = [
         headerText : "<spring:message code='pay.head.mainOrder'/>",
         editable : true,
         visible:true,
-        renderer : 
+        renderer :
         {
             type : "CheckBoxEditRenderer",
             showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -114,23 +114,23 @@ var columnLayout = [
         headerText : "<spring:message code='pay.head.rentalFees'/>",
         editable : false
     }];
-    
+
 //AUIGrid 칼럼 설정
-var estmColumnLayout = [ 
+var estmColumnLayout = [
     { dataField:"history" ,
         width: 30,
-        headerText:" ", 
+        headerText:" ",
         colSpan : 2,
-       renderer : 
+       renderer :
                {
               type : "IconRenderer",
               iconTableRef :  {
                   "default" : "${pageContext.request.contextPath}/resources/images/common/btn_close.gif"// default
-              },         
+              },
               iconWidth : 16,
               iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
-                 
+
                  if(item.stusCodeId =="44"){
                      showDetailEstmHistory(item.reqId, "C");
                  }
@@ -139,16 +139,16 @@ var estmColumnLayout = [
     },
     { dataField:"history" ,
         width: 30,
-        headerText:" ", 
-        colSpan : -1,        
-        renderer : 
+        headerText:" ",
+        colSpan : -1,
+        renderer :
                {
               type : "IconRenderer",
               iconTableRef :  {
                   "default" : "${pageContext.request.contextPath}/resources/images/common/btn_check.gif"// default
-              },         
+              },
               iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-              iconHeight : 16,              
+              iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
                   if(item.stusCodeId =="44"){
                       showDetailEstmHistory(item.reqId, "A");
@@ -181,20 +181,20 @@ var estmColumnLayout = [
         headerText : "<spring:message code='pay.head.by'/>",
         editable : false,
     }];
-    
+
 //AUIGrid 칼럼 설정
-var billGrpHistoryLayout = [ 
+var billGrpHistoryLayout = [
     {
         dataField : "",
         headerText : "",
         editable : false,
         width : 80,
-        renderer : 
+        renderer :
         {
        type : "IconRenderer",
        iconTableRef :  {
            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_right2.gif"// default
-       },         
+       },
        iconWidth : 20,
        iconHeight : 16,
       onclick : function(rowIndex, columnIndex, value, item) {
@@ -222,9 +222,9 @@ var billGrpHistoryLayout = [
         headerText : "<spring:message code='pay.head.by'/>",
         editable : false,
     }];
-    
+
 //AUIGrid 칼럼 설정
-var changeOrderLayout = [ 
+var changeOrderLayout = [
     {
         dataField : "custBillGrpNo",
         headerText : "<spring:message code='pay.head.grpNo'/>",
@@ -252,7 +252,7 @@ var changeOrderLayout = [
     }];
 
 //AUIGrid 칼럼 설정
-var estmHisPopColumnLayout = [ 
+var estmHisPopColumnLayout = [
     {
         dataField : "refNo",
         headerText : "<spring:message code='pay.head.refNo'/>",
@@ -275,9 +275,9 @@ var estmHisPopColumnLayout = [
         headerText : "By",
         editable : false,
     }];
-    
-//AUIGrid 칼럼 설정 
-var emailAddrLayout = [ 
+
+//AUIGrid 칼럼 설정
+var emailAddrLayout = [
     {
         dataField : "name",
         headerText : "<spring:message code='pay.head.status'/>",
@@ -295,7 +295,7 @@ var emailAddrLayout = [
     }];
 
 //AUIGrid 칼럼 설정
-var contPersonLayout = [ 
+var contPersonLayout = [
     {
         dataField : "name",
         headerText : "<spring:message code='pay.head.status'/>",
@@ -334,9 +334,9 @@ var contPersonLayout = [
         editable : false,
         visible : false
     }];
-    
+
 //AUIGrid 칼럼 설정
-var addOrderLayout = [ 
+var addOrderLayout = [
     {
         dataField : "isMain",
         headerText : "<spring:message code='pay.head.mainOrder'/>",
@@ -383,10 +383,10 @@ var addOrderLayout = [
         editable : false,
         visible:false
     }];
-    
+
     //ajax list 조회.
     function searchList(){
-        
+
         var now = new Date();
         var year= now.getFullYear();
         var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
@@ -395,25 +395,25 @@ var addOrderLayout = [
         var message = "";
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
-                
-        if(currentDay >= 26 || currentDay == 1){
-            
+
+        if(currentDay >= 31 || currentDay == 1){
+
             Common.alert("<spring:message code='pay.alert.unable26And1'/>");
             return;
-            
+
         }else{
-            
+
             if(orderNo == ""){
                 valid = false;
                 message = "<spring:message code='pay.alert.orderNumber'/>"
             }
-            
+
             if(valid){
-                
+
                 Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
                     console.log(result);
                     if(result.data.selectBasicInfo != null){
-                        
+
                         $("#displayVisible").show();
                         $("#orderNo").addClass('readonly');
                         $("#orderNo").prop('readonly', true);
@@ -426,14 +426,14 @@ var addOrderLayout = [
                         $("#customerId").text(result.data.selectBasicInfo.custBillCustId+"("+result.data.selectBasicInfo.codeName+")");
                         $("#nric").text(result.data.selectBasicInfo.nric);
                         $("#customerName").text(result.data.selectBasicInfo.name);
-                        
+
                         $("#post").prop('checked', false);//reset
                         $("#sms").prop('checked', false);//reset
                         $("#estm").prop('checked', false);//reset
                         var isPost = result.data.selectBasicInfo.custBillIsPost;
                         var isSms = result.data.selectBasicInfo.custBillIsSms;
                         var isEstm = result.data.selectBasicInfo.custBillIsEstm;
-                        
+
                         if(isPost == 1 && isSms == 1 && isEstm == 1){
                         	$("#post").prop('checked', true);
                         }else if(isPost == 1 && isSms == 1 && isEstm == 0){
@@ -453,93 +453,108 @@ var addOrderLayout = [
                         	$("#estm").prop('checked', true);
                         	//$("#post").prop('checked', false);
                         }
-                        
+
+                        var eInvFlg = result.data.selectBasicInfo.eInvFlg;
+                        $("#isEInvoice").prop('checked', false); //reset
+
+                        if(eInvFlg == 1){
+                        	$("#isEInvoice").prop('checked', true);
+                        	$("#isEInvoice").prop('disabled', false);
+                        	$("#isEInvoice").on('click', function() {
+                                return false;
+                            })
+                        }
+                        else{
+                        	$("#isEInvoice").prop('checked', false);
+                        }
+
+
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
-                        
+
                         if(result.data.selectBasicInfo.custBillEmail != undefined){
                             $("#email").text(result.data.selectBasicInfo.custBillEmail);
                         }else{
                             $("#email").text("");
                         }
-                        
+
                         if(result.data.selectBasicInfo.custBillEmailAdd != undefined){
                             $("#additionalEmail").text(result.data.selectBasicInfo.custBillEmailAdd);
                         }else{
                             $("#additionalEmail").text("");
                         }
-                        
+
                         //Mailling Addres
                         if(result.data.selectMaillingInfo != null){
                             $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
                         }else{
                             $("#maillingAddr").text("");
                         }
-                        
+
                         //ContractInfo
                         $("#contractPerson").text(result.data.selecContractInfo.name2);
                         $("#mobileNumber").text(result.data.selecContractInfo.telM1);
                         $("#officeNumber").text(result.data.selecContractInfo.telO);
                         $("#residenceNumber").text(result.data.selecContractInfo.telR);
                         $("#faxNumber").text(result.data.selecContractInfo.telf);
-                        
+
                         AUIGrid.clearGridData(groupListGridID);
                         AUIGrid.setGridData(groupListGridID, result.data.selectGroupList);
                         AUIGrid.resize(groupListGridID);
-                        
+
                         AUIGrid.clearGridData(esmListGridID);
                         AUIGrid.setGridData(esmListGridID, result.data.selectEstmReqHistory);
                         AUIGrid.resize(esmListGridID);
-                        
+
                         $("#confirm").hide();
                         $("#reSelect").show();
-                        
+
                     }else{
                         $("#displayVisible").hide();
                         $("#orderNo").removeClass('readonly');
                         $("#orderNo").prop('readonly', false);
                         Common.alert("<spring:message code='pay.alert.noBilling'/>");
                     }
-                    
+
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("<spring:message code='pay.alert.fail'/>");
                     $("#displayVisible").hide();
                 });
-                
+
             }else{
                 Common.alert(message);
                 $("#displayVisible").hide();
             }
         }
     }
-    
+
     function fn_billGrpHistory(){
-        
+
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectBillGrpHistory.do", {"custBillId":custBillId}, function(result){
             $("#viewHistorytPopup").show();
-            AUIGrid.destroy(billGrpHisGridID); 
+            AUIGrid.destroy(billGrpHisGridID);
             billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
             AUIGrid.setGridData(billGrpHisGridID, result);
         });
     }
-    
+
     function fn_hisClose() {
         $('#viewHistorytPopup').hide();
         searchList();
     }
-    
+
     function fn_changeMainOrder(){
-        
+
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChangeOrder.do", {"custBillId":custBillId}, function(result){
         	 $("#changeMainOrderPop").show();
             $('#custBillSoId').val(result.data.basicInfo.custBillSoId);
             $('#changePop_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changePop_ordGrp').text(result.data.grpOrder.orderGrp);$('#changePop_ordGrp').css("color","red");
-            AUIGrid.destroy(changeOrderGridID); 
+            AUIGrid.destroy(changeOrderGridID);
             changeOrderGridID = GridCommon.createAUIGrid("changeOrderGrid", changeOrderLayout,null,gridPros);
             AUIGrid.setGridData(changeOrderGridID, result.data.billGroupOrderView);
-            
+
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(changeOrderGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
@@ -548,7 +563,7 @@ var addOrderLayout = [
             });
         });
     }
-    
+
     function fn_changeOrderClose() {
         $('#changeMainOrderPop').hide();
         $('#change_reasonUpd').val("");
@@ -556,9 +571,9 @@ var addOrderLayout = [
         selectedGridValue = undefined;
         searchList();
     }
-    
+
     function fn_updRemark(){
-        
+
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectUpdRemark.do", {"custBillId":custBillId}, function(result){
         	$("#updRemPop").show();
@@ -567,15 +582,15 @@ var addOrderLayout = [
             $('#updRem_remark').text(result.data.basicInfo.custBillRem);
         });
     }
-    
+
     function fn_saveRemark(){
-        
+
         var custBillId = $("#custBillId").val();
         var newRem = $("#newRem").val();
         var reasonUpd = $("#reasonUpd").val();
         var message = "";
         var valid = true;
-        
+
         if($.trim(reasonUpd) == ""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -594,30 +609,30 @@ var addOrderLayout = [
                 $("#reasonUpd").val("");
                 fn_updRemark();
             });
-            
+
         }else{
             Common.alert(message);
         }
     }
-    
+
     function fn_updRemPopClose() {
         $('#updRemPop').hide();
         $("#newRem").val("");
         $("#reasonUpd").val("");
         searchList();
     }
-    
+
     function fn_changeBillType(){
         var custBillId = $("#custBillId").val();
         Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP"}, null , true ,'_editDiv3New');
     }
-    
+
     function fn_changeMaillAddr(){
-        
+
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChgMailAddr.do", {"custBillId":custBillId}, function(result){
         	$("#chgMailAddrPop").show();
-            
+
             $('#changeMail_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changeMail_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeMail_ordGrp').css("color","red");
             if(result.data.mailInfo !=null){
@@ -627,18 +642,18 @@ var addOrderLayout = [
             }
         });
     }
-    
+
     function fn_chgContPerson(){
 
         var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectChgContPerson.do", {"custBillId":custBillId}, function(result){
         	$("#chgContPerPop").show();
-            
+
             //BASIC INFO
             //$('#custBillCustId').val(result.data.basicInfo.custBillCustId);
             $('#chgContPer_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#chgContPer_ordGrp').text(result.data.grpOrder.orderGrp);$('#chgContPer_ordGrp').css("color","red");
-            
+
             //CURRENT 계약정보
             $('#curr_contPerson').text( result.data.contractInfo.name2);
             $('#curr_contMobNum').text(result.data.contractInfo.telM1);
@@ -647,53 +662,53 @@ var addOrderLayout = [
             $('#curr_faxNum').text(result.data.contractInfo.telf);
         });
     }
-    
+
     function fn_chgContPerPopClose() {
         $('#chgContPerPop').hide();
         searchList();
     }
-    
+
     function showDetailHistory(historyId){
-        
+
         Common.ajax("GET", "/payment/selectDetailHistoryView", {"historyId" : historyId} , function(result) {
-        	
+
         	$("#detailhistoryViewPop").show();
            var typeId = result.data.detailHistoryView.typeId;
-           
+
            $('#det_typeName').text(result.data.detailHistoryView.codeName);
            $('#det_at').text(result.data.detailHistoryView.histCrtDt);
            $('#det_sysRemark').text(result.data.detailHistoryView.sysHistRem);
            $('#det_by').text(result.data.detailHistoryView.histCrtUserId);
            $('#det_userRemark').val(result.data.detailHistoryView.userHistRem);
-           
+
            if(typeId == "1042"){
-               
+
                //Mailing Address
                var descFrom = result.data.mailAddrOldHistorty.addr;
                var descTo = result.data.mailAddrNewHistorty.addr;
-               
+
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1043"){
-                
+
                //Contact Person
                var descFrom = "";
                var descTo = "";
-                
+
                 descFrom += "<spring:message code='pay.alert.personDescFrom' arguments='"+result.data.cntcIdOldHistory.code+" ; "+result.data.cntcIdOldHistory.name+
                 " ; "+result.data.cntcIdOldHistory.nric+" ; "+result.data.cntcIdOldHistory.codeName+" ; "+result.data.cntcIdOldHistory.telM1+
                 " ; "+result.data.cntcIdOldHistory.telO+" ; "+result.data.cntcIdOldHistory.telR+" ; "+result.data.cntcIdOldHistory.telf+"' htmlEscape='false' argumentSeparator=';' />";
-                
+
                 descTo += "<spring:message code='pay.alert.personDescFrom' arguments='"+result.data.cntcIdNewHistory.code+" ; "+result.data.cntcIdNewHistory.name+
                 " ; "+result.data.cntcIdNewHistory.nric+" ; "+result.data.cntcIdNewHistory.codeName+" ; "+result.data.cntcIdNewHistory.telM1+
                 " ; "+result.data.cntcIdNewHistory.telO+" ; "+result.data.cntcIdNewHistory.telR+" ; "+result.data.cntcIdNewHistory.telf+"' htmlEscape='false' argumentSeparator=';' />";
-                
+
                 $('#det_descFrom').html(descFrom);
                 $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1044"){
-               
+
                //Remark
                var descFrom = "";
                var descTo = "";
@@ -701,83 +716,97 @@ var addOrderLayout = [
                descTo += result.data.detailHistoryView.remNw;
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1045"){
-               
+
                var descFrom = "";
                var descTo = "";
-               
+
                //Post
                if(result.data.detailHistoryView.isPostOld == "1"){
                    descFrom += "<spring:message code='pay.alert.postYes'/>";
-                   
+
                }else{
                    descFrom += "<spring:message code='pay.alert.postNo'/>";
                }
-               
+
                //SMS
                if(result.data.detailHistoryView.isSmsOld == "1"){
                    descFrom += "<spring:message code='pay.alert.smsYes'/>";
-                   
+
                }else{
                    descFrom += "<spring:message code='pay.alert.smsNo'/>";
                }
-               
+
                //E-Statement
                if(result.data.detailHistoryView.isEStateOld == "1"){
                    descFrom += "<spring:message code='pay.alert.estmYes'/>";
-                   
+
                }else{
                    descFrom += "<spring:message code='pay.alert.estmNo'/>";
                }
-               
+
                //Email
                if(result.data.detailHistoryView.emailOld != undefined){
             	   descFrom += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailOld+"' htmlEscape='false'/>";
                }else{
             	   descFrom += "<spring:message code='pay.alert.emailNull'/>";
                }
-               
+
+               //E-Invoice
+               if(result.data.detailHistoryView.eInvFlgOld == "1"){
+            	   descFrom += "<br>E-Invoice : Yes";
+               }else{
+            	   descFrom += "<br>E-Invoice : No";
+               }
+
                //Post
                if(result.data.detailHistoryView.isPostNw == "1"){
                    descTo += "<spring:message code='pay.alert.postYes'/>";
-                   
+
                }else{
                    descTo += "<spring:message code='pay.alert.postNo'/>";
                }
-               
+
                //SMS
                if(result.data.detailHistoryView.isSmsNw == "1"){
                    descTo += "<spring:message code='pay.alert.smsYes'/>";
-                   
+
                }else{
                    descTo += "<spring:message code='pay.alert.smsNo'/>";
                }
-               
+
                //E-Statement
                if(result.data.detailHistoryView.isEStateNw == "1"){
                    descTo += "<spring:message code='pay.alert.estmYes'/>";
-                   
+
                }else{
                    descTo += "<spring:message code='pay.alert.estmNo'/>";
                }
-               
+
                //Email
                if(result.data.detailHistoryView.emailNw != undefined){
             	   descTo += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailNw+"' htmlEscape='false'/>";
                }else{
             	   descTo += "<spring:message code='pay.alert.emailNull'/>";
                }
-               
+
+             //E-Invoice
+               if(result.data.detailHistoryView.eInvFlgNew == "1"){
+            	   descTo += "<br>E-Invoice : Yes";
+               }else{
+            	   descTo += "<br>E-Invoice : No";
+               }
+
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1046"){
-             
+
                //Order Grouping
                var descFrom = "";
                var descTo = "";
-               
+
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
                    descFrom += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
@@ -786,7 +815,7 @@ var addOrderLayout = [
                    result.data.salesOrderMsOld.mthRentAmt+" ; "+
                    result.data.salesOrderMsOld.product+"' htmlEscape='false' argumentSeparator=';' />"
                }
-               
+
                if(result.data.salesOrderMsNw == null || result.data.salesOrderMsNw == ""){
                    descTo += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
@@ -798,49 +827,49 @@ var addOrderLayout = [
 
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1047"){
                //E-Statement
                var descFrom = "";
                var descTo = "";
-               
+
                if(result.data.detailHistoryView.isEStateOld == "1"){
                    descFrom += "<spring:message code='pay.alert.estmYes'/>";
-                   
+
                }else{
                    descFrom += "<spring:message code='pay.alert.estmNo'/>";
                }
-               
+
                //Email
                if(result.data.detailHistoryView.emailOld != undefined){
                    descFrom += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailOld+"' htmlEscape='false'/>";
                }else{
                    descFrom += "<spring:message code='pay.alert.emailNull'/>";
                }
-               
+
                //E-Statement
                if(result.data.detailHistoryView.isEStateNw == "1"){
                    descTo += "<spring:message code='pay.alert.estmYes'/>";
-                   
+
                }else{
                    descTo += "<spring:message code='pay.alert.estmNo'/>";
                }
-               
+
                //Email
                if(result.data.detailHistoryView.emailNw != undefined){
                    descTo += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailNw+"' htmlEscape='false'/>";
                }else{
                    descTo += "<spring:message code='pay.alert.emailNull'/>";
                }
-               
+
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
+
            }else if(typeId == "1048"){
-               
+
                var descFrom = "";
                var descTo = "";
-               
+
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
             	   descFrom += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
@@ -849,7 +878,7 @@ var addOrderLayout = [
                    result.data.salesOrderMsOld.mthRentAmt+" ; "+
                    result.data.salesOrderMsOld.product+"' htmlEscape='false' argumentSeparator=';' />"
                }
-               
+
                if(result.data.salesOrderMsNw == null || result.data.salesOrderMsNw == ""){
             	   descTo += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
@@ -858,31 +887,31 @@ var addOrderLayout = [
                    result.data.salesOrderMsNw.mthRentAmt+" ; "+
                    result.data.salesOrderMsNw.product+"' htmlEscape='false' argumentSeparator=';' />";
                }
-             
+
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
            }
         });
     }
-    
+
     function fn_selectMailAddr(){
-        
+
         var custBillCustId = $("#custBillCustId").val();
         var custAddr = $("#custAddr").val();
-        
+
         Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
         	$("#selectMaillAddrPop").show();
-        	AUIGrid.destroy(emailAddrPopGridID); 
+        	AUIGrid.destroy(emailAddrPopGridID);
         	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
             AUIGrid.setGridData(emailAddrPopGridID, result);
-            
+
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(emailAddrPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
-                
+
                 $("#changeMail_newAddr").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "addr"));
                 $("#custAddId").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "custAddId"));
-                
+
                 $("#selectMaillAddrPop").hide();
                 AUIGrid.destroy(emailAddrPopGridID);
                 Common.alert("<spring:message code='pay.alert.newAddrSelected'/>");
@@ -890,21 +919,21 @@ var addOrderLayout = [
             });
         });
     }
-    
+
     function fn_newAddrSave(){
-        
+
         var valid = true;
         var message = "";
         var newAddr = $("#changeMail_newAddr").val();
         var reasonUpd = $("#changeMail_resUpd").val();
         var custAddId = $("#custAddId").val();
         var custBillId = $("#custBillId").val();
-        
+
         if(newAddr == ""){
             valid = false;
             message += "<spring:message code='pay.alert.selectAddr'/>";
         }
-        
+
         if($.trim(reasonUpd) == ""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -914,9 +943,9 @@ var addOrderLayout = [
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(valid){
-            
+
             Common.ajax("GET","/payment/saveNewAddr.do", {"custBillId":custBillId, "newAddr" : newAddr, "reasonUpd" : reasonUpd, "custAddId" : custAddId}, function(result){
                 console.log(result);
                 Common.alert(result.message);
@@ -924,54 +953,54 @@ var addOrderLayout = [
                 $("#changeMail_resUpd").val("");
                 fn_changeMaillAddr();
             });
-            
+
         }else{
             Common.alert(message);
         }
     }
-    
+
     function fn_selectContPerson(){
-        
+
         var custBillCustId = $("#custBillCustId").val();
         var personKeyword = $("#personKeyword").val();
-        
+
         Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custBillCustId, "personKeyword" : personKeyword}, function(result){
         	$("#selectContPersonPop").show();
-        	AUIGrid.destroy(contPersonPopGridID); 
+        	AUIGrid.destroy(contPersonPopGridID);
         	contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
             AUIGrid.setGridData(contPersonPopGridID, result);
-            
+
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(contPersonPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
-                
+
                 $("#custCntcId").val(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "custCntcId"));//히든값
                 $("#newContactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name1"));
                 $("#newMobNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telM1"));
                 $("#newOffNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
                 $("#newResNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
                 $("#newFaxNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telf"));
-                
+
                 $("#selectContPersonPop").hide();
                 AUIGrid.destroy(contPersonPopGridID);
                 Common.alert("<spring:message code='pay.alert.selectPerson'/>");
             });
         });
     }
-    
+
     function fn_newContPersonSave(){
-        
+
         var valid = true;
         var message = "";
         var custCntcId = $("#custCntcId").val();
         var custBillId = $("#custBillId").val();
         var reasonUpd = $("#newContPerReason").val();
-        
+
         if(custCntcId == ""){
             valid = false;
             message += "<spring:message code='pay.alert.selectContactPerson'/>";
         }
-        
+
         if($.trim(reasonUpd) == ""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -981,10 +1010,10 @@ var addOrderLayout = [
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(valid){
             Common.ajax("GET","/payment/saveNewContPerson.do", {"custBillId":custBillId, "custCntcId" : custCntcId, "reasonUpd" : reasonUpd}, function(result){
-                
+
                 Common.alert(result.message);
                 $("#newContactPerson").text("");
                 $("#newMobNo").text("");
@@ -992,23 +1021,23 @@ var addOrderLayout = [
                 $("#newResNo").text("");
                 $("#newFaxNo").text("");
                 $("#newContPerReason").val("");
-                
+
                 fn_chgContPerson();
             });
         }else{
             Common.alert(message);
         }
     }
-    
+
     function fn_reqNewMail(){
         $("#estmNewReqPop").show();
     }
-    
+
     function fn_addNewConPerson(){
-        var custBillCustId = $("#custBillCustId").val(); 
+        var custBillCustId = $("#custBillCustId").val();
         Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":custBillCustId, "callParam" : "billGroup"}, null , true ,'_editDiv3New');
     }
-    
+
     function fn_reSelect(){
         $("#confirm").show();
         $("#displayVisible").hide();
@@ -1018,14 +1047,14 @@ var addOrderLayout = [
         $("#orderNo").prop('readonly', false);
         $("#basciInfo").trigger("click");
     }
-    
+
     function showDetailEstmHistory(val, gubun){
-        
+
         if(gubun == "A"){
             $("#reqId").val(val);
             $("#btnApprReq").show();
             $("#btnCancelReq").hide();
-            
+
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
             	$("#estmDetailHisPop").show();
             	console.log(result);
@@ -1035,13 +1064,13 @@ var addOrderLayout = [
                 $("#apprReq_creBy").text(result.data.estmReqHisView.userName);
                 $("#apprReq_emailAdd").text(result.data.estmReqHisView.emailAdd);
             });
-            
+
         }else{
-            
+
             $("#reqId").val(val);
             $("#btnApprReq").hide();
             $("#btnCancelReq").show();
-            
+
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
             	$("#estmDetailHisPop").show();
                 $("#apprReq_refNo").text(result.data.estmReqHisView.refNo);
@@ -1052,20 +1081,20 @@ var addOrderLayout = [
             });
         }
     }
-    
+
     function fn_approveRequest(val){
-        
+
         var custBillId = $("#custBillId").val();
         var reasonUpd = $("#apprReq_reasonUpd").val();
         var reqId = $("#reqId").val();
         var valid = true;
         var message = "";
-        
+
         Common.ajax("GET","/payment/selectEStmRequestById.do", {"reqId":reqId}, function(result){
             console.log(result);
             if(result != null){
                 var stusId = result.data.estmReqHisView.stusCodeId;
-                
+
                 if(stusId != "44"){
                     valid = false;
                     message += "<spring:message code='pay.alert.estmNoPendingStatus'/>";
@@ -1075,23 +1104,23 @@ var addOrderLayout = [
 	                message += "<spring:message code='pay.alert.estmReqValid'/>";
 	            }
         });
-        
+
         if($.trim(reasonUpd) ==""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
-            
+
         }else{
-            
+
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(val == "A"){//APPROVE REQUEST
-            
+
             if(valid){
-                
+
                 Common.ajax("GET","/payment/saveApprRequest.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqId" : reqId}, function(result){
                     console.log(result);
 
@@ -1102,51 +1131,51 @@ var addOrderLayout = [
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("<spring:message code='pay.alert.estmFailToApprove'/>");
                 });
-                
+
             }else{
                 Common.alert(message);
             }
-            
+
         }else if(val == "C"){//CANCEL REQUEST
-            
+
             if(valid){
                 Common.ajax("GET","/payment/saveCancelRequest.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqId" : reqId}, function(result){
                     Common.alert(result.message);
                     $("#apprReq_reasonUpd").val("");
                     $("#btnCancelReq").hide();
-                    
+
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("<spring:message code='pay.alert.estmFailToCancel'/>");
 
                 });
-                
+
             }else{
                 Common.alert(message);
             }
         }
     }
-    
+
     function showDetailOrdGrp(salesOrdId){
-        
+
         $("#salesOrdId").val(salesOrdId);
         var custBillId = $("#custBillId").val();
         var valid = true;
         var message = "";
         $("#btnSave").show();
-        
+
         Common.ajax("GET","/payment/selectDetailOrdGrp.do", {"custBillId":custBillId, "salesOrdId" : salesOrdId}, function(result){
         	$("#removeOrderPop").show();
             if(result.code =="00"){
                 $("#remove_billGroup").text(result.data.basicInfo.custBillGrpNo);
                 $("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
                 $("#remove_ordNo").text(result.data.billGrpOrdView.salesOrdNo);
-                
+
                 if(result.data.billGrpOrdView.isMain == "1"){
                     $("#remove_isMain").text("Yes");
                 }else{
                     $("#remove_isMain").text("No");
                 }
-                
+
                 $("#remove_ordDate").text(result.data.billGrpOrdView.salesDt);
                 $("#remove_ordStatus").text(result.data.billGrpOrdView.code);
                 $("#remove_rentalFees").text(result.data.billGrpOrdView.mthRentAmt);
@@ -1156,37 +1185,37 @@ var addOrderLayout = [
             }
         });
     }
-    
+
     function fn_removeOrdGrp() {
-        
+
         var valid = true;
         var message = "";
         var custBillId = $("#custBillId").val();
         var salesOrdId = $("#salesOrdId").val();
         var reasonUpd = $("#remove_reasonUpd").val();
-        
+
         if($.trim(reasonUpd) ==""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
-            
+
         }else{
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(valid){
-            
+
             Common.confirm("<spring:message code='pay.alert.mainAddress'/>",function (){
-                
+
                 Common.ajax("GET", "/payment/saveRemoveOrder.do", {"custBillId" : custBillId, "reasonUpd":reasonUpd, "salesOrdId":salesOrdId}, function(result) {
-                    
+
                     Common.alert(result.message);
-                    
+
                     $("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
                     $("#btnSave").hide();
-                    
+
                 });
             });
 
@@ -1194,25 +1223,25 @@ var addOrderLayout = [
             Common.alert(message);
         }
     }
-    
+
     function fn_addNewAddr() {
         var custBillCustId = $("#custBillCustId").val();
         Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custBillCustId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
     }
-    
+
     function fn_addOrder() {
-        
+
         var custBillId = $("#custBillId").val();
-        
+
         Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
         	$("#addOrderPop").show();
             $("#addOrd_grpNo").text(result.data.basicInfo.custBillGrpNo);
             $("#addOrd_ordGrp").text(result.data.grpOrder.orderGrp);$('#addOrd_ordGrp').css("color","red");
-            
-            AUIGrid.destroy(addOrdPopGridID); 
+
+            AUIGrid.destroy(addOrdPopGridID);
             addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
             AUIGrid.setGridData(addOrdPopGridID, result.data.orderGrpList);
-            
+
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(addOrdPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
@@ -1221,7 +1250,7 @@ var addOrderLayout = [
             });
         });
     }
-    
+
     function fn_addOrdSave() {
         var valid = true;
         var message = "";
@@ -1231,12 +1260,12 @@ var addOrderLayout = [
         var i, rowItem, rowInfoObj, dataField;
         var str = "";
         var str2 = "";
-        
+
         if(selectedItems.length <= 0) {
             valid = false;
             message += "<spring:message code='pay.alert.selectOneOrder'/>";
         }
-        
+
         if($.trim(reasonUpd) ==""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -1246,9 +1275,9 @@ var addOrderLayout = [
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(valid){
-            
+
             for(i=0; i<selectedItems.length; i++) {
                 rowInfoObj = selectedItems[i];
                 rowItem = rowInfoObj.item;
@@ -1257,114 +1286,114 @@ var addOrderLayout = [
                 $("#salesOrdId").val(rowItem.salesOrdId);
                 str2 += rowItem.salesOrdId +":";
             }
-            
+
             var salesOrdNoArr = str.substring(0, str.length -1);
             var salesOrdIdArr = str2.substring(0, str2.length -1);
             var message2 = "<spring:message code='pay.alert.orderIntoBillingGroup' arguments='"+selectedItems.length+"' htmlEscape='false'/>";
-            
+
             Common.confirm(message2,function (){
-                
+
                 Common.ajax("GET", "/payment/saveAddOrder.do", {"salesOrdNo" : salesOrdNoArr, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdId" : salesOrdIdArr}, function(result) {
                     $("#addOrd_reasonUpd").val("");
                     Common.alert(result.message);
                     fn_addOrder();
                 });
             });
-            
+
         }else{
             Common.alert(message);
         }
     }
-    
+
     function fn_chgMainOrd() {
-        
+
         var valid = true;
         var message = "";
         var custBillId = $("#custBillId").val();
         var reasonUpd = $("#change_reasonUpd").val();
-        
+
         if(selectedGridValue == undefined){
-            
+
             valid = false;
             message += "<spring:message code='pay.alert.selectTargetOrder'/>";
-            
+
         }
-        
+
         if($.trim(reasonUpd) ==""){
             valid = false;
             message += "<spring:message code='pay.alert.reasonToUpdate'/>";
-            
+
         }else{
-            
+
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
-        
+
         if(valid){
-            
+
             var salesOrdId = $("#salesOrdId").val();
             var salesOrdNo = $("#salesOrdNo").val();
             var custBillSoId = $("#custBillSoId").val();
-            
+
             var message2= "<spring:message code='pay.alert.mainOrderGroup' arguments='"+salesOrdNo+"' htmlEscape='false'/>";
-            
+
             Common.confirm(message2,function (){
-                
+
                 Common.ajax("GET", "/payment/saveChgMainOrd.do", {"salesOrdId" : salesOrdId, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdNo" : salesOrdNo, "custBillSoId": custBillSoId}, function(result) {
                     Common.alert(result.message);
                     $('#change_reasonUpd').val("");
                 });
-                
+
             });
-            
+
         }else{
             Common.alert(message);
         }
     }
-    
+
     function fn_chgMailClose(){
         $("#chgMailAddrPop").hide();
         searchList();
     }
-    
+
     function fn_removeClose(){
         $("#removeOrderPop").hide();
         $("#remove_reasonUpd").val("");
         searchList();
     }
-    
+
     function fn_apprRequestClose(){
         $("#estmDetailHisPop").hide();
         $("#apprReq_reasonUpd").val("");
         searchList();
     }
-    
+
     function fn_custAddrClose(){
         $("#selectMaillAddrPop").hide();
         $("#custAddr").val("");
     }
-    
+
     function fn_keywordClear(){
         $("#custAddr").val("");
     }
-    
+
     function fn_contPerPopClose(){
         $("#selectContPersonPop").hide();
         $("#contKeyword").val("");
     }
-    
+
     function fn_keywordClear2(){
         $("#contKeyword").val("");
     }
-    
+
     function fn_addOrdPopClose(){
         $("#addOrderPop").hide();
         $("#addOrd_reasonUpd").val("");
         searchList();
     }
-    
+
 </script>
 <body>
 	<div id="wrap"><!-- wrap start -->
@@ -1461,6 +1490,12 @@ var addOrderLayout = [
 										    <label><input type="radio" disabled="disabled" id="sms" name="sms" value="2"/><span>SMS</span></label>
 										    <label><input type="radio" disabled="disabled" id="estm" name="estm" value="3"/><span>E-Statement</span></label>
 									    </td>
+									</tr>
+									<tr>
+									   <th scope="row">E-Invoice</th>
+									   <td colspan="3">
+									       <input id="isEInvoice" name="isEInvoice" type="checkbox" disabled="disabled"/>
+									   </td>
 									</tr>
 									<tr>
 									    <th scope="row">Email</th>
@@ -1572,7 +1607,7 @@ var addOrderLayout = [
 						</form>
 					</div><!-- divine_auto end -->
 				</section><!-- content end -->
-			   </div>       
+			   </div>
 		</section><!-- container end -->
 		<hr />
 	</div><!-- wrap end -->
@@ -2020,7 +2055,7 @@ var addOrderLayout = [
 					    </td>
 					    <th scope="row">Tel (Office)<span class="must">*</span></th>
 					    <td>
-					       <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />    
+					       <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />
 					    </td>
 					</tr>
 					<tr>

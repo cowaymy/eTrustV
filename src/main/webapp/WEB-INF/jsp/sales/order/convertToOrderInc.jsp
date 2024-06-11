@@ -45,6 +45,7 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
+                $("#custTin").val(custInfo.custTin); //Customer TIN no
 
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
@@ -251,6 +252,21 @@
                         $('#billMthdEmailTxt1').removeAttr("disabled").val("${preOrderInfo.custBillEmail}");
                         $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
 
+                        //E-Invoice Flag checking
+                        //var corpTypeID = custInfo.corpTypeId;
+
+                        $('#billMthdEInv').prop("checked", true);
+                        $('#billMthdEInv').removeAttr("disabled");
+                        $("#billMthdEInv").on('click', function() {
+                            return false;
+                        });
+
+                        /* if(corpTypeID != '1151' || corpTypeID != '1333'){ //For Government type and ePortal VIP, no need to check if TIN exist, auto-populate eInvoice Flag = 1
+                        	 if(FormUtil.isEmpty(custInfo.custTin)){
+                        		 Common.alert("* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice.");
+                             }
+                        } */
+
                         if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
                             $('#billMthdEmail2').prop("checked", true);
                         }
@@ -279,6 +295,10 @@
 
                         if(FormUtil.isNotEmpty('${preOrderInfo.CustBillIsSms2}')) {
                             $('#billMthdSms2').prop("checked", true);
+                        }
+
+                        if(FormUtil.isNotEmpty(custInfo.custTin)){
+                        	$('#billMthdEInv').removeAttr("disabled");
                         }
                     }
                 }

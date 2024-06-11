@@ -14,18 +14,19 @@ var contPersonPopGridID;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false
 };
+var tinID = 0;
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 
-    
+
 });
 
-var emailAddrLayout = [ 
+var emailAddrLayout = [
                        {
                            dataField : "name",
                            headerText : "<spring:message code='pay.head.status'/>",
@@ -43,7 +44,7 @@ var emailAddrLayout = [
                        }];
 
 //AUIGrid 칼럼 설정
-var contPersonLayout = [ 
+var contPersonLayout = [
                        {
                            dataField : "name",
                            headerText : "<spring:message code='pay.head.status'/>",
@@ -93,22 +94,22 @@ var contPersonLayout = [
 			$("#email").attr('disabled', true);
 		}
 	}
-	
+
 	function fn_selectMailAddr(){
-	    
+
 	    var custTypeId = $("#custTypeId").val();
 	    var custAddr = $("#custAddr").val();
-	    
+
 	    if(custTypeId == ""){
 	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
-	        
+
 	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId, "custAddr" : custAddr}, function(result){
 	        	$("#selectMaillAddrPop").show();
 	        	AUIGrid.destroy(emailAddrPopGridID);
 	        	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
 	            AUIGrid.setGridData(emailAddrPopGridID, result);
-	            
+
 	            //Grid 셀 클릭시 이벤트
 	            AUIGrid.bind(emailAddrPopGridID, "cellClick", function( event ){
 	                selectedGridValue = event.rowIndex;
@@ -116,52 +117,52 @@ var contPersonLayout = [
 	                $("#custAddId").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "custAddId"));
 	                $("#selectMaillAddrPop").hide();
 	                AUIGrid.destroy(emailAddrPopGridID);
-	    
+
 	            });
 	        });
 	    }
 	}
-	
+
 	function fn_addNewAddr() {
 	    var custTypeId = $("#custTypeId").val();
-	    
+
 	    if(custTypeId == ""){
 	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custTypeId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
 	    }
 	}
-	
+
 	function fn_addNewConPerson(){
-		
+
 	    var custTypeId = $("#custTypeId").val();
 	    if(custTypeId == ""){
-	    	
+
 	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":custTypeId, "callParam" : "billGroup"}, null , true ,'_editDiv3New');
 	    }
 	}
-	
+
 	function fn_selectContPerson(){
-	    
+
 	    var custTypeId = $("#custTypeId").val();
 	    var personKeyword = $("#personKeyword").val();
-	    
+
 	    if(custTypeId == ""){
 	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
-	    	
+
 	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId , "personKeyword" : personKeyword}, function(result){
 	        	$("#selectContPersonPop").show();
-	        	AUIGrid.destroy(contPersonPopGridID); 
+	        	AUIGrid.destroy(contPersonPopGridID);
 	            contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
 	            AUIGrid.setGridData(contPersonPopGridID, result);
-	            
+
 	            //Grid 셀 클릭시 이벤트
 	            AUIGrid.bind(contPersonPopGridID, "cellClick", function( event ){
 	                selectedGridValue = event.rowIndex;
-	                
+
 	                $("#custCntcId").val(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "custCntcId"));//히든값
 	                $("#contactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name1"));
 	                $("#mobileNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telM1"));
@@ -174,42 +175,42 @@ var contPersonLayout = [
 	        });
 	    }
 	}
-	
+
 	function fn_custAddrClose(){
 	    $("#selectMaillAddrPop").hide();
 	    $("#custAddr").val("");
 	}
-	
+
 	function fn_keywordClear(){
 	    $("#custAddr").val("");
 	}
-	
+
 	function fn_contPerPopClose(){
 	    $("#selectContPersonPop").hide();
 	    $("#personKeyword").val("");
 	}
-	
+
 	function fn_keywordClear2(){
 	    $("#personKeyword").val("");
 	}
-	
+
     function fn_orderSearch(){
     	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_ADD_NEW_GROUP", indicator : "SearchTrialNo"});
     }
-    
+
     function fn_orderInfo(ordNo, ordId){
     	loadOrderInfo(ordNo, ordId);
     }
-    
+
     function loadOrderInfo(ordNo, ordId){
-    	
+
     	Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdId" : ordId}, function(result){
             console.log(result);
-            
+
             if(result.data.orderInfo != null){
-            	
+
             	if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
-                    
+
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
@@ -219,7 +220,7 @@ var contPersonLayout = [
                     $('#customerId').text(result.data.orderInfo.custId);
                     $('#nric').text(result.data.orderInfo.nric);
                     $('#customerName').text(result.data.orderInfo.name);
-                    
+
                     //MAIL INFO
                     if(result.data.maillingInfo != null){
                     	$('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
@@ -228,38 +229,49 @@ var contPersonLayout = [
                     	//$('#custAddId').val("");//히든값
                         $('#maillingAddr').text("");
                     }
-                    
+
                     //CONTACT INFO
                     $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
                     $('#mobileNumber').text(result.data.contactInfo.telM1);
                     $('#officeNumber').text();
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
+
+                    //E-INVOICE FOR CORPORATE
+                    if(result.data.orderInfo.typeId == "965"){
+                    	$("#isEInvoice").prop('checked', true); // Mandatory for corporate
+                    	$("#isEInvoice").prop('disabled', true);
+                    }
+                    else{
+                        $("#isEInvoice").prop('checked', false); // reset for non-corporate
+                        $("#isEInvoice").prop('disabled', false);
+                    }
+
                 }else{
                     Common.alert("<spring:message code='pay.alert.notRentalType'/>");
-                } 
-            	
+                }
+
             }else{
             	Common.alert("<spring:message code='pay.alert.orderNotFound'/>");
-            } 
+            }
         });
     }
-    
+
     function onblurOrderInfo(){
-    	
+
     	var inputOrdNo = $('#orderNo').val();
-    	
+
     	if($.trim($('#orderNo').val()) == ""){
     		return;
     	}
-    	
+
         Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdNo" : inputOrdNo}, function(result){
             console.log(result);
-            
+
             if(result.data.orderInfo != null){
-            	
+
             	if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
-                    
+
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
@@ -269,7 +281,8 @@ var contPersonLayout = [
                     $('#customerId').text(result.data.orderInfo.custId);
                     $('#nric').text(result.data.orderInfo.nric);
                     $('#customerName').text(result.data.orderInfo.name);
-                    
+                    tinID = result.data.orderInfo.tinId;
+
                     //MAIL INFO
                     if(result.data.maillingInfo != null){
                     	$('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
@@ -278,26 +291,36 @@ var contPersonLayout = [
                     	//$('#custAddId').val("");//히든값
                         $('#maillingAddr').text("");
                     }
-                    
+
                     //CONTACT INFO
                     $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
                     $('#mobileNumber').text(result.data.contactInfo.telM1);
                     $('#officeNumber').text();
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
-                    
+
+                  //E-INVOICE FOR CORPORATE
+                    if(result.data.orderInfo.typeId == "965"){
+                        $("#isEInvoice").prop('checked', true); // Mandatory for corporate
+                        $("#isEInvoice").prop('disabled', true);
+                    }
+                    else{
+                    	$("#isEInvoice").prop('checked', false); // reset for non-corporate
+                    	$("#isEInvoice").prop('disabled', false);
+                    }
+
                 }else{
                 	$('#orderNo').val("");
                 	Common.alert("<spring:message code='pay.alert.notRentalType'/>");
                 }
-            	
+
             }else{
             	displayReset();
             	Common.alert("<spring:message code='pay.alert.orderNotFound'/>");
             }
         });
     }
-    
+
     function displayReset(){
     	$('#orderNo').val("");
         $('#customerId').text("");
@@ -306,6 +329,7 @@ var contPersonLayout = [
         $("#post").prop('checked', false);
         $("#estm").prop('checked', false);
         $("#sms").prop('checked', false);
+        $("#isEInvoice").prop('checked', false);
         $('#email').val("");
         $("#email").prop('readonly', true);
         $('#remark').val("");
@@ -316,95 +340,106 @@ var contPersonLayout = [
         $('#residenceNumber').text("");
         $('#faxNumber').text("");
     }
-    
+
     function fn_createEvent(objId, eventType){
     	var e = jQuery.Event(eventType);
         $('#'+objId).trigger(e);
     }
-    
+
     function fn_createNewGroup(){
-        
+
     	var message = "";
         var valid = true;
         var salesOrdId = $('#salesOrdId').val();
         var custTypeId = $('#custTypeId').val();
         var custAddId = $('#custAddId').val();
         var custCntcId = $('#custCntcId').val();
-    	
+
         if(salesOrdId == ""){
         	valid = false;
         	message += "<spring:message code='pay.alert.selectAnOrder'/>";
         }
-        
+
         if($("#post").is(":checked") == false && $("#sms").is(":checked") == false && $("#estm").is(":checked") == false ){
-            
+
             valid = false;
             message += "<spring:message code='pay.alert.selectBillingType.'/>";
         }else{
-        	
+
         	if($("#changePop_sms").is(":checked") && custTypeId == "965"){
-                
+
                 valid = false;
                 message += "<spring:message code='pay.alert.smsNotAllow.'/>";
             }
-        	
+
             if($("#estm").is(":checked")){
-                
+
                 if($("#email").val().trim() == ""){
                 	valid = false;
                 	message += "<spring:message code='pay.alert.emailAddress.'/>";
                 }else{
-                	
+
                 	if(FormUtil.checkEmail(($("#email").val().trim())) == true){
                         valid = false;
-                        message += "<spring:message code='pay.alert.invalidEmail.'/>"; 
+                        message += "<spring:message code='pay.alert.invalidEmail.'/>";
                      }
                 }
             }
         }
-        
+
+        if($("#isEInvoice").is(":checked") == true && tinID == "0"){
+            valid = false;
+            message += "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
+        }
+
         if(custAddId == ""){
             valid = false;
             message += "<spring:message code='pay.alert.selectAnAddress'/>";
         }
-        
+
         if(custCntcId == ""){
             valid = false;
             message += "<spring:message code='pay.alert.selectContPerson.'/>";
         }
-        
+
         if($("#post").is(":checked")){
         	$("#isPost").val(1);
         }else{
         	$("#isPost").val(0);
         }
-        
+
         if($("#sms").is(":checked")){
         	$("#isSms").val(1);
-          
+
         }else{
         	$("#isSms").val(0);
         }
-        
+
         if($("#sms").is(":checked")){
         	$("#isEstm").val(1);
         }else{
         	$("#isEstm").val(0);
         }
-        
+
+        if($("#isEInvoice").is(":checked")){
+        	$("#isEInv").val(1);
+        }else{
+        	$("#isEInv").val(0);
+        }
+
         if(valid){
-        	
+
         	Common.ajax("POST","/payment/saveAddNewGroup.do", $("#newGroupForm").serializeJSON(), function(result){
                 console.log(result);
                 Common.alert(result.message);
                 fn_disableControl();
             });
-        	
+
         }else{
         	Common.alert(message);
         }
     }
-    
+
     function fn_disableControl(){
     	$('#_btnSave').hide();
     	$('#trialNoBtn').hide();
@@ -419,7 +454,7 @@ var contPersonLayout = [
         $('#addNewContact').hide();
         $('#selectContPerson').hide();
     }
-    
+
 </script>
 <body>
 	<form action="" id="newGroupForm" name="newGroupForm">
@@ -430,6 +465,7 @@ var contPersonLayout = [
 		<input type="hidden" name="isPost" id="isPost">
     <input type="hidden" name="isSms" id="isSms">
     <input type="hidden" name="isEstm" id="isEstm">
+    <input type="hidden" name="isEInv" id="isEInv">
 		<div id="wrap"><!-- wrap start -->
 			<section id="content"><!-- content start -->
 				<ul class="path">
@@ -490,6 +526,12 @@ var contPersonLayout = [
 									        <input type="text"  id="email" name="email" />
 									    </td>
 									</tr>
+									<tr>
+                                       <th scope="row">E-Invoice</th>
+                                       <td colspan="3">
+                                           <input id="isEInvoice" name="isEInvoice" type="checkbox""/>
+                                       </td>
+                                    </tr>
 									<tr>
 									    <th scope="row">Remark</th>
 									    <td colspan="3"><textarea rows="" cols="" id="custBillRemark" name="custBillRemark"></textarea>

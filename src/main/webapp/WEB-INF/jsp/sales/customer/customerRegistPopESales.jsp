@@ -463,15 +463,14 @@
     // save
     function fn_saveNewCustomer(){
 
-    	var eInvValue = 0;
+    	// [Celeste] 29-05-2024 : move eInvoice flag to bill group
+    	/* var eInvValue = 0;
 
         if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
             eInvValue = 1;
         }else{
             eInvValue = 0;
-        }
-
-        console.log("eInvoice Flag: " + eInvValue);
+        } */
 
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
@@ -500,7 +499,7 @@
                     //rem : insBasicForm.rem.value,
                     sstRgistNo : insBasicForm.sstRgistNo.value,
                     tin : insBasicForm.tin.value,
-                    eInvFlg : eInvValue,
+                    /* eInvFlg : eInvValue, */ /* [Celeste] 29-05-2024 : move eInvoice flag to bill group */
 
                     addrDtl : null,//insAddressForm.addrDtl.value,
                     areaId : null, //insAddressForm.areaId.value,
@@ -852,10 +851,11 @@
              }
         }
 
-        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){
+        // [Celeste] 29-05-2024 : move eInvoice flag to bill group
+        /* if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){
             Common.alert('Please fill in TIN to receive e-Invoice.');
             return false;
-        }
+        } */
 
 
         return true;
@@ -1307,10 +1307,11 @@
 									</div>
 								</td>
                             </tr>
-                            <tr>
+                            <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+                            <%-- <tr>
                                 <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
 						        <td><input id="isEInvoice" name="isEInvoice" type="checkbox" /></td>
-							</tr>
+							</tr> --%>
                             <tr>
                                 <td colspan=2><span class="red_text">No Contain ' - ' in contact numbers</span></td>
                             </tr>

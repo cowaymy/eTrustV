@@ -191,9 +191,8 @@ $(document).ready(function(){
         }
 
 
-        console.log("eInvFlg: " + $('input:checkbox[id="isEInvoice"]').is(":checked"));
-
-        if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
+        // [Celeste] 29-05-2024 : move eInvoice flag to bill group
+       /*  if($('input:checkbox[id="isEInvoice"]').is(":checked") == true){
         	if($("#basicCustTin").val() != ''){
         		$("#isEInvoiceNew").val("1");
             }else{
@@ -203,10 +202,7 @@ $(document).ready(function(){
             }}
         else{
         	$("#isEInvoiceNew").val("0");
-        	}
-
-
-        console.log("eInvFlg: " + $("#isEInvoiceNew").val());
+        	} */
 
         //update
         fn_getCustomerBasicAjax();
@@ -507,7 +503,10 @@ $(document).ready(function(){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
     <td>${result.sstRgistNo}</td>
-    <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
+    <th scope="row"></th>
+    <td></td>
+    <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+    <%-- <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
     <td>
         <c:choose>
         <c:when test="${result.eInvFlg eq '1'}">
@@ -517,7 +516,7 @@ $(document).ready(function(){
             <input id="isEInvoiceDisplay" name="isEInvoiceDisplay" type="checkbox" onClick="return false"/>
         </c:otherwise>
         </c:choose>
-    </td>
+    </td> --%>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -637,8 +636,8 @@ $(document).ready(function(){
 <input type="hidden" value="${result.typeId }" name="basicTypeId">
 <input type="hidden" value="${result.nric}" name="basicNricOld">
 <input type="hidden" value="${result.custTin}" name="basicCustTinOld">
-<input type="hidden" value="${result.eInvFlg}" name="isEInvoiceOld">
-<input type="hidden" id = "isEInvoiceNew" name="isEInvoiceNew">
+<%-- <input type="hidden" value="${result.eInvFlg}" name="isEInvoiceOld"> --%> <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+<!-- <input type="hidden" id = "isEInvoiceNew" name="isEInvoiceNew"> --> <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -738,7 +737,10 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
+    <th scope="row"></th>
+    <td></td>
+    <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+    <%-- <th scope="row"><spring:message code="sal.text.eInvoicFlag" /></th>
     <td>
         <c:choose>
         <c:when test="${result.eInvFlg eq '1'}">
@@ -748,7 +750,7 @@ $(document).ready(function(){
             <input id="isEInvoice" name="isEInvoice" type="checkbox" />
         </c:otherwise>
         </c:choose>
-    </td>
+    </td> --%>
     <th scope="row"></th>
     <td></td>
 </tr>

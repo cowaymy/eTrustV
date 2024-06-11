@@ -31,7 +31,9 @@
 	       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
 	       Limit1.CUST_BILL_REM CUST_BILL_REM  ,
 	       Limit1.CUST_BILL_ADD_ID CUST_BILL_ADD_ID  ,
-	       Limit1.CUST_BILL_CNT_ID CUST_BILL_CNT_ID
+	       Limit1.CUST_BILL_CNT_ID CUST_BILL_CNT_ID ,
+	       LIMIT1.E_INV_FLG E_INV_FLG,
+	       LIMIT1.TIN_ID TIN_ID
 	  FROM ( SELECT Extent1.CUST_BILL_ID CUST_BILL_ID  ,
 	                Extent1.CUST_BILL_SO_ID CUST_BILL_SO_ID  ,
 	                Extent1.CUST_BILL_CUST_ID CUST_BILL_CUST_ID  ,
@@ -57,7 +59,9 @@
 	                CASE
 	                     WHEN ( Extent1.CUST_BILL_EMAIL_ADD IS NULL ) THEN ''
 	                ELSE Extent1.CUST_BILL_EMAIL_ADD
-	                   END CUST_BILL_EMAIL_ADD
+	                   END CUST_BILL_EMAIL_ADD ,
+	                Extent1.E_INV_FLG E_INV_FLG,
+	                NVL(Extent2.TIN_ID, 0) TIN_ID
 	         FROM SAL0024D Extent1
 	                JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_BILL_CUST_ID
 	                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.CUST_BILL_SO_ID
@@ -513,7 +517,9 @@
 			SYSHISREMARK,
 			USERHISREMARK,
 			TYPEID,
-			CODENAME
+			CODENAME,
+			EINVFLGOLD,
+            EINVFLGNEW
 			  FROM ( SELECT Project1.HistoryID HistoryID  ,
 			                Project1.AddressIDNew AddressIDNew  ,
 			                Project1.AddressIDOld AddressIDOld  ,
@@ -540,7 +546,9 @@
 			                Project1.SysHisRemark SysHisRemark  ,
 			                Project1.UserHisRemark UserHisRemark  ,
 			                Project1.TypeID TypeID  ,
-			                Project1.CodeName CodeName
+			                Project1.CodeName CodeName,
+			                Project1.EInvFlgOld EInvFlgOld,
+                            Project1.EInvFlgNew EInvFlgNew
 			  FROM ( SELECT Project1.HistoryID HistoryID  ,
 			                Project1.CustBillID CustBillID  ,
 			                Project1.HisCreated HisCreated  ,
@@ -568,6 +576,8 @@
 			                Project1.SysHisRemark SysHisRemark  ,
 			                Project1.CodeName CodeName  ,
 			                Project1.userName userName  ,
+			                Project1.EInvFlgOld EInvFlgOld,
+                            Project1.EInvFlgNew EInvFlgNew,
 			                ROW_NUMBER() OVER ( ORDER BY Project1.HistoryID DESC  ) row_number
 			         FROM ( SELECT Extent1.HIST_ID HistoryID  ,
 			                       Extent1.CUST_BILL_ID CustBillID  ,
@@ -598,7 +608,9 @@
 			                       CASE
 			                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
 			                       ELSE ''
-			                          END userName
+			                          END userName,
+			                       Extent1.E_INV_FLG_OLD EInvFlgOld,
+                                   Extent1.E_INV_FLG_NEW EInvFlgNew
 			                FROM SAL0025D Extent1
 			                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
 			                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.HIST_CRT_USER_ID
@@ -730,6 +742,7 @@
         , CUST_BILL_IS_POST = #{custBillIsPost}
         , CUST_BILL_EMAIL = #{custBillEmail}
         , CUST_BILL_EMAIL_ADD = #{custBillEmail}
+        , E_INV_FLG = #{custBillIsEInv}
         </if>
         <if test="apprReqFlag == 'Y'.toString() ">
         , CUST_BILL_EMAIL = #{emailNew}
@@ -789,7 +802,9 @@
 		TYPE_ID,
 		SYS_HIST_REM,
 		EMAIL_ADD_OLD,
-		EMAIL_ADD_NW
+		EMAIL_ADD_NW,
+		E_INV_FLG_OLD,
+		E_INV_FLG_NEW
 		)
 		VALUES(
 		SAL0025D_HIST_ID_SEQ.NEXTVAL,
@@ -818,7 +833,9 @@
 		#{typeId},
 		#{sysHisRemark},
 		#{emailAddtionalOld} ,
-		#{emailAddtionalNew}
+		#{emailAddtionalNew},
+		#{isEInvFlgOld},
+		#{isEInvFlgNew}
         )
     </insert>
 
@@ -850,7 +867,9 @@
             Limit1.SYS_HIST_REM SYS_HIST_REM  ,
             Limit1.USER_HIST_REM USER_HIST_REM  ,
             Limit1.TYPE_ID TYPE_ID  ,
-            Limit1.CODE_NAME CODE_NAME
+            Limit1.CODE_NAME CODE_NAME,
+            Limit1.E_INV_FLG_OLD E_INV_FLG_OLD,
+            Limit1.E_INV_FLG_NEW E_INV_FLG_NEW
 		  FROM ( SELECT Extent1.HIST_ID HIST_ID  ,
 		                Extent1.CUST_BILL_ID CUST_BILL_ID  ,
 		                Extent1.HIST_CRT_DT HIST_CRT_DT  ,
@@ -880,7 +899,9 @@
 		                CASE
 		                     WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
 		                ELSE ''
-		                   END C1
+		                   END C1,
+		                Extent1.E_INV_FLG_OLD E_INV_FLG_OLD,
+                        Extent1.E_INV_FLG_NEW E_INV_FLG_NEW
 		         FROM SAL0025D Extent1
 		                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
 		                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.HIST_CRT_USER_ID
@@ -1135,7 +1156,8 @@
 	       Extent1.CUST_BILL_IS_WEB_PORTAL CUST_BILL_IS_WEB_PORTAL  ,
 	       Extent1.CUST_BILL_WEB_PORTAL_URL CUST_BILL_WEB_PORTAL_URL  ,
 	       Extent1.CUST_BILL_IS_SMS2 CUST_BILL_IS_SMS2  ,
-	       Extent1.CUST_BILL_CUST_CARE_CNT_ID CUST_BILL_CUST_CARE_CNT_ID
+	       Extent1.CUST_BILL_CUST_CARE_CNT_ID CUST_BILL_CUST_CARE_CNT_ID,
+           Extent1.E_INV_FLG CUST_BILL_IS_E_INV
 	    FROM SAL0024D Extent1
 	   WHERE  Extent1.CUST_BILL_ID = #{custBillId} AND ROWNUM <![CDATA[<= ]]>  1
     </select>
@@ -1713,7 +1735,8 @@
 		CUST_BILL_IS_WEB_PORTAL,
 		CUST_BILL_WEB_PORTAL_URL,
 		CUST_BILL_IS_SMS2,
-		CUST_BILL_CUST_CARE_CNT_ID )
+		CUST_BILL_CUST_CARE_CNT_ID,
+		E_INV_FLG)
 		VALUES (
 		#{custBillIdSeq},
 		#{custBillSoId},
@@ -1739,7 +1762,8 @@
 		'',
 		'',
 		'',
-		'' )
+		'',
+		#{custBillIsEInv} )
     </insert>
 
     <select id="selectGetOrder" parameterType="Map" resultType="egovMap">
@@ -1756,7 +1780,8 @@
 	       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
 	       Limit1.MTH_RENT_AMT MTH_RENT_AMT  ,
 	       Limit1.APP_TYPE_ID APP_TYPE_ID  ,
-	       Limit1.SRV_CNTRCT_ID SRV_CNTRCT_ID
+	       Limit1.SRV_CNTRCT_ID SRV_CNTRCT_ID,
+	       Limit1.TIN_ID TIN_ID
 	       FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 	                Extent1.SALES_ORD_NO SALES_ORD_NO  ,
 	                Extent1.APP_TYPE_ID APP_TYPE_ID  ,
@@ -1784,7 +1809,8 @@
 	                CASE
 	                     WHEN ( Extent5.SRV_CNTRCT_ID IS NOT NULL ) THEN Extent5.SRV_CNTRCT_ID
 	                ELSE 0
-	                   END SRV_CNTRCT_ID
+	                   END SRV_CNTRCT_ID,
+	                NVL(Extent2.TIN_ID,0) TIN_ID
 	         FROM SAL0001D Extent1
 	                JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_ID
 	                LEFT JOIN SAL0023D Extent3   ON ( Extent3.CUST_ID = Extent2.CUST_ID )

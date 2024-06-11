@@ -396,17 +396,17 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   public void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception {
 
 	  // CELESTE 08-05-2024: INSERT NEW TIN ID AND INFO AND HISTORY [S]
-	  if(params.containsKey("isEInvoiceNew") && params.get("isEInvoiceNew") != null && params.get("isEInvoiceNew").equals("1")){
+	  /*if(params.containsKey("isEInvoiceNew") && params.get("isEInvoiceNew") != null && params.get("isEInvoiceNew").equals("1")){
 		  params.put("isEInvoice", 1);
 	  }
 	  else {
 		  params.put("isEInvoice", 0);
-	  }
+	  }*/
 
-	  if((params.get("basicCustTin").toString() != null && params.get("basicCustTin").toString() != "") ||
-		 (params.get("isEInvoice") != null && params.get("isEInvoice") != "") ) {
-			  if((params.get("basicCustTinOld").toString() != null && !params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString())) ||
-				 (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))	 ){
+	  if((params.get("basicCustTin").toString() != null && params.get("basicCustTin").toString() != "")
+			 /* || (params.get("isEInvoice") != null && params.get("isEInvoice") != "")*/ ) {
+			  if((params.get("basicCustTinOld").toString() != null && !params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))
+					  /*|| (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))*/	 ){
 				  int custTinId = customerMapper.getCustTinIdSeq();
 				  params.put("custTinId", custTinId);
 				  customerMapper.updateCustomerTinStatus(params);

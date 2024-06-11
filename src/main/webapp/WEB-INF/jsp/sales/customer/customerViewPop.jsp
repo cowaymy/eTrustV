@@ -408,7 +408,7 @@
              {dataField : "visaExpr", headerText : '<spring:message code="sal.text.visaExpire" />', width : '10%'},
              {dataField : "sstNo", headerText : '<spring:message code="sal.text.sstRegistrationNo" />', width : '20%'},
              {dataField : "custTin", headerText : '<spring:message code="sal.text.tin" />', width : '30%'},
-             {dataField : "eInvFlg", headerText : '<spring:message code="sal.text.eInvoicFlag" />', width : '10%'},
+             /* {dataField : "eInvFlg", headerText : '<spring:message code="sal.text.eInvoicFlag" />', width : '10%'}, */ /* [Celeste] 29-05-2024 : move eInvoice flag to bill group */
              {dataField : "remark", headerText : '<spring:message code="sal.text.remark" />', width : '30%'},
              {dataField : "updDt", headerText : '<spring:message code="sal.text.updateAt" />', width : '20%'},
              {dataField : "updUser", headerText : '<spring:message code="sal.text.updateBy" />', width : '20%'},
@@ -655,7 +655,8 @@
     <tr>
         <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
         <td>${result.sstRgistNo}</td>
-        <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
+        <!-- [Celeste] 29-05-2024 : move eInvoice flag to bill group -->
+        <%-- <th scope="row"><spring:message code="sal.title.text.eInvoicFlag" /></th>
         <td>
 	        <c:choose>
 		    <c:when test="${result.eInvFlg eq '1'}">
@@ -665,7 +666,7 @@
 		       <input id="isEInvoice" name="isEInvoice" type="checkbox" onClick="return false"/>
 		    </c:otherwise>
 	        </c:choose>
-        </td>
+        </td> --%>
 
         <th scope="row">Customer Status</th>
         <td><span>${result.custStatus}</span></td>

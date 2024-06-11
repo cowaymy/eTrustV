@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0024D database table.
- * 
+ *
  */
 public class CustBillMasterVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -61,6 +61,8 @@ public class CustBillMasterVO implements Serializable {
 	private int custBillUpdUserId;
 
 	private String custBillWebPortalUrl;
+
+	private int custBillIsEInv;
 
 	public CustBillMasterVO() {
 	}
@@ -263,6 +265,14 @@ public class CustBillMasterVO implements Serializable {
 
 	public void setCustBillWebPortalUrl(String custBillWebPortalUrl) {
 		this.custBillWebPortalUrl = custBillWebPortalUrl;
+	}
+
+	public int getCustBillIsEInv() {
+		return custBillIsEInv;
+	}
+
+	public void setCustBillIsEInv(int custBillIsEInv) {
+		this.custBillIsEInv = custBillIsEInv;
 	}
 
 }

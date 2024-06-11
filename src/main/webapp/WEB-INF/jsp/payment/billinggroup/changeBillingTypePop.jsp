@@ -11,7 +11,7 @@ var myGridID;
 var estmHisPopGridID;
 var callPrgm = '${callPrgm}';
 var custBillId = '${custBillId}';
-
+var tinID = 0;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
@@ -102,6 +102,26 @@ function changeBillingInfo(custBillId){
         	$("#changePop_post").prop('checked', false);
         }
 
+        var eInvFlg = result.data.basicInfo.eInvFlg;
+        $("#changePop_isEInvoice").prop('checked', false); //reset
+        tinID = result.data.basicInfo.tinId;
+
+        var custTypeId = $('#changeTypeForm #custTypeId').val();
+        if(custTypeId == "965"){
+        	$("#changePop_isEInvoice").prop('checked', true); // Mandatory for corporate
+        	//$("#changePop_isEInvoice").prop('disabled', true);
+        	$("#changePop_isEInvoice").on('click', function() {
+        		return false;
+        	});
+        }else{
+            if(eInvFlg == 1){
+                $("#changePop_isEInvoice").prop('checked', true);
+            }
+            else{
+                $("#changePop_isEInvoice").prop('checked', false);
+            }
+        }
+
         AUIGrid.destroy(estmHisPopGridID);
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
@@ -120,6 +140,7 @@ function fn_changeBillSave(){
     var isPost = 0;
     var isSms = 0;
     var isEstm = 0;
+    var isEInvFlg = 0;
     if($("#changePop_post").is(":checked")){
     	isPost = 1;
     }else{
@@ -144,6 +165,12 @@ function fn_changeBillSave(){
     	isEstm = 0;
     }
 
+    if($("#changePop_isEInvoice").is(":checked")){
+    	isEInvFlg = 1;
+    }else{
+    	isEInvFlg = 0;
+    }
+
     if($("#changePop_post").is(":checked") == false && $("#changePop_sms").is(":checked") == false && $("#changePop_estm").is(":checked") == false ){
         valid = false;
         message += "<spring:message code='pay.alert.selectBillingType'/>";
@@ -154,6 +181,11 @@ function fn_changeBillSave(){
         message += "<spring:message code='pay.alert.smsNotAllow.'/>";
     }
 
+    if($("#changePop_isEInvoice").is(":checked") == true && tinID == "0"){
+    	valid = false;
+    	message += "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
+    }
+
     if($.trim(reasonUpd) ==""){
         valid = false;
         message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -161,13 +193,13 @@ function fn_changeBillSave(){
     }else{
         if ($.trim(reasonUpd).length > 200){
             valid = false;
-            message += "<spring:message code='pay.alert.than200Characters'/>";
+            message += "<spring:message code='pay.alert.than200Characters.'/>";
         }
     }
 
     if(valid){
 
-        Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : isPost, "sms" : isSms, "estm" : isEstm, "custBillEmail" :custBillEmail}, function(result){
+        Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : isPost, "sms" : isSms, "estm" : isEstm, "custBillEmail" :custBillEmail, "isEInvFlg" :isEInvFlg}, function(result){
             console.log(result);
             Common.alert(result.message);
         });
@@ -296,6 +328,10 @@ function fn_estmReqPopClose(){
 	                            <label><input type="radio"   id="changePop_estm" name="billType"/><span>E-Statement </span></label>
 	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal" readonly="readonly"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
                             </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">E-Invoice</th>
+                            <td colspan="3"><input id="changePop_isEInvoice" name="changePop_isEInvoice" type="checkbox" /></td> <!-- If checked, e-Invoice else remain as Tax Invoice -->
                         </tr>
                         <tr>
                             <th scope="row">Reason Update</th>
