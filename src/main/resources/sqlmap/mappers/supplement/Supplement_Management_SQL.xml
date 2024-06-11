@@ -160,6 +160,192 @@
     SELECT DISTINCT SUP_REF_PCL_TRKNO from SUP0001M WHERE SUP_REF_PCL_TRKNO = #{inputParcelTrackNo} AND DEL_FLG = 'N'
   </select>
 
+    <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
+    SELECT T.DOC_SUB_ID
+             , T.DOC_SO_ID
+             , T.DOC_TYPE_ID
+             , T.CODE_NAME
+             , T.DOC_SUB_DT
+             , T.DOC_COPY_QTY
+    FROM ( SELECT T1.DOC_SUB_ID DOC_SUB_ID
+                        , T1.DOC_TYPE_ID DOC_TYPE_ID
+                        , T1.DOC_SO_ID DOC_SO_ID
+                        , T2.CODE_NAME CODE_NAME
+                        , DECODE(T1.DOC_SUB_DT, NULL, '01/01/1900'
+                        , TO_CHAR(T1.DOC_SUB_DT, 'DD/MM/YYYY')) DOC_SUB_DT
+                        , NVL(T1.DOC_COPY_QTY, 0) DOC_COPY_QTY
+               FROM ORG0010D T1
+               JOIN SYS0013M T2 ON T2.CODE_ID = T1.DOC_TYPE_ID
+               WHERE 1 = T1.STUS_ID
+                   AND T1.DOC_SO_ID = #{supRefId}
+    ) T ORDER BY T.CODE_NAME ASC
+  </select>
+
+  <select id="selectPaymentMasterList" parameterType="Map" resultType="egovMap">
+  SELECT PAY_ID
+           , OR_NO
+           , SALES_ORD_ID
+           , BILL_ID
+           , TR_NO
+           , TYPE_ID
+           , PAY_DATA
+           , BANK_CHG_ACC_ID
+           , COLL_MEM_ID
+           , BRNCH_ID
+           , BANK_ACC_ID
+           , STUS_CODE_ID
+           , UPD_USER_ID
+           , UPD_DT
+           , SYNC_HECK
+           , CUST_ID_3PARTY
+           , TOT_AMT
+           , MTCH_ID
+           , CRT_USER_ID
+           , CRT_DT
+           , IS_ALLOW_REV_MULTI
+           , IS_GL_POST_CLM
+           , GL_POST_CLM_DT
+           , TRX_ID
+           , CODE_DESC
+           , SALES_ORD_NO
+           , NAME
+           , CODE
+           , NAME1 AS NAME1
+           , ACC_CODE
+           , ACC_DESC
+           , NAME2 AS NAME2
+           , NAME3 AS NAME3
+           , USER_NAME
+           , REV_RECEIPT_NO
+           , PAY_ITM_APPV_NO
+    FROM ( SELECT T1.PAY_ID
+                        , T1.OR_NO
+                        , T1.SALES_ORD_ID
+                        , T1.BILL_ID
+                        , T1.TR_NO
+                        , T1.TYPE_ID
+                        , TO_CHAR(T1.PAY_DATA, 'DD/MM/YYYY') PAY_DATA
+                        , T1.BANK_CHG_ACC_ID
+                        , T1.COLL_MEM_ID
+                        , T1.BRNCH_ID
+                        , T1.BANK_ACC_ID
+                        , T1.STUS_CODE_ID
+                        , T1.UPD_USER_ID
+                        , T1.UPD_DT
+                        , T1.SYNC_HECK
+                        , T1.CUST_ID_3PARTY
+                        , T1.TOT_AMT
+                        , T1.MTCH_ID
+                        , T1.CRT_USER_ID
+                        , T1.CRT_DT
+                        , T1.IS_ALLOW_REV_MULTI
+                        , T1.IS_GL_POST_CLM
+                        , T1.GL_POST_CLM_DT
+                        , T1.TRX_ID
+                        , T2.CODE_DESC
+                        , T3.SALES_ORD_NO
+                        , T4.NAME
+                        , T5.CODE
+                        , T5.NAME AS NAME1
+                        , T6.ACC_CODE
+                        , T6.ACC_DESC
+                        , T7.NAME AS NAME2
+                        , T8.NAME AS NAME3
+                        , T9.USER_NAME
+                        , '' AS C1
+                        , DECODE(T10.PAY_ID, NULL, '', T10.OR_NO) AS REV_RECEIPT_NO
+                        , DECODE(T11.PAY_ITM_APPV_NO,NULL,'',T11.PAY_ITM_APPV_NO) AS PAY_ITM_APPV_NO
+               FROM PAY0064D T1
+               LEFT OUTER JOIN SYS0013M T2 ON T2.CODE_ID = T1.TYPE_ID
+               LEFT OUTER JOIN SAL0001D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID
+               LEFT OUTER JOIN ORG0001D T4 ON T4.MEM_ID = T1.COLL_MEM_ID
+               LEFT OUTER JOIN SYS0005M T5 ON T5.BRNCH_ID = T1.BRNCH_ID
+               LEFT OUTER JOIN SYS0001M T6 ON T6.ACC_ID = T1.BANK_ACC_ID
+               LEFT OUTER JOIN SYS0038M T7 ON T7.STUS_CODE_ID = T1.STUS_CODE_ID
+               LEFT OUTER JOIN ORG0001D T8 ON T8.MEM_ID = T1.UPD_USER_ID
+               LEFT OUTER JOIN SYS0047M T9 ON T9.USER_ID = T1.CRT_USER_ID
+               LEFT OUTER JOIN PAY0064D T10 ON T10.PAY_ID = T1.MTCH_ID AND 101 = T1.TYPE_ID
+               LEFT JOIN PAY0065D T11 ON T11.PAY_ID = T1.PAY_ID
+               WHERE (T1.SVC_CNTRCT_ID = 0 OR T1.SVC_CNTRCT_ID IS NULL)
+                    AND T1.SALES_ORD_ID = #{supRefId}
+    ) ORDER BY PAY_ID DESC
+  </select>
+
+  <select id="selectOrderBasicLedgerInfo" parameterType="Map" resultType="egovMap">
+
+      SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
+               Extent16.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.PV_YEAR AS PV_YEAR,
+               Extent1.PV_MONTH AS PV_MONTH,
+               Extent1.TOT_PV AS TOT_PV,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
+               Extent3.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent3.NRIC AS CUST_NRIC,
+               Extent3.GENDER AS CUST_GENDER,
+               Extent17.EMAIL AS CUST_EMAIL,
+               Extent17.TEL_M1 AS CUST_MOBILE_NO,
+               Extent17.TEL_O AS CUST_OFFICE_NO,
+               Extent17.TEL_R AS CUST_RESIDENT_NO,
+               Extent17.TELF AS CUST_FAX_NO,
+               TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
+               TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+               Extent10.CODE_NAME AS CUST_STATUS,
+               Extent11.CODE_NAME AS RACE_NAME,
+               Extent12.CODE_NAME AS CUST_TYPE_NAME,
+               Extent4.NAME AS NATION_NAME,
+               Extent13.ADD1 ||' '|| Extent13.ADD2 AS ADDRESS_LINE_1,
+               Extent13.ADD3 AS ADDRESS_LINE_2,
+               Extent14.AREA AS AREA,
+               Extent14.POSTCODE AS POSTCODE,
+               Extent14.STATE AS STATE,
+               Extent14.COUNTRY AS COUNTRY,
+               Extent14.CITY AS CITY,
+               Extent15.DEPT_CODE AS DEPT_CODE,
+               Extent15.GRP_CODE AS GRP_CODE,
+               Extent15.ORG_CODE AS ORG_CODE,
+               Extent6.MEM_CODE AS SALESMAN_CODE,
+               Extent6.NAME AS SALESMAN_NAME,
+               Extent6.MEM_CODE AS SALESMAN_NRIC,
+               Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
+               Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT
+    FROM SUP0001M Extent1
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    LEFT JOIN org0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '587'
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
+    LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
+    LEFT JOIN sal0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID
+    LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
+    LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_ID = #{supRefId}
+        AND ROWNUM <![CDATA[<=]]> 1
+
+  </select>
+
   <update id="updateRefStgStatus" parameterType="Map">
     UPDATE SUP0001M SET SUP_REF_STG = '4'
                                    , SUP_REF_PCL_TRKNO = #{inputParcelTrackNo}
