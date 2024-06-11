@@ -24,6 +24,9 @@ public interface SupplementUpdateService {
   List<EgovMap> getSupplementDetailList( Map<String, Object> params )
     throws Exception;
 
+  List<EgovMap> getDelRcdLst( Map<String, Object> params )
+    throws Exception;
+
   List<EgovMap> selectPosJsonList( Map<String, Object> params )
     throws Exception;
 
