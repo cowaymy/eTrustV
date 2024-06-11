@@ -46,4 +46,10 @@ public interface SupplementUpdateService {
 
   void sendEmail(Map<String, Object> params);
 
+  public List<EgovMap> selectDocumentList(Map<String, Object> params);
+
+  List<EgovMap> selectPaymentMasterList(Map<String, Object> params);
+
+  EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params);
+
 }
