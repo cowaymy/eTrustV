@@ -240,6 +240,18 @@
     WHERE Extent3.SUP_REF_ID = #{supRefId}
   </select>
 
+  <select id="getDelRcdLst"  parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(A.SUP_DEL_DT, 'DD-MM-YYYY hh:mm:ss AM') AS DEL_DT,
+               UPPER(B.CODE_NAME) AS DEL_STUS,
+               UPPER(A.SUP_DEL_LOC) AS DEL_LOC,
+               UPPER(A.SUP_DEL_RMK) AS RMK
+    FROM SUP0005D A
+    LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = '587' AND B.CODE = A.SUP_DEL_SEQ
+    JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_PCL_TRKNO = A.SUP_REF_PCL_TRKNO
+    WHERE A.DEL_FLG = 'N' AND A.SUP_REF_ID = #{supRefId}
+    ORDER BY A.SUP_DEL_DT DESC
+  </select>
+
   <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
     SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
                Extent1.SUP_REF_NO AS SUP_REF_NO,
@@ -275,8 +287,8 @@
                Extent11.CODE_NAME AS RACE_NAME,
                Extent12.CODE_NAME AS CUST_TYPE_NAME,
                Extent4.NAME AS NATION_NAME,
-               Extent13.ADD1 ||' '|| Extent13.ADD2 AS ADDRESS_LINE_1,
-               Extent13.ADD3 AS ADDRESS_LINE_2,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
                Extent14.AREA AS AREA,
                Extent14.POSTCODE AS POSTCODE,
                Extent14.STATE AS STATE,
@@ -295,14 +307,14 @@
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
     LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
     JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
-    LEFT JOIN org0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN ORG0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
     JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
     LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
     LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '587'
     LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
     LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
     LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
-    LEFT JOIN sal0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID
+    LEFT JOIN SAL0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID AND Extent1.CUST_ID = EXTENT13.CUST_ID
     LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
     LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
     LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
