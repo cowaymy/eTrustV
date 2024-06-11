@@ -20,7 +20,8 @@
 
     // 리스트 조회.
     function fn_selectDocumentList() {
-        Common.ajax("GET", "/sales/order/selectDocumentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
+        //Common.ajax("GET", "/sales/order/selectDocumentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
+        Common.ajax("GET", "/supplement/selectDocumentJsonList.do", {supRefId : '${orderInfo.supRefId}'}, function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
     }

@@ -26,7 +26,8 @@
 
     // 리스트 조회.
     function fn_selectPaymentList() {
-        Common.ajax("GET", "/sales/order/selectPaymentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
+        //Common.ajax("GET", "/sales/order/selectPaymentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
+        Common.ajax("GET", "/supplement/selectPaymentJsonList.do", {supRefId : '${orderInfo.supRefId}'}, function(result) {
             AUIGrid.setGridData(payGridID, result);
         });
     }
