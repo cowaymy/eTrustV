@@ -279,6 +279,7 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
     Map<String, Object> updParam =  new HashMap<>();
     updParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )));
+    updParam.put( "consNo", CommonUtils.nvl(params.get( "consNo" )));
     // SOFT REMOVE EXISTING LISTING DETAIL
     supplementUpdateMapper.updateDelLstDtl( updParam );
 
