@@ -159,6 +159,23 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 		return supplementUpdateMapper.checkDuplicatedTrackNo(params);
 }
 
+  @Override
+  public List<EgovMap> selectPaymentMasterList(Map<String, Object> params) {
+
+    return supplementUpdateMapper.selectPaymentMasterList(params);
+  }
+
+  @Override
+  public List<EgovMap> selectDocumentList(Map<String, Object> params) {
+
+    return supplementUpdateMapper.selectDocumentList(params);
+  }
+
+	public EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params) {
+
+		return supplementUpdateMapper.selectOrderBasicLedgerInfo(params);
+	}
+
   public Map<String, Object> updateRefStgStatus (Map<String, Object> params) throws Exception {
 	  Map<String, Object> rtnMap = new HashMap<>();
 	  Map<String, Object> stoEntry = new HashMap<String, Object>();
@@ -333,7 +350,10 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 
     LOGGER.info("############################ sendEmail - params: {}", params);
 
-    List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
+    //  List<String> emailNo = new ArrayList<String>();
+    // List<String> emailNo = Arrays.asList(" "+ params.get("custEmail") +" ");
+    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my", " "+ params.get("custEmail") +" ");
+    //List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
 
     if (CommonUtils.nvl(params.get("emailType")) == "1"){
       emailTitle = "Your Order Has Been Prepared and Is On Its Way!";
@@ -455,4 +475,5 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateType.getFileName(),
         AppConstants.DEFAULT_CHARSET, params);
   }
+
 }
