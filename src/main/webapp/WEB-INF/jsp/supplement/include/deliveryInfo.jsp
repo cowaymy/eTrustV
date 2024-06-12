@@ -52,6 +52,9 @@
 </script>
 
 <article class="tap_area">
+  <aside class="title_line">
+    <h3><spring:message code="sal.title.text.deliveryAddress" /></h3>
+  </aside>
   <table class="type1">
   <caption>table</caption>
   <colgroup>
