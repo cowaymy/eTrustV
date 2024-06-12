@@ -339,7 +339,6 @@
     LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
     LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
     LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
-    LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}
@@ -489,7 +488,14 @@
                Extent6.MEM_CODE AS SALESMAN_NRIC,
                Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
                Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
-               Extent6.TEL_HUSE AS SALESMAN_RESIDENT
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT,
+               Extent18.ADDR_DTL AS BILL_ADDRESS_LINE_1,
+               Extent18.STREET AS BILL_ADDRESS_LINE_2,
+               Extent19.AREA AS BILL_AREA,
+               Extent19.POSTCODE AS BILL_POSTCODE,
+               Extent19.STATE AS BILL_STATE,
+               Extent19.COUNTRY AS BILL_COUNTRY,
+               Extent19.CITY AS BILL_CITY
     FROM SUP0001M Extent1
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
     LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
@@ -506,6 +512,8 @@
     LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
     LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
     LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
+    LEFT JOIN SYS0064M Extent19 ON Extent19.AREA_ID = Extent18.AREA_ID
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}
