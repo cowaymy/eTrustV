@@ -207,7 +207,7 @@
            , GL_POST_CLM_DT
            , TRX_ID
            , CODE_DESC
-           , SALES_ORD_NO
+           , SUP_REF_NO AS SALES_ORD_NO
            , NAME
            , CODE
            , NAME1 AS NAME1
@@ -243,7 +243,7 @@
                         , T1.GL_POST_CLM_DT
                         , T1.TRX_ID
                         , T2.CODE_DESC
-                        , T3.SALES_ORD_NO
+                        , T3.SUP_REF_NO
                         , T4.NAME
                         , T5.CODE
                         , T5.NAME AS NAME1
@@ -257,7 +257,7 @@
                         , DECODE(T11.PAY_ITM_APPV_NO,NULL,'',T11.PAY_ITM_APPV_NO) AS PAY_ITM_APPV_NO
                FROM PAY0064D T1
                LEFT OUTER JOIN SYS0013M T2 ON T2.CODE_ID = T1.TYPE_ID
-               LEFT OUTER JOIN SAL0001D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID
+               LEFT OUTER JOIN SUP0001M T3 ON T3.SUP_REF_ID = T1.SALES_ORD_ID
                LEFT OUTER JOIN ORG0001D T4 ON T4.MEM_ID = T1.COLL_MEM_ID
                LEFT OUTER JOIN SYS0005M T5 ON T5.BRNCH_ID = T1.BRNCH_ID
                LEFT OUTER JOIN SYS0001M T6 ON T6.ACC_ID = T1.BANK_ACC_ID
@@ -267,6 +267,7 @@
                LEFT OUTER JOIN PAY0064D T10 ON T10.PAY_ID = T1.MTCH_ID AND 101 = T1.TYPE_ID
                LEFT JOIN PAY0065D T11 ON T11.PAY_ID = T1.PAY_ID
                WHERE (T1.SVC_CNTRCT_ID = 0 OR T1.SVC_CNTRCT_ID IS NULL)
+                    AND T1.REF_DTL LIKE 'BR66%'
                     AND T1.SALES_ORD_ID = #{supRefId}
     ) ORDER BY PAY_ID DESC
   </select>
