@@ -55,7 +55,7 @@
   <ul class="left_opt">
     <li>
       <h1 style="display: inline;">Bank Response Code: </h1>
-      <a href="${pageContext.request.contextPath}/resources/download/sales/BankFullResponseCode.pdf" download>
+      <a href="${pageContext.request.contextPath}/resources/download/sales/BankFullResponseCode_V2.pdf" download>
         <button>Download</button>
       </a>
     </li>
