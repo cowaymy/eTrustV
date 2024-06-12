@@ -8,35 +8,34 @@
   function createAUIGrid5() {
     var columnLayout = [{ headerText : '<spring:message code="sal.title.receiptNo" />',
                                      dataField : "orNo",
-                                     width : 100 }
+                                     width : "15%" }
                                 , { headerText : '<spring:message code="sal.title.reverseFor" />',
                                      dataField : "revReceiptNo",
-                                     width : 100 }
+                                     width : "10%" }
                                 , { headerText : '<spring:message code="sal.text.payDate" />',
                                      dataField : "payData",
-                                     width : 80  }
+                                     width : "15%"  }
                                 , { headerText : '<spring:message code="sal.title.payType" />',
                                      dataField : "codeDesc",
-                                     width : 120 }
+                                     width : "10%" }
                                 , { headerText : '<spring:message code="sal.title.debtorAcc" />',
                                      dataField : "accCode",
-                                     width : 100 }
+                                     width : "10%" }
                                 , { headerText : '<spring:message code="sal.text.keyInBranchCd" />',
                                      dataField : "code",
-                                     width : 90  }
+                                     width : "10%"  }
                                 , { headerText : '<spring:message code="sal.text.keyInBranchNm" />',
                                      dataField : "name1",
-                                     width : 140 }
+                                     width : "15%" }
                                 , { headerText : '<spring:message code="sal.text.totAmt" />',
                                      dataField : "totAmt",
-                                     width : 100 }
+                                     width : "15%" }
     ];
 
     payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);
   }
 
   function fn_selectPaymentList() {
-    //Common.ajax("GET", "/sales/order/selectPaymentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
     Common.ajax("GET", "/supplement/selectPaymentJsonList.do", {supRefId : '${orderInfo.supRefId}'}, function(result) {
       AUIGrid.setGridData(payGridID, result);
     });
