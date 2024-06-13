@@ -1,11 +1,11 @@
 <script type="text/javascript">
-    var posItmDetailGridID;
+    var subItmDetailGridID;
 
     $(document).ready(function() {
-        createPosPaymentDetailGrid();
+        createSubItmDetailGrid();
     });
 
-    function createPosPaymentDetailGrid() {
+    function createSubItmDetailGrid() {
         var columnLayout = [ {
             dataField : "itemCode",
             headerText : "<spring:message code='log.head.itemcode'/>",
@@ -51,7 +51,7 @@
             showRowNumColumn : true
         };
 
-        posItmDetailGridID = GridCommon.createAUIGrid("payment_detail_grid_wrap_1", columnLayout, "", paymentGridPros);
+        subItmDetailGridID = GridCommon.createAUIGrid("sub_itm_detail_grid_wrap_1", columnLayout, "", paymentGridPros);
 
         var footerLayout = [ {
             labelText : "Total",
@@ -64,20 +64,19 @@
             style : "aui-grid-my-footer-sum-total2"
         } ];
 
-        AUIGrid.setFooter(posItmDetailGridID, footerLayout);
+        AUIGrid.setFooter(subItmDetailGridID, footerLayout);
 
     }
 
     var supRefId = ${orderInfo.supRefId};
     var param = {supRefId : supRefId };
     Common.ajax("GET", "/supplement/getSupplementDetailList", param, function(result) {
-      AUIGrid.setGridData(posItmDetailGridID, result);
+      AUIGrid.setGridData(subItmDetailGridID, result);
     })
 </script>
 
 <article class="tap_area">
   <table class="type1">
-    <!-- table start -->
     <caption>table</caption>
     <colgroup>
       <col style="width: 180px" />
@@ -161,7 +160,7 @@
   </aside>
   <article class="tap_area">
     <article class="grid_wrap">
-      <div id="payment_detail_grid_wrap_1" style="width: 100%; height: 200px; margin: 0 auto;"></div>
+      <div id="sub_itm_detail_grid_wrap_1" style="width: 100%; height: 200px; margin: 0 auto;"></div>
     </article>
   </article>
 </article>

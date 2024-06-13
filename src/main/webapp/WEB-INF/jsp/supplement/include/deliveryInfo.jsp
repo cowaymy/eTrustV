@@ -1,105 +1,152 @@
 <script type="text/javascript">
-    var deliveryInfoGridID;
+  var deliveryInfoGridID;
 
-    $(document).ready(function() {
-        createDelDetailGrid();
-    });
+  $(document).ready(function() {
+    createDelDetailGrid();
 
-    function createDelDetailGrid() {
-        var columnLayout = [ {
-            dataField : "delDt",
-            headerText : "<spring:message code='log.head.deliverydate'/>",
-            width : '20%',
-            editable : false
-        }, {
-            dataField : "delStus",
-            headerText : "<spring:message code='supplement.text.delStat'/>",
-            width : '30%',
-            editable : false
-        }, {
-            dataField : "delLoc",
-            headerText : "<spring:message code='supplement.text.delLoc'/>",
-            width : '20%',
-            editable : false
-        }, {
-            dataField : "rmk",
-            headerText : "<spring:message code='sal.title.remark'/>",
-            width : '30%',
-            editable : false,
-        } ];
+    fn_maskingData('_addr1', '${orderInfo.addressLine1}');
+    fn_maskingData('_addr2', '${orderInfo.addressLine2}');
+  });
 
-        var delRcdGridPros = {
-            usePaging : true,
-            pageRowCount : 10,
-            fixedColumnCount : 1,
-            showStateColumn : true,
-            displayTreeOpen : false,
-            headerHeight : 30,
-            useGroupingPanel : false,
-            skipReadonlyColumns : true,
-            wrapSelectionMove : true,
-            showRowNumColumn : true
-        };
+  function fn_maskingData(ind, obj) {
+    var maskedVal = (obj).substr(-10).padStart((obj).length, '*');
+      $("#span" + ind).html(maskedVal);
+      $("#span" + ind).hover(function() {
+          $("#span" + ind).html(obj);
+      }).mouseout(function() {
+          $("#span" + ind).html(maskedVal);
+      });
+      $("#imgHover" + ind).hover(function() {
+          $("#span" + ind).html(obj);
+      }).mouseout(function() {
+          $("#span" + ind).html(maskedVal);
+      });
+  }
 
-        deliveryInfoGridID = GridCommon.createAUIGrid("delivery_rec_grid_wrap", columnLayout, "", delRcdGridPros);
-    }
+  function createDelDetailGrid() {
+    var columnLayout = [ {
+      dataField : "delDt",
+      headerText : "<spring:message code='log.head.deliverydate'/>",
+      width : '20%',
+      editable : false
+    }, {
+      dataField : "delStus",
+      headerText : "<spring:message code='supplement.text.delStat'/>",
+      width : '30%',
+      editable : false
+    }, {
+      dataField : "delLoc",
+      headerText : "<spring:message code='supplement.text.delLoc'/>",
+      width : '20%',
+      editable : false
+    }, {
+      dataField : "rmk",
+      headerText : "<spring:message code='sal.title.remark'/>",
+      width : '30%',
+      editable : false,
+    } ];
 
-    var supRefId = ${orderInfo.supRefId};
-    var param = {supRefId : supRefId };
-    Common.ajax("GET", "/supplement/getDelRcdLst", param, function(result) {
-      AUIGrid.setGridData(deliveryInfoGridID, result);
-    })
+    var delRcdGridPros = {
+      usePaging : true,
+      pageRowCount : 10,
+      fixedColumnCount : 1,
+      showStateColumn : true,
+      displayTreeOpen : false,
+      headerHeight : 30,
+      useGroupingPanel : false,
+      skipReadonlyColumns : true,
+      wrapSelectionMove : true,
+      showRowNumColumn : true
+    };
+
+    deliveryInfoGridID = GridCommon.createAUIGrid("delivery_rec_grid_wrap",
+        columnLayout, "", delRcdGridPros);
+  }
+
+  var supRefId = ${orderInfo.supRefId};
+  var param = {
+    supRefId : supRefId
+  };
+  Common.ajax("GET", "/supplement/getDelRcdLst", param, function(result) {
+    AUIGrid.setGridData(deliveryInfoGridID, result);
+  })
 </script>
 
 <article class="tap_area">
   <aside class="title_line">
-    <h3><spring:message code="sal.title.text.deliveryAddress" /></h3>
+    <h3>
+      <spring:message code="sal.title.text.deliveryAddress" />
+    </h3>
   </aside>
   <table class="type1">
-  <caption>table</caption>
-  <colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:110px" />
-    <col style="width:*" />
-  </colgroup>
-  <tbody>
-    <tr>
-      <th scope="row">Address Line 1</th>
-      <td colspan="5"><span>${orderInfo.addressLine1}</span></td>
-    </tr>
-    <tr>
-      <th scope="row">Address Line 2</th>
-      <td colspan="5"><span>${orderInfo.addressLine2}</span></td>
-    </tr>
-    <tr>
-      <th scope="row"><spring:message code="service.title.Area" /></th>
-      <td><span>${orderInfo.area}</span></td>
-      <th scope="row"><spring:message code="sal.text.city" /></th>
-      <td><span>${orderInfo.city}</span></td>
-      <th scope="row"><spring:message code="sys.title.postcode" /></th>
-      <td><span>${orderInfo.postcode}</span></td>
-    </tr>
-    <tr>
-      <th scope="row"><spring:message code="service.title.State" /></th>
-      <td><span>${orderInfo.state}</span></td>
-      <th scope="row"><spring:message code="sys.country"/></th>
-      <td><span>${orderInfo.country}</span></td>
-      <th </th>
-      <td>
-      </td>
-    </tr>
-  </tbody>
+    <caption>table</caption>
+    <colgroup>
+      <col style="width: 130px" />
+      <col style="width: *" />
+      <col style="width: 130px" />
+      <col style="width: *" />
+      <col style="width: 110px" />
+      <col style="width: *" />
+    </colgroup>
+    <tbody>
+      <tr>
+        <th scope="row"><spring:message code="sal.text.addressDetail" /></th>
+        <td colspan="5">
+          <table>
+           <tr>
+             <td width="95%"><span id='span_addr1'></span></td>
+             <td width="5">
+               <a href="#" class="search_btn" id="imgHover_addr1">
+                 <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
+               </a>
+             </td>
+           </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><spring:message code="sal.text.street" /></th>
+        <td colspan="5">
+          <table>
+           <tr>
+             <td width="95%"><span id='span_addr2'></span></td>
+             <td width="5">
+               <a href="#" class="search_btn" id="imgHover_addr2">
+                 <img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" />
+               </a>
+             </td>
+           </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><spring:message code="service.title.Area" /></th>
+        <td><span>${orderInfo.area}</span></td>
+        <th scope="row"><spring:message code="sal.text.city" /></th>
+        <td><span>${orderInfo.city}</span></td>
+        <th scope="row"><spring:message code="sys.title.postcode" /></th>
+        <td><span>${orderInfo.postcode}</span></td>
+      </tr>
+      <tr>
+        <th scope="row"><spring:message code="service.title.State" /></th>
+        <td><span>${orderInfo.state}</span></td>
+        <th scope="row"><spring:message code="sys.country" /></th>
+        <td><span>${orderInfo.country}</span></td>
+        <th  scope="row"></th>
+        <td></td>
+      </tr>
+    </tbody>
   </table>
 
   <aside class="title_line">
-    <h3><spring:message code="supplement.text.delRcd" /></h3>
+    <h3>
+      <spring:message code="supplement.text.delRcd" />
+    </h3>
   </aside>
   <article class="tap_area">
     <article class="grid_wrap">
-      <div id="delivery_rec_grid_wrap" style="width: 100%; height: 350px; margin: 0 auto;"></div>
+      <div id="delivery_rec_grid_wrap"
+        style="width: 100%; height: 350px; margin: 0 auto;"></div>
     </article>
   </article>
 </article>
