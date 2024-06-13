@@ -308,8 +308,8 @@
                Extent11.CODE_NAME AS RACE_NAME,
                Extent12.CODE_NAME AS CUST_TYPE_NAME,
                Extent4.NAME AS NATION_NAME,
-               Extent13.ADD1 ||' '|| Extent13.ADD2 AS ADDRESS_LINE_1,
-               Extent13.ADD3 AS ADDRESS_LINE_2,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
                Extent14.AREA AS AREA,
                Extent14.POSTCODE AS POSTCODE,
                Extent14.STATE AS STATE,
@@ -696,4 +696,21 @@
                     , #{userId}
     )
   </insert>
+
+    <select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[
+          {
+              call SP_GEN_SUPP_ORD_LDGR ( #{supRefId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
+        }
+        ]]>
+    </select>
+
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+        {
+              call SP_GET_SUPP_ORD_OTSTND_INFO ( #{supRefId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
+        }
+        ]]>
+    </select>
+
 </mapper>
