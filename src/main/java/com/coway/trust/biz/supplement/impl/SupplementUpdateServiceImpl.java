@@ -176,6 +176,20 @@ public class SupplementUpdateServiceImpl extends EgovAbstractServiceImpl impleme
 		return supplementUpdateMapper.selectOrderBasicLedgerInfo(params);
 	}
 
+	@Override
+	public List<EgovMap> getOderLdgr(Map<String, Object> params) {
+		supplementUpdateMapper.getOderLdgr(params);
+
+		return (List<EgovMap>) params.get("p1");
+	}
+
+	@Override
+	public List<EgovMap> getOderOutsInfo(Map<String, Object> params) {
+		supplementUpdateMapper.getOderOutsInfo(params);
+
+		 return (List<EgovMap>) params.get("p1");
+	}
+
   public Map<String, Object> updateRefStgStatus (Map<String, Object> params) throws Exception {
 	  Map<String, Object> rtnMap = new HashMap<>();
 	  Map<String, Object> stoEntry = new HashMap<String, Object>();

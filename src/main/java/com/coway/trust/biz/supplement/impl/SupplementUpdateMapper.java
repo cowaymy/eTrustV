@@ -50,4 +50,8 @@ public interface SupplementUpdateMapper {
   List<EgovMap> selectPaymentMasterList(Map<String, Object> params); // Payment Listing
 
   EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params);
+
+  List<EgovMap> getOderLdgr(Map<String, Object> params);
+
+  List<EgovMap> getOderOutsInfo(Map<String, Object> params);
 }
