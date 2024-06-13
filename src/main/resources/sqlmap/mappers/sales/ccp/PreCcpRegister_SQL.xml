@@ -99,10 +99,10 @@
 		, CASE
         WHEN C.APP_TYPE_ID = 66 THEN
 	            CASE
-	                WHEN E.STUS_CODE_ID IN ('WOF_1', 'TER') THEN
-	                    (NVL(H.MAX_RENT_INST_NO, 60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT - T1.REBATE_AMT_PER_INSTLMT)
+	                WHEN E.STUS_CODE_ID IN ('WOF_1', 'TER', 'CAN', 'INV') THEN
+	                    (NVL(H.MAX_RENT_INST_NO, 60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT - NVL(T1.REBATE_AMT_PER_INSTLMT, 0))
 	                ELSE
-	                    (NVL(B.RENT_INST_NO, 60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT - T1.REBATE_AMT_PER_INSTLMT)
+	                    (NVL(B.RENT_INST_NO, 60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT - NVL(T1.REBATE_AMT_PER_INSTLMT, 0))
 	            END
 	    END UNBILL_AMT
 		FROM SAL0001D C
