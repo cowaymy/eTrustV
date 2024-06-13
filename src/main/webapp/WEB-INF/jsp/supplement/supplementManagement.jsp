@@ -5,511 +5,262 @@
       .write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='
           + new Date().getTime() + '"><\/script>');
 
-  var posGridID;
-  var deductionCmGridID;
-  var posItmDetailGridID;
-  var posPaymentDetailGridID;
+  var supOrdGridID;
+  var supItmDetailGridID;
   var excelListGridID;
 
   var MEM_TYPE = '${SESSION_INFO.userTypeId}';
-  var arrPosStusCode; // POS GRID
-  var arrItmStusCode; //ITEM GRID
-  var arrMemStusCode; //MEMBER GRID
-  var balanceCapped = 0;
+  var arrSupStusCode; // SUPPLEMENT GRID
 
-  //Ajax async
   var ajaxOtp = {
     async : false
   };
 
-  $(document)
-      .ready(
-          function() { //*************************************************************************
+  $(document).ready(
+     function() {
+       createAUIGrid();
+       createExcelAUIGrid();
+       createPosPaymentDetailGrid();
+       gridHide();
 
-            createAUIGrid();
-            createExcelAUIGrid();
-            createPosPaymentDetailGrid();
-            girdHide();
+        doGetComboSepa('/common/selectBranchCodeList.do', '10', ' - ', '', '_brnchId', 'M', 'fn_multiComboBranch');
 
-            /*######################## Init Combo Box ########################*/
+        if (MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
+          if ("${SESSION_INFO.memberLevel}" == "1") {
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+          } else if ("${SESSION_INFO.memberLevel}" == "2") {
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-            //branch List
-            /*      CommonCombo.make('cmbWhBrnchId', "/supplement/selectWhBrnchList", '' , '', '');
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+          } else if ("${SESSION_INFO.memberLevel}" == "3") {
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-             $("#cmbWhBrnchId").change(function() {
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
-             var tempVal = $(this).val();
-             if(tempVal == null || tempVal == '' ){
-             $("#cmbWhId").val("");
-             }else{
-             var paramObj = {brnchId : tempVal};
-             Common.ajax('GET', "/supplement/selectSubmBrch", paramObj,function(result){
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+          } else if ("${SESSION_INFO.memberLevel}" == "4") {
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-             if(result != null){
-             $("#cmbWhId").val(result.whLocDesc);
-             }else{
-             $("#cmbWhId").val('');
-             }
-             });
-             }
-             }); */
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
-            doGetComboSepa('/common/selectBranchCodeList.do', '10',
-                ' - ', '', '_brnchId', 'M',
-                'fn_multiComboBranch');
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
 
-            if (MEM_TYPE == "1" || MEM_TYPE == "2"
-                || MEM_TYPE == "7") {
+            $("#salesmanCd").val("${SESSION_INFO.userName}");
+            $("#salesmanPopNm").val("${SESSION_INFO.userFullname}");
+            $("#salesmanCd").attr("class", "w100p readonly");
+            $("#salesmanCd").attr("readonly", "readonly");
+            $("#_memBtn").hide();
+          }
+        }
 
-              if ("${SESSION_INFO.memberLevel}" == "1") {
+        $('#excelDown').click(
+          function() {
+            var excelProps = { fileName : "Supplement Management",
+                                       exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
+                                     };
 
-                $("#orgCode").val("${orgCode}");
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+            AUIGrid.exportToXlsx( excelListGridID, excelProps);
+        });
 
-              } else if ("${SESSION_INFO.memberLevel}" == "2") {
+        $('#memBtn').click(
+          function() {
+            Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
+          });
 
-                $("#orgCode").val("${orgCode}");
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+        $('#salesmanCd').change(function(event) {
+          var memCd = $('#salesmanCd').val().trim();
 
-                $("#grpCode").val("${grpCode}");
-                $("#grpCode").attr("class", "w100p readonly");
-                $("#grpCode").attr("readonly", "readonly");
+          if (FormUtil.isNotEmpty(memCd)) {
+            fn_loadOrderSalesman(0, memCd);
+          } else {
+            $('#salesmanPopNm').val("");
+          }
+        });
 
-              } else if ("${SESSION_INFO.memberLevel}" == "3") {
+        $('#salesmanPopNm').change(function(event) {
+          var memName = $('#salesmanPopNm').val().trim();
 
-                $("#orgCode").val("${orgCode}");
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+          if (FormUtil.isNotEmpty(memName)) {
+            fn_loadOrderSalesman(0, memName);
+          } else {
+            $('#salesmanPopNm').val("");
+          }
+        });
 
-                $("#grpCode").val("${grpCode}");
-                $("#grpCode").attr("class", "w100p readonly");
-                $("#grpCode").attr("readonly", "readonly");
-
-                $("#deptCode").val("${deptCode}");
-                $("#deptCode").attr("class", "w100p readonly");
-                $("#deptCode").attr("readonly", "readonly");
-
-              } else if ("${SESSION_INFO.memberLevel}" == "4") {
-
-                $("#orgCode").val("${orgCode}");
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
-
-                $("#grpCode").val("${grpCode}");
-                $("#grpCode").attr("class", "w100p readonly");
-                $("#grpCode").attr("readonly", "readonly");
-
-                $("#deptCode").val("${deptCode}");
-                $("#deptCode").attr("class", "w100p readonly");
-                $("#deptCode").attr("readonly", "readonly");
-
-                $("#salesmanCd").val("${SESSION_INFO.userName}");
-                $("#salesmanPopNm").val("${SESSION_INFO.userFullname}");
-                $("#salesmanCd").attr("class", "w100p readonly");
-                $("#salesmanCd").attr("readonly", "readonly");
-                $("#_memBtn").hide();
-
+        $("#_search").click(
+          function() {
+            if ($("#_supRefNo").val() == '') {
+              if ($("#_sDate").val() == '' || $("#_eDate").val() == '') {
+                Common.alert('Reference Date is required when Reference Order No. is empty.')
+                return;
+              } else if ($("#_sDate").val() != '' && $("#_eDate").val() != '') {
+                if (!js.date.checkDateRange($("#_sDate").val(), $("#_eDate").val(), "Supplement Reference Date", "1")) {
+                  console.log("not within date rage");
+                }
               }
             }
 
-            /*######################## Init Combo Box ########################*/
+            AUIGrid.clearGridData(supOrdGridID);
+            AUIGrid.clearGridData(supItmDetailGridID);
+            fn_getSubListAjax();
+        });
 
-            //excel Download
-            $('#excelDown')
-                .click(
-                    function() {
-                      var excelProps = {
-                        fileName : "Supplement Management",
-                        exceptColumnFields : AUIGrid
-                            .getHiddenColumnDataFields(excelListGridID)
-                      };
-                      AUIGrid
-                          .exportToXlsx(
-                              excelListGridID,
-                              excelProps);
-                    });
+        $("#_updateShipTrackNoBtn").click(
+          function() {
+            var clickChk = AUIGrid.getSelectedItems(supOrdGridID);
 
-            //Member Search Popup
-            $('#memBtn').click(
-                function() {
-                  Common.popupDiv("/common/memberPop.do", $(
-                      "#searchForm").serializeJSON(),
-                      null, true);
-                });
+            if (clickChk == null || clickChk.length <= 0) {
+              Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
 
-            $('#salesmanCd').change(function(event) {
+            var supplementForm = {
+              supRefId : clickChk[0].item.supRefId,
+              supRefStus : clickChk[0].item.supRefStus,
+              supRefStg : clickChk[0].item.supRefStg,
+              ind : "1"
+            };
 
-              var memCd = $('#salesmanCd').val().trim();
+            var supRefId = clickChk[0].item.supRefId;
+            var supRefStusId = clickChk[0].item.supRefStusId;
+            var supRefStgId = clickChk[0].item.supRefStgId;
 
-              if (FormUtil.isNotEmpty(memCd)) {
-                fn_loadOrderSalesman(0, memCd);
-              }
-            });
+            if (supRefStusId == 1 && supRefStgId == 3) {
+              Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
+            } else {
+              Common.alert('Either order status is not Active or Stage Status is not in Tracking Number and GI/GR Process Pending.');
+              return;
+            }
+          });
 
-            $('#salesmanPopNm').change(function(event) {
+          $("#_viewBtn").click(
+            function() {
+              var clickChk = AUIGrid.getSelectedItems(supOrdGridID);
 
-              var memName = $('#salesmanPopNm').val().trim();
+               if (clickChk == null || clickChk.length <= 0) {
+                 Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
+                 return;
+               }
 
-              if (FormUtil.isNotEmpty(memName)) {
-                fn_loadOrderSalesman(0, memName);
-              }
-            });
+               var supplementForm = {
+                 supRefId : clickChk[0].item.supRefId,
+                 ind : "1"
+               };
 
-            //Search
-            $("#_search")
-                .click(
-                    function() {
+               Common.popupDiv("/supplement/supplementViewPop.do", supplementForm, null, true, '_insDiv');
+           });
 
-                      console.log("_supRefNo ::"
-                          + $("#_supRefNo").val());
+          $("#_updateDeliveryStatBtn").click(function() {
+            var selectedItems = AUIGrid.getCheckedRowItems(supOrdGridID);
+            var suppOrds = [];
 
-                      if ($("#_supRefNo").val() == '') {
-                        if ($("#_sDate").val() == ''
-                            || $("#_eDate").val() == '') {
-                          Common
-                              .alert('Reference Date is required when Reference Order No. is empty.')
-                          return;
-                        } else if ($("#_sDate").val() != ''
-                            && $("#_eDate").val() != '') {
-                          if (!js.date
-                              .checkDateRange(
-                                  $("#_sDate")
-                                      .val(),
-                                  $("#_eDate")
-                                      .val(),
-                                  "Supplement Reference Date",
-                                  "1")) {
-                            console
-                                .log("not within date rage");
-                          }
-                        }
-                      }
+            if (selectedItems.length <= 0) {
+              Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
 
-                      //Grid Clear
-                      AUIGrid.clearGridData(posGridID);
-                      AUIGrid
-                          .clearGridData(posItmDetailGridID);
-                      fn_getPosListAjax();
-                    });
-
-            //Update Shipment Tracking
-            $("#_updateShipTrackNoBtn")
-                .click(
-                    function() {
-
-                      var clickChk = AUIGrid
-                          .getSelectedItems(posGridID);
-
-                      //Validation
-                      if (clickChk == null
-                          || clickChk.length <= 0) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
-                        return;
-                      }
-
-                      var supplementForm = {
-                        supRefId : clickChk[0].item.supRefId,
-                        supRefStus : clickChk[0].item.supRefStus,
-                        supRefStg : clickChk[0].item.supRefStg,
-                        ind : "1"
-                      };
-
-                      var supRefId = clickChk[0].item.supRefId;
-                      var supRefStusId = clickChk[0].item.supRefStusId;
-                      var supRefStgId = clickChk[0].item.supRefStgId;
-
-                      console.log ("supplementForm supRefId:: "+ supRefId);
-                      console.log ("supplementForm supRefStusId:: " + supRefStusId);
-                      console.log ("supplementForm supRefStgId:: " + supRefStgId);
-
-                      if (supRefStusId != 1 || supRefStgId != 3) {
-                     // if (supRefStusId == 1 && supRefStgId == 3) {
-                    	//Common.popupDiv("/supplement/supplementTrackNoPop.do", {salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null , true , '_insDiv');
-                    	  Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
-                      }else {
-                    	   Common.alert('Either order status is not Active or Stage Status is not in Tracking Number and GI/GR Process Pending.');
-                    	   return;
-                    	  }
-                    });
-
-            $("#_viewBtn")
-                .click(
-                    function() {
-
-                      var clickChk = AUIGrid
-                          .getSelectedItems(posGridID);
-
-                      //Validation
-                      if (clickChk == null
-                          || clickChk.length <= 0) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
-                        return;
-                      }
-
-                      var supplementForm = {
-                        supRefId : clickChk[0].item.supRefId,
-                        ind : "1"
-                      };
-                      //Common.popupDiv("/supplement/supplementTrackNoPop.do", {salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null , true , '_insDiv');
-                      Common
-                          .popupDiv(
-                              "/supplement/supplementViewPop.do",
-                              supplementForm,
-                              null, true,
-                              '_insDiv');
-                    });
-
-            // UPDATE DELIVERY STATUS HERE
-            $("#_updateDeliveryStatBtn").click(function() {
-              var selectedItems = AUIGrid.getCheckedRowItems(posGridID);
-
-              var suppOrds = [];
-
-              for (var a=0; a < selectedItems.length; a++) {
-                // CHECK TRACKING NO.
-                if (selectedItems[a].item.parcelTrackNo === "" || selectedItems[a].item.parcelTrackNo === undefined) {
-                    Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supRefNo);
-                    return;
-                }
-
-                // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
-
-                if (selectedItems[a].item.supRefDelStus >= 4) {
-                    Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
-                    // REFRESH THE GRID
-                    AUIGrid.clearGridData(posGridID);
-                    AUIGrid.clearGridData(posItmDetailGridID);
-                    fn_getPosListAjax();
-                    return;
-                }
-
-                var item = {
-                  ordNo : selectedItems[a].item.supRefNo,
-                  trckNo: selectedItems[a].item.parcelTrackNo
-                }
-
-                suppOrds.push(item);
+            for (var a=0; a < selectedItems.length; a++) {
+              // CHECK TRACKING NO.
+              if (selectedItems[a].item.parcelTrackNo === "" || selectedItems[a].item.parcelTrackNo === undefined) {
+                  Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supRefNo);
+                  return;
               }
 
-              // GET & UPDATE DELIVERY STATUS
-              Common.ajax("POST", "/supplement/updOrdDelStat.do", {ords : suppOrds}, function(result) {
-                Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
-              });
+              // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
+              if (selectedItems[a].item.supRefDelStus >= 4) {
+                  Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
+                  // REFRESH THE GRID
+                  AUIGrid.clearGridData(supOrdGridID);
+                  AUIGrid.clearGridData(supItmDetailGridID);
+                  fn_getSubListAjax();
+                  return;
+              }
 
+              var item = {
+                ordNo : selectedItems[a].item.supRefNo,
+                trckNo: selectedItems[a].item.parcelTrackNo
+              }
+
+              suppOrds.push(item);
+            }
+
+            // GET & UPDATE DELIVERY STATUS
+            Common.ajax("POST", "/supplement/updOrdDelStat.do", {ords : suppOrds}, function(result) {
+              Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
             });
+          });
 
-            /*  AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
-             alert("cellDoubleClick...");
-             console.log("cellDoubleClick...");
-             }); */
+          AUIGrid.bind(supOrdGridID, "cellClick", function(event) {
+            AUIGrid.clearGridData(supItmDetailGridID);
 
-            //Cell Click Event
-            AUIGrid.bind(posGridID, "cellClick", function(event) {
+            var detailParam = {
+              supRefNo : event.item.supRefNo
+            };
 
-              //clear data
-              AUIGrid.clearGridData(posItmDetailGridID);
+            var detailParam = {
+              supRefId : event.item.supRefId
+            };
 
-              console.log("supRefId :: " + event.item.supRefId);
-              console.log("supRefNo :: " + event.item.supRefNo);
-
-              var detailParam = {
-                supRefNo : event.item.supRefNo
-              };
-              var detailParam = {
-                supRefId : event.item.supRefId
-              };
-
-              //Ajax
-              Common.ajax("GET",
-                  "/supplement/getSupplementDetailList",
-                  detailParam, function(result) {
-                    AUIGrid.setGridData(posItmDetailGridID,
-                        result);
-                    AUIGrid.setGridData(excelListGridID,
-                        result);
-
-                  });
-
+            Common.ajax("GET", "/supplement/getSupplementDetailList", detailParam, function(result) {
+              AUIGrid.setGridData(supItmDetailGridID, result);
+              AUIGrid.setGridData(excelListGridID, result);
             });
+          });
 
-            /***************** Status Change  *****************/
-            // 1) Pos Master Update
-            $("#_headerSaveBtn")
-                .click(
-                    function() {
+          AUIGrid.bind( supOrdGridID,
+                             "cellEditBegin",
+                              function(event) {
+                                if (event.item.posTypeId == 1361) {
+                                  Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
+                                  return false;
+                                }
 
-                      var rowCnt = AUIGrid
-                          .getRowCount(posGridID);
-                      if (rowCnt <= 0) {
-                        Common
-                            .alert("* please Search First.");
-                        return;
-                      }
-                      var updateList = AUIGrid
-                          .getEditedRowItems(posGridID);
-                      //   console.log("updateList(type) : " + $.type(updateList));
+                                if (event.value != 1 && event.value != 96) {
+                                  Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
+                                  return false;
+                                }
 
-                      if (updateList == null
-                          || updateList.length <= 0) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.noDataChange" />');
-                        return;
-                      }
+                                return true;
+          });
 
-                      var PosGridVO = {
-                        posStatusDataSetList : GridCommon
-                            .getEditData(posGridID)
-                      }; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
+          AUIGrid.bind( supItmDetailGridID,
+                             "cellEditBegin",
+                             function(event) {
+                               if (event.item.posTypeId == 1361) {
+                                 Common.alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
+                                 return false;
+                               }
 
-                      Common
-                          .ajax(
-                              "POST",
-                              "/sales/pos/updatePosMStatus",
-                              PosGridVO,
-                              function(result) {
+                               if (event.value != 96) {
+                                 Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
+                                 return false;
+                               }
+                               return true;
+          });
 
-                                Common
-                                    .alert(result.message);
-                                AUIGrid
-                                    .clearGridData(posItmDetailGridID);
-                                fn_getPosListAjax();
-                              });
-
-                    });
-
-            // 3) Pos Detail Update
-            $("#_itemSaveBtn")
-                .click(
-                    function() {
-
-                      var rowCnt = AUIGrid
-                          .getRowCount(posItmDetailGridID);
-                      if (rowCnt <= 0) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.selectItm" />');
-                        return;
-                      }
-                      var updateList = AUIGrid
-                          .getEditedRowItems(posItmDetailGridID);
-                      //  console.log("updateList(type) : " + $.type(updateList));
-
-                      if (updateList == null
-                          || updateList.length <= 0) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.noDataChange" />');
-                        return;
-                      }
-
-                      var PosGridVO = {
-                        posDetailStatusDataSetList : GridCommon
-                            .getEditData(posItmDetailGridID)
-                      }; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
-
-                      Common
-                          .ajax(
-                              "POST",
-                              "/sales/pos/updatePosDStatus",
-                              PosGridVO,
-                              function(result) {
-
-                                Common
-                                    .alert(result.message);
-                                AUIGrid
-                                    .clearGridData(posItmDetailGridID);
-                                fn_getPosListAjax();
-                              });
-
-                    });
-
-            /***************  Pos Grid Status ********************/
-            //1) Master
-            AUIGrid
-                .bind(
-                    posGridID,
-                    "cellEditBegin",
-                    function(event) {
-                      //Reversal
-                      if (event.item.posTypeId == 1361) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
-                        return false;
-                      }
-                      // Active NonReceive Only
-                      if (event.value != 1
-                          && event.value != 96) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
-                        return false;
-                      }
-
-                      //Others
-                      return true;
-                    });
-            // 2) Detail
-            AUIGrid
-                .bind(
-                    posItmDetailGridID,
-                    "cellEditBegin",
-                    function(event) {
-
-                      if (event.item.posTypeId == 1361) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
-                        return false;
-                      }
-                      // Active NonReceive Only
-                      if (event.value != 96) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
-                        return false;
-                      }
-                      //Others
-                      return true;
-                    });
-            // 3) Member
-            AUIGrid
-                .bind(
-                    deductionCmGridID,
-                    "cellEditBegin",
-                    function(event) {
-
-                      if (event.item.posTypeId == 1361) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
-                        return false;
-                      }
-                      // Active NonReceive Only
-                      if (event.value != 96) {
-                        Common
-                            .alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
-                        return false;
-                      }
-                      //Others
-                      return true;
-                    });
-
-            /***  Report ***/
-            $("#_posRawDataBtn").click(
-                function() {
-                  Common.popupDiv(
-                      "/sales/pos/posRawDataPop.do", '',
-                      null, null, true);
-                });
-
-            $("#_posPayListing")
-                .click(
-                    function() {
-                      Common
-                          .popupDiv(
-                              "/sales/pos/posPaymentListingPop.do",
-                              '', null, null,
-                              true);
-                    });
-          });//Doc ready Func End ****************************************************************************************************************************************
+          $("#_posRawDataBtn").click(
+            function() {
+              Common.popupDiv( "/sales/pos/posRawDataPop.do", '', null, null, true);
+          });
+  });
 
   function fn_multiComboBranch() {
     if ($("#_brnchId option[value='${SESSION_INFO.userBranchId}']").val() === undefined) {
@@ -542,31 +293,13 @@
     }
   }
 
-  /* function fn_getDateGap(sdate, edate){
-
-   var startArr, endArr;
-
-   startArr = sdate.split('/');
-   endArr = edate.split('/');
-
-   var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
-   var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
-
-   var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
-
-   //    console.log("gap : " + gap);
-
-   return gap;
-   } */
-
-  function girdHide() {
-    //Grid Hide
+  function gridHide() {
     $("#_deducGridDiv").css("display", "none");
     $("#_itmDetailGridDiv").css("display", "none");
   }
 
   function createPosPaymentDetailGrid() {
-    var posPaymentColumnLayout = [
+    var subItmColumnLayout = [
     {
       dataField : "itemCode",
       headerText : "<spring:message code='log.head.itemcode'/>",
@@ -613,7 +346,7 @@
       showRowNumColumn : true
     };
 
-    posItmDetailGridID = GridCommon.createAUIGrid("#payment_detail_grid_wrap", posPaymentColumnLayout, '', paymentGridPros);
+    supItmDetailGridID = GridCommon.createAUIGrid("#sub_itm_detail_grid_wrap", subItmColumnLayout, '', paymentGridPros);
 
     var footerLayout = [ {
         labelText : "Total",
@@ -626,12 +359,7 @@
         style : "aui-grid-my-footer-sum-total2"
       } ];
 
-        AUIGrid.setFooter(posItmDetailGridID, footerLayout);
-  }
-
-  //TODO 미개발 message
-  function fn_underDevelop() {
-    Common.alert('The program is under development.');
+        AUIGrid.setFooter(supItmDetailGridID, footerLayout);
   }
 
   $.fn.clearForm = function() {
@@ -652,107 +380,53 @@
   };
 
   function fn_loadOrderSalesman(memId, memCode, isPop) {
-    Common
-        .ajax(
-            "GET",
-            "/sales/order/selectMemberByMemberIDCode.do",
-            {
-              memId : memId,
-              memCode : memCode
-            },
-            function(memInfo) {
-              if (memInfo == null) {
-                Common
-                    .alert('<spring:message code="sal.alert.msg.memNotFound" />'
-                        + memCode + '</b>');
-                $("#salesmanPopCd").val('');
-                $("#hiddenSalesmanPopId").val('');
+    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", { memId : memId, memCode : memCode },
+      function(memInfo) {
+        if (memInfo == null) {
+          Common.alert('<spring:message code="sal.alert.msg.memNotFound" />' + memCode + '</b>');
+          $("#salesmanPopCd").val('');
+          $("#hiddenSalesmanPopId").val('');
+        } else {
+          if (isPop == 1) {
+            $('#hiddenSalesmanPopId').val(memInfo.memId);
+            $('#salesmanPopCd').val(memInfo.memCode);
+            $('#salesmanPopCd').removeClass("readonly");
+            $('#salesmanPopNm').val(memInfo.name);
 
-                //Clear Grid
-               // fn_clearAllGrid();
-              } else {
-                // console.log("멤버정보 가꼬옴");
-                console.log(memInfo.memId);
-                if (isPop == 1) {
-                  $('#hiddenSalesmanPopId')
-                      .val(memInfo.memId);
-                  $('#salesmanPopCd').val(memInfo.memCode);
-                  $('#salesmanPopCd').removeClass("readonly");
-                  $('#salesmanPopNm').val(memInfo.name);
-
-                  Common
-                      .ajax(
-                          "GET",
-                          "/sales/pos/getMemCode",
-                          {
-                            memCode : memCode
-                          },
-                          function(result) {
-
-                            if (result != null) {
-                              //$("#_cmbWhBrnchIdPop").val(result.brnch);
-                              //$("#_payBrnchCode").val(result.brnch);
-                              //getLocIdByBrnchId(result.brnch);
-                            } else {
-                              Common
-                                  .alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
-                              $("#salesmanPopCd")
-                                  .val('');
-                              $(
-                                  "#hiddenSalesmanPopId")
-                                  .val('');
-                              $('#salesmanPopNm')
-                                  .val('');
-                              $(
-                                  "#_cmbWhBrnchIdPop")
-                                  .val('');
-                              $("#cmbWhIdPop")
-                                  .val();
-                              //Clear Grid
-                              fn_clearAllGrid();
-                              return;
-                            }
-                          });
+            Common.ajax( "GET", "/sales/pos/getMemCode", { memCode : memCode },
+              function(result) {
+                if (result != null) {
                 } else {
-                  //  console.log("리스트임");
-                  $('#hiddenSalesmanId').val(memInfo.memId);
-                  $('#salesmanCd').val(memInfo.memCode);
-                  $('#salesmanCd').removeClass("readonly");
-                  $('#salesmanPopNm').val(memInfo.name);
+                  Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
+                  $("#salesmanPopCd").val('');
+                  $("#hiddenSalesmanPopId").val('');
+                  $('#salesmanPopNm').val('');
+                  $("#_cmbWhBrnchIdPop").val('');
+                  $("#cmbWhIdPop").val();
+                  fn_clearAllGrid();
+                  return;
                 }
+              });
+            } else {
+              $('#hiddenSalesmanId').val(memInfo.memId);
+              $('#salesmanCd').val(memInfo.memCode);
+              $('#salesmanCd').removeClass("readonly");
+              $('#salesmanPopNm').val(memInfo.name);
+            }
 
-                //Load Salesman Loyalty Reward
-                Common
-                    .ajax(
-                        "GET",
-                        "/sales/pos/getLoyaltyRewardPointByMemCode.do",
-                        {
-                          memCode : memCode
-                        },
-                        function(result) {
-                          console.log(result);
-                          if (result != null) {
-
-                            $('#_hidLrpId')
-                                .val(
-                                    result.lrpItmId);
-                            $('#_posBalanceCapped')
-                                .val(
-                                    result.lrpBalanceAmt);
-                            $('#_posDiscount')
-                                .val(
-                                    result.lrpUplDiscountPercent);
-                            $('#_posSDate').val(
-                                result.startDt);
-                            $('#_posEDate').val(
-                                result.endDt);
-
-                          }
-
-                        });
-
+            Common.ajax( "GET", "/sales/pos/getLoyaltyRewardPointByMemCode.do", { memCode : memCode },
+               function(result) {
+                 console.log(result);
+                   if (result != null) {
+                     $('#_hidLrpId').val(result.lrpItmId);
+                     $('#_posBalanceCapped').val(result.lrpBalanceAmt);
+                     $('#_posDiscount').val(result.lrpUplDiscountPercent);
+                     $('#_posSDate').val(result.startDt);
+                     $('#_posEDate').val(result.endDt);
+                   }
+                 });
               }
-            });
+    });
   }
 
   function createAUIGrid() {
@@ -859,33 +533,8 @@
       headerText : '<spring:message code="sal.text.updateDate" />',
       width : '8%',
       editable : false
-    },
+    }];
 
-    /*                             {dataField : "stusId", headerText : "Status", width : '10%',
-     labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
-     var retStr = "";
-     for(var i=0,len=arrPosStusCode.length; i<len; i++) {
-     if(arrPosStusCode[i]["codeId"] == value) {
-     retStr = arrPosStusCode[i]["codeName"];
-     break;
-     }
-     }
-     return retStr == "" ? value : retStr;
-     },
-     editRenderer : {
-     type : "DropDownListRenderer",
-     list : arrPosStusCode,
-     keyField   : "codeId", // key 에 해당되는 필드명
-     valueField : "codeName", // value 에 해당되는 필드명
-     easyMode : false
-     }
-     } ,
-     {dataField : "posId", visible : false},
-     {dataField : "posModuleTypeId", visible : false},
-     {dataField : "posTypeId", visible : false} */
-    ];
-
-    //그리드 속성 설정
     var gridPros = {
       showRowAllCheckBox : true,
       usePaging : true,
@@ -895,14 +544,11 @@
       showRowCheckColumn : true,
     };
 
-    posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,
-        '', gridPros); // address list
+    supOrdGridID = GridCommon.createAUIGrid("#sub_grid_wrap", posColumnLayout, '', gridPros); // address list
   }
 
   function createExcelAUIGrid() {
-
     var excelColumnLayout = [
-
     {
       dataField : "supRefNo",
       headerText : "Reference No",
@@ -939,7 +585,6 @@
       width : 100,
       editable : false
     },
-
     {
       dataField : "SupConsgNo",
       headerText : "Consignment No",
@@ -980,12 +625,9 @@
       headerText : "UpdateDate",
       width : 100,
       editable : false
-    }
-
-    ];
+    }];
 
     var excelGridPros = {
-
       enterKeyColumnBase : true,
       useContextMenu : true,
       enableFilter : true,
@@ -994,42 +636,23 @@
       noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
       groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
       exportURL : "/common/exportGrid.do"
-
     };
 
-    excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap",
-        excelColumnLayout, "", excelGridPros);
+    excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
   }
 
-  function fn_getPosListAjax() {
-      console.log($("#searchForm").serialize());
-    // Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
-    Common.ajax("GET", "/supplement/selectSupplementList", $("#searchForm")
-        .serialize(), function(result) {
-      AUIGrid.setGridData(posGridID, result);
+  function fn_getSubListAjax() {
+    Common.ajax("GET", "/supplement/selectSupplementList", $("#searchForm").serialize(), function(result) {
+      AUIGrid.setGridData(supOrdGridID, result);
       AUIGrid.setGridData(excelListGridID, result);
     });
-
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 </script>
 
 <form id="rptForm">
   <input type="hidden" id="reportFileName" name="reportFileName" />
   <input type="hidden" id="viewType" name="viewType" />
-  <input type="hidden" id="V_POSREFNO" name="V_POSREFNO" />
-  <input type="hidden" id="V_POSMODULETYPEID" name="V_POSMODULETYPEID" />
-  <input type="hidden" id="V_POSTYPEID" name="V_POSTYPEID">
-  <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
-  <input type="hidden" id="V_SHOWPAYMENTDATE" name="V_SHOWPAYMENTDATE">
-  <input type="hidden" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH">
-  <input type="hidden" id="V_SHOWRECEIPTNO" name="V_SHOWRECEIPTNO">
-  <input type="hidden" id="V_SHOWTRNO" name="V_SHOWTRNO">
-  <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER">
-  <input type="hidden" id="V_SHOWPOSNO" name="V_SHOWPOSNO">
-  <input type="hidden" id="V_SHOWMEMBERCODE" name="V_SHOWMEMBERCODE">
-  <input type="hidden" id="V_SHOWPOSTYPEID" name="V_SHOWPOSTYPEID">
 </form>
 <section id="content">
   <ul class="path">
@@ -1256,7 +879,7 @@
     <aside class="title_line">
     </aside>
     <article class="grid_wrap">
-      <div id="pos_grid_wrap" style="width: 100%; height: 300px; margin: 0 auto;"></div>
+      <div id="sub_grid_wrap" style="width: 100%; height: 300px; margin: 0 auto;"></div>
       <div id="excel_list_grid_wrap" style="display: none;"></div>
     </article>
 
@@ -1267,7 +890,7 @@
         </h3>
       </aside>
       <article class="grid_wrap">
-        <div id="payment_detail_grid_wrap" style="width: 100%; height: 200px; margin: 0 auto;"></div>
+        <div id="sub_itm_detail_grid_wrap" style="width: 100%; height: 200px; margin: 0 auto;"></div>
       </article>
     </div>
   </section>

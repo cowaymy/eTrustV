@@ -32,13 +32,13 @@
     case 'deliveryInfo' :
         AUIGrid.resize(deliveryInfoGridID, 942, 380);
         break;
-     case 'paymentInfo' :
+     case 'payInfo' :
        AUIGrid.resize(payGridID, 942, 380);
          if(AUIGrid.getRowCount(payGridID) <= 0) {
            fn_selectPaymentList();
          }
          break;
-     case 'DocumentSubmission' :
+     case 'docSubm' :
        AUIGrid.resize(docGridID, 942, 380);
        if(AUIGrid.getRowCount(docGridID) <= 0) {
          fn_selectDocumentList();
@@ -54,8 +54,8 @@
     <li><a id="aTabSI" href="#" onClick="javascript:chgTab('salesmanInfo');"><spring:message code="sal.title.text.salesmanInfo" /></a></li>
     <li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
     <li><a id="aTabDI" href="#" onClick="javascript:chgTab('deliveryInfo');"><spring:message code="supplement.title.text.supplementDeliveryInfo" /></a></li>
-    <li><a id="aTabPI" href="#" onClick="javascript:chgTab('paymentInfo');"><spring:message code="supplement.text.paymentInfo" /></a></li>
-    <li><a id="aTabDS" href="#" onClick="javascript:chgTab('DocumentSubmission');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+    <li><a id="aTabPI" href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="supplement.text.paymentInfo" /></a></li>
+    <li><a id="aTabDS" href="#" onClick="javascript:chgTab('docSubm');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
   </ul>
   <!------------------------------------------------------------------------------
     BASIC INFO
@@ -92,7 +92,4 @@
   ------------------------------------------------------------------------------->
   <%@ include file="/WEB-INF/jsp/supplement/include/docSubmission.jsp" %>
   <!------------------------------------------------------------------------------
-
-<%-- <%@ include file="/WEB-INF/jsp/supplement/orderLedgerPop.jsp" %> --%>
-</section>=
-
+</section>
