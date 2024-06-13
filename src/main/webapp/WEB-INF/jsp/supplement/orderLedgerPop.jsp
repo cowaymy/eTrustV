@@ -17,14 +17,9 @@
     	   orderLdgrList = JSON.parse('${orderLdgrList}');
        }
 
-       if('${agreList}'=='' || '${agreList}' == null){
-       }else{
-    	   agreList = JSON.parse('${agreList}');
-       }
-
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        createAUIGrid_agre();
+
 
     });
 
@@ -59,37 +54,6 @@
 
      if(orderLdgrList != '' ){
          AUIGrid.setGridData(ordLedgerGridID, orderLdgrList);
-     }
- }
-
-    function createAUIGrid_agre(){
-        //AUIGrid 칼럼 설정
-        var agreLayout = [
-          {   dataField : "govAgBatchNo",  headerText : 'Agreement No.',         width : 150 }
-         ,{   dataField : "name",     headerText : 'Agreement Status',     width : 150 }
-         ,{   dataField : "govAgPrgrsName",  headerText : 'Agreement Progress',         width : 150 }
-         ,{   dataField : "code",    headerText : 'Agreement Type',        width : 150 }
-         ,{   dataField : "govAgStartDt", headerText : 'Start Date',   width : 150 }
-         ,{   dataField : "govAgEndDt",  headerText : 'Expired Date',     width : 150  }
-        ];
-
-     //그리드 속성 설정
-     var agreGridPros = {
-         usePaging           : true,             //페이징 사용
-         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-         editable                : false,
-         showStateColumn     : false,
-         showRowNumColumn    : false,
-//         selectionMode       : "singleRow"  //"multipleCells",
-     };
-
-     agreGridID = GridCommon.createAUIGrid("agre_grid", agreLayout, "", agreGridPros);
-
-     if(agreList != '' ){
-         AUIGrid.setGridData(agreGridID, agreList);
-     } else{
-
-         $("#agreDiv").hide();
      }
  }
 
@@ -291,18 +255,6 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="ord_ledger_grid" style="width:100%; height:230px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
-
-
-
-<article class="grid_wrap mt20"><!-- grid_wrap start -->
-<div id ="agreDiv" >
-<aside class="title_line">
-<h2> Agreement Info</h2>
-</aside>
-    <div class = "mt10"id="agre_grid" style="width:100%; height:200px; margin:0 auto;"></div>
-</div>
-</article><!-- grid_wrap end -->
-
 
 </section><!-- pop_body end -->
 
