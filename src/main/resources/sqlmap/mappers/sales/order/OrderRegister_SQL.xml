@@ -3640,4 +3640,16 @@ WHERE
 	       ON A.EXTRADE_APP_TYPE = B.CODE_ID
 	       WHERE A.PROMO_ID = #{promoId}
     </select>
+
+    <select id="selectOutrightAmt" parameterType="int" resultType="java.math.BigDecimal">
+	    SELECT NVL(SUM(TRADE_AMT),0) TRADE_AMT
+	    FROM PAY0035D
+	    WHERE TRADE_SO_ID = #{value}
+    </select>
+
+    <select id="selectASAmt" parameterType="int" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(AS_LG_AMT),0) AS_LG_AMT
+        FROM PAY0006D
+        WHERE AS_SO_ID = #{value}
+    </select>
 </mapper>

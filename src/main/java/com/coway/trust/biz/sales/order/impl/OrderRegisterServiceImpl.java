@@ -480,6 +480,23 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                           isInValid = "InValid";
                         }
 
+                        // CHECK OUTSTANDING - INCLUDED AS
+                        BigDecimal valiOutStanding = (BigDecimal) orderRegisterMapper.selectOutrightAmt(getOldOrderID);
+                        valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                        if (valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+                          msg = msg + " -With Outstanding payment not allowed for Ex-Trade promo. <br/>";
+                          isInValid = "InValid";
+                        }
+
+                        BigDecimal valiASOutStanding = (BigDecimal) orderRegisterMapper.selectASAmt(getOldOrderID);
+                        valiASOutStanding = valiASOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                        if (valiASOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+                        	msg = msg + " -With AS Outstanding payment not allowed for Ex-Trade promo. <br/>";
+                        	isInValid = "InValid";
+                        }
+
                         ROOT_STATE = "ROOT_6";
 
                         txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
@@ -2606,7 +2623,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		}
 	}
 	else{
-    	if(params.get("appTypeId").equals("66") && params.get("extradeId").equals("1")){ //RENTAL APPTYPE WITH EXTRADE ONLY
+
+    	if((params.get("appTypeId").equals("66") || params.get("appTypeId").equals("67")) && params.get("extradeId").equals("1")){ //RENTAL || OUTRIGHT APPTYPE WITH EXTRADE ONLY
     		//promoId
     		//oldOrderNo
     		//oldOrdId
@@ -2650,14 +2668,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     				result.setMessage("Order is not eligible for current promotion selected");
     				return result;
     			}
-    		}
-    		else{
-    			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
-    				//svm expired within one month, just able to do extrade, else block.
+    		}else{
+    			if (!ordInfo.get("appTypeId").toString().equals("67")){
+        			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+        				//svm expired within one month, just able to do extrade, else block.
 
-    				result.setCode("99");
-    				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
-    				return result;
+        				result.setCode("99");
+        				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+        				return result;
+        			}
     			}
     		}
     	}else{

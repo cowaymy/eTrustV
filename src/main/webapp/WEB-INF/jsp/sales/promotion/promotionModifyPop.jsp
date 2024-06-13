@@ -677,7 +677,7 @@
             msg += "<spring:message code='sales.promo.msg20'/><br />";
         }
 
-        if($('#promoAppTypeId option:selected').val() == 2284){
+        if($('#promoAppTypeId option:selected').val() == 2284 || $('#promoAppTypeId option:selected').val() == 2285){
 	        if(!$('#extradeAppType').is(":disabled") && FormUtil.isEmpty($('#extradeAppType').val())) {
 	            isValid = false;
 	            msg += "Extrade App Type must be selected";

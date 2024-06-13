@@ -245,4 +245,8 @@ public interface OrderRegisterMapper {
 
   EgovMap rentalExtradeEligibility(Map<String, Object> params);
   EgovMap getPromotionInfoExtradeAppType(Map<String, Object> params);
+
+  BigDecimal selectOutrightAmt(int salesOrdId);
+
+  BigDecimal selectASAmt(int salesOrdId);
 }
