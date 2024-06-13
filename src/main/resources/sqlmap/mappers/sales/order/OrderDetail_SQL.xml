@@ -961,7 +961,7 @@
                         , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
                         , NVL(T1.BANK_APPV, 0) BANK_APPV
                         , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN '00' ELSE
-                        , T1.BANK_DTL_APPR_CODE BANK_DTL_APPR_CODE
+                        T1.BANK_DTL_APPR_CODE END AS BANK_DTL_APPR_CODE
                         , T2.CTRL_IS_CRC CTRL_IS_CRC
                         <!-- , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds (Baki Tidak Mencukupi)'
