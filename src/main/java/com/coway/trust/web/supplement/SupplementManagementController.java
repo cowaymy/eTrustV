@@ -159,7 +159,7 @@ public class SupplementManagementController {
 
     return ResponseEntity.ok(detailList);
   }
-  
+
   @RequestMapping(value = "/getDelRcdLst")
   public ResponseEntity<List<EgovMap>> getDelRcdLst(@RequestParam Map<String, Object> params) throws Exception {
 
@@ -169,7 +169,7 @@ public class SupplementManagementController {
 
     return ResponseEntity.ok(detailList);
   }
-  
+
 
   @RequestMapping(value = "/supplementTrackNoPop.do")
   public String supplementTrackNoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -215,6 +215,10 @@ public class SupplementManagementController {
 
 	  LOGGER.debug("params ======================================>>> " + params);
 
+	  if(CommonUtils.isEmpty(params.get("CutOffDate"))){
+			params.put("CutOffDate", "01/01/1900");
+		}
+
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
     //params.put("userId", sessionVO.getUserId());
@@ -222,6 +226,34 @@ public class SupplementManagementController {
 
     EgovMap orderInfo = supplementUpdateService.selectOrderBasicLedgerInfo(params);
     model.addAttribute("orderInfo", orderInfo);
+
+    List<EgovMap> orderLdgrList = supplementUpdateService.getOderLdgr(params);
+	double balance = 0;
+	for(int i = 0; i < orderLdgrList.size(); i++){
+		EgovMap result = orderLdgrList.get(i);
+
+		 if (result.get("docType") == "B/F")
+         {
+				balance = Double.parseDouble(result.get("balanceamt").toString());
+         }
+         else
+         {
+             balance = balance + Double.parseDouble(result.get("debitamt").toString()) + Double.parseDouble(result.get("creditamt").toString());
+         }
+		 result.put("balanceamt", balance);
+	}
+
+	LOGGER.debug("orderLdgrList =====================>>> " + orderLdgrList);
+
+	model.addAttribute("orderLdgrList", new Gson().toJson(orderLdgrList));
+
+    List<EgovMap> ordOutInfoList = supplementUpdateService.getOderOutsInfo(params);
+
+    EgovMap ordOutInfo = ordOutInfoList.get(0);
+
+    LOGGER.debug("ordOutInfo =====================>>> " + ordOutInfo);
+
+    model.addAttribute("ordOutInfo", ordOutInfo);
 
     return "supplement/orderLedgerPop";
   }
@@ -232,12 +264,10 @@ public class SupplementManagementController {
 	List<EgovMap> itemList = null;
 	Map<String, Object> transactionId = null;
 
-
 	LOGGER.debug("!@###### parcelTrackNo : " + params.get("parcelTrackNo"));
 	LOGGER.debug("!@###### supRefId : " + params.get("supRefId"));
 	LOGGER.debug("!@###### supRefStg : " + params.get("supRefStg"));
 	LOGGER.debug("!@###### inputParcelTrackNo : " + params.get("inputParcelTrackNo"));
-
 
 	itemList = supplementUpdateService.checkDuplicatedTrackNo(params);
 
