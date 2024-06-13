@@ -563,7 +563,10 @@
     <update id="updateAdvDet_FCM28D" parameterType="Map">
         UPDATE FCM0028D
         SET
-            NET_AMT = #{netAmt},
+            NET_AMT = REGEXP_REPLACE(#{netAmt}, '[^0-9.]+', NULL),
+             <if test="advType == 5">
+                INVC_CUR = #{advCurr},
+            </if>
             <if test="advType == 6">
                 AMT = #{totalAmt},
                 INVC_NO = #{invcNo},
