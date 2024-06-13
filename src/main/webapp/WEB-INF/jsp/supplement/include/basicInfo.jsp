@@ -123,6 +123,9 @@
         <td>${orderInfo.refCreateDate}</td>
       </tr>
       <tr>
+        <td></td>
+      </tr>
+      <tr>
         <th scope="row" colspan="6"><span class="must">* <spring:message
             code="supplement.text.supplementPvRemark" /></span></th>
       </tr>
