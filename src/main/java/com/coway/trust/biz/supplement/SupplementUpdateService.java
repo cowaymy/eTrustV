@@ -52,4 +52,8 @@ public interface SupplementUpdateService {
 
   EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params);
 
+  List<EgovMap> getOderLdgr(Map<String, Object> params);
+
+  List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+
 }
