@@ -525,6 +525,19 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
         }
+        if($("#_cmbTypeId_").val() == '965'){
+        	if($("#_cmbCorpTypeId_ :selected").val() != '1151'){
+        		if($("#_nric_").val().length > 12){
+                    Common.alert('NRIC/Company No length is more than 12 characters.');
+                    return false;
+                }
+        	}
+        }else{
+        	if($("#_nric_").val().length > 12){
+                Common.alert('NRIC/Company No length is more than 12 characters.');
+                return false;
+            }
+        }
         /*else if($("#_nric_") .length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
         }else{
@@ -732,11 +745,18 @@
             return false;
         }
 
-        if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
-            if($("#_tin_").val() == "" || $("#_tin_").val() == null){
-                Common.alert("Please enter Company TIN to proceed.");
-                return;
-             }
+        if($("#_cmbTypeId_").val() == '965'){
+        	if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
+                if($("#_tin_").val() == "" || $("#_tin_").val() == null){
+                    Common.alert("Please enter Company TIN to proceed.");
+                    return false;
+                 }
+            }
+        }
+
+        if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
+        	Common.alert("Please make sure TIN number is within 11 to 14 characters. ");
+            return false;
         }
 
         if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){

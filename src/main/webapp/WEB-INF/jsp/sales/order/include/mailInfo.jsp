@@ -278,6 +278,19 @@
     </div>
 	</td>
 </tr>
+<tr>
+    <th scope="row">E-Invoice</th>
+    <td colspan="5">
+	    <c:choose>
+             <c:when test="${orderDetail.mailingInfo.eInvFlg != 0}">
+                 <input type="checkbox" onClick="return false" checked/>
+              </c:when>
+              <c:otherwise>
+                 <input type="checkbox" onClick="return false"/>
+              </c:otherwise>
+            </c:choose>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

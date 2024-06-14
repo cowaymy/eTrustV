@@ -103,6 +103,10 @@
 <tr>
     <th scope="row">Customer Status</th>
     <td><span>${orderDetail.basicInfo.custStatus}</span></td>
+    <th scope="row">SST Registration No</th>
+    <td><span>${orderDetail.basicInfo.sstRgistNo}</span></td>
+    <th scope="row">TIN</th>
+    <td><span>${orderDetail.basicInfo.custTin}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
