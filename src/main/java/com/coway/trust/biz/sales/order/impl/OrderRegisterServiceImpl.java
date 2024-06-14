@@ -470,7 +470,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                 } else if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer
                     .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
                     || SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer
-                        .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment
+                        .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                     || SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS == Integer
+                             .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment, outright plus
 
                 		msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>"
                             + (String) GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
