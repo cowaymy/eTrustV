@@ -2680,6 +2680,24 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         				return result;
         			}
     			}
+
+//    			// If user request to allow previous order = outright is fall within certain period then only allow to use the promotion,
+//    			// Please uncomment below
+//    			else{
+//    				int expiredMth = Integer.parseInt(ordInfo.get("MONTH_EXPIRED").toString());
+//
+//    				int extradeFr = Integer.parseInt(promoInfo.get("EXTRADE_FR").toString());
+//    				int extradeTo = Integer.parseInt(promoInfo.get("EXTRADE_TO").toString());
+//
+//    				if(expiredMth >= extradeFr && expiredMth <= extradeTo){
+//    					// Proceed
+//    				}else{
+//    					// return error message
+//    					result.setCode("99");
+//						result.setMessage("Not able to extrade. Please choose another order");
+//						return result;
+//    				}
+//    			}
     		}
     	}else{
     		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
