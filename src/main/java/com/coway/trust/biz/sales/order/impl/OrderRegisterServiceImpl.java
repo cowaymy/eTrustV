@@ -2670,34 +2670,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     				result.setMessage("Order is not eligible for current promotion selected");
     				return result;
     			}
-    		}else{
-    			if (!ordInfo.get("appTypeId").toString().equals("67")){
-        			if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
-        				//svm expired within one month, just able to do extrade, else block.
-
-        				result.setCode("99");
-        				result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
-        				return result;
-        			}
-    			}
-
-//    			// If user request to allow previous order = outright is fall within certain period then only allow to use the promotion,
-//    			// Please uncomment below
-//    			else{
-//    				int expiredMth = Integer.parseInt(ordInfo.get("MONTH_EXPIRED").toString());
-//
-//    				int extradeFr = Integer.parseInt(promoInfo.get("EXTRADE_FR").toString());
-//    				int extradeTo = Integer.parseInt(promoInfo.get("EXTRADE_TO").toString());
-//
-//    				if(expiredMth >= extradeFr && expiredMth <= extradeTo){
-//    					// Proceed
-//    				}else{
-//    					// return error message
-//    					result.setCode("99");
-//						result.setMessage("Not able to extrade. Please choose another order");
-//						return result;
-//    				}
-//    			}
     		}
     	}else{
     		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
