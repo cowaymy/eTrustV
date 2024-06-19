@@ -58,10 +58,11 @@
 				                LEFT JOIN SYS0013M Extent3   ON Extent1.INV_REQ_PARTY_ID = Extent3.CODE_ID
 				                LEFT JOIN SYS0047M Extent4   ON Extent1.INV_REQ_CRT_USER_ID = Extent4.USER_ID
 				                <if test="orgCode != null and orgCode != ''">
-				                LEFT JOIN (SELECT usr.USER_ID, A.LAST_ORG_CODE, A.LAST_GRP_CODE, A.LAST_DEPT_CODE
-                                              FROM SYS0047M usr, ORG0005D A, ORG0001D B
+				                LEFT JOIN (SELECT usr.USER_ID, C.ORG_CODE LAST_ORG_CODE, C.GRP_CODE LAST_GRP_CODE, C.DEPT_CODE LAST_DEPT_CODE
+                                              FROM SYS0047M usr, ORG0005D A, ORG0001D B, ORG1001V C
                                             WHERE usr.USER_NAME = B.MEM_CODE
                                                AND B.MEM_ID = A.MEM_ID
+                                               AND C.MEM_ID = B.MEM_ID
                                                AND usr.USER_STUS_ID = 1
                                                AND B.STUS = 1
                                                AND A.ORG_STUS_CODE_ID = 1) Extent5 ON Extent1.INV_REQ_CRT_USER_ID = Extent5.USER_ID
