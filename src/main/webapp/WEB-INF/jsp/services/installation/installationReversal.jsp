@@ -147,8 +147,10 @@ function fn_setdetail(result){
 			$("#divResultReversal").hide();
 		}
 		if("${SESSION_INFO.userId}" != "19872" || "${SESSION_INFO.userId}" != "40785" || "${SESSION_INFO.userId}" != "517")
-	 	if(result.list1.c3==(day+'/'+month+'/'+year)){
+	 	//if(result.list1.c3==(day+'/'+month+'/'+year)){
+	 	if (result.list1.insMonYr == (month+year)) {
 			console.log(result.list1.c3);
+			console.log(result.list1.insMonYr);
 			errorM = "";
 			$("#lblErrorMessage").text(errorM);
 			$("#lblErrorMessage").hide();
@@ -156,6 +158,7 @@ function fn_setdetail(result){
 			$("#divResultReversal").show();
 		}else{
 		    console.log(result.list1.c3);
+		    console.log(result.list1.insMonYr);
 			errorM ="* This installation is past day. Reversal is disallowed.";
 			$("#lblErrorMessage").show();
 			$("#lblErrorMessage").text(errorM);

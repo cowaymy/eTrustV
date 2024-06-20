@@ -107,6 +107,7 @@
        Extent9.is_sirim                               IS_SIRIM,
        Extent9.stk_grad                               STK_GRAD,
        TO_CHAR(Extent2.crt_dt,'dd/mm/yyyy')     C3,
+       TO_CHAR(Extent2.crt_dt,'mmyyyy')     INS_MON_YR, <!--  Added for Pre-Com. To allow installation reversal within same month of installation completion, Hui Ding, 20/06/2024 -->
        Extent9.stk_ctgry_id                           STK_CTGRY_ID,
        Extent2.doc_ref_no1                            DOC_REF_NO1,
        Extent2.doc_ref_no2                            DOC_REF_NO2,
