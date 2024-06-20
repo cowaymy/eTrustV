@@ -718,7 +718,7 @@
             <input type="hidden" id="viewType" name="viewType" value="PDF" />
             <input id="tabHcAutoDebitandEcash" name="tabHcAutoDebitandEcash" type="hidden" value='${PAGE_AUTH.funcUserDefine30}'/>
             <!-- View Type  -->
-            <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> -->
+            <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="1231236" /> -->
             <!-- Download Name -->
 
             <!-- params -->
