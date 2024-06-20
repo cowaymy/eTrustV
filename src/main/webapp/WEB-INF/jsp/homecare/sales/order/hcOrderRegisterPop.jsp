@@ -206,6 +206,7 @@
                 $("#hiddenCustCrtDt").val(custInfo.crtDt); //cust create date
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
+                $("#custTin").val(custInfo.custTin); //Customer TIN no
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
@@ -1862,7 +1863,8 @@
                 custBillIsSms2            : $('#billMthdSms2').is(":checked") ? 1 : 0,
                 custBillIsWebPortal     : $('#billGrpWeb').is(":checked")   ? 1 : 0,
                 custBillRem               : $('#billRem').val().trim(),
-                custBillWebPortalUrl   : $('#billGrpWebUrl').val().trim()
+                custBillWebPortalUrl   : $('#billGrpWebUrl').val().trim(),
+                custBillIsEInv            : $('#billMthdEInv').is(":checked") ? 1 : 0,
             },
             rentalSchemeVO : {
 
@@ -2224,6 +2226,19 @@
                         msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
                     }
                 }
+            }
+        }
+
+        if($('#typeId').val() == '965' && $("#corpTypeId").val() != "1333" && $("#corpTypeId").val() != "1151"){
+            if(FormUtil.isEmpty($('#custTin').val())){
+                isValid = false;
+                msg = "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
+            }
+        }
+        else{
+            if($("#billMthdEInv").is(":checked") == true){
+                isValid = false;
+                msg = "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
             }
         }
 
@@ -3237,7 +3252,7 @@
 </tr>
  <tr>
 	<th scope="row">Receiving Marketing Message</th>
-	<td>
+	<td colspan="3">
 		<div style="display:inline-block;width:100%;">
 			<div style="display:inline-block;">
 			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
@@ -3251,6 +3266,8 @@
 <tr>
     <th scope="row">Customer Status</th>
     <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">TIN</th>
+    <td><input id="custTin" name="custTin" type="text" title="" placeholder="" class="w100p" readonly/></td>
 </tr>
 <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 <tr>
@@ -3933,7 +3950,9 @@
     <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
-    <td></td>
+    <td>
+    <label><input id="billMthdEInv" name="billMthdEInv" type="checkbox"/><span><spring:message code="sal.title.text.eInvoicFlag" /></span></label>
+    </td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
     <td><input id="billMthdEmailTxt2" name="billMthdEmailTxt2" type="text" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
