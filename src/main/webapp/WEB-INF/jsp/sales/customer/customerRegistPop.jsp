@@ -340,6 +340,8 @@
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_sstRgistNo_").removeAttr("disabled");
+            $("#_sstRgistNo_").removeClass("w100p disabled");
 
             // LaiKW - 20190903 - Added to hide centralize and ePortal VIP company type, disallow user to select the mentioned company types
             $("#_cmbCorpTypeId_ option[value='1174']").remove();
@@ -362,6 +364,8 @@
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
             $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+            $("#_sstRgistNo_").val('');
+            $("#_sstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }else{
         	$("#_oldNric_").val('');
         	$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -527,14 +531,43 @@
         }
         if($("#_cmbTypeId_").val() == '965'){
         	if($("#_cmbCorpTypeId_ :selected").val() != '1151'){
-        		if($("#_nric_").val().length > 12){
-                    Common.alert('NRIC/Company No length is more than 12 characters.');
+
+        		var regex1 = new RegExp("^[0-9]+$");
+                var str1 = $("#_nric_").val();
+                if (regex1.test(str1)) {
+                	 if($("#_nric_").val().length != 12){
+                         Common.alert('Only allow 12 characters for NRIC/Company No.');
+                         return false;
+                     }
+                	//return true;
+                }
+                else{
+                	Common.alert('Only allow 12 digits for NRIC/Company No.');
+                    return false;
+                }
+
+        	} else {
+        		if($("#_nric_").val().length > 20){
+                    Common.alert('Only allow 20 characters for NRIC/Company No.');
                     return false;
                 }
         	}
         }else{
-        	if($("#_nric_").val().length > 12){
-                Common.alert('NRIC/Company No length is more than 12 characters.');
+        	if($("#_cmbNation_").val() == '1'){
+        		// Malaysian NRIC validation
+        		var regex = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+        		var str = $("#_nric_").val();
+                if (regex.test(str)) {
+                    //return true;
+                }
+                else{
+                	Common.alert('Invalid format for NRIC/Company No.');
+                	return false;
+                }
+        	}
+
+        	if($("#_nric_").val().length != 12){
+                Common.alert('Only allow 12 digits for NRIC/Company No.');
                 return false;
             }
         }
@@ -754,9 +787,18 @@
             }
         }
 
-        if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
-        	Common.alert("Please make sure TIN number is within 11 to 14 characters. ");
-            return false;
+        if($("#_tin_").val() != ""){
+        	if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
+                Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
+                return false;
+            }
+        }
+
+        if($("#_sstRgistNo_").val() != ""){
+        	if($("#_sstRgistNo_").val().length != 17){
+                Common.alert("Please make sure SST No is 17 characters. ");
+                return false;
+            }
         }
 
         if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){

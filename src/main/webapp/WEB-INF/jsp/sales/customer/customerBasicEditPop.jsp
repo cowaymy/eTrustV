@@ -137,6 +137,23 @@ $(document).ready(function(){
                     return ;
                }
 
+               if($("#basicCmdNationTypeId").val() == '1'){
+            	   var regex = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+                   var str = $("#basicNric").val();
+                   if (regex.test(str)) {
+                       //return true;
+                   }
+                   else{
+                       Common.alert('Invalid format for NRIC/Company No.');
+                       return false;
+                   }
+               }
+
+               if($("#basicNric").val().length != 12){
+                   Common.alert('Only allow 12 digits for NRIC/Company No.');
+                   return false;
+               }
+
                 /* if ( genderCode == "F") {
                    if (lastDigit % 2 != 0) {
                     isValid = false;
@@ -181,12 +198,41 @@ $(document).ready(function(){
                  }
             }
 
+            if($("#basicCmbCorpTypeId").val() != '1151'){
+            	var regex1 = new RegExp("^[0-9]+$");
+                var str1 = $("#basicNric").val();
+                if (regex1.test(str1)) {
+                     if($("#basicNric").val().length != 12){
+                         Common.alert('Only allow 12 characters for NRIC/Company No.');
+                         return false;
+                     }
+                    //return true;
+                }
+                else{
+                    Common.alert('Only allow 12 digits for NRIC/Company No.');
+                    return false;
+                }
+            } else {
+                if($("#basicNric").val().length > 20){
+                    Common.alert('Only allow 20 digits for NRIC/Company No.');
+                    return false;
+                }
+            }
+
             // Company TIN
             if($("#basicCmbCorpTypeId").val() != "1333" && $("#basicCmbCorpTypeId").val() != "1151"){
             	 if($("#basicCustTin").val() == "" || $("#basicCustTin").val() == null){
                      Common.alert("Please enter Company TIN to proceed.");
                      return;
                   }
+            }
+
+            // SST No
+            if($("#basicSstRegNo").val() != ""){
+                if($("#basicSstRegNo").val().length != 17){
+                    Common.alert("Please make sure SST No is 17 characters. ");
+                    return false;
+                }
             }
         }
 
