@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -19,26 +20,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiForm;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.customerApi.CustomerApiService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
+import com.coway.trust.biz.sales.order.PreOrderService;
+import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
@@ -77,6 +88,15 @@ public class EpapanApiController {
 
      @Resource(name = "commonService")
      private CommonService commonService;
+
+ 	 @Resource(name = "preOrderService")
+ 	 private PreOrderService preOrderService;
+
+ 	@Resource(name = "hcOrderRegisterService")
+	 private HcOrderRegisterService hcOrderRegisterService;
+
+	@Resource(name = "homecareCmService")
+	private HomecareCmService homecareCmService;
 
  	@Autowired
  	private PreOrderApplication preOrderApplication;
@@ -306,8 +326,12 @@ public class EpapanApiController {
 	  public ResponseEntity<ReturnMessage> attachFileUpload(@ApiIgnore MultipartHttpServletRequest request) throws Exception {
 
 		  LOGGER.debug("request.getFileMap()>>>" + request.getFileMap());
+		  LOGGER.debug("request.getParameter()>>>" + request.getParameter("userId"));
+
 			String err = "";
 			String code = "";
+
+			String userId = request.getParameter("userId");
 			Map<String, Object> ps = new HashMap();
 
 			List<String> seqs = new ArrayList<>();
@@ -339,7 +363,7 @@ public class EpapanApiController {
 			  LOGGER.debug("list>>>" + list);
 
 
-			ps.put(CommonConstants.USER_ID, 138);
+			ps.put(CommonConstants.USER_ID, userId);
 			preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  ps, seqs);
 
 			ps.put("attachFiles", list);
@@ -358,4 +382,90 @@ public class EpapanApiController {
 			return ResponseEntity.ok(message);
 		}
 
+	  @ApiOperation(value = "registerPreOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/registerPreOrder", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> registerPreOrder(@RequestBody PreOrderVO preOrderVO, @ApiIgnore HttpServletRequest request) throws Exception {
+
+
+		  	SessionVO sessionVO = new SessionVO();
+		  	sessionVO.setUserId(preOrderVO.getCrtUserId());
+
+		  	preOrderVO.setChnnl(2);
+			preOrderService.insertPreOrder(preOrderVO, sessionVO);
+
+			String msg = "", appTypeName = "";
+
+			switch(preOrderVO.getAppTypeId()) {
+	    		case SalesConstants.APP_TYPE_CODE_ID_RENTAL :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHT_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_INSTALLMENT_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_SPONSOR :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_SPONSOR_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_SERVICE :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_SERVICE_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_EDUCATION :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_EDUCATION_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_FREE_TRIAL :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_FREE_TRIAL_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS_FULL;
+	    			break;
+	    		default :
+	    			break;
+	    	}
+
+	        msg += "Order successfully saved.<br />";
+	        msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
+	        msg += "Application Type : " + appTypeName + "<br />";
+
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setMessage(msg);
+
+			return ResponseEntity.ok(message);
+		}
+
+	  @ApiOperation(value = "selectExistSofNo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectExistSofNo")
+		public ResponseEntity<EgovMap> selectExistSofNo(@ModelAttribute EpapanApiMagicAddressForm param) {
+
+			int cnt = preOrderService.selectExistSofNo(EpapanApiMagicAddressForm.createMap(param));
+
+			EgovMap result = new EgovMap();
+
+			result.put("IS_EXIST", cnt > 0 ? "true" : "false");
+
+			return ResponseEntity.ok(result);
+		}
+
+	  @ApiOperation(value = "selectHcProductCodeList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	   @RequestMapping(value = "/selectHcProductCodeList", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectProductCodeList(@ModelAttribute EpapanApiMagicAddressForm param) {
+			// Homecare Product List
+			List<EgovMap> codeList = hcOrderRegisterService.selectHcProductCodeList(EpapanApiMagicAddressForm.createMap(param));
+
+			return ResponseEntity.ok(codeList);
+		}
+
+	  @ApiOperation(value = "checkIfIsAcInstallationProductCategoryCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/checkIfIsAcInstallationProductCategoryCode")
+		public ResponseEntity<ReturnMessage> checkIfIsAcInstallationProductCategoryCode(@ModelAttribute EpapanApiMagicAddressForm param) {
+			ReturnMessage message = new ReturnMessage();
+			int result = homecareCmService.checkIfIsAcInstallationProductCategoryCode(EpapanApiMagicAddressForm.createMap(param));
+			message.setCode("1");
+			message.setData(result);
+		    return ResponseEntity.ok(message);
+		}
 }

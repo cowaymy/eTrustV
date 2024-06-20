@@ -38,7 +38,14 @@ public class EpapanApiMagicAddressForm {
 		params.put("searchWord", vo.getSearchWord());
 		params.put("custCntcId", vo.getCustCntcId());
 		params.put("custAddId", vo.getCustAddId());
-
+		params.put("sofNo", vo.getSofNo());
+		params.put("selType", vo.getSelType());
+		params.put("stkType", vo.getStkType());
+		params.put("srvPacId", vo.getSrvPacId());
+		params.put("productType", vo.getProductType());
+		params.put("stkId", vo.getStkId());
+		params.put("isHomecare", vo.getIsHomecare());
+		params.put("isAC", vo.getIsAC());
 
 		return params;
 	}
@@ -134,7 +141,54 @@ public class EpapanApiMagicAddressForm {
 	public void setCustAddId(String custAddId) {
 		this.custAddId = custAddId;
 	}
-
+	public String getSofNo() {
+		return sofNo;
+	}
+	public void setSofNo(String sofNo) {
+		this.sofNo = sofNo;
+	}
+	public String getSelType() {
+		return selType;
+	}
+	public void setSelType(String selType) {
+		this.selType = selType;
+	}
+	public String getStkType() {
+		return stkType;
+	}
+	public void setStkType(String stkType) {
+		this.stkType = stkType;
+	}
+	public String getSrvPacId() {
+		return srvPacId;
+	}
+	public void setSrvPacId(String srvPacId) {
+		this.srvPacId = srvPacId;
+	}
+	public String getProductType() {
+		return productType;
+	}
+	public void setProductType(String productType) {
+		this.productType = productType;
+	}
+	public String getStkId() {
+		return stkId;
+	}
+	public void setStkId(String stkId) {
+		this.stkId = stkId;
+	}
+	public String getIsHomecare() {
+		return isHomecare;
+	}
+	public void setIsHomecare(String isHomecare) {
+		this.isHomecare = isHomecare;
+	}
+	public String getIsAC() {
+		return isAC;
+	}
+	public void setIsAC(String isAC) {
+		this.isAC = isAC;
+	}
 
 
 
@@ -151,6 +205,16 @@ public class EpapanApiMagicAddressForm {
 	public String searchWord;
     public String custCntcId;
 	public String custAddId;
+	public String sofNo;
+	public String selType;
+	public String stkType;
+	public String srvPacId;
+	public String productType;
+	public String stkId;
+	public String isHomecare;
+	public String isAC;
+
+
 
 
 }
