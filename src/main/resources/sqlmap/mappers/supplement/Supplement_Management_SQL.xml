@@ -17,7 +17,7 @@
                Extent2.NAME AS SUBM_BRCH,
                Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
                Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
-               Extent1.MEM_ID AS SALESMAN_ID,
+               Extent4.MEM_CODE AS SALESMAN_ID,
                Extent4.NAME AS SALESMAN_NAME,
                Extent1.CUST_ID AS CUST_ID,
                Extent3.NAME AS CUST_NAME,
@@ -98,6 +98,10 @@
 
     <if test=" null != SupConsgNo and '' != SupConsgNo">
       AND Extent1.SUP_REF_RTN_CSIGNO = #{SupConsgNo}
+    </if>
+
+    <if test=" null != salesmanCd and '' != salesmanCd">
+      AND Extent10.MEM_CODE = #{salesmanCd}
     </if>
 
     <if test=" null != orgCode and '' != orgCode">
