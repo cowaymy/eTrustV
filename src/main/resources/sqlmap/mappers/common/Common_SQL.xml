@@ -2545,11 +2545,72 @@
     )
   </insert>
 
-    <update id="updateGdexResp" parameterType="Map">
+  <update id="updateGdexResp" parameterType="Map">
       UPDATE SYS0116D SET GDEX_RESP_STUS = #{status}
                                     , GDEX_RESP_VAL = #{response}
                                     , UPD_USR_ID = 349
                                     , UPD_DT = SYSDATE
       WHERE GDEX_REQ_ID =  #{reqsId}
+  </update>
+
+   <select id="getDhlReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0117D_DHL_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="createDhlAuthReqs" parameterType="Map">
+    INSERT INTO SYS0117D ( DHL_REQ_ID
+                                      , DHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , DHL_REQ_MOD
+                                      </if>
+                                      , DHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{dhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateDhlAuthResp" parameterType="Map">
+      UPDATE SYS0117D SET DHL_RESP_STUS = #{status}
+                                    , DHL_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE DHL_REQ_ID =  #{reqsId}
+  </update>
+
+  <insert id="createDhlShipmDtlReqs" parameterType="Map">
+    INSERT INTO SYS0117D ( DHL_REQ_ID
+                                      , DHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , DHL_REQ_MOD
+                                      </if>
+                                      , DHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{dhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateDhlShptDtlResp" parameterType="Map">
+      UPDATE SYS0117D SET DHL_RESP_STUS = #{status}
+                                    , DHL_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE DHL_REQ_ID =  #{reqsId}
   </update>
 </mapper>
