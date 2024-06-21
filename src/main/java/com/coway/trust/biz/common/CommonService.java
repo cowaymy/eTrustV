@@ -482,4 +482,7 @@ public interface CommonService
     EgovMap reqEghlPmtLink( Map<String, Object> params ) throws IOException, JSONException;
 
     EgovMap getGdexShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+
+    EgovMap getDhlShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+
 }
