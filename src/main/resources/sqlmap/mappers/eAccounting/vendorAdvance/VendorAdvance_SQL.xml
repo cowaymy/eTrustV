@@ -241,8 +241,10 @@
             BGT_NM BUDGET_CODE_NAME,
             GL_ACC_NO GL_ACC_CODE,
             GL_ACC_NM GL_ACC_CODE_NAME,
-            <!-- INVC_DT, -->
-            INVC_DT INVC_DT,
+            TO_CHAR(
+                INVC_DT,
+                'DD/MM/YYYY'
+            ) AS INVC_DT,
             INVC_NO,
             SUPPLIER SUPPLIER_NAME,
             'OP (Purchase(0%):Out of scope)' TAX_CODE,
