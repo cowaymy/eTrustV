@@ -356,4 +356,14 @@ public interface CommonMapper
 
     void updateGdexResp ( Map<String, Object> params );
 
+    int getDhlReqsId ();
+
+    void createDhlAuthReqs ( Map<String, Object> params );
+
+    void updateDhlAuthResp ( Map<String, Object> params );
+
+    void createDhlShipmDtlReqs ( Map<String, Object> params );
+    
+    void updateDhlShptDtlResp ( Map<String, Object> params );
+    
 }
