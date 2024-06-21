@@ -65,6 +65,8 @@ function fn_searchCollection() {
     var msg = "";
 
     console.log ();
+    console.log ("== payDateFr == " + payDateFr);
+    console.log ("== payDateTo == " + payDateTo);
 
     if (payDateFr == '' && payDateTo == ''){
         msg = "Request Date is required.";
@@ -103,10 +105,21 @@ function fn_checkDateRange(payDateFr, payDateTo, field){
 
     var arrStDt = payDateFr.split('/');
     var arrEnDt = payDateTo.split('/');
-    var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
-    var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+    //var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
+    var dat1 = new Date(arrStDt[2], arrStDt[1] - 1, arrStDt[0]);
+    //var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+    var dat2 = new Date(arrEnDt[2], arrEnDt[1] - 1, arrEnDt[0]);
+
+
+    console.log ("== arrStDt == " + arrStDt);
+    console.log ("== arrEnDt == " + arrEnDt);
+    console.log ("== dat1 == " + dat1);
+    console.log ("== dat2 == " + dat2);
 
     var diff = dat2 - dat1;
+
+    console.log ("== diff == " + diff);
+    console.log ("== range check == " + js.date.dateDiff(dat1, dat2));
     if(diff < 0){
         Common.alert(field + " End Date MUST be greater than " + field + " Start Date.");
         return false;
