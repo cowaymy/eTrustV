@@ -1082,6 +1082,7 @@
 			$("#m14").hide();
 			$("#m15").hide();
 			$("#m16").hide();
+			$("#m28").hide();
 			break;
 		}
 	}
@@ -1218,6 +1219,7 @@
 		$("#m14").show();
 		$("#m15").show();
 		$("#m16").show();
+		$("#m28").show();
 
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1293,9 +1295,12 @@
 		}
 
 		if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){
+			$("#m28").show();
 			$("#ntuCom").attr("disabled", false);
 		}else{
+			$("#m28").hide();
 			$("#ntuCom").attr("disabled", true);
+			$("#ntuCom").val("0");
 		}
 
 		 if ($('#PROD_CDE').val() == "112098" || $('#PROD_CDE').val() == "112237" || $('#PROD_CDE').val() == "112763" || $('#PROD_CDE').val() == "112789" || $('#PROD_CDE').val() == "113050") { //112098 VILLAEM 1
@@ -1323,7 +1328,7 @@
 		$("#m16").hide();
 		$("#m18").hide();
 		$("#m19").hide();
-
+		$("#m28").hide();
 		$("#iscommission").attr("disabled", false);
 
 		$("#def_type").attr("disabled", "disabled");
@@ -1334,6 +1339,7 @@
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
 		$('#ntuCom').attr("disabled", "disabled");
+		$("#ntuCom").val("0");
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
 
@@ -1374,6 +1380,7 @@
 		$("#m16").hide();
 		$("#m18").hide();
 		$("#m19").hide();
+		$("#m28").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1383,6 +1390,7 @@
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
 		$('#ntuCom').attr("disabled", "disabled");
+		$("#ntuCom").val("0");
 		$('#waterSrcType').attr("disabled", "disabled");
 
 	    document.querySelectorAll(".imageFile").forEach(res=>{
@@ -1919,11 +1927,12 @@
 	                    rtnValue = false;
 	                }
 
-					if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
-				    	rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-				    	rtnValue = false;
-				    }
-
+				    if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
+						if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
+				    		rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+				    		rtnValue = false;
+				    	}
+					}
 				   // Installation Accessory checking for Complete status
 				   if($("#ddlStatus").val() == 4 ){
 				      if($("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
@@ -2904,7 +2913,7 @@
                         <!------------------------------------------------------------------------------
 				          Order Detail Page Include START
 				         ------------------------------------------------------------------------------->
-                        <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+                         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
                         <!------------------------------------------------------------------------------
 				        Order Detail Page Include END
 				       ------------------------------------------------------------------------------->
@@ -3063,7 +3072,7 @@
                                                     <option value="${list.codeId}">${list.codeName}</option>
                                                     </c:forEach>
                                                     </select></td>
-                                    <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" name="m28" class="must"></span></th>
+                                    <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" name="m28" class="must">*</span></th>
            							<td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
            							</td>
                                 </tr>

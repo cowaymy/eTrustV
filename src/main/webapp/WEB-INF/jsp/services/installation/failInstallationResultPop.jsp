@@ -44,6 +44,15 @@ var photo1Name = "";
       $("#reqsms").prop("checked", true);
     }
 
+    if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+		if($("#failReasonCode").val() == 8009 ){
+			$("#editInstallForm #m29").show();
+			$("#ntuFail").attr("disabled", false);
+		}else {
+			$("#editInstallForm #m29").hide();
+			$("#ntuFail").attr("disabled", true);
+		}
+	}
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
@@ -71,6 +80,20 @@ var photo1Name = "";
         }
         console.log(myFileCaches);
     });
+
+    $("#failReasonCode").change(
+    	    function(){
+    	    	if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+    	    		if($("#failReasonCode").val() == 8009 ){
+    	    			$("#editInstallForm #m29").show();
+    	    			$("#ntuFail").attr("disabled", false);
+    	    		}else {
+    	    			$("#editInstallForm #m29").hide();
+    	    			$("#ntuFail").attr("disabled", true);
+    	    		}
+    	    	}
+    });
+
 
  // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
@@ -479,9 +502,11 @@ function notMandatoryForAP(){
     }
 
 	// NTU Checking for Failed status
-    if (!($("#ntuCom").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
+	if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+    if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
     	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
       }
+    }
 
     if (msg != "") {
       Common.alert(msg);
@@ -744,7 +769,7 @@ function notMandatoryForAP(){
             </select></td>
             </tr>
 			<tr>
- 			<th scope="row"><spring:message code='service.title.ntu'/><span id="m29" class="must"></span></th>
+ 			<th scope="row"><spring:message code='service.title.ntu'/><span id="m29" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuFail" name="ntuFail" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' value="<c:out value="${installInfo.ntu}"/>" />
            </td>
            <th></th>

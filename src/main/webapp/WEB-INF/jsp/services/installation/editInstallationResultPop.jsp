@@ -58,6 +58,13 @@ var installAccValues = JSON.parse("${installAccValues}");
         doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
     }
 
+    if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+        $("#addInstallForm #m28").show();
+        $("#ntuCom").attr("disabled", false);
+    }else{
+    	$("#addInstallForm #m28").hide();
+        $("#ntuCom").attr("disabled", true);
+    }
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/boosterList.do', '', '${installInfo.boosterPump}','boosterPump', 'S' , '');
     doGetCombo('/services/waterSrcTypeList.do', '', '${installInfo.waterSrcType}','waterSrcType', 'S' , '');
@@ -276,6 +283,7 @@ function notMandatoryForAP(){
     $("#editInstallForm #m8").hide();
     $("#editInstallForm #m9").hide();
     $("#editInstallForm #m10").hide();
+    $("#editInstallForm #m28").hide();
 }
 
   function validate(evt) {
@@ -513,8 +521,10 @@ function notMandatoryForAP(){
         msg += validationForGlaze();
     }
 
-  	if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
-  	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+    if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+  		if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
+  	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+    	}
     }
 
  // Installation Accessory checking for Complete status
@@ -864,7 +874,7 @@ function notMandatoryForAP(){
                    <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
             </select></td>
-             <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must"></span></th>
+             <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' value="<c:out value="${installInfo.ntu}"/>" />
            </td>
           </tr>

@@ -31,6 +31,9 @@
 	};
 	$(".j_date").datepicker(pickerOpts);
 
+/* 	$("#ntuFail").attr("disabled", true);
+	$("#addInstallForm #m29").hide();
+ */
     var myGridID_view;
     var instChkLst_view;
     createInstallationViewAUIGrid();
@@ -110,6 +113,10 @@
         $("#addInstallForm #m17").hide();
         $("#addInstallForm #m24").hide();
         $("#addInstallForm #m18").hide();
+        $("#addInstallForm #m28").hide();
+        $("#addInstallForm #m29").hide();
+        $("#ntuCom").attr("disabled", true);
+        $("#ntuFail").attr("disabled", true);
 
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -142,10 +149,23 @@
           $("#addInstallForm #grid_wrap_instChk_view").hide();
           $("#addInstallForm #instChklstCheckBox").hide();
           $("#addInstallForm #instChklstDesc").hide();
+          $("#addInstallForm #m28").hide();
+          $("#addInstallForm #m29").hide();
+          $("#ntuCom").attr("disabled", true);
+          $("#ntuFail").attr("disabled", true);
+        } else if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+          $("#addInstallForm #m28").show();
+          $("#addInstallForm #m29").hide();
+          $("#ntuCom").attr("disabled", false);
+          $("#ntuFail").attr("disabled", true);
         } else {
           $("#addInstallForm #grid_wrap_instChk_view").show();
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
+          $("#addInstallForm #m28").hide();
+          $("#addInstallForm #m29").hide();
+          $("#ntuCom").attr("disabled", true);
+          $("#ntuFail").attr("disabled", true);
         }
       }
 
@@ -204,6 +224,20 @@
 //             });
        });
 
+ 	   $("#failReasonCode").change(
+    	function(){
+    		if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+    		if($("#failReasonCode").val() == 8009 ){
+    			$("#addInstallForm #m29").show();
+    			$("#ntuFail").attr("disabled", false);
+    		}else {
+    			$("#addInstallForm #m29").hide();
+    			$("#ntuFail").attr("disabled", true);
+    		}
+    		}
+
+      });
+
       $("#addInstallForm #installStatus").change(
         function() {
           if ($("#addInstallForm #installStatus").val() == 4) {
@@ -218,7 +252,9 @@
             $("#addInstallForm #m16").hide();
             $("#addInstallForm #failDeptChk").hide();
             $("#addInstallForm #failDeptChkDesc").hide();
-
+            $("#addInstallForm #m29").hide();
+            $("#ntuFail").attr("disabled", true);
+            $("#ntuFail").val("0");
             $("#addInstallForm #m2").show();
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
@@ -228,10 +264,18 @@
               $("#addInstallForm #grid_wrap_instChk_view").show();
               $("#addInstallForm #instChklstCheckBox").show();
               $("#addInstallForm #instChklstDesc").show();
+              $("#addInstallForm #m28").show();
+              $("#ntuCom").attr("disabled", false);
+            } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
+              $("#addInstallForm #m28").show();
+              $("#ntuCom").attr("disabled", false);
             } else {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
               $("#addInstallForm #instChklstDesc").hide();
+              $("#addInstallForm #m28").hide();
+              $("#ntuCom").attr("disabled", true);
+              $("#ntuCom").val("0");
             }
             $("#nextCallDate").val("");
 
@@ -257,6 +301,12 @@
             $("#addInstallForm #m17").hide();
             $("#addInstallForm #m24").hide();
             $("#addInstallForm #m18").hide();
+            $("#addInstallForm #m28").hide();
+            $("#addInstallForm #m29").hide();
+            $("#ntuCom").attr("disabled", true);
+            $("#ntuFail").attr("disabled", true);
+            $("#ntuCom").val("0");
+            $("#ntuFail").val("0");
 
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -493,6 +543,8 @@
       $("#addInstallForm #m13").hide();
       $("#addInstallForm #m14").hide();
       $("#addInstallForm #m24").hide();
+      $("#addInstallForm #m28").hide();
+      $("#addInstallForm #m29").hide();
   }
 
   function fn_saveInstall() {
@@ -633,8 +685,10 @@
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
       }
 
-      if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
+      if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+      	if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
     	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      	}
       }
 
       // Installation Accessory checking for Complete status
@@ -769,8 +823,14 @@
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
       }
 
-      if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
-    	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+    	if($("#failReasonCode").val() == 8009){
+      		if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
+    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      		}else if ($("#ntuFail").val() == "" || $("#ntuFail").val() < 0 ){
+      			msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      		}
+    	}
       }
 
       if (msg != "") {
@@ -2207,7 +2267,7 @@
 	        </td>
           </tr>
           <tr>
-           <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must"></span></th>
+           <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
            </td>
 			<th scope="row"></th>
@@ -2606,7 +2666,7 @@
           <tr>
             <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
             <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
-            <th scope="row"><spring:message code='service.title.ntu'/><span name="m29" id="m29" class="must"></span></th>
+            <th scope="row"><spring:message code='service.title.ntu'/><span name="m29" id="m29" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuFail" name="ntuFail" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
            </td>
           </tr>

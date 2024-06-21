@@ -706,9 +706,12 @@
     }
 
     if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" ){
+    	$("#m28").show();
         $("#ntuCom").attr("disabled", false);
     }else{
+    	$("#m28").hide();
         $("#ntuCom").attr("disabled", true);
+        $("#ntuCom").val("0");
     }
 
     // OPEN MANDATORY
@@ -1507,9 +1510,11 @@
           }
         }
 
-	    if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
-	    	rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-	    	rtnValue = false;
+	   if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
+	    	if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
+	    		rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+	    		rtnValue = false;
+	    	}
 	    }
 
 	   // Installation Accessory checking for Complete status
@@ -2625,7 +2630,7 @@
            <tr>
               <th scope="row">Rework Project<span id='m100' name='m100' class="must" style="display: none">*</span></th>
               <td><input type="text" title="" placeholder="Rework Project" class="disabled w100p" disabled="disabled" id='reworkProj' name='reworkProj' /></td>
-              <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must"></span></th>
+              <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
            	  <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
            	  </td>
             </tr>
