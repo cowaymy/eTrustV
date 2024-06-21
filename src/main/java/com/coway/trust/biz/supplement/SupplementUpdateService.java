@@ -38,7 +38,9 @@ public interface SupplementUpdateService {
   Map<String, Object> updateRefStgStatus( Map<String, Object> params )
     throws Exception;
 
-  EgovMap updOrdDelStat( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+  EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+
+  EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 
   EgovMap getStoSup( Map<String, Object> params );
 
