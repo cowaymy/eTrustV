@@ -168,7 +168,7 @@
                Common.popupDiv("/supplement/supplementViewPop.do", supplementForm, null, true, '_insDiv');
            });
 
-          $("#_updateDeliveryStatBtn").click(function() {
+          $("#_updateDeliveryStatGDexBtn").click(function() {
             var selectedItems = AUIGrid.getCheckedRowItems(supOrdGridID);
             var suppOrds = [];
 
@@ -187,10 +187,6 @@
               // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
               if (selectedItems[a].item.supRefDelStus >= 4) {
                   Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
-                  // REFRESH THE GRID
-                  AUIGrid.clearGridData(supOrdGridID);
-                  AUIGrid.clearGridData(supItmDetailGridID);
-                  fn_getSubListAjax();
                   return;
               }
 
@@ -203,8 +199,49 @@
             }
 
             // GET & UPDATE DELIVERY STATUS
-            Common.ajax("POST", "/supplement/updOrdDelStat.do", {ords : suppOrds}, function(result) {
+            Common.ajax("POST", "/supplement/updOrdDelStatGdex.do", {ords : suppOrds}, function(result) {
               Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
+              // REFRESH THE GRID
+              AUIGrid.clearGridData(supOrdGridID);
+              AUIGrid.clearGridData(supItmDetailGridID);
+              fn_getSubListAjax();
+            });
+          });
+
+          $("#_updateDeliveryStatDhlBtn").click(function() {
+            var selectedItems = AUIGrid.getCheckedRowItems(supOrdGridID);
+            var suppOrds = [];
+            var supShptNo = [];
+
+            if (selectedItems.length <= 0) {
+              Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
+
+            for (var a=0; a < selectedItems.length; a++) {
+              // CHECK TRACKING NO.
+              if (selectedItems[a].item.parcelTrackNo === "" || selectedItems[a].item.parcelTrackNo === undefined) {
+                  Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supRefNo);
+                  return;
+              }
+
+              // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
+              if (selectedItems[a].item.supRefDelStus >= 4) {
+                Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
+                return;
+              }
+
+              suppOrds.push(selectedItems[a].item.supRefNo);
+              supShptNo.push(selectedItems[a].item.parcelTrackNo);
+            }
+
+            // GET & UPDATE DELIVERY STATUS
+            Common.ajax("POST", "/supplement/updOrdDelStatDhl.do", {ordNo : suppOrds, consNo : supShptNo}, function(result) {
+              Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
+              // REFRESH THE GRID
+              AUIGrid.clearGridData(supOrdGridID);
+              AUIGrid.clearGridData(supItmDetailGridID);
+              fn_getSubListAjax();
             });
           });
 
@@ -679,7 +716,12 @@
       <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li>
           <p class="btn_blue">
-            <a href="#" id="_updateDeliveryStatBtn"><spring:message code="supplement.btn.updDelStat" /></a>
+            <a href="#" id="_updateDeliveryStatGDexBtn"><spring:message code="supplement.btn.updDelStat" />(GDEX)</a>
+          </p>
+        </li>
+        <li>
+          <p class="btn_blue">
+            <a href="#" id="_updateDeliveryStatDhlBtn"><spring:message code="supplement.btn.updDelStat" />(DHL)</a>
           </p>
         </li>
       </c:if>
