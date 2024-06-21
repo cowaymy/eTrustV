@@ -130,8 +130,8 @@
                            , V11.DISC_WAIVE AS PREBOOKING_PERIOD
                            , V2.SALES_ORD_ID_OLD
                            <!-- Added for e-Invoice. By Celeste, 14/06/2024 [s]-->
-                           <!-- , V1.SST_RGIST_NO
-                           , V1.CUST_TIN -->
+                           , V1.SST_RGIST_NO
+                           , V1.CUST_TIN
                            <!-- Added for e-Invoice. By Celeste, 14/06/2024 [e]-->
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
@@ -775,7 +775,7 @@
              , V1.MAIL_CNT_DEPT
              , V1.MAIL_CNT_POST
              <!-- Added for e-Invoice. By Celeste, 14/06/2024 [s]-->
-             <!-- , V1.E_INV_FLG -->
+             , V1.E_INV_FLG
              <!-- Added for e-Invoice. By Celeste, 14/06/2024 [e]-->
     FROM SAL1011V V1
     WHERE V1.ORD_ID = #{salesOrderId}
