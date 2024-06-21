@@ -432,7 +432,7 @@
   </select>
 
   <select id="getDelRcdLst"  parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(A.SUP_DEL_DT, 'DD-MM-YYYY hh:mm:ss AM') AS DEL_DT,
+    SELECT TO_CHAR(A.SUP_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS DEL_DT,
                UPPER(B.CODE_NAME) AS DEL_STUS,
                UPPER(A.SUP_DEL_LOC) AS DEL_LOC,
                UPPER(A.SUP_DEL_RMK) AS RMK
@@ -653,6 +653,23 @@
                AND DEL_FLG = 'N'
   </update>
 
+  <update id="updOrdDelDhlStat" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_DEL_STUS = #{latestEnumStatus},
+                                     <if test=" null != latestConsignmentNoteDate and '' != latestConsignmentNoteDate">
+                                       SUP_REF_DEL_DT = TO_DATE(#{latestConsignmentNoteDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                                     </if>
+                                     <if test=" null != ordRefStat and '' != ordRefStat">
+                                       SUP_REF_STUS = #{ordRefStat},
+                                     </if>
+                                     <if test=" null != ordRefStg and '' != ordRefStg">
+                                        SUP_REF_STG = #{ordRefStg},
+                                     </if>
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_REF_PCL_TRKNO = #{consNo}
+               AND DEL_FLG = 'N'
+  </update>
+
   <select id="getCustEmailDtl"  parameterType="Map" resultType="egovMap">
     SELECT A.SUP_REF_NO AS SUP_REF_NO,
                B.NAME  AS CUST_NAME,
@@ -669,14 +686,31 @@
     JOIN SAL0027D B ON B.CUST_ID = A.CUST_ID AND B.CUST_CNTC_ID = A.CUST_CNTC_ID
     JOIN SAL0023D C ON C.CUST_ID = A.CUST_ID AND C.CUST_ADD_ID = A.CUST_DEL_ADDR_ID
     LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
-    WHERE A.SUP_REF_NO = #{ordNo}
+    WHERE 1=1
+
+     <if test=" null != ordNo and '' != ordNo">
+       AND A.SUP_REF_NO = #{ordNo}
+     </if>
+
+     <if test=" null != consNo and '' != consNo">
+       AND A.SUP_REF_PCL_TRKNO = #{consNo}
+     </if>
+
   </select>
 
   <update id="updateDelLstDtl" parameterType="Map">
-    UPDATE SUP0005D SET DEL_FLG = 'Y'
-    WHERE SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
-        AND SUP_REF_PCL_TRKNO = #{consNo}
-        AND DEL_FLG = 'N'
+    UPDATE SUP0005D SET DEL_FLG = 'Y',
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+    </if>
+
+    <if test=" null != consNo and '' != consNo">
+      AND SUP_REF_PCL_TRKNO = #{consNo}
+    </if>
   </update>
 
   <insert id="insertDelLstDtl" parameterType="Map">
@@ -690,7 +724,15 @@
                                       , CRT_USR_ID
                                       , UPD_USR_ID
     ) VALUES ( SUP0005D_SUP_DEL_SEQ_ID.NEXTVAL
-                    , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+                     <choose>
+                       <when test=" null != ordNo and '' != ordNo">
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+                       </when>
+                       <otherwise>
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_PCL_TRKNO = #{consNo} )
+                       </otherwise>
+                     </choose>
+
                     , #{consNo}
                     , #{enumStatus}
                     , TO_DATE(#{dateScan}, 'YYYY-MM-DD HH24:MI:SS')
