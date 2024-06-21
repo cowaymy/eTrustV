@@ -352,14 +352,28 @@ public class SupplementManagementController {
 
   }
 
-  @RequestMapping(value = "/updOrdDelStat.do", method = RequestMethod.POST)
+  @RequestMapping(value = "/updOrdDelStatGdex.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> updOrdDelStat(@RequestBody Map<String, Object> params,
       HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
     ReturnMessage message = new ReturnMessage();
     // SET USER ID
     params.put("userId", sessionVO.getUserId());
 
-    EgovMap rtnData = supplementUpdateService.updOrdDelStat(params);
+    EgovMap rtnData = supplementUpdateService.updOrdDelStatGdex(params);
+    message.setCode( "000" );
+    message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
+
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/updOrdDelStatDhl.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updOrdDelStaDhlt(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
+    ReturnMessage message = new ReturnMessage();
+    // SET USER ID
+    params.put("userId", sessionVO.getUserId());
+
+    EgovMap rtnData = supplementUpdateService.updOrdDelStatDhl(params);
     message.setCode( "000" );
     message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
 
