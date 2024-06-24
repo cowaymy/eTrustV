@@ -905,6 +905,7 @@ public class HcInstallResultListController {
     @RequestMapping(value = "/batchJobInstallationPreCom.do", method = RequestMethod.GET)
     public ResponseEntity<String> batchJobInstallationPreCom() {
     	SessionVO sessionVO = new SessionVO();
+    	sessionVO.setUserId(349);
 
     	Map<String,Object> selectParam = new HashMap();
     	selectParam.put("preInstallStus", 4);
@@ -918,9 +919,10 @@ public class HcInstallResultListController {
     	        	Map<String,Object> params = new HashMap();
     	        	//installEntryId
     	        	params.put("installEntryId",preInstRecordResult.get("installEntryId"));
+    	        	params.put("stusCodeId", 1);
 
     			    EgovMap callType = installationResultListService.selectCallType(params);
-    			    params.put("codeid1", callType.get("typeId"));
+    			    params.put("codeId", callType.get("typeId"));
     			    EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
     			    EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
     			    EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
@@ -962,6 +964,7 @@ public class HcInstallResultListController {
     		        params.put("custId", custId);
     		        params.put("salesOrdNo", salesOrdNo);
     		        params.put("salesOrdId", preInstRecordResult.get("salesOrdId"));
+    		        params.put("salesOrderId", preInstRecordResult.get("salesOrdId"));
     		        EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
     		        // EgovMap customerAddress =
     		        // installationResultListService.getCustomerAddressInfo(customerInfo);
@@ -1002,7 +1005,12 @@ public class HcInstallResultListController {
         		        params.put("hidActualCTId","0");
     		        }
 
-    		        params.put("hidSirimLoc",sirimLoc.get("whLocCode"));
+    		        if(sirimLoc != null){
+        		        params.put("hidSirimLoc",sirimLoc.get("whLocCode"));
+    		        }
+    		        else{
+        		        params.put("hidSirimLoc","");
+    		        }
 
     		        params.put("hidCategoryId","");
     		        params.put("hidStockCode","");
@@ -1119,10 +1127,10 @@ public class HcInstallResultListController {
     		        params.put("totalWire","");
     		        params.put("gaspreAftIns","");
     		        params.put("installAcc","");
-    		        params.put("checkCommission",true);
+    		        params.put("checkCommission","on");
 //    		        params.put("checkTrade",false);
-//    		        params.put("checkSms",false);
-//    		        params.put("checkSend",false);
+    		        params.put("checkSms","on");
+    		        params.put("checkSend","on");
     		        params.put("hpMsg","COWAY: Order No: " + installResult.get("salesOrdNo") + "\nName" + hpMember.get("name1") + " \nInstall Status: Completed");
     		        params.put("msgRemark","Remark:");
     		        params.put("failLocCde","");
@@ -1131,7 +1139,10 @@ public class HcInstallResultListController {
     		        params.put("nextCallDate","");
     		        params.put("remark",preInstRecordResult.get("remark"));
 
-    				hcInstallResultListService.hcInsertInstallationResultSerial(params, sessionVO);
+    		    	Map<String,Object> insertParams = new HashMap();
+    		    	insertParams.put("installForm", params);
+
+    				hcInstallResultListService.hcInsertInstallationResultSerial(insertParams, sessionVO);
 
     		    	Map<String,Object> preComResult = new HashMap();
     		    	preComResult.put("statusId",4);
@@ -1141,7 +1152,7 @@ public class HcInstallResultListController {
     			} catch (Exception e) {
     		    	Map<String,Object> preComResult = new HashMap();
     		    	preComResult.put("statusId",21);
-    		    	preComResult.put("addRemark",CommonUtils.nvl(e.getMessage()));
+    		    	preComResult.put("addRemark",CommonUtils.nvl(e + "-" + e.getMessage()));
     		    	preComResult.put("installEntryNo",preInstRecordResultList.get(i).get("installEntryNo").toString());
     				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult);
     			}
