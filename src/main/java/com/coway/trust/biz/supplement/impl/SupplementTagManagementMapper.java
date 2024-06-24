@@ -26,4 +26,5 @@ public interface SupplementTagManagementMapper {
 
   EgovMap selectViewBasicInfo(Map<String, Object> params);
 
+  String getDocNo (int value);
 }
