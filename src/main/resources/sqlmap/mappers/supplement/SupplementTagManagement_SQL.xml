@@ -2,33 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.supplement.impl.SupplementTagManagementMapper">
 
-
   <select id="selectTagManagementList" parameterType="Map" resultType="egovMap">
-
-            SELECT
-            Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
-            Extent1.SUP_REF_NO AS SUP_REF_NO,
-            Extent1.SUP_REF_ID AS SUP_REF_ID,
-            Extent3.NAME AS CUST_NAME,
-            Extent2.CRT_DT AS TAG_REGISTER_DT,
-            Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
-            Extent5.NAME AS TAG_STATUS,
-            Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
-            Extent6.DEFECT_DESC AS MAIN_TOPIC,
-            Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
-            Extent7.DEFECT_DESC AS SUB_TOPIC,
-            Extent4.MAIN_DEPT AS INCHG_DEPT,
-            Extent4.SUB_DEPT AS SUB_DEPT
-
-            FROM SUP0001M Extent1
-            JOIN SUP0006M Extent2   ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
-            JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent1.CUST_ID
-            JOIN CCR0006D Extent4   ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
-            JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
-            LEFT JOIN SYS0100M Extent6   ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
-            LEFT JOIN SYS0100M Extent7   ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
-
-            WHERE 1 = 1
+    SELECT Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent3.NAME AS CUST_NAME,
+               TO_CHAR(Extent2.CRT_DT, 'DD-MM-YYYY') AS TAG_REGISTER_DT,
+               Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
+               Extent5.NAME AS TAG_STATUS,
+               Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
+               Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
+               UPPER(Extent6.DEFECT_DESC || '-' || Extent6.DEFECT_DESC) AS MAIN_TOPIC,
+               UPPER(Extent7.DEFECT_DESC || '-' || Extent7.DEFECT_DESC) AS SUB_TOPIC,
+               UPPER(Extent8.CODE || '-' || Extent8.CODE_NAME) AS INCHG_DEPT,
+               UPPER(Extent9.CODE || '-' || Extent9.CODE_NAME) AS SUB_DEPT
+    FROM SUP0001M Extent1
+    JOIN SUP0006M Extent2 ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    JOIN CCR0006D Extent4 ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
+    JOIN SYS0038M Extent5 ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
+    LEFT JOIN SYS0100M Extent6 ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
+    LEFT JOIN SYS0100M Extent7 ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE_MASTER_ID = '359' AND Extent8.CODE = Extent4.MAIN_DEPT
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_MASTER_ID = '360' AND Extent9.CODE = Extent4.SUB_DEPT
+    WHERE 1 = 1
 
     <if test=" null != supRefNo and '' != supRefNo">
       AND Extent1.SUP_REF_NO = #{supRefNo}
@@ -39,11 +36,7 @@
     </if>
 
     <if test="tagStus != null and tagStus != '' ">
-       AND Extent4.STUS_CODE_ID
-     <foreach item="item" collection="tagStus" index="index"
-        open="(" separator="," close=")">
-        #{item}
-      </foreach>
+       AND Extent4.STUS_CODE_ID = #{tagStus}
     </if>
 
     <if test="sDate != null and sDate != '' ">
@@ -66,9 +59,9 @@
       AND Extent2.SUP_TAG_SUB_INQ = #{ddSubTopic}
     </if>
 
- <!--    <if test=" null != inchgDept and '' != inchgDept">
+    <if test=" null != inchgDept and '' != inchgDept">
       AND Extent4.MAIN_DEPT = #{inchgDept}
-    </if> -->
+    </if>
 
     <if test=" null != ddSubDept and '' != ddSubDept">
       AND Extent4.SUB_DEPT = #{ddSubDept}
@@ -83,14 +76,14 @@
     <select id="selectTagStus"  parameterType="Map" resultType="egovMap">
     SELECT Extent1.STUS_CODE_ID CODE_ID
              , Extent1.CODE CODE
-             , Extent1.NAME CODE_NAME
+             , UPPER(Extent1.CODE || '-' || Extent1.NAME) CODE_NAME
     FROM SYS0038M Extent1
     WHERE Extent1.STUS_CODE_ID IN ( 1, 34, 10 )
   </select>
 
     <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
    SELECT DEFECT_ID AS CODE_ID,
-             DEFECT_DESC AS CODE_NAME,
+             UPPER(DEFECT_CODE || '-' || DEFECT_DESC) AS CODE_NAME,
              DEFECT_TYP AS PRODUCT_CTGRY_CODE
    FROM SYS0100M
    WHERE DEFECT_TYP = 'SMI'
@@ -102,24 +95,31 @@
     <![CDATA[
      SELECT DEFECT_TYP AS DEFECT_TYPE_CODE,
             DEFECT_ID AS CODE_ID,
-            DEFECT_DESC AS CODE_NAME
+            UPPER(DEFECT_CODE || '-' || DEFECT_DESC) AS CODE_NAME
      FROM SYS0100M
      WHERE DEFECT_GRP = #{DEFECT_GRP}
      AND DEFECT_ID != #{DEFECT_GRP}
     ]]>
   </select>
 
-      <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
-   SELECT DEFECT_ID AS CODE_ID,
-             DEFECT_DESC AS CODE_NAME,
-             DEFECT_TYP AS PRODUCT_CTGRY_CODE
+  <!-- <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
+    SELECT DEFECT_ID AS CODE_ID,
+               DEFECT_DESC AS CODE_NAME,
+               DEFECT_TYP AS PRODUCT_CTGRY_CODE
    FROM SYS0100M
    WHERE DEFECT_TYP = 'ICD'
-   AND DEFECT_STATUS = '1'
-   AND DEFECT_GRP = DEFECT_ID
+       AND DEFECT_STATUS = '1'
+       AND DEFECT_GRP = DEFECT_ID
+  </select> -->
+
+  <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+               UPPER(CODE || '-' || CODE_NAME) AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '359'
   </select>
 
-    <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
+  <!-- <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
     <![CDATA[
      SELECT DEFECT_TYP AS DEFECT_TYPE_CODE,
             DEFECT_ID AS CODE_ID,
@@ -129,6 +129,17 @@
      AND DEFECT_ID != #{DEFECT_GRP_DEPT}
      AND DEFECT_TYP = 'ICD'
     ]]>
+  </select> -->
+
+  <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID
+             , UPPER(CODE || '-' || CODE_DESC) CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 360
+
+    <if test = "DEFECT_GRP_DEPT != null and DEFECT_GRP_DEPT != '' ">
+      AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{DEFECT_GRP_DEPT})
+    </if>
   </select>
 
    <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
