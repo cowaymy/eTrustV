@@ -328,4 +328,8 @@
         AND Extent1.SUP_REF_NO = #{supRefNo}
   </select>
 
+  <select id="getDocNo" parameterType="Integer" resultType="String">
+    SELECT FN_GET_DOCNO(#{value}) from dual
+  </select>
+
 </mapper>
