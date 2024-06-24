@@ -68,7 +68,19 @@
 
     }
 
-    var supRefId = ${orderInfo.supRefId};
+
+    var supRefId ;
+
+    console.log ("supRefId::" + $("#orderInfo.supRefId").val());
+   // var supRefId = ${orderInfo.supRefId};
+
+    if (($("#orderInfo.supRefId").val() == null) || ($("#orderInfo.supRefId").val()) == "undefined"){
+        supRefId = "0";
+    } else {
+        supRefId = "${orderInfo.supRefId}";
+    }
+
+    //var supRefId = ${orderInfo.supRefId};
     var param = {supRefId : supRefId };
     Common.ajax("GET", "/supplement/getSupplementDetailList", param, function(result) {
       AUIGrid.setGridData(subItmDetailGridID, result);
