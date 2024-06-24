@@ -622,4 +622,12 @@
         LEFT JOIN SYS0026M E ON E.STK_ID = C.ITM_STK_ID
         WHERE HMC.ORD_SEQ_NO = #{bndlId}
   </select>
+
+  <select id="selectPreInstallationRecord"  parameterType="Map" resultType="egovMap">
+  		SELECT * FROM SVC0136D A
+		JOIN SAL0046D B
+		ON A.INSTALL_ENTRY_NO = B.INSTALL_ENTRY_NO
+		WHERE A.STUS_CODE_ID = #{preInstallStus}
+		AND B.STUS_CODE_ID = 1
+  </select>
 </mapper>

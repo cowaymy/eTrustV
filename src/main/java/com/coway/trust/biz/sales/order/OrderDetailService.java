@@ -49,7 +49,7 @@ public interface OrderDetailService {
   List<EgovMap> getInstImg(Map<String, Object> params);
 
   List<EgovMap> getInstImgByInst(Map<String, Object> params);
-  
+
   List<EgovMap> getHsImg(Map<String, Object> params);
 
   public List<EgovMap> selectGSTRebateList(Map<String, Object> params);
@@ -59,5 +59,9 @@ public interface OrderDetailService {
   public List<EgovMap> selectMCORemarkList(Map<String, Object> params);
 
   public List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params);
+
+EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
+
+EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params);
 
 }

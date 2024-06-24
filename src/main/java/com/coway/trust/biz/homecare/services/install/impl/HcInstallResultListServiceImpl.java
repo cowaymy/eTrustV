@@ -1095,6 +1095,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    return hcInstallResultListMapper.selectInstallationInfo(params);
 	}
 
+	@Override
+	public List<EgovMap> selectPreInstallationRecord(Map<String, Object> params) {
+	    return hcInstallResultListMapper.selectPreInstallationRecord(params);
+	}
+
 	public String getOutdoorAcStkCode(Map<String, Object> params){
 	    return hcInstallResultListMapper.getOutdoorAcStkCode(params);
 	}

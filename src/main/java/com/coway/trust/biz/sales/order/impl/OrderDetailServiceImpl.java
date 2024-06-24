@@ -656,4 +656,14 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
   public List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params) {
     return orderDetailMapper.selectFmcoEvoucherList(params);
   }
+
+    @Override
+    public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params) {
+        return orderDetailMapper.selectOrderSalesmanViewByOrderID(params);
+    }
+
+    @Override
+    public EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params) {
+        return orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
+    }
 }

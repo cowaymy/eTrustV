@@ -337,8 +337,12 @@
         }
        */
 
-        const serial = $("#serialNo").text();
-        const serial2 = $("#serialNo2").text();
+//          const serial = $("#serialNo").text();
+//          const serial2 = $("#serialNo2").text();
+         const serial = "4ABLH5AC19C1700095";
+         const serial2 = "4ABNH5AC19C1700098";
+
+         debugger;
 
         if(serial.length != 18 || serial.indexOf(indoorStkCode) < 0){
             document.getElementById("MsgAlert").innerHTML = "Indoor Serial Number is invalid.";
@@ -649,10 +653,11 @@
 	    }
     }
 
-    addImageUpload(document.getElementById("sirimUploadContainer"), "Sirim");
+   //create upload photo dynamically
+    addImageUpload(document.getElementById("sirimUploadContainer"), "Sirim And Indoor Serial Number");
 
-    for (let i = 0; i < 5; i++) {
-        let titleName = ['Installation Note (Indoor)','Indoor unit (After install)','Outdoor unit (After install)','Gas Pressure (After install)','Additional'];
+    for (let i = 0; i < 6; i++) {
+        let titleName = ['Outdoor Serial Number','Indoor unit (After Install)','Outdoor unit (After Install)','Installation Note (Indoor)','Installation Note (Outdoor)', 'Customer House (Over View Front Door)'];
 	    addImageUpload(document.getElementById("installUploadContainer"), titleName[i]);
     }
 

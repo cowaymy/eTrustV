@@ -89,4 +89,6 @@ public interface HcInstallResultListMapper {
 	EgovMap selectInstallationInfo(Map<String, Object> params);
 
 	String getOutdoorAcStkCode (Map<String, Object> params);
+
+	List<EgovMap> selectPreInstallationRecord(Map<String, Object> params);
 }

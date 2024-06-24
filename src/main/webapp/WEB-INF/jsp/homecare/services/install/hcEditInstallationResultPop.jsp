@@ -350,9 +350,9 @@ var installAccValues = JSON.parse("${installAccValues}");
     if ($("#editInstallForm #installdt").val() == '') {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
     }
-    if ($("#editInstallForm #sirimNo").val().trim() == '' || ("#editInstallForm #sirimNo") == null) {
-      msg += "* <spring:message code='sys.msg.necessary' arguments='Sirim No' htmlEscape='false'/> </br>";
-    }
+//     if ($("#editInstallForm #sirimNo").val().trim() == '' || ("#editInstallForm #sirimNo") == null) {
+//       msg += "* <spring:message code='sys.msg.necessary' arguments='Sirim No' htmlEscape='false'/> </br>";
+//     }
     if ($("#editInstallForm #serialNo").val().trim() == '' || ("#editInstallForm #serialNo") == null) {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
     } else {
@@ -390,25 +390,25 @@ var installAccValues = JSON.parse("${installAccValues}");
             msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
         }
 
-        if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
-            msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
-        }
+//         if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
+//             msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
+//         }
 
-        if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
-            msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
-        }
+//         if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
+//             msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
+//         }
 
-        if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
-            msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
-        }
+//         if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
+//             msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
+//         }
 
-        if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
-            msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
-        }
+//         if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
+//             msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
+//         }
 
-        if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
-            msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
-        }
+//         if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
+//             msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
+//         }
     }
     //validate aircon serial
 
@@ -633,7 +633,7 @@ function fn_InstallAcc_CheckedChanged(_obj) {
        <td colspan="3"><span><c:out value="${installInfo.c3} - ${installInfo.c4}" /></span></td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must"> *</span></th>
+       <th scope="row"><spring:message code='service.title.SirimNo' />
        <td><input type="text" id="sirimNo" name="sirimNo" class='w100p' value="<c:out value="${installInfo.sirimNo}"/>" /></td>
        <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must"> *</span></th>
        <td>
@@ -683,7 +683,7 @@ function fn_InstallAcc_CheckedChanged(_obj) {
             </td>
       </tr>--%>
       <tr>
-       <th scope="row">Dismantle<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Dismantle</th>
        <td colspan="1">
             <label><input type="radio" name="dismantle"  value="1"/><span>Yes</span></label>
             <label><input type="radio" name="dismantle"  value="0"/><span>No</span></label>
@@ -691,13 +691,13 @@ function fn_InstallAcc_CheckedChanged(_obj) {
        <th scope="row"></th><td></td>
      </tr>
      <tr>
-       <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Total Copper Pipe</th>
        <td>
          <input type="text" title="" placeholder="Total Copper Pipe" class="" id="totalPipe" name="totalPipe" style="width:90%;" type="number"
          value="<c:out value="${installInfo.totPipe}"/>" />
          <span>ft</span>
        </td>
-       <th scope="row" rowspan="2">Gas Pressue <span  class="must airconm"  style="display:none">*</span><br/>Before Installation<br/>After Installation
+       <th scope="row" rowspan="2">Gas Pressue <br/>Before Installation<br/>After Installation
        </th>
 
        <td rowspan="1">
@@ -706,7 +706,7 @@ function fn_InstallAcc_CheckedChanged(_obj) {
        </td>
      </tr>
      <tr>
-       <th scope="row">Total Wire<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Total Wire</th>
        <td>
          <input type="text" title="" placeholder="Total Wire" class="" id="totalWire" name="totalWire"  style="width:90%;" value="<c:out value="${installInfo.totWire}"/>" />
          <span>ft</span>

@@ -362,9 +362,9 @@
 	      if ($("#addInstallForm #installDate").val() == '') {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
 	      }
-	      if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
-	        msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
-	      }
+// 	      if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
+// 	        msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
+// 	      }
 	      if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
 	      } else {
@@ -385,6 +385,8 @@
 	      //validate aircon serial
 	      if($("#ordCtgryCd").val() == "ACI"){
 	    	  var stockCode = "";
+
+	    	  console.log($("#addInstallForm #serialNo").val().trim().substr(3,5));
 	          stockCode = (js.String.roughScale($("#addInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
 	           if(stockCode != "0" && $("#hidStockCode").val() != stockCode){
 	               msg += "* Serial Number NOT match with stock [" + $("#hidStockCode").val() +"] </br>";
@@ -401,25 +403,25 @@
 	              msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
 	          }
 
-	          if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
-	        	  msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
-	          }
+// 	          if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
+// 	        	  msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
+// 	          }
 
-	          if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
-                  msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
-              }
+// 	          if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
+//                   msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
+//               }
 
-	          if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
-                  msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
-              }
+// 	          if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
+//                   msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
+//               }
 
-	          if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
-                  msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
-              }
+// 	          if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
+//                   msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
+//               }
 
-	          if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
-                  msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
-              }
+// 	          if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
+//                   msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
+//               }
 	      }
          //validate aircon serial
 
@@ -474,6 +476,7 @@
 	             Common.ajaxFile("/homecare/services/install/attachFileUpload.do", formData, function(result) {
 	                if(result != 0 && result.code == 00) {
 	                      // KR-OHK Serial Check add
+	                      console.log($("#addInstallForm").serializeJSON());
 	                  var saveForm = {
 	                          "installForm" : $("#addInstallForm").serializeJSON(),
 	                          "fileGroupKey": result.data.fileGroupKey
@@ -1152,6 +1155,7 @@
         <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
     </form>
   <form action="#" id="addInstallForm" method="post">
+<!--   test -->
    <input type="hidden" value="${installResult.installEntryId}" id="installEntryId" name="installEntryId" />
    <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" />
    <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" />
@@ -1297,7 +1301,7 @@
     <tbody>
      <tr>
        <th scope="row">
-         <spring:message code='service.title.SIRIMNo' /><span name="m4" id="m4" class="must">*</span>
+         <spring:message code='service.title.SIRIMNo' />
        </th>
        <td>
          <input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p" id="sirimNo" name="sirimNo" />
@@ -1351,7 +1355,7 @@
        </td>
      </tr>
      <tr>
-       <th scope="row">Dismantle<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Dismantle</th>
        <td colspan="1">
 		    <label><input type="radio" name="dismantle"  value="1"/><span>Yes</span></label>
 		    <label><input type="radio" name="dismantle"  value="0"/><span>No</span></label>
@@ -1359,11 +1363,11 @@
        <th scope="row"></th><td></td>
      </tr>
      <tr>
-       <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Total Copper Pipe</th>
        <td>
          <input type="text" title="" placeholder="Total Copper Pipe" class="" id="totalPipe" name="totalPipe" style="width:90%;" type="number"/><span>ft</span>
        </td>
-       <th scope="row" rowspan="2">Gas Pressue <span  class="must airconm"  style="display:none">*</span><br/>Before Installation<br/>After Installation
+       <th scope="row" rowspan="2">Gas Pressue <br/>Before Installation<br/>After Installation
        </th>
 
        <td rowspan="1">
@@ -1371,7 +1375,7 @@
        </td>
      </tr>
      <tr>
-       <th scope="row">Total Wire<span  class="must airconm" style="display:none">*</span></th>
+       <th scope="row">Total Wire</th>
        <td>
          <input type="text" title="" placeholder="Total Wire" class="" id="totalWire" name="totalWire"  style="width:90%;"/><span>ft</span>
        </td>

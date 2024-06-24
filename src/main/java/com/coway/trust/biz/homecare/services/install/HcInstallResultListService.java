@@ -121,4 +121,6 @@ public interface HcInstallResultListService {
 
 	String getOutdoorAcStkCode (Map<String, Object> params);
 
+	List<EgovMap> selectPreInstallationRecord(Map<String, Object> params);
+
 }
