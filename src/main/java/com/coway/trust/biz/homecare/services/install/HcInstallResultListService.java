@@ -123,4 +123,6 @@ public interface HcInstallResultListService {
 
 	List<EgovMap> selectPreInstallationRecord(Map<String, Object> params);
 
+	void updateSVC0136DAutoPreComStatus(Map<String, Object> params);
+
 }

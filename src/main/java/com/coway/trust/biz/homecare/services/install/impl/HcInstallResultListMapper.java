@@ -91,4 +91,6 @@ public interface HcInstallResultListMapper {
 	String getOutdoorAcStkCode (Map<String, Object> params);
 
 	List<EgovMap> selectPreInstallationRecord(Map<String, Object> params);
+
+	void updateSVC0136DAutoPreComStatus(Map<String, Object> params);
 }

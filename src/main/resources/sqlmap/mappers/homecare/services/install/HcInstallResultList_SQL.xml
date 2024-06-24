@@ -628,6 +628,12 @@
 		JOIN SAL0046D B
 		ON A.INSTALL_ENTRY_NO = B.INSTALL_ENTRY_NO
 		WHERE A.STUS_CODE_ID = #{preInstallStus}
+		AND A.AUTO_STUS_CODE_ID = 1
 		AND B.STUS_CODE_ID = 1
   </select>
+
+<update id="updateSVC0136DAutoPreComStatus" parameterType="Map" >
+	UPDATE SVC0136D SET AUTO_STUS_CODE_ID = #{statusId}, ADD_REMARK = #{addRemark}
+	WHERE INSTALL_ENTRY_NO = #{installEntryNo}
+</update>
 </mapper>

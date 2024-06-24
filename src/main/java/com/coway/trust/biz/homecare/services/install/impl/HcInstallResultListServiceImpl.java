@@ -1100,6 +1100,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    return hcInstallResultListMapper.selectPreInstallationRecord(params);
 	}
 
+	@Override
+	public void updateSVC0136DAutoPreComStatus(Map<String, Object> params) {
+	    hcInstallResultListMapper.updateSVC0136DAutoPreComStatus(params);
+	}
+
 	public String getOutdoorAcStkCode(Map<String, Object> params){
 	    return hcInstallResultListMapper.getOutdoorAcStkCode(params);
 	}

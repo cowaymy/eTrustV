@@ -917,6 +917,8 @@ public class HcInstallResultListController {
     	        	Map<String,Object> preInstRecordResult = preInstRecordResultList.get(i);
     	        	Map<String,Object> params = new HashMap();
     	        	//installEntryId
+    	        	params.put("installEntryId",preInstRecordResult.get("installEntryId"));
+
     			    EgovMap callType = installationResultListService.selectCallType(params);
     			    params.put("codeid1", callType.get("typeId"));
     			    EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
@@ -1130,15 +1132,21 @@ public class HcInstallResultListController {
     		        params.put("remark",preInstRecordResult.get("remark"));
 
     				hcInstallResultListService.hcInsertInstallationResultSerial(params, sessionVO);
+
+    		    	Map<String,Object> preComResult = new HashMap();
+    		    	preComResult.put("statusId",4);
+    		    	preComResult.put("addRemark","Auto Pre-com Approve Completed");
+    		    	preComResult.put("installEntryNo",preInstRecordResult.get("installEntryNo").toString());
+    				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult);
     			} catch (Exception e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
+    		    	Map<String,Object> preComResult = new HashMap();
+    		    	preComResult.put("statusId",21);
+    		    	preComResult.put("addRemark",CommonUtils.nvl(e.getMessage()));
+    		    	preComResult.put("installEntryNo",preInstRecordResultList.get(i).get("installEntryNo").toString());
+    				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult);
     			}
     		}
     	}
-
-
-
-    	return ResponseEntity.ok("");
+    	return ResponseEntity.ok("Process Finished");
     }
 }
