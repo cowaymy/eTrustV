@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.supplement.impl.SupplementTagManagementMapper">
+
+
+  <select id="selectTagManagementList" parameterType="Map" resultType="egovMap">
+
+            SELECT
+            Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
+            Extent1.SUP_REF_NO AS SUP_REF_NO,
+            Extent1.SUP_REF_ID AS SUP_REF_ID,
+            Extent3.NAME AS CUST_NAME,
+            Extent2.CRT_DT AS TAG_REGISTER_DT,
+            Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
+            Extent5.NAME AS TAG_STATUS,
+            Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
+            Extent6.DEFECT_DESC AS MAIN_TOPIC,
+            Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
+            Extent7.DEFECT_DESC AS SUB_TOPIC,
+            Extent4.MAIN_DEPT AS INCHG_DEPT,
+            Extent4.SUB_DEPT AS SUB_DEPT
+
+            FROM SUP0001M Extent1
+            JOIN SUP0006M Extent2   ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
+            JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent1.CUST_ID
+            JOIN CCR0006D Extent4   ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
+            JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
+            LEFT JOIN SYS0100M Extent6   ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
+            LEFT JOIN SYS0100M Extent7   ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
+
+            WHERE 1 = 1
+
+    <if test=" null != supRefNo and '' != supRefNo">
+      AND Extent1.SUP_REF_NO = #{supRefNo}
+    </if>
+
+    <if test=" null != counselingNo and '' != counselingNo">
+      AND Extent2.SUP_CUR_SEQNO = #{counselingNo}
+    </if>
+
+    <if test="tagStus != null and tagStus != '' ">
+       AND Extent4.STUS_CODE_ID
+     <foreach item="item" collection="tagStus" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="sDate != null and sDate != '' ">
+      <![CDATA[
+        AND Extent2.CRT_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+      ]]>
+    </if>
+
+    <if test="eDate != null and eDate != '' ">
+      <![CDATA[
+        AND Extent2.CRT_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+      ]]>
+    </if>
+
+    <if test=" null != mainTopic and '' != mainTopic">
+      AND Extent2.SUP_TAG_MAIN_INQ = #{mainTopic}
+    </if>
+
+    <if test=" null != ddSubTopic and '' != ddSubTopic">
+      AND Extent2.SUP_TAG_SUB_INQ = #{ddSubTopic}
+    </if>
+
+ <!--    <if test=" null != inchgDept and '' != inchgDept">
+      AND Extent4.MAIN_DEPT = #{inchgDept}
+    </if> -->
+
+    <if test=" null != ddSubDept and '' != ddSubDept">
+      AND Extent4.SUB_DEPT = #{ddSubDept}
+    </if>
+
+    <if test=" null != custName and '' != custName">
+      AND Extent3.NAME = #{custName}
+    </if>
+
+  </select>
+
+    <select id="selectTagStus"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STUS_CODE_ID CODE_ID
+             , Extent1.CODE CODE
+             , Extent1.NAME CODE_NAME
+    FROM SYS0038M Extent1
+    WHERE Extent1.STUS_CODE_ID IN ( 1, 34, 10 )
+  </select>
+
+    <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
+   SELECT DEFECT_ID AS CODE_ID,
+             DEFECT_DESC AS CODE_NAME,
+             DEFECT_TYP AS PRODUCT_CTGRY_CODE
+   FROM SYS0100M
+   WHERE DEFECT_TYP = 'SMI'
+   AND DEFECT_STATUS = '1'
+   AND DEFECT_GRP = DEFECT_ID
+  </select>
+
+  <select id="getSubTopicList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+     SELECT DEFECT_TYP AS DEFECT_TYPE_CODE,
+            DEFECT_ID AS CODE_ID,
+            DEFECT_DESC AS CODE_NAME
+     FROM SYS0100M
+     WHERE DEFECT_GRP = #{DEFECT_GRP}
+     AND DEFECT_ID != #{DEFECT_GRP}
+    ]]>
+  </select>
+
+      <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
+   SELECT DEFECT_ID AS CODE_ID,
+             DEFECT_DESC AS CODE_NAME,
+             DEFECT_TYP AS PRODUCT_CTGRY_CODE
+   FROM SYS0100M
+   WHERE DEFECT_TYP = 'ICD'
+   AND DEFECT_STATUS = '1'
+   AND DEFECT_GRP = DEFECT_ID
+  </select>
+
+    <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+     SELECT DEFECT_TYP AS DEFECT_TYPE_CODE,
+            DEFECT_ID AS CODE_ID,
+            DEFECT_DESC AS CODE_NAME
+     FROM SYS0100M
+     WHERE DEFECT_GRP = #{DEFECT_GRP_DEPT}
+     AND DEFECT_ID != #{DEFECT_GRP_DEPT}
+     AND DEFECT_TYP = 'ICD'
+    ]]>
+  </select>
+
+   <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
+            SELECT
+            Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
+            Extent1.SUP_REF_ID AS SUP_REF_ID,
+            Extent1.SUP_REF_NO AS SUP_REF_NO,
+            Extent1.CUST_ID AS CUST_ID,
+            Extent3.NAME AS CUST_NAME,
+            Extent2.CRT_DT AS TAG_REGISTER_DT,
+            Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
+            Extent5.NAME AS TAG_STATUS,
+            Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
+            Extent6.DEFECT_DESC AS MAIN_TOPIC,
+            Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
+            Extent7.DEFECT_DESC AS SUB_TOPIC,
+            Extent4.MAIN_DEPT AS INCHG_DEPT_ID,
+            Extent8.DEFECT_DESC AS INCHG_DEPT_NAME,
+            Extent4.SUB_DEPT AS SUB_DEPT_ID,
+            Extent8.DEFECT_DESC AS SUB_DEPT_NAME,
+            Extent2.SUP_TAG_FL_ATT_ID AS CARELINE_ATCH
+
+            FROM SUP0001M Extent1
+            JOIN SUP0006M Extent2   ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
+            JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent1.CUST_ID
+            JOIN CCR0006D Extent4   ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
+            JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
+            LEFT JOIN SYS0100M Extent6   ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
+            LEFT JOIN SYS0100M Extent7   ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
+            LEFT JOIN SYS0100M Extent8   ON Extent8.DEFECT_CODE = Extent4.MAIN_DEPT AND Extent8.DEFECT_TYP = 'ICD'
+            LEFT JOIN SYS0100M Extent9   ON Extent9.DEFECT_CODE = Extent4.SUB_DEPT AND Extent8.DEFECT_TYP = 'ICD'
+
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="searchOrderBasicInfo"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
+               Extent16.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.PV_YEAR AS PV_YEAR,
+               Extent1.PV_MONTH AS PV_MONTH,
+               Extent1.TOT_PV AS TOT_PV,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
+               Extent3.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent3.NRIC AS CUST_NRIC,
+               Extent3.GENDER AS CUST_GENDER,
+               Extent17.EMAIL AS CUST_EMAIL,
+               Extent17.TEL_M1 AS CUST_MOBILE_NO,
+               Extent17.TEL_O AS CUST_OFFICE_NO,
+               Extent17.TEL_R AS CUST_RESIDENT_NO,
+               Extent17.TELF AS CUST_FAX_NO,
+               TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
+               TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+               Extent10.CODE_NAME AS CUST_STATUS,
+               Extent11.CODE_NAME AS RACE_NAME,
+               Extent12.CODE_NAME AS CUST_TYPE_NAME,
+               Extent4.NAME AS NATION_NAME,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
+               Extent14.AREA AS AREA,
+               Extent14.POSTCODE AS POSTCODE,
+               Extent14.STATE AS STATE,
+               Extent14.COUNTRY AS COUNTRY,
+               Extent14.CITY AS CITY,
+               Extent15.DEPT_CODE AS DEPT_CODE,
+               Extent15.GRP_CODE AS GRP_CODE,
+               Extent15.ORG_CODE AS ORG_CODE,
+               Extent6.MEM_CODE AS SALESMAN_CODE,
+               Extent6.NAME AS SALESMAN_NAME,
+               Extent6.MEM_CODE AS SALESMAN_NRIC,
+               Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
+               Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT,
+               Extent18.ADDR_DTL AS BILL_ADDRESS_LINE_1,
+               Extent18.STREET AS BILL_ADDRESS_LINE_2,
+               Extent19.AREA AS BILL_AREA,
+               Extent19.POSTCODE AS BILL_POSTCODE,
+               Extent19.STATE AS BILL_STATE,
+               Extent19.COUNTRY AS BILL_COUNTRY,
+               Extent19.CITY AS BILL_CITY
+    FROM SUP0001M Extent1
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    LEFT JOIN ORG0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '587'
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
+    LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
+    LEFT JOIN SAL0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID AND Extent1.CUST_ID = EXTENT13.CUST_ID
+    LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
+    LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
+    LEFT JOIN SYS0064M Extent19 ON Extent19.AREA_ID = Extent18.AREA_ID
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_NO = #{orderNo}
+  </select>
+
+  <select id="selectViewBasicInfo"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
+               Extent16.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.PV_YEAR AS PV_YEAR,
+               Extent1.PV_MONTH AS PV_MONTH,
+               Extent1.TOT_PV AS TOT_PV,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
+               Extent3.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent3.NRIC AS CUST_NRIC,
+               Extent3.GENDER AS CUST_GENDER,
+               Extent17.EMAIL AS CUST_EMAIL,
+               Extent17.TEL_M1 AS CUST_MOBILE_NO,
+               Extent17.TEL_O AS CUST_OFFICE_NO,
+               Extent17.TEL_R AS CUST_RESIDENT_NO,
+               Extent17.TELF AS CUST_FAX_NO,
+               TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
+               TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+               Extent10.CODE_NAME AS CUST_STATUS,
+               Extent11.CODE_NAME AS RACE_NAME,
+               Extent12.CODE_NAME AS CUST_TYPE_NAME,
+               Extent4.NAME AS NATION_NAME,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
+               Extent14.AREA AS AREA,
+               Extent14.POSTCODE AS POSTCODE,
+               Extent14.STATE AS STATE,
+               Extent14.COUNTRY AS COUNTRY,
+               Extent14.CITY AS CITY,
+               Extent15.DEPT_CODE AS DEPT_CODE,
+               Extent15.GRP_CODE AS GRP_CODE,
+               Extent15.ORG_CODE AS ORG_CODE,
+               Extent6.MEM_CODE AS SALESMAN_CODE,
+               Extent6.NAME AS SALESMAN_NAME,
+               Extent6.MEM_CODE AS SALESMAN_NRIC,
+               Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
+               Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT,
+               Extent18.ADDR_DTL AS BILL_ADDRESS_LINE_1,
+               Extent18.STREET AS BILL_ADDRESS_LINE_2,
+               Extent19.AREA AS BILL_AREA,
+               Extent19.POSTCODE AS BILL_POSTCODE,
+               Extent19.STATE AS BILL_STATE,
+               Extent19.COUNTRY AS BILL_COUNTRY,
+               Extent19.CITY AS BILL_CITY
+    FROM SUP0001M Extent1
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    LEFT JOIN ORG0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '586'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '587'
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
+    LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
+    LEFT JOIN SAL0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID AND Extent1.CUST_ID = EXTENT13.CUST_ID
+    LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
+    LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
+    LEFT JOIN SYS0064M Extent19 ON Extent19.AREA_ID = Extent18.AREA_ID
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_NO = #{supRefNo}
+  </select>
+
+</mapper>
