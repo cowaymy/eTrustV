@@ -21,7 +21,7 @@
   var productCode;
   var asMalfuncResnId;
   var matchMatDefCode = [];
-  var installAccTypeId = 603;
+  var installAccTypeId = 583;
 
   var ddlFilterObj = {};
 

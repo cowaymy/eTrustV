@@ -27,7 +27,7 @@
   var asRslt;
   var ops;
   var matchMatDefCode = [];
-  var installAccTypeId = 602;
+  var installAccTypeId = 582;
   var installAccValues = JSON.parse("${installAccValues}");
   var isSet = 0;
 

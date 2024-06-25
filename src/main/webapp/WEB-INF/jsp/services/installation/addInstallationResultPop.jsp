@@ -19,7 +19,7 @@
  -->
 <script type="text/javaScript">
   var myFileCaches = {};
-  var installAccTypeId = 602;
+  var installAccTypeId = 582;
 
   $(document).ready(function() {
   	var today = new Date();
@@ -31,9 +31,6 @@
 	};
 	$(".j_date").datepicker(pickerOpts);
 
-/* 	$("#ntuFail").attr("disabled", true);
-	$("#addInstallForm #m29").hide();
- */
     var myGridID_view;
     var instChkLst_view;
     createInstallationViewAUIGrid();
@@ -227,13 +224,14 @@
  	   $("#failReasonCode").change(
     	function(){
     		if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
-    		if($("#failReasonCode").val() == 8009 ){
-    			$("#addInstallForm #m29").show();
-    			$("#ntuFail").attr("disabled", false);
-    		}else {
-    			$("#addInstallForm #m29").hide();
-    			$("#ntuFail").attr("disabled", true);
-    		}
+    			if($("#failReasonCode").val() == 8009 ){
+    				$("#addInstallForm #m29").show();
+    				$("#ntuFail").attr("disabled", false);
+    			}else {
+    				$("#addInstallForm #m29").hide();
+    				$("#ntuFail").attr("disabled", true);
+    				$("#ntuFail").val("0");
+    			}
     		}
 
       });
@@ -825,10 +823,10 @@
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
     	if($("#failReasonCode").val() == 8009){
-      		if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
-    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      		if (!($("#ntuFail").val() == "" ) && ($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
+    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
       		}else if ($("#ntuFail").val() == "" || $("#ntuFail").val() < 0 ){
-      			msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      			msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
       		}
     	}
       }

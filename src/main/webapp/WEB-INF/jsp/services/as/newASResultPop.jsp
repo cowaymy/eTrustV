@@ -39,7 +39,7 @@
 	var productCode;
 	var asMalfuncResnId;
 	var matchMatDefCode = [];
-	var installAccTypeId = 602;
+	var installAccTypeId = 582;
 
 	$(document).ready(
 		    function() {

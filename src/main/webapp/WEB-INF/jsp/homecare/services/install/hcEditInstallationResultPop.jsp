@@ -15,7 +15,7 @@ var myFileCaches = {};
 var update = new Array();
 var remove = new Array();
 var fileGroupKey ="";
-var installAccTypeId = 603;
+var installAccTypeId = 583;
 var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(

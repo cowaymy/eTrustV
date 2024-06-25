@@ -11,7 +11,7 @@
 <script type="text/javaScript">
 var serialGubun = "1";
 var myFileCaches = {};
-var installAccTypeId = 603;
+var installAccTypeId = 583;
 
   $(document).ready(function() {
 	  doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');

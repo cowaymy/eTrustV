@@ -12,13 +12,28 @@
 
 <script type="text/javaScript">
 var myFileCaches = {};
-var installAccTypeId = 602;
+var installAccTypeId = 582;
 
   $(document).ready(
     function() {
       var instChkLst_view;
       createInstallationChkViewAUIGrid();
       fn_viewInstallationChkViewSearch();
+
+      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400") {
+          $("#addInstallForm #m28").show();
+          $("#addInstallForm #m29").hide();
+          $("#ntuCom").attr("disabled", false);
+          $("#ntuFail").attr("disabled", true);
+        } else {
+          $("#addInstallForm #m28").hide();
+          $("#addInstallForm #m29").hide();
+          $("#ntuCom").attr("disabled", true);
+          $("#ntuFail").attr("disabled", true);
+          $("#ntuCom").val("0");
+          $("#ntuFail").val("0");
+        }
+
       doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
 
       $("#addInstallForm #installStatus").change(
@@ -40,16 +55,29 @@ var installAccTypeId = 602;
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
 
+            $("#addInstallForm #m29").hide();
+            $("#ntuFail").attr("disabled", true);
+            $("#ntuFail").val("0");
+
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #m17").show();
               $("#addInstallForm #grid_wrap_instChk_view").show();
               $("#addInstallForm #instChklstCheckBox").show();
               $("#addInstallForm #instChklstDesc").show();
+              $("#addInstallForm #m28").show();
+              $("#ntuCom").attr("disabled", false);
+            } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
+            	$("#addInstallForm #m28").show();
+                $("#ntuCom").attr("disabled", false);
             } else {
               $("#addInstallForm #m17").hide();
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
               $("#addInstallForm #instChklstDesc").hide();
+              $("#addInstallForm #m28").hide();
+              $("#ntuCom").attr("disabled", true);
+              $("#ntuCom").val("0");
+
             }
             $("#nextCallDate").val("");
           } else {
@@ -69,6 +97,13 @@ var installAccTypeId = 602;
             $("#addInstallForm #m13").hide();
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
+            $("#addInstallForm #m28").hide();
+            $("#addInstallForm #m29").hide();
+            $("#ntuCom").attr("disabled", true);
+            $("#ntuFail").attr("disabled", true);
+            $("#ntuCom").val("0");
+            $("#ntuFail").val("0");
+
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
@@ -123,6 +158,20 @@ var installAccTypeId = 602;
           $("#addInstallForm #failReasonCode").val("");
           $("#addInstallForm #remark").val("");
         });
+
+      $("#failReasonCode").change(
+    	    	function(){
+    	    		if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+    	    			if($("#failReasonCode").val() == 8009 ){
+    	    				$("#addInstallForm #m29").show();
+    	    				$("#ntuFail").attr("disabled", false);
+    	    			}else {
+    	    				$("#addInstallForm #m29").hide();
+    	    				$("#ntuFail").attr("disabled", true);
+    	    				$("#ntuFail").val("0");
+    	    			}
+    	    		}
+    	      });
 
       var callType = "${callType.typeId}";
 
@@ -296,17 +345,28 @@ var installAccTypeId = 602;
              $("#addInstallForm #m2").show();
              $("#addInstallForm #m4").show();
              $("#addInstallForm #m5").show();
+             $("#addInstallForm #m29").hide();
+             $("#ntuFail").attr("disabled", true);
+             $("#ntuFail").val("0");
 
              if ("${orderInfo.stkCtgryId}" == "54") {
                $("#addInstallForm #m17").show();
                $("#addInstallForm #grid_wrap_instChk_view").show();
                $("#addInstallForm #instChklstCheckBox").show();
                $("#addInstallForm #instChklstDesc").show();
-             } else {
+               $("#addInstallForm #m28").show();
+               $("#ntuCom").attr("disabled", false);
+             } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
+                 $("#addInstallForm #m28").show();
+                 $("#ntuCom").attr("disabled", false);
+             }else {
                $("#addInstallForm #m17").hide();
                $("#addInstallForm #grid_wrap_instChk_view").hide();
                $("#addInstallForm #instChklstCheckBox").hide();
                $("#addInstallForm #instChklstDesc").hide();
+               $("#addInstallForm #m28").hide();
+               $("#ntuCom").attr("disabled", true);
+               $("#ntuCom").val("0");
              }
              $("#nextCallDate").val("");
 
@@ -324,6 +384,10 @@ var installAccTypeId = 602;
              $("#addInstallForm #m12").hide();
              $("#addInstallForm #m13").hide();
              $("#addInstallForm #m14").hide();
+             $("#ntuCom").attr("disabled", true);
+             $("#ntuFail").attr("disabled", true);
+             $("#ntuCom").val("0");
+             $("#ntuFail").val("0");
 
              if ("${orderInfo.stkCtgryId}" == "54") {
                $("#addInstallForm #m17").hide();
@@ -543,6 +607,8 @@ var installAccTypeId = 602;
     $("#addInstallForm #m12").hide();
     $("#addInstallForm #m13").hide();
     $("#addInstallForm #m14").hide();
+    $("#addInstallForm #m28").hide();
+    $("#addInstallForm #m29").hide();
 }
 
   function fn_installProductExchangeSave() {
@@ -755,8 +821,15 @@ var installAccTypeId = 602;
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
       }
 
-	  if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
-    	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+	// NTU Checking for Failed status
+      if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
+    	if($("#failReasonCode").val() == 8009){
+      		if (!($("#ntuFail").val() == "" ) && ($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
+    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
+      		}else if ($("#ntuFail").val() == "" || $("#ntuFail").val() < 0 ){
+      			msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
+      		}
+    	}
       }
 
       if (msg != "") {
@@ -2393,7 +2466,7 @@ var installAccTypeId = 602;
                    <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
             </select></td>
-             <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must"></span></th>
+             <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
            </td>
           </tr>
@@ -2693,7 +2766,7 @@ var installAccTypeId = 602;
             <td>
               <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" />
             </td>
-            <th scope="row"><spring:message code='service.title.ntu'/><span id="m29" class="must"></span></th>
+            <th scope="row"><spring:message code='service.title.ntu'/><span id="m29" class="must">*</span></th>
            <td><input type="text" title="NTU" class="w100p" id="ntuFail" name="ntuFail" placeholder="0.00" maxlength="5" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
            </td>
           </tr>

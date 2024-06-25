@@ -5,7 +5,7 @@
 <script type="text/javaScript">
     var serialGubun = "1";
     var myFileCaches = {};
-    var installAccTypeId = 603;
+    var installAccTypeId = 583;
 
     $(document).ready(function() {
     	var today = new Date();

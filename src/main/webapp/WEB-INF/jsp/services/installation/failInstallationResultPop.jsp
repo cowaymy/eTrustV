@@ -31,6 +31,7 @@ var photo1Name = "";
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
+    var failReasonCode = ${installInfo.c5};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -44,11 +45,13 @@ var photo1Name = "";
       $("#reqsms").prop("checked", true);
     }
 
+    console.log("failReasonCode : " + failReasonCode);
+
     if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
-		if($("#failReasonCode").val() == 8009 ){
+		if(failReasonCode == 8009 ){
 			$("#editInstallForm #m29").show();
 			$("#ntuFail").attr("disabled", false);
-		}else {
+		 }else {
 			$("#editInstallForm #m29").hide();
 			$("#ntuFail").attr("disabled", true);
 		}
@@ -81,7 +84,7 @@ var photo1Name = "";
         console.log(myFileCaches);
     });
 
-    $("#failReasonCode").change(
+     $("#failReasonCode").change(
     	    function(){
     	    	if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
     	    		if($("#failReasonCode").val() == 8009 ){
@@ -503,10 +506,12 @@ function notMandatoryForAP(){
 
 	// NTU Checking for Failed status
 	if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
-    if (!($("#ntuFail").val() == "" ) && !($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
-    	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-      }
-    }
+		if($("#editInstallForm #failReasonCode").val() == 8009){
+    		if (!($("#ntuFail").val() == "" ) && ($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
+    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
+      		}
+    	}
+	}
 
     if (msg != "") {
       Common.alert(msg);

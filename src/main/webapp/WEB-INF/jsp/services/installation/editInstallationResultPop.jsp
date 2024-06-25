@@ -19,7 +19,7 @@ var remove = new Array();
 var photo1ID = 0;
 var photo1Name = "";
 var fileGroupKey ="";
-var installAccTypeId = 602;
+var installAccTypeId = 582;
 var installAccValues = JSON.parse("${installAccValues}");
 
   $(document).ready(function() {
