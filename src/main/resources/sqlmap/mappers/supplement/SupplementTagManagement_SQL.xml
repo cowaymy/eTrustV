@@ -343,4 +343,64 @@
     SELECT FN_GET_DOCNO(#{value}) from dual
   </select>
 
+    <select id="getResponseLst"  parameterType="Map" resultType="egovMap">
+    SELECT
+        Extent4.DEFECT_DESC AS MAIN_DEPT ,
+        Extent5.DEFECT_DESC AS SUB_DEPT ,
+        Extent3.CALL_REM AS REMARK,
+        Extent6.NAME AS TAG_STUS,
+        Extent7.USER_FULL_NAME AS CALL_CRT_USER_ID ,
+        Extent3.CALL_CRT_DT AS CALL_CRT_DT
+
+    FROM SUP0006M Extent1
+        JOIN CCR0006D Extent2   ON Extent2.CUR_SEQ_NO = Extent1.SUP_CUR_SEQNO
+        JOIN CCR0007D Extent3   ON Extent3.CALL_RESULT_ID = Extent2.RESULT_ID
+        LEFT JOIN SYS0100M Extent4   ON Extent4.DEFECT_CODE = Extent3.MAIN_DEPT AND Extent4.DEFECT_TYP = 'ICD'
+        LEFT JOIN SYS0100M Extent5   ON Extent5.DEFECT_CODE = Extent3.SUB_DEPT AND Extent4.DEFECT_TYP = 'ICD'
+        JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent3.CALL_STUS_ID
+        JOIN SYS0047M Extent7    ON Extent7.USER_ID = Extent3.CALL_CRT_USER_ID
+    WHERE  Extent1.SUP_TAG_ORD_ID = #{supRefId}
+    ORDER BY Extent3.CALL_CRT_DT DESC
+  </select>
+
+      <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+      </select>
+
+      <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <select id="getSeqSUP0006M" resultType="java.lang.Integer">
+         SELECT SUP0006M_SUP_TAG_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqCCR0006D" resultType="java.lang.Integer">
+         SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqCCR0007D" resultType="java.lang.Integer">
+         SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
 </mapper>
