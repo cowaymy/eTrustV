@@ -22,7 +22,7 @@ public interface SupplementTagManagementMapper {
 
   EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
-  EgovMap searchOrderBasicInfo(Map<String, Object> params);
+  List<EgovMap> searchOrderBasicInfo(Map<String, Object> params);
 
   EgovMap selectViewBasicInfo(Map<String, Object> params);
 
