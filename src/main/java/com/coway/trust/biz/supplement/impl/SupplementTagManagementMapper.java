@@ -27,4 +27,18 @@ public interface SupplementTagManagementMapper {
   EgovMap selectViewBasicInfo(Map<String, Object> params);
 
   String getDocNo (int value);
+
+  List<EgovMap> getResponseLst( Map<String, Object> params );
+
+  void insertFileDetail(Map<String, Object> flInfo);
+
+  int selectNextFileId();
+
+  int getSeqSUP0006M();
+
+//  int getSeqCCR0006D();
+
+  int getSeqCCR0007D();
+
+  void insertSupplementTagMaster(Map<String, Object> params);
 }
