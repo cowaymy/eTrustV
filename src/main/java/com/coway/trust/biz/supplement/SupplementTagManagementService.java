@@ -24,7 +24,7 @@ public interface SupplementTagManagementService {
 
 	EgovMap selectOrderBasicInfo( Map<String, Object> params ) throws Exception;
 
-	EgovMap searchOrderBasicInfo(Map<String, Object> params);
+	List<EgovMap> searchOrderBasicInfo(Map<String, Object> params);
 
 	EgovMap selectViewBasicInfo( Map<String, Object> params ) throws Exception;
 
