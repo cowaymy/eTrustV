@@ -1251,6 +1251,8 @@
                    </li>
                </ul>
             </td>
+            <th>Pre-Installation Remarks:</th>
+            <td>${installResult.preinstallationAddRemark}</td>
      </tr>
      <tr>
       <th scope="row"><spring:message
