@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.FileGroupVO;
@@ -33,6 +32,12 @@ public class SupplementTagManagementImpl
 
   @Resource(name = "supplementTagManagementMapper")
   private SupplementTagManagementMapper supplementTagManagementMapper;
+
+  @Autowired
+  private FileService fileService;
+
+  @Autowired
+  private FileMapper fileMapper;
 
   @Override
   public List<EgovMap> selectTagStus() {
@@ -72,7 +77,7 @@ public class SupplementTagManagementImpl
   }
 
   @Override
-  public EgovMap searchOrderBasicInfo( Map<String, Object> params ) {
+  public List<EgovMap> searchOrderBasicInfo( Map<String, Object> params ) {
     return supplementTagManagementMapper.searchOrderBasicInfo( params );
   }
 
@@ -80,14 +85,6 @@ public class SupplementTagManagementImpl
   public EgovMap selectViewBasicInfo( Map<String, Object> params ) {
     return supplementTagManagementMapper.selectViewBasicInfo( params );
   }
-
-  @Autowired
-  private FileService fileService;
-
-  @Autowired
-  private FileMapper fileMapper;
-
-
 
   /* THIS FUNCTION TO GENERATE TAG NUMBER */
   private String getTagTokenNo() {
