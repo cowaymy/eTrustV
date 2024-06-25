@@ -63,7 +63,7 @@
         columnLayout, "", delRcdGridPros);
   }
 
-  var supRefId = ${orderInfo.supRefId};
+  var supRefId = '${orderInfo.supRefId}';
   var param = {
     supRefId : supRefId
   };
