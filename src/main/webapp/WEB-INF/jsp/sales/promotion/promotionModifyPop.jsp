@@ -521,9 +521,9 @@
         $('#exTrade').change(function() {
         	if($('#exTrade').val() == "1"){
                 $('.extradeMonth').removeAttr("hidden");
-                /* $('#extradeMonthFrom').prop("disabled", false);
+                $('#extradeMonthFrom').prop("disabled", false);
                 $('#extradeMonthTo').prop("disabled", false);
-                $('#extradeAppType').prop("disabled", false); */
+                $('#extradeAppType').prop("disabled", false);
         	}
         	else{
                 $('.extradeMonth').attr("hidden", true);
