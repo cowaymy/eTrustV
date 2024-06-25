@@ -12,8 +12,8 @@
                Extent5.NAME AS TAG_STATUS,
                Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
                Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
-               UPPER(Extent6.DEFECT_DESC || '-' || Extent6.DEFECT_DESC) AS MAIN_TOPIC,
-               UPPER(Extent7.DEFECT_DESC || '-' || Extent7.DEFECT_DESC) AS SUB_TOPIC,
+               UPPER(Extent6.DEFECT_CODE || '-' || Extent6.DEFECT_DESC) AS MAIN_TOPIC,
+               UPPER(Extent7.DEFECT_CODE || '-' || Extent7.DEFECT_DESC) AS SUB_TOPIC,
                UPPER(Extent8.CODE || '-' || Extent8.CODE_NAME) AS INCHG_DEPT,
                UPPER(Extent9.CODE || '-' || Extent9.CODE_NAME) AS SUB_DEPT
     FROM SUP0001M Extent1
