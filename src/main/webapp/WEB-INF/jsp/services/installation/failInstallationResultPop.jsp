@@ -93,6 +93,7 @@ var photo1Name = "";
     	    		}else {
     	    			$("#editInstallForm #m29").hide();
     	    			$("#ntuFail").attr("disabled", true);
+    	    			$("#ntuFail").val("0");
     	    		}
     	    	}
     });
