@@ -1,22 +1,17 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-  var purchaseGridID;
-  var serialTempGridID;
-  var memGridID;
-  var paymentGridID;
-
-  function setInputFile2(){//인풋파일 세팅하기
-	    $(".auto_file").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
-	}
-	setInputFile2();
-
   $(document).ready(function() {
     if ('${orderInfo}' != "" && '${orderInfo}' != null) {
       $("#basicForm").show();
       $("#inputForm").show();
+      $("#btnLedger").show();
       $('#entry_supRefNo').val('${orderInfo.supRefNo}');
     }
+
+    $('#btnLedger').click(function() {
+      Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+    });
 
     setTimeout(function() {
       fn_descCheck(0)
@@ -76,11 +71,20 @@
     });
   }
 
+  function fn_goOrdSearch(){
+    Common.popupDiv('/supplement/searchOrdNoPop.do', null, null, true, '_searchDiv');
+  }
+
   function fn_removeFile(name){
     if(name == "attch") {
        $("#attch").val("");
        $('#attch').change();
     }
+  }
+
+  function fn_callbackOrdSearchFunciton(ordNo) {
+    $("#entry_supRefNo").val(ordNo);
+    fn_checkOrderNo();
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -88,7 +92,7 @@
     <h1>Tag Management - New Ticket</h1>
     <ul class="right_opt">
       <li>
-        <p class="btn_blue2">
+        <p class="btn_blue2" style="display:none" id="btnLedger">
           <a id="btnLedger" href="#"><spring:message code="sal.btn.ledger" /></a>
         </p>
       </li>
@@ -100,6 +104,9 @@
     </ul>
   </header>
   <section class="pop_body">
+    <form id="frmLedger" name="frmLedger" action="#" method="post">
+      <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
+    </form>
     </br>
     <table class="type1">
       <caption>table</caption>
@@ -116,7 +123,7 @@
               <a href="#" onClick="fn_checkOrderNo()"><spring:message code='pay.combo.confirm' /></a>
             </p>
             <p class="btn_sky">
-              <a href="#" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search' /></a>
+              <a href="#" onclick="fn_goOrdSearch()"><spring:message code='sys.btn.search' /></a>
             </p>
           </td>
         </tr>
