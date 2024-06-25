@@ -322,7 +322,6 @@
 		const indoorStkCode = Number("${installationInfo.stkCode}").toString(36).toUpperCase();
 		const outdoorStkCode = Number("${outdoorStkCode}").toString(36).toUpperCase();
 
-     /*  // Testing purpose for serial number contains special character
          const serial = document.getElementById("txtIndoorBarcode").value;
         const serial2 = document.getElementById("txtOutdoorBarcode").value;
 
@@ -335,12 +334,9 @@
             document.getElementById("MsgAlert").innerHTML = "Outdoor Serial Number is invalid.";
             return false;
         }
-       */
 
-//          const serial = $("#serialNo").text();
-//          const serial2 = $("#serialNo2").text();
-         const serial = "4ABLH5AC19C1700095";
-         const serial2 = "4ABNH5AC19C1700098";
+          const serial = $("#serialNo").text();
+          const serial2 = $("#serialNo2").text();
 
          debugger;
 
