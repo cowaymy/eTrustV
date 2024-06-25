@@ -481,6 +481,10 @@ function notMandatoryForAP(){
       }
     }
 
+    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo"))){
+        msg += "* No Special Character Allowed for Serial No </br>";
+    }
+
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
  // PSI CHECKING
 
@@ -680,6 +684,11 @@ function notMandatoryForAP(){
       else{
     	  $("#installdt").attr("disabled", false);
       }
+  }
+
+  function fn_AlphanumericRegexCheck(value){
+	  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
+	  return strRegex.test(value);
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">

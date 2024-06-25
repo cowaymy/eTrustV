@@ -318,7 +318,6 @@
               }
               console.log(myFileCaches);
             });
-
     });
 
     function onchangeStatus(){
@@ -371,6 +370,14 @@
 	        if ($("#addInstallForm #serialNo").val().trim().length < 18) {
 	          msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
 	        }
+	      }
+
+	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo"))){
+	          msg += "* No Special Character Allowed for Serial No </br>";
+	      }
+
+	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #frmSerialNo"))){
+	          msg += "* No Special Character Allowed for Frame Serial No </br>";
 	      }
 
 	      if ($("#frmSerialNo").hasClass("readonly") == false
@@ -736,6 +743,10 @@
 		    }
 		  }
 
+	  function fn_AlphanumericRegexCheck(value){
+		  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
+		  return strRegex.test(value);
+	  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->

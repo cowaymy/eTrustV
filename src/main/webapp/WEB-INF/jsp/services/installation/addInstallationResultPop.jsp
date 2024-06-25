@@ -603,6 +603,10 @@
         }
       }
 
+      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo"))){
+          msg += "* No Special Character Allowed for Serial No </br>";
+      }
+
       if ( $("#waterSrcType").val() == "") {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Water source type' htmlEscape='false'/> </br>";
         }
@@ -1754,6 +1758,10 @@
 		    }
 		  }
 
+	  function fn_AlphanumericRegexCheck(value){
+		  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
+		  return strRegex.test(value);
+	  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->

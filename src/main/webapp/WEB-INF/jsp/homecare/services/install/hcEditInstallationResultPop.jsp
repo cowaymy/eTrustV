@@ -370,6 +370,14 @@ var installAccValues = JSON.parse("${installAccValues}");
           }
       }
 
+    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo"))){
+        msg += "* No Special Character Allowed for Serial No </br>";
+    }
+
+    if(!fn_AlphanumericRegexCheck($("#editInstallForm #frmSerialNo"))){
+        msg += "* No Special Character Allowed for Frame Serial No </br>";
+    }
+
     //validate aircon serial
     if($("#ordCtgryCd").val() == "ACI"){
         var stockCode = "";
@@ -539,6 +547,10 @@ function fn_InstallAcc_CheckedChanged(_obj) {
 	    }
 	  }
 
+function fn_AlphanumericRegexCheck(value){
+	  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
+	  return strRegex.test(value);
+}
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
