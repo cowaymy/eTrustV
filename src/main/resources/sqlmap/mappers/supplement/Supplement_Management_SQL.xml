@@ -773,18 +773,18 @@
                E.TEL_O AS CNTC_OFF,
                E.TEL_R AS CNTC_HM,
                E.EMAIL AS CNTC_EMAIL,
-               C.ADDR_DTL AS DEL_ADDR1,
-               C.STREET AS DEL_ADDR2,
+               UPPER(C.ADDR_DTL) AS DEL_ADDR1,
+               UPPER(C.STREET) AS DEL_ADDR2,
                D.POSTCODE AS DEL_POSTCDE,
-               D.CITY AS DEL_CITY,
-               D.STATE AS DEL_STATE,
-               D.COUNTRY AS DEL_CNTY,
-               F.ADDR_DTL AS BILL_ADDR1,
-               F.STREET AS BILL_ADDR2,
+               UPPER(D.CITY) AS DEL_CITY,
+               UPPER(D.STATE) AS DEL_STATE,
+               UPPER(D.COUNTRY) AS DEL_CNTY,
+               UPPER(F.ADDR_DTL) AS BILL_ADDR1,
+               UPPER(F.STREET) AS BILL_ADDR2,
                G.POSTCODE AS BILL_POSTCDE,
-               G.CITY AS BILL_CITY,
-               G.STATE AS BILL_STATE,
-               G.COUNTRY AS BILL_CNTY
+               UPPER(G.CITY) AS BILL_CITY,
+               UPPER(G.STATE) AS BILL_STATE,
+               UPPER(G.COUNTRY) AS BILL_CNTY
     FROM SUP0001M A
     JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
     JOIN SAL0023D C ON A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
