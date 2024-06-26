@@ -685,6 +685,9 @@
     });
   }
 
+  function fn_custDelInfo() {
+    Common.popupDiv("/supplement/supplementCustDelInfo.do",'',null, true, '_insDiv');
+  }
 </script>
 
 <form id="rptForm">
@@ -901,6 +904,13 @@
           </dt>
           <dd>
             <ul class="btns">
+              <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                <li>
+                  <p class="link_btn type2">
+                    <a href="#" onclick="fn_custDelInfo()"><spring:message code='supplement.btn.custDelInfo'/></a>
+                  </p>
+                </li>
+              </c:if>
             </ul>
             <p class="hide_btn">
               <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a>
