@@ -481,7 +481,7 @@ function notMandatoryForAP(){
       }
     }
 
-    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo"))){
+    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo").val())){
         msg += "* No Special Character Allowed for Serial No </br>";
     }
 

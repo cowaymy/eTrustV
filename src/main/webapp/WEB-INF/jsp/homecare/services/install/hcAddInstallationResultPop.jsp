@@ -372,14 +372,13 @@
 	        }
 	      }
 
-	      console.log(fn_AlphanumericRegexCheck($("#addInstallForm #serialNo")));
-// 	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo"))){
-// 	          msg += "* No Special Character Allowed for Serial No </br>";
-// 	      }
+	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo").val())){
+	          msg += "* No Special Character Allowed for Serial No </br>";
+	      }
 
-// 	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #frmSerialNo"))){
-// 	          msg += "* No Special Character Allowed for Frame Serial No </br>";
-// 	      }
+	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #frmSerialNo").val())){
+	          msg += "* No Special Character Allowed for Frame Serial No </br>";
+	      }
 
 	      if ($("#frmSerialNo").hasClass("readonly") == false
 	    		&& ($("#addInstallForm #frmSerialNo").val().trim() == '' || ("#addInstallForm #frmSerialNo") == null)) {
@@ -745,7 +744,7 @@
 		  }
 
 	  function fn_AlphanumericRegexCheck(value){
-		  var strRegex = new RegExp("/[^A-Za-z0-9]/gi");
+		  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
 		  return strRegex.test(value);
 	  }
 </script>
