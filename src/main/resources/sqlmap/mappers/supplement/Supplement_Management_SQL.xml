@@ -743,20 +743,59 @@
     )
   </insert>
 
-    <select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
-       <![CDATA[
-          {
-              call SP_GEN_SUPP_ORD_LDGR ( #{supRefId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
-        }
-        ]]>
-    </select>
+  <select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
+    <![CDATA[
+      {
+        CALL SP_GEN_SUPP_ORD_LDGR ( #{supRefId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
+       }
+    ]]>
+  </select>
 
-    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
-        <![CDATA[
-        {
-              call SP_GET_SUPP_ORD_OTSTND_INFO ( #{supRefId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
-        }
-        ]]>
-    </select>
+  <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+    <![CDATA[
+      {
+        CALL SP_GET_SUPP_ORD_OTSTND_INFO ( #{supRefId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
+      }
+    ]]>
+  </select>
+
+  <select id="getCustOrdDelInfo" parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               TO_CHAR(A.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DT,
+               A.SUP_REF_PCL_TRKNO AS SUP_REF_PCL_TRKNO,
+               H.MEM_CODE AS SAL_PERS_CDE,
+               H.NAME AS SAL_PERS_NM,
+               I.CODE AS POST_BR,
+               UPPER(B.NAME) AS CUST_NM,
+               UPPER(E.NAME) AS CNTC_NM,
+               E.TEL_M1 AS CNTC_MB,
+               E.TEL_O AS CNTC_OFF,
+               E.TEL_R AS CNTC_HM,
+               E.EMAIL AS CNTC_EMAIL,
+               C.ADDR_DTL AS DEL_ADDR1,
+               C.STREET AS DEL_ADDR2,
+               D.POSTCODE AS DEL_POSTCDE,
+               D.CITY AS DEL_CITY,
+               D.STATE AS DEL_STATE,
+               D.COUNTRY AS DEL_CNTY,
+               F.ADDR_DTL AS BILL_ADDR1,
+               F.STREET AS BILL_ADDR2,
+               G.POSTCODE AS BILL_POSTCDE,
+               G.CITY AS BILL_CITY,
+               G.STATE AS BILL_STATE,
+               G.COUNTRY AS BILL_CNTY
+    FROM SUP0001M A
+    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+    JOIN SAL0023D C ON A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
+    JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
+    JOIN SAL0027D E ON A.CUST_CNTC_ID = E.CUST_CNTC_ID
+    JOIN SAL0023D F ON A.CUST_BILL_ADDR_ID = F.CUST_ADD_ID
+    JOIN SYS0064M G ON F.AREA_ID = G.AREA_ID
+    JOIN ORG0001D H ON A.MEM_ID = H.MEM_ID
+    JOIN SYS0005M I ON A.MEM_BRNCH_ID = I.BRNCH_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_DEL_STUS = '3'
+  </select>
 
 </mapper>
