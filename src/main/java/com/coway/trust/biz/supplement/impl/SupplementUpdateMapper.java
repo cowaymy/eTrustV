@@ -47,13 +47,15 @@ public interface SupplementUpdateMapper {
 
   void revertStgStus( Map<String, Object> params );
 
-  List<EgovMap> selectDocumentList(Map<String, Object> params); // Document Result
+  List<EgovMap> selectDocumentList( Map<String, Object> params );
 
-  List<EgovMap> selectPaymentMasterList(Map<String, Object> params); // Payment Listing
+  List<EgovMap> selectPaymentMasterList( Map<String, Object> params );
 
-  EgovMap selectOrderBasicLedgerInfo(Map<String, Object> params);
+  EgovMap selectOrderBasicLedgerInfo( Map<String, Object> params );
 
-  List<EgovMap> getOderLdgr(Map<String, Object> params);
+  List<EgovMap> getOderLdgr( Map<String, Object> params );
 
-  List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+  List<EgovMap> getOderOutsInfo( Map<String, Object> params );
+
+  List<EgovMap> getCustOrdDelInfo( Map<String, Object> params );
 }
