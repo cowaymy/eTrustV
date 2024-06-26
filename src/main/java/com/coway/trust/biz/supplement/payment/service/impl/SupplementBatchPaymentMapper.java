@@ -22,121 +22,187 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("supplementBatchPaymentMapper")
 public interface SupplementBatchPaymentMapper {
-	/**
-	 * selectBatchList(Master Grid)
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectBatchList(Map<String, Object> params);
+  /**
+   * selectBatchList(Master Grid)
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> selectBatchList( Map<String, Object> params );
 
-	/**
-	 * selectBatchPaymentView
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectBatchPaymentView(Map<String, Object> params);
+  /**
+   * selectBatchPaymentView
+   *
+   * @param params
+   * @return
+   */
+  EgovMap selectBatchPaymentView( Map<String, Object> params );
 
-	/**
-	 * selectBatchPaymentDetList
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectBatchPaymentDetList(Map<String, Object> params);
+  /**
+   * selectBatchPaymentDetList
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> selectBatchPaymentDetList( Map<String, Object> params );
 
-	/**
-	 * selectTotalValidAmt
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectTotalValidAmt(Map<String, Object> params);
+  /**
+   * selectTotalValidAmt
+   *
+   * @param params
+   * @return
+   */
+  EgovMap selectTotalValidAmt( Map<String, Object> params );
 
+  /**
+   * updRemoveItem
+   *
+   * @param params
+   * @return
+   */
+  int updRemoveItem( Map<String, Object> params );
 
-	/**
-	 * updRemoveItem
-	 * @param params
-	 * @return
-	 */
-	int updRemoveItem(Map<String, Object> params);
+  /**
+   * saveConfirmBatch
+   *
+   * @param params
+   * @return
+   */
+  int saveConfirmBatch( Map<String, Object> params );
 
-	/**
-	 * saveConfirmBatch
-	 * @param params
-	 * @return
-	 */
-	int saveConfirmBatch(Map<String, Object> params);
+  /**
+   * selectBatchPaymentMs
+   *
+   * @param params
+   * @return
+   */
+  EgovMap selectBatchPaymentMs( Map<String, Object> params );
 
+  /**
+   * selectBatchPaymentDs
+   *
+   * @param params
+   * @return
+   */
+  EgovMap selectBatchPaymentDs( Map<String, Object> params );
 
-	/**
-	 * selectBatchPaymentMs
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectBatchPaymentMs(Map<String, Object> params);
+  /**
+   * saveDeactivateBatch
+   *
+   * @param params
+   * @return
+   */
+  int saveDeactivateBatch( Map<String, Object> params );
 
-	/**
-	 * selectBatchPaymentDs
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectBatchPaymentDs(Map<String, Object> params);
+  /**
+   * getPAY0360MSEQ
+   *
+   * @param params
+   * @return
+   */
+  int getPAY0360MSEQ();
 
-	/**
-	 * saveDeactivateBatch
-	 * @param params
-	 * @return
-	 */
-	int saveDeactivateBatch(Map<String, Object> params);
+  /**
+   * getPAY0359DSEQ
+   *
+   * @param params
+   * @return
+   */
+  int getPAY0359DSEQ();
 
-	/**
-	 * getPAY0360MSEQ
-	 * @param params
-	 * @return
-	 */
-	int getPAY0360MSEQ();
+  /**
+   * saveBatchPayMaster
+   *
+   * @param params
+   * @return
+   */
+  int saveBatchPayMaster( Map<String, Object> params );
 
-	/**
-	 * getPAY0359DSEQ
-	 * @param params
-	 * @return
-	 */
-	int getPAY0359DSEQ();
+  /**
+   * saveBatchPayDetailList
+   *
+   * @param params
+   * @return
+   */
+  int saveBatchPayDetailList( Map<String, Object> params );
 
-	/**
-	 * saveBatchPayMaster
-	 * @param params
-	 * @return
-	 */
-	int saveBatchPayMaster(Map<String, Object> params);
+  /**
+   * callCnvrBatchPay
+   *
+   * @param params
+   * @return
+   */
+  int callCnvrSupBatchPay( Map<String, Object> params );
 
-	/**
-	 * saveBatchPayDetailList
-	 * @param params
-	 * @return
-	 */
-	int saveBatchPayDetailList(Map<String, Object> params);
+  /**
+   * callBatchPayVerifyDet
+   *
+   * @param params
+   * @return
+   */
+  int callSupBatchPayVerifyDet( Map<String, Object> params );
 
-	/**
-	 * callCnvrBatchPay
-	 * @param params
-	 * @return
-	 */
-	int callCnvrSupBatchPay(Map<String, Object> params);
+  /**
+   * selectBatchPayCardModeId
+   *
+   * @param params
+   * @return
+   */
+  String selectBatchPayCardModeId( String cardModeCode );
 
-	/**
-	 * callBatchPayVerifyDet
-	 * @param params
-	 * @return
-	 */
-	int callSupBatchPayVerifyDet(Map<String, Object> params);
+  /**
+   * checkIfIsEGHLRecord
+   *
+   * @param params
+   * @return
+   */
+  int checkIfIsEGHLRecord( Map<String, Object> params );
 
-	String selectBatchPayCardModeId(String cardModeCode);
+  /**
+   * removeEGHLBatchOrderRecord
+   *
+   * @param params
+   * @return
+   */
+  int removeEGHLBatchOrderRecord( Map<String, Object> params );
 
-  int checkIfIsEGHLRecord(Map<String, Object> params);
+  /**
+   * selectSupBatchPaymentDtl
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> selectSupBatchPaymentDtl( Map<String, Object> params );
 
-	int removeEGHLBatchOrderRecord(Map<String, Object> params);
+  /**
+   * updSupplementOrdStage
+   *
+   * @param params
+   * @return
+   */
+  void updSupplementOrdStage( Map<String, Object> params );
 
-	List<EgovMap> selectSupBatchPaymentDtl(Map<String, Object> params);
+  /**
+   * getPaymentMode
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> getPaymentMode();
 
-	void updSupplementOrdStage(Map<String, Object> params);
+  /**
+   * getPaymentMode
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> getPaymentBatStatus();
 
+  /**
+   * getPaymentMode
+   *
+   * @param params
+   * @return
+   */
+  List<EgovMap> getPaymentBatConfirmtStatus();
 }
