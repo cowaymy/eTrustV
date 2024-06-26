@@ -19,22 +19,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.coway.trust.biz.supplement.SupplementUpdateService;
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
-import com.coway.trust.biz.sales.pos.PosService;
-import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.supplement.impl.SupplementUpdateMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.sales.SalesConstants;
-import com.coway.trust.biz.sales.pos.impl.PosServiceImpl;
-import com.coway.trust.biz.sales.pos.impl.PosStockMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -43,12 +35,7 @@ import com.coway.trust.cmmn.model.EmailVO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import com.coway.trust.web.common.ReportController.ViewType;
-import com.coway.trust.web.common.ReportController;
-import com.coway.trust.web.common.visualcut.ReportBatchController;
-import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.common.type.EmailTemplateType;
-import com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -57,32 +44,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
-import static com.coway.trust.AppConstants.EMAIL_TEXT;
-import static com.coway.trust.AppConstants.EMAIL_TO;
-import static com.coway.trust.AppConstants.MSG_NECESSARY;
-import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
-import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
-import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
-import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
-
 @Service("supplementUpdateService")
 public class SupplementUpdateServiceImpl
   extends EgovAbstractServiceImpl
   implements SupplementUpdateService {
   private static final Logger LOGGER = LoggerFactory.getLogger( SupplementUpdateServiceImpl.class );
 
-  @Resource(name = "posMapper")
-  private PosMapper posMapper;
-
-  @Resource(name = "posStockMapper")
-  private PosStockMapper posStockMapper;
-
   @Resource(name = "supplementUpdateMapper")
   private SupplementUpdateMapper supplementUpdateMapper;
-
-  @Autowired
-  private AdaptorService adaptorService;
 
   @Resource(name = "commonService")
   private CommonService commonService;
@@ -97,14 +66,12 @@ public class SupplementUpdateServiceImpl
   private String from;
 
   @Override
-  public List<EgovMap> selectPosJsonList( Map<String, Object> params )
-    throws Exception {
+  public List<EgovMap> selectPosJsonList( Map<String, Object> params ) throws Exception {
     return supplementUpdateMapper.selectPosJsonList( params );
   }
 
   @Override
-  public List<EgovMap> selectSupplementList( Map<String, Object> params )
-    throws Exception {
+  public List<EgovMap> selectSupplementList( Map<String, Object> params ) throws Exception {
     return supplementUpdateMapper.selectSupplementList( params );
   }
 
@@ -170,24 +137,26 @@ public class SupplementUpdateServiceImpl
     return supplementUpdateMapper.selectOrderBasicLedgerInfo( params );
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public List<EgovMap> getOderLdgr( Map<String, Object> params ) {
     supplementUpdateMapper.getOderLdgr( params );
     return (List<EgovMap>) params.get( "p1" );
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public List<EgovMap> getOderOutsInfo( Map<String, Object> params ) {
     supplementUpdateMapper.getOderOutsInfo( params );
     return (List<EgovMap>) params.get( "p1" );
   }
 
-  public Map<String, Object> updateRefStgStatus( Map<String, Object> params )
-    throws Exception {
+  public Map<String, Object> updateRefStgStatus( Map<String, Object> params ) throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     Map<String, Object> stoEntry = new HashMap<String, Object>();
     try {
-      int result = supplementUpdateMapper.updateRefStgStatus( params );
+      // int result = supplementUpdateMapper.updateRefStgStatus( params );
+      supplementUpdateMapper.updateRefStgStatus( params );
       EgovMap stoSup = supplementUpdateMapper.getStoSup( params );
       stoEntry.put( "custName", params.get( "custName" ) );
       stoEntry.put( "supRefId", params.get( "supRefId" ) );
@@ -221,8 +190,7 @@ public class SupplementUpdateServiceImpl
 
   @SuppressWarnings("unchecked")
   @Override
-  public EgovMap updOrdDelStatGdex( Map<String, Object> params )
-    throws IOException, JSONException, ParseException {
+  public EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException {
     if ( CommonUtils.nvl( params.get( "ords" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
@@ -273,28 +241,25 @@ public class SupplementUpdateServiceImpl
       this.insertDelGdexListing( extractedValueMap );
     }
     EgovMap message = new EgovMap();
-    message.put( "message",
-                 String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success, fail ) );
+    message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success, fail ) );
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public EgovMap updOrdDelStatDhl( Map<String, Object> params )
-    throws IOException, JSONException, ParseException {
+  public EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException {
     if ( CommonUtils.nvl( params.get( "ordNo" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
     if ( CommonUtils.nvl( params.get( "consNo" ) ).equals( "" ) ) {
-      throw new ApplicationException( AppConstants.FAIL,
-                                      "NO SHIPMENT NO. SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
+      throw new ApplicationException( AppConstants.FAIL, "NO SHIPMENT NO. SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
 
     // LOOP SELECTED ORDERS
     List<Map<String, String>> ordsList = (List<Map<String, String>>) params.get( "ordNo" );
     List<String> respCountList = new ArrayList<>();
     int total = ordsList.size();
-    int fail = 0;
+    // int fail = 0;
     int success = 0;
 
     // CALL DHL GET DELIVERY STATUS AND DATE.
@@ -337,7 +302,8 @@ public class SupplementUpdateServiceImpl
           dataValueMap.put( "latestConsignmentNoteDate", null );
           dataValueMap.put( "latestConsignmentNoteLocation", null );
         }
-        int count = supplementUpdateMapper.updOrdDelDhlStat( dataValueMap );
+        // int count = supplementUpdateMapper.updOrdDelDhlStat( dataValueMap );
+        supplementUpdateMapper.updOrdDelDhlStat( dataValueMap );
         // INSERT DELIVERY LISTIN DETAIL HERE
         this.insertDelDhlListing( dataValueMap );
 
@@ -366,9 +332,7 @@ public class SupplementUpdateServiceImpl
     return message;
   }
 
-  @SuppressWarnings("null")
-  public void insertDelGdexListing( Map<String, Object> params )
-    throws JSONException {
+  public void insertDelGdexListing( Map<String, Object> params ) throws JSONException {
     if ( params.get( "cnDetailStatusList" ) == null ) {
       // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
       return;
@@ -406,9 +370,7 @@ public class SupplementUpdateServiceImpl
     }
   }
 
-  @SuppressWarnings("null")
-  public void insertDelDhlListing( Map<String, Object> params )
-    throws JSONException {
+  public void insertDelDhlListing( Map<String, Object> params ) throws JSONException {
     if ( params.get( "deliveryHist" ) == null ) {
       // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
       return;
@@ -455,14 +417,12 @@ public class SupplementUpdateServiceImpl
     return (EgovMap) supplementUpdateMapper.SP_STO_PRE_SUPP( params );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void sendEmail( Map<String, Object> params ) {
     EmailVO email = new EmailVO();
     String emailTitle = "";
     String content = "";
 
-    LOGGER.info( "############################ sendEmail - params: {}", params );
     List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
 
     if ( CommonUtils.nvl( params.get( "emailType" ) ) == "1" ) {
@@ -502,28 +462,28 @@ public class SupplementUpdateServiceImpl
     }
     email.setText( content );
 
-    LOGGER.info( "[END] emailTitle: " + emailTitle + " " );
-    LOGGER.info( "[END] content " + content + " " );
-    LOGGER.info( "[END] Number of EMAIL SENT...: " + emailNo.size() + " " );
+    // LOGGER.info( "[END] emailTitle: " + emailTitle + " " );
+    // LOGGER.info( "[END] content " + content + " " );
+    // LOGGER.info( "[END] Number of EMAIL SENT...: " + emailNo.size() + " " );
 
     if ( emailNo.size() > 0 ) {
       email.setTo( emailNo );
       email.setHtml( true );
       email.setSubject( emailTitle );
       email.setHasInlineImage( true );
-      boolean isResult = false;
+      //boolean isResult = false;
       //isResult = adaptorService.sendEmail(email, false, null, null);
-      isResult = this.sendEmail( email, false, null, null );
+      //isResult = this.sendEmail( email, false, null, null );
+      this.sendEmail( email, false, null, null );
     }
   }
 
-  private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType,
-                             Map<String, Object> params ) {
+  private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params ) {
     boolean isSuccess = true;
     try {
       MimeMessage message = mailSender.createMimeMessage();
       boolean hasFile = email.getFiles().size() == 0 ? false : true;
-      boolean hasInlineImage = email.getHasInlineImage(); //for attaching image in HTML inline
+      boolean hasInlineImage = email.getHasInlineImage();
       boolean isMultiPart = hasFile || hasInlineImage;
       MimeMessageHelper messageHelper = new MimeMessageHelper( message, isMultiPart, AppConstants.DEFAULT_CHARSET );
       messageHelper.setFrom( from );
@@ -537,8 +497,7 @@ public class SupplementUpdateServiceImpl
       }
       if ( isMultiPart && email.getHasInlineImage() ) {
         try {
-          messageHelper.addInline( "coway_header",
-                                   new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
+          messageHelper.addInline( "coway_header", new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
         }
         catch ( Exception e ) {
           LOGGER.error( e.toString() );
@@ -569,7 +528,12 @@ public class SupplementUpdateServiceImpl
   }
 
   private String getMailTextByTemplate( EmailTemplateType templateType, Map<String, Object> params ) {
-    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(),
-                                                        AppConstants.DEFAULT_CHARSET, params );
+    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(), AppConstants.DEFAULT_CHARSET, params );
   }
+
+  @Override
+  public List<EgovMap> getCustOrdDelInfo( Map<String, Object> params ) {
+    return supplementUpdateMapper.getCustOrdDelInfo( params );
+  }
+
 }
