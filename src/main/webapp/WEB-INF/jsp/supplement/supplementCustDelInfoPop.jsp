@@ -183,7 +183,13 @@ $(document).ready(function() {
   }
 
   function fn_excelDown() {
-    GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Customer Delivery Information");
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    const date = year + month + day;
+    GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Customer Delivery Information-" + date);
   }
 
   /*$.fn.clearForm = function() {
