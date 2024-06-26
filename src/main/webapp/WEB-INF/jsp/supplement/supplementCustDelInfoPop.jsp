@@ -142,7 +142,7 @@ $(document).ready(function() {
                                               headerText : '<spring:message code="sal.text.billingAddress" /> 2',
                                               width : '25%'
                                           }, {
-                                              dataField : "billPostCde",
+                                              dataField : "billPostcde",
                                               headerText : '<spring:message code="sys.title.post.code" />',
                                               width : '15%'
                                           }, {
