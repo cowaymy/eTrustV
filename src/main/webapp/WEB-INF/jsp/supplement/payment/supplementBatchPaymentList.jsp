@@ -60,6 +60,27 @@
       $("#batchStatus").multipleSelect("setSelects", [ 1 ]);
 
       $('#uploadfile').on('change', function(evt) {
+        var fileInput = this;
+        var file = fileInput.files[0];
+
+        if (!file) {
+            var msgLabel = "<spring:message code='sal.text.attachment'/>"
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
+            return;
+        }
+
+        var fileType = file.type;
+        var fileName = file.name;
+
+        var isCSV = fileName.endsWith('.csv');
+
+        if (!isCSV) {
+          Common.alert("<spring:message code='supplement.alert.supplementBatchUploadCsv' />");
+          $("#uploadForm")[0].reset();
+          AUIGrid.clearGridData(myUploadGridID);
+          return;
+        }
+
         if (!checkHTML5Brower()) {
           commitFormSubmit();
         } else {
@@ -662,6 +683,13 @@
       return;
     }
 
+    if (FormUtil.checkReqValue($("#uploadfile"))) {
+      msgLabel = "<spring:message code='sal.text.attachment'/>"
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
+      return;
+    }
+
+
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
     formData.append("payModeId", payModeId);
 
@@ -918,29 +946,44 @@
             </td>
             <th scope="row"><spring:message code='sal.text.payMode' /></th>
             <td>
-              <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
+              <!-- <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
                 <option value="105">Cash (CSH)</option>
                 <option value="106">Cheque (CHQ)</option>
                 <option value="108">Online Payment (ONL)</option>
                 <option value="107">Credit Card (CRC)</option>
+              </select> -->
+              <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
+                <c:forEach var="list" items="${paymentMode}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
               </select>
             </td>
             <th scope="row"><spring:message code='supplement.text.pmtBatStat' /></th>
             <td>
-              <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
+              <!-- <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
                 <option value="1">Active</option>
                 <option value="4">Completed</option>
                 <option value="8">Inactive</option>
+              </select> -->
+              <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
+                <c:forEach var="list" items="${paymentBatchStatus}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
               </select>
             </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='supplement.text.pmtConfirmStat' /></th>
             <td>
-              <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
+              <!-- <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
                 <option value="44">Pending</option>
                 <option value="77">Confirm</option>
                 <option value="8">Inactive</option>
+              </select> -->
+              <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
+                <c:forEach var="list" items="${paymentBatchConfirmationStatus}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
               </select>
             </td>
             <th scope="row"><spring:message code='supplement.text.pmtBatUploadBy' /></th>
@@ -1293,24 +1336,35 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code='sal.text.payMode' /></th>
+            <th scope="row"><spring:message code='sal.text.payMode' /><span class="must">*</span></th>
             <td>
-              <select class="" id="paymentMode" name="paymentMode" class="w100p">
+              <!-- <select class="" id="paymentMode" name="paymentMode" class="w100p">
                 <option value="">Choose One</option>
                 <option value="105">Cash (CSH)</option>
                 <option value="106">Cheque (CHQ)</option>
                 <option value="108">Online Payment (ONL)</option>
                 <option value="107">Credit Card (CRC)</option>
+              </select> -->
+              <select id="paymentMode" name="paymentMode" class="w100p">
+                <option value="">Choose One</option>
+                <c:forEach var="list" items="${paymentMode}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
               </select>
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code='sal.text.attachment' /></th>
+            <th scope="row"><spring:message code='sal.text.attachment' /><span class="must">*</span></th>
             <td>
               <div class="auto_file">
-                <input type="file" title="file add" id="uploadfile" name="uploadfile" />
+                <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
               </div>
             </td>
+          </tr>
+          <tr>
+          <td colspan="2">
+            <span class="red_text">** <spring:message code="supplement.alert.supplementBatchUploadCsvNotice" /></span>
+          </td>
           </tr>
         </tbody>
       </table>
