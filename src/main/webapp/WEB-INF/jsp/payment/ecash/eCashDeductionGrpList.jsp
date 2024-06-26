@@ -389,6 +389,10 @@ function fn_genClaim(){
         Common.alert(" * Please select New Deduction Sales. <br/>");
         return
     }
+    if ($("#newProdCat option:selected").val() == null) {
+        Common.alert(" * Please select Product ");
+        return;
+    }
 
     var runNo1 = 0;
     var issueBank = "";
@@ -406,6 +410,18 @@ function fn_genClaim(){
         });
     }
     $("#hiddenIssueBank").val(issueBank);
+
+    if($("#newProdCat").val() != null){
+    	if($("#newProdCat").val() == 'HA'){
+    		$("#v_isHA").val("1");
+    	}
+    	else if($("#newProdCat").val() == 'HC'){
+    		$("#v_isHA").val("0");
+    	}
+    	else if($("#newProdCat :selected").length == 2){
+    		$("#v_isHA").val("2");
+    	}
+    }
 
 	//저장 처리
 	var data = {};
@@ -802,6 +818,7 @@ function fn_report(){
     <!-- pop_body start -->
     <form name="newForm" id="newForm"  method="post">
     <input type="hidden" name="v_isGrp"  id="v_isGrp" value = "1"/>
+    <input type="hidden" name="v_isHA"  id="v_isHA" value = "1"/>
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -847,6 +864,13 @@ function fn_report(){
                         <td>
                             <label><input type="radio" name="newDeductSales" id="newDeductSales" value="1" /><span>Yes</span></label>
                             <label><input type="radio" name="newDeductSales" id="newDeductSales" value="0"/><span>No</span></label>
+                        </td>
+                        <th scope="row">Product<span class="must">*</span></th>
+                        <td>
+                            <select class="multy_select w100p" multiple="multiple" id="newProdCat" name="newProdCat" data-placeholder="Product">
+									        <option value="HA">HA</option>
+									        <option value="HC">HC</option>
+                            </select>
                         </td>
                     </tr>
                    </tbody>

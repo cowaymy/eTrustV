@@ -364,7 +364,7 @@
     <resultMap id="resultECashGrpDeductionMap" type="egovMap" />
     <select id="createECashGrpDeduction" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_INST_ECASH_GEN_GRP_DEDUCT( #{new_merchantBank}, #{new_cardType} , #{new_issueBank}, #{newDeductSales},#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashGrpDeductionMap})
+            call SP_INST_ECASH_GEN_GRP_DEDUCT( #{new_merchantBank}, #{new_cardType} , #{new_issueBank}, #{newDeductSales},#{userId}, #{v_isHA},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashGrpDeductionMap})
         }
     </select>
 

@@ -847,6 +847,7 @@ public class ECashDeductionController {
     	LOGGER.debug("new_issueBank : {}", eCashDeduction.get("hiddenIssueBank"));
     	LOGGER.debug("new_merchantBank : {}", eCashDeduction.get("new_merchantBank"));
     	LOGGER.debug("cardType : {}", eCashDeduction.get("new_cardType"));
+    	LOGGER.debug("v_isHA : {}", eCashDeduction.get("v_isHA"));
     	LOGGER.debug("newDeductSales : {}", eCashDeduction.get("newDeductSales"));
     	String hiddenIssueBank = CommonUtils.nvl(String.valueOf(eCashDeduction.get("hiddenIssueBank")));
     	if(hiddenIssueBank.isEmpty() == false){
@@ -874,11 +875,13 @@ public class ECashDeductionController {
         	String bankId  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("new_merchantBank")));
         	String cardType  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("new_cardType")));
         	String issueBank  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("hiddenIssueBank")));
+        	String v_isHA  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("v_isHA")));
 
         	eCashDeduction.put("new_merchantBank", bankId);
         	eCashDeduction.put("new_issueBank", issueBank);
         	eCashDeduction.put("new_cardType", cardType);
         	eCashDeduction.put("new_isGrp", isGrp);
+        	eCashDeduction.put("v_isHA", v_isHA);
         	eCashDeduction.put("userId", sessionVO.getUserId());
 
         	eCashDeductionService.createECashGrpDeduction(eCashDeduction);		        	//프로시저 함수 호출
