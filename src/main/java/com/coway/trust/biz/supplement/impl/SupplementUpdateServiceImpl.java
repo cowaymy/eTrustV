@@ -169,6 +169,7 @@ public class SupplementUpdateServiceImpl
       this.sendEmail( params );
     }
     catch ( Exception e ) {
+      supplementUpdateMapper.rollbackRefStgStatus( params );
       rtnMap.put( "logError", "99" );
       rtnMap.put( "message", "An error occurred: " + e.getMessage() );
       LOGGER.error( "Error updating parcel tracking number...", e );
