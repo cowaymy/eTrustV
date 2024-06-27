@@ -36,9 +36,14 @@ public interface SupplementTagManagementMapper {
 
   int getSeqSUP0006M();
 
-//  int getSeqCCR0006D();
+  int getSeqCCR0006D();
 
   int getSeqCCR0007D();
 
   void insertSupplementTagMaster(Map<String, Object> params);
+
+  void insertCCRMain(Map<String, Object> params);
+
+  void insertCcrDetail(Map<String, Object> params);
+
 }
