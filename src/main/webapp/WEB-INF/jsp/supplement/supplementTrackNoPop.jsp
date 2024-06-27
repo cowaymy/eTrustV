@@ -58,6 +58,9 @@
   });
 
   function fn_popClose() {
+      AUIGrid.clearGridData(supOrdGridID);
+      AUIGrid.clearGridData(supItmDetailGridID);
+      fn_getSubListAjax();
     $("#_systemClose").click();
   }
 
