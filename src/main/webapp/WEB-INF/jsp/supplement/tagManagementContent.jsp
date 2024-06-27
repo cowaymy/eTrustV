@@ -24,7 +24,7 @@
   function chgTab(tabNm) {
     switch(tabNm) {
      case 'responseDetail' :
-       // AUIGrid.resize(salesmanInfoGridID, 942, 380);
+        AUIGrid.resize(docGridID, 942, 380);
        break;
      case 'referenceDetail' :
        //AUIGrid.resize(custInfoGridID, 942, 380);
