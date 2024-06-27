@@ -21,6 +21,8 @@ import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.supplement.SupplementTagManagementService;
 import com.coway.trust.biz.supplement.impl.SupplementTagManagementMapper;
+import com.coway.trust.util.CommonUtils;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -147,9 +149,16 @@ public class SupplementTagManagementImpl
       LOGGER.debug("insertFile :: End");
   }
 
+	@Override
+	public void insertAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
   @Override
   public Map<String, Object> supplementTagSubmission(Map<String, Object> params) throws Exception {
-    List<Object> supplementItemGrid = (List<Object>) params.get("supplementItmList");
+  //  List<Object> supplementItemGrid = (List<Object>) params.get("supplementItmList");
     Map<String, Object> rtnMap = new HashMap<>();
 
     try {
@@ -159,19 +168,35 @@ public class SupplementTagManagementImpl
 
       params.put("salesOrdId", "0");
       params.put("TypeId", "260");
-
       params.put("seqM", tagSeq);
       params.put("tokenM", getTagTokenNo());
-
-      // Insert the master record
-      supplementTagManagementMapper.insertSupplementTagMaster(params);
+      params.put( "userId", CommonUtils.nvl(params.get("userId")));
 
 
-/*      int ccr06Seq = supplementTagManagementMapper.getSeqCCR0006D();
+      LOGGER.info("############################ insertSupplementTagMaster - params: {}", params);
+
+
+      // Insert SUP0006M
+     supplementTagManagementMapper.insertSupplementTagMaster(params);
+
+
+      int ccr06Seq = supplementTagManagementMapper.getSeqCCR0006D();
       params.put("seqCcrId", ccr06Seq);
 
+      params.put("ccr06Stus", "1");
+
+
       int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
-      params.put("seqCcrResultId", ccr07Seq);*/
+      params.put("seqCcrResultId", ccr07Seq);
+
+
+      LOGGER.info("############################ insertCcrMain - params: {}", params);
+
+      // Insert CCR0006D
+      supplementTagManagementMapper.insertCCRMain(params);
+
+      // Insert CCR0007D
+      supplementTagManagementMapper.insertCcrDetail(params);
 
 
       // Loop through the items and insert each detail record
@@ -185,9 +210,8 @@ public class SupplementTagManagementImpl
        // supplementTagManagementMapper.insertSupplementSubmissionDetail(itemMap);
       //}
 
-      // Set the success response
-     // rtnMap.put("logError", "000");
-     // rtnMap.put("message", params.get("sofNo"));
+     //  Set the success response
+      rtnMap.put("logError", "000");
 
     } catch (Exception e) {
       // Log the exception (using a logging framework like SLF4J is recommended)
