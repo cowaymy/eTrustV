@@ -795,7 +795,8 @@
     JOIN ORG0001D H ON A.MEM_ID = H.MEM_ID
     JOIN SYS0005M I ON A.MEM_BRNCH_ID = I.BRNCH_ID
     WHERE A.DEL_FLG = 'N'
-        AND A.SUP_REF_DEL_STUS = '3'
+        AND A.SUP_REF_STG = '3'
+        AND A.SUP_REF_STUS = '1'
   </select>
 
 </mapper>
