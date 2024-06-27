@@ -158,13 +158,11 @@ public class SupplementTagManagementImpl
 
   @Override
   public Map<String, Object> supplementTagSubmission(Map<String, Object> params) throws Exception {
-  //  List<Object> supplementItemGrid = (List<Object>) params.get("supplementItmList");
     Map<String, Object> rtnMap = new HashMap<>();
 
     try {
       // Get the master sequence and set it in params
       int tagSeq = supplementTagManagementMapper.getSeqSUP0006M();
-
 
       params.put("salesOrdId", "0");
       params.put("TypeId", "260");
@@ -172,9 +170,7 @@ public class SupplementTagManagementImpl
       params.put("tokenM", getTagTokenNo());
       params.put( "userId", CommonUtils.nvl(params.get("userId")));
 
-
       LOGGER.info("############################ insertSupplementTagMaster - params: {}", params);
-
 
       // Insert SUP0006M
      supplementTagManagementMapper.insertSupplementTagMaster(params);
@@ -182,7 +178,6 @@ public class SupplementTagManagementImpl
 
       int ccr06Seq = supplementTagManagementMapper.getSeqCCR0006D();
       params.put("seqCcrId", ccr06Seq);
-
       params.put("ccr06Stus", "1");
 
 
@@ -198,32 +193,17 @@ public class SupplementTagManagementImpl
       // Insert CCR0007D
       supplementTagManagementMapper.insertCcrDetail(params);
 
-
-      // Loop through the items and insert each detail record
-      //for (int idx = 0; idx < supplementItemGrid.size(); idx++) {
-       // Map<String, Object> itemMap = (Map<String, Object>) supplementItemGrid.get(idx);
-       // int supplementDetailSeq = supplementTagManagementMapper.getSeqSUP0004D();
-       // itemMap.put("seqD", supplementDetailSeq);
-       // itemMap.put("seqM", supplementMasterSeq);
-       // itemMap.put("crtUsrId", params.get("crtUsrId"));
-
-       // supplementTagManagementMapper.insertSupplementSubmissionDetail(itemMap);
-      //}
-
      //  Set the success response
       rtnMap.put("logError", "000");
 
     } catch (Exception e) {
       // Log the exception (using a logging framework like SLF4J is recommended)
-      System.err.println("Error during supplement submission registration: " + e.getMessage());
+      System.err.println("Error during New Tag Submission : " + e.getMessage());
       e.printStackTrace();
 
       // Set the error response
       rtnMap.put("logError", "999");
       rtnMap.put("message", e.getMessage());
-
-      // Optionally rethrow the exception if you want it to propagate further
-      // throw e;
     }
 
     return rtnMap;
