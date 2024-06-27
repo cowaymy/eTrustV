@@ -1108,11 +1108,9 @@ public class HcInstallResultListController {
     		        params.put("ordCtgryCd",basicInfo.get("ordCtgryCd"));
     		        params.put("hidDismantle","");
 
-    		        Date todayDate = new Date();
-    		        DateFormat dateParser = new SimpleDateFormat("dd/MM/yyyy");
     		        //User Key In Part
     		        params.put("installStatus",4); //DEFAULT COMPLETE INSTALLATION
-    		        params.put("installDate", dateParser.format(todayDate)); //TODAY DATE
+    		        params.put("installDate", preInstRecordResult.get("crtDt")); //TODAY DATE
     		        params.put("ctCode",installResult.get("ctMemCode"));
     		        params.put("CTID",installResult.get("ctId"));
     		        params.put("sirimNo","");
