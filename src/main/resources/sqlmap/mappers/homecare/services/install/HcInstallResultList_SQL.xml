@@ -624,7 +624,7 @@
   </select>
 
   <select id="selectPreInstallationRecord"  parameterType="Map" resultType="egovMap">
-  		SELECT * FROM SVC0136D A
+  		SELECT TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CRT_DT,A.*,B.* FROM SVC0136D A
 		JOIN SAL0046D B
 		ON A.INSTALL_ENTRY_NO = B.INSTALL_ENTRY_NO
 		WHERE A.STUS_CODE_ID = #{preInstallStus}
