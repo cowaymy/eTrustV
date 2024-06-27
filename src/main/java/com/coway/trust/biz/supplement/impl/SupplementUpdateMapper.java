@@ -31,6 +31,8 @@ public interface SupplementUpdateMapper {
 
   int updateRefStgStatus( Map<String, Object> params );
 
+  int rollbackRefStgStatus( Map<String, Object> params );
+
   int updOrdDelStat( Map<String, Object> params );
 
   int updOrdDelDhlStat( Map<String, Object> params );
