@@ -83,9 +83,6 @@ public class SupplementTagManagementController {
   @Autowired
   private FileApplication fileApplication;
 
-	@Autowired
-	private WebInvoiceService webInvoiceService;
-
   @Resource(name = "posService")
   private PosService posService;
 
