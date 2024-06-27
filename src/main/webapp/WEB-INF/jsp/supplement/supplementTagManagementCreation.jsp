@@ -7,6 +7,8 @@ var serialTempGridID;
 var memGridID;
 
 var paymentGridID;
+var myFileCaches = {};
+var atchFileGrpId = 0;
 
 $(document).ready(function() {
 /* 	console.log("fn_formSetting222");
@@ -28,19 +30,31 @@ $(document).ready(function() {
 
 	console.log ( "orderNo:: "+ $("#entry_supRefNo").val());
 
-
-
-
-
-
-
-
 	setTimeout(function() {
         fn_descCheck(0)
       }, 1000);
 
 });
 
+$('#_saveBtn').click(function() {
+
+	console.log("_saveBtn");
+
+	 var supRefId =  $("#_infoSupRefStus").val();
+	 var subTopic = $('#ddlSubTopic').val().trim();
+
+	 console.log("supRefId::>><<@@" + supRefId);
+	 console.log("subTopic::>><<@@" + subTopic);
+
+
+
+
+
+
+
+
+    fn_SaveTagSubmission();
+});
 
 function fn_formSetting(){
 
@@ -110,22 +124,91 @@ function fn_checkOrderNo() {
                     ind : "1"
                   }; */
 
-
-
            Common.popupDiv("/supplement/supplementViewBasicPop.do", { supRefNo : $("#entry_supRefNo").val() }, fn_formSetting() , true,'_insDiv2');
 
-
                   $("#_systemClose").click();
-
-
-
 
         }
       });
   }
 
+
+//TODO 미개발 message
+
+function fn_SaveTagSubmission(){
+  //  var prchParam = AUIGrid.getGridData(purchaseGridID);
+  //  var totAmt = fn_calcuPurchaseAmt();
+
+    var orderVO = {
+
+            supRefId :  $("#_infoSupRefId").val(),
+           // atchFileGrpId : atchFileGrpId,
+            mainTopic : $('#mainTopicList').val().trim(),
+            subTopic : $('#ddlSubTopic').val().trim(),
+            mainDept : $('#inchgDeptList').val().trim(),
+            subDept : $('#ddlSubDept').val().trim(),
+            callRemark : $('#_remark').val().trim(),
+            supRefStus : $('#supRefStus').val().trim()
+    };
+
+    var supRefId =  $("#_infoSupRefId").val();
+    console.log("supRefId........... :: " + supRefId);
+
+    var formData = new FormData();
+    $.each(myFileCaches, function(n, v) {
+      formData.append(n, v.file);
+    });
+
+    console.log("supRefId###::" + supRefId);
+    console.log("subTopic###::" + subTopic);
+
+    Common.ajaxFile("/supplement/attachFileUploadId.do", formData, function(result) {
+          if (result != 0 && result.code == 00) {
+            orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+            Common.ajax("POST","/supplement/supplementTagSubmission.do", orderVO,
+                    function(result) {Common.alert( '<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                                  + DEFAULT_DELIMITER
+                                  + "<b>"
+                                  + result.message
+                                  + "</b>",
+                                  fn_closeSupplementSubmissionPop);
+                    },
+                    function(jqXHR, textStatus,
+                        errorThrown) {
+                      try {
+                        Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                                + DEFAULT_DELIMITER
+                                + "<b>Failed to save order. "
+                                + jqXHR.responseJSON.message
+                                + "</b>");
+                        Common.removeLoader();
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    });
+
+          } else {
+            Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                    + DEFAULT_DELIMITER + result.message);
+          }
+        },
+        function(result) {
+          Common
+              .alert("Upload Failed. Please check with System Administrator.");
+        });
+}
+
+function fn_closeSupplementSubmissionPop() {
+    myFileCaches = {};
+    $('#_systemClose').click();
+   // fn_getSupplementSubmissionList();
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<input type="hidden" id="_infoSupRefId" value="${orderInfo.supRefId}">
+<input type="hidden" id="_infoSupRefStus" value="${orderInfo.supRefStus}">
 <input type="hidden" id="_memBrnch" value="${userBr}">
 
 
@@ -154,7 +237,7 @@ function fn_checkOrderNo() {
         <td>
           <input type="text" title="" placeholder="supplementReferenceNo" class="" id="entry_supRefNo" name="entry_supRefNo" />
           <p class="btn_sky"><a href="#" onClick="fn_checkOrderNo()"><spring:message code='pay.combo.confirm'/></a></p><p class="btn_sky">
-            <a href="#" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search'/></a>
+            <%-- <a href="#" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search'/></a> --%>
            </p></td>
        </tr>
       </tbody>
@@ -223,7 +306,7 @@ function fn_checkOrderNo() {
     <th scope="row"><spring:message code="sal.text.attachment" /></th>
     <td colspan = "3">
            <div class="auto_file">
-                    <input type="file" title="file add" id="payFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                    <input type="file" title="file add" id="docFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
            </div>
      </td>
 </tr>
