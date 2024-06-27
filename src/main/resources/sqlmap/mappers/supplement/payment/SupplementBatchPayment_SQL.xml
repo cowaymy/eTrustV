@@ -561,12 +561,12 @@
 
   <resultMap id="rstMap" type="egovMap"></resultMap>
   <update id="callCnvrSupBatchPay" statementType="CALLABLE" parameterType="Map">
-    { call GBSLCVD.SP_SUPPLEMENT_UPD_CNVR_BATCH_PAY(#{batchId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
+    { call SP_SUPPLEMENT_UPD_CNVR_BATCH_PAY(#{batchId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
   </update>
 
   <resultMap id="rstMap1" type="egovMap"></resultMap>
   <update id="callSupBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">
-    {call GBSLCVD.SP_SUPPLEMENT_BATCH_PAY_VERIFY_DET(#{batchId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap1} )}
+    { call SP_SUPPLEMENT_BATCH_PAY_VERIFY_DET(#{batchId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap1} )}
   </update>
 
   <select id="selectBatchPayCardModeId" parameterType="String" resultType="String">
