@@ -359,6 +359,14 @@
         AND DEL_FLG = 'N'
   </update>
 
+  <update id="rollbackRefStgStatus" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STG = '3'
+                                   , SUP_REF_PCL_TRKNO = ''
+                                   , SUP_REF_DEL_STUS = null
+    WHERE SUP_REF_ID = #{supRefId}
+        AND DEL_FLG = 'N'
+  </update>
+
   <select id="getStoSup"  parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT *
