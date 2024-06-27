@@ -33,4 +33,6 @@ public interface SupplementTagManagementService {
 	void insertTagSubmissionAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 
 	Map<String, Object> supplementTagSubmission(Map<String, Object> params) throws Exception;
+
+	void insertAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 }
