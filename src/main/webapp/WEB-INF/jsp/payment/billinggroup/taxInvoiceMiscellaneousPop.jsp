@@ -121,7 +121,10 @@ function fn_generateInvoice(){
                 }
                 break;
             case 123 :
-                if( parseInt(year)*100 + parseInt(month) >= 201809){
+                if( parseInt(year)*100 + parseInt(month) >= 202405){
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST_202406.rpt');
+                }
+                else if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
                 }
                 else {
@@ -169,7 +172,10 @@ function fn_generateInvoice(){
             	break;
             // Added for differentiate Compensation vs Wholesales Invoice type by Hui Ding, 01/11/2019
             case 440 :
-                if( parseInt(year)*100 + parseInt(month) >= 201809){
+            	if( parseInt(year)*100 + parseInt(month) >= 202405){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST_202406.rpt');
+                }
+                else if( parseInt(year)*100 + parseInt(month) >= 201809){
                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
                 }
                 else {
