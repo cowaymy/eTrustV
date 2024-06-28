@@ -321,7 +321,7 @@
       </li>
       <li>
         <p class="btn_blue2">
-          <a id="_systemClose"><spring:message code="sal.btn.close" /></a>
+          <a id="_systemClose" href="#" ><spring:message code="sal.btn.close" /></a>
         </p>
       </li>
     </ul>

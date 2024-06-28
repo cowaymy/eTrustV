@@ -21,10 +21,13 @@
         docGridID = GridCommon.createAUIGrid("grid_doc_wrap", columnLayout, "", gridPros);
     }
 
+
+
+
     // 리스트 조회.
    // function fn_selectDocumentList() {
         //Common.ajax("GET", "/sales/order/selectDocumentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
-        Common.ajax("GET", "/supplement/getResponseLst", {supRefId : '${orderInfo.supRefId}'}, function(result) {
+        Common.ajax("GET", "/supplement/getResponseLst", {supRefId : '${orderInfo.supRefId}' , counselingNo : '${tagInfo.counselingNo}'}, function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
   //  }

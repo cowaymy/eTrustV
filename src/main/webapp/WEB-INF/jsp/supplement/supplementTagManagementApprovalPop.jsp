@@ -170,11 +170,21 @@ function fn_bookingAndpopClose(){
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.attachment" /></th>
-    <td colspan = "3">
+    <!-- <td colspan = "3">
            <div class="auto_file">
                     <input type="file" title="file add" id="payFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
            </div>
-     </td>
+     </td> -->
+     <td colspan="3">
+              <div class="auto_file2">
+                <input type="file" title="" id="attch" accept=".zip" />
+                <label>
+                  <input type='text' class='input_text' id='labelFileInput' readonly='readonly' />
+                  <span class='label_text' id='labelFileInput'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="service.title.Remark" /></th>

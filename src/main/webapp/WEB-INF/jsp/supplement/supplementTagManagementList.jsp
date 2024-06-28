@@ -48,10 +48,13 @@
 
             var supplementForm = {
               supRefId : clickChk[0].item.supRefId,
+              counselingNo : clickChk[0].item.counselingNo,
               ind : "1"
             };
 
            var supRefId = clickChk[0].item.supRefId;
+           var counselingNo = clickChk[0].item.counselingNo;
+
            Common.popupDiv("/supplement/tagMngApprovalPop.do", supplementForm, null, true, '_insDiv');
          });
 
@@ -62,6 +65,9 @@
            var detailParam = {
              supRefId : event.item.supRefId
            };
+           var detailParam = {
+             supRefId : event.item.counselingNo
+          };
          });
   });
 
