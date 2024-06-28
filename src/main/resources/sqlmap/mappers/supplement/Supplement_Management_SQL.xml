@@ -475,6 +475,7 @@
                Extent3.NAME AS CUST_NAME,
                Extent3.NRIC AS CUST_NRIC,
                Extent3.GENDER AS CUST_GENDER,
+               Extent17.NAME AS CUST_EMAIL_NM,
                Extent17.EMAIL AS CUST_EMAIL,
                Extent17.TEL_M1 AS CUST_MOBILE_NO,
                Extent17.TEL_O AS CUST_OFFICE_NO,
