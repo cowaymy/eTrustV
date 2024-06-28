@@ -22,6 +22,7 @@
           var inputParcelTrackNo = $("#parcelTrackNo").val();
           var supRefNo = $("#_infoSupRefNo").val();
           var custName = $("#_infoCustName").val();
+          var custEmailNm = $("#_infoCustNameEmail").val();
           var custEmail = $("#_infoCustEmail").val();
 
           if ($("#parcelTrackNo").val() == null || $("#parcelTrackNo").val().trim() == "") {
@@ -72,6 +73,7 @@
   <input type="hidden" id="_infoSupRefId" value="${orderInfo.supRefId}">
   <input type="hidden" id="_infoSupRefNo" value="${orderInfo.supRefNo}">
   <input type="hidden" id="_infoCustName" value="${orderInfo.custName}">
+  <input type="hidden" id="_infoCustNameEmail" value="${orderInfo.custEmailNm}">
   <input type="hidden" id="_infoCustEmail" value="${orderInfo.custEmail}">
   <header class="pop_header">
     <h1>
