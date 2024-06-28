@@ -237,6 +237,9 @@ public class SupplementUpdateServiceImpl
       // SEND EMAIL TO CUSTOMER
       Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( extractedValueMap );
       custEmailDtl.put( "emailType", "2" );
+      custEmailDtl.put( "deliveryAgent", "GDEX" );
+      custEmailDtl.put( "deliveryAgentUrl", "https://gdexpress.com/tracking/" );
+
       this.sendEmail( custEmailDtl );
       // INSERT DELIVERY LISTIN DETAIL HERE
       this.insertDelGdexListing( extractedValueMap );
@@ -317,6 +320,8 @@ public class SupplementUpdateServiceImpl
             continue;
           } else {
             custEmailDtl.put( "emailType", "2" );
+            custEmailDtl.put( "deliveryAgent", "DHL" );
+            custEmailDtl.put( "deliveryAgentUrl", "https://www.dhl.com/my-en/home/tracking.html" );
             this.sendEmail( custEmailDtl );
           }
         }
@@ -431,11 +436,11 @@ public class SupplementUpdateServiceImpl
       content += "<html>" + "<body>"
         + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
         + "Dear " + CommonUtils.nvl( params.get( "custName" ) ) + " ,<br/><br/>"
-        + "We are excited to inform you that your order has been prepared and is ready for delivery. Your parcel will be delivered by GDEX. <br/><br/>"
+        + "We are excited to inform you that your order has been prepared and is ready for delivery. Your parcel will be delivered by " + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + ". <br/><br/>"
         + "<b><u>Delivery Details:</u></b><br/>" + "<b>Order No. :</b>" + CommonUtils.nvl( params.get( "supRefNo" ) )
         + "<br/>" + "<b>Tracking No. :</b>" + CommonUtils.nvl( params.get( "inputParcelTrackNo" ) ) + "<br/>"
-        + "<b>Delivery Service : </b>GDEX<br/>"
-        + "You can track the status of your delivery using the following link: https://gdexpress.com/tracking/<br/><br/>"
+        + "<b>Delivery Service : </b>" + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + "<br/>"
+        + "You can track the status of your delivery using the following link: " + CommonUtils.nvl( params.get( "deliveryAgentUrl" ) ) + "<br/><br/>"
         + "If you have any questions or concerns about your order, please feel free to contact our customer service team at callcenter@coway.com.my or 1800-888-111.<br/>"
         + "Thank you for shopping with us. We hope you enjoy your purchase!<br/><br/>" + "Best Regards, <br/>"
         + "Coway <br/><br/>"
