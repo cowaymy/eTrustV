@@ -175,6 +175,7 @@ public class SupplementTagManagementController {
 
     LOGGER.debug("!@##############################################################################");
     LOGGER.debug("!@###### supRefId : " + params.get("supRefId"));
+    LOGGER.debug("!@###### counselingNo : " + params.get("counselingNo"));
     LOGGER.debug(" SelectTagStus : {}", tagStus);
     LOGGER.debug(" InchgDept : {}", inchgDept);
     LOGGER.debug("!@##############################################################################");
