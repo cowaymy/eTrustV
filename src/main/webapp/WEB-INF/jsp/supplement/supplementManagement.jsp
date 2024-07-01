@@ -1,16 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-  document
-      .write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='
-          + new Date().getTime() + '"><\/script>');
+  document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v=' + new Date().getTime() + '"><\/script>');
 
   var supOrdGridID;
   var supItmDetailGridID;
   var excelListGridID;
 
   var MEM_TYPE = '${SESSION_INFO.userTypeId}';
-  var arrSupStusCode; // SUPPLEMENT GRID
 
   var ajaxOtp = {
     async : false
@@ -109,11 +106,11 @@
           function() {
             if ($("#_supRefNo").val() == '') {
               if ($("#_sDate").val() == '' || $("#_eDate").val() == '') {
-                Common.alert('Reference Date is required when Reference Order No. is empty.')
+                Common.alert('<spring:message code="sal.alert.msg.supplement.alert.refDtRefOrdMust" />')
                 return;
               } else if ($("#_sDate").val() != '' && $("#_eDate").val() != '') {
-                if (!js.date.checkDateRange($("#_sDate").val(), $("#_eDate").val(), "Supplement Reference Date", "1")) {
-                  console.log("not within date rage");
+                if (!js.date.checkDateRange($("#_sDate").val(), $("#_eDate").val(), '<spring:message code="sal.text.createDate" />', "1")) {
+                  return;
                 }
               }
             }
