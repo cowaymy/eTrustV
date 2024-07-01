@@ -362,7 +362,6 @@
   }
 
   const openPage1 = () => {
-	  alert("11111");
     document.querySelector("#page2").classList.remove("d-flex");
     document.querySelector("#page2").style.display = "none";
 
