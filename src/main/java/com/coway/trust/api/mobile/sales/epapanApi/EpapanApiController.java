@@ -40,6 +40,8 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.order.HcPreOrderService;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.customerApi.CustomerApiService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
@@ -52,6 +54,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -97,6 +100,9 @@ public class EpapanApiController {
 
 	@Resource(name = "homecareCmService")
 	private HomecareCmService homecareCmService;
+
+    @Resource(name = "hcPreOrderService")
+    private HcPreOrderService hcPreOrderService;
 
  	@Autowired
  	private PreOrderApplication preOrderApplication;
@@ -467,5 +473,73 @@ public class EpapanApiController {
 			message.setCode("1");
 			message.setData(result);
 		    return ResponseEntity.ok(message);
+		}
+
+	  @ApiOperation(value = "checkProductSize", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/checkProductSize")
+		public ResponseEntity<ReturnMessage> checkProductSize(@ModelAttribute EpapanApiMagicAddressForm param) {
+			boolean chkSize = hcOrderRegisterService.checkProductSize(EpapanApiMagicAddressForm.createMap(param));
+
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			if(chkSize) {
+				message.setCode(AppConstants.SUCCESS);
+				message.setMessage("Success!");
+
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("Product Size is different.");
+			}
+
+			return ResponseEntity.ok(message);
+		}
+
+	  @ApiOperation(value = "selectStockPriceJsonInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectStockPriceJsonInfo", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> selectStockPrice(@ModelAttribute EpapanApiMagicAddressForm param)
+	      throws Exception {
+
+	    EgovMap priceInfo = orderRegisterService.selectStockPrice(EpapanApiMagicAddressForm.createMap(param));
+
+	    // 데이터 리턴.
+	    return ResponseEntity.ok(priceInfo);
+	  }
+
+	  @ApiOperation(value = "selectPrevOrderNoList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectPrevOrderNoList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectPrevOrderNoList(@ModelAttribute EpapanApiMagicAddressForm param) {
+	    List<EgovMap> result = orderRegisterService.selectPrevOrderNoList(EpapanApiMagicAddressForm.createMap(param));
+	    return ResponseEntity.ok(result);
+	  }
+
+	  @ApiOperation(value = "registerHcPreOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/registerHcPreOrder", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> registerHcPreOrder(@RequestBody PreOrderVO preOrderVO, @ApiIgnore HttpServletRequest request) throws Exception {
+			String appTypeStr = HomecareConstants.cnvAppTypeName(preOrderVO.getAppTypeId());
+
+		  	SessionVO sessionVO = new SessionVO();
+		  	sessionVO.setUserId(preOrderVO.getCrtUserId());
+
+			hcPreOrderService.registerHcPreOrder(preOrderVO, sessionVO);
+
+			HcOrderVO hcOrderVO = preOrderVO.getHcOrderVO();
+
+			String msg = "Order successfully saved.<br />";
+
+			if(!"".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId()))) {
+				msg += "Pre Order Number(Mattres) : " + hcOrderVO.getMatPreOrdId() + "<br />";
+			}
+			if(!"".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId()))) {
+				msg += "Pre Order Number(Frame) : "   + hcOrderVO.getFraPreOrdId() + "<br />";
+			}
+			msg += "Bundle Number : " + hcOrderVO.getBndlNo() + "<br />";
+			msg += "Application Type : " + appTypeStr + "<br />";
+
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(msg);
+
+			return ResponseEntity.ok(message);
 		}
 }

@@ -127,7 +127,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			int ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
 
 			preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
-			preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
+			preOrderVO.setChnnl(preOrderVO.getChnnl()==2 ? preOrderVO.getChnnl(): SalesConstants.PRE_ORDER_CHANNEL_WEB);
 			preOrderVO.setPreTm(CommonUtils.convert24Tm(preOrderVO.getPreTm()));
 			preOrderVO.setCrtUserId(sessionVO.getUserId());
 			preOrderVO.setUpdUserId(sessionVO.getUserId());

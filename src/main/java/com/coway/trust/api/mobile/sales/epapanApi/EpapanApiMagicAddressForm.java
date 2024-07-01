@@ -46,6 +46,10 @@ public class EpapanApiMagicAddressForm {
 		params.put("stkId", vo.getStkId());
 		params.put("isHomecare", vo.getIsHomecare());
 		params.put("isAC", vo.getIsAC());
+		params.put("product", vo.getProduct());
+		params.put("appTypeId", vo.getAppTypeId());
+		params.put("product1", vo.getProduct1());
+		params.put("product2", vo.getProduct2());
 
 		return params;
 	}
@@ -189,8 +193,30 @@ public class EpapanApiMagicAddressForm {
 	public void setIsAC(String isAC) {
 		this.isAC = isAC;
 	}
-
-
+	public String getProduct() {
+		return product;
+	}
+	public void setProduct(String product) {
+		this.product = product;
+	}
+	public String getAppTypeId() {
+		return appTypeId;
+	}
+	public void setAppTypeId(String appTypeId) {
+		this.appTypeId = appTypeId;
+	}
+	public String getProduct1() {
+		return product1;
+	}
+	public void setProduct1(String product1) {
+		this.product1 = product1;
+	}
+	public String getProduct2() {
+		return product2;
+	}
+	public void setProduct2(String product2) {
+		this.product2 = product2;
+	}
 
 	public String state;
     public String city;
@@ -213,8 +239,10 @@ public class EpapanApiMagicAddressForm {
 	public String stkId;
 	public String isHomecare;
 	public String isAC;
-
-
+	public String product;
+	public String product1;
+	public String product2;
+	public String appTypeId;
 
 
 }

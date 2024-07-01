@@ -194,7 +194,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	private void preprocPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
 
-		preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
+		preOrderVO.setChnnl(preOrderVO.getChnnl()==2 ? preOrderVO.getChnnl(): SalesConstants.PRE_ORDER_CHANNEL_WEB);
 		//preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 		//preOrderVO.setKeyinBrnchId(sessionVO.getUserBranchId());
 		preOrderVO.setPreTm(this.convert24Tm(preOrderVO.getPreTm()));
