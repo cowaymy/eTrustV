@@ -374,22 +374,13 @@
   }
 
   const openPage2 = () => {
-    alert("START");
     if (checkSerial()) {
-    	alert("PROCEED");
       const indoorStkCode = Number("${installationInfo.stkCode}").toString(36).toUpperCase();
       const outdoorStkCode = Number("${outdoorStkCode}").toString(36).toUpperCase();
 
-      alert("indoorStkCode " + indoorStkCode);
-      alert("outdoorStkCode " + outdoorStkCode);
-
-      alert("serialNo " + $("#serialNo").text());
       // INDOOR CHECKING
       if ($("#serialNo").text() != "") {
         const serial = $("#serialNo").text();
-        alert("serial " + serial);
-        alert("serial.indexOf(indoorStkCode) " + serial.indexOf(indoorStkCode));
-        alert("serial.length " + serial.length);
         if(serial.length != 18 || serial.indexOf(indoorStkCode) < 0){
           document.getElementById("MsgAlert").innerHTML = "Invalid format for Indoor Serial No.";
           $("#alertModalClick").click();
@@ -397,12 +388,8 @@
         }
       }
 
-      alert("serialNo2 " + $("#serialNo2").text());
       if ($("#serialNo2").text() != "") {
         const serial2 = $("#serialNo2").text();
-        alert("serial2 " + serial2);
-        alert("serial2.indexOf(indoorStkCode) " + serial2.indexOf(outdoorStkCode));
-        alert("serial2.length " + serial.length);
         if(serial2.length != 18 || serial2.indexOf(outdoorStkCode) < 0){
           document.getElementById("MsgAlert").innerHTML = "Invalid format for Outdoor Serial No.";
           $("#alertModalClick").click();
@@ -419,7 +406,6 @@
       document.querySelector("#page2").classList.add("d-flex");
       document.querySelector("#page2").style.display = "";
     } else {
-    	alert("RETURN");
       return;
     }
   }
