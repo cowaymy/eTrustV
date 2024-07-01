@@ -143,7 +143,7 @@
             if (supRefStusId == 1 && supRefStgId == 3) {
               Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
             } else {
-              Common.alert('Either order status is not Active or Stage Status is not in Tracking Number and GI/GR Process Pending.');
+              Common.alert('<spring:message code="supplement.alert.supplementUpdTrckErr" />');
               return;
             }
           });
