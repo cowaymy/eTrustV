@@ -39,6 +39,7 @@
     LEFT JOIN ORG1001V Extent10 ON Extent1.MEM_ID = Extent10.MEM_ID
     LEFT JOIN SAL0027D Extent11 ON Extent1.CUST_ID = Extent11.CUST_ID AND Extent1.CUST_CNTC_ID = Extent11.CUST_CNTC_ID
     WHERE 1=1
+    AND Extent1.DEL_FLG = 'N'
 
     <if test=" null != supRefNo and '' != supRefNo">
       AND Extent1.SUP_REF_NO = #{supRefNo}
