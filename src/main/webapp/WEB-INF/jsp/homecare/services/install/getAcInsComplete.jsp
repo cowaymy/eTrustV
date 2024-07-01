@@ -450,13 +450,11 @@
   });
 
   $("#btnBackPage1").click(e => {
-	  alert("2323232");
     e.preventDefault();
     openPage1();
   });
 
    $("#btnBackPage2").click(e => {
-	   alert("232323wewewe2");
     e.preventDefault();
     openPage2();
   });
@@ -715,7 +713,8 @@
       document.getElementById("qr-reader-cont").style.display = "none";
       document.getElementById("qr-reader-cont2").style.display = "none";
         //++countResults
-        if(decodedText.length !=18 || decodedText.indexOf(stkCode1) < 0){
+        //if(decodedText.length !=18 || decodedText.indexOf(stkCode1) < 0){
+        if(decodedText.length !=18){
           return;
         }
 
@@ -748,19 +747,21 @@
     });
 
     $("#btnScanBarcodeOutdoor").click(e => {
-      e.preventDefault();
-      document.getElementById("qr-reader-cont").style.display = 'flex'
-       document.getElementById("qr-reader-cont").onclick = function(e) {
-         this.style.display = 'none'
-           html5QrcodeScanner.stop()
-       }
-       html5QrcodeScanner.start(
-         {facingMode: 'environment'},
-         {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
-         (decodedText , decodedResult) => {
-           onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {html5QrcodeScanner.stop()})
-         }
-       );
+        e.preventDefault();
+        document.getElementById("qr-reader-cont").style.display = 'flex'
+        document.getElementById("qr-reader-cont").onclick = function(e) {
+           this.style.display = 'none'
+             html5QrcodeScanner.stop()
+        }
+        html5QrcodeScanner.start(
+            {facingMode: 'environment'},
+            {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
+            (decodedText , decodedResult) => {
+              onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {
+                html5QrcodeScanner.stop()
+              })
+            }
+        );
     });
 
   const validationCheck = (e) => {
