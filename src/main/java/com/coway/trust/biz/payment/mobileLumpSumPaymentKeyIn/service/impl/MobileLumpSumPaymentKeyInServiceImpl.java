@@ -1258,7 +1258,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
 			emailNo.add(CommonUtils.nvl(params.get("email1")));
-		} else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+		}
+		if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
 			emailNo.add(CommonUtils.nvl(params.get("email2")));
 		}
 
