@@ -917,236 +917,249 @@ public class HcInstallResultListController {
     	    	try {
     	        	Map<String,Object> preInstRecordResult = preInstRecordResultList.get(i);
     	        	Map<String,Object> params = new HashMap();
-    	        	//installEntryId
-    	        	params.put("installEntryId",preInstRecordResult.get("installEntryId"));
-    	        	params.put("stusCodeId", 1);
 
-    			    EgovMap callType = installationResultListService.selectCallType(params);
-    			    params.put("codeId", callType.get("typeId"));
-    			    EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
-    			    EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
-    			    EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
-    			    EgovMap orderInfo = new EgovMap();
-    		        if (params.get("codeId").toString().equals("258")) { // PRODUCT EXCHANGE
-    		        	orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
-    		        } else { // NEW PRODUCT INSTALLATION
-    		        	orderInfo = installationResultListService.getOrderInfo(params);
-    		        }
+    	        	String serialNo = CommonUtils.nvl(preInstRecordResult.get("serialNo"));
+    	        	String serialNo2 = CommonUtils.nvl(preInstRecordResult.get("serialNo2"));
+    	        	if(serialNo.equals("") || serialNo2.equals("")){
+    	        		Map<String,Object> preComResult1 = new HashMap();
+        		    	preComResult1.put("statusId",21);
+    	        		preComResult1.put("addRemark","Indoor & Outdoor Serial No is required to proceed.");
+    	        		preComResult1.put("installEntryNo",preInstRecordResult.get("installEntryNo").toString());
+        				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult1);
+    	        	}
+    	        	else{
+        	        	//installEntryId
+        	        	params.put("installEntryId",preInstRecordResult.get("installEntryId"));
+        	        	params.put("stusCodeId", 1);
 
-    		        int promotionId = 0;
-    		        if (CommonUtils.nvl(params.get("codeId")).toString().equals("258")) {
-    		        	promotionId = CommonUtils.intNvl(orderInfo.get("c8"));
-    		        } else {
-    		        	promotionId = CommonUtils.intNvl(orderInfo.get("c2"));
-    		        }
+        			    EgovMap callType = installationResultListService.selectCallType(params);
+        			    params.put("codeId", callType.get("typeId"));
+        			    EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+        			    EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
+        			    EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+        			    EgovMap orderInfo = new EgovMap();
+        		        if (params.get("codeId").toString().equals("258")) { // PRODUCT EXCHANGE
+        		        	orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+        		        } else { // NEW PRODUCT INSTALLATION
+        		        	orderInfo = installationResultListService.getOrderInfo(params);
+        		        }
 
-    		        EgovMap promotionView = new EgovMap();
+        		        int promotionId = 0;
+        		        if (CommonUtils.nvl(params.get("codeId")).toString().equals("258")) {
+        		        	promotionId = CommonUtils.intNvl(orderInfo.get("c8"));
+        		        } else {
+        		        	promotionId = CommonUtils.intNvl(orderInfo.get("c2"));
+        		        }
 
-    		        List<EgovMap> CheckCurrentPromo = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(promotionId);
-    		        if (CheckCurrentPromo.size() > 0) {
-    		        	promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), true);
+        		        EgovMap promotionView = new EgovMap();
 
-    		        } else {
-    		        	if (promotionId != 0) {
-    		        		promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), false);
+        		        List<EgovMap> CheckCurrentPromo = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(promotionId);
+        		        if (CheckCurrentPromo.size() > 0) {
+        		        	promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), true);
 
-    		        	} else {
-    		        		promotionView.put("promoId", "0");
-    		        		promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
-    		        		promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
-    		        		promotionView.put("swapPromoId", "0");
-    		        		promotionView.put("swapPromoPV", "0");
-    		        		promotionView.put("swapPormoPrice", "0");
-    		        	}
-    		        }
-    		        Object custId = (orderInfo == null ? installResult.get("custId") : orderInfo.get("custId"));
-    		        Object salesOrdNo = (orderInfo == null ? installResult.get("salesOrdNo") : orderInfo.get("salesOrdNo"));
-    		        params.put("custId", custId);
-    		        params.put("salesOrdNo", salesOrdNo);
-    		        params.put("salesOrdId", preInstRecordResult.get("salesOrdId"));
-    		        params.put("salesOrderId", preInstRecordResult.get("salesOrdId"));
-    		        EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
-    		        // EgovMap customerAddress =
-    		        // installationResultListService.getCustomerAddressInfo(customerInfo);
-    		        EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
-    		        EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
-//    		        EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
-    		        EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
-    		        EgovMap hpMember = installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
-    				EgovMap frameInfo = hcInstallResultListService.selectFrmInfo(params);
-    			    EgovMap basicInfo = orderDetailService.selectBasicInfo(params);
-    			    EgovMap salesmanInfo = orderDetailService.selectOrderSalesmanViewByOrderID(params);
-    			    EgovMap installationInfo = orderDetailService.selectOrderInstallationInfoByOrderID(params);
+        		        } else {
+        		        	if (promotionId != 0) {
+        		        		promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, CommonUtils.intNvl(installResult.get("installStkId")), false);
 
-    		        params.put("installEntryId",installResult.get("installEntryId"));
-    		        params.put("hidCallType",callType.get("typeId"));
-    		        params.put("hidEntryId",installResult.get("installEntryId"));
-    		        params.put("hidCustomerId",installResult.get("custId"));
-    		        params.put("hidSalesOrderId",installResult.get("salesOrdId"));
-    		        params.put("hidSirimNo",installResult.get("sirimNo"));
-    		        params.put("hidSerialNo",installResult.get("serialNo"));
-    		        params.put("hidStockIsSirim",installResult.get("isSirim"));
-    		        params.put("hidStockGrade",installResult.get("stkGrad"));
-    		        params.put("hidSirimTypeId",installResult.get("stkCtgryId"));
-    		        params.put("hidAppTypeId",installResult.get("codeId"));
-    		        params.put("hidProductId",installResult.get("installStkId"));
-    		        params.put("hidCustAddressId",installResult.get("custAddId"));
-    		        params.put("hidCustContactId",installResult.get("custCntId"));
-    		        params.put("hiddenBillId",installResult.get("custBillId"));
-    		        params.put("hiddenCustomerPayMode",installResult.get("codeName"));
-    		        params.put("hiddeninstallEntryNo",installResult.get("installEntryNo"));
+        		        	} else {
+        		        		promotionView.put("promoId", "0");
+        		        		promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
+        		        		promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")) == "258" ? CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
+        		        		promotionView.put("swapPromoId", "0");
+        		        		promotionView.put("swapPromoPV", "0");
+        		        		promotionView.put("swapPormoPrice", "0");
+        		        	}
+        		        }
+        		        Object custId = (orderInfo == null ? installResult.get("custId") : orderInfo.get("custId"));
+        		        Object salesOrdNo = (orderInfo == null ? installResult.get("salesOrdNo") : orderInfo.get("salesOrdNo"));
+        		        params.put("custId", custId);
+        		        params.put("salesOrdNo", salesOrdNo);
+        		        params.put("salesOrdId", preInstRecordResult.get("salesOrdId"));
+        		        params.put("salesOrderId", preInstRecordResult.get("salesOrdId"));
+        		        EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
+        		        // EgovMap customerAddress =
+        		        // installationResultListService.getCustomerAddressInfo(customerInfo);
+        		        EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
+        		        EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
+    //    		        EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
+        		        EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
+        		        EgovMap hpMember = installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
+        				EgovMap frameInfo = hcInstallResultListService.selectFrmInfo(params);
+        			    EgovMap basicInfo = orderDetailService.selectBasicInfo(params);
+        			    EgovMap salesmanInfo = orderDetailService.selectOrderSalesmanViewByOrderID(params);
+        			    EgovMap installationInfo = orderDetailService.selectOrderInstallationInfoByOrderID(params);
 
-    		        if(stock != null){
-        		        params.put("hidActualCTMemCode",stock.get("memCode"));
-        		        params.put("hidActualCTId",stock.get("movToLocId"));
-    		        }
-    		        else{
-        		        params.put("hidActualCTMemCode","0");
-        		        params.put("hidActualCTId","0");
-    		        }
+        		        params.put("installEntryId",installResult.get("installEntryId"));
+        		        params.put("hidCallType",callType.get("typeId"));
+        		        params.put("hidEntryId",installResult.get("installEntryId"));
+        		        params.put("hidCustomerId",installResult.get("custId"));
+        		        params.put("hidSalesOrderId",installResult.get("salesOrdId"));
+        		        params.put("hidSirimNo",installResult.get("sirimNo"));
+        		        params.put("hidSerialNo",installResult.get("serialNo"));
+        		        params.put("hidStockIsSirim",installResult.get("isSirim"));
+        		        params.put("hidStockGrade",installResult.get("stkGrad"));
+        		        params.put("hidSirimTypeId",installResult.get("stkCtgryId"));
+        		        params.put("hidAppTypeId",installResult.get("codeId"));
+        		        params.put("hidProductId",installResult.get("installStkId"));
+        		        params.put("hidCustAddressId",installResult.get("custAddId"));
+        		        params.put("hidCustContactId",installResult.get("custCntId"));
+        		        params.put("hiddenBillId",installResult.get("custBillId"));
+        		        params.put("hiddenCustomerPayMode",installResult.get("codeName"));
+        		        params.put("hiddeninstallEntryNo",installResult.get("installEntryNo"));
 
-    		        if(sirimLoc != null){
-        		        params.put("hidSirimLoc",sirimLoc.get("whLocCode"));
-    		        }
-    		        else{
-        		        params.put("hidSirimLoc","");
-    		        }
+        		        if(stock != null){
+            		        params.put("hidActualCTMemCode",stock.get("memCode"));
+            		        params.put("hidActualCTId",stock.get("movToLocId"));
+        		        }
+        		        else{
+            		        params.put("hidActualCTMemCode","0");
+            		        params.put("hidActualCTId","0");
+        		        }
 
-    		        params.put("hidCategoryId","");
-    		        params.put("hidStockCode","");
-    		        params.put("hidFrmStockCode","");
-    		        if(orderInfo.get("installEntryId") != null){
-        		        params.put("hidCategoryId",orderInfo.get("stkCtgryId"));
-        		        params.put("hidStockCode",orderInfo.get("stkCode"));
-        		        params.put("hidFrmStockCode",orderInfo.get("stockCode"));
-    		        }
+        		        if(sirimLoc != null){
+            		        params.put("hidSirimLoc",sirimLoc.get("whLocCode"));
+        		        }
+        		        else{
+            		        params.put("hidSirimLoc","");
+        		        }
 
-    		        params.put("hidPromotionId","");
-    		        params.put("hidPriceId","");
-    		        params.put("hiddenOriPriceId","");
-    		        params.put("hiddenOriPrice","");
-    		        params.put("hiddenOriPV","");
-    		        params.put("hiddenCatogory","");
-    		        params.put("hiddenProductItem","");
-    		        params.put("hidPERentAmt","");
-    		        params.put("hidPEDefRentAmt","");
-    		        params.put("hidInstallStatusCodeId","");
-    		        params.put("hidPEPreviousStatus","");
-    		        params.put("hidDocId","");
-    		        params.put("hidOldPrice","");
-    		        params.put("hidExchangeAppTypeId","");
-    		        if(callType.get("typeId").toString().equals("258"))
-    		        {
-        		        params.put("hidPromotionId",orderInfo.get(("c8")));
-        		        params.put("hidPriceId",orderInfo.get("c11"));
-        		        params.put("hiddenOriPriceId",orderInfo.get("c11"));
-        		        params.put("hiddenOriPrice",orderInfo.get(orderInfo.get("c12")));
-        		        params.put("hiddenOriPV",orderInfo.get("c13"));
-        		        params.put("hiddenProductItem",orderInfo.get("c7"));
-        		        params.put("hidPERentAmt",orderInfo.get("c17"));
-        		        params.put("hidPEDefRentAmt",orderInfo.get("c18"));
-        		        params.put("hidInstallStatusCodeId",orderInfo.get("c19"));
-        		        params.put("hidPEPreviousStatus",orderInfo.get("c20"));
-        		        params.put("hidDocId",orderInfo.get("docId"));
-        		        params.put("hidOldPrice",orderInfo.get("c15"));
-        		        params.put("hidExchangeAppTypeId",orderInfo.get("c21"));
-    		        }
-    		        else
-    		        {
-        		        params.put("hidPromotionId",orderInfo.get(("c2")));
-        		        params.put("hidPriceId",orderInfo.get("itmPrcId"));
-        		        params.put("hiddenOriPriceId",orderInfo.get("itmPrcId"));
-        		        params.put("hiddenOriPrice",orderInfo.get(orderInfo.get("c5")));
-        		        params.put("hiddenOriPV",orderInfo.get("c6"));
-        		        params.put("hiddenCatogory",orderInfo.get("codename1"));
-        		        params.put("hiddenProductItem",orderInfo.get("stkDesc"));
-        		        params.put("hidPERentAmt",orderInfo.get("c7"));
-        		        params.put("hidPEDefRentAmt",orderInfo.get("c8"));
-        		        params.put("hidInstallStatusCodeId",orderInfo.get("c9"));
+        		        params.put("hidCategoryId","");
+        		        params.put("hidStockCode","");
+        		        params.put("hidFrmStockCode","");
+        		        if(orderInfo.get("installEntryId") != null){
+            		        params.put("hidCategoryId",orderInfo.get("stkCtgryId"));
+            		        params.put("hidStockCode",orderInfo.get("stkCode"));
+            		        params.put("hidFrmStockCode",orderInfo.get("stockCode"));
+        		        }
 
-    		        }
+        		        params.put("hidPromotionId","");
+        		        params.put("hidPriceId","");
+        		        params.put("hiddenOriPriceId","");
+        		        params.put("hiddenOriPrice","");
+        		        params.put("hiddenOriPV","");
+        		        params.put("hiddenCatogory","");
+        		        params.put("hiddenProductItem","");
+        		        params.put("hidPERentAmt","");
+        		        params.put("hidPEDefRentAmt","");
+        		        params.put("hidInstallStatusCodeId","");
+        		        params.put("hidPEPreviousStatus","");
+        		        params.put("hidDocId","");
+        		        params.put("hidOldPrice","");
+        		        params.put("hidExchangeAppTypeId","");
+        		        if(callType.get("typeId").toString().equals("258"))
+        		        {
+            		        params.put("hidPromotionId",orderInfo.get(("c8")));
+            		        params.put("hidPriceId",orderInfo.get("c11"));
+            		        params.put("hiddenOriPriceId",orderInfo.get("c11"));
+            		        params.put("hiddenOriPrice",orderInfo.get(orderInfo.get("c12")));
+            		        params.put("hiddenOriPV",orderInfo.get("c13"));
+            		        params.put("hiddenProductItem",orderInfo.get("c7"));
+            		        params.put("hidPERentAmt",orderInfo.get("c17"));
+            		        params.put("hidPEDefRentAmt",orderInfo.get("c18"));
+            		        params.put("hidInstallStatusCodeId",orderInfo.get("c19"));
+            		        params.put("hidPEPreviousStatus",orderInfo.get("c20"));
+            		        params.put("hidDocId",orderInfo.get("docId"));
+            		        params.put("hidOldPrice",orderInfo.get("c15"));
+            		        params.put("hidExchangeAppTypeId",orderInfo.get("c21"));
+        		        }
+        		        else
+        		        {
+            		        params.put("hidPromotionId",orderInfo.get(("c2")));
+            		        params.put("hidPriceId",orderInfo.get("itmPrcId"));
+            		        params.put("hiddenOriPriceId",orderInfo.get("itmPrcId"));
+            		        params.put("hiddenOriPrice",orderInfo.get(orderInfo.get("c5")));
+            		        params.put("hiddenOriPV",orderInfo.get("c6"));
+            		        params.put("hiddenCatogory",orderInfo.get("codename1"));
+            		        params.put("hiddenProductItem",orderInfo.get("stkDesc"));
+            		        params.put("hidPERentAmt",orderInfo.get("c7"));
+            		        params.put("hidPEDefRentAmt",orderInfo.get("c8"));
+            		        params.put("hidInstallStatusCodeId",orderInfo.get("c9"));
 
-    		        params.put("hiddenCustomerType","");
-    		        params.put("hiddenPostCode","");
-    		        params.put("hiddenCountryName","");
-    		        params.put("hiddenStateName","");
-    		        params.put("hidPromoId",promotionView.get("promoId"));
-    		        params.put("hidPromoPrice",promotionView.get("promoPrice"));
-    		        params.put("hidPromoPV",promotionView.get("promoPV"));
-    		        params.put("hidSwapPromoId",promotionView.get("swapPromoId"));
-    		        params.put("hidSwapPromoPrice",promotionView.get("swapPormoPrice"));
-    		        params.put("hidSwapPromoPV",promotionView.get("swapPromoPV"));
-    		        params.put("hiddenInstallPostcode","");
-    		        params.put("hiddenInstallPostcode","");
-    		        params.put("hiddenInstallStateName","");
-    		        params.put("hidCustomerName",customerInfo.get("name"));
-    		        params.put("hidCustomerContact",customerContractInfo.get("telM1"));
-    		        params.put("hidTaxInvDSalesOrderNo",installResult.get("salesOrdNo"));
-    		        params.put("hidTradeLedger_InstallNo",installResult.get("installEntryNo"));
+        		        }
 
-    		        if(callType.get("typeId").toString().equals("257"))
-    		        {
-        		        params.put("hidOutright_Price",orderInfo.get("c5"));
-    		        }
-    		        else if (callType.get("typeId").toString().equals("258"))
-    		        {
-        		        params.put("hidOutright_Price",orderInfo.get("c12"));
-    		        }
+        		        params.put("hiddenCustomerType","");
+        		        params.put("hiddenPostCode","");
+        		        params.put("hiddenCountryName","");
+        		        params.put("hiddenStateName","");
+        		        params.put("hidPromoId",promotionView.get("promoId"));
+        		        params.put("hidPromoPrice",promotionView.get("promoPrice"));
+        		        params.put("hidPromoPV",promotionView.get("promoPV"));
+        		        params.put("hidSwapPromoId",promotionView.get("swapPromoId"));
+        		        params.put("hidSwapPromoPrice",promotionView.get("swapPormoPrice"));
+        		        params.put("hidSwapPromoPV",promotionView.get("swapPromoPV"));
+        		        params.put("hiddenInstallPostcode","");
+        		        params.put("hiddenInstallPostcode","");
+        		        params.put("hiddenInstallStateName","");
+        		        params.put("hidCustomerName",customerInfo.get("name"));
+        		        params.put("hidCustomerContact",customerContractInfo.get("telM1"));
+        		        params.put("hidTaxInvDSalesOrderNo",installResult.get("salesOrdNo"));
+        		        params.put("hidTradeLedger_InstallNo",installResult.get("installEntryNo"));
 
-    		        params.put("hidInstallation_AddDtl",installation.get("address"));
-    		        params.put("hidInstallation_AreaID",installation.get("areaId"));
-    		        params.put("hidInatallation_ContactPerson",customerContractInfo.get("name"));
-    		        params.put("rcdTms",installResult.get("rcdTms"));
-    		        params.put("hidSerialRequireChkYn",installResult.get("serialRequireChkYn"));
-    		        params.put("hidFrmSerialChkYn",frameInfo.get("serialChk"));
-    		        params.put("hidFrmOrdId",frameInfo.get("salesOrdId"));
-    		        params.put("hidFrmOrdNo",frameInfo.get("salesOrdNo"));
-    		        params.put("failDeptChk","");
-    		        params.put("custType",basicInfo.get("custType"));
-    		        params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-    		        params.put("hpMemId",salesmanInfo.get("memId"));
-    		        params.put("ordCtgryCd",basicInfo.get("ordCtgryCd"));
-    		        params.put("hidDismantle","");
+        		        if(callType.get("typeId").toString().equals("257"))
+        		        {
+            		        params.put("hidOutright_Price",orderInfo.get("c5"));
+        		        }
+        		        else if (callType.get("typeId").toString().equals("258"))
+        		        {
+            		        params.put("hidOutright_Price",orderInfo.get("c12"));
+        		        }
 
-    		        //User Key In Part
-    		        params.put("installStatus",4); //DEFAULT COMPLETE INSTALLATION
-    		        params.put("installDate", preInstRecordResult.get("crtDt")); //TODAY DATE
-    		        params.put("ctCode",installResult.get("ctMemCode"));
-    		        params.put("CTID",installResult.get("ctId"));
-    		        params.put("sirimNo","");
-    		        params.put("serialNo",preInstRecordResult.get("serialNo"));
-    		        params.put("custMobileNo",installationInfo.get("instCntTelM"));
-    		        params.put("chkSms","");
-    		        params.put("frmSerialNo",preInstRecordResult.get("serialNo2"));
-    		        params.put("dtPairCode","");
-    		        params.put("refNo1","");
-    		        params.put("refNo2","");
-    		        params.put("gaspreBefIns","");
-    		        params.put("totalWire","");
-    		        params.put("gaspreAftIns","");
-    		        params.put("installAcc","");
-    		        params.put("checkCommission","on");
-//    		        params.put("checkTrade",false);
-    		        params.put("checkSms","on");
-    		        params.put("checkSend","on");
-    		        params.put("hpMsg","COWAY: Order No: " + installResult.get("salesOrdNo") + "\nName" + hpMember.get("name1") + " \nInstall Status: Completed");
-    		        params.put("msgRemark","Remark:");
-    		        params.put("failLocCde","");
-    		        params.put("hiddenFailReasonCode","");
-    		        params.put("failReasonCode","");
-    		        params.put("nextCallDate","");
-    		        params.put("remark",preInstRecordResult.get("remark"));
+        		        params.put("hidInstallation_AddDtl",installation.get("address"));
+        		        params.put("hidInstallation_AreaID",installation.get("areaId"));
+        		        params.put("hidInatallation_ContactPerson",customerContractInfo.get("name"));
+        		        params.put("rcdTms",installResult.get("rcdTms"));
+        		        params.put("hidSerialRequireChkYn",installResult.get("serialRequireChkYn"));
+        		        params.put("hidFrmSerialChkYn",frameInfo.get("serialChk"));
+        		        params.put("hidFrmOrdId",frameInfo.get("salesOrdId"));
+        		        params.put("hidFrmOrdNo",frameInfo.get("salesOrdNo"));
+        		        params.put("failDeptChk","");
+        		        params.put("custType",basicInfo.get("custType"));
+        		        params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+        		        params.put("hpMemId",salesmanInfo.get("memId"));
+        		        params.put("ordCtgryCd",basicInfo.get("ordCtgryCd"));
+        		        params.put("hidDismantle","");
 
-    		    	Map<String,Object> insertParams = new HashMap();
-    		    	insertParams.put("installForm", params);
+        		        //User Key In Part
+        		        params.put("installStatus",4); //DEFAULT COMPLETE INSTALLATION
+        		        params.put("installDate", preInstRecordResult.get("crtDt")); //TODAY DATE
+        		        params.put("ctCode",installResult.get("ctMemCode"));
+        		        params.put("CTID",installResult.get("ctId"));
+        		        params.put("sirimNo","");
+        		        params.put("serialNo",preInstRecordResult.get("serialNo"));
+        		        params.put("custMobileNo",installationInfo.get("instCntTelM"));
+        		        params.put("chkSms","");
+        		        params.put("frmSerialNo",preInstRecordResult.get("serialNo2"));
+        		        params.put("dtPairCode","");
+        		        params.put("refNo1","");
+        		        params.put("refNo2","");
+        		        params.put("gaspreBefIns","");
+        		        params.put("totalWire","");
+        		        params.put("gaspreAftIns","");
+        		        params.put("installAcc","");
+        		        params.put("checkCommission","on");
+    //    		        params.put("checkTrade",false);
+        		        params.put("checkSms","on");
+        		        params.put("checkSend","on");
+        		        params.put("hpMsg","COWAY: Order No: " + installResult.get("salesOrdNo") + "\nName" + hpMember.get("name1") + " \nInstall Status: Completed");
+        		        params.put("msgRemark","Remark:");
+        		        params.put("failLocCde","");
+        		        params.put("hiddenFailReasonCode","");
+        		        params.put("failReasonCode","");
+        		        params.put("nextCallDate","");
+        		        params.put("remark",preInstRecordResult.get("remark"));
 
-    				hcInstallResultListService.hcInsertInstallationResultSerial(insertParams, sessionVO);
+        		    	Map<String,Object> insertParams = new HashMap();
+        		    	insertParams.put("installForm", params);
 
-    		    	Map<String,Object> preComResult = new HashMap();
-    		    	preComResult.put("statusId",4);
-    		    	preComResult.put("addRemark","Auto Pre-com Approve Completed");
-    		    	preComResult.put("installEntryNo",preInstRecordResult.get("installEntryNo").toString());
-    				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult);
+        				hcInstallResultListService.hcInsertInstallationResultSerial(insertParams, sessionVO);
+
+        		    	Map<String,Object> preComResult = new HashMap();
+        		    	preComResult.put("statusId",4);
+        		    	preComResult.put("addRemark","Auto Pre-com Approve Completed");
+        		    	preComResult.put("installEntryNo",preInstRecordResult.get("installEntryNo").toString());
+        				hcInstallResultListService.updateSVC0136DAutoPreComStatus(preComResult);
+
+    	        	}
     			} catch (Exception e) {
     		    	Map<String,Object> preComResult = new HashMap();
     		    	preComResult.put("statusId",21);
