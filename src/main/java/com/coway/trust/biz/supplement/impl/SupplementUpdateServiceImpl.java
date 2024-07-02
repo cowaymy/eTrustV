@@ -66,12 +66,14 @@ public class SupplementUpdateServiceImpl
   private String from;
 
   @Override
-  public List<EgovMap> selectPosJsonList( Map<String, Object> params ) throws Exception {
+  public List<EgovMap> selectPosJsonList( Map<String, Object> params )
+    throws Exception {
     return supplementUpdateMapper.selectPosJsonList( params );
   }
 
   @Override
-  public List<EgovMap> selectSupplementList( Map<String, Object> params ) throws Exception {
+  public List<EgovMap> selectSupplementList( Map<String, Object> params )
+    throws Exception {
     return supplementUpdateMapper.selectSupplementList( params );
   }
 
@@ -151,7 +153,8 @@ public class SupplementUpdateServiceImpl
     return (List<EgovMap>) params.get( "p1" );
   }
 
-  public Map<String, Object> updateRefStgStatus( Map<String, Object> params ) throws Exception {
+  public Map<String, Object> updateRefStgStatus( Map<String, Object> params )
+    throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     Map<String, Object> stoEntry = new HashMap<String, Object>();
     try {
@@ -164,6 +167,8 @@ public class SupplementUpdateServiceImpl
       stoEntry.put( "reqstNo", stoSup.get( "reqstNo" ) );
       stoEntry.put( "userId", params.get( "userId" ) );
       params.put( "emailType", "1" );
+      params.put( "deliveryAgent", "DHL" );
+      params.put( "deliveryAgentUrl", "https://www.dhl.com/my-en/home/tracking.html" );
       stoPreSupp( stoEntry );
       rtnMap.put( "logError", "000" );
       this.sendEmail( params );
@@ -191,7 +196,8 @@ public class SupplementUpdateServiceImpl
 
   @SuppressWarnings("unchecked")
   @Override
-  public EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+  public EgovMap updOrdDelStatGdex( Map<String, Object> params )
+    throws IOException, JSONException, ParseException {
     if ( CommonUtils.nvl( params.get( "ords" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
@@ -226,46 +232,49 @@ public class SupplementUpdateServiceImpl
       if ( extractedValueMap.get( "latestEnumStatus" ).equals( "4" ) ) {
         extractedValueMap.put( "ordRefStat", "4" );
         extractedValueMap.put( "ordRefStg", "99" );
-      } else {
-        extractedValueMap.put( "latestConsignmentNoteLocation", null);
-        extractedValueMap.put( "latestConsignmentNoteDate", null);
+      }
+      else {
+        extractedValueMap.put( "latestConsignmentNoteLocation", null );
+        extractedValueMap.put( "latestConsignmentNoteDate", null );
       }
       int count = supplementUpdateMapper.updOrdDelStat( extractedValueMap );
       if ( count > 0 ) {
         success += 1;
       }
       // SEND EMAIL TO CUSTOMER
-      Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( extractedValueMap );
-      custEmailDtl.put( "emailType", "2" );
-      custEmailDtl.put( "deliveryAgent", "GDEX" );
-      custEmailDtl.put( "deliveryAgentUrl", "https://gdexpress.com/tracking/" );
-
-      this.sendEmail( custEmailDtl );
+      if ( extractedValueMap.get( "latestEnumStatus" ).equals( "4" ) ) {
+        Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( extractedValueMap );
+        custEmailDtl.put( "emailType", "2" );
+        custEmailDtl.put( "deliveryAgent", "GDEX" );
+        custEmailDtl.put( "deliveryAgentUrl", "https://gdexpress.com/tracking/" );
+        this.sendEmail( custEmailDtl );
+      }
       // INSERT DELIVERY LISTIN DETAIL HERE
       this.insertDelGdexListing( extractedValueMap );
     }
     EgovMap message = new EgovMap();
-    message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success, fail ) );
+    message.put( "message",
+                 String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success, fail ) );
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+  public EgovMap updOrdDelStatDhl( Map<String, Object> params )
+    throws IOException, JSONException, ParseException {
     if ( CommonUtils.nvl( params.get( "ordNo" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
     if ( CommonUtils.nvl( params.get( "consNo" ) ).equals( "" ) ) {
-      throw new ApplicationException( AppConstants.FAIL, "NO SHIPMENT NO. SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
+      throw new ApplicationException( AppConstants.FAIL,
+                                      "NO SHIPMENT NO. SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
-
     // LOOP SELECTED ORDERS
     List<Map<String, String>> ordsList = (List<Map<String, String>>) params.get( "ordNo" );
     List<String> respCountList = new ArrayList<>();
     int total = ordsList.size();
     // int fail = 0;
     int success = 0;
-
     // CALL DHL GET DELIVERY STATUS AND DATE.
     EgovMap rtnData = commonService.getDhlShptDtl( params );
     if ( !"000".equals( rtnData.get( "status" ) ) ) {
@@ -276,21 +285,17 @@ public class SupplementUpdateServiceImpl
     }
     Map<String, Object> extractedValueMap = (Map<String, Object>) rtnData.get( "value" );
     System.out.println( extractedValueMap.toString() );
-
     // MULTIPLE SHIPMENTS DETAILS RETURN
     List<Map<String, Object>> shipmentList = (List<Map<String, Object>>) extractedValueMap.get( "shipmentList" );
-    if (shipmentList != null) {
+    if ( shipmentList != null ) {
       // LOOP SHIPMENTS DETAILS
       for ( Map<String, Object> shipment : shipmentList ) {
-
         Map<String, Object> dataValueMap = new HashMap<>();
-
-        if (!(CommonUtils.nvl( shipment.get( "shipmentID" )).equals( "" ))) {
-          if (!respCountList.contains( CommonUtils.nvl( shipment.get( "shipmentID" ) ))) {
-            respCountList.add( CommonUtils.nvl( shipment.get( "shipmentID" ) ));
+        if ( !( CommonUtils.nvl( shipment.get( "shipmentID" ) ).equals( "" ) ) ) {
+          if ( !respCountList.contains( CommonUtils.nvl( shipment.get( "shipmentID" ) ) ) ) {
+            respCountList.add( CommonUtils.nvl( shipment.get( "shipmentID" ) ) );
           }
         }
-
         dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
         dataValueMap.put( "ordNo", CommonUtils.nvl( shipment.get( "ordNo" ) ) );
         dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "shipmentID" ) ) );
@@ -300,9 +305,12 @@ public class SupplementUpdateServiceImpl
         if ( shipment.get( "latestEnumStatus" ).equals( "4" ) ) {
           dataValueMap.put( "ordRefStat", "4" );
           dataValueMap.put( "ordRefStg", "99" );
-          dataValueMap.put( "latestConsignmentNoteDate", CommonUtils.nvl( shipment.get( "latestConsignmentNoteDate" ) ) );
-          dataValueMap.put( "latestConsignmentNoteLocation", CommonUtils.nvl( shipment.get( "latestConsignmentNoteLocation" ) ) );
-        } else {
+          dataValueMap.put( "latestConsignmentNoteDate",
+                            CommonUtils.nvl( shipment.get( "latestConsignmentNoteDate" ) ) );
+          dataValueMap.put( "latestConsignmentNoteLocation",
+                            CommonUtils.nvl( shipment.get( "latestConsignmentNoteLocation" ) ) );
+        }
+        else {
           dataValueMap.put( "latestConsignmentNoteDate", null );
           dataValueMap.put( "latestConsignmentNoteLocation", null );
         }
@@ -310,15 +318,15 @@ public class SupplementUpdateServiceImpl
         supplementUpdateMapper.updOrdDelDhlStat( dataValueMap );
         // INSERT DELIVERY LISTIN DETAIL HERE
         this.insertDelDhlListing( dataValueMap );
-
         // ITEMS DELIVERED TO CUSTOMER ONLY FIRE EMAIL
-        if (dataValueMap.get( "latestEnumStatus" ).equals( "4" )) {
+        if ( dataValueMap.get( "latestEnumStatus" ).equals( "4" ) ) {
           // SEND EMAIL TO CUSTOMER
           Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( dataValueMap );
           if ( custEmailDtl == null ) {
             // NO DATA RETRIEVED
             continue;
-          } else {
+          }
+          else {
             custEmailDtl.put( "emailType", "2" );
             custEmailDtl.put( "deliveryAgent", "DHL" );
             custEmailDtl.put( "deliveryAgentUrl", "https://www.dhl.com/my-en/home/tracking.html" );
@@ -326,19 +334,20 @@ public class SupplementUpdateServiceImpl
           }
         }
       }
-
       // TOTAL OF NUMBER RESPONSE SUCCESS RETURN
       success = respCountList.size();
-    } else {
+    }
+    else {
       success = 0;
     }
-
     EgovMap message = new EgovMap();
-    message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success, (total-success) ) );
+    message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success,
+                                           ( total - success ) ) );
     return message;
   }
 
-  public void insertDelGdexListing( Map<String, Object> params ) throws JSONException {
+  public void insertDelGdexListing( Map<String, Object> params )
+    throws JSONException {
     if ( params.get( "cnDetailStatusList" ) == null ) {
       // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
       return;
@@ -376,7 +385,8 @@ public class SupplementUpdateServiceImpl
     }
   }
 
-  public void insertDelDhlListing( Map<String, Object> params ) throws JSONException {
+  public void insertDelDhlListing( Map<String, Object> params )
+    throws JSONException {
     if ( params.get( "deliveryHist" ) == null ) {
       // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
       return;
@@ -428,19 +438,19 @@ public class SupplementUpdateServiceImpl
     EmailVO email = new EmailVO();
     String emailTitle = "";
     String content = "";
-
-    List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
-
+    List<String> emailNo = Arrays.asList( " " + CommonUtils.nvl( params.get( "custEmail" ) ) + " " );
     if ( CommonUtils.nvl( params.get( "emailType" ) ) == "1" ) {
       emailTitle = "Your Order Has Been Prepared and Is On Its Way!";
       content += "<html>" + "<body>"
         + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
         + "Dear " + CommonUtils.nvl( params.get( "custName" ) ) + " ,<br/><br/>"
-        + "We are excited to inform you that your order has been prepared and is ready for delivery. Your parcel will be delivered by " + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + ". <br/><br/>"
-        + "<b><u>Delivery Details:</u></b><br/>" + "<b>Order No. :</b>" + CommonUtils.nvl( params.get( "supRefNo" ) )
-        + "<br/>" + "<b>Tracking No. :</b>" + CommonUtils.nvl( params.get( "inputParcelTrackNo" ) ) + "<br/>"
-        + "<b>Delivery Service : </b>" + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + "<br/>"
-        + "You can track the status of your delivery using the following link: " + CommonUtils.nvl( params.get( "deliveryAgentUrl" ) ) + "<br/><br/>"
+        + "We are excited to inform you that your order has been prepared and is ready for delivery. Your parcel will be delivered by "
+        + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + ". <br/><br/>" + "<b><u>Delivery Details:</u></b><br/>"
+        + "<b>Order No. :</b>" + CommonUtils.nvl( params.get( "supRefNo" ) ) + "<br/>" + "<b>Tracking No. :</b>"
+        + CommonUtils.nvl( params.get( "inputParcelTrackNo" ) ) + "<br/>" + "<b>Delivery Service : </b>"
+        + CommonUtils.nvl( params.get( "deliveryAgent" ) ) + "<br/>"
+        + "You can track the status of your delivery using the following link: "
+        + CommonUtils.nvl( params.get( "deliveryAgentUrl" ) ) + "<br/><br/>"
         + "If you have any questions or concerns about your order, please feel free to contact our customer service team at callcenter@coway.com.my or 1800-888-111.<br/>"
         + "Thank you for shopping with us. We hope you enjoy your purchase!<br/><br/>" + "Best Regards, <br/>"
         + "Coway <br/><br/>"
@@ -467,11 +477,9 @@ public class SupplementUpdateServiceImpl
         + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
     }
     email.setText( content );
-
     // LOGGER.info( "[END] emailTitle: " + emailTitle + " " );
     // LOGGER.info( "[END] content " + content + " " );
     // LOGGER.info( "[END] Number of EMAIL SENT...: " + emailNo.size() + " " );
-
     if ( emailNo.size() > 0 ) {
       email.setTo( emailNo );
       email.setHtml( true );
@@ -484,7 +492,8 @@ public class SupplementUpdateServiceImpl
     }
   }
 
-  private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params ) {
+  private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+                             Map<String, Object> params ) {
     boolean isSuccess = true;
     try {
       MimeMessage message = mailSender.createMimeMessage();
@@ -503,7 +512,8 @@ public class SupplementUpdateServiceImpl
       }
       if ( isMultiPart && email.getHasInlineImage() ) {
         try {
-          messageHelper.addInline( "coway_header", new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
+          messageHelper.addInline( "coway_header",
+                                   new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
         }
         catch ( Exception e ) {
           LOGGER.error( e.toString() );
@@ -534,12 +544,12 @@ public class SupplementUpdateServiceImpl
   }
 
   private String getMailTextByTemplate( EmailTemplateType templateType, Map<String, Object> params ) {
-    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(), AppConstants.DEFAULT_CHARSET, params );
+    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(),
+                                                        AppConstants.DEFAULT_CHARSET, params );
   }
 
   @Override
   public List<EgovMap> getCustOrdDelInfo( Map<String, Object> params ) {
     return supplementUpdateMapper.getCustOrdDelInfo( params );
   }
-
 }
