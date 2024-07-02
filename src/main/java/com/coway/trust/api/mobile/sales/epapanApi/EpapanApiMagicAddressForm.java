@@ -1,6 +1,8 @@
 package com.coway.trust.api.mobile.sales.epapanApi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
@@ -50,6 +52,15 @@ public class EpapanApiMagicAddressForm {
 		params.put("appTypeId", vo.getAppTypeId());
 		params.put("product1", vo.getProduct1());
 		params.put("product2", vo.getProduct2());
+		params.put("arrPreOrdStusId", vo.getArrPreOrdStusId());
+		params.put("_memCode", vo.getMemCode());
+		params.put("_sofNo", vo.getSofNo());
+		params.put("_reqstStartDt", vo.getReqstStartDt());
+		params.put("_reqstEndDt", vo.getReqstEndDt());
+		params.put("orgCode", vo.getOrgCode());
+		params.put("grpCode", vo.getGrpCode());
+		params.put("deptCode", vo.getDeptCode());
+		params.put("_ordNo", vo.getOrdNo());
 
 		return params;
 	}
@@ -217,6 +228,56 @@ public class EpapanApiMagicAddressForm {
 	public void setProduct2(String product2) {
 		this.product2 = product2;
 	}
+	public String getMemCode() {
+		return memCode;
+	}
+	public void setMemCode(String _memCode) {
+		this.memCode = _memCode;
+	}
+	public String getReqstStartDt() {
+		return reqstStartDt;
+	}
+	public void setReqstStartDt(String _reqstStartDt) {
+		this.reqstStartDt = _reqstStartDt;
+	}
+	public String getReqstEndDt() {
+		return reqstEndDt;
+	}
+	public void setReqstEndDt(String _reqstEndDt) {
+		this.reqstEndDt = _reqstEndDt;
+	}
+	public String[] getArrPreOrdStusId() {
+
+		return arrPreOrdStusId.toArray(new String[arrPreOrdStusId.size()]);
+	}
+	public void setArrPreOrdStusId(List<String> arrPreOrdStusId) {
+		this.arrPreOrdStusId = arrPreOrdStusId;
+	}
+	public String getOrgCode() {
+		return orgCode;
+	}
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	public String getGrpCode() {
+		return grpCode;
+	}
+	public void setGrpCode(String grpCode) {
+		this.grpCode = grpCode;
+	}
+	public String getDeptCode() {
+		return deptCode;
+	}
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
+	}
+	public String getOrdNo() {
+		return ordNo;
+	}
+	public void setOrdNo(String ordNo) {
+		this.ordNo = ordNo;
+	}
+
 
 	public String state;
     public String city;
@@ -243,6 +304,14 @@ public class EpapanApiMagicAddressForm {
 	public String product1;
 	public String product2;
 	public String appTypeId;
+	public List<String> arrPreOrdStusId;
+	public String memCode;
+	public String reqstStartDt;
+	public String reqstEndDt;
+	public String orgCode;
+	public String grpCode;
+	public String deptCode;
+	public String ordNo;
 
 
 }
