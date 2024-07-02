@@ -338,6 +338,15 @@
   $(function(){
       let x = document.querySelector('.bottom_msg_box');
       x.style.display = "none";
+
+      // [Bug Fix:#24037555] - validate the special symbol in text area field
+      // ADD REMARK ONKEYDOWN TO SKIP SOME SYMBOL AND ENTER
+      const regexp = [';', ':', '#', '@', '!', '|', '\\','"'];
+      const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
+        if(event.key ==='Enter' || regexp.includes(event.key)){
+          event.preventDefault();
+        }
+      });
   });
 
   const optionVal = document.querySelector("#optionVal");
@@ -361,6 +370,14 @@
     refreshOption();
   }
 
+  const isUppercaseAlphanumeric = (str) => {
+    if (typeof str !== 'string') {
+     return false;
+    }
+
+    return /^[A-Z0-9]+$/.test(str);
+  }
+
   const openPage1 = () => {
     document.querySelector("#page2").classList.remove("d-flex");
     document.querySelector("#page2").style.display = "none";
@@ -377,7 +394,7 @@
       const indoorStkCode = Number("${installationInfo.stkCode}").toString(36).toUpperCase();
       const outdoorStkCode = Number("${outdoorStkCode}").toString(36).toUpperCase();
 
-      // INDOOR CHECKING
+      // INDOOR CHECKING FOR SCAN BARCODE
       if ($("#serialNo").text() != "") {
         const serial = $("#serialNo").text();
         if(serial.length != 18 || serial.indexOf(indoorStkCode) < 0){
@@ -385,8 +402,16 @@
           $("#alertModalClick").click();
           return;
         }
+
+        // ALPHANUMBER UPPER CHECKING
+        if (!isUppercaseAlphanumeric(serial)) {
+            document.getElementById("MsgAlert").innerHTML = "Indoor Serial No. can only contain numbers and uppercase characters.";
+            $("#alertModalClick").click();
+            return;
+        }
       }
 
+      // OUTDOOR CHECKING FOR SCAN BARCODE
       if ($("#serialNo2").text() != "") {
         const serial2 = $("#serialNo2").text();
         if(serial2.length != 18 || serial2.indexOf(outdoorStkCode) < 0){
@@ -394,8 +419,16 @@
           $("#alertModalClick").click();
           return;
         }
+
+        // ALPHANUMBER UPPER CHECKING
+        if (!isUppercaseAlphanumeric(serial2)) {
+          document.getElementById("MsgAlert").innerHTML = "Outdoor Serial No. can only contain numbers and uppercase characters.";
+          $("#alertModalClick").click();
+          return;
+        }
       }
-      // NEXT PAGE
+
+      // GO TO NEXT PAGE
       document.querySelector("#page1").classList.remove("d-flex");
       document.querySelector("#page1").style.display = "none";
 
@@ -423,6 +456,7 @@
     const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
     const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
     let flag = false;
+
     if(sirimUploadInput.files[0]){
       flag=true;
     }
@@ -433,10 +467,10 @@
       }
     }
 
-     if(flag){
-       const completeTitle =document.getElementById("completeTitle");
-       completeTitle.style.display="";
-     }
+    if(flag){
+      const completeTitle =document.getElementById("completeTitle");
+      completeTitle.style.display="";
+    }
   }
 
   $("#btnClose").click(e => {
@@ -455,7 +489,7 @@
     openPage1();
   });
 
-   $("#btnBackPage2").click(e => {
+  $("#btnBackPage2").click(e => {
     e.preventDefault();
     openPage2();
   });
@@ -521,10 +555,10 @@
       displayImg.classList.add("display");
 
       if(uploadImg[i].src){
-         displayImg.src = uploadImg[i].src;
-         cardBody.appendChild(displayImg);
-         gridItem.appendChild(cardBody);
-         grid.appendChild(gridItem);
+        displayImg.src = uploadImg[i].src;
+        cardBody.appendChild(displayImg);
+        gridItem.appendChild(cardBody);
+        grid.appendChild(gridItem);
       }
     }
 
@@ -537,7 +571,6 @@
 
   const addImageUpload = (el, titleName) => {
     //image upload
-
     const title = document.createElement("h5");
     title.innerHTML = "&nbsp;" + titleName + " : ";
 
@@ -569,12 +602,12 @@
     upload.accept = ".jpeg,.png,.jpg";
 
     upload.onchange = (e) => {
-      if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
-        if(!iOS){
+      if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png") {
+        if(!iOS) {
           document.getElementById("MsgAlert").innerHTML =  "Only can upload images file with .png / .jpg";
           $("#alertModalClick").click();
         }
-      } else{
+      } else {
         createImageBitmap(e.target.files[0]).then((imageBit) => {
           const canvas = document.createElement("canvas")
           canvas.width = imageBit.width
@@ -652,25 +685,30 @@
       aElement.style.display = "none";
       aElement2.style.display = "none";
       aElement3.style.display = "flex";
+
       const video = document.createElement("video");
       video.autoplay = true;
       video.playsInline = true;
       video.muted = true;
       video.style.width = "100%";
       video.style.position  = "absolute";
+
       const vidCont = document.createElement("div")
       vidCont.appendChild(video)
       vidCont.style.position = "relative";
       vidCont.style.overflow = "hidden";
+
       const c = document.createElement("canvas")
       c.style.display = "none";
       el.appendChild(c);
+
       video.srcObject = s;
       video.addEventListener("loadedmetadata", () => {
         vidCont.style.height = video.clientHeight + 'px'
       })
       el.insertBefore(vidCont, imageCont);
       video.play();
+
       aElement3.onclick = () => {
         aElement3.style.display = "none";
         aElement.style.display = "flex";
@@ -696,116 +734,109 @@
 
   //create upload photo dynamically
   addImageUpload(document.getElementById("sirimUploadContainer"), "Sirim And Indoor Serial Number");
-    for (let i = 0; i < 6; i++) {
-      let titleName = ['Outdoor Serial Number','Indoor unit (After Install)','Outdoor unit (After Install)','Installation Note (Indoor)','Installation Note (Outdoor)', 'Customer House (Over View Front Door)'];
-      addImageUpload(document.getElementById("installUploadContainer"), titleName[i]);
+  for (let i = 0; i < 6; i++) {
+    let titleName = ['Outdoor Serial Number','Indoor unit (After Install)','Outdoor unit (After Install)','Installation Note (Indoor)','Installation Note (Outdoor)', 'Customer House (Over View Front Door)'];
+    addImageUpload(document.getElementById("installUploadContainer"), titleName[i]);
+  }
+
+  for (let i = 0; i < 2; i++) {
+    let titleName = (i==0? "Scan Indoor Barcode" : "Scan Outdoor Barcode");
+    addImageUpload(document.getElementById("imageSection"), titleName);
+  }
+
+  let resultContainer = document.getElementById('qr-reader-results');
+  let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+  let serialObject = {};
+
+  onScanSuccess = (decodedText, seq , callback) => {
+    document.getElementById("qr-reader-cont").style.display = "none";
+    document.getElementById("qr-reader-cont2").style.display = "none";
+    //++countResults
+    //if(decodedText.length !=18 || decodedText.indexOf(stkCode1) < 0){
+    if(decodedText.length !=18){
+      return;
     }
 
-    for (let i = 0; i < 2; i++) {
-      let titleName = (i==0? "Scan Indoor Barcode" : "Scan Outdoor Barcode");
-      addImageUpload(document.getElementById("imageSection"), titleName);
+    seq.innerText = decodedText;
+    callback();
+  }
+
+  $("#btnScanBarcode").click(e => {
+    e.preventDefault();
+    document.getElementById("qr-reader-cont2").style.display = 'flex'
+
+    const videoElement = document.querySelector("#qr-reader-cont2 video");
+    navigator.mediaDevices.getUserMedia({video : {
+      facingMode: "environment",
+      zoom: 3
+     }}).then(e => {
+       let devideId = e.getTracks()[0].getSettings().deviceId;
+
+       const codeReader = new ZXingBrowser.BrowserMultiFormatReader(null, {delayBetweenScanAttempts: 1, delayBetweenScanSuccess: 1});
+       codeReader.decodeFromVideoDevice(devideId, videoElement, (result,error, controls)=>{
+       document.getElementById("qr-reader-cont2").onclick = function(e) {
+         this.style.display = 'none'
+         controls.stop()
+       }
+
+       if(result){
+         onScanSuccess(result.text, document.querySelector("#serialNo"), () => {controls.stop()})
+       }
+     })
+   });
+  });
+
+  $("#btnScanBarcodeOutdoor").click(e => {
+    e.preventDefault();
+    document.getElementById("qr-reader-cont").style.display = 'flex'
+    document.getElementById("qr-reader-cont").onclick = function(e) {
+       this.style.display = 'none'
+       html5QrcodeScanner.stop()
     }
 
-    let resultContainer = document.getElementById('qr-reader-results');
-    let html5QrcodeScanner = new Html5Qrcode("qr-reader");
-    let serialObject = {};
-
-    onScanSuccess = (decodedText, seq , callback) => {
-      document.getElementById("qr-reader-cont").style.display = "none";
-      document.getElementById("qr-reader-cont2").style.display = "none";
-        //++countResults
-        //if(decodedText.length !=18 || decodedText.indexOf(stkCode1) < 0){
-        if(decodedText.length !=18){
-          return;
-        }
-
-        seq.innerText = decodedText;
-        callback();
-    }
-
-    $("#btnScanBarcode").click(e => {
-      e.preventDefault();
-      document.getElementById("qr-reader-cont2").style.display = 'flex'
-      const videoElement = document.querySelector("#qr-reader-cont2 video");
-      navigator.mediaDevices.getUserMedia({video : {
-        facingMode: "environment",
-        zoom: 3
-       }}).then(e => {
-         let devideId = e.getTracks()[0].getSettings().deviceId;
-
-         const codeReader = new ZXingBrowser.BrowserMultiFormatReader(null, {delayBetweenScanAttempts: 1, delayBetweenScanSuccess: 1});
-         codeReader.decodeFromVideoDevice(devideId, videoElement, (result,error, controls)=>{
-         document.getElementById("qr-reader-cont2").onclick = function(e) {
-           this.style.display = 'none'
-           controls.stop()
-         }
-
-         if(result){
-           onScanSuccess(result.text, document.querySelector("#serialNo"), () => {controls.stop()})
-         }
-       })
-     });
-    });
-
-    $("#btnScanBarcodeOutdoor").click(e => {
-        e.preventDefault();
-        document.getElementById("qr-reader-cont").style.display = 'flex'
-        document.getElementById("qr-reader-cont").onclick = function(e) {
-           this.style.display = 'none'
-             html5QrcodeScanner.stop()
-        }
-        html5QrcodeScanner.start(
-            {facingMode: 'environment'},
-            {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
-            (decodedText , decodedResult) => {
-              onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {
-                html5QrcodeScanner.stop()
-              })
-            }
-        );
-    });
+    html5QrcodeScanner.start( {facingMode: 'environment'},
+                                          {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
+                                          (decodedText , decodedResult) => {
+                                            onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {
+                                              html5QrcodeScanner.stop()
+                                            })
+                                          }
+    );
+  });
 
   const validationCheck = (e) => {
     const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
     const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
 
-    if(!sirimUploadInput.files[0]){
+    if(!sirimUploadInput.files[0]) {
       document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
       $("#alertModalClick").click();
       return false;
     }
 
-    for(let i = 0; i < installUploadContainer.length; i++){
-      if(!installUploadContainer[i].files[0]){
+    for(let i = 0; i < installUploadContainer.length; i++) {
+      if(!installUploadContainer[i].files[0]) {
         document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
         $("#alertModalClick").click();
-          return false;
-        }
+        return false;
       }
-        return true;
     }
+    return true;
+  }
 
-    let attachment = 0;
+  let attachment = 0;
 
-    // [Bug Fix:#24037555] - validate the special symbol in text area field
-    const regexp = [';', ':', '#', '@', '!', '|', '\\','"'];
-    const textArea = document.getElementById("remark").addEventListener('keydown',function(event){
-      if(event.key ==='Enter' || regexp.includes(event.key)){
-        event.preventDefault();
-      }
-    });
-
-    const textAreaRemark = document.getElementById("remark").addEventListener('input',function(event){
-        if(event.data ==='\n' || regexp.includes(event.data)){
-          var txtareaRmk = event.target;
-            var selectionStart = txtareaRmk.selectionStart;
-            var selectionEnd = txtareaRmk.selectionEnd;
-            var textBeforeCursor = txtareaRmk.value.substring(0, selectionStart - 1);
-            var textAfterCursor = txtareaRmk.value.substring(selectionEnd);
-            txtareaRmk.value = textBeforeCursor + textAfterCursor;
-            txtareaRmk.setSelectionRange(selectionStart - 1, selectionStart - 1);
-        }
-    });
+  const textAreaRemark = document.getElementById("remark").addEventListener('input',function(event){
+    if(event.data ==='\n' || regexp.includes(event.data)){
+      var txtareaRmk = event.target;
+      var selectionStart = txtareaRmk.selectionStart;
+      var selectionEnd = txtareaRmk.selectionEnd;
+      var textBeforeCursor = txtareaRmk.value.substring(0, selectionStart - 1);
+      var textAfterCursor = txtareaRmk.value.substring(selectionEnd);
+      txtareaRmk.value = textBeforeCursor + textAfterCursor;
+      txtareaRmk.setSelectionRange(selectionStart - 1, selectionStart - 1);
+    }
+  });
 
   const insertPreInsComplete = () => {
     const insNo = "${insNo}", serial = $("#serialNo").text() , serial2 = $("#serialNo2").text(), remark = document.querySelector("#remark").value;
@@ -841,7 +872,7 @@
     fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
       .then(r => r.json())
         .then(resp => {
-          if(!resp.dupCheck){
+          if(!resp.dupCheck) {
             const formData = new FormData();
             const container = new DataTransfer();
             const imageSection = document.querySelectorAll("#imageSection input");
@@ -864,47 +895,47 @@
               }
             }
 
-             const optionValue = $("#optionVal option:selected").val();
+            const optionValue = $("#optionVal option:selected").val();
 
-             if(optionValue){
-               for(let i = 0; i < imageSection.length; i++){
-                 if(imageSection[i].files[0]){
-                   uploadFlag=true;
-                   container.items.add(new File([imageSection[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_SERIAL' + (i+1) +'.png', {type: imageSection[i].files[0].type}))
-                 }
-               }
-             }
+            if(optionValue){
+              for(let i = 0; i < imageSection.length; i++){
+                if(imageSection[i].files[0]){
+                  uploadFlag=true;
+                  container.items.add(new File([imageSection[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_SERIAL' + (i+1) +'.png', {type: imageSection[i].files[0].type}))
+                }
+              }
+            }
 
-             if(uploadFlag){
-               $.each(container.files, function(n, v) {
-                 formData.append(n, v);
-                 formData.append("salesOrdId", salesOrdId);
-                 formData.append("InstallEntryNo",insNo);
-                 formData.append("atchFileGrpId", newfileGrpId);
-               });
+            if(uploadFlag){
+              $.each(container.files, function(n, v) {
+                formData.append(n, v);
+                formData.append("salesOrdId", salesOrdId);
+                formData.append("InstallEntryNo",insNo);
+                formData.append("atchFileGrpId", newfileGrpId);
+              });
 
-               fetch("/homecare/services/install/uploadInsImage.do", {
-                 method: "POST",
-                 body: formData
-               })
-               .then(d=>d.json())
-                 .then(r=> {
-                    if(r.code =="99"){
-                      document.getElementById("MsgAlert").innerHTML =  "Pre-Installation is failed to submit. Please upload another image.";
-                      $("#alertModalClick").click();
-                      return;
-                    }
+              fetch("/homecare/services/install/uploadInsImage.do", {
+                method: "POST",
+                body: formData
+              })
+              .then(d=>d.json())
+              .then(r=> {
+                if(r.code =="99") {
+                  document.getElementById("MsgAlert").innerHTML =  "Pre-Installation is failed to submit. Please upload another image.";
+                  $("#alertModalClick").click();
+                  return;
+                }
 
-                    attachment = r.fileGroupKey;
-                    insertPreInsComplete();
-                  })
-             }else{
-               insertPreInsComplete();
-             }
-           } else{
-             window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
-           }
+                attachment = r.fileGroupKey;
+                insertPreInsComplete();
+              })
+            } else {
+              insertPreInsComplete();
+            }
+          } else{
+            window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
+          }
         });
-    })
+  })
 
 </script>
