@@ -603,8 +603,10 @@
         }
       }
 
-      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo").val())){
-          msg += "* No Special Character Allowed for Serial No </br>";
+      if($("#addInstallForm #serialNo").val().trim() != ""){
+          if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo").val())){
+              msg += "* No Special Character Allowed for Serial No </br>";
+          }
       }
 
       if ( $("#waterSrcType").val() == "") {

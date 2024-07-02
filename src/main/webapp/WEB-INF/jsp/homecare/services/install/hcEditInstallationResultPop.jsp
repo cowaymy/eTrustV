@@ -370,12 +370,16 @@ var installAccValues = JSON.parse("${installAccValues}");
           }
       }
 
-    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo").val())){
-        msg += "* No Special Character Allowed for Serial No </br>";
+    if($("#editInstallForm #serialNo").val().trim() != ""){
+	    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo").val())){
+	        msg += "* No Special Character Allowed for Serial No </br>";
+	    }
     }
 
-    if(!fn_AlphanumericRegexCheck($("#editInstallForm #frmSerialNo").val())){
-        msg += "* No Special Character Allowed for Frame Serial No </br>";
+    if($("#editInstallForm #frmSerialNo").val().trim() != ""){
+	    if(!fn_AlphanumericRegexCheck($("#editInstallForm #frmSerialNo").val())){
+	        msg += "* No Special Character Allowed for Frame Serial No </br>";
+	    }
     }
 
     //validate aircon serial

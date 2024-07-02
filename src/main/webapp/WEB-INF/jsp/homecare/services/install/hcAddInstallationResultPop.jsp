@@ -372,12 +372,16 @@
 	        }
 	      }
 
-	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo").val())){
-	          msg += "* No Special Character Allowed for Serial No </br>";
+	      if($("#addInstallForm #serialNo").val().trim() != ""){
+		      if(!fn_AlphanumericRegexCheck($("#addInstallForm #serialNo").val())){
+		          msg += "* No Special Character Allowed for Serial No </br>";
+		      }
 	      }
 
-	      if(!fn_AlphanumericRegexCheck($("#addInstallForm #frmSerialNo").val())){
-	          msg += "* No Special Character Allowed for Frame Serial No </br>";
+	      if($("#addInstallForm #frmSerialNo").val().trim() != ""){
+		      if(!fn_AlphanumericRegexCheck($("#addInstallForm #frmSerialNo").val())){
+		          msg += "* No Special Character Allowed for Frame Serial No </br>";
+		      }
 	      }
 
 	      if ($("#frmSerialNo").hasClass("readonly") == false

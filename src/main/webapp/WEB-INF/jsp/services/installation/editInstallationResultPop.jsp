@@ -481,10 +481,11 @@ function notMandatoryForAP(){
       }
     }
 
-    if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo").val())){
-        msg += "* No Special Character Allowed for Serial No </br>";
+    if($("#editInstallForm #serialNo").val().trim() != ''){
+        if(!fn_AlphanumericRegexCheck($("#editInstallForm #serialNo").val())){
+            msg += "* No Special Character Allowed for Serial No </br>";
+        }
     }
-
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
  // PSI CHECKING
 
