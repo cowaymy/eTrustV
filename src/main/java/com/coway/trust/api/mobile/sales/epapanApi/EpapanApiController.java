@@ -543,13 +543,13 @@ public class EpapanApiController {
 			return ResponseEntity.ok(message);
 		}
 
-	  @ApiOperation(value = "chkExtradeScheduleEpapan", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	  @RequestMapping(value = "/chkExtradeScheduleEpapan", method = RequestMethod.GET)
-	  public ResponseEntity<Integer> chkExtradeScheduleEpapan(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
-	    int result = preOrderService.chkExtradeScheduleEpapan();
-
-	    return ResponseEntity.ok(result);
-	  }
+//	  @ApiOperation(value = "chkExtradeScheduleEpapan", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	  @RequestMapping(value = "/chkExtradeScheduleEpapan", method = RequestMethod.GET)
+//	  public ResponseEntity<Integer> chkExtradeScheduleEpapan(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+//	    int result = preOrderService.chkExtradeScheduleEpapan();
+//
+//	    return ResponseEntity.ok(result);
+//	  }
 
 	  @ApiOperation(value = "selectHcPreOrderList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	    @RequestMapping(value = "/selectHcPreOrderList",  method = RequestMethod.GET)
