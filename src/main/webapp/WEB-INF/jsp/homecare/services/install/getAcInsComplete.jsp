@@ -828,7 +828,7 @@
 
     for(let i = 0; i < installUploadContainer.length; i++) {
       if(!installUploadContainer[i].files[0]) {
-        document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
+        document.getElementById("MsgAlert").innerHTML = "All images are required to complete pre-installation.";
         $("#alertModalClick").click();
         return false;
       }
