@@ -519,18 +519,7 @@
             fn_calcDiscountPV();
         });
         $('#exTrade').change(function() {
-        	if($('#exTrade').val() == "1"){
-                $('.extradeMonth').removeAttr("hidden");
-                $('#extradeMonthFrom').prop("disabled", false);
-                $('#extradeMonthTo').prop("disabled", false);
-                $('#extradeAppType').prop("disabled", false);
-        	}
-        	else{
-                $('.extradeMonth').attr("hidden", true);
-                $('#extradeMonthFrom').val('0').prop("disabled", true);
-                $('#extradeMonthTo').val('0').prop("disabled", true);
-                $('#extradeAppType').val('0').prop("disabled", true);
-        	}
+            fn_extradeSetting();
 
             fn_calcDiscountPrice();
             fn_calcDiscountRPF();
@@ -576,9 +565,7 @@
 
             AUIGrid.setProp(stckGridID, "editable" , true);
 
-//             $('input[name="woHs"]').prop("disabled", true);
-//             $('#extradeMonthFrom').prop("disabled", true);
-//             $('#extradeMonthTo').prop("disabled", true);
+            fn_extradeSetting();
         }
         else if(vMode == 'VIEW') {
             $('#btnPromoEdit').removeClass("blind");
@@ -598,6 +585,8 @@
             $('#modifyForm').find(':input').prop("disabled", true);
 
             AUIGrid.setProp(stckGridID, "editable" , false);
+
+            fn_extradeSetting();
         }
     }
 
@@ -958,6 +947,21 @@
 
     function fn_onchange(){
     	$('#exTrade').trigger("change");
+    }
+
+    function fn_extradeSetting() {
+    	if($('#exTrade').val() == "1"){
+            $('.extradeMonth').removeAttr("hidden");
+            $('#extradeMonthFrom').prop("disabled", false);
+            $('#extradeMonthTo').prop("disabled", false);
+            $('#extradeAppType').prop("disabled", false);
+    	}
+    	else{
+            $('.extradeMonth').attr("hidden", true);
+            $('#extradeMonthFrom').val('0').prop("disabled", true);
+            $('#extradeMonthTo').val('0').prop("disabled", true);
+            $('#extradeAppType').val('0').prop("disabled", true);
+    	}
     }
 </script>
 
