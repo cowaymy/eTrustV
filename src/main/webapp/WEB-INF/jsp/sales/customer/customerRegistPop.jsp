@@ -304,9 +304,17 @@
 
             if($("#_cmbCorpTypeId_ :selected").val() != '1151' ){
                 $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
+                $("#_sstRgistNo_").removeAttr("disabled");
+                $("#_sstRgistNo_").removeClass("disabled");
+                $("#_tin_").removeAttr("disabled");
+                $("#_tin_").removeClass("disabled");
             }
             else{
                 $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+                $("#_sstRgistNo_").val('');
+                $("#_sstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+                $("#_tin_").val('');
+                $("#_tin_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             }
 
             //CELESTE - 20240510 - LHDN E-INVOICE [E]
@@ -341,7 +349,7 @@
             $("#genderForm").attr('checked', false);
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_sstRgistNo_").removeAttr("disabled");
-            $("#_sstRgistNo_").removeClass("w100p disabled");
+            $("#_sstRgistNo_").removeClass("disabled");
 
             // LaiKW - 20190903 - Added to hide centralize and ePortal VIP company type, disallow user to select the mentioned company types
             $("#_cmbCorpTypeId_ option[value='1174']").remove();
@@ -555,9 +563,11 @@
         }else{
         	if($("#_cmbNation_").val() == '1'){
         		// Malaysian NRIC validation
-        		var regex = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+        		//var regex2 = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+        		var regex2= new RegExp("(([0-9]{2}(?!0229))|([02468][048]|[13579][26])(?=0229))(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|(?<!02)30|(?<!02|4|6|9|11)31)[0-9]{2}[0-9]{4}$");
+        		//var regex2 = new RegExp("");
         		var str = $("#_nric_").val();
-                if (regex.test(str)) {
+                if (regex2.test(str)) {
                     //return true;
                 }
                 else{
@@ -794,10 +804,27 @@
             }
         }
 
-        if($("#_sstRgistNo_").val() != ""){
-        	if($("#_sstRgistNo_").val().length != 17){
-                Common.alert("Please make sure SST No is 17 characters. ");
-                return false;
+        if($("#_cmbTypeId_").val() == '965'){
+            if($("#_sstRgistNo_").val() != ""){
+
+                if($("#_sstRgistNo_").val().length == 35){
+
+                }else if($("#_sstRgistNo_").val().length == 17){
+
+                }else{
+                    Common.alert("Please make sure SST No format is valid");
+                    return false;
+                }
+
+                var regex3 = new RegExp("^[A-Za-z0-9\-\;]+$");
+                var str = $("#_sstRgistNo_").val();
+                if (regex3.test(str)) {
+                    //return true;
+                }
+                else{
+                    Common.alert("Special characters other than - and /; is not allowed. ");
+                    return false;
+                }
             }
         }
 

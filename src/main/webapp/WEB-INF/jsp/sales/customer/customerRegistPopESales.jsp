@@ -416,9 +416,17 @@
 
            if($("#_cmbCorpTypeId_ :selected").val() != '1151' ){
                $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
+               $("#_sstRgistNo_").removeAttr("disabled");
+               $("#_sstRgistNo_").removeClass("disabled");
+               $("#_tin_").removeAttr("disabled");
+               $("#_tin_").removeClass("disabled");
            }
            else{
                $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /></th>");
+               $("#_sstRgistNo_").val('');
+               $("#_sstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+               $("#_tin_").val('');
+               $("#_tin_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
            }
 
            //CELESTE - 20240510 - LHDN E-INVOICE [E]
@@ -583,6 +591,50 @@
         if($("#_nric_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
+        }
+        if($("#_cmbTypeId_").val() == '965'){
+            if($("#_cmbCorpTypeId_ :selected").val() != '1151'){
+
+                var regex1 = new RegExp("^[0-9]+$");
+                var str1 = $("#_nric_").val();
+                if (regex1.test(str1)) {
+                     if($("#_nric_").val().length != 12){
+                         Common.alert('Only allow 12 characters for NRIC/Company No.');
+                         return false;
+                     }
+                    //return true;
+                }
+                else{
+                    Common.alert('Only allow 12 digits for NRIC/Company No.');
+                    return false;
+                }
+
+            } else {
+                if($("#_nric_").val().length > 20){
+                    Common.alert('Only allow 20 characters for NRIC/Company No.');
+                    return false;
+                }
+            }
+        }else{
+            if($("#_cmbNation_").val() == '1'){
+                // Malaysian NRIC validation
+                //var regex2 = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+                var regex2= new RegExp("(([0-9]{2}(?!0229))|([02468][048]|[13579][26])(?=0229))(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|(?<!02)30|(?<!02|4|6|9|11)31)[0-9]{2}[0-9]{4}$");
+                //var regex2 = new RegExp("");
+                var str = $("#_nric_").val();
+                if (regex2.test(str)) {
+                    //return true;
+                }
+                else{
+                    Common.alert('Invalid format for NRIC/Company No.');
+                    return false;
+                }
+            }
+
+            if($("#_nric_").val().length != 12){
+                Common.alert('Only allow 12 digits for NRIC/Company No.');
+                return false;
+            }
         }
         /*else if($("#_nric_"). length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
@@ -844,12 +896,48 @@
             }
         }
 
-        if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
-            if($("#_tin_").val() == "" || $("#_tin_").val() == null){
-                Common.alert("Please enter Company TIN to proceed.");
-                return;
-             }
+        if($("#_cmbTypeId_").val() == '965'){
+        	if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
+                if($("#_tin_").val() == "" || $("#_tin_").val() == null){
+                    Common.alert("Please enter Company TIN to proceed.");
+                    return;
+                 }
+            }
         }
+        else{
+        	if($("#_tin_").val() != "" &&  $("#_tin_").val() != null){
+        		if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
+                    Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
+                    return false;
+                }
+        	}
+        }
+
+        if($("#_cmbTypeId_").val() == '965'){
+        	if($("#_sstRgistNo_").val() != ""){
+
+                if($("#_sstRgistNo_").val().length == 35){
+
+                }else if($("#_sstRgistNo_").val().length == 17){
+
+                }else{
+                	Common.alert("Please make sure SST No format is valid");
+                    return false;
+                }
+
+                var regex3 = new RegExp("^[A-Za-z0-9\-\;]+$");
+                var str = $("#_sstRgistNo_").val();
+                if (regex3.test(str)) {
+                    //return true;
+                }
+                else{
+                    Common.alert("Special characters other than - and /; is not allowed. ");
+                    return false;
+                }
+            }
+        }
+
+
 
         // [Celeste] 29-05-2024 : move eInvoice flag to bill group
         /* if($('input:checkbox[id="isEInvoice"]').is(":checked") == true && $("#_tin_").val() == ''){
@@ -1231,7 +1319,7 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
-                                <td><input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="18" placeholder="SST Registration No" class="w100p" /></td>
+                                <td><input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="35" placeholder="SST Registration No" class="w100p" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must foreigner">*</span>

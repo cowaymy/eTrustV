@@ -138,8 +138,9 @@ $(document).ready(function(){
                }
 
                if($("#basicCmdNationTypeId").val() == '1'){
-            	   var regex = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
-                   var str = $("#basicNric").val();
+            	   //var regex = new RegExp("/((([02468][048]|[13579][26])(02)(29))|(([0-9]{2})((0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-8])|(0[1|3-9]|1[0-2])(29|30)|(0[13578]|1[02])(31))))([0-9]{2})([0-9]{4})$/");
+                   var regex= new RegExp("(([0-9]{2}(?!0229))|([02468][048]|[13579][26])(?=0229))(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|(?<!02)30|(?<!02|4|6|9|11)31)[0-9]{2}[0-9]{4}$");
+            	   var str = $("#basicNric").val();
                    if (regex.test(str)) {
                        //return true;
                    }
@@ -229,10 +230,32 @@ $(document).ready(function(){
 
             // SST No
             if($("#basicSstRegNo").val() != ""){
-                if($("#basicSstRegNo").val().length != 17){
-                    Common.alert("Please make sure SST No is 17 characters. ");
+
+                if($("#basicSstRegNo").val().length == 35){
+
+                }else if($("#basicSstRegNo").val().length == 17){
+
+                }else{
+                    Common.alert("Please make sure SST No format is valid");
                     return false;
                 }
+
+                var regex3 = new RegExp("^[A-Za-z0-9\-\;]+$");
+                var str = $("#basicSstRegNo").val();
+                if (regex3.test(str)) {
+                    //return true;
+                }
+                else{
+                    Common.alert("Special characters other than - and /; is not allowed. ");
+                    return false;
+                }
+            }
+        }
+
+        if($("#_tin_").val() != ""){
+            if($("#basicCustTin").val().length < 11  || $("#basicCustTin").val().length > 15){
+                Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
+                return false;
             }
         }
 
