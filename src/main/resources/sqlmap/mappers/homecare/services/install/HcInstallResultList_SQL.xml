@@ -582,7 +582,9 @@
         #{attachment},
         SYSDATE,
         #{serial2},
-        #{remark}
+        #{remark},
+        null,
+        #{autoStusCodeId}
     )
   </insert>
 

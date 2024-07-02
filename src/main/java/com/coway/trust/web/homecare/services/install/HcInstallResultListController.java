@@ -845,6 +845,7 @@ public class HcInstallResultListController {
     @RequestMapping(value="/insertPreInsFail.do", method = RequestMethod.POST)
     public ResponseEntity<HashMap<String, Object>> insertPreInsFail(@RequestBody Map<String, Object> params) {
     	params.put("status", 21);
+    	params.put("autoStusCodeId", 10);
     	hcInstallResultListService.insertPreIns(params);
     	return ResponseEntity.ok(new HashMap<String, Object>());
     }
@@ -852,6 +853,7 @@ public class HcInstallResultListController {
     @RequestMapping(value="/insertPreInsCompleted.do", method = RequestMethod.POST)
     public ResponseEntity<HashMap<String, Object>> insertPreInsCompleted(@RequestBody Map<String, Object> params) {
     	params.put("status", 4);
+    	params.put("autoStusCodeId", 1);
     	hcInstallResultListService.insertPreIns(params);
     	return ResponseEntity.ok(new HashMap<String, Object>());
     }
