@@ -5,6 +5,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var stckGridID, giftGridID;
+    var mode;
 
     var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
                        {"codeId": "QUEEN" ,"codeName": "QUEEN"},
@@ -547,7 +548,7 @@
     function fn_chgPageMode(vMode) {
 
         if(vMode == 'MODIFY') {
-
+			mode = "MODIFY";
             $('#btnPromoEdit').addClass("blind");
             $('#btnPromoSave').removeClass("blind");
 
@@ -566,8 +567,16 @@
             AUIGrid.setProp(stckGridID, "editable" , true);
 
             fn_extradeSetting();
+            var extradeFr = "${promoInfo.extradeFr}";
+            var extradeTo = "${promoInfo.extradeTo}";
+            var extradeAppType = "${promoInfo.extradeAppType}";
+
+            $('#extradeMonthFrom').val(extradeFr);
+            $('#extradeMonthTo').val(extradeFr);
+            $('#extradeAppType').val(extradeAppType);
         }
         else if(vMode == 'VIEW') {
+			mode = "VIEW";
             $('#btnPromoEdit').removeClass("blind");
             $('#btnPromoSave').addClass("blind");
 
@@ -587,6 +596,13 @@
             AUIGrid.setProp(stckGridID, "editable" , false);
 
             fn_extradeSetting();
+            var extradeFr = "${promoInfo.extradeFr}";
+            var extradeTo = "${promoInfo.extradeTo}";
+            var extradeAppType = "${promoInfo.extradeAppType}";
+
+            $('#extradeMonthFrom').val(extradeFr);
+            $('#extradeMonthTo').val(extradeFr);
+            $('#extradeAppType').val(extradeAppType);
         }
     }
 
@@ -950,17 +966,33 @@
     }
 
     function fn_extradeSetting() {
-    	if($('#exTrade').val() == "1"){
-            $('.extradeMonth').removeAttr("hidden");
-            $('#extradeMonthFrom').prop("disabled", false);
-            $('#extradeMonthTo').prop("disabled", false);
-            $('#extradeAppType').prop("disabled", false);
+    	if(mode=="MODIFY"){
+        	if($('#exTrade').val() == "1"){
+                $('.extradeMonth').removeAttr("hidden");
+                $('#extradeMonthFrom').prop("disabled", false);
+                $('#extradeMonthTo').prop("disabled", false);
+                $('#extradeAppType').prop("disabled", false);
+        	}
+        	else{
+                $('.extradeMonth').attr("hidden", true);
+                $('#extradeMonthFrom').val('0').prop("disabled", true);
+                $('#extradeMonthTo').val('0').prop("disabled", true);
+                $('#extradeAppType').val('0').prop("disabled", true);
+        	}
     	}
     	else{
-            $('.extradeMonth').attr("hidden", true);
-            $('#extradeMonthFrom').val('0').prop("disabled", true);
-            $('#extradeMonthTo').val('0').prop("disabled", true);
-            $('#extradeAppType').val('0').prop("disabled", true);
+    		if($('#exTrade').val() == "1"){
+                $('.extradeMonth').removeAttr("hidden");
+                $('#extradeMonthFrom').prop("disabled", true);
+                $('#extradeMonthTo').prop("disabled", true);
+                $('#extradeAppType').prop("disabled", true);
+        	}
+        	else{
+                $('.extradeMonth').attr("hidden", true);
+                $('#extradeMonthFrom').val('0').prop("disabled", true);
+                $('#extradeMonthTo').val('0').prop("disabled", true);
+                $('#extradeAppType').val('0').prop("disabled", true);
+        	}
     	}
     }
 </script>
