@@ -1276,7 +1276,7 @@
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
          , TO_CHAR(WATER_SRC_TYPE) AS water_src_type
-         , TO_CHAR (NTU) AS ntu
+         , NTU AS ntu
          , TO_CHAR(CHK_SMS) AS chk_sms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
          , TO_CHAR(CHECK_SEND) AS check_send
