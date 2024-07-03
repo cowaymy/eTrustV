@@ -4049,9 +4049,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
     try {
+    	// Remove any "0" entries from the list
+  	  	installAccList.removeIf("0"::equals);
+
+        logger.info("### addInstallAccList : " + installAccList.toString());
 
       if (!installAccList.isEmpty()){
-        logger.info("### addInstallAccList : " + installAccList.toString());
 
         if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y") {
         	installResult.put("insAccRemark", "Mobile Entry");
