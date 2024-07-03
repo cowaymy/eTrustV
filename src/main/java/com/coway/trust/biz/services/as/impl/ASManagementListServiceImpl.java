@@ -4337,10 +4337,8 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 
   public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
   try {
-
 	// Remove any "0" entries from the list
-	  //installAccList.removeIf("7571"::equals);7591
-	  installAccList.removeIf("7591"::equals);
+	  installAccList.removeIf("0"::equals);
 
 	  LOGGER.info("### addInstallAccList : " + installAccList.toString());
 
