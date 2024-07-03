@@ -65,6 +65,7 @@
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
+                    $('#hiddenRefNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "refNo"));
                     $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
@@ -76,6 +77,7 @@
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
+                    $('#hiddenRefNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "refNo"));
                     $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     Common.alert('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
@@ -83,6 +85,7 @@
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
                     $('#speclInstct').val(RESULT.instSpecInst);
                     $('#hiddenMonthExpired').val(RESULT.monthExpired);
+                    $('#hiddenRefNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "refNo"));
                     $('#hiddenPreBook').val(0); //$('#hiddenPreBook').val(RESULT.preBook);
                     btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
                     //fn_popOrderDetail();
