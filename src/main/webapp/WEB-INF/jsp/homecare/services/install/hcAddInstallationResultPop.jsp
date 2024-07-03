@@ -490,6 +490,7 @@
 	                      console.log($("#addInstallForm").serializeJSON());
 	                  var saveForm = {
 	                          "installForm" : $("#addInstallForm").serializeJSON(),
+	                          "installAccList" : $("#installAcc").val() ,
 	                          "fileGroupKey": result.data.fileGroupKey
 	                    };
 
@@ -1403,7 +1404,7 @@
      </tr>
      <tr>
           <th scope="row"><spring:message code="service.title.installation.accessories" />
-          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
     		<td colspan="3">
     		<select class="w100p" id="installAcc" name="installAcc">
     		</select>
