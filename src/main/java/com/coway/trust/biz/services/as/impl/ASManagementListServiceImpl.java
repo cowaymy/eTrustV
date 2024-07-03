@@ -4338,8 +4338,12 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   public void insertInstallationAccessories (List<String> installAccList , EgovMap installResult, int userId){
   try {
 
+	// Remove any "0" entries from the list
+	  installAccList.removeIf("7571"::equals);
+
+	  LOGGER.info("### addInstallAccList : " + installAccList.toString());
+
     if (!installAccList.isEmpty()){
-      LOGGER.info("### addInstallAccList : " + installAccList.toString());
 
       if (CommonUtils.nvl(installResult.get("mobileYn")).toString() == "Y" || installResult.get("mobileYn").toString().equals("Y")) {
       	installResult.put("insAccRemark", "Mobile Entry");
