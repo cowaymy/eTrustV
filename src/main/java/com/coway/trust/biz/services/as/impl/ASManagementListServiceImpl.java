@@ -1940,11 +1940,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           params.put("user_id", params.get("updator"));
 
           LOGGER.debug("debug 111====" + params.get("mobileYn"));
+          LOGGER.debug("chkInstallAcc flag====" + svc0004dmap.get("chkInstallAcc").toString());
 
-          if (svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
+          if ( svc0004dmap.get("chkInstallAcc").toString() == "Y" || svc0004dmap.get("chkInstallAcc").toString().equals("Y") ){
 
         	  LOGGER.debug("debug 222====" + params.get("mobileYn"));
-          }
+
               try {
 
             	  LOGGER.debug("debug 333====" + params.get("mobileYn"));
@@ -1952,6 +1953,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+              }
               }
        }else {
     	  // // Insert SVC0140D for Installation Accessory - TPY
