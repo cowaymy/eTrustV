@@ -572,7 +572,7 @@
             var extradeAppType = "${promoInfo.extradeAppType}";
 
             $('#extradeMonthFrom').val(extradeFr);
-            $('#extradeMonthTo').val(extradeFr);
+            $('#extradeMonthTo').val(extradeTo);
             $('#extradeAppType').val(extradeAppType);
         }
         else if(vMode == 'VIEW') {
@@ -601,7 +601,7 @@
             var extradeAppType = "${promoInfo.extradeAppType}";
 
             $('#extradeMonthFrom').val(extradeFr);
-            $('#extradeMonthTo').val(extradeFr);
+            $('#extradeMonthTo').val(extradeTo);
             $('#extradeAppType').val(extradeAppType);
         }
     }
