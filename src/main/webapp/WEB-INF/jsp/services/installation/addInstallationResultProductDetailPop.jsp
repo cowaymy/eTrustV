@@ -752,6 +752,7 @@ var installAccTypeId = 582;
                   var saveForm = {
                             "installForm" : $("#addInstallForm").serializeJSON(),
                             "add" : addedRowItems,
+                            "installAccList" : $("#installAcc").val() ,
                             "fileGroupKey": result.data.fileGroupKey
                   };
 
