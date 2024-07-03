@@ -3651,9 +3651,10 @@ WHERE
 	    WHERE TRADE_SO_ID = #{value}
     </select>
 
-    <select id="selectASAmt" parameterType="int" resultType="java.math.BigDecimal">
-        SELECT NVL(SUM(AS_LG_AMT),0) AS_LG_AMT
-        FROM PAY0006D
-        WHERE AS_SO_ID = #{value}
+    <select id="selectSVMAmt" parameterType="int" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(B.SRV_MEM_AMT),0) SRV_MEM_AMT
+		FROM SAL0095D A
+		LEFT JOIN PAY0024D B ON A.SRV_MEM_ID = B.SRV_MEM_ID
+		WHERE A.SRV_SALES_ORD_ID =  #{value}
     </select>
 </mapper>

@@ -248,5 +248,5 @@ public interface OrderRegisterMapper {
 
   BigDecimal selectOutrightAmt(int salesOrdId);
 
-  BigDecimal selectASAmt(int salesOrdId);
+  BigDecimal selectSVMAmt(int salesOrdId);
 }

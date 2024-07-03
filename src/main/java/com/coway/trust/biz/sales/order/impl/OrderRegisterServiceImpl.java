@@ -413,6 +413,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                       isInValid = "InValid";
                     }
 
+                    BigDecimal valiSVMOutStanding = (BigDecimal) orderRegisterMapper.selectSVMAmt(getOldOrderID);
+                    valiSVMOutStanding = valiSVMOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                    if (valiSVMOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+                    	msg = msg + " -With SVM Outstanding payment not allowed for Ex-Trade promo. <br/>";
+                    	isInValid = "InValid";
+                    }
+
 //                    EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
 
 //                    EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
@@ -472,7 +480,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     || SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer
                         .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
                      || SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS == Integer
-                             .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment, outright plus
+                             .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                     || SalesConstants.APP_TYPE_CODE_ID_SPONSOR == Integer
+                             .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                     || SalesConstants.APP_TYPE_CODE_ID_SERVICE == Integer
+                             .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                             ) { // outright,Installment, outright plus, service, sponsor
 
                 		msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>"
                             + (String) GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
@@ -482,7 +495,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                           isInValid = "InValid";
                         }
 
-                        // CHECK OUTSTANDING - INCLUDED AS
+                        // CHECK OUTSTANDING
                         BigDecimal valiOutStanding = (BigDecimal) orderRegisterMapper.selectOutrightAmt(getOldOrderID);
                         valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
@@ -491,11 +504,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                           isInValid = "InValid";
                         }
 
-                        BigDecimal valiASOutStanding = (BigDecimal) orderRegisterMapper.selectASAmt(getOldOrderID);
-                        valiASOutStanding = valiASOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+                        BigDecimal valiSVMOutStanding = (BigDecimal) orderRegisterMapper.selectSVMAmt(getOldOrderID);
+                        valiSVMOutStanding = valiSVMOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-                        if (valiASOutStanding.compareTo(BigDecimal.ZERO) > 0) {
-                        	msg = msg + " -With AS Outstanding payment not allowed for Ex-Trade promo. <br/>";
+                        if (valiSVMOutStanding.compareTo(BigDecimal.ZERO) > 0) {
+                        	msg = msg + " -With SVM Outstanding payment not allowed for Ex-Trade promo. <br/>";
                         	isInValid = "InValid";
                         }
 
@@ -2626,7 +2639,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	else{
 
-    	if((params.get("appTypeId").equals("66") || params.get("appTypeId").equals("67")) && params.get("extradeId").equals("1")){ //RENTAL || OUTRIGHT APPTYPE WITH EXTRADE ONLY
+    	if((params.get("appTypeId").equals("66") || params.get("appTypeId").equals("67") || params.get("appTypeId").equals("68"))
+    			&& params.get("extradeId").equals("1")){ //RENTAL || OUTRIGHT || INSTALMENT APPTYPE WITH EXTRADE ONLY
     		//promoId
     		//oldOrderNo
     		//oldOrdId
