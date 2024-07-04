@@ -143,7 +143,7 @@
                         </if >
               ) Project1 ) Project1
               WHERE Project1.ROW_NUMBER > 0
-              ORDER BY Project1.BATCH_ID ASC
+              ORDER BY Project1.BATCH_ID DESC
   </select>
 
   <select id="selectBatchPaymentView" parameterType="Map" resultType="egovMap">
