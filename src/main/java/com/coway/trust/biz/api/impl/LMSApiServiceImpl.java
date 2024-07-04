@@ -1486,6 +1486,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
 	        //conn.setRequestProperty("Authorization", authorization);
+	        conn.setDoOutput(true);
 	        OutputStream os = conn.getOutputStream();
 	        os.write(jsonString.getBytes());
 	        os.flush();
@@ -1493,7 +1494,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	        LOGGER.error("Start Calling LMS API return......\n");
 	        LOGGER.error("Start Calling LMS API return" + conn.getResponseMessage() + "......\n");
 
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_REQUEST) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 		                (conn.getInputStream())));
 				conn.getResponseMessage();
