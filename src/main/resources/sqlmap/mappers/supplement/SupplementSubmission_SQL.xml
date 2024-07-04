@@ -664,7 +664,7 @@
   </insert>
 
   <insert id="insertSupplementD" parameterType="supplementDetailVO">
-    INSERTINTO SUP0002D ( SUP_ITM_ID ,
+    INSERT INTO SUP0002D ( SUP_ITM_ID ,
                                        SUP_REF_ID ,
                                        SUP_STK_ID ,
                                        SUP_ITM_QTY ,
