@@ -119,7 +119,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /></th>
+          <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /><span class="must">*</span></th>
           <td colspan='3'>
             <input type="text" title="" class="w100p" name="parcelTrackNo" id="parcelTrackNo" />
           </td>
