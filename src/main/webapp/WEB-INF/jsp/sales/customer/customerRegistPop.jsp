@@ -538,19 +538,26 @@
             return false;
         }
         if($("#_cmbTypeId_").val() == '965'){
-        	if($("#_cmbCorpTypeId_ :selected").val() != '1151'){
+        	if($("#_cmbCorpTypeId_ :selected").val() == '7614'){ //[CELESTE 04/07/2024 : Newly added type: Association]
 
-        		var regex1 = new RegExp("^[0-9]+$");
+        		if($("#_nric_").val().length > 20){
+                    Common.alert('Only allow 20 characters for NRIC/Company No.');
+                    return false;
+                }
+
+        	} else if($("#_cmbCorpTypeId_ :selected").val() != '1151') {
+
+                var regex1 = new RegExp("^[0-9]+$");
                 var str1 = $("#_nric_").val();
                 if (regex1.test(str1)) {
-                	 if($("#_nric_").val().length != 12){
+                     if($("#_nric_").val().length != 12){
                          Common.alert('Only allow 12 characters for NRIC/Company No.');
                          return false;
                      }
-                	//return true;
+                    //return true;
                 }
                 else{
-                	Common.alert('Only allow 12 digits for NRIC/Company No.');
+                    Common.alert('Only allow 12 digits for NRIC/Company No.');
                     return false;
                 }
 
@@ -798,7 +805,7 @@
         }
 
         if($("#_tin_").val() != ""){
-        	if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
+        	if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 14){
                 Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
                 return false;
             }
@@ -1230,7 +1237,7 @@
             <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
             <td>
                 <!-- <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="30" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" /> -->
-                <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="17" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+                <input type="text" title="" id="_sstRgistNo_" name="sstRgistNo" maxlength="35" placeholder="SST Registration No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
             <th scope="row" id="tinTitle"><spring:message code="sal.title.text.tin" /></th>
             <td>

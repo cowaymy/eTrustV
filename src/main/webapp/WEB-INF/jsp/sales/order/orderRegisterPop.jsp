@@ -185,6 +185,8 @@
                 $("#corpTypeId").val(custInfo.corpTypeId); //Corp Type
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
+                $("#sstRegNo").val(custInfo.sstRgistNo); //SST Reg No
+                $("#tin").val(custInfo.custTin); //TIN No
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#nation").val(custInfo.nation); //Nationality
                 $("#raceId").val(custInfo.raceId); //Nationality
@@ -200,7 +202,6 @@
                 $("#hiddenCustCrtDt").val(custInfo.crtDt); //cust create date
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
-                $("#custTin").val(custInfo.custTin); //Customer TIN no
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
                     $("#marketMessageYes").prop("checked", true);
@@ -2065,7 +2066,7 @@
         }
 
         if($('#typeId').val() == '965' && $("#corpTypeId").val() != "1333" && $("#corpTypeId").val() != "1151"){
-        	if(FormUtil.isEmpty($('#custTin').val())){
+        	if(FormUtil.isEmpty($('#tin').val())){
         		isValid = false;
                 msg = "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
         	}
@@ -3036,6 +3037,12 @@
     <td><input id="nric" name="nric" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.title.text.tin" /></th>
+    <td><input id="tin" name="tin" type="text" placeholder="TIN No" class="w100p" readonly/></td>
+    <th scope="row"><spring:message code="sal.title.text.sstRegistrationNo" /></th>
+    <td><input id="sstRegNo" name="sstRegNo" type="text" placeholder="SST Registration No" class="w100p" readonly/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p" readonly/>
         <input id="nation" name="nation" type="hidden"/>
@@ -3083,8 +3090,6 @@
 <tr>
     <th scope="row">Customer Status</th>
     <td><input id="custStatus" name="custStatus" type="text" title="" placeholder="" class="w100p" readonly/></td>
-    <th scope="row">TIN</th>
-    <td><input id="custTin" name="custTin" type="text" title="" placeholder="" class="w100p" readonly/></td>
 </tr>
 <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 <tr>

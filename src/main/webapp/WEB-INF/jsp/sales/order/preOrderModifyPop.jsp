@@ -2004,6 +2004,9 @@ var userType = "${userType}";
 
                 vCustTypeId = custInfo.typeId;
 
+                $("#sstRegNo").val(custInfo.sstRgistNo); //SST Reg No
+                $("#tin").val(custInfo.custTin); //TIN No
+
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
@@ -2956,6 +2959,17 @@ var userType = "${userType}";
     <col style="width:*" />
 </colgroup>
 <tbody>
+<tr>
+  <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /><span class="must">*</span></th>
+  <td><input id="sstRegNo" name="sstRegNo" type="text" title="" placeholder="SST Registration No" class="w100p readonly" readonly /></td>
+    <!-- <span id="sstRegNo" name="sstRegNo"></span> -->
+
+</tr>
+<tr>
+  <th scope="row"><spring:message code="sal.text.tin" /><span class="must">*</span></th>
+  <td><input id="tin" name="tin" type="text" title="" placeholder="TIN No" class="w100p readonly" readonly /></td>
+    <!-- <span id="tin" name="tin"></span> -->
+</tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nationality2" /></th>
     <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>

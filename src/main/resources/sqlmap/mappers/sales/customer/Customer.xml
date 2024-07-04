@@ -86,7 +86,8 @@
                 P2.RECEIVING_MARKETING_MSG_STATUS,
                 P2.CUST_STATUS_ID,
                 P2.CUST_STATUS,
-                P2.CUST_TIN
+                P2.CUST_TIN，
+                P2.SST_RGIST_NO
                 FROM ( SELECT P1.CUST_ID,
                                 P1.NAME1,
                                 P1.NRIC,
@@ -123,6 +124,7 @@
                                 P1.CUST_STATUS_ID,
                                 P1.CUST_STATUS,
                                 P1.CUST_TIN,
+                                P1.SST_RGIST_NO,
                                 ROW_NUMBER() OVER (ORDER BY P1.CUST_ID ASC) AS ROW_NUMBER
                         FROM ( SELECT D1.CUST_ID AS CUST_ID,
                                               D1.NAME1 AS NAME1,
@@ -159,7 +161,8 @@
                                               D1.RECEIVING_MARKETING_MSG_STATUS,
                                               D1.CUST_STATUS_ID,
                                               D1.CUST_STATUS,
-                                              D1.CUST_TIN
+                                              D1.CUST_TIN,
+                                              D1.SST_RGIST_NO
                                 FROM ( SELECT DISTINCT S1.CUST_ID1 AS CUST_ID,
                                                       S1.NAME1 AS NAME1,
                                                       S1.NRIC1 AS NRIC,
@@ -226,6 +229,7 @@
                                                       ,S1.CUST_STATUS_ID
                                                       ,S1.CUST_STATUS
                                                       ,S1.CUST_TIN
+                                                      ,S1.SST_RGIST_NO
                                             FROM   (SELECT T1.CUST_ID AS CUST_ID1,
                                                                    T1.NAME AS NAME1,
                                                                    T1.NRIC AS NRIC1,
@@ -263,7 +267,8 @@
                                                                     T1.RECEIVING_MARKETING_MSG_STATUS,
                                                                     T1.IS_EXST_CUST CUST_STATUS_ID,
                                                                     T12.CODE_NAME CUST_STATUS,
-                                                                    TIN.CUST_TIN CUST_TIN
+                                                                    TIN.CUST_TIN CUST_TIN,
+                                                                    T1.SST_RGIST_NO
                                                     FROM SAL0029D T1
                                                     LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
                                                     LEFT OUTER JOIN SYS0047M T3 ON T3.USER_ID = T1.UPD_USER_ID
@@ -1917,9 +1922,7 @@
     <if test='custTinId != null and custTinId != ""'>
       TIN_ID = #{custTinId},
     </if>
-    <if test='basicSstRegNo != null and basicSstRegNo != ""'>
-      SST_RGIST_NO = #{basicSstRegNo},
-    </if>
+    SST_RGIST_NO = #{basicSstRegNo},
     REM = #{basicRem}
     WHERE CUST_ID = #{basicCustId}
 

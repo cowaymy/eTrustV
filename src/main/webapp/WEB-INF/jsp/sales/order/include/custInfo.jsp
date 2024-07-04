@@ -103,9 +103,9 @@
 <tr>
     <th scope="row">Customer Status</th>
     <td><span>${orderDetail.basicInfo.custStatus}</span></td>
-    <th scope="row">SST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /></th>
     <td><span>${orderDetail.basicInfo.sstRgistNo}</span></td>
-    <th scope="row">TIN</th>
+    <th scope="row"><spring:message code="sal.text.tin" /></th>
     <td><span>${orderDetail.basicInfo.custTin}</span></td>
 </tr>
 </tbody>

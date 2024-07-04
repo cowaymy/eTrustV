@@ -1745,6 +1745,9 @@
 
                     $("#nric").val(custInfo.nric); //NRIC/Company No
 
+                    $("#sstRegNo").text(custInfo.sstRgistNo); //SST Reg No
+                    $("#tin").text(custInfo.custTin); //TIN No
+
                     // $("#nationNm").val(custInfo.name2); //Nationality
                     $("#nationNm").text(custInfo.name2); //Nationality
 
@@ -2688,6 +2691,20 @@
                   <col style="width: *;" />
                 </colgroup>
                 <tbody>
+                    <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /><span class="must">*</span></th>
+                    <td>
+                      <!-- <input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly />  -->
+                      <span id="sstRegNo" name="sstRegNo"></span>
+                     </td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code="sal.text.tin" /><span class="must">*</span></th>
+                    <td>
+                      <!-- <input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly />  -->
+                      <span id="tin" name="tin"></span>
+                     </td>
+                  </tr>
+                  <tr>
                   <tr>
                     <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span></th>
                     <td>

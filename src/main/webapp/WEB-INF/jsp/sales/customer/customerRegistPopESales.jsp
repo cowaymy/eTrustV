@@ -593,7 +593,14 @@
             return false;
         }
         if($("#_cmbTypeId_").val() == '965'){
-            if($("#_cmbCorpTypeId_ :selected").val() != '1151'){
+        	if($("#_cmbCorpTypeId_ :selected").val() == '7614'){ //[CELESTE 04/07/2024 : Newly added type: Association]
+
+                if($("#_nric_").val().length > 20){
+                    Common.alert('Only allow 20 characters for NRIC/Company No.');
+                    return false;
+                }
+
+            } else if($("#_cmbCorpTypeId_ :selected").val() != '1151') {
 
                 var regex1 = new RegExp("^[0-9]+$");
                 var str1 = $("#_nric_").val();
@@ -904,14 +911,13 @@
                  }
             }
         }
-        else{
-        	if($("#_tin_").val() != "" &&  $("#_tin_").val() != null){
-        		if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 15){
-                    Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
-                    return false;
-                }
-        	}
-        }
+
+       	if($("#_tin_").val() != "" &&  $("#_tin_").val() != null){
+       		if($("#_tin_").val().length < 11  || $("#_tin_").val().length > 14){
+                   Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
+                   return false;
+               }
+       	}
 
         if($("#_cmbTypeId_").val() == '965'){
         	if($("#_sstRgistNo_").val() != ""){

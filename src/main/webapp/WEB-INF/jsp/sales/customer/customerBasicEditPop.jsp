@@ -41,21 +41,29 @@ $(document).ready(function(){
     if(selCodeCustId == '964'){
         $("#basicCmbCustTypeId").attr("disabled" , "disabled");
         $("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
-       // $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
         $("input[name='basicGender']").attr("disabled" , false);
         $("#basicCmdRaceTypeId").attr("disabled" , false);
         //$("#basicCmdNationTypeId").attr("disabled" , "disabled");
         //$("#basicDob").attr("disabled" , "disabled");
+        $("#basicSstRegNo").val('');
+        $("#basicSstRegNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     }
     // company
     if(selCodeCustId == '965'){
         $("#basicCmbCustTypeId").attr("disabled" , "disabled");
         $("#basicCmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
-        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+        $("#basicNric").removeClass("disabled");
         $("input[name='basicGender']").attr({"disabled" : "disabled" , "checked" : false});
         $("#basicCmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
         $("#basicCmdNationTypeId").attr("disabled" , "disabled");
         $("#basicDob").attr("disabled" , "disabled");
+        $("#basicSstRegNo").removeAttr("disabled");
+        $("#basicSstRegNo").removeClass("disabled");
+        if($("#basicCmbCorpTypeId :selected").val() == '1151' ){
+        	$("#basicCustTin").val('');
+            $("#basicCustTin").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        }
     }
     //edit
      // 수정 항목 변경
@@ -253,7 +261,7 @@ $(document).ready(function(){
         }
 
         if($("#_tin_").val() != ""){
-            if($("#basicCustTin").val().length < 11  || $("#basicCustTin").val().length > 15){
+            if($("#basicCustTin").val().length < 11  || $("#basicCustTin").val().length > 14){
                 Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
                 return false;
             }
@@ -802,7 +810,7 @@ $(document).ready(function(){
         <input type="text" title="" placeholder="" class="w100p"  value="${result.custTin}" name="basicCustTin" id="basicCustTin" maxlength=14 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/>
     </td>
     <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=17 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=35 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/></td>
     </td>
 </tr>
 <tr>
