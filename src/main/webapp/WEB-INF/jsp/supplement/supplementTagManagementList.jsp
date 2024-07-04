@@ -224,7 +224,11 @@
 
   function fn_inchgDept_SelectedIndexChanged() {
     $("#ddSubDept option").remove();
-    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT='  + $("#inchgDept").val(), '', '', 'ddSubDept', 'S', '');
+    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT='  + $("#inchgDept").val(), '', 'SD1003', 'ddSubDept', 'M', 'fn_callbackSubDept');
+  }
+
+  function fn_callbackSubDept() {
+    $("#ddSubDept").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
   }
 
   function fn_descCheck(ind) {
@@ -236,7 +240,7 @@
     };
 
     doGetCombo('/supplement/getSubTopicList.do?DEFECT_GRP=' + $("#mainTopic").val(), '', '', 'ddSubTopic', 'S', '');
-    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDept").val(), '', '', 'ddSubDept', 'S', '');
+    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDept").val(), '', '', 'ddSubDept', 'S', 'fn_callbackSubDept');
   }
 
   function fn_getTagMngmtListAjax() {
@@ -317,7 +321,14 @@
               <select class="select w100p" id="mainTopic" name="mainTopic" onChange="fn_mainTopic_SelectedIndexChanged()">
                 <option value="">Choose One</option>
                 <c:forEach var="list" items="${mainTopic}" varStatus="status">
-                  <option value="${list.codeId}">${list.codeName}</option>
+                  <c:choose>
+                    <c:when test="${list.codeId=='4000'}"> <!-- DEFAULT SUPPLEMENT -->
+                      <option value="${list.codeId}" selected>${list.codeName}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${list.codeId}">${list.codeName}</option>
+                    </c:otherwise>
+                  </c:choose>
                 </c:forEach>
             </select>
             </td>
@@ -345,7 +356,14 @@
               <select class="select w100p" id="inchgDept" name="inchgDept" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
                 <c:forEach var="list" items="${inchgDept}" varStatus="status">
-                  <option value="${list.codeId}">${list.codeName}</option>
+                  <c:choose>
+                    <c:when test="${list.codeId=='MD103'}"> <!-- DEFAULT BEREX -->
+                      <option value="${list.codeId}" selected>${list.codeName}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${list.codeId}">${list.codeName}</option>
+                    </c:otherwise>
+                  </c:choose>
                 </c:forEach>
               </select>
             </td>
