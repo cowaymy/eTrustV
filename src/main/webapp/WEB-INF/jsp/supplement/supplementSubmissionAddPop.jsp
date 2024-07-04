@@ -908,24 +908,24 @@
     var isValid = true, msg = "";
     if (AUIGrid.getGridData(purchaseGridID) <= 0) {
       isValid = false;
-      msg += '<spring:message code="sal.alert.msg.selectItms" />';
+      msg += '<spring:message code="sal.alert.msg.selectItms" /><br>';
     }
 
     if (null == $("#salesmanCd").val() || '' == $("#salesmanCd").val()) {
       isValid = false;
-      msg += '<spring:message code="sal.alert.msg.selectMemCode" />';
+      msg += '<spring:message code="sal.alert.msg.selectMemCode" /><br>';
     }
 
     if (null == $("#hidSalesmanBrnchId").val()
         || '' == $("#hidSalesmanBrnchId").val()) {
       //console.log($("#hidSalesmanBrnchId").val());
       isValid = false;
-      msg += '<spring:message code="sal.alert.msg.memHasNoBrnch" />';
+      msg += '<spring:message code="sal.alert.msg.memHasNoBrnch" /><br>';
     }
 
     if ('N' == $("#isSuppl").val() || '' == $("#isSuppl").val()) {
       isValid = false;
-      msg += '<spring:message code="supplement.alert.memCodeNotEligible" />';
+      msg += '<spring:message code="supplement.alert.memCodeNotEligible" /><br>';
     }
 
     if (!isValid)
