@@ -624,6 +624,18 @@
        PIVOT (MAX(DAY) FOR IND IN ('startDate' AS start_Date, 'endDate' AS end_Date))
     </select>
 
+      <select id="chkExtradeScheduleEpapan" parameterType="Map" resultType="int">
+      SELECT COUNT(1)  from (
+           SELECT * FROM
+              (SELECT
+                    CODE IND
+                  , CODE_NAME DAY
+                  FROM SYS0094M WHERE IND ='EXTRADE'
+              )
+           PIVOT (MAX(DAY) FOR IND IN ('startDate' AS start_Date, 'endDate' AS end_Date))
+     )where to_char(sysdate, 'yyyymmdd') between to_char(sysdate,'yyyymm')||start_Date and   to_char(sysdate,'yyyymm')||end_Date
+    </select>
+
     <select id="selectExistingSalesVoucherCode" parameterType="preOrderVO" resultType="String">
     	SELECT VOUCHER_CODE FROM SAL0213M WHERE PRE_ORD_ID = #{preOrdId}
     </select>

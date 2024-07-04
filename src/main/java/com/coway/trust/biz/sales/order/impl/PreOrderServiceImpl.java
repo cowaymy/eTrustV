@@ -603,4 +603,11 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 			throw new ApplicationException(AppConstants.FAIL, "Voucher is applied on other e-KeyIn orders");
 		}
 	}
+
+	public int chkExtradeScheduleEpapan()
+	{
+		int result = preOrderMapper.chkExtradeScheduleEpapan();
+
+	    return result;
+	}
 }

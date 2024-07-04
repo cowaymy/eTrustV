@@ -248,7 +248,12 @@ public class EpapanApiMagicAddressForm {
 	}
 	public String[] getArrPreOrdStusId() {
 
-		return arrPreOrdStusId.toArray(new String[arrPreOrdStusId.size()]);
+		if(null != arrPreOrdStusId){
+			return arrPreOrdStusId.toArray(new String[arrPreOrdStusId.size()]);
+		}else{
+
+			return null;
+		}
 	}
 	public void setArrPreOrdStusId(List<String> arrPreOrdStusId) {
 		this.arrPreOrdStusId = arrPreOrdStusId;

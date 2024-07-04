@@ -439,6 +439,7 @@ public class EpapanApiController {
 			message.setCode(AppConstants.SUCCESS);
 //			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 			message.setMessage(msg);
+			message.setData(preOrderVO.getSofNo());
 
 			return ResponseEntity.ok(message);
 		}
@@ -539,17 +540,18 @@ public class EpapanApiController {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(msg);
+			message.setData(hcOrderVO.getBndlNo());
 
 			return ResponseEntity.ok(message);
 		}
 
-//	  @ApiOperation(value = "chkExtradeScheduleEpapan", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	  @RequestMapping(value = "/chkExtradeScheduleEpapan", method = RequestMethod.GET)
-//	  public ResponseEntity<Integer> chkExtradeScheduleEpapan(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
-//	    int result = preOrderService.chkExtradeScheduleEpapan();
-//
-//	    return ResponseEntity.ok(result);
-//	  }
+	  @ApiOperation(value = "chkExtradeScheduleEpapan", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/chkExtradeScheduleEpapan", method = RequestMethod.GET)
+	  public ResponseEntity<Integer> chkExtradeScheduleEpapan(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+	    int result = preOrderService.chkExtradeScheduleEpapan();
+
+	    return ResponseEntity.ok(result);
+	  }
 
 	  @ApiOperation(value = "selectHcPreOrderList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	    @RequestMapping(value = "/selectHcPreOrderList",  method = RequestMethod.GET)

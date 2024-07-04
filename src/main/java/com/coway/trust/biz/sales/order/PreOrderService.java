@@ -48,4 +48,6 @@ public interface PreOrderService {
 
 	EgovMap checkExtradeSchedule() ;
 
+	int chkExtradeScheduleEpapan();
+
 }
