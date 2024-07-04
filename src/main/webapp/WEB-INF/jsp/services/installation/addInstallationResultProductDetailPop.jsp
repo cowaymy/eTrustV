@@ -753,6 +753,7 @@ var installAccTypeId = 582;
                             "installForm" : $("#addInstallForm").serializeJSON(),
                             "add" : addedRowItems,
                             "installAccList" : $("#installAcc").val() ,
+                            "mobileYn" : "N" ,
                             "fileGroupKey": result.data.fileGroupKey
                   };
 
@@ -864,6 +865,7 @@ var installAccTypeId = 582;
                         "installForm" : $("#addInstallForm").serializeJSON(),
                         "add" : addedRowItems,
                         "installAccList" : $("#installAcc").val() ,
+                        "mobileYn" : "N" ,
                         "fileGroupKey": result.data.fileGroupKey
               };
 

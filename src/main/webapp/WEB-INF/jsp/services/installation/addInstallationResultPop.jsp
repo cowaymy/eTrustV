@@ -737,6 +737,8 @@
                     var saveForm = {
                               "installForm" : $("#addInstallForm").serializeJSON(),
                               "add" : addedRowItems,
+                              "installAccList" : $("#installAcc").val() ,
+                              "mobileYn" : "N" ,
                               "fileGroupKey": result.data.fileGroupKey
                     };
 
@@ -867,6 +869,7 @@
                         "installForm" : $("#addInstallForm").serializeJSON(),
                         "add" : addedRowItems,
                         "installAccList" : $("#installAcc").val() ,
+                        "mobileYn" : "N" ,
                         "fileGroupKey": result.data.fileGroupKey
               };
 

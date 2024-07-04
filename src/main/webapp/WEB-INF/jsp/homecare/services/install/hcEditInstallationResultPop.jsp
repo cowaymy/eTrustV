@@ -275,6 +275,7 @@ var installAccValues = JSON.parse("${installAccValues}");
 
         var saveForm = $("#editInstallForm").serializeJSON();
         saveForm.installAccList = $("#installAcc").val();
+        saveForm.mobileYn = "N";
 
       // KR-OHK Serial Check add
       Common.ajax("POST", "/homecare/services/install/hceditInstallationSerial.do", saveForm, function(result) {

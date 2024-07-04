@@ -561,6 +561,7 @@
                 var saveInsFailedForm = {
                         "installForm" : $("#addInstallForm").serializeJSON(),
                         "installAccList" : $("#installAcc").val() ,
+                        "mobileYn" : "N" ,
                         "fileGroupKey": result.data.fileGroupKey
                   };
 

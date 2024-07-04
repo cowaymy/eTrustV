@@ -437,6 +437,7 @@ function notMandatoryForAP(){
 
         var saveForm = $("#editInstallForm").serializeJSON();
         saveForm.installAccList = $("#installAcc").val();
+        saveForm.mobileYn = "N";
 
       Common.ajax("POST", url, saveForm, function(result) {
         Common.alert(result.message);
