@@ -336,9 +336,9 @@
                                      AND (T3.ORG_CODE IS NULL)
                                      AND (T3.TOP_ORG_CODE IS NULL)
                                      AND (T3.MEM_UP_ID IS NULL)
-                                     AND (T3.LVL3_UP_ID S NULL)
-                                     AND (T3.LVL2_UP_IDIS NULL)
-                                     AND (T3.LVL1_UP_IDIS NULL)
+                                     AND (T3.LVL3_UP_ID IS NULL)
+                                     AND (T3.LVL2_UP_ID IS NULL)
+                                     AND (T3.LVL1_UP_ID IS NULL)
                                      AND (T3.LVL0_UP_ID IS NULL))) THEN T3.LVL2_UP_ID
                                    ELSE 0 END LVL2_UP_ID
                         , CASE WHEN (NOT((T3.MEM_ID IS NULL)
