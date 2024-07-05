@@ -34,16 +34,6 @@ public class SupplementAdvPaymentMatchController {
   @Resource(name = "supplementAdvPaymentMatchService")
   private SupplementAdvPaymentMatchService supplementAdvPaymentMatchService;
 
-  /******************************************************
-   * Advance Payment Matching
-   *****************************************************/
-  /**
-   * Advance Payment Matching
-   *
-   * @param params
-   * @param model
-   * @return
-   */
   @RequestMapping(value = "/initAdvPaymentMatch.do")
   public String initAdvPaymentMatch( @RequestParam Map<String, Object> params, ModelMap model ) {
     String bfDay = CommonUtils.changeFormat( CommonUtils.getCalDate( -30 ), SalesConstants.DEFAULT_DATE_FORMAT3,
@@ -54,14 +44,6 @@ public class SupplementAdvPaymentMatchController {
     return "/supplement/payment/supplementAdvPaymentMatch";
   }
 
-  /**
-   * Advance Payment Matching
-   *
-   * @param
-   * @param params
-   * @param model
-   * @return
-   */
   @RequestMapping(value = "/selectPaymentMatchList.do", method = RequestMethod.POST)
   public ResponseEntity<Map<String, Object>> selectPaymentMatchList( @ModelAttribute("searchVO") ReconciliationSearchVO searchVO,
                                                                      @RequestBody Map<String, Object> params,
@@ -74,13 +56,6 @@ public class SupplementAdvPaymentMatchController {
     return ResponseEntity.ok( resultMap );
   }
 
-  /**
-   * Advance Payment Matching - Key In
-   *
-   * @param params
-   * @param model
-   * @return
-   */
   @RequestMapping(value = "/initDetailGrpPaymentPop.do")
   public String initRequestDCFPop( @RequestParam Map<String, Object> params, ModelMap model ) {
     model.put( "groupSeq", params.get( "groupSeq" ) );
@@ -92,19 +67,11 @@ public class SupplementAdvPaymentMatchController {
                                                                     ModelMap model ) {
     String[] groupSeqList = params.get( "groupSeq" ).toString().replace( "\"", "" ).split( "," );
     params.put( "groupSeq", groupSeqList );
-    //조회.
+
     List<EgovMap> resultList = supplementAdvPaymentMatchService.selectPaymentListByGroupSeq( params );
-    // 조회 결과 리턴.
     return ResponseEntity.ok( resultList );
   }
 
-  /**
-   * Advance Payment Matching - Mapping
-   *
-   * @param params
-   * @param model
-   * @return
-   */
   @RequestMapping(value = "/saveAdvPaymentMapping.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> saveAdvPaymentMapping( @RequestBody Map<String, Object> params, ModelMap model,
                                                               SessionVO sessionVO ) {
@@ -124,13 +91,6 @@ public class SupplementAdvPaymentMatchController {
     return ResponseEntity.ok( message );
   }
 
-  /**
-   * Advance Payment Matching - Debtor 처리
-   *
-   * @param params
-   * @param model
-   * @return
-   */
   @RequestMapping(value = "/saveAdvPaymentDebtor.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> saveAdvPaymentDebtor( @RequestBody Map<String, Object> params, ModelMap model,
                                                              SessionVO sessionVO ) {
