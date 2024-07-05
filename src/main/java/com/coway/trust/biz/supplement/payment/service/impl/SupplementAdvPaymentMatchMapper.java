@@ -7,76 +7,25 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("supplementAdvPaymentMatchMapper")
 public interface SupplementAdvPaymentMatchMapper {
+  List<EgovMap> selectAdvKeyInList( Map<String, Object> paramMap );
 
-	/**
-   	 * Advance Payment Match - Advance KeyIn List
-   	 * @param params
-   	 * @param model
-   	 * @return
-   	 *
-   	 */
-	List<EgovMap> selectAdvKeyInList(Map<String, Object> paramMap);
+  List<EgovMap> selectBankStateMatchList( Map<String, Object> paramMap );
 
-	/**
-   	 * Advance Payment Match - Bank Statement List
-   	 * @param params
-   	 * @param model
-   	 * @return
-   	 *
-   	 */
-	List<EgovMap> selectBankStateMatchList(Map<String, Object> paramMap);
+  void mappingAdvGroupPayment( Map<String, Object> params );
 
-	/**
-	 * Advance Payment Matching - Mapping : Group Payment Mapping처리
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	void mappingAdvGroupPayment(Map<String, Object> params);
+  void mappingBankStatementAdv( Map<String, Object> params );
 
-	/**
-	 * Advance Payment Matching - Mapping : Bank Statement Mapping
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	void mappingBankStatementAdv(Map<String, Object> params);
+  List<EgovMap> selectMappedData( Map<String, Object> paramMap );
 
+  void insertAdvPaymentMatchIF( EgovMap params );
 
-	/**
-   	 * Advance Payment Match - I/F
-   	 * @param params
-   	 * @param model
-   	 * @return
-   	 *
-   	 */
-	List<EgovMap> selectMappedData(Map<String, Object> paramMap);
+  void insertAdvPaymentDebtorIF( EgovMap params );
 
+  void updateDiffTypeDiffAmt( Map<String, Object> params );
 
-	/**
-	 *
-	 * @param
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	void insertAdvPaymentMatchIF(EgovMap params);
+  List<EgovMap> getAccountList( Map<String, Object> params );
 
-	/**
-	 * Debtor
-	 * @param
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	void insertAdvPaymentDebtorIF(EgovMap params);
+  List<EgovMap> selectPaymentListByGroupSeq( Map<String, Object> params );
 
-	void updateDiffTypeDiffAmt(Map<String, Object> params);
-
-  List<EgovMap> getAccountList(Map<String, Object> params);
-
-  List<EgovMap> selectPaymentListByGroupSeq(Map<String, Object> params);
-
-  List<EgovMap>selectAdvKeyInReport(Map<String, Object> params);
-
+  List<EgovMap> selectAdvKeyInReport( Map<String, Object> params );
 }
