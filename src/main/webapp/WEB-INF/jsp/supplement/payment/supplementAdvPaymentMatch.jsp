@@ -944,31 +944,31 @@
 
           <tbody>
             <tr>
-              <th scope="row"><spring:message code='supplement.text.uploadAmt' /> (A)</th>
+              <th scope="row"><spring:message code='supplement.text.uploadAmt' /> (A)<span class="must">*</span></th>
               <td>
                 <input id="preKeyInAmt" name="preKeyInAmt" type="text" class="readonly" readonly />
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='supplement.text.bnkStatementAmt' /> (B)</th>
+              <th scope="row"><spring:message code='supplement.text.bnkStatementAmt' /> (B)<span class="must">*</span></th>
               <td>
                 <input id="bankStmtAmt" name="bankStmtAmt" type="text" class="readonly" readonly />
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='supplement.text.amtVariance' /> (<spring:message code='supplement.text.amtVariance' /> = A - B)</th>
+              <th scope="row"><spring:message code='supplement.text.amtVariance' /> (<spring:message code='supplement.text.amtVariance' /> = A - B)<span class="must">*</span></th>
               <td>
                 <input id="variance" name="variance" type="text" class="readonly" readonly />
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='pay.head.accountCode' /></th>
+              <th scope="row"><spring:message code='pay.head.accountCode' /><span class="must">*</span></th>
               <td>
                 <select id="accCode" name="accCode" class="w100p"></select>
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='supplement.text.remark' /></th>
+              <th scope="row"><spring:message code='supplement.text.remark' /><span class="must">*</span></th>
               <td>
                 <textarea id="remark" name="remark" cols="10" rows="3" placeholder=""></textarea></td>
             </tr>
