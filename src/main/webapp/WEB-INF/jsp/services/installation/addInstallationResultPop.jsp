@@ -690,8 +690,12 @@
       }
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
-      	if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
-    	  msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      	if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
+      		if(!($("#ntuCom").val() >= 0 && $("#ntuCom").val() <= 10 )){
+    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+      		}
+      	}else{
+      		msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
       	}
       }
 
@@ -831,10 +835,12 @@
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
     	if($("#failReasonCode").val() == 8009){
-      		if (!($("#ntuFail").val() == "" ) && ($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 )){
-    	  		msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
-      		}else if ($("#ntuFail").val() == "" || $("#ntuFail").val() < 0 ){
-      			msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
+      		if (!($("#ntuFail").val() == "" || $("#ntuFail").val() == null )){
+      			if($("#ntuFail").val() > 0 && $("#ntuFail").val() <= 10 ){
+    	  			msg += "* <spring:message code='sys.msg.range' arguments='NTU,10.00,99.00' htmlEscape='false'/> </br>";
+      			}
+      		}else{
+      			msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
       		}
     	}
       }

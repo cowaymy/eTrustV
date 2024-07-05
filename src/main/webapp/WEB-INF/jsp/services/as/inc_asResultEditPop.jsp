@@ -1511,11 +1511,16 @@
         }
 
 	   if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
-	    	if (!($("#ntuCom").val() == "" ) && !($("#ntuCom").val() > 0 && $("#ntuCom").val() <= 10 )){
-	    		rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-	    		rtnValue = false;
+	    	if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
+	      		if(!($("#ntuCom").val() >= 0 && $("#ntuCom").val() <= 10 )){
+	    			rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+	    			rtnValue = false;
+	      		}
+	    	}else{
+	    			rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+	    			rtnValue = false;
+	    		}
 	    	}
-	    }
 
 	   // Installation Accessory checking for Complete status
 	   if($("#ddlStatus").val() == 4 ){
