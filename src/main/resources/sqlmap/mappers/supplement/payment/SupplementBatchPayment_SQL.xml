@@ -102,6 +102,7 @@
                                    LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CNFM_USER_ID
                                    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.CNFM_STUS_ID
                                    WHERE  1=1
+                                   AND Extent1.DEL_FLG = 'N'
 
                                    <if test="payMode != null">
                                      AND Extent1.PAY_MODE_ID IN
@@ -198,6 +199,7 @@
               JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.CNFM_STUS_ID
               LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Extent1.CNVR_USER_ID
               WHERE Extent1.BATCH_ID = #{batchId}
+                  AND Extent1.DEL_FLG = 'N'
                   AND ROWNUM <![CDATA[  <= ]]> 1 ) Limit1
   </select>
 
@@ -352,7 +354,8 @@
                Extent1.UPD_USER_ID UPD_USER_ID ,
                Extent1.UPD_DT UPD_DT
     FROM PAY0360M Extent1
-    WHERE  Extent1.BATCH_ID = #{batchId}
+    WHERE Extent1.BATCH_ID = #{batchId}
+    AND Extent1.DEL_FLG = 'N'
     AND ROWNUM <![CDATA[ <= ]]> 1
   </select>
 
@@ -395,7 +398,8 @@
                Extent1.UPD_USER_ID UPD_USER_ID ,
                Extent1.UPD_DT UPD_DT
     FROM PAY0359D Extent1
-    WHERE  Extent1.DET_ID = #{detId}
+    WHERE Extent1.DEL_FLG = 'N'
+    AND Extent1.DET_ID = #{detId}
     AND ROWNUM <![CDATA[ <= ]]> 1
   </select>
 
@@ -403,6 +407,7 @@
     SELECT COUNT(*)
     FROM PAY0359D
     WHERE DET_ID = #{detId}
+        AND DEL_FLG = 'N'
         AND PAY_CHANNEL = 'EGHL'
   </select>
 
@@ -411,7 +416,8 @@
                                      DEL_FLG = 'Y',
                                      UPD_USER_ID = #{userId},
                                      UPD_DT = SYSDATE
-    WHERE DET_ID = #{detId}
+    WHERE DEL_FLG = 'N'
+        AND DET_ID = #{detId}
         AND BATCH_ID = #{batchId}
         AND USER_REF_NO = #{userRefNo}
   </update>
@@ -624,7 +630,8 @@
     UPDATE SUP0001M SET SUP_REF_STG = '2',
                                      UPD_USR_ID = #{userId},
                                      UPD_DT = SYSDATE
-    WHERE SUP_REF_NO = #{userOrdNo}
+    WHERE DEL_FLG = 'N'
+    AND SUP_REF_NO = #{userOrdNo}
   </update>
 
   <select id="getPaymentMode" parameterType="Map" resultType="egovMap">
