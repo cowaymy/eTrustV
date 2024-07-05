@@ -11,7 +11,7 @@ $('.multy_select').change(function() {
 });
 
 $(document).ready(function() {
-    doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', sbrnch, sbrnch,'sBranchCode', 'M' , 'f_multiCombos');
+    //doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', sbrnch, sbrnch,'sBranchCode', 'M' , 'f_multiCombos');
 
 });
 
