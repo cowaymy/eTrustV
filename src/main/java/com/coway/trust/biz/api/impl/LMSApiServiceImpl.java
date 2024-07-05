@@ -17,6 +17,8 @@ import java.util.List;
  ***************************************/
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1506,8 +1508,15 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		        	LOGGER.debug(output);
 		        }
 
+		        String jsonPart = "";
+		        Pattern pattern = Pattern.compile("\\{.*\\}");
+	            Matcher matcher = pattern.matcher(output1);
+	            if (matcher.find()) {
+	                jsonPart = matcher.group();
+	                System.out.println("Extracted JSON: " + jsonPart);
+	            }
 		        Gson g = new Gson();
-		        p = g.fromJson(output1, LMSApiRespForm.class);
+		        p = g.fromJson(jsonPart, LMSApiRespForm.class);
 		        String msg = p.getMessage() != null ? "LMS: " + p.getMessage().toString() : "";
 		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
