@@ -10,11 +10,11 @@
 
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : '<spring:message code="service.grid.mainDept" />',    dataField : "mainDept"                }
+            { headerText : '<spring:message code="service.grid.mainDept" />',    dataField : "mainDept" }
           , { headerText : '<spring:message code="service.grid.subDept" />', dataField : "subDept",   width : 120 }
-          , { headerText : '<spring:message code="pay.head.remark" />',   dataField : "remark", width : 220 }
+          , { headerText : '<spring:message code="pay.head.remark" />',   dataField : "tagRemark", width : 220 }
           , { headerText : '<spring:message code="supplement.text.supplementTagStus" />',   dataField : "tagStus", width : 120 }
-          , { headerText : '<spring:message code="service.grid.asEntCreator" />',   dataField : "callCrtUserId", width : 120 }
+          , { headerText : '<spring:message code="service.grid.asEntCreator" />',   dataField : "callCrtUser", width : 120 }
           , { headerText : '<spring:message code="service.grid.registerDt" />',   dataField : "callCrtDt", width : 120 }
           ];
 
