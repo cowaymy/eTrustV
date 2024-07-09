@@ -442,4 +442,14 @@
 
     ORDER BY A.GROUP_SEQ
   </select>
+
+  <update id="updSupplementOrdStage" parameterType="Map">
+        UPDATE SUP0001M SET SUP_REF_STG = '3',
+                                         UPD_USR_ID = #{userId},
+                                         UPD_DT = SYSDATE
+        WHERE SUP_REF_NO = #{salesOrdNo}
+        AND SUP_REF_STG = '2'
+        AND SUP_REF_STUS = '1'
+  </update>
+
 </mapper>
