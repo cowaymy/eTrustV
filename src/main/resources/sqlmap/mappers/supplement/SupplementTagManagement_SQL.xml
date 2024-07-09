@@ -8,6 +8,7 @@
                Extent1.SUP_REF_ID AS SUP_REF_ID,
                Extent3.NAME AS CUST_NAME,
                TO_CHAR(Extent2.CRT_DT, 'DD-MM-YYYY') AS TAG_REGISTER_DT,
+               Extent4.CALL_ENTRY_ID AS CCR0006D_CALL_ENTRY_ID_SEQ,
                Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
                Extent5.NAME AS TAG_STATUS,
                Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
@@ -150,6 +151,7 @@
             Extent1.CUST_ID AS CUST_ID,
             Extent3.NAME AS CUST_NAME,
             Extent2.CRT_DT AS TAG_REGISTER_DT,
+            Extent4.CALL_ENTRY_ID AS CCR0006D_CALL_ENTRY_ID_SEQ,
             Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
             Extent5.NAME AS TAG_STATUS,
             Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
@@ -298,9 +300,9 @@
     SELECT
         UPPER (Extent4.CODE || '-' || Extent4.CODE_NAME)  AS MAIN_DEPT,
         UPPER (Extent5.CODE || '-' || Extent5.CODE_NAME) AS SUB_DEPT,
-        Extent3.CALL_REM AS REMARK,
+       <!--  Extent3.CALL_REM AS TAG_REMARK, -->
         Extent6.NAME AS TAG_STUS,
-        Extent7.USER_FULL_NAME AS CALL_CRT_USER_ID ,
+        Extent7.USER_FULL_NAME AS CALL_CRT_USER ,
         Extent3.CALL_CRT_DT AS CALL_CRT_DT
 
     FROM SUP0006M Extent1
@@ -353,6 +355,10 @@
 
     <select id="getSeqCCR0007D" resultType="java.lang.Integer">
          SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+     <select id="getSeqSUP0007M" resultType="java.lang.Integer">
+         SELECT SUP0007M_SUP_CANC_SEQ_ID.NEXTVAL FROM DUAL
     </select>
 
 
@@ -477,6 +483,124 @@
     ''
      )
      </insert>
+
+       <insert id="insertTagCcrDetail" parameterType="Map">
+
+     INSERT INTO CCR0007D (
+
+     CALL_RESULT_ID,
+     CALL_ENTRY_ID,
+     CALL_STUS_ID,
+     CALL_DT,
+     CALL_ACTN_DT,
+
+     CALL_FDBCK_ID,
+     CALL_CT_ID,
+     CALL_REM,
+     CALL_CRT_USER_ID,
+     CALL_CRT_DT,
+
+     CALL_CRT_USER_ID_DEPT,
+     CALL_HC_ID,
+     CALL_ROS_AMT,
+     CALL_SMS,
+     CALL_SMS_REM,
+
+     MAIN_DEPT,
+     SUB_DEPT,
+     DEPT_CODE
+     )
+     VALUES (
+
+    #{seqCcrResultId} ,
+    #{ccr0006dCallEntryIdSeq} ,
+    #{tagStus} ,
+    SYSDATE ,
+    SYSDATE ,
+
+    '0',
+    '0',
+    #{remark} ,
+    #{userId} ,
+    SYSDATE ,
+
+    '0',
+    '',
+    0 ,
+    '0',
+    '0',
+
+    #{mainDept} ,
+    #{subDept} ,
+    ''
+     )
+
+  </insert>
+
+
+   <update id="updateCcrMain" parameterType="Map">
+
+    UPDATE CCR0006D
+    SET   RESULT_ID = #{seqCcrResultId},
+            STUS_CODE_ID = #{tagStus},
+            MAIN_DEPT = #{mainDept},
+            SUB_DEPT = #{subDept},
+            UPD_DT = SYSDATE ,
+            UPD_USER_ID = #{userId}
+    WHERE CALL_ENTRY_ID = #{ccr0006dCallEntryIdSeq}
+
+  </update>
+
+
+   <insert id="insertCancMain" parameterType="Map">
+
+         INSERT INTO SUP0007M (
+
+         SUP_REQ_CANC_ID ,
+         SUP_REF_ID ,
+         SUP_REQ_CANC_NO ,
+         SUP_REQ_CANC_STAT ,
+         SUP_REQ_CANC_CALL_ENT ,
+         SUP_REQ_CANC_RTN_TRKNO ,
+         SUP_REQ_CANC_RMK ,
+         CRT_USR_ID ,
+         CRT_DT ,
+         UPD_USR_ID ,
+         UPD_DT
+
+         ) VALUES (
+
+        #{seqCancId} ,
+        #{supRefId} ,
+        #{tokenSupReqCancNo} ,
+        '32' ,
+        #{ccr0006dCallEntryIdSeq} ,
+        '',
+        '',
+        #{userId} ,
+        SYSDATE ,
+        #{userId} ,
+        SYSDATE
+         )
+
+    </insert>
+
+
+    <update id="updateCcrMainWithCid" parameterType="Map">
+
+    UPDATE CCR0006D
+    SET   RESULT_ID = #{seqCcrResultId},
+            STUS_CODE_ID = #{tagStus},
+            MAIN_DEPT = #{mainDept},
+            SUB_DEPT = #{subDept},
+            DOC_ID = #{seqCancId},
+            UPD_DT = SYSDATE ,
+            UPD_USER_ID = #{userId}
+
+    WHERE CALL_ENTRY_ID = #{ccr0006dCallEntryIdSeq}
+
+    </update>
+
 
 
 </mapper>
