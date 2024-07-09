@@ -810,7 +810,8 @@ $(document).ready(function(){
         <input type="text" title="" placeholder="" class="w100p"  value="${result.custTin}" name="basicCustTin" id="basicCustTin" maxlength=14 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/>
     </td>
     <th scope="row"><spring:message code="sal.text.sstRegistrationNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=35 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/></td>
+    <%-- <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=35 onkeydown='return /[a-zA-Z0-9]/i.test(event.key)'/></td> --%>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${result.sstRgistNo}" name="basicSstRegNo" id="basicSstRegNo" maxlength=35 /></td>
     </td>
 </tr>
 <tr>

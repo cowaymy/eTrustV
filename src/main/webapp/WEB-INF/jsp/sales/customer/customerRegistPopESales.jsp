@@ -919,15 +919,15 @@
                }
        	}
 
-        if($("#_cmbTypeId_").val() == '965'){
-        	if($("#_sstRgistNo_").val() != ""){
+       	if($("#_cmbTypeId_").val() == '965'){
+            if($("#_sstRgistNo_").val() != ""){
 
                 if($("#_sstRgistNo_").val().length == 35){
 
                 }else if($("#_sstRgistNo_").val().length == 17){
 
                 }else{
-                	Common.alert("Please make sure SST No format is valid");
+                    Common.alert("Please make sure SST No format is valid");
                     return false;
                 }
 
