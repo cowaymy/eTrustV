@@ -636,12 +636,19 @@
                     Common.alert('Invalid format for NRIC/Company No.');
                     return false;
                 }
+
+                if($("#_nric_").val().length != 12){
+                    Common.alert('Only allow 12 characters for NRIC/Company No.');
+                    return false;
+                }
+
+            }else{
+                if($("#_nric_").val().length > 12){
+                    Common.alert('Only allow 12 characters for NRIC/Company No.');
+                    return false;
+                }
             }
 
-            if($("#_nric_").val().length != 12){
-                Common.alert('Only allow 12 digits for NRIC/Company No.');
-                return false;
-            }
         }
         /*else if($("#_nric_"). length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
