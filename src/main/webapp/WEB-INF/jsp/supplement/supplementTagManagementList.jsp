@@ -49,11 +49,15 @@
             var supplementForm = {
               supRefId : clickChk[0].item.supRefId,
               counselingNo : clickChk[0].item.counselingNo,
+              ccr0006dCallEntryIdSeq : clickChk[0].item.ccr0006dCallEntryIdSeq,
               ind : "1"
             };
 
            var supRefId = clickChk[0].item.supRefId;
            var counselingNo = clickChk[0].item.counselingNo;
+           var ccr0006dCallEntryIdSeq = clickChk[0].item.ccr0006dCallEntryIdSeq;
+
+           console.log("ccr0006dCallEntryIdSeq:: " + ccr0006dCallEntryIdSeq)
 
            Common.popupDiv("/supplement/tagMngApprovalPop.do", supplementForm, null, true, '_insDiv');
          });
@@ -66,7 +70,10 @@
              supRefId : event.item.supRefId
            };
            var detailParam = {
-             supRefId : event.item.counselingNo
+             counselingNo : event.item.counselingNo
+          };
+           var detailParam = {
+             ccr0006dCallEntryIdSeq : event.item.ccr0006dCallEntryIdSeq
           };
          });
   });
@@ -78,6 +85,11 @@
           visible : false,
           editable : false
         },
+        {
+            dataField : "ccr0006dCallEntryIdSeq",
+            visible : false,
+            editable : false
+         },
         {
           dataField : "counselingNo",
           headerText : '<spring:message code="service.grid.counselingNo" />',
@@ -152,11 +164,16 @@
 
   function createExcelAUIGrid() {
     var excelColumnLayout = [
+
     {
       dataField : "supRefId",
       visible : false,
       editable : false
     }, {
+        dataField : "ccr0006dCallEntryIdSeq",
+        visible : false,
+        editable : false
+    },{
       dataField : "counselingNo",
       headerText : '<spring:message code="service.grid.counselingNo" />',
       width : 100,
