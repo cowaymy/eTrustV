@@ -6,6 +6,8 @@ var purchaseGridID;
 var serialTempGridID;
 var memGridID;
 var paymentGridID;
+var myFileCaches = {};
+var atchFileGrpId = 0;
 
 $(document).ready(function() {
 
@@ -35,58 +37,238 @@ $(document).ready(function() {
     //Save Btn
     $("#_saveBtn").click(function() {
 
-        var parcelTrackNo =  $("#_infoParcelTrackNo").val();
-        var supRefStus =  $("#_infoSupRefStus").val();
-        var supRefStg =  $("#_infoSupRefStgId").val();
+
+    	var inchgDeptList =  $("#inchgDeptList").val();
+        var ddlSubDeptUpd =  $("#ddlSubDeptUpd").val();
+        var tagStus =  $("#tagStusPop").val();
+        var attachment = $("#attch").val().trim();
+        var remark = $("#_remark").val().trim();
+        var counselingNo = $("#_infoCounselingNo").val();
+        var ccr0006dCallEntryIdSeq = $("#_infoCcr0006dCallEntryIdSeq").val();
+        var attchFilePathName = "attchFilePathName";
+        var preTagStatus =  $("#_infoTagStatus").val();
+        var preTagStatusId =  $("#_infoTagStatusId").val();
+        var subTopicId =  $("#_infoSubTopicId").val();
+        var subTopic =  $("#_infoSubTopic").val();
+
         var supRefId =  $("#_infoSupRefId").val();
-        var inputParcelTrackNo = $("#parcelTrackNo").val();
         var supRefNo = $("#_infoSupRefNo").val();
-        var custName = $("#_infoCustName").val();
-        var custEmail = $("#_infoCustEmail").val();
-
-        if ($("#parcelTrackNo").val() == null || $("#parcelTrackNo").val().trim() == "") {
-            Common.alert('Parcel tracking number is required.');
-            return;
-        }
-
-        console.log("New Tracking No :: " + $("#parcelTrackNo").val());
-        console.log("Ex Tracking No :: " + $("#_infoParcelTrackNo").val());
-        console.log("_infoSupRefStus :: " + $("#_infoSupRefStus").val());
-        console.log("_infoSupRefStg :: " + $("#_infoSupRefStg").val());
-
-        var param = {parcelTrackNo: parcelTrackNo, supRefId: supRefId, inputParcelTrackNo: inputParcelTrackNo, supRefNo: supRefNo, custName : custName, custEmail : custEmail};
 
 
-        Common.ajax('GET', "/supplement/checkDuplicatedTrackNo", param, function(result) {
-            console.log("result.length :: " + result.length);
-            if(result.length > 0 ){
-                Common.alert("Parcel tracking number already exist!");
-                return;
-            }else{
-                Common.ajax("POST", "/supplement/updateRefStgStatus.do", param, function(result) {
-                    if(result.code == "00") {//successful update
-                        console.log("Success");
-                        Common.alert(" The tracking number for "+ supRefNo + " has been update successfully." , fn_popClose());
-                    } else {
-                        console.log("failed");
-                        Common.alert(result.message,fn_popClose);
-                       }
+
+
+        console.log("inchgDeptList :: " + inchgDeptList);
+        console.log("ddlSubDeptUpd :: " + ddlSubDeptUpd);
+        console.log("tagStus :: " + tagStus);
+        console.log("attachment :: " + attachment);
+        console.log("remark :: " + remark);
+        console.log("counselingNo :: " + counselingNo);
+        console.log("ccr0006dCallEntryIdSeq :: " + ccr0006dCallEntryIdSeq);
+        console.log("preTagStatus :: " + preTagStatus);
+        console.log("preTagStatusId :: " + preTagStatusId);
+        console.log("subTopicId :: " + subTopicId);
+        console.log("subTopic :: " + subTopic);
+
+        console.log("supRefId :: " + supRefId);
+        console.log("supRefNo :: " + supRefNo);
+
+
+        var param = {supRefId: supRefId, supRefNo: supRefNo, mainDept: inchgDeptList,  subDept : ddlSubDeptUpd, tagStus : tagStus, remark : remark, counselingNo : counselingNo, ccr0006dCallEntryIdSeq : ccr0006dCallEntryIdSeq , preTagStatusId : preTagStatusId , subTopicId : subTopicId};
+
+
+    	 if (!fn_validInpuInfo()) {
+             return false;
+         }
+
+
+    	 if (FormUtil.isNotEmpty($('#attch').val().trim())) {
+
+    		 console.log("Attachment found...");
+
+    	     var formData = new FormData();
+    	      $.each(myFileCaches, function(n, v) {
+    	        //console.log("n : " + n + " v.file : " + v.file);
+    	        formData.append(n, v.file);
+    	        formData.append(attchFilePathName, "tagApproval");
+    	      });
+
+    		 var orderVO = {
+    	              supRefId :  $("#_infoSupRefId").val(),
+    	              mainDept : $('#inchgDeptList').val().trim(),
+    	              subDept : $('#ddlSubDept').val(),
+    	              callRemark : $('#_remark').val().trim(),
+    	              atchFileGrpId : atchFileGrpId,
+    	              attchFilePathName : "attchFilePathName"
+    	      };
+
+    		 if (!fn_validFile()) {
+                 return false;
+             }
+
+    		 console.log("Attachment value::" + $("#attch").val());
+
+             Common.ajaxFile("/supplement/attachFileUploadId.do", formData, function(result) {
+
+                 console.log("result attachFileUploadId:: " + result.code);
+
+                   if (result != 0 && result.code == 00) {
+                       orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+                     } else {
+                       Common.alert('Save Tag Approval'+ DEFAULT_DELIMITER + result.message);
+                     }
+
+                   Common.ajax("POST", "/supplement/updateTagInfo.do", param, function(result) {
+                       if(result.code == "00") {//successful update
+                           console.log("Success");
+                           Common.alert(" The tracking number for "+ supRefNo + " has been update successfully." , fn_popClose());
+
+                       } else {
+                           console.log("failed");
+                           Common.alert(result.message,fn_popClose);
+                          }
+                    });
+             },
+
+                 function(result) {
+                   Common.alert("Upload Failed. Please check with System Administrator.");
                  });
-            }
-      });
 
+         }else {
+        console.log("no attachment found... ELSE case");
+
+        Common.ajax("POST", "/supplement/updateTagInfo.do", param, function(result) {
+            if(result.code == "00") {//successful update
+                console.log("Success");
+                Common.alert(" The tracking number for "+ supRefNo + " has been update successfully." , fn_popClose());
+            } else {
+                console.log("failed");
+                Common.alert(result.message,fn_popClose);
+               }
+            });
+         }
     });
 });
 
+$('#attch').change(function(evt) {
+    handleFileChange(evt, 1);
+});
+
+function fn_validFile() {
+    var isValid = true, msg = "";
+
+    if (FormUtil.isEmpty($('#attch').val().trim())) {
+        isValid = false;
+        msg += 'Attachment is required.';
+    }
+
+    $.each(myFileCaches,function(i, j) {
+                        if (myFileCaches[i].file.checkFileValid == false) {
+                            isValid = false;
+                            msg += myFileCaches[i].file.name + '<spring:message code="supplement.alert.fileUploadFormat" />';
+                        }
+                    });
+
+    if (!isValid)
+        Common.alert('Save New Tag Submission'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+    return isValid;
+}
+
+// Define a common function to handle file input changes
+function handleFileChange(evt, cacheIndex) {
+    var file = evt.target.files[0];
+    if (file == null && myFileCaches[cacheIndex] != null) {
+        delete myFileCaches[cacheIndex];
+    } else if (file != null) {
+        myFileCaches[cacheIndex] = {
+            file : file
+        };
+    }
+
+    var msg = '';
+    if (file && file.name.length > 30) {
+        msg += "*File name wording should be not more than 30 alphabet.<br>";
+    }
+
+/*       var fileType = file ? file.type.split('/') : [];
+    if (fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf') {
+        msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+    } */
+
+    if (file && file.size > 2000000) {
+        msg += "*Only allow .zip file with less than 2MB.<br>";
+    }
+
+    if (msg) {
+        myFileCaches[cacheIndex].file['checkFileValid'] = false;
+        Common.alert(msg);
+    } else {
+        myFileCaches[cacheIndex].file['checkFileValid'] = true;
+    }
+
+    console.log("myFileCaches::" + myFileCaches);
+}
+
+function fn_validFile() {
+    var isValid = true, msg = "";
+
+    if (FormUtil.isEmpty($('#attch').val().trim())) {
+        isValid = false;
+        msg += 'Attachment is required.';
+    }
+
+    $.each(myFileCaches,function(i, j) {
+                        if (myFileCaches[i].file.checkFileValid == false) {
+                            isValid = false;
+                            msg += myFileCaches[i].file.name + '<spring:message code="supplement.alert.fileUploadFormat" />';
+                        }
+                    });
+
+    if (!isValid)
+        Common.alert('Save New Tag Submission'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+    return isValid;
+}
 
 //Close
 function fn_popClose(){
+	myFileCaches = {};
     $("#_systemClose").click();
 }
 
 function fn_bookingAndpopClose(){
     $("#_systemClose").click();
 }
+
+function fn_validInpuInfo() {
+    var isValid = true, msg = "";
+
+    if(null == $("#inchgDeptList").val() || '' == $("#inchgDeptList").val()){
+        isValid = false;
+        msg += 'InCharge Department is required.';
+    }
+
+    else if( null == $("#ddlSubDeptUpd").val() || '' == $("#ddlSubDeptUpd").val()){
+        isValid = false;
+        msg += 'Sub Department is required.';
+    }
+
+    else if( null == $("#tagStusPop").val() || '' == $("#tagStusPop").val()){
+        isValid = false;
+        msg += 'Tag Status is required.';
+    }
+
+    if (!isValid)Common.alert('Update Tag Submission'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+    return isValid;
+}
+
+function fn_removeFile(name){
+    if(name == "attch") {
+       $("#attch").val("");
+       $('#attch').change();
+    }
+  }
 
  function fn_inchgDept_SelectedIndexChanged() {
     $("#ddlSubDeptUpd option").remove();
@@ -103,6 +285,13 @@ function fn_bookingAndpopClose(){
 <input type="hidden" id="_infoSupRefNo" value="${orderInfo.supRefNo}">
 <input type="hidden" id="_infoCustName" value="${orderInfo.custName}">
 <input type="hidden" id="_infoCustEmail" value="${orderInfo.custEmail}">
+<input type="hidden" id="_infoCounselingNo" value="${tagInfo.counselingNo}">
+<input type="hidden" id="_infoTagStatus" value="${tagInfo.tagStatus}">
+<input type="hidden" id="_infoTagStatusId" value="${tagInfo.tagStatusId}">
+<input type="hidden" id="_infoSubTopicId" value="${tagInfo.subTopicId}">
+<input type="hidden" id="_infoSubTopic" value="${tagInfo.subTopic}">
+
+<input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
 
 
 <header class="pop_header">
@@ -160,7 +349,7 @@ function fn_bookingAndpopClose(){
 <tr>
     <th scope="row"><spring:message code="supplement.text.supplementTagStus" /></th>
     <td colspan="3">
-            <select class="select w100p"  id="tagStus" name="tagStus">
+            <select class="select w100p"  id="tagStusPop" name=""tagStusPop"">
             <option value="">Choose One</option>
                 <c:forEach var="list" items="${tagStus}" varStatus="status">
                   <option value="${list.codeId}">${list.codeName}</option>
