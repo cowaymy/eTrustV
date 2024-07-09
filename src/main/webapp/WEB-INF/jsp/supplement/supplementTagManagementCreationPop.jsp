@@ -8,6 +8,10 @@
   var myFileCaches = {};
   var atchFileGrpId = 0;
 
+  function setInputFile2(){//인풋파일 세팅하기
+        $(".auto_file").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
+    }
+
   $(document).ready(function() {
     if ('${orderInfo}' != "" && '${orderInfo}' != null) {
       $("#basicForm").show();
@@ -23,116 +27,105 @@
     setTimeout(function() {
       fn_descCheck(0)
     }, 1000);
+
+    setInputFile2();
   });
 
   $('#attch').change(function(evt) {
       handleFileChange(evt, 1);
   });
 
+  // Define a common function to handle file input changes
   function handleFileChange(evt, cacheIndex) {
-    var file = evt.target.files[0];
-    if (file == null && myFileCaches[cacheIndex] != null) {
-        delete myFileCaches[cacheIndex];
-    } else if (file != null) {
-        myFileCaches[cacheIndex] = {
-            file : file
-        };
-    }
-
-    var msg = '';
-    if (file && file.name.length > 30) {
-        msg += "<spring:message code='supplement.text.supplement.text.fileNameNotExist '/>";
-        $("#attch").val('');
-        return;
-    }
-
-    /*
-      var fileType = file ? file.type.split('/') : [];
-      if (fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf') {
-        msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[cacheIndex] != null) {
+          delete myFileCaches[cacheIndex];
+      } else if (file != null) {
+          myFileCaches[cacheIndex] = {
+              file : file
+          };
       }
-    */
 
-    var isZip = file.name.endsWith('.zip');
+      var msg = '';
+      if (file && file.name.length > 30) {
+          msg += "*File name wording should be not more than 30 alphabet.<br>";
+      }
 
-    if (!isZip) {
-      Common.alert("<spring:message code='supplement.alert.supplementBatchUploadZip' />");
-      $("#attch").val('');
-      return;
-    }
+/*       var fileType = file ? file.type.split('/') : [];
+      if (fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf') {
+          msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+      } */
 
-    if (file && file.size > 2000000) {
-      msg += "<spring:message code='supplement.text.fileSizeLessThan'/>";
-      $("#attch").val('');
-      return;
-    }
+      if (file && file.size > 2000000) {
+          msg += "*Only allow .zip file with less than 2MB.<br>";
+      }
 
-    if (msg) {
-      myFileCaches[cacheIndex].file['checkFileValid'] = false;
-      Common.alert(msg);
-    } else {
-      myFileCaches[cacheIndex].file['checkFileValid'] = true;
-    }
+      if (msg) {
+          myFileCaches[cacheIndex].file['checkFileValid'] = false;
+          Common.alert(msg);
+      } else {
+          myFileCaches[cacheIndex].file['checkFileValid'] = true;
+      }
+
+      //console.log("myFileCaches::" + myFileCaches);
   }
 
   $('#_saveBtn').click(function() {
-    if (!fn_validInpuInfo()) {
-      return false;
-    }
 
-    fn_SaveTagSubmission();
-  });
+      if (!fn_validInpuInfo()) {
+          return false;
+      }
+
+        fn_SaveTagSubmission();
+    });
 
   function fn_validInpuInfo() {
-    var isValid = true, msg = "", msgLabel="";
+      var isValid = true, msg = "";
 
-    if(null == $("#mainTopicList").val() || '' == $("#mainTopicList").val()){
-      isValid = false;
-      msgLabel = "<spring:message code='supplement.text.supplementMainTopicInquiry'/>"
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
-      return isValid;
-    } else if( null == $("#ddlSubTopic").val() || '' == $("#ddlSubTopic").val()){
-      isValid = false;
-      msgLabel = "<spring:message code='supplement.text.supplementSubTopicInquiry'/>"
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
-      return isValid;
-    } else if( null == $("#inchgDeptList").val() || '' == $("#inchgDeptList").val()){
-      isValid = false;
-      msgLabel = "<spring:message code='service.text.InChrDept'/>"
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
-      return isValid;
-    } else if( null == $("#ddlSubDept").val() || '' == $("#ddlSubDept").val()){
-      isValid = false;
-      msgLabel = "<spring:message code='service.grid.subDept'/>"
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
-      return isValid;
-    }
+      if(null == $("#mainTopicList").val() || '' == $("#mainTopicList").val()){
+          isValid = false;
+          msg += 'Main Topic Inquiry is required.';
+      }
 
-    //if (!isValid) {
-    //  Common.alert("<spring:message code='supplement.text.tagTicketSuccCreate'/>" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-    //}
-    return isValid;
+      else if( null == $("#ddlSubTopic").val() || '' == $("#ddlSubTopic").val()){
+          isValid = false;
+          msg += 'Sub Topic Inquiry is required.';
+      }
+
+      else if( null == $("#inchgDeptList").val() || '' == $("#inchgDeptList").val()){
+          isValid = false;
+          msg += 'Incharge Department is required.';
+      }
+
+      else if( null == $("#ddlSubDept").val() || '' == $("#ddlSubDept").val()){
+          isValid = false;
+          msg += 'Sub Department is required.';
+      }
+
+      if (!isValid)Common.alert('Save New Tag Submission'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+      return isValid;
   }
 
   function fn_validFile() {
-    var isValid = true, msg = "";
+      var isValid = true, msg = "";
 
-    if (FormUtil.isEmpty($('#attch').val().trim())) {
-      isValid = false;
-      var field = "<spring:message code='service.text.attachment' />";
-      msg += "<spring:message code='sys.msg.necessary' arguments='* <b>" + field + "</b>' htmlEscape='false'/>";
-    }
+      if (FormUtil.isEmpty($('#attch').val().trim())) {
+          isValid = false;
+          msg += 'Attachment is required.';
+      }
 
-    $.each(myFileCaches,function(i, j) {
-      if (myFileCaches[i].file.checkFileValid == false) {
-        isValid = false;
-        msg += myFileCaches[i].file.name + '<spring:message code="supplement.alert.fileUploadFormat" />';
-     }
-   });
+      $.each(myFileCaches,function(i, j) {
+                          if (myFileCaches[i].file.checkFileValid == false) {
+                              isValid = false;
+                              msg += myFileCaches[i].file.name + '<spring:message code="supplement.alert.fileUploadFormat" />';
+                          }
+                      });
 
-    if (!isValid)
-      Common.alert("<spring:message code='supplement.text.tagTicketSuccCreate'/>" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-    return isValid;
+      if (!isValid)
+          Common.alert('Save New Tag Submission'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+      return isValid;
   }
 
   function fn_formSetting() {
@@ -153,7 +146,7 @@
     };
 
     doGetCombo('/supplement/getSubTopicList.do?DEFECT_GRP=' + $("#mainTopicList").val(), '', '', 'ddlSubTopic', 'S', '');
-    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDeptList").val(), '', '', 'ddlSubDept', 'S', 'fn_callbackSubDept');
+    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDeptList").val(), '', '', 'ddlSubDept', 'S', '');
   }
 
   function fn_mainTopic_SelectedIndexChanged() {
@@ -163,12 +156,8 @@
 
   function fn_inchgDept_SelectedIndexChanged() {
     $("#ddlSubDept option").remove();
-    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDeptList").val(), '', '', 'ddlSubDept', 'S', 'fn_callbackSubDept');
+    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT=' + $("#inchgDeptList").val(), '', '', 'ddlSubDept', 'S', '');
   }
-
-  function fn_callbackSubDept() {
-	    $("#ddlSubDept").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
-	  }
 
    function fn_checkOrderNo() {
     if ($("#entry_supRefNo").val() == "") {
@@ -177,9 +166,11 @@
       return;
     }
 
-    Common.ajax("GET", "/supplement/searchOrderNo", { searchOrdNo : $("#entry_supRefNo").val() }, function(result) {
-      if (result == "") {
-        Common.alert("<spring:message code='supplement.alert.supplementNoOrdFound'/>");
+    Common.ajax("GET", "/supplement/searchOrderNo", { orderNo : $("#entry_supRefNo").val() }, function(result) {
+        console.log("result.supRefId:: " +result.supRefId);
+      if (result == null) {
+        var field = "<spring:message code='supplement.text.supplementReferenceNo' />";
+        Common.alert("<spring:message code='sys.msg.notexist' arguments='* <b>" + $("#entry_supRefNo").val() + "</b>' htmlEscape='false'/>");
         return;
       } else {
         Common.popupDiv("/supplement/supplementViewBasicPop.do", {
@@ -195,61 +186,100 @@
     Common.popupDiv('/supplement/searchOrdNoPop.do', null, null, true, '_searchDiv');
   }
 
+//TODO 미개발 message
+
   function fn_SaveTagSubmission(){
-    var orderVO = {
-       supRefId :  $("#_infoSupRefId").val(),
-       mainTopic : $('#mainTopicList').val().trim(),
-       subTopic : $('#ddlSubTopic').val().trim(),
-       mainDept : $('#inchgDeptList').val().trim(),
-       subDept : $('#ddlSubDept').val().trim(),
-       callRemark : $('#_remark').val().trim(),
-       atchFileGrpId : atchFileGrpId
-    };
 
-    var supRefId =  $("#_infoSupRefId").val();
-    var subTopic = $('#ddlSubTopic').val().trim();
-    var supRefStus = $("#_infoSupRefStus").val();
-    var supRefStusId = $("#_infoSupRefStusId").val();
+      var orderVO = {
+
+              supRefId :  $("#_infoSupRefId").val(),
+              mainTopic : $('#mainTopicList').val().trim(),
+              subTopic : $('#ddlSubTopic').val().trim(),
+              mainDept : $('#inchgDeptList').val().trim(),
+              subDept : $('#ddlSubDept').val().trim(),
+              callRemark : $('#_remark').val().trim(),
+              atchFileGrpId : atchFileGrpId,
+              attchFilePathName : "attchFilePathName"
+
+      };
+
+      var supRefId =  $("#_infoSupRefId").val();
+      var subTopic = $('#ddlSubTopic').val().trim();
+      var supRefStus = $("#_infoSupRefStus").val();
+      var supRefStusId = $("#_infoSupRefStusId").val();
+      var attchFilePathName = "attchFilePathName";
 
 
-    var formData = new FormData();
-    $.each(myFileCaches, function(n, v) {
-      formData.append(n, v.file);
-    });
+      var formData = new FormData();
+      $.each(myFileCaches, function(n, v) {
+        //console.log("n : " + n + " v.file : " + v.file);
+        formData.append(n, v.file);
+        formData.append(attchFilePathName, "tagSubmission");
+      });
 
-    if (subTopic ==  "4001") { // Request Refund
-      if (supRefStusId !=  "4"){
-        Common.alert("<spring:message code='supplement.text.tagTicketFailStatId' />");
-        return false;
-      } else {
-         if (!fn_validFile()) {
-           return false;
-         }
-       }
-     }
+      console.log("supRefId###::" + supRefId);
+      console.log("subTopic###::" + subTopic);
+      console.log("supRefStus###::" + supRefStus);
+      console.log("supRefStusId###::" + supRefStusId);
 
-     if($("#attch").val().trim() !=""){
-       Common.ajaxFile("/supplement/attachFileUploadId.do", formData, function(result) {
-         if (result != 0 && result.code == 00) {
-           orderVO["atchFileGrpId"] = result.data.fileGroupKey;
-         } else {
-           Common.alert("<spring:message code='supplement.text.tagTicketSuccCreate' />" + DEFAULT_DELIMITER + result.message);
-         }
 
-         Common.ajax("POST","/supplement/supplementTagSubmission.do", orderVO,
-           function(result) {
-             Common.alert( 'Save New Tag Submission' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_closeSupplementSubmissionPop);
-           });
-       }, function(result) {
-         Common.alert("<spring:message code='supplement.text.tagTicketFailUpload' />");
-       });
-     } else {
-       Common.ajax("POST","/supplement/supplementTagSubmission.do", orderVO,
-         function(result) {
-           Common.alert( "<spring:message code='supplement.text.tagTicketSuccCreate' />" + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_closeSupplementSubmissionPop);
-         });
-     }
+              if (subTopic ==  "4001") { // Request Refund
+                  if (supRefStusId !=  "1"){ // need change to (supRefStusId !=  "4")
+                      Common.alert("Process failed. Please check the Supplement Reference Status.");
+                      return false;
+                  } else {
+                      if (!fn_validFile()) {
+                             return false;
+                         }
+                  }
+              }
+
+              console.log("Attachment value::" + $("#attch").val());
+
+
+             if($("#attch").val().trim() !=""){
+
+              Common.ajaxFile("/supplement/attachFileUploadId.do", formData, function(result) {
+
+                  //console.log("result attachFileUploadId:: " + result.code);
+
+                    if (result != 0 && result.code == 00) {
+                        orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+
+                      } else {
+                        Common.alert('Save New Tag Submission'+ DEFAULT_DELIMITER + result.message);
+                      }
+
+                       Common.ajax("POST","/supplement/supplementTagSubmission.do", orderVO,
+                              function(result) {Common.alert( 'Save New Tag Submission'
+                                            + DEFAULT_DELIMITER
+                                            + "<b>"
+                                            + result.message
+                                            + "</b>",
+                                            fn_closeSupplementSubmissionPop);
+                              });
+              },
+
+                  function(result) {
+                    Common.alert("Upload Failed. Please check with System Administrator.");
+                  });
+             }
+
+             else {
+
+                 Common.ajax("POST","/supplement/supplementTagSubmission.do", orderVO,
+                         function(result) {Common.alert( 'Save New Tag Submission'
+                                       + DEFAULT_DELIMITER
+                                       + "<b>"
+                                       + result.message
+                                       + "</b>",
+                                       fn_closeSupplementSubmissionPop);
+                         });
+
+             }
+
   }
+
 
   function fn_closeSupplementSubmissionPop() {
       myFileCaches = {};
@@ -263,17 +293,9 @@
     }
   }
 
-  function fn_callbackOrdSearchFunciton(ordNo) {
+    function fn_callbackOrdSearchFunciton(ordNo) {
     $("#entry_supRefNo").val(ordNo);
     fn_checkOrderNo();
-  }
-
-  function fn_attachment(obj) {
-    if (obj.value == "4001") {
-      $("#attchSpan").show();
-    } else {
-      $("#attchSpan").hide();
-    }
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -357,21 +379,14 @@
             <td>
               <select class="select w100p" id="mainTopicList" name="mainTopicList" onChange="fn_mainTopic_SelectedIndexChanged()">
                 <option value="">Choose One</option>
-                 <c:forEach var="list" items="${mainTopic}" varStatus="status">
-                  <c:choose>
-                    <c:when test="${list.codeId=='4000'}"> <!-- DEFAULT SUPPLEMENT -->
-                      <option value="${list.codeId}" selected>${list.codeName}</option>
-                    </c:when>
-                    <c:otherwise>
-                      <option value="${list.codeId}">${list.codeName}</option>
-                    </c:otherwise>
-                  </c:choose>
+                <c:forEach var="list" items="${mainTopic}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
               </select>
             </td>
             <th scope="row"><spring:message code="supplement.text.supplementSubTopicInquiry" /><span class="must">*</span></th>
             <td>
-              <select id='ddlSubTopic' name='ddlSubTopic' class="w100p" onchange="fn_attachment(this)"></select>
+              <select id='ddlSubTopic' name='ddlSubTopic' class="w100p"></select>
             </td>
           </tr>
           <tr>
@@ -380,14 +395,7 @@
               <select class="select w100p" id="inchgDeptList" name="inchgDeptList" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
                 <c:forEach var="list" items="${inchgDept}" varStatus="status">
-                  <c:choose>
-                    <c:when test="${list.codeId=='MD103'}"> <!-- DEFAULT BEREX -->
-                      <option value="${list.codeId}" selected>${list.codeName}</option>
-                    </c:when>
-                    <c:otherwise>
-                      <option value="${list.codeId}">${list.codeName}</option>
-                    </c:otherwise>
-                  </c:choose>
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
               </select>
             </td>
@@ -397,7 +405,7 @@
           </tr>
 
           <tr>
-            <th scope="row"><spring:message code='service.text.attachment' /><span id="attchSpan" class="must" style="display:none">*</span></th>
+            <th scope="row"><spring:message code='service.text.attachment' /></th>
             <td colspan="3">
               <div class="auto_file2">
                 <input type="file" title="" id="attch" accept=".zip" />
@@ -407,11 +415,6 @@
                 </label>
                 <span class='label_text'><a href='#' onclick='fn_removeFile("attch")'><spring:message code='sys.btn.remove' /></a></span>
               </div>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <span class="red_text">** <spring:message code="supplement.alert.supplementBatchUploadZipNotice" /></span>
             </td>
           </tr>
           <tr>
