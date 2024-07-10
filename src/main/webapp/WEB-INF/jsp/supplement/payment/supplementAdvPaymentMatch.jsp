@@ -1011,7 +1011,6 @@
             <col style="width: 200px" />
             <col style="width: *" />
           </colgroup>
-
           <tbody>
             <tr>
               <th scope="row"><spring:message code='supplement.text.remark' /></th>
@@ -1039,11 +1038,7 @@
       <spring:message code='supplement.text.advKeyInRpt' />
     </h1>
     <ul class="right_opt">
-      <!-- <li>
-        <p class="btn_blue2">
-          <a href="#" onclick="javascript:fn_generateReport();"><spring:message code='supplement.btn.generateRpt' /></a>
-        </p>
-      </li> -->
+      <li><p class="btn_blue2"><a href="#none" onclick="javascript:fn_generateReport();"><spring:message code="sal.btn.search" /></a></p></li>
       <li>
         <p class="btn_blue2">
           <a href="#" onclick="hideViewPopup('#reportAdvanceKeyin_wrap');"><spring:message code='sys.btn.close' /></a>
@@ -1053,9 +1048,6 @@
   </header>
 
   <section class="pop_body">
-    <ul class="right_btns mb10">
-      <li><p class="btn_blue"><span class="search"></span><a href="#none" onclick="javascript:fn_generateReport();"><spring:message code="sal.btn.search" /></a></p></li>
-    </ul>
     <table class="type1">
       <colgroup>
         <col style="width: 150px" />
@@ -1077,11 +1069,6 @@
       </tr>
       <tr>
       </tr>
-      <!-- <tr>
-        <td colspan="2">
-          <div id="report_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
-        </td>
-      </tr> -->
     </table>
     <ul class="right_btns">
       <li>
