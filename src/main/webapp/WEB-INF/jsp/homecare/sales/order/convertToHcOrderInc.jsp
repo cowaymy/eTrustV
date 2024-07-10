@@ -234,11 +234,12 @@
                       //E-Invoice Flag checking
                         //var corpTypeID = custInfo.corpTypeId;
 
-                        $('#billMthdEInv').prop("checked", true);
+                      //20240710 [CELESTE]: Turn off due to unable to collect back all the TIN from Corporate customer. WIND requested to temporarily turn off the checking.
+                        /* $('#billMthdEInv').prop("checked", true);
                         $('#billMthdEInv').removeAttr("disabled");
                         $("#billMthdEInv").on('click', function() {
                             return false;
-                        });
+                        }); */
 
                         /* if(corpTypeID != '1151' || corpTypeID != '1333'){ //For Government type and ePortal VIP, no need to check if TIN exist, auto-populate eInvoice Flag = 1
                              if(FormUtil.isEmpty(custInfo.custTin)){
@@ -270,9 +271,10 @@
                             $('#billMthdSms2').prop("checked", true);
                         }
 
-                        if(FormUtil.isNotEmpty(custInfo.custTin)){
+                      //20240710 [CELESTE]: Turn off due to unable to collect back all the TIN from Corporate customer. WIND requested to temporarily turn off the checking.
+                        /* if(FormUtil.isNotEmpty(custInfo.custTin)){
                             $('#billMthdEInv').removeAttr("disabled");
-                        }
+                        } */
                     }
 
                 } else {

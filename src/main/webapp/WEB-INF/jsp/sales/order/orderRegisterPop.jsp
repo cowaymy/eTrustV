@@ -2064,7 +2064,8 @@
             }
         }
 
-        if($('#typeId').val() == '965' && $("#corpTypeId").val() != "1333" && $("#corpTypeId").val() != "1151"){
+        //20240710 [CELESTE]: Turn off due to unable to collect back all the TIN from Corporate customer. WIND requested to temporarily turn off the checking.
+        /* if($('#typeId').val() == '965' && $("#corpTypeId").val() != "1333" && $("#corpTypeId").val() != "1151"){
         	if(FormUtil.isEmpty($('#tin').val())){
         		isValid = false;
                 msg = "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
@@ -2075,7 +2076,7 @@
         		isValid = false;
                 msg = "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
         	}
-        }
+        } */
 
 
 
