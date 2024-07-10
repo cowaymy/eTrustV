@@ -207,29 +207,45 @@
     });
 
     $("#rtnQtyUpd").click(
-        function() {
-          alert("rtnQtyUpd");
-          /*Common.popupDiv("/supplement/supplementSubmissionAddPop.do", '', null, true, '_insDiv');*/
+      function() {
+        var rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
+        if (rowIdx > -1) {
+          var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStat");
+          var rtnTckNo = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRtnPrcTrkNo");
+          /*if (stusCode.toUpperCase() != 'CANCELLED') {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+            return false;
+          }*/
+
+          /*if (rtnTckNo === undefined) {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+            return false;
+          }*/
+
+          Common.popupDiv("/supplement/cancellation/supplementCancellationUpdateReturnQtyPop.do", { supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
+        } else {
+          Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
+          return false;
         }
+      }
     );
 
 
     $("#cancellationDetailView").click(
        function() {
-         alert("cancellationDetailView");
-         /*rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
+         var rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
          if (rowIdx > -1) {
-           Common.popupDiv("/supplement/supplementSubmissionViewApprovalPop.do", { supSubmId : AUIGrid.getCellValue( supplementGridID, rowIdx, "supSubmId"), modValue : "view" }, null, true, '_insDiv');
+           Common.popupDiv("/supplement/cancellation/supplementCancellationViewDetailPop.do", { supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
          } else {
            Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
            return false;
-         }*/
+         }
        }
     );
 
     $("#congsRtnUpd").click(
       function() {
-        rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
+        var rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
         if (rowIdx > -1) {
          var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStat");
          var rtnTckNo = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRtnPrcTrkNo");
