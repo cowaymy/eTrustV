@@ -1496,7 +1496,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	        LOGGER.error("Start Calling LMS API return......\n");
 	        LOGGER.error("Start Calling LMS API return" + conn.getResponseMessage() + "......\n");
 
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_REQUEST) {
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_GATEWAY) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 		                (conn.getInputStream())));
 				conn.getResponseMessage();
