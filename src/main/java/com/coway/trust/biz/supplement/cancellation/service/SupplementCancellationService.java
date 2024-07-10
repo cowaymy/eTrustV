@@ -27,4 +27,8 @@ public interface SupplementCancellationService {
 
   Map<String, Object> updateRefStgStatus( Map<String, Object> params ) throws Exception;
 
+  EgovMap selectOrderStockQty( Map<String, Object> params ) throws Exception;
+
+  Map<String, Object> updateReturnGoodsQty( Map<String, Object> params ) throws Exception;
+
 }
