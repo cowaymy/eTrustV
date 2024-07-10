@@ -113,6 +113,7 @@ public class SupplementCancellationImpl
       supplementCancellationMapper.updateRefStgStatus( params );
       emailMap = supplementCancellationMapper.getCustomerInfo( params );
       emailMap.put( "parcelRtnTrackNo", params.get( "parcelRtnTrackNo" ) );
+      emailMap.put( "emailType", "1" );
       rtnMap.put( "logError", "000" );
       this.sendEmail( emailMap );
     }
@@ -131,27 +132,43 @@ public class SupplementCancellationImpl
     String content = "";
     List<String> emailNo = Arrays.asList( " " + CommonUtils.nvl( params.get( "email" ) ) + " " );
 
-    emailTitle = "Your Refund Request (" + CommonUtils.nvl( params.get( "supReqCancNo" ) ) + ") Has Been Approved";
-    content += "<html>" + "<body>"
-        + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
-        + "Dear " + CommonUtils.nvl( params.get( "name" ) ) + " ,<br/><br/>"
-        + "We are pleased to inform you that your refund request has been approved.<br/><br/>"
-        + "Please be reminded that only unopened product(s) will be accepted. Ensure the product is safe and in good condition during delivery by using the original carton box or wrapping it with bubble wrap when returning the product."
-        + "Coway reserves the right to reject any returned products that are deemed spoiled, opened, or in bad condition.<br/><br/>"
-        + "Please follow the instructions below:<br/><br/>"
-        + "Drop off the package at a DHL Branch (not Network Partner). Here is a list of DHL Branches:<br/><br/>"
-        + "Link: https://www.dhl.com/discover/en-my/ship-with-dhl/dhl-express-locations<br/>"
-        + "Return code:" + CommonUtils.nvl( params.get( "parcelRtnTrackNo" ) ) +"<br/>"
-        + "Ensure the package is in good condition before passing it to our courier partner.<br/>"
-        + "Your return package delivery fee is borne by Coway. Do not make any payment to our courier partner.<br/><br/>"
-        + "Best Regards, <br/>"
-        + "Coway <br/><br/>"
-        + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
+    if (CommonUtils.nvl( params.get( "emailType" )).equals( "1" )){
+      emailTitle = "Your Refund Request (" + CommonUtils.nvl( params.get( "supReqCancNo" ) ) + ") Has Been Approved";
+      content += "<html>" + "<body>"
+          + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
+          + "Dear " + CommonUtils.nvl( params.get( "name" ) ) + " ,<br/><br/>"
+          + "We are pleased to inform you that your refund request has been approved.<br/><br/>"
+          + "Please be reminded that only unopened product(s) will be accepted. Ensure the product is safe and in good condition during delivery by using the original carton box or wrapping it with bubble wrap when returning the product."
+          + "Coway reserves the right to reject any returned products that are deemed spoiled, opened, or in bad condition.<br/><br/>"
+          + "Please follow the instructions below:<br/><br/>"
+          + "Drop off the package at a DHL Branch (not Network Partner). Here is a list of DHL Branches:<br/><br/>"
+          + "Link: https://www.dhl.com/discover/en-my/ship-with-dhl/dhl-express-locations<br/>"
+          + "Return code:" + CommonUtils.nvl( params.get( "parcelRtnTrackNo" ) ) +"<br/>"
+          + "Ensure the package is in good condition before passing it to our courier partner.<br/>"
+          + "Your return package delivery fee is borne by Coway. Do not make any payment to our courier partner.<br/><br/>"
+          + "Best Regards, <br/>"
+          + "Coway <br/><br/>"
+          + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
+    } else if (CommonUtils.nvl( params.get( "emailType" )).equals( "2" )) {
+      emailTitle = "Your Returned Package (" + CommonUtils.nvl( params.get( "supReqCancNo" ) ) + ") Has Been Received";
+      content += "<html>" + "<body>"
+          + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
+          + "Dear " + CommonUtils.nvl( params.get( "name" ) ) + " ,<br/><br/>"
+          + "We have received your returned package!<br/><br/>"
+          + "Order Number: " + CommonUtils.nvl( params.get( "supRefNo" ) ) +"<br/>"
+          + "Your refund will be processed as follows:<br/><br/>"
+          + "Online Transfer: Please allow 6 working days.<br/>"
+          + "Credit/Debit Card: Please allow 16-21 working days.<br/><br/>"
+          + "Thank you for your support.<br/>"
+          + "Best Regards, <br/>"
+          + "Coway <br/><br/>"
+          + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
+    } else {
+      return;
+    }
 
     email.setText( content );
 
-    LOGGER.debug( emailNo.toString() );
-    LOGGER.debug( content );
     if ( emailNo.size() > 0 ) {
       email.setTo( emailNo );
       email.setHtml( true );
@@ -230,9 +247,9 @@ public class SupplementCancellationImpl
     try {
       supplementCancellationMapper.updateReturnGoodsQty( params );
       emailMap = supplementCancellationMapper.getCustomerInfo( params );
-      emailMap.put( "parcelRtnTrackNo", params.get( "parcelRtnTrackNo" ) );
+      emailMap.put( "emailType", "2" );
       rtnMap.put( "logError", "000" );
-      //this.sendEmail( emailMap );
+      this.sendEmail( emailMap );
     }
     catch ( Exception e ) {
       supplementCancellationMapper.rollbackRefStgStatus( params );
