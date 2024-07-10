@@ -166,30 +166,32 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 
 		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
 
-		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+//		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+//		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
 /*		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
 */
 /*		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
-*/		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
+*/
 /*		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
 *//*		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
 		List<SalesPromoFreeGiftVO> udtSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getUpdate();
 		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();*/
 
+        Map<String,Object> paramRqst = new HashMap();
+        paramRqst.put("promoReqstId", salesPromoMVO.getPromoReqstId());
 
-		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
+        EgovMap promoReqstInfo = promotionMapper.selectPromoReqstInfo(paramRqst);
+        List<EgovMap> promoReqstPrdList =promotionMapper.selectPromoReqstPrdList(paramRqst);
 
-		promotionMapper.updateSalesPromoM(salesPromoMVO);
+        SalesPromoMVO salesPromoMVONew = new SalesPromoMVO();
+		this.preprocSalesPromotionMasterNew(promoReqstInfo,salesPromoMVONew,sessionVO);
+		promotionMapper.updateSalesPromoM(salesPromoMVONew);
 
-/*		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
-*/		this.preprocSalesPromotionDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
-/*		this.preprocSalesPromotionDetail(delSalesPromoDVOList, salesPromoMVO.getPromoId(), sessionVO);
-*/
-/*		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
-			promotionMapper.insertSalesPromoD(addVO);
-		}*/
 
-		for(SalesPromoDVO udtVO : udtSalesPromoDVOList) {
+		List<SalesPromoDVO> udtSalesPromoDVOListNew = new ArrayList<SalesPromoDVO>();
+        this.preprocSalesPromotionDetailNew(promoReqstPrdList,udtSalesPromoDVOListNew,sessionVO);
+
+		for(SalesPromoDVO udtVO : udtSalesPromoDVOListNew) {
 			if (udtVO.getActionTab().equalsIgnoreCase("UPDATE")){
 				promotionMapper.updateSalesPromoD(udtVO);
 			}
@@ -207,7 +209,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		extraParams.put("promoId", salesPromoMVO.getPromoId());
 		extraParams.put("promoReqstId", salesPromoMVO.getPromoReqstId());
 		extraParams.put("codeMasterId", 566);
-		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVO , extraParams, sessionVO);
+		List<EgovMap> custStatusList = this.preprocSalesPromoCustStatus(salesPromoMVONew , extraParams, sessionVO);
 		EgovMap custStatusIns = new EgovMap();
 		custStatusIns.put("list", custStatusList);
 		promotionMapper.insertSalesPromoAddtValue(custStatusIns);
@@ -629,5 +631,73 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 
 		return custStatusList;
+	}
+
+	private void preprocSalesPromotionMasterNew(EgovMap promoReqstInfo ,SalesPromoMVO salesPromoMVO, SessionVO sessionVO) {
+
+		String promoDtFrom = promoReqstInfo.get("promoDtFrom").toString();
+		String promoDtEnd  = promoReqstInfo.get("promoDtEnd").toString();
+
+		salesPromoMVO.setPromoId(CommonUtils.intNvl(promoReqstInfo.get("promoId")));
+		salesPromoMVO.setPromoDesc(CommonUtils.nvl(promoReqstInfo.get("promoDesc")));
+		salesPromoMVO.setPromoSrvMemPacId(CommonUtils.intNvl(promoReqstInfo.get("promoSrvMemPacId")));
+		salesPromoMVO.setPromoDtFrom(CommonUtils.changeFormat(promoDtFrom, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+		salesPromoMVO.setPromoDtEnd(CommonUtils.changeFormat(promoDtEnd,  SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+		salesPromoMVO.setPromoUpdUserId(sessionVO.getUserId());
+		salesPromoMVO.setPromoIsTrialCnvr(0);
+		salesPromoMVO.setPromoPrcPrcnt(CommonUtils.intNvl(promoReqstInfo.get("promoPrcPrcnt")));
+		salesPromoMVO.setPromoCustType(CommonUtils.intNvl(promoReqstInfo.get("promoCustType")));
+		salesPromoMVO.setPromoDiscType(CommonUtils.intNvl(promoReqstInfo.get("promoDiscType")));
+		salesPromoMVO.setPromoRpfDiscAmt(CommonUtils.intNvl(promoReqstInfo.get("promoRpfDiscAmt")));
+		salesPromoMVO.setPromoDiscPeriodTp(CommonUtils.intNvl(promoReqstInfo.get("promoDiscPeriodTp")));
+		salesPromoMVO.setPromoDiscPeriod(CommonUtils.intNvl(promoReqstInfo.get("promoDiscPeriod")));
+		salesPromoMVO.setPromoFreesvcPeriodTp(CommonUtils.intNvl(promoReqstInfo.get("promoFreesvcPeriodTp")));
+		salesPromoMVO.setPromoAddDiscPrc(CommonUtils.intNvl(promoReqstInfo.get("promoAddDiscPrc")));
+		salesPromoMVO.setPromoAddDiscPv(CommonUtils.intNvl(promoReqstInfo.get("promoAddDiscPv")));
+		salesPromoMVO.setEmpChk(CommonUtils.intNvl(promoReqstInfo.get("empChk")));
+		salesPromoMVO.setExTrade(CommonUtils.intNvl(promoReqstInfo.get("exTrade")));
+		salesPromoMVO.setUpdUserId(sessionVO.getUserId());
+		salesPromoMVO.setMegaDeal(CommonUtils.intNvl(promoReqstInfo.get("megaDeal")));
+		salesPromoMVO.setPromoESales(CommonUtils.intNvl(promoReqstInfo.get("eSales")));
+		salesPromoMVO.setAdvDisc(CommonUtils.intNvl(promoReqstInfo.get("advDisc")));
+		salesPromoMVO.setStkSize(CommonUtils.nvl(promoReqstInfo.get("stkSize")));
+		salesPromoMVO.setVoucherPromotion(CommonUtils.intNvl(promoReqstInfo.get("voucherPromotion")));
+		salesPromoMVO.setCustStatusEn(CommonUtils.intNvl(promoReqstInfo.get("custStatusEn")));
+		salesPromoMVO.setCustStatusDisen(CommonUtils.intNvl(promoReqstInfo.get("custStatusDisen")));
+		salesPromoMVO.setCustStatusNew(CommonUtils.intNvl(promoReqstInfo.get("custStatusNew")));
+		salesPromoMVO.setCustStatusEnWoutWp(CommonUtils.intNvl(promoReqstInfo.get("custStatusEnWoutWp")));
+		salesPromoMVO.setCustStatusEnWp6m(CommonUtils.intNvl(promoReqstInfo.get("custStatusEnWp6m")));
+		salesPromoMVO.setPromoDiscOnBill(CommonUtils.intNvl(promoReqstInfo.get("promoDiscOnBill")));
+		salesPromoMVO.setPreBook(CommonUtils.intNvl(promoReqstInfo.get("preBook")));
+		salesPromoMVO.setWoHs(CommonUtils.intNvl(promoReqstInfo.get("woHs")));
+		salesPromoMVO.setExtradeFr(CommonUtils.intNvl(promoReqstInfo.get("extradeFr")));
+		salesPromoMVO.setExtradeTo(CommonUtils.intNvl(promoReqstInfo.get("extradeTo")));
+		salesPromoMVO.setExtradeAppType(CommonUtils.intNvl(promoReqstInfo.get("extradeAppType")));
+
+		salesPromoMVO.setPromoMtchId(0);
+		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
+		salesPromoMVO.setCrtUserId(sessionVO.getUserId());
+		salesPromoMVO.setIsNew(1);
+	}
+
+	private void preprocSalesPromotionDetailNew(List<EgovMap> promoReqstPrdList,List<SalesPromoDVO> salesPromoDVOList, SessionVO sessionVO) {
+		if(promoReqstPrdList != null) {
+			if(promoReqstPrdList.size() > 0){
+				for(EgovMap promoReqstPrd : promoReqstPrdList) {
+					SalesPromoDVO salesPromoDVO = new SalesPromoDVO();
+					salesPromoDVO.setPromoItmId(CommonUtils.intNvl(promoReqstPrd.get("promoItmId")));
+					salesPromoDVO.setPromoId(CommonUtils.intNvl(promoReqstPrd.get("promoId")));
+					salesPromoDVO.setPromoItmStkId(CommonUtils.intNvl(promoReqstPrd.get("promoItmStkId")));
+					salesPromoDVO.setPromoItmCurId(0);
+					salesPromoDVO.setPromoItmPv(CommonUtils.intNvl(promoReqstPrd.get("promoItmPv")));
+					salesPromoDVO.setPromoItmStusId(SalesConstants.STATUS_ACTIVE);
+					salesPromoDVO.setPromoItmUpdUserId(sessionVO.getUserId());
+					salesPromoDVO.setCrtUserId(sessionVO.getUserId());
+					salesPromoDVO.setUpdUserId(sessionVO.getUserId());
+					salesPromoDVO.setPromoItmPvGst((BigDecimal)promoReqstPrd.get("promoItmPvGst"));
+					salesPromoDVO.setActionTab(CommonUtils.nvl(promoReqstPrd.get("actionTab")));
+				}
+			}
+		}
 	}
 }
