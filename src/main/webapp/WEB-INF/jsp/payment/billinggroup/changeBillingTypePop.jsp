@@ -107,8 +107,16 @@ function changeBillingInfo(custBillId){
         tinID = result.data.basicInfo.tinId;
 
         var custTypeId = $('#changeTypeForm #custTypeId').val();
-        if(custTypeId == "965"){
-        	$("#changePop_isEInvoice").prop('checked', true); // Mandatory for corporate
+        if(eInvFlg == 1){
+            $("#changePop_isEInvoice").prop('checked', true);
+        }
+        else{
+            $("#changePop_isEInvoice").prop('checked', false);
+        }
+
+        //20240710 [CELESTE]: Turn off due to unable to collect back all the TIN from Corporate customer. WIND requested to temporarily turn off the checking.
+        /*if(custTypeId == "965"){
+        	 $("#changePop_isEInvoice").prop('checked', true); // Mandatory for corporate
         	//$("#changePop_isEInvoice").prop('disabled', true);
         	$("#changePop_isEInvoice").on('click', function() {
         		return false;
@@ -120,7 +128,7 @@ function changeBillingInfo(custBillId){
             else{
                 $("#changePop_isEInvoice").prop('checked', false);
             }
-        }
+        }*/
 
         AUIGrid.destroy(estmHisPopGridID);
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
@@ -181,10 +189,11 @@ function fn_changeBillSave(){
         message += "<spring:message code='pay.alert.smsNotAllow.'/>";
     }
 
-    if($("#changePop_isEInvoice").is(":checked") == true && tinID == "0"){
+  //20240710 [CELESTE]: Turn off due to unable to collect back all the TIN from Corporate customer. WIND requested to temporarily turn off the checking.
+    /* if($("#changePop_isEInvoice").is(":checked") == true && tinID == "0"){
     	valid = false;
     	message += "* E-Invoice is not allow. Please update customer's TIN number in Customer Management before choosing e-Invoice. <br />";
-    }
+    } */
 
     if($.trim(reasonUpd) ==""){
         valid = false;
