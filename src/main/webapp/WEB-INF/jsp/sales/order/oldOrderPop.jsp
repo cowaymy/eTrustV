@@ -28,7 +28,7 @@
         console.log('param salesOrdId:'+$('#relatedNo').val());
         console.log('param custId:'+$('#custId').val());
 
-        Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo').val(), exTrade : $('#exTrade').val(), refNo : $('#hiddenRefNo').val()}, function(RESULT) {
+        Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo').val(), exTrade : $('#exTrade').val()}, function(RESULT) {
             console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
             console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
             console.log('RESULT MSG         :'+RESULT.msg);

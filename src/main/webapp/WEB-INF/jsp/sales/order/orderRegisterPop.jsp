@@ -1194,7 +1194,6 @@
                 $('#txtOldOrderID').val('');
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
-                $('#hiddenRefNo').val('');
                 $('#hiddenMonthExpired').val('');
                 $('#hiddenPreBook').val('');
                 $('#btnRltdNo').addClass("blind");
@@ -3259,7 +3258,6 @@
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
-        <input id="hiddenRefNo" name="hiddenRefNo" type="hidden" />
         </td>
 </tr>
 <tr>

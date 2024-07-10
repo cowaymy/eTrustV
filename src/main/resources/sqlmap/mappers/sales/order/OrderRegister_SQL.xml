@@ -32,7 +32,7 @@
   </select>
 
   <select id="selectOldOrderId" parameterType="string" resultType="egovMap">
-    SELECT T1.SALES_ORD_ID, APP_TYPE_ID
+    SELECT T1.SALES_ORD_ID, APP_TYPE_ID,REF_NO
     FROM SAL0001D T1
     WHERE T1.SALES_ORD_NO = #{value}
         AND ROWNUM &lt;= 1
