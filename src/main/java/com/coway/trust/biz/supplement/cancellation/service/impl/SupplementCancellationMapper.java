@@ -28,4 +28,9 @@ public interface SupplementCancellationMapper {
   Map<String, Object> getCustomerInfo( Map<String, Object> params );
 
   List<EgovMap> selectSupDelStus();
+
+  EgovMap selectOrderStockQty( Map<String, Object> params );
+
+  int updateReturnGoodsQty( Map<String, Object> params );
+
 }
