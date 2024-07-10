@@ -263,6 +263,22 @@
     WHERE A.SUP_REQ_CANC_ID = #{canReqId}
   </select>
 
+  <select id="selectOrderStockQty" parameterType="Map" resultType="egovMap">
+    SELECT SUM(A.SUP_ITM_QTY) AS TTL_QTY
+    FROM SUP0002D A
+    JOIN SUP0001M B ON A.SUP_REF_ID = B.SUP_REF_ID
+    WHERE B.SUP_REF_NO = #{supOrdNo}
+  </select>
+
+  <update id="updateReturnGoodsQty" parameterType="Map">
+    UPDATE SUP0008M SET SUP_RTN_GDS = #{rtnGoodCondQty}
+                                   , SUP_RTN_BAD_GDS = #{rtnDefectCondQty}
+                                   , SUP_RTN_MIA_GDS = #{rtnMissCond}
+    WHERE SUP_REF_ID = #{supRefId}
+        AND SUP_REQ_CANC_ID = #{canReqId}
+        AND DEL_FLG = 'N'
+  </update>
+
   <select id="selectPaymentMasterList" parameterType="Map" resultType="egovMap">
   SELECT PAY_ID
            , OR_NO
