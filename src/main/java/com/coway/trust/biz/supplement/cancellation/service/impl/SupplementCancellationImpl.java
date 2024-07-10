@@ -104,6 +104,7 @@ public class SupplementCancellationImpl
     return supplementCancellationMapper.checkDuplicatedTrackNo( params );
   }
 
+  @Override
   public Map<String, Object> updateRefStgStatus( Map<String, Object> params )
     throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
@@ -112,7 +113,6 @@ public class SupplementCancellationImpl
       supplementCancellationMapper.updateRefStgStatus( params );
       emailMap = supplementCancellationMapper.getCustomerInfo( params );
       emailMap.put( "parcelRtnTrackNo", params.get( "parcelRtnTrackNo" ) );
-      LOGGER.debug( ">>>>>>>>>>>>>>>>>>>> " + emailMap.toString() );
       rtnMap.put( "logError", "000" );
       this.sendEmail( emailMap );
     }
@@ -217,4 +217,29 @@ public class SupplementCancellationImpl
                                                         AppConstants.DEFAULT_CHARSET, params );
   }
 
+  @Override
+  public EgovMap selectOrderStockQty( Map<String, Object> params ) throws Exception {
+    return supplementCancellationMapper.selectOrderStockQty( params );
+  }
+
+  @Override
+  public Map<String, Object> updateReturnGoodsQty( Map<String, Object> params )
+    throws Exception {
+    Map<String, Object> rtnMap = new HashMap<>();
+    Map<String, Object> emailMap = new HashMap<>();
+    try {
+      supplementCancellationMapper.updateReturnGoodsQty( params );
+      emailMap = supplementCancellationMapper.getCustomerInfo( params );
+      emailMap.put( "parcelRtnTrackNo", params.get( "parcelRtnTrackNo" ) );
+      rtnMap.put( "logError", "000" );
+      //this.sendEmail( emailMap );
+    }
+    catch ( Exception e ) {
+      supplementCancellationMapper.rollbackRefStgStatus( params );
+      rtnMap.put( "logError", "99" );
+      rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+      LOGGER.error( "Error updating parcel tracking number...", e );
+    }
+    return rtnMap;
+  }
 }
