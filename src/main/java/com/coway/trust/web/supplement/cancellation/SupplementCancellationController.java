@@ -154,4 +154,83 @@ public class SupplementCancellationController {
     }
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "supplementCancellationViewDetailPop.do")
+  public String supplementCancellationViewDetailPop( @RequestParam Map<String, Object> params, ModelMap model )
+    throws Exception {
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    params.put( "userId", sessionVO.getUserId() );
+
+    EgovMap orderInfoMap = null;
+
+    orderInfoMap = supplementCancellationService.selectOrderBasicInfo(params);
+
+    params.put("userId", sessionVO.getUserId());
+
+    model.addAttribute("userId", sessionVO.getUserId());
+    model.addAttribute("userBr", sessionVO.getUserBranchId());
+    model.addAttribute("cancReqNo", params.get( "cancReqNo" ));
+    model.addAttribute("cancReqDt", params.get( "cancReqDt" ));
+    model.addAttribute("cancReqBy", params.get( "cancReqBy" ));
+    model.addAttribute("supRtnStat", params.get( "supRtnStat" ));
+    model.addAttribute("canReqId", params.get( "canReqId" ));
+
+    model.addAttribute("orderInfo", orderInfoMap);
+
+    return "supplement/cancellation/supplementCancellationViewDetailPop";
+  }
+
+  @RequestMapping(value = "supplementCancellationUpdateReturnQtyPop.do")
+  public String supplementCancellationUpdateReturnQtyPop( @RequestParam Map<String, Object> params, ModelMap model )
+    throws Exception {
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    params.put( "userId", sessionVO.getUserId() );
+
+    EgovMap orderInfoMap = null;
+    EgovMap orderStockMap = null;
+
+    orderInfoMap = supplementCancellationService.selectOrderBasicInfo(params);
+    orderStockMap = supplementCancellationService.selectOrderStockQty(params);
+
+    params.put("userId", sessionVO.getUserId());
+
+    model.addAttribute("userId", sessionVO.getUserId());
+    model.addAttribute("userBr", sessionVO.getUserBranchId());
+    model.addAttribute("cancReqNo", params.get( "cancReqNo" ));
+    model.addAttribute("cancReqDt", params.get( "cancReqDt" ));
+    model.addAttribute("cancReqBy", params.get( "cancReqBy" ));
+    model.addAttribute("supRtnStat", params.get( "supRtnStat" ));
+    model.addAttribute("canReqId", params.get( "canReqId" ));
+    model.addAttribute("ttlGoodsQty", orderStockMap);
+
+    model.addAttribute("orderInfo", orderInfoMap);
+
+    return "supplement/cancellation/supplementCancellationUpdateReturnQtyPop";
+  }
+
+  @Transactional
+  @RequestMapping(value = "/updateReturnGoodsQty.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateReturnGoodsQty(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+    ReturnMessage message = new ReturnMessage();
+    String msg = "";
+    params.put("userId", sessionVO.getUserId());
+
+    try {
+      Map<String, Object> returnMap = supplementCancellationService.updateReturnGoodsQty(params);
+      if ("000".equals(returnMap.get("logError"))) {
+        msg += "Parcel tracking number update successfully.";
+        message.setCode(AppConstants.SUCCESS);
+      } else {
+        msg += "Parcel tracking number failed to update. <br />";
+        msg += "Errorlogs : " + returnMap.get("message") + "<br />";
+        message.setCode(AppConstants.FAIL);
+      }
+      message.setMessage(msg);
+    } catch (Exception e) {
+      msg += "An unexpected error occurred.<br />";
+      message.setCode(AppConstants.FAIL);
+      message.setMessage(msg);
+    }
+    return ResponseEntity.ok(message);
+  }
 }
