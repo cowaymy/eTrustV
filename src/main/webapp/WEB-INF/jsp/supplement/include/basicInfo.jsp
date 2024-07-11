@@ -1,3 +1,42 @@
+<style>
+  .status-active {
+    color: green;
+    font-weight: bold;
+  }
+  .status-complete {
+    color: blue;
+    font-weight: bold;
+  }
+  .status-cancel {
+    color: red;
+    font-weight: bold;
+  }
+  .status-ready {
+    color: teal;
+    font-weight: bold;
+  }
+  .status-pending {
+    color: orange;
+    font-weight: bold;
+  }
+  .status-pickup {
+    color: yellow;
+    font-weight: bold;
+  }
+  .status-in-transit {
+    color: lightblue;
+    font-weight: bold;
+  }
+  .status-out-for-delivery {
+    color: purple;
+    font-weight: bold;
+  }
+  .status-delivered {
+    color: green;
+    font-weight: bold;
+  }
+</style>
+
 <script type="text/javascript">
     var subItmDetailGridID;
 
@@ -102,7 +141,22 @@
       </tr>
       <tr>
         <th scope="row"><spring:message code="supplement.text.supplementReferenceStatus" /></th>
-        <td>${orderInfo.supRefStus}</td>
+        <td>
+          <c:choose>
+            <c:when test="${orderInfo.supRefStusId=='1'}">
+              <span class="status-active">${orderInfo.supRefStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='4'}">
+              <span class="status-complete">${orderInfo.supRefStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='10'}">
+              <span class="status-cancel">${orderInfo.supRefStus}</span>
+            </c:when>
+            <c:otherwise>
+              <span>${orderInfo.supRefStus}</span>
+            </c:otherwise>
+          </c:choose>
+        </td>
         <!-- <th scope="row"><spring:message code="sal.text.appType" /></th>
         <td>${orderInfo.supApplTyp}</td> -->
         <th scope="row"><spring:message
@@ -140,18 +194,69 @@
         <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /></th>
         <td>${orderInfo.parcelTrackNo}</td>
         <th scope="row"><spring:message code="supplement.text.supplementDeliveryStatus" /></th>
-        <td>${orderInfo.supRefDelStus}</td>
+        <td>
+          <c:choose>
+            <c:when test="${orderInfo.supRefDelStusId=='0'}">
+              <span class="status-pending">${orderInfo.supRefDelStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='1'}">
+              <span class="status-pickup">${orderInfo.supRefDelStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='2'}">
+              <span class="status-in-transit">${orderInfo.supRefDelStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='3'}">
+              <span class="status-out-for-delivery">${orderInfo.supRefDelStus}</span>
+            </c:when>
+            <c:when test="${orderInfo.supRefStusId=='4'}">
+              <span class="status-delivered">${orderInfo.supRefDelStus}</span>
+            </c:when>
+            <c:otherwise>
+              <span>${orderInfo.supRefDelStus}</span>
+            </c:otherwise>
+          </c:choose>
+        </td>
+
         <th scope="row"><spring:message code="sys.scm.onTimeDelivery.deliveryDate" /></th>
         <td>${orderInfo.supRefDelDt}</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <th scope="row"><spring:message code="supplement.text.supplementProductReturnConsigNo" /></th>
         <td>${orderInfo.supConsgNo}</td>
         <th></th>
         <td></td>
          <th></th>
         <td></td>
-      </tr>
+      </tr> -->
+       <tr>
+         <th scope="row"><spring:message code="supplement.text.supplementProductReturnConsigNo" /></th>
+         <td>${cancellationDelInfo.rtnTckNo}</td>
+         <th scope="row"><spring:message code="sal.combo.text.recv" /> <spring:message code="sal.text.status" /></th>
+         <td>
+           <c:choose>
+             <c:when test="${cancellationDelInfo.rtnStatId=='0'}">
+               <span class="status-pending">${cancellationDelInfo.rtnStat}</span>
+             </c:when>
+             <c:when test="${cancellationDelInfo.rtnStatId=='1'}">
+               <span class="status-active">${cancellationDelInfo.rtnStat}</span>
+             </c:when>
+             <c:when test="${cancellationDelInfo.rtnStatId=='102'}">
+               <span class="status-ready">${cancellationDelInfo.rtnStat}</span>
+             </c:when>
+             <c:when test="${cancellationDelInfo.rtnStatId=='4'}">
+               <span class="status-complete">${cancellationDelInfo.rtnStat}</span>
+             </c:when>
+             <c:when test="${cancellationDelInfo.rtnStatId=='10'}">
+               <span class="status-cancel">${cancellationDelInfo.rtnStat}</span>
+             </c:when>
+             <c:otherwise>
+               <span>${cancellationDelInfo.rtnStat}</span>
+             </c:otherwise>
+           </c:choose>
+          </td>
+          <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
+          <td>${cancellationDelInfo.rtnDt}</td>
+        </tr>
     </tbody>
     </br>
   </table>
