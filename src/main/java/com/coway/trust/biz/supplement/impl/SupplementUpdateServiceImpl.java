@@ -121,6 +121,12 @@ public class SupplementUpdateServiceImpl
   }
 
   @Override
+  public EgovMap selectCancDelInfo( Map<String, Object> params )
+    throws Exception {
+    return supplementUpdateMapper.selectCancDelInfo( params );
+  }
+
+  @Override
   public List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params ) {
     return supplementUpdateMapper.checkDuplicatedTrackNo( params );
   }

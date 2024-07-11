@@ -27,6 +27,8 @@ public interface SupplementUpdateMapper {
 
   EgovMap selectOrderBasicInfo( Map<String, Object> params );
 
+  EgovMap selectCancDelInfo( Map<String, Object> params );
+
   List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params );
 
   int updateRefStgStatus( Map<String, Object> params );
