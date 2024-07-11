@@ -210,7 +210,6 @@ public class SupplementTagManagementController {
 	 model.put("userBr", sessionVO.getUserBranchId());
     params.put("userId", sessionVO.getUserId());
 
-
     return "supplement/supplementTagManagementCreationPop";
   }
 
@@ -221,17 +220,6 @@ public class SupplementTagManagementController {
 
     return "supplement/include/ordSlctPop";
   }
-
-/*  @RequestMapping(value = "/searchOrderNo", method = RequestMethod.GET)
-  public ResponseEntity<EgovMap> selectOrderNo(@RequestParam Map<String, Object> params, ModelMap model) {
-	  LOGGER.debug("===========================/searchOrderNo.do===============================");
-	  LOGGER.debug("== params " + params.toString());
-	  LOGGER.debug("===========================/searchOrderNo.do===============================");
-
-    EgovMap basicInfo = supplementTagManagementService.searchOrderBasicInfo(params);
-    model.addAttribute("orderInfo", basicInfo);
-    return ResponseEntity.ok(basicInfo);
-  }*/
 
   @RequestMapping(value = "/searchOrderNo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectOrderNo( @RequestParam Map<String, Object> params, ModelMap model ) {
@@ -278,39 +266,12 @@ public class SupplementTagManagementController {
     return ResponseEntity.ok(responceList);
   }
 
-/*	@RequestMapping(value = "/attachFileUploadId.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> sampleUploadCommon(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		LOGGER.debug("params =====================================>>  " + params);
-
-
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "Supplement" + File.separator + "tagManagement", 1024 * 1024 * 6);
-
-		LOGGER.debug("list.size : {}", list.size());
-
-		params.put("userId", sessionVO.getUserId());
-
-		supplementTagManagementService.insertAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
-
-		params.put("attachFiles", list);
-
-		LOGGER.debug("list SIZE=============" + list.size());
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		//message.setData(params.get("fileGroupKey"));
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}*/
 
   @RequestMapping(value = "/attachFileUploadId.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request,
       @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-	  LOGGER.debug("params =====================================>>  " + params);
+	  LOGGER.debug("params attachFileUploadId =====================================>>  " + params);
 
     String err = "";
     String code = "";
@@ -319,9 +280,14 @@ public class SupplementTagManagementController {
     LocalDate date = LocalDate.now();
     String year = String.valueOf(date.getYear());
     String month = String.format("%02d", date.getMonthValue());
+    String subPathName = (String) params.get("attchFilePathName");
 
-    String subPath = File.separator + "supplement" + File.separator + "tagSubmission" + File.separator + year
+
+
+    String subPath = File.separator + "supplement" + File.separator + subPathName + File.separator + year
         + File.separator + month + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
+    LOGGER.debug("subPath =====================================>>  " + subPathName);
 
     try {
       Set set = request.getFileMap().entrySet();
@@ -333,7 +299,6 @@ public class SupplementTagManagementController {
         seqs.add(key);
       }
 
-      // List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
       List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, subPath,
           AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
@@ -396,4 +361,54 @@ public class SupplementTagManagementController {
     return ResponseEntity.ok(message);
   }
 
+
+  @Transactional
+  @RequestMapping(value = "/updateTagInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateRefStgStatus(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+	  	ReturnMessage message = new ReturnMessage();
+	  	String msg = "";
+		params.put("userId", sessionVO.getUserId());
+
+		try {
+
+		LOGGER.info("############################ updateTagInfo - params: {}", params);
+
+		Map<String, Object> returnMap = supplementTagManagementService.updateTagInfo(params);
+
+		 if ("000".equals(returnMap.get("logError"))) {
+		        msg += "Parcel tracking number update successfully.";
+		        message.setCode(AppConstants.SUCCESS);
+		      } else {
+		        msg += "Parcel tracking number failed to update. <br />";
+		        msg += "Errorlogs : " + returnMap.get("message") + "<br />";
+		        message.setCode(AppConstants.FAIL);
+		      }
+		      message.setMessage(msg);
+		      LOGGER.debug(" params returnMap result =======>"+returnMap);
+
+		} catch (Exception e) {
+		      LOGGER.error("Error during update tag approval details.", e);
+		      msg += "An unexpected error occurred.<br />";
+		      message.setCode(AppConstants.FAIL);
+		      message.setMessage(msg);
+		    }
+
+	    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/selectAttachListCareline.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getAttachListCareline(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> attachList = supplementTagManagementService.getAttachListCareline(params);
+
+    return ResponseEntity.ok(attachList);
+  }
+
+  @RequestMapping(value = "/selectAttachListHq.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getAttachListHq(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> attachList = supplementTagManagementService.getAttachListHq(params);
+
+    return ResponseEntity.ok(attachList);
+  }
 }
