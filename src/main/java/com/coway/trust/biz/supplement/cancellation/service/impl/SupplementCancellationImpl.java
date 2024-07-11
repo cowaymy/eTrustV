@@ -118,6 +118,8 @@ public class SupplementCancellationImpl
 
       rtnSeqNo = supplementCancellationMapper.getRtnSeqNo();
       params.put( "rtnSeqNo", rtnSeqNo );
+      // UPDATE DEL_FLG TO Y PREVIOUS RECORDS IF EXISTS
+      supplementCancellationMapper.updateExistingReturn( params );
       // INSERT SUP0008M
       supplementCancellationMapper.insertGoodsReturnMaster( params );
 

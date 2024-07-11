@@ -25,6 +25,8 @@ public interface SupplementCancellationMapper {
 
   int updateMasterRefStgStatus( Map<String, Object> params );
 
+  int updateExistingReturn( Map<String, Object> params );
+
   void insertGoodsReturnMaster(Map<String, Object> params);
 
   int rollbackRefStgStatus( Map<String, Object> params );
