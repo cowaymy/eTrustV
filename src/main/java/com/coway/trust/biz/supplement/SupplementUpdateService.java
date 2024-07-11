@@ -31,6 +31,8 @@ public interface SupplementUpdateService {
 
   EgovMap selectOrderBasicInfo( Map<String, Object> params ) throws Exception;
 
+  EgovMap selectCancDelInfo( Map<String, Object> params ) throws Exception;
+
   Map<String, Object> updateRefStgStatus( Map<String, Object> params ) throws Exception;
 
   EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException;
