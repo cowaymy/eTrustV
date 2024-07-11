@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.supplement.SupplementUpdateService;
 import com.coway.trust.biz.supplement.cancellation.service.SupplementCancellationService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -48,6 +49,9 @@ public class SupplementCancellationController {
 
   @Resource(name = "supplementCancellationService")
   private SupplementCancellationService supplementCancellationService;
+
+  @Resource(name = "supplementUpdateService")
+  private SupplementUpdateService supplementUpdateService;
 
   @RequestMapping(value = "supplementCancellationList.do")
   public String selectSupplementSubmissionList( @RequestParam Map<String, Object> params, ModelMap model )
@@ -102,8 +106,10 @@ public class SupplementCancellationController {
     params.put( "userId", sessionVO.getUserId() );
 
     EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
 
-    orderInfoMap = supplementCancellationService.selectOrderBasicInfo(params);
+    orderInfoMap = supplementUpdateService.selectOrderBasicInfo(params);
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
 
     params.put("userId", sessionVO.getUserId());
 
@@ -116,6 +122,7 @@ public class SupplementCancellationController {
     model.addAttribute("canReqId", params.get( "canReqId" ));
 
     model.addAttribute("orderInfo", orderInfoMap);
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/cancellation/supplementUpdateRtnTrackNoPop";
   }
@@ -162,8 +169,10 @@ public class SupplementCancellationController {
     params.put( "userId", sessionVO.getUserId() );
 
     EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
 
-    orderInfoMap = supplementCancellationService.selectOrderBasicInfo(params);
+    orderInfoMap = supplementUpdateService.selectOrderBasicInfo(params);
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
 
     params.put("userId", sessionVO.getUserId());
 
@@ -176,6 +185,7 @@ public class SupplementCancellationController {
     model.addAttribute("canReqId", params.get( "canReqId" ));
 
     model.addAttribute("orderInfo", orderInfoMap);
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/cancellation/supplementCancellationViewDetailPop";
   }
@@ -188,9 +198,11 @@ public class SupplementCancellationController {
 
     EgovMap orderInfoMap = null;
     EgovMap orderStockMap = null;
+    EgovMap cancellationDelInfoMap = null;
 
     orderInfoMap = supplementCancellationService.selectOrderBasicInfo(params);
     orderStockMap = supplementCancellationService.selectOrderStockQty(params);
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
 
     params.put("userId", sessionVO.getUserId());
 
@@ -204,6 +216,7 @@ public class SupplementCancellationController {
     model.addAttribute("ttlGoodsQty", orderStockMap);
 
     model.addAttribute("orderInfo", orderInfoMap);
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/cancellation/supplementCancellationUpdateReturnQtyPop";
   }
