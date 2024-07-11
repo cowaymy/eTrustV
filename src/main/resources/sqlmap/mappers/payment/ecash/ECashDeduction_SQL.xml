@@ -444,6 +444,7 @@
         , CTRL_EMAIL_SUBJ
         , CTRL_EMAIL_TEXT
         , CTRL_ZIP
+        , CTRL_IS_CRC
     FROM    PAY0289M
         WHERE   CTRL_IS_CRC = 2
             AND CTRL_BANK_ID = #{fileBatchBankId}
