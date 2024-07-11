@@ -128,14 +128,17 @@ public class SupplementManagementController {
   public String supplementTrackNoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
 
     orderInfoMap = supplementUpdateService.selectOrderBasicInfo(params);
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
 
     params.put("userId", sessionVO.getUserId());
 
     model.addAttribute("userId", sessionVO.getUserId());
     model.addAttribute("userBr", sessionVO.getUserBranchId());
     model.addAttribute("orderInfo", orderInfoMap);
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/supplementTrackNoPop";
   }
@@ -144,14 +147,17 @@ public class SupplementManagementController {
   public String supplementViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
 
     orderInfoMap = supplementUpdateService.selectOrderBasicInfo(params);
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
 
     params.put("userId", sessionVO.getUserId());
 
     model.addAttribute("userId", sessionVO.getUserId());
     model.addAttribute("userBr", sessionVO.getUserBranchId());
     model.addAttribute("orderInfo", orderInfoMap);
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/supplementViewPop";
   }
