@@ -440,7 +440,7 @@
     WHERE Extent3.SUP_REF_ID = #{supRefId}
   </select>
 
-  <select id="getDelRcdLst"  parameterType="Map" resultType="egovMap">
+  <select id="getDelRcdLst" parameterType="Map" resultType="egovMap">
     SELECT TO_CHAR(A.SUP_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS DEL_DT,
                UPPER(B.CODE_NAME) AS DEL_STUS,
                UPPER(A.SUP_DEL_LOC) AS DEL_LOC,
@@ -448,7 +448,15 @@
     FROM SUP0005D A
     LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = '585' AND B.CODE = A.SUP_DEL_SEQ
     JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_PCL_TRKNO = A.SUP_REF_PCL_TRKNO
-    WHERE A.DEL_FLG = 'N' AND A.SUP_REF_ID = #{supRefId}
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
+        <if test="trkNo != null and trkNo != '' ">
+          AND A.SUP_REF_PCL_TRKNO = #{trkNo}
+        </if>
+
+        <if test="rtnTrkNo != null and rtnTrkNo != '' ">
+          AND A.SUP_REF_PCL_TRKNO = #{rtnTrkNo}
+        </if>
     ORDER BY A.SUP_DEL_DT DESC
   </select>
 
@@ -532,6 +540,23 @@
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="selectCancDelInfo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REQ_CANC_NO AS CANC_NO,
+               B.SUP_RTN_NO AS RTN_NO,
+               A.SUP_REQ_CANC_RTN_TRKNO AS RTN_TCK_NO,
+               D.NAME AS RTN_STAT,
+               CASE WHEN B.SUP_RTN_STAT = 4 THEN TO_CHAR(B.UPD_DT, 'DD-MM-YYYY') ELSE '' END AS RTN_DT,
+               NVL(SUP_RTN_GDS, '0') AS RTN_GDS,
+               NVL(SUP_RTN_BAD_GDS, '0') AS RTN_BAD_GDS,
+               NVL(SUP_RTN_MIA_GDS, '0') AS RTN_MIA_GDS
+    FROM SUP0007M A
+    LEFT JOIN SUP0008M B ON A.SUP_REQ_CANC_ID = B.SUP_REQ_CANC_ID AND B.DEL_FLG = 'N'
+    JOIN SUP0001M C ON A.SUP_REF_ID = C.SUP_REF_ID
+    JOIN SYS0038M D ON B.SUP_RTN_STAT = D.STUS_CODE_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
   </select>
 
   <select id="selectPosJsonList" parameterType="Map" resultType="egovMap">
