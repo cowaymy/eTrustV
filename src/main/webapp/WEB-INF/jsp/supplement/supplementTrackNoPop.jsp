@@ -8,9 +8,8 @@
 
   $(document).ready(
     function() {
-      $("#btnLedger").click(
-        function() {
-          Common.popupDiv("/supplement/orderLedgerViewPop.do", '', null, true, '_insDiv');
+      $('#btnLedger').click(function() {
+        Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
       });
 
       $("#_saveBtn").click(
@@ -75,6 +74,9 @@
   <input type="hidden" id="_infoCustName" value="${orderInfo.custName}">
   <input type="hidden" id="_infoCustNameEmail" value="${orderInfo.custEmailNm}">
   <input type="hidden" id="_infoCustEmail" value="${orderInfo.custEmail}">
+  <form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
+  </form>
   <header class="pop_header">
     <h1>
       <spring:message code="supplement.title.parcelTrackingNo" />
