@@ -62,10 +62,24 @@
           editable : false
         },
         {
+          dataField : "supRefStatCde",
+          headerText : '',
+          width : '15%',
+          editable : false,
+          visible : false
+        },
+        {
           dataField : "supRefStat",
           headerText : '<spring:message code="supplement.text.supplementReferenceStatus" />',
           width : '15%',
           editable : false
+        },
+        {
+          dataField : "supRefStgCde",
+          headerText : '',
+          width : '15%',
+          editable : false,
+          visible : false
         },
         {
           dataField : "supRefStg",
@@ -83,6 +97,12 @@
           dataField : "supCustNric",
           headerText : '<spring:message code="sal.text.nricCompanyNo" />',
           width : '10%',
+          editable : false
+        },
+        {
+          dataField : "supRtnStatCde",
+          headerText : '',
+          width : '5%',
           editable : false
         },
         {
@@ -210,17 +230,35 @@
       function() {
         var rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
         if (rowIdx > -1) {
-          var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStat");
+          var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStatCde");
+          var stgCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStgCde");
+          var rtnStusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRtnStatCde");
           var rtnTckNo = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRtnPrcTrkNo");
-          /*if (stusCode.toUpperCase() != 'CANCELLED') {
-            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+          // SUPPLEMENT ORDER STATUS MUST UNDER CANCELLAED
+          if (stusCode != '10') {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Status NOT IN Cancel Mode.</b>');
             return false;
-          }*/
+          }
 
-          /*if (rtnTckNo === undefined) {
-            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+          if (stgCode != '6') {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Product Quantity Update Stage.</b>');
             return false;
-          }*/
+          }
+
+          // SUPPLEMENT RETURN STATUS MUST UNDER ACTIVE
+          if (rtnStusCode === undefined) {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>No Status Found for Goods Return.</b>');
+            return false;
+          } else if (rtnStusCode != '1') {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Return Status NOT IN Active Mode</b>');
+            return false;
+          }
+
+          // RETURN TRACKING NUMBER MUST HAVE VALUE
+          if (rtnTckNo === undefined) {
+            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />'  + '<br/><b>No Return Tracking No. Found.</b>');
+            return false;
+          }
 
           Common.popupDiv("/supplement/cancellation/supplementCancellationUpdateReturnQtyPop.do", { supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
         } else {
@@ -229,7 +267,6 @@
         }
       }
     );
-
 
     $("#cancellationDetailView").click(
        function() {
@@ -247,18 +284,20 @@
       function() {
         var rowIdx = AUIGrid.getSelectedIndex(supplementGridID)[0];
         if (rowIdx > -1) {
-         var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStat");
+         var stusCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStatCde");
+         var stgCode = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRefStgCde");
          var rtnTckNo = AUIGrid.getCellValue(supplementGridID, rowIdx, "supRtnPrcTrkNo");
 
-         /*if (stusCode.toUpperCase() != 'CANCELLED') {
-           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+         // SUPPLEMENT ORDER STATUS MUST UNDER CANCELLAED
+         if (stusCode != '10') {
+           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Status NOT IN Cancel Mode.</b>');
            return false;
-         }*/
+         }
 
-         /*if (rtnTckNo !== undefined && rtnTckNo !== null && rtnTckNo.trim() !== "") {
-           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />');
+         if (stusCode != '5') {
+           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update Stage.</b>');
            return false;
-         }*/
+         }
 
          Common.popupDiv("/supplement/cancellation/supplementUpdateRtnTrackNoPop.do", { supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
        } else {
