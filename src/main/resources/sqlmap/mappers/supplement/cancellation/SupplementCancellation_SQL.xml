@@ -6,6 +6,7 @@
     SELECT A.SUP_REQ_CANC_NO AS SUP_CANC_REQ_NO,
                TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') AS SUP_CANC_DT,
                UPPER(E.USER_NAME) AS SUP_CANC_BY,
+               C.SUP_REF_ID AS SUP_ORD_ID,
                C.SUP_REF_NO AS SUP_ORD_NO,
                C.SUP_REF_STUS AS SUP_REF_STAT_CDE,
                F.NAME AS SUP_REF_STAT,
