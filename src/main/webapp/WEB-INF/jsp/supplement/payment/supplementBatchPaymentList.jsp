@@ -1316,7 +1316,7 @@
     <ul class="right_opt">
       <li>
         <p class="btn_blue2">
-          <a href="${pageContext.request.contextPath}/resources/download/payment/BatchPaymentFormat.csv"><spring:message code='pay.btn.downloadTemplate' /></a>
+          <a href="${pageContext.request.contextPath}/resources/download/supplement/SupplementBatchPaymentFormat.csv"><spring:message code='pay.btn.downloadTemplate' /></a>
         </p>
       </li>
       <li>
