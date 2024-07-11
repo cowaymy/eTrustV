@@ -100,15 +100,22 @@
           editable : false
         },
         {
+          dataField : "supRtnNo",
+          headerText : '<spring:message code="sal.title.text.returnNo" />',
+          width : '10%',
+          editable : false
+        },
+        {
           dataField : "supRtnStatCde",
           headerText : '',
           width : '5%',
-          editable : false
+          editable : false,
+          visible : false
         },
         {
           dataField : "supRtnStat",
           headerText : '<spring:message code="sal.title.text.returnStatus" />',
-          width : '5%',
+          width : '10%',
           editable : false
         },
         {
@@ -120,6 +127,18 @@
         {
           dataField : "supRtnPrcTrkNo",
           headerText : '<spring:message code="supplement.text.supplementPrcRtnTrcNo" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "lstUpdBy",
+          headerText : '<spring:message code="sal.text.lastUpdateBy" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "lstUpdDt",
+          headerText : '<spring:message code="sal.text.lastUpdateAt" />',
           width : '10%',
           editable : false
         }
