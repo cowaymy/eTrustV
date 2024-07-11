@@ -100,6 +100,10 @@
     <if test=" null != prcRtnTrkNo and '' != prcRtnTrkNo">
       AND A.SUP_REQ_CANC_RTN_TRKNO = #{prcRtnTrkNo}
     </if>
+
+    <if test=" null != rtnNo and '' != rtnNo">
+      AND B.SUP_RTN_NO = #{rtnNo}
+    </if>
   </select>
 
   <select id="selectSupRefStus"  parameterType="Map" resultType="egovMap">
