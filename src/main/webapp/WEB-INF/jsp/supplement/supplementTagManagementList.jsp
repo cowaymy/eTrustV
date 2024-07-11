@@ -48,12 +48,14 @@
 
             var supplementForm = {
               supRefId : clickChk[0].item.supRefId,
+              supTagId : clickChk[0].item.supTagId,
               counselingNo : clickChk[0].item.counselingNo,
               ccr0006dCallEntryIdSeq : clickChk[0].item.ccr0006dCallEntryIdSeq,
               ind : "1"
             };
 
            var supRefId = clickChk[0].item.supRefId;
+           var supTagId = clickChk[0].item.supTagId;
            var counselingNo = clickChk[0].item.counselingNo;
            var ccr0006dCallEntryIdSeq = clickChk[0].item.ccr0006dCallEntryIdSeq;
 
@@ -66,6 +68,9 @@
            var detailParam = {
              supRefNo : event.item.supRefNo
            };
+           var detailParam = {
+             supTagId : event.item.supTagId
+            };
            var detailParam = {
              supRefId : event.item.supRefId
            };
@@ -171,6 +176,10 @@
       editable : false
     }, {
         dataField : "ccr0006dCallEntryIdSeq",
+        visible : false,
+        editable : false
+    },{
+        dataField : "supTagId",
         visible : false,
         editable : false
     },{
