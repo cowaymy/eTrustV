@@ -2,29 +2,54 @@ package com.coway.trust.biz.supplement.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
+import javax.mail.internet.MimeMessage;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.supplement.SupplementTagManagementService;
 import com.coway.trust.biz.supplement.impl.SupplementTagManagementMapper;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+import com.coway.trust.cmmn.model.EmailVO;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import com.coway.trust.biz.common.type.EmailTemplateType;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Service("supplementTagManagementService")
 public class SupplementTagManagementImpl
@@ -40,6 +65,15 @@ public class SupplementTagManagementImpl
 
   @Autowired
   private FileMapper fileMapper;
+
+  @Autowired
+  private JavaMailSender mailSender;
+
+  @Value("${mail.supplement.config.from}")
+  private String from;
+
+  @Autowired
+  private VelocityEngine velocityEngine;
 
   @Override
   public List<EgovMap> selectTagStus() {
@@ -89,19 +123,26 @@ public class SupplementTagManagementImpl
   }
 
   /* THIS FUNCTION TO GENERATE TAG NUMBER */
-  private String getTagTokenNo() {
-    /* PREFIX : "S" + YYYYMMDD + '6 DIGIT RUNNING NUMBER (DOC: 200)*/
-    // STEP 1 : GET TODAY DATE IN YYYYMMDD
-    LocalDate today = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-    String formattedDate = today.format(formatter);
-
+  private String getSupReqCancNo() {
     // GET RUNNING SEQUENCE NUMBER
-    String seqNo = supplementTagManagementMapper.getDocNo(200);
-
+    String seqNo = supplementTagManagementMapper.getDocNo(201);
     // COMBINE TOGETHER
-    return "S" + formattedDate + seqNo;
+    return seqNo;
   }
+
+  private String getTagTokenNo() {
+	    /* PREFIX : "S" + YYYYMMDD + '6 DIGIT RUNNING NUMBER (DOC: 200)*/
+	    // STEP 1 : GET TODAY DATE IN YYYYMMDD
+	    LocalDate today = LocalDate.now();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+	    String formattedDate = today.format(formatter);
+
+	    // GET RUNNING SEQUENCE NUMBER
+	    String seqNo = supplementTagManagementMapper.getDocNo(200);
+
+	    // COMBINE TOGETHER
+	    return "S" + formattedDate + seqNo;
+	  }
 
   @Override
   public List<EgovMap> getResponseLst( Map<String, Object> params ) throws Exception {
@@ -208,4 +249,184 @@ public class SupplementTagManagementImpl
 
     return rtnMap;
   }
+
+  public Map<String, Object> updateTagInfo( Map<String, Object> params ) throws Exception {
+	    Map<String, Object> rtnMap = new HashMap<>();
+	    Map<String, Object> stoEntry = new HashMap<String, Object>();
+
+	    try {
+	        params.put( "userId", CommonUtils.nvl(params.get("userId")));
+
+	 	   	int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
+	 	      params.put("seqCcrResultId", ccr07Seq);
+
+	    	LOGGER.info("############################ updateTagInfo - params: {}", params);
+
+	    	// INSERT CCR0007D ; apply for any conditions
+	    	supplementTagManagementMapper.insertTagCcrDetail( params );
+
+	    	if (params.get("attachYN") == "Y"){
+	    	supplementTagManagementMapper.updateSupHqAttch(params);
+	    	}
+
+	    	if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("34")) && (!params.get("subTopicId").equals ("4001")) )){ // Active either Cancel or Resolved but not in request refund
+	    		 // Update CCR0006D
+		         supplementTagManagementMapper.updateCcrMain(params);
+
+		         if (params.get("tagStus").equals ("10")) {
+
+		        	 Map<String, Object> dataValueMap = new HashMap<>();
+
+		        	 /*	dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" )));
+		        	 dataValueMap.put( "custName", CommonUtils.nvl( params.get( "custName" )));
+		        	 dataValueMap.put( "remark", CommonUtils.nvl( params.get( "remark" )));*/
+
+		        	 Map<String, Object> custEmailDtl = supplementTagManagementMapper.getCustEmailDtl( params );
+
+		        	 if ( custEmailDtl == null ) {
+		                 // NO DATA RETRIEVED
+		                 //continue;
+		               } else {
+		                 this.sendEmail( custEmailDtl );
+		               }
+		         }
+	    	}
+
+
+	    	if ((params.get("tagStus").equals ("34")) && (params.get("subTopicId").equals ("4001"))){ // Solved and request refund
+
+		    	int sup07Seq = supplementTagManagementMapper.getSeqSUP0007M();
+		 	      params.put("seqCancId", sup07Seq);
+
+		 	      //SupReqCancNo
+		 	      params.put("tokenSupReqCancNo", getSupReqCancNo());
+
+
+		 	   LOGGER.info("############################ updateTagInfo and Cancellation - params: {}", params);
+
+		    	//  INSERT SUP0007M
+		    	supplementTagManagementMapper.insertCancMain(params);
+
+		    	// Update CCR0006D
+		    	supplementTagManagementMapper.updateCcrMainWithCid(params);
+
+	    	}
+
+	      rtnMap.put( "logError", "000" );
+	    //  this.sendEmail( params );
+	    }
+	    catch ( Exception e ) {
+	    //	supplementTagManagementMapper.rollbackRefStgStatus( params );
+	      rtnMap.put( "logError", "99" );
+	      rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+	      LOGGER.error( "Error in updating approval request", e );
+	    }
+	    return rtnMap;
+	  }
+
+  @Override
+  public void sendEmail( Map<String, Object> params ) {
+    EmailVO email = new EmailVO();
+    String emailTitle = "";
+    String content = "";
+
+    LOGGER.info("############################ sendEmail - params: {}", params);
+
+    //List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
+    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my");
+
+
+      emailTitle = "Refund Request Status";
+      content += "<html>" + "<body>"
+        + "<img src=\"cid:coway_header\" align=\"center\" style=\"display:block; margin: 0 auto; max-width: 100%; height: auto; padding: 20px 0;\"/><br/><br/>"
+        + "Dear " + CommonUtils.nvl( params.get( "custName" ) ) + " ,<br/><br/>"
+        + "After reviewing your refund request, we regret to inform you that it has been rejected.<br/><br/>"
+        + "The reasons for this decision are as follows: </b><br/>"
+        + "<br/>" + CommonUtils.nvl( params.get( "remark" ) ) + "<br/><br/>"
+        + "We apologize for any inconvenience this may cause and appreciate your understanding.<br/><br/>"
+        + "If you have any questions or concerns about your order, please feel free to contact our customer service team at callcenter@coway.com.my or 1800-888-111.<br/>"
+        + "Best Regards, <br/>"
+        + "Coway <br/><br/>"
+        + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
+
+
+    email.setText( content );
+
+
+    if ( emailNo.size() > 0 ) {
+      email.setTo( emailNo );
+      email.setHtml( true );
+      email.setSubject( emailTitle );
+      email.setHasInlineImage( true );
+      //boolean isResult = false;
+      //isResult = adaptorService.sendEmail(email, false, null, null);
+      //isResult = this.sendEmail( email, false, null, null );
+      this.sendEmail( email, false, null, null );
+    }
+  }
+
+  private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params ) {
+	    boolean isSuccess = true;
+	    try {
+	      MimeMessage message = mailSender.createMimeMessage();
+	      boolean hasFile = email.getFiles().size() == 0 ? false : true;
+	      boolean hasInlineImage = email.getHasInlineImage();
+	      boolean isMultiPart = hasFile || hasInlineImage;
+	      MimeMessageHelper messageHelper = new MimeMessageHelper( message, isMultiPart, AppConstants.DEFAULT_CHARSET );
+	      messageHelper.setFrom( from );
+	      messageHelper.setTo( email.getTo().toArray( new String[email.getTo().size()] ) );
+	      messageHelper.setSubject( email.getSubject() );
+	      if ( templateType != null ) {
+	        messageHelper.setText( getMailTextByTemplate( templateType, params ), email.isHtml() );
+	      }
+	      else {
+	        messageHelper.setText( email.getText(), email.isHtml() );
+	      }
+	      if ( isMultiPart && email.getHasInlineImage() ) {
+	        try {
+	          messageHelper.addInline( "coway_header", new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
+	        }
+	        catch ( Exception e ) {
+	          LOGGER.error( e.toString() );
+	          throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+	        }
+	      }
+	      else if ( isMultiPart ) {
+	        email.getFiles().forEach( file -> {
+	          try {
+	            messageHelper.addAttachment( file.getName(), file );
+	          }
+	          catch ( Exception e ) {
+	            LOGGER.error( e.toString() );
+	            throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+	          }
+	        } );
+	      }
+	      mailSender.send( message );
+	    }
+	    catch ( Exception e ) {
+	      isSuccess = false;
+	      LOGGER.error( e.getMessage() );
+	      if ( isTransactional ) {
+	        throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+	      }
+	    }
+	    return isSuccess;
+	  }
+
+  private String getMailTextByTemplate( EmailTemplateType templateType, Map<String, Object> params ) {
+	    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(), AppConstants.DEFAULT_CHARSET, params );
+	  }
+
+  @Override
+  public List<EgovMap> getAttachListCareline(Map<String, Object> params) {
+    return supplementTagManagementMapper.selectAttachListCareline(params);
+  }
+
+  @Override
+  public List<EgovMap> getAttachListHq(Map<String, Object> params) {
+    return supplementTagManagementMapper.selectAttachListHq(params);
+  }
+
+
 }

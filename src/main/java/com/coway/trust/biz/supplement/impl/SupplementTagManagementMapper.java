@@ -40,10 +40,28 @@ public interface SupplementTagManagementMapper {
 
   int getSeqCCR0007D();
 
+  int getSeqSUP0007M();
+
   void insertSupplementTagMaster(Map<String, Object> params);
 
   void insertCCRMain(Map<String, Object> params);
 
   void insertCcrDetail(Map<String, Object> params);
+
+  int insertTagCcrDetail( Map<String, Object> params );
+
+  void updateCcrMain(Map<String, Object> params);
+
+  void updateSupHqAttch(Map<String, Object> params);
+
+  int insertCancMain( Map<String, Object> params );
+
+  void updateCcrMainWithCid (Map<String, Object> params);
+
+  public List<EgovMap> selectAttachListCareline(Map<String, Object> params);
+
+  public List<EgovMap> selectAttachListHq(Map<String, Object> params);
+
+  Map<String, Object> getCustEmailDtl( Map<String, Object> params );
 
 }
