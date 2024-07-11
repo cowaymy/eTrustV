@@ -109,8 +109,18 @@ public class SupplementCancellationImpl
     throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     Map<String, Object> emailMap = new HashMap<>();
+    String rtnSeqNo = "";
     try {
+      // UPDATE SUP0007M
       supplementCancellationMapper.updateRefStgStatus( params );
+      // UPDATE SUP0001M
+      supplementCancellationMapper.updateMasterRefStgStatus( params );
+
+      rtnSeqNo = supplementCancellationMapper.getRtnSeqNo();
+      params.put( "rtnSeqNo", rtnSeqNo );
+      // INSERT SUP0008M
+      supplementCancellationMapper.insertGoodsReturnMaster( params );
+
       emailMap = supplementCancellationMapper.getCustomerInfo( params );
       emailMap.put( "parcelRtnTrackNo", params.get( "parcelRtnTrackNo" ) );
       emailMap.put( "emailType", "1" );
@@ -119,6 +129,8 @@ public class SupplementCancellationImpl
     }
     catch ( Exception e ) {
       supplementCancellationMapper.rollbackRefStgStatus( params );
+      supplementCancellationMapper.rollbackMasterRefStgStatus( params );
+      supplementCancellationMapper.removeGoodsReturnMaster( params );
       rtnMap.put( "logError", "99" );
       rtnMap.put( "message", "An error occurred: " + e.getMessage() );
       LOGGER.error( "Error updating parcel tracking number...", e );
@@ -246,13 +258,19 @@ public class SupplementCancellationImpl
     Map<String, Object> emailMap = new HashMap<>();
     try {
       supplementCancellationMapper.updateReturnGoodsQty( params );
+
+      // LOGISTIC CALL HERE
+
+      supplementCancellationMapper.updateMasterSupplementStat( params );
+
       emailMap = supplementCancellationMapper.getCustomerInfo( params );
       emailMap.put( "emailType", "2" );
       rtnMap.put( "logError", "000" );
       this.sendEmail( emailMap );
     }
     catch ( Exception e ) {
-      supplementCancellationMapper.rollbackRefStgStatus( params );
+      supplementCancellationMapper.rollbackReturnGoodsQty( params );
+      supplementCancellationMapper.rollbackMasterSupplementStat( params );
       rtnMap.put( "logError", "99" );
       rtnMap.put( "message", "An error occurred: " + e.getMessage() );
       LOGGER.error( "Error updating parcel tracking number...", e );

@@ -23,14 +23,30 @@ public interface SupplementCancellationMapper {
 
   int updateRefStgStatus( Map<String, Object> params );
 
+  int updateMasterRefStgStatus( Map<String, Object> params );
+
+  void insertGoodsReturnMaster(Map<String, Object> params);
+
   int rollbackRefStgStatus( Map<String, Object> params );
 
+  int rollbackMasterRefStgStatus( Map<String, Object> params );
+
   Map<String, Object> getCustomerInfo( Map<String, Object> params );
+
+  String getRtnSeqNo();
+
+  int removeGoodsReturnMaster( Map<String, Object> params );
 
   List<EgovMap> selectSupDelStus();
 
   EgovMap selectOrderStockQty( Map<String, Object> params );
 
   int updateReturnGoodsQty( Map<String, Object> params );
+
+  int updateMasterSupplementStat( Map<String, Object> params );
+
+  int rollbackReturnGoodsQty( Map<String, Object> params );
+
+  int rollbackMasterSupplementStat( Map<String, Object> params );
 
 }
