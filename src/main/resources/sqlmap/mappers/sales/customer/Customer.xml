@@ -3389,6 +3389,7 @@
   <update id="updateCustomerTinStatus" parameterType="Map">
     UPDATE EIV0002M SET
     STATUS = 8
+    , TIN_VALID_TO_DT = SYSDATE - 1
     , UPD_DT = SYSDATE
     , UPD_USER_ID = #{userId}
     WHERE CUST_ID = #{basicCustId}
