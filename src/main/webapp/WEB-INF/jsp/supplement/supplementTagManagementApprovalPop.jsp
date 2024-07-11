@@ -219,13 +219,32 @@ $(document).ready(function() {
 
                  console.log("result attachFileUploadId:: " + result.code);
 
+                 console.log('File upload result:', result);
+
+                 console.log("fileGroupKey:: " + result.data.fileGroupKey);
+
+                 var param = {
+                         supRefId: supRefId,
+                         supRefNo: supRefNo,
+                         mainDept: inchgDeptList,
+                         subDept: ddlSubDeptUpd,
+                         tagStus: tagStus,
+                         remark: remark,
+                         counselingNo: counselingNo,
+                         ccr0006dCallEntryIdSeq: ccr0006dCallEntryIdSeq,
+                         preTagStatusId: preTagStatusId,
+                         subTopicId: subTopicId,
+                         supTagId: supTagId,
+                         attachYN: "Y"
+                     };
+
                    if (result != 0 && result.code == 00) {
                 	   param["atchFileGrpId"] = result.data.fileGroupKey;
                      } else {
                        Common.alert('Save Tag Approval'+ DEFAULT_DELIMITER + result.message);
                      }
 
-                   var param = {supRefId: supRefId, supRefNo: supRefNo, mainDept: inchgDeptList,  subDept : ddlSubDeptUpd, tagStus : tagStus, remark : remark, counselingNo : counselingNo, ccr0006dCallEntryIdSeq : ccr0006dCallEntryIdSeq , preTagStatusId : preTagStatusId , subTopicId : subTopicId , supTagId : supTagId , attachYN : "Y"};
+                 //  var param = {supRefId: supRefId, supRefNo: supRefNo, mainDept: inchgDeptList,  subDept : ddlSubDeptUpd, tagStus : tagStus, remark : remark, counselingNo : counselingNo, ccr0006dCallEntryIdSeq : ccr0006dCallEntryIdSeq , preTagStatusId : preTagStatusId , subTopicId : subTopicId , supTagId : supTagId , attachYN : "Y"};
 
                    Common.ajax("POST", "/supplement/updateTagInfo.do", param, function(result) {
                        if(result.code == "00") {//successful update
@@ -415,11 +434,9 @@ function fn_removeFile(name){
 
  <header class="pop_header">
   <h1>Supplement Tag Management - Approval</h1>
-  <ul class="right_opt">
-   <li><p class="btn_blue2">
-     <a href="#"><spring:message code='expense.CLOSE'/></a>
-    </p></li>
-  </ul>
+ <ul class="right_opt">
+    <li><p class="btn_blue2"><a id="_systemClose"><spring:message code="sal.btn.close" /></a></p></li>
+</ul>
  </header>
 
 
@@ -613,11 +630,7 @@ function fn_removeFile(name){
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.attachment" /></th>
-    <!-- <td colspan = "3">
-           <div class="auto_file">
-                    <input type="file" title="file add" id="payFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
-           </div>
-     </td> -->
+
      <td colspan="3">
               <div class="auto_file2">
                 <input type="file" title="" id="attch" accept=".zip" />
