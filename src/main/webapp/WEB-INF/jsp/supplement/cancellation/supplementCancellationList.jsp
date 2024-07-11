@@ -344,8 +344,11 @@
     if ((!FormUtil.isEmpty($('#cancelStartDt').val()) && FormUtil
         .isEmpty($('#cancelEndDt').val()))
         || (FormUtil.isEmpty($('#cancelStartDt').val()) && !FormUtil
+            .isEmpty($('#cancelEndDt').val()))
+        || (FormUtil.isEmpty($('#cancelStartDt').val()) && FormUtil
             .isEmpty($('#cancelEndDt').val()))) {
-      msg += '<spring:message code="supplement.alert.msg.selectSupRtnDt" /><br/>';
+      var msgLabel = "<spring:message code='supplement.text.supplementCanDt'/>"
+      msg += "<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/><br/>";
       isValid = false;
     }
 
@@ -500,6 +503,10 @@
             </td>
           </tr>
           <tr>
+            <th scope="row"><spring:message code="sal.title.text.returnNo" /></th>
+            <td>
+              <input id="rtnNo" name="rtnNo" type="text" title="" placeholder="Return No." class="w100p" />
+            </td>
             <th scope="row"><spring:message code="sal.title.text.returnStatus" /></th>
             <td>
               <select class="multy_select w100p" multiple="multiple" id="rtnStat" name="rtnStat">
@@ -508,13 +515,20 @@
                 </c:forEach>
               </select>
             </td>
+            <th scope="row"><spring:message code="supplement.text.supplementPrcRtnTrcNo" /></th>
+            <td>
+              <input id="prcRtnTrkNo" name="prcRtnTrkNo" type="text" title="" placeholder="Parcel Return Tracking No" class="w100p" />
+            </td>
+          </tr>
+          <tr>
             <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /></th>
             <td>
               <input id="prcTrkNo" name="prcTrkNo" type="text" title="" placeholder="Parcel tracking No." class="w100p" />
             </td>
-            <th scope="row"><spring:message code="supplement.text.supplementPrcRtnTrcNo" /></th>
-            <td>
-              <input id="prcRtnTrkNo" name="prcRtnTrkNo" type="text" title="" placeholder="Parcel Return Tracking No" class="w100p" /></td>
+            <th scope="row"></th>
+            <td></td>
+            <th scope="row"></th>
+            <td></td>
           </tr>
         </tbody>
       </table>
