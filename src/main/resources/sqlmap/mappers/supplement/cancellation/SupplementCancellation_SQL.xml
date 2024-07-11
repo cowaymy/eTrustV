@@ -13,11 +13,14 @@
                G.CODE_NAME AS SUP_REF_STG,
                UPPER(D.NAME) AS SUP_CUST_NM,
                D.NRIC AS SUP_CUST_NRIC,
+               B.SUP_RTN_NO AS SUP_RTN_NO,
                B.SUP_RTN_STAT AS SUP_RTN_STAT_CDE,
                H.NAME AS SUP_RTN_STAT,
                C.SUP_REF_PCL_TRKNO AS SUP_PRC_TRK_NO,
                A.SUP_REQ_CANC_RTN_TRKNO AS SUP_RTN_PRC_TRK_NO,
-               A.SUP_REQ_CANC_ID AS CAN_REQ_ID
+               A.SUP_REQ_CANC_ID AS CAN_REQ_ID,
+               I.USER_NAME AS LST_UPD_BY,
+               TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') AS LST_UPD_DT
     FROM SUP0007M A
     LEFT JOIN SUP0008M B ON A.SUP_REF_ID = B.SUP_REF_ID AND A.SUP_REQ_CANC_ID = B.SUP_REQ_CANC_ID AND B.DEL_FLG = 'N'
     JOIN SUP0001M C ON A.SUP_REF_ID = C.SUP_REF_ID
@@ -26,6 +29,7 @@
     LEFT JOIN SYS0038M F ON C.SUP_REF_STUS = F.STUS_CODE_ID
     LEFT JOIN SYS0013M G ON C.SUP_REF_STG = G.CODE AND G.CODE_MASTER_ID = '584'
     LEFT JOIN SYS0038M H ON B.SUP_RTN_STAT = H.STUS_CODE_ID
+    LEFT JOIN SYS0047M I ON A.UPD_USR_ID = I.USER_ID
     WHERE A.DEL_FLG = 'N'
         AND C.DEL_FLG = 'N'
 
@@ -257,6 +261,15 @@
                                      UPD_USR_ID = #{userId},
                                      UPD_DT = SYSDATE
     WHERE SUP_REF_ID = #{supRefId}
+        AND DEL_FLG = 'N'
+  </update>
+
+  <update id="updateExistingReturn" parameterType="Map">
+    UPDATE SUP0008M SET DEL_FLG = 'Y'
+                                     , UPD_USR_ID = #{userId}
+                                     , UPD_DT = SYSDATE
+    WHERE SUP_REF_ID = #{supRefId}
+        AND SUP_REQ_CANC_ID = #{canReqId}
         AND DEL_FLG = 'N'
   </update>
 
