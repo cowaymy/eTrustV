@@ -31,7 +31,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.codec.binary.Base64;
 import java.nio.charset.StandardCharsets;
 import com.coway.trust.AppConstants;
@@ -1456,6 +1457,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		return resultValue;
 	}
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
