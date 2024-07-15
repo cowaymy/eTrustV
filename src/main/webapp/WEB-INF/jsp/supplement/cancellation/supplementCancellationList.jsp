@@ -320,7 +320,7 @@
            return false;
          }
 
-         if (stusCode != '5') {
+         if (stgCode != '5') {
            Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update Stage.</b>');
            return false;
          }

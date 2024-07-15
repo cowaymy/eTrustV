@@ -30,7 +30,10 @@
 
         $("#_search").click(function() {
           AUIGrid.clearGridData(tagGridID);
-          fn_getTagMngmtListAjax();
+          if (fn_validSearchList()) {
+            fn_getTagMngmtListAjax();
+          }
+          return;
         });
 
         $("#_new").click(
@@ -43,6 +46,12 @@
             var clickChk = AUIGrid.getSelectedItems(tagGridID);
             if (clickChk == null || clickChk.length <= 0) {
               Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
+
+            var tagStat = clickChk[0].item.tagStatusId;
+            if (tagStat != '1') {
+              Common.alert('<spring:message code="supplement.alert.msg.actTagAllowAppv" />');
               return;
             }
 
@@ -59,7 +68,7 @@
            var counselingNo = clickChk[0].item.counselingNo;
            var ccr0006dCallEntryIdSeq = clickChk[0].item.ccr0006dCallEntryIdSeq;
 
-           console.log("ccr0006dCallEntryIdSeq:: " + ccr0006dCallEntryIdSeq)
+           //console.log("ccr0006dCallEntryIdSeq:: " + ccr0006dCallEntryIdSeq)
 
            Common.popupDiv("/supplement/tagMngApprovalPop.do", supplementForm, null, true, '_insDiv');
          });
@@ -97,7 +106,7 @@
          },
         {
           dataField : "counselingNo",
-          headerText : '<spring:message code="service.grid.counselingNo" />',
+          headerText : '<spring:message code="supplement.text.tagNo" />',
           width : '10%',
           editable : false
         },
@@ -119,6 +128,13 @@
           headerText : '<spring:message code="supplement.text.supplementTagRegisterDt" />',
           width : '10%',
           editable : false
+        },
+        {
+          dataField : "tagStatusId",
+          headerText : '',
+          width : 100,
+          editable : false,
+          visible : false
         },
         {
           dataField : "tagStatus",
@@ -184,7 +200,7 @@
         editable : false
     },{
       dataField : "counselingNo",
-      headerText : '<spring:message code="service.grid.counselingNo" />',
+      headerText : '<spring:message code="supplement.text.tagNo" />',
       width : 100,
       editable : false
     }, {
@@ -275,6 +291,22 @@
       AUIGrid.setGridData(excelListGridID, result);
     });
   }
+
+  function fn_validSearchList() {
+    var isValid = true, msg = "";
+
+    if ((!FormUtil.isEmpty($('#_sDate').val()) && FormUtil.isEmpty($('#_eDate').val()))
+      || (FormUtil.isEmpty($('#_sDate').val()) && !FormUtil.isEmpty($('#_eDate').val()))
+      || (FormUtil.isEmpty($('#_sDate').val()) && FormUtil.isEmpty($('#_eDate').val()))) {
+      var msgLabel = "<spring:message code='supplement.text.supplementTagRegisterDt'/>"
+      msg += "<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/><br/>";
+      isValid = false;
+    }
+
+    if (!isValid)
+      Common.alert('<spring:message code="supplement.title.supplementTagManagement" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      return isValid;
+  }
 </script>
 
 <form id="rptForm">
@@ -337,10 +369,32 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code="service.grid.counselingNo" /></th>
+            <th scope="row"><spring:message code="supplement.text.tagNo" /></th>
             <td>
-              <input type="text" title="" placeholder="Counseling No" class="w100p" id="_counselingNo" name="counselingNo" />
+              <input type="text" title="" placeholder="Tikcet No" class="w100p" id="_counselingNo" name="counselingNo" />
             </td>
+            <th scope="row"><spring:message code="supplement.text.supplementTagStus" /></th>
+            <td>
+              <select class="multy_select w100p" multiple="multiple" id="tagStus" name="tagStus">
+                <c:forEach var="list" items="${tagStus}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <th scope="row"><spring:message code="supplement.text.supplementTagRegisterDt" /><span class="must">*</span></th>
+            <td>
+              <div class="date_set w100p">
+                <p>
+                  <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="sDate" id="_sDate" value="${bfDay}" />
+                </p>
+                <span><spring:message code="sal.title.to" /></span>
+                <p>
+                  <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate" id="_eDate" value="${toDay}" />
+                </p>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">
               <spring:message code="supplement.text.supplementMainTopicInquiry" /></th>
             <td>
@@ -363,20 +417,10 @@
             <td>
               <select id='ddSubTopic' name='ddSubTopic' class="w100p"></select>
             </td>
+            <th/></th>
+            <td></td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.supplementTagRegisterDt" /><span class="must">*</span></th>
-            <td>
-              <div class="date_set w100p">
-                <p>
-                  <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="sDate" id="_sDate" value="${bfDay}" />
-                </p>
-                <span><spring:message code="sal.title.to" /></span>
-                <p>
-                  <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate" id="_eDate" value="${toDay}" />
-                </p>
-              </div>
-            </td>
             <th scope="row"><spring:message code="service.text.InChrDept" /></th>
             <td>
               <select class="select w100p" id="inchgDept" name="inchgDept" onChange="fn_inchgDept_SelectedIndexChanged()">
@@ -397,19 +441,6 @@
             <td>
               <select id='ddSubDept' name='ddSubDept' class="w100p"></select>
             </td>
-          </tr>
-          <tr>
-            <th scope="row"><spring:message code="supplement.text.supplementTagStus" /></th>
-            <td>
-              <select class="select w100p" id="tagStus" name="tagStus">
-                <option value="">Choose One</option>
-                <c:forEach var="list" items="${tagStus}" varStatus="status">
-                  <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach>
-              </select>
-            </td>
-            <th></th>
-            <td></td>
             <th/></th>
             <td></td>
           </tr>
@@ -422,8 +453,10 @@
             <td>
               <input type="text" title="" placeholder="Customer Name" class="w100p" id="_custName" " name="custName" />
             </td>
-            <th/></th>
-            <td></td>
+            <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
+            <td>
+              <input id="custNric" name="custNric" type="text" title="" placeholder="NRIC / Company No." class="w100p" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -459,7 +492,7 @@
     <aside class="title_line"></aside>
     <article class="grid_wrap">
       <div id="tag_grid_wrap"
-        style="width: 100%; height: 300px; margin: 0 auto;"></div>
+        style="width: 100%; height: 450px; margin: 0 auto;"></div>
       <div id="excel_list_grid_wrap" style="display: none;"></div>
     </article>
   </section>

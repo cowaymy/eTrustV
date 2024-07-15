@@ -18,13 +18,17 @@ $(document).ready(function() {
      var rowIdx = AUIGrid.getSelectedIndex(orderGridID)[0];
 
      if(rowIdx > -1) {
+       var ordId = AUIGrid.getCellValue(orderGridID, rowIdx, "supRefId");
        var ordNo = AUIGrid.getCellValue(orderGridID, rowIdx, "supRefNo");
+       var ordStat = AUIGrid.getCellValue(orderGridID, rowIdx, "supRefStusId");
 
        $("#_closeOrdPop").click();
        $("#_salesOrderNo").val(ordNo);
        $("#_confirm").click();
 
-       fn_callbackOrdSearchFunciton(ordNo);
+       var param = { ordId: ordId, ordNo : ordNo, ordStat : ordStat};
+
+       fn_callbackOrdSearchFunciton(param);
      }
    });
 
@@ -74,6 +78,7 @@ $(document).ready(function() {
     var orderColumnLayout = [ {dataField : "supRefId",headerText : '<spring:message code="supplement.text.supplementReferenceNo" />', width : '20%'},
                                           {dataField : "supRefNo",headerText : '<spring:message code="supplement.text.supplementReferenceNo" />', width : '20%'},
                                           {dataField : "ordDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '15%'},
+                                          {dataField : "supRefStusId", headerText : '<spring:message code="sal.title.status" />', width : '15%', visible : false},
                                           {dataField : "supRefStus", headerText : '<spring:message code="sal.title.status" />', width : '15%'},
                                           {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />',width : '40%'},
                                           {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '15%'}
