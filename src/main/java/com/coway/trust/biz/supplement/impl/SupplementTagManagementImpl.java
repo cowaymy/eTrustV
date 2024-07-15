@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
@@ -34,22 +31,8 @@ import com.coway.trust.biz.supplement.impl.SupplementTagManagementMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-
-import com.coway.trust.cmmn.model.EmailVO;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import com.coway.trust.biz.common.type.EmailTemplateType;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 @Service("supplementTagManagementService")
 public class SupplementTagManagementImpl
@@ -81,8 +64,7 @@ public class SupplementTagManagementImpl
   }
 
   @Override
-  public List<EgovMap> selectTagManagementList( Map<String, Object> params )
-    throws Exception {
+  public List<EgovMap> selectTagManagementList( Map<String, Object> params ) throws Exception {
     return supplementTagManagementMapper.selectTagManagementList( params );
   }
 
@@ -107,8 +89,7 @@ public class SupplementTagManagementImpl
   }
 
   @Override
-  public EgovMap selectOrderBasicInfo( Map<String, Object> params )
-    throws Exception {
+  public EgovMap selectOrderBasicInfo( Map<String, Object> params ) throws Exception {
     return supplementTagManagementMapper.selectOrderBasicInfo( params );
   }
 
@@ -131,18 +112,18 @@ public class SupplementTagManagementImpl
   }
 
   private String getTagTokenNo() {
-	    /* PREFIX : "S" + YYYYMMDD + '6 DIGIT RUNNING NUMBER (DOC: 200)*/
-	    // STEP 1 : GET TODAY DATE IN YYYYMMDD
-	    LocalDate today = LocalDate.now();
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-	    String formattedDate = today.format(formatter);
+      /* PREFIX : "S" + YYYYMMDD + '6 DIGIT RUNNING NUMBER (DOC: 200)*/
+      // STEP 1 : GET TODAY DATE IN YYYYMMDD
+      LocalDate today = LocalDate.now();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+      String formattedDate = today.format(formatter);
 
-	    // GET RUNNING SEQUENCE NUMBER
-	    String seqNo = supplementTagManagementMapper.getDocNo(200);
+      // GET RUNNING SEQUENCE NUMBER
+      String seqNo = supplementTagManagementMapper.getDocNo(200);
 
-	    // COMBINE TOGETHER
-	    return "S" + formattedDate + seqNo;
-	  }
+      // COMBINE TOGETHER
+      return "S" + formattedDate + seqNo;
+    }
 
   @Override
   public List<EgovMap> getResponseLst( Map<String, Object> params ) throws Exception {
@@ -151,17 +132,14 @@ public class SupplementTagManagementImpl
 
   @Override
   public void insertTagSubmissionAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs) {
-    // TODO Auto-generated method stub
     int fileGroupKey = fileMapper.selectFileGroupKey();
-    AtomicInteger i = new AtomicInteger(0); // get seq key.
+    AtomicInteger i = new AtomicInteger(0);
 
     list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
     params.put("fileGroupKey", fileGroupKey);
   }
 
   public void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
-      LOGGER.debug("insertFile :: Start");
-
       int atchFlId = supplementTagManagementMapper.selectNextFileId();
 
       FileGroupVO fileGroupVO = new FileGroupVO();
@@ -186,23 +164,20 @@ public class SupplementTagManagementImpl
       fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
 
       fileMapper.insertFileGroup(fileGroupVO);
-
-      LOGGER.debug("insertFile :: End");
   }
 
-	@Override
-	public void insertAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
-		params.put("fileGroupKey", fileGroupKey);
-	}
+  @Override
+  public void insertAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+    params.put("fileGroupKey", fileGroupKey);
+  }
 
   @Override
   public Map<String, Object> supplementTagSubmission(Map<String, Object> params) throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
 
     try {
-      // Get the master sequence and set it in params
       int tagSeq = supplementTagManagementMapper.getSeqSUP0006M();
 
       params.put("salesOrdId", "0");
@@ -211,22 +186,15 @@ public class SupplementTagManagementImpl
       params.put("tokenM", getTagTokenNo());
       params.put( "userId", CommonUtils.nvl(params.get("userId")));
 
-      LOGGER.info("############################ insertSupplementTagMaster - params: {}", params);
-
       // Insert SUP0006M
      supplementTagManagementMapper.insertSupplementTagMaster(params);
-
 
       int ccr06Seq = supplementTagManagementMapper.getSeqCCR0006D();
       params.put("seqCcrId", ccr06Seq);
       params.put("ccr06Stus", "1");
 
-
       int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
       params.put("seqCcrResultId", ccr07Seq);
-
-
-      LOGGER.info("############################ insertCcrMain - params: {}", params);
 
       // Insert CCR0006D
       supplementTagManagementMapper.insertCCRMain(params);
@@ -234,15 +202,13 @@ public class SupplementTagManagementImpl
       // Insert CCR0007D
       supplementTagManagementMapper.insertCcrDetail(params);
 
-     //  Set the success response
+      // SET SUCCESS RESPONSE
       rtnMap.put("logError", "000");
 
     } catch (Exception e) {
-      // Log the exception (using a logging framework like SLF4J is recommended)
       System.err.println("Error during New Tag Submission : " + e.getMessage());
       e.printStackTrace();
 
-      // Set the error response
       rtnMap.put("logError", "999");
       rtnMap.put("message", e.getMessage());
     }
@@ -251,78 +217,59 @@ public class SupplementTagManagementImpl
   }
 
   public Map<String, Object> updateTagInfo( Map<String, Object> params ) throws Exception {
-	    Map<String, Object> rtnMap = new HashMap<>();
-	    Map<String, Object> stoEntry = new HashMap<String, Object>();
+    Map<String, Object> rtnMap = new HashMap<>();
 
-	    try {
-	        params.put( "userId", CommonUtils.nvl(params.get("userId")));
+    try {
+      params.put( "userId", CommonUtils.nvl(params.get("userId")));
 
-	 	   	int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
-	 	      params.put("seqCcrResultId", ccr07Seq);
+      int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
+      params.put("seqCcrResultId", ccr07Seq);
 
-	    	LOGGER.info("############################ updateTagInfo - params: {}", params);
+      // INSERT CCR0007D
+      supplementTagManagementMapper.insertTagCcrDetail( params );
 
-	    	// INSERT CCR0007D ; apply for any conditions
-	    	supplementTagManagementMapper.insertTagCcrDetail( params );
+      if (params.get("attachYN") == "Y"){
+        supplementTagManagementMapper.updateSupHqAttch(params);
+      }
 
-	    	if (params.get("attachYN") == "Y"){
-	    	supplementTagManagementMapper.updateSupHqAttch(params);
-	    	}
+      // ACTIVE EITHE CANCEL OR RESOLVED BUT NOT IN REQUEST REFUND
+      if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("5")) && (!params.get("subTopicId").equals ("4001")) )){
+        // UPDATE CCR0006D
+        supplementTagManagementMapper.updateCcrMain(params);
 
-	    	if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("34")) && (!params.get("subTopicId").equals ("4001")) )){ // Active either Cancel or Resolved but not in request refund
-	    		 // Update CCR0006D
-		         supplementTagManagementMapper.updateCcrMain(params);
+        if (params.get("tagStus").equals ("10")) { // REJECT
+          Map<String, Object> custEmailDtl = supplementTagManagementMapper.getCustEmailDtl( params );
+          if ( custEmailDtl != null ) {
+            this.sendEmail( custEmailDtl );
+          }
+        }
+      }
 
-		         if (params.get("tagStus").equals ("10")) {
+      // SOLVED & REQUEST REFUND
+      if ((params.get("tagStus").equals ("5")) && (params.get("subTopicId").equals ("4001"))){
+        int sup07Seq = supplementTagManagementMapper.getSeqSUP0007M();
+        params.put("seqCancId", sup07Seq);
 
-		        	 Map<String, Object> dataValueMap = new HashMap<>();
+        params.put("tokenSupReqCancNo", getSupReqCancNo());
 
-		        	 /*	dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" )));
-		        	 dataValueMap.put( "custName", CommonUtils.nvl( params.get( "custName" )));
-		        	 dataValueMap.put( "remark", CommonUtils.nvl( params.get( "remark" )));*/
+        //  INSERT SUP0007M
+        supplementTagManagementMapper.insertCancMain(params);
 
-		        	 Map<String, Object> custEmailDtl = supplementTagManagementMapper.getCustEmailDtl( params );
+        // UPDATE CCR0006D
+        supplementTagManagementMapper.updateCcrMainWithCid(params);
 
-		        	 if ( custEmailDtl == null ) {
-		                 // NO DATA RETRIEVED
-		                 //continue;
-		               } else {
-		                 this.sendEmail( custEmailDtl );
-		               }
-		         }
-	    	}
-
-
-	    	if ((params.get("tagStus").equals ("34")) && (params.get("subTopicId").equals ("4001"))){ // Solved and request refund
-
-		    	int sup07Seq = supplementTagManagementMapper.getSeqSUP0007M();
-		 	      params.put("seqCancId", sup07Seq);
-
-		 	      //SupReqCancNo
-		 	      params.put("tokenSupReqCancNo", getSupReqCancNo());
-
-
-		 	   LOGGER.info("############################ updateTagInfo and Cancellation - params: {}", params);
-
-		    	//  INSERT SUP0007M
-		    	supplementTagManagementMapper.insertCancMain(params);
-
-		    	// Update CCR0006D
-		    	supplementTagManagementMapper.updateCcrMainWithCid(params);
-
-	    	}
-
-	      rtnMap.put( "logError", "000" );
-	    //  this.sendEmail( params );
-	    }
-	    catch ( Exception e ) {
-	    //	supplementTagManagementMapper.rollbackRefStgStatus( params );
-	      rtnMap.put( "logError", "99" );
-	      rtnMap.put( "message", "An error occurred: " + e.getMessage() );
-	      LOGGER.error( "Error in updating approval request", e );
-	    }
-	    return rtnMap;
-	  }
+        // UPDATE SUP0001M STATUS AND STAGE
+        supplementTagManagementMapper.updateMasterSuppStaStag(params);
+      }
+      rtnMap.put( "logError", "000" );
+    } catch ( Exception e ) {
+      // supplementTagManagementMapper.rollbackRefStgStatus( params );
+      rtnMap.put( "logError", "99" );
+      rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+      LOGGER.error( "Error in updating approval request", e );
+    }
+    return rtnMap;
+  }
 
   @Override
   public void sendEmail( Map<String, Object> params ) {
@@ -330,11 +277,7 @@ public class SupplementTagManagementImpl
     String emailTitle = "";
     String content = "";
 
-    LOGGER.info("############################ sendEmail - params: {}", params);
-
-    //List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
-    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my");
-
+    List<String> emailNo = Arrays.asList(" "+ CommonUtils.nvl(params.get("custEmail")) +" ");
 
       emailTitle = "Refund Request Status";
       content += "<html>" + "<body>"
@@ -349,74 +292,63 @@ public class SupplementTagManagementImpl
         + "Coway <br/><br/>"
         + "<span style='font-size: 12;'>Please do not reply to this email as this is a computer generated message.</span><br/>";
 
-
     email.setText( content );
-
 
     if ( emailNo.size() > 0 ) {
       email.setTo( emailNo );
       email.setHtml( true );
       email.setSubject( emailTitle );
       email.setHasInlineImage( true );
-      //boolean isResult = false;
-      //isResult = adaptorService.sendEmail(email, false, null, null);
-      //isResult = this.sendEmail( email, false, null, null );
       this.sendEmail( email, false, null, null );
     }
   }
 
   private boolean sendEmail( EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params ) {
-	    boolean isSuccess = true;
-	    try {
-	      MimeMessage message = mailSender.createMimeMessage();
-	      boolean hasFile = email.getFiles().size() == 0 ? false : true;
-	      boolean hasInlineImage = email.getHasInlineImage();
-	      boolean isMultiPart = hasFile || hasInlineImage;
-	      MimeMessageHelper messageHelper = new MimeMessageHelper( message, isMultiPart, AppConstants.DEFAULT_CHARSET );
-	      messageHelper.setFrom( from );
-	      messageHelper.setTo( email.getTo().toArray( new String[email.getTo().size()] ) );
-	      messageHelper.setSubject( email.getSubject() );
-	      if ( templateType != null ) {
-	        messageHelper.setText( getMailTextByTemplate( templateType, params ), email.isHtml() );
-	      }
-	      else {
-	        messageHelper.setText( email.getText(), email.isHtml() );
-	      }
-	      if ( isMultiPart && email.getHasInlineImage() ) {
-	        try {
-	          messageHelper.addInline( "coway_header", new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
-	        }
-	        catch ( Exception e ) {
-	          LOGGER.error( e.toString() );
-	          throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
-	        }
-	      }
-	      else if ( isMultiPart ) {
-	        email.getFiles().forEach( file -> {
-	          try {
-	            messageHelper.addAttachment( file.getName(), file );
-	          }
-	          catch ( Exception e ) {
-	            LOGGER.error( e.toString() );
-	            throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
-	          }
-	        } );
-	      }
-	      mailSender.send( message );
-	    }
-	    catch ( Exception e ) {
-	      isSuccess = false;
-	      LOGGER.error( e.getMessage() );
-	      if ( isTransactional ) {
-	        throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
-	      }
-	    }
-	    return isSuccess;
-	  }
+    boolean isSuccess = true;
+    try {
+      MimeMessage message = mailSender.createMimeMessage();
+      boolean hasFile = email.getFiles().size() == 0 ? false : true;
+      boolean hasInlineImage = email.getHasInlineImage();
+      boolean isMultiPart = hasFile || hasInlineImage;
+      MimeMessageHelper messageHelper = new MimeMessageHelper( message, isMultiPart, AppConstants.DEFAULT_CHARSET );
+      messageHelper.setFrom( from );
+      messageHelper.setTo( email.getTo().toArray( new String[email.getTo().size()] ) );
+      messageHelper.setSubject( email.getSubject() );
+
+      if ( templateType != null ) {
+        messageHelper.setText( getMailTextByTemplate( templateType, params ), email.isHtml() );
+      } else {
+        messageHelper.setText( email.getText(), email.isHtml() );
+      }
+
+      if ( isMultiPart && email.getHasInlineImage() ) {
+        try {
+          messageHelper.addInline( "coway_header", new ClassPathResource( "template/stylesheet/images/coway_logo.png" ) );
+        } catch ( Exception e ) {
+          throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+        }
+      } else if ( isMultiPart ) {
+        email.getFiles().forEach( file -> {
+          try {
+            messageHelper.addAttachment( file.getName(), file );
+          } catch ( Exception e ) {
+            throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+          }
+        });
+      }
+      mailSender.send( message );
+    } catch ( Exception e ) {
+      isSuccess = false;
+      if ( isTransactional ) {
+        throw new ApplicationException( e, AppConstants.FAIL, e.getMessage() );
+      }
+    }
+    return isSuccess;
+  }
 
   private String getMailTextByTemplate( EmailTemplateType templateType, Map<String, Object> params ) {
-	    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(), AppConstants.DEFAULT_CHARSET, params );
-	  }
+    return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, templateType.getFileName(), AppConstants.DEFAULT_CHARSET, params );
+  }
 
   @Override
   public List<EgovMap> getAttachListCareline(Map<String, Object> params) {
@@ -427,6 +359,4 @@ public class SupplementTagManagementImpl
   public List<EgovMap> getAttachListHq(Map<String, Object> params) {
     return supplementTagManagementMapper.selectAttachListHq(params);
   }
-
-
 }
