@@ -304,7 +304,12 @@ public class SupplementUpdateServiceImpl
         }
         dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
         dataValueMap.put( "ordNo", CommonUtils.nvl( shipment.get( "ordNo" ) ) );
-        dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "shipmentID" ) ) );
+        if (!(CommonUtils.nvl( shipment.get( "shipmentID" )).equals( "" ))) {
+          dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "shipmentID" )));
+        } else {
+          dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "subShipmentID" )));
+        }
+
         dataValueMap.put( "subConsNo", CommonUtils.nvl( shipment.get( "subShipmentID" ) ) );
         dataValueMap.put( "latestEnumStatus", CommonUtils.nvl( shipment.get( "latestEnumStatus" ) ) );
         dataValueMap.put( "deliveryHist", CommonUtils.nvl( shipment.get( "events" ) ) );
