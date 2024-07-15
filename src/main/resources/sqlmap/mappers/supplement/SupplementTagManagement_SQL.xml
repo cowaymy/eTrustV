@@ -28,6 +28,8 @@
     LEFT JOIN SYS0013M Extent8 ON Extent8.CODE_MASTER_ID = '359' AND Extent8.CODE = Extent4.MAIN_DEPT
     LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_MASTER_ID = '360' AND Extent9.CODE = Extent4.SUB_DEPT
     WHERE 1 = 1
+     AND Extent1.DEL_FLG = 'N'
+     AND Extent2.DEL_FLG = 'N'
 
     <if test=" null != supRefNo and '' != supRefNo">
       AND Extent1.SUP_REF_NO = #{supRefNo}
@@ -37,8 +39,12 @@
       AND Extent2.SUP_CUR_SEQNO = #{counselingNo}
     </if>
 
-    <if test="tagStus != null and tagStus != '' ">
-       AND Extent4.STUS_CODE_ID = #{tagStus}
+    <if test="supTagStusArray != null and supTagStusArray != '' ">
+       AND Extent4.STUS_CODE_ID IN
+     <foreach item="item" collection="supTagStusArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
 
     <if test="sDate != null and sDate != '' ">
@@ -73,24 +79,28 @@
       AND Extent3.NAME = #{custName}
     </if>
 
+    <if test=" null != custNric and '' != custNric">
+      AND Extent3.NRIC = #{custNric}
+    </if>
+    ORDER BY Extent2.UPD_DT DESC
   </select>
 
-    <select id="selectTagStus"  parameterType="Map" resultType="egovMap">
+  <select id="selectTagStus"  parameterType="Map" resultType="egovMap">
     SELECT Extent1.STUS_CODE_ID CODE_ID
              , Extent1.CODE CODE
-             , UPPER(Extent1.CODE || '-' || Extent1.NAME) CODE_NAME
+             , UPPER(Extent1.NAME) CODE_NAME
     FROM SYS0038M Extent1
-    WHERE Extent1.STUS_CODE_ID IN ( 1, 34, 10 )
+    WHERE Extent1.STUS_CODE_ID IN ( 1, 5, 10 )
   </select>
 
-    <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
-   SELECT DEFECT_ID AS CODE_ID,
+  <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
+    SELECT DEFECT_ID AS CODE_ID,
              UPPER(DEFECT_CODE || '-' || DEFECT_DESC) AS CODE_NAME,
              DEFECT_TYP AS PRODUCT_CTGRY_CODE
-   FROM SYS0100M
-   WHERE DEFECT_TYP = 'SMI'
-   AND DEFECT_STATUS = '1'
-   AND DEFECT_GRP = DEFECT_ID
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'SMI'
+    AND DEFECT_STATUS = '1'
+    AND DEFECT_GRP = DEFECT_ID
   </select>
 
   <select id="getSubTopicList" parameterType="Map" resultType="egovMap">
@@ -104,34 +114,12 @@
     ]]>
   </select>
 
-  <!-- <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
-    SELECT DEFECT_ID AS CODE_ID,
-               DEFECT_DESC AS CODE_NAME,
-               DEFECT_TYP AS PRODUCT_CTGRY_CODE
-   FROM SYS0100M
-   WHERE DEFECT_TYP = 'ICD'
-       AND DEFECT_STATUS = '1'
-       AND DEFECT_GRP = DEFECT_ID
-  </select> -->
-
   <select id="getInchgDeptList" parameterType="Map" resultType="egovMap">
     SELECT CODE AS CODE_ID,
                UPPER(CODE || '-' || CODE_NAME) AS CODE_NAME
     FROM SYS0013M
     WHERE CODE_MASTER_ID = '359'
   </select>
-
-  <!-- <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-     SELECT DEFECT_TYP AS DEFECT_TYPE_CODE,
-            DEFECT_ID AS CODE_ID,
-            DEFECT_DESC AS CODE_NAME
-     FROM SYS0100M
-     WHERE DEFECT_GRP = #{DEFECT_GRP_DEPT}
-     AND DEFECT_ID != #{DEFECT_GRP_DEPT}
-     AND DEFECT_TYP = 'ICD'
-    ]]>
-  </select> -->
 
   <select id="getSubDeptList" parameterType="Map" resultType="egovMap">
     SELECT CODE CODE_ID
@@ -144,57 +132,55 @@
     </if>
   </select>
 
-   <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
-            SELECT
-            Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
-            Extent2.SUP_TAG_ID AS SUP_TAG_ID,
-            Extent2.SUP_TAG_FL_ATT_ID1 AS SUP_TAG_FL_ATT_ID1,
-            Extent2.SUP_TAG_FL_ATT_ID2 AS SUP_TAG_FL_ATT_ID2,
-            Extent1.SUP_REF_ID AS SUP_REF_ID,
-            Extent1.SUP_REF_NO AS SUP_REF_NO,
-            Extent1.CUST_ID AS CUST_ID,
-            Extent3.NAME AS CUST_NAME,
-            Extent2.CRT_DT AS TAG_REGISTER_DT,
-            Extent4.CALL_ENTRY_ID AS CCR0006D_CALL_ENTRY_ID_SEQ,
-            Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
-            Extent5.NAME AS TAG_STATUS,
-            Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
-            Extent6.DEFECT_DESC AS MAIN_TOPIC,
-            Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
-            Extent7.DEFECT_DESC AS SUB_TOPIC,
-            Extent4.MAIN_DEPT AS INCHG_DEPT_ID,
-            Extent8.CODE_NAME AS INCHG_DEPT_NAME,
-            Extent4.SUB_DEPT AS SUB_DEPT_ID,
-            Extent9.CODE_NAME AS SUB_DEPT_NAME,
-            Extent2.SUP_TAG_FL_ATT_ID1 AS CARELINE_ATCH
-
-            FROM SUP0001M Extent1
-            JOIN SUP0006M Extent2   ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
-            JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent1.CUST_ID
-            JOIN CCR0006D Extent4   ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
-            JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
-            LEFT JOIN SYS0100M Extent6   ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
-            LEFT JOIN SYS0100M Extent7   ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
-            LEFT JOIN SYS0013M Extent8   ON Extent8.CODE = Extent4.MAIN_DEPT AND Extent8.CODE_MASTER_ID = '359'
-            LEFT JOIN SYS0013M Extent9   ON Extent9.CODE = Extent4.SUB_DEPT AND Extent9.CODE_MASTER_ID = '360'
-
+  <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
+    SELECT Extent2.SUP_CUR_SEQNO AS COUNSELING_NO,
+               Extent2.SUP_TAG_ID AS SUP_TAG_ID,
+               Extent2.SUP_TAG_FL_ATT_ID1 AS SUP_TAG_FL_ATT_ID1,
+               Extent2.SUP_TAG_FL_ATT_ID2 AS SUP_TAG_FL_ATT_ID2,
+               Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent2.CRT_DT AS TAG_REGISTER_DT,
+               Extent4.CALL_ENTRY_ID AS CCR0006D_CALL_ENTRY_ID_SEQ,
+               Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
+               Extent5.NAME AS TAG_STATUS,
+               Extent2.SUP_TAG_MAIN_INQ AS MAIN_TOPIC_ID,
+               Extent6.DEFECT_DESC AS MAIN_TOPIC,
+               Extent2.SUP_TAG_SUB_INQ AS SUB_TOPIC_ID,
+               Extent7.DEFECT_DESC AS SUB_TOPIC,
+               Extent4.MAIN_DEPT AS INCHG_DEPT_ID,
+               Extent8.CODE_NAME AS INCHG_DEPT_NAME,
+               Extent4.SUB_DEPT AS SUB_DEPT_ID,
+               Extent9.CODE_NAME AS SUB_DEPT_NAME,
+               Extent2.SUP_TAG_FL_ATT_ID1 AS CARELINE_ATCH
+    FROM SUP0001M Extent1
+    JOIN SUP0006M Extent2 ON Extent2.SUP_TAG_ORD_ID = Extent1.SUP_REF_ID
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    JOIN CCR0006D Extent4 ON Extent4.CUR_SEQ_NO = Extent2.SUP_CUR_SEQNO
+    JOIN SYS0038M Extent5 ON Extent5.STUS_CODE_ID = Extent4.STUS_CODE_ID
+    LEFT JOIN SYS0100M Extent6 ON Extent6.DEFECT_ID = Extent2.SUP_TAG_MAIN_INQ AND Extent6.DEFECT_TYP = 'SMI'
+    LEFT JOIN SYS0100M Extent7 ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent4.MAIN_DEPT AND Extent8.CODE_MASTER_ID = '359'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent4.SUB_DEPT AND Extent9.CODE_MASTER_ID = '360'
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
+        AND Extent2.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}
         AND Extent2.SUP_CUR_SEQNO = #{counselingNo}
   </select>
 
-    <select id="searchOrderBasicInfo"  parameterType="Map" resultType="egovMap">
+  <select id="searchOrderBasicInfo"  parameterType="Map" resultType="egovMap">
     SELECT A.SUP_REF_ID,
                A.SUP_REF_NO,
                TO_CHAR(A.SUP_REF_DT, 'DD-MM-YYYY') AS ORD_DT,
+               A.SUP_REF_STUS AS SUP_REF_STUS_ID,
                B.NAME AS SUP_REF_STUS,
                C.NAME AS CUST_NAME,
                C.NRIC AS CUST_NRIC
     FROM SUP0001M A
     JOIN SYS0038M B ON A.SUP_REF_STUS = B.STUS_CODE_ID
     JOIN SAL0029D C ON A.CUST_ID = C.CUST_ID
-
     WHERE 1 = 1
     AND A.DEL_FLG = 'N'
 
@@ -300,328 +286,279 @@
     SELECT FN_GET_DOCNO(#{value}) from dual
   </select>
 
-    <select id="getResponseLst"  parameterType="Map" resultType="egovMap">
-    SELECT
-        UPPER (Extent4.CODE || '-' || Extent4.CODE_NAME)  AS MAIN_DEPT,
-        UPPER (Extent5.CODE || '-' || Extent5.CODE_NAME) AS SUB_DEPT,
-       <!--  Extent3.CALL_REM AS TAG_REMARK, -->
-        Extent6.NAME AS TAG_STUS,
-        Extent7.USER_FULL_NAME AS CALL_CRT_USER ,
-        Extent3.CALL_CRT_DT AS CALL_CRT_DT
-
+  <select id="getResponseLst"  parameterType="Map" resultType="egovMap">
+    SELECT UPPER (Extent4.CODE || '-' || Extent4.CODE_NAME) AS MAIN_DEPT,
+               UPPER (Extent5.CODE || '-' || Extent5.CODE_NAME) AS SUB_DEPT,
+               DBMS_LOB.SUBSTR(Extent3.CALL_REM, 4000, 1) AS TAG_REMARK,
+               Extent6.NAME AS TAG_STUS,
+               Extent7.USER_FULL_NAME AS CALL_CRT_USER ,
+               TO_CHAR(Extent3.CALL_CRT_DT, 'DD-MM-YYYY HH:MM:SS:AM') AS CALL_CRT_DT
     FROM SUP0006M Extent1
-        JOIN CCR0006D Extent2   ON Extent2.CUR_SEQ_NO = Extent1.SUP_CUR_SEQNO
-        JOIN CCR0007D Extent3   ON Extent3.CALL_RESULT_ID = Extent2.RESULT_ID
-        LEFT JOIN SYS0013M Extent4   ON Extent4.CODE = Extent3.MAIN_DEPT AND Extent4.CODE_MASTER_ID = '359'
-        LEFT JOIN SYS0013M Extent5   ON Extent5.CODE = Extent3.SUB_DEPT AND Extent5.CODE_MASTER_ID = '360'
-        JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent3.CALL_STUS_ID
-        JOIN SYS0047M Extent7    ON Extent7.USER_ID = Extent3.CALL_CRT_USER_ID
-    WHERE  Extent1.SUP_TAG_ORD_ID = #{supRefId}
-    AND  Extent1.SUP_CUR_SEQNO = #{counselingNo}
+    JOIN CCR0006D Extent2 ON Extent2.CUR_SEQ_NO = Extent1.SUP_CUR_SEQNO
+    JOIN CCR0007D Extent3 ON Extent3.CALL_ENTRY_ID = Extent2.CALL_ENTRY_ID
+    LEFT JOIN SYS0013M Extent4 ON Extent4.CODE = Extent3.MAIN_DEPT AND Extent4.CODE_MASTER_ID = '359'
+    LEFT JOIN SYS0013M Extent5 ON Extent5.CODE = Extent3.SUB_DEPT AND Extent5.CODE_MASTER_ID = '360'
+    JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent3.CALL_STUS_ID
+    JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent3.CALL_CRT_USER_ID
+    WHERE Extent1.DEL_FLG ='N'
+        AND Extent1.SUP_TAG_ORD_ID = #{supRefId}
+        AND Extent1.SUP_CUR_SEQNO = #{counselingNo}
     ORDER BY Extent3.CALL_CRT_DT DESC
   </select>
 
-      <select id="selectNextFileId" resultType="int">
-        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
-      </select>
+  <select id="selectNextFileId" resultType="int">
+    SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+  </select>
 
-      <insert id="insertFileDetail" parameterType="Map">
-        INSERT INTO SYS0071D (
-        ATCH_FILE_ID
-        , ATCH_FILE_NAME
-        , FILE_SUB_PATH
-        , PHYSICL_FILE_NAME
-        , FILE_EXTSN
-        , FILE_SIZE
-        , FILE_PASSWORD
-        , FILE_UNQ_KEY
-        , FILE_KEY_SEQ
-        )VALUES (
-        #{atchFileId}
-        ,#{atchFileName}
-        ,#{fileSubPath}
-        ,#{physiclFileName}
-        ,#{fileExtsn}
-        ,#{fileSize}
-        ,#{filePassword}
-        ,#{fileUnqKey}
-        ,#{fileKeySeq}
-        )
-    </insert>
+  <insert id="insertFileDetail" parameterType="Map">
+    INSERT INTO SYS0071D ( ATCH_FILE_ID
+                                      , ATCH_FILE_NAME
+                                      , FILE_SUB_PATH
+                                      , PHYSICL_FILE_NAME
+                                      , FILE_EXTSN
+                                      , FILE_SIZE
+                                      , FILE_PASSWORD
+                                      , FILE_UNQ_KEY
+                                      , FILE_KEY_SEQ
+    ) VALUES ( #{atchFileId}
+                  , #{atchFileName}
+                  , #{fileSubPath}
+                  , #{physiclFileName}
+                  , #{fileExtsn}
+                  , #{fileSize}
+                  , #{filePassword}
+                  , #{fileUnqKey}
+                  , #{fileKeySeq}
+    )
+  </insert>
 
-    <select id="getSeqSUP0006M" resultType="java.lang.Integer">
-         SELECT SUP0006M_SUP_TAG_SEQ_ID.NEXTVAL FROM DUAL
-    </select>
+  <select id="getSeqSUP0006M" resultType="java.lang.Integer">
+    SELECT SUP0006M_SUP_TAG_SEQ_ID.NEXTVAL FROM DUAL
+  </select>
 
-    <select id="getSeqCCR0006D" resultType="java.lang.Integer">
-         SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
-    </select>
+  <select id="getSeqCCR0006D" resultType="java.lang.Integer">
+    SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
 
-    <select id="getSeqCCR0007D" resultType="java.lang.Integer">
-         SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
-    </select>
+  <select id="getSeqCCR0007D" resultType="java.lang.Integer">
+    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
 
-     <select id="getSeqSUP0007M" resultType="java.lang.Integer">
-         SELECT SUP0007M_SUP_CANC_SEQ_ID.NEXTVAL FROM DUAL
-    </select>
+  <select id="getSeqSUP0007M" resultType="java.lang.Integer">
+    SELECT SUP0007M_SUP_CANC_SEQ_ID.NEXTVAL FROM DUAL
+  </select>
 
+  <insert id="insertSupplementTagMaster" parameterType="Map">
+    INSERT INTO SUP0006M ( SUP_TAG_ID ,
+                                        SUP_CUR_SEQNO ,
+                                        SUP_TAG_ORD_ID ,
+                                        SUP_TAG_MAIN_INQ ,
+                                        SUP_TAG_SUB_INQ ,
+                                        SUP_TAG_FL_ATT_ID1 ,
+                                        CRT_USR_ID ,
+                                        CRT_DT ,
+                                        UPD_USR_ID ,
+                                        UPD_DT
+    ) VALUES ( #{seqM} ,
+                    #{tokenM} ,
+                    #{supRefId},
+                    #{mainTopic} ,
+                    #{subTopic} ,
+                    #{atchFileGrpId} ,
+                    #{userId} ,
+                    SYSDATE ,
+                    #{userId} ,
+                    SYSDATE
+    )
+  </insert>
 
-<insert id="insertSupplementTagMaster" parameterType="Map">
-     INSERT INTO SUP0006M (
-     SUP_TAG_ID,
-     SUP_CUR_SEQNO,
-     SUP_TAG_ORD_ID,
-     SUP_TAG_MAIN_INQ,
-     SUP_TAG_SUB_INQ,
-     SUP_TAG_FL_ATT_ID1,
-     CRT_USR_ID,
-     CRT_DT,
-     UPD_USR_ID,
-     UPD_DT
-     )
-     VALUES (
-     #{seqM} ,
-     #{tokenM} ,
-     #{supRefId},
-     #{mainTopic} ,
-     #{subTopic} ,
-     #{atchFileGrpId} ,
-     #{userId} ,
-     SYSDATE ,
-     #{userId} ,
-     SYSDATE
-     )
-     </insert>
+  <update id="updateSupHqAttch" parameterType="Map">
+    UPDATE SUP0006M SET SUP_TAG_FL_ATT_ID2 = #{atchFileGrpId},
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_TAG_ORD_ID = #{supRefId}
+        AND SUP_TAG_ID = #{supTagId}
+  </update>
 
+  <insert id="insertCCRMain" parameterType="Map">
+    INSERT INTO CCR0006D ( CALL_ENTRY_ID ,
+                                         SALES_ORD_ID ,
+                                         TYPE_ID ,
+                                         STUS_CODE_ID ,
+                                         RESULT_ID ,
+                                         DOC_ID ,
+                                         CRT_USER_ID ,
+                                         CRT_DT ,
+                                         CALL_DT ,
+                                         IS_WAIT_FOR_CANCL ,
+                                         HAPY_CALLER_ID ,
+                                         UPD_DT ,
+                                         UPD_USER_ID ,
+                                         CUR_SEQ_NO ,
+                                         MAIN_DEPT ,
+                                         SUB_DEPT
+    ) VALUES ( #{seqCcrId} ,
+                    #{salesOrdId} ,
+                    #{TypeId},
+                    '1' ,
+                    #{seqCcrResultId} ,
+                    '0' ,
+                    #{userId} ,
+                    SYSDATE ,
+                    TO_DATE('01-01-1900','dd-mm-yyyy') ,
+                    '0',
+                    '0',
+                    SYSDATE ,
+                    #{userId} ,
+                    #{tokenM} ,
+                    #{mainDept} ,
+                    #{subDept}
+    )
+  </insert>
 
-     <update id="updateSupHqAttch" parameterType="Map">
-         UPDATE SUP0006M
-         SET   SUP_TAG_FL_ATT_ID2 = #{atchFileGrpId},
-            UPD_USR_ID = #{userId},
-            UPD_DT = SYSDATE
-         WHERE SUP_TAG_ORD_ID = #{supRefId}
-         AND SUP_TAG_ID = #{supTagId}
-     </update>
+  <insert id="insertCcrDetail" parameterType="Map">
+    INSERT INTO CCR0007D ( CALL_RESULT_ID ,
+                                        CALL_ENTRY_ID ,
+                                        CALL_STUS_ID ,
+                                        CALL_DT ,
+                                        CALL_ACTN_DT ,
+                                        CALL_FDBCK_ID ,
+                                        CALL_CT_ID ,
+                                        CALL_REM ,
+                                        CALL_CRT_USER_ID ,
+                                        CALL_CRT_DT ,
+                                        CALL_CRT_USER_ID_DEPT ,
+                                        CALL_HC_ID ,
+                                        CALL_ROS_AMT ,
+                                        CALL_SMS ,
+                                        CALL_SMS_REM ,
+                                        MAIN_DEPT ,
+                                        SUB_DEPT ,
+                                        DEPT_CODE
+    ) VALUES ( #{seqCcrResultId} ,
+                    #{seqCcrId} ,
+                    '1' ,
+                    SYSDATE ,
+                    SYSDATE ,
+                    '0',
+                    '0',
+                   #{callRemark} ,
+                   #{userId} ,
+                   SYSDATE ,
+                   '0',
+                   '',
+                   0 ,
+                   '0',
+                   '0',
+                   #{mainDept} ,
+                   #{subDept} ,
+                   ''
+    )
+  </insert>
 
-     <insert id="insertCCRMain" parameterType="Map">
-     INSERT INTO CCR0006D (
-     CALL_ENTRY_ID,
-     SALES_ORD_ID,
-     TYPE_ID,
-     STUS_CODE_ID,
-     RESULT_ID,
-
-     DOC_ID,
-     CRT_USER_ID,
-     CRT_DT,
-     CALL_DT,
-
-     IS_WAIT_FOR_CANCL,
-     HAPY_CALLER_ID,
-     UPD_DT,
-     UPD_USER_ID,
-     CUR_SEQ_NO,
-     MAIN_DEPT,
-     SUB_DEPT
-     )
-     VALUES (
-     #{seqCcrId} ,
-     #{salesOrdId} ,
-     #{TypeId},
-     '1' ,
-     #{seqCcrResultId} ,
-
-     '0' ,
-     #{userId} ,
-     SYSDATE ,
-     TO_DATE('01-01-1900','dd-mm-yyyy') ,
-     '0',
-
-     '0',
-     SYSDATE ,
-     #{userId} ,
-     #{tokenM} ,
-     #{mainDept} ,
-     #{subDept}
-
-     )
-     </insert>
-
-     <insert id="insertCcrDetail" parameterType="Map">
-     INSERT INTO CCR0007D (
-
-     CALL_RESULT_ID,
-     CALL_ENTRY_ID,
-     CALL_STUS_ID,
-     CALL_DT,
-     CALL_ACTN_DT,
-
-     CALL_FDBCK_ID,
-     CALL_CT_ID,
-     CALL_REM,
-     CALL_CRT_USER_ID,
-     CALL_CRT_DT,
-
-     CALL_CRT_USER_ID_DEPT,
-     CALL_HC_ID,
-     CALL_ROS_AMT,
-     CALL_SMS,
-     CALL_SMS_REM,
-
-     MAIN_DEPT,
-     SUB_DEPT,
-     DEPT_CODE
-     )
-     VALUES (
-
-    #{seqCcrResultId} ,
-    #{seqCcrId} ,
-    '1' ,
-    SYSDATE ,
-    SYSDATE ,
-
-    '0',
-    '0',
-    #{callRemark} ,
-    #{userId} ,
-    SYSDATE ,
-
-    '0',
-    '',
-    0 ,
-    '0',
-    '0',
-
-    #{mainDept} ,
-    #{subDept} ,
-    ''
-     )
-     </insert>
-
-       <insert id="insertTagCcrDetail" parameterType="Map">
-
-     INSERT INTO CCR0007D (
-
-     CALL_RESULT_ID,
-     CALL_ENTRY_ID,
-     CALL_STUS_ID,
-     CALL_DT,
-     CALL_ACTN_DT,
-
-     CALL_FDBCK_ID,
-     CALL_CT_ID,
-     CALL_REM,
-     CALL_CRT_USER_ID,
-     CALL_CRT_DT,
-
-     CALL_CRT_USER_ID_DEPT,
-     CALL_HC_ID,
-     CALL_ROS_AMT,
-     CALL_SMS,
-     CALL_SMS_REM,
-
-     MAIN_DEPT,
-     SUB_DEPT,
-     DEPT_CODE
-     )
-     VALUES (
-
-    #{seqCcrResultId} ,
-    #{ccr0006dCallEntryIdSeq} ,
-    #{tagStus} ,
-    SYSDATE ,
-    SYSDATE ,
-
-    '0',
-    '0',
-    #{remark} ,
-    #{userId} ,
-    SYSDATE ,
-
-    '0',
-    '',
-    0 ,
-    '0',
-    '0',
-
-    #{mainDept} ,
-    #{subDept} ,
-    ''
-     )
-
+  <insert id="insertTagCcrDetail" parameterType="Map">
+    INSERT INTO CCR0007D ( CALL_RESULT_ID,
+                                        CALL_ENTRY_ID,
+                                        CALL_STUS_ID,
+                                        CALL_DT,
+                                        CALL_ACTN_DT,
+                                        CALL_FDBCK_ID,
+                                        CALL_CT_ID,
+                                        CALL_REM,
+                                        CALL_CRT_USER_ID,
+                                        CALL_CRT_DT,
+                                        CALL_CRT_USER_ID_DEPT,
+                                        CALL_HC_ID,
+                                        CALL_ROS_AMT,
+                                        CALL_SMS,
+                                        CALL_SMS_REM,
+                                        MAIN_DEPT,
+                                        SUB_DEPT,
+                                        DEPT_CODE
+    ) VALUES ( #{seqCcrResultId} ,
+                    #{ccr0006dCallEntryIdSeq} ,
+                    #{tagStus} ,
+                    SYSDATE ,
+                    SYSDATE ,
+                    '0',
+                    '0',
+                    #{remark} ,
+                    #{userId} ,
+                    SYSDATE ,
+                    '0',
+                    '',
+                    0 ,
+                    '0',
+                    '0',
+                    #{mainDept} ,
+                    #{subDept} ,
+                    ''
+    )
   </insert>
 
   <update id="updateCcrMain" parameterType="Map">
-
-    UPDATE CCR0006D
-    SET   RESULT_ID = #{seqCcrResultId},
-            STUS_CODE_ID = #{tagStus},
-            MAIN_DEPT = #{mainDept},
-            SUB_DEPT = #{subDept},
-            UPD_DT = SYSDATE ,
-            UPD_USER_ID = #{userId}
+    UPDATE CCR0006D SET RESULT_ID = #{seqCcrResultId},
+                                     STUS_CODE_ID = #{tagStus},
+                                     MAIN_DEPT = #{mainDept},
+                                     SUB_DEPT = #{subDept},
+                                     UPD_DT = SYSDATE ,
+                                     UPD_USER_ID = #{userId}
     WHERE CALL_ENTRY_ID = #{ccr0006dCallEntryIdSeq}
-
   </update>
 
+  <insert id="insertCancMain" parameterType="Map">
+    INSERT INTO SUP0007M ( SUP_REQ_CANC_ID ,
+                                        SUP_REF_ID ,
+                                        SUP_REQ_CANC_NO ,
+                                        SUP_REQ_CANC_STAT ,
+                                        SUP_REQ_CANC_CALL_ENT ,
+                                        SUP_REQ_CANC_RTN_TRKNO ,
+                                        SUP_REQ_CANC_RMK ,
+                                        CRT_USR_ID ,
+                                        CRT_DT ,
+                                        UPD_USR_ID ,
+                                        UPD_DT
+    ) VALUES ( #{seqCancId} ,
+                    #{supRefId} ,
+                    #{tokenSupReqCancNo} ,
+                    '32' ,
+                    #{ccr0006dCallEntryIdSeq} ,
+                    '',
+                    '',
+                    #{userId} ,
+                    SYSDATE ,
+                    #{userId} ,
+                    SYSDATE
+    )
+  </insert>
 
-   <insert id="insertCancMain" parameterType="Map">
-
-         INSERT INTO SUP0007M (
-
-         SUP_REQ_CANC_ID ,
-         SUP_REF_ID ,
-         SUP_REQ_CANC_NO ,
-         SUP_REQ_CANC_STAT ,
-         SUP_REQ_CANC_CALL_ENT ,
-         SUP_REQ_CANC_RTN_TRKNO ,
-         SUP_REQ_CANC_RMK ,
-         CRT_USR_ID ,
-         CRT_DT ,
-         UPD_USR_ID ,
-         UPD_DT
-
-         ) VALUES (
-
-        #{seqCancId} ,
-        #{supRefId} ,
-        #{tokenSupReqCancNo} ,
-        '32' ,
-        #{ccr0006dCallEntryIdSeq} ,
-        '',
-        '',
-        #{userId} ,
-        SYSDATE ,
-        #{userId} ,
-        SYSDATE
-         )
-
-    </insert>
-
-
-    <update id="updateCcrMainWithCid" parameterType="Map">
-
-    UPDATE CCR0006D
-    SET   RESULT_ID = #{seqCcrResultId},
-            STUS_CODE_ID = #{tagStus},
-            MAIN_DEPT = #{mainDept},
-            SUB_DEPT = #{subDept},
-            DOC_ID = #{seqCancId},
-            UPD_DT = SYSDATE ,
-            UPD_USER_ID = #{userId}
-
+  <update id="updateCcrMainWithCid" parameterType="Map">
+    UPDATE CCR0006D SET RESULT_ID = #{seqCcrResultId},
+                                     STUS_CODE_ID = #{tagStus},
+                                     MAIN_DEPT = #{mainDept},
+                                     SUB_DEPT = #{subDept},
+                                     DOC_ID = #{seqCancId},
+                                     UPD_DT = SYSDATE ,
+                                     UPD_USER_ID = #{userId}
     WHERE CALL_ENTRY_ID = #{ccr0006dCallEntryIdSeq}
+  </update>
 
-    </update>
+  <update id="updateMasterSuppStaStag" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STUS = 10,
+                                     SUP_REF_STG = 5,
+                                     UPD_DT = SYSDATE ,
+                                     UPD_USR_ID = #{userId}
+    WHERE SUP_REF_ID = #{supRefId}
+  </update>
 
   <select id="selectAttachListCareline" parameterType="Map" resultType="egovMap">
     SELECT T1.ATCH_FILE_GRP_ID
-         , T1.ATCH_FILE_ID
-         ,T2.ATCH_FILE_NAME
-         ,T2.FILE_SUB_PATH
-         ,T2.PHYSICL_FILE_NAME
-         ,T2.FILE_EXTSN
-         ,T2.FILE_SIZE
+             , T1.ATCH_FILE_ID
+             , T2.ATCH_FILE_NAME
+             , T2.FILE_SUB_PATH
+             , T2.PHYSICL_FILE_NAME
+             , T2.FILE_EXTSN
+             , T2.FILE_SIZE
     FROM SYS0070M T1
     LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
     WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
@@ -630,12 +567,12 @@
 
   <select id="selectAttachListHq" parameterType="Map" resultType="egovMap">
     SELECT T1.ATCH_FILE_GRP_ID
-         , T1.ATCH_FILE_ID
-         ,T2.ATCH_FILE_NAME
-         ,T2.FILE_SUB_PATH
-         ,T2.PHYSICL_FILE_NAME
-         ,T2.FILE_EXTSN
-         ,T2.FILE_SIZE
+             , T1.ATCH_FILE_ID
+             , T2.ATCH_FILE_NAME
+             , T2.FILE_SUB_PATH
+             , T2.PHYSICL_FILE_NAME
+             , T2.FILE_EXTSN
+             , T2.FILE_SIZE
     FROM SYS0070M T1
     LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
     WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
@@ -644,7 +581,7 @@
 
   <select id="getCustEmailDtl"  parameterType="Map" resultType="egovMap">
     SELECT A.SUP_REF_NO AS SUP_REF_NO,
-               B.NAME  AS CUST_NAME,
+               B.NAME AS CUST_NAME,
                UPPER(C.ADDR_DTL) AS ADDR_LN1,
                UPPER(C.STREET) AS ADDR_LN2,
                UPPER(D.AREA) AS AREA,
