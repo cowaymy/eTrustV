@@ -158,10 +158,10 @@
   }
 </select>
 
-<update id="saveEInvDeactivateBatch" parameterType="Map">
+<update id="saveEInvBatchMain" parameterType="Map">
      UPDATE EIV0003M
      SET
-     STATUS = '8',
+     STATUS = #{status},
      CONF_USER_ID = #{userId},
      CONF_DT = SYSDATE
      WHERE  BATCH_ID = #{batchId}
@@ -170,7 +170,7 @@
 <update id="saveEInvDeactivateBatchEInv" parameterType="Map">
      UPDATE EIV0004D
      SET
-     STATUS = '8',
+     STATUS = '21',
      UPD_USER_ID = #{userId},
      UPD_DT = SYSDATE
      WHERE  BATCH_ID = #{batchId}
@@ -393,14 +393,14 @@
 		,MAIN_LOG.REF_NO
 		,INV.UNIQUE_ID INV_UIN
 		,DET_LOG.DOCUMENT_ID DOCUMENT_ID
-		,CASE WHEN DET_LOG.RESP_CODE = 'true' THEN '121' ELSE '8' END STATUS
+		,CASE WHEN DET_LOG.RESP_CODE = 'true' THEN '121' ELSE '21' END STATUS
 		FROM EIV0004D INV
 		LEFT JOIN EIV0003M MBATCH ON MBATCH.BATCH_ID = INV.BATCH_ID
 		LEFT JOIN EIV0006M MAIN_LOG ON MAIN_LOG.REF_NO = TO_CHAR(INV.GRP_ID)
 		LEFT JOIN EIV0007D DET_LOG ON DET_LOG.RESP_ID = MAIN_LOG.RESP_ID AND INV.UNIQUE_ID = DET_LOG.UNIQUE_ID
 		WHERE INV.STATUS = 44
 		AND INV.GRP_ID IS NOT NULL
-		AND MBATCH.STATUS not in ('8')
+		AND MBATCH.STATUS not in ('21')
 	) SRC
 	ON (TRG.UNIQUE_ID = SRC.INV_UIN AND TRG.BATCH_ID = SRC.BATCH_ID AND TRG.GRP_ID = SRC.GRP_ID)
 	WHEN MATCHED THEN
@@ -409,7 +409,7 @@
 		,TRG.DOCUMENT_ID = SRC.DOCUMENT_ID
 </update>
 
-<update id="updEInvJsonStringByDocId" parameterType="Map">
+<update id="updEInvByDocId" parameterType="Map">
     UPDATE EIV0004D
     SET
     <if test="qrCode != null and qrCode != '' ">

@@ -19,6 +19,14 @@ public interface GovEInvoiceService{
 
 	int saveEInvDeactivateBatch(Map<String, Object> params);
 
+	int saveEInvBatch(Map<String, Object> params);
+
+	int updEInvJsonString(Map<String, Object> params);
+
+	int updEInvByDocId(Map<String, Object> params);
+
+	int insertApiDetailAccessLog(Map<String, Object> params);
+
 	Map<String, Object> prepareEInvClaim(Map<String, Object> param);
 
 	Map<String, Object> sendEInvClaim(Map<String, Object> param);
@@ -29,7 +37,7 @@ public interface GovEInvoiceService{
 
 	Map<String, Object> rtnRespMsg(int respSeq, String pgmPath, String code, String msg, String respTm, String reqPrm,String respPrm, String apiUserId, String refNo);
 
-	Map<String, Object> govEInvoiceCheckStatus(Map<String, Object> param);
+	Map<String, Object> checkStatusEInvClaim(Map<String, Object> param);
 
 	Map<String, Object> clearTaxCheckStatusReqApi(Map<String, Object> params);
 

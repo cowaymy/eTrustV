@@ -34,7 +34,7 @@ public interface GovEInvoiceMapper {
 
 	Map<String, Object> createEInvClaim(Map<String, Object> param);
 
-	int saveEInvDeactivateBatch(Map<String, Object> params);
+	int saveEInvBatchMain(Map<String, Object> params);
 
 	int saveEInvDeactivateBatchEInv(Map<String, Object> params);
 
@@ -52,9 +52,9 @@ public interface GovEInvoiceMapper {
 
 	void insertApiAccessLog(Map<String, Object> params);
 
-	void insertApiDetailAccessLog(Map<String, Object> params);
+	int insertApiDetailAccessLog(Map<String, Object> params);
 
 	void updateEInvMain(Map<String, Object> formMap);
 
-	int updEInvJsonStringByDocId(Map<String, Object> params);
+	int updEInvByDocId(Map<String, Object> params);
 }

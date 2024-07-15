@@ -223,14 +223,14 @@ public class GovEInvoiceController {
 		return ResponseEntity.ok(message);
 	}
 
-	@RequestMapping(value = "/govEInvoicePrepare.do")
-	public ResponseEntity<ReturnMessage> govEInvoicePrepare(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/saveEInvBatch.do")
+	public ResponseEntity<ReturnMessage> saveEInvBatch(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
-		Map<String, Object> resultValue = new HashMap<String, Object>();
+		int result = 0;
 
-		resultValue = govEInvoiceService.prepareEInvClaim(params);
+		result = govEInvoiceService.saveEInvBatch(params);
 
-		if(resultValue.get("status").equals("1")){
+		if(result > 0){
 			message.setMessage("Batch payment has been confirmed.");
 			message.setCode(AppConstants.SUCCESS);
 		}else{
@@ -241,6 +241,24 @@ public class GovEInvoiceController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/govEInvoicePrepare.do")
+	public void govEInvoicePrepare(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		resultValue = govEInvoiceService.prepareEInvClaim(params);
+
+//		if(resultValue.get("status").equals("1")){
+//			message.setMessage("Batch payment has been confirmed.");
+//			message.setCode(AppConstants.SUCCESS);
+//		}else{
+//			message.setMessage("Failed to confirmed this batch payment. Please try again later.");
+//			message.setCode(AppConstants.FAIL);
+//		}
+
+//		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/govEInvoiceSend.do")
 	public void govEInvoiceSend(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -249,11 +267,11 @@ public class GovEInvoiceController {
 
 	}
 
-	@RequestMapping(value = "/govEInvoiceCheckStatus.do")
-	public void govEInvoiceCheckStatus(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/checkStatusEInvClaim.do")
+	public void checkStatusEInvClaim(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
-		resultValue = govEInvoiceService.govEInvoiceCheckStatus(params);
+		resultValue = govEInvoiceService.checkStatusEInvClaim(params);
 
 	}
 }

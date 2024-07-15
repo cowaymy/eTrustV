@@ -135,9 +135,18 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
 
     @Override
     public int saveEInvDeactivateBatch(Map<String, Object> params) {
-        int result = govEInvoiceMapper.saveEInvDeactivateBatch(params);
+    	params.put("status", "21");
+        int result = govEInvoiceMapper.saveEInvBatchMain(params);
         int result1 = govEInvoiceMapper.saveEInvDeactivateBatchEInv(params);
         return result;
+    }
+
+    @Override
+    public int saveEInvBatch(Map<String, Object> params) {
+    	params.put("batchStatus", 1);
+        params.put("userId", 349);
+    	int result = govEInvoiceMapper.saveEInvConfirmBatch(params);
+    	return result;
     }
 
     @Override
@@ -145,7 +154,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         Map<String, Object> resultValue = new HashMap<String, Object>();
 
         List<Map<String, Object>> eInvcClaimList = new ArrayList<>();
-        params.put("batchStatus", 1);
+        params.put("batchStatus", 5);
         params.put("einvStatus", 1);
         params.put("userId", 349);
         eInvcClaimList = govEInvoiceMapper.selectEInvSendList(params);
@@ -193,12 +202,19 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             jsonParams.put("userId", 349);
             jsonParams.put("status", 104);
             jsonParams.put("issueDt", formattedDate);
-            int result = govEInvoiceMapper.updEInvJsonString(jsonParams);
+            updEInvJsonString(jsonParams);
         }
 
-        int result = govEInvoiceMapper.saveEInvConfirmBatch(params);
+//        int result = govEInvoiceMapper.saveEInvConfirmBatch(params);
         resultValue.put("status", "1");
         return resultValue;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public int updEInvJsonString(Map<String, Object> params) {
+        int result = govEInvoiceMapper.updEInvJsonString(params);
+        return result;
     }
 
     @Override
@@ -257,7 +273,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 jsonParams.put("userId", 349);
                 jsonParams.put("status", 44);
                 jsonParams.put("groupId", groupId);
-                int result = govEInvoiceMapper.updEInvJsonString(jsonParams);
+                updEInvJsonString(jsonParams);
 
                 if(j==9 || i+1 == eInvcClaimList.size()){
                     GovEInvcDocumentVO govEInvcDocumentVO = new GovEInvcDocumentVO();
@@ -290,8 +306,8 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 }
         }
 
-        Map<String, Object> updateParams = new HashMap<String, Object>();
-        govEInvoiceMapper.updateEInvMain(updateParams);
+//        Map<String, Object> updateParams = new HashMap<String, Object>();
+//        govEInvoiceMapper.updateEInvMain(updateParams);
 
         return resultValue;
     }
@@ -353,7 +369,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         String groupId = params.get("groupId").toString();
 //		String einvType = params.get("einvoiceType").toString();
         String output1 = "";
-        String ResponseCode = "";
+        String ResponseCode = "Failed";
         String ResponseMsg = "";
         int respSeq = 0;
         GovEInvcGenerateResponseVO p = new GovEInvcGenerateResponseVO();
@@ -423,7 +439,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                         apiDetparams.put("warningDetails", warningDetStr);
                         apiDetparams.put("respCode", documentResponse.getSuccess()==null?"":documentResponse.getSuccess().toString());
 
-                        govEInvoiceMapper.insertApiDetailAccessLog(apiDetparams);
+                        insertApiDetailAccessLog(apiDetparams);
                     }
                 }
                 /*if(p.getStatus() ==null || p.getStatus().isEmpty()){
@@ -465,6 +481,13 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         }
 
         return resultValue;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public int insertApiDetailAccessLog(Map<String, Object> params) {
+        int result = govEInvoiceMapper.insertApiDetailAccessLog(params);
+        return result;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -516,7 +539,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     }
 
     @Override
-    public Map<String, Object> govEInvoiceCheckStatus(Map<String, Object> params) {
+    public Map<String, Object> checkStatusEInvClaim(Map<String, Object> params) {
         Map<String, Object> resultValue = new HashMap<String, Object>();
 
         List<Map<String, Object>> eInvcClaimList = new ArrayList<>();
@@ -610,7 +633,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                     einvUpdParams.put("dateTimeValidated", dateTimeValidated);
                     einvUpdParams.put("userId", 349);
                     einvUpdParams.put("status", 4);
-                    govEInvoiceMapper.updEInvJsonStringByDocId(einvUpdParams);
+                    updEInvByDocId(einvUpdParams);
                 }
                 conn.disconnect();
 
@@ -638,5 +661,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         }
 
         return resultValue;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public int updEInvByDocId(Map<String, Object> params) {
+        int result = govEInvoiceMapper.updEInvByDocId(params);
+        return result;
     }
 }
