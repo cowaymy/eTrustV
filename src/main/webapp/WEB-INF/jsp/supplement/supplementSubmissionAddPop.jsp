@@ -868,6 +868,7 @@
 
   function fn_validCustomer() {
     var isValid = true, msg = "";
+    var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
     if (FormUtil.checkReqValue($('#hiddenCustId'))) {
       isValid = false;
@@ -882,6 +883,18 @@
     if (FormUtil.checkReqValue($('#hiddenCustAddId'))) {
       isValid = false;
       msg += "* Please select an installation address.<br>";
+    }
+
+    if($("#email").val() == '') {
+    	isValid = false;
+        msg += "* Please fill in email address.<br>";
+    }
+
+    if ((jQuery.trim($("#email").val())).length > 0){
+        if (!regEmail.test($("#email").val())){
+        	isValid = false;
+            msg += "* Invalid email address format.<br>";
+        }
     }
 
     if (!isValid)
