@@ -89,13 +89,13 @@ public class GovEInvcVO {
 	        PostalAddress postalAddress = new PostalAddress();
 	        List<AddressLine> addressLineList = new ArrayList<>();
 	        AddressLine addr1 = new AddressLine();
-	        addr1.setLine(mapValue.get("accsupPostalAddr1").toString());
+	        addr1.setLine(mapValue.get("accsupPostalAddr1")==null?"N/A":mapValue.get("accsupPostalAddr1").toString());
 	        addressLineList.add(addr1);
 	        AddressLine addr2 = new AddressLine();
-	        addr2.setLine(mapValue.get("accsupPostalAddr2").toString());
+	        addr2.setLine(mapValue.get("accsupPostalAddr2")==null?"N/A":mapValue.get("accsupPostalAddr2").toString());
 	        addressLineList.add(addr2);
 	        AddressLine addr3 = new AddressLine();
-	        addr3.setLine(mapValue.get("accsupPostalAddr3")==null?"":mapValue.get("accsupPostalAddr3").toString());
+	        addr3.setLine(mapValue.get("accsupPostalAddr3")==null?"N/A":mapValue.get("accsupPostalAddr3").toString());
 	        addressLineList.add(addr3);
 	        postalAddress.setAddressLine(addressLineList);
 	        postalAddress.setCityName(mapValue.get("accsupPostalCity").toString());
@@ -105,7 +105,7 @@ public class GovEInvcVO {
 	        country.setIdentificationCode(identificationCode);
 	        postalAddress.setCountry(country);
 	        postalAddress.setCountrySubentityCode(mapValue.get("accsupPostalCtrySubcode").toString());
-	        postalAddress.setPostalZone(mapValue.get("accsupPostalZone").toString());
+	        postalAddress.setPostalZone(mapValue.get("accsupPostalZone")==null?"N/A":mapValue.get("accsupPostalZone").toString());
 	        supplierParty.setPostalAddress(postalAddress);
 	        AccountingSupplierParty.setParty(supplierParty);
 
