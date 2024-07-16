@@ -1,8 +1,10 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
+  var rtnItmDetailGridID;
   $(document).ready(
     function() {
+      createSubItmDetailGrid();
       $('#btnLedger').click(function() {
         Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
       });
@@ -18,7 +20,7 @@
           var custEmailNm = $("#_infoCustNameEmail").val();
           var custEmail = $("#_infoCustEmail").val();
 
-          if ($("#rtnGoodCond").val() == null || $("#rtnGoodCond").val().trim() == "") {
+          /*if ($("#rtnGoodCond").val() == null || $("#rtnGoodCond").val().trim() == "") {
             var msgLabel = "<spring:message code='supplement.text.supplementTtlRtnGoodCondQty'/>"
             Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
             return;
@@ -40,8 +42,13 @@
           if (ttlQty != Number($("#ttlGoodQty").val())) {
             Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ ttlQty + ";" + $("#ttlGoodQty").val() +"' htmlEscape='false' argumentSeparator=';'/>");
             return;
+          }*/
+
+          if (!verifyReturnQty()) {
+            return;
           }
 
+          var rtnItmList = AUIGrid.getGridData(rtnItmDetailGridID);
           var param = {
             parcelTrackNo : parcelTrackNo,
             supRefId : supRefId,
@@ -49,10 +56,11 @@
             custName : custName,
             custEmail : custEmail,
             canReqId : '${canReqId}',
+            supRtnId : '${supRtnId}',
             rtnGoodCondQty : $("#rtnGoodCond").val(),
             rtnDefectCondQty : $("#rtnDefectCond").val() ,
             rtnMissCond : $("#rtnMissCond").val(),
-            ttlQty : ttlQty
+            rtnItmList : rtnItmList
           };
 
           Common.ajax("POST", "/supplement/cancellation/updateReturnGoodsQty.do", param,
@@ -124,13 +132,96 @@
               $(this).val(numberValue);
           }
       });
+
+      var supRefId = '${orderInfo.supRefId}';
+      var param = {supRefId : supRefId };
+      Common.ajax("GET", "/supplement/cancellation/getSupplementRtnItmDetailList", param, function(result) {
+        AUIGrid.setGridData(rtnItmDetailGridID, result);
+      })
   });
+
+  function verifyReturnQty() {
+    var rowCount = AUIGrid.getRowCount(rtnItmDetailGridID);
+    if(rowCount == null || rowCount < 1){
+      Common.alert('<spring:message code="sal.alert.msg.selectItm" />');
+      return;
+    }
+
+    for (var a=0; a<rowCount; a++) {
+      var itm = AUIGrid.getColumnValues(rtnItmDetailGridID, 'itemDesc');
+      var itmQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'quantity');
+      var itmGoodCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlGoodCond');
+      var itmDefectCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlDefectCond');
+      var itmMiaCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlMiaCond');
+
+      var insertQty = Number(itmGoodCondQty[a]) + Number(itmDefectCondQty[a]) + Number(itmMiaCondQty[a]);
+      if (itmQty[a] != insertQty) {
+        Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ insertQty + ";" + itmQty[a] + " (" + itm[a] + ")" +"' htmlEscape='false' argumentSeparator=';'/>");
+        return false;
+      }
+    }
+    return true;
+  }
 
   function fn_popClose() {
       AUIGrid.clearGridData(supplementGridID);
       AUIGrid.clearGridData(supplementItmGridID);
       fn_getSupplementSubmissionList();
     $("#_systemClose").click();
+  }
+
+  function createSubItmDetailGrid() {
+      var columnLayout = [ {
+          dataField : "itemCode",
+          headerText : "<spring:message code='log.head.itemcode'/>",
+          width : '10%',
+          editable : false,
+          visible : false
+      }, {
+          dataField : "itemDesc",
+          headerText : "<spring:message code='log.head.itemdescription'/>",
+          width : '30%',
+          editable : false
+      }, {
+          dataField : "quantity",
+          headerText : "<spring:message code='pay.head.quantity'/>",
+          width : '10%',
+          editable : false
+      }, {
+          dataField : "ttlGoodCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnGoodCondQty'/>",
+          width : '25%',
+          editable : true,
+          dataType : "numeric"
+      }, {
+          dataField : "ttlDefectCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>",
+          width : '25%',
+          editable : true,
+          dataType : "numeric"
+      }, {
+          dataField : "ttlMiaCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>",
+          width : '25%',
+          editable : true,
+          dataType : "numeric"
+      } ];
+
+      var rtnItmGridPros = {
+          showFooter : true,
+          usePaging : true,
+          pageRowCount : 10,
+          fixedColumnCount : 1,
+          showStateColumn : true,
+          displayTreeOpen : false,
+          headerHeight : 30,
+          useGroupingPanel : false,
+          skipReadonlyColumns : true,
+          wrapSelectionMove : true,
+          showRowNumColumn : true
+      };
+
+      rtnItmDetailGridID = GridCommon.createAUIGrid("rtn_itm_detail_grid_wrap", columnLayout, "", rtnItmGridPros);
   }
 
 </script>
@@ -143,6 +234,7 @@
   <input type="hidden" id="_infoCustName" value="${orderInfo.custName}">
   <input type="hidden" id="_infoCustNameEmail" value="${orderInfo.custEmailNm}">
   <input type="hidden" id="_infoCustEmail" value="${orderInfo.custEmail}">
+
   <form id="frmLedger" name="frmLedger" action="#" method="post">
     <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
   </form>
@@ -235,7 +327,7 @@
             <span style="width:5%;text-align:center" >${ttlGoodsQty.ttlQty}</span> <span style="color:red;font-size:10px">Qty.</span>
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <th scope="row"><spring:message code="supplement.text.supplementTtlRtnGoodCondQty" /><span class="must">*</span></th>
           <td>
             <input type="text" title="" style="width:85%" name="rtnGoodCond" id="rtnGoodCond" value="0"/><span style="color:red;font-size:10px">Qty.</span>
@@ -253,10 +345,20 @@
           <th scope="row"></th>
           <td>
           </td>
-        </tr>
+        </tr> -->
         </br>
       </tbody>
     </table>
+
+    <aside class="title_line">
+      <!-- <h3><spring:message code="sal.title.itmList" /></h3> -->
+    </aside>
+    <article class="tap_area">
+      <article class="grid_wrap">
+        <div id="rtn_itm_detail_grid_wrap" style="width: 100%; height: 200px; margin: 0 auto;"></div>
+      </article>
+    </article>
+
     <ul class="center_btns">
       <li><p class="btn_blue2">
           <a id="_saveBtn"><spring:message code="sal.btn.save" /></a>

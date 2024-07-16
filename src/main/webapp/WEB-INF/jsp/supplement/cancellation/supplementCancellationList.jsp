@@ -107,6 +107,13 @@
           editable : false
         },
         {
+          dataField : "supRtnId",
+          headerText : '',
+          width : '10%',
+          editable : false,
+          visible : false
+        },
+        {
           dataField : "supRtnNo",
           headerText : '<spring:message code="sal.title.text.returnNo" />',
           width : '10%',
@@ -286,7 +293,7 @@
             return false;
           }
 
-          Common.popupDiv("/supplement/cancellation/supplementCancellationUpdateReturnQtyPop.do", { supRefId : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdId") ,supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
+          Common.popupDiv("/supplement/cancellation/supplementCancellationUpdateReturnQtyPop.do", { supRefId : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdId") ,supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId"), supRtnId : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnId") }, null, true, '_insDiv');
         } else {
           Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
           return false;
