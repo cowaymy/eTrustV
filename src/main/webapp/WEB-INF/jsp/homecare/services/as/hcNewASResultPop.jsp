@@ -21,7 +21,8 @@
   var productCode;
   var asMalfuncResnId;
   var matchMatDefCode = [];
-  var installAccTypeId = 583;
+  /* var installAccTypeId = 583; */
+  var installAccTypeId = 580;
 
   var ddlFilterObj = {};
 
@@ -2733,7 +2734,8 @@ function f_multiCombo(){
          </tr>
          <tr>
           	<th scope="row"><spring:message code="service.title.installation.accessories" />
-          	<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+          	<!-- <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th> -->
+          	<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
     		<td colspan="3">
     		<select class="w100p" id="installAcc" name="installAcc">
     		</select>
