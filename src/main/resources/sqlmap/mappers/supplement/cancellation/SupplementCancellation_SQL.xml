@@ -14,6 +14,7 @@
                G.CODE_NAME AS SUP_REF_STG,
                UPPER(D.NAME) AS SUP_CUST_NM,
                D.NRIC AS SUP_CUST_NRIC,
+               B.SUP_RTN_ID AS SUP_RTN_ID,
                B.SUP_RTN_NO AS SUP_RTN_NO,
                B.SUP_RTN_STAT AS SUP_RTN_STAT_CDE,
                H.NAME AS SUP_RTN_STAT,
@@ -286,9 +287,6 @@
                                         SUP_RTN_STAT,
                                         SUP_RTN_MOV_ID,
                                         SUP_REQ_CANC_ID,
-                                        SUP_RTN_GDS,
-                                        SUP_RTN_BAD_GDS,
-                                        SUP_RTN_MIA_GDS,
                                         SUP_RTN_RFND,
                                         DEL_FLG,
                                         CRT_USR_ID,
@@ -302,9 +300,6 @@
                   , 1
                   , null
                   , #{canReqId}
-                  , 0
-                  , 0
-                  , 0
                   , 'N'
                   , 'N'
                   , #{userId}
@@ -312,7 +307,33 @@
                   , #{userId}
                   , SYSDATE
         )
-    </insert>
+  </insert>
+
+  <insert id="insertGoodsReturnSub" parameterType="Map">
+    INSERT INTO SUP0009D ( SUP_RTN_ITM_ID,
+                                        SUP_RTN_ID,
+                                        SUP_STK_ID,
+                                        SUP_RTN_GDS,
+                                        SUP_RTN_BAD_GDS,
+                                        SUP_RTN_MISS_GDS,
+                                        DEL_FLG,
+                                        CRT_USR_ID,
+                                        CRT_DT,
+                                        UPD_USR_ID,
+                                        UPD_DT
+    ) VALUES ( #{rtnItmId}
+                  , #{supRtnId}
+                  , #{itemCode}
+                  , #{ttlGoodCond}
+                  , #{ttlDefectCond}
+                  , #{ttlMiaCond}
+                  , 'N'
+                  , #{userId}
+                  , SYSDATE
+                  , #{userId}
+                  , SYSDATE
+        )
+  </insert>
 
   <update id="rollbackRefStgStatus" parameterType="Map">
     UPDATE SUP0007M SET SUP_REQ_CANC_RTN_TRKNO = '',
@@ -364,10 +385,7 @@
   </select>
 
   <update id="updateReturnGoodsQty" parameterType="Map">
-    UPDATE SUP0008M SET SUP_RTN_GDS = #{rtnGoodCondQty}
-                                   , SUP_RTN_BAD_GDS = #{rtnDefectCondQty}
-                                   , SUP_RTN_MIA_GDS = #{rtnMissCond}
-                                   , SUP_RTN_STAT = 4
+    UPDATE SUP0008M SET SUP_RTN_STAT = 4
                                    , UPD_USR_ID = #{userId}
                                    , UPD_DT = SYSDATE
     WHERE SUP_REF_ID = #{supRefId}
@@ -385,10 +403,7 @@
   </update>
 
   <update id="rollbackReturnGoodsQty" parameterType="Map">
-    UPDATE SUP0008M SET SUP_RTN_GDS = 0
-                                   , SUP_RTN_BAD_GDS = 0
-                                   , SUP_RTN_MIA_GDS = 0
-                                   , SUP_RTN_STAT = 1
+    UPDATE SUP0008M SET SUP_RTN_STAT = 1
                                    , UPD_USR_ID = #{userId}
                                    , UPD_DT = SYSDATE
     WHERE SUP_REF_ID = #{supRefId}
@@ -407,6 +422,23 @@
 
   <select id="SP_STO_PRE_SUPP" parameterType="Map"  statementType="CALLABLE" >
     { CALL SP_STO_PRC_SUPP (#{P_STO},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} ) }
+  </select>
+
+  <select id="getSupplementRtnItmDetailList"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_STK_ID AS ITEM_CODE,
+               Extent2.STK_DESC AS ITEM_DESC,
+               Extent1.SUP_ITM_QTY AS QUANTITY,
+               0 AS TTL_GOOD_COND,
+               0 AS TTL_DEFECT_COND,
+               0 AS TTL_MIA_COND
+    FROM SUP0002D Extent1
+    JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.SUP_STK_ID
+    JOIN SUP0001M Extent3 ON Extent1.SUP_REF_ID = Extent3.SUP_REF_ID
+    WHERE Extent3.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="getRtnItmSeq" resultType="java.lang.Integer">
+    SELECT SUP0009D_SUP_RTN_ITM_SEQ_ID.NEXTVAL FROM DUAL
   </select>
 
 </mapper>
