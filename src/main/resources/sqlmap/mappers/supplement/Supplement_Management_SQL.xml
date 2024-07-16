@@ -460,6 +460,26 @@
     ORDER BY A.SUP_DEL_DT DESC
   </select>
 
+  <select id="getRtnItmRcdLst" parameterType="Map" resultType="egovMap">
+    SELECT D.STK_ID AS ITEM_CODE,
+               D.STK_DESC AS ITEM_DESC,
+               F.SUP_ITM_QTY AS QUANTITY,
+               C.SUP_RTN_GDS AS TTL_GOOD_COND,
+               C.SUP_RTN_BAD_GDS AS TTL_DEFECT_COND,
+               C.SUP_RTN_MISS_GDS AS TTL_MIA_COND
+    FROM SUP0007M A
+    JOIN SUP0008M B ON A.SUP_REQ_CANC_ID = B.SUP_REQ_CANC_ID AND B.DEL_FLG = 'N'
+    JOIN SUP0009D C ON B.SUP_RTN_ID = C.SUP_RTN_ID AND C.DEL_FLG = 'N'
+    JOIN SYS0026M D ON C.SUP_STK_ID = D.STK_ID
+    JOIN SUP0001M E ON A.SUP_REF_ID = E.SUP_REF_ID
+    JOIN SUP0002D F ON E.SUP_REF_ID = F.SUP_REF_ID AND F.SUP_STK_ID = C.SUP_STK_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
+        <if test="rtnTrkNo != null and rtnTrkNo != '' ">
+          AND A.SUP_REQ_CANC_RTN_TRKNO = #{rtnTrkNo}
+        </if>
+  </select>
+
   <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
     SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
                Extent1.SUP_REF_NO AS SUP_REF_NO,
