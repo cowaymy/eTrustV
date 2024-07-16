@@ -928,7 +928,7 @@
     <aside class="title_line">
     </aside>
     <article class="grid_wrap">
-      <div id="sub_grid_wrap" style="width: 100%; height: 300px; margin: 0 auto;"></div>
+      <div id="sub_grid_wrap" style="width: 100%; height: 340px; margin: 0 auto;"></div>
       <div id="excel_list_grid_wrap" style="display: none;"></div>
     </article>
 
