@@ -51,4 +51,10 @@ public interface SupplementCancellationMapper {
 
   int rollbackMasterSupplementStat( Map<String, Object> params );
 
+  int getRtnItmSeq();
+
+  List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params );
+
+  void insertGoodsReturnSub( Map<String, Object> params );
+
 }

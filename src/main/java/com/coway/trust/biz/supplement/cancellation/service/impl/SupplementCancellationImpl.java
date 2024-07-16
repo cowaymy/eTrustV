@@ -8,9 +8,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.app.VelocityEngine;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +28,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.cmmn.model.EmailVO;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.supplement.cancellation.service.SupplementCancellationService;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 @Service("supplementCancellationService")
 public class SupplementCancellationImpl
@@ -253,13 +242,25 @@ public class SupplementCancellationImpl
     return supplementCancellationMapper.selectOrderStockQty( params );
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> updateReturnGoodsQty( Map<String, Object> params )
     throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     Map<String, Object> emailMap = new HashMap<>();
     try {
+      List<Object> supplementItemGrid = (List<Object>) params.get( "rtnItmList" );
       supplementCancellationMapper.updateReturnGoodsQty( params );
+
+      for ( int idx = 0; idx < supplementItemGrid.size(); idx++ ) {
+        Map<String, Object> itemMap = (Map<String, Object>) supplementItemGrid.get( idx );
+        int rtnItmSeq = supplementCancellationMapper.getRtnItmSeq();
+        itemMap.put( "cancId", CommonUtils.nvl(params.get( "canReqId" )) );
+        itemMap.put( "supRtnId", CommonUtils.nvl(params.get( "supRtnId" )) );
+        itemMap.put( "rtnItmId", rtnItmSeq);
+        itemMap.put( "userId", CommonUtils.nvl(params.get( "userId" )) );
+        supplementCancellationMapper.insertGoodsReturnSub( itemMap );
+      }
 
       // LOGISTIC CALL HERE
 
@@ -278,5 +279,11 @@ public class SupplementCancellationImpl
       LOGGER.error( "Error updating parcel tracking number...", e );
     }
     return rtnMap;
+  }
+
+  @Override
+  public List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params )
+    throws Exception {
+    return supplementCancellationMapper.getSupplementRtnItmDetailList( params );
   }
 }

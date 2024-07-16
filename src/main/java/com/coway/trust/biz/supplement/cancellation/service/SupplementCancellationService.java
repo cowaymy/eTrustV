@@ -31,4 +31,6 @@ public interface SupplementCancellationService {
 
   Map<String, Object> updateReturnGoodsQty( Map<String, Object> params ) throws Exception;
 
+  List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params ) throws Exception;
+
 }
