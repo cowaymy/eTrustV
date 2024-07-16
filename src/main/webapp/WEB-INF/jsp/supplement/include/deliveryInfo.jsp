@@ -1,10 +1,12 @@
 <script type="text/javascript">
   var deliveryInfoGridID;
   var canDeliveryInfoGridID;
+  var rtnDeliveryInfoGridID
 
   $(document).ready(function() {
     createDelDetailGrid();
     createCancDelDetailGrid();
+    createRtnItmDetailGrid();
 
     fn_maskingData('_addr1', '${orderInfo.addressLine1}');
     fn_maskingData('_addr2', '${orderInfo.addressLine2}');
@@ -104,6 +106,61 @@
     canDeliveryInfoGridID = GridCommon.createAUIGrid("canc_delivery_rec_grid_wrap", canColumnLayout, "", canDelRcdGridPros);
   }
 
+
+  function createRtnItmDetailGrid() {
+      var columnLayout = [ {
+          dataField : "itemCode",
+          headerText : "<spring:message code='log.head.itemcode'/>",
+          width : '10%',
+          editable : false,
+          visible : false
+      }, {
+          dataField : "itemDesc",
+          headerText : "<spring:message code='log.head.itemdescription'/>",
+          width : '30%',
+          editable : false
+      }, {
+          dataField : "quantity",
+          headerText : "<spring:message code='pay.head.quantity'/>",
+          width : '10%',
+          editable : false
+      }, {
+          dataField : "ttlGoodCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnGoodCondQty'/>",
+          width : '25%',
+          editable : false,
+          dataType : "numeric"
+      }, {
+          dataField : "ttlDefectCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>",
+          width : '25%',
+          editable : false,
+          dataType : "numeric"
+      }, {
+          dataField : "ttlMiaCond",
+          headerText : "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>",
+          width : '25%',
+          editable : false,
+          dataType : "numeric"
+      } ];
+
+      var rtnItmGridPros = {
+          showFooter : false,
+          usePaging : true,
+          pageRowCount : 10,
+          fixedColumnCount : 1,
+          showStateColumn : true,
+          displayTreeOpen : false,
+          headerHeight : 30,
+          useGroupingPanel : false,
+          skipReadonlyColumns : true,
+          wrapSelectionMove : true,
+          showRowNumColumn : true
+      };
+
+      rtnDeliveryInfoGridID = GridCommon.createAUIGrid("item_delivery_rec_grid_wrap", columnLayout, "", rtnItmGridPros);
+  }
+
   var supRefId = '${orderInfo.supRefId}';
   var trkNo = '${orderInfo.parcelTrackNo}';
   var rtnTrkNo = '${cancellationDelInfo.rtnTckNo}';
@@ -122,6 +179,10 @@
 
   Common.ajax("GET", "/supplement/getDelRcdLst", rtnParam, function(result) {
     AUIGrid.setGridData(canDeliveryInfoGridID, result);
+  })
+
+  Common.ajax("GET", "/supplement/getRtnItmRcdLst", rtnParam, function(result) {
+    AUIGrid.setGridData(rtnDeliveryInfoGridID, result);
   })
 </script>
 
@@ -300,14 +361,14 @@
           <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
           <td>${cancellationDelInfo.rtnDt}</td>
         </tr>
-        <tr>
+        <!-- <tr>
           <th scope="row"><spring:message code="supplement.text.supplementTtlRtnGoodCondQty" /></th>
           <td>${cancellationDelInfo.rtnGds}</td>
           <th scope="row"><spring:message code="supplement.text.supplementTtlRtnDefectCondQty" /></th>
           <td>${cancellationDelInfo.rtnBadGds}</td>
           <th scope="row"><spring:message code="supplement.text.supplementTtlRtnMissCondQty" /></th>
           <td>${cancellationDelInfo.rtnMiaGds}</td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
     <br/>
@@ -315,6 +376,13 @@
       <article class="grid_wrap">
         <div id="canc_delivery_rec_grid_wrap"
           style="width: 100%; height: 350px; margin: 0 auto;"></div>
+      </article>
+    </article>
+    <br/>
+    <article class="">
+      <article class="grid_wrap">
+        <div id="item_delivery_rec_grid_wrap"
+          style="width: 100%; height: 200px; margin: 0 auto;"></div>
       </article>
     </article>
   </article>
