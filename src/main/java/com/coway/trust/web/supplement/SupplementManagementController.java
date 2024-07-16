@@ -123,6 +123,12 @@ public class SupplementManagementController {
     return ResponseEntity.ok(detailList);
   }
 
+  @RequestMapping(value = "/getRtnItmRcdLst")
+  public ResponseEntity<List<EgovMap>> getRtnItmRcdLst(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> detailList = null;
+    detailList = supplementUpdateService.getRtnItmRcdLst(params);
+    return ResponseEntity.ok(detailList);
+  }
 
   @RequestMapping(value = "/supplementTrackNoPop.do")
   public String supplementTrackNoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
