@@ -25,6 +25,8 @@ public interface SupplementUpdateMapper {
 
   List<EgovMap> getDelRcdLst( Map<String, Object> params );
 
+  List<EgovMap> getRtnItmRcdLst( Map<String, Object> params );
+
   EgovMap selectOrderBasicInfo( Map<String, Object> params );
 
   EgovMap selectCancDelInfo( Map<String, Object> params );

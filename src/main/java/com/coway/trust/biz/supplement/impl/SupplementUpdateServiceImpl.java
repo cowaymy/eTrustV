@@ -115,6 +115,12 @@ public class SupplementUpdateServiceImpl
   }
 
   @Override
+  public List<EgovMap> getRtnItmRcdLst( Map<String, Object> params )
+    throws Exception {
+    return supplementUpdateMapper.getRtnItmRcdLst( params );
+  }
+
+  @Override
   public EgovMap selectOrderBasicInfo( Map<String, Object> params )
     throws Exception {
     return supplementUpdateMapper.selectOrderBasicInfo( params );

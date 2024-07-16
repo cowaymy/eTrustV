@@ -25,6 +25,8 @@ public interface SupplementUpdateService {
 
   List<EgovMap> getDelRcdLst( Map<String, Object> params ) throws Exception;
 
+  List<EgovMap> getRtnItmRcdLst( Map<String, Object> params ) throws Exception;
+
   List<EgovMap> selectPosJsonList( Map<String, Object> params ) throws Exception;
 
   List<EgovMap> checkDuplicatedTrackNo( Map<String, Object> params );
