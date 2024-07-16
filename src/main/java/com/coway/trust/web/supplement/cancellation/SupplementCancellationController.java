@@ -213,6 +213,7 @@ public class SupplementCancellationController {
     model.addAttribute("cancReqBy", params.get( "cancReqBy" ));
     model.addAttribute("supRtnStat", params.get( "supRtnStat" ));
     model.addAttribute("canReqId", params.get( "canReqId" ));
+    model.addAttribute("supRtnId", params.get( "supRtnId" ));
     model.addAttribute("ttlGoodsQty", orderStockMap);
 
     model.addAttribute("orderInfo", orderInfoMap);
@@ -245,5 +246,12 @@ public class SupplementCancellationController {
       message.setMessage(msg);
     }
     return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/getSupplementRtnItmDetailList")
+  public ResponseEntity<List<EgovMap>> getSupplementRtnItmDetailList(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> detailList = null;
+    detailList = supplementCancellationService.getSupplementRtnItmDetailList(params);
+    return ResponseEntity.ok(detailList);
   }
 }
