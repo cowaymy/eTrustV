@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import org.codehaus.jettison.json.JSONException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SupplementUpdateService {
@@ -58,4 +61,7 @@ public interface SupplementUpdateService {
   List<EgovMap> getOderOutsInfo( Map<String, Object> params );
 
   List<EgovMap> getCustOrdDelInfo( Map<String, Object> params );
+
+  Map<String, Object> updateDelStageInfo( Map<String, Object> params ) throws JsonProcessingException, IOException;
+
 }
