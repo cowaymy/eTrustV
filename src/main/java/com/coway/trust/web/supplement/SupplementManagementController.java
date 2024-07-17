@@ -325,16 +325,32 @@ public class SupplementManagementController {
     return ResponseEntity.ok(custOrdDelInfo);
   }
 
+  @SuppressWarnings("unchecked")
   @RequestMapping(value = "/updateDelStageInfo.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> updateDelStageInfo(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
     ReturnMessage message = new ReturnMessage();
+    String msg = "";
+
     // SET USER ID
     params.put("userId", sessionVO.getUserId());
 
-    EgovMap rtnData = supplementUpdateService.updateDelStageInfo(params);
-    message.setCode( "000" );
-    //message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
-
+    try {
+      Map<String, Object> returnMap = supplementUpdateService.updateDelStageInfo(params);
+      if ("000".equals(returnMap.get("logError"))) {
+        msg += "Parcel tracking number update successfully.";
+        message.setCode(AppConstants.SUCCESS);
+      } else {
+        msg += "Parcel tracking number failed to update. <br />";
+        msg += "Errorlogs : " + returnMap.get("message") + "<br />";
+        message.setCode(AppConstants.FAIL);
+      }
+      message.setMessage(msg);
+    } catch (Exception e) {
+      LOGGER.error("Error during update Parcel Tracking Number.", e);
+      msg += "An unexpected error occurred.<br />";
+      message.setCode(AppConstants.FAIL);
+      message.setMessage(msg);
+    }
     return ResponseEntity.ok(message);
   }
 
