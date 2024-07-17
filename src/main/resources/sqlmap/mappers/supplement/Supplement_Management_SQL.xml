@@ -814,43 +814,52 @@
   </select>
 
   <select id="getCustOrdDelInfo" parameterType="Map" resultType="egovMap">
-    SELECT A.SUP_REF_ID AS SUP_REF_ID,
-               A.SUP_REF_NO AS SUP_REF_NO,
-               TO_CHAR(A.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DT,
-               A.SUP_REF_PCL_TRKNO AS SUP_REF_PCL_TRKNO,
-               H.MEM_CODE AS SAL_PERS_CDE,
-               H.NAME AS SAL_PERS_NM,
-               I.CODE AS POST_BR,
-               UPPER(B.NAME) AS CUST_NM,
-               UPPER(E.NAME) AS CNTC_NM,
-               E.TEL_M1 AS CNTC_MB,
-               E.TEL_O AS CNTC_OFF,
-               E.TEL_R AS CNTC_HM,
-               E.EMAIL AS CNTC_EMAIL,
-               UPPER(C.ADDR_DTL) AS DEL_ADDR1,
-               UPPER(C.STREET) AS DEL_ADDR2,
-               D.POSTCODE AS DEL_POSTCDE,
-               UPPER(D.CITY) AS DEL_CITY,
-               UPPER(D.STATE) AS DEL_STATE,
-               UPPER(D.COUNTRY) AS DEL_CNTY,
-               UPPER(F.ADDR_DTL) AS BILL_ADDR1,
-               UPPER(F.STREET) AS BILL_ADDR2,
-               G.POSTCODE AS BILL_POSTCDE,
-               UPPER(G.CITY) AS BILL_CITY,
-               UPPER(G.STATE) AS BILL_STATE,
-               UPPER(G.COUNTRY) AS BILL_CNTY
+    SELECT '5395801' AS PICK_UP_ACC_NO,
+               A.SUP_REF_NO AS SHIPM_ORD_ID,
+               'PDO' AS SHIPM_SERV_CDE,
+               UPPER(B.NAME) AS CONGS_NM,
+               UPPER(C.ADDR_DTL) AS ADDRS_LN1,
+               UPPER(C.STREET) AS ADDRS_LN2,
+               UPPER(D.CITY) AS CITY,
+               UPPER(D.STATE) AS STATE,
+               D.POSTCODE AS POST_CDE,
+               D.ISO AS COUNTRY,
+               B.TEL_M1 AS PHONE_NO,
+               B.EMAIL AS EMAIL_ADDR,
+               '100' AS SHIPM_WEIGHT,
+               'MYR' AS CUR_CDE,
+               A.SUP_REF_NO AS SHIPM_DESC,
+               E.ITM_LIST AS REMARKS
     FROM SUP0001M A
-    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
-    JOIN SAL0023D C ON A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
+    JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
+    JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
     JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
-    JOIN SAL0027D E ON A.CUST_CNTC_ID = E.CUST_CNTC_ID
-    JOIN SAL0023D F ON A.CUST_BILL_ADDR_ID = F.CUST_ADD_ID
-    JOIN SYS0064M G ON F.AREA_ID = G.AREA_ID
-    JOIN ORG0001D H ON A.MEM_ID = H.MEM_ID
-    JOIN SYS0005M I ON A.MEM_BRNCH_ID = I.BRNCH_ID
+    JOIN (SELECT A.SUP_REF_ID,
+                        LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY, CHR(10)) WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+            FROM SUP0001M A
+            JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
+            LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
+            WHERE A.DEL_FLG = 'N'
+                AND A.SUP_REF_STG = '3'
+                AND A.SUP_REF_STUS = '1'
+            GROUP BY A.SUP_REF_ID) E ON A.SUP_REF_ID = E.SUP_REF_ID
     WHERE A.DEL_FLG = 'N'
         AND A.SUP_REF_STG = '3'
         AND A.SUP_REF_STUS = '1'
+  </select>
+
+
+  <select id="getOrdInfo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               B.NAME AS CUST_NAME
+    FROM SUP0001M A
+    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+    WHERE A.DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND A.SUP_REF_NO = #{ordNo}
+    </if>
   </select>
 
 </mapper>
