@@ -173,15 +173,20 @@
         Common.alert("<spring:message code='sys.msg.notexist' arguments='* <b>" + $("#entry_supRefNo").val() + "</b>' htmlEscape='false'/>");
         return;
       } else {
-        if (result[0].supRefStusId != '4') {
-          Common.alert("<spring:message code='supplement.alert.msg.selTagOrdNotComp' />");
+        if (result.length > 0) {
+          /*if (result[0].supRefStusId != '4') {
+            Common.alert("<spring:message code='supplement.alert.msg.selTagOrdNotComp' />");
+            return;
+          }*/
+          Common.popupDiv("/supplement/supplementViewBasicPop.do", {
+            supRefNo : $("#entry_supRefNo").val()
+          }, fn_formSetting(), true, '_insDiv2');
+
+          $("#_systemClose").click();
+        } else {
+          Common.alert("<spring:message code='supplement.alert.msg.ordNotFound' />");
           return;
         }
-        Common.popupDiv("/supplement/supplementViewBasicPop.do", {
-          supRefNo : $("#entry_supRefNo").val()
-        }, fn_formSetting(), true, '_insDiv2');
-
-        $("#_systemClose").click();
       }
     });
   }
