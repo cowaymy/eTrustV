@@ -74,7 +74,7 @@ public class GovEInvcVO {
 	        tin.setId(tinId);
 	        partyIdentificationList.add(tin);
 	        brnId.setSchemeID("BRN");
-	        brnId.setValue(mapValue.get("accsupPartyBrn").toString());
+	        brnId.setValue(mapValue.get("accsupPartyBrn")==null?"N/A":mapValue.get("accsupPartyBrn").toString());
 	        brn.setId(brnId);
 	        partyIdentificationList.add(brn);
 	        sstId.setSchemeID("SST");
@@ -146,7 +146,7 @@ public class GovEInvcVO {
 	        PostalAddress custPostalAddress = new PostalAddress();
 	        List<AddressLine> custAddressLineList = new ArrayList<>();
 	        AddressLine custAddr1 = new AddressLine();
-	        custAddr1.setLine(mapValue.get("acccustPostalAddr1").toString());
+	        custAddr1.setLine(mapValue.get("acccustPartyTtx")==null?"N/A":mapValue.get("acccustPostalAddr1").toString());
 	        custAddressLineList.add(custAddr1);
 	        if(mapValue.get("acccustPostalAddr2") != null){
 	        	AddressLine custAddr2 = new AddressLine();
@@ -159,14 +159,14 @@ public class GovEInvcVO {
 		        custAddressLineList.add(custAddr3);
 	        }
 	        custPostalAddress.setAddressLine(custAddressLineList);
-	        custPostalAddress.setCityName(mapValue.get("acccustPostalCity").toString());
+	        custPostalAddress.setCityName(mapValue.get("acccustPostalCity")==null?"N/A":mapValue.get("acccustPostalCity").toString());
 	        Country custCountry = new Country();
 	        IdentificationCode custIdentificationCode = new IdentificationCode();
 	        custIdentificationCode.setCountryCode(mapValue.get("acccustPostalCtry").toString());
 	        custCountry.setIdentificationCode(custIdentificationCode);
 	        custPostalAddress.setCountry(custCountry);
 	        custPostalAddress.setCountrySubentityCode(mapValue.get("acccustPostalCtrySubcode").toString());
-	        custPostalAddress.setPostalZone(mapValue.get("acccustPostalZone").toString());
+	        custPostalAddress.setPostalZone(mapValue.get("acccustPostalZone")==null?"N/A":mapValue.get("acccustPostalZone").toString());
 	        customerParty.setPostalAddress(custPostalAddress);
 	        AccountingCustomerParty.setParty(customerParty);
 
@@ -192,7 +192,7 @@ public class GovEInvcVO {
 	        taxSub_taxSub_taxAmount.setCurrencyID("MYR");
 	        taxSub_taxSub_taxAmount.setValue(mapValue.get("taxtotSubSubTaxVal")==null?"0.00":mapValue.get("taxtotSubSubTaxVal").toString());
 	        TaxCatObject taxSub_taxSub_taxCat = new TaxCatObject();
-	        taxSub_taxSub_taxCat.setId(mapValue.get("taxtotTaxAmt")==null?"01":mapValue.get("taxtotTaxAmt")=="0.00"?"01":"06");
+	        taxSub_taxSub_taxCat.setId(mapValue.get("taxtotTaxAmt")==null?"06":"02");
 	        taxSubtotalObj_TaxSubtotal.setTaxAmount(taxSub_taxSub_taxAmount);
 	        taxSubtotalObj_TaxSubtotal.setTaxCategory(taxSub_taxSub_taxCat);
 	        taxSubtotalObj_TaxSubtotalList.add(taxSubtotalObj_TaxSubtotal);

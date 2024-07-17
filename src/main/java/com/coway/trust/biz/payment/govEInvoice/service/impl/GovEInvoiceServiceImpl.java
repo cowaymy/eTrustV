@@ -165,48 +165,53 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         String formattedDate = dateFormat.format(currentDate);
 
         for(int i =0; i < eInvcClaimList.size(); i ++){
-            Map<String, Object> govEinvcMain = new HashMap<String, Object>();
-            GovEInvcVO govEInvc = new GovEInvcVO();
-            govEinvcMain = eInvcClaimList.get(i);
-            govEinvcMain.put("issueDate", formattedDate);
-            govEinvcMain.put("issueTime", "00:00:00");
-            govEInvc.Invoice(govEinvcMain);
+        	try{
+                Map<String, Object> govEinvcMain = new HashMap<String, Object>();
+                GovEInvcVO govEInvc = new GovEInvcVO();
+                govEinvcMain = eInvcClaimList.get(i);
+                govEinvcMain.put("issueDate", formattedDate);
+                govEinvcMain.put("issueTime", "00:00:00");
+                govEInvc.Invoice(govEinvcMain);
 
-            List<GovEInvcLineVO> invoiceLine = new ArrayList<>();
-            List<Map<String, Object>> eInvcClaimLineList = new ArrayList<>();
-            Map<String, Object> lineParams = new HashMap<String, Object>();
-            lineParams.put("invId", eInvcClaimList.get(i).get("invId").toString());
-            lineParams.put("batchId", eInvcClaimList.get(i).get("batchId").toString());
-            eInvcClaimLineList = govEInvoiceMapper.selectEInvLineSendList(lineParams);
-            for(int j=0; j < eInvcClaimLineList.size() ;j++){
-                GovEInvcLineVO govEInvcLine = new GovEInvcLineVO();
-                govEInvcLine.InvoiceLine(eInvcClaimLineList.get(j));
-                invoiceLine.add(govEInvcLine);
+                List<GovEInvcLineVO> invoiceLine = new ArrayList<>();
+                List<Map<String, Object>> eInvcClaimLineList = new ArrayList<>();
+                Map<String, Object> lineParams = new HashMap<String, Object>();
+                lineParams.put("invId", eInvcClaimList.get(i).get("invId").toString());
+                lineParams.put("batchId", eInvcClaimList.get(i).get("batchId").toString());
+                eInvcClaimLineList = govEInvoiceMapper.selectEInvLineSendList(lineParams);
+                for(int j=0; j < eInvcClaimLineList.size() ;j++){
+                    GovEInvcLineVO govEInvcLine = new GovEInvcLineVO();
+                    govEInvcLine.InvoiceLine(eInvcClaimLineList.get(j));
+                    invoiceLine.add(govEInvcLine);
+                }
+                govEInvc.setInvoiceLine(invoiceLine);
+
+                String json = "";
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+                    json = objectMapper.writeValueAsString(govEInvc);
+                    System.out.println(json);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Map<String, Object> jsonParams = new HashMap<String, Object>();
+                jsonParams.put("jsonString", json);
+                jsonParams.put("invId", eInvcClaimList.get(i).get("invId").toString());
+                jsonParams.put("batchId", eInvcClaimList.get(i).get("batchId").toString());
+                jsonParams.put("userId", 349);
+                jsonParams.put("status", 104);
+                jsonParams.put("issueDt", formattedDate);
+                updEInvJsonString(jsonParams);
+
+            }catch (Exception e) {
+                System.out.println(e.getMessage()); //catch to not rollback for previously all transactions
             }
-            govEInvc.setInvoiceLine(invoiceLine);
-
-            String json = "";
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
-                json = objectMapper.writeValueAsString(govEInvc);
-                System.out.println(json);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Map<String, Object> jsonParams = new HashMap<String, Object>();
-            jsonParams.put("jsonString", json);
-            jsonParams.put("invId", eInvcClaimList.get(i).get("invId").toString());
-            jsonParams.put("batchId", eInvcClaimList.get(i).get("batchId").toString());
-            jsonParams.put("userId", 349);
-            jsonParams.put("status", 104);
-            jsonParams.put("issueDt", formattedDate);
-            updEInvJsonString(jsonParams);
         }
 
 //        int result = govEInvoiceMapper.saveEInvConfirmBatch(params);
-        resultValue.put("status", "1");
+//        resultValue.put("status", "1");
         return resultValue;
     }
 

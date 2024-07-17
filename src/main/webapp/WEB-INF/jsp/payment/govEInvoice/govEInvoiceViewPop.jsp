@@ -90,7 +90,7 @@ function fn_confirmBatch(){
 	if(validRequiredField() == true){
 	    Common.confirm("<spring:message code='pay.alert.confPayBatch'/>",function (){
 	        var batchId = $("#hiddenBatchId").val();
-	        Common.ajax("GET","/payment/einv/govEInvoicePrepare.do", {"batchId" : batchId}, function(result){
+	        Common.ajax("GET","/payment/einv/saveEInvBatch.do", {"batchId" : batchId}, function(result){
 	            console.log(result);
 	            /* $('#btnConf').hide();
 	            $('#btnDeactivate').hide(); */
