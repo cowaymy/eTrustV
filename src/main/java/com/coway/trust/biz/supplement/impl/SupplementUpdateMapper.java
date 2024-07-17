@@ -64,4 +64,7 @@ public interface SupplementUpdateMapper {
   List<EgovMap> getOderOutsInfo( Map<String, Object> params );
 
   List<EgovMap> getCustOrdDelInfo( Map<String, Object> params );
+
+  Map<String, Object> getOrdInfo( Map<String, Object> param );
+
 }
