@@ -142,29 +142,29 @@
         $("#addInstallForm #failDeptChk").hide();
         $("#addInstallForm #failDeptChkDesc").hide();
 
+        console.log("check stkCtgryId : " + "${orderInfo.stkCtgryId}")
+        if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
+            $("#addInstallForm #m28").show();
+            $("#addInstallForm #m29").hide();
+            $("#ntuCom").attr("disabled", false);
+            $("#ntuFail").attr("disabled", true);
+          }else{
+        	  $("#addInstallForm #m28").hide();
+              $("#addInstallForm #m29").hide();
+              $("#ntuCom").attr("disabled", true);
+              $("#ntuFail").attr("disabled", true);
+          }
+
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #grid_wrap_instChk_view").hide();
           $("#addInstallForm #instChklstCheckBox").hide();
           $("#addInstallForm #instChklstDesc").hide();
-          $("#addInstallForm #m28").hide();
-          $("#addInstallForm #m29").hide();
-          $("#ntuCom").attr("disabled", true);
-          $("#ntuFail").attr("disabled", true);
-        } else if("${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "54"){ // WP & POE
-          $("#addInstallForm #m28").show();
-          $("#addInstallForm #m29").hide();
-          $("#ntuCom").attr("disabled", false);
-          $("#ntuFail").attr("disabled", true);
         } else {
           $("#addInstallForm #grid_wrap_instChk_view").show();
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
-          $("#addInstallForm #m28").hide();
-          $("#addInstallForm #m29").hide();
-          $("#ntuCom").attr("disabled", true);
-          $("#ntuFail").attr("disabled", true);
-        }
       }
+     }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
       $("#checkCommission").prop("checked", true);
@@ -1805,7 +1805,7 @@
         <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-        <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+<%--         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
         <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
