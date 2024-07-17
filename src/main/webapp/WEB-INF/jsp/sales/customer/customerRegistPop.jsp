@@ -302,7 +302,7 @@
     	if($("#_cmbTypeId_").val() == '965'){
             //CELESTE - 20240510 - LHDN E-INVOICE [S]
 
-            if($("#_cmbCorpTypeId_ :selected").val() != '1151' ){
+            if($("#_cmbCorpTypeId_ :selected").val() != '1151' && $("#_cmbCorpTypeId_ :selected").val() != '7614' ){
                 $("#tinTitle").replaceWith("<th scope='row' id='tinTitle'><spring:message code='sal.title.text.tin' /><span class='must'>*</span></th>");
                 $("#_sstRgistNo_").removeAttr("disabled");
                 $("#_sstRgistNo_").removeClass("disabled");
@@ -802,7 +802,7 @@
         }
 
         if($("#_cmbTypeId_").val() == '965'){
-        	if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151"){
+        	if($("#_cmbCorpTypeId_").val() != "1333" && $("#_cmbCorpTypeId_").val() != "1151" && $("#_cmbCorpTypeId_").val() != "7614"){
                 if($("#_tin_").val() == "" || $("#_tin_").val() == null){
                     Common.alert("Please enter Company TIN to proceed.");
                     return false;

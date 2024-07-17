@@ -156,12 +156,13 @@ $(document).ready(function(){
                        Common.alert('Invalid format for NRIC/Company No.');
                        return false;
                    }
+
+                   if($("#basicNric").val().length != 12){
+                       Common.alert('Only allow 12 digits for NRIC/Company No.');
+                       return false;
+                   }
                }
 
-               if($("#basicNric").val().length != 12){
-                   Common.alert('Only allow 12 digits for NRIC/Company No.');
-                   return false;
-               }
 
                 /* if ( genderCode == "F") {
                    if (lastDigit % 2 != 0) {
@@ -207,7 +208,7 @@ $(document).ready(function(){
                  }
             }
 
-            if($("#basicCmbCorpTypeId").val() != '1151'){
+            if($("#basicCmbCorpTypeId").val() != '1151' && $("#basicCmbCorpTypeId").val() != '7614'){
             	var regex1 = new RegExp("^[0-9]+$");
                 var str1 = $("#basicNric").val();
                 if (regex1.test(str1)) {
