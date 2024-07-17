@@ -229,12 +229,13 @@ $(document).ready(function(){
             }
 
             // Company TIN
-            if($("#basicCmbCorpTypeId").val() != "1333" && $("#basicCmbCorpTypeId").val() != "1151"){
+            // 20240717 - Wind Request to turn off temporarily. Will open after E-Invoice stable
+            /* if($("#basicCmbCorpTypeId").val() != "1333" && $("#basicCmbCorpTypeId").val() != "1151"){
             	 if($("#basicCustTin").val() == "" || $("#basicCustTin").val() == null){
                      Common.alert("Please enter Company TIN to proceed.");
                      return;
                   }
-            }
+            } */
 
             // SST No
             if($("#basicSstRegNo").val() != ""){
@@ -260,7 +261,7 @@ $(document).ready(function(){
             }
         }
 
-        if($("#_tin_").val() != ""){
+        if($("#basicCustTin").val() != ""){
             if($("#basicCustTin").val().length < 11  || $("#basicCustTin").val().length > 14){
                 Common.alert("Please make sure TIN No is within 11 to 14 characters. ");
                 return false;
