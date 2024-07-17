@@ -5,60 +5,13 @@
 
 var orderGridID;
 
-$(document).ready(function() {
-  createAUIGrid();
-  fn_getCustDelInfoListAjax();
-
-  /*$("#_orderSearchBtn").click(function() {
-    fn_getSearchResultJsonListAjax();
-  });
-
-  $("#_orderSelectBtn").click(function() {
-     var rowIdx = AUIGrid.getSelectedIndex(orderGridID)[0];
-
-     if(rowIdx > -1) {
-       var ordNo = AUIGrid.getCellValue(orderGridID, rowIdx, "supRefNo");
-
-       $("#_closeOrdPop").click();
-       $("#_salesOrderNo").val(ordNo);
-       $("#_confirm").click();
-
-       fn_callbackOrdSearchFunciton(ordNo);
-     }
-  });*/
-
-  /* var pickerOpts = {
-    changeMonth:true,
-    changeYear:true,
-    dateFormat: "dd/mm/yy"
-  };
-
-  $(".j_date").datepicker(pickerOpts);
-
-  var monthOptions = {
-    pattern: 'mm/yyyy',
-    selectedYear: 2017,
-    startYear: 2007,
-    finalYear: 2027
-  };
-
-  $(".j_date2").monthpicker(monthOptions);
-
-   AUIGrid.bind(orderGridID, "cellClick", function(event) {
-     AUIGrid.clearGridData(supItmDetailGridID);
-
-     var detailParam = {
-       supRefId : event.item.supRefId
-     };
-
-     Common.ajax("GET", "/supplement/getSupplementDetailList", detailParam, function(result) {
-       AUIGrid.setGridData(supItmDetailGridID, result);
-       //AUIGrid.setGridData(excelListGridID, result);
-     });*/
+  $(document).ready(function() {
+    createAUIGrid();
+    fn_getCustDelInfoListAjax();
   });
 
   function createAUIGrid(){
-    var orderColumnLayout = [ { dataField : "supRefId",
+    /*var orderColumnLayout = [ { dataField : "supRefId",
                                              headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
                                              visible : false
                                            }, {
@@ -158,7 +111,177 @@ $(document).ready(function() {
                                               headerText : '<spring:message code="sal.text.country" />',
                                               width : '15%'
                                           }
-    ];
+    ];*/
+
+    var orderColumnLayout = [ {
+    	                                       dataField : "pickUpAccNo",
+                                             headerText : 'Pick-up Account Number',
+                                           }, {
+                                             dataField : "shipmOrdId",
+                                             headerText : 'Shipment Order ID',
+                                             width : '20%'
+                                           }, {
+                                             dataField : "shipmServCde",
+                                             headerText : 'Shipping Service Code',
+                                             width : '15%'
+                                           }, {
+                                             dataField : "company",
+                                             headerText : 'Company',
+                                             width : '5%',
+                                             visible : false
+                                           }, {
+                                             dataField : "congsNm",
+                                             headerText : 'Consignee Name',
+                                             width : '18%'
+                                           }, {
+                                             dataField : "addrsLn1",
+                                             headerText : 'Address Line 1',
+                                             width : '15%'
+                                           }, {
+                                             dataField : "addrsLn2",
+                                             headerText : 'Address Line 2',
+                                             width : '15%'
+                                           }, {
+                                             dataField : "addrsLn3",
+                                             headerText : 'Address Line 3',
+                                             width : '5%',
+                                             visible : false
+                                           }, {
+                                             dataField : "city",
+                                             headerText : 'City',
+                                             width : '15%'
+                                           }, {
+                                               dataField : "state",
+                                               headerText : 'State',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "postCde",
+                                               headerText : 'Postal Code',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "country",
+                                               headerText : 'Destination Country Code',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "phoneNo",
+                                               headerText : 'Phone Number',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "emailAddr",
+                                               headerText : 'Email Address',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "shipmWeight",
+                                               headerText : 'Shipment Weight (g)',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "curCde",
+                                               headerText : 'Currency Code',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "totalDeclVal",
+                                               headerText : 'Total Declared Value',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "isInsured",
+                                               headerText : 'Is Insured',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "insurance",
+                                               headerText : 'Insurance',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "isCOD",
+                                               headerText : 'Is COD',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "cshDelVal",
+                                               headerText : 'Cash on Delivery Value',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmDesc",
+                                               headerText : 'Shipment Description',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "remarks",
+                                               headerText : 'Remarks',
+                                               width : '15%'
+                                           }, {
+                                               dataField : "serv1",
+                                               headerText : 'Service1',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "serv2",
+                                               headerText : 'Service2',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pickupDt",
+                                               headerText : 'Pickup Date',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "handoverMtd",
+                                               headerText : 'Handover Method',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "isMult",
+                                               headerText : 'IsMult',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "delOpt",
+                                               headerText : 'Delivery Option',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "noPieces",
+                                               headerText : 'No of Pieces',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "piecesId",
+                                               headerText : 'PieceID',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceDesc",
+                                               headerText : 'Piece Description',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceWeight",
+                                               headerText : 'Piece Weight',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceCod",
+                                               headerText : 'Piece COD',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceIns",
+                                               headerText : 'Piece Insurance',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceBill1",
+                                               headerText : 'Piece Billing Reference 1',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "pieceBill2",
+                                               headerText : 'Piece Billing Reference 2',
+                                               width : '5%',
+                                               visible : false
+                                           }];
 
     var gridPros = { usePaging : true,
                             pageRowCount : 20,
@@ -170,7 +293,7 @@ $(document).ready(function() {
                             useGroupingPanel : false,
                             skipReadonlyColumns : true,
                             wrapSelectionMove : true,
-                            showRowNumColumn : true
+                            showRowNumColumn : false
     };
 
     orderGridID = GridCommon.createAUIGrid("#order_grid_wrap", orderColumnLayout, '', gridPros);
@@ -182,6 +305,10 @@ $(document).ready(function() {
     });
   }
 
+  function fn_dlExcelAck() {
+    Common.confirm("<spring:message code='supplement.alert.msg.downloadCustDelInfoAckw'/>",fn_excelDown);
+  }
+
   function fn_excelDown() {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -190,6 +317,25 @@ $(document).ready(function() {
 
     const date = year + month + day;
     GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Customer Delivery Information-" + date);
+
+    var rowCount = AUIGrid.getRowCount(orderGridID);
+    var ordList = AUIGrid.getGridData(orderGridID);
+    var param = {
+      ordList : ordList
+    };
+
+    alert();
+
+    // UPDATE STAGE
+    Common.ajax("POST", "/supplement/updateDelStageInfo.do", param,
+      function(result) {
+        /*(if (result.code == "00") {
+          Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
+        } else {
+          console.log("failed");
+          Common.alert(result.message, fn_popClose);
+        }*/
+      });
   }
 
   /*$.fn.clearForm = function() {
@@ -247,12 +393,12 @@ $(document).ready(function() {
     <ul class="right_btns">
       <li>
         <p class="btn_grid">
-          <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
+          <a href="#" onClick="fn_dlExcelAck()"><spring:message code='service.btn.Generate'/></a>
         </p>
       </li>
     </ul>
     <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="order_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+      <div id="order_grid_wrap" style="width:100%; height:580px; margin:0 auto;"></div>
     </article>
   </section>
 </div>
