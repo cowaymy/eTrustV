@@ -20,7 +20,7 @@
     font-weight: bold;
   }
   .status-pickup {
-    color: yellow;
+    color: brown;
     font-weight: bold;
   }
   .status-in-transit {
@@ -199,16 +199,16 @@
             <c:when test="${orderInfo.supRefDelStusId=='0'}">
               <span class="status-pending">${orderInfo.supRefDelStus}</span>
             </c:when>
-            <c:when test="${orderInfo.supRefStusId=='1'}">
+            <c:when test="${orderInfo.supRefDelStusId=='1'}">
               <span class="status-pickup">${orderInfo.supRefDelStus}</span>
             </c:when>
-            <c:when test="${orderInfo.supRefStusId=='2'}">
+            <c:when test="${orderInfo.supRefDelStusId=='2'}">
               <span class="status-in-transit">${orderInfo.supRefDelStus}</span>
             </c:when>
-            <c:when test="${orderInfo.supRefStusId=='3'}">
+            <c:when test="${orderInfo.supRefDelStusId=='3'}">
               <span class="status-out-for-delivery">${orderInfo.supRefDelStus}</span>
             </c:when>
-            <c:when test="${orderInfo.supRefStusId=='4'}">
+            <c:when test="${orderInfo.supRefDelStusId=='4'}">
               <span class="status-delivered">${orderInfo.supRefDelStus}</span>
             </c:when>
             <c:otherwise>

@@ -324,18 +324,17 @@ var orderGridID;
       ordList : ordList
     };
 
-    alert();
-
-    // UPDATE STAGE
-    Common.ajax("POST", "/supplement/updateDelStageInfo.do", param,
-      function(result) {
-        /*(if (result.code == "00") {
-          Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
-        } else {
-          console.log("failed");
-          Common.alert(result.message, fn_popClose);
-        }*/
-      });
+    if (rowCount > 0) {
+      // UPDATE STAGE
+      Common.ajax("POST", "/supplement/updateDelStageInfo.do", param,
+        function(result) {
+          if (result.code == "00") {
+            Common.alert(" Tracking number has been update successfully.", fn_popClose());
+          } else {
+            Common.alert(result.message, fn_popClose);
+          }
+        });
+    }
   }
 
   /*$.fn.clearForm = function() {
