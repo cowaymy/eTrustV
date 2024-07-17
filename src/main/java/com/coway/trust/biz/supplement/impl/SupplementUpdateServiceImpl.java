@@ -44,6 +44,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+
 @Service("supplementUpdateService")
 public class SupplementUpdateServiceImpl
   extends EgovAbstractServiceImpl
@@ -569,4 +573,34 @@ public class SupplementUpdateServiceImpl
   public List<EgovMap> getCustOrdDelInfo( Map<String, Object> params ) {
     return supplementUpdateMapper.getCustOrdDelInfo( params );
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Map<String, Object> updateDelStageInfo( Map<String, Object> params ) throws JsonProcessingException, IOException {
+    Map<String, Object> rtnMap = new HashMap<>();
+    List<Object> ordList = (List<Object>) params.get( "ordList" );
+
+    for ( int idx = 0; idx < ordList.size(); idx++ ) {
+      Map<String, Object> itemMap = (Map<String, Object>) ordList.get( idx );
+      Map<String, Object> paramOrdInfo = new HashMap<String, Object>();
+
+      paramOrdInfo.put( "ordNo", itemMap.get( "shipmDesc" ) );
+      Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfo( paramOrdInfo );
+      ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
+      ordInfo.put( "inputParcelTrackNo", itemMap.get( "shipmOrdId" ) );
+
+      try {
+        this.updateRefStgStatus( ordInfo );
+      }
+      catch ( Exception e ) {
+        e.printStackTrace();
+        rtnMap.put( "logError", "99" );
+        rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+        LOGGER.error( "Error updating parcel tracking number...", e );
+      }
+    }
+    rtnMap.put( "logError", "000" );
+    return rtnMap;
+  }
+
 }
