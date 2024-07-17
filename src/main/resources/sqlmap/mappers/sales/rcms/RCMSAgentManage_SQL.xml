@@ -331,9 +331,9 @@
             </when>
             <when test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
-                    <if test="rosCaller1 != null and rosCaller1 != ''">
+                       <if test="rosCaller != null and rosCaller != ''">
                     AND A.AGENT_GRP_ID IN
-                    <foreach item="item" collection="rosCaller1" index="index" open="(" separator="," close=")">
+                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
                   </if>
