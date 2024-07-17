@@ -324,4 +324,18 @@ public class SupplementManagementController {
     List<EgovMap> custOrdDelInfo = supplementUpdateService.getCustOrdDelInfo(params);
     return ResponseEntity.ok(custOrdDelInfo);
   }
+
+  @RequestMapping(value = "/updateDelStageInfo.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateDelStageInfo(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
+    ReturnMessage message = new ReturnMessage();
+    // SET USER ID
+    params.put("userId", sessionVO.getUserId());
+
+    EgovMap rtnData = supplementUpdateService.updateDelStageInfo(params);
+    message.setCode( "000" );
+    //message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
+
+    return ResponseEntity.ok(message);
+  }
+
 }
