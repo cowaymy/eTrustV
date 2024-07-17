@@ -852,7 +852,8 @@
   <select id="getOrdInfo"  parameterType="Map" resultType="egovMap">
     SELECT A.SUP_REF_ID AS SUP_REF_ID,
                A.SUP_REF_NO AS SUP_REF_NO,
-               B.NAME AS CUST_NAME
+               B.NAME AS CUST_NAME,
+               B.EMAIL AS CUST_EMAIL
     FROM SUP0001M A
     JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
     WHERE A.DEL_FLG = 'N'
