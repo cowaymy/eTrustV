@@ -307,9 +307,9 @@ public class SupplementUpdateServiceImpl
       // LOOP SHIPMENTS DETAILS
       for ( Map<String, Object> shipment : shipmentList ) {
         Map<String, Object> dataValueMap = new HashMap<>();
-        if ( !( CommonUtils.nvl( shipment.get( "shipmentID" ) ).equals( "" ) ) ) {
-          if ( !respCountList.contains( CommonUtils.nvl( shipment.get( "shipmentID" ) ) ) ) {
-            respCountList.add( CommonUtils.nvl( shipment.get( "shipmentID" ) ) );
+        if ( !( CommonUtils.nvl( shipment.get( "subShipmentID" ) ).equals( "" ) ) ) {
+          if ( !respCountList.contains( CommonUtils.nvl( shipment.get( "subShipmentID" ) ) ) ) {
+            respCountList.add( CommonUtils.nvl( shipment.get( "subShipmentID" ) ) );
           }
         }
         dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
@@ -587,7 +587,7 @@ public class SupplementUpdateServiceImpl
       paramOrdInfo.put( "ordNo", itemMap.get( "shipmDesc" ) );
       Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfo( paramOrdInfo );
       ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
-      ordInfo.put( "inputParcelTrackNo", itemMap.get( "shipmOrdId" ) );
+      ordInfo.put( "inputParcelTrackNo", "MYMEJ" + itemMap.get( "shipmOrdId" ) );
 
       try {
         this.updateRefStgStatus( ordInfo );
