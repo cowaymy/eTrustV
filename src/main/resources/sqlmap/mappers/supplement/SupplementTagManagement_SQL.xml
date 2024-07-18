@@ -598,4 +598,11 @@
     WHERE A.SUP_REF_ID = #{supRefId}
   </select>
 
+  <select id="checkRcdExistCancellation"  parameterType="Map" resultType="integer">
+    SELECT COUNT(*) AS CNT
+    FROM SUP0007M
+    WHERE DEL_FLG = 'N'
+        AND SUP_REF_ID = #{supRefId}
+  </select>
+
 </mapper>
