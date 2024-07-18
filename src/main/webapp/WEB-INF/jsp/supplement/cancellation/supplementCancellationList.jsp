@@ -327,8 +327,8 @@
            return false;
          }
 
-         if (stgCode != '5') {
-           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update Stage.</b>');
+         if (stgCode != '5' && stgCode != '6' ) {
+           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update or Return Product Quantity Update Stage.</b>');
            return false;
          }
 
