@@ -75,7 +75,7 @@
       return false;
     }
 
-    fn_SaveTagSubmission();
+    fn_verifyCancellation();
   });
 
   function fn_validInpuInfo() {
@@ -195,6 +195,24 @@
     Common.popupDiv('/supplement/searchOrdNoPop.do', null, null, true, '_searchDiv');
   }
 
+  function fn_verifyCancellation() {
+    // VERIFY RECORD EXIST ON CANCELLATION
+    if ($('#ddlSubTopic').val().trim() ==  "4001") {
+      Common.ajax("GET","/supplement/checkRcdExistCancellation.do", {supRefId : $("#_infoSupRefId").val()}, function(result) {
+        if (result > 0) {
+          Common.alert( "<spring:message code='supplement.alert.msg.cancellationExist' />");
+          return false;
+        } else {
+          fn_SaveTagSubmission()
+          return true;
+        }
+      });
+    } else {
+      fn_SaveTagSubmission()
+      return true;
+    }
+  }
+
   function fn_SaveTagSubmission(){
     var orderVO = {
       supRefId :  $("#_infoSupRefId").val(),
@@ -220,13 +238,16 @@
     });
 
     if (subTopic ==  "4001") { // Request Refund
-      if (supRefStusId !=  "4"){ // need change to (supRefStusId !=  "4")
+      /*if (supRefStusId !=  "4"){ // need change to (supRefStusId !=  "4")
         Common.alert("<spring:message code='supplement.alert.msg.failRefund' />");
         return false;
       } else {
         if (!fn_validFile()) {
           return false;
         }
+      }*/
+      if (!fn_validFile()) {
+        return false;
       }
     }
 

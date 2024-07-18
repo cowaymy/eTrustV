@@ -223,7 +223,7 @@
               }
 
               // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
-              if (selectedItems[a].item.supRefDelStus >= 4) {
+              if (selectedItems[a].item.supRefDelStus == 4) {
                 Common.alert('<spring:message code="supplement.alert.updDelStatDelStatCom" />' + " " + selectedItems[a].item.supRefNo);
                 return;
               }
@@ -683,7 +683,7 @@
   }
 
   function fn_custDelInfo() {
-    Common.popupDiv("/supplement/supplementCustDelInfo.do",'',null, true, '_insDiv');
+    Common.popupDiv("/supplement/supplementCustDelInfo.do",{ind : 'PDO'},null, true, '_insDiv');
   }
 </script>
 

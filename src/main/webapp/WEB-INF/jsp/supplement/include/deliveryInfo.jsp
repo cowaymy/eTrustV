@@ -290,6 +290,9 @@
               <c:when test="${orderInfo.supRefDelStusId=='4'}">
                 <span class="status-delivered">${orderInfo.supRefDelStus}</span>
               </c:when>
+              <c:when test="${orderInfo.supRefDelStusId=='5'}">
+                <span class="status-returned">${orderInfo.supRefDelStus}</span>
+              </c:when>
               <c:otherwise>
                 <span>${orderInfo.supRefDelStus}</span>
               </c:otherwise>

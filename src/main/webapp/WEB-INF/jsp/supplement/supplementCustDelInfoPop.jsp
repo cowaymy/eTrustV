@@ -300,7 +300,7 @@ var orderGridID;
   }
 
   function fn_getCustDelInfoListAjax(){
-    Common.ajax("GET", "/supplement/getCustOrdDelInfo.do",null, function(result) {
+    Common.ajax("GET", "/supplement/getCustOrdDelInfo.do",{ind : '${ind}'}, function(result) {
       AUIGrid.setGridData(orderGridID, result);
     });
   }
@@ -316,11 +316,17 @@ var orderGridID;
     const year = today.getFullYear();
 
     const date = year + month + day;
-    GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Customer Delivery Information-" + date);
+
+    if ('${ind}' == "PDR") {
+      GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Return Delivery Information-" + date);
+    } else {
+     GridCommon.exportTo("order_grid_wrap", "xlsx", "[Supplement] Customer Delivery Information-" + date);
+    }
 
     var rowCount = AUIGrid.getRowCount(orderGridID);
     var ordList = AUIGrid.getGridData(orderGridID);
     var param = {
+      ind : '${ind}',
       ordList : ordList
     };
 
@@ -335,6 +341,10 @@ var orderGridID;
           }
         });
     }
+  }
+
+  function fn_popClose() {
+    $("#_closeOrdPop").click();
   }
 
   /*$.fn.clearForm = function() {
