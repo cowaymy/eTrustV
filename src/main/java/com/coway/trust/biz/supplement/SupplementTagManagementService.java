@@ -40,5 +40,7 @@ public interface SupplementTagManagementService {
 
   List<EgovMap> getAttachListHq( Map<String, Object> params );
 
+  int checkRcdExistCancellation( Map<String, Object> params );
+
   void sendEmail( Map<String, Object> params );
 }

@@ -63,8 +63,11 @@ public interface SupplementUpdateMapper {
 
   List<EgovMap> getOderOutsInfo( Map<String, Object> params );
 
-  List<EgovMap> getCustOrdDelInfo( Map<String, Object> params );
+  List<EgovMap> getCustOrdDelInfoPdo( Map<String, Object> params );
 
-  Map<String, Object> getOrdInfo( Map<String, Object> param );
+  List<EgovMap> getCustOrdDelInfoPdr( Map<String, Object> params );
 
+  Map<String, Object> getOrdInfoPdo( Map<String, Object> param );
+
+  Map<String, Object> getOrdInfoPdr( Map<String, Object> param );
 }

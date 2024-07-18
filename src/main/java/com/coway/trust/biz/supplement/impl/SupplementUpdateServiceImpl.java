@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.coway.trust.biz.supplement.SupplementUpdateService;
+import com.coway.trust.biz.supplement.cancellation.service.SupplementCancellationService;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.supplement.impl.SupplementUpdateMapper;
@@ -56,6 +57,9 @@ public class SupplementUpdateServiceImpl
 
   @Resource(name = "supplementUpdateMapper")
   private SupplementUpdateMapper supplementUpdateMapper;
+
+  @Resource(name = "supplementCancellationService")
+  private SupplementCancellationService supplementCancellationService;
 
   @Resource(name = "commonService")
   private CommonService commonService;
@@ -571,7 +575,12 @@ public class SupplementUpdateServiceImpl
 
   @Override
   public List<EgovMap> getCustOrdDelInfo( Map<String, Object> params ) {
-    return supplementUpdateMapper.getCustOrdDelInfo( params );
+
+    if (CommonUtils.nvl(params.get( "ind" )).equals( "PDR" )) {
+      return supplementUpdateMapper.getCustOrdDelInfoPdr( params );
+    } else {
+      return supplementUpdateMapper.getCustOrdDelInfoPdo( params );
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -580,23 +589,45 @@ public class SupplementUpdateServiceImpl
     Map<String, Object> rtnMap = new HashMap<>();
     List<Object> ordList = (List<Object>) params.get( "ordList" );
 
-    for ( int idx = 0; idx < ordList.size(); idx++ ) {
-      Map<String, Object> itemMap = (Map<String, Object>) ordList.get( idx );
-      Map<String, Object> paramOrdInfo = new HashMap<String, Object>();
+    if (params.get( "ind" ).equals( "PDR" )) {
+      for ( int idx = 0; idx < ordList.size(); idx++ ) {
+        Map<String, Object> itemMap = (Map<String, Object>) ordList.get( idx );
+        Map<String, Object> paramOrdInfo = new HashMap<String, Object>();
 
-      paramOrdInfo.put( "ordNo", itemMap.get( "shipmDesc" ) );
-      Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfo( paramOrdInfo );
-      ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
-      ordInfo.put( "inputParcelTrackNo", "MYMEJ" + itemMap.get( "shipmOrdId" ) );
+        paramOrdInfo.put( "ordNo", itemMap.get( "shipmDesc" ) );
+        Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfoPdr( paramOrdInfo );
+        ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
+        ordInfo.put( "parcelRtnTrackNo", "MYMEJ" + itemMap.get( "shipmOrdId" ) );
 
-      try {
-        this.updateRefStgStatus( ordInfo );
+        try {
+          supplementCancellationService.updateRefStgStatus( ordInfo );
+        }
+        catch ( Exception e ) {
+          e.printStackTrace();
+          rtnMap.put( "logError", "99" );
+          rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+          LOGGER.error( "Error updating parcel tracking number...", e );
+        }
       }
-      catch ( Exception e ) {
-        e.printStackTrace();
-        rtnMap.put( "logError", "99" );
-        rtnMap.put( "message", "An error occurred: " + e.getMessage() );
-        LOGGER.error( "Error updating parcel tracking number...", e );
+    } else {
+      for ( int idx = 0; idx < ordList.size(); idx++ ) {
+        Map<String, Object> itemMap = (Map<String, Object>) ordList.get( idx );
+        Map<String, Object> paramOrdInfo = new HashMap<String, Object>();
+
+        paramOrdInfo.put( "ordNo", itemMap.get( "shipmDesc" ) );
+        Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfoPdo( paramOrdInfo );
+        ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
+        ordInfo.put( "inputParcelTrackNo", "MYMEJ" + itemMap.get( "shipmOrdId" ) );
+
+        try {
+          this.updateRefStgStatus( ordInfo );
+        }
+        catch ( Exception e ) {
+          e.printStackTrace();
+          rtnMap.put( "logError", "99" );
+          rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+          LOGGER.error( "Error updating parcel tracking number...", e );
+        }
       }
     }
     rtnMap.put( "logError", "000" );

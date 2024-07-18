@@ -359,4 +359,10 @@ public class SupplementTagManagementImpl
   public List<EgovMap> getAttachListHq(Map<String, Object> params) {
     return supplementTagManagementMapper.selectAttachListHq(params);
   }
+
+  @Override
+  public int checkRcdExistCancellation(Map<String, Object> params) {
+    return supplementTagManagementMapper.checkRcdExistCancellation(params);
+  }
+
 }

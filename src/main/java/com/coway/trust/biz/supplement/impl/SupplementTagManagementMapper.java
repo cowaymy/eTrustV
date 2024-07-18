@@ -63,5 +63,7 @@ public interface SupplementTagManagementMapper {
 
   public List<EgovMap> selectAttachListHq( Map<String, Object> params );
 
+  public int checkRcdExistCancellation( Map<String, Object> params );
+
   Map<String, Object> getCustEmailDtl( Map<String, Object> params );
 }
