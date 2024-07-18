@@ -2120,18 +2120,28 @@ public class CommonServiceImpl
              * 77184 - PROCESSED AT DELIVERY FACILITY > 2 : IN TRANSIT
              * 77090 - OUT FOR DELIVERY > 3 : OUT FOR DELIVERY
              * 77093 - SUCCESSFULLY DELIVERED > 4 : DELIVERED
+             *
+             * 71006 - RETURN REQUESTED > 0 : PENDING
+             * 77123 - SHIPMENT DATA RECEIVED > 0 : PENDING
+             * 77267 - OUT FOR COLLECTION OF SHIPMENT > 0 : PENDING
+             * 77225 - RETURN SHIPMENT PICKUP WAS SUCCESSFUL > 1 : PICKUP
+             * 77169 - DEPARTED FROM FACILITY > 2 : IN TRANSIT
+             * 77232 - RETURN SHIPMENT OUT FOR DELIVERY > 3 : OUT FOR DELIVERY
+             * 77174 - RETURN SHIPMENT WAS SUCCESSFULLY DELIVERED > 5 : RETURNED
              * */
 
-            if (shipmentEventStatus.equals( "71005" ) || shipmentEventStatus.equals( "77123" ) || shipmentEventStatus.equals( "77236" )) { // PENDING
+            if (shipmentEventStatus.equals( "71005" ) || shipmentEventStatus.equals( "77123" ) || shipmentEventStatus.equals( "77236" ) || shipmentEventStatus.equals( "71006" ) || shipmentEventStatus.equals( "77123" ) || shipmentEventStatus.equals( "77267" )) { // PENDING
               enumStatus = "0";
-            } else if (shipmentEventStatus.equals( "77206" )) { // PICKUP
+            } else if (shipmentEventStatus.equals( "77206" ) || shipmentEventStatus.equals( "77225" )) { // PICKUP
               enumStatus = "1";
             } else if (shipmentEventStatus.equals( "77013" ) || shipmentEventStatus.equals( "77015" ) || shipmentEventStatus.equals( "77027" ) || shipmentEventStatus.equals( "77169" ) || shipmentEventStatus.equals( "77178" ) || shipmentEventStatus.equals( "77184" )) { // IN-TRANSIT
               enumStatus = "2";
-            } else if (shipmentEventStatus.equals( "77090" )) { // OUT FOR DELIVERY
+            } else if (shipmentEventStatus.equals( "77090" ) || shipmentEventStatus.equals( "77232" )) { // OUT FOR DELIVERY
               enumStatus = "3";
             } else if (shipmentEventStatus.equals( "77093" )) { // DELIVERED
               enumStatus = "4";
+            } else if (shipmentEventStatus.equals( "77174" )) { // RETURNED
+              enumStatus = "5";
             } else { // UN-DETECTED STATUS
               enumStatus = "0";
             }
