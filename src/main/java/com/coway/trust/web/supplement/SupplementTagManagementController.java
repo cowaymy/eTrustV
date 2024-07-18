@@ -305,4 +305,12 @@ public class SupplementTagManagementController {
     List<EgovMap> attachList = supplementTagManagementService.getAttachListHq( params );
     return ResponseEntity.ok( attachList );
   }
+
+  @RequestMapping(value = "/checkRcdExistCancellation.do", method = RequestMethod.GET)
+  public ResponseEntity<Integer> checkRcdExistCancellation( @RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ) {
+    int list = supplementTagManagementService.checkRcdExistCancellation( params );
+    return ResponseEntity.ok( list );
+  }
+
+
 }

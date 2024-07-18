@@ -316,6 +316,9 @@ public class SupplementManagementController {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     model.put("userId", sessionVO.getUserId());
 
+    model.addAttribute("userId", sessionVO.getUserId());
+    model.addAttribute("ind", params.get( "ind" ));
+
     return "supplement/supplementCustDelInfoPop";
   }
 
