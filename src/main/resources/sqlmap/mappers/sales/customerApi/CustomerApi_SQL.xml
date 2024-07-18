@@ -228,7 +228,7 @@
                   , #{tinNo}
                   , 1
                   , ''
-                  , SYSDATE
+                  , TRUNC(SYSDATE, 'MM')
                   , (TO_DATE('99991231', 'YYYYMMDD'))
                   , SYSDATE
                   , #{crtUserId}
