@@ -264,9 +264,13 @@ public class CustomerApiServiceImpl
       throw new ApplicationException( AppConstants.FAIL, "Fail to get Customer ID." );
     }
 
-    int tinId = customerApiMapper.getTinId();
-    if ( CommonUtils.isEmpty( tinId ) ) {
-      throw new ApplicationException( AppConstants.FAIL, "Fail to get TIN ID." );
+    String tinId = "";
+
+    if ( !CommonUtils.isEmpty(CommonUtils.nvl( param.getTinNo() ))) {
+      tinId = String.valueOf( customerApiMapper.getTinId());
+      if ( CommonUtils.isEmpty( tinId ) ) {
+        throw new ApplicationException( AppConstants.FAIL, "Fail to get TIN ID." );
+      }
     }
 
     /* SAL0029D --ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer */
@@ -333,10 +337,13 @@ public class CustomerApiServiceImpl
 
     /* SAL0416D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustTinNo. */
     //customerMap.put( "eInvFlg", param.geteInvFlg());
-    customerMap.put( "tinNo", param.getTinNo() );
-    saveCnt = customerApiMapper.insertCustomerTin( customerMap );
-    if ( saveCnt != 1 ) {
-      throw new ApplicationException( AppConstants.FAIL, "Customer Tin Exception." );
+    if ( !CommonUtils.isEmpty(CommonUtils.nvl( param.getTinNo() ))) {
+      customerMap.put( "tinNo", param.getTinNo() );
+
+      saveCnt = customerApiMapper.insertCustomerTin( customerMap );
+      if ( saveCnt != 1 ) {
+        throw new ApplicationException( AppConstants.FAIL, "Customer Tin Exception." );
+      }
     }
 
     /* SAL0027D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustContact */
