@@ -23,6 +23,7 @@
           var custName = $("#_infoCustName").val();
           var custEmailNm = $("#_infoCustNameEmail").val();
           var custEmail = $("#_infoCustEmail").val();
+          var autoGIGR = ($('#chkAutoGIGR').is(":checked")) ? "1" : "0";
 
           if ($("#parcelTrackNo").val() == null || $("#parcelTrackNo").val().trim() == "") {
             Common.alert('Parcel tracking number is required.');
@@ -35,7 +36,8 @@
             inputParcelTrackNo : inputParcelTrackNo,
             supRefNo : supRefNo,
             custName : custName,
-            custEmail : custEmail
+            custEmail : custEmail,
+            autoGIGR : autoGIGR
           };
 
           Common.ajax( 'GET', "/supplement/checkDuplicatedTrackNo", param,
@@ -120,6 +122,12 @@
         <col style="width: *" />
       </colgroup>
       <tbody>
+        <tr>
+          <th scope="row"><spring:message code="log.label.auto" /> <spring:message code="log.btn.GIGR" /></th>
+          <td colspan='3'>
+            <input type="checkbox" id="chkAutoGIGR" name="chkAutoGIGR" onclick="" title="" />
+          </td>
+        </tr>
         <tr>
           <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /><span class="must">*</span></th>
           <td colspan='3'>
