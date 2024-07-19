@@ -159,6 +159,8 @@
     ];
 
     var gridPros = {
+      showRowAllCheckBox : true,
+      showRowCheckColumn : true,
       usePaging : true,
       pageRowCount : 10,
       fixedColumnCount : 1,
@@ -350,6 +352,43 @@
         const date = year + month + day;
         GridCommon.exportTo("supplement_grid_wrap", "xlsx", "Supplement Cancellation Listing-" + date);
     });
+
+    $("#_updateDeliveryStatDhlBtn").click(function() {
+        var selectedItems = AUIGrid.getCheckedRowItems(supplementGridID);
+        var suppOrds = [];
+        var supShptNo = [];
+
+        if (selectedItems.length <= 0) {
+          Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+          return;
+        }
+
+        for (var a=0; a < selectedItems.length; a++) {
+          // CHECK TRACKING NO.
+          if (selectedItems[a].item.supRtnPrcTrkNo === "" || selectedItems[a].item.supRtnPrcTrkNo === undefined) {
+              Common.alert('<spring:message code="supplement.alert.updDelStatNoTckNo" />'+ " " + selectedItems[a].item.supOrdNo);
+              return;
+          }
+
+          // NO ACTION IF DELIVERY STATUS AFTER DELIVERED (>4)
+          if (selectedItems[a].item.supRtnStatCde == 4) {
+            Common.alert('<spring:message code="supplement.alert.updDelStatDelStatRtn" />' + " " + selectedItems[a].item.supOrdNo);
+            return;
+          }
+
+          suppOrds.push(selectedItems[a].item.supOrdNo);
+          supShptNo.push(selectedItems[a].item.supRtnPrcTrkNo);
+        }
+
+        // GET & UPDATE DELIVERY STATUS
+        Common.ajax("POST", "/supplement/updOrdDelStatDhl.do", {ordNo : suppOrds, consNo : supShptNo}, function(result) {
+          Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
+          // REFRESH THE GRID
+          AUIGrid.clearGridData(supplementGridID);
+          AUIGrid.clearGridData(supplementItmGridID);
+          fn_getSupplementSubmissionList();
+        });
+      });
   });
 
   function fn_validSearchList() {
@@ -403,6 +442,12 @@
     Common.popupDiv("/supplement/supplementCustDelInfo.do",{ind : 'PDR'},null, true, '_insDiv');
   }
 
+  function fn_popClose() {
+    $("#_closeOrdPop").click();
+    fn_getSupplementSubmissionList();
+  }
+
+
 </script>
 <section id="content">
   <ul class="path">
@@ -430,6 +475,13 @@
         <li>
           <p class="btn_blue">
             <a href="#" id="rtnQtyUpd"><spring:message code="supplement.btn.supplementRtnQtyUpd" /></a>
+          </p>
+        </li>
+      </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+        <li>
+          <p class="btn_blue">
+            <a href="#" id="_updateDeliveryStatDhlBtn"><spring:message code="supplement.btn.updDelStat" />(DHL)</a>
           </p>
         </li>
       </c:if>

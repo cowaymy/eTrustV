@@ -685,6 +685,11 @@
   function fn_custDelInfo() {
     Common.popupDiv("/supplement/supplementCustDelInfo.do",{ind : 'PDO'},null, true, '_insDiv');
   }
+
+  function fn_popClose() {
+    $("#_closeOrdPop").click();
+    fn_getSubListAjax();
+  }
 </script>
 
 <form id="rptForm">
