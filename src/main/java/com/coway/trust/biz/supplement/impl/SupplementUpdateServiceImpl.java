@@ -180,16 +180,19 @@ public class SupplementUpdateServiceImpl
     try {
       // int result = supplementUpdateMapper.updateRefStgStatus( params );
       supplementUpdateMapper.updateRefStgStatus( params );
-      EgovMap stoSup = supplementUpdateMapper.getStoSup( params );
-      stoEntry.put( "custName", params.get( "custName" ) );
-      stoEntry.put( "supRefId", params.get( "supRefId" ) );
-      stoEntry.put( "supRefNo", params.get( "supRefNo" ) );
-      stoEntry.put( "reqstNo", stoSup.get( "reqstNo" ) );
-      stoEntry.put( "userId", params.get( "userId" ) );
+
       params.put( "emailType", "1" );
       params.put( "deliveryAgent", "DHL" );
       params.put( "deliveryAgentUrl", "https://www.dhl.com/my-en/home/tracking.html" );
-      stoPreSupp( stoEntry );
+      if (CommonUtils.nvl(params.get( "autoGIGR" )).equals( "1" )) { // AUTO GIGR FLAG. 0 IGNORE GIGR. 1 PERFORM GI/GR
+        EgovMap stoSup = supplementUpdateMapper.getStoSup( params );
+        stoEntry.put( "custName", params.get( "custName" ) );
+        stoEntry.put( "supRefId", params.get( "supRefId" ) );
+        stoEntry.put( "supRefNo", params.get( "supRefNo" ) );
+        stoEntry.put( "reqstNo", stoSup.get( "reqstNo" ) );
+        stoEntry.put( "userId", params.get( "userId" ) );
+        stoPreSupp( stoEntry );
+      }
       rtnMap.put( "logError", "000" );
       this.sendEmail( params );
     }
@@ -618,6 +621,7 @@ public class SupplementUpdateServiceImpl
         Map<String, Object> ordInfo = supplementUpdateMapper.getOrdInfoPdo( paramOrdInfo );
         ordInfo.put( "userId", CommonUtils.nvl( params.get( "userId" ) ));
         ordInfo.put( "inputParcelTrackNo", "MYMEJ" + itemMap.get( "shipmOrdId" ) );
+        ordInfo.put( "autoGIGR", "1" ); // MUST AUTO GI/GR
 
         try {
           this.updateRefStgStatus( ordInfo );
