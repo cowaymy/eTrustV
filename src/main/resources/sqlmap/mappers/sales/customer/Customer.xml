@@ -3377,7 +3377,7 @@
     , #{basicCustTin}
     , 1
     , NULL
-    , SYSDATE
+    , TO_DATE('01' || '-' || EXTRACT(MONTH FROM SYSDATE) || '-' || EXTRACT(YEAR FROM SYSDATE), 'DD-MM-YYYY')
     , TO_DATE('31-12-9999', 'DD-MM-YYYY')
     , SYSDATE
     , #{userId}

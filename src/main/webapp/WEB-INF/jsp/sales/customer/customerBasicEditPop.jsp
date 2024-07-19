@@ -65,6 +65,20 @@ $(document).ready(function(){
             $("#basicCustTin").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }
     }
+
+    //[CELESTE 20240718] - New Validation on 1st of the Month cannot edit Customer due to e-Invoice TIN validity confusion [S]
+    var d = new Date();
+    var h = d.getDate();
+    if(h == 19){
+        $("#basicCustTin").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#basicCustTin").click(function(){
+        	Common.alert("TIN is not allow to edit on the 1st day of the month.");
+            return;
+        });
+
+    }
+  //[CELESTE 20240718] - New Validation on 1st of the Month cannot edit Customer due to e-Invoice TIN validity confusion [E]
+
     //edit
      // 수정 항목 변경
     $("#_editCustomerInfo").change(function(){
