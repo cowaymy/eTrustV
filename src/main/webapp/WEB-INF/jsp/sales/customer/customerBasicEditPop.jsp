@@ -70,7 +70,7 @@ $(document).ready(function(){
     var d = new Date();
     var h = d.getDate();
     if(h == 19){
-        $("#basicCustTin").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#basicCustTin").attr({"readonly" : "readonly" , "class" : "w100p disabled"});
         $("#basicCustTin").click(function(){
         	Common.alert("TIN is not allow to edit on the 1st day of the month.");
             return;
