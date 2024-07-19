@@ -154,10 +154,7 @@
                           T1.STUS_CODE_ID
                FROM SYS0026M T1
                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
-               WHERE 61 != STK_TYPE_ID
-                   OR ( 61 = STK_TYPE_ID
-                   AND  '600052' = STK_CODE
-    )) Project1
+               WHERE 61 = STK_TYPE_ID) Project1
     WHERE Project1. ALLOW_SALES = 1
         AND Project1.STUS_CODE_ID = 1
         AND Project1.STK_CTGRY_ID = #{itemType}
@@ -207,7 +204,7 @@
                                                                      ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
                                                           FROM SAL0016M
                                                           WHERE MEM_PAC_ID = 0
-                                                              AND APP_TYPE_ID = 67
+                                                              AND APP_TYPE_ID = 7611
                                                               AND STUS_CODE_ID = 1
                                                ) T1 WHERE T1.CNT <= 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID ]]>
                <![CDATA[
