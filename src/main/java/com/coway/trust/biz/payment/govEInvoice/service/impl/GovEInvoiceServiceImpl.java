@@ -626,20 +626,23 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 Gson g = new Gson();
                 p = g.fromJson(output1, GovEInvcCheckStatusResponseVO.class);
 
-                if(p.getSuccess() && !p.getStatus().equals("SUBMITTED")){
-                    Map<String, Object> einvUpdParams = new HashMap<>();
-                    String documentId = p.getDocumentId().toString();
-                     String qrCode = p.getQrCode().toString();
-                    String internalId = p.getInternalId().toString();
-                    String dateTimeValidated = p.getDateTimeValidated().toString();
+                Map<String, Object> einvUpdParams = new HashMap<>();
+                String documentId = p.getDocumentId()==null?"":p.getDocumentId().toString();
+                String qrCode = p.getQrCode()==null?"":p.getQrCode().toString();
+                String internalId = p.getInternalId()==null?"":p.getInternalId().toString();
+                String dateTimeValidated = p.getDateTimeValidated()==null?"":p.getDateTimeValidated().toString();
 
-                    einvUpdParams.put("documentId", documentId);
-                    einvUpdParams.put("qrCode", qrCode);
-                    einvUpdParams.put("dateTimeValidated", dateTimeValidated);
-                    einvUpdParams.put("userId", 349);
+                einvUpdParams.put("documentId", documentId);
+                einvUpdParams.put("qrCode", qrCode);
+                einvUpdParams.put("dateTimeValidated", dateTimeValidated);
+                einvUpdParams.put("userId", 349);
+                if(p.getSuccess() && p.getStatus().equals("VALID")){
                     einvUpdParams.put("status", 4);
-                    updEInvByDocId(einvUpdParams);
+                }else{
+                    einvUpdParams.put("status", 8);
                 }
+                updEInvByDocId(einvUpdParams);
+
                 conn.disconnect();
 
                 br.close();
