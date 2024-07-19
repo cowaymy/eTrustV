@@ -343,10 +343,6 @@ var orderGridID;
     }
   }
 
-  function fn_popClose() {
-    $("#_closeOrdPop").click();
-  }
-
   /*$.fn.clearForm = function() {
     return this.each(function() {
       var type = this.type, tag = this.tagName.toLowerCase();
