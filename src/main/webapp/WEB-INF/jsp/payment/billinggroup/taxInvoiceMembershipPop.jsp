@@ -36,7 +36,8 @@ $(document).ready(function(){
      { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
      { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
      { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
-     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
+     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false},
+     { dataField:"genEInv" ,headerText:"Generate e-Invoice",width: 10 , editable : false ,visible : false}
      ];
 
     	// Order 정보 (Master Grid) 그리드 생성
@@ -76,13 +77,18 @@ function fn_generateInvoice(){
         var salesOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "salesOrdNo"); //Added by keyi 20211013
         var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
         var reportDownFileName = ""; //Added by keyi 20211013
+        var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv"); //Added for e-Invoice
 
-        if(parseInt(year)*100 + parseInt(month) >= 202404){
-        	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_3.rpt');
-        }else if(parseInt(year)*100 + parseInt(month) >= 201809){
-            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
+        if(genEInv == 'Y'){
+        	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV.rpt');
         }else{
-            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
+	        if(parseInt(year)*100 + parseInt(month) >= 202404){
+	        	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_3.rpt');
+	        }else if(parseInt(year)*100 + parseInt(month) >= 201809){
+	            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
+	        }else{
+	            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
+	        }
         }
 
         $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));

@@ -52,6 +52,7 @@ var memoInvoiceNo;
 var month;
 var year;
 var refNo;
+var genEInv;
 
 var totalChrg = "0.00";
 var totalGST = "0.00";
@@ -76,6 +77,7 @@ function selectAdjustmentDetailPop(adjId, invNo){
             month = result.master.month;
             year = result.master.year;
             refNo = result.master.memoAdjRefNo;
+            genEInv = result.master.genEInv;
 
             $("#tRequestor").text(result.master.memoAdjCrtUserId);
             $("#tStatus").text(result.master.memoAdjStusNm);
@@ -200,39 +202,55 @@ function fn_generateReport(){
     }
 
     if(invoiceType ==  126 || invoiceType == 127){
-    	if( parseInt(year)*100 + parseInt(month) >= 201809){
-    		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
-    	}
-    	else{
-    		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
+    	if(genEInv == "Y"){
+    		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_EIV.rpt');
+    	}else{
+	    	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	    		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
+	    	}
+	    	else{
+	    		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
+	    	}
     	}
     }else{
         if( miscType == 117 ){
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF.rpt');
-            }
+        	if(genEInv == "Y"){
+        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF_EIV.rpt');
+        	}else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF.rpt');
+	            }
+        	}
         }else if(miscType == 118) {
-        	if( parseInt(year)*100 + parseInt(month) >= 202403){
-                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST_202404.rpt');
-            }
-        	else if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF.rpt');
-            }
+        	if(genEInv == "Y"){
+        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_EIV.rpt');
+        	}else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 202403){
+	                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST_202404.rpt');
+	            }
+	        	else if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF.rpt');
+	            }
+        	}
         }else if(miscType == 119) {
-        	if( parseInt(year)*100 + parseInt(month) >= 202403){
-                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST_202404.rpt');
-            }
-            else if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF.rpt');
+        	if(genEInv == "Y"){
+        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_EIV.rpt');
+            }else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 202403){
+	                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST_202404.rpt');
+	            }
+	            else if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF.rpt');
+	            }
             }
         }else if(miscType == 121) {
         	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -249,33 +267,49 @@ function fn_generateReport(){
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
             }
         }else if(miscType == 123) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF.rpt');
+        	if(genEInv == "Y"){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF_EIV.rpt');
+            }else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF.rpt');
+	            }
             }
         }else if(miscType == 124) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
-            }
+        	if(genEInv == "Y"){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_EIV.rpt');
+        	}else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
+	            }
+        	}
         }else if(miscType == 125) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF.rpt');
-            }
+        	if(genEInv == "Y"){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF_EIV.rpt');
+        	}else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF.rpt');
+	            }
+        	}
         }else if(miscType == 142) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201809){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_SST.rpt');
-            }
-            else{
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
-            }
+        	if(genEInv == "Y"){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_EIV.rpt');
+        	} else{
+	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
+	        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_SST.rpt');
+	            }
+	            else{
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
+	            }
+        	}
         }else if(invoiceType == 128) {
 
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_ServiceCare_PDF_SST.rpt');

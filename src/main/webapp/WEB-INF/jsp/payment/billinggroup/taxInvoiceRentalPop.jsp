@@ -103,7 +103,14 @@
 									headerText : "<spring:message code='pay.head.instNo'/>",
 									width : 200,
 									editable : false
-								} ];
+								},
+								{
+                                    dataField : "genEInv",
+                                    headerText : "Generate e-Invoice",
+                                    width : 10,
+                                    editable : false,
+                                    visible : false
+                                }];
 
 						// Order 정보 (Master Grid) 그리드 생성
 						myGridID = GridCommon.createAUIGrid("grid_wrap",
@@ -150,17 +157,22 @@
 			var invcItmOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "invcItmOrdNo"); //Added by keyi 20211013
 			var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
 			var reportDownFileName = ""; //Added by keyi 20211013
+			var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv"); //Added for e-Invoice
 
-			if (parseInt(year) == 2015 && parseInt(month) < 4) {
-				$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_NOGST_PDF.rpt');
-			} else {
-				if (parseInt(year) * 100 + parseInt(month) >= 201602) {
-					$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_201602.rpt');
-				}
-				if (parseInt(year) * 100 + parseInt(month) >= 201809) {
-					$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_SST.rpt');
+			 if(genEInv == 'Y'){
+                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV.rpt');
+             }else{
+				if (parseInt(year) == 2015 && parseInt(month) < 4) {
+					$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_NOGST_PDF.rpt');
 				} else {
-					$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt');
+					if (parseInt(year) * 100 + parseInt(month) >= 201602) {
+						$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_201602.rpt');
+					}
+					if (parseInt(year) * 100 + parseInt(month) >= 201809) {
+						   $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_SST.rpt');
+					} else {
+						$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt');
+					}
 				}
 			}
 

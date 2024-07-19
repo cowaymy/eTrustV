@@ -14,7 +14,8 @@
 	       Filter1.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
 	       Filter1.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO  ,
 	       Filter1.TAX_INVC_MONTH MONTH,
-	       Filter1.TAX_INVC_YEAR YEAR
+	       Filter1.TAX_INVC_YEAR YEAR,
+	       Filter1.GEN_E_INV <!-- Added for e-Invoice -->
 	    FROM
 	            (
 	            SELECT
@@ -28,11 +29,15 @@
 	                Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
 	                Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
 	                Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
-	                Extent4.CUST_ID TAX_INVC_CUST_ID
+	                Extent4.CUST_ID TAX_INVC_CUST_ID,
+                    CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                        ELSE 'N'
+                    END AS GEN_E_INV
 	            FROM
 	                PAY0029D Extent1
 	                JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
 	                LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+	                LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
 	            WHERE
 	                Extent1.TAX_INVC_BILL_TYPE = 133) Filter1
 	            LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
@@ -76,12 +81,16 @@
             txs.INVC_ITM_AMT_DUE,
             TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'MM')) AS month,
             TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'YYYY')) AS year,
-            orm.CUST_ID TAX_INVC_CUST_ID  <!--Added by Keyi 20211013-->
+            orm.CUST_ID TAX_INVC_CUST_ID,  <!--Added by Keyi 20211013-->
+            CASE WHEN eiv.QR_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+            END AS GEN_E_INV
         FROM
             PAY0033D txm
             LEFT JOIN PAY0034D txs ON txm.TAX_INVC_ID = txs.TAX_INVC_ID
             LEFT JOIN SAL0001D orm ON txs.INVC_ITM_ORD_NO = orm.SALES_ORD_NO
             LEFT JOIN SYS0013M cd ON orm.APP_TYPE_ID = cd.CODE_ID
+            LEFT JOIN EIV0004D eiv ON eiv.INV_REF_NO = txm.TAX_INVC_REF_NO AND eiv.STATUS = 4
         WHERE
             1=1
             <if test="invoiceNo != null and invoiceNo != '' ">
@@ -122,11 +131,15 @@
 	        TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
 	        (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
 	        Extent3.SALES_ORD_NO,
- 	        Extent3.CUST_ID TAX_INVC_CUST_ID  <!--Added by keyi 20211013-->
+ 	        Extent3.CUST_ID TAX_INVC_CUST_ID,  <!--Added by keyi 20211013-->
+            CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV
         FROM
             PAY0031D Extent1
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
             INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
+            LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
         WHERE
             1=1
              <if test="invoiceNo != null and invoiceNo != '' ">
@@ -221,9 +234,13 @@
 				Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
 				Extent1.TAX_INVC_AMT_DUE AS TAX_INVC_AMT_DUE,
 				TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
-				TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year
+				TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
+                CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+                END AS GEN_E_INV
             FROM
                 PAY0031D Extent1
+                LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
             WHERE
                 Extent1.TAX_INVC_TYPE = #{invoiceType}
                 <if test="invoiceNo != null and invoiceNo != '' ">

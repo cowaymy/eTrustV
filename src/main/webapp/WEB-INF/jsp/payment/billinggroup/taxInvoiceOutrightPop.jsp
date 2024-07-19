@@ -36,7 +36,8 @@ $(document).ready(function(){
      { dataField:"taxInvcCustId" ,headerText:"Customer ID", editable : false }, //added by keyi 20211013
      { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"},
      { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
-     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
+     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false},
+     { dataField:"genEInv" ,headerText:"Generate e-Invoice",width: 10 , editable : false ,visible : false}
      ];
 
 
@@ -91,11 +92,16 @@ function fn_generateInvoice(){
       var invcItmOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "invcItmOrdNo"); //Added by keyi 20211013
       var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
       var reportDownFileName = ""; //Added by keyi 20211013
+      var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv");; //Added for e-Invoice
 
-      if( parseInt(year)*100 + parseInt(month) >= 201809){
-          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_SST.rpt');
+      if(genEInv == 'Y'){
+    	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_EIV.rpt');
       }else{
-          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF.rpt');
+    	   if( parseInt(year)*100 + parseInt(month) >= 201809){
+   	              $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_SST.rpt');
+    	      }else{
+    	          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF.rpt');
+    	      }
       }
       $("#reportPDFForm #v_taxInvoiceId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
 

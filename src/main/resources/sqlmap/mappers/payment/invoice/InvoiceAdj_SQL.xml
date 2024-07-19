@@ -1089,7 +1089,10 @@
             WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(company.TAX_INVC_REF_DT,'YYYY'))
             WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(out.TAX_INVC_REF_DT,'YYYY'))
             ELSE TO_NUMBER(TO_CHAR(misc.TAX_INVC_REF_DT,'YYYY')) END year,
-        mst.ATCH_FILE_GRP_ID
+        mst.ATCH_FILE_GRP_ID,
+        CASE WHEN eiv.QR_CODE IS NOT NULL THEN 'Y'
+            ELSE 'N'
+        END AS GEN_E_INV
     FROM
         PAY0011D mst
 	    LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID
@@ -1104,6 +1107,7 @@
 	    LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID
 	    LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
 	    LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
+	    LEFT JOIN EIV0004D eiv ON eiv.INV_REF_NO = mst.MEMO_ADJ_REF_NO AND eiv.STATUS = 4
     WHERE mst.MEMO_ADJ_ID = #{adjId}
     </select>
 
