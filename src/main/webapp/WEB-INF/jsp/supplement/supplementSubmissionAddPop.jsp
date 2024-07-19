@@ -194,25 +194,60 @@
     });
 
     $('#sofFile').change(function(evt) {
-      handleFileChange(evt, 1);
+      //handleFileChange(evt, 1);
     });
     $('#nricFile').change(function(evt) {
-      handleFileChange(evt, 2);
+      //handleFileChange(evt, 2);
     });
     $('#otherFile').change(function(evt) {
-      handleFileChange(evt, 3);
+      //handleFileChange(evt, 3);
+    	var file = evt.target.files[0];
+        if(file == null && myFileCaches[3] != null){
+            delete myFileCaches[3];
+        }else if(file != null){
+          myFileCaches[3] = {file:file, contentsType:"otherFile"};
+        }
+        console.log(myFileCaches);
     });
     $('#otherFile2').change(function(evt) {
-      handleFileChange(evt, 4);
+      //handleFileChange(evt, 4);
+    	var file = evt.target.files[0];
+        if(file == null && myFileCaches[4] != null){
+            delete myFileCaches[4];
+        }else if(file != null){
+          myFileCaches[4] = {file:file, contentsType:"otherFile2"};
+        }
+        console.log(myFileCaches);
     });
     $('#otherFile3').change(function(evt) {
-      handleFileChange(evt, 5);
+      //handleFileChange(evt, 5);
+    	var file = evt.target.files[0];
+        if(file == null && myFileCaches[5] != null){
+            delete myFileCaches[5];
+        }else if(file != null){
+          myFileCaches[5] = {file:file, contentsType:"otherFile3"};
+        }
+        console.log(myFileCaches);
     });
     $('#otherFile4').change(function(evt) {
-      handleFileChange(evt, 6);
+      //handleFileChange(evt, 6);
+    	var file = evt.target.files[0];
+        if(file == null && myFileCaches[6] != null){
+            delete myFileCaches[6];
+        }else if(file != null){
+          myFileCaches[6] = {file:file, contentsType:"otherFile4"};
+        }
+        console.log(myFileCaches);
     });
     $('#otherFile5').change(function(evt) {
-      handleFileChange(evt, 7);
+      //handleFileChange(evt, 7);
+    	var file = evt.target.files[0];
+        if(file == null && myFileCaches[7] != null){
+            delete myFileCaches[7];
+        }else if(file != null){
+          myFileCaches[7] = {file:file, contentsType:"otherFile5"};
+        }
+        console.log(myFileCaches);
     });
 
     // Save btn
@@ -632,7 +667,7 @@
   }
 
   // Define a common function to handle file input changes
-  function handleFileChange(evt, cacheIndex) {
+/*   function handleFileChange(evt, cacheIndex) {
     var file = evt.target.files[0];
     if (file == null && myFileCaches[cacheIndex] != null) {
       delete myFileCaches[cacheIndex];
@@ -657,15 +692,14 @@
       msg += "*Only allow picture with less than 2MB.<br>";
     }
 
+    console.log(myFileCaches);
     if (msg) {
       myFileCaches[cacheIndex].file['checkFileValid'] = false;
       Common.alert(msg);
     } else {
       myFileCaches[cacheIndex].file['checkFileValid'] = true;
     }
-
-    //console.log(myFileCaches);
-  }
+  } */
 
   function fn_removeFile(name) {
     if (name == "OTH") {
