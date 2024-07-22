@@ -39,7 +39,8 @@
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
-                $("#custTin").val(custInfo.custTin); //Customer TIN no
+                $("#tin").val(custInfo.custTin); //Customer TIN no
+                $("#sstRegNo").val(custInfo.sstRgistNo); //SST Reg No
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
                 if(custInfo.receivingMarketingMsgStatus == 1){
