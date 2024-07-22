@@ -64,6 +64,11 @@ public class SupplementTagManagementImpl
   }
 
   @Override
+  public List<EgovMap> selectTagStus2() {
+    return supplementTagManagementMapper.selectTagStus2();
+  }
+
+  @Override
   public List<EgovMap> selectTagManagementList( Map<String, Object> params ) throws Exception {
     return supplementTagManagementMapper.selectTagManagementList( params );
   }
@@ -279,6 +284,34 @@ public class SupplementTagManagementImpl
           }
         }
       }
+
+      rtnMap.put( "logError", "000" );
+    } catch ( Exception e ) {
+      // supplementTagManagementMapper.rollbackRefStgStatus( params );
+      rtnMap.put( "logError", "99" );
+      rtnMap.put( "message", "An error occurred: " + e.getMessage() );
+      LOGGER.error( "Error in updating approval request", e );
+    }
+    return rtnMap;
+  }
+
+  public Map<String, Object> updateTagInfoResponse( Map<String, Object> params ) throws Exception {
+    Map<String, Object> rtnMap = new HashMap<>();
+
+    try {
+      params.put( "userId", CommonUtils.nvl(params.get("userId")));
+
+      int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
+      params.put("seqCcrResultId", ccr07Seq);
+
+      // INSERT CCR0007D
+      supplementTagManagementMapper.insertTagCcrDetail( params );
+
+      if (params.get("attachYN").equals("Y")){
+        supplementTagManagementMapper.updateSupCareAttch(params);
+      }
+
+      supplementTagManagementMapper.updateCcrMain(params);
 
       rtnMap.put( "logError", "000" );
     } catch ( Exception e ) {

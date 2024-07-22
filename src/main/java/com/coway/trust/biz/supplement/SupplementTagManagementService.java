@@ -12,6 +12,8 @@ public interface SupplementTagManagementService {
 
   List<EgovMap> selectTagStus();
 
+  List<EgovMap> selectTagStus2();
+
   List<EgovMap> getMainTopicList();
 
   List<EgovMap> getInchgDeptList();
@@ -35,6 +37,8 @@ public interface SupplementTagManagementService {
   void insertAttachBiz( List<FileVO> list, FileType type, Map<String, Object> params );
 
   Map<String, Object> updateTagInfo( Map<String, Object> params ) throws Exception;
+
+  Map<String, Object> updateTagInfoResponse( Map<String, Object> params ) throws Exception;
 
   List<EgovMap> getAttachListCareline( Map<String, Object> params );
 

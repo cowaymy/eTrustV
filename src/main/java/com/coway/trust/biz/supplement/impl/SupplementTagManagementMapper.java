@@ -11,6 +11,8 @@ public interface SupplementTagManagementMapper {
 
   List<EgovMap> selectTagStus();
 
+  List<EgovMap> selectTagStus2();
+
   List<EgovMap> getMainTopicList();
 
   List<EgovMap> getInchgDeptList();
@@ -52,6 +54,8 @@ public interface SupplementTagManagementMapper {
   void updateCcrMain( Map<String, Object> params );
 
   void updateSupHqAttch( Map<String, Object> params );
+
+  void updateSupCareAttch( Map<String, Object> params );
 
   int insertCancMain( Map<String, Object> params );
 
