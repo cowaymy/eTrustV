@@ -222,45 +222,64 @@ public class SupplementTagManagementImpl
     try {
       params.put( "userId", CommonUtils.nvl(params.get("userId")));
 
+      // VERIFY ORDER ALREADY BEEN CANCEL IF SUB TOPIC IS  REFUND REQUEST.
+      if (CommonUtils.nvl(params.get("subTopicId")).equals ("4001")) {
+        if ((params.get("tagStus").equals ("5"))){
+          int count = supplementTagManagementMapper.checkRcdExistCancellation(params);
+          if (count > 0) {
+            rtnMap.put( "logError", "99" );
+            rtnMap.put( "message", "Order already been cancel." );
+            LOGGER.error( "Order already been cancel.");
+            return rtnMap;
+          }
+        }
+      }
+
       int ccr07Seq = supplementTagManagementMapper.getSeqCCR0007D();
       params.put("seqCcrResultId", ccr07Seq);
 
       // INSERT CCR0007D
       supplementTagManagementMapper.insertTagCcrDetail( params );
 
-      if (params.get("attachYN") == "Y"){
+      if (params.get("attachYN").equals("Y")){
         supplementTagManagementMapper.updateSupHqAttch(params);
       }
 
       // ACTIVE EITHE CANCEL OR RESOLVED BUT NOT IN REQUEST REFUND
-      if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("5")) && (!params.get("subTopicId").equals ("4001")) )){
-        // UPDATE CCR0006D
-        supplementTagManagementMapper.updateCcrMain(params);
+      if (!CommonUtils.nvl(params.get("subTopicId")).equals ("4001")) {
+        if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("5")) )){
+          // UPDATE CCR0006D
+          supplementTagManagementMapper.updateCcrMain(params);
+        }
+      }
 
-        if (params.get("tagStus").equals ("10")) { // REJECT
+      // SOLVED & REQUEST REFUND
+      if (CommonUtils.nvl(params.get("subTopicId")).equals ("4001")) {
+        supplementTagManagementMapper.updateCcrMain(params);
+        if ((params.get("tagStus").equals ("5"))){
+          int sup07Seq = supplementTagManagementMapper.getSeqSUP0007M();
+          params.put("seqCancId", sup07Seq);
+
+          params.put("tokenSupReqCancNo", getSupReqCancNo());
+
+          //  INSERT SUP0007M
+          supplementTagManagementMapper.insertCancMain(params);
+
+          // UPDATE CCR0006D
+          supplementTagManagementMapper.updateCcrMainWithCid(params);
+
+          // UPDATE SUP0001M STATUS AND STAGE
+          supplementTagManagementMapper.updateMasterSuppStaStag(params);
+
+        } else if (params.get("tagStus").equals ("10")) { // REJECT
           Map<String, Object> custEmailDtl = supplementTagManagementMapper.getCustEmailDtl( params );
           if ( custEmailDtl != null ) {
+            custEmailDtl.put( "remark", params.get("remark") );
             this.sendEmail( custEmailDtl );
           }
         }
       }
 
-      // SOLVED & REQUEST REFUND
-      if ((params.get("tagStus").equals ("5")) && (params.get("subTopicId").equals ("4001"))){
-        int sup07Seq = supplementTagManagementMapper.getSeqSUP0007M();
-        params.put("seqCancId", sup07Seq);
-
-        params.put("tokenSupReqCancNo", getSupReqCancNo());
-
-        //  INSERT SUP0007M
-        supplementTagManagementMapper.insertCancMain(params);
-
-        // UPDATE CCR0006D
-        supplementTagManagementMapper.updateCcrMainWithCid(params);
-
-        // UPDATE SUP0001M STATUS AND STAGE
-        supplementTagManagementMapper.updateMasterSuppStaStag(params);
-      }
       rtnMap.put( "logError", "000" );
     } catch ( Exception e ) {
       // supplementTagManagementMapper.rollbackRefStgStatus( params );
