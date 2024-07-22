@@ -134,6 +134,58 @@ public class SupplementTagManagementController {
     return "supplement/supplementTagManagementApprovalPop";
   }
 
+  @RequestMapping(value = "/tagMngResponsePop.do")
+  public String tagMngResponsePop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
+    EgovMap tagInfoMap = null;
+
+    List<EgovMap> tagStus = supplementTagManagementService.selectTagStus2();
+    List<EgovMap> inchgDept = supplementTagManagementService.getInchgDeptList();
+
+    orderInfoMap = supplementUpdateService.selectOrderBasicInfo( params );
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
+    tagInfoMap = supplementTagManagementService.selectOrderBasicInfo( params );
+
+    params.put( "userId", sessionVO.getUserId() );
+    model.put( "userBr", sessionVO.getUserBranchId() );
+
+    model.addAttribute( "orderInfo", orderInfoMap );
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
+    model.addAttribute( "tagInfo", tagInfoMap );
+    model.addAttribute( "tagStus", tagStus );
+    model.addAttribute( "inchgDept", inchgDept );
+
+    return "supplement/supplementTagManagementResponsePop";
+  }
+
+  @RequestMapping(value = "/tagMngViewDetailPop.do")
+  public String tagMngViewDetailPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    EgovMap orderInfoMap = null;
+    EgovMap cancellationDelInfoMap = null;
+    EgovMap tagInfoMap = null;
+
+    List<EgovMap> tagStus = supplementTagManagementService.selectTagStus();
+    List<EgovMap> inchgDept = supplementTagManagementService.getInchgDeptList();
+
+    orderInfoMap = supplementUpdateService.selectOrderBasicInfo( params );
+    cancellationDelInfoMap = supplementUpdateService.selectCancDelInfo(params);
+    tagInfoMap = supplementTagManagementService.selectOrderBasicInfo( params );
+
+    params.put( "userId", sessionVO.getUserId() );
+    model.put( "userBr", sessionVO.getUserBranchId() );
+
+    model.addAttribute( "orderInfo", orderInfoMap );
+    model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
+    model.addAttribute( "tagInfo", tagInfoMap );
+    model.addAttribute( "tagStus", tagStus );
+    model.addAttribute( "inchgDept", inchgDept );
+
+    return "supplement/supplementTagManagementViewDetailPop";
+  }
+
   @RequestMapping(value = "/newTagRequestPop.do")
   public String newTagRequestPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -274,6 +326,36 @@ public class SupplementTagManagementController {
 
     try {
       Map<String, Object> returnMap = supplementTagManagementService.updateTagInfo( params );
+      if ( "000".equals( returnMap.get( "logError" ) ) ) {
+        msg += "Selected tag ticket update successfully.";
+        message.setCode( AppConstants.SUCCESS );
+      }
+      else {
+        msg += "Selected tag ticket failed to update. <br />";
+        msg += "Errorlogs : " + returnMap.get( "message" ) + "<br />";
+        message.setCode( AppConstants.FAIL );
+      }
+      message.setMessage( msg );
+    }
+    catch ( Exception e ) {
+      LOGGER.error( "Error during update tag approval details.", e );
+      msg += "An unexpected error occurred.<br />";
+      message.setCode( AppConstants.FAIL );
+      message.setMessage( msg );
+    }
+    return ResponseEntity.ok( message );
+  }
+
+  @Transactional
+  @RequestMapping(value = "/updateTagInfoResponse.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateTagInfoResponse( @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO ) throws Exception {
+    ReturnMessage message = new ReturnMessage();
+    String msg = "";
+
+    params.put( "userId", sessionVO.getUserId() );
+
+    try {
+      Map<String, Object> returnMap = supplementTagManagementService.updateTagInfoResponse( params );
       if ( "000".equals( returnMap.get( "logError" ) ) ) {
         msg += "Selected tag ticket update successfully.";
         message.setCode( AppConstants.SUCCESS );
