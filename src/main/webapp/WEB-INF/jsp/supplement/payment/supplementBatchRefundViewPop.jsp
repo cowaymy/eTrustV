@@ -83,8 +83,6 @@ $(document).ready(function () {
         setFilterByValues(21);
     });
 
-
-	console.log('${bRefundInfo.totalValidAmt}');
 	var str =""+ Number('${bRefundInfo.totalValidAmt}').toFixed(2);
 
     var str2 = str.split(".");
@@ -94,11 +92,9 @@ $(document).ready(function () {
     }
 
     str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-    console.log(str);
 
     $("#totAmt").text(str);
 
-	console.log($.parseJSON('${bRefundItem}'));
 	AUIGrid.setGridData(viewGridID, $.parseJSON('${bRefundItem}'));
 
 	$("#refundInfo").trigger("click");
@@ -110,8 +106,6 @@ function fn_closePop() {
 
 function setFilterByValues(validStusId) {
     // 4 : valid, 21 : invalid
-    console.log("setFilterByValues");
-    console.log(validStusId);
     if(validStusId == 4) {
     	AUIGrid.setFilterByValues(viewGridID, "validStusId", [4]);
     } else if(validStusId == 21) {

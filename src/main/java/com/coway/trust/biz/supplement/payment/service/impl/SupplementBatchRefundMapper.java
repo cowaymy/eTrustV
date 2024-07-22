@@ -8,7 +8,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("supplementBatchRefundMapper")
 public interface SupplementBatchRefundMapper {
-
 	List<EgovMap> selectBatchRefundList(Map<String, Object> params);
 
 	EgovMap selectBatchRefundInfo(Map<String, Object> params);

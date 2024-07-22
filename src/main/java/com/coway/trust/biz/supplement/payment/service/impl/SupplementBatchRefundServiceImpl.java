@@ -21,18 +21,17 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 
 	@Override
 	public List<EgovMap> selectBatchRefundList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return supplementBatchRefundMapper.selectBatchRefundList(params);
 	}
 
 	@Override
 	public EgovMap selectBatchRefundInfo(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		EgovMap bRefundInfo = supplementBatchRefundMapper.selectBatchRefundInfo(params);
 		List<EgovMap> bRefundItem = supplementBatchRefundMapper.selectBatchRefundItem(params);
 
 		int totalInvalid = 0;
 		double totalValidAmt = 0;
+
 		for (EgovMap egovMap : bRefundItem) {
 			if(Integer.parseInt(String.valueOf(egovMap.get("validStusId"))) == 21) {
 				totalInvalid = totalInvalid + 1;
@@ -52,25 +51,21 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 
 	@Override
 	public List<EgovMap> selectBatchRefundItem(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return supplementBatchRefundMapper.selectBatchRefundItem(params);
 	}
 
 	@Override
 	public List<EgovMap> selectAccNoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return supplementBatchRefundMapper.selectAccNoList(params);
 	}
 
 	@Override
   public List<EgovMap> selectCodeList(Map<String, Object> params) {
-    // TODO Auto-generated method stub
     return supplementBatchRefundMapper.selectCodeList(params);
   }
 
 	@Override
 	public int saveBatchRefundUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
-		// TODO Auto-generated method stub
     int result = 0;
 		int mastetSeq = supplementBatchRefundMapper.selectNextBatchId();
 		master.put("batchId", mastetSeq);
@@ -85,6 +80,7 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 				detailList.get(i).put("delFlg", "N");
 				supplementBatchRefundMapper.insertBatchRefundD(detailList.get(i));
 			}
+
 			//CALL PROCEDURE
 			result = supplementBatchRefundMapper.callBatchRefundVerifyDet(master);
 			 if (!master.get( "p1" ).toString().equals("1")) {
@@ -96,7 +92,6 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 
 	@Override
 	public int batchRefundDeactivate(Map<String, Object> master) {
-		// TODO Auto-generated method stub
 		EgovMap bRefundInfo = supplementBatchRefundMapper.selectBatchRefundInfo(master);
 
 		if(!bRefundInfo.isEmpty()) {
@@ -104,12 +99,12 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 				return supplementBatchRefundMapper.batchRefundDeactivate(master);
 			}
 		}
+
 		return 0;
 	}
 
 	@Override
 	public int batchRefundConfirm(Map<String, Object> master, Boolean isConvert) {
-		// TODO Auto-generated method stub
 		EgovMap bRefundInfo = supplementBatchRefundMapper.selectBatchRefundInfo(master);
 		List<EgovMap> bRefundItem = supplementBatchRefundMapper.selectBatchRefundItem(master);
 		int result = 0;
@@ -154,7 +149,6 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 
 	@Override
 	public int batchRefundItemDisab(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return supplementBatchRefundMapper.batchRefundItemDisab(params);
 	}
 
@@ -175,7 +169,6 @@ public class SupplementBatchRefundServiceImpl implements SupplementBatchRefundSe
 
   @Override
   public List<EgovMap> selectSupOrdList(String borNo) {
-    // TODO Auto-generated method stub
     return supplementBatchRefundMapper.selectSupOrdList(borNo);
   }
 

@@ -90,7 +90,6 @@ $(document).ready(function () {
 	$("#pConfirm_btn").click(fn_confirm);
 	$("#remove_btn").click(fn_bRefundItemDisab);
 
-	console.log('${bRefundInfo.totalValidAmt}');
 	var str =""+ Number('${bRefundInfo.totalValidAmt}').toFixed(2);
 
     var str2 = str.split(".");
@@ -100,16 +99,12 @@ $(document).ready(function () {
     }
 
     str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-    console.log(str);
 
     $("#totAmt").text(str);
 
-	console.log($.parseJSON('${bRefundItem}'));
 	AUIGrid.setGridData(confirmGridID, $.parseJSON('${bRefundItem}'));
 
 	AUIGrid.bind(confirmGridID, "cellClick", function( event ) {
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("CellClick detId : " + event.item.detId);
         // TODO pettyCash Expense Info GET
         detId = event.item.detId;
     });
@@ -123,8 +118,6 @@ function fn_closePop() {
 
 function setFilterByValues(validStusId) {
     // 4 : valid, 21 : invalid
-    console.log("setFilterByValues");
-    console.log(validStusId);
     if(validStusId == 4) {
     	AUIGrid.setFilterByValues(confirmGridID, "validStusId", [4]);
     } else if(validStusId == 21) {
@@ -138,12 +131,8 @@ function setFilterByValues(validStusId) {
 function fn_deactivate() {
 	Common.confirm("<spring:message code='supplement.alert.deactivateRefundBatch'/>",function (){
 		Common.ajax("GET", "/supplement/payment/batchRefundDeactivate.do", $("#form_bRefundConfirm").serialize(), function(result) {
-	        console.log(result);
-
 	        Common.alert(result.message);
-
 	        fn_closePop();
-
 	        fn_selectBatchRefundList();
 	    });
 	});
@@ -156,7 +145,6 @@ function fn_confirm() {
 	    } else {
 	        if(Number($("#totValidCount").text()) > 0) {
 	            Common.ajax("GET", "/supplement/payment/batchRefundConfirm.do", $("#form_bRefundConfirm").serialize(), function(result) {
-	                console.log(result);
 	                Common.alert(result.message);
 	                fn_closePop();
 	                fn_selectBatchRefundList();
@@ -169,11 +157,8 @@ function fn_confirm() {
 }
 
 function fn_bRefundItemDisab() {
-	console.log("remove Action");
 	if(detId > 0) {
 		Common.ajax("GET", "/supplement/payment/batchRefundItemDisab.do", {detId:detId,batchId:$("#pBatchId").val()}, function(result) {
-            console.log(result);
-
             Common.alert(result.message);
 
             $("#tBatchId").text(result.data.batchId);
@@ -187,9 +172,7 @@ function fn_bRefundItemDisab() {
             $("#tCnvtBy").text(result.data.c2);
             $("#tCnvtAt").text(result.data.cnvrDt);
             var totAmt = result.data.totalValidAmt;
-            console.log(totAmt);
             var str =""+ totAmt.toFixed(2);
-
             var str2 = str.split(".");
 
             if(str2.length == 1){
@@ -197,7 +180,6 @@ function fn_bRefundItemDisab() {
             }
 
             str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-            console.log(str);
             $("#totAmt").text(str);
             $("#totItemCount").text(result.data.totalItem);
             $("#totValidCount").text(result.data.totalValid);

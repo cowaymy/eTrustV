@@ -59,8 +59,6 @@ public class SupplementBatchRefundController {
 
 	@RequestMapping(value = "/selectBatchRefundList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBatchRefundList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-		LOGGER.debug("params =====================================>>  " + params);
-
 		String[] payMode = request.getParameterValues("payMode");
 		String[] batchStus = request.getParameterValues("batchStus");
 		String[] cnfmStus = request.getParameterValues("cnfmStus");
@@ -71,18 +69,16 @@ public class SupplementBatchRefundController {
 
 		List<EgovMap> list = supplementBatchRefundService.selectBatchRefundList(params);
 
-		LOGGER.debug("list =====================================>>  " + list.toString());
 		return ResponseEntity.ok(list);
 	}
 
 	@RequestMapping(value = "/batchRefundViewPop.do")
 	public String batchRefundViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		LOGGER.debug("params =====================================>>  " + params);
-
 		EgovMap bRefundInfo = supplementBatchRefundService.selectBatchRefundInfo(params);
 
 		model.addAttribute("bRefundInfo", bRefundInfo);
 		model.addAttribute("bRefundItem", new Gson().toJson(bRefundInfo.get("bRefundItem")));
+
 		return "supplement/payment/supplementBatchRefundViewPop";
 	}
 
@@ -93,8 +89,6 @@ public class SupplementBatchRefundController {
 
 	@RequestMapping(value = "/selectAccNoList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAccNoList(@RequestParam Map<String, Object> params, ModelMap model) {
-		LOGGER.debug("params =====================================>>  " + params);
-
 		List<EgovMap> list = supplementBatchRefundService.selectAccNoList(params);
 
 		return ResponseEntity.ok(list);
@@ -102,8 +96,6 @@ public class SupplementBatchRefundController {
 
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-    LOGGER.debug("params =====================================>>  " + params);
-
     List<EgovMap> codeList = supplementBatchRefundService.selectCodeList(params);
 
     return ResponseEntity.ok(codeList);
@@ -120,7 +112,6 @@ public class SupplementBatchRefundController {
 		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 		String accNo = request.getParameter("accNo");
 		for (SupplementBatchRefundVO vo : vos) {
-      LOGGER.info("[SupplementBatchRefundController - bRefundCsvFileUpload] vo :: {}" + vo);
       HashMap<String, Object> hm = new HashMap<String, Object>();
       List<EgovMap> supOrdList = supplementBatchRefundService.selectSupOrdList(vo.getBorNo().trim());
 
@@ -181,18 +172,16 @@ public class SupplementBatchRefundController {
 			message.setCode(AppConstants.FAIL);
 		}
 
-
 		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/batchRefundConfirmPop.do")
 	public String batchRefundConfirmPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		LOGGER.debug("params =====================================>>  " + params);
-
-		EgovMap bRefundInfo = supplementBatchRefundService.selectBatchRefundInfo(params);
+	  EgovMap bRefundInfo = supplementBatchRefundService.selectBatchRefundInfo(params);
 
 		model.addAttribute("bRefundInfo", bRefundInfo);
 		model.addAttribute("bRefundItem", new Gson().toJson(bRefundInfo.get("bRefundItem")));
+
 		return "supplement/payment/supplementBatchRefundConfirmPop";
 	}
 
