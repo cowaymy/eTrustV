@@ -221,7 +221,7 @@
 
                Common.ajax("POST", "/supplement/updateTagInfo.do", param,
                  function(result) {
-                   if (result.code == "00") { //successful update
+                   if (result.code == "00") {
                      Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
                    } else {
                      Common.alert(result.message, fn_popClose);
@@ -248,10 +248,9 @@
 
              Common.ajax("POST", "/supplement/updateTagInfo.do", param,
                function(result) {
-                 if (result.code == "00") { //successful update
+                 if (result.code == "00") {
                    Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
                  } else {
-                   console.log("failed");
                    Common.alert(result.message, fn_popClose);
                  }
              });
