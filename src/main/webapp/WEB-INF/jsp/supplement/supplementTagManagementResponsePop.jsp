@@ -219,7 +219,7 @@
                  Common.alert('Save Tag Approval' + DEFAULT_DELIMITER + result.message);
                }
 
-               Common.ajax("POST", "/supplement/updateTagInfo.do", param,
+               Common.ajax("POST", "/supplement/updateTagInfoResponse.do", param,
                  function(result) {
                    if (result.code == "00") {
                      Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
@@ -246,7 +246,7 @@
                                   attachYN : "N"
              };
 
-             Common.ajax("POST", "/supplement/updateTagInfo.do", param,
+             Common.ajax("POST", "/supplement/updateTagInfoResponse.do", param,
                function(result) {
                  if (result.code == "00") {
                    Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
@@ -406,7 +406,7 @@
   <input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
 
   <header class="pop_header">
-    <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="pay.btn.approval" /></h1>
+    <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="sal.text.response" /></h1>
     <ul class="right_opt">
       <li>
         <p class="btn_blue2">
@@ -525,7 +525,7 @@
     <section class="search_result">
       <article class="grid_wrap">
         <aside class="title_line">
-          <h3><spring:message code="pay.btn.approval" /></h3>
+          <h3><spring:message code="sal.text.response" /></h3>
         </aside>
         <table class="type1">
           <caption>table</caption>

@@ -41,6 +41,36 @@
             Common.popupDiv("/supplement/newTagRequestPop.do", '', null, true, '_insDiv');
         });
 
+        $("#_tagResponse").click(
+          function() {
+            var clickChk = AUIGrid.getSelectedItems(tagGridID);
+            if (clickChk == null || clickChk.length <= 0) {
+              Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
+
+            var tagStat = clickChk[0].item.tagStatusId;
+            if (tagStat != '1') {
+              Common.alert('<spring:message code="supplement.alert.msg.actTagAllowResp" />');
+              return;
+            }
+
+            var supplementForm = {
+              supRefId : clickChk[0].item.supRefId,
+              supTagId : clickChk[0].item.supTagId,
+              counselingNo : clickChk[0].item.counselingNo,
+              ccr0006dCallEntryIdSeq : clickChk[0].item.ccr0006dCallEntryIdSeq,
+              ind : "1"
+            };
+
+            var supRefId = clickChk[0].item.supRefId;
+            var supTagId = clickChk[0].item.supTagId;
+            var counselingNo = clickChk[0].item.counselingNo;
+            var ccr0006dCallEntryIdSeq = clickChk[0].item.ccr0006dCallEntryIdSeq;
+
+            Common.popupDiv("/supplement/tagMngResponsePop.do", supplementForm, null, true, '_insDiv');
+        });
+
         $("#_update").click(
           function() {
             var clickChk = AUIGrid.getSelectedItems(tagGridID);
@@ -71,6 +101,30 @@
            //console.log("ccr0006dCallEntryIdSeq:: " + ccr0006dCallEntryIdSeq)
 
            Common.popupDiv("/supplement/tagMngApprovalPop.do", supplementForm, null, true, '_insDiv');
+         });
+
+        $("#_viewDetail").click(
+          function() {
+            var clickChk = AUIGrid.getSelectedItems(tagGridID);
+            if (clickChk == null || clickChk.length <= 0) {
+              Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+              return;
+            }
+
+            var tagForm = {
+              supRefId : clickChk[0].item.supRefId,
+              supTagId : clickChk[0].item.supTagId,
+              counselingNo : clickChk[0].item.counselingNo,
+              ccr0006dCallEntryIdSeq : clickChk[0].item.ccr0006dCallEntryIdSeq,
+              ind : "1"
+            };
+
+            var supRefId = clickChk[0].item.supRefId;
+            var supTagId = clickChk[0].item.supTagId;
+            var counselingNo = clickChk[0].item.counselingNo;
+            var ccr0006dCallEntryIdSeq = clickChk[0].item.ccr0006dCallEntryIdSeq;
+
+            Common.popupDiv("/supplement/tagMngViewDetailPop.do", tagForm, null, true, '_insDiv');
          });
 
          AUIGrid.bind(tagGridID, "cellClick", function(event) {
@@ -266,7 +320,7 @@
 
   function fn_inchgDept_SelectedIndexChanged() {
     $("#ddSubDept option").remove();
-    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT='  + $("#inchgDept").val(), '', 'SD1003', 'ddSubDept', 'M', 'fn_callbackSubDept');
+    doGetCombo('/supplement/getSubDeptList.do?DEFECT_GRP_DEPT='  + $("#inchgDept").val(), '', '', 'ddSubDept', 'S', '');
   }
 
   function fn_callbackSubDept() {
@@ -337,6 +391,13 @@
           </p>
         </li>
       </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+        <li>
+          <p class="btn_blue">
+            <a href="#" id="_tagResponse"><spring:message code="sal.text.response" /></a>
+          </p>
+        </li>
+      </c:if>
       <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li>
           <p class="btn_blue">
@@ -345,6 +406,11 @@
         </li>
       </c:if>
       <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li>
+          <p class="btn_blue">
+            <a href="#" id="_viewDetail"><spring:message code="sys.scm.inventory.ViewDetail" /></a>
+          </p>
+        </li>
         <li>
           <p class="btn_blue">
             <a href="#" id="_search"><span class="search"></span> <spring:message

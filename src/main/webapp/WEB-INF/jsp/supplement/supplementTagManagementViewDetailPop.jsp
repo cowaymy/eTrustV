@@ -224,7 +224,7 @@
                    if (result.code == "00") {
                      Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
                    } else {
-                     Common.alert(result.message);
+                     Common.alert(result.message, fn_popClose);
                    }
                });
              },
@@ -251,7 +251,7 @@
                  if (result.code == "00") {
                    Common.alert(" The Tag No. for " + supRefNo + " has been update successfully.", fn_popClose());
                  } else {
-                   Common.alert(result.message);
+                   Common.alert(result.message, fn_popClose);
                  }
              });
            }
@@ -518,85 +518,6 @@
         <!------------------------------------------------------------------------------
           Order Detail Page Include END
          ------------------------------------------------------------------------------->
-      </article>
-    </section>
-    <section class="search_table">
-    </section>
-    <section class="search_result">
-      <article class="grid_wrap">
-        <aside class="title_line">
-          <h3><spring:message code="pay.btn.approval" /></h3>
-        </aside>
-        <table class="type1">
-          <caption>table</caption>
-          <colgroup>
-            <col style="width: 180px" />
-            <col style="width: *" />
-            <col style="width: 180px" />
-            <col style="width: *" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">*</span></th>
-              <td colspan="3">
-                <select class="select w100p" id="inchgDeptList" name="inchgDeptList" onChange="fn_inchgDept_SelectedIndexChanged()">
-                <option value="">Choose One</option>
-                <c:forEach var="list" items="${inchgDept}" varStatus="status">
-                  <c:choose>
-                    <c:when test="${list.codeId=='MD103'}"> <!-- DEFAULT BEREX -->
-                      <option value="${list.codeId}" selected>${list.codeName}</option>
-                    </c:when>
-                    <c:otherwise>
-                      <option value="${list.codeId}">${list.codeName}</option>
-                    </c:otherwise>
-                  </c:choose>
-                </c:forEach>
-              </select>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
-              <td colspan="3"><select id='ddlSubDeptUpd' name='ddlSubDeptUpd' class="w100p"></select></td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code="supplement.text.supplementTagStus" /><span class="must">*</span></th>
-              <td colspan="3">
-                <select class="select w100p" id="tagStusPop" name=""tagStusPop"">
-                  <option value="">Choose One</option>
-                  <c:forEach var="list" items="${tagStus}" varStatus="status">
-                    <option value="${list.codeId}">${list.codeName}</option>
-                  </c:forEach>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code="sal.text.attachment" /></th>
-              <td colspan="3">
-                <div class="auto_file2">
-                  <input type="file" title="" id="attch" accept=".zip" />
-                  <label>
-                    <input type='text' class='input_text' id='labelFileInput' readonly='readonly' />
-                    <span class='label_text' id='labelFileInput'>
-                      <a href='#'><spring:message code='sys.btn.upload' /></a>
-                    </span>
-                  </label>
-                  <span class='label_text'><a href='#' onclick='fn_removeFile("attch")'><spring:message code='sys.btn.remove' /></a></span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code="service.title.Remark" /></th>
-              <td colspan="3"><input type="text" title="" placeholder="Remark" class="w100p" id="_remark" " name="remark" />
-              </td>
-            </tr>
-            </br>
-          </tbody>
-        </table>
-        <ul class="center_btns">
-          <li><p class="btn_blue2">
-              <a id="_saveBtn"><spring:message code="sal.btn.save" /></a>
-            </p></li>
-        </ul>
       </article>
     </section>
   </section>
