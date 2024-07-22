@@ -1230,6 +1230,30 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
            AND T1.PROMO_ITM_STUS_ID = 1
     </select>
 
+    <select id="selectPromoReqstPrdUpdateList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_REQST_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.ACTION_TAB
+          FROM SAL0359D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+         WHERE T1.PROMO_REQST_ID = #{promoReqstId}
+    </select>
+
       <update id="updatePromoReqstApproval" parameterType="Map">
           UPDATE SAL0358M
            SET APPV_STUS = #{appvStus}

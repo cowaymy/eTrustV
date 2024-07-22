@@ -181,7 +181,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
         paramRqst.put("promoReqstId", salesPromoMVO.getPromoReqstId());
 
         EgovMap promoReqstInfo = promotionMapper.selectPromoReqstInfo(paramRqst);
-        List<EgovMap> promoReqstPrdList =promotionMapper.selectPromoReqstPrdList(paramRqst);
+        List<EgovMap> promoReqstPrdList =promotionMapper.selectPromoReqstPrdUpdateList(paramRqst);
 
         SalesPromoMVO salesPromoMVONew = new SalesPromoMVO();
 		this.preprocSalesPromotionMasterNew(promoReqstInfo,salesPromoMVONew,sessionVO);

@@ -68,6 +68,7 @@ public interface PromotionMapper {
 	EgovMap selectPromoReqstInfo(Map<String, Object> params);
 
 	List<EgovMap> selectPromoReqstPrdList(Map<String, Object> params);
+	List<EgovMap> selectPromoReqstPrdUpdateList(Map<String, Object> params);
 
 	void updatePromoReqstApproval(Map<String, Object> params);
 
