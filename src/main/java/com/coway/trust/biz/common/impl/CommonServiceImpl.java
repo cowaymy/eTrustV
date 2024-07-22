@@ -1512,13 +1512,13 @@ public class CommonServiceImpl
     if ("".equals( CommonUtils.nvl(params.get( "custCtnt" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER CONTACT NUMBER IS REQUIRED.");
       rtnStat.put( "status", "999" );
-      rtnStat.put( "message", "CUSTOMER CONTACT NUMBER IS REQUIRED." );
+      rtnStat.put( "message", "CUSTOMER MAIN CONTACT NUMBER IS REQUIRED." );
       return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "custEmail" )))) {
       //throw new ApplicationException(AppConstants.FAIL, "CUSTOMER EMAIL IS REQUIRED.");
       rtnStat.put( "status", "999" );
-      rtnStat.put( "message", "CUSTOMER EMAIL IS REQUIRED." );
+      rtnStat.put( "message", "CUSTOMER MAIN CONTACT EMAIL IS REQUIRED." );
       return rtnStat;
     }
     if ("".equals( CommonUtils.nvl(params.get( "ordDesc" )))) {
