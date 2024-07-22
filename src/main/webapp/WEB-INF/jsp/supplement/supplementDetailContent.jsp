@@ -39,10 +39,10 @@
          }
          break;
      case 'docSubm' :
-       AUIGrid.resize(docGridID, 942, 380);
+       /* AUIGrid.resize(docGridID, 942, 380);
        if(AUIGrid.getRowCount(docGridID) <= 0) {
          fn_selectDocumentList();
-       }
+       } */
        break;
     }
   }
