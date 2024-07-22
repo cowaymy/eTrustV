@@ -93,6 +93,14 @@
     WHERE Extent1.STUS_CODE_ID IN ( 1, 5, 10 )
   </select>
 
+  <select id="selectTagStus2"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STUS_CODE_ID CODE_ID
+             , Extent1.CODE CODE
+             , UPPER(Extent1.NAME) CODE_NAME
+    FROM SYS0038M Extent1
+    WHERE Extent1.STUS_CODE_ID IN ( 1, 10 )
+  </select>
+
   <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
     SELECT DEFECT_ID AS CODE_ID,
              UPPER(DEFECT_CODE || '-' || DEFECT_DESC) AS CODE_NAME,
@@ -374,6 +382,14 @@
 
   <update id="updateSupHqAttch" parameterType="Map">
     UPDATE SUP0006M SET SUP_TAG_FL_ATT_ID2 = #{atchFileGrpId},
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_TAG_ORD_ID = #{supRefId}
+        AND SUP_TAG_ID = #{supTagId}
+  </update>
+
+  <update id="updateSupCareAttch" parameterType="Map">
+    UPDATE SUP0006M SET SUP_TAG_FL_ATT_ID1 = #{atchFileGrpId},
                                      UPD_USR_ID = #{userId},
                                      UPD_DT = SYSDATE
     WHERE SUP_TAG_ORD_ID = #{supRefId}
