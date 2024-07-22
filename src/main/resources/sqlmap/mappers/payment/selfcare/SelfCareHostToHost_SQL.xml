@@ -89,16 +89,18 @@
 		A.REMARKS, B.USER_AMT, A.SALES_ORD_NO,
 		D.OR_NO AS RECEIPT_NO, TO_CHAR(B.CRT_DT,'DD/MM/YYYY') AS KEY_IN_DT
 		FROM PAY0354D A
+        JOIN SAL0001D F
+        ON F.SALES_ORD_NO = A.SALES_ORD_NO
 		JOIN PAY0043D B
-		ON A.TRANS_ID = B.USER_REF_NO AND A.BATCH_ID = B.BATCH_ID
+		ON A.TRANS_ID = B.USER_REF_NO AND A.BATCH_ID = B.BATCH_ID AND F.SALES_ORD_ID = B.SYS_ORD_ID
 		JOIN PAY0065D C
 		ON C.PAY_ITM_REF_NO = B.USER_REF_NO
 		JOIN PAY0064D D
-		ON C.PAY_ID = D.PAY_ID
+		ON C.PAY_ID = D.PAY_ID AND F.SALES_ORD_ID = D.SALES_ORD_ID
 		JOIN SYS0013M E
 		ON C.PAY_ITM_MODE_ID =  E.CODE_ID
 		<if test="paymentModeList != null and paymentModeList != ''">
-	      AND C.PAY_ITM_MODE_ID in
+	      AND C.PAY_ITM_MODE_ID IN
 	        <foreach item="item" collection="paymentModeList" index="index" open="(" separator="," close=")">
 	          #{item}
 	        </foreach>

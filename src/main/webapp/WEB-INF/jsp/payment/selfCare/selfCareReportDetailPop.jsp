@@ -8,6 +8,7 @@
 		console.log('${detail.fileId}');
 		var fileId=  '${detail.fileId}';
 		$('#reportFileId').val(fileId);
+		$('#readFileId').val(fileId);
 		createAUIGrid();
 	    $("#btnDownload").click(function() {
 	        GridCommon.exportTo("grid_wrap_report_detail", "xlsx", "SelfCareReportDetail");
@@ -38,7 +39,7 @@
         },
 		{
 			dataField : "payDate",
-			headerText : 'Pay Date',
+			headerText : 'Payment Date',
 			editable : false
 		}, {
 			dataField : "userIssBank",
@@ -53,7 +54,7 @@
 			headerText : 'Payment Method',
 			editable : false
 		},{
-			dataField : "ccNo",
+			dataField : "cardNo",
 			headerText : 'Card Num.',
 			editable : false
 		},{
@@ -164,6 +165,10 @@
 				        		<th>ID</th>
 				        		<td>
 				        			<input type="text" title="ID" id="detailId" name="detailId" placeholder="ID" class="w100p" />
+				        		</td>
+				        		<th>File ID</th>
+				        		<td>
+				        			<input type="text" title="ID" id="readFileId" name="readFileId" placeholder="ID" class="w100p" disabled/>
 				        		</td>
 				        	<tr>
 				        	</tr>
