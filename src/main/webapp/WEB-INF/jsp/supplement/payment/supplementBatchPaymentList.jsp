@@ -805,7 +805,7 @@
       $('#totalValid').text("");
       $('#totalInvalid').text("");
 
-      $("#panymentInfo").trigger("click");
+      $("#paymentInfo").trigger("click");
     }
 
     searchList();
@@ -1060,7 +1060,7 @@
   <section class="pop_body">
     <section class="tap_wrap">
       <ul class="tap_type1">
-        <li><a href="#" class="on" id="panymentInfo"><spring:message code='supplement.text.generalInfo' /></a></li>
+        <li><a href="#" class="on" id="paymentInfo"><spring:message code='supplement.text.generalInfo' /></a></li>
         <li><a href="#"><spring:message code='supplement.text.batPmtDtlLst' /></a></li>
       </ul>
       <article class="tap_area">
