@@ -150,6 +150,7 @@ $(document).ready(function() {
                                                dataField : "amt",
                                                headerText :'<spring:message code="sal.title.unitPrice" />',
                                                width : '10%',
+                                               editable : false ,
                                                dataType : "numeric",
                                                formatString : "#,##0.00",
                                                editRenderer : { type : "InputEditRenderer",
@@ -164,6 +165,14 @@ $(document).ready(function() {
                                                dataType : "numeric",
                                                formatString : "#,##0.00",
                                                expFunction : function( rowIndex, columnIndex, item, dataField ) {
+                                                // VALIDATE QUANTITY IN NUMBER ONLY
+                                                if (!/^\d+$/.test(item.inputQty)) {
+                                                  item.inputQty = 0;
+                                                  var label = "<spring:message code='sal.text.quantity' />";
+                                                  Common.alert("<spring:message code='sys.msg.invalid' arguments='"+ label + "'/>");
+                                                  return false;
+                                                }
+
                                                  var subObj = fn_calculateAmt(item.amt , item.inputQty);
                                                  return Number(subObj.subChanges);
                                                }
