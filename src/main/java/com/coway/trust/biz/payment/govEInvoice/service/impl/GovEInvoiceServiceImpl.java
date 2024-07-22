@@ -627,19 +627,29 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 p = g.fromJson(output1, GovEInvcCheckStatusResponseVO.class);
 
                 Map<String, Object> einvUpdParams = new HashMap<>();
-                String documentId = p.getDocumentId()==null?"":p.getDocumentId().toString();
-                String qrCode = p.getQrCode()==null?"":p.getQrCode().toString();
-                String internalId = p.getInternalId()==null?"":p.getInternalId().toString();
-                String dateTimeValidated = p.getDateTimeValidated()==null?"":p.getDateTimeValidated().toString();
-
-                einvUpdParams.put("documentId", documentId);
-                einvUpdParams.put("qrCode", qrCode);
-                einvUpdParams.put("dateTimeValidated", dateTimeValidated);
-                einvUpdParams.put("userId", 349);
                 if(p.getSuccess() && p.getStatus().equals("VALID")){
+                    String documentId = p.getDocumentId()==null?"":p.getDocumentId().toString();
+                    String qrCode = p.getQrCode()==null?"":p.getQrCode().toString();
+                    String internalId = p.getInternalId()==null?"":p.getInternalId().toString();
+                    String dateTimeValidated = p.getDateTimeValidated()==null?"":p.getDateTimeValidated().toString();
+
+                    einvUpdParams.put("documentId", documentId);
+                    einvUpdParams.put("qrCode", qrCode);
+                    einvUpdParams.put("dateTimeValidated", dateTimeValidated);
+                    einvUpdParams.put("userId", 349);
                     einvUpdParams.put("status", 4);
-                }else{
+                }else if(p.getSuccess() && p.getStatus().equals("INVALID")){
+                    String documentId = p.getDocumentId()==null?"":p.getDocumentId().toString();
+                    String qrCode = p.getQrCode()==null?"":p.getQrCode().toString();
+                    String internalId = p.getInternalId()==null?"":p.getInternalId().toString();
+                    String dateTimeValidated = p.getDateTimeValidated()==null?"":p.getDateTimeValidated().toString();
+
+                    einvUpdParams.put("documentId", documentId);
+                    einvUpdParams.put("qrCode", qrCode);
+                    einvUpdParams.put("dateTimeValidated", dateTimeValidated);
+                    einvUpdParams.put("userId", 349);
                     einvUpdParams.put("status", 8);
+                    ResponseMsg = p.getErrorDetails()==null?"":p.getErrorDetails().toString();
                 }
                 updEInvByDocId(einvUpdParams);
 
