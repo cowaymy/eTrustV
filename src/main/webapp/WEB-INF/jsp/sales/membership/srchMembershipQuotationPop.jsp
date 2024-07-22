@@ -24,7 +24,8 @@ var searchQuotationPopLayout = [
     { dataField:"srvQuotValId" ,headerText:"<spring:message code="sal.title.expiredDate" />",width: 100 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
     { dataField:"srvMemPacAmt" ,headerText:"<spring:message code="sal.title.packageCharges" />",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
     { dataField:"srvMemBsAmt" ,headerText:"<spring:message code="sal.title.filterCharges" />",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
-    { dataField:"totalAmt" ,headerText:"<spring:message code="sal.title.totalCharges" />",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"}
+    { dataField:"totalAmt" ,headerText:"<spring:message code="sal.title.totalCharges" />",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
+    { dataField:"billGrpNo" ,headerText:"Customer Bill Group No.", editable : false, visible: false }
     ];
 
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.

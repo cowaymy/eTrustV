@@ -86,6 +86,11 @@
 		headerText : "<spring:message code='pay.head.custId'/>",
 		editable : false
 	}, {
+		dataField:"billGrpNo" ,
+		headerText:"Bill Group No.",
+		width: 100,
+		editable : false
+	}, {
 		dataField : "custName",
 		headerText : "<spring:message code='pay.head.customerName'/>",
 		width : 200,
@@ -230,9 +235,18 @@
 		} else {
 			if (rowCount > 1) {
 				var custId = AUIGrid.getColumnValues(myGridID, "custId");
+				var billGrpNo = AUIGrid.getColumnValues(myGridID, "billGrpNo");
 
 				for (i = 0; i < custId.length - 1; i++) {
 					if (custId[i] != custId[i + 1]) {
+						boolDiff = true;
+						break;
+					} else {
+						boolDiff = false;
+					}
+
+					// Check Customer Bill Group No.
+					if (billGrpNo[i] != billGrpNo[i + 1]) {
 						boolDiff = true;
 						break;
 					} else {
@@ -262,7 +276,7 @@
 			return false;
 		} else {
 			if (boolDiff == true) {
-                Common.alert("Fail to proceed due to diffirent Cust Name /Cust ID");
+                Common.alert("Fail to proceed due to diffirent Cust Name /Cust ID / Cust Bill Group No");
                 boolDiff = false;
             } else {
 				$("#viewDetail_wrap").show();

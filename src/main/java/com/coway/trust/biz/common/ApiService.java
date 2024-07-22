@@ -50,6 +50,10 @@ public interface ApiService {
 
   EgovMap tokenizationProcess(HttpServletRequest request, Map<String, Object> params);
 
+  EgovMap checkRenEInv(Map<String, Object> params);
+  EgovMap checkOutEInv(Map<String, Object> params);
+  EgovMap checkSvmEInv(Map<String, Object> params);
+
 
 
 

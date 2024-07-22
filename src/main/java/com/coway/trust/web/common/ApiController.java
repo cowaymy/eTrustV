@@ -261,11 +261,18 @@ public class ApiController {
   @RequestMapping(value = "/customer/genInvoice.do")
   public void genInvoice(HttpServletRequest request, HttpServletResponse response,
       @RequestParam Map<String, Object> params) {
+	  EgovMap eInvResult = new EgovMap();
 
     // if (params.get("type").equals("133") || params.get("type").equals("134")) {
     if (params.get("type").equals("REN")) {
 
-      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
+      eInvResult = apiService.checkRenEInv(params);
+
+      if(eInvResult.get("genEInv").toString().equals("Y")){
+          params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV_2.rpt");
+      }else{
+          params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
+      }
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
       params.put("V_TYPE", "133");
@@ -273,20 +280,34 @@ public class ApiController {
 
     } else if (params.get("type").equals("OUT")) {
 
-      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
+      eInvResult = apiService.checkOutEInv(params);
+
+      if(eInvResult.get("genEInv").toString().equals("Y")){
+    	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_EIV.rpt");
+      }else{
+    	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
+      }
+      
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
 
     } else if (params.get("type").equals("SVM")) {
 
-      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");
+      eInvResult = apiService.checkSvmEInv(params);
+
+      if(eInvResult.get("genEInv").toString().equals("Y")){
+    	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV_2.rpt");
+      }else{
+    	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");
+      }
+      
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("v_taxInvoiceID", params.get("taxInvoiceId").toString()); // parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
           "ServiceMembership_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
 
-    } else if (params.get("type").equals("RENSVM")) {
+    } else if (params.get("type").equals("RENSVM")) { // RENSVM is opt out for e-Invoice
 
       params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_ServiceContract_PDF_SST.rpt");
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType

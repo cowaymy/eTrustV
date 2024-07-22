@@ -430,4 +430,19 @@ public class ApiServiceImpl implements ApiService {
       return displayResponseMessage(request, params, result);
   }
 
+  @Override
+  public EgovMap checkRenEInv(Map<String, Object> params) {
+	  return apiMapper.checkRenEInv(params);
+  }
+
+  @Override
+  public EgovMap checkOutEInv(Map<String, Object> params) {
+	  return apiMapper.checkOutEInv(params);
+  }
+
+  @Override
+  public EgovMap checkSvmEInv(Map<String, Object> params) {
+	  return apiMapper.checkSvmEInv(params);
+  }
+
 }

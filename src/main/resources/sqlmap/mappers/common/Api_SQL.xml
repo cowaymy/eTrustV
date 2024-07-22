@@ -491,4 +491,33 @@
         AND REF_NO = #{refNo}
     </update>
 
+    <select id="checkRenEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV
+		FROM PAY0029D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
+
+    <select id="checkOutEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV
+		FROM PAY0033D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
+
+    <select id="checkSvmEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV
+		FROM PAY0031D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
 </mapper>

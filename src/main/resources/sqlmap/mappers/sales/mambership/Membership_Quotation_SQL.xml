@@ -966,7 +966,8 @@
             e.STK_DESC,
             f.SRV_MEM_PAC_ID,
             f.SRV_MEM_DESC,
-            h.CODE CUST_TYPE
+            h.CODE CUST_TYPE,
+            i.CUST_BILL_GRP_NO AS BILL_GRP_NO
         FROM
             SAL0093D a
             LEFT JOIN PAY0024D b ON a.SRV_MEM_QUOT_ID = b.SRV_MEM_QOTAT_ID
@@ -976,6 +977,7 @@
             LEFT JOIN SAL0091M f ON a.SRV_MEM_PAC_ID = f.SRV_MEM_PAC_ID
             JOIN SAL0029D g ON c.CUST_ID = g.CUST_ID
             JOIN SYS0013M h ON g.TYPE_ID = h.CODE_ID and h.CODE_MASTER_ID = 8
+            LEFT JOIN SAL0024D i ON i.CUST_BILL_ID = c.CUST_BILL_ID
         WHERE
             a.SRV_QUOT_STUS_ID = 1
             AND b.SRV_MEM_LG_ID IS NULL

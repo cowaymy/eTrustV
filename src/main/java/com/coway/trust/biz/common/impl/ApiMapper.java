@@ -63,4 +63,8 @@ public interface ApiMapper {
 
   int updateTokenStaging(Map<String, Object> params);
 
+  EgovMap checkRenEInv(Map<String, Object> params);
+  EgovMap checkOutEInv(Map<String, Object> params);
+  EgovMap checkSvmEInv(Map<String, Object> params);
+
 }
