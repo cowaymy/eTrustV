@@ -47,32 +47,32 @@ public class GovEInvcLineVO {
     	this.ItemPriceExtension = new ItemPriceExtension();
     	AmountObject amount = new AmountObject();
     	amount.setCurrencyID(mapValue.get("itmprcextCurid").toString());
-    	amount.setValue(mapValue.get("itmprcextValue").toString());
+    	amount.setValue(mapValue.get("itmprcextValue")==null?"0.00":mapValue.get("itmprcextValue").toString());
     	ItemPriceExtension.setAmount(amount);
 
     	this.Price = new Price();
     	AmountObject priceAmount = new AmountObject();
     	priceAmount.setCurrencyID(mapValue.get("prcCurid").toString());
-    	priceAmount.setValue(mapValue.get("prcVal").toString());
+    	priceAmount.setValue(mapValue.get("prcVal")==null?"0.00":mapValue.get("prcVal").toString());
     	Price.setPriceAmount(priceAmount);
 
     	this.LineExtensionAmount = new AmountObject();
     	LineExtensionAmount.setCurrencyID(mapValue.get("lnextamtCurid").toString());
-    	LineExtensionAmount.setValue(mapValue.get("lnextamtVal").toString());
+    	LineExtensionAmount.setValue(mapValue.get("lnextamtVal")==null?"0.00":mapValue.get("lnextamtVal").toString());
 
     	this.TaxTotal = new TaxTotal();
     	AmountObject taxAmount = new AmountObject();
     	taxAmount.setCurrencyID(mapValue.get("taxtotTaxamtCurid").toString());
-    	taxAmount.setValue(mapValue.get("taxtotTaxamtVal").toString());
+    	taxAmount.setValue(mapValue.get("taxtotTaxamtVal")==null?"0.00":mapValue.get("taxtotTaxamtVal").toString());
     	TaxTotal.setTaxAmount(taxAmount);
     	List<TaxSubtotal> taxSubTotalList = new ArrayList<>();
     	TaxSubtotal taxSubTotal = new TaxSubtotal();
     	AmountObject taxSub_taxAmount = new AmountObject();
     	taxSub_taxAmount.setCurrencyID(mapValue.get("taxtotTaxsubTaxamtCurid").toString());
-    	taxSub_taxAmount.setValue(mapValue.get("taxtotTaxsubTaxamtVal").toString());
+    	taxSub_taxAmount.setValue(mapValue.get("taxtotTaxsubTaxamtVal")==null?"0.00":mapValue.get("taxtotTaxsubTaxamtVal").toString());
     	AmountObject taxSub_taxableAmount = new AmountObject();
     	taxSub_taxableAmount.setCurrencyID(mapValue.get("taxtotTaxsubTaxableamtCurid").toString());
-    	taxSub_taxableAmount.setValue(mapValue.get("taxtotTaxsubTaxableamtVal").toString());
+    	taxSub_taxableAmount.setValue(mapValue.get("taxtotTaxsubTaxableamtVal")==null?"0.00":mapValue.get("taxtotTaxsubTaxableamtVal").toString());
     	TaxCatObject taxSub_taxCategory = new TaxCatObject();
     	taxSub_taxCategory.setId(String.format("%02d",Integer.parseInt(mapValue.get("taxtotTaxsubTaxcatId").toString())));
     	taxSub_taxCategory.setTaxRate(mapValue.get("taxtotTaxsubTaxcatRate").toString());

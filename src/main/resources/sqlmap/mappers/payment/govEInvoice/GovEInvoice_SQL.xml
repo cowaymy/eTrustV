@@ -89,7 +89,7 @@
 	A.NAME CODE_NAME
 	FROM SYS0038M A
 	WHERE
-	A.STUS_CODE_ID IN ('1', '5', '8')
+	A.STUS_CODE_ID IN ('1', '5', '8','21')
 	ORDER BY A.STUS_CODE_ID
 </select>
 
