@@ -159,7 +159,7 @@
         <tr>
           <th scope="row"><spring:message code="supplement.text.supplementPrcRtnTrcNo" /><span class="must">*</span></th>
           <td colspan='3'>
-            <input type="text" title="" class="w100p" name="parcelRtnTrackNo" id="parcelRtnTrackNo" />
+            <input type="text" title="" class="w100p" name="parcelRtnTrackNo" id="parcelRtnTrackNo" maxlength="20"/>
           </td>
         </tr>
         </br>
