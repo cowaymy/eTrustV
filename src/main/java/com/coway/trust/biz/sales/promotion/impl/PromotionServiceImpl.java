@@ -696,6 +696,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 					salesPromoDVO.setUpdUserId(sessionVO.getUserId());
 					salesPromoDVO.setPromoItmPvGst((BigDecimal)promoReqstPrd.get("promoItmPvGst"));
 					salesPromoDVO.setActionTab(CommonUtils.nvl(promoReqstPrd.get("actionTab")));
+					salesPromoDVOList.add(salesPromoDVO);
 				}
 			}
 		}
