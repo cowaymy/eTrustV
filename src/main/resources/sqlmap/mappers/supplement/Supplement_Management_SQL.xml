@@ -133,6 +133,10 @@
     <if test=" null != custEmail and '' != custEmail">
       AND Extent3.EMAIL = #{custEmail}
     </if>
+
+    <if test=" null != isRefund and '' != isRefund">
+      AND Extent1.SUP_RTN_RFND = #{isRefund}
+    </if>
   </select>
 
   <select id="selectSupRefStus"  parameterType="Map" resultType="egovMap">
