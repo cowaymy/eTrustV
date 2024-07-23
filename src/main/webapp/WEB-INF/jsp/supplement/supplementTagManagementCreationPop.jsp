@@ -32,7 +32,30 @@
   });
 
   $('#attch').change(function(evt) {
-      handleFileChange(evt, 1);
+      //handleFileChange(evt, 1);
+      var file = evt.target.files[0];
+      if (typeof file === 'undefined') {
+        $("#attch").val("");
+      } else {
+        var msg = '';
+
+        if (!(file.name).endsWith('.zip')) {
+          msg += "*Only allow.zip format file.<br>";
+        }
+
+        if (file && file.name.length > 30) {
+          msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        if (file && file.size > 2000000) {
+          msg += "*Only allow .zip file with less than 2MB.<br>";
+        }
+
+        if (msg) {
+          $("#attch").val("");
+          Common.alert(msg);
+        }
+      }
   });
 
   function handleFileChange(evt, cacheIndex) {
