@@ -28,9 +28,11 @@
     $("#nric").keyup(function() {
       $(this).val($.trim($(this).val().toUpperCase()));
     });
+
     $("#sofNo").keyup(function() {
       $(this).val($.trim($(this).val().toUpperCase()));
     });
+
     $('#nric').keypress(function(e) {
       var regex = new RegExp("^[a-zA-Z0-9\s]+$");
       var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
@@ -47,7 +49,6 @@
       if (!fn_validConfirm())
         return false;
 
-      //if(fn_isExistMember() == 'true') return false;
       if (fn_isExistSupplementSubmissionNo() == 'true')
         return false;
 
@@ -68,7 +69,7 @@
       if (event.which === 13) {
         if (!fn_validConfirm())
           return false;
-        //if(fn_isExistMember() == 'true') return false;
+
         if (fn_isExistSupplementSubmissionNo() == 'true')
           return false;
 
@@ -84,7 +85,7 @@
       if (event.which === 13) {
         if (!fn_validConfirm())
           return false;
-        //if(fn_isExistMember() == 'true') return false;
+
         if (fn_isExistSupplementSubmissionNo() == 'true')
           return false;
 
@@ -103,30 +104,35 @@
         callParam : "PRE_ORD_CNTC"
       }, null, true);
     });
+
     $('#btnSelCntc').click(function() {
       Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {
         custId : $('#hiddenCustId').val(),
         callPrgm : "PRE_ORD_CNTC"
       }, null, true);
     });
+
     $('#btnNewInstAddr').click(function() {
       Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {
         custId : $('#hiddenCustId').val(),
         callParam : "PRE_ORD_INST_ADD"
       }, null, true);
     });
+
     $('#btnSelInstAddr').click(function() {
       Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {
         custId : $('#hiddenCustId').val(),
         callPrgm : "PRE_ORD_INST_ADD"
       }, null, true);
     });
+
     $('#billNewAddrBtn').click(function() {
       Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {
         custId : $('#hiddenCustId').val(),
         callParam : "PRE_ORD_BILL_ADD"
       }, null, true);
     });
+
     $('#billSelAddrBtn').click(function() {
       Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {
         custId : $('#hiddenCustId').val(),
@@ -134,7 +140,6 @@
       }, null, true);
     });
 
-    //Member Search Popup
     $('#salesmanCd').change(function(event) {
       var memCd = $('#salesmanCd').val().trim();
 
@@ -145,8 +150,8 @@
         $('#salesmanBrnch').text('');
         $('#hidSalesmanBrnchId').val('');
       }
-
     });
+
     $('#salesmanCd').keydown(function(event) {
       if (event.which === 13) { //enter
         var memCd = $('#salesmanCd').val().trim();
@@ -161,14 +166,13 @@
         return false;
       }
     });
+
     $('#memBtn').click(
         function() {
-          //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
           Common.popupDiv("/common/memberPop.do", $("#searchForm")
               .serializeJSON(), null, true);
         });
 
-    //Purchase Btn
     $("#_addBtn").click(
         function() {
           Common.popupDiv(
@@ -177,12 +181,10 @@
         });
 
     $("#_delBtn").click(function() {
-
       var chkDelArray = AUIGrid.getCheckedRowItems(purchaseGridID);
 
       AUIGrid.removeCheckedRows(purchaseGridID);
 
-      //PayTab Total Charge Text
       var purTotAmt = 0;
       purTotAmt = fn_calcuPurchaseAmt();
       if (chkDelArray == null || chkDelArray.length <= 0) {
@@ -190,7 +192,6 @@
       } else {
         $("#_payTotCharges").html('RM : ' + purTotAmt);
       }
-
     });
 
     $('#sofFile').change(function(evt) {
@@ -201,58 +202,75 @@
     });
     $('#otherFile').change(function(evt) {
       //handleFileChange(evt, 3);
-    	var file = evt.target.files[0];
-        if(file == null && myFileCaches[3] != null){
-            delete myFileCaches[3];
-        }else if(file != null){
-          myFileCaches[3] = {file:file, contentsType:"otherFile"};
-        }
-        console.log(myFileCaches);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[3] != null) {
+        delete myFileCaches[3];
+      } else if (file != null) {
+        myFileCaches[3] = {
+          file : file,
+          contentsType : "otherFile"
+        };
+      }
+      console.log(myFileCaches);
     });
+
     $('#otherFile2').change(function(evt) {
       //handleFileChange(evt, 4);
-    	var file = evt.target.files[0];
-        if(file == null && myFileCaches[4] != null){
-            delete myFileCaches[4];
-        }else if(file != null){
-          myFileCaches[4] = {file:file, contentsType:"otherFile2"};
-        }
-        console.log(myFileCaches);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[4] != null) {
+        delete myFileCaches[4];
+      } else if (file != null) {
+        myFileCaches[4] = {
+          file : file,
+          contentsType : "otherFile2"
+        };
+      }
+      console.log(myFileCaches);
     });
+
     $('#otherFile3').change(function(evt) {
       //handleFileChange(evt, 5);
-    	var file = evt.target.files[0];
-        if(file == null && myFileCaches[5] != null){
-            delete myFileCaches[5];
-        }else if(file != null){
-          myFileCaches[5] = {file:file, contentsType:"otherFile3"};
-        }
-        console.log(myFileCaches);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[5] != null) {
+        delete myFileCaches[5];
+      } else if (file != null) {
+        myFileCaches[5] = {
+          file : file,
+          contentsType : "otherFile3"
+        };
+      }
+      console.log(myFileCaches);
     });
+
     $('#otherFile4').change(function(evt) {
       //handleFileChange(evt, 6);
-    	var file = evt.target.files[0];
-        if(file == null && myFileCaches[6] != null){
-            delete myFileCaches[6];
-        }else if(file != null){
-          myFileCaches[6] = {file:file, contentsType:"otherFile4"};
-        }
-        console.log(myFileCaches);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[6] != null) {
+        delete myFileCaches[6];
+      } else if (file != null) {
+        myFileCaches[6] = {
+          file : file,
+          contentsType : "otherFile4"
+        };
+      }
+      console.log(myFileCaches);
     });
+
     $('#otherFile5').change(function(evt) {
       //handleFileChange(evt, 7);
-    	var file = evt.target.files[0];
-        if(file == null && myFileCaches[7] != null){
-            delete myFileCaches[7];
-        }else if(file != null){
-          myFileCaches[7] = {file:file, contentsType:"otherFile5"};
-        }
-        console.log(myFileCaches);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[7] != null) {
+        delete myFileCaches[7];
+      } else if (file != null) {
+        myFileCaches[7] = {
+          file : file,
+          contentsType : "otherFile5"
+        };
+      }
+      console.log(myFileCaches);
     });
 
-    // Save btn
     $('#btnSave').click(function() {
-
       if (!fn_validCustomer()) {
         $('#aTabCS').click();
         return false;
@@ -285,10 +303,7 @@
     var isValid = true, msg = "";
 
     var nric = $('#nric').val();
-    //console.log("nric :: " + nric);
-
     var sofNo = $('#sofNo').val();
-    //console.log("sofNo :: " + sofNo);
 
     if (FormUtil.checkReqValue($('#nric'))) {
       isValid = false;
@@ -296,16 +311,13 @@
     } else {
       //check if NRIC is Numeric, else company number (includes alphabet)
       var nric_trim = $("#nric").val().replace(/ |-|_/g, '');
-      console.log("nric_trim :: " + nric_trim);
       if ($.isNumeric($("#nric_trim").val())) {
         var dob = Number($('#nric').val().substr(0, 2));
         var nowDt = new Date();
         var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
         var age = nowDtY - dob < 0 ? nowDtY - dob + 100 : nowDtY - dob;
-        //console.log(age);
         if (age < 18) {
-          Common
-              .alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
+          Common.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
                   + DEFAULT_DELIMITER
                   + "<b>* Customer must 18 years old and above.</b>");
           $('#scSupplementSubmissionArea').addClass("blind");
@@ -322,147 +334,90 @@
     }
 
     if (!isValid)
-      Common
-          .alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
+      Common.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
               + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
   }
 
   function fn_loadCustomer(custId, nric) {
-    Common
-        .ajax(
-            "GET",
-            "/sales/customer/selectCustomerJsonList",
-            {
-              custId : custId,
-              nric : nric
-            },
-            function(result) {
-              Common.removeLoader();
+    Common.ajax( "GET",
+                         "/sales/customer/selectCustomerJsonList",
+                        { custId : custId, nric : nric },
+                        function(result) {
+                          Common.removeLoader();
 
-              if (result.length > 0) {
-                Common
-                    .confirm(
-                        '<b>* This customer is an existing customer.<br>Do you want to proceed for key-in?</b>',
-                        function() {
-                          $(
-                              '#scSupplementSubmissionArea')
-                              .removeClass(
-                                  "blind");
-                          var custInfo = result[0];
-                          var dob = custInfo.dob;
-                          var dobY = dob.split("/")[2];
-                          var nowDt = new Date();
-                          var nowDtY = nowDt
-                              .getFullYear();
-                          if (!nric.startsWith("TST")) {
-                            if (dobY != 1900) {
-                              if ((nowDtY - dobY) < 18) {
-                                Common
-                                    .alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
-                                        + DEFAULT_DELIMITER
-                                        + "<b>* Customer must 18 years old and above.</b>");
-                                $(
-                                    '#scSupplementSubmissionArea')
-                                    .addClass(
-                                        "blind");
-                                return false;
+                          if (result.length > 0) {
+                            Common.confirm( '<b>* This customer is an existing customer.<br>Do you want to proceed for key-in?</b>',
+                            function() {
+                              $('#scSupplementSubmissionArea').removeClass("blind");
+                              var custInfo = result[0];
+                              var dob = custInfo.dob;
+                              var dobY = dob.split("/")[2];
+                              var nowDt = new Date();
+                              var nowDtY = nowDt.getFullYear();
+                              if (!nric.startsWith("TST")) {
+                                if (dobY != 1900) {
+                                  if ((nowDtY - dobY) < 18) {
+                                    Common.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
+                                                     + DEFAULT_DELIMITER
+                                                     + "<b>* Customer must 18 years old and above.</b>");
+                                    $('#scSupplementSubmissionArea').addClass("blind");
+                                    return false;
+                                  }
+                                }
                               }
-                            }
-                          }
 
-                          $("#hiddenCustId").val(
-                              custInfo.custId); //Customer ID(Hidden)
-                          $("#custTypeNm").text(
-                              custInfo.codeName1);
-                          $("#hiddenCustTypeNm").val(
-                              custInfo.codeName1); //Customer Type Nm(Hidden)
-                          $("#hiddenTypeId").val(
-                              custInfo.typeId); //Type
-                          $("#name").text(
-                              custInfo.name); //Name
-                          $("#nric").val(
-                              custInfo.nric); //NRIC/Company No
-                          $("#nationNm").text(
-                              custInfo.name2); //Nationality
-                          $("#race").text(
-                              custInfo.codeName2); //
-                          $("#dob")
-                              .text(
-                                  custInfo.dob == '01/01/1900' ? ''
-                                      : custInfo.dob); //DOB
-                          $("#gender").text(
-                              custInfo.gender); //Gender
-                          $("#pasSportExpr")
-                              .text(
-                                  custInfo.pasSportExpr == '01/01/1900' ? ''
-                                      : custInfo.pasSportExpr); //Passport Expiry
-                          $("#visaExpr")
-                              .text(
-                                  custInfo.visaExpr == '01/01/1900' ? ''
-                                      : custInfo.visaExpr); //Visa Expiry
-                          $("#custEmail").val(
-                              custInfo.email); //Email
+                          $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
+                          $("#custTypeNm").text(custInfo.codeName1);
+                          $("#hiddenCustTypeNm").val(custInfo.codeName1); //Customer Type Nm(Hidden)
+                          $("#hiddenTypeId").val(custInfo.typeId); //Type
+                          $("#name").text(custInfo.name); //Name
+                          $("#nric").val(custInfo.nric); //NRIC/Company No
+                          $("#nationNm").text(custInfo.name2); //Nationality
+                          $("#race").text(custInfo.codeName2); //
+                          $("#dob").text(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
+                          $("#gender").text(custInfo.gender); //Gender
+                          $("#pasSportExpr").text(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+                          $("#visaExpr").text(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+                          $("#custEmail").val(custInfo.email); //Email
                           $("#pCustEmail").show();
-                          fn_maskingData(
-                              "_CUSTEMAIL",
-                              $("#custEmail"));
-                          $("#custEmail").text(
-                              custInfo.email); //Email
-                          $("#hiddenCustStatusId")
-                              .val(
-                                  custInfo.custStatusId); //Customer Status
-                          $("#custStatus")
-                              .text(
-                                  custInfo.custStatus); //Customer Status
+                          fn_maskingData("_CUSTEMAIL", $("#custEmail"));
+                          $("#custEmail").text(custInfo.email); //Email
+                          $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
+                          $("#custStatus").text(custInfo.custStatus); //Customer Status
                           if (custInfo.receivingMarketingMsgStatus == 1) {
-                            $("#marketMessageYes")
-                                .prop(
-                                    "checked",
-                                    true);
+                            $("#marketMessageYes").prop("checked", true);
                           } else {
-                            $("#marketMessageNo")
-                                .prop(
-                                    "checked",
-                                    true);
+                            $("#marketMessageNo").prop( "checked", true);
                           }
 
                           if (custInfo.corpTypeId > 0) {
-                            $("#corpTypeNm")
-                                .val(
-                                    custInfo.codeName); //Industry Code
+                            $("#corpTypeNm").val(custInfo.codeName); //Industry Code
                           } else {
-                            $("#corpTypeNm")
-                                .val(""); //Industry Code
+                            $("#corpTypeNm").val(""); //Industry Code
                           }
 
                           if (custInfo.custAddId > 0) {
-
                             fn_loadBillAddr(custInfo.custAddId);
                             fn_loadInstallAddr(custInfo.custAddId);
                           }
 
                           if (custInfo.custCntcId > 0) {
-
                             fn_loadMainCntcPerson(custInfo.custCntcId);
                             fn_loadCntcPerson(custInfo.custCntcId);
-
                           }
 
                           if (custInfo.codeName == 'Government') {
-                            Common
-                                .alert('<b>Goverment Customer</b>');
+                            Common.alert('<b>Goverment Customer</b>');
                           }
                         }, fn_closeNewSubmissionPop);
               } else {
-                Common
-                    .confirm(
-                        '<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>',
-                        fn_createCustomerPop,
-                        fn_closeNewSubmissionPop);
-              }
-            });
+                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>',
+                                       fn_createCustomerPop,
+                                       fn_closeNewSubmissionPop);
+             }
+          });
   }
 
   function fn_createCustomerPop() {
@@ -499,12 +454,10 @@
           if (rsltInfo != null) {
             isExist = rsltInfo.isExist;
           }
-          //console.log('fn_isExistSupplementSubmissionNo:' + isExist);
         });
 
     if (isExist == 'true')
-      Common
-          .alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
+      Common.alert('<spring:message code="supplement.text.supplementSubmissionSummary" />'
               + DEFAULT_DELIMITER
               + "<b>* The entered eSOF no. ("
               + $('#sofNo').val().trim()
@@ -609,97 +562,73 @@
   }
 
   function fn_loadOrderSalesman(memId, memCode) {
-    Common
-        .ajax(
-            "GET",
-            "/supplement/selectMemberByMemberIDCode.do",
-            {
-              memId : memId,
-              memCode : memCode
-            },
-            function(memInfo) {
+    Common.ajax("GET",
+                        "/supplement/selectMemberByMemberIDCode.do",
+                       { memId : memId, memCode : memCode },
+                       function(memInfo) {
+                         if (memInfo == null) {
+                           Common.alert('<b>Member not found.</br>Your input member code : ' + memCode + '</b>');
+                         } else {
+                           $('#salesmanCd').val(memInfo.memCode);
+                           $('#salesmanNm').val(memInfo.name);
+                           $('#hidSalesmanId').val(memInfo.memId);
+                           $('#isSuppl').val(memInfo.isSuppl);
 
-              if (memInfo == null) {
-                Common
-                    .alert('<b>Member not found.</br>Your input member code : '
-                        + memCode + '</b>');
-              } else {
-                $('#salesmanCd').val(memInfo.memCode);
-                $('#salesmanNm').val(memInfo.name);
-                $('#hidSalesmanId').val(memInfo.memId);
-                $('#isSuppl').val(memInfo.isSuppl);
-
-                if (memInfo.isSuppl == 'N'
-                    || memInfo.isSuppl == null) {
-                  Common
-                      .alert('<spring:message code="supplement.alert.memCodeNotEligible" />'
-                          + ' - ' + memCode + '</b>');
-                  $('#salesmanCd').val('');
-                  $('#salesmanNm').val('');
-                } else {
-                  Common
-                      .ajax(
-                          "GET",
-                          "/supplement/selectMemBrnchByMemberCode.do",
-                          {
-                            memCode : memInfo.memCode
-                          },
-                          function(result) {
-                            if (result != null) {
-                              $('#salesmanBrnch')
-                                  .text(
-                                      result.brnch);
-                              $(
-                                  '#hidSalesmanBrnchId')
-                                  .val(
-                                      result.brnchId);
-                            } else {
-                              $('#salesmanBrnch')
-                                  .val('');
-                              $(
-                                  '#hidSalesmanBrnchId')
-                                  .val('');
+                           if (memInfo.isSuppl == 'N' || memInfo.isSuppl == null) {
+                             Common.alert('<spring:message code="supplement.alert.memCodeNotEligible" />' + ' - ' + memCode + '</b>');
+                             $('#salesmanCd').val('');
+                             $('#salesmanNm').val('');
+                           } else {
+                             Common.ajax("GET", "/supplement/selectMemBrnchByMemberCode.do",
+                               { memCode : memInfo.memCode },
+                               function(result) {
+                                 if (result != null) {
+                                  $('#salesmanBrnch').text(result.brnch);
+                                  $('#hidSalesmanBrnchId').val(result.brnchId);
+                                } else {
+                                  $('#salesmanBrnch').val('');
+                                  $('#hidSalesmanBrnchId').val('');
+                                }
+                              });
                             }
-                          });
-                }
-              }
-            });
+                         }
+    });
   }
 
   // Define a common function to handle file input changes
-/*   function handleFileChange(evt, cacheIndex) {
-    var file = evt.target.files[0];
-    if (file == null && myFileCaches[cacheIndex] != null) {
-      delete myFileCaches[cacheIndex];
-    } else if (file != null) {
-      myFileCaches[cacheIndex] = {
-        file : file
-      };
-    }
+  /*   function handleFileChange(evt, cacheIndex) {
+   var file = evt.target.files[0];
+   if (file == null && myFileCaches[cacheIndex] != null) {
+   delete myFileCaches[cacheIndex];
+   } else if (file != null) {
+   myFileCaches[cacheIndex] = {
+   file : file
+   };
+   }
 
-    var msg = '';
-    if (file && file.name.length > 30) {
-      msg += "*File name wording should be not more than 30 alphabet.<br>";
-    }
+   var msg = '';
+   if (file && file.name.length > 30) {
+   msg += "*File name wording should be not more than 30 alphabet.<br>";
+   }
 
-    var fileType = file ? file.type.split('/') : [];
-    if (fileType[1] != 'jpg' && fileType[1] != 'jpeg'
-        && fileType[1] != 'png' && fileType[1] != 'pdf') {
-      msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-    }
+   var fileType = file ? file.type.split('/') : [];
+   if (fileType[1] != 'jpg' && fileType[1] != 'jpeg'
+   && fileType[1] != 'png' && fileType[1] != 'pdf') {
+   msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+   }
 
-    if (file && file.size > 2000000) {
-      msg += "*Only allow picture with less than 2MB.<br>";
-    }
+   if (file && file.size > 2000000) {
+   msg += "*Only allow picture with less than 2MB.<br>";
+   }
 
-    console.log(myFileCaches);
-    if (msg) {
-      myFileCaches[cacheIndex].file['checkFileValid'] = false;
-      Common.alert(msg);
-    } else {
-      myFileCaches[cacheIndex].file['checkFileValid'] = true;
-    }
-  } */
+   console.log(myFileCaches);
+   if (msg) {
+   myFileCaches[cacheIndex].file['checkFileValid'] = false;
+   Common.alert(msg);
+   } else {
+   myFileCaches[cacheIndex].file['checkFileValid'] = true;
+   }
+   } */
 
   function fn_removeFile(name) {
     if (name == "OTH") {
@@ -721,19 +650,16 @@
   }
 
   function fn_maskingData(ind, obj) {
-    var maskedVal = (obj.val()).substr(-4)
-        .padStart((obj.val()).length, '*');
+    var maskedVal = (obj.val()).substr(-4).padStart((obj.val()).length, '*');
     $("#span" + ind).html(maskedVal);
   }
 
   function fn_maskingDataAddr(ind, obj) {
-    var maskedVal = (obj.val()).substr(-20).padStart((obj.val()).length,
-        '*');
+    var maskedVal = (obj.val()).substr(-20).padStart((obj.val()).length, '*');
     $("#span" + ind).html(maskedVal);
   }
 
   function createPurchaseGridID() {
-
     var posColumnLayout = [ {
       dataField : "stkCode",
       headerText : '<spring:message code="sal.title.itemCode" />',
@@ -791,7 +717,6 @@
     } //STK_ID
     ];
 
-    //그리드 속성 설정
     var gridPros = {
       showFooter : true,
       usePaging : true, //페이징 사용
@@ -800,7 +725,6 @@
       fixedColumnCount : 1,
       showStateColumn : true,
       displayTreeOpen : false,
-      //         selectionMode       : "singleRow",  //"multipleCells",
       headerHeight : 30,
       useGroupingPanel : false, //그룹핑 패널 사용
       skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -810,11 +734,9 @@
       softRemoveRowMode : false
     };
 
-    purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap",
-        posColumnLayout, '', gridPros); // address list
+    purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout, '', gridPros); // address list
     AUIGrid.resize(purchaseGridID, 960, 300);
 
-    //
     var footerLayout = [ {
       labelText : "Total(RM)",
       positionField : "#base"
@@ -837,20 +759,15 @@
       formatString : "#,##0.00",
       style : "aui-grid-my-footer-sum-total2"
     } ];
-    //
-    // 푸터 레이아웃 그리드에 설정
     AUIGrid.setFooter(purchaseGridID, footerLayout);
   }
 
-  //posItmSrchPop -> posSystemPop
   function getItemListFromSrchPop(itmList) {
     AUIGrid.setGridData(purchaseGridID, itmList);
 
   }
 
-  //Purchase Charge Amount
   function fn_calcuPurchaseAmt() {
-
     var totArr = [];
     totArr = AUIGrid.getColumnValues(purchaseGridID, 'totalAmt');
 
@@ -884,7 +801,6 @@
     };
 
     return retObj;
-
   }
 
   var prev = "";
@@ -897,7 +813,6 @@
     } else {
       prev = obj.value;
     }
-
   }
 
   function fn_validCustomer() {
@@ -919,22 +834,21 @@
       msg += "* Please select an installation address.<br>";
     }
 
-    if($("#email").val() == '') {
-    	isValid = false;
-        msg += "* Please fill in email address.<br>";
+    if ($("#email").val() == '') {
+      isValid = false;
+      msg += "* Please fill in email address.<br>";
     }
 
-    if ((jQuery.trim($("#email").val())).length > 0){
-        if (!regEmail.test($("#email").val())){
-        	isValid = false;
-            msg += "* Invalid email address format.<br>";
-        }
+    if ((jQuery.trim($("#email").val())).length > 0) {
+      if (!regEmail.test($("#email").val())) {
+        isValid = false;
+        msg += "* Invalid email address format.<br>";
+      }
     }
 
     if (!isValid)
-      Common
-          .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                       + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
   }
@@ -943,9 +857,8 @@
     var isValid = true, msg = "";
 
     if (!isValid)
-      Common
-          .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                       + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
 
@@ -963,9 +876,7 @@
       msg += '<spring:message code="sal.alert.msg.selectMemCode" /><br>';
     }
 
-    if (null == $("#hidSalesmanBrnchId").val()
-        || '' == $("#hidSalesmanBrnchId").val()) {
-      //console.log($("#hidSalesmanBrnchId").val());
+    if (null == $("#hidSalesmanBrnchId").val() || '' == $("#hidSalesmanBrnchId").val()) {
       isValid = false;
       msg += '<spring:message code="sal.alert.msg.memHasNoBrnch" /><br>';
     }
@@ -976,9 +887,8 @@
     }
 
     if (!isValid)
-      Common
-          .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                       + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
   }
@@ -994,21 +904,18 @@
       msg += '<spring:message code="supplement.alert.uploadNric" />';
     }
 
-    $
-        .each(
-            myFileCaches,
-            function(i, j) {
-              if (myFileCaches[i].file.checkFileValid == false) {
-                isValid = false;
-                msg += myFileCaches[i].file.name
-                    + '<spring:message code="supplement.alert.fileUploadFormat" />';
-              }
-            });
+    $.each(myFileCaches,
+              function(i, j) {
+                if (myFileCaches[i].file.checkFileValid == false) {
+                  isValid = false;
+                  msg += myFileCaches[i].file.name
+                      + '<spring:message code="supplement.alert.fileUploadFormat" />';
+                }
+    });
 
     if (!isValid)
-      Common
-          .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                       + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
     return isValid;
   }
@@ -1034,60 +941,46 @@
 
     var formData = new FormData();
     $.each(myFileCaches, function(n, v) {
-      //console.log("n : " + n + " v.file : " + v.file);
       formData.append(n, v.file);
     });
 
-    //console.log(JSON.stringify(orderVO));
-    Common
-        .ajaxFile(
-            "/supplement/attachFileUpload.do",
-            formData,
-            function(result) {
-              if (result != 0 && result.code == 00) {
-                orderVO["atchFileGrpId"] = result.data.fileGroupKey;
-                Common
-                    .ajax(
-                        "POST",
-                        "/supplement/supplementSubmissionRegister.do",
-                        orderVO,
-                        function(result) {
-                          Common
-                              .alert(
-                                  '<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-                                      + DEFAULT_DELIMITER
-                                      + "<b>"
-                                      + result.message
-                                      + "</b>",
-                                  fn_closeSupplementSubmissionPop);
-                        },
-                        function(jqXHR, textStatus,
-                            errorThrown) {
-                          try {
-                            Common
-                                .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-                                    + DEFAULT_DELIMITER
-                                    + "<b>Failed to save order. "
-                                    + jqXHR.responseJSON.message
-                                    + "</b>");
-                            Common.removeLoader();
-                          } catch (e) {
-                            console.log(e);
-                          }
-                        });
-
+    Common.ajaxFile("/supplement/attachFileUpload.do",
+                            formData,
+                            function(result) {
+                              if (result != 0 && result.code == 00) {
+                                orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+                                Common.ajax( "POST",
+                                                     "/supplement/supplementSubmissionRegister.do",
+                                                     orderVO,
+                                                     function(result) {
+                                                       Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                                                       + DEFAULT_DELIMITER
+                                                       + "<b>"
+                                                       + result.message
+                                                       + "</b>",
+                                                       fn_closeSupplementSubmissionPop);
+                                                     },
+                                                     function(jqXHR, textStatus, errorThrown) {
+                                                       try {
+                                                         Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                                                                          + DEFAULT_DELIMITER
+                                                                          + "<b>Failed to save order. "
+                                                                          + jqXHR.responseJSON.message
+                                                                          + "</b>");
+                                                        Co mmon.removeLoader();
+                                                       } catch (e) {
+                                                         console.log(e);
+                                                       }
+                                });
               } else {
-                Common
-                    .alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
-                        + DEFAULT_DELIMITER
-                        + result.message);
+                Common.alert('<spring:message code="supplement.text.saveSupplementSubmissionSummary" />'
+                                 + DEFAULT_DELIMITER
+                                 + result.message);
               }
             },
             function(result) {
-              Common
-                  .alert("Upload Failed. Please check with System Administrator.");
+              Common.alert("Upload Failed. Please check with System Administrator.");
             });
-
   }
 
   function fn_closeSupplementSubmissionPop() {
@@ -1098,43 +991,34 @@
   }
 
   function fn_resetSales() {
-
   }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
-  <input type="hidden" id="_memBrnch" value="${userBrnchId}"> <input
-    type="hidden" name="hidSalesmanBrnchId" id="hidSalesmanBrnchId"
-    value=""> <input type="hidden" name="isSuppl" id="isSuppl"
-    value=""> <input type="hidden" name="hidTotAmt" id="hidTotAmt"
-    value=""> <input type="hidden" name="hidSalesmanId"
-    id="hidSalesmanId" value="">
-  <!-- popup_wrap start -->
+  <input type="hidden" id="_memBrnch" value="${userBrnchId}">
+   <input type="hidden" name="hidSalesmanBrnchId" id="hidSalesmanBrnchId" value="">
+   <input type="hidden" name="isSuppl" id="isSuppl" value="">
+   <input type="hidden" name="hidTotAmt" id="hidTotAmt" value="">
+   <input type="hidden" name="hidSalesmanId" id="hidSalesmanId" value="">
   <header class="pop_header">
-    <!-- pop_header start -->
     <h1>
       <spring:message code="supplement.text.newSubmission" />
     </h1>
     <ul class="right_opt">
       <li>
         <p class="btn_blue2">
-          <a id="btnNewSubmissionClose" href="#"><spring:message
-              code="sal.btn.close" /></a>
+          <a id="btnNewSubmissionClose" href="#"><spring:message code="sal.btn.close" /></a>
         </p>
       </li>
     </ul>
   </header>
-  <!-- pop_header end -->
 
   <section class="pop_body">
-    <!-- pop_body start -->
     <aside class="title_line">
-      <!-- title_line start -->
       <ul class="right_btns">
         <li>
           <p class="btn_blue">
-            <a id="btnConfirm" href="#"><spring:message
-                code="sal.btn.confirm" /></a>
+            <a id="btnConfirm" href="#"><spring:message code="sal.btn.confirm" /></a>
           </p>
         </li>
         <li>
@@ -1144,13 +1028,11 @@
         </li>
       </ul>
     </aside>
-    <!-- title_line end -->
 
     <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
-      <input id="selType" name="selType" type="hidden" value="1" /> <input
-        id="callPrgm" name="callPrgm" type="hidden" value="PRE_ORD" />
+      <input id="selType" name="selType" type="hidden" value="1" />
+      <input id="callPrgm" name="callPrgm" type="hidden" value="PRE_ORD" />
       <table class="type1">
-        <!-- table start -->
         <caption>table</caption>
         <colgroup>
           <col style="width: 150px" />
@@ -1158,11 +1040,9 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span
-              class="must">**</span></th>
-            <td colspan="3"><input id="nric" name="nric" type="text"
-              title="" placeholder="" class="w100p" style="min-width: 150px"
-              value="" />
+            <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span class="must">**</span></th>
+            <td colspan="3">
+              <input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" />
               <table id="pNric" style="display: none">
                 <tr>
                   <td><span id="span_NRIC"></span></td>
@@ -1170,11 +1050,9 @@
               </table></td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.eSOFno" /><span
-              class="must">**</span></th>
-            <td colspan="3"><input id="sofNo" name="sofNo" type="text"
-              title="" placeholder="" class="w100p" style="min-width: 150px"
-              value="" maxlength="20" />
+            <th scope="row"><spring:message code="supplement.text.eSOFno" /><span class="must">**</span></th>
+            <td colspan="3">
+              <input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width: 150px" value="" maxlength="20" />
               <table id="pSofNo" style="display: none">
                 <tr>
                   <td><span id="span_SOFNO"></span></td>
@@ -1182,68 +1060,49 @@
               </table></td>
           </tr>
           <tr>
-            <th scope="row" colspan="4"><span class="must"><spring:message
-                  code='sales.msg.ordlist.icvalid' /></span></th>
+            <th scope="row" colspan="4"><span class="must"><spring:message code='sales.msg.ordlist.icvalid' /></span></th>
           </tr>
         </tbody>
       </table>
-      <!-- table end -->
     </form>
 
     <!------------------------------------------------------------------------------
       Supplement Submission Content START
     ------------------------------------------------------------------------------->
-
     <section id="scSupplementSubmissionArea" class="blind">
       <section class="tap_wrap">
-        <!-- tap_wrap start -->
         <ul class="tap_type1 num4">
-          <li><a id="aTabCS" class="on"><spring:message
-                code="sal.page.title.custInformation" /></a></li>
-          <li><a id="aTabBD"><spring:message
-                code="supplement.text.paymentInfo" /></a></li>
-          <li><a id="aTabOI"><spring:message
-                code="supplement.text.supplementInfo" /></a></li>
-          <li><a id="aTabFL"><spring:message
-                code="sal.text.attachment" /></a></li>
+          <li><a id="aTabCS" class="on"><spring:message code="sal.page.title.custInformation" /></a></li>
+          <li><a id="aTabBD"><spring:message code="supplement.text.paymentInfo" /></a></li>
+          <li><a id="aTabOI"><spring:message code="supplement.text.supplementInfo" /></a></li>
+          <li><a id="aTabFL"><spring:message code="sal.text.attachment" /></a></li>
         </ul>
 
         <article class="tap_area">
-          <!-- tap_area start -->
           <section class="search_table">
-            <!-- search_table start -->
             <section class="tap_wrap">
               <ul class="tap_type1 num4">
-                <li><a id="aTabGI" class="on"><spring:message
-                      code="supplement.text.generalInfo" /></a></li>
-                <li><a id="aTabCI"><spring:message
-                      code="sal.tap.title.contactInfo" /></a></li>
-                <li><a id="aTabDI"><spring:message
-                      code="supplement.text.deliveryAddressInfo" /></a></li>
+                <li><a id="aTabGI" class="on"><spring:message code="supplement.text.generalInfo" /></a></li>
+                <li><a id="aTabCI"><spring:message code="sal.tap.title.contactInfo" /></a></li>
+                <li><a id="aTabDI"><spring:message code="supplement.text.deliveryAddressInfo" /></a></li>
               </ul>
               <article class="tap_area">
-                <form id="frmNewSubmission" name="frmNewSubmission" action="#"
-                  method="post">
-                  <input id="hiddenCustId" name="custId" type="hidden" /> <input
-                    id="hiddenCustTypeNm" name="custTypeNm" type="hidden" /> <input
-                    id="hiddenTypeId" name="typeId" type="hidden" /> <input
-                    id="hiddenCustCntcId" name="custCntcId" type="hidden" /> <input
-                    id="hiddenCustAddId" name="custAddId" type="hidden" /> <input
-                    id="hiddenCallPrgm" name="callPrgm" type="hidden" /> <input
-                    id="hiddenCustStatusId" name="hiddenCustStatusId"
-                    type="hidden" />
+                <form id="frmNewSubmission" name="frmNewSubmission" action="#" method="post">
+                  <input id="hiddenCustId" name="custId" type="hidden" />
+                  <input id="hiddenCustTypeNm" name="custTypeNm" type="hidden" />
+                  <input id="hiddenTypeId" name="typeId" type="hidden" />
+                  <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
+                  <input id="hiddenCustAddId" name="custAddId" type="hidden" />
+                  <input id="hiddenCallPrgm" name="callPrgm" type="hidden" />
+                  <input id="hiddenCustStatusId" name="hiddenCustStatusId" type="hidden" />
 
-
-                  <!-- title_line start -->
                   <aside class="title_line">
                     <h3>
                       <spring:message code="supplement.text.generalInfo" />
                     </h3>
                   </aside>
-                  <!-- title_line end -->
 
                   <table class="type1">
-                    <!-- table start -->
                     <caption>table</caption>
                     <colgroup>
                       <col style="width: 40%" />
@@ -1251,38 +1110,31 @@
                     </colgroup>
                     <tbody>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.custType" /><span class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.custType" /><span class="must">**</span></th>
                         <td><span id="custTypeNm" name="custTypeNm"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.title.text.companyType" /><span class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.title.text.companyType" /><span class="must">**</span></th>
                         <td><span id="corpTypeNm" name="corpTypeNm"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.initial" /><span
-                          class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.initial" /><span class="must">**</span></th>
                         <td><span id="custInitial" name="custInitial"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.custName" /><span class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.custName" /><span class="must">**</span></th>
                         <td><span id="name" name="name"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.nationality" /></th>
+                        <th scope="row"><spring:message code="sal.text.nationality" /></th>
                         <td><span id="nationNm" name="nationNm"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="supplement.text.passportExpiryDate" /></th>
+                        <th scope="row"><spring:message code="supplement.text.passportExpiryDate" /></th>
                         <td><span id="pasSportExpr" name="pasSportExpr"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="supplement.text.passportVisaExpiryDate" /></th>
+                        <th scope="row"><spring:message code="supplement.text.passportVisaExpiryDate" /></th>
                         <td><span id="visaExpr" name="visaExpr"></span></td>
                       </tr>
                       <tr>
@@ -1299,9 +1151,8 @@
                       </tr>
                       <tr>
                         <th scope="row"><spring:message code="sal.text.email" /></th>
-                        <td><input id="custEmail" name="custCntcEmail"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <td>
+                          <input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCustEmail" style="display: none">
                             <tr>
                               <td><span id="span_CUSTEMAIL"></span></td>
@@ -1309,42 +1160,34 @@
                           </table></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.custStus" /><span class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.custStus" /><span class="must">**</span></th>
                         <td><span id="custStatus" name="custStatus"></span></td>
                       </tr>
                     </tbody>
                   </table>
-                  <!-- table end -->
                 </form>
               </article>
               <article class="tap_area">
                 <section class="search_table">
-                  <!-- search_table start -->
                   <aside class="title_line">
-                    <!-- title_line start -->
                     <h3>
                       <spring:message code="sal.tap.title.contactInfo" />
                     </h3>
                   </aside>
-                  <!-- title_line end -->
                   <ul class="right_btns mb10">
                     <li>
                       <p class="btn_grid">
-                        <a id="btnSelCntc" href="#"><spring:message
-                            code="supplement.btn.selectOtherContact" /></a>
+                        <a id="btnSelCntc" href="#"><spring:message code="supplement.btn.selectOtherContact" /></a>
                       </p>
                     </li>
                     <li>
                       <p class="btn_grid">
-                        <a id="btnNewCntc" href="#"><spring:message
-                            code="pay.btn.addNewContact" /></a>
+                        <a id="btnNewCntc" href="#"><spring:message code="pay.btn.addNewContact" /></a>
                       </p>
                     </li>
                   </ul>
 
                   <table class="type1">
-                    <!-- table start -->
                     <caption>table</caption>
                     <colgroup>
                       <col style="width: 40%" />
@@ -1352,18 +1195,14 @@
                     </colgroup>
                     <tbody>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.title.text.contactPersonName" /><span
-                          class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.title.text.contactPersonName" /><span class="must">**</span></th>
                         <td><span id="custCntcName" name="custCntcName"></span>
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.mobileNo" /><span class="must">**</span></th>
-                        <td><input id="custCntcTelM" name="custCntcTelM"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <th scope="row"><spring:message code="sal.text.mobileNo" /><span class="must">**</span></th>
+                        <td>
+                          <input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCustCntcTelM" style="display: none">
                             <tr>
                               <td><span id="span_CUSTCNTCTELM"></span></td>
@@ -1371,12 +1210,9 @@
                           </table></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="supplement.text.residenceContactNo" /><span
-                          class="must">**</span></th>
-                        <td><input id="custCntcTelR" name="custCntcTelR"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <th scope="row"><spring:message code="supplement.text.residenceContactNo" /><span class="must">**</span></th>
+                        <td>
+                          <input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCustCntcTelR" style="display: none">
                             <tr>
                               <td><span id="span_CUSTCNTCTELR"></span></td>
@@ -1384,11 +1220,9 @@
                           </table></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="supplement.text.officeContactNo" /></th>
-                        <td><input id="custCntcTelO" name="custCntcTelO"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <th scope="row"><spring:message code="supplement.text.officeContactNo" /></th>
+                        <td>
+                          <input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCustCntcTelO" style="display: none">
                             <tr>
                               <td><span id="span_CUSTCNTCTELO"></span></td>
@@ -1397,9 +1231,8 @@
                       </tr>
                       <tr>
                         <th scope="row"><spring:message code="sal.text.faxNo" /></th>
-                        <td><input id="custCntcTelF" name="custCntcTelF"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <td>
+                          <input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCustCntcTelF" style="display: none">
                             <tr>
                               <td><span id="span_CUSTCNTCTELF"></span></td>
@@ -1411,11 +1244,9 @@
                         <td><span id="custCntcExt" name="custCntcExt"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.email" /><span
-                          class="must">**</span></th>
-                        <td><input id="custCntcEmail" name="custCntcEmail"
-                          type="text" title="" placeholder="" class="w100p readonly"
-                          readonly style="display: none" />
+                        <th scope="row"><spring:message code="sal.text.email" /><span class="must">**</span></th>
+                        <td>
+                          <input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly style="display: none" />
                           <table id="pCntcEmail" style="display: none">
                             <tr>
                               <td><span id="span_CNTCEMAIL"></span></td>
@@ -1424,31 +1255,29 @@
                       </tr>
                     </tbody>
                   </table>
-                  <!-- table end -->
                 </section>
               </article>
               <article class="tap_area">
                 <section class="search_table">
-                  <!-- search_table start -->
                   <aside class="title_line">
-                    <!-- title_line start -->
                     <h3>
                       <spring:message code="supplement.text.deliveryAddressInfo" />
                     </h3>
                   </aside>
                   <ul class="right_btns mb10">
-                    <li><p class="btn_grid">
-                        <a id="btnSelInstAddr" href="#"><spring:message
-                            code="supplement.btn.selectOtherAddress" /></a>
-                      </p></li>
-                    <li><p class="btn_grid">
-                        <a id="btnNewInstAddr" href="#"><spring:message
-                            code="supplement.btn.addNewAddress" /></a>
-                      </p></li>
+                    <li>
+                      <p class="btn_grid">
+                        <a id="btnSelInstAddr" href="#"><spring:message code="supplement.btn.selectOtherAddress" /></a>
+                      </p>
+                    </li>
+                    <li>
+                      <p class="btn_grid">
+                        <a id="btnNewInstAddr" href="#"><spring:message code="supplement.btn.addNewAddress" /></a>
+                      </p>
+                    </li>
                   </ul>
 
                   <table class="type1">
-                    <!-- table start -->
                     <caption>table</caption>
                     <colgroup>
                       <col style="width: 40%" />
@@ -1458,17 +1287,15 @@
                     </colgroup>
                     <tbody>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.addressDetail" /><span class="must">**</span></th>
-                        <td colspan="3"><input id="instAddrDtl"
-                          name="instAddrDtl" type="text" title=""
-                          placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945"
-                          class="w100p readonly" readonly style="display: none" />
+                        <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">**</span></th>
+                        <td colspan="3">
+                          <input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly style="display: none" />
                           <table id="pInstAddrDtl" style="display: none">
                             <tr>
                               <td><span id="span_INSTADDRDTL"></span></td>
                             </tr>
-                          </table></td>
+                          </table>
+                        </td>
                       </tr>
                       <tr>
                         <th scope="row"><spring:message code="sal.text.street" /></th>
@@ -1476,34 +1303,28 @@
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.area" /><span
-                          class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.area" /><span class="must">**</span></th>
                         <td colspan="3"><span id="instArea" name="instArea"></span>
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.city" /><span
-                          class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.city" /><span class="must">**</span></th>
                         <td colspan="3"><span id="instCity" name="instCity"></span>
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message
-                            code="sal.text.postCode" /><span class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.postCode" /><span class="must">**</span></th>
                         <td colspan="3"><span id="instPostCode"
                           name="instPostCode"></span></td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.state" /><span
-                          class="must">**</span></th>
+                        <th scope="row"><spring:message code="sal.text.state" /><span class="must">**</span></th>
                         <td colspan="3"><span id="instState" name="instState"></span>
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row"><spring:message code="sal.text.country" /><span
-                          class="must">**</span></th>
-                        <td colspan="3"><span id="instCountry"
-                          name="instCountry"></span></td>
+                        <th scope="row"><spring:message code="sal.text.country" /><span class="must">**</span></th>
+                        <td colspan="3"><span id="instCountry" name="instCountry"></span></td>
                       </tr>
                     </tbody>
                   </table>
@@ -1511,44 +1332,36 @@
               </article>
             </section>
           </section>
-          <!-- search_table end -->
         </article>
-        <!-- tap_area end -->
         <article class="tap_area">
           <section class="search_table">
-            <!-- search_table start -->
             <!------------------------------------------------------------------------------
               Billing Address - Form ID(billAddrForm)
             ------------------------------------------------------------------------------->
             <section id="sctBillAddr">
-              <input id="hiddenBillAddId" name="custAddId" type="hidden" /> <input
-                id="hiddenBillStreetId" name="hiddenBillStreetId" type="hidden" />
+              <input id="hiddenBillAddId" name="custAddId" type="hidden" />
+              <input id="hiddenBillStreetId" name="hiddenBillStreetId" type="hidden" />
 
               <aside class="title_line">
-                <!-- title_line start -->
                 <h3>
                   <spring:message code="sal.title.billingAddress" />
                 </h3>
               </aside>
-              <!-- title_line end -->
 
               <ul class="right_btns mb10">
                 <li>
                   <p class="btn_grid">
-                    <a id="billSelAddrBtn" href="#"><spring:message
-                        code="supplement.btn.selectOtherAddress" /></a>
+                    <a id="billSelAddrBtn" href="#"><spring:message code="supplement.btn.selectOtherAddress" /></a>
                   </p>
                 </li>
                 <li>
                   <p class="btn_grid">
-                    <a id="billNewAddrBtn" href="#"><spring:message
-                        code="supplement.btn.addNewAddress" /></a>
+                    <a id="billNewAddrBtn" href="#"><spring:message code="supplement.btn.addNewAddress" /></a>
                   </p>
                 </li>
               </ul>
 
               <table class="type1">
-                <!-- table start -->
                 <caption>table</caption>
                 <colgroup>
                   <col style="width: 40%" />
@@ -1556,12 +1369,8 @@
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th scope="row"><spring:message
-                        code="sal.text.addressDetail" /><span class="must">**</span></th>
-                    <td><input id="billAddrDtl" name="billAddrDtl"
-                      type="text" title=""
-                      placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945"
-                      class="w100p readonly" readonly style="display: none" />
+                    <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">**</span></th>
+                    <td><input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly style="display: none" />
                       <table id="pBillAddrDtl" style="display: none">
                         <tr>
                           <td><span id="span_BILLADDRDTL"></span></td>
@@ -1599,55 +1408,42 @@
                   </tr>
                 </tbody>
               </table>
-              <!-- table end -->
-              <!-- Existing Type end -->
             </section>
           </section>
         </article>
         <article class="tap_area">
           <section class="search_table">
-            <!-- search_table start -->
             <aside class="title_line">
-              <!-- title_line start -->
               <h3>
                 <spring:message code="supplement.text.supplementInfo" />
               </h3>
             </aside>
-            <!-- title_line end -->
             <table class="type1">
-              <!-- table start -->
               <caption>table</caption>
               <colgroup>
                 <col style="width: 40%" />
                 <col style="width: *" />
               </colgroup>
               <tr>
-                <th scope="row"><spring:message code="sal.text.salManCode" /><span
-                  class="must">*</span></th>
-                <td><input id="salesmanCd" name="salesmanCd" type="text"
-                  style="width: 230px;" title="" placeholder="" class="" /> <a
-                  id="memBtn" href="#" class="search_btn"> <img
-                    src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                    alt="search" />
-                </a></td>
+                <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
+                <td>
+                  <input id="salesmanCd" name="salesmanCd" type="text" style="width: 230px;" title="" placeholder="" class="" />
+                  <a id="memBtn" href="#" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
                 <td>
                   <p>
-                    <input id="salesmanNm" name="salesmanNm" type="text"
-                      style="width: 250px;" class="" title=""
-                      placeholder="Salesman Name" disabled="disabled">
+                    <input id="salesmanNm" name="salesmanNm" type="text" style="width: 250px;" class="" title="" placeholder="Salesman Name" disabled="disabled">
                   </p>
                 </td>
               </tr>
               <%-- <tr>
-            <th scope="row"><spring:message code="supplement.text.submissionBranch"/></th>
-            <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
-            <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}" class="w100p"></td>
-        </tr> --%>
+                <th scope="row"><spring:message code="supplement.text.submissionBranch"/></th>
+                <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
+                <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}" class="w100p"></td>
+              </tr> --%>
               <tr>
-                <th scope="row"><spring:message
-                    code="supplement.text.submissionBranch" /></th>
-                <td colspan="2"><span id="salesmanBrnch"
-                  name="salesmanBrnch"></span></td>
+                <th scope="row"><spring:message code="supplement.text.submissionBranch" /></th>
+                <td colspan="2"><span id="salesmanBrnch" name="salesmanBrnch"></span></td>
               </tr>
               <tr>
                 <th scope="row"><spring:message code="sal.title.remark" /></th>
@@ -1658,17 +1454,14 @@
               </tr>
             </table>
             <aside class="title_line">
-              <!-- title_line start -->
               <h2>
                 <spring:message code="sal.title.text.purchItems" />
               </h2>
             </aside>
-            <!-- title_line end -->
 
             <ul class="right_btns">
               <li><p class="btn_grid">
-                  <a id="_addBtn"><spring:message
-                      code="supplement.btn.addItemSelection" /></a>
+                  <a id="_addBtn"><spring:message code="supplement.btn.addItemSelection" /></a>
                 </p></li>
               <li><p class="btn_grid">
                   <a id="_delBtn"><spring:message code="sal.btn.del" /></a>
@@ -1676,27 +1469,19 @@
             </ul>
 
             <article class="grid_wrap">
-              <!-- grid_wrap start -->
               <div id="item_grid_wrap"
                 style="width: 100%; height: 300px; margin: 0 auto;"></div>
             </article>
-            <!-- grid_wrap end -->
-
-
           </section>
         </article>
         <article class="tap_area">
           <section class="search_table">
-            <!-- search_table start -->
             <aside class="title_line">
-              <!-- title_line start -->
               <h3>
                 <spring:message code="sal.text.attachment" />
               </h3>
             </aside>
-            <!-- title_line end -->
             <table class="type1">
-              <!-- table start -->
               <caption>table</caption>
               <colgroup>
                 <col style="width: 30%" />
@@ -1704,142 +1489,101 @@
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.eSofForm" /><span class="must">**</span></th>
+                  <th scope="row"><spring:message code="supplement.text.eSofForm" /><span class="must">**</span></th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="sofFile"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'><a
-                          href='#'><spring:message code="sys.btn.upload" /></a></span>
+                      <input type="file" title="file add" id="sofFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' /> <span class='label_text'><a href='#'><spring:message code="sys.btn.upload" /></a></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.photocopyOfNric" /><span class="must">**</span></th>
+                  <th scope="row"><spring:message code="supplement.text.photocopyOfNric" /><span class="must">**</span></th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="nricFile"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a></span> <span
-                        class='label_text'></span>
+                      <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' /> <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.other" />1</th>
+                  <th scope="row"><spring:message code="supplement.text.other" />1</th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="otherFile"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a></span> <span
-                        class='label_text'> <a href='#'
-                          onclick='fn_removeFile("OTH")'><spring:message
-                              code="sys.btn.remove" /></a>
-                      </span>
+                      <input type="file" title="file add" id="otherFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("OTH")'><spring:message code="sys.btn.remove" /></a></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.other" />2</th>
+                  <th scope="row"><spring:message code="supplement.text.other" />2</th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="otherFile2"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a>
-                      </span> <span class='label_text'> <a href='#'
-                          onclick='fn_removeFile("OTH2")'><spring:message
-                              code="sys.btn.remove" /></a>
-                      </span>
+                      <input type="file" title="file add" id="otherFile2" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("OTH2")'><spring:message code="sys.btn.remove" /></a></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.other" />3</th>
+                  <th scope="row"><spring:message code="supplement.text.other" />3</th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="otherFile3"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a>
-                      </span> <span class='label_text'> <a href='#'
-                          onclick='fn_removeFile("OTH3")'><spring:message
-                              code="sys.btn.remove" /></a>
-                      </span>
+                      <input type="file" title="file add" id="otherFile3" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("OTH3")'><spring:message code="sys.btn.remove" /></a></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.other" />4</th>
+                  <th scope="row"><spring:message code="supplement.text.other" />4</th>
                   <td>
                     <div class="auto_file2">
-                      <input type="file" title="file add" id="otherFile4"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a>
-                      </span> <span class='label_text'> <a href='#'
-                          onclick='fn_removeFile("OTH4")'><spring:message
-                              code="sys.btn.remove" /></a>
-                      </span>
+                      <input type="file" title="file add" id="otherFile4" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("OTH4")'><spring:message  code="sys.btn.remove" /></a></span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row"><spring:message code="supplement.text.other" />5</th>
+                  <td>
+                    <div class="auto_file2">
+                      <input type="file" title="file add" id="otherFile5" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("OTH5")'><spring:message code="sys.btn.remove" /></a></span>
                       </label>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message
-                      code="supplement.text.other" />5</th>
-                  <td>
-                    <div class="auto_file2">
-                      <input type="file" title="file add" id="otherFile5"
-                        accept="image/jpg, image/jpeg, image/png, application/pdf" />
-                      <label> <input type='text' class='input_text'
-                        readonly='readonly' /> <span class='label_text'> <a
-                          href='#'><spring:message code="sys.btn.upload" /></a>
-                      </span> <span class='label_text'> <a href='#'
-                          onclick='fn_removeFile("OTH5")'><spring:message
-                              code="sys.btn.remove" /></a>
-                      </span>
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td colspan=2><span class="red_text"><spring:message
-                        code="supplement.text.picFormatNotice" /> </span></td>
+                  <td colspan=2><span class="red_text"><spring:message code="supplement.text.picFormatNotice" /> </span></td>
                 </tr>
               </tbody>
             </table>
           </section>
         </article>
-        <!-- tap_area end -->
       </section>
-      <!-- tap_wrap end -->
 
       <ul class="center_btns mt20">
         <li>
@@ -1848,12 +1592,9 @@
           </p>
         </li>
       </ul>
-
     </section>
     <!------------------------------------------------------------------------------
       Supplement Submission Content END
     ------------------------------------------------------------------------------->
   </section>
-  <!-- pop_body end -->
 </div>
-<!-- popup_wrap end -->
