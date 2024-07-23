@@ -31,6 +31,8 @@ public interface SupplementCancellationService {
 
   Map<String, Object> updateReturnGoodsQty( Map<String, Object> params ) throws Exception;
 
+  EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+
   List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params ) throws Exception;
 
 }

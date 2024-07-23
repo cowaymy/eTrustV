@@ -8,6 +8,9 @@ import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.cmmn.model.EmailVO;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.supplement.cancellation.service.SupplementCancellationService;
@@ -285,5 +291,108 @@ public class SupplementCancellationImpl
   public List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params )
     throws Exception {
     return supplementCancellationMapper.getSupplementRtnItmDetailList( params );
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    if ( CommonUtils.nvl( params.get( "ordNo" ) ).equals( "" ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
+    }
+    if ( CommonUtils.nvl( params.get( "consNo" ) ).equals( "" ) ) {
+      throw new ApplicationException( AppConstants.FAIL,
+                                      "NO SHIPMENT NO. SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
+    }
+    // LOOP SELECTED ORDERS
+    List<Map<String, String>> ordsList = (List<Map<String, String>>) params.get( "ordNo" );
+    List<String> respCountList = new ArrayList<>();
+    int total = ordsList.size();
+    // int fail = 0;
+    int success = 0;
+    // CALL DHL GET DELIVERY STATUS AND DATE.
+    EgovMap rtnData = commonService.getDhlShptDtl( params );
+    if ( !"000".equals( rtnData.get( "status" ) ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "DHL - ERRCODE : " + rtnData.get( "message" ) );
+    }
+    if ( CommonUtils.nvl( rtnData.get( "value" ) ).equals( "" ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "DHL RESPONE DOES NOT CONTAIN VALUE." );
+    }
+    Map<String, Object> extractedValueMap = (Map<String, Object>) rtnData.get( "value" );
+    System.out.println( extractedValueMap.toString() );
+    // MULTIPLE SHIPMENTS DETAILS RETURN
+    List<Map<String, Object>> shipmentList = (List<Map<String, Object>>) extractedValueMap.get( "shipmentList" );
+    if ( shipmentList != null ) {
+      // LOOP SHIPMENTS DETAILS
+      for ( Map<String, Object> shipment : shipmentList ) {
+        Map<String, Object> dataValueMap = new HashMap<>();
+        if ( !( CommonUtils.nvl( shipment.get( "subShipmentID" ) ).equals( "" ) ) ) {
+          if ( !respCountList.contains( CommonUtils.nvl( shipment.get( "subShipmentID" ) ) ) ) {
+            respCountList.add( CommonUtils.nvl( shipment.get( "subShipmentID" ) ) );
+          }
+        }
+        dataValueMap.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
+        dataValueMap.put( "ordNo", CommonUtils.nvl( shipment.get( "ordNo" ) ) );
+        if (!(CommonUtils.nvl( shipment.get( "shipmentID" )).equals( "" ))) {
+          dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "shipmentID" )));
+        } else {
+          dataValueMap.put( "consNo", CommonUtils.nvl( shipment.get( "subShipmentID" )));
+        }
+
+        dataValueMap.put( "subConsNo", CommonUtils.nvl( shipment.get( "subShipmentID" ) ) );
+        dataValueMap.put( "latestEnumStatus", CommonUtils.nvl( shipment.get( "latestEnumStatus" ) ) );
+        dataValueMap.put( "deliveryHist", CommonUtils.nvl( shipment.get( "events" ) ) );
+        dataValueMap.put( "latestConsignmentNoteDate", null );
+        dataValueMap.put( "latestConsignmentNoteLocation", null );
+
+        // INSERT DELIVERY LISTIN DETAIL HERE
+        this.insertDelDhlListing( dataValueMap );
+      }
+      // TOTAL OF NUMBER RESPONSE SUCCESS RETURN
+      success = respCountList.size();
+    } else {
+      success = 0;
+    }
+    EgovMap message = new EgovMap();
+    message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success,
+                                           ( total - success ) ) );
+    return message;
+  }
+
+  public void insertDelDhlListing( Map<String, Object> params )
+    throws JSONException {
+    if ( params.get( "deliveryHist" ) == null ) {
+      // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
+      return;
+    }
+    System.out.println( params.get( "deliveryHist" ) );
+    // CONVERT STRING TO JSON ARRAY
+    JSONArray jsonArray = new JSONArray( params.get( "deliveryHist" ).toString() );
+    if ( jsonArray.length() == 0 ) {
+      // NO DATA FROM GDEX TO INSERT DELIVERY LISTING
+      return;
+    }
+    if ( CommonUtils.nvl( params.get( "consNo" ) ).equals( "" ) ) {
+      return;
+    }
+    Map<String, Object> updParam = new HashMap<>();
+    //updParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )));
+    updParam.put( "consNo", CommonUtils.nvl( params.get( "consNo" ) ) );
+    updParam.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
+    // SOFT REMOVE EXISTING LISTING DETAIL
+    supplementCancellationMapper.updateDelLstDtl( updParam );
+    for ( int i = 0; i < jsonArray.length(); i++ ) {
+      JSONObject jsonObject = jsonArray.getJSONObject( i );
+      Map<String, Object> insertParam = new HashMap<>();
+      //insertParam.put( "ordNo", CommonUtils.nvl(params.get( "ordNo" )));
+      insertParam.put( "consNo", CommonUtils.nvl( params.get( "consNo" ) ) );
+      insertParam.put( "enumStatus", jsonObject.getInt( "status" ) );
+      //insertParam.put( "undelCode", jsonObject.getString("undelCode"));
+      insertParam.put( "consignmentNoteStatus", jsonObject.getString( "status" ) );
+      insertParam.put( "statusDetail", jsonObject.getString( "description" ) );
+      insertParam.put( "location", jsonObject.getString( "city" ) );
+      insertParam.put( "userId", CommonUtils.nvl( params.get( "userId" ) ) );
+      insertParam.put( "dateScan", jsonObject.getString( "dateTime" ) );
+      supplementCancellationMapper.insertDelLstDtl( insertParam );
+    }
   }
 }

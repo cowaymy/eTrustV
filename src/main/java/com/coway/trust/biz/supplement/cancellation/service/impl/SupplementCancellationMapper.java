@@ -57,4 +57,7 @@ public interface SupplementCancellationMapper {
 
   void insertGoodsReturnSub( Map<String, Object> params );
 
+  void updateDelLstDtl( Map<String, Object> params );
+
+  void insertDelLstDtl( Map<String, Object> params );
 }
