@@ -48,6 +48,7 @@ import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+import com.coway.trust.biz.sales.promotion.PromotionService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -103,6 +104,9 @@ public class EpapanApiController {
 
     @Resource(name = "hcPreOrderService")
     private HcPreOrderService hcPreOrderService;
+
+	@Resource(name = "promotionService")
+	private PromotionService promotionService;
 
  	@Autowired
  	private PreOrderApplication preOrderApplication;
@@ -574,4 +578,12 @@ public class EpapanApiController {
 			return ResponseEntity.ok(result);
 		}
 
+	  @ApiOperation(value = "selectPromotionFreeGiftList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/selectPromotionFreeGiftList", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectPromotionFreeGiftList(@ModelAttribute EpapanApiMagicAddressForm param) {
+
+			List<EgovMap> resultList = promotionService.selectPromotionFreeGiftList(EpapanApiMagicAddressForm.createMap(param));
+
+			return ResponseEntity.ok(resultList);
+		}
 }

@@ -61,6 +61,7 @@ public class EpapanApiMagicAddressForm {
 		params.put("grpCode", vo.getGrpCode());
 		params.put("deptCode", vo.getDeptCode());
 		params.put("_ordNo", vo.getOrdNo());
+		params.put("promoId", vo.getPromoId());
 
 		return params;
 	}
@@ -282,7 +283,12 @@ public class EpapanApiMagicAddressForm {
 	public void setOrdNo(String ordNo) {
 		this.ordNo = ordNo;
 	}
-
+	public String getPromoId() {
+		return promoId;
+	}
+	public void setPromoId(String promoId) {
+		this.promoId = promoId;
+	}
 
 	public String state;
     public String city;
@@ -317,6 +323,6 @@ public class EpapanApiMagicAddressForm {
 	public String grpCode;
 	public String deptCode;
 	public String ordNo;
-
+	public String promoId;
 
 }
