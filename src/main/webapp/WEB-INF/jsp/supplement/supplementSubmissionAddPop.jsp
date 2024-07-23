@@ -25,6 +25,9 @@
   $(document).ready(function() {
     createPurchaseGridID();
 
+
+    doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '' , 'salesmanBrnch', 'S', ''); //Branch Code
+
     $("#nric").keyup(function() {
       $(this).val($.trim($(this).val().toUpperCase()));
     });
@@ -583,11 +586,11 @@
                                { memCode : memInfo.memCode },
                                function(result) {
                                  if (result != null) {
-                                  $('#salesmanBrnch').text(result.brnch);
-                                  $('#hidSalesmanBrnchId').val(result.brnchId);
+                                  $('#salesmanBrnch').val(result.brnch);
+                                  //$('#hidSalesmanBrnchId').val(result.brnchId);
                                 } else {
                                   $('#salesmanBrnch').val('');
-                                  $('#hidSalesmanBrnchId').val('');
+                                  //$('#hidSalesmanBrnchId').val('');
                                 }
                               });
                             }
@@ -876,7 +879,7 @@
       msg += '<spring:message code="sal.alert.msg.selectMemCode" /><br>';
     }
 
-    if (null == $("#hidSalesmanBrnchId").val() || '' == $("#hidSalesmanBrnchId").val()) {
+    if (null == $("#salesmanBrnch").val() || '' == $("#salesmanBrnch").val()) {
       isValid = false;
       msg += '<spring:message code="sal.alert.msg.memHasNoBrnch" /><br>';
     }
@@ -931,7 +934,7 @@
       custBillAddId : $("#hiddenBillAddId").val(),
       memId : $('#hidSalesmanId').val(),
       memCode : $('#salesmanCd').val(),
-      memBrnchId : $('#hidSalesmanBrnchId').val(),
+      memBrnchId : $('#salesmanBrnch').val(),
       usrBrnchId : $('#_memBrnch').val(),
       remark : $('#remark').val().replace(/[\r\n]+/g, ' '),
       totAmt : totAmt,
@@ -967,7 +970,7 @@
                                                                           + "<b>Failed to save order. "
                                                                           + jqXHR.responseJSON.message
                                                                           + "</b>");
-                                                        Co mmon.removeLoader();
+                                                        Common.removeLoader();
                                                        } catch (e) {
                                                          console.log(e);
                                                        }
@@ -1443,7 +1446,8 @@
               </tr> --%>
               <tr>
                 <th scope="row"><spring:message code="supplement.text.submissionBranch" /></th>
-                <td colspan="2"><span id="salesmanBrnch" name="salesmanBrnch"></span></td>
+               <!-- <td colspan="2"><span id="salesmanBrnch" name="salesmanBrnch"></span></td> -->
+                  <td><select  id="salesmanBrnch" name="salesmanBrnch" class="w100p"></select></td>
               </tr>
               <tr>
                 <th scope="row"><spring:message code="sal.title.remark" /></th>

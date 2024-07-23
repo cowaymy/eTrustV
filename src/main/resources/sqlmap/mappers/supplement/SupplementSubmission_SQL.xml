@@ -231,11 +231,11 @@
                A.MEM_CODE ,
                A.MEM_TYPE ,
                A.NAME ,
-               B.BRNCH_ID ,
+               A.BRNCH ,
                C.CODE || ' - ' || C.NAME AS BRNCH
     FROM ORG0001D A
     LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
-    LEFT JOIN SYS0005M C ON B.BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
+    LEFT JOIN SYS0005M C ON A.BRNCH = C.BRNCH_ID AND C.STUS_ID = 1
     WHERE A.MEM_CODE = #{memCode}
    </select>
 
@@ -254,6 +254,7 @@
              , T.LVL2_UP_ID
              , T.LVL1_UP_ID
              , T.IS_SUPPL
+             , T.BRNCH
     FROM ( SELECT T1.MEM_ID
                         , T1.MEM_CODE
                         , T1.MEM_TYPE
@@ -351,7 +352,8 @@
                                      AND (T3.LVL1_UP_ID IS NULL)
                                      AND (T3.LVL0_UP_ID IS NULL))) THEN T3.LVL1_UP_ID
                                    ELSE 0 END LVL1_UP_ID ,
-                          T1.IS_SUPPL
+                          T1.IS_SUPPL ,
+                          T1.BRNCH
                FROM ORG0001D T1
                JOIN SYS0013M T2 ON T2.CODE_ID = T1.MEM_TYPE
                LEFT JOIN (SELECT V1.MEM_ID
