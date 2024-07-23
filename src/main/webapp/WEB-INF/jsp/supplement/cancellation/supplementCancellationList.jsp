@@ -381,7 +381,7 @@
         }
 
         // GET & UPDATE DELIVERY STATUS
-        Common.ajax("POST", "/supplement/updOrdDelStatDhl.do", {ordNo : suppOrds, consNo : supShptNo}, function(result) {
+        Common.ajax("POST", "/supplement/cancellation/updOrdDelStatDhl.do", {ordNo : suppOrds, consNo : supShptNo}, function(result) {
           Common.alert('<spring:message code="supplement.alert.updDelStatDelStatTtl" />'  + " </br>" +result.message);
           // REFRESH THE GRID
           AUIGrid.clearGridData(supplementGridID);
