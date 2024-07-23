@@ -287,7 +287,7 @@ public class ApiController {
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
       }
-      
+
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
@@ -301,7 +301,7 @@ public class ApiController {
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");
       }
-      
+
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("v_taxInvoiceID", params.get("taxInvoiceId").toString()); // parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
