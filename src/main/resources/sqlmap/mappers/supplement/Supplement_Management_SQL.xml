@@ -12,6 +12,7 @@
                Extent8.CODE_NAME AS SUP_REF_STG,
                Extent1.SUP_REF_DEL_STUS AS SUP_REF_DEL_STUS,
                Extent9.CODE_NAME AS SUP_DEL_STUS,
+               CASE WHEN Extent1.SUP_RTN_RFND = 'N' THEN 'No' ELSE 'Yes' END AS IS_REFUND,
                TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DATE ,
                TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mm:ss') AS SUP_DEL_DATE ,
                Extent2.NAME AS SUBM_BRCH,
