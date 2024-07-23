@@ -511,6 +511,11 @@
         width : '15%',
         editable : false
     }, {
+        dataField : "isRefund",
+        headerText :  '<spring:message code="supplement.text.isRefund" />',
+        width : '5%',
+        editable : false
+    }, {
       dataField : "supRefDate",
       headerText :  '<spring:message code="supplement.text.supplementReferenceDate" />',
       width : '15%',
@@ -830,8 +835,10 @@
             <td>
               <input type="text" title="" placeholder="Supplement Consignment No" class="w100p" id="_SupConsgNo" " name="SupConsgNo" />
             </td>
-            <th/></th>
-            <td></td>
+            <th/><spring:message code="supplement.text.isRefund" /></th>
+            <td>
+              <input type="checkbox" value="Y" id="isRefund" name="isRefund" />
+            </td>
           </tr>
           <!-- <tr>
             <th scope="row"><spring:message code="sal.text.salManCode" /></th>
