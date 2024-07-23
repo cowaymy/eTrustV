@@ -268,7 +268,7 @@ public class ApiController {
 
       eInvResult = apiService.checkRenEInv(params);
 
-      if(eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null && eInvResult.get("genEInv").toString().equals("Y")){
           params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV_2.rpt");
       }else{
           params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
@@ -282,7 +282,7 @@ public class ApiController {
 
       eInvResult = apiService.checkOutEInv(params);
 
-      if(eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null &&  eInvResult.get("genEInv").toString().equals("Y")){
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_EIV.rpt");
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
@@ -296,7 +296,7 @@ public class ApiController {
 
       eInvResult = apiService.checkSvmEInv(params);
 
-      if(eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null &&  eInvResult.get("genEInv").toString().equals("Y")){
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV_2.rpt");
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");
