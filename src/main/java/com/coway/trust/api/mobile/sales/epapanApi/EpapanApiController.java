@@ -525,6 +525,7 @@ public class EpapanApiController {
 		  	SessionVO sessionVO = new SessionVO();
 		  	sessionVO.setUserId(preOrderVO.getCrtUserId());
 
+		  	preOrderVO.setChnnl(2);
 			hcPreOrderService.registerHcPreOrder(preOrderVO, sessionVO);
 
 			HcOrderVO hcOrderVO = preOrderVO.getHcOrderVO();
