@@ -69,22 +69,22 @@
 
   function createCancDelDetailGrid() {
     var canColumnLayout = [ {
-      dataField : "cdelDt",
+      dataField : "delDt",
       headerText : "<spring:message code='log.head.deliverydate'/>",
       width : '20%',
       editable : false
     }, {
-      dataField : "cdelStus",
+      dataField : "delStus",
       headerText : "<spring:message code='supplement.text.delStat'/>",
       width : '30%',
       editable : false
     }, {
-      dataField : "cdelLoc",
+      dataField : "delLoc",
       headerText : "<spring:message code='supplement.text.delLoc'/>",
       width : '20%',
       editable : false
     }, {
-      dataField : "crmk",
+      dataField : "rmk",
       headerText : "<spring:message code='sal.title.remark'/>",
       width : '30%',
       editable : false,
