@@ -1,11 +1,14 @@
 package com.coway.trust.web.supplement.cancellation;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -220,6 +223,19 @@ public class SupplementCancellationController {
     model.addAttribute("cancellationDelInfo", cancellationDelInfoMap);
 
     return "supplement/cancellation/supplementCancellationUpdateReturnQtyPop";
+  }
+
+  @RequestMapping(value = "/updOrdDelStatDhl.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updOrdDelStaDhlt(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
+    ReturnMessage message = new ReturnMessage();
+    // SET USER ID
+    params.put("userId", sessionVO.getUserId());
+
+    EgovMap rtnData = supplementCancellationService.updOrdDelStatDhl(params);
+    message.setCode( "000" );
+    message.setMessage(CommonUtils.nvl(rtnData.get( "message" )));
+
+    return ResponseEntity.ok(message);
   }
 
   @Transactional
