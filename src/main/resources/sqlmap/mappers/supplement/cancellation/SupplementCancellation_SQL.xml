@@ -441,4 +441,48 @@
     SELECT SUP0009D_SUP_RTN_ITM_SEQ_ID.NEXTVAL FROM DUAL
   </select>
 
+  <update id="updateDelLstDtl" parameterType="Map">
+    UPDATE SUP0005D SET DEL_FLG = 'Y',
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+    </if>
+
+    <if test=" null != consNo and '' != consNo">
+      AND SUP_REF_PCL_TRKNO = #{consNo}
+    </if>
+  </update>
+
+  <insert id="insertDelLstDtl" parameterType="Map">
+    INSERT INTO SUP0005D ( SUP_DEL_ID
+                                      , SUP_REF_ID
+                                      , SUP_REF_PCL_TRKNO
+                                      , SUP_DEL_SEQ
+                                      , SUP_DEL_DT
+                                      , SUP_DEL_LOC
+                                      , SUP_DEL_RMK
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( SUP0005D_SUP_DEL_SEQ_ID.NEXTVAL
+                     <choose>
+                       <when test=" null != ordNo and '' != ordNo">
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+                       </when>
+                       <otherwise>
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_PCL_TRKNO = #{consNo} )
+                       </otherwise>
+                     </choose>
+
+                    , #{consNo}
+                    , #{enumStatus}
+                    , TO_DATE(#{dateScan}, 'YYYY-MM-DD HH24:MI:SS')
+                    , #{location}
+                    , #{statusDetail}
+                    , #{userId}
+                    , #{userId}
+    )
+  </insert>
 </mapper>
