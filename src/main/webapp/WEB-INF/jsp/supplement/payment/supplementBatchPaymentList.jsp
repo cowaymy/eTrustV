@@ -894,14 +894,12 @@
           </p>
         </li>
       </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
         <li>
           <p class="btn_blue">
             <a href="javascript:fn_viewBatchPopup();"><spring:message code='sys.scm.inventory.ViewDetail' /></a>
           </p>
         </li>
-      </c:if>
-      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
         <li>
           <p class="btn_blue">
             <a href="#" onclick="searchList();">
@@ -1029,7 +1027,7 @@
   </section>
 
   <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
       <li>
         <p class="btn_grid">
           <a href="#" id="excelDown"><spring:message code='pay.btn.generate' /></a>
