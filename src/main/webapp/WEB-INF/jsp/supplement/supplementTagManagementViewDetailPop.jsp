@@ -406,7 +406,7 @@
   <input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
 
   <header class="pop_header">
-    <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="pay.btn.approval" /></h1>
+    <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="sys.scm.inventory.ViewDetail" /></h1>
     <ul class="right_opt">
       <li>
         <p class="btn_blue2">
