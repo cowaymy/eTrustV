@@ -146,7 +146,7 @@ public class GovEInvcVO {
 	        PostalAddress custPostalAddress = new PostalAddress();
 	        List<AddressLine> custAddressLineList = new ArrayList<>();
 	        AddressLine custAddr1 = new AddressLine();
-	        custAddr1.setLine(mapValue.get("acccustPartyTtx")==null?"N/A":mapValue.get("acccustPostalAddr1").toString());
+	        custAddr1.setLine(mapValue.get("acccustPostalAddr1")==null?"N/A":mapValue.get("acccustPostalAddr1").toString());
 	        custAddressLineList.add(custAddr1);
 	        if(mapValue.get("acccustPostalAddr2") != null){
 	        	AddressLine custAddr2 = new AddressLine();
