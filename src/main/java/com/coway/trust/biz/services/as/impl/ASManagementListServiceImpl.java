@@ -1935,15 +1935,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
           installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
           installResult.put("mobileYn", params.get("mobileYn"));
-          params.put("chkInstallAcc", svc0004dmap.get("chkInstallAcc"));
+          installResult.put("chkInstallAcc", params.get("chkInstallAcc"));
           //params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
 
           LOGGER.debug("debug 111====" + params.get("mobileYn"));
-          LOGGER.debug("chkInstallAcc flag====" + params.get("chkInstallAcc").toString());
+          LOGGER.debug("chkInstallAcc flag 2====" + installResult.get("chkInstallAcc").toString());
 
-          if ( params.get("chkInstallAcc").toString() == "Y" || params.get("chkInstallAcc").toString().equals("Y") ){
+          if ( installResult.get("chkInstallAcc").toString() == "Y" || installResult.get("chkInstallAcc").toString().equals("Y") ){
 
         	  LOGGER.debug("debug 222====" + params.get("mobileYn"));
 
