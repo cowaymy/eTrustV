@@ -41,7 +41,7 @@ $(document).ready(function(){
     if(selCodeCustId == '964'){
         $("#basicCmbCustTypeId").attr("disabled" , "disabled");
         $("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
-        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+        //$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
         $("input[name='basicGender']").attr("disabled" , false);
         $("#basicCmdRaceTypeId").attr("disabled" , false);
         //$("#basicCmdNationTypeId").attr("disabled" , "disabled");
@@ -751,7 +751,7 @@ $(document).ready(function(){
     <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder=""   value="${result.nric}"  name = "basicNric" id="basicNric"/>
+    <input type="text" title="" placeholder="" class="w100p"  value="${result.nric}"  name = "basicNric" id="basicNric"/>
     </td>
 </tr>
 <tr>
