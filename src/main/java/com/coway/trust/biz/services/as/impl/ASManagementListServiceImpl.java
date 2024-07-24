@@ -1940,16 +1940,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
 
-          LOGGER.debug("debug 111====" + params.get("mobileYn"));
           LOGGER.debug("chkInstallAcc flag 2====" + installResult.get("chkInstallAcc").toString());
 
           if ( installResult.get("chkInstallAcc").toString() == "Y" || installResult.get("chkInstallAcc").toString().equals("Y") ){
-
-        	  LOGGER.debug("debug 222====" + params.get("mobileYn"));
-
               try {
-
-            	  LOGGER.debug("debug 333====" + params.get("mobileYn"));
                 insertInstallationAccessories(installAccList,installResult,CommonUtils.intNvl(params.get("updator")));
               } catch (Exception e) {
                 // TODO Auto-generated catch block
