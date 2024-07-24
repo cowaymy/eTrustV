@@ -1935,7 +1935,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
           installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
           installResult.put("mobileYn", params.get("mobileYn"));
-          params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
+          params.put("chkInstallAcc", svc0004dmap.get("chkInstallAcc"));
+          //params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
           params.put("user_id", params.get("updator"));
 
