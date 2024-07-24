@@ -71,7 +71,7 @@
 			editable : false
 		},{
 			dataField : "userAmt",
-			headerText : 'Amount',
+			headerText : 'Key-in Amount',
 			editable : false
 		}, {
 			dataField : "salesOrdNo",
