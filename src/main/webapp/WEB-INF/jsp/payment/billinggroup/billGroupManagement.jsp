@@ -396,9 +396,12 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
 
-        if(currentDay >= 31 || currentDay == 1){
+        /*
+        Project ID: 7048111877 Stop early bill - to block first day of the month cannot update bill group. Hui Ding, 24/07/2024
+        if(currentDay >= 31 || currentDay == 1){ */
+    	    if(currentDay == 1){
 
-            Common.alert("<spring:message code='pay.alert.unable26And1'/>");
+            Common.alert("<spring:message code='pay.alert.block.billGroupUpd'/>");
             return;
 
         }else{
