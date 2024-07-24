@@ -632,11 +632,11 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
            		   		  throw e5;
            		   	  }
 
-           		   	  String supplementInd = p.getUserResult().get(user).getSupplementInd();
-               		  if(StringUtil.isBlank(supplementInd)){
-     	        		  Exception e6 = new Exception("Supplement Course Indicator is required");
-     	        		  throw e6;
-     	        	  }
+//           		   	  String supplementInd = p.getUserResult().get(user).getSupplementInd();
+//               		  if(StringUtil.isBlank(supplementInd)){
+//     	        		  Exception e6 = new Exception("Supplement Course Indicator is required");
+//     	        		  throw e6;
+//     	        	  }
 
                 	  //Attendee List
                       Map<String, Object> attendeeInfo = new HashMap<String, Object>();
@@ -645,12 +645,12 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                       attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
                       attendeeInfo.put("coursTestResult", p.getUserResult().get(user).getTrainingResult());
 
-                      if(supplementInd.equals("1")){
-                          attendeeInfo.put("supplementInd", "Y");
-                      }
-                      else{
-                          attendeeInfo.put("supplementInd", "N");
-                      }
+//                      if(supplementInd.equals("1")){
+//                          attendeeInfo.put("supplementInd", "Y");
+//                      }
+//                      else{
+//                          attendeeInfo.put("supplementInd", "N");
+//                      }
                       if(!p.getUserResult().get(user).getCdpPoint().isEmpty()){
                     	  attendeeInfo.put("coursCdpPoint", p.getUserResult().get(user).getCdpPoint());
                       }
@@ -659,12 +659,12 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                       }
                       lmsApiMapper.updateAttendee(attendeeInfo);
 
-                      if(supplementInd.equals("1")){
-                    	  Map<String, Object> memInfo = new HashMap<String, Object>();
-                    	  memInfo.put("MemberID", userId.get("memId"));
-                    	  memInfo.put("supplementInd", "Y");
-                    	  lmsApiMapper.updateMemSupplimentFlag(memInfo);
-                      }
+//                      if(supplementInd.equals("1")){
+//                    	  Map<String, Object> memInfo = new HashMap<String, Object>();
+//                    	  memInfo.put("MemberID", userId.get("memId"));
+//                    	  memInfo.put("supplementInd", "Y");
+//                    	  lmsApiMapper.updateMemSupplimentFlag(memInfo);
+//                      }
 
                       //when HP, call to trigger open sales
                       if(userId.get("memType").toString().equals("1") && attendeeInfo.get("coursTestResult").toString().equalsIgnoreCase("P")){
