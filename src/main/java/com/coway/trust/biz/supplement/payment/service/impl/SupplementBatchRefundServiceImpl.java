@@ -117,8 +117,8 @@ public class SupplementBatchRefundServiceImpl
           if ( supBatchRefundDtl.size() > 0 ) {
             for ( int i = 0; i < supBatchRefundDtl.size(); i++ ) {
               Map<String, Object> updMap = (Map<String, Object>) supBatchRefundDtl.get( i );
-              updMap.put( "userId", master.get( "userId" ).toString() );
-              result = supplementBatchRefundMapper.updSupplementRtnRfnd( updMap );
+              updMap.put( "userId", master.get( "updator" ).toString() );
+              supplementBatchRefundMapper.updSupplementRtnRfnd( updMap );
             }
           }
           for ( EgovMap egovMap : bRefundItem ) {
