@@ -393,7 +393,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
+            conn.setRequestProperty("x-clear-tin", "C12113374050");
             conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
             OutputStream os = conn.getOutputStream();
             os.write(jsonString.getBytes());
@@ -604,7 +604,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setDoOutput(true);
             conn.setRequestMethod("GET");
 //            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
+            conn.setRequestProperty("x-clear-tin", "C12113374050");
             conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
 //            OutputStream os = conn.getOutputStream();
 //            os.flush();
