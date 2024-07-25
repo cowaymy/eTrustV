@@ -34,6 +34,8 @@ public interface GovEInvoiceMapper {
 
 	Map<String, Object> createEInvClaim(Map<String, Object> param);
 
+	Map<String, Object> createEInvClaimDaily(Map<String, Object> param);
+
 	int saveEInvBatchMain(Map<String, Object> params);
 
 	int saveEInvDeactivateBatchEInv(Map<String, Object> params);

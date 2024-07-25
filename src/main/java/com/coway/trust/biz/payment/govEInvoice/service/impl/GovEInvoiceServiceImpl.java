@@ -134,6 +134,11 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     }
 
     @Override
+    public Map<String, Object> createEInvClaimDaily(Map<String, Object> params) {
+    	return govEInvoiceMapper.createEInvClaimDaily(params);
+    }
+
+    @Override
     public int saveEInvDeactivateBatch(Map<String, Object> params) {
     	params.put("status", "21");
         int result = govEInvoiceMapper.saveEInvBatchMain(params);
@@ -311,8 +316,8 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 }
         }
 
-//        Map<String, Object> updateParams = new HashMap<String, Object>();
-//        govEInvoiceMapper.updateEInvMain(updateParams);
+        Map<String, Object> updateParams = new HashMap<String, Object>();
+        govEInvoiceMapper.updateEInvMain(updateParams);
 
         return resultValue;
     }

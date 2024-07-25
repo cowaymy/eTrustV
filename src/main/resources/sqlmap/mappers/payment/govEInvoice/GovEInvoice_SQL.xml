@@ -154,7 +154,15 @@
 <select id="createEInvClaim" statementType="CALLABLE"
   parameterType="Map">
   {
-  call SP_E_INVOICE_GENRT(#{invType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  call SP_E_INVOICE_GENRT_MONTHLY(#{invType},#{invoicePeriod}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  }
+</select>
+
+<resultMap id="resultEInvMap1" type="egovMap" />
+<select id="createEInvClaimDaily" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  call SP_E_INVOICE_GENRT(#{invType},#{invoicePeriod}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap1} )
   }
 </select>
 
@@ -387,6 +395,7 @@
 </insert>
 
 <update id="updateEInvMain" parameterType="Map">
+
 	MERGE INTO EIV0004D TRG
 	USING (
 		SELECT
@@ -403,7 +412,7 @@
 		WHERE INV.STATUS = 44
 		AND INV.GRP_ID IS NOT NULL
 		AND MBATCH.STATUS not in ('8')
-		AND MAIN_LOG.RESP_ID IS NOT NULL
+		--AND MAIN_LOG.RESP_ID IS NOT NULL
 	) SRC
 	ON (TRG.UNIQUE_ID = SRC.INV_UIN AND TRG.BATCH_ID = SRC.BATCH_ID AND TRG.GRP_ID = SRC.GRP_ID)
 	WHEN MATCHED THEN

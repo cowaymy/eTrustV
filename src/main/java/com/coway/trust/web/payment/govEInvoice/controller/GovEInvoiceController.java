@@ -138,7 +138,7 @@ public class GovEInvoiceController {
 	    // HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다.
 	    searchMap = new HashMap<String, Object>();
 	    searchMap.put("invType", eInvClaim.get("sInvType"));
-	    searchMap.put("invMonth", eInvClaim.get("namecrtsdt"));
+	    searchMap.put("invoicePeriod", eInvClaim.get("namecrtsdt"));
 //	    searchMap.put("fromDate", eInvClaim.get("namecrtsdt"));
 //	    searchMap.put("toDate", eInvClaim.get("sRqtendDt"));
 	    searchMap.put("status", "1");
@@ -274,4 +274,79 @@ public class GovEInvoiceController {
 		resultValue = govEInvoiceService.checkStatusEInvClaim(params);
 
 	}
+
+	@RequestMapping(value = "/dailyGenerateNewEInvClaim.do")
+	  public ResponseEntity<ReturnMessage> dailyGenerateNewEInvClaim(@RequestParam Map<String, Object> params, Model model,
+	      SessionVO sessionVO) {// 가져오기
+	    Map<String, Object> returnMap = new HashMap<String, Object>();
+	    Map<String, Object> searchMap = null;
+	    String returnCode = "";
+
+	    // 검색 파라미터 확인.(화면 Form객체 입력값)
+	    LOGGER.debug("new_invoiceType : {}", params.get("sInvType"));
+	    LOGGER.debug("new_InvoiceDateMonth : {}", params.get("namecrtsdt"));
+
+	    // HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다.
+	    searchMap = new HashMap<String, Object>();
+	    searchMap.put("invType", params.get("sInvType"));
+	    searchMap.put("invoicePeriod", params.get("namecrtsdt"));
+//	    searchMap.put("fromDate", eInvClaim.get("namecrtsdt"));
+//	    searchMap.put("toDate", eInvClaim.get("sRqtendDt"));
+	    searchMap.put("status", "1");
+
+//	    List<EgovMap> isActiveBatchList = govEInvoiceService.selectGovEInvoiceList(searchMap);
+
+	    // Active인 배치가 있는 경우
+//	    if (isActiveBatchList.size() > 0) {
+//	      returnCode = "IS_BATCH";
+//	      returnMap = (Map<String, Object>) isActiveBatchList.get(0);
+//	    } else {
+
+//	      String isCRC = "131".equals((String.valueOf(eInvClaim.get("sInvType")))) ? "1": "132".equals((String.valueOf(claim.get("new_claimType")))) ? "0" : "134";
+//	      String inputDate = CommonUtils.changeFormat(String.valueOf(eInvClaim.get("new_debitDate")), "dd/MM/yyyy", "yyyyMMdd");
+//	      String claimDay = CommonUtils.nvl(String.valueOf(eInvClaim.get("new_claimDay")));
+//	      claim.put("new_cardType", cardType);
+	    	searchMap.put("userId", "349");
+
+	      govEInvoiceService.createEInvClaimDaily(searchMap);
+
+	      String resultStr = searchMap.get("p1").toString();
+
+	      returnCode = resultStr;
+//	      if ("999".equals(resultStr)) {
+//	          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + resultStr + ":" + "New E-Invoice Error");
+//	      }
+
+//	      if (resultMapList.size() > 0) {
+	        // 프로시저 결과 Map
+//	        returnMap = (Map<String, Object>) resultMapList.get(0);
+
+	        // Calim Master 및 Detail 조회
+	        // EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
+	        // List<EgovMap> claimDetailList =
+	        // claimService.selectClaimDetailById(returnMap);
+
+//	        try {
+//	          // 파일 생성하기
+//	          // this.createClaimFileMain(claimMasterMap,claimDetailList);
+//	          returnCode = "FILE_OK";
+//	        } catch (Exception e) {
+//	          returnCode = "FILE_FAIL";
+//	        }
+//	      }
+//	    else {
+//	        returnCode = "FAIL";
+//	      }
+//	    }
+
+	    // 결과 만들기.
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(returnCode);
+	    message.setData(returnMap);
+	    message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+
+	    return ResponseEntity.ok(message);
+
+	  }
+
 }
