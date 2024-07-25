@@ -35,7 +35,8 @@
         {
       		dataField : "id",
       		headerText : 'ID',
-      		editable : false
+      		editable : false,
+      		visible: false
         },
         {
       		dataField : "batchId",
@@ -176,19 +177,17 @@
 								</td>
 				        	</tr>
 				        	<tr>
-				        		<th>ID</th>
+<!-- 				        		<th>ID</th> -->
+<!-- 				        		<td> -->
+<!-- 				        			<input type="text" title="ID" id="detailId" name="detailId" placeholder="ID" class="w100p" /> -->
+<!-- 				        		</td> -->
+				        		<th>File ID</th>
 				        		<td>
-				        			<input type="text" title="ID" id="detailId" name="detailId" placeholder="ID" class="w100p" />
+				        			<input type="text" title="File ID" id="readFileId" name="readFileId" placeholder="File ID" class="w100p" disabled/>
 				        		</td>
 				        		<th>Batch ID</th>
 				        		<td>
 				        			<input type="text" title="Batch ID" id="batchId" name="batchId" placeholder="Batch ID" class="w100p" />
-				        		</td>
-				        	</tr>
-				        	<tr>
-				        		<th>File ID</th>
-				        		<td>
-				        			<input type="text" title="File ID" id="readFileId" name="readFileId" placeholder="File ID" class="w100p" disabled/>
 				        		</td>
 				        	</tr>
 				        </tbody>
