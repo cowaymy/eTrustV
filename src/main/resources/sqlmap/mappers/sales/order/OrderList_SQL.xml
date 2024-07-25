@@ -2031,13 +2031,11 @@
 		                   ELSE T.CODE_NAME
 		              END AS RESULT <!--IS_APPROVE_STR -->
 		              , T.BANK_DTL_AMT AS TRX_AMT
-		              , CASE WHEN BANK_DTL_APPR_CODE = '00' THEN  (
-		                SELECT
-		                    P65.PAY_ITM_APPV_NO ||'/'|| P64.OR_NO
-		                FROM PAY0064D P64
-		                JOIN PAY0065D P65 ON P65.PAY_ID = P64.PAY_ID
-		                WHERE  P64.SALES_ORD_ID = #{ordId}
-		                    AND TO_NUMBER(P65.PAY_ITM_REF_NO) = T.CTRL_ID)
+		              , CASE WHEN BANK_DTL_APPR_CODE = '00' THEN
+		                     CASE WHEN T9.PAY_ITM_APPV_NO IS NOT NULL AND T9.OR_NO IS NOT NULL THEN
+                                T9.PAY_ITM_APPV_NO ||'/'|| T9.OR_NO
+		                  ELSE '-'
+		                  END
 		                ELSE '-'
 		              END AS APPROVAL_CODE_RECEIPT_NO
 		              , T.CRT_DT
@@ -2052,25 +2050,20 @@
 		                          WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
 		                          ELSE 'FPX'
 		                  END BATCH_MODE
-		                , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
+                        , NVL(T3.CODE, '') CODE
 		                , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
 		                , NVL(T1.BANK_APPV, 0) BANK_APPV
 		                , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
 		                , T2.CTRL_IS_CRC CTRL_IS_CRC
-		                , CASE WHEN T6.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
-	                        WHEN T6.IND = 'INSFUNDS' THEN 'Insufficient Funds'
-	                        WHEN T6.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
-	                        WHEN T6.IND = 'CHGCARD' THEN
-	                                                    CASE WHEN T2.CTRL_IS_CRC = 1 THEN
-	                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
-	                                                    ELSE  'Change Account' END
-	                        WHEN T6.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
-	                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END)
-	                        END CODE_NAME
+                        , CASE
+                                WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success'
+                                ELSE GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
+                          END CODE_NAME
 		                , LPAD(SUBSTR(T4.CUST_ORI_CRC_NO,-4),LENGTH(T4.CUST_ORI_CRC_NO),'*') CUST_ACC_NO
 		                , TO_CHAR(TO_DATE(T4.CUST_CRC_EXPR,'MM/YY'),'MM/YY') AS EXP_DT
 		                , T5.CODE_NAME CARD_TYPE
 		                , T2.CRT_DT
+		                , T1.SALES_ORD_ID
 		           FROM PAY0042D T1
 		           JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
 		           LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
@@ -2079,8 +2072,57 @@
 		           LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
 		           WHERE T1.SALES_ORD_ID = #{ordId}
 		           AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+
+		           UNION
+
+		           SELECT
+				        T1.BANK_DTL_ID
+				        , T1.BANK_DTL_AMT
+				        , T2.CTRL_ID
+				        , TO_CHAR(T2.CRT_DT, 'MM/YY') CRT_DT_MM
+				        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
+				        , CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'CRC'
+				                  WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
+				                  ELSE 'FPX'
+				          END BATCH_MODE
+                        , NVL(T3.CODE, '') CODE
+				        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+				        , NVL(T1.BANK_APPV, 0) BANK_APPV
+				        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+				        , T2.CTRL_IS_CRC CTRL_IS_CRC
+                        , CASE
+                                WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success'
+                                ELSE GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
+                          END CODE_NAME
+				        , LPAD(SUBSTR(T4.CUST_ORI_CRC_NO,-4),LENGTH(T4.CUST_ORI_CRC_NO),'*') CUST_ACC_NO
+				        , TO_CHAR(TO_DATE(T4.CUST_CRC_EXPR,'MM/YY'),'MM/YY') AS EXP_DT
+				        , T5.CODE_NAME CARD_TYPE
+				        , T2.CRT_DT
+				        , T1.SALES_ORD_ID
+				    FROM PAY0102D T1
+				    LEFT JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
+				    LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+				    LEFT JOIN SAL0028D T4 ON  T4.CUST_CRC_TOKEN = T1.BANK_DTL_DR_ACC_NO AND
+				                            T4.CUST_CRC_OWNER = T1.BANK_DTL_DR_NAME AND
+				                            T4.CUST_CRC_BANK_ID = T1.BANK_DTL_DR_BANK_TYPE_ID AND
+				                            T4.CUST_CRC_EXPR = T1.BANK_DTL_CRC_EXPR
+				    LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
+				    LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+				    WHERE T1.SALES_ORD_ID = #{ordId}
+				    AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+
 		        ) T
 		        LEFT JOIN SYS0013M T6 ON T6.CODE = T.BATCH_MODE AND T6.CODE_MASTER_ID = 19
+		        LEFT JOIN (
+                    SELECT
+                            P65.PAY_ITM_APPV_NO,
+                            P64.OR_NO,
+                            P64.SALES_ORD_ID,
+                            P65.PAY_ITM_REF_NO
+                        FROM PAY0064D P64
+                        JOIN PAY0065D P65 ON P65.PAY_ID = P64.PAY_ID
+                        WHERE P64.SALES_ORD_ID = #{ordId}
+                )T9 ON T9.SALES_ORD_ID = T.SALES_ORD_ID AND T9.PAY_ITM_REF_NO = TO_CHAR(T.CTRL_ID)
 		        ORDER BY T.BANK_DTL_ID DESC
 		    ) A
 
@@ -2105,7 +2147,7 @@
 		          END RESULT
 		        , A.FILE_ITM_AMT AS TRX_AMT
 		        , CASE WHEN A.FILE_ITM_STUS_ID = 4 THEN
-		                I.PAY_ITM_APPV_NO ||'/'|| H.OR_NO
+		              A.FILE_ITM_APPR_CODE ||'/'|| A.FILE_ITM_OR_NO
 		            ELSE '-'
 		          END AS APPROVAL_CODE_RECEIPT_NO,
 		          A.FILE_ITM_CRT
@@ -2113,14 +2155,13 @@
 		    JOIN SAL0001D B ON B.SALES_ORD_ID = A.FILE_ITM_ORD_ID
 		    LEFT JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID AND C.CUST_ID = B.CUST_ID
 		    LEFT JOIN SAL0028D D ON D.CUST_CRC_ID = C.CUST_CRC_ID
-		    LEFT JOIN PAY0064D H ON H.SALES_ORD_ID = A.FILE_ITM_ORD_ID
-		    LEFT JOIN PAY0065D I ON I.PAY_ID = H.PAY_ID
 		    LEFT JOIN SYS0013M E ON E.CODE_ID = C.MODE_ID
 		    LEFT JOIN SYS0004M F ON F.BANK_ID = C.BANK_ID
 		    LEFT JOIN SYS0013M G ON G.CODE_ID = D.CARD_TYPE_ID
 		    WHERE 1=1
 		        AND A.FILE_ITM_ORD_ID = #{ordId}
 		        AND C.MODE_ID = 131
+		        AND A.FILE_ITM_STUS_ID != 8
 		        AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
 		    ) B
 
@@ -2136,8 +2177,15 @@
 		    <!--===============================-->
 		    SELECT * FROM (
 		         SELECT
-		            CASE WHEN (Extent1.DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_APPLY_DT, 'DD/MM/YYYY')
-		             ELSE '-'
+		            CASE
+		                WHEN (Extent1.DD_APPLY_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd'))
+                        THEN
+                            CASE
+                                WHEN (Extent1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_REJCT_DT, 'DD/MM/YYYY')
+                                WHEN (Extent1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_START_DT, 'DD/MM/YYYY')
+                                WHEN (Extent1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_SUBMIT_DT, 'DD/MM/YYYY')
+                            ELSE TO_CHAR(Extent1.DD_APPLY_DT, 'DD/MM/YYYY') END
+		            ELSE '-'
 		            END DT,
 		             CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN
 		               CASE WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
@@ -2188,13 +2236,21 @@
 		        LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.MODE_ID
 		        WHERE (Extent1.SALES_ORD_ID = #{ordId})
 		         AND (Extent1.SVC_CNTRCT_ID = '0')
+		         AND Extent1.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND Extent1.UPD_DT
 
 		        UNION ALL
 
 		        SELECT * FROM (
 		            SELECT
-		               CASE WHEN (Ext1.DD_APPLY_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_APPLY_DT, 'DD/MM/YYYY')
-		                  ELSE '-'
+		               CASE
+		                  WHEN (Ext1.DD_APPLY_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd'))
+                          THEN
+                              CASE
+                                  WHEN (Ext1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_REJCT_DT, 'DD/MM/YYYY')
+                                  WHEN (Ext1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_START_DT, 'DD/MM/YYYY')
+                                  WHEN (Ext1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_SUBMIT_DT, 'DD/MM/YYYY')
+                              ELSE TO_CHAR(Ext1.DD_APPLY_DT, 'DD/MM/YYYY') END
+		               ELSE '-'
 		               END DT,
 		               CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN
 		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN LPAD(SUBSTR(Ext3.CUST_ACC_NO,-4),LENGTH(Ext3.CUST_ACC_NO),'*')
@@ -2223,7 +2279,7 @@
 		               '' AS RESULT,
 		               NULL AS TRX_AMT,
 		               '' AS APPROVAL_CODE_RECEIPT_NO,
-		                Ext1.UPD_DT
+		               Ext1.UPD_DT
 		            FROM SAL0076D Ext1
 		            JOIN SYS0013M Ext2 ON Ext2.CODE_ID = Ext1.MODE_ID
 		            LEFT JOIN SAL0022D Ext3 ON (Ext3.CUST_ACC_ID = Ext1.CUST_ACC_ID)
@@ -2243,10 +2299,10 @@
 		            LEFT JOIN SYS0013M Ext10 ON Ext10.CODE_ID = Ext1.MODE_ID
 		            WHERE (Ext1.SALES_ORD_ID = #{ordId})
 		               AND (Ext1.SVC_CNTRCT_ID = '0')
-		            ORDER BY Ext1.UPD_DT DESC
+		               AND Ext1.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND Ext1.UPD_DT
 		        )
 		    )C
-		    WHERE C.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND C.UPD_DT
+
 		)
 		ORDER BY TO_DATE(DT,'DD/MM/YYYY') DESC
     </select>

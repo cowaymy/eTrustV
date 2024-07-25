@@ -143,7 +143,7 @@
             , { headerText : "prev3Month",    dataField : "prev3Month",   width : 120 }
             , { headerText : "prev4Month",    dataField : "prev4Month",   width : 120 }
             , { headerText : "prev5Month",    dataField : "prev5Month",   width : 120 }
-            , { headerText : "prev6Month",    dataField : "prev5Month",   width : 120 }
+            , { headerText : "prev6Month",    dataField : "prev6Month",   width : 120 }
         ];
 
 	     //그리드 속성 설정
