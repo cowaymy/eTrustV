@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 	var selfCareGridReportDetailID;
+	var selfCareGridReportDetailCsvID;
 	$(document).ready(function() {
 		console.log("selfCareReportDetailPop.jsp");
 
@@ -10,8 +11,9 @@
 		$('#reportFileId').val(fileId);
 		$('#readFileId').val(fileId);
 		createAUIGrid();
+		createHiddenAUIGridCSV();
 	    $("#btnDownload").click(function() {
-	        GridCommon.exportTo("grid_wrap_report_detail", "xlsx", "SelfCareReportDetail");
+	        GridCommon.exportTo("grid_wrap_report_detail_csv", "xlsx", "SelfCareReportDetail");
 		});
 
 	    $('#btnSelfCareDetReportClose').click(function() {
@@ -37,6 +39,10 @@
       		headerText : 'ID',
       		editable : false,
       		visible: false
+        }, {
+      		dataField : "fileId",
+      		headerText : 'File ID',
+      		editable : false
         },
         {
       		dataField : "batchId",
@@ -96,10 +102,10 @@
 			headerText : 'Key-In Date',
 			editable : false
 		},  {
-      		dataField : "fileId",
-      		headerText : 'File ID',
-      		editable : false
-        }];
+			dataField : "trxId",
+			headerText : 'Transaction ID',
+			editable : false
+		}];
 
 		var gridPros = {
 			usePaging : true,
@@ -117,6 +123,100 @@
 				columnLayout, gridPros);
 	}
 
+	function createHiddenAUIGridCSV() {
+		var columnLayout = [
+        {
+      		dataField : "id",
+      		headerText : 'ID',
+      		editable : false,
+      		visible: false
+        }, {
+      		dataField : "fileId",
+      		headerText : 'File ID',
+      		editable : false
+        },
+        {
+      		dataField : "batchId",
+      		headerText : 'Batch ID',
+      		editable : false
+        },
+		{
+			dataField : "payDate",
+			headerText : 'Payment Date',
+			editable : false
+		}, {
+			dataField : "userIssBank",
+			headerText : 'Bank',
+			editable : false
+		}, {
+			dataField : "payItmModeDesc",
+			headerText : 'Payment Mode',
+			editable : false
+		}, {
+			dataField : "payMethod",
+			headerText : 'Payment Method',
+			editable : false
+		},{
+			dataField : "cardNo",
+			headerText : 'Card Num.',
+			editable : false
+		},{
+			dataField : "approvalCode",
+			headerText : 'Appv Code',
+			editable : false,
+			cellMerge : true
+		},{
+			dataField : "userRefNo",
+			headerText : 'Ref No',
+			editable : false,
+			cellMerge : true
+		}, {
+			dataField : "remarks",
+			headerText : 'Remark',
+			editable : false
+		},{
+			dataField : "userAmt",
+			headerText : 'Key-in Amount',
+			editable : false
+		},{
+			dataField : "totalAmt",
+			headerText : 'Total Amount',
+			editable : false,
+			cellMerge : true
+		}, {
+			dataField : "salesOrdNo",
+			headerText : 'Order Num.',
+			editable : false
+		}, {
+			dataField : "receiptNo",
+			headerText : 'Receipt No.',
+			editable : false
+		},  {
+			dataField : "keyInDt",
+			headerText : 'Key-In Date',
+			editable : false
+		},  {
+			dataField : "trxId",
+			headerText : 'Transaction ID',
+			editable : false
+		}];
+
+		var gridPros = {
+			fixedColumnCount : 3,
+			showStateColumn : false,
+			displayTreeOpen : true,
+			headerHeight : 30,
+			useGroupingPanel : false,
+			skipReadonlyColumns : true,
+			wrapSelectionMove : true,
+			wordWrap : true,
+            enableCellMerge : true,
+            cellMergePolicy: "withNull",
+		};
+		selfCareGridReportDetailCsvID = AUIGrid.create("#grid_wrap_report_detail_csv",
+				columnLayout, gridPros);
+	}
+
 	function f_multiCombo() {
 	    $('#payModeStus').change(function() {
 	    }).multipleSelect({
@@ -129,6 +229,7 @@
 	      Common.ajax("GET", "/payment/selfCareHostToHost/getSelfcareBatchDetailReport.do", $("#searchFormReport").serialize(), function(result) {
 	    	  console.log(result);
 	          AUIGrid.setGridData(selfCareGridReportDetailID, result);
+	          AUIGrid.setGridData(selfCareGridReportDetailCsvID, result);
 	      });
 	}
 </script>
@@ -197,6 +298,8 @@
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap_report_detail"></div>
+				<!-- grid_wrap start -->
+				<div id="grid_wrap_report_detail_csv" style="display:none;"></div>
 			</article>
 		</section>
 	</div>
