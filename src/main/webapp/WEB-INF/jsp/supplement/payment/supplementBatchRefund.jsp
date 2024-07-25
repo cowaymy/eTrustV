@@ -64,10 +64,10 @@
     $("#confirm_btn").click(fn_bRefundConfirmPop);
 
     $("#payMode").multipleSelect("setSelects", [108]);
-    $("#cnfmStus").multipleSelect("setSelects", [44]);
-    $("#batchStus").multipleSelect("setSelects", [1]);
+    //$("#cnfmStus").multipleSelect("setSelects", [44]);
+    //$("#batchStus").multipleSelect("setSelects", [1]);
 
-    fn_setToDay();
+    //fn_setToDay();
 
     AUIGrid.bind(bRefundGridID, "cellClick", function(event) {
       batchId = event.item.batchId;
@@ -167,34 +167,12 @@
             <tr>
               <th scope="row"><spring:message code='supplement.head.batchId'/></th>
               <td>
-                <input type="text" title="Batch ID (Number Only)" placeholder="Batch ID (Number Only)" class="w100p" id="batchId" name="batchId"/>
+                <input type="text" title="Refund Payment Batch ID" placeholder="Refund Payment Batch ID" class="w100p" id="batchId" name="batchId"/>
               </td>
               <th scope="row"><spring:message code='supplement.head.paymode'/></th>
               <td>
                 <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
                   <c:forEach var="list" items="${paymentMode}" varStatus="status">
-                    <option value="${list.codeId}">${list.codeName}</option>
-                  </c:forEach>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='supplement.head.createDate'/></th>
-              <td>
-                <div class="date_set w100p">
-                  <p>
-                    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/>
-                  </p>
-                  <span><spring:message code='supplement.text.to'/></span>
-                  <p>
-                    <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/>
-                  </p>
-                </div>
-              </td>
-              <th scope="row"><spring:message code='supplement.head.confirmStatus'/></th>
-              <td>
-                <select id="cnfmStus" name="cnfmStus" class="multy_select w100p" multiple="multiple">
-                  <c:forEach var="list" items="${batchConfirmationStatus}" varStatus="status">
                     <option value="${list.codeId}">${list.codeName}</option>
                   </c:forEach>
                 </select>
@@ -209,6 +187,28 @@
                   </c:forEach>
                 </select>
               </td>
+              <th scope="row"><spring:message code='supplement.head.confirmStatus'/></th>
+              <td>
+                <select id="cnfmStus" name="cnfmStus" class="multy_select w100p" multiple="multiple">
+                  <c:forEach var="list" items="${batchConfirmationStatus}" varStatus="status">
+                    <option value="${list.codeId}">${list.codeName}</option>
+                  </c:forEach>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='supplement.head.createDate'/></th>
+              <td>
+                <div class="date_set w100p">
+                  <p>
+                    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt" value="${bfDay}"/>
+                  </p>
+                  <span><spring:message code='supplement.text.to'/></span>
+                  <p>
+                    <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt" value="${toDay}"/>
+                  </p>
+                </div>
+              </td>
               <th scope="row"><spring:message code='supplement.head.creator'/></th>
               <td>
                 <input type="text" title="Creator (Username)" placeholder="Creator (Username)" class="w100p" id="crdUserName" name="crtUserIdName"/>
@@ -216,6 +216,25 @@
             </tr>
           </tbody>
         </table>
+        <aside class="link_btns_wrap">
+        <p class="show_btn">
+          <a href="#">
+            <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
+          </a>
+        </p>
+        <dl class="link_list">
+          <dt>Link</dt>
+          <dd>
+            <ul class="btns">
+            </ul>
+            <p class="hide_btn">
+              <a href="#">
+                <img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" />
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </aside>
       </form>
     </section>
     <ul class="right_btns">
@@ -228,6 +247,8 @@
       </c:if>
     </ul>
     <section class="search_result">
-       <article class="grid_wrap" id="bRefund_grid_wrap"></article>
+       <article class="grid_wrap" >
+         <div style="width:100%; height:480px; margin:0 auto;" id="bRefund_grid_wrap" />
+       </article>
     </section>
 </section>
