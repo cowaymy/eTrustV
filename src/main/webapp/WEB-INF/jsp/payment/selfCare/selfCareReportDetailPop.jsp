@@ -37,6 +37,11 @@
       		headerText : 'ID',
       		editable : false
         },
+        {
+      		dataField : "batchId",
+      		headerText : 'Batch ID',
+      		editable : false
+        },
 		{
 			dataField : "payDate",
 			headerText : 'Payment Date',
@@ -73,6 +78,10 @@
 			dataField : "userAmt",
 			headerText : 'Key-in Amount',
 			editable : false
+		},{
+			dataField : "totalAmt",
+			headerText : 'Total Amount',
+			editable : false
 		}, {
 			dataField : "salesOrdNo",
 			headerText : 'Order Num.',
@@ -85,12 +94,16 @@
 			dataField : "keyInDt",
 			headerText : 'Key-In Date',
 			editable : false
-		}];
+		},  {
+      		dataField : "fileId",
+      		headerText : 'File ID',
+      		editable : false
+        }];
 
 		var gridPros = {
 			usePaging : true,
 			pageRowCount : 20,
-			fixedColumnCount : 2,
+			fixedColumnCount : 3,
 			showStateColumn : false,
 			displayTreeOpen : true,
 			headerHeight : 30,
@@ -162,15 +175,21 @@
 									</select>
 								</td>
 				        	</tr>
+				        	<tr>
 				        		<th>ID</th>
 				        		<td>
 				        			<input type="text" title="ID" id="detailId" name="detailId" placeholder="ID" class="w100p" />
 				        		</td>
+				        		<th>Batch ID</th>
+				        		<td>
+				        			<input type="text" title="Batch ID" id="batchId" name="batchId" placeholder="Batch ID" class="w100p" />
+				        		</td>
+				        	</tr>
+				        	<tr>
 				        		<th>File ID</th>
 				        		<td>
-				        			<input type="text" title="ID" id="readFileId" name="readFileId" placeholder="ID" class="w100p" disabled/>
+				        			<input type="text" title="File ID" id="readFileId" name="readFileId" placeholder="File ID" class="w100p" disabled/>
 				        		</td>
-				        	<tr>
 				        	</tr>
 				        </tbody>
 				   	</table>
