@@ -732,4 +732,11 @@
     WHERE REQST_NO = #{reqstNo}
   </update>
 
+  <select id="getWhLocId" parameterType="String" resultType="Integer">
+    SELECT WH_LOC_ID
+    FROM SYS0028M
+    WHERE WH_LOC_CODE = #{params}
+        AND WH_LOC_STUS_ID = 1
+  </select>
+
 </mapper>

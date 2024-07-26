@@ -452,7 +452,16 @@
                UPPER(A.SUP_DEL_RMK) AS RMK
     FROM SUP0005D A
     LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = '585' AND B.CODE = A.SUP_DEL_SEQ
-    JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_PCL_TRKNO = A.SUP_REF_PCL_TRKNO
+
+    <choose>
+      <when test=" null != trkNo and '' != trkNo">
+         JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_PCL_TRKNO = A.SUP_REF_PCL_TRKNO
+      </when>
+      <otherwise>
+         JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_RTN_CSIGNO = A.SUP_REF_PCL_TRKNO
+      </otherwise>
+    </choose>
+
     WHERE A.DEL_FLG = 'N'
         AND A.SUP_REF_ID = #{supRefId}
         <if test="trkNo != null and trkNo != '' ">
@@ -835,7 +844,17 @@
                '100' AS SHIPM_WEIGHT,
                'MYR' AS CUR_CDE,
                A.SUP_REF_NO AS SHIPM_DESC,
-               E.ITM_LIST AS REMARKS
+               E.ITM_LIST AS REMARKS,
+               'COWAY (MALAYSIA) SDN BHD' AS SHIPM_COMP,
+               UPPER('COWAY (MALAYSIA) SDN BHD') AS SHIPM_NM,
+               UPPER('3, JALAN KELULI 1, TAMAN PERINDUSTR') AS SHIPM_ADDRS_LN1,
+               UPPER('') AS SHIPM_ADDRS_LN2,
+               UPPER('SHAH ALAM, SELANGOR') AS SHIPM_CITY,
+               UPPER('SEL') AS SHIPM_STATE,
+               '40000' AS SHIPM_POST_CDE,
+               D.ISO AS SHIPM_COUNTRY,
+               '601162762865' AS SHIPM_PHONE_NO,
+               'grace.lee@cjcentury.com' AS SHIPM_EMAIL_ADDR
     FROM SUP0001M A
     JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
     JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
