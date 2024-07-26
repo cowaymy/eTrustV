@@ -3263,7 +3263,7 @@ public void HpCommissionMonthlyData() {
   params.put("V_TASKID", taskIDConf);
   params.put("V_TEMP", "TEMP");// parameter
   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "Finance" + File.separator + "HpCommissionMonthlyData" + CommonUtils.getNowDate() + ".xls");
+      "Finance" + File.separator + "HpCommissionMonthlyData_" + CommonUtils.getNowDate() + ".xls");
 
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] HpCommissionMonthlyDataReport...");
