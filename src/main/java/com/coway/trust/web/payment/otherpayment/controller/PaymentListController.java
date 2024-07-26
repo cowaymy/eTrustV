@@ -129,9 +129,29 @@ public class PaymentListController {
 		int count = paymentListService.invalidFT(params);
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 
+		// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [S]
+
+		/*if (count > 0) {
+		returnMap.put("error", "FT Invalid for 'EOR'");
+		} */
+
 		if (count > 0) {
-			returnMap.put("error", "FT Invalid for 'EOR'");
-		} else {
+			String remark = "FT Invalid for (";
+			params.put("type", "FT");
+			List<EgovMap> invalidTypeList = paymentListService.selectInvalidORCodeNm(params);
+
+			for(int i = 0; i < invalidTypeList.size(); i++){
+				EgovMap invalidTypeCode = invalidTypeList.get(i);
+				String invalidORNm = invalidTypeCode.get("code").toString();
+
+				remark += invalidORNm + ", ";
+			}
+			remark = remark.replaceAll(", $", "") + ")";
+			returnMap.put("error", remark);
+		}
+
+    	// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [E]
+		else {
 			returnMap.put("success", true);
 		}
 
@@ -650,8 +670,29 @@ public class PaymentListController {
 		int invalidStatus = paymentListService.invalidStatus(params);
 		List<EgovMap> invalidTypeList = paymentListService.selectInvalidORType(params);
 
-		if(invalidTypeCount > 0) {
+		/*if(invalidTypeCount > 0) {
 			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
+		}*/
+		// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [S]
+
+		/*if (invalidTypeCount > 0) {
+			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR', 'AFR')");
+	    }*/
+
+		if (invalidTypeCount > 0) {
+			String remark = "Refund is invalid for (";
+			List<EgovMap> invalidTypeListNm = paymentListService.selectInvalidORCodeNm(params);
+
+			for(int i = 0; i < invalidTypeListNm.size(); i++){
+				EgovMap invalidTypeCode = invalidTypeListNm.get(i);
+				String invalidORNm = invalidTypeCode.get("code").toString();
+
+				remark += invalidORNm + ", ";
+			}
+			remark = remark.replaceAll(", $", "") + ")";
+			returnMap.put("error", remark);
+
+    	// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [E]
 		}
 		else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) && (Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5"))){
 			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request Refund");
@@ -1400,8 +1441,27 @@ public class PaymentListController {
     		//CHECK RESERVE STATUS - BLOCK WHN STATUS = 1 AND 5
     		int invalidStatus = paymentListService.invalidStatus(params);
 
+    		// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [S]
+
+    		/*if (invalidTypeCount > 0) {
+				returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR', 'AFR')");
+		    }*/
+
     		if (invalidTypeCount > 0) {
-    			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+    			String remark = "DCF Invalid for (";
+    			List<EgovMap> invalidTypeList = paymentListService.selectInvalidORCodeNm(params);
+
+    			for(int i = 0; i < invalidTypeList.size(); i++){
+    				EgovMap invalidTypeCode = invalidTypeList.get(i);
+    				String invalidORNm = invalidTypeCode.get("code").toString();
+
+    				remark += invalidORNm + ", ";
+    			}
+    			remark = remark.replaceAll(", $", "") + ")";
+    			returnMap.put("error", remark);
+
+        	// CELESTE [26/07/2024] PROJECT ID: 7084993469 - [Enhancement] New AFR affected current process [E]
+
     		} else if((Arrays.asList(revStusId).contains("1") || Arrays.asList(revStusId).contains("5")) &&
     				(Arrays.asList(ftStusId).contains("1") || Arrays.asList(ftStusId).contains("5")) ){
     			returnMap.put("error", "Payment Group Number has already been Requested or Approved. Please reselect before Request DCF.");

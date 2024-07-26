@@ -2839,4 +2839,21 @@
         SET REM = #{message}
         WHERE REQ_ID = #{reqId}
     </update>
+
+     <select id="selectInvalidORCodeNm" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT SUBSTR(OR_NO,0,3) CODE
+        FROM PAY0064D A
+        JOIN PAY0252T B ON A.PAY_ID = B.PAY_ID
+        AND REGEXP_SUBSTR(OR_NO, '\D+') NOT IN (
+            <if test="ind != '' and ind == 'DCF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'DCF_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'FT' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'FT_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'REF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'REFD_ALLOW' AND DISB = 0
+            </if>
+        )
+    </select>
 </mapper>

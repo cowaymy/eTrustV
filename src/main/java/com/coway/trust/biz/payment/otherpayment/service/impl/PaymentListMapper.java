@@ -240,4 +240,5 @@ public interface PaymentListMapper {
     List<EgovMap> selectRefundCodeList(Map<String, Object> params);
     List<EgovMap> selectBankListCode();
     void insertErrorRem(Map<String, String> error);
+    List<EgovMap> selectInvalidORCodeNm(Map<String, Object> params);
 }

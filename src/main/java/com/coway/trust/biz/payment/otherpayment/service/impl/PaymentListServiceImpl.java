@@ -1572,4 +1572,10 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		// TODO Auto-generated method stub
 		return paymentListMapper.selectBankListCode();
 	}
+
+	@Override
+	public List<EgovMap> selectInvalidORCodeNm(Map<String, Object> params) {
+		params.put("ind", params.get("type"));
+		return paymentListMapper.selectInvalidORCodeNm(params);
+	}
 }
