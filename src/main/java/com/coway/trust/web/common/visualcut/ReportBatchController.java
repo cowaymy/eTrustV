@@ -2334,7 +2334,7 @@ public class ReportBatchController {
        "AD Summary Report" + File.separator + "TokenIdMaintenanceRawdata_" + CommonUtils.getNowDate() + ".xls");
 
    this.viewProcedure(null, null, params);
-   LOGGER.info("[END] CreditCardClaimListDetails...");
+   LOGGER.info("[END] TokenIdMaintenanceRaw...");
   }
   @RequestMapping(value = "/FilterStockLogHSRuturnUsedFilterData.do")
   //@Scheduled(cron = "0 0 5 ? * MON")//5:00 a.m. every monday of the month
@@ -3250,6 +3250,73 @@ String fileNm = "";
 
 /** End for new MD report - Sales Analysis Key In Report by Hui Ding, 05/01/2024 **/
 
+@RequestMapping(value = "/HpCommissionMonthlyData.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void HpCommissionMonthlyData() {
+  LOGGER.info("[START] HpCommissionMonthlyData...");
+  Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/visualcut/HpCommisionRawdata_Excel.rpt");// visualcut
+                                                                   // rpt file
+                                                                   // name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "Finance" + File.separator + "HpCommissionMonthlyData" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] HpCommissionMonthlyDataReport...");
+}
+
+@RequestMapping(value = "/CodyCommissionMonthlyData.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void CodyCommissionMonthlyData() {
+LOGGER.info("[START] CodyCommissionMonthlyData...");
+int taskIDConf = this.calculateTaskId();
+Map<String, Object> params = new HashMap<>();
+params.put(REPORT_FILE_NAME, "/visualcut/CodyCommisionRawdata_Excel.rpt");// visualcut
+                                                                           // rpt
+                                                                           // file
+																			   //name.
+params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+params.put("V_TASKID", taskIDConf);
+params.put("V_TEMP", "TEMP");// parameter
+params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+		"Finance" + File.separator + "CodyCommisionRawdata_" + CommonUtils.getNowDate() + ".xls");
+
+this.viewProcedure(null, null, params);
+LOGGER.info("[END] CodyCommissionMonthlyData...");
+}
+
+public static int calculateTaskId() {
+  // Get current date
+  Calendar calendar = Calendar.getInstance();
+  calendar.add(Calendar.MONTH, -1); // Move to previous month
+
+  // Format the previous month's date to MM/yyyy format
+  SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+  String cmmDtString = dateFormat.format(calendar.getTime());
+
+  // Parse the commission date string
+  Date cmmDt;
+  try {
+      cmmDt = dateFormat.parse(cmmDtString);
+  } catch (Exception e) {
+      e.printStackTrace();
+      return -1; // Return -1 or another error code if parsing fails
+  }
+
+  // Create a Calendar instance and set it to the commission date
+  calendar.setTime(cmmDt);
+
+  // Extract month and year from the commission date
+  int monthConf = calendar.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based
+  int yearConf = calendar.get(Calendar.YEAR);
+
+  // Calculate the taskId
+  int taskId = monthConf + (yearConf * 12) - 24157;
+
+  return taskId;
+}
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
