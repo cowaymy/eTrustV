@@ -232,7 +232,7 @@
                A.MEM_TYPE ,
                A.NAME ,
                A.BRNCH ,
-               C.CODE || ' - ' || C.NAME AS BRNCH
+               C.CODE || ' - ' || C.NAME AS BRNCH_NAME
     FROM ORG0001D A
     LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
     LEFT JOIN SYS0005M C ON A.BRNCH = C.BRNCH_ID AND C.STUS_ID = 1

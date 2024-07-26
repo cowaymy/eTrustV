@@ -423,19 +423,12 @@
                           },
                           function(result) {
                             if (result != null) {
-                              $('#salesmanBrnch')
-                                  .text(
-                                      result.brnch);
-                              $(
-                                  '#hidSalesmanBrnchId')
-                                  .val(
-                                      result.brnchId);
+                              $('#salesmanBrnch').text(result.brnchName);
+                              $('#hidSalesmanBrnchId').val(result.brnchId);
+
                             } else {
-                              $('#salesmanBrnch')
-                                  .val('');
-                              $(
-                                  '#hidSalesmanBrnchId')
-                                  .val('');
+                              $('#salesmanBrnch').text('');
+                              $('#hidSalesmanBrnchId').val('');
                             }
                           });
                 }
