@@ -94,7 +94,7 @@ function fn_generateInvoice(){
       var reportDownFileName = ""; //Added by keyi 20211013
       var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv");; //Added for e-Invoice
 
-      if(genEInv == 'Y'){
+      if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
     	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_EIV.rpt');
       }else{
     	   if( parseInt(year)*100 + parseInt(month) >= 201809){

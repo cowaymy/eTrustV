@@ -262,13 +262,24 @@ public class ApiController {
   public void genInvoice(HttpServletRequest request, HttpServletResponse response,
       @RequestParam Map<String, Object> params) {
 	  EgovMap eInvResult = new EgovMap();
+	  boolean getEInv = false;
 
     // if (params.get("type").equals("133") || params.get("type").equals("134")) {
     if (params.get("type").equals("REN")) {
 
       eInvResult = apiService.checkRenEInv(params);
 
-      if(eInvResult != null && eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null){
+    	  String result = eInvResult.get("genEInv").toString();
+    	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
+    	  int month = Integer.parseInt(eInvResult.get("month").toString());
+
+    	  if(result.equals("Y") && (year + month >= 202408)){
+    		  getEInv = true;
+    	  }
+      }
+
+      if(getEInv == true){
           params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV_2.rpt");
       }else{
           params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
@@ -282,7 +293,17 @@ public class ApiController {
 
       eInvResult = apiService.checkOutEInv(params);
 
-      if(eInvResult != null &&  eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null){
+    	  String result = eInvResult.get("genEInv").toString();
+    	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
+    	  int month = Integer.parseInt(eInvResult.get("month").toString());
+
+    	  if(result.equals("Y") && (year + month >= 202408)){
+    		  getEInv = true;
+    	  }
+      }
+
+      if(getEInv == true){
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_EIV.rpt");
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
@@ -296,7 +317,17 @@ public class ApiController {
 
       eInvResult = apiService.checkSvmEInv(params);
 
-      if(eInvResult != null &&  eInvResult.get("genEInv").toString().equals("Y")){
+      if(eInvResult != null){
+    	  String result = eInvResult.get("genEInv").toString();
+    	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
+    	  int month = Integer.parseInt(eInvResult.get("month").toString());
+
+    	  if(result.equals("Y") && (year + month >= 202408)){
+    		  getEInv = true;
+    	  }
+      }
+
+      if(getEInv == true){
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV_2.rpt");
       }else{
     	  params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");

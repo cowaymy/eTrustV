@@ -88,7 +88,7 @@ function fn_generateInvoice(){
 
         switch (taxInvcType){
             case 117 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
             		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_EIV.rpt');
             	}else{
             		 if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -100,7 +100,7 @@ function fn_generateInvoice(){
             	}
                 break;
             case 118 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
             		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_EIV.rpt');
             	}else{
             		 if( parseInt(year)*100 + parseInt(month) >= 202403){
@@ -131,7 +131,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 123 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_EIV.rpt');
                 }else{
 	                if( parseInt(year)*100 + parseInt(month) >= 202405){
@@ -146,7 +146,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 124 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
             		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_EIV.rpt');
             	}else{
 	                if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -167,7 +167,7 @@ function fn_generateInvoice(){
                     }
                 }else{
 
-                	if(genEInv == 'Y'){
+                	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
                 		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_EIV.rpt');
                 	}else{
 	                    if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -180,7 +180,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 142 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
             		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_EIV.rpt');
             	}else{
             		  if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -192,7 +192,7 @@ function fn_generateInvoice(){
             	}
                 break;
             case 408 :
-            	if(genEInv == 'Y'){
+            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
             		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_EIV.rpt');
             	}else{
             		  if( parseInt(year)*100 + parseInt(month) >= 201809){
