@@ -247,7 +247,8 @@ public class SupplementSubmissionServiceImpl
     params.put( "supRefId", supRefId );
     logPram.put( "S_NO", supRefNo );
     logPram.put( "RE_TYPE", "STO" );
-    logPram.put( "P_LOC", SalesConstants.SUPPLEMENT_WH_LOC_ID ); // HQ Warehouse location id
+    // logPram.put( "P_LOC", SalesConstants.SUPPLEMENT_WH_LOC_ID ); // HQ Warehouse location id
+    logPram.put( "P_LOC", CommonUtils.nvl(supplementSubmissionMapper.getWhLocId(SalesConstants.SUPPLEMENT_WH_LOC_CODE)) ); // HQ Warehouse location id
     logPram.put( "P_TYPE", "OD01" );
     logPram.put( "P_USER", CommonUtils.intNvl( params.get( "crtUsrId" ) ) );
     supplementSubmissionMapper.SP_LOGISTIC_REQUEST_SUPP( logPram );

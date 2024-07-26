@@ -73,4 +73,6 @@ public interface SupplementSubmissionMapper {
   void updateStockTransferMReq( Map<String, Object> params );
 
   void updateStockTransferDReq( Map<String, Object> params );
+
+  int getWhLocId(String params);
 }
