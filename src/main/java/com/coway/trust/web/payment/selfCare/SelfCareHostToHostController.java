@@ -72,7 +72,6 @@ public class SelfCareHostToHostController {
 	@RequestMapping(value = "/selfCareReportDetailPop.do")
 	public String selfCareReportDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		model.addAttribute("detail", params);
 		return "payment/selfCare/selfCareReportDetailPop";
 	}
 

@@ -6,10 +6,6 @@
 	$(document).ready(function() {
 		console.log("selfCareReportDetailPop.jsp");
 
-		console.log('${detail.fileId}');
-		var fileId=  '${detail.fileId}';
-		$('#reportFileId').val(fileId);
-		$('#readFileId').val(fileId);
 		createAUIGrid();
 		createHiddenAUIGridCSV();
 	    $("#btnDownload").click(function() {
@@ -25,7 +21,7 @@
 		});
 
 	    f_multiCombo();
-	    fn_getSelfCareTransactionReportDetails();
+	    //fn_getSelfCareTransactionReportDetails();
 	});
 
 	function fn_close() {
@@ -251,7 +247,6 @@
 		<section class="pop_body">
 			<section class="search_table">
 				<form id="searchFormReport" action="#" method="post">
-					<input type="hidden" id="reportFileId" name="reportFileId"' value=""/>
 				   	<table class="type1">
 		        		<caption>table</caption>
 				        <colgroup>
@@ -284,7 +279,7 @@
 <!-- 				        		</td> -->
 				        		<th>File ID</th>
 				        		<td>
-				        			<input type="text" title="File ID" id="readFileId" name="readFileId" placeholder="File ID" class="w100p" disabled/>
+				        			<input type="text" title="File ID" id="reportFileId" name="reportFileId" placeholder="File ID" class="w100p"/>
 				        		</td>
 				        		<th>Batch ID</th>
 				        		<td>

@@ -48,16 +48,17 @@
 	    });
 
 	    $("#_generateBtn").click(function() {
-	    	var selIdx = AUIGrid.getSelectedIndex(selfCareGridID)[0];
-	      	if(selIdx > -1) {
-      			var fileId=  AUIGrid.getCellValue(selfCareGridID, selIdx, "fileId")
-				if(fileId != null && fileId > 0){
-					fn_viewSelfCareReportDetailPop(fileId);
-				}
-	         }
-	      	else{
-	      		Common.alert("No record selected.");
-	      	}
+// 	    	var selIdx = AUIGrid.getSelectedIndex(selfCareGridID)[0];
+// 	      	if(selIdx > -1) {
+//       			var fileId=  AUIGrid.getCellValue(selfCareGridID, selIdx, "fileId")
+// 				if(fileId != null && fileId > 0){
+// 					fn_viewSelfCareReportDetailPop(fileId);
+// 				}
+// 	         }
+// 	      	else{
+// 	      		Common.alert("No record selected.");
+// 	      	}
+	    	fn_viewSelfCareReportDetailPop();
 		});
 	});
 
@@ -68,11 +69,8 @@
 		    Common.popupDiv("/payment/selfCareHostToHost/selfCareDetailPop.do", data, null, true, "selfCareDetailPop");
 	}
 
-	function fn_viewSelfCareReportDetailPop(fileId){
-		 var data = {
-				 fileId : fileId
-		    };
-		    Common.popupDiv("/payment/selfCareHostToHost/selfCareReportDetailPop.do", data, null, true, "selfCareReportDetailPop");
+	function fn_viewSelfCareReportDetailPop(){
+		    Common.popupDiv("/payment/selfCareHostToHost/selfCareReportDetailPop.do", null, null, true, "selfCareReportDetailPop");
 	}
 
 	function f_multiCombo() {
