@@ -583,8 +583,8 @@ public class SalesConstants {
 
   public static final String SUB_APPOVAL_DEL_FLG_Y= "Y";
 
-  public static final String SUPPLEMENT_WH_LOC_CODE = "H000"; // HEAD QUATERS WAREHOUSE LOCATION CODE
+  public static final String SUPPLEMENT_WH_LOC_CODE = "F010"; // HEAD QUATERS WAREHOUSE LOCATION CODE
 
-  public static final String SUPPLEMENT_WH_LOC_ID = "70574"; // HEAD QUATERS WAREHOUSE LOCATION ID
+  //public static final String SUPPLEMENT_WH_LOC_ID = "70574"; // HEAD QUATERS WAREHOUSE LOCATION ID
 
 }
