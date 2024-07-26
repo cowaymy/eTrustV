@@ -544,9 +544,7 @@
                                                                 SUP_REF_STG,
                                                                 SUP_RTN_RFND
                                                     FROM GBSLCVD.SUP0001M
-                                                    WHERE SUP_REF_STUS = 10
-                                                        AND SUP_REF_STG = 99
-                                                        AND SUP_RTN_RFND = 'N'
+                                                    WHERE SUP_RTN_RFND = 'N'
                                                         AND SUP_REF_NO = #{supRefNo}
     ) SRC ON (A.SUP_REF_NO = SRC.SUP_REF_NO)
     WHEN MATCHED THEN UPDATE SET A.SUP_RTN_RFND = 'Y'
