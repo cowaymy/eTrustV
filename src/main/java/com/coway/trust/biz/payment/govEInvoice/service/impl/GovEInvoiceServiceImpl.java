@@ -316,8 +316,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 }
         }
 
-        Map<String, Object> updateParams = new HashMap<String, Object>();
-        govEInvoiceMapper.updateEInvMain(updateParams);
+        try{
+        	Map<String, Object> updateParams = new HashMap<String, Object>();
+            govEInvoiceMapper.updateEInvMain(updateParams);
+        }catch (Exception e) {
+        	System.out.println("error updateEInvMain" );
+        }
 
         return resultValue;
     }
@@ -393,7 +397,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-clear-tin", "C12113374050");
+            conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
             conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
             OutputStream os = conn.getOutputStream();
             os.write(jsonString.getBytes());
@@ -604,7 +608,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setDoOutput(true);
             conn.setRequestMethod("GET");
 //            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-clear-tin", "C12113374050");
+            conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
             conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
 //            OutputStream os = conn.getOutputStream();
 //            os.flush();
