@@ -212,6 +212,62 @@ var orderGridID;
                                                headerText : 'Remarks',
                                                width : '15%'
                                            }, {
+
+                                               dataField : "shipmComp",
+                                               headerText : 'Shipper Company',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmNm",
+                                               headerText : 'Shipper Name',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmAddrsLn1",
+                                               headerText : 'Shipper Address1',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmAddrsLn2",
+                                               headerText : 'Shipper Address2',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmAddrsLn3",
+                                               headerText : 'Shipper Address3',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmCity",
+                                               headerText : 'Shipper City',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmState",
+                                               headerText : 'Shipper State',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmPostCde",
+                                               headerText : 'Shipper Postal Code',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmCountry",
+                                               headerText : 'Shipper CountryCode',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmPhoneNo",
+                                               headerText : 'Shipper Phone Number',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
+                                               dataField : "shipmEmailAddr",
+                                               headerText : 'Shipper Email address',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
                                                dataField : "serv1",
                                                headerText : 'Service1',
                                                width : '5%',
@@ -325,6 +381,7 @@ var orderGridID;
 
     var rowCount = AUIGrid.getRowCount(orderGridID);
     var ordList = AUIGrid.getGridData(orderGridID);
+
     var param = {
       ind : '${ind}',
       ordList : ordList
