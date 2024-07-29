@@ -199,9 +199,27 @@
 
     $('#sofFile').change(function(evt) {
       //handleFileChange(evt, 1);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[1] != null) {
+        delete myFileCaches[1];
+      } else if (file != null) {
+        myFileCaches[1] = {
+          file : file,
+          contentsType : "sofFile"
+        };
+      }
     });
     $('#nricFile').change(function(evt) {
       //handleFileChange(evt, 2);
+      var file = evt.target.files[0];
+      if (file == null && myFileCaches[2] != null) {
+        delete myFileCaches[2];
+      } else if (file != null) {
+        myFileCaches[2] = {
+          file : file,
+          contentsType : "nricFile"
+        };
+      }
     });
     $('#otherFile').change(function(evt) {
       //handleFileChange(evt, 3);
