@@ -140,12 +140,13 @@
             var supRefStusId = clickChk[0].item.supRefStusId;
             var supRefStgId = clickChk[0].item.supRefStgId;
 
-            if (supRefStusId == 1 && (supRefStgId == 3 || supRefStgId == 4)) {
+            // TEMPORARY CLOSE FOR TESTING
+            //if (supRefStusId == 1 && (supRefStgId == 3 || supRefStgId == 4)) {
               Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
-            } else {
-              Common.alert('<spring:message code="supplement.alert.supplementUpdTrckErr" />');
-              return;
-            }
+            //} else {
+            //  Common.alert('<spring:message code="supplement.alert.supplementUpdTrckErr" />');
+            //  return;
+            //}
           });
 
           $("#_viewBtn").click(
@@ -724,11 +725,11 @@
         </li>
       </c:if>
       <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li>
+        <!-- <li>
           <p class="btn_blue">
             <a href="#" id="_updateDeliveryStatGDexBtn"><spring:message code="supplement.btn.updDelStat" />(GDEX)</a>
           </p>
-        </li>
+        </li> -->
         <li>
           <p class="btn_blue">
             <a href="#" id="_updateDeliveryStatDhlBtn"><spring:message code="supplement.btn.updDelStat" />(DHL)</a>
