@@ -1676,9 +1676,12 @@
 			                              LEFT JOIN SAL0077D Extent6   ON Extent6.SRV_CNTRCT_ORD_ID = Filter1.SALESORDERID1
 			                        WHERE  ( Filter1.CUSTBILLID2 <![CDATA[<> ]]>  #{custBillId} )
 			                                 AND ( Filter1.CUST_ID = #{custId} )
-			                                 AND ( ( ( 66 <![CDATA[<> ]]> Filter1.APP_TYPE_ID )
+			                                 <!-- 20240729 [CELESTE] TURN OFF DUE TO FAR REQUEST TO BE ABLE TO MERGE BILL GROUP OF DIFF APP TYPE[S] -->
+			                                 <!-- AND ( ( ( 66 <![CDATA[<> ]]> Filter1.APP_TYPE_ID )
 			                                 AND ( Extent6.SRV_CNTRCT_ID IS NOT NULL ) )
-			                                 OR ( 66 = Filter1.APP_TYPE_ID ) ) ) Distinct1 ) Project2 ) Project2
+			                                 OR ( 66 = Filter1.APP_TYPE_ID ) )  -->
+			                                 <!-- 20240729 [CELESTE] TURN OFF DUE TO FAR REQUEST TO BE ABLE TO MERGE BILL GROUP OF DIFF APP TYPE [E] -->
+			                                 ) Distinct1 ) Project2 ) Project2
 			 WHERE  Project2.ROW_NUMBER > 0
 			 ORDER BY Project2.SALES_ORD_NO ASC )
     </select>
