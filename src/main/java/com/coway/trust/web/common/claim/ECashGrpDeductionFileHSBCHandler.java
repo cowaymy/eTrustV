@@ -106,6 +106,12 @@ public class ECashGrpDeductionFileHSBCHandler extends BasicTextDownloadHandler
 					headerConf = (Map<String, Object>) headerInfo.get(a);
 
 					strData = this.dataReplace(headerConf, dataRow);
+
+					//Special case handling for converting amount to hundred value
+					if(CommonUtils.nvl(headerConf.get("ctrlDat")).toString().trim().equals("{totAmt}")){
+						strData = this.hundredValueProcess(headerConf, strData);
+					}
+
 					strData = this.dataProcessor(headerConf, strData);
 					strHeader += strData;
 				}
