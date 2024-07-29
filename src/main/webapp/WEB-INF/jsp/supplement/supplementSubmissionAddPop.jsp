@@ -1428,7 +1428,7 @@
                 <col style="width: *" />
               </colgroup>
               <tr>
-                <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">**</span></th>
                 <td>
                   <input id="salesmanCd" name="salesmanCd" type="text" style="width: 230px;" title="" placeholder="" class="" />
                   <a id="memBtn" href="#" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
@@ -1445,9 +1445,9 @@
                 <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}" class="w100p"></td>
               </tr> --%>
               <tr>
-                <th scope="row"><spring:message code="supplement.text.submissionBranch" /></th>
+                <th scope="row"><spring:message code="supplement.text.submissionBranch" /><span class="must">**</span></th>
                <!-- <td colspan="2"><span id="salesmanBrnch" name="salesmanBrnch"></span></td> -->
-                  <td><select  id="salesmanBrnch" name="salesmanBrnch" class="w100p"></select></td>
+                  <td colspan="2"><select  id="salesmanBrnch" name="salesmanBrnch" class="w100p"></select></td>
               </tr>
               <tr>
                 <th scope="row"><spring:message code="sal.title.remark" /></th>
