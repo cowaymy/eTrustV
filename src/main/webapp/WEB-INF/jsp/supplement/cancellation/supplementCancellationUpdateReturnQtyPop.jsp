@@ -1,5 +1,23 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style>
+  .inventory-statement {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 10px;
+    color: #333;
+  }
+  .inventory-statement ul  {
+    list-style-type: disc;
+    margin-left: 10px;
+  }
+  .inventory-statement ul ul {
+    list-style-type: circle;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+</style>
 <script type="text/javascript">
   var rtnItmDetailGridID;
   $(document).ready(
@@ -153,11 +171,39 @@
       var itmGoodCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlGoodCond');
       var itmDefectCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlDefectCond');
       var itmMiaCondQty = AUIGrid.getColumnValues(rtnItmDetailGridID, 'ttlMiaCond');
+      var msgLabel = "";
 
-      var insertQty = Number(itmGoodCondQty[a]) + Number(itmDefectCondQty[a]) + Number(itmMiaCondQty[a]);
-      if (itmQty[a] != insertQty) {
-        Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ insertQty + ";" + itmQty[a] + " (" + itm[a] + ")" +"' htmlEscape='false' argumentSeparator=';'/>");
+      if (itmGoodCondQty == "") {
+        msgLabel = itm + " (" + "<spring:message code='supplement.text.supplementTtlRtnGoodCondQty'/>" + ") ";
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='" + msgLabel +"' htmlEscape='false'/>");
         return false;
+      }
+
+      if (itmDefectCondQty == "") {
+        msgLabel = itm + " (" + "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>" + ") ";
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='" + msgLabel +"' htmlEscape='false'/>");
+        return false;
+      }
+
+      if (itmMiaCondQty == "") {
+        msgLabel = itm + " (" + "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>" + ") ";
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='" + msgLabel +"' htmlEscape='false'/>");
+        return false;
+      }
+
+      if (itmMiaCondQty[a] > 0) {
+        // TOTAL QUANTITY MUST EQUAL TO TOTAL MISSING QUANTITY
+        if (itmQty[a] != itmMiaCondQty[a]) {
+          Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ itmMiaCondQty[a] + ";" + itmQty[a] + " (" + itm[a] + ")" +"' htmlEscape='false' argumentSeparator=';'/>");
+          return false;
+        }
+      } else {
+        // TOTAL QUANTITY MUST EQUAL TO  TOTAL GOOD CONDITION  AND DEFECTIVE CONDITION GOODS.
+        var insertQty = Number(itmGoodCondQty[a]) + Number(itmDefectCondQty[a]);
+        if (itmQty[a] != insertQty) {
+          Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ insertQty + ";" + itmQty[a] + " (" + itm[a] + ")" +"' htmlEscape='false' argumentSeparator=';'/>");
+          return false;
+        }
       }
     }
     return true;
@@ -354,11 +400,25 @@
       <!-- <h3><spring:message code="sal.title.itmList" /></h3> -->
     </aside>
     <article class="tap_area">
+      <div class="inventory-statement">
+        <ul>
+          <li><strong>Returns in Goods Condition and Defective Goods:</strong>
+            <ul>
+              <li>The sum of items returned in good condition and items returned as defective must equal the actual order quantity of the item.</li>
+            </ul>
+          </li>
+          <li><strong>Missing Goods:</strong>
+            <ul>
+              <li>If the quantity of missing goods is reported, it must equal the actual order quantity of the item.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <article class="grid_wrap">
         <div id="rtn_itm_detail_grid_wrap" style="width: 100%; height: 200px; margin: 0 auto;"></div>
       </article>
     </article>
-
+    <br/>
     <ul class="center_btns">
       <li><p class="btn_blue2">
           <a id="_saveBtn"><spring:message code="sal.btn.save" /></a>

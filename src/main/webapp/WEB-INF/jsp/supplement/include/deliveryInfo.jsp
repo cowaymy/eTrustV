@@ -1,3 +1,22 @@
+<style>
+  .inventory-statement {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 10px;
+    color: #333;
+  }
+  .inventory-statement ul  {
+    list-style-type: disc;
+    margin-left: 10px;
+  }
+  .inventory-statement ul ul {
+    list-style-type: circle;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+</style>
+
 <script type="text/javascript">
   var deliveryInfoGridID;
   var canDeliveryInfoGridID;
@@ -381,8 +400,22 @@
           style="width: 100%; height: 350px; margin: 0 auto;"></div>
       </article>
     </article>
-    <br/>
+
     <article class="">
+      <div class="inventory-statement">
+        <ul>
+          <li><strong>Returns in Goods Condition and Defective Goods:</strong>
+            <ul>
+              <li>The sum of items returned in good condition and items returned as defective must equal the actual order quantity of the item.</li>
+            </ul>
+          </li>
+          <li><strong>Missing Goods:</strong>
+            <ul>
+              <li>If the quantity of missing goods is reported, it must equal the actual order quantity of the item.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <article class="grid_wrap">
         <div id="item_delivery_rec_grid_wrap"
           style="width: 100%; height: 200px; margin: 0 auto;"></div>
