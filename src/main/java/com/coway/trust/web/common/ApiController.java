@@ -274,7 +274,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202409)){
+    	  if(result.equals("Y") && (year + month >= 202409)){ // will not send eInvoice through E-statement due to 08/24 undergo Pilot test
     		  getEInv = true;
     	  }
       }
@@ -298,7 +298,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202409)){
+    	  if(result.equals("Y") && (year + month >= 202409)){ // will not send eInvoice through E-statement due to 08/24 undergo Pilot test
     		  getEInv = true;
     	  }
       }
@@ -322,7 +322,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202409)){
+    	  if(result.equals("Y") && (year + month >= 202409)){ // will not send eInvoice through E-statement due to 08/24 undergo Pilot test
     		  getEInv = true;
     	  }
       }
