@@ -51,6 +51,8 @@ public interface SupplementCancellationMapper {
 
   int rollbackMasterSupplementStat( Map<String, Object> params );
 
+  void rollbackReturnQty( Map<String, Object> params );
+
   int getRtnItmSeq();
 
   List<EgovMap> getSupplementRtnItmDetailList( Map<String, Object> params );
@@ -60,4 +62,8 @@ public interface SupplementCancellationMapper {
   void updateDelLstDtl( Map<String, Object> params );
 
   void insertDelLstDtl( Map<String, Object> params );
+
+  String getOrdNo( Map<String, Object> params );
+
+  Map<String, Object> SP_LOGISTIC_RETURN_SUPP( Map<String, Object> param );
 }

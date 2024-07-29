@@ -25,6 +25,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.supplement.cancellation.service.SupplementCancellationService;
+import com.coway.trust.biz.supplement.impl.SupplementSubmissionMapper;
 
 @Service("supplementCancellationService")
 public class SupplementCancellationImpl
@@ -46,6 +48,9 @@ public class SupplementCancellationImpl
 
   @Resource(name = "supplementCancellationMapper")
   private SupplementCancellationMapper supplementCancellationMapper;
+
+  @Resource(name = "supplementSubmissionMapper")
+  private SupplementSubmissionMapper supplementSubmissionMapper;
 
   @Resource(name = "commonService")
   private CommonService commonService;
@@ -269,6 +274,14 @@ public class SupplementCancellationImpl
       }
 
       // LOGISTIC CALL HERE
+      Map<String, Object> rtnLogPrm = new HashMap<>();
+      String ordNo = supplementCancellationMapper.getOrdNo( params );
+      rtnLogPrm.put( "S_NO", CommonUtils.nvl(ordNo) );
+      rtnLogPrm.put( "RETYPE", "US93" );
+      rtnLogPrm.put( "P_LOC", CommonUtils.nvl(supplementSubmissionMapper.getWhLocId(SalesConstants.SUPPLEMENT_WH_LOC_CODE)) );
+      rtnLogPrm.put( "P_TYPE", "OD93" );
+      rtnLogPrm.put( "P_USER", params.get( "userId" ) );
+      this.supRtnSp( rtnLogPrm );
 
       supplementCancellationMapper.updateMasterSupplementStat( params );
 
@@ -280,9 +293,10 @@ public class SupplementCancellationImpl
     catch ( Exception e ) {
       supplementCancellationMapper.rollbackReturnGoodsQty( params );
       supplementCancellationMapper.rollbackMasterSupplementStat( params );
+      supplementCancellationMapper.rollbackReturnQty( params );
       rtnMap.put( "logError", "99" );
       rtnMap.put( "message", "An error occurred: " + e.getMessage() );
-      LOGGER.error( "Error updating parcel tracking number...", e );
+      LOGGER.error( "Error updating parcel return quantity...", e );
     }
     return rtnMap;
   }
@@ -395,4 +409,14 @@ public class SupplementCancellationImpl
       supplementCancellationMapper.insertDelLstDtl( insertParam );
     }
   }
+
+  private void supRtnSp( Map<String, Object> params )
+    throws Exception {
+    supplementCancellationMapper.SP_LOGISTIC_RETURN_SUPP( params );
+    if ( !"000".equals( params.get( "p1" ) ) ) {
+      throw new ApplicationException( AppConstants.FAIL, "SP_LOGISTIC_RETURN_SUPP - ERRCODE : " + params.get( "p1" ) );
+      // throw new Exception("SP_STO_PRC_SUPP - ERRCODE : " + logPram.get("p1"));
+    }
+  }
+
 }
