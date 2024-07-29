@@ -55,6 +55,14 @@
           $("#attch").val("");
           Common.alert(msg);
         }
+
+        if (file == null && myFileCaches[1] != null) {
+          delete myFileCaches[1];
+        } else if (file != null) {
+          myFileCaches[1] = {
+            file : file
+          };
+        }
       }
   });
 
@@ -313,13 +321,13 @@
   }
 
   function fn_callbackOrdSearchFunciton(params) {
-    if (params.ordStat == '4') {
+    //if (params.ordStat == '4') {
       $("#entry_supRefNo").val(params.ordNo);
       fn_checkOrderNo();
-    } else {
-      Common.alert("<spring:message code='supplement.alert.msg.selTagOrdNotComp' />");
-      return;
-    }
+    //} else {
+    //  Common.alert("<spring:message code='supplement.alert.msg.selTagOrdNotComp' />");
+    //  return;
+    //}
   }
 
   function fn_attachment(obj) {
@@ -446,7 +454,6 @@
             <td><select id='ddlSubDept' name='ddlSubDept' class="w100p"></select>
             </td>
           </tr>
-
           <tr>
             <th scope="row"><spring:message code='service.text.attachment' /><span id="attchSpan" class="must" style="display:none">*</span></th>
             <td colspan="3">

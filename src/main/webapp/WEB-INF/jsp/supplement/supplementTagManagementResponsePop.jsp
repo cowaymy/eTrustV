@@ -69,10 +69,10 @@
         function(result) {
           if (result) {
             if (result.length > 0) {
-              $("#attachTd").html("");
+              $("#attachTdCareLine").html("");
               for (var i = 0; i < result.length; i++) {
                 var atchTdId = "atchId" + (i + 1);
-                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                $("#attachTdCareLine").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
                 $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
               }
 
@@ -100,10 +100,10 @@
         function(result) {
           if (result) {
             if (result.length > 0) {
-              $("#attachTd").html("");
+              $("#attachTdHq").html("");
               for (var i = 0; i < result.length; i++) {
                 var atchTdId = "atchId2" + (i + 1);
-                $("#attachTd2").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                $("#attachTdHq").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
                 $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
               }
 
@@ -260,8 +260,43 @@
     fn_inchgDept_SelectedIndexChanged();
   });
 
+  //$('#attch').change(function(evt) {
+  //  handleFileChange(evt, 1);
+  //});
+
   $('#attch').change(function(evt) {
-    handleFileChange(evt, 1);
+      //handleFileChange(evt, 1);
+      var file = evt.target.files[0];
+      if (typeof file === 'undefined') {
+        $("#attch").val("");
+      } else {
+        var msg = '';
+
+        if (!(file.name).endsWith('.zip')) {
+          msg += "*Only allow.zip format file.<br>";
+        }
+
+        if (file && file.name.length > 30) {
+          msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        if (file && file.size > 2000000) {
+          msg += "*Only allow .zip file with less than 2MB.<br>";
+        }
+
+        if (msg) {
+          $("#attch").val("");
+          Common.alert(msg);
+        }
+
+        if (file == null && myFileCaches[1] != null) {
+          delete myFileCaches[1];
+        } else if (file != null) {
+          myFileCaches[1] = {
+            file : file
+          };
+        }
+      }
   });
 
   function fn_validFile() {
@@ -479,12 +514,12 @@
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="service.title.carelineAttc" /></th>
-                  <td colspan="3" id="attachTd"><input type="hidden" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
+                  <td colspan="3" id="attachTdCareLine"><input type="hidden" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
                   </td>
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="service.title.hqAttc" /></th>
-                  <td colspan="3" id="attachTd2"><input type="hidden" id="atchFileGrpIdHQ" value="${tagInfo.supTagFlAttId2 }">
+                  <td colspan="3" id="attachTdHq"><input type="hidden" id="atchFileGrpIdHQ" value="${tagInfo.supTagFlAttId2 }">
                   </td>
                 </tr>
               </tbody>
@@ -582,6 +617,11 @@
                   </label>
                   <span class='label_text'><a href='#' onclick='fn_removeFile("attch")'><spring:message code='sys.btn.remove' /></a></span>
                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <span class="red_text">** <spring:message code="supplement.alert.supplementBatchUploadZipNotice" /></span>
               </td>
             </tr>
             <tr>

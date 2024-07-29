@@ -69,10 +69,10 @@
         function(result) {
           if (result) {
             if (result.length > 0) {
-              $("#attachTd").html("");
+              $("#attachTdCareLine").html("");
               for (var i = 0; i < result.length; i++) {
                 var atchTdId = "atchId" + (i + 1);
-                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                $("#attachTdCareLine").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
                 $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
               }
 
@@ -100,10 +100,10 @@
         function(result) {
           if (result) {
             if (result.length > 0) {
-              $("#attachTd").html("");
+              $("#attachTdHq").html("");
               for (var i = 0; i < result.length; i++) {
                 var atchTdId = "atchId2" + (i + 1);
-                $("#attachTd2").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                $("#attachTdHq").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
                 $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
               }
 
@@ -479,12 +479,12 @@
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="service.title.carelineAttc" /></th>
-                  <td colspan="3" id="attachTd"><input type="hidden" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
+                  <td colspan="3" id="attachTdCareLine"><input type="hidden" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
                   </td>
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="service.title.hqAttc" /></th>
-                  <td colspan="3" id="attachTd2"><input type="hidden" id="atchFileGrpIdHQ" value="${tagInfo.supTagFlAttId2 }">
+                  <td colspan="3" id="attachTdHq"><input type="hidden" id="atchFileGrpIdHQ" value="${tagInfo.supTagFlAttId2 }">
                   </td>
                 </tr>
               </tbody>
