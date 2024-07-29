@@ -329,10 +329,11 @@
            return false;
          }
 
-         if (stgCode != '5' && stgCode != '6' ) {
-           Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update or Return Product Quantity Update Stage.</b>');
-           return false;
-         }
+         // TEMPORARY CLOSE FOR TESTING
+         //if (stgCode != '5' && stgCode != '6' ) {
+         //  Common.alert('<spring:message code="supplement.alert.msg.cancellationDisallow" />' + '<br/><b>Order Stage NOT IN Return Consignment Number Update or Return Product Quantity Update Stage.</b>');
+         //  return false;
+         //}
 
          Common.popupDiv("/supplement/cancellation/supplementUpdateRtnTrackNoPop.do", { supRefId : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdId") ,supOrdNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supOrdNo"), cancReqNo : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancReqNo"), cancReqDt : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancDt"), cancReqBy : AUIGrid.getCellValue( supplementGridID, rowIdx, "supCancBy"), supRtnStat : AUIGrid.getCellValue( supplementGridID, rowIdx, "supRtnStat") , canReqId : AUIGrid.getCellValue( supplementGridID, rowIdx, "canReqId") }, null, true, '_insDiv');
        } else {
