@@ -472,7 +472,7 @@
                          , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
                        </when>
                        <otherwise>
-                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_PCL_TRKNO = #{consNo} )
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_RTN_CSIGNO = #{consNo} )
                        </otherwise>
                      </choose>
 
@@ -485,4 +485,24 @@
                     , #{userId}
     )
   </insert>
+
+  <select id="getOrdNo" parameterType="Map" resultType="String">
+    SELECT SUP_REF_NO AS ORD_NO
+    FROM SUP0001M A
+    WHERE SUP_REF_ID= #{supRefId}
+  </select>
+
+  <select id="SP_LOGISTIC_RETURN_SUPP" parameterType="Map"  statementType="CALLABLE" >
+    {
+      CALL SP_LOGISTIC_RETURN_SUPP (#{S_NO},#{RETYPE},#{P_LOC},#{P_TYPE},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+    }
+  </select>
+
+  <update id="rollbackReturnQty" parameterType="Map">
+    UPDATE SUP0009D SET DEL_FLG = 'Y'
+                                   , UPD_USR_ID = #{userId}
+                                   , UPD_DT = SYSDATE
+    WHERE SUP_RTN_ID = #{supRtnId}
+        AND DEL_FLG = 'N'
+  </update>
 </mapper>
