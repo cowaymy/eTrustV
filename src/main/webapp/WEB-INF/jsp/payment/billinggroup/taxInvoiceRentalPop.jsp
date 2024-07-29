@@ -159,7 +159,7 @@
 			var reportDownFileName = ""; //Added by keyi 20211013
 			var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv"); //Added for e-Invoice
 
-			 if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+			 if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
                  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV.rpt');
              }else{
 				if (parseInt(year) == 2015 && parseInt(month) < 4) {

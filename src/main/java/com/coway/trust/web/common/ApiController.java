@@ -274,7 +274,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202408)){
+    	  if(result.equals("Y") && (year + month >= 202409)){
     		  getEInv = true;
     	  }
       }
@@ -298,7 +298,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202408)){
+    	  if(result.equals("Y") && (year + month >= 202409)){
     		  getEInv = true;
     	  }
       }
@@ -322,7 +322,7 @@ public class ApiController {
     	  int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
     	  int month = Integer.parseInt(eInvResult.get("month").toString());
 
-    	  if(result.equals("Y") && (year + month >= 202408)){
+    	  if(result.equals("Y") && (year + month >= 202409)){
     		  getEInv = true;
     	  }
       }

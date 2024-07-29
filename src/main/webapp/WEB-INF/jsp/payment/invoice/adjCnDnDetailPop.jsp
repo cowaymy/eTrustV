@@ -202,7 +202,7 @@ function fn_generateReport(){
     }
 
     if(invoiceType ==  126 || invoiceType == 127){
-    	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+    	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
     		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_EIV.rpt');
     	}else{
 	    	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -214,7 +214,7 @@ function fn_generateReport(){
     	}
     }else{
         if( miscType == 117 ){
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF_EIV.rpt');
         	}else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -225,7 +225,7 @@ function fn_generateReport(){
 	            }
         	}
         }else if(miscType == 118) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_EIV.rpt');
         	}else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 202403){
@@ -239,7 +239,7 @@ function fn_generateReport(){
 	            }
         	}
         }else if(miscType == 119) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_EIV.rpt');
             }else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 202403){
@@ -267,7 +267,7 @@ function fn_generateReport(){
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
             }
         }else if(miscType == 123) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF_EIV.rpt');
             }else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -278,7 +278,7 @@ function fn_generateReport(){
 	            }
             }
         }else if(miscType == 124) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_EIV.rpt');
         	}else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -289,7 +289,7 @@ function fn_generateReport(){
 	            }
         	}
         }else if(miscType == 125) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF_EIV.rpt');
         	}else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -300,7 +300,7 @@ function fn_generateReport(){
 	            }
         	}
         }else if(miscType == 142) {
-        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+        	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202409)){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_EIV.rpt');
         	} else{
 	        	if( parseInt(year)*100 + parseInt(month) >= 201809){
