@@ -35,6 +35,7 @@
   var statusName = '${supplement.supSubmStusName}';
   var userName = '${SESSION_INFO.userName}';
   var modValue = '${modValue}';
+  var subBrnch = '${supplement.supSubmBrnch}';
 
   var sofFileId = 0;
   var nricFileId = 0;
@@ -200,6 +201,8 @@
     fn_loadCntcPerson(cntcId);
     fn_loadBillAddr(billAddrId);
     fn_loadInstallAddr(delAddrId);
+
+    $('#salesmanBrnch').text(subBrnch);
 
     if (atchFileGrpId != 0) {
       fn_loadAtchment(atchFileGrpId);
@@ -413,7 +416,8 @@
                           + ' - ' + memCode + '</b>');
                   $('#salesmanCd').val('');
                   $('#salesmanNm').val('');
-                } else {
+                }
+                /* else {
                   Common
                       .ajax(
                           "GET",
@@ -431,7 +435,7 @@
                               $('#hidSalesmanBrnchId').val('');
                             }
                           });
-                }
+                } */
               }
             });
   }
