@@ -459,7 +459,7 @@ public class ECashDeductionController {
         				}
         			}
                 }else if ("19".equals(String.valueOf(claimMap.get("fileBatchBankId")))){// Standard Charted merchant getting MBB's cardHolder
-
+                	map.put("fileBatchBankId", String.valueOf(claimMap.get("fileBatchBankId")));
                 	int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
                 	int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
         			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
@@ -494,6 +494,7 @@ public class ECashDeductionController {
                   }
               }
                 else if ("17".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
+                	map.put("fileBatchBankId", String.valueOf(claimMap.get("fileBatchBankId")));
                     int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
                     int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
                     int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
