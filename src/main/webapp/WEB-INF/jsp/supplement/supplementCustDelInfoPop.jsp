@@ -392,7 +392,8 @@ var orderGridID;
       Common.ajax("POST", "/supplement/updateDelStageInfo.do", param,
         function(result) {
           if (result.code == "00") {
-            Common.alert(" Tracking number has been update successfully.", fn_popClose());
+            Common.alert(" Tracking number has been update successfully.", fn_popClose);
+            $("#_closeOrdPop").click();
           } else {
             Common.alert(result.message, fn_popClose);
           }
