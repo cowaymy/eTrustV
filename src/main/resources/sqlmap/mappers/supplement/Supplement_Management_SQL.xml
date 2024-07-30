@@ -860,7 +860,7 @@
     JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
     JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
     JOIN (SELECT A.SUP_REF_ID,
-                        LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY, CHR(10)) WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+                        LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY|| ' BOX(S)', ' ' || CHR(38) || ' ') WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
             FROM SUP0001M A
             JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
             LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
@@ -889,11 +889,31 @@
                'grace.lee@cjcentury.com' AS EMAIL_ADDR,
                '100' AS SHIPM_WEIGHT,
                'MYR' AS CUR_CDE,
-               A.SUP_REF_NO AS SHIPM_DESC
+               A.SUP_REF_NO AS SHIPM_DESC,
+               E.ITM_LIST AS REMARKS,
+               UPPER(B.NAME) AS SHIPM_COMP,
+               UPPER(B.NAME) AS SHIPM_NM,
+               UPPER(C.ADDR_DTL) AS SHIPM_ADDRS_LN1,
+               UPPER(C.STREET) AS SHIPM_ADDRS_LN2,
+               UPPER(D.CITY) AS SHIPM_CITY,
+               UPPER(D.STATE) AS SHIPM_STATE,
+               D.POSTCODE AS SHIPM_POST_CDE,
+               D.ISO AS SHIPM_COUNTRY,
+               B.TEL_M1 AS SHIPM_PHONE_NO,
+               B.EMAIL AS SHIPM_EMAIL_ADDR
     FROM SUP0001M A
     JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
     JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
     JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
+    JOIN (SELECT A.SUP_REF_ID,
+                       LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY|| ' BOX(S)', ' ' || CHR(38) || ' ') WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+            FROM SUP0001M A
+            JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
+            LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
+            WHERE A.DEL_FLG = 'N'
+                AND A.SUP_REF_STG = '5'
+                AND A.SUP_REF_STUS = '10'
+            GROUP BY A.SUP_REF_ID) E ON A.SUP_REF_ID = E.SUP_REF_ID
     WHERE A.DEL_FLG = 'N'
         AND A.SUP_REF_STG = '5'
         AND A.SUP_REF_STUS = '10'
