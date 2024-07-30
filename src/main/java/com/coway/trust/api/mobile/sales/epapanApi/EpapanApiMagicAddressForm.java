@@ -62,6 +62,13 @@ public class EpapanApiMagicAddressForm {
 		params.put("deptCode", vo.getDeptCode());
 		params.put("_ordNo", vo.getOrdNo());
 		params.put("promoId", vo.getPromoId());
+		params.put("insCustId", vo.getInsCustId());
+		params.put("stusId", vo.getStusId());
+		params.put("addrRem", vo.getAddrRem());
+		params.put("areaId", vo.getAreaId());
+		params.put("addrDtl", vo.getAddrDtl());
+		params.put("streetDtl", vo.getStreetDtl());
+		params.put("userId", vo.getUserId());
 
 		return params;
 	}
@@ -289,6 +296,48 @@ public class EpapanApiMagicAddressForm {
 	public void setPromoId(String promoId) {
 		this.promoId = promoId;
 	}
+	public String getInsCustId() {
+		return insCustId;
+	}
+	public void setInsCustId(String insCustId) {
+		this.insCustId = insCustId;
+	}
+	public String getStusId() {
+		return stusId;
+	}
+	public void setStusId(String stusId) {
+		this.stusId = stusId;
+	}
+	public String getAddrRem() {
+		return addrRem;
+	}
+	public void setAddrRem(String addrRem) {
+		this.addrRem = addrRem;
+	}
+	public String getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+	public String getAddrDtl() {
+		return addrDtl;
+	}
+	public void setAddrDtl(String addrDtl) {
+		this.addrDtl = addrDtl;
+	}
+	public String getStreetDtl() {
+		return streetDtl;
+	}
+	public void setStreetDtl(String streetDtl) {
+		this.streetDtl = streetDtl;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 	public String state;
     public String city;
@@ -324,5 +373,12 @@ public class EpapanApiMagicAddressForm {
 	public String deptCode;
 	public String ordNo;
 	public String promoId;
+	public String insCustId;
+	public String stusId;
+	public String addrRem;
+	public String areaId;
+	public String addrDtl;
+	public String streetDtl;
+	public String userId;
 
 }
