@@ -17,5 +17,6 @@ public interface WhatappsApiService {
 
 	void rtnRespMsg(Map<String, Object> params);
 
+	Map<String, Object> setWaTemplateConfiguration(Map<String, Object> params);
 
 }

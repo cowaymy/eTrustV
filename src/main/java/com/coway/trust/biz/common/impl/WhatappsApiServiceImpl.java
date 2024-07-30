@@ -88,6 +88,7 @@ public class WhatappsApiServiceImpl implements WhatappsApiService{
 	@Value("${watapps.api.button.template}")
 	private String waApiBtnTemplate;
 
+	private int cbtApiUserId = 7;
 
 	@Override
 	public Map<String, Object> preBookWhatappsReqApi(Map<String, Object> params){
@@ -242,8 +243,157 @@ public class WhatappsApiServiceImpl implements WhatappsApiService{
 	      params.put("respParam", params2.get("resPrm"));
 	      params.put("apiUserId", params2.get("apiUserId"));
 	      params.put("longReqParam", String.valueOf(params2.get("longReqPrm")));
+	      params.put("reqParam", params2.get("requestParam"));
+	      System.out.print(params.get("reqParam"));
 
 	      whatappsApiMapper.insertApiAccessLog(params);
 	  }
+
+	@Override
+	public Map<String, Object> setWaTemplateConfiguration(Map<String, Object> params2) {
+
+		// message
+		Map<String, Object> msgMap = new HashMap();
+		msgMap.put("type", AppConstants.WA_TYPE_TEMPLATE);
+
+		// template
+		Map<String, Object> templateMap = new HashMap();
+		templateMap.put("template_name", params2.get("templateName"));
+		templateMap.put("language", params2.get("language"));
+		msgMap.put("template", templateMap);
+
+		// data
+		Map<String, Object> dataMap = new HashMap();
+
+		dataMap.put("image_url", params2.get("imageUrl"));
+		dataMap.put("video_url", params2.get("videoUrl"));
+		dataMap.put("file_url", params2.get("fileUrl"));
+		dataMap.put("body_params", params2.get("bodyParams"));
+		dataMap.put("header", params2.get("header"));
+
+		// buttons
+		Map<String, Object> buttonsMap = new HashMap();
+		String type = waApiBtnUrlDomains + params2.get("path");
+
+		buttonsMap.put("type", type);
+		buttonsMap.put("payload", params2.get("payload"));
+
+		List<Map<String, Object>> btnList = new ArrayList<>();
+		btnList.add(buttonsMap);
+		dataMap.put("buttons", btnList);
+
+		msgMap.put("data", dataMap);
+
+		String telno = params2.get("telno").toString();
+		if (params2.get("telno").toString().substring(0,2) != AppConstants.COUNTRY_CODE_MY)
+			telno = AppConstants.CODE_MY + telno;
+
+		// body
+		Map<String, Object> params = new HashMap();
+		params.put("platform", AppConstants.WA_PLATFORM);
+		params.put("user_id", telno);
+		params.put("message", msgMap);
+
+		LOGGER.info("[WhatappsReqApi] params :: {} " + params);
+
+		GsonBuilder builder = new GsonBuilder();
+		builder.serializeNulls();
+		builder.disableHtmlEscaping();
+		Gson gson = builder.setPrettyPrinting().create();
+		String jsonString = gson.toJson(params);
+
+		LOGGER.info("[WhatappsReqApi] jsonString :: {} " + jsonString);
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		resultValue.put("status", AppConstants.FAIL);
+		resultValue.put("message", "Whatapps Failed: Please contact Administrator.");
+
+		String respTm = null;
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.reset();
+		stopWatch.start();
+
+		String waUrl = waApiDomains;
+		String output1 = "";
+
+		WhatappsApiRespForm p = new WhatappsApiRespForm();
+
+		try {
+			URL url = new URL(waUrl);
+
+			// insert to API0004M
+			LOGGER.info("Start Calling Whatapps API .... " + waUrl + "......\n");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("ClientId", waApiClientUser);
+			conn.setRequestProperty("ClientAccessToken", waApiClientAccessToken);
+
+			DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+			os.write(jsonString.getBytes());
+			os.flush();
+			os.close();
+
+			LOGGER.info("Start Calling Whatapps API return......\n");
+			LOGGER.info("Start Calling Whatapps API return" + conn.getResponseMessage() + "......\n");
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+				conn.getResponseMessage();
+
+				String output = "";
+				LOGGER.info("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					output1 = output;
+					LOGGER.info(output);
+				}
+
+				Gson g = new Gson();
+				p = g.fromJson(output1, WhatappsApiRespForm.class);
+				if (p.isSuccess() == true) {
+					p.setStatusCode(AppConstants.RESPONSE_CODE_SUCCESS);
+					resultValue.put("status", AppConstants.SUCCESS);
+					resultValue.put("message", "Success");
+				} else {
+					p.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", p.getError());
+				}
+
+				conn.disconnect();
+
+				br.close();
+			} else {
+				p.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				p.setSuccess(false);
+				resultValue.put("status", AppConstants.FAIL);
+				resultValue.put("message", "No Response");
+			}
+		} catch (Exception e) {
+			LOGGER.error("Timeout:");
+			LOGGER.error("[Whatapps API] - Caught Exception: " + e);
+			p.setStatusCode(AppConstants.RESPONSE_CODE_TIMEOUT);
+			p.setSuccess(false);
+			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
+			resultValue.put("message", "Time Out");
+		} finally {
+			stopWatch.stop();
+			respTm = stopWatch.toString();
+			Map<String, Object> apiLog = new HashMap();
+			apiLog.put("requestParam", jsonString);
+			apiLog.put("responseCode", resultValue.get("status") == null ? "" : resultValue.get("status").toString());
+			apiLog.put("responseMessage",
+					resultValue.get("message") == null ? "" : resultValue.get("message").toString());
+			apiLog.put("url", waUrl);
+			apiLog.put("respTm", respTm);
+			apiLog.put("resPrm", output1);
+			apiLog.put("apiUserId", cbtApiUserId);
+
+			rtnRespMsg(apiLog);
+		}
+
+		return resultValue;
+	}
 
 }

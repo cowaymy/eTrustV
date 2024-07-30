@@ -212,4 +212,13 @@ public class AppConstants {
 	public static final String E_VOUCHER_RECEIPT_BATCH_TEMPLATE = "template/html/eVoucherReceipt.html";
 
 	public static final String BILLER_CODE = "9928 (COWAY (MALAYSIA) SDN BHD)";
+	
+	//whatsApp
+	public static final String WA_TYPE_TEMPLATE = "wa_template";
+	public static final String WA_PLATFORM = "whatsapp";
+	public static final String LANGUAGE_EN = "en";
+	public static final String LANGUAGE_CN = "cn";
+	public static final String LANGUAGE_MS = "ms";
+	public static final String COUNTRY_CODE_MY = "60";
+	public static final String CODE_MY = "6";
 }

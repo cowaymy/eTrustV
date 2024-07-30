@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,18 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.WhatappsApiService;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 
@@ -51,6 +56,14 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	@Resource(name = "preCcpRegisterMapper")
 	private PreCcpRegisterMapper preCcpRegisterMapper;
 
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private WhatappsApiService whatappsApiService;
+
+	@Value("${watapps.api.button.pre.ccp.template}")
+	 private String waApiBtnPreCCPTemplate;
 
 	@Override
 	@Transactional
@@ -329,5 +342,65 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public EgovMap chkAvailableQuota(Map<String, Object> params){
 		return preCcpRegisterMapper.chkAvailableQuota(params);
+	}
+
+	@Transactional
+	@Override
+	public ReturnMessage sendWhatsApp(Map<String, Object> params) {
+
+		ReturnMessage message = new ReturnMessage();
+
+		try {
+
+			EgovMap chkTime = chkSendSmsValidTime(params);
+			BigDecimal defaultValidTime = new BigDecimal("5"),
+					latestSendSmsTime = new BigDecimal(chkTime.get("chkTime").toString());
+			;
+			Integer compareResult = latestSendSmsTime.compareTo(defaultValidTime);
+			EgovMap getCustInfo = getCustInfo(params);
+
+			if (getCustInfo.get("smsConsent").toString().equals("1")) {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage("preccp.existed"));
+				return message;
+			}
+
+			if (getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)) {
+
+				String telno = getCustInfo.get("custMobileno").toString();
+				String templateName = waApiBtnPreCCPTemplate;
+				String payload = "=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
+				String path = "sales/ccp/consent";
+				String imageUrl = "https://iili.io/dxKWRkJ.jpg";
+
+				Map<String, Object> param = new HashMap<>();
+				param.put("telno", telno);
+				param.put("templateName", templateName);
+				param.put("language", AppConstants.LANGUAGE_EN);
+				param.put("payload", payload);
+				param.put("path", path);
+				param.put("imageUrl", imageUrl);
+
+				Map<String, Object> waResult = whatappsApiService.setWaTemplateConfiguration(param);
+
+				if (waResult.get("status").toString() == "00") {
+					updateSmsCount(params);
+				}
+				message.setCode(waResult.get("status") == "00" ? AppConstants.SUCCESS : AppConstants.FAIL);
+				message.setMessage(waResult.get("status") == "00" ? messageAccessor.getMessage("preccp.doneWhatsApp")
+						: messageAccessor.getMessage("preccp.failWhatsApp"));
+				return message;
+
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage("preccp.retryWhatsApp"));
+				return message;
+			}
+		} catch (Exception e) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage("preccp.failWhatsApp"));
+			return message;
+		}
+
 	}
 }

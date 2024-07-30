@@ -453,7 +453,7 @@
      const sendSms = (id,seq) => {
     	 document.getElementById(id).disabled = true;
     	 Common.showLoader();
-    	 fetch("/sales/ccp/sendSms.do?preccpSeq=" + seq)
+    	 fetch("/sales/ccp/sendWhatsApp.do?preccpSeq=" + seq)
     	 .then(r=> r.json())
     	 .then(data=>{
     		 Common.removeLoader();

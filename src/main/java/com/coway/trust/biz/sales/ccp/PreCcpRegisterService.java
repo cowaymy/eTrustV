@@ -3,8 +3,13 @@ package com.coway.trust.biz.sales.ccp;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.cmmn.model.ReturnMessage;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -105,5 +110,7 @@ public interface PreCcpRegisterService {
 	EgovMap checkNewCustomerResult(Map<String, Object> params);
 
 	EgovMap chkAvailableQuota(Map<String, Object> params);
+
+	ReturnMessage sendWhatsApp(Map<String, Object> params);
 
 }

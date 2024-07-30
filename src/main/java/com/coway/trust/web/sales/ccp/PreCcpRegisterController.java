@@ -58,6 +58,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.EncryptionDecryptionService;
+import com.coway.trust.biz.common.WhatappsApiService;
 import com.coway.trust.biz.enquiry.EnquiryService;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.config.csv.CsvReadComponent;
@@ -335,67 +336,69 @@ public class PreCcpRegisterController {
 		return ResponseEntity.ok(message);
 	}
 
-   @Transactional
-   @RequestMapping(value = "/sendSms.do")
-   public ResponseEntity<ReturnMessage> sendSms(@RequestParam Map<String, Object> params){
+	@Transactional
+	@RequestMapping(value = "/sendSms.do")
+	public ResponseEntity<ReturnMessage> sendSms(@RequestParam Map<String, Object> params) {
 
-	   ReturnMessage message = new ReturnMessage();
+		ReturnMessage message = new ReturnMessage();
 
-	   try{
-		   	EgovMap chkTime = preCcpRegisterService.chkSendSmsValidTime(params);
-		   	BigDecimal defaultValidTime = new BigDecimal("5"), latestSendSmsTime =new BigDecimal(chkTime.get("chkTime").toString());;
-		   	Integer compareResult = latestSendSmsTime.compareTo(defaultValidTime);
+		try {
+			EgovMap chkTime = preCcpRegisterService.chkSendSmsValidTime(params);
+			BigDecimal defaultValidTime = new BigDecimal("5"),
+					latestSendSmsTime = new BigDecimal(chkTime.get("chkTime").toString());
+			;
+			Integer compareResult = latestSendSmsTime.compareTo(defaultValidTime);
 			EgovMap getCustInfo = preCcpRegisterService.getCustInfo(params);
 
-			if(getCustInfo.get("smsConsent").toString().equals("1")){
-	    		message.setCode(AppConstants.FAIL);
-	           	message.setMessage(messageAccessor.getMessage("preccp.existed"));
-	           	return ResponseEntity.ok(message);
+			if (getCustInfo.get("smsConsent").toString().equals("1")) {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage("preccp.existed"));
+				return ResponseEntity.ok(message);
 			}
 
-	    	if(getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)){
-	    	   	params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+			if (getCustInfo.get("smsCount").toString().equals("0") || compareResult.equals(1)) {
+				params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
 
-	    	   	String smsMessage ="";
-    			smsMessage += "COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
-    			smsMessage +=  etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString() + params.get("preccpSeq").toString();
-    			smsMessage += ", check the box and submit. Thank you.";
+				String smsMessage = "";
+				smsMessage += "COWAY: Authorise Coway to check your credit standing for rental of a Coway appliance. Click ";
+				smsMessage += etrustBaseUrl + "/sales/ccp/consent?d=" + getCustInfo.get("tacNo").toString()
+						+ params.get("preccpSeq").toString();
+				smsMessage += ", check the box and submit. Thank you.";
 
-           	    SmsVO sms = new SmsVO(349 , 7327);
-           	    sms.setMessage(smsMessage);
-           	    sms.setMobiles(getCustInfo.get("custMobileno").toString());
+				SmsVO sms = new SmsVO(349, 7327);
+				sms.setMessage(smsMessage);
+				sms.setMobiles(getCustInfo.get("custMobileno").toString());
 
-           	    SmsResult smsResult = adaptorService.sendSMS3(sms);
+				SmsResult smsResult = adaptorService.sendSMS3(sms);
 
-           	    params.put("smsId", smsResult.getSmsId());
-           	    params.put("statusId", smsResult.getSmsStatus());
-           	    params.put("failRsn", smsResult.getFailReason().toString());
-           	    params.put("smsId", smsResult.getSmsId());
-           	    params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+				params.put("smsId", smsResult.getSmsId());
+				params.put("statusId", smsResult.getSmsStatus());
+				params.put("failRsn", smsResult.getFailReason().toString());
+				params.put("smsId", smsResult.getSmsId());
+				params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
 
-           	    preCcpRegisterService.insertSmsHistory(params);
+				preCcpRegisterService.insertSmsHistory(params);
 
-           	    if(smsResult.getSmsStatus() == 4){
-	    	   		preCcpRegisterService.updateSmsCount(params);
-           	    }
+				if (smsResult.getSmsStatus() == 4) {
+					preCcpRegisterService.updateSmsCount(params);
+				}
 
-    	   		message.setCode(smsResult.getSmsStatus() == 4 ? AppConstants.SUCCESS : AppConstants.FAIL);
-	           	message.setMessage(smsResult.getSmsStatus() == 4 ? messageAccessor.getMessage("preccp.doneSms") : messageAccessor.getMessage("preccp.failSms"));
-	           	return ResponseEntity.ok(message);
+				message.setCode(smsResult.getSmsStatus() == 4 ? AppConstants.SUCCESS : AppConstants.FAIL);
+				message.setMessage(smsResult.getSmsStatus() == 4 ? messageAccessor.getMessage("preccp.doneSms")
+						: messageAccessor.getMessage("preccp.failSms"));
+				return ResponseEntity.ok(message);
 
-	    	}
-	    	else{
-	    		message.setCode(AppConstants.FAIL);
-	           	message.setMessage(messageAccessor.getMessage("preccp.retrySms"));
-	           	return ResponseEntity.ok(message);
-	    	}
-	   	}
-	   	catch(Exception e){
-	   		message.setCode(AppConstants.FAIL);
-           	message.setMessage(messageAccessor.getMessage("preccp.failSms"));
-           	return ResponseEntity.ok(message);
-	   	}
-   }
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage("preccp.retrySms"));
+				return ResponseEntity.ok(message);
+			}
+		} catch (Exception e) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage("preccp.failSms"));
+			return ResponseEntity.ok(message);
+		}
+	}
 
    @RequestMapping(value = "/selectPreCcpResult.do")
    public ResponseEntity<List<EgovMap>> selectPreCcpResult(@RequestParam Map<String, Object> params){
@@ -634,4 +637,11 @@ public class PreCcpRegisterController {
 		    return ResponseEntity.ok(message);
 	    }
    }
+
+	@RequestMapping(value = "/sendWhatsApp.do")
+	public ResponseEntity<ReturnMessage> sendWhatsApp(@RequestParam Map<String, Object> params) {
+		params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+		ReturnMessage message = preCcpRegisterService.sendWhatsApp(params);
+		return ResponseEntity.ok(message);
+	}
 }
