@@ -153,7 +153,7 @@ function fn_memberSave(){
 
                             if($("#eHPemail").val() != "") {
                                 var recipient = $("#eHPemail").val();
-                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+                                var url = "https://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
                                 Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient,password:'true'}, function(result) {
