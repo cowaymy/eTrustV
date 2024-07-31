@@ -8,7 +8,10 @@
                Extent1.SUP_REF_NO AS SUP_REF_NO,
                Extent1.SUP_REF_ID AS SUP_REF_ID,
                Extent3.NAME AS CUST_NAME,
-               TO_CHAR(Extent2.CRT_DT, 'DD-MM-YYYY') AS TAG_REGISTER_DT,
+               TO_CHAR(Extent2.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') AS TAG_REGISTER_DT,
+               UPPER(Extent10.USER_NAME) AS TAG_REGISTER_BY,
+               TO_CHAR(Extent2.UPD_DT, 'DD-MM-YYYY HH:MI:SS AM') AS TAG_UPD_DT,
+               UPPER(Extent11.USER_NAME) AS TAG_UPD_BY,
                Extent4.CALL_ENTRY_ID AS CCR0006D_CALL_ENTRY_ID_SEQ,
                Extent4.STUS_CODE_ID AS TAG_STATUS_ID,
                Extent5.NAME AS TAG_STATUS,
@@ -27,6 +30,8 @@
     LEFT JOIN SYS0100M Extent7 ON Extent7.DEFECT_ID = Extent2.SUP_TAG_SUB_INQ AND Extent7.DEFECT_TYP = 'SMI'
     LEFT JOIN SYS0013M Extent8 ON Extent8.CODE_MASTER_ID = '359' AND Extent8.CODE = Extent4.MAIN_DEPT
     LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_MASTER_ID = '360' AND Extent9.CODE = Extent4.SUB_DEPT
+    LEFT JOIN SYS0047M Extent10 ON Extent2.CRT_USR_ID = Extent10.USER_ID
+    LEFT JOIN SYS0047M Extent11 ON Extent2.UPD_USR_ID = Extent11.USER_ID
     WHERE 1 = 1
      AND Extent1.DEL_FLG = 'N'
      AND Extent2.DEL_FLG = 'N'
@@ -90,7 +95,7 @@
              , Extent1.CODE CODE
              , UPPER(Extent1.NAME) CODE_NAME
     FROM SYS0038M Extent1
-    WHERE Extent1.STUS_CODE_ID IN ( 1, 5, 10 )
+    WHERE Extent1.STUS_CODE_ID IN ( 1, 5, 10, 34 )
   </select>
 
   <select id="selectTagStus2"  parameterType="Map" resultType="egovMap">
@@ -98,7 +103,7 @@
              , Extent1.CODE CODE
              , UPPER(Extent1.NAME) CODE_NAME
     FROM SYS0038M Extent1
-    WHERE Extent1.STUS_CODE_ID IN ( 1, 10 )
+    WHERE Extent1.STUS_CODE_ID IN ( 1, 10, 34 )
   </select>
 
   <select id="getMainTopicList" parameterType="Map" resultType="egovMap">
@@ -266,7 +271,8 @@
                Extent19.POSTCODE AS BILL_POSTCODE,
                Extent19.STATE AS BILL_STATE,
                Extent19.COUNTRY AS BILL_COUNTRY,
-               Extent19.CITY AS BILL_CITY
+               Extent19.CITY AS BILL_CITY,
+               Extent1.SUP_RTN_RFND AS IS_REFUND
     FROM SUP0001M Extent1
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
     LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
@@ -300,7 +306,7 @@
                DBMS_LOB.SUBSTR(Extent3.CALL_REM, 4000, 1) AS TAG_REMARK,
                Extent6.NAME AS TAG_STUS,
                Extent7.USER_FULL_NAME AS CALL_CRT_USER ,
-               TO_CHAR(Extent3.CALL_CRT_DT, 'DD-MM-YYYY HH:MM:SS:AM') AS CALL_CRT_DT
+               TO_CHAR(Extent3.CALL_CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') AS CALL_CRT_DT
     FROM SUP0006M Extent1
     JOIN CCR0006D Extent2 ON Extent2.CUR_SEQ_NO = Extent1.SUP_CUR_SEQNO
     JOIN CCR0007D Extent3 ON Extent3.CALL_ENTRY_ID = Extent2.CALL_ENTRY_ID
@@ -391,6 +397,13 @@
   <update id="updateSupCareAttch" parameterType="Map">
     UPDATE SUP0006M SET SUP_TAG_FL_ATT_ID1 = #{atchFileGrpId},
                                      UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_TAG_ORD_ID = #{supRefId}
+        AND SUP_TAG_ID = #{supTagId}
+  </update>
+
+  <update id="updateSupTagUpd" parameterType="Map">
+    UPDATE SUP0006M SET UPD_USR_ID = #{userId},
                                      UPD_DT = SYSDATE
     WHERE SUP_TAG_ORD_ID = #{supRefId}
         AND SUP_TAG_ID = #{supTagId}
