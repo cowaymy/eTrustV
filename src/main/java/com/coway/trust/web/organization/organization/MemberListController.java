@@ -1,5 +1,8 @@
 package com.coway.trust.web.organization.organization;
 
+import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
+import static com.coway.trust.AppConstants.EMAIL_TO;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +53,7 @@ import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.ctDutyAllowance.CtDutyAllowanceApplication;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
@@ -2030,19 +2034,13 @@ public class MemberListController {
     public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, HttpServletRequest request,
             ModelMap model, SessionVO session) {
 
-        //logger.debug("==================== sendEmail.do ====================");
+        logger.debug("==================== sendEmail.do ====================");
 
-        //logger.debug("params {}", params);
+        logger.debug("params {}", params);
     	String pdfPasswordMsg ="";
     	if(params.get("password") != null && params.get("password").equals("true")){
-    		pdfPasswordMsg = "<br />Agreement Password: " +  pdfPassword;
+    		pdfPasswordMsg = "<br />Password: " +  pdfPassword;
     	}
-
-        // send email
-        EmailVO email = new EmailVO();
-        email.setTo((String) params.get("recipient"));
-        email.setHtml(true);
-        email.setSubject("Health Planner Agreement Confirmation");
 
         /* VER NBL [S] String url = (String) params.get("url");
         String msg = "Dear Sir/Madam, <br /><br />"
@@ -2052,30 +2050,62 @@ public class MemberListController {
                 + "Please note that you are able to view this Coway Health Planner Agreement for agreement confirmation within 7 days from your application date to complete your Health Planner registration.<br /><br />"
                 + "This is a system generated email, please do not reply.<br /><br />" + "Thank you."
                 + "<br /><br /><br />" + "Best Regards,<br /><b>Coway Malaysia</b>"; */
-        String url = (String) params.get("url");
-        String msg = "Dear Sir/Madam, <br /><br />"
-                + "Congratulations, your application has been successful. We are pleased to appoint you as our Health Planner, subject to terms and conditions "
-        		+ "of the Health Planner [Health Planner Agreement (\"HP Agreement\") accessible at "+ url
-        		+ pdfPasswordMsg
-        		+ " <br /><br />"
-                + "Kindly read, understand and confirm your acceptance of the HP Agreement within seven (7) days from the date hereof.<br /><br />"
-                + "Thank you."
-                + "<br /><br />" + "Best Regards,<br /><b>Coway (Malaysia) Sdn Bhd</b>"
-                + "<br /><br /><br />This is a system generated email, please do not reply.<br /><br />"
+        /* String url = (String) params.get("url");
+        String msg = "Dear Sir/Madam, <br />"
+        		+ "Greetings from Coway Malaysia. <br />"
+                + "We are pleased to inform you that your application as Health Planner (HP) has been successful. <br />"
+        		+ "Please read, understand and confirm your acceptance of the Health Planner Agreement via the link below within seven (7) days from the date hereof. <br /> "
+                + "Health Planner Agreement Link: <br />"
+                + url
+                + pdfPasswordMsg
+                + "<br /><br />" + "We look forward to having you with us.<br />Thank you."
+                + "<br />" + "Best Regards,<br /><b>Coway (Malaysia) Sdn Bhd</b>"
+                + "<br />" + "_____________________________________________________________________________________________________________________________"
+                + "<br />" + "Tuan / Puan, <br />"
+                + "Salam sejahtera daripada Coway Malaysia. <br />"
+                + "Kami dengan sukacitanya ingin memaklumkan bahawa permohonan anda sebagai Health Planner (HP) telah berjaya. <br />"
+                + "Sila baca, fahami, dan sahkan penerimaan Perjanjian Health Planner melalui pautan di bawah dalam tempoh tujuh (7) hari. <br />"
+                + "Health Planner Agreement Link: <br />"
+                + url
+                + pdfPasswordMsg
+                + "<br /><br />" + "Coway Malaysia teruja di atas penyertaan anda.<br />Terima kasih."
+                + "<br />" + "Salam Sejahtera,<br /><b>Coway (Malaysia) Sdn Bhd</b>" */
+                /* + "<br /><br /><br />This is a system generated email, please do not reply.<br /><br />"
                 + "<p style='margin-bottom:6.0pt'><span lang=EN-MY style='font-size:8.0pt;color:gray'>CONFIDENTIALITY NOTICE:</span><br /><br />"
                 + "<p style='text-align:justify;text-justify:inter-ideograph'><span lang=EN-MY style='font-size:8.0pt;color:gray'>This email and any files transmitted "
                 + "with it are CONFIDENTIAL and/or PRIVILEGED information intended solely for the use of the individual or entity to whom they are addressed. "
                 + "The Addressee(s) must maintain CONFIDENTIALITY as it may be legally protected from DISCLOSURE. If you are not the named addressee(s) "
                 + "you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake "
                 + "and delete this e-mail and any attachments from your system. If you are not the intended recipient you are notified that any use, disclosing, copying, "
-                + "distributing, storage and/or taking any action in reliance on the contents of this information is strictly prohibited.<o:p></o:p></span></p>";
+                + "distributing, storage and/or taking any action in reliance on the contents of this information is strictly prohibited.<o:p></o:p></span></p>"*/
+                ; 
         /* VER NBL [E] */
 
-        email.setText(msg);
-
-        boolean isResult = false;
-        isResult = adaptorService.sendEmail(email, false);
-
+        //email.setText(msg);
+        
+        // send email
+        EmailVO email = new EmailVO();
+        String emailSubject = "Health Planner Agreement Confirmation";
+        List<String> emailNo = new ArrayList<String>();
+        
+    	if (!"".equals(CommonUtils.nvl(params.get("recipient")))) {
+			emailNo.add(CommonUtils.nvl(params.get("recipient")));
+		}
+    	
+		params.put(EMAIL_SUBJECT, emailSubject);
+		params.put(EMAIL_TO, emailNo);
+		
+		boolean isResult = false;
+		
+		email.setTo(emailNo);
+		email.setHtml(true);
+		email.setSubject(emailSubject);
+	    email.setHasInlineImage(true);
+	    isResult =	adaptorService.sendEmail(email, false, EmailTemplateType.E_HP_ACKNOWLEDGE, params);
+	
+        
+        //isResult = adaptorService.sendEmail(email, false);
+       
         ReturnMessage message = new ReturnMessage();
 
         if (isResult == true) {
@@ -3160,6 +3190,12 @@ public class MemberListController {
 		return ResponseEntity.ok(message);
 	  }
 
+		@RequestMapping(value = "/sendWhatsAppHp.do", method = RequestMethod.GET)
+		public ResponseEntity<ReturnMessage> sendWhatsApp(@RequestParam Map<String, Object> params)  throws Exception {
+			params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+			ReturnMessage message = memberListService.sendWhatsApp(params);
+			return ResponseEntity.ok(message);
+		}
 
 }
 

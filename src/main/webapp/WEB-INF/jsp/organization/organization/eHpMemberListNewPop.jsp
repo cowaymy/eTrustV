@@ -120,25 +120,35 @@ function fn_memberSave(){
 
                             var aplcntId = result.id;
                             var idntfc = result.idntfc;
-
+                            var MemberID = idntfc + aplcntId
+                            
                             // Construct Agreement URL via SMS
                             /* VER NBL [S] var cnfmSms = " COWAY: Click " +
                                           "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
                                           " for confirmation of HP agreement. TQ!"; */
-                            var cnfmSms = " COWAY: HP Application successful. Click " +
-                                                  "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                  " to accept T&C." + "Password: " + "${pdfPwd}";
+//                             var cnfmSms = " COWAY: HP Application successful. Click " +
+//                                                   "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+//                                                   " to accept T&C." + "Password: " + "${pdfPwd}";
                             /* VER NBL [E] */
 
-                            console.log(cnfmSms);
-
+//                             console.log(cnfmSms);
+                            console.log("eHPmobileNo : " + $("#eHPmobileNo").val() );
                             if($("#eHPmobileNo").val() != "") {
                                 var rTelNo = $("#eHPmobileNo").val();
-
+                                console.log("eHPmobileNo INNN : ");
+                                
+                                /*
                                 Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
                                     console.log("sms.");
                                     console.log( result);
                                 });
+                                */
+                                console.log("MemberID : " + MemberID);
+                                Common.ajax("GET","/organization/sendWhatsAppHp.do", {rTelNo:rTelNo, MemberID:MemberID}, function(result) {
+                                	console.log("whatsapp.");
+                                    console.log(result);
+                                });
+                                
                             }
 
                             if($("#eHPemail").val() != "") {

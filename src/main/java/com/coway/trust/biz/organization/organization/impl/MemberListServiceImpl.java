@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,12 +54,14 @@ import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.impl.FileMapper;
+import com.coway.trust.biz.common.WhatappsApiService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -91,6 +94,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Value("${sso.use.flag}")
 	private int ssoLoginFlag;
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private WhatappsApiService whatappsApiService;
+	
+	@Value("${watapps.api.button.ehp.agreement.template}")
+	 private String waApiBtnEhpAgreementTemplate;
+	
 	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
@@ -3103,4 +3116,40 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return returnVal;
 	}
 
+	@Transactional
+	@Override
+	public ReturnMessage sendWhatsApp(Map<String, Object> params) {
+
+		ReturnMessage message = new ReturnMessage();
+
+		try {
+			
+				String telno = CommonUtils.nvl(params.get("rTelNo"));
+				String templateName = waApiBtnEhpAgreementTemplate;
+				String payload = "=" + params.get("MemberID").toString();
+				String path = "organization/agreementListing.do";
+				String imageUrl = "https://iili.io/dTBskTG.jpg";
+				
+				Map<String, Object> param = new HashMap<>();
+				param.put("telno", telno);
+				param.put("templateName", templateName);
+				param.put("language", AppConstants.LANGUAGE_EN);
+				param.put("payload", payload);
+				param.put("path", path);
+				param.put("imageUrl", imageUrl);
+
+				Map<String, Object> waResult = whatappsApiService.setWaTemplateConfiguration(param);
+
+				message.setCode(waResult.get("status") == "00" ? AppConstants.SUCCESS : AppConstants.FAIL);
+				message.setMessage(waResult.get("status") == "00" ? messageAccessor.getMessage("ehpAgreement.doneWhatsApp")
+						: messageAccessor.getMessage("ehpAgreement.failWhatsApp"));
+				return message;
+
+
+		} catch (Exception e) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage("ehpAgreement.failWhatsApp"));
+			return message;
+		}
+	}
 }

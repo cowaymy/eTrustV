@@ -10,7 +10,8 @@ public enum EmailTemplateType {
 	E_TEMPORARY_RECEIPT("/template/mail/eTemporaryReceipt.html"),
     E_SVM_RECEIPT("/template/mail/eSvmReceipt.html"),
     E_LUMP_SUM_RECEIPT("/template/mail/eLumpSumReceipt.html"),
-    E_VOUCHER_RECEIPT("/template/mail/eVoucherReceipt.html");
+    E_VOUCHER_RECEIPT("/template/mail/eVoucherReceipt.html"),
+    E_HP_ACKNOWLEDGE("/template/mail/eHpAcknowledgeEmail.html");
 
 	private String fileName = "";
 
