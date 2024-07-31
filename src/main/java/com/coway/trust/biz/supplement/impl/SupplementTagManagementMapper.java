@@ -57,6 +57,8 @@ public interface SupplementTagManagementMapper {
 
   void updateSupCareAttch( Map<String, Object> params );
 
+  void updateSupTagUpd( Map<String, Object> params );
+
   int insertCancMain( Map<String, Object> params );
 
   void updateCcrMainWithCid( Map<String, Object> params );

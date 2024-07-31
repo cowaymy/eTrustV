@@ -248,11 +248,13 @@ public class SupplementTagManagementImpl
 
       if (params.get("attachYN").equals("Y")){
         supplementTagManagementMapper.updateSupHqAttch(params);
+      } else {
+        supplementTagManagementMapper.updateSupTagUpd(params);
       }
 
       // ACTIVE EITHE CANCEL OR RESOLVED BUT NOT IN REQUEST REFUND
       if (!CommonUtils.nvl(params.get("subTopicId")).equals ("4001")) {
-        if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("5")) )){
+        if ((params.get("tagStus").equals ("1")) || (params.get("tagStus").equals ("10")) || ((params.get("tagStus").equals ("5")) ) || ((params.get("tagStus").equals ("34")) )){
           // UPDATE CCR0006D
           supplementTagManagementMapper.updateCcrMain(params);
         }
@@ -309,6 +311,8 @@ public class SupplementTagManagementImpl
 
       if (params.get("attachYN").equals("Y")){
         supplementTagManagementMapper.updateSupCareAttch(params);
+      } else {
+        supplementTagManagementMapper.updateSupTagUpd(params);
       }
 
       supplementTagManagementMapper.updateCcrMain(params);
