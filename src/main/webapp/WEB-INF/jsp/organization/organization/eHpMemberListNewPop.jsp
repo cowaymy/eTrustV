@@ -132,7 +132,7 @@ function fn_memberSave(){
                             /* VER NBL [E] */
 
 //                             console.log(cnfmSms);
-                            console.log("eHPmobileNo : " + $("#eHPmobileNo").val() );
+
                             if($("#eHPmobileNo").val() != "") {
                                 var rTelNo = $("#eHPmobileNo").val();
                                 console.log("eHPmobileNo INNN : ");
@@ -143,7 +143,7 @@ function fn_memberSave(){
                                     console.log( result);
                                 });
                                 */
-                                console.log("MemberID : " + MemberID);
+
                                 Common.ajax("GET","/organization/sendWhatsAppHp.do", {rTelNo:rTelNo, MemberID:MemberID}, function(result) {
                                 	console.log("whatsapp.");
                                     console.log(result);
