@@ -2039,7 +2039,7 @@ public class MemberListController {
         logger.debug("params {}", params);
     	String pdfPasswordMsg ="";
     	if(params.get("password") != null && params.get("password").equals("true")){
-    		pdfPasswordMsg = "<br />Password: " +  pdfPassword;
+    		params.put("pdfPassword","Cow@y");
     	}
 
         /* VER NBL [S] String url = (String) params.get("url");
