@@ -59,8 +59,8 @@
   $(document).ready( function() {
     tagRespondGrid();
 
-    $("#btnLedger").click( function() {
-      Common.popupDiv("/supplement/orderLedgerViewPop.do", '', null, true, '_insDiv');
+    $('#btnLedger').click(function() {
+      Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     });
 
     var attachList = $("#atchFileGrpId").val();
@@ -385,12 +385,10 @@
     if (null == $("#inchgDeptList").val() || '' == $("#inchgDeptList").val()) {
       isValid = false;
       msg += 'InCharge Department is required.';
-    }
-
-    else if (null == $("#ddlSubDeptUpd").val() || '' == $("#ddlSubDeptUpd").val()) {
+    } /* else if (null == $("#ddlSubDeptUpd").val() || '' == $("#ddlSubDeptUpd").val()) {
       isValid = false;
       msg += 'Sub Department is required.';
-    } else if (null == $("#tagStusPop").val() || '' == $("#tagStusPop").val()) {
+    }*/ else if (null == $("#tagStusPop").val() || '' == $("#tagStusPop").val()) {
       isValid = false;
       msg += 'Tag Status is required.';
     }
@@ -439,10 +437,18 @@
   <input type="hidden" id="_infoSubTopic" value="${tagInfo.subTopic}">
   <input type="hidden" id="_infoSupTagId" value="${tagInfo.supTagId}">
   <input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
+  <form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
+  </form>
 
   <header class="pop_header">
     <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="sal.text.response" /></h1>
     <ul class="right_opt">
+      <li>
+        <p class="btn_blue2" id="btnLedger">
+          <a id="btnLedger" href="#"><spring:message code="sal.btn.ledger" /></a>
+        </p>
+      </li>
       <li>
         <p class="btn_blue2">
           <a id="_systemClose"><spring:message code="sal.btn.close" /></a>
@@ -572,7 +578,7 @@
           </colgroup>
           <tbody>
             <tr>
-              <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">**</span></th>
               <td colspan="3">
                 <select class="select w100p" id="inchgDeptList" name="inchgDeptList" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
@@ -590,11 +596,11 @@
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="service.grid.subDept" /></th>
               <td colspan="3"><select id='ddlSubDeptUpd' name='ddlSubDeptUpd' class="w100p"></select></td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code="supplement.text.supplementTagStus" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="supplement.text.supplementTagStus" /><span class="must">**</span></th>
               <td colspan="3">
                 <select class="select w100p" id="tagStusPop" name=""tagStusPop"">
                   <option value="">Choose One</option>

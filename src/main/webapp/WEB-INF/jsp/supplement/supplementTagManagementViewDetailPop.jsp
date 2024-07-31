@@ -59,8 +59,8 @@
   $(document).ready( function() {
     tagRespondGrid();
 
-    $("#btnLedger").click( function() {
-      Common.popupDiv("/supplement/orderLedgerViewPop.do", '', null, true, '_insDiv');
+    $('#btnLedger').click(function() {
+      Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     });
 
     var attachList = $("#atchFileGrpId").val();
@@ -404,10 +404,18 @@
   <input type="hidden" id="_infoSubTopic" value="${tagInfo.subTopic}">
   <input type="hidden" id="_infoSupTagId" value="${tagInfo.supTagId}">
   <input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
+  <form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
+  </form>
 
   <header class="pop_header">
     <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="sys.scm.inventory.ViewDetail" /></h1>
     <ul class="right_opt">
+      <li>
+        <p class="btn_blue2" id="btnLedger">
+          <a id="btnLedger" href="#"><spring:message code="sal.btn.ledger" /></a>
+        </p>
+      </li>
       <li>
         <p class="btn_blue2">
           <a id="_systemClose"><spring:message code="sal.btn.close" /></a>

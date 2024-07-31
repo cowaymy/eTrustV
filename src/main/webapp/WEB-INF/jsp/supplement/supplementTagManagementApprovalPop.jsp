@@ -59,9 +59,9 @@
   $(document).ready( function() {
     tagRespondGrid();
 
-    $("#btnLedger").click( function() {
-      Common.popupDiv("/supplement/orderLedgerViewPop.do", '', null, true, '_insDiv');
-    });
+    $('#btnLedger').click(function() {
+        Common.popupWin("frmLedger", "/supplement/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+      });
 
     var attachList = $("#atchFileGrpId").val();
     if (attachList > 0) {
@@ -385,12 +385,10 @@
     if (null == $("#inchgDeptList").val() || '' == $("#inchgDeptList").val()) {
       isValid = false;
       msg += 'InCharge Department is required.';
-    }
-
-    else if (null == $("#ddlSubDeptUpd").val() || '' == $("#ddlSubDeptUpd").val()) {
+    } /* else if (null == $("#ddlSubDeptUpd").val() || '' == $("#ddlSubDeptUpd").val()) {
       isValid = false;
       msg += 'Sub Department is required.';
-    } else if (null == $("#tagStusPop").val() || '' == $("#tagStusPop").val()) {
+    } */ else if (null == $("#tagStusPop").val() || '' == $("#tagStusPop").val()) {
       isValid = false;
       msg += 'Tag Status is required.';
     }
@@ -420,7 +418,7 @@
   }
 
   function fn_callbackSubDept2() {
-    $("#ddlSubDeptUpd").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
+    //$("#ddlSubDeptUpd").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
   }
 </script>
 
@@ -439,10 +437,17 @@
   <input type="hidden" id="_infoSubTopic" value="${tagInfo.subTopic}">
   <input type="hidden" id="_infoSupTagId" value="${tagInfo.supTagId}">
   <input type="hidden" id="_infoCcr0006dCallEntryIdSeq" value="${tagInfo.ccr0006dCallEntryIdSeq}">
-
+  <form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="supRefId" name="supRefId" type="hidden" value="${orderInfo.supRefId}" />
+  </form>
   <header class="pop_header">
     <h1><spring:message code="supplement.title.supplementTagManagement" /> - <spring:message code="pay.btn.approval" /></h1>
     <ul class="right_opt">
+      <li>
+        <p class="btn_blue2" id="btnLedger">
+          <a id="btnLedger" href="#"><spring:message code="sal.btn.ledger" /></a>
+        </p>
+      </li>
       <li>
         <p class="btn_blue2">
           <a id="_systemClose"><spring:message code="sal.btn.close" /></a>
@@ -514,7 +519,7 @@
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="service.title.carelineAttc" /></th>
-                  <td colspan="3" id="attachTdCareLine"><input type="text" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
+                  <td colspan="3" id="attachTdCareLine"><input type="hidden" id="atchFileGrpId" value="${tagInfo.supTagFlAttId1}">
                   </td>
                 </tr>
                 <tr>
@@ -572,13 +577,13 @@
           </colgroup>
           <tbody>
             <tr>
-              <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">**</span></th>
               <td colspan="3">
                 <select class="select w100p" id="inchgDeptList" name="inchgDeptList" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
                 <c:forEach var="list" items="${inchgDept}" varStatus="status">
                   <c:choose>
-                    <c:when test="${list.codeId=='MD103'}"> <!-- DEFAULT BEREX -->
+                    <c:when test="${list.codeId=='MD20'}">
                       <option value="${list.codeId}" selected>${list.codeName}</option>
                     </c:when>
                     <c:otherwise>
@@ -590,11 +595,11 @@
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="service.grid.subDept" /></th>
               <td colspan="3"><select id='ddlSubDeptUpd' name='ddlSubDeptUpd' class="w100p"></select></td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code="supplement.text.supplementTagStus" /><span class="must">*</span></th>
+              <th scope="row"><spring:message code="supplement.text.supplementTagStus" /><span class="must">**</span></th>
               <td colspan="3">
                 <select class="select w100p" id="tagStusPop" name=""tagStusPop"">
                   <option value="">Choose One</option>

@@ -164,11 +164,19 @@
         </td>
         <!-- <th scope="row"><spring:message code="sal.text.appType" /></th>
         <td>${orderInfo.supApplTyp}</td> -->
-        <th scope="row"><spring:message
-            code="supplement.text.supplementTotalAmount" /></th>
+        <th scope="row"><spring:message code="supplement.text.supplementTotalAmount" /></th>
         <td>${orderInfo.supTtlAmt}</td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row"><spring:message code="supplement.text.isRefund" /></th>
+        <td>
+          <c:choose>
+            <c:when test="${orderInfo.isRefund=='Y'}">
+              <input type="checkbox" value="Y" id="isRefund" name="isRefund" checked disabled/>
+            </c:when>
+            <c:otherwise>
+              <input type="checkbox" value="Y" id="isRefund" name="isRefund" disabled/>
+            </c:otherwise>
+          </c:choose>
+        </td>
       </tr>
       <tr>
         <th scope="row"><spring:message code="sal.text.createDate" /></th>

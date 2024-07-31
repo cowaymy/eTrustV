@@ -178,12 +178,6 @@
           editable : false
         },
         {
-          dataField : "tagRegisterDt",
-          headerText : '<spring:message code="supplement.text.supplementTagRegisterDt" />',
-          width : '10%',
-          editable : false
-        },
-        {
           dataField : "tagStatusId",
           headerText : '',
           width : 100,
@@ -193,6 +187,30 @@
         {
           dataField : "tagStatus",
           headerText : '<spring:message code="supplement.text.supplementTagStus" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "tagRegisterDt",
+          headerText : '<spring:message code="supplement.text.supplementTagRegisterDt" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "tagRegisterBy",
+          headerText : '<spring:message code="supplement.text.supplementTagRegisterBy" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "tagUpdDt",
+          headerText : '<spring:message code="supplement.text.supplementTagUpdateDt" />',
+          width : '10%',
+          editable : false
+        },
+        {
+          dataField : "tagUpdBy",
+          headerText : '<spring:message code="supplement.text.supplementTagUpdateBy" />',
           width : '10%',
           editable : false
         },
@@ -231,7 +249,8 @@
       useGroupingPanel : false,
       skipReadonlyColumns : true,
       wrapSelectionMove : true,
-      showRowNumColumn : true
+      showRowNumColumn : true,
+      fixedColumnCount : 7
     };
 
     tagGridID = GridCommon.createAUIGrid("#tag_grid_wrap", posColumnLayout, '', gridPros);
@@ -324,7 +343,7 @@
   }
 
   function fn_callbackSubDept() {
-    $("#ddSubDept").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
+    //$("#ddSubDept").val('SD1003'); // DEFAULT FOOD SUPPLEMENT
   }
 
   function fn_descCheck(ind) {
@@ -492,14 +511,14 @@
               <select class="select w100p" id="inchgDept" name="inchgDept" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
                 <c:forEach var="list" items="${inchgDept}" varStatus="status">
-                  <c:choose>
-                    <c:when test="${list.codeId=='MD103'}"> <!-- DEFAULT BEREX -->
+                  <!-- <c:choose>
+                    <c:when test="${list.codeId=='MD103'}">
                       <option value="${list.codeId}" selected>${list.codeName}</option>
                     </c:when>
-                    <c:otherwise>
+                    <c:otherwise> -->
                       <option value="${list.codeId}">${list.codeName}</option>
-                    </c:otherwise>
-                  </c:choose>
+                    <!-- </c:otherwise>
+                  </c:choose> -->
                 </c:forEach>
               </select>
             </td>

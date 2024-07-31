@@ -125,11 +125,11 @@
       isValid = false;
       msgLabel = "<spring:message code='service.text.InChrDept' />";
       msg += "<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>";
-    } else if( null == $("#ddlSubDept").val() || '' == $("#ddlSubDept").val()){
+    } /* else if( null == $("#ddlSubDept").val() || '' == $("#ddlSubDept").val()){
       isValid = false;
       msgLabel = "<spring:message code='service.grid.subDept' />";
       msg += "<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>";
-    }
+    }*/
 
     if (!isValid)
       Common.alert("<spring:message code='supplement.text.tagTicketSuccCreate' />"+ DEFAULT_DELIMITER + "<b>" + msg + "</b>");
@@ -370,7 +370,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row"><spring:message code='supplement.text.supplementReferenceNo' /><span class="must">*</span></th>
+          <th scope="row"><spring:message code='supplement.text.supplementReferenceNo' /><span class="must">**</span></th>
           <td>
             <input type="text" title="" placeholder="Order No." class="" id="entry_supRefNo" name="entry_supRefNo" />
             <p class="btn_sky">
@@ -412,7 +412,7 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.supplementMainTopicInquiry" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="supplement.text.supplementMainTopicInquiry" /><span class="must">**</span></th>
             <td>
               <select class="select w100p" id="mainTopicList" name="mainTopicList" onChange="fn_mainTopic_SelectedIndexChanged()">
                 <option value="">Choose One</option>
@@ -428,13 +428,13 @@
                 </c:forEach>
               </select>
             </td>
-            <th scope="row"><spring:message code="supplement.text.supplementSubTopicInquiry" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="supplement.text.supplementSubTopicInquiry" /><span class="must">**</span></th>
             <td>
               <select id='ddlSubTopic' name='ddlSubTopic' class="w100p" onchange="fn_attachment(this)"></select>
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="service.text.InChrDept" /><span class="must">**</span></th>
             <td>
               <select class="select w100p" id="inchgDeptList" name="inchgDeptList" onChange="fn_inchgDept_SelectedIndexChanged()">
                 <option value="">Choose One</option>
@@ -450,7 +450,7 @@
                 </c:forEach>
               </select>
             </td>
-            <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="service.grid.subDept" /></th>
             <td><select id='ddlSubDept' name='ddlSubDept' class="w100p"></select>
             </td>
           </tr>
