@@ -589,14 +589,13 @@ public class EpapanApiController {
 		}
 
 	  @ApiOperation(value = "insertCustomerAddressInfoAf", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	  @RequestMapping(value = "/insertCustomerAddressInfoAf")
-	  public ResponseEntity<ReturnMessage> insertCustomerAddressInfoAf(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+	  @RequestMapping(value = "/insertCustomerAddressInfoAf", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> insertCustomerAddressInfoAf(@RequestBody EpapanApiMagicAddressForm param) throws Exception {
 
-		EpapanApiMagicAddressForm.createMap(param).put("custId", EpapanApiMagicAddressForm.createMap(param).get("insCustId"));
 
 	    int custAddrExist = customerService.selectCustomerAddressJsonList(EpapanApiMagicAddressForm.createMap(param)).size();
 
-	    EpapanApiMagicAddressForm.createMap(param).put("stusId", custAddrExist < 1 ? 9 : 1);
+	    param.setStusId( custAddrExist < 1 ? "9" : "1");
 	    int custAddId = customerService.insertCustomerAddressInfoAf(EpapanApiMagicAddressForm.createMap(param));
 
 	    ReturnMessage message = new ReturnMessage();
