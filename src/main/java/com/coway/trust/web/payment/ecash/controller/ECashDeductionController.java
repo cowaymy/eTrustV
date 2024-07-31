@@ -501,7 +501,9 @@ public class ECashDeductionController {
 
                     if (pageCnt > 0){
                       for(int i = 1 ; i <= pageCnt ; i++){
+                    	int customBatchNo = 600 + i;
                         claimMap.put("pageNo", i);
+                        claimMap.put("batchNoCount", customBatchNo);
                         claimMap.put("rowCount", 60000);
                         claimMap.put("batchNo", totBatToday);
                         claimMap.put("pageCnt", pageCnt);
@@ -1345,7 +1347,7 @@ public class ECashDeductionController {
           String inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
           String subPath =  claimMap.get("subPath").toString() + inputDate + "/";
 
-          String sFile = claimMap.get("batchName").toString().replace("{0}", "_" + claimMap.get("pageNo").toString());
+          String sFile = claimMap.get("batchName").toString().replace("{0}", "_" + claimMap.get("batchNoCount").toString());
 
           LOGGER.debug("sFile PARAM : {}", sFile);
           downloadHandler = getTextDownloadHSBCGrpHandler(sFile, claimFileColumns, null, filePath, subPath , claimMap);

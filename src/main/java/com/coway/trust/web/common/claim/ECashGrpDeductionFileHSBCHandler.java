@@ -112,6 +112,11 @@ public class ECashGrpDeductionFileHSBCHandler extends BasicTextDownloadHandler
 						strData = this.hundredValueProcess(headerConf, strData);
 					}
 
+					//Manual Config for batch Number to start at 600 and above
+					if(CommonUtils.nvl(headerConf.get("ctrlDat")).toString().trim().equals("{pageno}")){
+ 						strData =	CommonUtils.nvl((Integer.parseInt(strData) + 600));
+					}
+
 					strData = this.dataProcessor(headerConf, strData);
 					strHeader += strData;
 				}
