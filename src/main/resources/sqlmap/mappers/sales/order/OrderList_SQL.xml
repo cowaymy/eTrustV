@@ -2057,7 +2057,7 @@
 		                , T2.CTRL_IS_CRC CTRL_IS_CRC
                         , CASE
                                 WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success'
-                                ELSE GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
+                                ELSE FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
                           END CODE_NAME
 		                , LPAD(SUBSTR(T4.CUST_ORI_CRC_NO,-4),LENGTH(T4.CUST_ORI_CRC_NO),'*') CUST_ACC_NO
 		                , TO_CHAR(TO_DATE(T4.CUST_CRC_EXPR,'MM/YY'),'MM/YY') AS EXP_DT
@@ -2092,7 +2092,7 @@
 				        , T2.CTRL_IS_CRC CTRL_IS_CRC
                         , CASE
                                 WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success'
-                                ELSE GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
+                                ELSE FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1)
                           END CODE_NAME
 				        , LPAD(SUBSTR(T4.CUST_ORI_CRC_NO,-4),LENGTH(T4.CUST_ORI_CRC_NO),'*') CUST_ACC_NO
 				        , TO_CHAR(TO_DATE(T4.CUST_CRC_EXPR,'MM/YY'),'MM/YY') AS EXP_DT
