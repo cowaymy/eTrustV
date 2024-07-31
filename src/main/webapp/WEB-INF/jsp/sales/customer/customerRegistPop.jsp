@@ -1247,7 +1247,7 @@
             </td>
             <th scope="row" id="tinTitle"><spring:message code="sal.title.text.tin" /></th>
             <td>
-                <input type="text" title="" id="_tin_" name="tin" maxlength="14" placeholder="TIN" class="w100p" />
+                <input type="text" title="" id="_tin_" name="tin" maxlength="14" placeholder="TIN" class="w100p" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)"/>
             </td>
         </tr>
         <tr>
