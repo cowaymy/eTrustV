@@ -526,4 +526,13 @@
 		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
 		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
     </select>
+
+    <select id="getEInvStrDt" resultType="EgovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'BILLING'
+        AND DISB = '0'
+        AND PARAM_CODE = 'E_INV_STR_DT'
+    </select>
 </mapper>

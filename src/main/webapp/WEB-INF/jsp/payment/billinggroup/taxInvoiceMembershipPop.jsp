@@ -65,6 +65,46 @@ function fn_getTaxInvoiceListAjax() {
     });
 }
 
+function fn_generateEInvoice(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+    if (selectedItem[0] > -1){
+        //report form에 parameter 세팅
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+        var salesOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "salesOrdNo");
+        var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt");
+        var reportDownFileName = "";
+        var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv");
+
+        if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV.rpt');
+	        $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));
+	        $("#reportPDFForm #v_invoiceType").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType"));
+	        $("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo"));
+
+	        var InvoiceDate = new Date(taxInvcRefDt);
+	        var Day = (InvoiceDate.getDate() < 10) ? ('0' + InvoiceDate.getDate()):InvoiceDate.getDate();
+	        var Month = InvoiceDate.getMonth() + 1;
+	        Month = (Month < 10) ? ('0' + Month) : Month;
+
+	        reportDownFileName = 'PUBLIC_eInvoice_' + salesOrdNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
+	        $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
+
+	        //report 호출
+	        var option = {
+	            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	        };
+
+	        Common.report("reportPDFForm", option);
+        }else{
+        	Common.alert("E-Invoice will not be generated before 01/08/2024.");
+        }
+
+    }else{
+        Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+    }
+}
 
 //크리스탈 레포트
 function fn_generateInvoice(){
@@ -77,18 +117,13 @@ function fn_generateInvoice(){
         var salesOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "salesOrdNo"); //Added by keyi 20211013
         var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
         var reportDownFileName = ""; //Added by keyi 20211013
-        var genEInv = AUIGrid.getCellValue(myGridID,selectedGridValue, "genEInv"); //Added for e-Invoice
 
-        if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-        	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_EIV.rpt');
+        if(parseInt(year)*100 + parseInt(month) >= 202404){
+        	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_3.rpt');
+        }else if(parseInt(year)*100 + parseInt(month) >= 201809){
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
         }else{
-	        if(parseInt(year)*100 + parseInt(month) >= 202404){
-	        	  $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_3.rpt');
-	        }else if(parseInt(year)*100 + parseInt(month) >= 201809){
-	            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
-	        }else{
-	            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
-	        }
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
         }
 
         $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));
@@ -134,6 +169,7 @@ function fn_clear(){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateEInvoice();">Generate E-Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>

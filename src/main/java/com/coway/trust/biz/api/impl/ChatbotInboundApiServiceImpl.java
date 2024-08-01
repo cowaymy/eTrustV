@@ -448,6 +448,31 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     				String day = invcDtSplit[0];
     				String invcDay = String.format("%02d", Integer.valueOf(day));
 
+    				// Check E-Invoice
+    				boolean getEInv = false;
+
+    			    EgovMap eInvResult = chatbotInboundApiMapper.checkRenEInv(invoiceDet);
+
+    			    if(eInvResult != null){
+    			    	String result = eInvResult.get("genEInv").toString();
+    			    	 int year = Integer.parseInt(eInvResult.get("year").toString()) * 100;
+    			    	 int month = Integer.parseInt(eInvResult.get("month").toString());
+
+    			    	 int eInvStrDt = Integer.parseInt(chatbotInboundApiMapper.getEInvStrDt().get("paramVal").toString());
+
+    			    	 if(result.equals("Y") && (year + month >= eInvStrDt)){ // will not send eInvoice through E-statement due to 08/24 undergo Pilot test
+    			    		 getEInv = true;
+    			    	 }
+    			    }
+
+    			    if(getEInv == true){
+    			    	emailReqParam.put("rptName", "/statement/TaxInvoice_Rental_PDF_JOMPAY_EIV.rpt");
+        				emailReqParam.put("fileName", "eInvoice_"+ params.get("orderNo").toString() + "_InvoiceDate(" + invcDay + requestMonth + requestYear + ").pdf");
+    			    }else{
+    			    	emailReqParam.put("rptName", "/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt");
+        				emailReqParam.put("fileName", "TaxInvoice_"+ params.get("orderNo").toString() + "_InvoiceDate(" + invcDay + requestMonth + requestYear + ").pdf");
+    			    }
+
     				rptParam.put("v_referenceID", invoiceDet.get("stateId"));
     				rptParam.put("v_taskId", "1");
     				rptParam.put("v_refMonth", "1");
@@ -456,8 +481,7 @@ public class ChatbotInboundApiServiceImpl extends EgovAbstractServiceImpl implem
     				rptParam.put("date", monthName + " " + String.valueOf(requestYear));
     				rptParam.put("requestNameType", "INVOICE");
     				rptParam.put("custEmail", params.get("custEmailAdd").toString());
-    				emailReqParam.put("rptName", "/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt");
-    				emailReqParam.put("fileName", "TaxInvoice_"+ params.get("orderNo").toString() + "_InvoiceDate(" + invcDay + requestMonth + requestYear + ").pdf");
+
     			}else if(reqParameter.getStatementType() == 3){//Ledger
     				Map<String, Object> ledgerParam = new HashMap<String, Object>();
     				ledgerParam.put("ordId", params.get("orderId"));

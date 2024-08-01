@@ -359,4 +359,25 @@
 <!-- 		FETCH FIRST ROWS ONLY -->
 <!--     </select> -->
 
+
+    <select id="checkRenEInv" resultType="EgovMap">
+        SELECT
+            CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'YYYY')) AS year
+        FROM PAY0029D A
+        LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+        WHERE A.TAX_INVC_ID = #{stateId}
+    </select>
+
+    <select id="getEInvStrDt" resultType="EgovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'BILLING'
+        AND DISB = '0'
+        AND PARAM_CODE = 'E_INV_STR_DT'
+    </select>
 </mapper>

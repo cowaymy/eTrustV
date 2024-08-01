@@ -66,5 +66,6 @@ public interface ApiMapper {
   EgovMap checkRenEInv(Map<String, Object> params);
   EgovMap checkOutEInv(Map<String, Object> params);
   EgovMap checkSvmEInv(Map<String, Object> params);
+  EgovMap getEInvStrDt();
 
 }

@@ -30,4 +30,7 @@ public interface ChatbotInboundApiMapper {
 	EgovMap getRentalLastPayInfo(Map<String, Object> params);
 //	EgovMap getOutPlusLastPayInfo(Map<String, Object> params);
 //	EgovMap getOthersLastPayInfo(Map<String, Object> params);
+
+	EgovMap checkRenEInv(Map<String, Object> params);
+	EgovMap getEInvStrDt();
 }

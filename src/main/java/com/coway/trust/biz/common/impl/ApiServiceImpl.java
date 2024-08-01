@@ -445,4 +445,9 @@ public class ApiServiceImpl implements ApiService {
 	  return apiMapper.checkSvmEInv(params);
   }
 
+  @Override
+  public EgovMap getEInvStrDt() {
+	  return apiMapper.getEInvStrDt();
+  }
+
 }

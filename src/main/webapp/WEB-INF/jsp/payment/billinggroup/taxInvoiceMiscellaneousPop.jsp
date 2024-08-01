@@ -70,6 +70,100 @@ function fn_getTaxInvoiceListAjax() {
     });
 }
 
+function fn_generateEInvoice(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+    if (selectedItem[0] > -1){
+        //report form에 parameter 세팅
+        var taxInvcType = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType");             //taxInvoice Id
+        var taxInvcSvcNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"); //service No
+        var taxInvcRefNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo");               //br No. = invoiceNo
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+        var genEInv = AUIGrid.getCellValue(myGridID, selectedGridValue, "genEInv");
+        var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt");
+
+        if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
+	        switch (taxInvcType){
+	            case 117 : // HP REGISTER BR64
+	                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_EIV.rpt');
+	                break;
+	            case 118 : // AS BR62
+	                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_EIV.rpt');
+	                break;
+	            case 121 : // POS BR66 -- NO LONGER IN USE
+	                if( parseInt(year)*100 + parseInt(month) >= 201809){
+	                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF_SST.rpt');
+	                }
+	                else {
+	                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF.rpt');
+	                }
+	                break;
+	            case 122 : // ITEM BANK BR65
+	                if( parseInt(year)*100 + parseInt(month) >= 201809){
+	                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
+	                }
+	                else {
+	                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
+	                }
+	                break;
+	            case 123 : // WHOLESALE BR63
+	                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_EIV.rpt');
+	                break;
+	            case 124 : // PRODUCT LOST BR56
+	                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_EIV.rpt');
+	                break;
+	            case 125 : // EARLY TERMINATION BR52
+	                if(taxInvcSvcNo.indexOf('SCT') > -1){
+	                    if( parseInt(year)*100 + parseInt(month) >= 201809){
+	                        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF_SST.rpt');
+	                    }
+	                    else {
+	                        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF.rpt');
+	                    }
+	                }else{
+	                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_EIV.rpt');
+	                }
+	                break;
+	            case 142 : // POS BR68
+	                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_EIV.rpt');
+	                break;
+	            case 408 : // CARE SERVICE BR71
+	                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_EIV.rpt');
+	                break;
+	            case 440 : // COMPENSATION BR63
+	            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_EIV.rpt');
+	                break;
+	            default:
+	                break;
+	        }
+
+	        var InvoiceDate = new Date(taxInvcRefDt);
+	        var Day = (InvoiceDate.getDate() < 10) ? ('0' + InvoiceDate.getDate()):InvoiceDate.getDate();
+	        var Month = InvoiceDate.getMonth() + 1;
+	        Month = (Month < 10) ? ('0' + Month) : Month;
+
+	        reportDownFileName = 'PUBLIC_eInvoice_' + taxInvcSvcNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
+	        $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
+
+	        $("#reportPDFForm #v_serviceNo").val(taxInvcSvcNo);
+	        $("#reportPDFForm #v_invoiceType").val(taxInvcType);
+
+	        //report 호출
+	        var option = {
+	                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	        };
+
+	        Common.report("reportPDFForm", option);
+
+        }else{
+        	Common.alert("E-Invoice will not be generated before 01/08/2024.");
+        }
+    }else{
+        Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+    }
+}
+
 
 //크리스탈 레포트
 function fn_generateInvoice(){
@@ -82,37 +176,28 @@ function fn_generateInvoice(){
         var taxInvcRefNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo");               //br No. = invoiceNo
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
-        var genEInv = AUIGrid.getCellValue(myGridID, selectedGridValue, "genEInv");
 
         var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt");  //Added by keyi 20211013
 
         switch (taxInvcType){
             case 117 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_EIV.rpt');
-            	}else{
-            		 if( parseInt(year)*100 + parseInt(month) >= 201809){
-                         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_SST.rpt');
-                     }
-                     else {
-                         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF.rpt');
-                     }
-            	}
+           		 if( parseInt(year)*100 + parseInt(month) >= 201809){
+                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_SST.rpt');
+                 }
+                 else {
+                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF.rpt');
+                 }
                 break;
             case 118 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_EIV.rpt');
-            	}else{
-            		 if( parseInt(year)*100 + parseInt(month) >= 202403){
-                         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
-                     }
-                     else if( parseInt(year)*100 + parseInt(month) >= 201809){
-                         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
-                     }
-                     else {
-                         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF.rpt');
-                     }
-            	}
+           		 if( parseInt(year)*100 + parseInt(month) >= 202403){
+                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST_202404.rpt');
+                 }
+                 else if( parseInt(year)*100 + parseInt(month) >= 201809){
+                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+                 }
+                 else {
+                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF.rpt');
+                 }
                 break;
             case 121 :
                 if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -131,31 +216,23 @@ function fn_generateInvoice(){
                 }
                 break;
             case 123 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_EIV.rpt');
-                }else{
-	                if( parseInt(year)*100 + parseInt(month) >= 202405){
-	                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST_202406.rpt');
-	                }
-	                else if( parseInt(year)*100 + parseInt(month) >= 201809){
-	                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
-	                }
-	                else {
-	                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF.rpt');
-	                }
+                if( parseInt(year)*100 + parseInt(month) >= 202405){
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST_202406.rpt');
+                }
+                else if( parseInt(year)*100 + parseInt(month) >= 201809){
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
+                }
+                else {
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF.rpt');
                 }
                 break;
             case 124 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_EIV.rpt');
-            	}else{
-	                if( parseInt(year)*100 + parseInt(month) >= 201809){
-	                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_SST.rpt');
-	                }
-	                else {
-	                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF.rpt');
-	                }
-            	}
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_SST.rpt');
+                }
+                else {
+                	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF.rpt');
+                }
                 break;
             case 125 :
                 if(taxInvcSvcNo.indexOf('SCT') > -1){
@@ -167,38 +244,26 @@ function fn_generateInvoice(){
                     }
                 }else{
 
-                	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-                		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_EIV.rpt');
-                	}else{
-	                    if( parseInt(year)*100 + parseInt(month) >= 201809){
-                   		    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_SST.rpt');
-	                    }
-	                    else {
-	                    	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF.rpt');
-	                    }
-                	}
+                    if( parseInt(year)*100 + parseInt(month) >= 201809){
+                  		    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_SST.rpt');
+                    }
+                    else {
+                    	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF.rpt');
+                    }
                 }
                 break;
             case 142 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_EIV.rpt');
-            	}else{
-            		  if( parseInt(year)*100 + parseInt(month) >= 201809){
-                          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
-                      }
-                      else {
-                          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
-                      }
-            	}
+            	if( parseInt(year)*100 + parseInt(month) >= 201809){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
+                }
+                else {
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
+                }
                 break;
             case 408 :
-            	if(genEInv == "Y" && (parseInt(year) * 100 + parseInt(month) >= 202408)){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_EIV.rpt');
-            	}else{
-            		  if( parseInt(year)*100 + parseInt(month) >= 201809){
-                          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
-                      }
-            	}
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
+                }
             	break;
             // Added for differentiate Compensation vs Wholesales Invoice type by Hui Ding, 01/11/2019
             case 440 :
@@ -258,6 +323,7 @@ function fn_clear(){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateEInvoice();">Generate E-Invoice</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
