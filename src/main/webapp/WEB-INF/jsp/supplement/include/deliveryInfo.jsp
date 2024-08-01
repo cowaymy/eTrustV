@@ -72,7 +72,6 @@
     var delRcdGridPros = {
       usePaging : true,
       pageRowCount : 10,
-      fixedColumnCount : 1,
       showStateColumn : true,
       displayTreeOpen : false,
       headerHeight : 30,
@@ -90,12 +89,12 @@
     var canColumnLayout = [ {
       dataField : "delDt",
       headerText : "<spring:message code='log.head.deliverydate'/>",
-      width : '20%',
+      width : '25%',
       editable : false
     }, {
       dataField : "delStus",
       headerText : "<spring:message code='supplement.text.delStat'/>",
-      width : '30%',
+      width : '25%',
       editable : false
     }, {
       dataField : "delLoc",
@@ -112,7 +111,6 @@
     var canDelRcdGridPros = {
       usePaging : true,
       pageRowCount : 10,
-      fixedColumnCount : 1,
       showStateColumn : true,
       displayTreeOpen : false,
       headerHeight : 30,

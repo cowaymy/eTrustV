@@ -55,7 +55,9 @@
     }, {
       headerText : '<spring:message code="sal.text.totAmt" />',
       dataField : "totAmt",
-      width : "15%"
+      width : "15%",
+      dataType : "numeric",
+      formatString : "#,##0.00"
     } ];
 
     payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);

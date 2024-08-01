@@ -288,6 +288,11 @@ var orderGridID;
                                                width : '5%',
                                                visible : false
                                            }, {
+                                               dataField : "rtnMode",
+                                               headerText : 'Return Mode',
+                                               width : '5%',
+                                               visible : false
+                                           }, {
                                                dataField : "isMult",
                                                headerText : 'IsMult',
                                                width : '5%',

@@ -638,7 +638,7 @@
           if (totalValid > 0) {
             Common.ajax( "GET", "/supplement/payment/saveConfirmBatch.do", { "batchId" : batchId },
               function(result) {
-                fn_confirmBatchPopup();
+                //fn_confirmBatchPopup();
                 $('#btnConf').hide();
                 $('#btnDeactivate').hide();
                 Common.alert(result.message);
@@ -703,7 +703,7 @@
           }
 
           Common.alert(message, function() {
-            hideViewPopup('#upload_wrap');
+            hideViewPopup('#upload_popup_wrap');
           });
         });
   }
