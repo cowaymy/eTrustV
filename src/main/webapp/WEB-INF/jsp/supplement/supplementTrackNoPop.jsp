@@ -66,6 +66,10 @@
     $("#_systemClose").click();
   }
 
+  function fn_trimInput(obj) {
+    obj.value = obj.value.trim();
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <input type="hidden" id="_infoParcelTrackNo" value="${orderInfo.parcelTrackNo}">
@@ -131,7 +135,7 @@
         <tr>
           <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /><span class="must">*</span></th>
           <td colspan='3'>
-            <input type="text" title="" class="w100p" name="parcelTrackNo" id="parcelTrackNo" maxlength="20"/>
+            <input type="text" title="" class="w100p" name="parcelTrackNo" id="parcelTrackNo" maxlength="20" onblur="fn_trimInput(this)"/>
           </td>
         </tr>
         </br>
