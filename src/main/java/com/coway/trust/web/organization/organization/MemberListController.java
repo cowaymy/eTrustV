@@ -2096,7 +2096,7 @@ public class MemberListController {
 			emailNo.add(CommonUtils.nvl(params.get("recipient")));
 		}
     	
-    	String path = "organization/agreementListing.do";
+    	String path = "organization/agreementListing.do?MemberID=" + params.get("MemberID");
     	String url = ehpAgreementUrlDomains + path;
     	
     	params.put(EMAIL_URL, url);
