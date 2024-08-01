@@ -2,6 +2,7 @@ package com.coway.trust.web.organization.organization;
 
 import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
 import static com.coway.trust.AppConstants.EMAIL_TO;
+import static com.coway.trust.AppConstants.EMAIL_URL;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -145,6 +146,9 @@ public class MemberListController {
 
 	@Value("${pdf.password}")
 	private String pdfPassword;
+	
+	@Value("${ehp.agreement.email.webUrl.domains}")
+	 private String ehpAgreementUrlDomains;
 
 	@Resource(name = "ssoLoginService")
 	  private SsoLoginService ssoLoginService;
@@ -2092,6 +2096,10 @@ public class MemberListController {
 			emailNo.add(CommonUtils.nvl(params.get("recipient")));
 		}
     	
+    	String path = "organization/agreementListing.do";
+    	String url = ehpAgreementUrlDomains + path;
+    	
+    	params.put(EMAIL_URL, url);
 		params.put(EMAIL_SUBJECT, emailSubject);
 		params.put(EMAIL_TO, emailNo);
 		

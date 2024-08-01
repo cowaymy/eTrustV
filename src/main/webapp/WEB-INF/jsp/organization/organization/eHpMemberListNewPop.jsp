@@ -156,7 +156,7 @@ function fn_memberSave(){
                                 var url = "https://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient,password:'true'}, function(result) {
+                                Common.ajax("GET", "/organization/sendEmail.do", {recipient:recipient,password:'true'}, function(result) {
                                     console.log("email.");
                                     console.log(result);
                                 })

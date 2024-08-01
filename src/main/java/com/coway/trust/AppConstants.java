@@ -129,6 +129,7 @@ public class AppConstants {
 	public static final String EMAIL_SUBJECT = "emailSubject";
 	public static final String EMAIL_TEXT = "emailText";
 	public static final String EMAIL_TO = "emailTo";
+	public static final String EMAIL_URL = "url";
 
 	/**
 	 * 5 hours
