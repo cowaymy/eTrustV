@@ -478,7 +478,7 @@
      [
           {headerText: 'Pre-CCP ID', dataField: 'preccpId' ,width:150},
           {headerText: 'Customer Name', dataField: 'custName', editable: false, width:250},
-          {headerText: 'Send SMS', width:100,
+          {headerText: 'Send WhatsApp', width:120,
               renderer: {
                 type: "TemplateRenderer",
              },
