@@ -86,7 +86,12 @@
                                                       headerText : '<spring:message code="supplement.text.eSOFno" />',
                                                       width : '8%',
                                                       editable : false
-                                                                                                                                        }, {
+                                                    }, {
+                                                      dataField : "supRefNo",
+                                                      headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
+                                                      width : '10%',
+                                                      editable : false
+                                                    }, {
                                                       dataField : "supSubmStus",
                                                       headerText : '<spring:message code="supplement.text.submissionStatus" />',
                                                       width : '8%',
@@ -103,23 +108,18 @@
                                                       width : '8%',
                                                       editable : false
                                                     }, {
-                                                      dataField : "supSubmBrnch",
-                                                      headerText : '<spring:message code="supplement.text.submissionBranch" />',
-                                                      width : '8%',
-                                                      editable : false
-                                                    }, {
                                                       dataField : "custName",
                                                       headerText : '<spring:message code="sal.text.custName" />',
-                                                      width : '8%',
+                                                      width : '15%',
                                                       editable : false
                                                     }, {
-                                                      dataField : "supRefNo",
-                                                      headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
+                                                      dataField : "supSubmBrnch",
+                                                      headerText : '<spring:message code="supplement.text.submissionBranch" />',
                                                       width : '15%',
                                                       editable : false
                                                     }, {
                                                       dataField : "memCode",
-                                                      headerText : '<spring:message code="sal.title.text.salesman" />',
+                                                      headerText : '<spring:message code="sal.text.salManCode" />',
                                                       width : '8%',
                                                       editable : false
                                                     }, {
@@ -155,7 +155,7 @@
     var gridPros = {
       usePaging : true,
       pageRowCount : 10,
-      fixedColumnCount : 1,
+      fixedColumnCount : 4,
       showStateColumn : true,
       displayTreeOpen : false,
       headerHeight : 30,
@@ -279,7 +279,7 @@
                                              editable : false
                                            }, {
                                              dataField : "memCode",
-                                             headerText : '<spring:message code="sal.title.text.salesman" />',
+                                             headerText : '<spring:message code="sal.text.salManCode" />',
                                              width : 200,
                                              editable : false
                                            }, {
@@ -739,7 +739,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.submissionDate" /></th>
+            <th scope="row"><spring:message code="supplement.text.submissionDate" /><span class="must">*</span></th>
             <td>
               <div class="date_set w100p">
                 <p>
@@ -761,7 +761,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="supplement.text.eSOFno" /></th>
+            <th scope="row"><spring:message code="supplement.text.eSOFno" /><span class="must">*</span></th>
             <td>
               <input id="eSOFNo" name="eSOFNo" type="text" title="" placeholder="eSOF No" class="w100p" />
             </td>
