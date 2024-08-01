@@ -120,7 +120,7 @@
     <table class="type1">
       <caption>table</caption>
       <colgroup>
-        <col style="width: 180px" />
+        <col style="width: 250px" />
         <col style="width: *" />
         <col style="width: 180px" />
         <col style="width: *" />
@@ -133,7 +133,7 @@
           </td>
         </tr>
         <tr>
-          <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /><span class="must">*</span></th>
+          <th scope="row"><spring:message code="supplement.text.parcelTrackingNo" /><span class="must">**</span></th>
           <td colspan='3'>
             <input type="text" title="" class="w100p" name="parcelTrackNo" id="parcelTrackNo" maxlength="20" onblur="fn_trimInput(this)"/>
           </td>

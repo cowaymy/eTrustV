@@ -154,14 +154,14 @@
     <table class="type1">
       <caption>table</caption>
       <colgroup>
-        <col style="width: 200px" />
+        <col style="width: 250px" />
         <col style="width: *" />
         <col style="width: 180px" />
         <col style="width: *" />
       </colgroup>
       <tbody>
         <tr>
-          <th scope="row"><spring:message code="supplement.text.supplementPrcRtnTrcNo" /><span class="must">*</span></th>
+          <th scope="row"><spring:message code="supplement.text.supplementPrcRtnTrcNo" /><span class="must">**</span></th>
           <td colspan='3'>
             <input type="text" title="" class="w100p" name="parcelRtnTrackNo" id="parcelRtnTrackNo" maxlength="20" onblur="fn_trimInput(this)"/>
           </td>
