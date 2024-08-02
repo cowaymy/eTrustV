@@ -2437,10 +2437,9 @@
                         , A.TO_LOC_ID                  -- TO CDC
                         , A.TRNSC_TYPE                 -- (HP)
                         , A.IO_TYPE
-               FROM LOG0099D A ) X
+               FROM LOG0099D A WHERE (A.DELVRY_NO = #{reqstNo} or A.REQST_NO = #{reqstNo})
+               ) X
     WHERE X.RN = 1
-        AND (X.DELVRY_NO = #{reqstNo} or X.REQST_NO = #{reqstNo})
-
         <if test="zIoType !=null and zIoType !=''">
           and X.IO_TYPE = #{zIoType}
         </if>
