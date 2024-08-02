@@ -287,7 +287,7 @@ public class SupplementManagementController {
   }
 
   @RequestMapping(value = "/updOrdDelStatDhl.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> updOrdDelStaDhlt(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws ParseException, IOException, JSONException {
+  public ResponseEntity<ReturnMessage> updOrdDelStaDhlt(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws Exception {
     ReturnMessage message = new ReturnMessage();
     // SET USER ID
     params.put("userId", sessionVO.getUserId());
