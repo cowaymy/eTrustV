@@ -768,6 +768,22 @@
 
   </select>
 
+  <select id="getOrdInfo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO
+    FROM SUP0001M A
+    WHERE 1=1
+
+     <if test=" null != ordNo and '' != ordNo">
+       AND A.SUP_REF_NO = #{ordNo}
+     </if>
+
+     <if test=" null != consNo and '' != consNo">
+       AND A.SUP_REF_PCL_TRKNO = #{consNo}
+     </if>
+
+  </select>
+
   <update id="updateDelLstDtl" parameterType="Map">
     UPDATE SUP0005D SET DEL_FLG = 'Y',
                                      UPD_USR_ID = #{userId},
@@ -954,4 +970,16 @@
     </if>
   </select>
 
+  <select id="getWhLocId" parameterType="String" resultType="Integer">
+    SELECT WH_LOC_ID
+    FROM SYS0028M
+    WHERE WH_LOC_CODE = #{params}
+        AND WH_LOC_STUS_ID = 1
+  </select>
+
+  <select id="SP_LOGISTIC_REQUEST_SUPP" parameterType="Map"  statementType="CALLABLE" >
+    {
+       call SP_LOGISTIC_REQUEST_SUPP( #{S_NO},#{RE_TYPE},#{P_LOC},#{P_TYPE},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+    }
+  </select>
 </mapper>
