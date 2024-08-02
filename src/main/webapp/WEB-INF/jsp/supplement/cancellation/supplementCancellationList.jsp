@@ -443,6 +443,10 @@
     Common.popupDiv("/supplement/supplementCustDelInfo.do",{ind : 'PDR'},null, true, '_insDiv');
   }
 
+  function fn_dailyOrderReport() {
+	Common.popupDiv("/supplement/supplementDailyOrderReportPop.do",{ind : 'CAN'},null, true, '_insDiv');
+  }
+
   function fn_popClose() {
     $("#_closeOrdPop").click();
     fn_getSupplementSubmissionList();
@@ -618,6 +622,13 @@
                 <li>
                   <p class="link_btn type2">
                     <a href="#" onclick="fn_custDelInfo()"><spring:message code='supplement.btn.custDelInfo'/></a>
+                  </p>
+                </li>
+              </c:if>
+              <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+                <li>
+                  <p class="link_btn type2">
+                    <a href="#" onclick="fn_dailyOrderReport()"><spring:message code='supplement.btn.dailyReportOrder'/></a>
                   </p>
                 </li>
               </c:if>

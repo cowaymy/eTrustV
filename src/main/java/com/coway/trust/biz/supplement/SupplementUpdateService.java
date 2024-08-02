@@ -64,4 +64,6 @@ public interface SupplementUpdateService {
 
   Map<String, Object> updateDelStageInfo( Map<String, Object> params ) throws JsonProcessingException, IOException;
 
+  List<EgovMap> selectSupplementDailyOrderReportList( Map<String, Object> params ) throws Exception;
+
 }

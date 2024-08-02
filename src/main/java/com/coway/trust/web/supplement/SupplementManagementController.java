@@ -357,4 +357,23 @@ public class SupplementManagementController {
     return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/supplementDailyOrderReportPop.do")
+  public String supplementDailyOrderReportPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    //LOGGER.debug( "params {}", params );
+    String bfDay = CommonUtils.changeFormat( CommonUtils.getCalDate( -30 ), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1 );
+    String toDay = CommonUtils.getFormattedString( SalesConstants.DEFAULT_DATE_FORMAT1 );
+    model.put( "bfDay", bfDay );
+    model.put( "toDay", toDay );
+    model.put( "ind", params.get("ind"));
+
+    return "supplement/supplementDailyOrderReportPop";
+  }
+
+  @RequestMapping(value = "/selectSupplementDailyOrderReportList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectSupplementDailyOrderReportList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    //LOGGER.debug( "params {}", params );
+    List<EgovMap> dailyOrderReport = supplementUpdateService.selectSupplementDailyOrderReportList(params);
+    return ResponseEntity.ok(dailyOrderReport);
+  }
+
 }

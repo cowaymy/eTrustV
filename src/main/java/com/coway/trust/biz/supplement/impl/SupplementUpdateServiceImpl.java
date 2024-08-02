@@ -658,4 +658,9 @@ public class SupplementUpdateServiceImpl
     return rtnMap;
   }
 
+  @Override
+  public List<EgovMap> selectSupplementDailyOrderReportList( Map<String, Object> params )
+    throws Exception {
+    return supplementUpdateMapper.selectSupplementDailyOrderReportList( params );
+  }
 }
