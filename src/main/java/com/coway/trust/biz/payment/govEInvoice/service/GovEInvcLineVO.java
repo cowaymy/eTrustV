@@ -79,6 +79,7 @@ public class GovEInvcLineVO {
     	taxSubTotal.setTaxAmount(taxSub_taxAmount);
     	taxSubTotal.setTaxableAmount(taxSub_taxableAmount);
     	taxSubTotal.setTaxCategory(taxSub_taxCategory);
+    	taxSubTotal.setPercent(mapValue.get("taxtotTaxsubPerc").toString());
     	taxSubTotalList.add(taxSubTotal);
     	TaxTotal.setTaxSubtotal(taxSubTotalList);
 
@@ -322,6 +323,7 @@ public class GovEInvcLineVO {
     	private AmountObject TaxableAmount;
     	private AmountObject TaxAmount;
     	private TaxCatObject TaxCategory;
+    	private String Percent;
 
 		public AmountObject getTaxableAmount() {
 			return TaxableAmount;
@@ -340,6 +342,12 @@ public class GovEInvcLineVO {
 		}
 		public void setTaxAmount(AmountObject taxAmount) {
 			TaxAmount = taxAmount;
+		}
+		public String getPercent() {
+			return Percent;
+		}
+		public void setPercent(String percent) {
+			Percent = percent;
 		}
 
     }

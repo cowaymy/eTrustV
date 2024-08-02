@@ -186,17 +186,10 @@ public class GovEInvcVO {
 	        taxSub_taxAmount.setCurrencyID("MYR");
 	        taxSub_taxAmount.setValue(mapValue.get("taxtotSubTaxVal")==null?"0.00":mapValue.get("taxtotSubTaxVal").toString());
 	        taxSubtotalObj.setTaxAmount(taxSub_taxAmount);
-	        taxSubtotalObj taxSubtotalObj_TaxSubtotal = new taxSubtotalObj();
-	        List<taxSubtotalObj> taxSubtotalObj_TaxSubtotalList = new ArrayList<>();
-	        AmountObject taxSub_taxSub_taxAmount = new AmountObject();
-	        taxSub_taxSub_taxAmount.setCurrencyID("MYR");
-	        taxSub_taxSub_taxAmount.setValue(mapValue.get("taxtotSubSubTaxVal")==null?"0.00":mapValue.get("taxtotSubSubTaxVal").toString());
-	        TaxCatObject taxSub_taxSub_taxCat = new TaxCatObject();
-	        taxSub_taxSub_taxCat.setId(mapValue.get("taxtotTaxAmt")==null?"06":"02");
-	        taxSubtotalObj_TaxSubtotal.setTaxAmount(taxSub_taxSub_taxAmount);
-	        taxSubtotalObj_TaxSubtotal.setTaxCategory(taxSub_taxSub_taxCat);
-	        taxSubtotalObj_TaxSubtotalList.add(taxSubtotalObj_TaxSubtotal);
-	        taxSubtotalObj.setTaxSubtotal(taxSubtotalObj_TaxSubtotalList);
+	        TaxCatObject taxSub_taxCat = new TaxCatObject();
+	        taxSub_taxCat.setId(mapValue.get("taxtotTaxAmt")==null?"06":"02");
+	        taxSubtotalObj.setTaxCategory(taxSub_taxCat);
+
 	        taxSubtotalObjList.add(taxSubtotalObj);
 	        TaxTotalList.setTaxSubtotal(taxSubtotalObjList);
 	        TaxTotal.add(TaxTotalList);
@@ -543,7 +536,8 @@ public class GovEInvcVO {
 	    public static class TaxSubtotal {
 	    	private AmountObject TaxableAmount;
 	    	private AmountObject TaxAmount;
-	    	private List<taxSubtotalObj> TaxSubtotal;
+	    	private TaxCatObject TaxCategory;
+//	    	private List<taxSubtotalObj> TaxSubtotal;
 
 			public AmountObject getTaxableAmount() {
 				return TaxableAmount;
@@ -557,11 +551,17 @@ public class GovEInvcVO {
 			public void setTaxAmount(AmountObject taxAmount) {
 				TaxAmount = taxAmount;
 			}
-			public List<taxSubtotalObj> getTaxSubtotal() {
-				return TaxSubtotal;
+//			public List<taxSubtotalObj> getTaxSubtotal() {
+//				return TaxSubtotal;
+//			}
+//			public void setTaxSubtotal(List<taxSubtotalObj> taxSubtotalObj) {
+//				TaxSubtotal = taxSubtotalObj;
+//			}
+			public TaxCatObject getTaxCategory() {
+				return TaxCategory;
 			}
-			public void setTaxSubtotal(List<taxSubtotalObj> taxSubtotalObj) {
-				TaxSubtotal = taxSubtotalObj;
+			public void setTaxCategory(TaxCatObject taxCategory) {
+				TaxCategory = taxCategory;
 			}
 	    }
 
