@@ -43,6 +43,10 @@ public interface SupplementUpdateMapper {
 
   Map<String, Object> getCustEmailDtl( Map<String, Object> params );
 
+  Map<String, Object> getOrdInfo( Map<String, Object> params );
+
+  int getWhLocId( String params );
+
   void updateDelLstDtl( Map<String, Object> params );
 
   void insertDelLstDtl( Map<String, Object> params );
@@ -70,4 +74,6 @@ public interface SupplementUpdateMapper {
   Map<String, Object> getOrdInfoPdo( Map<String, Object> param );
 
   Map<String, Object> getOrdInfoPdr( Map<String, Object> param );
+
+  Map<String, Object> SP_LOGISTIC_REQUEST_SUPP( Map<String, Object> param );
 }

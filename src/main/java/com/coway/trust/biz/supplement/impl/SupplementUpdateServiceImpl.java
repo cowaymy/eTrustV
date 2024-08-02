@@ -28,6 +28,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.supplement.impl.SupplementUpdateMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -284,7 +285,7 @@ public class SupplementUpdateServiceImpl
   @SuppressWarnings("unchecked")
   @Override
   public EgovMap updOrdDelStatDhl( Map<String, Object> params )
-    throws IOException, JSONException, ParseException {
+    throws Exception {
     if ( CommonUtils.nvl( params.get( "ordNo" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
@@ -348,6 +349,8 @@ public class SupplementUpdateServiceImpl
         this.insertDelDhlListing( dataValueMap );
         // ITEMS DELIVERED TO CUSTOMER ONLY FIRE EMAIL
         if ( dataValueMap.get( "latestEnumStatus" ).equals( "4" ) ) {
+          // STOCK COMPLETE CHARGE OUT
+          this.stockCompleteReceive(dataValueMap);
           // SEND EMAIL TO CUSTOMER
           Map<String, Object> custEmailDtl = supplementUpdateMapper.getCustEmailDtl( dataValueMap );
           if ( custEmailDtl == null ) {
@@ -372,6 +375,23 @@ public class SupplementUpdateServiceImpl
     message.put( "message", String.format( "Total records processed: %d, Successful: %d, Failed: %d", total, success,
                                            ( total - success ) ) );
     return message;
+  }
+
+  private void stockCompleteReceive( Map<String, Object> params ) throws Exception {
+    Map<String, Object> logPram = new HashMap<>();
+    Map<String, Object> ord = supplementUpdateMapper.getOrdInfo( params );
+    params.put( "supRefId", CommonUtils.nvl(ord.get( "supRefId" )) );
+    logPram.put( "S_NO", CommonUtils.nvl(ord.get( "supRefNo" ))  );
+    logPram.put( "RE_TYPE", "COMPLET" );
+    logPram.put( "P_LOC", CommonUtils.nvl(supplementUpdateMapper.getWhLocId(SalesConstants.SUPPLEMENT_WH_LOC_CODE)) ); // HQ Warehouse location id
+    logPram.put( "P_TYPE", "OD01" );
+    logPram.put( "P_USER", CommonUtils.intNvl( 349 ) );
+    supplementUpdateMapper.SP_LOGISTIC_REQUEST_SUPP( logPram );
+    if ( !"000".equals( logPram.get( "p1" ) ) ) {
+      throw new ApplicationException( AppConstants.FAIL,
+                                      "SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get( "p1" ) );
+      // throw new Exception("SP_LOGISTIC_REQUEST_SUPP - ERRCODE : " + logPram.get("p1"));
+    }
   }
 
   public void insertDelGdexListing( Map<String, Object> params )

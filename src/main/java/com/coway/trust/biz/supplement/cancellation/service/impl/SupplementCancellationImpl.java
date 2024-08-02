@@ -159,6 +159,7 @@ public class SupplementCancellationImpl
           + "Link: https://www.dhl.com/discover/en-my/ship-with-dhl/dhl-express-locations<br/>"
           + "Return code:" + CommonUtils.nvl( params.get( "parcelRtnTrackNo" ) ) +"<br/>"
           + "Ensure the package is in good condition before passing it to our courier partner.<br/>"
+          + "<b>Customer must hand over the return parcel to the delivery partner within five (5) working days upon receiving the return consignment number or note via email.</b><br/>"
           + "Your return package delivery fee is borne by Coway. Do not make any payment to our courier partner.<br/><br/>"
           + "Best Regards, <br/>"
           + "Coway <br/><br/>"
