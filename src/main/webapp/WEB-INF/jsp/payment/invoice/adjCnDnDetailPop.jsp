@@ -265,7 +265,7 @@ function fn_generateEReport(){
    	    }
 
     }else{
-    	Common.alert("E-Invoice will not be generated before 01/08/2024.");
+    	Common.alert("The selected invoice is not applicable for E-Invoice.");
     }
 }
 
