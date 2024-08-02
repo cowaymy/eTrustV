@@ -1163,7 +1163,7 @@
                 </tr>
 
                 <tr>
-                  <th scope="row"><spring:message code="supplement.text.photocopyOfNric" /><span class="must">**</span></th>
+                  <th scope="row"><spring:message code="supplement.text.photocopyOfNric" /></th>
                   <td>
                     <div class="auto_file2">
                       <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />

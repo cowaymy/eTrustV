@@ -652,7 +652,10 @@
    } */
 
   function fn_removeFile(name) {
-    if (name == "OTH") {
+    if (name == "NRIC") {
+      $("#nricFile").val("");
+      $('#nricFile').change();
+    } else  if (name == "OTH") {
       $("#otherFile").val("");
       $('#otherFile').change();
     } else if (name == "OTH2") {
@@ -920,10 +923,10 @@
       isValid = false;
       msg += '<spring:message code="supplement.alert.uploadSOF" />';
     }
-    if (FormUtil.isEmpty($('#nricFile').val().trim())) {
+    /*if (FormUtil.isEmpty($('#nricFile').val().trim())) {
       isValid = false;
       msg += '<spring:message code="supplement.alert.uploadNric" />';
-    }
+    }*/
 
     $.each(myFileCaches,
               function(i, j) {
@@ -1522,13 +1525,26 @@
                   </td>
                 </tr>
 
-                <tr>
+                <!-- <tr>
                   <th scope="row"><spring:message code="supplement.text.photocopyOfNric" /><span class="must">**</span></th>
                   <td>
                     <div class="auto_file2">
                       <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
                       <label>
                         <input type='text' class='input_text' readonly='readonly' /> <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'></span>
+                      </label>
+                    </div>
+                  </td>
+                </tr> -->
+
+                <tr>
+                  <th scope="row"><spring:message code="supplement.text.photocopyOfNric" /></th>
+                  <td>
+                    <div class="auto_file2">
+                      <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf" />
+                      <label>
+                        <input type='text' class='input_text' readonly='readonly' />
+                        <span class='label_text'> <a href='#'><spring:message code="sys.btn.upload" /></a></span> <span class='label_text'> <a href='#' onclick='fn_removeFile("NRIC")'><spring:message code="sys.btn.remove" /></a></span>
                       </label>
                     </div>
                   </td>
