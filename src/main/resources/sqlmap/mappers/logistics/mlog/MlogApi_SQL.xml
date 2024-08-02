@@ -2422,7 +2422,7 @@
   </select>
 
   <select id="selectSerialInfo" parameterType="Map" resultType="egovMap">
-    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectSerialInfo] - HLTANG */
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectSerialInfo]  */
     SELECT X.*
     FROM ( SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
                         , A.SERIAL_NO
@@ -2446,7 +2446,7 @@
   </select>
 
   <update id="updateDeliveryGrDetail" parameterType="Map">
-    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrDetail] - Huiling */
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrDetail]  */
     update LOG0099D set scan_stus_code = 'C'
     where Scan_no in ( select SCAN_NO from ( SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
                                                                           ,SCAN_NO
@@ -2467,7 +2467,7 @@
   </update>
 
   <update id="updateDeliveryGrMain" parameterType="Map">
-    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrMain] - Huiling */
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrMain]  */
     update LOG0100m set stus_code = #{ioType}
     WHERE
 
@@ -2482,7 +2482,7 @@
   </update>
 
   <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
-    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectDeliveryGrHist] - Huiling */
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectDeliveryGrHist]  */
     select * from ( SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
                                   ,SERIAL_NO
                                   ,SEQ
@@ -2502,7 +2502,7 @@
   </select>
 
   <update id="updateDeliveryGrHist" parameterType="Map">
-    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrHist] - Huiling */
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrHist]  */
     update LOG0101H set stus_code = #{ioType}
     WHERE serial_no = #{serialNo}
         AND SEQ = #{seq}
