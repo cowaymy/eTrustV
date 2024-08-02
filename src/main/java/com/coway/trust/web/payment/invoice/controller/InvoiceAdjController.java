@@ -1025,12 +1025,17 @@ public class InvoiceAdjController {
             //} else {
             EgovMap sstInfo = commonService.getSstRelatedInfo();
             double totalTaxes = 0.00;
-            if (Integer.parseInt(billItemTaxRate) > 0){
+            double itemCharges = 0.00;
+            itemCharges = itemAdjsutment;
+
+            if (Integer.parseInt(billItemTaxRate) > 0 && Integer.parseInt(billItemTaxRate) == 8){
             	totalTaxes = itemAdjsutment- (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate)));
+            	itemCharges = (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate)));
             	returnParam.put("memoItemTaxCodeID", sstInfo.get("codeId").toString());
             }
             returnParam.put("memoItemTaxes", totalTaxes);
-            returnParam.put("memoItemCharges", (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate))));
+            returnParam.put("memoItemCharges", itemCharges);
+            //returnParam.put("memoItemCharges", (itemAdjsutment * 100 / (100 + Integer.parseInt(billItemTaxRate)))); //to run reverse calculation only when taxrate = 8
             returnParam.put("memoItemAmount", (itemAdjsutment));
         	//returnParam.put("memoItemTaxes",0);
            // }

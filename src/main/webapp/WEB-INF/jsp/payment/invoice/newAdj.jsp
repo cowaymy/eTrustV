@@ -33,11 +33,11 @@
                 var taxRate = item.billitemtaxrate;
                 oriTaxRate = item.billitemtaxrate;
 
-                var newInvoiceDt = new Date(invoiceDt);
+                var newInvoiceDt = new Date(item.billitemtaxinvcdt);
                 var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
                 var newSstRate = 0;
 
-                if(newInvoiceDt < newSstStartDt && item.billitemtaxrate > 0){
+                if(newInvoiceDt < newSstStartDt && item.billitemtaxrate > 0 && item.billitemtaxrate != 8){
                 	taxRate = newSstRate;
                 }
 
@@ -49,10 +49,10 @@
 
                 var itemBillCharge = item.billitemcharges;
 
-                var newInvoiceDt = new Date(invoiceDt);
+                var newInvoiceDt = new Date(item.billitemtaxinvcdt);
                 var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
 
-                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0){
+                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0 && item.billitemtaxrate != 8){
                 	itemBillCharge = item.billitemamount;
                 }
 
@@ -65,11 +65,12 @@
 
                 var billItemTaxes = item.billitemtaxes;
 
-                var newInvoiceDt = new Date(invoiceDt);
+                var newInvoiceDt = new Date(item.billitemtaxinvcdt);
                 var newSstStartDt = new Date(2024, 3, 1); // mm minus 1 to achieve the date 01-04-2024 SST start date
                 var newBillItemTaxes = 0.00;
 
-                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0){
+                if(newInvoiceDt < newSstStartDt && oriTaxRate > 0 && item.billitemtaxrate != 8){
+                		billItemTaxes = 0;
                 	billItemTaxes = newBillItemTaxes;
                 }
 
