@@ -405,7 +405,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	  if(params.get("basicCustTin") != null && !params.get("basicCustTin").toString().equals("")) {
 			 /* || (params.get("isEInvoice") != null && params.get("isEInvoice") != "")*/
-			  if(!(params.get("basicCustTinOld") == null && params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))){
+			  if((params.get("basicCustTinOld") != null && !params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))){
 					  /*|| (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))*/
 				  int custTinId = customerMapper.getCustTinIdSeq();
 				  params.put("custTinId", custTinId);
