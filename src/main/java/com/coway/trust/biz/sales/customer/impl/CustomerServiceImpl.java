@@ -403,7 +403,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		  params.put("isEInvoice", 0);
 	  }*/
 
-	  if(!(params.get("basicCustTin") == null && params.get("basicCustTin").toString().equals(""))) {
+	  if(params.get("basicCustTin") != null && !params.get("basicCustTin").toString().equals("")) {
 			 /* || (params.get("isEInvoice") != null && params.get("isEInvoice") != "")*/
 			  if(!(params.get("basicCustTinOld") == null && params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))){
 					  /*|| (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))*/
