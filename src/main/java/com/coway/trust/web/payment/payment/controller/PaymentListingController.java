@@ -43,7 +43,7 @@ public class PaymentListingController {
 	 * Payment Listing
 	 *****************************************************/
 	/**
-	 * Payment Listing 초기화 화면
+	 * Payment Listing
 	 * @param params
 	 * @param model
 	 * @return
@@ -53,35 +53,29 @@ public class PaymentListingController {
 		return "payment/payment/paymentListing";
 	}
 
-
 	/**
-     * Payment Listing - 크리스탈 레포트 호출
+     * Payment Listing
      * @param params
      * @param model
      * @return
      * @RequestParam Map<String, Object> params
      */
     @RequestMapping(value = "/generateReportParam.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> generateReportParam(@RequestBody Map<String, Object> params,
-    		Model model,  HttpServletRequest request) {
-
-    	LOGGER.debug("params : {}",params);
+   public ResponseEntity<ReturnMessage> generateReportParam(@RequestBody Map<String, Object> params, 	Model model,  HttpServletRequest request) {
+    	LOGGER.debug("[PaymentListingController - generateReportParam] params : {}",params);
 
     	//Log down user search params
     	SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
     	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/initPaymentListing.do/");
-		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
+		  accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
 
-    	//레포트 표지에 보여질 데이터
     	String showPaymentDate = "";
     	String showKeyInBranch = "";
     	String showBatchID = "";
     	String showReceiptNo = "";
     	String showTRNo = "";
     	String showKeyInUser = "";
-
-    	//쿼리 조건절
     	String whereSQL = "";
     	int runNo = 0;
 
@@ -98,86 +92,84 @@ public class PaymentListingController {
     	}
 
     	if("2".equals(String.valueOf(params.get("paymentType")))){
-    		// 화면에서 같은 이름으로 파라미터를 넘기는 경우 처리.
-    		List<String> paymentItems = (List<String>) params.get("paymentItem");
-    		List<String> payTypeList = new ArrayList<String>();
+        		List<String> paymentItems = (List<String>) params.get("paymentItem");
+        		List<String> payTypeList = new ArrayList<String>();
 
-    		if(paymentItems != null && paymentItems.size() > 0){
-    			for (String classId : paymentItems) {
-    				this.getPayType(classId,payTypeList);
-    			}
-    		}
+        		if(paymentItems != null && paymentItems.size() > 0){
+        			for (String classId : paymentItems) {
+        				this.getPayType(classId,payTypeList);
+        			}
+        		}
 
-    		if(payTypeList.size() > 0){
-    			whereSQL += " AND pm.TYPE_ID IN (";
-    			for (String typeId : payTypeList) {
-    				  if (runNo > 0){
-    					  whereSQL += "," + typeId;
-    				  }else{
-                    	  whereSQL += typeId;
-    				  }
-    				  runNo = runNo + 1;
-    			}
-    			whereSQL += ") ";
-    		}
+        		if(payTypeList.size() > 0){
+        			whereSQL += " AND pm.TYPE_ID IN (";
+        			for (String typeId : payTypeList) {
+        				  if (runNo > 0){
+        					  whereSQL += "," + typeId;
+        				  }else{
+                      whereSQL += typeId;
+        				  }
+        				  runNo = runNo + 1;
+        			}
+        			whereSQL += ")";
+        		}
 
-    		if(paymentItems != null && paymentItems.size() > 0){
-    			if (paymentItems.size() > 1){
-    				if (!paymentItems.contains("1308")){
-    					whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL)  ";
-    				}
-    			} else {
-    				if (!"1308".equals(paymentItems.get(0))){
-    					whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL) ";
-    				}else if ("1308".equals(paymentItems.get(0))){
-    					whereSQL += " AND pm.SVC_CNTRCT_ID <> 0 ";
-    				}
-    			}
+        		if(paymentItems != null && paymentItems.size() > 0){
+            			if (paymentItems.size() > 1){
+              				if (!paymentItems.contains("1308")){
+              					whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL)  ";
+              				}
+            			} else {
+                				if (!"1308".equals(paymentItems.get(0))){
+                					 whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL) ";
+                				}else if ("1308".equals(paymentItems.get(0))){
+                					 whereSQL += " AND pm.SVC_CNTRCT_ID <> 0 ";
+                				}
+            			}
 
-				if (!paymentItems.contains("223")){
-					whereSQL += " ";
-				}
-			 else {
-				if (!"223".equals(paymentItems.get(0))){
-					whereSQL += " ";
-				}else if ("223".equals(paymentItems.get(0))){
-					whereSQL += " AND bill1.BILL_SO_ID NOT IN (SELECT SRV_ORD_ID FROM SAL0225D) ";
-				}
-			}
-    		}
-
+        				if (!paymentItems.contains("223")){
+        					whereSQL += " ";
+        				}
+        			  else {
+            				if (!"223".equals(paymentItems.get(0))){
+            					whereSQL += " ";
+            				}else if ("223".equals(paymentItems.get(0))){
+            					whereSQL += " AND bill1.BILL_SO_ID NOT IN (SELECT SRV_ORD_ID FROM SAL0225D) ";
+            				}
+        			  }
          }
+     }
 
     	if(!"".equals(String.valueOf(params.get("batchId")))){
-    		showBatchID = String.valueOf(params.get("batchId"));
+    		    showBatchID = String.valueOf(params.get("batchId"));
 
-    		if ("Payment".equals(String.valueOf(params.get("batchType")))){
-    			whereSQL += " AND pm.BATCH_PAY_ID = '" + params.get("batchId") + "' ";
+    		    if ("Payment".equals(String.valueOf(params.get("batchType")))){
+    		     	whereSQL += " AND pm.BATCH_PAY_ID = '" + params.get("batchId") + "' ";
             } else {
-            	whereSQL += " AND brd.BATCH_ID = '" + params.get("batchId") + "' ";
+            	//Fixed the unable to search batch id when batch type = batch refund with supplement batch refund payment
+              whereSQL += " AND (brd.BATCH_ID = '" + params.get("batchId") + "' OR supbrd.BATCH_ID = '"+ params.get("batchId") +"') ";
             }
     	}
 
     	if(!"".equals(String.valueOf(params.get("receiptNoFr"))) && !"".equals(String.valueOf(params.get("receiptNoTo")))){
         	showReceiptNo = params.get("receiptNoFr") + " To " + params.get("receiptNoTo");
         	whereSQL += "AND (pm.OR_NO BETWEEN '" + params.get("receiptNoFr") + "' AND '" + params.get("receiptNoTo") + "') ";
-        }
+      }
 
-        if (!"".equals(String.valueOf(params.get("trNoFr"))) && !"".equals(String.valueOf(params.get("trNoTo")))) {
-            showTRNo = params.get("trNoFr") + " To " + params.get("trNoTo");
-            whereSQL += "AND (pm.TR_NO BETWEEN '" + params.get("trNoFr") + "' AND '" + params.get("trNoTo") + "') ";
-        }
+      if (!"".equals(String.valueOf(params.get("trNoFr"))) && !"".equals(String.valueOf(params.get("trNoTo")))) {
+          showTRNo = params.get("trNoFr") + " To " + params.get("trNoTo");
+          whereSQL += "AND (pm.TR_NO BETWEEN '" + params.get("trNoFr") + "' AND '" + params.get("trNoTo") + "') ";
+      }
 
-        if (!"".equals(String.valueOf(params.get("collector")))) {
-        	whereSQL += " AND m.MEM_CODE = '" + params.get("collector") + "' ";
-        }
+      if (!"".equals(String.valueOf(params.get("collector")))) {
+      	whereSQL += " AND m.MEM_CODE = '" + params.get("collector") + "' ";
+      }
 
-        if (!"".equals(String.valueOf(params.get("userId")))) {
-            showKeyInUser = String.valueOf(params.get("userNm"));
-            whereSQL += "AND pm.CRT_USER_ID = " + params.get("userId") + " ";
-        }
+      if (!"".equals(String.valueOf(params.get("userId")))) {
+          showKeyInUser = String.valueOf(params.get("userNm"));
+          whereSQL += "AND pm.CRT_USER_ID = " + params.get("userId") + " ";
+      }
 
-    	//결과 데이터 만들기
     	Map<String, Object> returnMap = new HashMap<String,Object>();
     	returnMap.put("showPaymentDate", showPaymentDate);
     	returnMap.put("showKeyInBranch", showKeyInBranch);
@@ -188,14 +180,13 @@ public class PaymentListingController {
     	returnMap.put("docVal", String.valueOf(params.get("docVal")));
     	returnMap.put("whereSQL", whereSQL);
 
-        // 결과 만들기.
-        ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);
-        message.setData(returnMap);
-        message.setMessage("Saved Successfully");
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(returnMap);
+      message.setMessage("Saved Successfully");
 
-        return ResponseEntity.ok(message);
-    }
+      return ResponseEntity.ok(message);
+  }
 
 
 
