@@ -403,16 +403,16 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		  params.put("isEInvoice", 0);
 	  }*/
 
-	  if((params.get("basicCustTin").toString() != null && params.get("basicCustTin").toString() != "")
-			 /* || (params.get("isEInvoice") != null && params.get("isEInvoice") != "")*/ ) {
-			  if((params.get("basicCustTinOld").toString() != null && !params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))
-					  /*|| (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))*/	 ){
+	  if(!(params.get("basicCustTin") == null && params.get("basicCustTin").toString().equals(""))) {
+			 /* || (params.get("isEInvoice") != null && params.get("isEInvoice") != "")*/
+			  if(!(params.get("basicCustTinOld") == null && params.get("basicCustTin").toString().equals(params.get("basicCustTinOld").toString()))){
+					  /*|| (params.get("isEInvoice") != null && !params.get("isEInvoice").equals(params.get("isEInvoiceOld")))*/
 				  int custTinId = customerMapper.getCustTinIdSeq();
 				  params.put("custTinId", custTinId);
 				  customerMapper.updateCustomerTinStatus(params);
 				  customerMapper.insertCustomerTinId(params);
 			  }
-			  else if(params.get("basicCustTinOld").toString() == null) {
+			  else if(params.get("basicCustTinOld") == null || params.get("basicCustTinOld").toString().equals("")) {
 				  int custTinId = customerMapper.getCustTinIdSeq();
 				  params.put("custTinId", custTinId);
 				  customerMapper.insertCustomerTinId(params);
