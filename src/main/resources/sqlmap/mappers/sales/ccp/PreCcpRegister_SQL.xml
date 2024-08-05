@@ -2,50 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.ccp.impl.PreCcpRegisterMapper">
 
-	<insert id="insertPreCcpSubmission" parameterType="java.util.Map">
-		INSERT INTO SAL0343D
-		(
-		PRECCP_SEQ
-		, CUST_NAME
-		, CUST_IC
-		, CUST_MOBILENO
-		, CUST_EMAIL
-		, CRT_DT
-		, CRT_ID
-		, CUST_ID
-		, CHS_STATUS
-		, CHS_RSN
-		, DISAB
-		, TYPE_ID
-		, UPD_DT
-		, UPD_ID
-		, TAC_NO
-		, DEPT_CODE
-		, GRP_CODE
-		, ORG_CODE
-		)
-		VALUES
-		(
-		SAL0343D_PRECCP_SEQ.NEXTVAL
-		, #{customerName}
-		, #{customerNric}
-		, #{customerMobileNo}
-		, #{customerEmailAddr}
-		, SYSDATE
-		, #{userId}
-		, #{custId}
-		, #{chsStatus}
-		, #{chsRsn}
-		, 0
-		, #{customerType}
-		, SYSDATE
-		, #{userId}
-		, #{tacNo}
-		, #{deptCode}
-		, #{grpCode}
-		, #{orgCode}
-		)
-	</insert>
+  <insert id="insertPreCcpSubmission" parameterType="java.util.Map">
+    INSERT INTO SAL0343D ( PRECCP_SEQ
+                                      , CUST_NAME
+                                      , CUST_IC
+                                      , CUST_MOBILENO
+                                      , CUST_EMAIL
+                                      , CRT_DT
+                                      , CRT_ID
+                                      , CUST_ID
+                                      , CHS_STATUS
+                                      , CHS_RSN
+                                      , DISAB
+                                      , TYPE_ID
+                                      , UPD_DT
+                                      , UPD_ID
+                                      , TAC_NO
+                                      , DEPT_CODE
+                                      , GRP_CODE
+                                      , ORG_CODE
+    ) VALUES ( #{preccpSeq}
+                  , #{customerName}
+                  , #{customerNric}
+                  , #{customerMobileNo}
+                   , #{customerEmailAddr}
+                  , SYSDATE
+                  , #{userId}
+                  , #{custId}
+                  , #{chsStatus}
+                  , #{chsRsn}
+                  , 0
+                  , #{customerType}
+                  , SYSDATE
+                  , #{userId}
+                  , #{tacNo}
+                  , #{deptCode}
+                  , #{grpCode}
+                  , #{orgCode}
+    )
+  </insert>
 
 	<select id="getSeqSAL0343D" resultType="java.lang.Integer">
 		SELECT SAL0343D_PRECCP_SEQ.CURRVAL FROM DUAL
