@@ -21,7 +21,7 @@
                                       , DEPT_CODE
                                       , GRP_CODE
                                       , ORG_CODE
-    ) VALUES ( #{preccpSeq}
+    ) VALUES ( SAL0343D_PRECCP_SEQ.NEXTVAL
                   , #{customerName}
                   , #{customerNric}
                   , #{customerMobileNo}
