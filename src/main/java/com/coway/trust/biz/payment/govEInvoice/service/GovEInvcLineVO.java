@@ -75,11 +75,11 @@ public class GovEInvcLineVO {
     	taxSub_taxableAmount.setValue(mapValue.get("taxtotTaxsubTaxableamtVal")==null?"0.00":mapValue.get("taxtotTaxsubTaxableamtVal").toString());
     	TaxCatObject taxSub_taxCategory = new TaxCatObject();
     	taxSub_taxCategory.setId(String.format("%02d",Integer.parseInt(mapValue.get("taxtotTaxsubTaxcatId").toString())));
-    	taxSub_taxCategory.setTaxRate(mapValue.get("taxtotTaxsubTaxcatRate").toString());
+    	//taxSub_taxCategory.setTaxRate(mapValue.get("taxtotTaxsubTaxcatRate")==null?"0.00":mapValue.get("taxtotTaxsubTaxcatRate").toString());
     	taxSubTotal.setTaxAmount(taxSub_taxAmount);
     	taxSubTotal.setTaxableAmount(taxSub_taxableAmount);
     	taxSubTotal.setTaxCategory(taxSub_taxCategory);
-    	taxSubTotal.setPercent(mapValue.get("taxtotTaxsubPerc").toString());
+    	taxSubTotal.setPercent(mapValue.get("taxtotTaxsubPerc")==null?"0.00":mapValue.get("taxtotTaxsubPerc").toString());
     	taxSubTotalList.add(taxSubTotal);
     	TaxTotal.setTaxSubtotal(taxSubTotalList);
 
@@ -260,7 +260,7 @@ public class GovEInvcLineVO {
 
     public static class TaxCatObject {
         private String Id;
-        private String TaxRate;
+//        private String TaxRate;
 
         public String getId() {
             return Id;
@@ -268,12 +268,12 @@ public class GovEInvcLineVO {
         public void setId(String id) {
             this.Id = id;
         }
-		public String getTaxRate() {
-			return TaxRate;
-		}
-		public void setTaxRate(String taxRate) {
-			TaxRate = taxRate;
-		}
+//		public String getTaxRate() {
+//			return TaxRate;
+//		}
+//		public void setTaxRate(String taxRate) {
+//			TaxRate = taxRate;
+//		}
     }
 
     public static class ItemPriceExtension {
