@@ -279,9 +279,9 @@ public class PreCcpRegisterApiController {
         return ResponseEntity.ok( message );
       }
 
-      params.put( "preccpSeq", preCcpRegisterService.getSeqSAL0343D() );
       params.put( "tacNo", getRandomNumber( 6 ) );
       preCcpRegisterService.insertPreCcpSubmission( params );
+      params.put( "preccpSeq", preCcpRegisterService.getSeqSAL0343D() );
 
       //triggerSms( params );
       preCcpRegisterService.sendWhatsApp( params );
