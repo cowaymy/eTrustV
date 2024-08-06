@@ -14,7 +14,28 @@
 <script type="text/javascript">
   var confirmGridID;
   var detId = 0;
-  var confirmColumnLayout = [ { dataField : "detId",
+  var confirmColumnLayout = [ {
+                                                dataField : "history",
+                                                width : 30,
+                                                headerText : " ",
+                                                renderer : {
+                                                  type : "IconRenderer",
+                                                  iconTableRef : {
+                                                    "default" : "${pageContext.request.contextPath}/resources/images/common/icon_gabage_s.png"// default
+                                                  },
+                                                  iconWidth : 16,
+                                                  iconHeight : 16,
+                                                  onclick : function(rowIndex, columnIndex, value, item) {
+                                                    if (item.validStusId == "4" || item.validStusId == "21") {
+                                                    	fn_bRefundItemDisab(item.detId);
+                                                    } else {
+                                                      Common.alert("<spring:message code='supplement.alert.supplementBatchPmtRemove'/>");
+                                                      return;
+                                                    }
+                                                  }
+                                                }
+                                            }, {
+                                        	  dataField : "detId",
                                               visible : false
                                             }, {
                                               dataField : "validStusId",
@@ -155,9 +176,9 @@
      });
   }
 
-  function fn_bRefundItemDisab() {
+  function fn_bRefundItemDisab(detId) {
     if (detId > 0) {
-      Common.ajax("GET", "/supplement/payment/batchRefundItemDisab.do", { detId : detId, batchId : $("#pBatchId").val() },
+      Common.ajax("GET", "/supplement/payment/batchRefundItemDisab.do", {detId : detId, batchId : $("#pBatchId").val()},
       function(result) {
         Common.alert(result.message);
 
@@ -281,13 +302,13 @@
       <article class="tap_area">
         <aside class="title_line">
           <ul class="right_btns">
-            <c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
+ <%--  <c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
               <li>
                 <p class="btn_grid">
                   <a href="#" id="remove_btn"><spring:message code='supplement.btn.remove' /></a>
                 </p>
               </li>
-            </c:if>
+            </c:if> --%>
             <li>
               <p class="btn_grid">
                 <a href="#" id="allItem_btn"><spring:message code='supplement.btn.allItems' /></a>
