@@ -50,7 +50,7 @@ public class GovEInvcVO {
 
 	        SupplierParty supplierParty = new SupplierParty();
 	        Contact contact = new Contact();
-	        contact.setElectronicMail("coway@coway.com.my");
+	        contact.setElectronicMail(mapValue.get("accsupContEmail").toString());
 	        contact.setTelephone(mapValue.get("accsupContTel").toString());
 	        supplierParty.setContact(contact);
 	        IndustryClassificationCode industryClassificationCode = new IndustryClassificationCode();
