@@ -658,9 +658,9 @@
         $("#reportForm1 #V_DSCBRANCHID").val(0);
         $("#reportForm1 #V_SETTLEDATEFROM").val(settleDateFrom);
         $("#reportForm1 #V_SETTLEDATETO").val(settleDateTo);
-        $("#reportForm1 #reportFileName").val('/services/ASInstallAccessoriesRaw.rpt');
+        $("#reportForm1 #reportFileName").val('/services/ASSparePartRaw.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASInstallAccessoriesRaw" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("ASSparePartRaw_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
