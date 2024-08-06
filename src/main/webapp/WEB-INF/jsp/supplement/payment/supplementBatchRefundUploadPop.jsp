@@ -150,14 +150,25 @@
     var payMode = $("#pPayMode option:selected").val();
     var accNo = $("#accNo").val();
     var remark = $("#remark").val();
+    var msgLabel = "";
 
     if (payMode == "") {
-      Common.alert('<spring:message code="pay.alert.selectPayMode"/>');
+      // Common.alert('<spring:message code="pay.alert.selectPayMode"/>');
+      msgLabel = "<spring:message code='supplement.head.paymode' />";
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
+      return;
+    }
+
+    if (accNo == "") {
+      msgLabel = "<spring:message code='supplement.head.accountNo' />";
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
       return;
     }
 
     if (FormUtil.isEmpty($("#uploadfile").val())) {
-      Common.alert('<spring:message code="pay.alert.selectCsvFile"/>');
+      // Common.alert('<spring:message code="pay.alert.selectCsvFile"/>');
+      msgLabel = "<spring:message code='service.text.attachment' />";
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ msgLabel +"'/>");
       return;
     }
 
@@ -172,7 +183,7 @@
           Common.alert(result.message);
           fn_closePop();
           fn_selectBatchRefundList();
-        });
+    });
   }
 </script>
 
@@ -204,13 +215,13 @@
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code='supplement.head.paymode' /></th>
+            <th scope="row"><spring:message code='supplement.head.paymode' /><span class="must">**</span></th>
             <td>
               <select class="" id="pPayMode" name="payMode" onchange="javascript:fn_setAccNo()"></select>
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code='supplement.head.accountNo' /></th>
+            <th scope="row"><spring:message code='supplement.head.accountNo' /><span class="must">**</span></th>
             <td>
               <select class="" id="accNo" name="accNo"></select>
             </td>
@@ -222,7 +233,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code='service.text.attachment' /></th>
+            <th scope="row"><spring:message code='service.text.attachment' /><span class="must">**</span></th>
             <td>
               <div class="auto_file">
                 <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv" />
