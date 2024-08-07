@@ -430,7 +430,7 @@
    LEFT JOIN ITF0942M advPay ON advPay.GRP_SEQ = A.GROUP_SEQ
    WHERE G.DEL_FLG = 'N'
    AND A.KEY_IN_SCRN = 'BAT'
-   AND A.APP_TYPE = 'SUP'
+   AND A.APP_TYPE = 'OOUT'
 
     <if test="keyinDateFr != null and keyinDateFr != '' ">
        AND TRX.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{keyinDateFr},'DD/MM/YYYY')
