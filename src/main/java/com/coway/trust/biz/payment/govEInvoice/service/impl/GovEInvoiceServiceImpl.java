@@ -294,7 +294,8 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                     String json = "";
                     try {
                         ObjectMapper objectMapper = new ObjectMapper();
-                        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+//                        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+                        objectMapper.setPropertyNamingStrategy(new UpperCamelCaseStrategy());
                         json = objectMapper.writeValueAsString(govEInvcDocumentVO);
                         System.out.println(json);
 
