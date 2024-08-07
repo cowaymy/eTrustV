@@ -55,7 +55,7 @@
         selectedGridValue = event.rowIndex;
       });
 
-      $("#payMode").multipleSelect("setSelects", [ 108 ]);
+      $("#payMode").multipleSelect("setSelects", [ 105, 106, 107, 108 ]);
       $("#confirmStatus").multipleSelect("setSelects", [ 44 ]);
       $("#batchStatus").multipleSelect("setSelects", [ 1 ]);
 
