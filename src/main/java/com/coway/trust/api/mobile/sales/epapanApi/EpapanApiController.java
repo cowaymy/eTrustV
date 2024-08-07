@@ -605,4 +605,39 @@ public class EpapanApiController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+	  @ApiOperation(value = "insertCustomerBankAddAf", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/insertCustomerBankAddAf")
+	  public ResponseEntity<ReturnMessage> insertCustomerBankAddAf(@RequestBody EpapanApiMagicAddressForm param)
+	      throws Exception {
+
+	    customerService.insertCustomerBankAddAf(EpapanApiMagicAddressForm.createMap(param));
+
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage("Success!");
+
+	    return ResponseEntity.ok(message);
+	  }
+
+	  @ApiOperation(value = "insertCustomerCardAddAf", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/insertCustomerCardAddAf")
+	  public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestBody EpapanApiMagicAddressForm param)
+	      throws Exception {
+
+	    int custCrcId = customerService.getCustCrcId();
+	    param.setCustCrcId(String.valueOf(custCrcId));
+
+	    customerService.insertCustomerCardAddAf(EpapanApiMagicAddressForm.createMap(param)); //FRANGO CHECk
+		customerService.tokenCrcUpdate1(EpapanApiMagicAddressForm.createMap(param));
+
+	    // 결과 만들기 예.
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage("Success!");
+
+	    return ResponseEntity.ok(message);
+
+	  }
+
 }

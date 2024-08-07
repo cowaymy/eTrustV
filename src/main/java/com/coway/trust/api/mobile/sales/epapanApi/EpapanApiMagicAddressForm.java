@@ -69,6 +69,23 @@ public class EpapanApiMagicAddressForm {
 		params.put("addrDtl", vo.getAddrDtl());
 		params.put("streetDtl", vo.getStreetDtl());
 		params.put("userId", vo.getUserId());
+		params.put("bankCustAccNo", vo.getBankCustAccNo());
+		params.put("bankCustAccOwner", vo.getBankCustAccOwner());
+		params.put("bankCustAccTypeId", vo.getBankCustAccTypeId());
+		params.put("bankCustAccBankId", vo.getBankCustAccBankId());
+		params.put("bankCustAccBankBrnch", vo.getBankCustAccBankBrnch());
+		params.put("bankCustAccRem", vo.getBankCustAccRem());
+		params.put("custCrcId", vo.getCustCrcId());
+		params.put("custOriCrcNo", vo.getCustOriCrcNo());
+		params.put("custCrcOwner", vo.getCustCrcOwner());
+		params.put("custCrcTypeId", vo.getCustCrcTypeId());
+		params.put("custCrcBankId", vo.getCustCrcBankId());
+		params.put("custCrcRem", vo.getCustCrcRem());
+		params.put("cardExpr", vo.getCardExpr());
+		params.put("cardTypeId", vo.getCardTypeId());
+		params.put("tknId", vo.getTknId());
+		params.put("refNo", vo.getRefNo());
+
 
 		return params;
 	}
@@ -338,6 +355,102 @@ public class EpapanApiMagicAddressForm {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	public String getBankCustAccNo() {
+		return bankCustAccNo;
+	}
+	public void setBankCustAccNo(String bankCustAccNo) {
+		this.bankCustAccNo = bankCustAccNo;
+	}
+	public String getBankCustAccOwner() {
+		return bankCustAccOwner;
+	}
+	public void setBankCustAccOwner(String bankCustAccOwner) {
+		this.bankCustAccOwner = bankCustAccOwner;
+	}
+	public String getBankCustAccTypeId() {
+		return bankCustAccTypeId;
+	}
+	public void setBankCustAccTypeId(String bankCustAccTypeId) {
+		this.bankCustAccTypeId = bankCustAccTypeId;
+	}
+	public String getBankCustAccBankId() {
+		return bankCustAccBankId;
+	}
+	public void setBankCustAccBankId(String bankCustAccBankId) {
+		this.bankCustAccBankId = bankCustAccBankId;
+	}
+	public String getBankCustAccBankBrnch() {
+		return bankCustAccBankBrnch;
+	}
+	public void setBankCustAccBankBrnch(String bankCustAccBankBrnch) {
+		this.bankCustAccBankBrnch = bankCustAccBankBrnch;
+	}
+	public String getBankCustAccRem() {
+		return bankCustAccRem;
+	}
+	public void setBankCustAccRem(String bankCustAccRem) {
+		this.bankCustAccRem = bankCustAccRem;
+	}
+	public String getCustCrcId() {
+		return custCrcId;
+	}
+	public void setCustCrcId(String custCrcId) {
+		this.custCrcId = custCrcId;
+	}
+	public String getCustOriCrcNo() {
+		return custOriCrcNo;
+	}
+	public void setCustOriCrcNo(String custOriCrcNo) {
+		this.custOriCrcNo = custOriCrcNo;
+	}
+	public String getCustCrcOwner() {
+		return custCrcOwner;
+	}
+	public void setCustCrcOwner(String custCrcOwner) {
+		this.custCrcOwner = custCrcOwner;
+	}
+	public String getCustCrcTypeId() {
+		return custCrcTypeId;
+	}
+	public void setCustCrcTypeId(String custCrcTypeId) {
+		this.custCrcTypeId = custCrcTypeId;
+	}
+	public String getCustCrcBankId() {
+		return custCrcBankId;
+	}
+	public void setCustCrcBankId(String custCrcBankId) {
+		this.custCrcBankId = custCrcBankId;
+	}
+	public String getCustCrcRem() {
+		return custCrcRem;
+	}
+	public void setCustCrcRem(String custCrcRem) {
+		this.custCrcRem = custCrcRem;
+	}
+	public String getCardExpr() {
+		return cardExpr;
+	}
+	public void setCardExpr(String cardExpr) {
+		this.cardExpr = cardExpr;
+	}
+	public String getCardTypeId() {
+		return cardTypeId;
+	}
+	public void setCardTypeId(String cardTypeId) {
+		this.cardTypeId = cardTypeId;
+	}
+	public String getTknId() {
+		return tknId;
+	}
+	public void setTknId(String tknId) {
+		this.tknId = tknId;
+	}
+	public String getRefNo() {
+		return refNo;
+	}
+	public void setRefNo(String refNo) {
+		this.refNo = refNo;
+	}
 
 	public String state;
     public String city;
@@ -380,5 +493,22 @@ public class EpapanApiMagicAddressForm {
 	public String addrDtl;
 	public String streetDtl;
 	public String userId;
+	public String bankCustAccNo;
+	public String bankCustAccOwner;
+	public String bankCustAccTypeId;
+	public String bankCustAccBankId;
+	public String bankCustAccBankBrnch;
+	public String bankCustAccRem;
+	public String custCrcId;
+	public String custOriCrcNo;
+	public String custCrcOwner;
+	public String custCrcTypeId;
+	public String custCrcBankId;
+	public String custCrcRem;
+	public String cardExpr;
+	public String cardTypeId;
+	public String tknId;
+	public String refNo;
+
 
 }
