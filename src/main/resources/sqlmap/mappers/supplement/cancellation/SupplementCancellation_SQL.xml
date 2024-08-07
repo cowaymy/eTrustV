@@ -221,7 +221,9 @@
                Extent19.POSTCODE AS BILL_POSTCODE,
                Extent19.STATE AS BILL_STATE,
                Extent19.COUNTRY AS BILL_COUNTRY,
-               Extent19.CITY AS BILL_CITY
+               Extent19.CITY AS BILL_CITY,
+               Extent1.SUP_RTN_RFND AS IS_REFUND,
+               Extent1.SUP_REF_RMK AS RMK
     FROM SUP0001M Extent1
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
     LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
