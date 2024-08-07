@@ -38,11 +38,11 @@ public class GovEInvcLineVO {
     	commodityClassificationList.add(commodityClassification);
     	Item.setCommodityClassification(commodityClassificationList);
     	Item.setDescription(mapValue.get("itmDesc").toString());
-    	IdentificationCode identificationCode = new IdentificationCode();
-    	identificationCode.setCountryCode(mapValue.get("itmOrictryCode").toString());
-    	OriginCountry originCountry = new OriginCountry();
-    	originCountry.setIdentificationCode(identificationCode);
-    	Item.setOriginCountry(originCountry);
+//    	IdentificationCode identificationCode = new IdentificationCode();
+//    	identificationCode.setCountryCode(mapValue.get("itmOrictryCode").toString());
+//    	OriginCountry originCountry = new OriginCountry();
+//    	originCountry.setIdentificationCode(identificationCode);
+//    	Item.setOriginCountry(originCountry);
 
     	this.ItemPriceExtension = new ItemPriceExtension();
     	AmountObject amount = new AmountObject();
@@ -162,7 +162,7 @@ public class GovEInvcLineVO {
     public static class Item {
     	private List<CommodityClassification> CommodityClassification;
     	private String Description;
-    	private OriginCountry OriginCountry;
+//    	private OriginCountry OriginCountry;
 
 		public List<CommodityClassification> getCommodityClassification() {
 			return CommodityClassification;
@@ -176,12 +176,12 @@ public class GovEInvcLineVO {
 		public void setDescription(String description) {
 			Description = description;
 		}
-		public OriginCountry getOriginCountry() {
-			return OriginCountry;
-		}
-		public void setOriginCountry(OriginCountry originCountry) {
-			OriginCountry = originCountry;
-		}
+//		public OriginCountry getOriginCountry() {
+//			return OriginCountry;
+//		}
+//		public void setOriginCountry(OriginCountry originCountry) {
+//			OriginCountry = originCountry;
+//		}
     }
 
     public static class CommodityClassification {
