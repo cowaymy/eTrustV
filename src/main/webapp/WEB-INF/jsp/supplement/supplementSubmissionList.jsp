@@ -668,7 +668,7 @@
           </p>
         </li>
       </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
         <li>
           <p class="btn_blue">
             <a href="#" id="submissionCancel"><spring:message code="supplement.btn.submissionCancel" /></a>
