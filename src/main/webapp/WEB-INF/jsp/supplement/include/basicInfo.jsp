@@ -189,6 +189,10 @@
         <td>${orderInfo.refCreateDate}</td>
       </tr>
       <tr>
+        <th scope="row"><spring:message code="supplement.text.remark" /></th>
+        <td colspan="5">${orderInfo.rmk}</td>
+      </tr>
+      <tr>
         <td></td>
       </tr>
       <tr>
