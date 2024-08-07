@@ -41,6 +41,7 @@
   };
 
   var gridPros3 = {
+	editable : false,
     showStateColumn : false,
     headerHeight : 35,
     softRemoveRowMode : false
@@ -666,6 +667,10 @@
   }
 
   function fn_uploadPopup() {
+	//CLEAR THE EXISTING DATA IN UI
+    $("#uploadForm")[0].reset();
+    AUIGrid.clearGridData(myUploadGridID);
+
     $('#upload_popup_wrap').show();
     $("#paymentMode").val("108");
     AUIGrid.resize(myUploadGridID);
