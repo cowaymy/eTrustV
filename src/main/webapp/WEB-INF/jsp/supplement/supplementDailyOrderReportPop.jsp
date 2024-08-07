@@ -65,6 +65,14 @@
       headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
       width : '20%'
     }, {
+      dataField : "stkDesc",
+      headerText : '<spring:message code="log.head.item" />' + "(s)",
+      width : '15%'
+    }, {
+      dataField : "stkCde",
+      headerText : '<spring:message code="sal.title.productCode" />',
+      width : '15%'
+    }, {
       dataField : "supRefStus",
       headerText : '<spring:message code="supplement.text.supplementReferenceStatus" />',
       width : '20%'
@@ -87,10 +95,6 @@
     }, {
       dataField : "orNo",
       headerText : 'Offical Receipt No',
-      width : '15%'
-    }, {
-      dataField : "stkDesc",
-      headerText : '<spring:message code="log.head.item" />' + "(s)",
       width : '15%'
     }, {
       dataField : "supItmQty",
@@ -140,6 +144,12 @@
       dataField : "supRefNo",
       headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
     }, {
+      dataField : "stkDesc",
+      headerText : '<spring:message code="log.head.item" />' + "(s)",
+    }, {
+      dataField : "stkCde",
+      headerText : '<spring:message code="sal.title.productCode" />',
+    }, {
       dataField : "supRefStus",
       headerText : '<spring:message code="supplement.text.supplementReferenceStatus" />',
     }, {
@@ -157,9 +167,6 @@
     }, {
       dataField : "orNo",
       headerText : 'Offical Receipt No'
-    }, {
-      dataField : "stkDesc",
-      headerText : '<spring:message code="log.head.item" />' + "(s)",
     }, {
       dataField : "supItmQty",
       headerText : '<spring:message code="sal.text.quantity" />',
