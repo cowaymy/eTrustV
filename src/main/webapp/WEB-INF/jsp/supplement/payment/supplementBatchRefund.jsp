@@ -63,7 +63,7 @@
     $("#uploadPop_btn").click(fn_bRefundUploadPop);
     $("#confirm_btn").click(fn_bRefundConfirmPop);
 
-    $("#payMode").multipleSelect("setSelects", [108]);
+    $("#payMode").multipleSelect("setSelects", [105, 106, 107, 108]);
     //$("#cnfmStus").multipleSelect("setSelects", [44]);
     //$("#batchStus").multipleSelect("setSelects", [1]);
 
