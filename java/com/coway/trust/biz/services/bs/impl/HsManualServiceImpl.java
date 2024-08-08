@@ -346,6 +346,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     logger.debug("=========================SaveResult - START - ===============================");
 
+    logger.debug("*****PARAMSSSSS:***** "+ params.toString()) ;
+
     int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
     String docNo = commonMapper.selectDocNo("11");
     int masterCnt = hsManualMapper.selectHSResultMCnt(params);
@@ -601,6 +603,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       hsManualMapper.updateHsScheduleM(insertHsScheduleM); // UPDATE SVC0008D
     }
 
+    logger.debug("***hidSalesOrdId: *** " +  params.get("hidSalesOrdId") );
+    logger.debug("***hidSalesOrdCd: *** " +  params.get("hidSalesOrdCd") );
+    logger.debug("***serviceNo: *** " +  params.get("serviceNo") );
+
     EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
 
     if (srvConfiguration.size() > 0) {
@@ -619,14 +625,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
         EgovMap callMas = new EgovMap();
         callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
-        callMas.put("hcTypeNo", params.get("hidSalesOrdCd") != null ? params.get("hidSalesOrdCd") : params.get("serviceNo"));
+        callMas.put("hcTypeNo", params.get("hidSalesOrdCd") != null ? params.get("hidSalesOrdCd").toString() : params.get("serviceNo"));
         callMas.put("crtUserId", sessionVO.getUserId());
         callMas.put("updUserId", sessionVO.getUserId());
         // callMas.put("hcTypeNo", params.get("serviceNo") );
 
-        logger.info("***HS NO: ** " + callMas.get("hcTypeNo"));
-        logger.info("***hidSalesOrdCd: *** " +  params.get("hidSalesOrdCd") );
-        logger.info("***serviceNo: *** " +  params.get("serviceNo") );
+        logger.debug("***HS NO: ** " + callMas.get("hcTypeNo"));
+        logger.debug("***hidSalesOrdCd: *** " +  params.get("hidSalesOrdCd") );
+        logger.debug("***serviceNo: *** " +  params.get("serviceNo") );
 
         hsManualMapper.insertCcr0001d(callMas);
 
