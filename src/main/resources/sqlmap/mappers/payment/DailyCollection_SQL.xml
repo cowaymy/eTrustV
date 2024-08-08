@@ -305,14 +305,24 @@
 
     <select id="selectDailyCollectionData" parameterType="Map" resultType="egovMap">
          SELECT
-                B.OR_NO AS RECEIPTNO  ,
-                (CASE WHEN C.SALES_ORD_NO IS NULL THEN SOM.SALES_ORD_NO ELSE C.SALES_ORD_NO END) AS ORDERNO  ,
+                B.OR_NO AS RECEIPTNO,
+                (
+                   CASE WHEN (C.SALES_ORD_NO IS NULL AND B.SALES_ORD_ID != 0) THEN SOM.SALES_ORD_NO ELSE
+                             CASE WHEN (supm.SUP_REF_NO IS NOT NULL AND B.SALES_ORD_ID = 0) THEN supm.SUP_REF_NO
+                                ELSE C.SALES_ORD_NO END
+                     END
+                ) AS ORDERNO,
                 TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
-                (CASE WHEN D.NAME IS NULL THEN CTD.NAME ELSE D.NAME END) NAME  ,
-                E.ACC_CODE AS BANK_ACC  ,
-                F.ACC_CODE AS DEBT_CODE  ,
-                G.CODE AS BranchCode  ,
-                A.PAY_ITM_APPV_NO AS PayItemAppvNo ,
+                (
+                    CASE WHEN (D.NAME IS NULL AND  B.SALES_ORD_ID != 0)THEN CTD.NAME ELSE
+                               CASE WHEN (B.SALES_ORD_ID = 0 AND supm.SUP_REF_NO IS NOT NULL) THEN c5.NAME
+                               ELSE D.NAME END
+                    END
+                ) AS NAME,
+                E.ACC_CODE AS BANK_ACC,
+                F.ACC_CODE AS DEBT_CODE,
+                G.CODE AS BranchCode,
+                A.PAY_ITM_APPV_NO AS PayItemAppvNo,
                 A.PAY_ITM_CHQ_NO AS PayItemChqNo,
                 H.USER_NAME AS UserName,
                 I.CODE_DESC AS Description,
@@ -321,47 +331,47 @@
                 A.PAY_ITM_REM AS PayItemRemark,
                 j.CODE AS code,
                 A.PAY_ITM_ORI_CC_NO AS fPayItemCCNo,
-                NVL(b.TR_NO, ' ') AS TR_NO  ,
-                NVL(a.PAY_ITM_REF_NO, ' ') AS REF_NO  ,
-                NVL(b.REF_DTL,' ') AS REF_DTL ,
+                NVL(b.TR_NO, ' ') AS TR_NO,
+                NVL(a.PAY_ITM_REF_NO, ' ') AS REF_NO,
+                NVL(b.REF_DTL,' ') AS REF_DTL,
                 (CASE
                     WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
-                    WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) AS CRCMode  ,
-                k.CODE_DESC AS CRCType  ,
+                    WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) AS CRCMode,
+                k.CODE_DESC AS CRCType,
                 a.PAY_ITM_CC_HOLDER_NAME AS PayItemCCHolderName,
                 a.PAY_ITM_CC_EXPR_DT AS PayItemCCExpiryDate,
-                a.PAY_ITM_REF_DT AS RefDate ,
-                l.USER_NAME AS keyInBy  ,
-                NVL(BNK.CODE, ' ') AS issuedBank  ,
-                NVL(sdm.DEPT_NAME, ' ') AS DeptCode  ,
-                (CASE WHEN ssc.NAME IS NULL THEN STC.NAME ELSE SSC.NAME END) AS OrderStatus  ,
-                (CASE WHEN D.CUST_VA_NO IS NULL THEN CTD.CUST_VA_NO ELSE D.CUST_VA_NO END) AS custVaNo  ,
-                A.PAY_ITM_BANK_CHRG_AMT AS Bank_Chg_Amt  ,
-                cd.CODE_DESC AS  Paymode  ,
-                NVL(B.ADV_MONTH, 0) AS AdvanceMth  ,
-                NVL(A.PAY_ITM_RUNNG_NO, ' ') AS RunningNo  ,
-                NVL(ad.CODE_DESC, ' ') AS CardType  ,
+                a.PAY_ITM_REF_DT AS RefDate,
+                l.USER_NAME AS keyInBy,
+                NVL(BNK.CODE, ' ') AS issuedBank,
+                NVL(sdm.DEPT_NAME, ' ') AS DeptCode,
+                (CASE WHEN ssc.NAME IS NULL THEN STC.NAME ELSE SSC.NAME END) AS OrderStatus,
+                (CASE WHEN D.CUST_VA_NO IS NULL THEN CTD.CUST_VA_NO ELSE D.CUST_VA_NO END) AS custVaNo,
+                A.PAY_ITM_BANK_CHRG_AMT AS Bank_Chg_Amt,
+                cd.CODE_DESC AS Paymode,
+                NVL(B.ADV_MONTH, 0) AS AdvanceMth,
+                NVL(A.PAY_ITM_RUNNG_NO, ' ') AS RunningNo,
+                NVL(ad.CODE_DESC, ' ') AS CardType,
                 (CASE WHEN C.PV_MONTH IS NULL THEN SOM.PV_MONTH ELSE C.PV_MONTH END) AS PV_MONTH,
                 (CASE WHEN C.PV_YEAR IS NULL THEN SOM.PV_YEAR ELSE C.PV_YEAR END) AS PV_YEAR,
                 /*
-                NVL(RCONST.NAME, ' ') AS Recon_Status  ,
-                NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') AS RCL_NO  ,
+                NVL(RCONST.NAME, ' ') AS Recon_Status,
+                NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') AS RCL_NO,
                 */
-                NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO  ,
-                NVL(CRCST.NAME, ' ') AS CRC_STATUS  ,
-                NVL(CRCM.CRC_STATE_REM, ' ') AS CRC_STATEMENT_REMARK  ,
-                DDD1.CODE_NAME AS CustCategory  ,
-                DDD2.CODE_NAME AS CustType  ,
-                NVL(B.BATCH_PAY_ID, 0) AS BATCH_PAY_ID  ,
+                NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO,
+                NVL(CRCST.NAME, ' ') AS CRC_STATUS,
+                NVL(CRCM.CRC_STATE_REM, ' ') AS CRC_STATEMENT_REMARK,
+                DDD1.CODE_NAME AS CustCategory,
+                DDD2.CODE_NAME AS CustType,
+                NVL(B.BATCH_PAY_ID, 0) AS BATCH_PAY_ID,
                 NVL(mbb1.MEM_CODE, ' ') AS PAYMENTCOLLECTOR,
                 GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
                 (CASE WHEN C.CRT_DT IS NULL THEN TO_CHAR(SOM.CRT_DT,'DD/MM/YYYY') ELSE TO_CHAR(C.CRT_DT,'DD/MM/YYYY')END) AS ORD_CRT_DT,
                 GP.KEY_IN_SCRN
             FROM
                 PAY0064D B
-                JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
+                JOIN PAY0065D A ON A.PAY_ID = B.PAY_ID
                 /*
-                JOIN PAY0009D GL   ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID AND GL.GL_RECIPT_SETL_ACC_ID <![CDATA[ <> ]]> GL.GL_RECIPT_ACC_ID <!-- AND GL.GL_RECIPT_ITM_AMT <![CDATA[ < ]]> 0 -->
+                JOIN PAY0009D GL ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID AND GL.GL_RECIPT_SETL_ACC_ID <![CDATA[ <> ]]> GL.GL_RECIPT_ACC_ID <!-- AND GL.GL_RECIPT_ITM_AMT <![CDATA[ < ]]> 0 -->
                 */
                 LEFT JOIN PAY0252T GP ON A.PAY_ITM_ID = GP.PAY_ITM_ID AND GP.PAY_ID = B.PAY_ID
                 LEFT JOIN PAY0076D CRCD ON GP.CRC_STATE_MAPPING_ID = CRCD.CRC_TRNSC_ID
@@ -371,202 +381,208 @@
                 LEFT JOIN PAY0079D RCONM ON RCOND.F_BANK_JRNL_ID = RCONM.F_BANK_JRNL_ID
                 LEFT JOIN SYS0038M RCONST ON  RCONST.STUS_CODE_ID = RCONM.F_BANK_JRNL_STUS_ID
                 /*
-                LEFT JOIN PAY0076D RCRC   ON RCRC.CRC_TRNSC_ID = TO_NUMBER(GL.GL_AUDIT_REF)
-                LEFT JOIN PAY0075D RSTA   ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
-                LEFT JOIN SYS0038M RCRCST   ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
-                LEFT JOIN PAY0074D RCONS   ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
-                LEFT JOIN PAY0073D RCON   ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
-                LEFT JOIN SYS0038M RCONST   ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
+                LEFT JOIN PAY0076D RCRC ON RCRC.CRC_TRNSC_ID = TO_NUMBER(GL.GL_AUDIT_REF)
+                LEFT JOIN PAY0075D RSTA ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
+                LEFT JOIN SYS0038M RCRCST ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
+                LEFT JOIN PAY0074D RCONS ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
+                LEFT JOIN PAY0073D RCON ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
+                LEFT JOIN SYS0038M RCONST ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
                 */
-                LEFT JOIN PAY0007D BIL   ON BIL.BILL_ID = B.BILL_ID
-                LEFT JOIN SAL0001D SOM   ON SOM.SALES_ORD_ID = BIL.BILL_SO_ID
-                LEFT JOIN SAL0029D CTD   ON CTD.CUST_ID = SOM.CUST_ID
-                LEFT JOIN SYS0038M STC   ON STC.STUS_CODE_ID = SOM.STUS_CODE_ID
-                LEFT JOIN SAL0001D C   ON B.SALES_ORD_ID = C.SALES_ORD_ID
-                LEFT JOIN SAL0029D D   ON C.CUST_ID = D.CUST_ID
-                LEFT JOIN SYS0013M DDD1   ON DDD1.CODE_ID = D.TYPE_ID
-                LEFT JOIN SYS0013M DDD2   ON DDD2.CODE_ID = D.CORP_TYPE_ID
-                LEFT JOIN SYS0001M E   ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
-                LEFT JOIN SYS0001M F   ON B.BANK_ACC_ID = F.ACC_ID
-                LEFT JOIN SYS0005M G   ON B.BRNCH_ID = G.BRNCH_ID
-                LEFT JOIN SYS0047M H   ON B.UPD_USER_ID = H.USER_ID
-                LEFT JOIN SYS0013M I   ON A.PAY_ITM_MODE_ID = I.CODE_ID
-                LEFT JOIN SYS0013M cd   ON cd.CODE_ID = b.TYPE_ID
-                LEFT JOIN SYS0013M j   ON B.TYPE_ID = j.CODE_ID
-                LEFT JOIN SYS0013M k   ON a.PAY_ITM_CC_TYPE_ID = k.CODE_ID
-                LEFT JOIN SYS0013M ad   ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
-                LEFT JOIN SYS0004M BNK   ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
-                LEFT JOIN SYS0047M l   ON b.CRT_USER_ID = l.USER_ID
-                LEFT JOIN SYS0040M sdm   ON sdm.DEPT_ID = l.USER_DEPT_ID
-                LEFT JOIN SYS0038M ssc   ON ssc.STUS_CODE_ID = c.STUS_CODE_ID
-                LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = C.MEM_ID
-                LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
-                LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+                LEFT JOIN PAY0007D BIL ON BIL.BILL_ID = B.BILL_ID
+                LEFT JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = BIL.BILL_SO_ID
+                LEFT JOIN SAL0029D CTD ON CTD.CUST_ID = SOM.CUST_ID
+                LEFT JOIN SYS0038M STC ON STC.STUS_CODE_ID = SOM.STUS_CODE_ID
+                LEFT JOIN SAL0001D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
+                LEFT JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
+                LEFT JOIN SYS0013M DDD1 ON DDD1.CODE_ID = D.TYPE_ID
+                LEFT JOIN SYS0013M DDD2 ON DDD2.CODE_ID = D.CORP_TYPE_ID
+                LEFT JOIN SYS0001M E ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
+                LEFT JOIN SYS0001M F ON B.BANK_ACC_ID = F.ACC_ID
+                LEFT JOIN SYS0005M G ON B.BRNCH_ID = G.BRNCH_ID
+                LEFT JOIN SYS0047M H ON B.UPD_USER_ID = H.USER_ID
+                LEFT JOIN SYS0013M I ON A.PAY_ITM_MODE_ID = I.CODE_ID
+                LEFT JOIN SYS0013M cd ON cd.CODE_ID = b.TYPE_ID
+                LEFT JOIN SYS0013M j ON B.TYPE_ID = j.CODE_ID
+                LEFT JOIN SYS0013M k ON a.PAY_ITM_CC_TYPE_ID = k.CODE_ID
+                LEFT JOIN SYS0013M ad ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
+                LEFT JOIN SYS0004M BNK ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
+                LEFT JOIN SYS0047M l ON b.CRT_USER_ID = l.USER_ID
+                LEFT JOIN SYS0040M sdm ON sdm.DEPT_ID = l.USER_DEPT_ID
+                LEFT JOIN SYS0038M ssc ON ssc.STUS_CODE_ID = c.STUS_CODE_ID
+                LEFT JOIN ORG0001D mbb ON mbb.MEM_ID = C.MEM_ID
+                LEFT JOIN ORG0001D mbb1 ON mbb1.MEM_ID = B.COLL_MEM_ID
+                LEFT JOIN PAY0069D trx ON trx.TRX_ID = B.TRX_ID
                 LEFT JOIN SYS0013M cm ON cm.CODE_ID = a.PAY_ITM_CARD_MODE_ID
+                LEFT JOIN SUP0001M supm ON supm.SUP_REF_NO = BIL.BILL_NO /*supplement master*/
+                LEFT JOIN SAL0029D c5 ON c5.CUST_ID = supm.CUST_ID /*supplement customer information*/
             WHERE
                 trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
                 AND a.PAY_ITM_STUS_ID = 1
-                AND B.TYPE_ID NOT IN ( 224,225,226,227,222,93,223,228,229,230,231,232,233,234,235,236,237 )
+                AND B.TYPE_ID NOT IN (224,225,226,227,222,93,223,228,229,230,231,232,233,234,235,236,237)
+
             UNION ALL
-            SELECT
-                DISTINCT B.OR_NO RECIPT_NO  ,
-                l.SALES_ORD_NO ORD_NO  ,
+
+            SELECT DISTINCT B.OR_NO RECIPT_NO,
+                l.SALES_ORD_NO ORD_NO,
                 TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
                 D.NAME ,
-                E.ACC_CODE BANK_ACC  ,
-                F.ACC_CODE DEBT_CODE  ,
-                G.CODE ,
-                A.PAY_ITM_APPV_NO ,
-                A.PAY_ITM_CHQ_NO ,
-                H.USER_NAME ,
+                E.ACC_CODE BANK_ACC,
+                F.ACC_CODE DEBT_CODE,
+                G.CODE,
+                A.PAY_ITM_APPV_NO,
+                A.PAY_ITM_CHQ_NO,
+                H.USER_NAME,
                 I.CODE_DESC,
                 cm.CODE_NAME,
-                A.PAY_ITM_AMT ,
+                A.PAY_ITM_AMT,
                 A.PAY_ITM_REM,
-                j.CODE ,
-                A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO  ,
-                NVL(b.TR_NO, ' ') TR_NO  ,
-                NVL(a.PAY_ITM_REF_NO, ' ') REF_NO  ,
-                 NVL(b.REF_DTL,' ') AS REF_DTL ,
+                j.CODE,
+                A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO,
+                NVL(b.TR_NO, ' ') TR_NO,
+                NVL(a.PAY_ITM_REF_NO, ' ') REF_NO,
+                 NVL(b.REF_DTL,' ') AS REF_DTL,
                 (CASE
                     WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
-                    WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) CRCMODE  ,
-                M.CODE_DESC CRCTYPE  ,
-                a.PAY_ITM_CC_HOLDER_NAME ,
-                a.PAY_ITM_CC_EXPR_DT ,
-                a.PAY_ITM_REF_DT REF_DT  ,
-                N.USER_NAME KEYINBY  ,
-                NVL(BNK.CODE, ' ') ISSUEDBANK  ,
-                NVL(sdm.DEPT_NAME, ' ') DEPT_CODE  ,
-                NVL(ssc.NAME, ' ') ORD_STUS  ,
-                NVL(D.CUST_VA_NO, ' ') CUST_VA_NO  ,
-                A.PAY_ITM_BANK_CHRG_AMT BANK_CHG_AMT  ,
-                cd.CODE_DESC PAY_MODE  ,
-                NVL(B.ADV_MONTH, 0) ADVANCEMTH  ,
-                NVL(A.PAY_ITM_RUNNG_NO, ' ') RUNNINGNO  ,
-                NVL(ad.CODE_DESC, ' ') CARD_TYPE  ,
+                    WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END
+                 ) CRCMODE,
+                M.CODE_DESC CRCTYPE,
+                a.PAY_ITM_CC_HOLDER_NAME,
+                a.PAY_ITM_CC_EXPR_DT,
+                a.PAY_ITM_REF_DT REF_DT,
+                N.USER_NAME KEYINBY,
+                NVL(BNK.CODE, ' ') ISSUEDBANK,
+                NVL(sdm.DEPT_NAME, ' ') DEPT_CODE,
+                NVL(ssc.NAME, ' ') ORD_STUS,
+                NVL(D.CUST_VA_NO, ' ') CUST_VA_NO,
+                A.PAY_ITM_BANK_CHRG_AMT BANK_CHG_AMT,
+                cd.CODE_DESC PAY_MODE,
+                NVL(B.ADV_MONTH, 0) ADVANCEMTH,
+                NVL(A.PAY_ITM_RUNNG_NO, ' ') RUNNINGNO,
+                NVL(ad.CODE_DESC, ' ') CARD_TYPE,
                 l.PV_MONTH,
                 l.PV_YEAR,
                 /*
-                NVL(RCONST.NAME, ' ') RECON_STATUS  ,
-                NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') RCL_NO  ,
+                NVL(RCONST.NAME, ' ') RECON_STATUS,
+                NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') RCL_NO,
                 */
-                NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO  ,
-                NVL(CRCST.NAME, ' ') CRC_STATUS  ,
-                NVL(CRCM.CRC_STATE_REM, ' ') CRC_STATEMENT_REMARK  ,
-                DDD1.CODE_NAME CUSTCATEGORY  ,
-                DDD2.CODE_NAME CUST_TYPE  ,
-                NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
+                NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO,
+                NVL(CRCST.NAME, ' ') CRC_STATUS,
+                NVL(CRCM.CRC_STATE_REM, ' ') CRC_STATEMENT_REMARK,
+                DDD1.CODE_NAME CUSTCATEGORY,
+                DDD2.CODE_NAME CUST_TYPE,
+                NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID,
                 NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
                 GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
                 TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT,
                 GP.KEY_IN_SCRN
             FROM
                 PAY0064D B
-                JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
-                JOIN PAY0009D GL   ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID
+                JOIN PAY0065D A ON A.PAY_ID = B.PAY_ID
+                JOIN PAY0009D GL ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID
                 LEFT JOIN PAY0252T GP ON A.PAY_ITM_ID = GP.PAY_ITM_ID AND GP.PAY_ID = B.PAY_ID
                 LEFT JOIN PAY0076D CRCD ON GP.CRC_STATE_MAPPING_ID = CRCD.CRC_TRNSC_ID
                 LEFT JOIN PAY0075D CRCM ON CRCD.CRC_STATE_ID = CRCM.CRC_STATE_ID
-                LEFT JOIN SYS0038M CRCST ON  CRCST.STUS_CODE_ID = CRCM.CRC_BC_STUS_ID
+                LEFT JOIN SYS0038M CRCST ON CRCST.STUS_CODE_ID = CRCM.CRC_BC_STUS_ID
                 LEFT JOIN PAY0081D RCOND ON GP.BANK_STATE_MAPPING_ID = RCOND.F_TRNSC_ID
                 LEFT JOIN PAY0079D RCONM ON RCOND.F_BANK_JRNL_ID = RCONM.F_BANK_JRNL_ID
-                LEFT JOIN SYS0038M RCONST ON  RCONST.STUS_CODE_ID = RCONM.F_BANK_JRNL_STUS_ID
+                LEFT JOIN SYS0038M RCONST ON RCONST.STUS_CODE_ID = RCONM.F_BANK_JRNL_STUS_ID
                 /*
-                LEFT JOIN PAY0076D RCRC   ON RCRC.CRC_TRNSC_ID = TO_NUMBER(GL.GL_AUDIT_REF)
-                LEFT JOIN PAY0075D RSTA   ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
-                LEFT JOIN SYS0038M RCRCST   ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
-                LEFT JOIN PAY0074D RCONS   ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
-                LEFT JOIN PAY0073D RCON   ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
-                LEFT JOIN SYS0038M RCONST   ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
+                LEFT JOIN PAY0076D RCRC ON RCRC.CRC_TRNSC_ID = TO_NUMBER(GL.GL_AUDIT_REF)
+                LEFT JOIN PAY0075D RSTA ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
+                LEFT JOIN SYS0038M RCRCST ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
+                LEFT JOIN PAY0074D RCONS ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
+                LEFT JOIN PAY0073D RCON ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
+                LEFT JOIN SYS0038M RCONST ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
                 */
-                LEFT JOIN PAY0007D k   ON B.BILL_ID = k.BILL_ID
-                LEFT JOIN SAL0001D l   ON k.BILL_SO_ID = l.SALES_ORD_ID
-                LEFT JOIN SAL0029D D   ON l.CUST_ID = D.CUST_ID
-                LEFT JOIN SYS0013M DDD1   ON DDD1.CODE_ID = D.TYPE_ID
-                LEFT JOIN SYS0013M DDD2   ON DDD2.CODE_ID = D.CORP_TYPE_ID
-                LEFT JOIN SYS0001M E   ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
-                LEFT JOIN SYS0001M F   ON B.BANK_ACC_ID = F.ACC_ID
-                LEFT JOIN SYS0005M G   ON B.BRNCH_ID = G.BRNCH_ID
-                LEFT JOIN SYS0047M H   ON B.UPD_USER_ID = H.USER_ID
-                LEFT JOIN SYS0013M I   ON A.PAY_ITM_MODE_ID = I.CODE_ID
-                LEFT JOIN SYS0013M j   ON k.BILL_TYPE_ID = j.CODE_ID
-                LEFT JOIN SYS0013M cd   ON cd.CODE_ID = b.TYPE_ID
-                LEFT JOIN SYS0013M M   ON a.PAY_ITM_CC_TYPE_ID = M.CODE_ID
-                LEFT JOIN SYS0013M ad   ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
-                LEFT JOIN SYS0004M BNK   ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
-                LEFT JOIN SYS0047M N   ON b.CRT_USER_ID = N.USER_ID
-                LEFT JOIN SYS0040M sdm   ON sdm.DEPT_ID = N.USER_DEPT_ID
-                LEFT JOIN SYS0038M ssc   ON ssc.STUS_CODE_ID = l.STUS_CODE_ID
-                LEFT JOIN SAL0001D som   ON som.SALES_ORD_ID = B.SALES_ORD_ID
-                LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = som.MEM_ID
-                LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
-                LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+                LEFT JOIN PAY0007D k ON B.BILL_ID = k.BILL_ID
+                LEFT JOIN SAL0001D l ON k.BILL_SO_ID = l.SALES_ORD_ID
+                LEFT JOIN SAL0029D D ON l.CUST_ID = D.CUST_ID
+                LEFT JOIN SYS0013M DDD1 ON DDD1.CODE_ID = D.TYPE_ID
+                LEFT JOIN SYS0013M DDD2 ON DDD2.CODE_ID = D.CORP_TYPE_ID
+                LEFT JOIN SYS0001M E ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
+                LEFT JOIN SYS0001M F ON B.BANK_ACC_ID = F.ACC_ID
+                LEFT JOIN SYS0005M G ON B.BRNCH_ID = G.BRNCH_ID
+                LEFT JOIN SYS0047M H ON B.UPD_USER_ID = H.USER_ID
+                LEFT JOIN SYS0013M I ON A.PAY_ITM_MODE_ID = I.CODE_ID
+                LEFT JOIN SYS0013M j ON k.BILL_TYPE_ID = j.CODE_ID
+                LEFT JOIN SYS0013M cd ON cd.CODE_ID = b.TYPE_ID
+                LEFT JOIN SYS0013M M ON a.PAY_ITM_CC_TYPE_ID = M.CODE_ID
+                LEFT JOIN SYS0013M ad ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
+                LEFT JOIN SYS0004M BNK ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
+                LEFT JOIN SYS0047M N ON b.CRT_USER_ID = N.USER_ID
+                LEFT JOIN SYS0040M sdm ON sdm.DEPT_ID = N.USER_DEPT_ID
+                LEFT JOIN SYS0038M ssc ON ssc.STUS_CODE_ID = l.STUS_CODE_ID
+                LEFT JOIN SAL0001D som ON som.SALES_ORD_ID = B.SALES_ORD_ID
+                LEFT JOIN ORG0001D mbb ON mbb.MEM_ID = som.MEM_ID
+                LEFT JOIN ORG0001D mbb1 ON mbb1.MEM_ID = B.COLL_MEM_ID
+                LEFT JOIN PAY0069D trx ON trx.TRX_ID = B.TRX_ID
                 LEFT JOIN SYS0013M cm ON cm.CODE_ID = A.PAY_ITM_CARD_MODE_ID
         WHERE
                 trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
                 AND a.PAY_ITM_STUS_ID = 1
                 AND B.TYPE_ID IN ( 93,223,228,229,230,231,232,233,234,235,236,237 )
+
         UNION ALL
+
         SELECT
-            DISTINCT B.OR_NO RECIPT_NO  ,
-            l.MEM_CODE ORD_NO  ,
+            DISTINCT B.OR_NO RECIPT_NO,
+            l.MEM_CODE ORD_NO,
             TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
-            l.NAME ,
-            E.ACC_CODE BANK_ACC  ,
-            F.ACC_CODE DEBT_CODE  ,
-            G.CODE ,
-            A.PAY_ITM_APPV_NO ,
-            A.PAY_ITM_CHQ_NO ,
-            H.USER_NAME ,
-            I.CODE_DESC ,
+            l.NAME,
+            E.ACC_CODE BANK_ACC,
+            F.ACC_CODE DEBT_CODE,
+            G.CODE,
+            A.PAY_ITM_APPV_NO,
+            A.PAY_ITM_CHQ_NO,
+            H.USER_NAME,
+            I.CODE_DESC,
             cm.CODE_NAME,
-            A.PAY_ITM_AMT ,
-            A.PAY_ITM_REM ,
-            j.CODE ,
-            A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO  ,
-            NVL(b.TR_NO, ' ') TR_NO  ,
-            NVL(a.PAY_ITM_REF_NO, ' ') REF_NO  ,
-             NVL(b.REF_DTL,' ') AS REF_DTL ,
+            A.PAY_ITM_AMT,
+            A.PAY_ITM_REM,
+            j.CODE,
+            A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO,
+            NVL(b.TR_NO, ' ') TR_NO,
+            NVL(a.PAY_ITM_REF_NO, ' ') REF_NO,
+             NVL(b.REF_DTL,' ') AS REF_DTL,
             (CASE
                 WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
-                WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) CRCMODE  ,
-            M.CODE_DESC CRCTYPE  ,
-            a.PAY_ITM_CC_HOLDER_NAME ,
-            a.PAY_ITM_CC_EXPR_DT ,
-            a.PAY_ITM_REF_DT REF_DT  ,
-            N.USER_NAME KEYINBY  ,
-            NVL(BNK.CODE, ' ') ISSUEDBANK  ,
-            NVL(sdm.DEPT_NAME, ' ') DEPT_CODE  ,
-            ' ' ORD_STUS  ,
-            ' ' CUST_VA_NO  ,
-            A.PAY_ITM_BANK_CHRG_AMT BANK_CHG_AMT  ,
-            cd.CODE_DESC PAY_MODE  ,
-            NVL(B.ADV_MONTH, 0) ADVANCEMTH  ,
-            NVL(A.PAY_ITM_RUNNG_NO, ' ') RUNNINGNO  ,
-            NVL(ad.CODE_DESC, ' ') CARD_TYPE  ,
+                WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) CRCMODE,
+            M.CODE_DESC CRCTYPE,
+            a.PAY_ITM_CC_HOLDER_NAME,
+            a.PAY_ITM_CC_EXPR_DT,
+            a.PAY_ITM_REF_DT REF_DT,
+            N.USER_NAME KEYINBY,
+            NVL(BNK.CODE, ' ') ISSUEDBANK,
+            NVL(sdm.DEPT_NAME, ' ') DEPT_CODE,
+            ' ' ORD_STUS,
+            ' ' CUST_VA_NO,
+            A.PAY_ITM_BANK_CHRG_AMT BANK_CHG_AMT,
+            cd.CODE_DESC PAY_MODE,
+            NVL(B.ADV_MONTH, 0) ADVANCEMTH,
+            NVL(A.PAY_ITM_RUNNG_NO, ' ') RUNNINGNO,
+            NVL(ad.CODE_DESC, ' ') CARD_TYPE,
             0 as PV_MONTH,
             0 as PV_YEAR,
             /*
-            NVL(RCONST.NAME, ' ') RECON_STATUS  ,
-            NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') RCL_NO  ,
+            NVL(RCONST.NAME, ' ') RECON_STATUS,
+            NVL(RCONM.F_BANK_JRNL_REF_NO, ' ') RCL_NO,
             */
-            NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO  ,
+            NVL(CRCM.CRC_STATE_ID, 0) AS CRC_STATEMENT_NO,
             NVL(CRCST.NAME, ' ') CRC_STATUS  ,
-            NVL(CRCM.CRC_STATE_REM, ' ') CRC_STATEMENT_REMARK  ,
-            ' ' CUSTCATEGORY  ,
-            ' ' CUST_TYPE  ,
-            NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
+            NVL(CRCM.CRC_STATE_REM, ' ') CRC_STATEMENT_REMARK,
+            ' ' CUSTCATEGORY,
+            ' ' CUST_TYPE,
+            NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID,
             NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
             GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
             TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT,
             GP.KEY_IN_SCRN
         FROM
             PAY0064D B
-            JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
-            JOIN PAY0009D GL   ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID
+            JOIN PAY0065D A ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0009D GL ON GL.GL_RECIPT_ITM_ID = A.PAY_ITM_ID
             LEFT JOIN PAY0252T GP ON A.PAY_ITM_ID = GP.PAY_ITM_ID AND GP.PAY_ID = B.PAY_ID
             LEFT JOIN PAY0076D CRCD ON GP.CRC_STATE_MAPPING_ID = CRCD.CRC_TRNSC_ID
             LEFT JOIN PAY0075D CRCM ON CRCD.CRC_STATE_ID = CRCM.CRC_STATE_ID
@@ -575,38 +591,38 @@
             LEFT JOIN PAY0079D RCONM ON RCOND.F_BANK_JRNL_ID = RCONM.F_BANK_JRNL_ID
             LEFT JOIN SYS0038M RCONST ON  RCONST.STUS_CODE_ID = RCONM.F_BANK_JRNL_STUS_ID
             /*
-            LEFT JOIN PAY0076D RCRC   ON RCRC.CRC_TRNSC_ID = UTILS.CONVERT_TO_NUMBER(GL.GL_AUDIT_REF,10,0)
-            LEFT JOIN PAY0075D RSTA   ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
-            LEFT JOIN SYS0038M RCRCST   ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
-            LEFT JOIN PAY0074D RCONS   ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
-            LEFT JOIN PAY0073D RCON   ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
-            LEFT JOIN SYS0038M RCONST   ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
+            LEFT JOIN PAY0076D RCRC ON RCRC.CRC_TRNSC_ID = UTILS.CONVERT_TO_NUMBER(GL.GL_AUDIT_REF,10,0)
+            LEFT JOIN PAY0075D RSTA ON RSTA.CRC_STATE_ID = RCRC.CRC_STATE_ID
+            LEFT JOIN SYS0038M RCRCST ON RCRCST.STUS_CODE_ID = RSTA.CRC_STATE_STUS_ID
+            LEFT JOIN PAY0074D RCONS ON RCONS.F_DEP_RECON_ITM_PAY_ITM_ID = a.PAY_ITM_ID
+            LEFT JOIN PAY0073D RCON ON RCON.F_DEP_RECON_ID = RCONS.F_DEP_RECON_ID
+            LEFT JOIN SYS0038M RCONST ON RCONST.STUS_CODE_ID = RCON.F_DEP_RECON_STUS_ID
             */
-            LEFT JOIN PAY0007D k   ON B.BILL_ID = k.BILL_ID
-            LEFT JOIN ORG0001D l   ON k.BILL_MEM_ID = l.MEM_ID
-            LEFT JOIN SYS0001M E   ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
-            LEFT JOIN SYS0001M F   ON B.BANK_ACC_ID = F.ACC_ID
-            LEFT JOIN SYS0005M G   ON B.BRNCH_ID = G.BRNCH_ID
-            LEFT JOIN SYS0047M H   ON B.UPD_USER_ID = H.USER_ID
-            LEFT JOIN SYS0013M I   ON A.PAY_ITM_MODE_ID = I.CODE_ID
-            LEFT JOIN SYS0013M j   ON k.BILL_TYPE_ID = j.CODE_ID
-            LEFT JOIN SYS0013M cd   ON cd.CODE_ID = b.TYPE_ID
-            LEFT JOIN SYS0013M M   ON a.PAY_ITM_CC_TYPE_ID = M.CODE_ID
-            LEFT JOIN SYS0013M ad   ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
-            LEFT JOIN SYS0004M BNK   ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
-            LEFT JOIN SYS0047M N   ON b.CRT_USER_ID = N.USER_ID
-            LEFT JOIN SYS0040M sdm   ON sdm.DEPT_ID = N.USER_DEPT_ID
+            LEFT JOIN PAY0007D k ON B.BILL_ID = k.BILL_ID
+            LEFT JOIN ORG0001D l ON k.BILL_MEM_ID = l.MEM_ID
+            LEFT JOIN SYS0001M E ON A.PAY_ITM_BANK_ACC_ID = E.ACC_ID
+            LEFT JOIN SYS0001M F ON B.BANK_ACC_ID = F.ACC_ID
+            LEFT JOIN SYS0005M G ON B.BRNCH_ID = G.BRNCH_ID
+            LEFT JOIN SYS0047M H ON B.UPD_USER_ID = H.USER_ID
+            LEFT JOIN SYS0013M I ON A.PAY_ITM_MODE_ID = I.CODE_ID
+            LEFT JOIN SYS0013M j ON k.BILL_TYPE_ID = j.CODE_ID
+            LEFT JOIN SYS0013M cd ON cd.CODE_ID = b.TYPE_ID
+            LEFT JOIN SYS0013M M ON a.PAY_ITM_CC_TYPE_ID = M.CODE_ID
+            LEFT JOIN SYS0013M ad ON ad.CODE_ID = a.PAY_ITM_CARD_TYPE_ID
+            LEFT JOIN SYS0004M BNK ON BNK.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
+            LEFT JOIN SYS0047M N ON b.CRT_USER_ID = N.USER_ID
+            LEFT JOIN SYS0040M sdm ON sdm.DEPT_ID = N.USER_DEPT_ID
             /*
-            LEFT JOIN SAL0001D som   ON som.SALES_ORD_NO = l.MEM_CODE
-            LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = som.MEM_ID
+            LEFT JOIN SAL0001D som ON som.SALES_ORD_NO = l.MEM_CODE
+            LEFT JOIN ORG0001D mbb ON mbb.MEM_ID = som.MEM_ID
             */
-            LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
-            LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+            LEFT JOIN ORG0001D mbb1 ON mbb1.MEM_ID = B.COLL_MEM_ID
+            LEFT JOIN PAY0069D trx ON trx.TRX_ID = B.TRX_ID
             LEFT JOIN SYS0013M cm ON cm.CODE_ID = A.PAY_ITM_CARD_MODE_ID
         WHERE
             trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
             AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
             AND a.PAY_ITM_STUS_ID = 1
-            AND B.TYPE_ID IN ( 224,225,226,227,222 )
+            AND B.TYPE_ID IN (224,225,226,227,222)
     </select>
 </mapper>
