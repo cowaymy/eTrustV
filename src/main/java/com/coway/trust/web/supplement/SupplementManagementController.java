@@ -195,10 +195,10 @@ public class SupplementManagementController {
   }
 
     model.addAttribute("orderLdgrList", new Gson().toJson(orderLdgrList));
-    List<EgovMap> ordOutInfoList = supplementUpdateService.getOderOutsInfo(params);
+    //List<EgovMap> ordOutInfoList = supplementUpdateService.getOderOutsInfo(params);
 
-    EgovMap ordOutInfo = ordOutInfoList.get(0);
-    model.addAttribute("ordOutInfo", ordOutInfo);
+    //EgovMap ordOutInfo = ordOutInfoList.get(0);
+    //model.addAttribute("ordOutInfo", ordOutInfo);
 
     return "supplement/orderLedgerPop";
   }
