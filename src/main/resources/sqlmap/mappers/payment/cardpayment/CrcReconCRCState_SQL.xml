@@ -173,6 +173,7 @@
               LEFT JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
               WHERE A.PAY_ITM_MODE_ID = 107
                 AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                AND A.APP_TYPE != 'OOUT'
                 AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID <![CDATA[ <> ]]> 5)
                 <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
                   AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
