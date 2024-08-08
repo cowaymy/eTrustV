@@ -346,6 +346,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     logger.debug("=========================SaveResult - START - ===============================");
 
+    logger.debug("*****PARAMSSSSS:***** "+ params.toString()) ;
+
     int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
     String docNo = commonMapper.selectDocNo("11");
     int masterCnt = hsManualMapper.selectHSResultMCnt(params);
@@ -617,9 +619,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
         insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
 
+        logger.debug("*** Service No: **** " + params.get("serviceNo"));
+        logger.debug("***  hidSalesOrdCd: **** " + params.get("hidSalesOrdCd"));
+
         EgovMap callMas = new EgovMap();
         callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
-        callMas.put("hcTypeNo", params.get("hidSalesOrdCd"));
+        callMas.put("hcTypeNo", params.get("hidSalesOrdCd") !=null ? params.get("hidSalesOrdCd") : params.get("serviceNo")); // Edited by Hui Ding for solving Happy Call Survey issue. 08/08/2024
         callMas.put("crtUserId", sessionVO.getUserId());
         callMas.put("updUserId", sessionVO.getUserId());
         // callMas.put("hcTypeNo", params.get("serviceNo") );
