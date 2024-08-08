@@ -471,6 +471,7 @@
                CODE || ' - ' || CODE_NAME AS CODE_NAME
     FROM SYS0013M
     WHERE DISAB = 0
+        AND CODE NOT IN ('105')
         AND CODE_MASTER_ID = 395
   </select>
 
@@ -479,6 +480,7 @@
                CODE_NAME || ' (' || CODE || ')' AS CODE_NAME
     FROM SYS0013M
     WHERE CODE_MASTER_ID = '36'
+        AND CODE_ID NOT IN ('105')
         AND DISAB = '0'
   </select>
 
