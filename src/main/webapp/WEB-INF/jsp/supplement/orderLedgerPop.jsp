@@ -156,6 +156,16 @@
           $("#span" + ind).html(maskedVal);
       });
   }
+
+  function fn_reportPdf() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    const date = year + month + day;
+    GridCommon.exportTo("ord_ledger_grid", "pdf", "Order Ledger (" + "${orderInfo.supRefNo}" + ")_" + date);
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win">
   <header class="pop_header">
@@ -352,7 +362,7 @@
         </tbody>
       </table>
       </br>
-      <table class="type1">
+      <!-- <table class="type1">
         <caption>table</caption>
         <colgroup>
           <col style="width: 140px" />
@@ -388,13 +398,15 @@
             <td></td>
           </tr>
         </tbody>
-      </table>
-      <ul class="right_btns mt20">
-        <li><p><spring:message code="sal.text.transactionDate" /></p></li>
-        <li><input type="text" id="cutOffDate" name="cutOffDate" class="j_date2" /></li>
-        <li><p class="btn_blue">
-            <a href="#" onclick="fn_report1()"><spring:message code="sys.progmanagement.grid1.PRINT" /></a>
-          </p></li>
+      </table> -->
+      <ul class="right_btns mt10">
+        <!-- <li><p><spring:message code="sal.text.transactionDate" /></p></li>
+        <li><input type="text" id="cutOffDate" name="cutOffDate" class="j_date2" /></li> -->
+        <li>
+          <p class="btn_blue">
+            <a href="#" onclick="fn_reportPdf()"><spring:message code="sal.btn.generate" /></a>
+          </p>
+        </li>
       </ul>
     </form>
     <article class="grid_wrap">
