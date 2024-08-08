@@ -3357,8 +3357,7 @@
 		CCR0001D_HC_ID_SEQ.NEXTVAL
 		, #{hcsoid}
 		, 0
-		,
-		#{hcTypeNo}
+		, #{hcTypeNo}
 		, 509
 		, 33
 		, 0

@@ -624,6 +624,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         callMas.put("updUserId", sessionVO.getUserId());
         // callMas.put("hcTypeNo", params.get("serviceNo") );
 
+        logger.info("***HS NO: ** " + callMas.get("hcTypeNo"));
+        logger.info("***hidSalesOrdCd: *** " +  params.get("hidSalesOrdCd") );
+        logger.info("***serviceNo: *** " +  params.get("serviceNo") );
+
         hsManualMapper.insertCcr0001d(callMas);
 
         // hsManualMapper.updateHsSrvConfigM(insertHsSrvConfigM);
