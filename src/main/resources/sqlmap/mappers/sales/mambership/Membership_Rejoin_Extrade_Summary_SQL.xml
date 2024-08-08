@@ -26,7 +26,7 @@
             T0.FRESH_RATE FRESH_EXTRADE,
             T0.REJOIN_RATE REJOIN_EXTRADE,
             T0.UPD_DT
-        FROM SAL0259T_2024 T0
+        FROM SAL0419M T0
         WHERE 1 = 1
             AND T0.MEM_LVL <![CDATA[<>]]> 0
             AND T0.REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
