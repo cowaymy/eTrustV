@@ -418,6 +418,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 				  customerMapper.insertCustomerTinId(params);
 			  }
 	  }
+	  else{
+		  customerMapper.updateCustomerTinStatus(params);
+	  }
 
 	  customerMapper.insertCustomerBasicInfoHist(params);
 
