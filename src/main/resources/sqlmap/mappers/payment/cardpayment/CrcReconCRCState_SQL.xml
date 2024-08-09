@@ -144,85 +144,89 @@
     </select>
 
   <select id="selectCrcKeyInList" parameterType="Map" resultType="egovMap">
-    SELECT
-             TB2.SALES_ORD_NO,
-             GROUP_SEQ,
-             (CASE WHEN PAY_ITM_CC_NO IS NULL THEN ' '
-                   WHEN LENGTH(PAY_ITM_CC_NO) >= 13 THEN SUBSTR(PAY_ITM_CC_NO,0,6) || '******' || SUBSTR(PAY_ITM_CC_NO,13,LENGTH(PAY_ITM_CC_NO))
-                   ELSE PAY_ITM_CC_NO END) PAY_ITM_CC_NO,
-             PAY_ITM_REF_DT,
-             PAY_ITM_APPV_NO,
-             PAY_ITM_CARD_MODE_ID,
-             CARD_MODE_NAME,
-             AMOUNT,
-             CRC_MC_NAME
-        FROM ( SELECT A.GROUP_SEQ GROUP_SEQ,
-                      B.PAY_ITM_ORI_CC_NO PAY_ITM_CC_NO,
-                      B.PAY_ITM_REF_DT PAY_ITM_REF_DT,
-                      B.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
-                      B.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
-                      B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
-                      NVL(C.CODE_NAME, ' ') CARD_MODE_NAME,
-                      NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
-                      NVL(E.ACC_DESC, ' ') CRC_MC_NAME,
-                      MAX(A.PAY_ID) AS MAX_PAY_ID
-              FROM PAY0252T A
-              JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
-              LEFT JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
-              LEFT JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
-              LEFT JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
-              WHERE A.PAY_ITM_MODE_ID = 107
-                AND A.CRC_STATE_MAPPING_STUS_ID = 1
-                AND A.APP_TYPE != 'OOUT'
-                AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID <![CDATA[ <> ]]> 5)
-                <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
-                  AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
-                </if>
-                <if test="bankAcc != null and bankAcc != ''">
-                  AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
-                </if>
+    SELECT TB2.SALES_ORD_NO,
+               GROUP_SEQ,
+               ( CASE WHEN PAY_ITM_CC_NO IS NULL THEN ' '
+                         WHEN LENGTH(PAY_ITM_CC_NO) >= 13 THEN SUBSTR(PAY_ITM_CC_NO,0,6) || '******' || SUBSTR(PAY_ITM_CC_NO,13,LENGTH(PAY_ITM_CC_NO))
+                 ELSE PAY_ITM_CC_NO END ) PAY_ITM_CC_NO,
+               PAY_ITM_REF_DT,
+               PAY_ITM_APPV_NO,
+               PAY_ITM_CARD_MODE_ID,
+               CARD_MODE_NAME,
+               AMOUNT,
+               CRC_MC_NAME
+    FROM ( SELECT A.GROUP_SEQ GROUP_SEQ,
+                          B.PAY_ITM_ORI_CC_NO PAY_ITM_CC_NO,
+                          B.PAY_ITM_REF_DT PAY_ITM_REF_DT,
+                          B.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
+                          B.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
+                          B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
+                          NVL(C.CODE_NAME, ' ') CARD_MODE_NAME,
+                          NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                          NVL(E.ACC_DESC, ' ') CRC_MC_NAME,
+                          MAX(A.PAY_ID) AS MAX_PAY_ID
+               FROM PAY0252T A
+               JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+               LEFT JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
+               LEFT JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
+               LEFT JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+               WHERE A.PAY_ITM_MODE_ID = 107
+                   AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                   AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID <![CDATA[ <> ]]> 5)
 
-              GROUP BY A.GROUP_SEQ,
-                       B.PAY_ITM_ORI_CC_NO,
-                       B.PAY_ITM_REF_DT,
-                       B.PAY_ITM_APPV_NO,
-                       B.PAY_ITM_CARD_MODE_ID,
-                       B.PAY_ITM_BANK_ACC_ID,
-                       C.CODE_NAME,
-                       E.ACC_DESC ) TB1
-            JOIN (
-                SELECT
-                    (CASE WHEN SUB2.SALES_ORD_NO IS NOT NULL THEN SUB2.SALES_ORD_NO ELSE SUB4.SALES_ORD_NO END) AS SALES_ORD_NO, PAY_ID
-                FROM PAY0064D SUB1
-                LEFT JOIN SAL0001D SUB2 ON SUB1.SALES_ORD_ID = SUB2.SALES_ORD_ID
-                LEFT JOIN PAY0007D SUB3 ON SUB1.BILL_ID = SUB3.BILL_ID
-                LEFT JOIN SAL0001D SUB4 ON SUB3.BILL_SO_ID = SUB4.SALES_ORD_ID
-                WHERE SUBSTR(SUB1.OR_NO, 1, 3) NOT IN ('AOR','ADR','EOR','AER', 'AFR')
-            ) TB2 ON TB2.PAY_ID = TB1.MAX_PAY_ID
-        WHERE 1 = 1
-          AND (SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, -4) ,TB1.PAY_ITM_APPV_NO,TB1.AMOUNT,TB1.PAY_ITM_BANK_ACC_ID )
-          NOT IN ( SELECT SUBSTR(B.CRC_TRNSC_NO, 1, 6) || SUBSTR(B.CRC_TRNSC_NO, -4) ,
-                          B.CRC_TRNSC_APPV,
-                          NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
-                          A.CRC_STATE_ACC_ID
-                   FROM PAY0075D A
-                   JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
-                   LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
-                   WHERE B.KEYIN_STUS_ID = 1
+                  <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                    AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                  </if>
 
-                   <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
-                     AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
-                   </if>
-                   <if test="bankAcc != null and bankAcc != ''">
-                     AND A.CRC_STATE_ACC_ID = #{bankAcc}
-                   </if>
+                  <if test="bankAcc != null and bankAcc != ''">
+                    AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                  </if>
+               GROUP BY A.GROUP_SEQ,
+                              B.PAY_ITM_ORI_CC_NO,
+                              B.PAY_ITM_REF_DT,
+                              B.PAY_ITM_APPV_NO,
+                              B.PAY_ITM_CARD_MODE_ID,
+                              B.PAY_ITM_BANK_ACC_ID,
+                              C.CODE_NAME,
+                              E.ACC_DESC ) TB1
+    JOIN ( SELECT ( CASE WHEN SUB2.SALES_ORD_NO IS NOT NULL
+                                   THEN SUB2.SALES_ORD_NO
+                                   ELSE CASE WHEN (SUB5.SUP_REF_NO IS NOT NULL AND SUB1.SALES_ORD_ID = 0)
+                                                   THEN SUB5.SUP_REF_NO
+                                                   ELSE SUB4.SALES_ORD_NO END
+                                   END) AS SALES_ORD_NO,
+                         PAY_ID
+              FROM PAY0064D SUB1
+              LEFT JOIN SAL0001D SUB2 ON SUB1.SALES_ORD_ID = SUB2.SALES_ORD_ID
+              LEFT JOIN PAY0007D SUB3 ON SUB1.BILL_ID = SUB3.BILL_ID
+              LEFT JOIN SAL0001D SUB4 ON SUB3.BILL_SO_ID = SUB4.SALES_ORD_ID
+              LEFT JOIN SUP0001M SUB5 ON SUB5.SUP_REF_NO = SUB3.BILL_NO -- SUPPLEMENT MASTER TABLE
+              WHERE SUBSTR(SUB1.OR_NO, 1, 3) NOT IN ('AOR','ADR','EOR','AER')
+    ) TB2 ON TB2.PAY_ID = TB1.MAX_PAY_ID
+    WHERE 1 = 1
+        AND (SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, -4) ,TB1.PAY_ITM_APPV_NO,TB1.AMOUNT,TB1.PAY_ITM_BANK_ACC_ID )
+               NOT IN ( SELECT SUBSTR(B.CRC_TRNSC_NO, 1, 6) || SUBSTR(B.CRC_TRNSC_NO, -4) ,
+                                       B.CRC_TRNSC_APPV,
+                                       NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                                       A.CRC_STATE_ACC_ID
+                            FROM PAY0075D A
+                            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                            LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+                            WHERE B.KEYIN_STUS_ID = 1
 
-                   GROUP BY B.CRC_TRNSC_ID,
-                            B.CRC_TRNSC_NO,
-                            B.CRC_TRNSC_APPV,
-                            A.CRC_STATE_ACC_ID
-                 )
-        ORDER BY PAY_ITM_REF_DT DESC
+                            <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                              AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                            </if>
+
+                            <if test="bankAcc != null and bankAcc != ''">
+                              AND A.CRC_STATE_ACC_ID = #{bankAcc}
+                            </if>
+
+                            GROUP BY B.CRC_TRNSC_ID,
+                                           B.CRC_TRNSC_NO,
+                                           B.CRC_TRNSC_APPV,
+                                           A.CRC_STATE_ACC_ID
+    ) ORDER BY PAY_ITM_REF_DT DESC
   </select>
 
     <!-- <select id="selectCrcStateList" parameterType="Map" resultType="egovMap">
