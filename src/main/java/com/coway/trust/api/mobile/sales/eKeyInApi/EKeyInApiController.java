@@ -215,6 +215,12 @@ public class EKeyInApiController {
     return ResponseEntity.ok(eKeyInApiService.selectPromoChange(param));
   }
 
+  @ApiOperation(value = "selectSrvType", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectSrvType", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> selectSrvType(EKeyInApiForm param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.selectSrvType(param));
+  }
+
   @ApiOperation(value = "selectAnotherAddress", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectAnotherAddress", method = RequestMethod.GET)
   public ResponseEntity<List<EKeyInApiDto>> selectAnotherAddress(EKeyInApiForm param) throws Exception {
