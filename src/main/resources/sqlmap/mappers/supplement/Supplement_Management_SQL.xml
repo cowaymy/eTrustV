@@ -1027,4 +1027,65 @@
     </if>
     ORDER BY F.PAY_DATA DESC
   </select>
+
+  <select id="getSofListingInfo" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(A.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') AS SUP_REF_CRT_DT,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               A.SUP_SUBM_SOF AS SOF_NO,
+               B.CODE AS BR,
+               UPPER(C.NAME) AS CUST_NAME,
+               D.MEM_CODE AS SALESMAN_ID,
+               UPPER(D.NAME) AS SALESMAN_NAME,
+               UPPER(F.STK_CODE || ' - ' || F.STK_DESC) AS SUP_REF_ITM,
+               G.USER_NAME AS REF_CREATE_BY,
+               UPPER(H.CODE_NAME) AS IS_COMPANY
+    FROM SUP0001M A
+    LEFT JOIN SYS0005M B ON A.MEM_BRNCH_ID = B.BRNCH_ID
+    LEFT JOIN SAL0029D C ON A.CUST_ID = C.CUST_ID
+    LEFT JOIN ORG0001D D ON A.MEM_ID = D.MEM_ID
+    LEFT JOIN SUP0002D E ON A.SUP_REF_ID = E.SUP_REF_ID
+    LEFT JOIN SYS0026M F ON E.SUP_STK_ID = F.STK_ID
+    LEFT JOIN SYS0047M G ON A.CRT_USR_ID = G.USER_ID
+    LEFT JOIN SYS0013M H ON H.CODE_MASTER_ID = '8' AND C.TYPE_ID = H.CODE_ID
+
+    WHERE 1=1
+
+    <if test='dpOrderDateFr != null and dpOrderDateFr != "" and dpOrderDateTo != null and dpOrderDateTo != ""'>
+      AND A.CRT_DT BETWEEN TO_DATE(#{dpOrderDateFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpOrderDateTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test='txtOrderNoFr != null and txtOrderNoFr != "" and txtOrderNoTo != null and txtOrderNoTo != ""'>
+      AND <![CDATA[REGEXP_REPLACE(A.SUP_REF_NO, '[^0-9]', '')]]> BETWEEN TO_CHAR(#{txtOrderNoFr})  AND TO_CHAR(#{txtOrderNoTo})
+    </if>
+
+    <if test=" null != txtCustName and '' != txtCustName">
+      AND C.NAME = #{txtCustName}
+    </if>
+
+    <if test=" null != cmbKeyBranch and '' != cmbKeyBranch">
+      AND A.MEM_BRNCH_ID = #{cmbKeyBranch}
+    </if>
+
+    <if test=" null != keyInUser and '' != keyInUser">
+      AND G.USER_NAME = #{keyInUser}
+    </if>
+
+    <if test="cmbSort != null and cmbSort != '' ">
+      <choose>
+        <when test="cmbSort == 2">
+           ORDER BY A.MEM_BRNCH_ID
+        </when>
+        <when test="cmbSort == 3">
+           ORDER BY A.CRT_DT
+        </when>
+        <when test="cmbSort == 4">
+          ORDER BY A.SUP_REF_NO
+        </when>
+        <when test="cmbSort == 5">
+          ORDER BY C.NAME
+        </when>
+      </choose>
+    </if>
+
+  </select>
 </mapper>
