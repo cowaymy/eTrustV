@@ -119,7 +119,7 @@
     {
       dataField : "supRefCrtDt",
       headerText : '<spring:message code="sal.text.createDate" />',
-      width : '13%',
+      width : '20%',
       editable : false
     }, {
       dataField : "supRefNo",
@@ -156,7 +156,7 @@
     }, {
       dataField : "supRefItm",
       headerText : '<spring:message code="sal.text.productItem" />',
-      width : '25%',
+      width : '35%',
       editable : false
     }, {
       dataField : "refCreateBy",
@@ -180,6 +180,28 @@
     };
 
     supSofGridID = GridCommon.createAUIGrid("#sofList_grid", sofColumnLayout, '', gridPros);
+  }
+
+  function excelDown() {
+	  alert("123");
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    const date = year + month + day;
+    GridCommon.exportTo("sofList_grid", "xlsx", "SOF_Listing_Xlsx_" + date);
+  }
+
+  function pdfDown() {
+	    alert("123");
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    const date = year + month + day;
+    GridCommon.exportTo("sofList_grid", "pdf", "SOF_Listing_Pdf_" + date);
   }
 
   CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', '', fn_multiComboBranch);
@@ -259,9 +281,16 @@
 
     <section class="search_result">
       <ul class="right_btns">
-        <li><p class="btn_grid">
-            <a href="#" id="excelDown"><spring:message code="sal.btn.generate" /></a>
-          </p></li>
+        <li>
+          <p class="btn_grid">
+            <a href="#" id="pdfDown" onclick="pdfDown()"><spring:message code="sal.btn.genPDF" /></a>
+          </p>
+        </li>
+        <li>
+          <p class="btn_grid">
+            <a href="#" id="excelDown" onclick="excelDown()"><spring:message code="sal.btn.genExcel" /></a>
+          </p>
+        </li>
       </ul>
       <aside class="title_line">
       </aside>
