@@ -78,4 +78,6 @@ public interface SupplementUpdateMapper {
   Map<String, Object> SP_LOGISTIC_REQUEST_SUPP( Map<String, Object> param );
 
   List<EgovMap> selectSupplementDailyOrderReportList( Map<String, Object> params );
+
+  List<EgovMap> getSofListingInfo( Map<String, Object> params );
 }
