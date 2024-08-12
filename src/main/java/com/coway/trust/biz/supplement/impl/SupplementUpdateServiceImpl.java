@@ -663,4 +663,10 @@ public class SupplementUpdateServiceImpl
     throws Exception {
     return supplementUpdateMapper.selectSupplementDailyOrderReportList( params );
   }
+
+  @Override
+  public List<EgovMap> getSofListingInfo( Map<String, Object> params )
+    throws Exception {
+    return supplementUpdateMapper.getSofListingInfo( params );
+  }
 }
