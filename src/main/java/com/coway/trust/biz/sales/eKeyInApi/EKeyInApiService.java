@@ -56,6 +56,8 @@ public interface EKeyInApiService {
 
   EKeyInApiDto selectPromoChange(EKeyInApiForm param) throws Exception;
 
+  EKeyInApiDto selectSrvType(EKeyInApiForm param) throws Exception;
+
   List<EgovMap> selectAnotherAddress(EKeyInApiForm param) throws Exception;
 
   EKeyInApiDto saveAddNewAddress(EKeyInApiDto param) throws Exception;
