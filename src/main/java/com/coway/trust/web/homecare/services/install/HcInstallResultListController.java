@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -889,7 +891,13 @@ public class HcInstallResultListController {
 
     @RequestMapping(value="/uploadInsImage.do", method=RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> uploadInsImage(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params) throws Exception {
-    	List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, "/service/mobile/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    	LocalDate date = LocalDate.now();
+		String year    = String.valueOf(date.getYear());
+		String month   = String.format("%02d",date.getMonthValue());
+		String subPath =  "/service/mobile/installation" + File.separator + year + File.separator + month
+	               + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
+    	List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath, AppConstants.UPLOAD_MIN_FILE_SIZE, true);
     	List<String> seqs = new ArrayList<>();
     	Set set = request.getFileMap().entrySet();
         Iterator i = set.iterator();
