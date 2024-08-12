@@ -693,12 +693,16 @@
   }
 
   function fn_dailyOrderReport() {
-	Common.popupDiv("/supplement/supplementDailyOrderReportPop.do",{ind : 'MGT'},null, true, '_insDiv');
+    Common.popupDiv("/supplement/supplementDailyOrderReportPop.do",{ind : 'MGT'},null, true, '_insDiv');
   }
 
   function fn_popClose() {
     $("#_closeOrdPop").click();
     fn_getSubListAjax();
+  }
+
+  function fn_sofListingReport() {
+	  Common.popupDiv("/supplement/supplementSofListingPop.do",{ind : 'MGT'},null, true, '_insDiv');
   }
 </script>
 
@@ -930,6 +934,11 @@
                   <p class="link_btn type2">
                     <a href="#" onclick="fn_dailyOrderReport()"><spring:message code='supplement.btn.dailyReportOrder'/></a>
                   </p>
+                </li>
+              </c:if>
+              <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
+                <li>
+                  <p class="link_btn"><a href="#" id="btnSof" onclick="fn_sofListingReport()"><spring:message code='sales.btn.sof'/></a></p>
                 </li>
               </c:if>
             </ul>
