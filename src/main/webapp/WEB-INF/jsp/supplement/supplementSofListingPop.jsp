@@ -17,6 +17,20 @@
     width: '100%'
   });
 
+  function fn_multiComboBranch() {
+    if ($("#cmbKeyBranch option[value='${ind}']").val() === undefined) {
+      $("#cmbKeyBranch").prop('disabled', false);
+    } else {
+      if ('${auth}' == "Y") {
+        $("#cmbKeyBranch").val('${ind}');
+        $("#cmbKeyBranch").prop('disabled', false);
+      } else {
+        $("#cmbKeyBranch").val('${ind}');
+        $("#cmbKeyBranch").prop('disabled', true);
+      }
+    }
+  }
+
   $.fn.clearForm = function() {
 
   return this.each(function() {
@@ -168,7 +182,7 @@
     supSofGridID = GridCommon.createAUIGrid("#sofList_grid", sofColumnLayout, '', gridPros);
   }
 
-  CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+  CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', '', fn_multiComboBranch);
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
