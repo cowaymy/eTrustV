@@ -694,6 +694,33 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
   @Override
+  public EKeyInApiDto selectSrvType(EKeyInApiForm param) throws Exception {
+
+	  if (null == param) {
+	      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+	    }
+
+	  logger.info("############################ selectSupplementList  params.toString : " + param.toString());
+
+	    Map<String, Object> srvTypeInfoMap = new HashMap<String, Object>();
+
+	    srvTypeInfoMap.put("itmStkId", param.getItmStkId());
+	    srvTypeInfoMap.put("promoId", param.getPromoId());
+
+	    Map<String, Object> params = new HashMap<String, Object>();
+
+
+	    EgovMap selectSrvType = eKeyInApiMapper.selectSrvType(params);
+
+	    EKeyInApiDto rtn = new EKeyInApiDto();
+	    if (MapUtils.isNotEmpty(selectSrvType)) {
+	      rtn = EKeyInApiDto.create(selectSrvType);
+	    }
+	    return rtn;
+
+  }
+
+  @Override
   public List<EgovMap> selectAnotherAddress(EKeyInApiForm param) throws Exception {
     if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
