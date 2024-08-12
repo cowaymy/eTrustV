@@ -384,6 +384,7 @@ public class SupplementManagementController {
     model.put( "bfDay", bfDay );
     model.put( "toDay", toDay );
     model.put( "ind", params.get("ind"));
+    model.put( "auth", params.get("auth"));
 
     return "supplement/supplementSofListingPop";
   }
