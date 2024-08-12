@@ -894,8 +894,7 @@ public class HcInstallResultListController {
     	LocalDate date = LocalDate.now();
 		String year    = String.valueOf(date.getYear());
 		String month   = String.format("%02d",date.getMonthValue());
-		String subPath =  "/service/mobile/installation" + File.separator + year + File.separator + month
-	               + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+		String subPath =  "/service/mobile/installation" + File.separator + year + File.separator + month;
 
     	List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath, AppConstants.UPLOAD_MIN_FILE_SIZE, true);
     	List<String> seqs = new ArrayList<>();
