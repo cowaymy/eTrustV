@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiForm;
 import com.coway.trust.biz.common.FileVO;
@@ -694,29 +695,20 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
   @Override
-  public EKeyInApiDto selectSrvType(EKeyInApiForm param) throws Exception {
+  public EgovMap selectSrvType(EKeyInApiForm param) throws Exception {
 
 	  if (null == param) {
 	      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
 	    }
-
-	  logger.info("############################ selectSupplementList  params.toString : " + param.toString());
-
-	    Map<String, Object> srvTypeInfoMap = new HashMap<String, Object>();
-
-	    srvTypeInfoMap.put("itmStkId", param.getItmStkId());
-	    srvTypeInfoMap.put("promoId", param.getPromoId());
-
-	    Map<String, Object> params = new HashMap<String, Object>();
-
-
-	    EgovMap selectSrvType = eKeyInApiMapper.selectSrvType(params);
-
-	    EKeyInApiDto rtn = new EKeyInApiDto();
-	    if (MapUtils.isNotEmpty(selectSrvType)) {
-	      rtn = EKeyInApiDto.create(selectSrvType);
+	  if ( CommonUtils.isEmpty( String.valueOf( param.getItmStkId()) ) ) {
+	      throw new ApplicationException( AppConstants.FAIL, "Item ID value does not exist." );
 	    }
-	    return rtn;
+	    if ( CommonUtils.isEmpty( String.valueOf( param.getPromoId()) ) )  {
+	      throw new ApplicationException( AppConstants.FAIL, "Promo ID value does not exist." );
+	    }
+
+	    return eKeyInApiMapper.selectSrvType(EKeyInApiForm.createMap( param ));
+
 
   }
 
