@@ -30,6 +30,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.files.FileDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
 import com.coway.trust.cmmn.exception.FileDownException;
@@ -217,8 +219,9 @@ public class EKeyInApiController {
 
   @ApiOperation(value = "selectSrvType", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectSrvType", method = RequestMethod.GET)
-  public ResponseEntity<EKeyInApiDto> selectSrvType(EKeyInApiForm param) throws Exception {
-    return ResponseEntity.ok(eKeyInApiService.selectSrvType(param));
+	public ResponseEntity<EKeyInApiDto> selectSrvType(@ModelAttribute EKeyInApiForm param) throws Exception {
+    return ResponseEntity.ok(EKeyInApiDto.create(eKeyInApiService.selectSrvType(param)));
+
   }
 
   @ApiOperation(value = "selectAnotherAddress", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
