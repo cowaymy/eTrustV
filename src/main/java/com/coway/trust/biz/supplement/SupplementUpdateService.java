@@ -66,4 +66,6 @@ public interface SupplementUpdateService {
 
   List<EgovMap> selectSupplementDailyOrderReportList( Map<String, Object> params ) throws Exception;
 
+  List<EgovMap> getSofListingInfo( Map<String, Object> params ) throws Exception;
+
 }
