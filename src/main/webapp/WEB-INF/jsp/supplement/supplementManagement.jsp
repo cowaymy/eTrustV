@@ -702,7 +702,7 @@
   }
 
   function fn_sofListingReport() {
-	  Common.popupDiv("/supplement/supplementSofListingPop.do",{ind : 'MGT'},null, true, '_insDiv');
+	  Common.popupDiv("/supplement/supplementSofListingPop.do",{ind : '${SESSION_INFO.userBranchId}', auth : '${PAGE_AUTH.funcUserDefine2}' },null, true, '_insDiv');
   }
 </script>
 
