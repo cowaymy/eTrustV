@@ -94,16 +94,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Value("${sso.use.flag}")
 	private int ssoLoginFlag;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private WhatappsApiService whatappsApiService;
-	
+
 	@Value("${watapps.api.button.ehp.agreement.template}")
 	 private String waApiBtnEhpAgreementTemplate;
-	
+
 	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
@@ -2856,14 +2856,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	public int updateOrgUserPW(Map<String, Object> params) {
 
-		try{
-			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-	  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
-	  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
-	  		Map<String,Object> returnSsoParams = ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
-		}catch(Exception ex) {
-			throw ex;
-        }
+		if(ssoLoginFlag > 0){
+    		try{
+    			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+    	  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
+    	  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
+    	  		Map<String,Object> returnSsoParams = ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+    		}catch(Exception ex) {
+    			throw ex;
+            }
+		}
 
 	    return memberListMapper.updateOrgUserPW(params);
 	}
@@ -3123,13 +3125,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		ReturnMessage message = new ReturnMessage();
 
 		try {
-			
+
 				String telno = CommonUtils.nvl(params.get("rTelNo"));
 				String templateName = waApiBtnEhpAgreementTemplate;
 				String payload = "=" + params.get("MemberID").toString();
 				String path = "organization/agreementListing.do";
 				String imageUrl = "https://iili.io/dTBskTG.jpg";
-				
+
 				Map<String, Object> param = new HashMap<>();
 				param.put("telno", telno);
 				param.put("templateName", templateName);
