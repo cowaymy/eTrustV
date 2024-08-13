@@ -249,11 +249,11 @@
 
     <section class="search_result">
       <ul class="right_btns">
-        <li>
+        <!-- <li>
           <p class="btn_grid">
             <a href="#" id="pdfDown" onclick="pdfDown()"><spring:message code="sal.btn.genPDF" /></a>
           </p>
-        </li>
+        </li> -->
         <li>
           <p class="btn_grid">
             <a href="#" id="excelDown" onclick="excelDown()"><spring:message code="sal.btn.genExcel" /></a>
