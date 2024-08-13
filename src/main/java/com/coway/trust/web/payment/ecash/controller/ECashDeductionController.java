@@ -439,6 +439,7 @@ public class ECashDeductionController {
 	      claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
 	      claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
           claimMap.put("ctrlConfId", fileInfoConf.get("id"));
+          claimMap.put("ctrlIsCrc", fileInfoConf.get("ctrlIsCrc"));
 
 	      isZip  = fileInfoConf.get("ctrlZip").toString();
 	    }
@@ -458,7 +459,7 @@ public class ECashDeductionController {
         				}
         			}
                 }else if ("19".equals(String.valueOf(claimMap.get("fileBatchBankId")))){// Standard Charted merchant getting MBB's cardHolder
-
+                	map.put("fileBatchBankId", String.valueOf(claimMap.get("fileBatchBankId")));
                 	int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
                 	int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
         			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
@@ -493,15 +494,18 @@ public class ECashDeductionController {
                   }
               }
                 else if ("17".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
+                	map.put("fileBatchBankId", String.valueOf(claimMap.get("fileBatchBankId")));
                     int totRowCount = eCashDeductionService.selectECashDeductCCSubByIdCnt(map);
-                    //int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
+                    int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
                     int pageCnt = (int) Math.round(Math.ceil(totRowCount / 60000.0));
 
                     if (pageCnt > 0){
                       for(int i = 1 ; i <= pageCnt ; i++){
+                    	int customBatchNo = 600 + i;
                         claimMap.put("pageNo", i);
+                        claimMap.put("batchNoCount", customBatchNo);
                         claimMap.put("rowCount", 60000);
-                        //claimMap.put("batchNo", totBatToday);
+                        claimMap.put("batchNo", totBatToday);
                         claimMap.put("pageCnt", pageCnt);
                         this.createECashGrpDeductionFileHSBC(claimMap);
                       }
@@ -1205,6 +1209,11 @@ public class ECashDeductionController {
       String emailBody = claimsMap.get("emailBody").toString();
       String fileDirectory = filePath + subPath;
 
+      if("2".equals(String.valueOf(claimsMap.get("ctrlIsCrc"))) && "17".equals(String.valueOf(claimsMap.get("fileBatchBankId")))) {
+          // HSBC - Remove param from filename
+          batchName = batchName.replace("{0}", "_");
+      }
+
         String zipFile = fileDirectory + "/" + batchName + batchDate + ".zip";
         String srcDir  = fileDirectory + "/" + batchDate;
         String subPathFile = subPath + batchName +batchDate + ".zip";
@@ -1329,19 +1338,18 @@ public class ECashDeductionController {
         }
 
     public void createECashGrpDeductionFileHSBC(EgovMap claimMap) throws Exception {
-
     	ECashGrpDeductionFileHSBCHandler downloadHandler = null;
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        LOGGER.debug("params : {}", claimMap);
 
         try {
           String inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
-          String todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-          String fileName = claimMap.get("batchName").toString();
           String subPath =  claimMap.get("subPath").toString() + inputDate + "/";
-          String ext = claimMap.get("ext").toString();
-          String batchNo = claimMap.get("fileBatchId").toString();
 
-          String sFile = fileName + todayDate + "_" + batchNo + "." + ext;
+          String sFile = claimMap.get("batchName").toString().replace("{0}", "_" + claimMap.get("batchNoCount").toString());
 
+          LOGGER.debug("sFile PARAM : {}", sFile);
           downloadHandler = getTextDownloadHSBCGrpHandler(sFile, claimFileColumns, null, filePath, subPath , claimMap);
           largeExcelService.downLoadECashGrpDeductionFileHSBC(claimMap, downloadHandler);
           //downloadHandler.writeFooter();
