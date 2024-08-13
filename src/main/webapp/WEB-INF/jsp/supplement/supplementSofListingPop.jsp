@@ -165,8 +165,8 @@
       editable : false
     }, {
       dataField : "isCompany",
-      headerText :  '<spring:message code="sal.text.company" />',
-      width : '10%',
+      headerText :  '<spring:message code="sal.title.custType" />',
+      width : '15%',
       editable : false
     }];
 
@@ -183,7 +183,6 @@
   }
 
   function excelDown() {
-	  alert("123");
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -194,7 +193,6 @@
   }
 
   function pdfDown() {
-	    alert("123");
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
