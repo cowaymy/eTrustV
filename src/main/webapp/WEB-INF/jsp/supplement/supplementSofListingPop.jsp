@@ -5,18 +5,6 @@
   var supSofGridID;
   createAUIGrid();
 
-  var date = new Date().getDate();
-  if(date.toString().length == 1){
-    date = "0" + date;
-  }
-
-  /* 멀티셀렉트 플러그인 start */
-  $('.multy_select').change(function() {
-     //console.log($(this).val());
-  }).multipleSelect({
-    width: '100%'
-  });
-
   function fn_multiComboBranch() {
     if ($("#cmbKeyBranch option[value='${ind}']").val() === undefined) {
       $("#cmbKeyBranch").prop('disabled', false);
@@ -30,24 +18,6 @@
       }
     }
   }
-
-  $.fn.clearForm = function() {
-
-  return this.each(function() {
-    var type = this.type, tag = this.tagName.toLowerCase();
-    if (tag === 'form'){
-      return $(':input',this).clearForm();
-    }
-
-    if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-      this.value = '';
-    } else if (tag === 'select'){
-      this.selectedIndex = 0;
-    }
-
-    $("#cmbSort").prop("selectedIndex", 2);
-  });
-};
 
   function validRequiredField(){
     var valid = true;
