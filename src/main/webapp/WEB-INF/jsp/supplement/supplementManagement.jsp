@@ -140,13 +140,12 @@
             var supRefStusId = clickChk[0].item.supRefStusId;
             var supRefStgId = clickChk[0].item.supRefStgId;
 
-            // TEMPORARY CLOSE FOR TESTING
-            //if (supRefStusId == 1 && (supRefStgId == 3 || supRefStgId == 4)) {
+            if (supRefStusId == 1 && (supRefStgId == 3 || supRefStgId == 4)) {
               Common.popupDiv("/supplement/supplementTrackNoPop.do",supplementForm,null, true, '_insDiv');
-            //} else {
-            //  Common.alert('<spring:message code="supplement.alert.supplementUpdTrckErr" />');
-            //  return;
-            //}
+            } else {
+              Common.alert('<spring:message code="supplement.alert.supplementUpdTrckErr" />');
+              return;
+            }
           });
 
           $("#_viewBtn").click(
