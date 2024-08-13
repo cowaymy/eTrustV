@@ -725,6 +725,23 @@ SELECT A.CUST_ID AS CUST_ID
     ]]>
   </select>
 
+   <select id="selectSrvType" parameterType="int" resultType="egovMap">
+    <![CDATA[
+
+      SELECT EX1.PROMO_ID,
+        EX1.PROMO_DESC,
+        EX1.PROMO_CODE,
+        EX2.SRV_TYPE
+      FROM SAL0017D EX1
+      LEFT JOIN SAL0018D EX2 ON EX2.PROMO_ID = EX1.PROMO_ID
+      WHERE EX2.PROMO_ITM_STK_ID = #{itmStkId}
+      AND EX2.PROMO_ID = #{promoId}
+      AND EX2.PROMO_ITM_STUS_ID = '1'
+      AND ROWNUM = 1
+
+    ]]>
+  </select>
+
   <select id="selectProductPromotionPriceByPromoStockIDNewCorp" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockIDNewCorp] 20191213 - KR JAEMAJEM */
