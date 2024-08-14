@@ -4,7 +4,7 @@
   var supplementGridID;
   var supplementItmGridID;
   var excelListGridID;
-  var supplementCategoryId = "33";
+  var supplementCategoryId = "35";
 
   var MEM_TYPE = '${SESSION_INFO.userTypeId}';
   var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
