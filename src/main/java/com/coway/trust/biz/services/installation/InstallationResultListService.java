@@ -147,12 +147,12 @@ public interface InstallationResultListService {
   List<EgovMap> selectFilterSparePartList(Map<String, Object> params);
 
   EgovMap selectStkCatType (Map<String, Object> params);
-
-//  void sendSms(Map<String, Object> smsList);
+  
+  void sendSms(Map<String, Object> smsList);
 
   //void sendEmail();
 
-//  Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult);
+  Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult);
 
   List<EgovMap> selectWaterSrcType();
 
