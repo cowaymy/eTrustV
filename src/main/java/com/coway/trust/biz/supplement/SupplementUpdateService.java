@@ -40,7 +40,7 @@ public interface SupplementUpdateService {
 
   Map<String, Object> updateRefStgStatus( Map<String, Object> params ) throws Exception;
 
-  EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+  EgovMap updOrdDelStatGdex( Map<String, Object> params ) throws IOException, JSONException, ParseException, Exception;
 
   EgovMap updOrdDelStatDhl( Map<String, Object> params ) throws IOException, JSONException, ParseException, Exception;
 
