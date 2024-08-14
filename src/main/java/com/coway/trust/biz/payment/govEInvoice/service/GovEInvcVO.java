@@ -24,6 +24,7 @@ public class GovEInvcVO {
 	    private LegalMonetaryTotal LegalMonetaryTotal;
 	    private PaymentMeans PaymentMeans;
 	    private PaymentTerms PaymentTerms;
+	    private List<BillingReference> BillingReference;
 
 
 	    // Constructor
@@ -36,6 +37,7 @@ public class GovEInvcVO {
 	    	this.AccountingCustomerParty = new AccountingCustomerParty();
 	    	this.TaxTotal = new ArrayList<>();
 	    	this.LegalMonetaryTotal = new LegalMonetaryTotal();
+	    	this.BillingReference = new ArrayList<>();
 
 	        this.InvoiceTypeCode.setValue(String.format("%02d",Integer.parseInt(mapValue.get("invTypeCode").toString())));
 	        this.InvoicePeriod.setStartDate(mapValue.get("invprdStartDt").toString());
@@ -229,6 +231,13 @@ public class GovEInvcVO {
 	        this.PaymentMeans.setPaymentMeansCode(mapValue.get("pymtmeansCode").toString());
 	        this.PaymentMeans.setPaymentMeansCode(String.format("%02d",Integer.parseInt(mapValue.get("pymtmeansCode").toString())));
 	        this.PaymentTerms.setNote(mapValue.get("pymttermsNote").toString());
+
+	        AdditionalDocumentReference additionalDocumentReference = new AdditionalDocumentReference();
+	        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
+	        BillingReference billingReference = new BillingReference();
+	        billingReference.setAdditionalDocumentReference(additionalDocumentReference);
+	        BillingReference.add(billingReference);
+
 	    }
 
 //	    public void Invoice(Map<String, Object> mapValue, String startDate, String endDate, String description, String issueDate, String issueTime) {
@@ -866,6 +875,28 @@ public class GovEInvcVO {
 			}
 			public void setPostalAddress(PostalAddress postalAddress) {
 				PostalAddress = postalAddress;
+			}
+	    }
+
+	    public static class BillingReference {
+	    	private AdditionalDocumentReference AdditionalDocumentReference;
+
+			public AdditionalDocumentReference getAdditionalDocumentReference() {
+				return AdditionalDocumentReference;
+			}
+			public void setAdditionalDocumentReference(AdditionalDocumentReference additionalDocumentReference) {
+				AdditionalDocumentReference = additionalDocumentReference;
+			}
+	    }
+
+	    public static class AdditionalDocumentReference {
+	    	private String Id;
+
+			public String getId() {
+				return Id;
+			}
+			public void setId(String id) {
+				Id = id;
 			}
 	    }
 	}
