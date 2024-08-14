@@ -221,7 +221,7 @@ public class SupplementUpdateServiceImpl
   @SuppressWarnings("unchecked")
   @Override
   public EgovMap updOrdDelStatGdex( Map<String, Object> params )
-    throws IOException, JSONException, ParseException {
+    throws Exception {
     if ( CommonUtils.nvl( params.get( "ords" ) ).equals( "" ) ) {
       throw new ApplicationException( AppConstants.FAIL, "NO ORDERS SELECTED TO PERFORM DELIVERY STATUS UPDATE." );
     }
@@ -256,6 +256,9 @@ public class SupplementUpdateServiceImpl
       if ( extractedValueMap.get( "latestEnumStatus" ).equals( "4" ) ) {
         extractedValueMap.put( "ordRefStat", "4" );
         extractedValueMap.put( "ordRefStg", "99" );
+
+        // STOCK COMPLETE CHARGE OUT
+        this.stockCompleteReceive(extractedValueMap);
       }
       else {
         extractedValueMap.put( "latestConsignmentNoteLocation", null );
