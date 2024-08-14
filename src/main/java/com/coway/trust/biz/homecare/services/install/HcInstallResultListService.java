@@ -103,13 +103,13 @@ public interface HcInstallResultListService {
 
 	public int updateInstallFileKey(Map<String, Object> params, SessionVO sessionVO) throws ParseException, Exception;
 
-	/*
-	 * Map<String, Object> hcInstallationSendSMS(String ApptypeID, Map<String, Object> installResult);
-	 * 
-	 * void sendSms(Map<String, Object> smsList);
-	 * 
-	 * Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult);
-	 */
+	
+	  Map<String, Object> hcInstallationSendSMS(String ApptypeID, Map<String, Object> installResult);
+	  
+	  void sendSms(Map<String, Object> smsList);
+	  
+	  Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult);
+	 
 
 	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
 

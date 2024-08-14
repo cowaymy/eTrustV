@@ -65,10 +65,10 @@ public interface HcOrderCallListService {
 	 */
 	public List<EgovMap> searchHcOrderCallList(Map<String, Object> params);
 
-	/*
-	 * void sendSms(Map<String, Object> smsList);
-	 * 
-	 * Map<String, Object> hcCallLogSendSMS(Map<String, Object> params, SessionVO sessionVO);
-	 */
+	
+	  void sendSms(Map<String, Object> smsList);
+	  
+	  Map<String, Object> hcCallLogSendSMS(Map<String, Object> params, SessionVO sessionVO);
+	 
 
 }
