@@ -1083,7 +1083,7 @@ function fn_pushCU(){
         else {
             Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
                 console.log(result);
-                if(result.message == 'LMS: Successfully create user.'){
+                if(result.message == 'LMS: User created successfully' || result.status == '00'){
                     Common.alert("Successfully push to CU.");
                 }else{
                     Common.alert("Failed Request. Invalid parameter");
