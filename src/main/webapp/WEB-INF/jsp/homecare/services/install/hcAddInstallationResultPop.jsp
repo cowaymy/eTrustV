@@ -327,12 +327,12 @@
 
     function fn_saveInstall() {
 	    var msg = "";
-	    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+	    /* var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
 	    var chkMobileNo = custMobileNo.substring(0, 2);
 	    if (chkMobileNo == '60'){
 	        custMobileNo = custMobileNo.substring(1);
 	    }
-	    $("#custMobileNo").val(custMobileNo);
+	    $("#custMobileNo").val(custMobileNo); */
 
 	    var hpPhoneNo = $("#hpPhoneNo").val().replace(/[^0-9\.]+/g, "") ;
         var chkHpPhoneNo = hpPhoneNo.substring(0, 2);
@@ -439,9 +439,9 @@
         var hidDismantle = $("input[type=radio][name=dismantle]:checked").val();
         $("#hidDismantle").val(hidDismantle);
 
-	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+	      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-	      }
+	      } */
 
 	   // Installation Accessory checking for Complete status
 	      if($("#addInstallForm #chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
@@ -526,9 +526,9 @@
 	    	msg += "Please choose a DT Pair";
 	      } */
 
-	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+	      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-	      }
+	      } */
 
 	      if (msg != "") {
 	        Common.alert(msg);
@@ -1334,11 +1334,13 @@
        </td>
      </tr>
      <tr>
-       <th scope="row">Mobile</th>
+      <%--  <th scope="row">Mobile</th>
        <td>
          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
-       </td>
+       </td> --%>
+       <th scope="row"></th>
+       <td></td>
        <div class="frmS1" style="display:none;">
        <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
        <td></td></tr>
@@ -1562,8 +1564,8 @@
            </tr>
         </tbody>
       </table>
-
-   <aside class="title_line" id="completedHide1">
+   <br></br>
+   <%-- <aside class="title_line" id="completedHide1">
     <!-- title_line start -->
     <h2>
      <spring:message code='service.title.SMSInfo' />
@@ -1591,7 +1593,7 @@
       <td><input type="text" title="" placeholder="" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
-   </table>
+   </table> --%>
    <!-- table end -->
    <table class="type1" id="failHide3">
     <!-- table start -->

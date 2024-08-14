@@ -745,7 +745,7 @@ public class InstallationResultListController {
     ReturnMessage message = new ReturnMessage();
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> resultValuePexRtn = new HashMap<String, Object>();
-    Map<String, Object> smsResultValue = new HashMap<String, Object>();
+//    Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
     logger.debug("==========================/addInstallation_2.do=================================");
     logger.debug("params : {}", params);
@@ -901,7 +901,7 @@ public class InstallationResultListController {
                 message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
               }
 
-              String chksms = "";
+              /*String chksms = "";
               if (CommonUtils.nvl(param.get("chkSms")).equals("on")){
             	  chksms = "Y";
               }else{
@@ -928,8 +928,8 @@ public class InstallationResultListController {
         	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
         		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(param.get("custMobileNo")).toString();
         	  }
-
-        	  message.setMessage(msg);
+*/
+        	  message.setMessage(msg); 
             }
           }
         }

@@ -52,7 +52,7 @@ public interface OrderCallListService {
 
   List<EgovMap> selectPromotionList();
 
-  void sendSms(Map<String, Object> smsList);
-
-  Map<String, Object> callLogSendSMS(Map<String, Object> params, SessionVO sessionVO);
+//  void sendSms(Map<String, Object> smsList);
+//
+//  Map<String, Object> callLogSendSMS(Map<String, Object> params, SessionVO sessionVO);
 }

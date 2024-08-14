@@ -284,7 +284,7 @@ public class OrderCallListController {
     logger.debug("==================/insertCallResult_2.do=======================");
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
-    Map<String, Object> smsResultValue = new HashMap<String, Object>();
+//    Map<String, Object> smsResultValue = new HashMap<String, Object>();
     int noRcd = orderCallListService.chkRcdTms(params);
 
     if (noRcd == 1) { // RECORD ABLE TO UPDATE
@@ -316,7 +316,7 @@ public class OrderCallListController {
                 	  params.put("logStat", resultValue.get("logStat"));
                 	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
 
-                	  try{
+/*                	  try{
                 		  smsResultValue = orderCallListService.callLogSendSMS(params, sessionVO);
                 	  }catch (Exception e){
                 		  logger.info("===smsResultValue===" + smsResultValue.toString());
@@ -324,6 +324,7 @@ public class OrderCallListController {
                 	  if(smsResultValue.isEmpty()){
                 		  msg += "</br> Failed to send SMS to " + params.get("custMobileNo").toString();
                 	  }
+                	  */
                 	  message.setMessage(msg);
                       message.setCode("1");
                   }
@@ -350,14 +351,14 @@ public class OrderCallListController {
                   	  params.put("logStat", resultValue.get("logStat"));
                   	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
 
-                  	  try{
+                  	 /* try{
                   		  smsResultValue = orderCallListService.callLogSendSMS(params, sessionVO);
                   	  }catch (Exception e){
                   		  logger.info("===smsResultValue===" + smsResultValue.toString());
                   	  }
                   	  if(smsResultValue.isEmpty()){
                   		  msg += "</br> Failed to send SMS to " + params.get("custMobileNo").toString();
-                  	  }
+                  	  }*/
                   	  message.setMessage(msg);
                         message.setCode("1");
                     }

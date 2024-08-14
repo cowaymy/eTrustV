@@ -620,8 +620,8 @@ var installAccTypeId = 582;
   function fn_saveInstall() {
     console.log("addInstallationResultProductDetailPop :: fn_saveInstall");
     var msg = "";
-    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
-    var chkMobileNo = custMobileNo.substring(0, 2);
+    /* var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+    var chkMobileNo = custMobileNo.substring(0, 2); */
     var addedRowItems;
     // KR-OHK Serial Check add
     var url = "";
@@ -632,10 +632,10 @@ var installAccTypeId = 582;
       url = "/services/addInstallation_2.do";
     }
 
-    if (chkMobileNo == '60'){
+    /* if (chkMobileNo == '60'){
         custMobileNo = custMobileNo.substring(1);
     }
-    $("#custMobileNo").val(custMobileNo);
+    $("#custMobileNo").val(custMobileNo); */
 
     if ($("#addInstallForm #installStatus").val() == 4) {
       // COMPLETED
@@ -701,9 +701,9 @@ var installAccTypeId = 582;
               msg += validationForGlazeWhenCompleted();
       }
 
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
         	if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
@@ -825,9 +825,9 @@ var installAccTypeId = 582;
           }
         }
 
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
 	// NTU Checking for Failed status
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
@@ -2501,13 +2501,13 @@ var installAccTypeId = 582;
               </select>
             </td>
           </tr>
-          <tr>
+          <%-- <tr>
             <th scope="row">Mobile</th>
             <td>
               <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
               <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
             </td>
-          </tr>
+          </tr> --%>
     </tbody>
    </table>
    <br/>
@@ -2551,7 +2551,7 @@ var installAccTypeId = 582;
         id="checkCommission" name="checkCommission" /><span><spring:message
           code='service.btn.AllowCommission' /> ?</span></label> <label><input
         type="checkbox" id="checkTrade" name="checkTrade" /><span><spring:message
-          code='service.btn.IsTradeIn' /> ?</span></label> <label><input
+          code='service.btn.IsTradeIn' /> ?</span></label><label><input
         type="checkbox" id="checkSms" name="checkSms" /><span><spring:message
           code='service.btn.RequireSMS' /> ?</span></label></td>
      </tr>
@@ -2708,8 +2708,9 @@ var installAccTypeId = 582;
           <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
         </td>
       </tr>
+      <br></br>
    <!-- table end -->
-   <aside class="title_line" id="completedHide1">
+   <%-- <aside class="title_line" id="completedHide1">
     <!-- title_line start -->
     <h2>
      <spring:message code='service.title.SMSInfo' />
@@ -2743,7 +2744,7 @@ var installAccTypeId = 582;
       <td><input type="text" title="" placeholder="Remark" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
-   </table>
+   </table> --%>
    <!-- table end -->
    <table class="type1" id="failHide3">
     <!-- table start -->

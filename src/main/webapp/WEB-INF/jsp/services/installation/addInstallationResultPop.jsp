@@ -548,8 +548,8 @@
   function fn_saveInstall() {
 
     var msg = "";
-    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
-    var chkMobileNo = custMobileNo.substring(0, 2);
+    /* var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+    var chkMobileNo = custMobileNo.substring(0, 2); */
     var url = "";
 
     if ($("#hidSerialRequireChkYn").val() == 'Y') {
@@ -560,10 +560,10 @@
 
     $("#hiddenFailReasonCode").val( $("#failReasonCode option:selected").text() );
 
-    if (chkMobileNo == '60'){
+   /*  if (chkMobileNo == '60'){
         custMobileNo = custMobileNo.substring(1);
-    }
-    $("#custMobileNo").val(custMobileNo);
+    } */
+    /* $("#custMobileNo").val(custMobileNo); */
 
     if ($("#addInstallForm #installStatus").val() == 4) {
 
@@ -685,9 +685,9 @@
     	  console.log("appointment Dt: " + $("#hidAppntDt").val());
       }
 
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
       	if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
@@ -829,9 +829,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           }
         }
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
       if("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400"){ // WP & POE
     	if($("#failReasonCode").val() == 8009){
@@ -2277,11 +2277,13 @@
           <tr>
             <th scope="row"><spring:message code='service.title.AddUsedParts' /></th>
             <td><label><input type="checkbox" id='chkCrtAS' name='chkCrtAS' onChange="fn_chkCrtAS(this)" /></label></td>
-            <th scope="row">Mobile</th>
+            <th scope="row"></th>
+            <td></td>
+          <%--   <th scope="row">Mobile</th>
 	        <td>
 	          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
 	          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
-	        </td>
+	        </td> --%>
           </tr>
           <tr>
            <th scope="row"><spring:message code='service.title.ntu'/><span name="m28" id="m28" class="must">*</span></th>
@@ -2331,7 +2333,7 @@
             <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p" id="refNo2" name="refNo2" /></td>
           </tr>
           <tr>
-            <td colspan="8"><label><input type="checkbox" id="checkCommission" name="checkCommission" /><span><spring:message code='service.btn.AllowCommission' /> ?</span></label> <label><input type="checkbox" id="checkTrade" name="checkTrade" /><span><spring:message code='service.btn.IsTradeIn' /> ?</span></label> <label><input type="checkbox" id="checkSms" name="checkSms" /><span><spring:message code='service.btn.RequireSMS' /> ?</span></label></td>
+            <td colspan="8"><label><input type="checkbox" id="checkCommission" name="checkCommission" /><span><spring:message code='service.btn.AllowCommission' /> ?</span></label> <label><input type="checkbox" id="checkTrade" name="checkTrade" /><span><spring:message code='service.btn.IsTradeIn' /> ?</span></label><label><input type="checkbox" id="checkSms" name="checkSms" /><span><spring:message code='service.btn.RequireSMS' /> ?</span></label></td>
           </tr>
         </tbody>
       </table>
@@ -2578,16 +2580,17 @@
       <tr>
         <td colspan="8"><label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label></td>
       </tr>
+      <br></br>
       <!-- table end -->
 
-      <aside class="title_line" id="completedHide1">
+      <%-- <aside class="title_line" id="completedHide1">
         <!-- title_line start -->
         <h2>
           <spring:message code='service.title.SMSInfo' />
         </h2>
-      </aside>
+      </aside> --%>
       <!-- title_line end -->
-      <table class="type1" id="completedHide2">
+      <%-- <table class="type1" id="completedHide2">
         <!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -2612,7 +2615,7 @@
             <td><input type="text" title="" placeholder="" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
           </tr>
         </tbody>
-      </table>
+      </table> --%>
       <!-- table end -->
       <table class="type1" id="failHide3">
         <!-- table start -->

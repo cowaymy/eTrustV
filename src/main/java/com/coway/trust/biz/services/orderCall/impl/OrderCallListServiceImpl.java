@@ -765,56 +765,56 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     return orderCallListMapper.selectPromotionList();
   }
 
-  @Override
-  public void sendSms(Map<String, Object> smsList){
-    int userId = (int) smsList.get("userId");
-    SmsVO sms = new SmsVO(userId, 975);
-
-    sms.setMessage(smsList.get("smsMessage").toString());
-    sms.setMobiles(smsList.get("smsMobileNo").toString());
-    //send SMS
-    SmsResult smsResult = adaptorService.sendSMS(sms);
-  }
-
-	@Override
-	public Map<String, Object> callLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
-		Map<String, Object> smsResultValue = new HashMap<String, Object>();
-		String smsMessage = "";
-
-		try{
-		  //SMS for OrderCal Appointment
-		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
-		    		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
-
-		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
-
-		    logger.debug("//SMS params" + params.toString());
-
-		       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
-		       {
-		    	   logger.debug("//IN SMS1");
-
-		    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
-		    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-
-		           	       Map<String, Object> smsList = new HashMap<>();
-		                   smsList.put("userId", sessionVO.getUserId());
-		                   smsList.put("smsType", 975);
-		                   smsList.put("smsMessage", smsMessage);
-		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
-
-		                   sendSms(smsList);
-		    	   }
-		      }
-		    }catch(Exception e){
-		    	logger.info("Fail to send SMS to " + params.get("custMobileNo").toString());
-		    	smsResultValue.put("smsLogStat", "3");
-		    }finally{
-				logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
-		    }
-
-		smsResultValue.put("smsLogStat", "0");//if success
-		logger.info("===resultValue===" + smsResultValue.toString());
-		return smsResultValue;
-	}
+//  @Override
+//  public void sendSms(Map<String, Object> smsList){
+//    int userId = (int) smsList.get("userId");
+//    SmsVO sms = new SmsVO(userId, 975);
+//
+//    sms.setMessage(smsList.get("smsMessage").toString());
+//    sms.setMobiles(smsList.get("smsMobileNo").toString());
+//    //send SMS
+//    SmsResult smsResult = adaptorService.sendSMS(sms);
+//  }
+//
+//	@Override
+//	public Map<String, Object> callLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
+//		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+//		String smsMessage = "";
+//
+//		try{
+//		  //SMS for OrderCal Appointment
+//		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+//		    		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
+//
+//		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+//
+//		    logger.debug("//SMS params" + params.toString());
+//
+//		       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+//		       {
+//		    	   logger.debug("//IN SMS1");
+//
+//		    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+//		    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+//
+//		           	       Map<String, Object> smsList = new HashMap<>();
+//		                   smsList.put("userId", sessionVO.getUserId());
+//		                   smsList.put("smsType", 975);
+//		                   smsList.put("smsMessage", smsMessage);
+//		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+//
+//		                   sendSms(smsList);
+//		    	   }
+//		      }
+//		    }catch(Exception e){
+//		    	logger.info("Fail to send SMS to " + params.get("custMobileNo").toString());
+//		    	smsResultValue.put("smsLogStat", "3");
+//		    }finally{
+//				logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+//		    }
+//
+//		smsResultValue.put("smsLogStat", "0");//if success
+//		logger.info("===resultValue===" + smsResultValue.toString());
+//		return smsResultValue;
+//	}
 }

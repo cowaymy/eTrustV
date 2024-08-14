@@ -34,7 +34,7 @@ var installAccTypeId = 583;
         $("#refNo2").val("");
         $("#checkCommission").prop("checked", false);
         $("#checkTrade").prop("checked", false);
-        $("#checkSms").prop("checked", false);
+        /* $("#checkSms").prop("checked", false); */
         $("#msgRemark").val("");
         $("#failReason").val("0");
         $("#nextCallDate").val("");
@@ -149,7 +149,7 @@ var installAccTypeId = 583;
           $("#addInstallForm #refNo1").val("");
           $("#addInstallForm #refNo2").val("");
           $("#addInstallForm #checkTrade").prop("checked", false);
-          $("#addInstallForm #checkSms").prop("checked", false);
+          /* $("#addInstallForm #checkSms").prop("checked", false); */
           $("#addInstallForm #msgRemark").val("Remark:");
           $("#addInstallForm #failReason").val("0");
           $("#addInstallForm #nextCallDate").val("");
@@ -324,9 +324,9 @@ var installAccTypeId = 583;
           }
       }
 
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
    	  // Installation Accessory checking for Complete status
       if($("#addInstallForm #chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
@@ -405,9 +405,9 @@ var installAccTypeId = 583;
         msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
       }
 
-      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      }
+      } */
 
       if (msg != "") {
         Common.alert(msg);
@@ -920,13 +920,13 @@ var installAccTypeId = 583;
       <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
        id="refNo2" name="refNo2" /></td>
      </tr>
-     <tr>
+     <%-- <tr>
         <th scope="row">Mobile</th>
         <td  colspan="3">
             <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:30%;" />
             <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
         </td>
-     </tr>
+     </tr> --%>
      <tr>
           <th scope="row"><spring:message code="service.title.installation.accessories" />
           <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
@@ -944,10 +944,10 @@ var installAccTypeId = 583;
             <input type="checkbox" id="checkTrade" name="checkTrade" />
             <span><spring:message code='service.btn.IsTradeIn' /> ?</span>
         </label>
-        <label>
+       <%--  <label>
             <input type="checkbox" id="checkSms" name="checkSms" />
             <span><spring:message code='service.btn.RequireSMS' /> ?</span>
-        </label>
+        </label> --%>
       </td>
      </tr>
     </tbody>
@@ -1087,7 +1087,8 @@ var installAccTypeId = 583;
           </tr>
       </tbody>
     </table>
-   <aside class="title_line" id="completedHide1">
+    <br></br>
+   <%-- <aside class="title_line" id="completedHide1">
     <!-- title_line start -->
     <h2>
      <spring:message code='service.title.SMSInfo' />
@@ -1127,7 +1128,7 @@ var installAccTypeId = 583;
       <td><input type="text" title="" placeholder="Remark" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
-   </table>
+   </table> --%>
    <!-- table end -->
    <table class="type1" id="failHide3">
     <!-- table start -->

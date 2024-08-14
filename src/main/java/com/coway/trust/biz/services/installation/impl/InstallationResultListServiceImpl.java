@@ -1896,14 +1896,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     //Added by Keyi Installation SMS 202206
     logger.debug("CHECKPOINT2///////");
-	if(!CommonUtils.nvl(params.get("chkSms")).toString().equals(null)){
-		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
-	}else{
-		installResult.put("chkSMS", "N");
-	}
+//	if(!CommonUtils.nvl(params.get("chkSms")).toString().equals(null)){
+//		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
+//	}else{
+//		installResult.put("chkSMS", "N");
+//	}
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
-    installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
+//    installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
     installResult.put("salesOrderNo", CommonUtils.nvl(params.get("salesOrderNo")).toString());
     if(!CommonUtils.nvl(params.get("ctMemCode")).toString().equals(null)){
 		installResult.put("ctCode", CommonUtils.nvl(params.get("ctMemCode")).toString());
@@ -1918,11 +1918,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("gasPreAIns", params.get("gaspreAftIns"));//After Installation
 
     installResult.put("signData", params.get("signData"));
-    if(!CommonUtils.nvl(params.get("checkSend")).toString().equals(null)){
-		installResult.put("checkSend", CommonUtils.nvl(params.get("checkSend")).toString());
-	}else{
-		installResult.put("checkSend", "N");
-	}
+//    if(!CommonUtils.nvl(params.get("checkSend")).toString().equals(null)){
+//		installResult.put("checkSend", CommonUtils.nvl(params.get("checkSend")).toString());
+//	}else{
+//		installResult.put("checkSend", "N");
+//	}
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
@@ -2537,24 +2537,24 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     maxtaxInvoiceID.put("value", "taxInvoiceId");
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
-    String chkSMS = "";
-    String checkSend = "";
-
-    if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
-    	chkSMS = "Y";
-    }
-    else{
-    	chkSMS = "N";
-    }
-
-    if(installResult.get("checkSend").equals("on") || installResult.get("checkSend").equals("Y")){
-    	checkSend = "Y";
-    }
-    else{
-    	checkSend = "N";
-    }
-    installResult.put("chkSMS", chkSMS);
-    installResult.put("checkSend", checkSend);
+//    String chkSMS = "";
+//    String checkSend = "";
+//
+//    if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
+//    	chkSMS = "Y";
+//    }
+//    else{
+//    	chkSMS = "N";
+//    }
+//
+//    if(installResult.get("checkSend").equals("on") || installResult.get("checkSend").equals("Y")){
+//    	checkSend = "Y";
+//    }
+//    else{
+//    	checkSend = "N";
+//    }
+//    installResult.put("chkSMS", chkSMS);
+//    installResult.put("checkSend", checkSend);
 
     // Rental || Sponsor || Education || AUX
     if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
@@ -2574,9 +2574,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("resultIcMobileNo", installResult.get("resultIcMobileNo"));
         s46dup.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
         s46dup.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
-        s46dup.put("chkSMS", chkSMS);
-        s46dup.put("custMobileNo", installResult.get("custMobileNo"));
-        s46dup.put("checkSend", checkSend);
+//        s46dup.put("chkSMS", chkSMS);
+//        s46dup.put("custMobileNo", installResult.get("custMobileNo"));
+//        s46dup.put("checkSend", checkSend);
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
@@ -2618,9 +2618,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       entry.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
       entry.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
 
-      entry.put("chkSMS", chkSMS);
-      entry.put("custMobileNo", installResult.get("custMobileNo"));
-      entry.put("checkSend", checkSend);
+//      entry.put("chkSMS", chkSMS);
+//      entry.put("custMobileNo", installResult.get("custMobileNo"));
+//      entry.put("checkSend", checkSend);
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
     }
@@ -2719,9 +2719,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         m.put("installResultId", maxId);
         m.put("salesOrdId", installResult.get("salesOrdId"));
         m.put("installDate", installResult.get("installDate"));
-        m.put("chkSMS", chkSMS);
-        m.put("custMobileNo", installResult.get("custMobileNo"));
-        m.put("checkSend", checkSend);
+//        m.put("chkSMS", chkSMS);
+//        m.put("custMobileNo", installResult.get("custMobileNo"));
+//        m.put("checkSend", checkSend);
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(m);
@@ -2771,9 +2771,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     logger.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
     logger.debug("PARAMS111 :" + installResult.toString());
-    logger.debug("================chkSMS================" + chkSMS);
+    //logger.debug("================chkSMS================" + chkSMS);
     logger.debug("================ApptypeID================" + ApptypeID);
-    logger.debug("================checkSend================" + checkSend);
+    //logger.debug("================checkSend================" + checkSend);
     logger.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
@@ -3724,23 +3724,23 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  return stockMapper.selectStkCatType(params);
   }
 
-  @Override
-  public void sendSms(Map<String, Object> smsList){
-	  logger.debug("====inSendSMS111=====" + smsList.toString());
-	  logger.debug("====inSendSMS111=====" + smsList.get("userId"));
-	  logger.debug("====inSendSMS111=====" + Integer.parseInt(smsList.get("userId").toString()));
-    int userId = Integer.parseInt(smsList.get("userId").toString());
-    SmsVO sms = new SmsVO(userId, 975);
-
-    logger.debug("====inSendSMS111=====");
-
-    sms.setMessage(smsList.get("smsMessage").toString());
-    sms.setMobiles(smsList.get("smsMobileNo").toString());
-    //send SMS
-    logger.debug("smsmsg111===" + smsList.toString());
-
-    SmsResult smsResult = adaptorService.sendSMS(sms);
-  }
+//  @Override
+//  public void sendSms(Map<String, Object> smsList){
+//	  logger.debug("====inSendSMS111=====" + smsList.toString());
+//	  logger.debug("====inSendSMS111=====" + smsList.get("userId"));
+//	  logger.debug("====inSendSMS111=====" + Integer.parseInt(smsList.get("userId").toString()));
+//    int userId = Integer.parseInt(smsList.get("userId").toString());
+//    SmsVO sms = new SmsVO(userId, 975);
+//
+//    logger.debug("====inSendSMS111=====");
+//
+//    sms.setMessage(smsList.get("smsMessage").toString());
+//    sms.setMobiles(smsList.get("smsMobileNo").toString());
+//    //send SMS
+//    logger.debug("smsmsg111===" + smsList.toString());
+//
+//    SmsResult smsResult = adaptorService.sendSMS(sms);
+//  }
 
 
   /*@SuppressWarnings("unchecked")
@@ -3899,64 +3899,64 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  }
 
 
-  	@Override
-	public Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult) {
-  		Map<String, Object> smsResultValue = new HashMap<String, Object>();
-		String smsMessage = "";
-		smsResultValue.put("smsLogStat", "0");//if success
-
-		logger.debug("================INSMS111================");
-		logger.debug("ApptypeID===" + ApptypeID);
-		logger.debug("InstallationResult====" + installResult.toString());
-		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
-		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
-
-		 if(CommonUtils.nvl(installResult.get("userId")).toString() != ""){ //from Mobile
-			 installResult.put("ctCode", installResult.get("userId"));
-		 }
-
-		 if(CommonUtils.nvl(installResult.get("CTID")).toString() != ""){//from Mobile
-			 installResult.put("creator", installResult.get("CTID"));
-		 }
-
-		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
-		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
-			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
-			    {
-				 logger.debug("================INSMS================");
-
-			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
-
-				        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
-			    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
-			    	}else{ //FAIL
-			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
-			    	}
-			    }
-		 }
-
-	    Map<String, Object> smsList = new HashMap<>();
-	    smsList.put("userId", installResult.get("creator"));
-	    smsList.put("smsType", 975);
-	    smsList.put("smsMessage", smsMessage);
-	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
-
-		try{
-		    if(smsMessage != "")
-		    {
-		    	sendSms(smsList);
-		    }
-		}catch(Exception e){
-			logger.info("Fail to send SMS to " + installResult.get("custMobileNo").toString());
-	    	smsResultValue.put("smsLogStat", "3");//if fail
-		}finally{
-			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
-		}
-
-		logger.info("===resultValue===" + smsResultValue.toString());
-		return smsResultValue;
-	}
+//  	@Override
+//	public Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult) {
+//  		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+//		String smsMessage = "";
+//		smsResultValue.put("smsLogStat", "0");//if success
+//
+//		logger.debug("================INSMS111================");
+//		logger.debug("ApptypeID===" + ApptypeID);
+//		logger.debug("InstallationResult====" + installResult.toString());
+//		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
+//		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
+//
+//		 if(CommonUtils.nvl(installResult.get("userId")).toString() != ""){ //from Mobile
+//			 installResult.put("ctCode", installResult.get("userId"));
+//		 }
+//
+//		 if(CommonUtils.nvl(installResult.get("CTID")).toString() != ""){//from Mobile
+//			 installResult.put("creator", installResult.get("CTID"));
+//		 }
+//
+//		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
+//		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
+//			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
+//			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
+//			    {
+//				 logger.debug("================INSMS================");
+//
+//			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
+//
+//				        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
+//			    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
+//			    	}else{ //FAIL
+//			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+//			    	}
+//			    }
+//		 }
+//
+//	    Map<String, Object> smsList = new HashMap<>();
+//	    smsList.put("userId", installResult.get("creator"));
+//	    smsList.put("smsType", 975);
+//	    smsList.put("smsMessage", smsMessage);
+//	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
+//
+//		try{
+//		    if(smsMessage != "")
+//		    {
+//		    	sendSms(smsList);
+//		    }
+//		}catch(Exception e){
+//			logger.info("Fail to send SMS to " + installResult.get("custMobileNo").toString());
+//	    	smsResultValue.put("smsLogStat", "3");//if fail
+//		}finally{
+//			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+//		}
+//
+//		logger.info("===resultValue===" + smsResultValue.toString());
+//		return smsResultValue;
+//	}
 
   	@SuppressWarnings("unchecked")
 	@Override
