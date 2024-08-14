@@ -921,7 +921,7 @@
                D.ISO AS SHIPM_COUNTRY,
                B.TEL_M1 AS SHIPM_PHONE_NO,
                B.EMAIL AS SHIPM_EMAIL_ADDR,
-               '2' AS HANDOVER_MTD,
+               '1' AS HANDOVER_MTD,
                '02' AS RTN_MODE
     FROM SUP0001M A
     JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
