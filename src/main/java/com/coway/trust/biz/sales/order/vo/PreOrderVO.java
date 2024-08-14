@@ -157,6 +157,8 @@ public class PreOrderVO implements Serializable {
 
     private String voucherCode;
 
+    private String srvType;
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -991,5 +993,13 @@ public class PreOrderVO implements Serializable {
 	public void setVoucherCode(String voucherCode) {
 		this.voucherCode = voucherCode;
 	}
+
+  public String getSrvType() {
+    return srvType;
+  }
+
+  public void setSrvType(String srvType) {
+    this.srvType = srvType;
+  }
 
 }

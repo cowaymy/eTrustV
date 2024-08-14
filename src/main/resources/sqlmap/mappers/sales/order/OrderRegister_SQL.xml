@@ -762,6 +762,7 @@
              , T1.PROMO_ITM_RENTAL
              , T1.PROMO_ITM_RENT_PRIOD
              , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.SRV_TYPE
           FROM SAL0018D T1
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STK_ID = #{stkId}
@@ -790,6 +791,7 @@
              , T3.PROMO_APP_TYPE_ID
              , T3.PROMO_DISC_ON_BILL
              , T5.CODE PROMO_DISC_ON_BILL_CODE
+             , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -831,6 +833,7 @@
              , T3.PROMO_APP_TYPE_ID
              , T3.PROMO_DISC_ON_BILL
              , T5.CODE PROMO_DISC_ON_BILL_CODE
+             , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -872,6 +875,7 @@
              , T3.PROMO_APP_TYPE_ID
              , T3.PROMO_DISC_ON_BILL
              , T5.CODE PROMO_DISC_ON_BILL_CODE
+             , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -1496,6 +1500,7 @@
              , EDIT_TYPE_ID
              , IS_TRADE_IN
              , VRIFY_REM
+             , SRV_TYPE
              )
         VALUES
              ( #{installId}
@@ -1515,6 +1520,7 @@
              , #{editTypeId}
              , #{isTradeIn}
              , #{vrifyRem}
+             , NVL(#{serviceType},'HS')
              )
     </insert>
 
@@ -3655,4 +3661,34 @@ WHERE
 		LEFT JOIN PAY0024D B ON A.SRV_MEM_ID = B.SRV_MEM_ID
 		WHERE A.SRV_SALES_ORD_ID =  #{value}
     </select>
+
+    <insert id="insertSSRebate" parameterType="Map">
+    INSERT INTO PAY0286D ( GST_REBATE_ID ,
+                                         ORD_ID ,
+                                         REBATE_TYPE ,
+                                         REBATE_AMT_PER_INSTLMT ,
+                                         REBATE_START_INSTLMT ,
+                                         REBATE_END_INSTLMT ,
+                                         REM ,
+                                         CRT_DT ,
+                                         CRT_USER_ID ,
+                                         UPD_DT ,
+                                         UPD_USER_ID ,
+                                         STUS_ID ,
+                                         CNTRCT_ID
+    ) VALUES ( PAY0286D_SEQ.NEXTVAL
+                  , #{ordId}
+                  , #{rebateType}
+                  , #{rebateAmtPerInstallment}
+                  , #{rebateStartInstallment}
+                  , #{rebateEndInstallment}
+                  , #{rem}
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , #{stusId}
+                  , #{cntrctId}
+     )
+  </insert>
 </mapper>

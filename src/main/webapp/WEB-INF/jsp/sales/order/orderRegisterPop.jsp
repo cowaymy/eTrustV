@@ -27,6 +27,8 @@
     var voucherAppliedEmail = "";
     var voucherPromotionId = [];
 
+    var preSrvType = "${preOrderInfo.srvType}";
+
 	//Voucher Management
     var codeList_562 = [];
     codeList_562.push({codeId:"0", codeName:"No", code:"No"});
@@ -37,8 +39,8 @@
     function getSub() {
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
+        //doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
+        //doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
         doGetComboSepa('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
         doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
@@ -48,6 +50,8 @@
         createAUIGrid();
 
         fn_selectDocSubmissionList();
+
+        fn_checkPreSrvType(preSrvType);
 
         //special - extrade whether need product return
         //$('#isReturnExtrade').prop("checked", true);
@@ -865,12 +869,12 @@
                             appSubType = '367';
                             var vCustType = $("#typeId").val();
                             if (vCustType == '965' ){
-                                $("#corpCustType").val('').removeAttr("disabled");
-                                $("#agreementType").val('').removeAttr("disabled");
+                                //$("#corpCustType").val('').removeAttr("disabled");
+                                //$("#agreementType").val('').removeAttr("disabled");
                             }
                             else{
-                                $("#corpCustType").val('').prop("disabled", true);
-                                $("#agreementType").val('').prop("disabled", true);
+                                //$("#corpCustType").val('').prop("disabled", true);
+                                //$("#agreementType").val('').prop("disabled", true);
                             }
 
                             break;
@@ -888,8 +892,8 @@
                                 $('#pBtnCal').addClass("blind");
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             appSubType = '368';
 
                             break;
@@ -908,8 +912,8 @@
                                 $('#pBtnCal').addClass("blind");
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             appSubType = '369';
 
                             break;
@@ -932,8 +936,8 @@
                             }
 
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             appSubType = '370';
 
                             break;
@@ -942,8 +946,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -952,8 +956,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -962,8 +966,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -972,8 +976,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -981,8 +985,8 @@
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0');
                             $('#pBtnCal').addClass("blind");
-                            $("#corpCustType").val('').prop("disabled", true);
-                            $("#agreementType").val('').prop("disabled", true);
+                            //$("#corpCustType").val('').prop("disabled", true);
+                            //$("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -1653,6 +1657,7 @@
 
             salesOrderMVO : {
                 advBill                 : $('input:radio[name="advPay"]:checked').val(),
+                serviceType             : $('input:radio[name="srvType"]:checked').val(),
                 appTypeId               : $('#appType').val(),
                 srvPacId                : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
@@ -1690,8 +1695,8 @@
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
                 gstChk                  : $('#gstChk').val(),
-                corpCustType            : $('#corpCustType').val(),
-                agreementType           : $('#agreementType').val(),
+                corpCustType            : 0 ,//$('#corpCustType').val(),
+                agreementType           : 0 ,//$('#agreementType').val(),
                 comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 ,voucherCode : voucherAppliedCode
@@ -1980,6 +1985,11 @@
             }
         } */
 
+        if ($(':radio[name="srvType"]:checked').val() != 'HS'
+            && $(':radio[name="srvType"]:checked').val() != 'SS') {
+          isValid = false;
+          msg += "* Please select Service Type.<br>";
+        }
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
             if($('#hiddenSalesmanId').val() == '1' || $('#hiddenSalesmanId').val() == '2') {
@@ -2462,6 +2472,7 @@
                 $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#orgOrdPriceId").val(stkPriceInfo.priceId);
  */
+ 				fn_checkPreSrvType(promoPriceInfo.srvType);
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
             }
@@ -2966,6 +2977,25 @@
 		  });
 	  }
   }
+
+  function fn_checkPreSrvType(val){
+	  $("#srvTypeLbl").find("span").remove();
+	  preSrvType = val;
+	  if(preSrvType == "HS"){
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeHS').prop("checked", true);
+	  }else if(preSrvType == "SS"){
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeSS').prop("checked", true);
+		  $("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+	  }else if(preSrvType == "BOTH"){
+		  $('[name="srvType"]').prop("disabled", false);
+		  $('#srvTypeHS').prop("checked", true);
+	  }else{
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeHS').prop("checked", true);
+	  }
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -3365,6 +3395,13 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark"></textarea></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
+    <td colspan="3"><input id="srvTypeHS" name="srvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
+        <input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
+        <label id="srvTypeLbl"></label>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.rentPay" /><span class="must">*</span></th>

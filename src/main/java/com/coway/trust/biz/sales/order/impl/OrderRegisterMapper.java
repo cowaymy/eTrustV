@@ -249,4 +249,6 @@ public interface OrderRegisterMapper {
   BigDecimal selectOutrightAmt(int salesOrdId);
 
   BigDecimal selectSVMAmt(int salesOrdId);
+
+  void insertSSRebate( Map<String, Object> params );
 }

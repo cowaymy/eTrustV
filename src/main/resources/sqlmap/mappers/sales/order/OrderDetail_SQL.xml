@@ -1054,6 +1054,8 @@
                , CONFIG_BS_WEEK
                , CUST_NAME
                , CUST_NRIC
+               , SRV_TYPE
+               , SRV_COUNT
       FROM ( SELECT T.ORD_ID
                           , T.ORD_NO
                           , T.APP_TYPE_CODE
@@ -1072,6 +1074,8 @@
                           , T.CONFIG_BS_WEEK
                           , T.CUST_NAME
                           , T.CUST_NRIC
+                          , T.SRV_TYPE
+                          , T.SRV_COUNT
                  FROM ( SELECT T1.ORD_ID
                                      , T1.ORD_NO
                                      , T1.APP_TYPE_CODE
@@ -1090,6 +1094,8 @@
                                      , T2.CONFIG_BS_WEEK
                                      , T2.CONFIG_BS_REM
                                      , T2.SRV_MEM_FREQ
+                                     , T2.SRV_TYPE
+                                     , T2.SRV_COUNT
                             FROM ( SELECT V1.ORD_ID
                                                 , V1.ORD_NO
                                                 , V1.RENTAL_STUS
@@ -1183,6 +1189,10 @@
                                                              , V2.LAST_SRV_MEM_ID
                                                              , V2.LAST_SRV_MEM_START_DATE
                                                              , V2.LAST_SRV_MEM_EXPR_DATE
+                                                             , V2.SRV_TYPE
+                                                             , (SELECT COUNT(*)
+     															FROM SAL0090H
+     															WHERE SRV_CONFIG_ID = V2.CONFIG_ID) AS SRV_COUNT
                                                    FROM SAL1014V V2
                                 ) T2 ON T1.ORD_ID = T2.ORD_ID
                                 LEFT JOIN ORG0001D T3 ON T2.CONFIG_BS_MEM_ID = T3.MEM_ID

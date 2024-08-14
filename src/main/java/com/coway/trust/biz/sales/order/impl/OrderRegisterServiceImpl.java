@@ -57,6 +57,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
+import com.coway.trust.biz.sales.order.vo.SupplementMasterVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -1649,6 +1650,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int itmCompId = salesOrderDVO.getItmCompId();
     int brnchId = installationVO.getBrnchId();
     String custNric = orderVO.getRentPaySetVO().getIssuNric();
+    String srvType = salesOrderMVO.getServiceType();
 
     // SET BNDL_ID
     salesOrderMVO.setBndlId(orderVO.getBndlId());
@@ -1948,6 +1950,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
+    // Self Service Rebate - PAY0286D
+    if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && srvType.equals("SS")){
+      insertSelfServiceRebate(salesOrderMVO , sessionVO);
+    }
+
     // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
     if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode")) > 01 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
       EgovMap params = new EgovMap();
@@ -2137,6 +2144,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     // INSTALLATION
     installationVO.setSalesOrdId(salesOrdId);
+    installationVO.setServiceType(salesOrderMVO.getServiceType());
     orderRegisterMapper.insertInstallation(installationVO);
 
     // CUSTOMER BILL MASTER
@@ -2697,4 +2705,26 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	}
 		return result;
   }
+
+  private void insertSelfServiceRebate( SalesOrderMVO salesOrderMVO , SessionVO sessionVO ) {
+    Map<String,Object> params = new HashMap();
+    params.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
+    EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
+
+    if(!srvPackageResult.isEmpty()){
+      params.put("ordId", salesOrderMVO.getSalesOrdId());
+      params.put("rebateType", 0);
+      params.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
+      params.put("rebateStartInstallment", 1);  //
+      params.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+      params.put("rem", salesOrderMVO.getMthRentAmt());
+      params.put("crtUserId", sessionVO.getUserId());
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("stusId", 1);
+      params.put("cntrctId", 0);
+
+      orderRegisterMapper.insertSSRebate(params);
+    }
+  }
+
 }

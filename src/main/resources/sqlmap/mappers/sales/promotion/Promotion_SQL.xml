@@ -441,6 +441,7 @@
              , PROMO_ITM_STUS_ID
              , PROMO_ITM_UPD_USER_ID
              , PROMO_ITM_UPD_DT
+             , SRV_TYPE
              , CRT_USER_ID
              , CRT_DT
              , UPD_USER_ID
@@ -456,6 +457,7 @@
              , #{promoItmStusId}
              , #{promoItmUpdUserId}
              , SYSDATE
+             , #{srvType}
              , #{crtUserId}
              , SYSDATE
              , #{updUserId}
@@ -555,6 +557,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.PROMO_ITM_OBLIG_PRIOD
              , T1.PROMO_ITM_PV_GST
              , 'Y' AS SAVED_PV_YN
+             , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -580,6 +583,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
                 END AS PROMO_AMT
              , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -749,6 +753,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
            SET PROMO_ITM_PV          = #{promoItmPv}
              , PROMO_ITM_STUS_ID     = #{promoItmStusId}
              , PROMO_ITM_UPD_USER_ID = #{promoItmUpdUserId}
+             , SRV_TYPE 			 = #{srvType}
              , PROMO_ITM_UPD_DT      = SYSDATE
          WHERE PROMO_ITM_ID          = #{promoItmId}
     </update>
@@ -1043,6 +1048,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , PROMO_ITM_PV_GST
              , CTRL_FLAG
              , CTRL_QUOTA
+             , SRV_TYPE
              , CRT_USER_ID
              , CRT_DT
              , UPD_USER_ID
@@ -1064,6 +1070,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , #{promoItmPvGst}
              , 0
              , 0
+             , NVL(#{srvType}, 'HS')
              , #{crtUserId}
              , SYSDATE
              , #{updUserId}
@@ -1222,6 +1229,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.PROMO_ITM_PV_GST
              , 'Y' AS SAVED_PV_YN
              , T1.ACTION_TAB
+             , T1.SRV_TYPE
           FROM SAL0359D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -1247,6 +1255,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.PROMO_ITM_PV_GST
              , 'Y' AS SAVED_PV_YN
              , T1.ACTION_TAB
+             , T1.SRV_TYPE
           FROM SAL0359D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -1346,6 +1355,7 @@ SELECT T1.PROMO_REQST_ITM_ID
              , T4.EX_TRADE
              , T4.PROMO_RPF_DISC_AMT
              , T4.PRE_BOOK
+             , T1.SRV_TYPE
           FROM SAL0359D T1
           JOIN SAL0358M T4 ON T4.PROMO_REQST_ID = T1.PROMO_REQST_ID
           JOIN SAL0018D T3 ON T3.PROMO_ITM_ID = T1.PROMO_ITM_ID

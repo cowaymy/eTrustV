@@ -7,6 +7,10 @@
     var stckGridID, giftGridID;
     var mode;
 
+    var arrSrvTypeCode = [{"codeId": "SS"  ,"codeName": "Self Service"},
+                          {"codeId": "HS" ,"codeName": "Heart Service"},
+                          {"codeId": "BOTH","codeName": "Both"}];
+
     var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
                        {"codeId": "QUEEN" ,"codeName": "QUEEN"},
                        {"codeId": "SINGLE","codeName": "SINGLE"}];
@@ -20,7 +24,7 @@
         doGetCombo('/common/selectCodeList.do', '76',  '${promoInfo.promoTypeId}',       'promoTypeId',       'S'); //Promo Type
         doGetCombo('/common/selectCodeList.do', '8',   '',     'promoCustType',     'S', 'fn_addOption'); //Customer Type
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${promoInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${promoInfo.exTrade}',              'exTrade',              'S','fn_onchange()'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${promoInfo.exTrade}',              'exTrade',              'S','fn_onchange'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${promoInfo.empChk}',               'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.promoDiscType}',        'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
@@ -135,6 +139,25 @@
           , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
           , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
           , {dataField: "stkCtgryId", visible: false}
+          , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+            	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+                  var retStr = "Heart Service";
+                  for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                      if(arrSrvTypeCode[i]["codeId"] == value) {
+                          retStr = arrSrvTypeCode[i]["codeName"];
+                          break;
+                      }
+                  }
+                  return retStr;
+            },
+            editRenderer : {
+          		 type : "DropDownListRenderer",
+                   list : arrSrvTypeCode,
+                   keyField   : "codeId", // key 에 해당되는 필드명
+                   valueField : "codeName", // value 에 해당되는 필드명
+                   easyMode : false
+            }
+          }
           ];
 
         //AUIGrid 칼럼 설정

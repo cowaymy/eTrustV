@@ -90,7 +90,9 @@ public class PreOrderController {
 		}
 
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		String bfDay = CommonUtils.changeFormat( CommonUtils.getCalDate( -30 ), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1 );
 
+    model.put("bfDay", bfDay );
 		model.put("toDay", toDay);
 		model.put("isAdmin", "true");
 		EgovMap branchTypeRes = salesCommonService.getUserBranchType(params);

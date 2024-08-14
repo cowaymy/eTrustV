@@ -3,13 +3,17 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
   //AUIGrid
-  var listGridId, viewGridId, stckGridID, giftGridID, priceHistoryGrid, histGridID;
+  var listGridId, viewGridID, stckGridID, giftGridID, priceHistoryGrid, histGridID;
 
   //Grid에서 선택된 RowID
   var selectedGridValue;
 
   // Empty Set
   var emptyData = [];
+
+  var arrSrvTypeCode = [{"codeId": "SS"  ,"codeName": "Self Service"},
+                        {"codeId": "HS" ,"codeName": "Heart Service"},
+                        {"codeId": "BOTH","codeName": "Both"}];
 
   var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
                      {"codeId": "QUEEN" ,"codeName": "QUEEN"},
@@ -186,6 +190,25 @@
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
         , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
         , {dataField: "stkCtgryId", visible: false}
+        , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+        	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+              var retStr = "Heart Service";
+              for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                  if(arrSrvTypeCode[i]["codeId"] == value) {
+                      retStr = arrSrvTypeCode[i]["codeName"];
+                      break;
+                  }
+              }
+              return retStr;
+        },
+        editRenderer : {
+      		 type : "DropDownListRenderer",
+               list : arrSrvTypeCode,
+               keyField   : "codeId", // key 에 해당되는 필드명
+               valueField : "codeName", // value 에 해당되는 필드명
+               easyMode : false
+        }
+      }
         ];
 
       //그리드 속성 설정
@@ -240,6 +263,25 @@
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
         , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
         , {dataField: "stkCtgryId", visible: false}
+        , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+        	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+              var retStr = "Heart Service";
+              for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                  if(arrSrvTypeCode[i]["codeId"] == value) {
+                      retStr = arrSrvTypeCode[i]["codeName"];
+                      break;
+                  }
+              }
+              return retStr;
+        },
+        editRenderer : {
+      		 type : "DropDownListRenderer",
+               list : arrSrvTypeCode,
+               keyField   : "codeId", // key 에 해당되는 필드명
+               valueField : "codeName", // value 에 해당되는 필드명
+               easyMode : false
+        }
+      }
         ];
 
 
@@ -281,7 +323,7 @@
 
       //AUIGrid 칼럼 설정
       var columnLayout3 = [
-          { headerText : "Seq", dataField  : "promoReqstId",   editable : false,   width : 100 }
+          { headerText : "Seq", dataField  : "promoReqstId",   editable : false,   width : 50 }
         ,  { headerText : "<spring:message code='sales.prodCd'/>", dataField  : "itmcd",   editable : false,   width : 100 }
         , { headerText : "<spring:message code='sales.prodNm'/>", dataField  : "itmname", editable : false                  }
         , { headerText : "<spring:message code='sales.normal'/>"
@@ -297,6 +339,25 @@
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
         , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
         , {dataField: "stkCtgryId", visible: false}
+        , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+        	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+              var retStr = "Heart Service";
+              for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                  if(arrSrvTypeCode[i]["codeId"] == value) {
+                      retStr = arrSrvTypeCode[i]["codeName"];
+                      break;
+                  }
+              }
+              return retStr;
+        },
+        editRenderer : {
+      		 type : "DropDownListRenderer",
+               list : arrSrvTypeCode,
+               keyField   : "codeId", // key 에 해당되는 필드명
+               valueField : "codeName", // value 에 해당되는 필드명
+               easyMode : false
+        }
+      }
         ];
 
 
@@ -1156,8 +1217,7 @@
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
  */          };
 
-      console.log(promotionVO);
-
+          //console.log(JSON.stringify(promotionVO));
           Common.ajax("POST", "/sales/promotion/registerNewPromo.do", promotionVO, function(result) {
 
 
@@ -1270,6 +1330,7 @@
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
  */      };
 
+      //console.log(JSON.stringify(promotionVO));
       Common.ajax("POST", "/sales/promotion/updatePromoInfo.do", promotionVO, function(result) {
 
           Common.alert("Update Promotion" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");

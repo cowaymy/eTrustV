@@ -729,7 +729,7 @@ public String getUnitType() {
     this.unitType = unitType;
   }
 
-  public String ServiceType() {
+  public String getServiceType() {
     return serviceType;
   }
 

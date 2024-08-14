@@ -5,6 +5,9 @@
 
     //AUIGrid 생성 후 반환 ID
     var stckGridID, giftGridID;
+    var arrSrvTypeCode = [{"codeId": "SS"  ,"codeName": "Self Service"},
+                          {"codeId": "HS" ,"codeName": "Heart Service"},
+                          {"codeId": "BOTH","codeName": "Both"}];
 
     var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
                        {"codeId": "QUEEN" ,"codeName": "QUEEN"},
@@ -63,15 +66,34 @@
           , { headerText : "<spring:message code='sales.prodNm'/>", dataField  : "itmname", editable : false                  }
           , { headerText : "<spring:message code='sales.normal'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",         editable : false, width : 100  }
-                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      editable : false, width : 100  }
-                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       editable : false, width : 100  }]}
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      editable : false, width : 80  }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       editable : false, width : 80  }]}
           , { headerText : "<spring:message code='sales.title.Promotion'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100  }
-                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100  }
-                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100  }]}
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 80  }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 80  }]}
           , { headerText : "promoItmPvGst", dataField   : "promoItmPvGst",  visible  : false,     width : 80  }
           , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           , {dataField: "stkCtgryId", visible: false}
+          , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+          	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+                var retStr = "Heart Service";
+                for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                    if(arrSrvTypeCode[i]["codeId"] == value) {
+                        retStr = arrSrvTypeCode[i]["codeName"];
+                        break;
+                    }
+                }
+                return retStr;
+          },
+          editRenderer : {
+        		 type : "DropDownListRenderer",
+                 list : arrSrvTypeCode,
+                 keyField   : "codeId", // key 에 해당되는 필드명
+                 valueField : "codeName", // value 에 해당되는 필드명
+                 easyMode : false
+          }
+        }
           ];
 
         //AUIGrid 칼럼 설정

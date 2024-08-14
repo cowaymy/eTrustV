@@ -8,6 +8,10 @@
     var excelGridID;
     var listStckGridID, listGiftGridID;
 
+    var arrSrvTypeCode = [{"codeId": "SS"  ,"codeName": "Self Service"},
+                          {"codeId": "HS" ,"codeName": "Heart Service"},
+                          {"codeId": "BOTH","codeName": "Both"}];
+
     var keyValueList = [];
 
     var timerId = null;
@@ -240,6 +244,25 @@
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  width : 100 }]}
           , { headerText : "itmid",      dataField   : "promoItmStkId", visible : false, width : 80 }
           , { headerText : "promoItmId", dataField   : "promoItmId",    visible : false, width : 80 }
+          , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',
+          	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
+                var retStr = "Heart Service";
+                for(var i=0,len=arrSrvTypeCode.length; i<len; i++) {
+                    if(arrSrvTypeCode[i]["codeId"] == value) {
+                        retStr = arrSrvTypeCode[i]["codeName"];
+                        break;
+                    }
+                }
+                return retStr;
+          },
+          editRenderer : {
+        		 type : "DropDownListRenderer",
+                 list : arrSrvTypeCode,
+                 keyField   : "codeId", // key 에 해당되는 필드명
+                 valueField : "codeName", // value 에 해당되는 필드명
+                 easyMode : false
+          }
+        }
           ];
 
         //AUIGrid 칼럼 설정

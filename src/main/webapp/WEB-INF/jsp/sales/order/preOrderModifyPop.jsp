@@ -7,6 +7,7 @@ var BEFORE_DD = "${bfDay}";
 var blockDtFrom = "${hsBlockDtFrom}";
 var blockDtTo = "${hsBlockDtTo}";
 var userType = "${userType}";
+var preSrvType = "${preOrderInfo.srvType}";
 
 
     //AUIGrid 생성 후 반환 ID
@@ -66,6 +67,8 @@ var userType = "${userType}";
         /* doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period */
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
+
+        fn_checkPreSrvType(preSrvType);
 
         if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
             $('#voucherCode').val('${preOrderInfo.voucherInfo.voucherCode}');
@@ -637,6 +640,13 @@ var userType = "${userType}";
         });
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
+        });
+
+        $('[name="preSrvType"]').click(function() {
+        	$("#preSrvTypeLbl").find("span").remove();
+        	if($('input:radio[name="preSrvType"]:checked').val() == 'SS'){
+        		$("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+        	}
         });
 
         $('#btnCal').click(function() {
@@ -1296,6 +1306,12 @@ var userType = "${userType}";
             }
         }
 
+        if ($(':radio[name="preSrvType"]:checked').val() != 'HS'
+            && $(':radio[name="preSrvType"]:checked').val() != 'SS') {
+          isValid = false;
+          msg += "* Please select Service Type.<br>";
+        }
+
         if($("#srvPacId option:selected").index() <= 0){
      	   isValid = false;
             msg += "* Please select a package.<br>";
@@ -1479,6 +1495,7 @@ var userType = "${userType}";
                 prcId                : $('#ordPriceId').val(),
                 memCode              : $('#salesmanCd').val(),
                 advBill              : $('input:radio[name="advPay"]:checked').val(),
+                srvType              : $('input:radio[name="preSrvType"]:checked').val(),
                 custCrcId            : vCustCRCID,
                 bankId               : vBankID,
                 custAccId            : vCustAccID,
@@ -1730,6 +1747,7 @@ var userType = "${userType}";
 
                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+                fn_checkPreSrvType(promoPriceInfo.srvType);
 
             }
             enableSaveButton()
@@ -2847,6 +2865,25 @@ var userType = "${userType}";
 			  });
 		  }
 	  }
+
+   function fn_checkPreSrvType(val){
+		  $("#preSrvTypeLbl").find("span").remove();
+		  preSrvType = val;
+		  if(preSrvType == "HS"){
+			  $('[name="preSrvType"]').prop("disabled", true);
+			  $('#preSrvTypeHS').prop("checked", true);
+		  }else if(preSrvType == "SS"){
+			  $('[name="preSrvType"]').prop("disabled", true);
+			  $('#preSrvTypeSS').prop("checked", true);
+			  $("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+		  }else if(preSrvType == "BOTH"){
+			  $('[name="preSrvType"]').prop("disabled", false);
+			  $('#preSrvTypeHS').prop("checked", true);
+		  }else{
+			  $('[name="preSrvType"]').prop("disabled", true);
+			  $('#preSrvTypeHS').prop("checked", true);
+		  }
+	  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -3290,6 +3327,13 @@ var userType = "${userType}";
 <tr>
     <th scope="row">Rental Fee<span class="must">*</span></th>
     <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
+    <td><input id="preSrvTypeHS" name="preSrvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
+        <input id="preSrvTypeSS" name="preSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
+        <label id="preSrvTypeLbl"></label>
+    </td>
 </tr>
 <tr>
     <th scope="row">Advance Rental Payment*</th>

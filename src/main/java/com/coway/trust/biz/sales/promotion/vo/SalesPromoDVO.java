@@ -54,6 +54,8 @@ public class SalesPromoDVO implements Serializable {
 
 	private BigDecimal prcPv;
 
+	private String srvType;//
+
 	private int crtUserId;
 
 	private int updUserId;
@@ -254,6 +256,14 @@ public class SalesPromoDVO implements Serializable {
 
 	  public void setActionTab(String actionTab) {
 		    this.actionTab = actionTab;
+    }
+
+    public String getSrvType() {
+      return srvType;
+    }
+
+    public void setSrvType(String srvType) {
+      this.srvType = srvType;
     }
 
 

@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0045D database table.
- * 
+ *
  */
 public class InstallationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -45,6 +45,8 @@ public class InstallationVO implements Serializable {
 	private int updUserId;
 
 	private String vrifyRem;
+
+	private String serviceType;
 
 	public int getInstallId() {
 		return installId;
@@ -181,5 +183,13 @@ public class InstallationVO implements Serializable {
 	public void setVrifyRem(String vrifyRem) {
 		this.vrifyRem = vrifyRem;
 	}
+
+  public String getServiceType() {
+    return serviceType;
+  }
+
+  public void setServiceType(String serviceType) {
+    this.serviceType = serviceType;
+  }
 
 }

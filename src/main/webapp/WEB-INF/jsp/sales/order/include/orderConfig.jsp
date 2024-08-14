@@ -1,3 +1,26 @@
+<script type="text/javaScript" language="javascript">
+var srvType = "${orderDetail.orderCfgInfo.srvType}";
+
+$(document).ready(function(){
+	fn_checkPreSrvType(srvType);
+});
+
+function fn_checkPreSrvType(val){
+	  var preSrvType = val;
+	  if(preSrvType == "HS"){
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeHS').prop("checked", true);
+	  }else if(preSrvType == "SS"){
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeSS').prop("checked", true);
+	  }else{
+		  $('[name="srvType"]').prop("disabled", true);
+		  $('#srvTypeHS').prop("checked", true);
+	  }
+}
+
+</script>
+
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -18,6 +41,17 @@
     <td><span>${orderDetail.orderCfgInfo.srvMemFreq} month(s)</span></td>
     <th scope="row"><spring:message code="sal.text.lastBsDt" /></th>
     <td><span>${orderDetail.orderCfgInfo.setlDt}</span></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.srvType'/></th>
+    <td colspan="5">
+    <input id="srvTypeHS" name="srvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
+    <input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.srvTypeChangeCount'/></th>
+    <td colspan="5"><span>${orderDetail.orderCfgInfo.srvCount}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.bsCodyCd" /></th>

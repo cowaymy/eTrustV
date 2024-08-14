@@ -624,7 +624,7 @@ console.log("preOrderList");
     }
 
     function fn_getPreOrderList() {
-    	console.log($("#_frmPreOrdSrch").serialize());
+    	//console.log($("#_frmPreOrdSrch").serialize());
         Common.ajax("GET", "/sales/order/selectPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
@@ -826,9 +826,9 @@ console.log("preOrderList");
 	<th scope="row">Pre-Order date</th>
 	<td>
 	   <div class="date_set w100p"><!-- date_set start -->
-        <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
         <span>To</span>
-        <p><input id="_reqstEndDt" name="_reqstEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <p><input id="_reqstEndDt" name="_reqstEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
         </div><!-- date_set end -->
     </td>
 </tr>
