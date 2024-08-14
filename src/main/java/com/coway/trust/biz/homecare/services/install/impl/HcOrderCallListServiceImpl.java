@@ -444,38 +444,51 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 		return hcAllocationMapper.selectHcDetailList(params);
 	}
 
-	/*
-	 * @Override public Map<String, Object> hcCallLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
-	 * Map<String, Object> smsResultValue = new HashMap<String, Object>(); String smsMessage = "";
-	 * 
-	 * logger.debug("===params=== " + params.toString());
-	 * 
-	 * try{ //SMS for OrderCall Appointment smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() +
-	 * ", janji temu anda utk pemasangan produk akan ditetapkan. Sebarang pertanyaan, sila hubungi 1800-888-111.";
-	 * 
-	 * params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
-	 * 
-	 * if(params.get("apptypeId").equals("66") || params.get("apptypeId").equals("67") ||
-	 * params.get("apptypeId").equals("68") || params.get("apptypeId").equals("5764"))//IF APPTYPE =
-	 * RENTAL/OUTRIGHT/INSTALLMENT/AUX { if(params.get("callStatus").equals("20") &&
-	 * params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO
-	 * DO && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE =
-	 * INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-	 * 
-	 * Map<String, Object> smsList = new HashMap<>(); smsList.put("userId", sessionVO.getUserId());
-	 * smsList.put("smsType", 975); smsList.put("smsMessage", smsMessage); smsList.put("smsMobileNo",
-	 * params.get("custMobileNo").toString());
-	 * 
-	 * sendSms(smsList); } } }catch(Exception e){ smsResultValue.put("smsLogStat", "3"); }
-	 * 
-	 * smsResultValue.put("smsLogStat", "0");//if success return smsResultValue; }
-	 */
+	@Override
+	public Map<String, Object> hcCallLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
+		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
 
-	/*
-	 * @Override public void sendSms(Map<String, Object> smsList){ int userId = (int) smsList.get("userId"); SmsVO sms =
-	 * new SmsVO(userId, 975);
-	 * 
-	 * sms.setMessage(smsList.get("smsMessage").toString()); sms.setMobiles(smsList.get("smsMobileNo").toString());
-	 * //send SMS SmsResult smsResult = adaptorService.sendSMS(sms); }
-	 */
+        logger.debug("===params=== " + params.toString());
+
+		try{
+		  //SMS for OrderCall Appointment
+		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", janji temu anda utk pemasangan produk akan ditetapkan. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+
+		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+
+		       if(params.get("apptypeId").equals("66") || params.get("apptypeId").equals("67") || params.get("apptypeId").equals("68")
+		    		   || params.get("apptypeId").equals("5764"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT/AUX
+		       {
+		    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+		    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+
+		           	       Map<String, Object> smsList = new HashMap<>();
+		                   smsList.put("userId", sessionVO.getUserId());
+		                   smsList.put("smsType", 975);
+		                   smsList.put("smsMessage", smsMessage);
+		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+
+		                   sendSms(smsList);
+		    	   }
+		      }
+		    }catch(Exception e){
+		    	smsResultValue.put("smsLogStat", "3");
+		    }
+
+		smsResultValue.put("smsLogStat", "0");//if success
+		return smsResultValue;
+	}
+
+	 @Override
+	  public void sendSms(Map<String, Object> smsList){
+	    int userId = (int) smsList.get("userId");
+	    SmsVO sms = new SmsVO(userId, 975);
+
+	    sms.setMessage(smsList.get("smsMessage").toString());
+	    sms.setMobiles(smsList.get("smsMobileNo").toString());
+	    //send SMS
+	    SmsResult smsResult = adaptorService.sendSMS(sms);
+	  }
+	 
 }
