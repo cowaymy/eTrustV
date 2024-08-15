@@ -163,7 +163,6 @@
   }
 
   function pdfDown() {
-	console.log("Click Generate PDF START");
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -192,7 +191,6 @@
         var txtOrderNoTo = $("#txtOrderNoTo").val().trim();
 
         if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
-
             orderDateFrom = $("#dpOrderDateFr").val(); //dd/MM/yyyy
             orderDateTo = $("#dpOrderDateTo").val();
 
@@ -263,9 +261,6 @@
         };
 
         Common.report("searchForm2", option);
-        console.log("Click Generate PDF END");
-        console.log("Report Download File Name :: " + $("#reportDownFileName").val());
-        console.log("Report template File Name :: " + $("#reportFileName").val());
     }else {
     	return false;
     }
