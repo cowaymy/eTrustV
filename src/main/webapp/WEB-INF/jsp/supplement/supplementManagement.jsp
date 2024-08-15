@@ -937,7 +937,7 @@
               </c:if>
               <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
                 <li>
-                  <p class="link_btn"><a href="#" id="btnSof" onclick="fn_sofListingReport()"><spring:message code='sales.btn.sof'/></a></p>
+                  <p class="link_btn"><a href="#" id="btnSof" onclick="fn_sofListingReport()"><spring:message code='supplement.btn.sof'/></a></p>
                 </li>
               </c:if>
             </ul>
