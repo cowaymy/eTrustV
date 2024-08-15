@@ -159,17 +159,116 @@
     const year = today.getFullYear();
 
     const date = year + month + day;
-    GridCommon.exportTo("sofList_grid", "xlsx", "SOF_Listing_Xlsx_" + date);
+    GridCommon.exportTo("sofList_grid", "xlsx", "FSO_Listing_Xlsx_" + date);
   }
 
   function pdfDown() {
+	console.log("Click Generate PDF START");
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
 
     const date = year + month + day;
-    GridCommon.exportTo("sofList_grid", "pdf", "SOF_Listing_Pdf_" + date);
+
+    if(validRequiredField() == true){
+        $("#reportFileName").val("");
+        $("#reportDownFileName").val("");
+        $("#viewType").val("");
+
+        var orderNoFrom = "";
+        var orderNoTo = "";
+        var orderDateFrom = "";
+        var orderDateTo = "";
+        var keyInUser = "";
+        var keyInBranch = "";
+        var sortBy = "";
+        var whereSQL = "";
+        var extraWhereSQL = "";
+        var orderBySQL = "";
+        var custName = "";
+        var runNo = 0;
+        var txtOrderNoFr = $("#txtOrderNoFr").val().trim();
+        var txtOrderNoTo = $("#txtOrderNoTo").val().trim();
+
+        if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
+
+            orderDateFrom = $("#dpOrderDateFr").val(); //dd/MM/yyyy
+            orderDateTo = $("#dpOrderDateTo").val();
+
+            var frArr = $("#dpOrderDateFr").val().split("/");
+            var toArr = $("#dpOrderDateTo").val().split("/");
+            var dpOrderDateFr = frArr[0]+"/"+frArr[1]+"/"+frArr[2]; // MM/dd/yyyy
+            var dpOrderDateTo = toArr[0]+"/"+toArr[1]+"/"+toArr[2];
+
+            whereSQL += " AND (A.CRT_DT BETWEEN TO_DATE('"+dpOrderDateFr+" 00:00:00', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('"+dpOrderDateTo+" 23:59:59', 'DD/MM/YYYY HH24:MI:SS'))";
+        }
+
+        runNo = 0;
+
+        if(!(txtOrderNoFr == null || txtOrderNoFr.length == 0) && !(txtOrderNoTo == null || txtOrderNoTo.length == 0)){
+            orderNoFrom = txtOrderNoFr;
+            orderNoTo = txtOrderNoTo;
+            whereSQL += " AND (REGEXP_REPLACE(A.SUP_REF_NO, '[^0-9]', '') BETWEEN TO_CHAR('"+txtOrderNoFr+"') AND TO_CHAR('"+txtOrderNoTo+"'))";
+        }
+
+        if($("#cmbKeyBranch :selected").index() > 0){
+            keyInBranch = $("#cmbKeyBranch :selected").text();
+            whereSQL += " AND A.MEM_BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+        }
+
+        if(!($("#txtCustName").val().trim() == null || $("#txtCustName").val().trim().length == 0)){
+            custName = $("#txtCustName").val().trim();
+            whereSQL += " AND C.NAME LIKE '%"+custName.replace("'", "''")+"%' ";
+        }
+
+        if(!($("#txtUserName").val().trim() == null || $("#txtUserName").val().trim().length == 0)){
+        	keyInUser = $("#txtUserName").val().trim();
+            whereSQL += " AND G.USER_NAME LIKE '%"+keyInUser.replace("'", "''")+"%' ";
+        }
+
+        if($("#cmbSort :selected").index() > -1){
+            sortBy = $("#cmbSort :selected").text();
+
+            if($("#cmbSort :selected").val() == "2"){
+                orderBySQL = " ORDER BY A.MEM_BRNCH_ID";
+            }else if($("#cmbSort :selected").val() == "3"){
+                orderBySQL = " ORDER BY A.CRT_DT";
+            }else if($("#cmbSort :selected").val() == "4"){
+                orderBySQL = " ORDER BY A.SUP_REF_NO";
+            }else if($("#cmbSort :selected").val() == "5"){
+                orderBySQL = " ORDER BY C.NAME";
+            }
+        }
+
+        $("#reportDownFileName").val("FSO_Listing_Pdf_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#searchForm2 #viewType").val("PDF");
+        $("#searchForm2 #reportFileName").val("/supplement/SupplementOrderSOFList.rpt");
+        $("#searchForm2 #V_ORDERNOFROM").val(orderNoFrom);
+        $("#searchForm2 #V_ORDERNOTO").val(orderNoTo);
+        $("#searchForm2 #V_ORDERDATEFROM").val(orderDateFrom);
+        $("#searchForm2 #V_ORDERDATETO").val(orderDateTo);
+        $("#searchForm2 #V_KEYINBRANCH").val(keyInBranch);
+        $("#searchForm2 #V_KEYINUSER").val(keyInUser);
+        $("#searchForm2 #V_CUSTNAME").val(custName);
+        $("#searchForm2 #V_SORTBY").val(sortBy);
+        $("#searchForm2 #V_WHERESQL").val(whereSQL);
+        $("#searchForm2 #V_EXTRAWHERESQL").val(extraWhereSQL);
+        $("#searchForm2 #V_ORDERBYSQL").val(orderBySQL);
+        $("#searchForm2 #V_SELECTSQL").val("");
+        $("#searchForm2 #V_FULLSQL").val("");
+
+        var option ={
+        		isProcedure :true
+        };
+
+        Common.report("searchForm2", option);
+        console.log("Click Generate PDF END");
+        console.log("Report Download File Name :: " + $("#reportDownFileName").val());
+        console.log("Report template File Name :: " + $("#reportFileName").val());
+    }else {
+    	return false;
+    }
   }
 
   CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', '', fn_multiComboBranch);
@@ -188,6 +287,22 @@
     <aside class="title_line"></aside>
   <section class="search_table">
   <form id="searchForm2">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+    <input type="hidden" id="V_ORDERNOFROM" name="V_ORDERNOFROM" value="" />
+    <input type="hidden" id="V_ORDERNOTO" name="V_ORDERNOTO" value="" />
+    <input type="hidden" id="V_ORDERDATEFROM" name="V_ORDERDATEFROM" value="" />
+    <input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />
+    <input type="hidden" id="V_KEYINBRANCH" name="V_KEYINBRANCH" value="" />
+    <input type="hidden" id="V_CUSTNAME" name="V_CUSTNAME" value="" />
+    <input type="hidden" id="V_KEYINUSER" name="V_KEYINUSER" value="" />
+    <input type="hidden" id="V_SORTBY" name="V_SORTBY" value="" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+    <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
+    <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+    <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
+    <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
     <table class="type1">
       <caption>table</caption>
       <colgroup>
@@ -249,11 +364,12 @@
 
     <section class="search_result">
       <ul class="right_btns">
-        <!-- <li>
+        <li>
           <p class="btn_grid">
-            <a href="#" id="pdfDown" onclick="pdfDown()"><spring:message code="sal.btn.genPDF" /></a>
+            <!--<a href="#" id="pdfDown" onclick="pdfDown()"><spring:message code="sal.btn.genPDF" /></a>  -->
+            <a href="#" onclick="javascript:pdfDown();"><spring:message code="sal.btn.genPDF" /></a>
           </p>
-        </li> -->
+        </li>
         <li>
           <p class="btn_grid">
             <a href="#" id="excelDown" onclick="excelDown()"><spring:message code="sal.btn.genExcel" /></a>
@@ -267,7 +383,6 @@
       </article>
     </section>
   </form>
-
   </section>
   </section>
 </div>
