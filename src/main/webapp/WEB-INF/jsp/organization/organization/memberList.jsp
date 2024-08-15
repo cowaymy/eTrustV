@@ -1093,27 +1093,6 @@ function fn_pushCU(){
     });
 }
 
-function fn_pushCU(){
-
-    let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
-    var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
-    Common.ajax("GET","/organization/selectCntMemSameEmail.do", {email : memEmail}, function(cnt) {
-        if(cnt > 1){
-            Common.alert("Failed request. Duplicate email");
-        }
-        else {
-            Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
-                console.log(result);
-                if(result.message == 'LMS: Successfully create user.'){
-                    Common.alert("Successfully push to CU.");
-                }else{
-                    Common.alert("Failed Request. Invalid parameter");
-                }
-            });
-        }
-    });
-}
-
 function fn_suspendCU(){
 
     let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
