@@ -146,7 +146,7 @@ public class MemberListController {
 
 	@Value("${pdf.password}")
 	private String pdfPassword;
-	
+
 	@Value("${ehp.agreement.email.webUrl.domains}")
 	 private String ehpAgreementUrlDomains;
 
@@ -1119,6 +1119,7 @@ public class MemberListController {
         // LaiKW - Comment ends here
         //Keyi - bug fix #24033842 - unable update member email
         formMap.put("emailUpd", params.get("emailUpd"));
+        formMap.put("sponsorCd",  params.get("sponsorCd")); // bug fix ticket 24040722
 
         String memCode = "";
         String memId = "";
@@ -2082,38 +2083,38 @@ public class MemberListController {
                 + "you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake "
                 + "and delete this e-mail and any attachments from your system. If you are not the intended recipient you are notified that any use, disclosing, copying, "
                 + "distributing, storage and/or taking any action in reliance on the contents of this information is strictly prohibited.<o:p></o:p></span></p>"*/
-                ; 
+                ;
         /* VER NBL [E] */
 
         //email.setText(msg);
-        
+
         // send email
         EmailVO email = new EmailVO();
         String emailSubject = "Health Planner Agreement Confirmation";
         List<String> emailNo = new ArrayList<String>();
-        
+
     	if (!"".equals(CommonUtils.nvl(params.get("recipient")))) {
 			emailNo.add(CommonUtils.nvl(params.get("recipient")));
 		}
-    	
+
     	String path = "organization/agreementListing.do?MemberID=" + params.get("MemberID");
     	String url = ehpAgreementUrlDomains + path;
-    	
+
     	params.put(EMAIL_URL, url);
 		params.put(EMAIL_SUBJECT, emailSubject);
 		params.put(EMAIL_TO, emailNo);
-		
+
 		boolean isResult = false;
-		
+
 		email.setTo(emailNo);
 		email.setHtml(true);
 		email.setSubject(emailSubject);
 	    email.setHasInlineImage(true);
 	    isResult =	adaptorService.sendEmail(email, false, EmailTemplateType.E_HP_ACKNOWLEDGE, params);
-	
-        
+
+
         //isResult = adaptorService.sendEmail(email, false);
-       
+
         ReturnMessage message = new ReturnMessage();
 
         if (isResult == true) {
