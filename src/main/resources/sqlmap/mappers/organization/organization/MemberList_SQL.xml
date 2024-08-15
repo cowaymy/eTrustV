@@ -5525,6 +5525,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="businessType != null and businessType != '' ">
           , BIZ_TYPE = #{businessType}
         </if>
+        <if test="sponsorCd != null and sponsorCd != '' ">
+          , SPONS_CODE = #{sponsorCd}
+        </if>
         WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
     </update>
 
@@ -5607,6 +5610,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         </if>
         <if test="Birth != null and Birth != '' ">
           , APLICNT_DOB = TO_DATE(#{Birth}, 'DD/MM/YYYY')
+        </if>
+        <if test="sponsorCd != null and sponsorCd != '' ">
+          , APLICNT_SPONS_CODE = #{sponsorCd}
         </if>
         WHERE APLCTN_ID = (
             SELECT APLICNT_ID
