@@ -23,7 +23,7 @@ public class GovEInvcLineVO {
 
     // Constructor
     public void InvoiceLine(Map<String, Object> mapValue) {
-    	this.Id = mapValue.get("invItmId").toString();
+    	this.Id = mapValue.get("invItmSeq").toString();
     	this.InvoicedQuantity = new InvoicedQuantity();
     	InvoicedQuantity.setQuantity(mapValue.get("invqtyQty").toString());
     	InvoicedQuantity.setUnitCode(mapValue.get("invqtyUnitcd").toString());
