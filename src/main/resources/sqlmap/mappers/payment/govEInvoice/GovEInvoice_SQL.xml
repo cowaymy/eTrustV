@@ -437,5 +437,6 @@
         UPD_USER_ID = #{userId},
         UPD_DT = SYSDATE
     WHERE  DOCUMENT_ID = #{documentId}
+    AND STATUS NOT IN (8,21)
 </update>
 </mapper>
