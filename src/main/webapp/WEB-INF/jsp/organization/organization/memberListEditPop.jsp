@@ -114,6 +114,7 @@ function fn_memberSave(){
                     $.extend(jsonObj, {'businessType' : $("#businessType").val()});
                     //Keyi - bug fix #24033842 - unable update member email
                     $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
+                    $.extend(jsonObj, {'sponsorCd' : $("#sponsorCd").val()});  // bug fix ticket 24040722
 
 				    console.log(JSON.stringify(jsonObj));
 				    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -169,6 +170,7 @@ function fn_memberSave(){
                       $.extend(jsonObj, {'businessType' : $("#businessType").val()});
                       //Keyi - bug fix #24033842 - unable update member email
                       $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
+                      $.extend(jsonObj, {'sponsorCd' : $("#sponsorCd").val()});  // bug fix ticket 24040722
 
 	                  console.log(JSON.stringify(jsonObj));
 	                  Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -227,6 +229,7 @@ function fn_memberSave(){
 		            $.extend(jsonObj, {'businessType' : $("#businessType").val()});
 		            //Keyi - bug fix #24033842 - unable update member email
                     $.extend(jsonObj, {'emailUpd' : $("#memEmail").val()});
+                    $.extend(jsonObj, {'sponsorCd' : $("#sponsorCd").val()});  // bug fix ticket 24040722
 
 		            console.log(JSON.stringify(jsonObj));
 		            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
