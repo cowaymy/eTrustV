@@ -1049,6 +1049,7 @@
     LEFT JOIN SYS0013M H ON H.CODE_MASTER_ID = '8' AND C.TYPE_ID = H.CODE_ID
 
     WHERE 1=1
+        AND A.DEL_FLG = 'N'
 
     <if test='dpOrderDateFr != null and dpOrderDateFr != "" and dpOrderDateTo != null and dpOrderDateTo != ""'>
       AND A.CRT_DT BETWEEN TO_DATE(#{dpOrderDateFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpOrderDateTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
