@@ -680,8 +680,8 @@
 </script>
 
 <body>
-<div id="login_wrap" style="padding:30px 0; background-size:contain"><!-- login_wrap start -->
-    <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway"/></h1>
+<div id="login_wrap" style="padding:30px 0; background-size:cover"><!-- login_wrap start -->
+<%--     <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway"/></h1> --%>
 
     <article class="login_box"><!-- login_box start -->
         <form id="loginForm" name="loginForm" method="post">
@@ -705,7 +705,7 @@
             <input type="hidden" id="verBankName" name="verBankName" value=""/>
             <input type="hidden" id="consentFlg" name="consentFlg" value=""/>
 
-            <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
+            <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust1.png" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>
             <p><input type="password" title="PASSWORD" placeholder="PASSWORD" id="password" name="password"
                       value=""/></p>
@@ -766,6 +766,7 @@
         </form>
     </article><!-- login_box end -->
 
-    <p class="copy" style="padding-top: 80px">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved.</p>
+    <h2 style="display: flex; align-items: flex-end; justify-content: center;"><img src="${pageContext.request.contextPath}/resources/images/common/copyright.png" alt="Coway"/></h2>
+<!--     <p class="copy" style="padding-top: 80px">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved.</p> -->
 </div><!-- login_wrap end -->
 </body>

@@ -13,7 +13,7 @@ table,caption,tbody,tfoot,thead,tr,th,td,
 article,aside,canvas,details,embed,
 figure,figcaption,footer,header,hgroup,
 menu,nav,output,ruby,section,summary,
-time,mark,audio,video{margin:0; padding:0; border:0 none; vertical-align:baseline; font-size:12px; font-family:Verdana,"돋움",Dotum,sans-serif; color:#444; line-height:1;}
+time,mark,audio,video{margin:0; padding:0; border:0 none; vertical-align:baseline; font-size:12px; font-family:Verdana,"돋움",Dotum,sans-serif; line-height:1;}
 ol,ul{list-style:none;}
 blockquote,q{quotes:none;}
 blockquote:before,blockquote:after,q:before,q:after{content:""; content:none;}
