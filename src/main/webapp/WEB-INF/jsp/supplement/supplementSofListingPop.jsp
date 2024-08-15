@@ -118,12 +118,12 @@
       width : '15%',
       editable : false
     }, {
-      dataField : "salesmanName",
+    /*  dataField : "salesmanName",
       headerText : '<spring:message code="sal.text.salManName" />',
       width : '20%',
       style : 'left_style',
       editable : false
-    }, {
+    }, {*/
       dataField : "supRefItm",
       headerText : '<spring:message code="sal.text.productItem" />',
       width : '35%',
@@ -271,7 +271,7 @@
 
 <div id="popup_wrap" class="popup_wrap">
   <header class="pop_header">
-    <h1><spring:message code="sal.title.text.ordReportSalesOrdFromSofList" /></h1>
+    <h1><spring:message code="supplement.title.text.ordReportSalesOrdFromFsoList" /></h1>
     <ul class="right_opt">
       <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_search();"><spring:message code="sales.btn.search" /></a></p></li>
       <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
@@ -311,7 +311,7 @@
           <th scope="row"><spring:message code="sal.text.ordDate" /></th>
           <td>
             <div class="date_set w100p">
-              <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr" value="${bfDay}"/></p>
+              <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr" value="${toDay}"/></p>
               <span><spring:message code="sal.title.to" /></span>
               <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo" value="${toDay}"/></p>
             </div>
