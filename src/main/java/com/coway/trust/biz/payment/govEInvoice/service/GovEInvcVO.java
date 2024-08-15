@@ -50,6 +50,12 @@ public class GovEInvcVO {
 
 	        //this.InvoiceLine = (List<GovEInvcLineVO>) mapValue.get("invoiceLine");
 
+	        AdditionalDocumentReference additionalDocumentReference = new AdditionalDocumentReference();
+	        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
+	        BillingReference billingReference = new BillingReference();
+	        billingReference.setAdditionalDocumentReference(additionalDocumentReference);
+	        BillingReference.add(billingReference);
+
 	        SupplierParty supplierParty = new SupplierParty();
 	        Contact contact = new Contact();
 	        contact.setElectronicMail(mapValue.get("accsupContEmail").toString());
@@ -232,11 +238,7 @@ public class GovEInvcVO {
 	        this.PaymentMeans.setPaymentMeansCode(String.format("%02d",Integer.parseInt(mapValue.get("pymtmeansCode").toString())));
 	        this.PaymentTerms.setNote(mapValue.get("pymttermsNote").toString());
 
-	        AdditionalDocumentReference additionalDocumentReference = new AdditionalDocumentReference();
-	        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
-	        BillingReference billingReference = new BillingReference();
-	        billingReference.setAdditionalDocumentReference(additionalDocumentReference);
-	        BillingReference.add(billingReference);
+
 
 	    }
 
@@ -356,6 +358,14 @@ public class GovEInvcVO {
 
 		public void setPaymentTerms(PaymentTerms paymentTerms) {
 			PaymentTerms = paymentTerms;
+		}
+
+		public List<BillingReference> getBillingReference() {
+			return BillingReference;
+		}
+
+		public void setBillingReference(List<BillingReference> billingReference) {
+			BillingReference = billingReference;
 		}
 
 		// Inner class start
