@@ -11,6 +11,7 @@
     if ('${orderLdgrList}' == '' || '${orderLdgrList}' == null) {
     } else {
       orderLdgrList = JSON.parse('${orderLdgrList}');
+      console.log("orderLdgrList :: " + '${orderLdgrList}');
     }
 
     createAUIGrid();
@@ -43,7 +44,7 @@
       width : "10%"
     }, {
       dataField : "payMode",
-      headerText : '<spring:message code="sal.title.adjReason" />',
+      headerText : '<spring:message code="sal.title.text.payMode" />',
       width : "10%"
     }, {
       dataField : "refDt",
@@ -51,7 +52,7 @@
       width : "10%"
     }, {
       dataField : "refNo",
-      headerText : '<spring:message code="sal.title.text.refDate" />',
+      headerText : '<spring:message code="sal.title.text.refNo" />',
       width : "10%"
     }, {
       dataField : "accCode",
@@ -93,32 +94,18 @@
     }
   }
 
+  //print the ledger
   function fn_report1() {
-    //CURRENT DATE
-    var date = new Date().getDate();
-    var mon = new Date().getMonth() + 1;
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
 
-    if (date.toString().length == 1) {
-      date = "0" + date;
-    }
+    const date1 = year + month + day;
 
-    if (mon.toString().length == 1) {
-      mon = "0" + mon;
-    }
+   $("#V_CUTOFFDATE").val("01/01/1900");
 
-    var inputDate = dataForm.cutOffDate.value;
-
-    if ($("#cutOffDate").val() == "") {
-      $("#V_CUTOFFDATE").val('01/01/1900');
-    } else {
-      $("#V_CUTOFFDATE").val(
-          '01/' + inputDate.substring(0, 2) + '/'
-              + inputDate.substring(3, 7));
-    }
-
-    $("#reportDownFileName").val(
-        $("#V_ORDERNO").val() + "_" + date + mon
-            + new Date().getFullYear());
+   $("#reportDownFileName").val($("#V_ORDERNO").val() + "_" +date1 +(new Date().getMonth()+1)+new Date().getFullYear());
 
     var option = {
       isProcedure : true
@@ -157,7 +144,8 @@
       });
   }
 
-  function fn_reportPdf() {
+ /*
+ function fn_reportPdf() {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -165,7 +153,9 @@
 
     const date = year + month + day;
     GridCommon.exportTo("ord_ledger_grid", "pdf", "Order Ledger (" + "${orderInfo.supRefNo}" + ")_" + date);
-  }
+
+  }*/
+
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win">
   <header class="pop_header">
@@ -185,11 +175,11 @@
     </aside>
     <br/>
     <form id="dataForm" name="dataForm">
-      <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/OrderLedger.rpt" />
+      <input type="hidden" id="reportFileName" name="reportFileName" value="/supplement/SupplementOrderLedger.rpt" />
       <input type="hidden" id="viewType" name="viewType" value="PDF" />
       <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
-      <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderInfo.ordId}" />
-      <input type="hidden" id="V_ORDERNO" name="V_ORDERNO" value="${orderInfo.ordNo}" />
+      <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderInfo.supRefId}" />
+      <input type="hidden" id="V_ORDERNO" name="V_ORDERNO" value="${orderInfo.supRefNo}" />
       <input type="hidden" id="V_PAYREFNO" name="V_PAYREFNO" value="${orderInfo.jomPayRef}" />
       <input type="hidden" id="V_CUSTTYPE" name="V_CUSTTYPE" value="${orderInfo.custType}" />
       <input type="hidden" id="V_CUTOFFDATE" name="V_CUTOFFDATE" />
@@ -400,11 +390,9 @@
         </tbody>
       </table> -->
       <ul class="right_btns mt10">
-        <!-- <li><p><spring:message code="sal.text.transactionDate" /></p></li>
-        <li><input type="text" id="cutOffDate" name="cutOffDate" class="j_date2" /></li> -->
         <li>
           <p class="btn_blue">
-            <a href="#" onclick="fn_reportPdf()"><spring:message code="sal.btn.generate" /></a>
+              <a href="#" onclick="javascript:fn_report1();"><spring:message code="sal.btn.generate" /></a>
           </p>
         </li>
       </ul>
