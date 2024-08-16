@@ -841,6 +841,7 @@
             fn_clearAddCpnt();
 
             $('[name="advPay"]').prop("disabled", true);
+            fn_resetPreSrvType();
 
             var idx    = $("#appType option:selected").index();
             var selVal = $("#appType").val();
@@ -1030,6 +1031,7 @@
             $('#ordPromo option').remove();
             $('#ordPromo').prop("disabled", true);
             fn_clearAddCpnt();
+            fn_resetPreSrvType();
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
@@ -1049,6 +1051,7 @@
                //** Start exTrade Neo to Neo Plus **//
                //   $('#relatedNo').val('');
                //** End exTrade Neo to Neo Plus **//
+            fn_resetPreSrvType();
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
                 $('#ordProudct').val('');
@@ -2996,6 +2999,12 @@
 		  $('#srvTypeHS').prop("checked", true);
 	  }
   }
+
+  function fn_resetPreSrvType(){
+	  $('[name="srvType"]').prop("disabled", true);
+      $("#srvTypeLbl").find("span").remove();
+      $('[name="srvType"]').prop("checked", false);
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -3399,10 +3408,13 @@
 <tr>
     <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
     <td colspan="3"><input id="srvTypeHS" name="srvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
-        <input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
-        <label id="srvTypeLbl"></label>
+        			<input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
     </td>
 </tr>
+<tr>
+    <th></th>
+    <td colspan="3"><label id="srvTypeLbl"></label></td>
+	</tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.rentPay" /><span class="must">*</span></th>
     <td colspan="3"><span><spring:message code="sal.msg.6month" /></span>

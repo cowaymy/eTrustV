@@ -404,8 +404,7 @@
               fn_clearSales();
 
               $('[name="advPay"]').prop("disabled", true);
-              $('[name="preSrvType"]').prop("disabled", true);
-              $("#preSrvTypeLbl").find("span").remove();
+              fn_resetPreSrvType();
 
               var idx = $("#appType option:selected").index();
               var selVal = $("#appType").val();
@@ -599,6 +598,9 @@
       $('#ordProudct option').remove();
       $('#ordProudct optgroup').remove();
 
+      fn_resetPreSrvType();
+
+
       var idx = $("#srvPacId option:selected").index();
       var selVal = $("#srvPacId").val();
 
@@ -674,6 +676,9 @@
           //** Start exTrade Neo to Neo Plus **//
           //  $('#relatedNo').val('');
           //** End exTrade Neo to Neo Plus **//
+
+          fn_resetPreSrvType();
+
 
           console.log('ordProudct change event start');
           disableSaveButton()
@@ -3048,6 +3053,13 @@
 		  $('#preSrvTypeHS').prop("checked", true);
 	  }
   }
+
+  function fn_resetPreSrvType(){
+	  $('[name="preSrvType"]').prop("disabled", true);
+      $("#preSrvTypeLbl").find("span").remove();
+      $('[name="preSrvType"]').prop("checked", false);
+  }
+
 </script>
 
   <div id="popup_wrap" class="popup_wrap">
@@ -3807,8 +3819,11 @@
                 <td>
                 <input id="preSrvTypeHS" name="preSrvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
                 <input id="preSrvTypeSS" name="preSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
-                <label id="preSrvTypeLbl"></label>
                 </td>
+                </tr>
+                <tr>
+                <th></th>
+                <td><label id="preSrvTypeLbl"></label></td>
                 </tr>
                 <tr>
                   <th scope="row">Advance Rental Payment*</th>
