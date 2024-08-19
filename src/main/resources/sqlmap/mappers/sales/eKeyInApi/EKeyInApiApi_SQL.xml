@@ -1610,6 +1610,7 @@ SELECT A.CUST_ID AS CUST_ID
         , A.UPD_DT = SYSDATE
         , A.CPNT_ID = #{cpntId}
         , A.VOUCHER_CODE = #{voucherCode}
+        , A.SRV_TYPE = #{srvType}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
