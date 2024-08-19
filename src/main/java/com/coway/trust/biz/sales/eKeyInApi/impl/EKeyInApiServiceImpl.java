@@ -1694,6 +1694,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Promotion ID does not exist.");
     }
 
+    if (CommonUtils.isEmpty(param.getSrvType())) {
+        throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist");
+      }
+
     if (CommonUtils.isEmpty(param.getMthRentAmt())) {
       throw new ApplicationException(AppConstants.FAIL, "Monthly Rental Amount does not exist.");
     }
