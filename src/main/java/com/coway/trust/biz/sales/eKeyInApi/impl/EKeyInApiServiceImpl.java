@@ -2083,6 +2083,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Promotion ID does not exist.");
     }
 
+    if (CommonUtils.isEmpty(param.getSrvType())) {
+        throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist.");
+      }
+
     if (CommonUtils.isEmpty(param.getMthRentAmt())) {
       throw new ApplicationException(AppConstants.FAIL, "Monthly Rental Amount does not exist.");
     }
@@ -2202,6 +2206,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("agreementType", 0);
     // sal0213M.put("bndlId", null);
     sal0213M.put("voucherCode", param.getVoucherCode());
+    sal0213M.put("srvType", param.getSrvType());
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
