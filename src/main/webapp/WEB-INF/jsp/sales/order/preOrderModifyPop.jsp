@@ -8,6 +8,7 @@ var blockDtFrom = "${hsBlockDtFrom}";
 var blockDtTo = "${hsBlockDtTo}";
 var userType = "${userType}";
 var preSrvType = "${preOrderInfo.srvType}";
+var totPvSs = "${preOrderInfo.totPvSs}";
 
 
     //AUIGrid 생성 후 반환 ID
@@ -1495,6 +1496,7 @@ var preSrvType = "${preOrderInfo.srvType}";
                 discRntFee           : $('#ordRentalFees').val().trim(),
                 totPv                : $('#ordPv').val().trim(),
                 totPvGst             : $('#ordPvGST').val().trim(),
+                totPvSs                : $('#ordPvSs').val().trim(),
                 prcId                : $('#ordPriceId').val(),
                 memCode              : $('#salesmanCd').val(),
                 advBill              : $('input:radio[name="advPay"]:checked').val(),
@@ -1751,6 +1753,7 @@ var preSrvType = "${preOrderInfo.srvType}";
                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
                 fn_checkPreSrvType(promoPriceInfo.srvType);
+                $("#ordPvSs").val(parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2));
 
             }
             enableSaveButton()
@@ -2892,6 +2895,7 @@ var preSrvType = "${preOrderInfo.srvType}";
 		  $('[name="preSrvType"]').prop("disabled", true);
 	      $("#preSrvTypeLbl").find("span").remove();
 	      $('[name="preSrvType"]').prop("checked", false);
+	      $('#ordPvSs').val('0.00');
 	  }
 </script>
 
@@ -3323,6 +3327,16 @@ var preSrvType = "${preOrderInfo.srvType}";
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
 </tr>
 <tr>
+    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
+    <td><input id="preSrvTypeHS" name="preSrvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
+        <input id="preSrvTypeSS" name="preSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
+    </td>
+</tr>
+<tr>
+    <th></th>
+    <td><label id="preSrvTypeLbl"></label></td>
+</tr>
+<tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
     <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36)" class="w100p readonly" readonly/></td>
 </tr>
@@ -3336,16 +3350,6 @@ var preSrvType = "${preOrderInfo.srvType}";
 <tr>
     <th scope="row">Rental Fee<span class="must">*</span></th>
     <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
-    <td><input id="preSrvTypeHS" name="preSrvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
-        <input id="preSrvTypeSS" name="preSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
-    </td>
-</tr>
-<tr>
-    <th></th>
-    <td><label id="preSrvTypeLbl"></label></td>
 </tr>
 <tr>
     <th scope="row">Advance Rental Payment*</th>
@@ -3378,6 +3382,7 @@ var preSrvType = "${preOrderInfo.srvType}";
 <tr style="display:none;">
     <th scope="row">PV<span class="must">*</span></th>
     <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+    	<input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
     <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>

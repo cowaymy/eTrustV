@@ -159,6 +159,8 @@ public class PreOrderVO implements Serializable {
 
     private String srvType;
 
+    private BigDecimal totPvSs;
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -1000,6 +1002,14 @@ public class PreOrderVO implements Serializable {
 
   public void setSrvType(String srvType) {
     this.srvType = srvType;
+  }
+
+  public BigDecimal getTotPvSs() {
+    return totPvSs;
+  }
+
+  public void setTotPvSs(BigDecimal totPvSs) {
+    this.totPvSs = totPvSs;
   }
 
 }

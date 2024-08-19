@@ -438,6 +438,8 @@
              , PROMO_ITM_STK_ID
              , PROMO_ITM_CUR_ID
              , PROMO_ITM_PV
+             , PROMO_ITM_PV_SS
+             , PROMO_ITM_PRC_SS
              , PROMO_ITM_STUS_ID
              , PROMO_ITM_UPD_USER_ID
              , PROMO_ITM_UPD_DT
@@ -454,6 +456,8 @@
              , #{promoItmStkId}
              , #{promoItmCurId}
              , #{promoItmPv}
+             , #{promoItmPvSs}
+             , #{promoAmtSs}
              , #{promoItmStusId}
              , #{promoItmUpdUserId}
              , SYSDATE
@@ -548,7 +552,9 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T2.STK_DESC AS ITMNAME
              , T1.PROMO_ITM_CUR_ID
              , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
              , T1.PROMO_ITM_STUS_ID
              , T1.PROMO_ITM_UPD_USER_ID
              , T1.PROMO_ITM_UPD_DT
@@ -583,6 +589,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
                 END AS PROMO_AMT
              , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
              , T1.SRV_TYPE
           FROM SAL0018D T1
           LEFT OUTER
@@ -614,6 +622,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , FLOOR(T4.SRV_PAC_ITM_RENTAL - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_PAC_ITM_RENTAL*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
              , 0                     AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -644,6 +654,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , FLOOR(T4.SRV_MEM_ITM_PRC - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_MEM_ITM_PRC*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
              , 0 AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -674,6 +686,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
              , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -751,6 +765,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
     <update id="updateSalesPromoD" parameterType="salesPromoDVO">
         UPDATE SAL0018D
            SET PROMO_ITM_PV          = #{promoItmPv}
+           	 , PROMO_ITM_PV_SS       = #{promoItmPvSs}
+           	 , PROMO_ITM_PRC_SS      = #{promoAmtSs}
              , PROMO_ITM_STUS_ID     = #{promoItmStusId}
              , PROMO_ITM_UPD_USER_ID = #{promoItmUpdUserId}
              , SRV_TYPE 			 = #{srvType}
@@ -1049,6 +1065,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , CTRL_FLAG
              , CTRL_QUOTA
              , SRV_TYPE
+             , PROMO_ITM_PV_SS
+             , PROMO_ITM_PRC_SS
              , CRT_USER_ID
              , CRT_DT
              , UPD_USER_ID
@@ -1071,6 +1089,8 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , 0
              , 0
              , NVL(#{srvType}, 'HS')
+             , #{promoItmPvSs}
+             , NVL(#{promoAmtSs}, 0)
              , #{crtUserId}
              , SYSDATE
              , #{updUserId}
@@ -1221,7 +1241,9 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T2.STK_DESC AS ITMNAME
              , T1.PROMO_ITM_CUR_ID
              , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
              , T1.PROMO_ITM_STUS_ID
              , T1.PROMO_ITM_RENTAL
              , T1.PROMO_ITM_RENT_PRIOD
@@ -1247,7 +1269,9 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T2.STK_DESC AS ITMNAME
              , T1.PROMO_ITM_CUR_ID
              , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
              , T1.PROMO_ITM_STUS_ID
              , T1.PROMO_ITM_RENTAL
              , T1.PROMO_ITM_RENT_PRIOD
@@ -1334,7 +1358,9 @@ SELECT T1.PROMO_REQST_ITM_ID
              , T2.STK_DESC AS ITMNAME
              , T1.PROMO_ITM_CUR_ID
              , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
              , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
              , T1.PROMO_ITM_STUS_ID
              , T1.PROMO_ITM_RENTAL
              , T1.PROMO_ITM_RENT_PRIOD

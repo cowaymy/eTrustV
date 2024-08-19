@@ -56,6 +56,10 @@ public class SalesPromoDVO implements Serializable {
 
 	private String srvType;//
 
+	private int promoItmPvSs;
+
+	private int promoAmtSs;
+
 	private int crtUserId;
 
 	private int updUserId;
@@ -264,6 +268,22 @@ public class SalesPromoDVO implements Serializable {
 
     public void setSrvType(String srvType) {
       this.srvType = srvType;
+    }
+
+    public int getPromoItmPvSs() {
+      return promoItmPvSs;
+    }
+
+    public void setPromoItmPvSs(int promoItmPvSs) {
+      this.promoItmPvSs = promoItmPvSs;
+    }
+
+    public int getPromoAmtSs() {
+      return promoAmtSs;
+    }
+
+    public void setPromoAmtSs(int promoAmtSs) {
+      this.promoAmtSs = promoAmtSs;
     }
 
 

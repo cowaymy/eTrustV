@@ -792,6 +792,7 @@
              , T3.PROMO_DISC_ON_BILL
              , T5.CODE PROMO_DISC_ON_BILL_CODE
              , T1.SRV_TYPE
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2
@@ -876,6 +877,7 @@
              , T3.PROMO_DISC_ON_BILL
              , T5.CODE PROMO_DISC_ON_BILL_CODE
              , T1.SRV_TYPE
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2

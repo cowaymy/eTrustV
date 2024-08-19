@@ -232,6 +232,7 @@
              ,  T1.EX_TRADE_PR IS_EXTRADE_PR
              , T1.VOUCHER_CODE
              , T1.SRV_TYPE
+             , T1.TOT_PV_SS
           FROM SAL0213M T1
           JOIN SYS0026M T2 ON T2.STK_ID = T1.ITM_STK_ID
           LEFT JOIN (
@@ -333,6 +334,7 @@
 		     , EX_TRADE_PR
 		     , VOUCHER_CODE
 		     , SRV_TYPE
+		     , TOT_PV_SS
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -405,6 +407,7 @@
              , #{isExtradePR}
              , #{voucherCode}
              , #{srvType}
+             , #{totPvSs}
 		     )
     </insert>
 
@@ -461,6 +464,7 @@
              , CUST_BILL_IS_SMS2          = #{custBillIsSms2}
              , CUST_BILL_CUST_CARE_CNT_ID = #{custBillCustCareCntId}
              , SRV_TYPE                   = #{srvType}
+             , TOT_PV_SS                  = #{totPvSs}
              <!-- , REM1                       = #{rem1}
              , REM2                       = #{rem2} -->
              , UPD_USER_ID                = #{updUserId}

@@ -28,6 +28,7 @@
     var voucherPromotionId = [];
 
     var preSrvType = "${preOrderInfo.srvType}";
+    var totPvSs = "${preOrderInfo.totPvSs}";
 
 	//Voucher Management
     var codeList_562 = [];
@@ -50,6 +51,10 @@
         createAUIGrid();
 
         fn_selectDocSubmissionList();
+
+        if(totPvSs != null || totPvSs != ""){
+        	$('#ordPvSs').val(parseFloat(totPvSs).toFixed(2));
+        }
 
         fn_checkPreSrvType(preSrvType);
 
@@ -817,6 +822,12 @@
             if(event.which === 13) {    //enter
                 fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
             }
+        });
+        $('[name="srvType"]').click(function() {
+        	$("#srvTypeLbl").find("span").remove();
+        	if($('input:radio[name="srvType"]:checked').val() == 'SS'){
+        		$("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+        	}
         });
         $('#appType').change(function() {
             fn_tabOnOffSet('PAY_CHA', 'HIDE');
@@ -2476,6 +2487,7 @@
                 $("#orgOrdPriceId").val(stkPriceInfo.priceId);
  */
  				fn_checkPreSrvType(promoPriceInfo.srvType);
+ 				$("#ordPvSs").val(parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2));
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
             }
@@ -2606,6 +2618,7 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
+        $('#ordPvSs').val('');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -3004,6 +3017,7 @@
 	  $('[name="srvType"]').prop("disabled", true);
       $("#srvTypeLbl").find("span").remove();
       $('[name="srvType"]').prop("checked", false);
+      $('#ordPvSs').val('0.00');
   }
 </script>
 
@@ -3355,6 +3369,23 @@
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
+<tr>
+    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
+    <td><input id="srvTypeHS" name="srvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
+        <input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
+    </td>
+    <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
+    <td><input id="departCd"    name="departCd"    type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
+        <input id="departMemId" name="departMemId" type="hidden" /></td>
+
+</tr>
+<tr>
+	<th><spring:message code='sal.title.text.gstRebate'/></th>
+    <td><label id="srvTypeLbl"></label></td>
+    <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
+    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
+        <input id="grpMemId" name="grpMemId" type="hidden" /></td>
+</tr>
 <tr id='trCboOrdNoTag' style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.cboBindOrdNo" /><span class="must">*</span></th>
     <td>
@@ -3371,50 +3402,38 @@
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
         <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /></td>
-    <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
-    <td><input id="departCd"    name="departCd"    type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
-        <input id="departMemId" name="departMemId" type="hidden" /></td>
+     <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
+    <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
+        <input id="orgMemId" name="orgMemId" type="hidden" /></td>
+
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
     <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
-    <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
-    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
-        <input id="grpMemId" name="grpMemId" type="hidden" /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
-    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
-        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
-        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
-    <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
-    <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
-        <input id="orgMemId" name="orgMemId" type="hidden" /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-    <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-    <th scope="row"><spring:message code="sal.text.trialNo" /></th>
+	 <th scope="row"><spring:message code="sal.text.trialNo" /></th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
                <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" style="width:210px;" class="readonly" readonly />
                <input id="trialId" name="trialId" type="hidden" />
                <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+
 </tr>
+<tr>
+    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <td colspan="3"><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
+        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
+        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
+
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.pv" /> & SS <spring:message code="sal.title.text.pv" /></th>
+    <td colspan="3"><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+    	<input id="ordPvSs"    name="ordPvSs"    type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
+        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
+   </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark"></textarea></td>
 </tr>
-<tr>
-    <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
-    <td colspan="3"><input id="srvTypeHS" name="srvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
-        			<input id="srvTypeSS" name="srvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
-    </td>
-</tr>
-<tr>
-    <th></th>
-    <td colspan="3"><label id="srvTypeLbl"></label></td>
-	</tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.rentPay" /><span class="must">*</span></th>
     <td colspan="3"><span><spring:message code="sal.msg.6month" /></span>

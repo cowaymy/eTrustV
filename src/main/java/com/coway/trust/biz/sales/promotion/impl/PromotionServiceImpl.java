@@ -692,6 +692,8 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 					salesPromoDVO.setPromoItmPv(CommonUtils.intNvl(promoReqstPrd.get("promoItmPv")));
 					salesPromoDVO.setPromoItmStusId(SalesConstants.STATUS_ACTIVE);
 					salesPromoDVO.setPromoItmUpdUserId(sessionVO.getUserId());
+					salesPromoDVO.setPromoAmtSs(CommonUtils.intNvl(promoReqstPrd.get("promoAmtSs")));
+					salesPromoDVO.setPromoItmPvSs(CommonUtils.intNvl(promoReqstPrd.get("promoItmPvSs")));
 					salesPromoDVO.setSrvType(CommonUtils.nvl(promoReqstPrd.get("srvType")));
 					salesPromoDVO.setCrtUserId(sessionVO.getUserId());
 					salesPromoDVO.setUpdUserId(sessionVO.getUserId());

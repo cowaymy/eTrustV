@@ -184,7 +184,12 @@
         , { headerText : "<spring:message code='sales.title.Promotion'/>"
           , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
                         , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
-                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }
+                        ]}
+        , { headerText : "<spring:message code='sales.text.selfService'/>"
+      	  , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmtSs",    editable : true, width : 100  }
+            , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPvSs",  editable : true,  width : 100  }
+            ]}
         , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
         , { headerText : "promoReqstItmId",    dataField   : "promoReqstItmId",       visible  : false, width : 80 }
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
@@ -257,7 +262,12 @@
         , { headerText : "<spring:message code='sales.title.Promotion'/>"
           , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
                         , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
-                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }
+                        ]}
+        , { headerText : "<spring:message code='sales.text.selfService'/>"
+      	  , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmtSs",    editable : true, width : 100  }
+            , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPvSs",  editable : true,  width : 100 }
+            ]}
         , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
         , { headerText : "promoReqstItmId",    dataField   : "promoReqstItmId",       visible  : false, width : 80 }
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
@@ -333,7 +343,12 @@
         , { headerText : "<spring:message code='sales.title.Promotion'/>"
           , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
                         , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
-                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
+                        , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }
+                        ]}
+        , { headerText : "<spring:message code='sales.text.selfService'/>"
+      	  , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmtSs",    editable : true, width : 100  }
+            , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPvSs",  editable : true,  width : 100  }
+            ]}
         , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
         , { headerText : "promoReqstItmId",    dataField   : "promoReqstItmId",       visible  : false, width : 80 }
         , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }

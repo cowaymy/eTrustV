@@ -241,7 +241,12 @@
           , { headerText : "<spring:message code='sales.title.Promotion'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    width : 100 }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", width : 100 }
-                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  width : 100 }]}
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  width : 100 }
+                          ]}
+          , { headerText : "<spring:message code='sales.text.selfService'/>"
+        	  , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmtSs",    editable : true, width : 100  }
+              , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPvSs",  editable : true,  width : 100  }
+              ]}
           , { headerText : "itmid",      dataField   : "promoItmStkId", visible : false, width : 80 }
           , { headerText : "promoItmId", dataField   : "promoItmId",    visible : false, width : 80 }
           , {dataField : "srvType", headerText : "<spring:message code='sales.srvType'/>", width : '10%',

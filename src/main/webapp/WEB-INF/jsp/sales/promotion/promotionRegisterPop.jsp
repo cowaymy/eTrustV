@@ -71,7 +71,12 @@
           , { headerText : "<spring:message code='sales.title.Promotion'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100  }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 80  }
-                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 80  }]}
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 80  }
+                          ]}
+          , { headerText : "<spring:message code='sales.text.selfService'/>"
+        	  , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmtSs",    editable : true, width : 100  }
+              , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPvSs",  editable : true,  width : 100  }
+              ]}
           , { headerText : "promoItmPvGst", dataField   : "promoItmPvGst",  visible  : false,     width : 80  }
           , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           , {dataField: "stkCtgryId", visible: false}
@@ -265,6 +270,7 @@
             if((!(AUIGrid.getCellValue(stckGridID, i, "stkCtgryId") == 7177) || dscPrcVal != 0) && $('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
 
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
+            AUIGrid.setCellValue(stckGridID, i, "promoAmtSs", newPrcVal);
         }
     }
 
@@ -333,6 +339,7 @@
             if(gstPvVal < 0) gstPvVal = 0;
 
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
+            AUIGrid.setCellValue(stckGridID, i, "promoItmPvSs", newPvVal);
             AUIGrid.setCellValue(stckGridID, i, "promoItmPvGst", gstPvVal);
         }
     }
