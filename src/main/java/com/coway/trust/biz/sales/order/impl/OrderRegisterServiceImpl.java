@@ -1951,7 +1951,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
     // Self Service Rebate - PAY0286D
-    if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && srvType.equals("SS")){
+    if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && srvType != null && srvType.equals("SS")){
       insertSelfServiceRebate(salesOrderMVO , sessionVO);
     }
 
