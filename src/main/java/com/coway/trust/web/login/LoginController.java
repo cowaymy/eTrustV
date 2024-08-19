@@ -249,6 +249,7 @@ public class LoginController {
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "PASSWORD" }));
 
 		LOGGER.debug("userID : {}", params.get("userId"));
+		LOGGER.debug("isCheckedMfa : {}", params.get("isCheckedMfa"));
 
 		LoginVO loginVO = loginService.getLoginInfo(params);
 		//LOGGER.info("###loginVO: " + loginVO.toString());
@@ -311,8 +312,12 @@ public class LoginController {
 			loginHistory.setLoginType(AppConstants.LOGIN_WEB);
 
 			loginService.saveLoginHistory(loginHistory);
-			HttpSession session = sessionHandler.getCurrentSession();
-			session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+
+			if(params.get("isCheckedMfa").equals("Y")){
+				HttpSession session = sessionHandler.getCurrentSession();
+				session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+			}
+
 			message.setData(loginVO);
 
 			// set vaccination checking

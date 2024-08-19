@@ -283,6 +283,7 @@
     	                  if (result.code != 99) {
     	                      mfaPopUpClose();
     	                      isCheckedMfa = "Y";
+    	                      $("#isCheckedMfa").val(isCheckedMfa);
     	                      fn_login();
     	                  }
     	                  else {
@@ -333,6 +334,8 @@
             }
             return false;
         }
+        console.log($("#loginForm").serializeJSON());
+        console.log(isCheckedMfa);
 
         Common.ajax("POST"
             , "/login/getLoginInfo.do"
@@ -704,6 +707,8 @@
             <input type="hidden" id="verBankAccNo" name="verBankAccNo" value=""/>
             <input type="hidden" id="verBankName" name="verBankName" value=""/>
             <input type="hidden" id="consentFlg" name="consentFlg" value=""/>
+            <input type="hidden" id="isCheckedMfa" name="isCheckedMfa" value="${isCheckedMfa}"/>
+
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust1.png" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>
