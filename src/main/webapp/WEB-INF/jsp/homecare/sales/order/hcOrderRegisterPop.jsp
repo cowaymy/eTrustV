@@ -1119,7 +1119,6 @@
 
         // Product Change Event
         $('#ordProduct1, #ordProduct2').change(function(event) {
-        	//debugger;
             var _tagObj = $(event.target);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
@@ -1379,6 +1378,14 @@
 
     function fn_srvPacId() {
     	$('#srvPacId').change();
+    }
+
+    function fn_promoChg1(){
+    	fn_promoChg("1");
+    }
+
+    function fn_promoChg2(){
+    	fn_promoChg("2");
     }
 
     function fn_promoChg(_tagNum) {
@@ -2044,7 +2051,7 @@
 
         const ordProd1 = $("#ordProduct1");
         const ordProd2 = $("#ordProduct2");
-        //debugger;
+
         if((ordProd1.find("option").length > 1 && ordProd1.find("option:selected").index() <= 0) || (ordProd2.find("option").length > 1 && ordProd2.find("option:selected").index() <= 0)){
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
@@ -2614,12 +2621,11 @@
     //LoadProductPromotion - copy(chage)
     function fn_loadProductPromotion_chg(appTypeVal, stkId, empChk, custTypeVal, exTrade, promoVal, tagNum) {
         $('#ordPromo'+tagNum).removeAttr("disabled");
-
         //Voucher Management
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', 'fn_promoChg'+tagNum); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, promoVal, 'ordPromo'+tagNum, 'S', 'fn_promoChg'+tagNum); //Common Code
         }
     }
 

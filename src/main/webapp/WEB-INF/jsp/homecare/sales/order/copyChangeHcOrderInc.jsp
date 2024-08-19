@@ -19,7 +19,6 @@
                 fn_tabOnOffSet('BIL_DTL', 'SHOW');
 
                 var custInfo = result[0];
-
                 $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
                 $("#custId").val(custInfo.custId); //Customer ID
                 $("#custTypeNm").val(custInfo.codeName1); //Customer Name
@@ -35,9 +34,9 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
-
                 $("#hiddenCustStatusId").val(custInfo.custStatusId); //Customer Status
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
+                 $("#empChk").val('${orderInfo.basicInfo.empChk}');//Employee
                 if(custInfo.receivingMarketingMsgStatus == 1){
                 	$("#marketMessageYes").prop("checked", true);
                 }
@@ -423,8 +422,13 @@
 
         var pType = $("#appType").val() == '66' ? '1' : '2';
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-        doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
+        doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', 'fnReloadPromo'); //APPLICATION SUBTYPE
     }
+
+	function fnReloadPromo(){
+		 $('#ordProduct1').change();
+		 $('#ordProduct2').change();
+	}
 
 	function checkExtradePreBookEligible(custId,salesOrdIdOld){
 		   Common.ajax("GET", "/homecare/sales/order/selectPreBookOrderEligibleCheck.do", {custId : custId , salesOrdIdOld : salesOrdIdOld}, function(result) {
