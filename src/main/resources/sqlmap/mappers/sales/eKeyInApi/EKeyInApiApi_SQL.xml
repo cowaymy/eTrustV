@@ -1459,6 +1459,7 @@ SELECT A.CUST_ID AS CUST_ID
                                       , AGREEMENT_TYPE
                                       , BNDL_ID
                                       , VOUCHER_CODE
+                                      , SRV_TYPE
     ) VALUES ( #{preOrdId}
                   , SYSDATE
                   , #{chnnl}
@@ -1527,6 +1528,7 @@ SELECT A.CUST_ID AS CUST_ID
                   , #{agreementType}
                   , #{bndlId}
                   , #{voucherCode}
+                  , #{srvType}
     )
   </insert>
 
