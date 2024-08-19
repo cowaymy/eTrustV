@@ -1810,6 +1810,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("agreementType", 0);
     sal0213M.put("bndlId", null);
     sal0213M.put("voucherCode", param.getVoucherCode());
+    sal0213M.put("srvType", param.getSrvType());
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
