@@ -143,6 +143,7 @@ SELECT A.CUST_ID AS CUST_ID
                , NVL(A.INST_PRIOD,0) AS INST_PRIOD
                , A.ITM_STK_ID AS ITM_STK_ID
                , A.PROMO_ID AS PROMO_ID
+               , A.SRV_TYPE AS SRV_TYPE
                , A.TOT_AMT AS TOT_AMT
                , A.MTH_RENT_AMT AS MTH_RENT_AMT
                , A.TOT_PV AS TOT_PV
