@@ -361,11 +361,11 @@
             (
                 #{contTrackId}
 				,#{seq}
-				,TO_DATE(#{contractCommDt}, 'YYYY/MM/DD')
-				,TO_DATE(#{contractCommExpDt}, 'YYYY/MM/DD')
+				,TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
+				,TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
 				,#{contractTermY}
 				,#{contractTermM}
-				,TO_DATE(#{noticePeriod}, 'YYYY/MM/DD')
+				,TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
 				<if test="contractRenewDt != null and contractRenewDt != '' ">
 				,TO_DATE(#{contractRenewDt}, 'YYYY/MM/DD')
 				</if>
@@ -419,12 +419,12 @@
     SELECT
         CONT_TRACK_ID
         ,SEQ
-        ,TO_CHAR(RENEWAL_COMM_DT,'YYYY/MM/DD') contract_Comm_Dt
-        ,TO_CHAR(RENEWAL_EXP_DT,'YYYY/MM/DD') contract_Comm_Exp_Dt
+        ,TO_CHAR(RENEWAL_COMM_DT,'DD/MM/YYYY') contract_Comm_Dt
+        ,TO_CHAR(RENEWAL_EXP_DT,'DD/MM/YYYY') contract_Comm_Exp_Dt
         ,RENEWAL_TERM_YEAR contract_Term_y
         ,RENEWAL_TERM_MONTH contract_Term_m
-        ,TO_CHAR(RENEWAL_CUTOFF_DT,'YYYY/MM/DD') notice_Period
-        ,TO_CHAR(CONT_RENEWAL_DT,'YYYY/MM/DD') contract_Renew_Dt
+        ,TO_CHAR(RENEWAL_CUTOFF_DT,'DD/MM/YYYY') notice_Period
+        ,TO_CHAR(CONT_RENEWAL_DT,'DD/MM/YYYY') contract_Renew_Dt
         ,ATCH_FILE_GRP_ID
         ,TO_CHAR(CRT_DT,'DD/MM/YYYY') CRT_DT
         ,CRT_USER_ID
@@ -437,11 +437,11 @@
 
     <update id="updateContractCycleDetails" parameterType="Map">
         update SAL0415D SET
-			RENEWAL_COMM_DT = TO_DATE(#{contractCommDt}, 'YYYY/MM/DD')
-			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'YYYY/MM/DD')
+			RENEWAL_COMM_DT = TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
+			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
 			,RENEWAL_TERM_YEAR = #{contractTermY}
 			,RENEWAL_TERM_MONTH = #{contractTermM}
-			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'YYYY/MM/DD')
+			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
 			<if test="contractRenewDt != null and contractRenewDt != '' ">
 			,CONT_RENEWAL_DT = TO_DATE(#{contractRenewDt}, 'YYYY/MM/DD')
 			</if>

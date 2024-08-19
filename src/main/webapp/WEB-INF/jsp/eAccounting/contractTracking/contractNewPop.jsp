@@ -68,7 +68,7 @@ var cycleColumnLayout = [
 	,editable : false
     /* ,editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true} */
 }
-, { headerText : 'Contract Term', dataField : "contractTerm",  width : 150 ,editable : false,
+, { headerText : 'Renewal Contract Term', dataField : "contractTerm",  width : 150 ,editable : false,
 	labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
 		var strY = '';
 		var strM = '';
@@ -87,9 +87,9 @@ var cycleColumnLayout = [
 	,editable : false,
     /* editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true} */
 }
-, { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date"//, dateInputFormat:"dd/mm/yyyy"
+, { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date", formatString:"dd/mm/yyyy"
 	,editable : true,
-    editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true//,formatString : "dd/mm/yyyy"
+    editRenderer : {type : "CalendarRenderer",showEditorBtnOver : true, onlyCalendar : true, showExtraDays : true,formatString : "dd/mm/yyyy"
     	}
 }
 , { dataField : "atchFileGrpId", visible : false}
@@ -133,10 +133,13 @@ var cycleColumnLayoutView = [
 ,  */
 { headerText : 'Renewal Cycle', dataField : "seq",  width : 110,editable : false}
 ,{ headerText : 'Commencement Date', dataField : "contractCommDt", width : 180, dataType : "date",
-    formatString : "yyyy/mm/dd",editable : false}
+    //formatString : "dd/mm/yyyy",
+    editable : false}
 , { headerText : 'Contract Expiry Date', dataField : "contractCommExpDt", width : 160 , dataType : "date"
-    , formatString : "yyyy/mm/dd",editable : false}
-, { headerText : 'Contract Term', dataField : "contractTerm",  width : 150 ,editable : false,
+    //, formatString : "dd/mm/yyyy"
+    ,editable : false}
+
+, { headerText : 'Renewal Contract Term', dataField : "contractTerm",  width : 150 ,editable : false,
     labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
         var strY = '';
         var strM = '';
@@ -152,9 +155,11 @@ var cycleColumnLayoutView = [
 , { dataField : "contractTermM",  visible : false}
 , { dataField : "contractTermY",  visible : false}
 , { headerText : 'Renewal Cut-Off Date', dataField : "noticePeriod",  width : 180, dataType : "date"
-    , formatString : "yyyy/mm/dd",editable : false}
+    //, formatString : "dd/mm/yyyy"
+    ,editable : false}
 , { headerText : 'Renewal Date', dataField : "contractRenewDt",  width : 150, dataType : "date"
-    ,formatString : "yyyy/mm/dd",editable : false}
+    //',formatString : "dd/mm/yyyy"
+    ,editable : false}
 , { dataField : "atchFileGrpId", visible : false}
 , { dataField : "atchFileId", visible : false}
 , { dataField : "isAttach", visible : false}
@@ -227,6 +232,11 @@ $(document).ready(function () {
 	    $("#createdBy").val('${userName}');
 	    $("#contractStus").val('1');
 	    //$('#contractStus').attr("disabled","disabled");
+
+	    /* if($('#contractRefNo').val() == ''){
+	        $('#contractRefNo').val('NIL');
+	    } */
+
 	}else{//view or edit
 
 	    console.log('details ' + "${details}");
@@ -341,6 +351,13 @@ $(function(){
     });
 
 	$('#btnSave').click(function() {
+
+		if($('#contractRefNo').val() == ''){
+	        $('#contractRefNo').val('NIL');
+	    }
+
+		$('#sContStatus').val($('#contractStus').val());
+
 		if(fn_valid()){
 			if(action == 'new'){
 				//Common.alert("valid");
@@ -491,6 +508,14 @@ $(function(){
 
         $(this).val("");
     });
+
+	$('#contractRefNo').change(function() {
+        console.log('contractRefNo change');
+        if($('#contractRefNo').val() == ''){
+            $('#contractRefNo').val('NIL');
+        }
+    });
+
 });
 
 function fn_valid() {
@@ -752,10 +777,16 @@ function fn_addCycleGridRow() {
 		var commDtSplit = $("#_contractCommDt").val().split("/");
 		var commDtRevert = commDtSplit[2] + "/" + commDtSplit [1] + "/" + commDtSplit[0];
 		var parts = $("#_contractExpDt").val().split("/");
-		var expDtRevert = parts[2] + "/" + parts [1] + "/" + parts[0];
-		var dayExp = parseInt(parts[0]);
-        var monthExp = parseInt(parts[1]) - 1; // Months are zero-indexed in JavaScript
-        var yearExp = parseInt(parts[2]);
+
+		var day = parts[0];
+        var month = parts[1];
+        var year = parts[2];
+
+        var expDtRevert = day + "/" + month + "/" + year;
+		//var expDtRevert = year + "/" + month + "/" + day;
+		var dayExp = parseInt(day);
+        var monthExp = parseInt(month) - 1; // Months are zero-indexed in JavaScript
+        var yearExp = parseInt(year);
         // Create a new Date object for the given date
         var date = new Date(yearExp, monthExp, dayExp);
         // Subtract days from the date
@@ -763,8 +794,8 @@ function fn_addCycleGridRow() {
         var yearBefore = date.getFullYear();
         var monthBefore = date.getMonth() + 1; // Add 1 since months are zero-indexed
         var dayBefore = date.getDate();
-        //dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
-        dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
+        dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+        //dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
 
       //moment(new Date($("#_contractExpDt").val())).format('DD/MM/YYYY')
         var strY = '';
@@ -825,6 +856,11 @@ function fn_addCycleGridRow() {
 
 	    		var commDt = AUIGrid.getCellValue(cycleGridID, i, "contractCommDt");
 	    		var commParts = commDt.split("/");
+
+	    		var day = commParts[0];
+	    		var month = commParts[1];
+	    		var year = commParts[2];
+
 	    		var commMonth = commParts[1];
 	    		commMonth = parseInt(commMonth) + parseInt(AUIGrid.getCellValue(cycleGridID, i, "contractTermM"));
 	    		var plusYear = 0 ;
@@ -832,30 +868,34 @@ function fn_addCycleGridRow() {
 	    			commMonth = commMonth - 12;
 	    			plusYear++;
 	    		}
-	    		var commYear = parseInt(commParts[0]) + parseInt(AUIGrid.getCellValue(cycleGridID, i, "contractTermY")) + parseInt(plusYear);
+	    		var commYear = parseInt(year) + parseInt(AUIGrid.getCellValue(cycleGridID, i, "contractTermY")) + parseInt(plusYear);
 	    		if(commMonth < 10){
 	    			commMonth = "0" + commMonth
 	            }
-	    		//contractCommDt = commParts[0] + "/" + commMonth + "/" + commYear;
-	    		contractCommDt = commYear + "/" + commMonth + "/" + commParts[2];
+	    		contractCommDt = day + "/" + commMonth + "/" + commYear;
+	    		//contractCommDt = commYear + "/" + commMonth + "/" + day;
 
 	    		var expDt = AUIGrid.getCellValue(cycleGridID, i, "contractCommExpDt");
                 var expParts = expDt.split("/");
-                var expMonth = expParts[1];
+                var vExpDay = expParts[0];
+                var vExpMonth = expParts[1];
+                var vExpYear = expParts[2];
+
+                var expMonth = vExpMonth;
                 expMonth = parseInt(expMonth) + parseInt(strContM);
                 var expPlusYear = 0 ;
                 if(expMonth > 12){
                 	expMonth = expMonth - 12;
                 	expPlusYear++;
                 }
-                var year = parseInt(expParts[0]) + parseInt(strContY) + parseInt(expPlusYear);
+                var year = parseInt(vExpYear) + parseInt(strContY) + parseInt(expPlusYear);
                 if(expMonth < 10){
                 	expMonth = "0" + expMonth
                 }
-                //contractCommExpDt = expParts[0] + "/" + expMonth + "/" + year;
-                contractCommExpDt =  year + "/" + expMonth + "/" + expParts[2];
+                contractCommExpDt = vExpDay + "/" + expMonth + "/" + year;
+                //contractCommExpDt =  year + "/" + expMonth + "/" + vExpDay;
 
-	    		var dayExp = parseInt(expParts[2]);
+	    		var dayExp = parseInt(vExpDay);
 	    		var monthExp = parseInt(expMonth) - 1; // Months are zero-indexed in JavaScript
 	    		var yearExp = parseInt(year);
 	    		// Create a new Date object for the given date
@@ -865,8 +905,8 @@ function fn_addCycleGridRow() {
 	    		var yearBefore = date.getFullYear();
 	    		var monthBefore = date.getMonth() + 1; // Add 1 since months are zero-indexed
 	    		var dayBefore = date.getDate();
-	    		//dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
-	    		dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
+	    		dateBefore = ("0" + dayBefore).slice(-2) + "/" + ("0" + monthBefore).slice(-2) + "/" + yearBefore;
+	    		//dateBefore = yearBefore + "/" + ("0" + monthBefore).slice(-2) + "/" + ("0" + dayBefore).slice(-2);
 
 
 	    		var strContTerm = strY + strM;
@@ -982,7 +1022,7 @@ function onlyNumber(obj) {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Contract Tracking System</h1>
+<h1>Contract Expiration Tracking</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -1005,6 +1045,7 @@ function onlyNumber(obj) {
 <input type="file" id="file1" style="visibility:hidden;"></input>
 <input type="hidden" id="sContStatus" name="sContStatus" >
 
+<h2>Contract Details</h2>
 <table class="type1"  style="margin-bottom: 25;"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1032,7 +1073,7 @@ function onlyNumber(obj) {
 <tr>
     <th scope="row">Contract Reference No.</th>
     <td>
-       <input type="text" title="" placeholder="" class="w100p edit" id="contractRefNo" value="${details.contractRefNo}" name="contractRefNo"/>
+       <input type="text" title="" placeholder="Default as NIL" class="w100p edit" id="contractRefNo" value="${details.contractRefNo}" name="contractRefNo"/>
     </td>
     <th scope="row" >Date Created</th>
     <td>
@@ -1044,7 +1085,7 @@ function onlyNumber(obj) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Type of Contract<span class="must">*</span></th>
+    <th scope="row">Contract Type<span class="must">*</span></th>
     <td>
 		<select id="contractType" name="contractType" class="w100p manCheck">
 			<option value="">Choose One</option>
@@ -1088,6 +1129,7 @@ function onlyNumber(obj) {
         <%-- <input type="text" title="" id="contractTerm" name="contractTerm" placeholder="in year unit" class="j_date w100p manCheck" value="${details.contTerm}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"/> --%>
         <select id="contractTermY" name="contractTermY" class="" style="width: 110px;">
             <option value="">Choose One</option>
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -1102,6 +1144,7 @@ function onlyNumber(obj) {
         <span>Years</span>
         <select id="contractTermM" name="contractTermM" class=""  style="width: 110px;">
             <option value="">Choose One</option>
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -1174,11 +1217,12 @@ function onlyNumber(obj) {
     <td><input type="text" title="" placeholder="" class="w50p detManCheck" id="aRenewalCycle" name="aRenewalCycle" onkeydown="onlyNumber(this)"/></td>
 </tr>
 <tr>
-    <th scope="row">Contract Term<span style="color:red">*</span></th>
+    <th scope="row">Renewal Contract Term<span style="color:red">*</span></th>
     <td>
     <!-- <input type="text" title="" placeholder="" class="w100p detManCheck" id="aContractTerm" name="aContractTerm" onkeydown="onlyNumber(this)"/> -->
     <select id="aContractTermY" name="aContractTermY" class=" detManCheck" style="width: 110px;">
             <option value="">Choose One</option>
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -1193,6 +1237,7 @@ function onlyNumber(obj) {
         <span>Years</span>
         <select id="aContractTermM" name="aContractTermM" class=" detManCheck"  style="width: 110px;">
             <option value="">Choose One</option>
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -1210,7 +1255,7 @@ function onlyNumber(obj) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Renewal Cut-Off Duration<span style="color:red">*</span></th>
+    <th scope="row">Renewal Cut-Off Duration(Days)<span style="color:red">*</span></th>
     <td><input type="text" title="" placeholder="" class="w50p detManCheck" id="aRenewalDur" name="aRenewalDur" onkeydown="onlyNumber(this)"/></td>
 </tr>
 </tbody>
