@@ -313,7 +313,7 @@ public class LoginController {
 
 			loginService.saveLoginHistory(loginHistory);
 
-			if(params.get("isCheckedMfa").equals("Y")){
+			if(params.get("isCheckedMfa").equals("Y") || loginVO.getCheckMfaFlag() == 2){
 				HttpSession session = sessionHandler.getCurrentSession();
 				session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 			}
