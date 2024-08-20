@@ -664,6 +664,20 @@ SELECT A.CUST_ID AS CUST_ID
     ]]>
   </insert>
 
+    <select id="selectSsPvInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+          SELECT
+          NVL(PROMO_ITM_PV_SS, 0) AS PV_SS
+          FROM SAL0018D
+          WHERE
+          PROMO_ITM_ID = #{itmStkId},
+          PROMO_ID = #{promoId},
+          SRV_TYPE = #{srvType},
+          AND ROWNUM <= 1
+          ORDER BY PROMO_ITM_ID
+    ]]>
+  </select>
+
   <select id="selectItmStkPrice" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectItmStkPrice] 20191213 - KR JAEMAJEM */
