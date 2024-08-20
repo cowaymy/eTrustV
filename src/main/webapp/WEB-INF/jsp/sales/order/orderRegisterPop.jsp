@@ -28,7 +28,8 @@
     var voucherPromotionId = [];
 
     var preSrvType = "${preOrderInfo.srvType}";
-    var totPvSs = "${preOrderInfo.totPvSs}";
+    var totPv = "";
+    var totPvSs = "";
 
 	//Voucher Management
     var codeList_562 = [];
@@ -52,9 +53,9 @@
 
         fn_selectDocSubmissionList();
 
-        if(totPvSs != null || totPvSs != ""){
+/*         if(totPvSs != null || totPvSs != ""){
         	$('#ordPvSs').val(parseFloat(totPvSs).toFixed(2));
-        }
+        } */
 
         fn_checkPreSrvType(preSrvType);
 
@@ -827,6 +828,9 @@
         	$("#srvTypeLbl").find("span").remove();
         	if($('input:radio[name="srvType"]:checked').val() == 'SS'){
         		$("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+        		$('#ordPv').val(totPvSs);
+        	}else{
+        		$('#ordPv').val(totPv);
         	}
         });
         $('#appType').change(function() {
@@ -2486,8 +2490,9 @@
                 $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#orgOrdPriceId").val(stkPriceInfo.priceId);
  */
+ 				totPv = promoPriceInfo.orderPVPromo;
+ 				totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
  				fn_checkPreSrvType(promoPriceInfo.srvType);
- 				$("#ordPvSs").val(parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2));
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
             }
@@ -2618,7 +2623,6 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
-        $('#ordPvSs').val('');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -3004,6 +3008,7 @@
 		  $('[name="srvType"]').prop("disabled", true);
 		  $('#srvTypeSS').prop("checked", true);
 		  $("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+		  $('#ordPv').val(totPvSs);
 	  }else if(preSrvType == "BOTH"){
 		  $('[name="srvType"]').prop("disabled", false);
 		  $('#srvTypeHS').prop("checked", true);
@@ -3017,7 +3022,6 @@
 	  $('[name="srvType"]').prop("disabled", true);
       $("#srvTypeLbl").find("span").remove();
       $('[name="srvType"]').prop("checked", false);
-      $('#ordPvSs').val('0.00');
   }
 </script>
 
@@ -3425,9 +3429,8 @@
 
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.pv" /> & SS <spring:message code="sal.title.text.pv" /></th>
+    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td colspan="3"><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-    	<input id="ordPvSs"    name="ordPvSs"    type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
    </tr>
 <tr>

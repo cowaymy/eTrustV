@@ -23,6 +23,8 @@
   var blockDtFrom = "${hsBlockDtFrom}";
   var blockDtTo = "${hsBlockDtTo}";
   var preSrvType = "";
+  var totPv = "";
+  var totPvSs = "";
 
   //파일 저장 캐시
   var myFileCaches = {};
@@ -807,8 +809,12 @@
 
     $('[name="preSrvType"]').click(function() {
     	$("#preSrvTypeLbl").find("span").remove();
+
     	if($('input:radio[name="preSrvType"]:checked').val() == 'SS'){
     		$("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+    		$('#ordPv').val(totPvSs);
+    	}else{
+    		$('#ordPv').val(totPv);
     	}
     });
 
@@ -1774,6 +1780,7 @@
         vIsReturnExtrade = 0;
       }
     }
+
     console.log("service :: " + $("#hiddenBPCareId").val());
     var orderVO = {
       sofNo : $('#sofNo').val().trim(),
@@ -1805,7 +1812,6 @@
       discRntFee : $('#ordRentalFees').val().trim(),
       totPv : $('#ordPv').val().trim(),
       totPvGst : $('#ordPvGST').val().trim(),
-      totPvSs : $('#ordPvSs').val().trim(),
       prcId : $('#ordPriceId').val(),
       memCode : $('#salesmanCd').val(),
       srvType : $('input:radio[name="preSrvType"]:checked').val(),
@@ -2123,7 +2129,6 @@
     } else {
       $('#pBtnCal').addClass("blind");
     }
-
     Common.ajax("GET",
         "/sales/order/selectProductPromotionPriceByPromoStockID.do", {
           promoId : promoId,
@@ -2145,8 +2150,9 @@
                 promoPriceInfo.promoDiscPeriodTp);
             $("#promoDiscPeriod").val(
                 promoPriceInfo.promoDiscPeriod);
+            totPv = promoPriceInfo.orderPVPromo;
+            totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
             fn_checkPreSrvType(promoPriceInfo.srvType);
-            $("#ordPvSs").val(parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2));
           }
           enableSaveButton()
         });
@@ -2252,7 +2258,6 @@
     $('#ordPrice').val('');
     $('#ordPriceId').val('');
     $('#ordPv').val('');
-    $('#ordPvSs').val('');
     $('#ordRentalFees').val('');
     $('#compType').addClass("blind");
   }
@@ -3048,6 +3053,7 @@
 		  $('[name="preSrvType"]').prop("disabled", true);
 		  $('#preSrvTypeSS').prop("checked", true);
 		  $("#preSrvTypeLbl").append("<span class='must'><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+		  $('#ordPv').val(totPvSs)
 	  }else if(preSrvType == "BOTH"){
 		  $('[name="preSrvType"]').prop("disabled", false);
 		  $('#preSrvTypeHS').prop("checked", true);
@@ -3061,7 +3067,6 @@
 	  $('[name="preSrvType"]').prop("disabled", true);
       $("#preSrvTypeLbl").find("span").remove();
       $('[name="preSrvType"]').prop("checked", false);
-      $('#ordPvSs').val('0.00');
   }
 
 </script>
@@ -3823,10 +3828,9 @@
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">PV & SS PV<span class="must">*</span></th>
+                  <th scope="row">PV<span class="must">*</span></th>
                   <td>
                     <input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-                    <input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
                     <input id="ordPvGST" name="ordPvGST" type="hidden" />
                   </td>
                 </tr>

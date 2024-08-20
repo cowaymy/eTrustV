@@ -8,7 +8,8 @@ var blockDtFrom = "${hsBlockDtFrom}";
 var blockDtTo = "${hsBlockDtTo}";
 var userType = "${userType}";
 var preSrvType = "${preOrderInfo.srvType}";
-var totPvSs = "${preOrderInfo.totPvSs}";
+var totPv = "";
+var totPvSs = "";
 
 
     //AUIGrid 생성 후 반환 ID
@@ -650,6 +651,9 @@ var totPvSs = "${preOrderInfo.totPvSs}";
         	$("#preSrvTypeLbl").find("span").remove();
         	if($('input:radio[name="preSrvType"]:checked').val() == 'SS'){
         		$("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+        		$('#ordPv').val(totPvSs);
+        	}else{
+        		$('#ordPv').val(totPv);
         	}
         });
 
@@ -1494,9 +1498,8 @@ var totPvSs = "${preOrderInfo.totPvSs}";
                 norAmt               : $('#normalOrdPrice').val().trim(),
 //                norRntFee            : $('#normalOrdRentalFees').val().trim(),
                 discRntFee           : $('#ordRentalFees').val().trim(),
-                totPv                : $('#ordPv').val().trim(),
+                totPv 				 : $('#ordPv').val().trim(),
                 totPvGst             : $('#ordPvGST').val().trim(),
-                totPvSs                : $('#ordPvSs').val().trim(),
                 prcId                : $('#ordPriceId').val(),
                 memCode              : $('#salesmanCd').val(),
                 advBill              : $('input:radio[name="advPay"]:checked').val(),
@@ -1752,9 +1755,9 @@ var totPvSs = "${preOrderInfo.totPvSs}";
 
                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+                totPv = promoPriceInfo.orderPVPromo;
+                totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
                 fn_checkPreSrvType(promoPriceInfo.srvType);
-                $("#ordPvSs").val(parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2));
-
             }
             enableSaveButton()
         });
@@ -2882,6 +2885,7 @@ var totPvSs = "${preOrderInfo.totPvSs}";
 			  $('[name="preSrvType"]').prop("disabled", true);
 			  $('#preSrvTypeSS').prop("checked", true);
 			  $("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
+			  $('#ordPv').val(totPvSs)
 		  }else if(preSrvType == "BOTH"){
 			  $('[name="preSrvType"]').prop("disabled", false);
 			  $('#preSrvTypeHS').prop("checked", true);
@@ -2895,7 +2899,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
 		  $('[name="preSrvType"]').prop("disabled", true);
 	      $("#preSrvTypeLbl").find("span").remove();
 	      $('[name="preSrvType"]').prop("checked", false);
-	      $('#ordPvSs').val('0.00');
 	  }
 </script>
 
@@ -3382,7 +3385,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
 <tr style="display:none;">
     <th scope="row">PV<span class="must">*</span></th>
     <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-    	<input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
     <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
