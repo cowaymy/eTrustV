@@ -1540,6 +1540,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
 
+
+      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
+          throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
+        }
+
+      if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
+  	    param.getBasic().setTotPv (param.getTotPvSs() );
+  		}
+
       // INSERT SAL0213M
       this.insertEkeyInSal0213M(param.getBasic());
 
@@ -1563,6 +1572,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getMattress().setCrtUserId(loginVO.getUserId());
       param.getMattress().setUpdUserId(loginVO.getUserId());
       param.getMattress().setRegId(param.getRegId());
+
 
       // INSERT SAL0213M
       int mattressPreOrdId = insertEkeyInSal0213M(param.getMattress());
@@ -1846,6 +1856,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("bndlId", null);
     sal0213M.put("voucherCode", param.getVoucherCode());
     sal0213M.put("srvType", param.getSrvType());
+    //sal0213M.put("totPvSs", param.getTotPvSs());
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
@@ -1890,6 +1901,14 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setCrtUserId(loginVO.getUserId());
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
+
+      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
+          throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
+        }
+
+      if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
+  	    param.getBasic().setTotPv (param.getTotPvSs() );
+  		}
 
       // INSERT SAL0213M
       updateEkeyInSal0213M(param.getBasic());
@@ -2238,6 +2257,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("bndlId", null);
     sal0213M.put("voucherCode", param.getVoucherCode());
     sal0213M.put("srvType", param.getSrvType());
+   // sal0213M.put("totPvSs", param.getTotPvSs());
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
