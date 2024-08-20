@@ -1845,6 +1845,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")).toString());
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
+    installResult.put("competitor", CommonUtils.nvl(params.get("competitor")).toString());
+    installResult.put("competitorBrand", CommonUtils.nvl(params.get("competitorBrand")).toString());
 
     if (!CommonUtils.nvl(params.get("mobileYn")).toString().equals(null)){
     	if (CommonUtils.nvl(params.get("mobileYn")).toString()== "Y"){
@@ -4086,5 +4088,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     @Override
     public List<EgovMap> selectInstallAccWithInstallEntryId(Map<String, Object> params) {
       return installationResultListMapper.selectInstallAccWithInstallEntryId(params);
+    }
+
+    @Override
+    public List<EgovMap> selectCompetitorBrand() {
+      return installationResultListMapper.selectCompetitorBrand();
     }
 }

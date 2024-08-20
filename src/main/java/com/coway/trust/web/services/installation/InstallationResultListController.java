@@ -325,6 +325,8 @@ public class InstallationResultListController {
     EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult); // STOCK
                                                                                                  // LOCATION
 
+    List<EgovMap> competitorBrand = installationResultListService.selectCompetitorBrand(); //COMPETITOR BRAND [CELESTE: 20240814 - JOMTUKAR ]
+
     params.put("ststusCodeId", 1);
     params.put("reasonTypeId", 172);
 
@@ -434,6 +436,7 @@ public class InstallationResultListController {
     model.addAttribute("promotionView", promotionView);
     model.addAttribute("waterSrcType", waterSrcType);
     // model.addAttribute("customerAddress", customerAddress);
+    model.addAttribute("competitorBrand", competitorBrand);
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
@@ -929,7 +932,7 @@ public class InstallationResultListController {
         		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(param.get("custMobileNo")).toString();
         	  }
 */
-        	  message.setMessage(msg); 
+        	  message.setMessage(msg);
             }
           }
         }

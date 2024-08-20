@@ -55,6 +55,18 @@
         }
       }
 
+      console.log("jomTukar: " + $("input[type='radio'][name=jomTukar]:checked").val());
+
+      if($("input[type='radio'][name=jomTukar]:checked").val() == "Y"){
+    	  $("input[type='radio'][name=competitor]").removeAttr("disabled");
+    	  $("#competitor").val("Y");
+    	  $("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product<span class='must'>*</span></th>");
+      }else{
+    	  $("input[type='radio'][name=competitor]").attr('disabled', 'disabled');
+    	  $("#competitor").val("");
+    	  $("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product</th>");
+      }
+
       if ("${stock}" != null) {
         $("#hidActualCTMemCode").val("${stock.memCode}");
         $("#hidActualCTId").val("${stock.movToLocId}");
@@ -578,6 +590,18 @@
       }
       if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
+      }
+
+      if($("input[type='radio'][name=jomTukar]:checked").val() == "Y"){
+    	  if($("input[type='radio'][name=competitor]:checked").val() != "Y"){
+    		  msg += "* <spring:message code='sys.msg.necessary' arguments='Competitor Product' htmlEscape='false'/> </br>";
+    	  }
+      }
+
+      if($("input[type='radio'][name=competitor]:checked").val() == "Y"){
+    	  if($("#competitorBrand").val() == ""){
+    		  msg += "* <spring:message code='sys.msg.necessary' arguments='Competitor Brand' htmlEscape='false'/> </br>";
+    	  }
       }
 
       // ADDED BOOSTER PUMP
@@ -1773,6 +1797,19 @@
 		  var strRegex = new RegExp(/^[A-Za-z0-9]+$/);
 		  return strRegex.test(value);
 	  }
+
+	  function fn_competitorBrand(competitorFlg){
+		  if(competitorFlg == "Y"){
+			  $("#competitorBrand").removeAttr("disabled");
+			  //$("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product<span class='must'>*</span></th>");
+			  $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand<span class='must'>*</span></th>");
+		  }else{
+			  $("#competitorBrand").attr('disabled', 'disabled');
+			  $("#competitorBrand").val('');
+			  //$("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product</th>");
+			  $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand</th>");
+		  }
+	  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -2236,6 +2273,31 @@
             <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
             <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" /> <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" /></td>
           </tr>
+          <th scope="row">JomTukar<span class="must">*</span></th>
+            <td colspan="3">
+                 <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${installResult.jomTukarFlag eq 'Y'}">checked</c:if> value="Y" onClick="return false"/><span>Yes</span></label>
+                 <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${installResult.jomTukarFlag ne 'Y'}">checked</c:if> value="N" onClick="return false"/><span>No</span></label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" id="competitorHeader">Competitor Product</th>
+            <td colspan="3">
+                <label><input type="radio" id="competitor" name="competitor" value="Y" onchange="javascript:fn_competitorBrand(this.value)" disabled="disabled"/><span>Yes</span><label>
+                <label><input type="radio" id="competitor" name="competitor" value="N" onchange="javascript:fn_competitorBrand(this.value)" disabled="disabled"/><span>No</span></label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" id="competitorBrandHeader">Competitor Brand</th>
+            <td colspan="3">
+                <select class="w100p" id="competitorBrand" name="competitorBrand" disabled="disabled" readonly="readonly">
+			        <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+			        <c:forEach var="list" items="${competitorBrand}">
+			             <option value="${list.codeId}">${list.codeName}</option>
+			        </c:forEach>
+                </select>
+            </td>
+          </tr>
+          <tr>
           <tr>
             <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
             <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur='validate2(this);' /></td>

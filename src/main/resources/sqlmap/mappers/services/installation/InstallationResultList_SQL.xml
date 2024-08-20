@@ -643,6 +643,8 @@
 	         THEN 'Complete(CDC)'
 	         END
 	         DELVRSTS
+         , CASE WHEN (Extent3.EX_TRADE = 3) THEN 'Y'
+             ELSE 'N' END AS JOM_TUKAR_FLAG
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -3808,6 +3810,8 @@
                         , GAS_PRES_BEF
                         , GAS_PRES_AFT
                         , DT_PAIR_ID
+                        , COMP_YN
+                        , COMP_BRAND
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3855,6 +3859,8 @@
             , nvl(#{gasPreBIns},0)
             , nvl(#{gasPreAIns},0)
             , #{dtPairId}
+            , #{competitor}
+            , #{competitorBrand}
     )
   </insert>
 
@@ -5722,5 +5728,16 @@ AND J.CODE IN ('COM','FAL','CAN')
                       , DISB = 1
     WHERE RESULT_NO IN (SELECT INSTALL_ENTRY_NO FROM SAL0046D WHERE INSTALL_ENTRY_ID = #{installEntryId} )
   </update>
+
+  <select id="selectCompetitorBrand" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT Extent1.CODE_ID CODE_ID
+           , Extent1.CODE_NAME CODE_NAME
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = 602
+      AND DISAB = 0
+      ORDER BY Extent1.CODE_ID
+    ]]>
+  </select>
 
 </mapper>

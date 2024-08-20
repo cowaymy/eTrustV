@@ -147,7 +147,7 @@ public interface InstallationResultListService {
   List<EgovMap> selectFilterSparePartList(Map<String, Object> params);
 
   EgovMap selectStkCatType (Map<String, Object> params);
-  
+
   void sendSms(Map<String, Object> smsList);
 
   //void sendEmail();
@@ -163,5 +163,7 @@ public interface InstallationResultListService {
   void insertInstallationAccessories(List<String> installAccList , EgovMap installResult, int userId);
 
   List<EgovMap> selectInstallAccWithInstallEntryId(Map<String, Object> params);
+
+  List<EgovMap> selectCompetitorBrand();
 
 }

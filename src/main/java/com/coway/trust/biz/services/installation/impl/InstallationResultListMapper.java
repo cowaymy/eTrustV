@@ -330,4 +330,6 @@ public interface InstallationResultListMapper {
 
  void disbleInstallAccWithInstallEntryId(Map<String, Object> params);
 
+ List<EgovMap> selectCompetitorBrand();
+
 }
