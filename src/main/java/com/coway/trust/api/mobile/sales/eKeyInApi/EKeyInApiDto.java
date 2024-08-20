@@ -99,6 +99,7 @@ public class EKeyInApiDto {
   private BigDecimal norAmt;
   private BigDecimal mthRentAmt;
   private BigDecimal totPv;
+  private BigDecimal totPvSs;
   private BigDecimal totPvGst;
   private String instct;
   private String yyyy;
@@ -752,6 +753,14 @@ public class EKeyInApiDto {
 
   public void setTotPv(BigDecimal totPv) {
     this.totPv = totPv;
+  }
+
+  public BigDecimal getTotPvSs() {
+	return totPvSs;
+  }
+
+  public void setTotPvSs(BigDecimal totPvSs) {
+	this.totPvSs = totPvSs;
   }
 
   public BigDecimal getTotPvGst() {
