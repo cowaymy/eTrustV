@@ -556,6 +556,28 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     return EKeyInApiDto.create(selectItmStkPrice);
   }
 
+  public EKeyInApiDto selectSsPvInfo (EKeyInApiForm param) throws Exception {
+	    if (null == param) {
+	      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+	    }
+	    if (CommonUtils.isEmpty(param.getPromoId())) {
+	      throw new ApplicationException(AppConstants.FAIL, "PromoId value does not exist.");
+	    }
+	    if (CommonUtils.isEmpty(param.getSrvType())) {
+		      throw new ApplicationException(AppConstants.FAIL, "SrvType value does not exist.");
+		}
+	    if (CommonUtils.isEmpty(param.getItmStkId())) {
+		      throw new ApplicationException(AppConstants.FAIL, "ItmStkId value does not exist.");
+		}
+
+	    EgovMap selectSsPvInfo = null;
+
+	    selectSsPvInfo = eKeyInApiMapper.selectSsPvInfo(EKeyInApiForm.createMap(param));
+	    selectSsPvInfo.put("promoItemPvSs", selectSsPvInfo.get("totPvSs"));
+
+	    return EKeyInApiDto.create(selectSsPvInfo);
+	  }
+
   @Override
   public EKeyInApiDto selectItmStkChangeInfo(EKeyInApiForm param) throws Exception {
     EKeyInApiDto selectItmStkPrice = selectItmStkPrice(param);
@@ -594,6 +616,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     }
     return selectItmStkPrice;
   }
+
+
+  @Override
+  public EKeyInApiDto selectSsPv (EKeyInApiForm param) throws Exception {
+    EKeyInApiDto selectSsPv = selectSsPvInfo(param);
+    return selectSsPv;
+  }
+
+
 
   @Override
   public EKeyInApiDto selectPromoChange(EKeyInApiForm param) throws Exception {

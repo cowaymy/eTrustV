@@ -54,6 +54,10 @@ public interface EKeyInApiService {
 
   EKeyInApiDto selectItmStkChangeInfo(EKeyInApiForm param) throws Exception;
 
+  EKeyInApiDto selectSsPv(EKeyInApiForm param) throws Exception;
+
+  EKeyInApiDto selectSsPvInfo(EKeyInApiForm param) throws Exception;
+
   EKeyInApiDto selectPromoChange(EKeyInApiForm param) throws Exception;
 
   EgovMap selectSrvType(EKeyInApiForm param) throws Exception;
