@@ -1629,6 +1629,7 @@ ORDER BY
         , A.CPNT_ID = #{cpntId}
         , A.VOUCHER_CODE = #{voucherCode}
         , A.SRV_TYPE = #{srvType}
+      <!--   , A.TOT_PV_SS = #{totPvSs} -->
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
