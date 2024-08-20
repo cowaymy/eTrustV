@@ -163,7 +163,7 @@ public class GovEInvcVO {
 	        }
 	        if(mapValue.get("acccustPostalAddr3") != null){
 	        	AddressLine custAddr3 = new AddressLine();
-		        custAddr3.setLine(mapValue.get("accsupPostalAddr3").toString());
+		        custAddr3.setLine(mapValue.get("acccustPostalAddr3").toString());
 		        custAddressLineList.add(custAddr3);
 	        }
 	        custPostalAddress.setAddressLine(custAddressLineList);
