@@ -11,6 +11,7 @@
                  , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
                  , TO_CHAR(T1.REQST_DT, 'HH:MI:SS AM') AS REQUEST_TM
                  , T19.CODE || ' ' || T19.NAME AS DT_BRANCH
+                 , T4.STK_ID AS STK_ID
                  , T4.STK_DESC AS PRODUCT
                  , T14.PROMO_CODE AS PROMO_CODE
                  , T14.PROMO_DESC AS PROMO_DESC

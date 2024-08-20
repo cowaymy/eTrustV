@@ -8,6 +8,7 @@
              , T3.CODE_NAME AS APP_TYPE
              , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
              , TO_CHAR(T1.REQST_DT, 'HH:MI:SS AM') AS REQUEST_TM
+             , T4.STK_ID AS STK_ID
              , T4.STK_DESC AS PRODUCT
              , T5.NAME AS CUST_NM
              , T6.CODE_NAME AS CUST_TYPE
