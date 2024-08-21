@@ -1541,13 +1541,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setRegId(param.getRegId());
 
 
-      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
+/*      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
           throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
-        }
+        }*/
 
-      if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
+/*      if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
   	    param.getBasic().setTotPv (param.getTotPvSs() );
-  		}
+  		}*/
 
       // INSERT SAL0213M
       this.insertEkeyInSal0213M(param.getBasic());
@@ -1912,9 +1912,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
         }*/
 
-      if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
+ /*     if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
   	    param.getBasic().setTotPv (param.getTotPvSs() );
-  		}
+  		}*/
 
       // INSERT SAL0213M
       updateEkeyInSal0213M(param.getBasic());
