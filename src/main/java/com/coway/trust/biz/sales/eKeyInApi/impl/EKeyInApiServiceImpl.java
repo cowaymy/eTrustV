@@ -1818,7 +1818,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("norAmt", param.getNorAmt());
     sal0213M.put("norRntFee", null);
     sal0213M.put("discRntFee", param.getDiscRntFee());
-    sal0213M.put("totPv", param.getTotPv());
+
+    if (String.valueOf(CommonUtils.nvl(param.getSrvType())).equals("SS")){
+    	sal0213M.put("totPv", CommonUtils.nvl(param.getTotPvSs())); // replace SS PV into TOT PV
+    } else {
+    	sal0213M.put("totPv", param.getTotPv());
+    }
+
     sal0213M.put("totPvGst", param.getTotPvGst());
     sal0213M.put("prcId", param.getPrcId());
     sal0213M.put("memCode", param.getRegId());
@@ -1902,9 +1908,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
 
-      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
+/*      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
           throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
-        }
+        }*/
 
       if (param.getTotPvSs().compareTo(BigDecimal.ZERO) != 0) { // TotPvSs only have value when SS selected, Then new PV will be substitute
   	    param.getBasic().setTotPv (param.getTotPvSs() );
@@ -2181,6 +2187,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       logger.debug("getNorAmt : " + param.getNorAmt());
       logger.debug("getDiscRntFee : " + param.getDiscRntFee());
       logger.debug("getTotPv : " + param.getTotPv());
+      logger.debug("getTotPvSs : " + CommonUtils.nvl(param.getTotPvSs()));
       logger.debug("getTotPvGst : " + param.getTotPvGst());
       logger.debug("####################################################");
       logger.debug("####################################################");
@@ -2219,7 +2226,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("norAmt", param.getNorAmt());
     // sal0213M.put("norRntFee", null);
     sal0213M.put("discRntFee", param.getDiscRntFee());
-    sal0213M.put("totPv", param.getTotPv());
+
+    if (String.valueOf(CommonUtils.nvl(param.getSrvType())).equals("SS")){
+    	sal0213M.put("totPv", CommonUtils.nvl(param.getTotPvSs())); // replace SS PV into TOT PV
+    } else {
+    	sal0213M.put("totPv", param.getTotPv());
+    }
+
+    //sal0213M.put("totPv", param.getTotPv());
+
     sal0213M.put("totPvGst", param.getTotPvGst());
     sal0213M.put("prcId", param.getPrcId());
     sal0213M.put("memCode", param.getRegId());
