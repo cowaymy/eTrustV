@@ -147,19 +147,14 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
-  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(
-      InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
+  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
-
     Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
-
     serviceNo = String.valueOf(params.get("serviceNo"));
 
-    logger.debug(
-        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
     logger.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
-    logger.debug(
-        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
 
     // INSERT LOG HISTORY (SVC0043T)(REQUIRES_NEW) (resultSeq KEY CREATE)
     if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
