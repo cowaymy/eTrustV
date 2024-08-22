@@ -259,7 +259,7 @@ function fn_clear() {
           <a href="javascript:fn_openDivPop('NEW');">New E-invoice</a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="javascript:fn_openDivPop('CONSOLIDATED');">Consolidated Tax Invoice</a>
+          <a href="javascript:fn_openDivPop('CONSOLIDATED');">New Consolidated Tax Invoice</a>
          </p></li>
          </c:if>
        </ul>
