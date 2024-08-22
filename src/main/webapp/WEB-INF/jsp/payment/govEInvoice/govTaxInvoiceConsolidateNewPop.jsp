@@ -38,6 +38,7 @@ function validRequiredField(){
       	var today = new Date();
       	var thisYear = today.getFullYear();
       	var thisMonth =  today.getMonth();
+      	var todayDate =  today.getDate();
 
       	var selectedMonth = selectedDate.split("/")[0];
       	var selectedYear = selectedDate.split("/")[1];
@@ -62,6 +63,14 @@ function validRequiredField(){
             	message += 'No past or future year is allowed';
       		}
       	}
+
+//       	if(todayDate >=2 && todayDate <=7){
+//       		//allow to create consolidate tax invoice
+//       	}
+//       	else{
+//       		valid = false;
+//         		message += 'Consolidate Tax Invoice can only being generate in between 2nd to 7th of each month';
+//       	}
     }
 
     if(valid == false){
