@@ -1582,7 +1582,7 @@
 <option value=965>Company</option>
     </select>
     </td>
-    <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.extrade'/>/Jom Tukar<span class="must">*</span></th>
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>
@@ -1862,7 +1862,7 @@
     </select>
 
     </td>
-    <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.extrade'/>/Jom Tukar<span class="must">*</span></th>
     <td>
     <select id="v_exTrade" name="v_exTrade" class="w100p" disabled></select>
     </td>

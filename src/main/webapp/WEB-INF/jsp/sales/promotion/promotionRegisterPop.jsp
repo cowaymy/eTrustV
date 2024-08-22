@@ -918,7 +918,7 @@
     <td>
     <select id="promoCustType" name="promoCustType" class="w100p"></select>
     </td>
-    <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.extrade'/>/Jom Tukar<span class="must">*</span></th>
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>

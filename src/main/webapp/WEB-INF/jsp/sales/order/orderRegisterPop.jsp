@@ -3310,7 +3310,7 @@
     <p><select id="appType" name="appType" class="w100p"></select></p>
     <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
     </td>
-    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
+    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" />/Jom Tukar</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>

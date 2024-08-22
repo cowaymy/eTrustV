@@ -3291,7 +3291,7 @@ var totPvSs = "";
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Ex-Trade/Related No</th>
+    <th scope="row">Ex-Trade/Related No/Jom Tukar</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
         <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>

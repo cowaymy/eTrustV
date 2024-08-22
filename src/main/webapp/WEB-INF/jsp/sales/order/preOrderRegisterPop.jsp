@@ -3730,7 +3730,7 @@
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">Ex-Trade/Related No</th>
+                  <th scope="row">Ex-Trade/Related No/Jom Tukar</th>
                   <td>
                     <p>
                       <select id="exTrade" name="exTrade" class="w100p"></select>
