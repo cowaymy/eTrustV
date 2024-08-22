@@ -334,8 +334,6 @@
             }
             return false;
         }
-        console.log($("#loginForm").serializeJSON());
-        console.log(isCheckedMfa);
 
         Common.ajax("POST"
             , "/login/getLoginInfo.do"
