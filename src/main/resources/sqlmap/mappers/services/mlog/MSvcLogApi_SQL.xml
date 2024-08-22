@@ -1097,6 +1097,7 @@
                                          , TO_CHAR (SAL0001D.EX_TRADE) AS IS_JOM_TUKAR
                                          , TO_CHAR (SAL0047D.COMP_YN) AS IS_COMPT_PROD
                                          , TO_CHAR (SAL0047D.COMP_BRAND) AS COMPT_BRND
+                                         , TO_CHAR (SAL0045D.SRV_TYPE) AS SRV_TYP
       FROM SAL0046D,
                ORG0001D,
                ORG0005D,
