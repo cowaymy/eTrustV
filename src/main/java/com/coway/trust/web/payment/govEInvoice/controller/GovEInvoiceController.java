@@ -311,11 +311,11 @@ public class GovEInvoiceController {
 	}
 
 	@RequestMapping(value = "/saveEInvBatch.do")
-	public ResponseEntity<ReturnMessage> saveEInvBatch(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveEInvBatch(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		int result = 0;
-
-		result = govEInvoiceService.saveEInvBatch(params);
+		int userId = sessionVO.getUserId();
+		params.put("userId", userId);
 
 		if(result > 0){
 			message.setMessage("Batch payment has been confirmed.");

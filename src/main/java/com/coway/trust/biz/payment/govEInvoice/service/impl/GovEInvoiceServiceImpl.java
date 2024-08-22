@@ -188,7 +188,11 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 GovEInvcVO govEInvc = new GovEInvcVO();
                 govEinvcMain = eInvcClaimList.get(i);
                 govEinvcMain.put("issueDate", formattedDate);
-                govEinvcMain.put("issueTime", "00:00:00");
+                if(govEinvcMain.get("invTypeCode").toString().equals("02") || govEinvcMain.get("invTypeCode").toString().equals("03")){
+                	govEinvcMain.put("issueTime", "00:05:00");
+                }else{
+                	govEinvcMain.put("issueTime", "00:00:00");
+                }
                 govEInvc.Invoice(govEinvcMain);
 
                 List<GovEInvcLineVO> invoiceLine = new ArrayList<>();
