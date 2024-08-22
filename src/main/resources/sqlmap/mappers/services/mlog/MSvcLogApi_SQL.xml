@@ -988,300 +988,272 @@
 
   <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
     <![CDATA[
-      SELECT *
-      FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC)  rnum,
-                   SAL0046D.INSTALL_ENTRY_NO AS service_No,
-                   SAL0046D.STUS_CODE_ID AS job_Status,
-                   NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS appointment_Date,
-                   CASE WHEN SAL0046D.APPNT_TM IS NULL
-                      THEN DECODE (SAL0046D.SESION_CODE,
-                                   'M', '1000',
-                                   'A', '1400',
-                                   'E', '1900',
-                                   'O', '2000',
-                                   '2000')
-                      ELSE TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':')) END appointment_Time,
-                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY'), '') AS plan_Year,
-                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'MM'), '') AS plan_Month,
-                   CASE WHEN SAL0046D.SESION_CODE IS NULL
-                     THEN 'O'
-                     ELSE SAL0046D.SESION_CODE END AS job_Session,
-                   ( SELECT NAME
-                     FROM ORG0001D
-                     WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
-                   (SELECT TEL_MOBILE
-                    FROM ORG0001D
-                    WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT NAME
-                               FROM ORG0001D
-                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT NAME
-                              FROM ORG0001D
-                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Name,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE
-                               FROM ORG0001D
-                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT TEL_MOBILE
-                              FROM ORG0001D
-                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Tel,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT NAME
-                               FROM ORG0001D
-                               WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT NAME
-                              FROM ORG0001D
-                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Name,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE
-                               FROM ORG0001D
-                               WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT TEL_MOBILE
-                              FROM ORG0001D
-                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Tel,
-                   NVL (ORG0001D.MEM_CODE, '') AS settled_By,
-                   NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
-                   NVL (SAL0001D.CUST_ID, '') AS customer_Id,
-                   FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
-                   NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
-                   NVL (TO_CHAR (SAL0017D.PROMO_ID), '') AS sales_Promotion_Cde,
-                   NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
-                   NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
-                   NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
-                   NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
-                   NVL (SAL0024D.CUST_BILL_PAY_REF_NO1, '') AS customer_Jom_Pay_Ref_No,
-                   NVL (SAL0027D.TEL_M1, '') AS handphone_Tel,
-                   NVL (SAL0027D.TEL_R, '') AS home_Tel,
-                   NVL (SAL0027D.TEL_O, '') AS office_Tel,
-                   NVL (SAL0029D.NAME, '') AS cust_Name,
-                   NVL (TO_CHAR (SAL0029D.TYPE_ID), '') AS customer_Type,
-                   NVL (SAL0027D.EMAIL, '') AS mail_Address,
-                   NVL (SAL0029D.CUST_VA_NO, '') AS customer_Va_No,
-                   NVL (SAL0047D.SIRIM_NO, '') AS sirim_No,
-                   NVL (SAL0047D.SERIAL_NO, '') AS serial_No,
-                   NVL (TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '') AS settled_Date,
-                   NVL (TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '') AS expiry_Date,
-                   NVL (SAL0095D.SRV_DUR, '') AS contract_Duration,
-                   NVL(SYS0064M.POSTCODE, '') postcode,
-                   NVL(SYS0064M.STATE, '') service_State,
-                   (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
-                   NVL (SAL0023D.LATITUDE, '') AS latitude,
-                   NVL (SAL0023D.LONGITUDE, '') AS longitude,
-                   NVL (SYS0026M.STK_DESC, '') AS product_Name,
-                   NVL (SYS0026M.STK_CODE, '') AS product_Code,
-                   NVL (SYS0005M.CODE, '') AS dsc_Code,
-                   NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
-                   SAL0047D.REM AS RESULT_REMARK,
-                   NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
-                   NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
-                   NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No
-                   , CASE WHEN CCR0006D.TYPE_ID = '258' AND (
-                         SELECT COUNT(*) AS CNT
-                         FROM SAL0046D A
-                         JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
-                         JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
-                         WHERE A.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                             AND A.STUS_CODE_ID = '4'
-                             AND C.STK_CTGRY_ID IN (5706, 5707)
-                   ) > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
-                   , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
-                   , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
-                   , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
-                   , TO_CHAR (SAL0047D.PSI) AS psi
-                   , TO_CHAR (SAL0047D.LPM) AS lpm
-                   , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
-                   , TO_CHAR (SAL0047D.VOLT) AS voltage
-                   , TO_CHAR (SAL0047D.TDS) AS tds
-                   , TO_CHAR (SAL0047D.ROOM_TEMP) AS room_Temp
-                   , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS water_Src_Temp
-                   , TO_CHAR (SAL0047D.ADPT_USED) AS adpt_Used
-                   , TO_CHAR (SAL0047D.INST_CHKLST) AS inst_Chk_Lst
-                   , TO_CHAR (SAL0047D.BOOSTER_PUMP) AS booster_Pump
-                   , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
-                   , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
-                   , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
-                   , TO_CHAR (SAL0047D.WATER_SRC_TYPE) AS water_src_type
-                   , (SAL0047D.NTU) AS ntu
-                   , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
-                   , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
-                   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO) AS RESULT_IC_MOBILE_NO
-                   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_REPORT_EMAIL_NO
-                   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACCEPTANCE_NAME
-                   , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
-                   , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
-                   , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
-            FROM SAL0046D,
-                     ORG0001D,
-                     ORG0005D,
-                     ORG1001V,
-                     SAL0001D,
-                     SAL0002D,
-                     (SELECT CUST_ID AS CUST_ID,
-                                 MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID,
-                                 MAX(CUST_ACC_NO) AS CUST_ACC_NO
-                      FROM SAL0022D
-                      GROUP BY CUST_ID) SAL0022D,
-                       SAL0023D,
-                       SAL0024D,
-                       SAL0027D,
-                       SAL0029D,
-                       SAL0045D,
-                       SAL0047D,
-                       SAL0095D,
-                       SYS0005M,
-                       SYS0026M,
-                       CCR0006D,
-                       CCR0007D,
-                       (SELECT *
-                        FROM SYS0064M
-                        WHERE STATUS_ID = 1) SYS0064M,
-                       SAL0233M,
-                       SVC0113D,
-                       SAL0017D
-                       WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
-                        AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
-                        AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
-                        AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
-                        AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
-                        AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
-                        AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
-                        AND SAL0023D.AREA_ID = SAL0233M.AREA_ID(+) AND SAL0233M.STUS_CODE_ID(+) = 1
-                        AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
-                        AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
-                        AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
-                        AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
-                        AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
-                        AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
-                        AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
-                        AND SAL0046D.INSTALL_STK_ID = SYS0026M.STK_ID(+)
-                        AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
-                        AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                        AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-                        AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-                        AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
-                        AND ORG0001D.mem_code = #{userId}
-                        AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
-                        AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-                        AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
-                        AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
+      SELECT * FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
+                                         SAL0046D.INSTALL_ENTRY_NO AS service_No,
+                                         SAL0046D.STUS_CODE_ID AS job_Status,
+                                         NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS appointment_Date,
+                                         CASE WHEN SAL0046D.APPNT_TM IS NULL
+                                                 THEN DECODE (SAL0046D.SESION_CODE, 'M', '1000', 'A', '1400', 'E', '1900', 'O', '2000', '2000')
+                                                 ELSE TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':')) END appointment_Time,
+                                         NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY'), '') AS plan_Year,
+                                         NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'MM'), '') AS plan_Month,
+                                         CASE WHEN SAL0046D.SESION_CODE IS NULL
+                                                 THEN 'O'
+                                                 ELSE SAL0046D.SESION_CODE END AS job_Session,
+                                         ( SELECT NAME FROM ORG0001D
+                                                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
+                                         ( SELECT TEL_MOBILE FROM ORG0001D
+                                                                        WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
+                                         CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
+                                                 THEN ( SELECT NAME FROM ORG0001D
+                                                                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
+                                                 ELSE (SELECT NAME FROM ORG0001D
+                                                                             WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Name,
+                                         CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
+                                                 THEN (SELECT TEL_MOBILE FROM ORG0001D
+                                                                                       WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
+                                                 ELSE ( SELECT TEL_MOBILE FROM ORG0001D
+                                                           WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Tel,
+                                         CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
+                                                 THEN (SELECT NAME FROM ORG0001D
+                                                                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
+                                                 ELSE ( SELECT NAME FROM ORG0001D
+                                                           WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Name,
+                                         CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
+                                                 THEN ( SELECT TEL_MOBILE FROM ORG0001D
+                                                            WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
+                                                 ELSE ( SELECT TEL_MOBILE FROM ORG0001D
+                                                           WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Tel,
+                                         NVL (ORG0001D.MEM_CODE, '') AS settled_By,
+                                         NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
+                                         NVL (SAL0001D.CUST_ID, '') AS customer_Id,
+                                         FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
+                                         NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
+                                         NVL (TO_CHAR (SAL0017D.PROMO_ID), '') AS sales_Promotion_Cde,
+                                         NVL (TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
+                                         NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
+                                         NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
+                                         NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
+                                         NVL (SAL0024D.CUST_BILL_PAY_REF_NO1, '') AS customer_Jom_Pay_Ref_No,
+                                         NVL (SAL0027D.TEL_M1, '') AS handphone_Tel,
+                                         NVL (SAL0027D.TEL_R, '') AS home_Tel,
+                                         NVL (SAL0027D.TEL_O, '') AS office_Tel,
+                                         NVL (SAL0029D.NAME, '') AS cust_Name,
+                                         NVL (TO_CHAR (SAL0029D.TYPE_ID), '') AS customer_Type,
+                                         NVL (SAL0027D.EMAIL, '') AS mail_Address,
+                                         NVL (SAL0029D.CUST_VA_NO, '') AS customer_Va_No,
+                                         NVL (SAL0047D.SIRIM_NO, '') AS sirim_No,
+                                         NVL (SAL0047D.SERIAL_NO, '') AS serial_No,
+                                         NVL (TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '') AS settled_Date,
+                                         NVL (TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '') AS expiry_Date,
+                                         NVL (SAL0095D.SRV_DUR, '') AS contract_Duration,
+                                         NVL (SYS0064M.POSTCODE, '') postcode,
+                                         NVL (SYS0064M.STATE, '') service_State,
+                                         (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
+                                         NVL (SAL0023D.LATITUDE, '') AS latitude,
+                                         NVL (SAL0023D.LONGITUDE, '') AS longitude,
+                                         NVL (SYS0026M.STK_DESC, '') AS product_Name,
+                                         NVL (SYS0026M.STK_CODE, '') AS product_Code,
+                                         NVL (SYS0005M.CODE, '') AS dsc_Code,
+                                         NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
+                                         SAL0047D.REM AS RESULT_REMARK,
+                                         NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
+                                         NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
+                                         NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No,
+                                         CASE WHEN CCR0006D.TYPE_ID = '258' AND ( SELECT COUNT(*) AS CNT
+                                                                                                          FROM SAL0046D A
+                                                                                                          JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                                                                                                          JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
+                                                                                                          WHERE A.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+                                                                                                              AND A.STUS_CODE_ID = '4'
+                                                                                                              AND C.STK_CTGRY_ID IN (5706, 5707)
+                                         ) > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
+                                         , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
+                                         , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
+                                         , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
+                                         , TO_CHAR (SAL0047D.PSI) AS psi
+                                         , TO_CHAR (SAL0047D.LPM) AS lpm
+                                         , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
+                                         , TO_CHAR (SAL0047D.VOLT) AS voltage
+                                         , TO_CHAR (SAL0047D.TDS) AS tds
+                                         , TO_CHAR (SAL0047D.ROOM_TEMP) AS room_Temp
+                                         , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS water_Src_Temp
+                                         , TO_CHAR (SAL0047D.ADPT_USED) AS adpt_Used
+                                         , TO_CHAR (SAL0047D.INST_CHKLST) AS inst_Chk_Lst
+                                         , TO_CHAR (SAL0047D.BOOSTER_PUMP) AS booster_Pump
+                                         , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
+                                         , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
+                                         , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
+                                         , TO_CHAR (SAL0047D.WATER_SRC_TYPE) AS water_src_type
+                                         , (SAL0047D.NTU) AS ntu
+                                         , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
+                                         , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
+                                         , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO) AS RESULT_IC_MOBILE_NO
+                                         , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_REPORT_EMAIL_NO
+                                         , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACCEPTANCE_NAME
+                                         , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
+                                         , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
+                                         , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
+                                         , TO_CHAR (SAL0001D.EX_TRADE) AS IS_JOM_TUKAR
+                                         , TO_CHAR (SAL0047D.COMP_YN) AS IS_COMPT_PROD
+                                         , TO_CHAR (SAL0047D.COMP_BRAND) AS COMPT_BRND
+      FROM SAL0046D,
+               ORG0001D,
+               ORG0005D,
+               ORG1001V,
+               SAL0001D,
+               SAL0002D,
+               (SELECT CUST_ID AS CUST_ID,
+                           MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID,
+                           MAX(CUST_ACC_NO) AS CUST_ACC_NO
+                FROM SAL0022D
+                GROUP BY CUST_ID) SAL0022D,
+               SAL0023D,
+               SAL0024D,
+               SAL0027D,
+               SAL0029D,
+               SAL0045D,
+               SAL0047D,
+               SAL0095D,
+               SYS0005M,
+               SYS0026M,
+               CCR0006D,
+               CCR0007D,
+               (SELECT *
+                FROM SYS0064M
+                WHERE STATUS_ID = 1) SYS0064M,
+               SAL0233M,
+               SVC0113D,
+               SAL0017D
+      WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
+          AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
+          AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
+          AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
+          AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
+          AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
+          AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
+          AND SAL0023D.AREA_ID = SAL0233M.AREA_ID(+) AND SAL0233M.STUS_CODE_ID(+) = 1
+          AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
+          AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
+          AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
+          AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
+          AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
+          AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
+          AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
+          AND SAL0046D.INSTALL_STK_ID = SYS0026M.STK_ID(+)
+          AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
+          AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+          AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+          AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+          AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
+          AND ORG0001D.mem_code = #{userId}
+          AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
+          AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+          AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
+          AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
     ]]>
-
-         <!-- <if test='userId == "DT100004" '>
-              AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate}
-              AND SAL0046D.INSTALL_DT between sysdate - 1 and sysdate
-              AND TO_CHAR(SAL0046D.INSTALL_DT, 'YYYYMMDD')  between TO_CHAR(SYSDATE, 'YYYYMMDD') - 1 and TO_CHAR(SYSDATE, 'YYYYMMDD')
-         </if> -->
-
-      ) WHERE rnum = 1
-
-    <!-- WHERE rnum = 1
-
-           SELECT COUNT(*) AS CNT
-           FROM SAL0046D
-           WHERE SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-           AND STUS_CODE_ID = '4' -->
+    ) WHERE rnum = 1
   </select>
 
   <select id="getInstallationJobList_b" parameterType="Map" resultType="egovMap">
     SELECT TO_CHAR(SALES_ORD_NO) AS sales_Order_No
-         , TO_CHAR(SVC_NO) AS service_No
-         , TO_CHAR(CUST_NAME) AS cust_Name
-         , TO_CHAR(JOB_TYPE) AS job_Type
-         , TO_CHAR(JOB_STUS) AS job_Status
-         , TO_CHAR(APPNT_DT) AS appointment_Date
-         , TO_CHAR(APPNT_TM) AS appointment_Time
-         , TO_CHAR(JOB_SESION) AS job_Session
-         , TO_CHAR(CHECKIN_DT) AS check_In_Date
-         , TO_CHAR(CHECKIN_TM) AS check_In_Time
-         , TO_CHAR(CHECKIN_GPS) AS check_In_Gps
-         , TO_CHAR(CUST_TYPE) AS customer_Type
-         , TO_CHAR(CUST_ID) AS customer_Id
-         , TO_CHAR(SVC_STATE) AS service_State
-         , TO_CHAR(PLAN_YEAR) AS plan_Year
-         , TO_CHAR(PLAN_MONTH) AS plan_Month
-         , TO_CHAR(INSTALL_ADDR) AS install_Address
-         , TO_CHAR(POST_CODE) AS postcode
-         , TO_CHAR(HANDPHONE_TEL) AS handphone_Tel
-         , TO_CHAR(HOME_TEL) AS home_Tel
-         , TO_CHAR(OFFICE_TEL) AS office_Tel
-         , TO_CHAR(MAIL_ADDR) AS mail_Address
-         , TO_CHAR(CUST_VA_NO) AS customer_Va_No
-         , TO_CHAR(CUST_JOM_PAY_REF_NO) AS customer_Jom_Pay_Ref_No
-         , TO_CHAR(PRODUCT_NAME) AS product_Name
-         , TO_CHAR(PRODUCT_CODE) AS product_Code
-         , TO_CHAR(APP_TYPE) AS app_Type
-         , TO_CHAR(INSTCT) AS instruction
-         , TO_CHAR(SALES_PROMT) AS sales_Promotion
-         , TO_CHAR(CNTRCT_DUR) AS contract_Duration
-         , TO_CHAR(MONTH_RENTAL_FEES) AS monthly_Rental_Fees
-         , TO_CHAR(RGIST_FEES) AS registration_Fees
-         , TO_CHAR(PAY_MODE) AS payment_Mode
-         , TO_CHAR(BANK_CODE) AS bank_Code
-         , TO_CHAR(BANK_NAME) AS bank_Name
-         , TO_CHAR(CARD_ACC_NO) AS card_AccountNo
-         , TO_CHAR(OTSTND) AS outstanding
-         , TO_CHAR(EXPR_DT) AS expiry_Date
-         , TO_CHAR(DSC_CODE) AS dsc_Code
-         , TO_CHAR(SIRIM_NO) AS sirim_No
-         , TO_CHAR(SERIAL_NO) AS serial_No
-         , TO_CHAR(HP_NAME) AS hp_Name
-         , TO_CHAR(HP_TEL) AS hp_Tel
-         , TO_CHAR(HM_NAME) AS hm_Name
-         , TO_CHAR(HM_TEL) AS hm_Tel
-         , TO_CHAR(BILL_AMT) AS bill_Amount
-         , TO_CHAR(PAID_AMT) AS paid_Amount
-         , TO_CHAR(ADJ_AMT) AS adjustment_Amount
-         , TO_CHAR(RESULT_REM) AS result_Remark
-         , TO_CHAR(OWNER_CODE) AS owner_Code
-         , TO_CHAR(OWNER_CODE_NM) AS owner_Code_Nm
-         , TO_CHAR(RESULT_CUST_NAME) AS result_Cust_Name
-         , TO_CHAR(RESULT_ICMOBILE_NO) AS result_Ic_Mobile_No
-         , TO_CHAR(RESULT_RPT_EMAIL_NO) AS result_Report_Email_No
-         , TO_CHAR(RESULT_ACEPT_NAME) AS result_Acceptance_Name
-         , TO_CHAR(FAIL_RESN_CODE) AS fail_Reason_Code
-         , TO_CHAR(FAIL_RESN_NAME) AS fail_Reason_Name
-         , TO_CHAR(LAST_PAY_DT) AS last_Payment_Date
-         , TO_CHAR(NEXT_CALL_DT) AS next_Call_Date
-         , TO_CHAR(NEXT_CALL_TM) AS next_Call_Time
-         , TO_CHAR(AS_EXCHN_YN) AS as_Exchange_Y_N
-         , TO_CHAR(BEFORE_PRODUCT_CODE) AS before_Product_Code
-         , TO_CHAR(BEFORE_PRODUCT_SERIAL_NO) AS before_Product_Serial_No
-         , TO_CHAR(CRT_USER_ID) AS Create_User_ID
-         , TO_CHAR(CRT_DT) AS Create_Date
-         , TO_CHAR(FRA_YN) AS fra_Yn
-         , TO_CHAR(FRA_ORD_NO) AS fra_Ord_No
-         , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
-         , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
-         , TO_CHAR(RESULT_REMARK) AS result_Result
-         , TO_CHAR(SERIAL_CHK) AS serial_Chk
-         , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
-         , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
-         , TO_CHAR(REAL_AS_EXCHN_YN) AS real_As_Exchn_Yn
-         , TO_CHAR(REAL_BEFORE_PRODUCT_CODE) AS real_Before_Product_Code
-         , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
-         , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
-         , TO_CHAR(PSI) AS psi
-         , TO_CHAR(LPM) AS lpm
-         , TO_CHAR(PRODCAT) AS prodcat
-         , TO_CHAR(SALES_PROMT_CDE) AS sales_Promotion_Cde
-         , TO_CHAR(VOLT) AS voltage
-         , TO_CHAR(TDS) AS tds
-         , TO_CHAR(ROOM_TEMP) AS room_Temp
-         , TO_CHAR(WATER_SRC_TEMP) AS water_Src_Temp
-         , TO_CHAR(ADPT_USED) AS adpt_Used
-         , TO_CHAR(INST_CHKLST) AS inst_Chk_Lst
-         , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
-         , TO_CHAR(AFT_PSI) AS aft_Psi
-         , TO_CHAR(AFT_LPM) AS aft_Lpm
-         , TO_CHAR(TURB_LVL) AS turb_Lvl
-         , TO_CHAR(WATER_SRC_TYPE) AS water_src_type
-         , NTU AS ntu
-         , TO_CHAR(CHK_SMS) AS chk_sms
-         , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
-         , TO_CHAR(CHECK_SEND) AS check_send
-         , LATITUDE AS LATITUDE
-         , LONGITUDE AS LONGITUDE
+             , TO_CHAR(SVC_NO) AS service_No
+             , TO_CHAR(CUST_NAME) AS cust_Name
+             , TO_CHAR(JOB_TYPE) AS job_Type
+             , TO_CHAR(JOB_STUS) AS job_Status
+             , TO_CHAR(APPNT_DT) AS appointment_Date
+             , TO_CHAR(APPNT_TM) AS appointment_Time
+             , TO_CHAR(JOB_SESION) AS job_Session
+             , TO_CHAR(CHECKIN_DT) AS check_In_Date
+             , TO_CHAR(CHECKIN_TM) AS check_In_Time
+             , TO_CHAR(CHECKIN_GPS) AS check_In_Gps
+             , TO_CHAR(CUST_TYPE) AS customer_Type
+             , TO_CHAR(CUST_ID) AS customer_Id
+             , TO_CHAR(SVC_STATE) AS service_State
+             , TO_CHAR(PLAN_YEAR) AS plan_Year
+             , TO_CHAR(PLAN_MONTH) AS plan_Month
+             , TO_CHAR(INSTALL_ADDR) AS install_Address
+             , TO_CHAR(POST_CODE) AS postcode
+             , TO_CHAR(HANDPHONE_TEL) AS handphone_Tel
+             , TO_CHAR(HOME_TEL) AS home_Tel
+             , TO_CHAR(OFFICE_TEL) AS office_Tel
+             , TO_CHAR(MAIL_ADDR) AS mail_Address
+             , TO_CHAR(CUST_VA_NO) AS customer_Va_No
+             , TO_CHAR(CUST_JOM_PAY_REF_NO) AS customer_Jom_Pay_Ref_No
+             , TO_CHAR(PRODUCT_NAME) AS product_Name
+             , TO_CHAR(PRODUCT_CODE) AS product_Code
+             , TO_CHAR(APP_TYPE) AS app_Type
+             , TO_CHAR(INSTCT) AS instruction
+             , TO_CHAR(SALES_PROMT) AS sales_Promotion
+             , TO_CHAR(CNTRCT_DUR) AS contract_Duration
+             , TO_CHAR(MONTH_RENTAL_FEES) AS monthly_Rental_Fees
+             , TO_CHAR(RGIST_FEES) AS registration_Fees
+             , TO_CHAR(PAY_MODE) AS payment_Mode
+             , TO_CHAR(BANK_CODE) AS bank_Code
+             , TO_CHAR(BANK_NAME) AS bank_Name
+             , TO_CHAR(CARD_ACC_NO) AS card_AccountNo
+             , TO_CHAR(OTSTND) AS outstanding
+             , TO_CHAR(EXPR_DT) AS expiry_Date
+             , TO_CHAR(DSC_CODE) AS dsc_Code
+             , TO_CHAR(SIRIM_NO) AS sirim_No
+             , TO_CHAR(SERIAL_NO) AS serial_No
+             , TO_CHAR(HP_NAME) AS hp_Name
+             , TO_CHAR(HP_TEL) AS hp_Tel
+             , TO_CHAR(HM_NAME) AS hm_Name
+             , TO_CHAR(HM_TEL) AS hm_Tel
+             , TO_CHAR(BILL_AMT) AS bill_Amount
+             , TO_CHAR(PAID_AMT) AS paid_Amount
+             , TO_CHAR(ADJ_AMT) AS adjustment_Amount
+             , TO_CHAR(RESULT_REM) AS result_Remark
+             , TO_CHAR(OWNER_CODE) AS owner_Code
+             , TO_CHAR(OWNER_CODE_NM) AS owner_Code_Nm
+             , TO_CHAR(RESULT_CUST_NAME) AS result_Cust_Name
+             , TO_CHAR(RESULT_ICMOBILE_NO) AS result_Ic_Mobile_No
+             , TO_CHAR(RESULT_RPT_EMAIL_NO) AS result_Report_Email_No
+             , TO_CHAR(RESULT_ACEPT_NAME) AS result_Acceptance_Name
+             , TO_CHAR(FAIL_RESN_CODE) AS fail_Reason_Code
+             , TO_CHAR(FAIL_RESN_NAME) AS fail_Reason_Name
+             , TO_CHAR(LAST_PAY_DT) AS last_Payment_Date
+             , TO_CHAR(NEXT_CALL_DT) AS next_Call_Date
+             , TO_CHAR(NEXT_CALL_TM) AS next_Call_Time
+             , TO_CHAR(AS_EXCHN_YN) AS as_Exchange_Y_N
+             , TO_CHAR(BEFORE_PRODUCT_CODE) AS before_Product_Code
+             , TO_CHAR(BEFORE_PRODUCT_SERIAL_NO) AS before_Product_Serial_No
+             , TO_CHAR(CRT_USER_ID) AS Create_User_ID
+             , TO_CHAR(CRT_DT) AS Create_Date
+             , TO_CHAR(FRA_YN) AS fra_Yn
+             , TO_CHAR(FRA_ORD_NO) AS fra_Ord_No
+             , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
+             , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
+             , TO_CHAR(RESULT_REMARK) AS result_Result
+             , TO_CHAR(SERIAL_CHK) AS serial_Chk
+             , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
+             , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
+             , TO_CHAR(REAL_AS_EXCHN_YN) AS real_As_Exchn_Yn
+             , TO_CHAR(REAL_BEFORE_PRODUCT_CODE) AS real_Before_Product_Code
+             , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
+             , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
+             , TO_CHAR(PSI) AS psi
+             , TO_CHAR(LPM) AS lpm
+             , TO_CHAR(PRODCAT) AS prodcat
+             , TO_CHAR(SALES_PROMT_CDE) AS sales_Promotion_Cde
+             , TO_CHAR(VOLT) AS voltage
+             , TO_CHAR(TDS) AS tds
+             , TO_CHAR(ROOM_TEMP) AS room_Temp
+             , TO_CHAR(WATER_SRC_TEMP) AS water_Src_Temp
+             , TO_CHAR(ADPT_USED) AS adpt_Used
+             , TO_CHAR(INST_CHKLST) AS inst_Chk_Lst
+             , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
+             , TO_CHAR(AFT_PSI) AS aft_Psi
+             , TO_CHAR(AFT_LPM) AS aft_Lpm
+             , TO_CHAR(TURB_LVL) AS turb_Lvl
+             , TO_CHAR(WATER_SRC_TYPE) AS water_src_type
+             , NTU AS ntu
+             , TO_CHAR(CHK_SMS) AS chk_sms
+             , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
+             , TO_CHAR(CHECK_SEND) AS check_send
+             , LATITUDE AS LATITUDE
+             , LONGITUDE AS LONGITUDE
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
