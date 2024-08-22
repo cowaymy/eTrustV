@@ -380,7 +380,13 @@
 
             if($("#exTradeAexc").val() == '1') {
                 $('#relatedNoAexc').removeAttr("readonly").removeClass("readonly");
-            } else {
+            }else if($("#exTradeAexc").val() == '3'){
+                $('#exTradeAexc').val('');
+
+                var msg = "HC is not allowed for Jom Tukar.";
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                return false;
+            }else {
                 $('#relatedNoAexc').val('').prop("readonly", true).addClass("readonly");
             }
 
