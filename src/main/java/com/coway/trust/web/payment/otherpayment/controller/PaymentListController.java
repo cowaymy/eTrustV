@@ -136,7 +136,7 @@ public class PaymentListController {
 		} */
 
 		if (count > 0) {
-			String remark = "FT Invalid for (";
+			String remark = "FT is only valid for (";
 			params.put("type", "FT");
 			List<EgovMap> invalidTypeList = paymentListService.selectInvalidORCodeNm(params);
 
@@ -680,7 +680,7 @@ public class PaymentListController {
 	    }*/
 
 		if (invalidTypeCount > 0) {
-			String remark = "Refund is invalid for (";
+			String remark = "Refund is only valid for (";
 			List<EgovMap> invalidTypeListNm = paymentListService.selectInvalidORCodeNm(params);
 
 			for(int i = 0; i < invalidTypeListNm.size(); i++){
@@ -1448,7 +1448,7 @@ public class PaymentListController {
 		    }*/
 
     		if (invalidTypeCount > 0) {
-    			String remark = "DCF Invalid for (";
+    			String remark = "DCF is only valid for (";
     			List<EgovMap> invalidTypeList = paymentListService.selectInvalidORCodeNm(params);
 
     			for(int i = 0; i < invalidTypeList.size(); i++){
