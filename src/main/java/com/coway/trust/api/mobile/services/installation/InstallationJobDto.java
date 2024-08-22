@@ -293,6 +293,14 @@ public class InstallationJobDto {
 
   private BigDecimal ntu;
 
+  private String isJomTukar;
+
+  private String isComptProd;
+
+  private String comptBrnd;
+
+  private String srvTyp;
+
   public BigDecimal getNtu() {
 	return ntu;
 }
@@ -1161,6 +1169,38 @@ public String getVoltage() {
 
   public void setLongitude(BigDecimal longitude){
      this.longitude = longitude;
+  }
+
+  public String getIsJomTukar() {
+    return isJomTukar;
+  }
+
+  public void setIsJomTukar( String isJomTukar ) {
+    this.isJomTukar = isJomTukar;
+  }
+
+  public String getIsComptProd() {
+    return isComptProd;
+  }
+
+  public void setIsComptProd( String isComptProd ) {
+    this.isComptProd = isComptProd;
+  }
+
+  public String getComptBrnd() {
+    return comptBrnd;
+  }
+
+  public void setComptBrnd( String comptBrnd ) {
+    this.comptBrnd = comptBrnd;
+  }
+
+  public String getSrvTyp() {
+    return srvTyp;
+  }
+
+  public void setSrvTyp( String srvTyp ) {
+    this.srvTyp = srvTyp;
   }
 
   public static InstallationJobDto create(EgovMap egvoMap) {
