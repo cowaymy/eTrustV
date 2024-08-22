@@ -34,7 +34,7 @@ var installAccTypeId = 583;
         $("#refNo2").val("");
         $("#checkCommission").prop("checked", false);
         $("#checkTrade").prop("checked", false);
-        /* $("#checkSms").prop("checked", false); */
+        $("#checkSms").prop("checked", false);
         $("#msgRemark").val("");
         $("#failReason").val("0");
         $("#nextCallDate").val("");
@@ -149,7 +149,7 @@ var installAccTypeId = 583;
           $("#addInstallForm #refNo1").val("");
           $("#addInstallForm #refNo2").val("");
           $("#addInstallForm #checkTrade").prop("checked", false);
-          /* $("#addInstallForm #checkSms").prop("checked", false); */
+          $("#addInstallForm #checkSms").prop("checked", false);
           $("#addInstallForm #msgRemark").val("Remark:");
           $("#addInstallForm #failReason").val("0");
           $("#addInstallForm #nextCallDate").val("");
@@ -944,10 +944,10 @@ var installAccTypeId = 583;
             <input type="checkbox" id="checkTrade" name="checkTrade" />
             <span><spring:message code='service.btn.IsTradeIn' /> ?</span>
         </label>
-       <%--  <label>
+       <label>
             <input type="checkbox" id="checkSms" name="checkSms" />
             <span><spring:message code='service.btn.RequireSMS' /> ?</span>
-        </label> --%>
+        </label>
       </td>
      </tr>
     </tbody>
