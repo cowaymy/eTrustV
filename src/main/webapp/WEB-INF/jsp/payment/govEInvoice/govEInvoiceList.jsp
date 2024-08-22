@@ -117,7 +117,12 @@ function fn_getEInvListAjax() {
 
 //New Claim Pop-UP
 function fn_openDivPop(val) {
-    Common.popupDiv("/payment/einv/govEInvoiceNewPop.do", null, null, true, "newEInvPop");
+	if(val == "NEW"){
+	    Common.popupDiv("/payment/einv/govEInvoiceNewPop.do", null, null, true, "newEInvPop");
+	}
+	else if(val == "CONSOLIDATED"){
+	    Common.popupDiv("/payment/einv/govTaxInvoiceConsolidateNewPop.do", null, null, true, "newTaxInvoiceConsolidatePop");
+	}
 }
 
 //View Claim Pop-UP
@@ -253,9 +258,9 @@ function fn_clear() {
         <li><p class="link_btn type2">
           <a href="javascript:fn_openDivPop('NEW');">New E-invoice</a>
          </p></li>
-         <!-- <li><p class="link_btn type2">
-          <a href="javascript:fn_openDivPop('CONSOLIDATED');">New Consolidated</a>
-         </p></li> -->
+        <li><p class="link_btn type2">
+          <a href="javascript:fn_openDivPop('CONSOLIDATED');">Consolidated Tax Invoice</a>
+         </p></li>
          </c:if>
        </ul>
        <p class="hide_btn">

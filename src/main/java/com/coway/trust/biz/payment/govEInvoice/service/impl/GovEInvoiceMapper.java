@@ -36,6 +36,8 @@ public interface GovEInvoiceMapper {
 
 	Map<String, Object> createEInvClaimDaily(Map<String, Object> param);
 
+	Map<String, Object> createTaxInvConsolidateClaim(Map<String, Object> param);
+
 	int saveEInvBatchMain(Map<String, Object> params);
 
 	int saveEInvDeactivateBatchEInv(Map<String, Object> params);
@@ -59,4 +61,6 @@ public interface GovEInvoiceMapper {
 	void updateEInvMain(Map<String, Object> formMap);
 
 	int updEInvByDocId(Map<String, Object> params);
+
+	String getSendMaxRowCount(Map<String, Object> params);
 }

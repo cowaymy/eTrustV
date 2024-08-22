@@ -166,6 +166,14 @@
   }
 </select>
 
+<resultMap id="resultTaxInvConsolidateMap" type="egovMap" />
+<select id="createTaxInvConsolidateClaim" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE(#{invType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  }
+</select>
+
 <update id="saveEInvBatchMain" parameterType="Map">
      UPDATE EIV0003M
      SET
@@ -200,6 +208,7 @@
 </select>
 
 <select id="selectEInvSendList" parameterType="Map" resultType="egovMap">
+	SELECT * FROM (
      SELECT
          INV_ID
 		, INV_TYPE_CODE
@@ -284,7 +293,15 @@
      <if test="batchId != null and batchId != ''">
          AND A.BATCH_ID = #{batchId}
      </if>
+     <if test="invType != null and invType != ''">
+         AND A.INV_TYPE = NVL(#{invType},'01')
+     </if>
      ORDER BY B.INV_ID
+     )
+     WHERE 1=1
+     <if test="maxRowNum != null and maxRowNum != ''">
+         AND ROWNUM <![CDATA[<=]]> #{maxRowNum}
+     </if>
 </select>
 
 <select id="selectEInvLineSendList" parameterType="Map" resultType="egovMap">
@@ -432,6 +449,9 @@
     <if test="qrCode != null and qrCode != '' ">
         QR_CODE = UTL_RAW.CAST_TO_RAW(#{qrCode}),
     </if>
+    <if test="uuid != null and uuid != '' ">
+        UUID = #{uuid},
+    </if>
         STATUS = #{status},
         DT_TM_VALIDATED = TO_DATE(#{dateTimeValidated}, 'YYYY-MM-DD"T"HH24:MI:SS'),
         UPD_USER_ID = #{userId},
@@ -439,4 +459,9 @@
     WHERE  DOCUMENT_ID = #{documentId}
     AND STATUS NOT IN (8,21)
 </update>
+
+<select id="getSendMaxRowCount" parameterType="Map" resultType="String">
+	SELECT CODE FROM EIV0009M WHERE CODE_MASTER_ID = #{codeMasterId}
+	AND ROWNUM = 1
+</select>
 </mapper>

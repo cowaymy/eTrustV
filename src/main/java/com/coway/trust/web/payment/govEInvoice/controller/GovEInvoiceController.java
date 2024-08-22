@@ -92,6 +92,11 @@ public class GovEInvoiceController {
 		return "payment/govEInvoice/govEInvoiceNewPop";
 	}
 
+	@RequestMapping(value = "/govTaxInvoiceConsolidateNewPop.do")
+	public String newGovTaxInvoiceConsolidatePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/govEInvoice/govTaxInvoiceConsolidateNewPop";
+	}
+
 	@RequestMapping(value = "/govEInvoiceViewPop.do")
 	public String viewInvoicePop(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -197,6 +202,88 @@ public class GovEInvoiceController {
 
 	  }
 
+	@RequestMapping(value = "/generateNewTaxInvConsolidateClaim.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> generateNewTaxInvConsolidateClaim(@RequestBody Map<String, ArrayList<Object>> params, Model model,
+	      SessionVO sessionVO) {
+
+	    List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
+	                                                                   // 가져오기
+	    Map<String, Object> returnMap = new HashMap<String, Object>();
+	    Map<String, Object> searchMap = null;
+	    String returnCode = "";
+
+	    // form 객체 값을 담을 Map
+	    Map<String, Object> eInvClaim = new HashMap<String, Object>();
+
+	    // form 객체 데이터 세팅
+	    if (formList.size() > 0) {
+	      formList.forEach(obj -> {
+	        Map<String, Object> map = (Map<String, Object>) obj;
+	        eInvClaim.put((String) map.get("name"), map.get("value"));
+	      });
+	    }
+	    // 검색 파라미터 확인.(화면 Form객체 입력값)
+	    LOGGER.debug("new_invoiceType : {}", eInvClaim.get("sInvType"));
+	    LOGGER.debug("new_InvoiceDateMonth : {}", eInvClaim.get("namecrtsdt"));
+
+	    // HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다.
+	    searchMap = new HashMap<String, Object>();
+	    searchMap.put("invType", eInvClaim.get("sInvType"));
+	    searchMap.put("invBillType", eInvClaim.get("sInvBillType"));
+	    searchMap.put("invMonth", eInvClaim.get("sRqtStartDt"));
+	    //searchMap.put("invoicePeriod", eInvClaim.get("sRqtStartDt"));
+	    searchMap.put("status", "1");
+
+	    List<EgovMap> isActiveBatchList = govEInvoiceService.selectGovEInvoiceList(searchMap);
+
+	    // Active인 배치가 있는 경우
+	    if (isActiveBatchList.size() > 0) {
+	      returnCode = "IS_BATCH";
+	      returnMap = (Map<String, Object>) isActiveBatchList.get(0);
+	    } else {
+
+	    searchMap.put("userId", sessionVO.getUserId());
+
+	      govEInvoiceService.createTaxInvConsolidateClaim(searchMap);
+
+	      String resultStr = searchMap.get("p1").toString();
+
+	      if ("999".equals(resultStr)) {
+	          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + resultStr + ":" + "New E-Invoice Error");
+	      }
+
+//	      if (resultMapList.size() > 0) {
+	        // 프로시저 결과 Map
+//	        returnMap = (Map<String, Object>) resultMapList.get(0);
+
+	        // Calim Master 및 Detail 조회
+	        // EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
+	        // List<EgovMap> claimDetailList =
+	        // claimService.selectClaimDetailById(returnMap);
+
+	        try {
+	          // 파일 생성하기
+	          // this.createClaimFileMain(claimMasterMap,claimDetailList);
+	          returnCode = "FILE_OK";
+	        } catch (Exception e) {
+	          returnCode = "FILE_FAIL";
+	        }
+//	      }
+//	    else {
+//	        returnCode = "FAIL";
+//	      }
+	    }
+
+	    // 결과 만들기.
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(returnCode);
+	    message.setData(returnMap);
+	    message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+
+	    return ResponseEntity.ok(message);
+
+	  }
+
 	@RequestMapping(value = "/saveEInvDeactivateBatch", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveEInvDeactivateBatch(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
@@ -246,6 +333,7 @@ public class GovEInvoiceController {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    	params.put("invType", "01"); //For E-Invoice Only
 		resultValue = govEInvoiceService.prepareEInvClaim(params);
 
 //		if(resultValue.get("status").equals("1")){
@@ -263,14 +351,52 @@ public class GovEInvoiceController {
 	public void govEInvoiceSend(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    	params.put("invType", "01"); //For E-Invoice Only
+		resultValue = govEInvoiceService.sendEInvClaim(params);
+	}
+
+	@RequestMapping(value = "/govTaxInvPrepare.do")
+	public ResponseEntity<ReturnMessage> govTaxInvPrepare(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+    	params.put("invType", "02"); //For Consolidated Tax Invoice
+		resultValue = govEInvoiceService.prepareEInvClaim(params);
+
+		message.setMessage("Success");
+		message.setCode(AppConstants.SUCCESS);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/govTaxInvoiceSend.do")
+	public ResponseEntity<ReturnMessage> govTaxInvoiceSend(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+    	params.put("invType", "02"); //For Consolidated Tax Invoice
 		resultValue = govEInvoiceService.sendEInvClaim(params);
 
+		message.setMessage("Success");
+		message.setCode(AppConstants.SUCCESS);
+
+		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/checkStatusEInvClaim.do")
 	public void checkStatusEInvClaim(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    	params.put("invType", "01"); //For Consolidated Tax Invoice
+		resultValue = govEInvoiceService.checkStatusEInvClaim(params);
+
+	}
+
+	@RequestMapping(value = "/checkStatusTaxInvClaim.do")
+	public void checkStatusTaxInvClaim(@RequestParam Map<String, Object> params, ModelMap model) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+    	params.put("invType", "02"); //For Consolidated Tax Invoice
 		resultValue = govEInvoiceService.checkStatusEInvClaim(params);
 
 	}

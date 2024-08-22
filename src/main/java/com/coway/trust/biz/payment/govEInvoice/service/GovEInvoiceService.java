@@ -19,6 +19,8 @@ public interface GovEInvoiceService{
 
 	Map<String, Object> createEInvClaimDaily(Map<String, Object> param);
 
+	Map<String, Object> createTaxInvConsolidateClaim(Map<String, Object> params);
+
 	int saveEInvDeactivateBatch(Map<String, Object> params);
 
 	int saveEInvBatch(Map<String, Object> params);

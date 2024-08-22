@@ -39,6 +39,7 @@ import com.coway.trust.biz.payment.invoice.service.InvoiceService;
 import com.coway.trust.biz.payment.invoice.service.impl.InvoiceMapper;
 import com.coway.trust.config.datasource.DataSource;
 import com.coway.trust.config.datasource.DataSourceType;
+import com.coway.trust.util.CommonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.google.gson.Gson;
@@ -103,6 +104,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     @Value("${cleartax.api.tin}")
     private String ClearTaxApiTin;
 
+    @Value("${cleartax.api.url.upload}")
+    private String ClearTaxApiUpload;
+
+    @Value("${cleartax.api.url.domains.staging}")
+    private String ClearTaxApiDomainStaging;
+
     @Override
     public List<EgovMap> selectGovEInvoiceList(Map<String, Object> params) {
         return govEInvoiceMapper.selectGovEInvoiceList(params);
@@ -136,6 +143,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     @Override
     public Map<String, Object> createEInvClaimDaily(Map<String, Object> params) {
     	return govEInvoiceMapper.createEInvClaimDaily(params);
+    }
+
+    @Override
+    public Map<String, Object> createTaxInvConsolidateClaim(Map<String, Object> params) {
+    	//sInvBillType
+        return govEInvoiceMapper.createTaxInvConsolidateClaim(params);
     }
 
     @Override
@@ -235,6 +248,13 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         List<Map<String, Object>> eInvcClaimList = new ArrayList<>();
         params.put("batchStatus", 5);
         params.put("einvStatus", 104);
+
+        if(params.get("invType").equals("02")){ //Consolidate
+            params.put("codeMasterId", 3);
+            String maxRow = CommonUtils.nvl(govEInvoiceMapper.getSendMaxRowCount(params));
+            params.put("maxRowNum", maxRow);
+        }
+
         eInvcClaimList = govEInvoiceMapper.selectEInvSendList(params);
 
         int j = 0;
@@ -300,7 +320,13 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                         System.out.println(json);
 
                         Map<String, Object> einvApiParams = new HashMap<String, Object>();
-                        einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiGenerate+"?einvoice-type=SALES");
+
+                        if(params.get("invType").equals("01")){ //E-Invoice
+                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiGenerate+"?einvoice-type=SALES");
+                        }
+                        else if(params.get("invType").equals("02")){ //Consolidate
+                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomainStaging + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
+                        }
                         einvApiParams.put("json", json);
                         einvApiParams.put("groupId", groupId);
                         //einvApiParams.put("uin", eInvcClaimList.get(i).get("uniqueId").toString());
@@ -568,7 +594,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         	if(documentParams.get("documentId") != null && !documentParams.get("documentId").toString().isEmpty()){
         		Map<String, Object> resultStatus = new HashMap<String, Object>();
         		Map<String, Object> einvApiParams = new HashMap<String, Object>();
-                einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES");
+                if(params.get("invType").equals("01")){ //E-Invoice
+                    einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES");
+                }
+                else if(params.get("invType").equals("02")){ //Consolidate
+                    einvApiParams.put("cleartaxUrl", ClearTaxApiDomainStaging + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES_B2C");
+                }
                 einvApiParams.put("documentId", documentParams.get("documentId").toString());
                 einvApiParams.put("invRefNo", documentParams.get("invRefNo").toString());
         		resultStatus = clearTaxCheckStatusReqApi(einvApiParams);
@@ -661,6 +692,17 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                     einvUpdParams.put("userId", 349);
                     einvUpdParams.put("status", 8);
                     ResponseMsg = p.getErrorDetails()==null?"":p.getErrorDetails().toString();
+                }else if(p.getSuccess() && p.getStatus().equals("CONSOLIDATED")){
+                    String documentId = p.getDocumentId()==null?"":p.getDocumentId().toString();
+                    String internalId = p.getInternalId()==null?"":p.getInternalId().toString();
+                    String dateTimeValidated = p.getDateTimeValidated()==null?"":p.getDateTimeValidated().toString();
+                    String uuid = p.getUuid()==null?"":p.getUuid().toString();
+
+                    einvUpdParams.put("documentId", documentId);
+                    einvUpdParams.put("uuid", uuid);
+                    einvUpdParams.put("dateTimeValidated", dateTimeValidated);
+                    einvUpdParams.put("userId", 349);
+                    einvUpdParams.put("status", 4);
                 }
                 updEInvByDocId(einvUpdParams);
 
