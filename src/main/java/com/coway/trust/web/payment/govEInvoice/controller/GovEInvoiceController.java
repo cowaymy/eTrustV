@@ -317,6 +317,8 @@ public class GovEInvoiceController {
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
 
+		result = govEInvoiceService.saveEInvBatch(params);
+
 		if(result > 0){
 			message.setMessage("Batch payment has been confirmed.");
 			message.setCode(AppConstants.SUCCESS);
