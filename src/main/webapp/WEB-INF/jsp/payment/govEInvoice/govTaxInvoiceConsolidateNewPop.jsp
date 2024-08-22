@@ -11,8 +11,6 @@ $('.multy_select').change(function() {
 });
 
 $(document).ready(function() {
-    //doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', sbrnch, sbrnch,'sBranchCode', 'M' , 'f_multiCombos');
-
     $('.sInvBillTypeDisp').show();
     $("#sInvType").change(function() {
     	if($("#sInvType").val() == '02'){
@@ -33,6 +31,37 @@ function validRequiredField(){
     if($("#sInvType").val() == '' || $("#sRqtStartDt").val() == '' || $("#sRqtendDt").val() == '' || $("#sInvBillType").val() == ''){
          valid = false;
          message += 'Please select value of the selection(s)';
+    }
+
+    if($('#sRqtStartDt').val() != ''){
+    	var selectedDate = $('#sRqtStartDt').val();
+      	var today = new Date();
+      	var thisYear = today.getFullYear();
+      	var thisMonth =  today.getMonth();
+
+      	var selectedMonth = selectedDate.split("/")[0];
+      	var selectedYear = selectedDate.split("/")[1];
+
+      	if(thisYear == selectedYear){
+          	if(selectedMonth >= thisMonth) //current allowed past month, when live, only allow previous month
+          	{
+          		valid = false;
+            	message += 'Only Past Month is allowed';
+          	}
+      	}
+      	else{
+      		if(thisMonth == 1){
+      			if(selectedMonth == 12 && selectedYear == (thisYear-1)){
+      			}
+      			else{
+              		valid = false;
+                	message += 'No past or future year is allowed';
+      			}
+      		}else{
+          		valid = false;
+            	message += 'No past or future year is allowed';
+      		}
+      	}
     }
 
     if(valid == false){
@@ -112,6 +141,9 @@ function btnGenerate_Click(){
 </colgroup>
 <tbody>
 <tr>
+	<p style="color:red">Currently connected to STAGING url</p>
+</tr>
+<tr>
     <th scope="row">Invoice Type</th>
     <td>
     <select class=" w100p" id="sInvType" name="sInvType">
@@ -137,16 +169,10 @@ function btnGenerate_Click(){
       <div class="date_set w100p">
        <!-- date_set start -->
        <p>
-        <input id="sRqtStartDt" name="namecrtsdt" type="text"
+        <input id="sRqtStartDt" name="sRqtStartDt" type="text"
          title="Create start Date" placeholder="MM/YYYY"
          class="j_date2" />
        </p>
-       <!-- <span> To </span>
-       <p>
-        <input id="sRqtendDt" name="namecrtedt" type="text"
-         title="Create End Date" placeholder="MM/YYYY"
-         class="j_date2" />
-       </p> -->
       </div>
     <!-- date_set end -->
   </td>
