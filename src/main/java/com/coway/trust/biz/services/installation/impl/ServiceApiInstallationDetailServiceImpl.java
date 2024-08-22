@@ -458,12 +458,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params)
-      throws Exception {
+  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params) throws Exception {
     String serviceNo = String.valueOf(params.get("serviceNo"));
     SessionVO sessionVO1 = new SessionVO();
     int resultSeq = 0;
+
     if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
       resultSeq = (Integer) params.get("resultSeq");
     }
@@ -472,6 +473,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     Calendar cal = Calendar.getInstance();
     cal.setTime(dt);
     cal.add(Calendar.DATE, 1);
+
     int year = cal.get(cal.YEAR);
     String month = String.format("%02d", cal.get(cal.MONTH) + 1);
     String date = String.format("%02d", cal.get(cal.DATE));
@@ -483,7 +485,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     if (isInsCnt == 0) {
       String statusId = "21";
 
-      // SAL0046D SELECT
+      // SAL0046D
       EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
       params.put("installEntryId", installResult.get("installEntryId"));
 
@@ -508,8 +510,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("CTID", String.valueOf(userId));
       params.put("installDate", "");
       params.put("updator", String.valueOf(userId));
-      params.put("nextCallDate",
-          String.valueOf(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
+      params.put("nextCallDate", String.valueOf(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
       params.put("refNo1", "0");
       params.put("refNo2", "0");
       params.put("codeId", String.valueOf(installResult.get("typeId")));
@@ -523,17 +524,14 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
       params.put("turbLvl", String.valueOf(params.get("turbLvl")));
       params.put("ntu", String.valueOf(params.get("ntu")));
-
       params.put("customerType", String.valueOf(installResult.get("custType")));
       params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
-
       params.put("remark", String.valueOf(params.get("remark")));
       params.put("failLct", String.valueOf(params.get("failLocCde")));
       params.put("failDeptChk", String.valueOf(params.get("failBfDepWH")));
       params.put("chkInstallAcc", 'N');
       params.put("instAccLst", null);
       params.put("mobileYn", 'Y');
-
 
       if (orderInfo != null) {
         params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
@@ -555,11 +553,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       }
 
       /*
-       * params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get( "sirimNo"))); params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get( "serialNo"))); params.put("remark",insTransLogs.get(i).get("resultRemark"));
+       * params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get( "sirimNo")));
+       * params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get( "serialNo")));
+       * params.put("remark",insTransLogs.get(i).get("resultRemark"));
        */
 
-      logger.debug("### INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
-
+      logger.debug("= INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
       Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
 
       if (null != rtnValue) {
@@ -584,8 +583,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         String errCode = (String) spMap.get("pErrcode");
         String errMsg = (String) spMap.get("pErrmsg");
 
-        logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
-        logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+        logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+        logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
 
         // pErrcode : 000 = Success, others = Fail
         if (!"000".equals(errCode)) {
@@ -597,32 +596,32 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
         }
 
-        //send sms
+        // SEND SMS
         Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
-        try{
-        	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
-        		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+        try {
+          if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
+            smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
 
-        		EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
-        		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-        		params.put("hpMemId",salesmanInfo.get("memId"));
-        		EgovMap failReason = hcInstallResultListService.selectFailReason(params);
-        		params.put("resnDesc",failReason.get("resnDesc"));
-        		params.put("resnCode",failReason.get("resnCode"));
-        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "\n Install Status: Failed"
-        				+ "\n Failed Reason: " + params.get("resnDesc") ;
-        		params.put("hpMsg",hpMsg);
+            EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
+            params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+            params.put("hpMemId",salesmanInfo.get("memId"));
+            EgovMap failReason = hcInstallResultListService.selectFailReason(params);
+            params.put("resnDesc",failReason.get("resnDesc"));
+            params.put("resnCode",failReason.get("resnCode"));
+            String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "\n Install Status: Failed"
+                              + "\n Failed Reason: " + params.get("resnDesc") ;
+            params.put("hpMsg",hpMsg);
 
-        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
-        	}else{
-        		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
-        	}
+            smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
+          }else{
+            smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+          }
 
-      	}catch (Exception e){
-      		logger.info("===smsResultValue===" + smsResultValue.toString());
-      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-      	}
+        } catch (Exception e) {
+          logger.info("= SEND SMS" + smsResultValue.toString());
+          logger.info("= FAILED TO SEND SMS TO " + params.get("custMobileNo").toString() + "=");
+        }
       }
     } else {
       if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
