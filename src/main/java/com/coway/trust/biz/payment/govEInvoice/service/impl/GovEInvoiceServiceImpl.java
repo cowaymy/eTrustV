@@ -162,7 +162,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     @Override
     public int saveEInvBatch(Map<String, Object> params) {
     	params.put("batchStatus", 1);
-        params.put("userId", 349);
+        //params.put("userId", 349);
     	int result = govEInvoiceMapper.saveEInvConfirmBatch(params);
     	return result;
     }
