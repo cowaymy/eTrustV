@@ -5734,7 +5734,7 @@ AND J.CODE IN ('COM','FAL','CAN')
       SELECT Extent1.CODE_ID CODE_ID
            , Extent1.CODE_NAME CODE_NAME
       FROM SYS0013M Extent1
-      WHERE CODE_MASTER_ID = 602
+      WHERE CODE_MASTER_ID = 586
       AND DISAB = 0
       ORDER BY Extent1.CODE_ID
     ]]>
