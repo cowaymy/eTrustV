@@ -1298,6 +1298,9 @@ public class InstallationResultListController {
 
     model.put("installAccValues", installAccValues);
 
+    List<EgovMap> competitorBrand = installationResultListService.selectCompetitorBrand(); //COMPETITOR BRAND [CELESTE: 20240814 - JOMTUKAR ]
+    model.put("competitorBrand", competitorBrand);
+
     // 호출될 화면
     return "services/installation/editInstallationResultPop";
   }
@@ -1905,6 +1908,17 @@ public class InstallationResultListController {
     model.addAttribute("installStatus", installStatus);
     model.addAttribute("dscCodeList", dscCodeList);
     return "services/installation/installationAccessoriesRawPop";
+  }
+
+  @RequestMapping(value = "/competitorBrand.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> competitorBrand(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+    logger.debug("=====================competitorBrand=======================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("=====================competitorBrand=======================");
+    List<EgovMap> competitorBrand = installationResultListService.selectCompetitorBrand();
+
+    return ResponseEntity.ok(competitorBrand);
   }
 
 }

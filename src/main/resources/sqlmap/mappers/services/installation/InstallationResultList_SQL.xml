@@ -3325,6 +3325,9 @@
            , Limit1.GAS_PRES_BEF
            , Limit1.GAS_PRES_AFT
            , Limit1.NTU
+           , Limit1.COMPETITOR_FLAG
+           , Limit1.COMPETITOR_BRAND_ID
+           , Limit1.COMPETITOR_BRAND_DESC
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3381,6 +3384,9 @@
                   , NVL(Extent3.GAS_PRES_BEF,0) GAS_PRES_BEF
                   , NVL(Extent3.GAS_PRES_AFT,0) GAS_PRES_AFT
                   , NVL(Extent3.NTU,0) NTU
+                  , NVL(Extent3.COMP_YN, 'N') AS COMPETITOR_FLAG
+                  , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent3.COMP_BRAND ELSE NULL END COMPETITOR_BRAND_ID
+                  , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent9.CODE_DESC ELSE NULL END COMPETITOR_BRAND_DESC
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
@@ -3389,6 +3395,7 @@
          LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent3.CRT_USER_ID
          LEFT JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent3.UPD_USER_ID
          LEFT JOIN SYS0028M Extent8 ON Extent5.MEM_CODE = Extent8.WH_LOC_CODE
+         LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent3.COMP_BRAND AND Extent9.CODE_MASTER_ID = 586
          WHERE  Extent1.INSTALL_ENTRY_ID = TO_NUMBER(TRIM(#{installEntryId})) AND ROWNUM <= 1 ) Limit1
     ]]>
   </select>
@@ -3620,6 +3627,8 @@
                   , Project1.GAS_PRES_BEF GAS_PRES_BEF
                   , Project1.GAS_PRES_AFT GAS_PRES_AFT
                   , Project1.NTU
+                  , Project1.COMPETITOR_FLAG
+                  , Project1.COMPETITOR_BRAND
          FROM ( SELECT Extent1.RESULT_ID RESULT_ID
                      , to_char(Extent1.INSTALL_DT,'yyyy-mm-dd')  INSTALL_DT
                      , Extent1.REM REM
@@ -3646,12 +3655,15 @@
                      , Extent1.GAS_PRES_BEF
                      , Extent1.GAS_PRES_AFT
                      , Extent1.NTU
+                     , NVL(Extent1.COMP_YN, 'N') AS COMPETITOR_FLAG
+                     , CASE WHEN (Extent1.COMP_BRAND IS NOT NULL) THEN Extent7.CODE_DESC ELSE '-' END COMPETITOR_BRAND
                 FROM SAL0047D Extent1
                 JOIN SAL0046D Extent2 ON Extent1.ENTRY_ID = Extent2.INSTALL_ENTRY_ID
                 LEFT JOIN SYS0038M Extent3 ON Extent2.STUS_CODE_ID = Extent3.STUS_CODE_ID
                 LEFT JOIN ORG0001D Extent4 ON Extent1.CT_ID = Extent4.MEM_ID
                 LEFT JOIN SYS0047M Extent5 ON Extent1.CRT_USER_ID = Extent5.USER_ID
                 LEFT JOIN SYS0032M Extent6 ON Extent1.FAIL_ID = Extent6.RESN_ID
+                LEFT JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent1.COMP_BRAND AND Extent7.CODE_MASTER_ID = 586
                 WHERE  Extent1.RESULT_ID = #{resultId} ) Project1
          ORDER BY Project1.RESULT_ID ASC )
          WHERE ROWNUM <= 1
@@ -5035,6 +5047,12 @@
                       	</if>
                         <if test="ntuFail != null and ntuFail != ''">
                       , NTU = #{ntuFail}
+                      	</if>
+                        <if test="competitor != null and competitor != ''">
+                      , COMP_YN = #{ntuFail}
+                      	</if>
+                        <if test="competitorBrand != null and competitorBrand != ''">
+                      , COMP_BRAND = #{competitorBrand}
                       	</if>
 
     WHERE ( RESULT_ID = #{resultId} )

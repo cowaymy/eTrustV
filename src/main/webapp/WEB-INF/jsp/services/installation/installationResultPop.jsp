@@ -213,6 +213,27 @@ function fn_winClose(){
 
 </tr>
 <tr>
+  <th scope="row">JomTukar<span class="must">*</span></th>
+  <td colspan="3">
+    <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${resultInfo.jomTukarFlag eq 'Y'}">checked</c:if> value="Y" onClick="return false"/><span>Yes</span></label>
+    <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${resultInfo.jomTukarFlag ne 'Y'}">checked</c:if> value="N" onClick="return false"/><span>No</span></label>
+  </td>
+</tr>
+<tr>
+  <th scope="row" id="competitorHeader">Competitor Product</th>
+  <td colspan="3">
+      <label><input type="radio" id="competitor" name="competitor" <c:if test="${resultInfo.competitorFlag eq 'Y'}">checked</c:if> value="Y"  onClick="return false"/><span>Yes</span><label>
+      <label><input type="radio" id="competitor" name="competitor" <c:if test="${resultInfo.competitorFlag ne 'Y'}">checked</c:if> value="N"  onClick="return false"/><span>No</span></label>
+  </td>
+</tr>
+<tr>
+  <th scope="row" id="competitorBrandHeader">Competitor Brand</th>
+  <td colspan="3">
+      <span><c:out value="${resultInfo.competitorBrand}"/></span>
+  </td>
+</tr>
+
+<tr>
     <th scope="row">SIRIM No.</th>
     <td>
     <span><c:out value="${resultInfo.sirimNo}"/></span>

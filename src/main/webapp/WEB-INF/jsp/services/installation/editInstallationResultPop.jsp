@@ -68,6 +68,7 @@ var installAccValues = JSON.parse("${installAccValues}");
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/boosterList.do', '', '${installInfo.boosterPump}','boosterPump', 'S' , '');
     doGetCombo('/services/waterSrcTypeList.do', '', '${installInfo.waterSrcType}','waterSrcType', 'S' , '');
+    doGetCombo('/services/competitorBrand.do', '', '${installInfo.competitorBrandId}','competitorBrand', 'S' , '');
 
      /*  $("#boosterPump").change(function() {
         val = $(this).val();
@@ -774,7 +775,7 @@ function notMandatoryForAP(){
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.ActionCT' /></th>
-              <td>
+              <td colspan="3">
                 <span><c:out value="${installInfo.c3} - ${installInfo.c4}" /></span>
               </td>
               <c:if test="${codeId == '258'}">
@@ -784,6 +785,33 @@ function notMandatoryForAP(){
                 </td>
               </c:if>
             </tr>
+            <th scope="row">JomTukar<span class="must">*</span></th>
+            <td colspan="3">
+                 <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${installInfo.jomTukarFlag eq 'Y'}">checked</c:if> value="Y" onClick="return false"/><span>Yes</span></label>
+                 <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${installInfo.jomTukarFlag ne 'Y'}">checked</c:if> value="N" onClick="return false"/><span>No</span></label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" id="competitorHeader">Competitor Product</th>
+            <td colspan="3">
+                <!-- <label><input type="radio" id="competitor" name="competitor" value="Y" onchange="javascript:fn_competitorBrand(this.value)" disabled="disabled"/><span>Yes</span><label>
+                <label><input type="radio" id="competitor" name="competitor" value="N" onchange="javascript:fn_competitorBrand(this.value)" disabled="disabled"/><span>No</span></label> -->
+                <label><input type="radio" id="competitor" name="competitor" <c:if test="${installInfo.competitorFlag eq 'Y'}">checked</c:if> value="Y"  onClick="return false"/><span>Yes</span><label>
+                <label><input type="radio" id="competitor" name="competitor" <c:if test="${installInfo.competitorFlag ne 'Y'}">checked</c:if> value="N"  onClick="return false"/><span>No</span></label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" id="competitorBrandHeader">Competitor Brand</th>
+            <td colspan="3">
+                <select class="w100p" id="competitorBrand" name="competitorBrand">
+                    <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                    <c:forEach var="list" items="${competitorBrand}">
+                         <option value="${list.codeId}">${list.codeName}</option>
+                    </c:forEach>
+                </select>
+            </td>
+          </tr>
+          <tr>
             <tr>
               <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must" id="m1"> *</span></th>
               <td>
