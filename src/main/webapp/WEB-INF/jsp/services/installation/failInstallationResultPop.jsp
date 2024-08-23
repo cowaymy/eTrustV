@@ -701,7 +701,7 @@ function notMandatoryForAP(){
           <tr>
             <th scope="row" id="competitorBrandHeader">Competitor Brand</th>
             <td colspan="3">
-                <select class="w100p" id="competitorBrand" name="competitorBrand">
+                <select class="disabled w100p" disabled="disabled" id="competitorBrand" name="competitorBrand">
                     <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                     <c:forEach var="list" items="${competitorBrand}">
                          <option value="${list.codeId}">${list.codeName}</option>
