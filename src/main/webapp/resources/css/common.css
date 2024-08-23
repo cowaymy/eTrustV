@@ -34,7 +34,7 @@ section#content {
 #login_wrap .login_box p.lang{float:right; margin-right:13px; color:#FFFFFF;}
 #login_wrap .login_box p.lang select{width:80px; height:20px;  padding:0 0 0 4px; margin:0; border:1px solid #007bff; border-radius:3px; box-sizing:border-box; font-size:11px; color:#FFFFFF; background-color: transparent; font-family:Verdana,"돋움",Dotum,sans-serif;}
 #login_wrap .login_btn{clear:both; padding-top:5px;}
-#login_wrap .login_btn a{border-radius: 25px; display:block; width:315px; height:50px; line-height:50px; text-align:center; margin:25 auto 4px; background:#00A9E0 url(../images/common/login_text1.png) no-repeat center center; text-indent:-1000em; overflow:hidden;}
+#login_wrap .login_btn a{border-radius: 25px; display:block; width:315px; height:50px; line-height:50px; text-align:center; margin:25px auto 4px; background:#00A9E0 url(../images/common/login_text1.png) no-repeat center center; text-indent:-1000em; overflow:hidden;}
 /* #login_wrap .login_box p{margin-bottom:10px;} */
 #login_wrap .login_box .login_opt{text-align:center;}
 #login_wrap .login_box .login_opt li{display:inline-block; padding:0 0 0 9px;}
