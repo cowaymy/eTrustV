@@ -1736,7 +1736,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     }
 
     if (CommonUtils.isEmpty(param.getSrvType())) {
-        throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist");
+    	param.setSrvType("HS");
+        //throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist");
       }
 
     if (CommonUtils.isEmpty(param.getMthRentAmt())) {
@@ -2138,9 +2139,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getPromoId()) || param.getPromoId() <= 0) {
       throw new ApplicationException(AppConstants.FAIL, "Promotion ID does not exist.");
     }
-
+    
     if (CommonUtils.isEmpty(param.getSrvType())) {
-        throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist.");
+    	param.setSrvType("HS");
+        //throw new ApplicationException(AppConstants.FAIL, "Service Type does not exist");
       }
 
     if (CommonUtils.isEmpty(param.getMthRentAmt())) {
@@ -2232,8 +2234,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     } else {
     	sal0213M.put("totPv", param.getTotPv());
     }
-
-    //sal0213M.put("totPv", param.getTotPv());
 
     sal0213M.put("totPvGst", param.getTotPvGst());
     sal0213M.put("prcId", param.getPrcId());
