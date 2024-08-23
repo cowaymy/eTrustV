@@ -1256,6 +1256,10 @@
              , TO_CHAR(CHECK_SEND) AS check_send
              , LATITUDE AS LATITUDE
              , LONGITUDE AS LONGITUDE
+             , TO_CHAR(SRV_TYPE) AS SRV_TYP
+             , TO_CHAR(IS_JOM_TUKAR) AS IS_JOM_TUKAR
+             , TO_CHAR(COMP_YN) AS IS_COMPT_PROD
+             , TO_CHAR(COMP_BRAND) AS COMPT_BRND
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
