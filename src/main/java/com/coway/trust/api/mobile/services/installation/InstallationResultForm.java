@@ -15,8 +15,7 @@ import com.coway.trust.util.BeanConverter;
 import io.swagger.annotations.ApiModelProperty;
 
 public class InstallationResultForm {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(InstallationResultForm.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger( InstallationResultForm.class );
 
   @ApiModelProperty(value = "사용자 ID (예_CT123456)")
   private String userId;
@@ -68,198 +67,218 @@ public class InstallationResultForm {
   private String signRegTime;
 
   private String checkInDate;
+
   private String checkInTime;
+
   private String checkInGps;
+
   private String scanSerial;
+
   private String fraSerialNo;
 
   private String serialRequireChkYn;
 
   private String psiRcd;
+
   private String lpmRcd;
 
   private String volt;
+
   private String tds;
+
   private String roomTemp;
+
   private String waterSourceTemp;
+
   private String adptUsed;
+
   private String instChklstCheckBox;
+
   private String instNoteChk;
 
   private String boosterPump;
+
   private String aftPsi;
+
   private String aftLpm;
+
   private String turbLvl;
+
   private String ntu;
 
-  public String getChkInstallAcc() {
-	return chkInstallAcc;
-}
+  private String competitor;
 
-public List<InstallationResultDetailForm> getInstallAccList() {
-	return installAccList;
-}
+  private String competitorBrand;
 
-public void setChkInstallAcc(String chkInstallAcc) {
-	this.chkInstallAcc = chkInstallAcc;
-}
-
-public void setInstallAccList(List<InstallationResultDetailForm> installAccList) {
-	this.installAccList = installAccList;
-}
-
-private String waterSrcType;
+  private String waterSrcType;
 
   private String chkCrtAs;
 
   private String chkSms;
+
   private String checkSend;
+
   private String custMobileNo;
+
   private String customerType;
 
   private String partnerCode;
+
   private String memCode;
 
   private String type;
+
   private int insAccPartId;
+
   private String chkInstallAcc;
 
   @ApiModelProperty(value = "installAccList")
   private List<InstallationResultDetailForm> installAccList;
 
-  /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
-
   @ApiModelProperty(value = "partList")
   private List<InstallationResultDetailForm> partList;
 
+  public String getChkInstallAcc() {
+    return chkInstallAcc;
+  }
 
-  /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+  public List<InstallationResultDetailForm> getInstallAccList() {
+    return installAccList;
+  }
 
+  public void setChkInstallAcc( String chkInstallAcc ) {
+    this.chkInstallAcc = chkInstallAcc;
+  }
 
-public String getType() {
-	return type;
-}
+  public void setInstallAccList( List<InstallationResultDetailForm> installAccList ) {
+    this.installAccList = installAccList;
+  }
 
-public String getNtu() {
-	return ntu;
-}
+  public String getType() {
+    return type;
+  }
 
-public void setNtu(String ntu) {
-	this.ntu = ntu;
-}
+  public String getNtu() {
+    return ntu;
+  }
 
-public void setType(String type) {
-	this.type = type;
-}
+  public void setNtu( String ntu ) {
+    this.ntu = ntu;
+  }
 
-public int getInsAccPartId() {
-	return insAccPartId;
-}
+  public void setType( String type ) {
+    this.type = type;
+  }
 
-public void setInsAccPartId(int insAccPartId) {
-	this.insAccPartId = insAccPartId;
-}
-public String getChkCrtAs() {
-	return chkCrtAs;
-}
+  public int getInsAccPartId() {
+    return insAccPartId;
+  }
 
-public String getPartnerCode() {
-	return partnerCode;
-}
+  public void setInsAccPartId( int insAccPartId ) {
+    this.insAccPartId = insAccPartId;
+  }
 
-public String getMemCode() {
-	return memCode;
-}
+  public String getChkCrtAs() {
+    return chkCrtAs;
+  }
 
-public void setPartnerCode(String partnerCode) {
-	this.partnerCode = partnerCode;
-}
+  public String getPartnerCode() {
+    return partnerCode;
+  }
 
-public void setMemCode(String memCode) {
-	this.memCode = memCode;
-}
+  public String getMemCode() {
+    return memCode;
+  }
 
-public void setChkCrtAs(String chkCrtAs) {
-	this.chkCrtAs = chkCrtAs;
-}
+  public void setPartnerCode( String partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
 
-public String getTurbLvl() {
-	return turbLvl;
-}
+  public void setMemCode( String memCode ) {
+    this.memCode = memCode;
+  }
 
-public void setTurbLvl(String turbLvl) {
-	this.turbLvl = turbLvl;
-}
+  public void setChkCrtAs( String chkCrtAs ) {
+    this.chkCrtAs = chkCrtAs;
+  }
 
-public String getWaterSrcType() {
-	return waterSrcType;
-}
+  public String getTurbLvl() {
+    return turbLvl;
+  }
 
-public void setWaterSrcType(String waterSrcType) {
-	this.waterSrcType = waterSrcType;
-}
+  public void setTurbLvl( String turbLvl ) {
+    this.turbLvl = turbLvl;
+  }
 
-public String getCheckSend() {
-	return checkSend;
-}
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
 
-public void setCheckSend(String checkSend) {
-	this.checkSend = checkSend;
-}
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
 
-public String getChkSms() {
-	return chkSms;
-}
+  public String getCheckSend() {
+    return checkSend;
+  }
 
-public void setChkSms(String chkSms) {
-	this.chkSms = chkSms;
-}
+  public void setCheckSend( String checkSend ) {
+    this.checkSend = checkSend;
+  }
 
-public String getCustMobileNo() {
-	return custMobileNo;
-}
+  public String getChkSms() {
+    return chkSms;
+  }
 
-public void setCustMobileNo(String custMobileNo) {
-	this.custMobileNo = custMobileNo;
-}
+  public void setChkSms( String chkSms ) {
+    this.chkSms = chkSms;
+  }
 
-public String getCustomerType() {
+  public String getCustMobileNo() {
+    return custMobileNo;
+  }
+
+  public void setCustMobileNo( String custMobileNo ) {
+    this.custMobileNo = custMobileNo;
+  }
+
+  public String getCustomerType() {
     return customerType;
   }
 
-  public void setCustomerType(String customerType) {
+  public void setCustomerType( String customerType ) {
     this.customerType = customerType;
   }
 
-public String getBoosterPump() {
-	return boosterPump;
-}
+  public String getBoosterPump() {
+    return boosterPump;
+  }
 
-public void setBoosterPump(String boosterPump) {
-	this.boosterPump = boosterPump;
-}
+  public void setBoosterPump( String boosterPump ) {
+    this.boosterPump = boosterPump;
+  }
 
-public String getAftPsi() {
-	return aftPsi;
-}
+  public String getAftPsi() {
+    return aftPsi;
+  }
 
-public void setAftPsi(String aftPsi) {
-	this.aftPsi = aftPsi;
-}
+  public void setAftPsi( String aftPsi ) {
+    this.aftPsi = aftPsi;
+  }
 
-public String getAftLpm() {
-	return aftLpm;
-}
+  public String getAftLpm() {
+    return aftLpm;
+  }
 
-public void setAftLpm(String aftLpm) {
-	this.aftLpm = aftLpm;
-}
+  public void setAftLpm( String aftLpm ) {
+    this.aftLpm = aftLpm;
+  }
 
-public String getLpmRcd() {
+  public String getLpmRcd() {
     return lpmRcd;
   }
 
-  public void setLpmRcd(String lpmRcd) {
+  public void setLpmRcd( String lpmRcd ) {
     this.lpmRcd = lpmRcd;
   }
 
@@ -267,7 +286,7 @@ public String getLpmRcd() {
     return psiRcd;
   }
 
-  public void setPsiRcd(String psiRcd) {
+  public void setPsiRcd( String psiRcd ) {
     this.psiRcd = psiRcd;
   }
 
@@ -275,7 +294,7 @@ public String getLpmRcd() {
     return volt;
   }
 
-  public void setVolt(String volt) {
+  public void setVolt( String volt ) {
     this.volt = volt;
   }
 
@@ -283,7 +302,7 @@ public String getLpmRcd() {
     return tds;
   }
 
-  public void setTds(String tds) {
+  public void setTds( String tds ) {
     this.tds = tds;
   }
 
@@ -291,7 +310,7 @@ public String getLpmRcd() {
     return roomTemp;
   }
 
-  public void setRoomTemp(String roomTemp) {
+  public void setRoomTemp( String roomTemp ) {
     this.roomTemp = roomTemp;
   }
 
@@ -299,7 +318,7 @@ public String getLpmRcd() {
     return waterSourceTemp;
   }
 
-  public void setWaterSourceTemp(String waterSourceTemp) {
+  public void setWaterSourceTemp( String waterSourceTemp ) {
     this.waterSourceTemp = waterSourceTemp;
   }
 
@@ -307,7 +326,7 @@ public String getLpmRcd() {
     return adptUsed;
   }
 
-  public void setAdptUsed(String adptUsed) {
+  public void setAdptUsed( String adptUsed ) {
     this.adptUsed = adptUsed;
   }
 
@@ -315,7 +334,7 @@ public String getLpmRcd() {
     return instChklstCheckBox;
   }
 
-  public void setInstChklstCheckBox(String instChklstCheckBox) {
+  public void setInstChklstCheckBox( String instChklstCheckBox ) {
     this.instChklstCheckBox = instChklstCheckBox;
   }
 
@@ -323,7 +342,7 @@ public String getLpmRcd() {
     return instNoteChk;
   }
 
-  public void setInstNoteChk(String instNoteChk) {
+  public void setInstNoteChk( String instNoteChk ) {
     this.instNoteChk = instNoteChk;
   }
 
@@ -331,7 +350,7 @@ public String getLpmRcd() {
     return serialRequireChkYn;
   }
 
-  public void setSerialRequireChkYn(String serialRequireChkYn) {
+  public void setSerialRequireChkYn( String serialRequireChkYn ) {
     this.serialRequireChkYn = serialRequireChkYn;
   }
 
@@ -339,7 +358,7 @@ public String getLpmRcd() {
     return scanSerial;
   }
 
-  public void setScanSerial(String scanSerial) {
+  public void setScanSerial( String scanSerial ) {
     this.scanSerial = scanSerial;
   }
 
@@ -347,7 +366,7 @@ public String getLpmRcd() {
     return fraSerialNo;
   }
 
-  public void setFraSerialNo(String fraSerialNo) {
+  public void setFraSerialNo( String fraSerialNo ) {
     this.fraSerialNo = fraSerialNo;
   }
 
@@ -355,7 +374,7 @@ public String getLpmRcd() {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -363,7 +382,7 @@ public String getLpmRcd() {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -371,7 +390,7 @@ public String getLpmRcd() {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -379,7 +398,7 @@ public String getLpmRcd() {
     return signRegDate;
   }
 
-  public void setSignRegDate(String signRegDate) {
+  public void setSignRegDate( String signRegDate ) {
     this.signRegDate = signRegDate;
   }
 
@@ -387,7 +406,7 @@ public String getLpmRcd() {
     return signRegTime;
   }
 
-  public void setSignRegTime(String signRegTime) {
+  public void setSignRegTime( String signRegTime ) {
     this.signRegTime = signRegTime;
   }
 
@@ -395,7 +414,7 @@ public String getLpmRcd() {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId( String userId ) {
     this.userId = userId;
   }
 
@@ -403,7 +422,7 @@ public String getLpmRcd() {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(int salesOrderNo) {
+  public void setSalesOrderNo( int salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -411,7 +430,7 @@ public String getLpmRcd() {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -419,7 +438,7 @@ public String getLpmRcd() {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -427,7 +446,7 @@ public String getLpmRcd() {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -435,7 +454,7 @@ public String getLpmRcd() {
     return asExchangeYN;
   }
 
-  public void setAsExchangeYN(String asExchangeYN) {
+  public void setAsExchangeYN( String asExchangeYN ) {
     this.asExchangeYN = asExchangeYN;
   }
 
@@ -443,7 +462,7 @@ public String getLpmRcd() {
     return beforeProductSerialNo;
   }
 
-  public void setBeforeProductSerialNo(String beforeProductSerialNo) {
+  public void setBeforeProductSerialNo( String beforeProductSerialNo ) {
     this.beforeProductSerialNo = beforeProductSerialNo;
   }
 
@@ -451,7 +470,7 @@ public String getLpmRcd() {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -459,7 +478,7 @@ public String getLpmRcd() {
     return ownerCode;
   }
 
-  public void setOwnerCode(int ownerCode) {
+  public void setOwnerCode( int ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -467,7 +486,7 @@ public String getLpmRcd() {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -475,7 +494,7 @@ public String getLpmRcd() {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -483,7 +502,7 @@ public String getLpmRcd() {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -491,7 +510,7 @@ public String getLpmRcd() {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -499,7 +518,7 @@ public String getLpmRcd() {
     return signData;
   }
 
-  public void setSignData(String signData) {
+  public void setSignData( String signData ) {
     this.signData = signData;
   }
 
@@ -507,7 +526,7 @@ public String getLpmRcd() {
     return transactionId;
   }
 
-  public void setTransactionId(String transactionId) {
+  public void setTransactionId( String transactionId ) {
     this.transactionId = transactionId;
   }
 
@@ -517,7 +536,7 @@ public String getLpmRcd() {
     return serialChk;
   }
 
-  public void setSerialChk(String serialChk) {
+  public void setSerialChk( String serialChk ) {
     this.serialChk = serialChk;
   }
 
@@ -527,7 +546,7 @@ public String getLpmRcd() {
     return realAsExchangeYn;
   }
 
-  public void setRealAsExchangeYn(String realAsExchangeYn) {
+  public void setRealAsExchangeYn( String realAsExchangeYn ) {
     this.realAsExchangeYn = realAsExchangeYn;
   }
 
@@ -537,7 +556,7 @@ public String getLpmRcd() {
     return realBeforeProductCode;
   }
 
-  public void setRealBeforeProductCode(String realBeforeProductCode) {
+  public void setRealBeforeProductCode( String realBeforeProductCode ) {
     this.realBeforeProductCode = realBeforeProductCode;
   }
 
@@ -547,7 +566,7 @@ public String getLpmRcd() {
     return realBeforeProductName;
   }
 
-  public void setRealBeforeProductName(String realBeforeProductName) {
+  public void setRealBeforeProductName( String realBeforeProductName ) {
     this.realBeforeProductName = realBeforeProductName;
   }
 
@@ -557,16 +576,32 @@ public String getLpmRcd() {
     return realBeforeProductSerialNo;
   }
 
-  public void setRealBeforeProductSerialNo(String realBeforeProductSerialNo) {
+  public void setRealBeforeProductSerialNo( String realBeforeProductSerialNo ) {
     this.realBeforeProductSerialNo = realBeforeProductSerialNo;
   }
 
-  public List<InstallationResultDetailForm> getPartList() {
-	return partList;
- }
+  public String getCompetitor() {
+    return competitor;
+  }
 
-  public void setPartList(List<InstallationResultDetailForm> partList) {
-	this.partList = partList;
+  public void setCompetitor( String competitor ) {
+    this.competitor = competitor;
+  }
+
+  public String getCompetitorBrand() {
+    return competitorBrand;
+  }
+
+  public void setCompetitorBrand( String competitorBrand ) {
+    this.competitorBrand = competitorBrand;
+  }
+
+  public List<InstallationResultDetailForm> getPartList() {
+    return partList;
+  }
+
+  public void setPartList( List<InstallationResultDetailForm> partList ) {
+    this.partList = partList;
   }
 
   // public static Map<String, Object> createMaps(InstallationResultForm
@@ -598,10 +633,7 @@ public String getLpmRcd() {
   // return params;
   // }
 
-
-
-public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
-
+  public List<Map<String, Object>> createMaps( InstallationResultForm installationResultForm ) {
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
 
@@ -612,91 +644,68 @@ public List<Map<String, Object>> createMaps(InstallationResultForm installationR
     //
     // list.add(map);
     // }
-    map = BeanConverter.toMap(installationResultForm, "signData");
-    map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
-    // install Result
+    map = BeanConverter.toMap( installationResultForm, "signData" );
+    map.put( "signData", Base64.decodeBase64( installationResultForm.getSignData() ) );
+    map.put( "userId", installationResultForm.getUserId() );
+    map.put( "salesOrderNo", installationResultForm.getSalesOrderNo() );
+    map.put( "serviceNo", installationResultForm.getServiceNo() );
+    map.put( "sirimNo", installationResultForm.getSirimNo() );
+    map.put( "serialNo", installationResultForm.getSerialNo() );
+    map.put( "asExchangeYN", installationResultForm.getAsExchangeYN() );
+    map.put( "beforeProductSerialNo", installationResultForm.getBeforeProductSerialNo() );
+    map.put( "resultRemark", installationResultForm.getResultRemark() );
+    map.put( "ownerCode", installationResultForm.getOwnerCode() );
+    map.put( "resultCustName", installationResultForm.getResultCustName() );
+    map.put( "resultIcMobileNo", installationResultForm.getResultIcMobileNo() );
+    map.put( "resultReportEmailNo", installationResultForm.getResultReportEmailNo() );
+    map.put( "resultAcceptanceName", installationResultForm.getResultAcceptanceName() );
+    map.put( "signData", Base64.decodeBase64( installationResultForm.getSignData() ) );
+    map.put( "transactionId", installationResultForm.getTransactionId() );
+    map.put( "signRegDate", installationResultForm.getSignRegDate() );
+    map.put( "signRegTime", installationResultForm.getSignRegTime() );
 
-    map.put("userId", installationResultForm.getUserId());
-    map.put("salesOrderNo", installationResultForm.getSalesOrderNo());
-    map.put("serviceNo", installationResultForm.getServiceNo());
-    map.put("sirimNo", installationResultForm.getSirimNo());
-    map.put("serialNo", installationResultForm.getSerialNo());
-    map.put("asExchangeYN", installationResultForm.getAsExchangeYN());
-    map.put("beforeProductSerialNo", installationResultForm.getBeforeProductSerialNo());
-    map.put("resultRemark", installationResultForm.getResultRemark());
-    map.put("ownerCode", installationResultForm.getOwnerCode());
-    map.put("resultCustName", installationResultForm.getResultCustName());
-    map.put("resultIcMobileNo", installationResultForm.getResultIcMobileNo());
-    map.put("resultReportEmailNo", installationResultForm.getResultReportEmailNo());
-    map.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
-    map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-    map.put("transactionId", installationResultForm.getTransactionId());
-    map.put("signRegDate", installationResultForm.getSignRegDate());
-    map.put("signRegTime", installationResultForm.getSignRegTime());
-
-    /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
-
-    if (partList != null && partList.size() > 0) {
-    	for (InstallationResultDetailForm dtl : partList) {
-    	map.put("filterCode", dtl.getFilterCode());
-        map.put("chargesFoc", dtl.getChargesFoc());
-        map.put("exchangeId", dtl.getExchangeId());
-        map.put("salesPrice", dtl.getSalesPrice());
-        map.put("filterChangeQty", dtl.getFilterChangeQty());
-        map.put("partsType", dtl.getPartsType());
-        map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
-        map.put("retSmoSerialNo", dtl.getRetSmoSerialNo());
-    	}
+    /////////////////////////////// ADD FILTER / PARTS /MISC /////////////////////////////////////
+    if ( partList != null && partList.size() > 0 ) {
+      for ( InstallationResultDetailForm dtl : partList ) {
+        map.put( "filterCode", dtl.getFilterCode() );
+        map.put( "chargesFoc", dtl.getChargesFoc() );
+        map.put( "exchangeId", dtl.getExchangeId() );
+        map.put( "salesPrice", dtl.getSalesPrice() );
+        map.put( "filterChangeQty", dtl.getFilterChangeQty() );
+        map.put( "partsType", dtl.getPartsType() );
+        map.put( "filterBarcdSerialNo", dtl.getFilterBarcdSerialNo() );
+        map.put( "retSmoSerialNo", dtl.getRetSmoSerialNo() );
+      }
     }
-    /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+    /////////////////////////////// ADD FILTER / PARTS / MISC /////////////////////////////////////
 
-    /////////////////////////////// installAccList /////////////////////////////////////
-
-    LOGGER.debug("=====installAccList===== :" + installAccList.size() );
-
-    if (installAccList != null && installAccList.size() > 0) {
-    	for (InstallationResultDetailForm dtl : installAccList) {
-    	map.put("resultNo", dtl.getResultNo());
-        map.put("resultSoId", dtl.getResultSoId());
-        map.put("insAccPartId", dtl.getInsAccPartId());
-        map.put("remark", dtl.getRemark());
-        map.put("crtUserId", dtl.getCrtUserId());
-    	}
+    /////////////////////////////// ADD INSTALLATION ACCES. /////////////////////////////////////
+    if ( installAccList != null && installAccList.size() > 0 ) {
+      for ( InstallationResultDetailForm dtl : installAccList ) {
+        map.put( "resultNo", dtl.getResultNo() );
+        map.put( "resultSoId", dtl.getResultSoId() );
+        map.put( "insAccPartId", dtl.getInsAccPartId() );
+        map.put( "remark", dtl.getRemark() );
+        map.put( "crtUserId", dtl.getCrtUserId() );
+      }
     }
+    /////////////////////////////// ADD INSTALLATION ACCES.  /////////////////////////////////////
 
-    /////////////////////////////// installAccList /////////////////////////////////////
-
-    list.add(map);
-
+    list.add( map );
     return list;
   }
 
-/*  public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
-
-	    List<Map<String, Object>> list = new ArrayList<>();
-
-	    if (partList != null && partList.size() > 0) {
-	      Map<String, Object> map;
-	      for (InstallationResultDetailForm dtl : partList) {
-	        map = BeanConverter.toMap(installationResultForm, "signData", "partList");
-	        map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-
-	        // as Dtails
-	        map.put("filterCode", dtl.getFilterCode());
-	        map.put("chargesFoc", dtl.getChargesFoc());
-	        map.put("exchangeId", dtl.getExchangeId());
-	        map.put("salesPrice", dtl.getSalesPrice());
-	        map.put("filterChangeQty", dtl.getFilterChangeQty());
-	        map.put("partsType", dtl.getPartsType());
-	        map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
-	        map.put("retSmoSerialNo", dtl.getRetSmoSerialNo());
-
-	        list.add(map);
-	      }
-
-	    }
-	    return list;
-	  }*/
-
+  /*
+   * public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
+   * List<Map<String, Object>> list = new ArrayList<>(); if (partList != null && partList.size() >
+   * 0) { Map<String, Object> map; for (InstallationResultDetailForm dtl : partList) { map =
+   * BeanConverter.toMap(installationResultForm, "signData", "partList"); map.put("signData",
+   * Base64.decodeBase64(installationResultForm.getSignData())); // as Dtails map.put("filterCode",
+   * dtl.getFilterCode()); map.put("chargesFoc", dtl.getChargesFoc()); map.put("exchangeId",
+   * dtl.getExchangeId()); map.put("salesPrice", dtl.getSalesPrice()); map.put("filterChangeQty",
+   * dtl.getFilterChangeQty()); map.put("partsType", dtl.getPartsType());
+   * map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo()); map.put("retSmoSerialNo",
+   * dtl.getRetSmoSerialNo()); list.add(map); } } return list; }
+   */
 }
