@@ -1094,7 +1094,7 @@
                                          , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
                                          , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
                                          , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
-                                         , TO_CHAR (SAL0047D.INST_NOTECHK) AS INST_NOTECHK
+                                         , TO_CHAR (SAL0047D.INST_NOTECHK) AS INST_NOTE_CHK
                                          , TO_CHAR (SAL0001D.EX_TRADE) AS IS_JOM_TUKAR
                                          , TO_CHAR (SAL0047D.COMP_YN) AS IS_COMPT_PROD
                                          , TO_CHAR (SAL0047D.COMP_BRAND) AS COMPT_BRND
