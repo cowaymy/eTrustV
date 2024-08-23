@@ -1285,13 +1285,13 @@
                 $('#ordProduct1').val('');
                 $('#ordProduct2').val('');
 
-//                 if($("#exTrade").val() == '3'){
-//                 	$('#exTrade').val('');
+                if($("#exTrade").val() == '3'){
+                	$('#exTrade').val('');
 
-//                 	var msg = "HC is not allowed for Jom Tukar.";
-//                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-//                     return;
-//                 }
+                	var msg = "HC is not allowed for Jom Tukar.";
+                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                    return;
+                }
             }
             $('#isReturnExtrade').attr("disabled",true);
             $('#ordProduct1').val('');
