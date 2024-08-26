@@ -3384,7 +3384,7 @@
 
 </tr>
 <tr>
-	<th><spring:message code='sal.title.text.gstRebate'/></th>
+	<th></th>
     <td><label id="srvTypeLbl"></label></td>
     <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
