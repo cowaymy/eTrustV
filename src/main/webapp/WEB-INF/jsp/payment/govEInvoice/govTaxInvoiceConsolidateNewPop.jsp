@@ -37,14 +37,14 @@ function validRequiredField(){
     	var selectedDate = $('#sRqtStartDt').val();
       	var today = new Date();
       	var thisYear = today.getFullYear();
-      	var thisMonth =  today.getMonth();
+      	var thisMonth =  today.getMonth() + 1;
       	var todayDate =  today.getDate();
 
       	var selectedMonth = selectedDate.split("/")[0];
       	var selectedYear = selectedDate.split("/")[1];
 
-      	if(thisYear == selectedYear){
-          	if(selectedMonth >= thisMonth) //current allowed past month, when live, only allow previous month
+      	if(thisYear == parseInt(selectedYear)){
+          	if(parseInt(selectedMonth) >= thisMonth) //current allowed past month, when live, only allow previous month
           	{
           		valid = false;
             	message += 'Only Past Month is allowed';
