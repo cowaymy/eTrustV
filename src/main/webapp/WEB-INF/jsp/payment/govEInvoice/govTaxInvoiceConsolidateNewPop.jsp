@@ -52,7 +52,7 @@ function validRequiredField(){
       	}
       	else{
       		if(thisMonth == 1){
-      			if(selectedMonth == 12 && selectedYear == (thisYear-1)){
+      			if(parseInt(selectedMonth) == 12 && parseInt(selectedYear) == (thisYear-1)){
       			}
       			else{
               		valid = false;
