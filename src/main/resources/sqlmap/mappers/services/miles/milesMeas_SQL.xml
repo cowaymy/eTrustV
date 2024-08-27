@@ -105,4 +105,31 @@
     ORDER BY B.MIL_CLM_NO, B.CRT_DT, B.MIL_CLM_SUB_NO
   </select>
 
+  <select id="getMilesMeasRaw" parameterType="Map" resultType="egovMap">
+    SELECT F.CODE AS RAW_DSC_CDE,
+               C.MEM_CODE AS RAW_CT_CDE,
+               TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS RAW_CLAIM_DT,
+               D.SALES_ORD_NO AS RAW_ORD_NO,
+               B.SVC_NO AS RAW_SRV_NO,
+               CASE WHEN B.SVC_NO = 'S' THEN A.T_MIL
+                                                       ELSE B.MIL END AS RAW_TTL_MILES,
+               CASE WHEN B.SVC_NO = 'S' THEN A.T_TRV_DIST
+                                                       ELSE B.TRV_DIST END AS RAW_TM_TRAV,
+               CASE WHEN B.SVC_NO = 'S' THEN A.T_AMT
+                                                       ELSE 0 END AS RAW_TTL_AMT
+    FROM SVC0137M A
+    JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
+    JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
+    WHERE A.DISB = 0
+    AND A.CLM_DT BETWEEN TO_DATE(#{dpDateRangeFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpDateRangeTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    AND C.BRNCH = #{rawBranchId}
+    <if test="rawMemCode != null and rawMemCode != '' ">
+      AND C.MEM_CODE = #{rawMemCode}
+    </if>
+    ORDER BY B.MIL_CLM_NO,
+                   B.CRT_DT,
+                   B.MIL_CLM_SUB_NO
+  </select>
 </mapper>
