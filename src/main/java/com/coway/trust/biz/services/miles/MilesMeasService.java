@@ -19,4 +19,6 @@ public interface MilesMeasService {
 
   List<EgovMap> getMilesMeasDetailList(Map<String, Object> params);
 
+  List<EgovMap> getMilesMeasRaw(Map<String, Object> params);
+
 }
