@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.services.miles.MilesMeasService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -68,4 +70,20 @@ public class MilesMeasController {
     return ResponseEntity.ok(rtnList);
   }
 
+  @RequestMapping(value = "/goMilesMeasRaw.do")
+  public String goMilesMeasRaw(@RequestParam Map<String, Object> params, ModelMap model) {
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+
+    return "services/miles/milesMeasRawPop";
+  }
+
+  @RequestMapping(value = "/getMilesMeasRaw")
+  public ResponseEntity<List<EgovMap>> getMilesMeasRaw(@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception {
+    List<EgovMap> milesMeasRaw = milesMeasService.getMilesMeasRaw(params);
+    return ResponseEntity.ok(milesMeasRaw);
+  }
 }
