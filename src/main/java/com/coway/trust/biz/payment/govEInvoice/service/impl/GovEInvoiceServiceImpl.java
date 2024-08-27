@@ -110,6 +110,10 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     @Value("${cleartax.api.url.domains.staging}")
     private String ClearTaxApiDomainStaging;
 
+    @Value("${cleartax.api.value.staging}")
+    private String ClearTaxApiValueStaging;
+
+
     @Override
     public List<EgovMap> selectGovEInvoiceList(Map<String, Object> params) {
         return govEInvoiceMapper.selectGovEInvoiceList(params);
@@ -340,6 +344,8 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                         einvApiParams.put("json", json);
                         einvApiParams.put("groupId", groupId);
                         //einvApiParams.put("uin", eInvcClaimList.get(i).get("uniqueId").toString());
+                        einvApiParams.put("invType",params.get("invType"));
+
                         clearTaxSubmitReqApi(einvApiParams);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -436,7 +442,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
-            conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
+            if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
+                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValueStaging);
+            }
+            else{
+                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
+            }
             OutputStream os = conn.getOutputStream();
             os.write(jsonString.getBytes());
             os.flush();
@@ -612,6 +623,8 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 }
                 einvApiParams.put("documentId", documentParams.get("documentId").toString());
                 einvApiParams.put("invRefNo", documentParams.get("invRefNo").toString());
+                einvApiParams.put("invType",params.get("invType"));
+
         		resultStatus = clearTaxCheckStatusReqApi(einvApiParams);
         	}
         }
@@ -629,6 +642,10 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         String lmsApiUserId = "3";
         String key= ClearTaxApiKey;
         String value = ClearTaxApiValue;
+
+        if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
+        	value = ClearTaxApiValueStaging;
+        }
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.reset();
