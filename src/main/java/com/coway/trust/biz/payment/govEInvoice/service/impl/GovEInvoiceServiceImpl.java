@@ -171,6 +171,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     public Map<String, Object> prepareEInvClaim(Map<String, Object> params) {
         Map<String, Object> resultValue = new HashMap<String, Object>();
 
+        if(params.get("invType").equals("02")){ //Consolidate
+            params.put("codeMasterId", 3);
+            String maxRow = CommonUtils.nvl(govEInvoiceMapper.getSendMaxRowCount(params));
+            params.put("maxRowNum", maxRow);
+        }
+
         List<Map<String, Object>> eInvcClaimList = new ArrayList<>();
         params.put("batchStatus", 5);
         params.put("einvStatus", 1);
