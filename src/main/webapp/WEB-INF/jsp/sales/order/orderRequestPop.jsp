@@ -1513,8 +1513,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
           return false;
         }
         if (todayYY >= 2018) {
-          if (todayDD == 26 || todayDD == 27 || todayDD == 1
-              || todayDD == 2) {
+          if (todayDD == 1 || todayDD == 2) {
             var msg = '<spring:message code="sal.msg.chkCancDate" />';
             Common.alert(
                 '<spring:message code="sal.alert.msg.actionRestriction" />'
@@ -1653,7 +1652,7 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         }
 
         if (todayYY >= 2018) {
-          if ( todayDD >= 26 ||  todayDD == 1) {
+          if (  todayDD == 1 || todayDD == 2) {
             //                      var msg = "Ownership transfer is not allowed from 26 until 1 next month.";
             var msg = '<spring:message code="sal.msg.underOwnTrans2" />';
 
