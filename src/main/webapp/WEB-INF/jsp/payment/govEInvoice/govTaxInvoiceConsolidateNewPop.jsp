@@ -44,7 +44,7 @@ function validRequiredField(){
       	var selectedYear = selectedDate.split("/")[1];
 
       	if(thisYear == parseInt(selectedYear)){
-          	if(parseInt(selectedMonth) >= thisMonth) //current allowed past month, when live, only allow previous month
+          	if(parseInt(selectedMonth) > thisMonth) //current allowed past month, when live, only allow previous month
           	{
           		valid = false;
             	message += 'Only Past Month is allowed';
