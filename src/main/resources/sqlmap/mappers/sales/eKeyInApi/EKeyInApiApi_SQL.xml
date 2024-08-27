@@ -667,27 +667,46 @@ SELECT A.CUST_ID AS CUST_ID
     <select id="selectSsPvInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
 
-    SELECT
-        NVL(TOT_PV_SS, 0) AS TOT_PV_SS
-    FROM (
+    SELECT NVL(TOT_PV_SS, 0) AS TOT_PV_SS
+        FROM (
     SELECT PROMO_ITM_PV_SS AS TOT_PV_SS
-    FROM SAL0018D
+        FROM SAL0018D
     WHERE PROMO_ITM_STK_ID = #{itmStkId}
-      AND PROMO_ID = #{promoId}
-      AND SRV_TYPE = #{srvType}
-    ORDER BY PROMO_ITM_ID
-            )
-    WHERE ROWNUM <= 1
+        AND PROMO_ID = #{promoId}
+        AND SRV_TYPE = 'SS'
+        ORDER BY PROMO_ITM_ID
+        FETCH FIRST 1 ROWS ONLY
+    )
 
-    UNION ALL
+UNION ALL
+
+    SELECT NVL(TOT_PV_SS, 0) AS TOT_PV_SS
+        FROM (
+    SELECT PROMO_ITM_PV_SS AS TOT_PV_SS
+        FROM SAL0018D
+    WHERE PROMO_ITM_STK_ID = #{itmStkId}
+        AND PROMO_ID = #{promoId}
+        AND SRV_TYPE = 'BOTH'
+        AND NOT EXISTS (
+          SELECT 1
+                FROM SAL0018D
+          WHERE PROMO_ITM_STK_ID = #{itmStkId}
+                AND PROMO_ID = #{promoId}
+                AND SRV_TYPE = 'SS'
+      )
+        ORDER BY PROMO_ITM_ID
+        FETCH FIRST 1 ROWS ONLY
+        )
+
+UNION ALL
 
     SELECT 0 AS TOT_PV_SS FROM DUAL
-    WHERE NOT EXISTS (
+        WHERE NOT EXISTS (
     SELECT 1
-    FROM SAL0018D
-    WHERE PROMO_ITM_STK_ID = #{itmStkId}
-      AND PROMO_ID = #{promoId}
-      AND SRV_TYPE = #{srvType}
+        FROM SAL0018D
+        WHERE PROMO_ITM_STK_ID = #{itmStkId}
+        AND PROMO_ID = #{promoId}
+        AND (SRV_TYPE = 'SS' OR SRV_TYPE = 'BOTH')
     )
 
     ]]>
