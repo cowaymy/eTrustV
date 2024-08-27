@@ -1411,13 +1411,13 @@
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
                 }
-                /* if(todayYY >= 2018) {
-                    if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
+                 if(todayYY >= 2018) {
+                    if(todayDD == 1 || todayDD == 2) {
                         msg = '<spring:message code="sal.msg.chkCancDate" />';
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                         return false;
                     }
-                } */
+                }
             } else {
                 msg = "Sorry. You have no access rights to request order cancellation.";
                 Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
@@ -1513,7 +1513,7 @@
                 }
 
                 if(todayYY >= 2018) {
-                    if(todayDD >= 26 || todayDD == 1) {
+                    if(todayDD == 1 || todayDD == 2) {
                         msg = '<spring:message code="sal.msg.underOwnTrans2" />';
 
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
