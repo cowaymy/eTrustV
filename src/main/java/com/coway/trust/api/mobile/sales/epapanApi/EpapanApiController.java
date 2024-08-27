@@ -640,4 +640,16 @@ public class EpapanApiController {
 
 	  }
 
+	  @ApiOperation(value = "getNationList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/getNationList")
+	  public ResponseEntity<List<EgovMap>> getNationList(@RequestBody EpapanApiMagicAddressForm param) throws Exception {
+
+	    List<EgovMap> nationList = null;
+
+	    nationList = customerService.getNationList(EpapanApiMagicAddressForm.createMap(param));
+
+	    return ResponseEntity.ok(nationList);
+
+	  }
+
 }
