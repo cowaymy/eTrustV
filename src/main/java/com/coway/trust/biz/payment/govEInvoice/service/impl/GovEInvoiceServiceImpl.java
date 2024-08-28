@@ -643,10 +643,6 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
         String key= ClearTaxApiKey;
         String value = ClearTaxApiValue;
 
-        if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
-        	value = ClearTaxApiValueStaging;
-        }
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.reset();
         stopWatch.start();
@@ -669,7 +665,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setRequestMethod("GET");
 //            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
-            conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
+            if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
+                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValueStaging);
+            }
+            else{
+                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
+            }
 //            OutputStream os = conn.getOutputStream();
 //            os.flush();
 
