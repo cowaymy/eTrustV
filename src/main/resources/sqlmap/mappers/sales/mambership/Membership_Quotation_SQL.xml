@@ -892,9 +892,8 @@
             SELECT
                  TO_CHAR(TO_DATE(MAX(A.MBRSH_EXPR_DT),'DD-MM-RRRR HH24:MI:SS'),'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
             FROM SAL1003V A
-            LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME
+            LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME AND SRV_MEM_PAC_ID <![CDATA[ <> ]]> 27
             WHERE A.SALES_ORD_ID = #{ORD_ID}
-            AND SRV_MEM_PAC_ID <![CDATA[ <> ]]> 27
             AND A.MBRSH_STUS_CODE = 'COM'
        </select>
 
