@@ -605,8 +605,15 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     public Map<String, Object> checkStatusEInvClaim(Map<String, Object> params) {
         Map<String, Object> resultValue = new HashMap<String, Object>();
 
+        if(params.get("invType").equals("02")){ //Consolidate
+            params.put("codeMasterId", 3);
+            String maxRow = CommonUtils.nvl(govEInvoiceMapper.getSendMaxRowCount(params));
+            params.put("maxRowNum", maxRow);
+        }
+
         List<Map<String, Object>> eInvcClaimList = new ArrayList<>();
         params.put("einvStatus", 121);
+
         eInvcClaimList = govEInvoiceMapper.selectEInvSendList(params);
 
         for(int i =0; i < eInvcClaimList.size(); i++){
