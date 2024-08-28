@@ -696,7 +696,7 @@ public class HsManualController {
   @RequestMapping(value = "/hsConfigBasicPop.do	")
   public String hsConfigBasicPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
-    logger.debug("params(pop)================= : {}", params.toString());
+    logger.debug("[HsManualController - hsConfigBasicPop] params :: {}", params.toString());
     params.put("orderNo", params.get("salesOrdId"));
 
     // List<EgovMap> cmbServiceMemList =
@@ -706,11 +706,21 @@ public class HsManualController {
     // EgovMap serMember = hsManualService.se ;
     // EgovMap as_ord_basicInfo = hsManualService.selectOrderBasicInfo(params);
     // EgovMap asentryInfo =null;
-
     // model.put("cmbServiceMemList", cmbServiceMemList);
     model.put("configBasicInfo", configBasicInfo);
-    model.put("SALEORD_ID", (String) params.get("salesOrdId"));
 
+    EgovMap promoInfo = hsManualService.getPromoItemInfo(params);
+    model.put("promoInfo", promoInfo);
+
+    //order outstanding info
+    List<EgovMap> ordOutInfoList = hsManualService.getOderOutsInfo(params);
+    EgovMap ordOutInfo = ordOutInfoList.get(0);
+    model.addAttribute("ordOutInfo", ordOutInfo);
+
+    int srvTypeChgTimes = hsManualService.getSrvTypeChgTm(params);
+    model.put("srvTypeChgTimes", srvTypeChgTimes);
+
+    model.put("SALEORD_ID", (String) params.get("salesOrdId"));
     // model.put("as_ord_basicInfo", as_ord_basicInfo);
     // model.put("AS_NO", (String)params.get("AS_NO"));
     model.put("BRNCH_ID", (String) params.get("brnchId"));
@@ -896,24 +906,27 @@ public class HsManualController {
       HttpServletRequest request, SessionVO sessionVO) throws ParseException {
     ReturnMessage message = new ReturnMessage();
 
-    logger.debug("params : {}", params);
+    logger.debug("[HsManualController - saveHsConfigBasic] params :: {}", params);
     String srvCodyId = "";
     LinkedHashMap hsResultM = (LinkedHashMap) params.get("hsResultM");
     hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
+
     srvCodyId = hsManualService.getSrvCodyIdbyMemcode(hsResultM);
-    logger.debug("srvCodyId : " + srvCodyId);
+    logger.debug("[HsManualController - saveHsConfigBasic] srvCodyId :: " + srvCodyId);
+
     hsResultM.put("cmbServiceMem", srvCodyId);
     hsResultM.put("hscodyId", srvCodyId);
-    logger.debug("hsResultM : {}", hsResultM);
+
+    logger.debug("[HsManualController - saveHsConfigBasic] hsResultM :: {}", hsResultM);
     hsManualService.updateSrvCodyId(hsResultM);
     // logger.debug("params111111111 : {}", params);
     // List<Object> remList = (List<Object>)
     // params.get(AppConstants.AUIGRID_REMOVE);
 
-    logger.debug("hsResultM ===>" + hsResultM.toString());
+    logger.debug("[HsManualController - saveHsConfigBasic] hsResultM ===>{}" + hsResultM.toString());
 
     int resultValue = hsManualService.updateHsConfigBasic(params, sessionVO);
-
+    logger.debug("[HsManualController - saveHsConfigBasic] resultValue ===>{}" + resultValue);
     if (resultValue > 0) {
       message.setCode(AppConstants.SUCCESS);
       message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -1455,6 +1468,16 @@ public class HsManualController {
     message.setMessage("Complete to Update HS Settle Date for " +  formMap.get("hsNo"));
 
     return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/getSrvTypeChgHistoryLogInfo.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getSrvTypeChgHistoryLogInfo(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+    List<EgovMap> srvTypeChghistoryLogInfo = hsManualService.getSrvTypeChgHistoryLogInfo(params);
+    logger.info("[HsManualController - hsConfigBasicPop] srvTypeChghistoryLogInfo :: {} " + srvTypeChghistoryLogInfo);
+    model.put("srvTypeChghistoryLogInfo", srvTypeChghistoryLogInfo);
+
+    return ResponseEntity.ok(srvTypeChghistoryLogInfo);
   }
 
 }

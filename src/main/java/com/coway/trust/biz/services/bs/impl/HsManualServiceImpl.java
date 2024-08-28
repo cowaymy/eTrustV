@@ -23,6 +23,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -57,6 +58,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   @Resource(name = "invoiceAdjMapper")
   private InvoiceAdjMapper invoiceMapper;
+
+  @Resource(name = "orderRegisterMapper")
+  private OrderRegisterMapper orderRegisterMapper;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -994,17 +998,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   @Override
   public int updateHsConfigBasic(Map<String, Object> params, SessionVO sessionVO) {
     // TODO Auto-generated method stub
+    logger.debug("[HsManualServiceImpl - updateHsConfigBasic] - hsResultM params ===> {}" + params);
 
     int cnt = 0;
 
     LinkedHashMap hsBasicmap = (LinkedHashMap) params.get("hsResultM");
-
-    logger.debug("hsResultM services ===>" + params);
     EgovMap selectConfigBasicInfoYn = hsManualMapper.selectConfigBasicInfoYn(hsBasicmap);
-
+    
     if (selectConfigBasicInfoYn.size() > 0) {
       Map<String, Object> sal0090 = new HashMap<String, Object>();
-
       sal0090.put("salesOrderId", hsBasicmap.get("salesOrderId"));
       sal0090.put("availability", hsBasicmap.get("availability"));
       sal0090.put("srvConfigId", selectConfigBasicInfoYn.get("srvConfigId"));
@@ -1012,40 +1014,77 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       sal0090.put("lstHSDate", hsBasicmap.get("lstHSDate"));
       sal0090.put("remark", hsBasicmap.get("remark"));
       sal0090.put("srvBsWeek", hsBasicmap.get("srvBsWeek"));
-      sal0090.put("SrvUpdateAt", sessionVO.getUserId());
+      sal0090.put("srvUpdateAt", sessionVO.getUserId());
       sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
       sal0090.put("faucetExch", hsBasicmap.get("faucetExch"));
-      // sal0090.put("SrvUpdateAt", SYSDATE);
 
+      String originalSrvType = hsBasicmap.get("oldSrvType").toString();
+      String serviceType = hsBasicmap.get("serviceType").toString();
+
+      hsBasicmap.put("srvUpdateAt", sessionVO.getUserId());
+
+      if(!originalSrvType.equals(serviceType)) {
+           hsManualMapper.insertHsConfigBasicHistory(hsBasicmap);
+
+            // Self Service Rebate - PAY0286D
+           params.put("srvCntrctPacId", hsBasicmap.get("ordSrvPacId"));
+           EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
+       
+           int chkSSGstRebate = hsManualMapper.chkSSGstRebate(hsBasicmap);
+      
+           if(!srvPackageResult.isEmpty() && Integer.parseInt(hsBasicmap.get("appTypeId").toString()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL){
+                 if(hsBasicmap.get("serviceType") != null){
+                     Map<String,Object> pay0286 = new HashMap();
+
+                     pay0286.put("ordId", hsBasicmap.get("salesOrderId"));
+                     pay0286.put("rebateType", 0);
+                     pay0286.put("rebateStartInstallment", 1);
+                     pay0286.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+                     pay0286.put("rem", hsBasicmap.get("ordMthRentAmt"));
+                     pay0286.put("crtUserId", sessionVO.getUserId());
+                     pay0286.put("updUserId", sessionVO.getUserId());
+                     pay0286.put("stusId", 1);
+                     pay0286.put("cntrctId", 0);
+
+                     if(hsBasicmap.get("serviceType").equals("SS")){
+                          pay0286.put("rebateAmtPerInstallment", 5); // RM5 for Self Service Discount Rebate
+                    }else if(hsBasicmap.get("serviceType").equals("HS") && chkSSGstRebate > 0){
+                          pay0286.put("rebateAmtPerInstallment", -5); // - RM5 for HS GST Rebate when change the service type SS to HS
+                    }
+                     orderRegisterMapper.insertSSRebate(pay0286);
+                 }
+           }
+     }
+      sal0090.put("srvType", hsBasicmap.get("serviceType"));
+      // sal0090.put("SrvUpdateAt", SYSDATE);
       // hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
-
+  
       // SrvConfigSetting --> Installation : 281
       List<EgovMap> configSettingMap = hsManualMapper.selectConfigSettingYn(hsBasicmap);
 
       if (configSettingMap.size() > 0) {
         for (int i = 0; i < configSettingMap.size(); i++) {
-
           Map<String, Object> sal0089 = configSettingMap.get(i);
 
           if (configSettingMap.get(i).get("srvSettTypeId").toString().equals("281")) {
-            if ("1".equals(hsBasicmap.get("settIns").toString())) {
-              sal0089.put("srvSettStusId", 1);
-            } else {
-              sal0089.put("srvSettStusId", 8);
-            }
+              if ("1".equals(hsBasicmap.get("settIns").toString())) {
+                sal0089.put("srvSettStusId", 1);
+              } else {
+                sal0089.put("srvSettStusId", 8);
+              }
           } else if (configSettingMap.get(i).get("srvSettTypeId").toString().equals("280")) {
-            if ("1".equals(hsBasicmap.get("settHs").toString())) {
-              sal0089.put("srvSettStusId", 1);
-            } else {
-              sal0089.put("srvSettStusId", 8);
-            }
+              if ("1".equals(hsBasicmap.get("settHs").toString())) {
+                sal0089.put("srvSettStusId", 1);
+              } else {
+                sal0089.put("srvSettStusId", 8);
+              }
           } else if (configSettingMap.get(i).get("srvSettTypeId").toString().equals("279")) {
-            if ("1".equals(hsBasicmap.get("settAs").toString())) {
-              sal0089.put("srvSettStusId", 1);
-            } else {
-              sal0089.put("srvSettStusId", 8);
-            }
+              if ("1".equals(hsBasicmap.get("settAs").toString())) {
+                sal0089.put("srvSettStusId", 1);
+              } else {
+                sal0089.put("srvSettStusId", 8);
+              }
           }
 
           sal0089.put("salesOrderId", hsBasicmap.get("salesOrderId"));
@@ -1054,7 +1093,6 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
 
           hsManualMapper.updateHsconfigSetting(sal0089);
-
         }
       }
     }
@@ -3660,8 +3698,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //      insertHsResultfinal.put("switchChkLst", params.get("switchChkLst"));
 
       logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
-      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT
-                                                               // SVC0006D
+      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT SVC0006D
 
       //Filter Change Code start
       List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
@@ -3868,4 +3905,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
      hsManualMapper.editHSEditSettleDate(params);
    }
 
+   @Override
+   public int getSrvTypeChgTm(Map<String, Object> params) {
+     return hsManualMapper.getSrvTypeChgTm(params);
+   }
+
+   @Override
+   public EgovMap getPromoItemInfo(Map<String, Object> params) {
+     return hsManualMapper.getPromoItemInfo(params);
+   }
+
+   //check the outstanding order
+   @Override
+   public List<EgovMap> getOderOutsInfo(Map<String, Object> params) {
+     hsManualMapper.getOderOutsInfo(params);
+    return (List<EgovMap>) params.get("p1");
+   }
+
+   @Override
+   public List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params) {
+     return hsManualMapper.getSrvTypeChgHistoryLogInfo(params);
+   }
 }

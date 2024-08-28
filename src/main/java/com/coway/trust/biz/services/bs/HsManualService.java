@@ -187,4 +187,13 @@ public interface HsManualService {
 
   void editHSEditSettleDate(Map<String, Object> params);
 
+  int getSrvTypeChgTm(Map<String, Object> params);
+
+  EgovMap getPromoItemInfo(Map<String, Object> params);
+
+  //check the outstanding order
+  List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+
+  List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params);
+
 }

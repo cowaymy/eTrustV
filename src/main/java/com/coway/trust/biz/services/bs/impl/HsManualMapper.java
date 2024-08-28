@@ -358,4 +358,15 @@ public interface HsManualMapper {
   void insertSAL0329D(Map<String, Object> params);
   //CELESTE : 25/08/2022 : EDIT CUSTOMER INFO[E]
 
+  int getSrvTypeChgTm(Map<String, Object> params);
+
+  EgovMap getPromoItemInfo(Map<String, Object> params);
+
+  List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+
+  int chkSSGstRebate(Map<String, Object> params);
+
+  void insertHsConfigBasicHistory(Map<String, Object> params);
+
+  List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params);
 }
