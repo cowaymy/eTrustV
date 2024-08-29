@@ -889,12 +889,16 @@
        </select>
 
        <select id="getSalesOrderLastExpiredDate" parameterType="Map" resultType="egovMap">
-            SELECT
-                 TO_CHAR(TO_DATE(MAX(A.MBRSH_EXPR_DT),'DD-MM-RRRR HH24:MI:SS'),'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
-            FROM SAL1003V A
-            LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME AND SRV_MEM_PAC_ID <![CDATA[ <> ]]> 27
-            WHERE A.SALES_ORD_ID = #{ORD_ID}
-            AND A.MBRSH_STUS_CODE = 'COM'
+            SELECT TO_CHAR(MAX(MBRSH_EXPR_DT),'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
+            FROM
+            (
+			    SELECT TO_DATE(A.MBRSH_EXPR_DT,'DD-MM-RRRR HH24:MI:SS') MBRSH_EXPR_DT
+			    FROM SAL1003V A
+			    LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME AND SRV_MEM_PAC_ID  =  27
+			    WHERE A.SALES_ORD_ID = #{ORD_ID}
+			    AND A.MBRSH_STUS_CODE = 'COM'
+			    AND B.SRV_MEM_PAC_ID IS NULL
+			)
        </select>
 
        <select id="getServicePacIdExist" parameterType="Map" resultType="egovMap">
