@@ -902,40 +902,31 @@ public class HsManualController {
    * @throws Exception
    */
   @RequestMapping(value = "/saveHsConfigBasic.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> saveHsConfigBasic(@RequestBody Map<String, Object> params,
-      HttpServletRequest request, SessionVO sessionVO) throws ParseException {
-    ReturnMessage message = new ReturnMessage();
+  public ResponseEntity<ReturnMessage> saveHsConfigBasic(@RequestBody Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) throws ParseException {
+        ReturnMessage message = new ReturnMessage();
 
-    logger.debug("[HsManualController - saveHsConfigBasic] params :: {}", params);
-    String srvCodyId = "";
-    LinkedHashMap hsResultM = (LinkedHashMap) params.get("hsResultM");
-    hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
+        logger.debug("[HsManualController - saveHsConfigBasic] params :: {}", params);
+        String srvCodyId = "";
+        LinkedHashMap hsResultM = (LinkedHashMap) params.get("hsResultM");
+        hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
 
-    srvCodyId = hsManualService.getSrvCodyIdbyMemcode(hsResultM);
-    logger.debug("[HsManualController - saveHsConfigBasic] srvCodyId :: " + srvCodyId);
+        srvCodyId = hsManualService.getSrvCodyIdbyMemcode(hsResultM);
 
-    hsResultM.put("cmbServiceMem", srvCodyId);
-    hsResultM.put("hscodyId", srvCodyId);
+        hsResultM.put("cmbServiceMem", srvCodyId);
+        hsResultM.put("hscodyId", srvCodyId);
 
-    logger.debug("[HsManualController - saveHsConfigBasic] hsResultM :: {}", hsResultM);
-    hsManualService.updateSrvCodyId(hsResultM);
-    // logger.debug("params111111111 : {}", params);
-    // List<Object> remList = (List<Object>)
-    // params.get(AppConstants.AUIGRID_REMOVE);
+        hsManualService.updateSrvCodyId(hsResultM);
 
-    logger.debug("[HsManualController - saveHsConfigBasic] hsResultM ===>{}" + hsResultM.toString());
+        int resultValue = hsManualService.updateHsConfigBasic(params, sessionVO);
 
-    int resultValue = hsManualService.updateHsConfigBasic(params, sessionVO);
-    logger.debug("[HsManualController - saveHsConfigBasic] resultValue ===>{}" + resultValue);
-    if (resultValue > 0) {
-      message.setCode(AppConstants.SUCCESS);
-      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    } else {
-      message.setCode(AppConstants.FAIL);
-      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-    }
-    return ResponseEntity.ok(message);
-
+        if (resultValue > 0) {
+          message.setCode(AppConstants.SUCCESS);
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+          message.setCode(AppConstants.FAIL);
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+        return ResponseEntity.ok(message);
   }
 
   @RequestMapping(value = "/hsCountForecastListingPop.do")

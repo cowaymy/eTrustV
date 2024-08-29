@@ -1004,7 +1004,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     LinkedHashMap hsBasicmap = (LinkedHashMap) params.get("hsResultM");
     EgovMap selectConfigBasicInfoYn = hsManualMapper.selectConfigBasicInfoYn(hsBasicmap);
-    
+
     if (selectConfigBasicInfoYn.size() > 0) {
       Map<String, Object> sal0090 = new HashMap<String, Object>();
       sal0090.put("salesOrderId", hsBasicmap.get("salesOrderId"));
@@ -1021,45 +1021,85 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       String originalSrvType = hsBasicmap.get("oldSrvType").toString();
       String serviceType = hsBasicmap.get("serviceType").toString();
 
+      // calculate the PV for SS Rebate
+      int promoItmPv = Integer.parseInt(hsBasicmap.get("promoItmPv").toString());
+      int promoItmPvSs = Integer.parseInt(hsBasicmap.get("promoItmPvSs").toString());
+      int pvRebatePerInstallment = promoItmPv - promoItmPvSs;
+
       hsBasicmap.put("srvUpdateAt", sessionVO.getUserId());
 
-      if(!originalSrvType.equals(serviceType)) {
-           hsManualMapper.insertHsConfigBasicHistory(hsBasicmap);
+      if(hsBasicmap.get("serviceType") != null){
+          if(!originalSrvType.equals(serviceType)) {
+               // Insert SAL0090H
+               hsManualMapper.insertHsConfigBasicHistory(hsBasicmap);
 
-            // Self Service Rebate - PAY0286D
-           params.put("srvCntrctPacId", hsBasicmap.get("ordSrvPacId"));
-           EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
-       
-           int chkSSGstRebate = hsManualMapper.chkSSGstRebate(hsBasicmap);
-      
-           if(!srvPackageResult.isEmpty() && Integer.parseInt(hsBasicmap.get("appTypeId").toString()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL){
-                 if(hsBasicmap.get("serviceType") != null){
-                     Map<String,Object> pay0286 = new HashMap();
+                // Self Service Rebate - PAY0286D
+               params.put("srvCntrctPacId", hsBasicmap.get("ordSrvPacId"));
+               EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
 
-                     pay0286.put("ordId", hsBasicmap.get("salesOrderId"));
-                     pay0286.put("rebateType", 0);
-                     pay0286.put("rebateStartInstallment", 1);
-                     pay0286.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
-                     pay0286.put("rem", hsBasicmap.get("ordMthRentAmt"));
-                     pay0286.put("crtUserId", sessionVO.getUserId());
-                     pay0286.put("updUserId", sessionVO.getUserId());
-                     pay0286.put("stusId", 1);
-                     pay0286.put("cntrctId", 0);
+               //check the new or existing have SS GST Rebate - PAY0286D
+               EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(hsBasicmap);
 
-                     if(hsBasicmap.get("serviceType").equals("SS")){
-                          pay0286.put("rebateAmtPerInstallment", 5); // RM5 for Self Service Discount Rebate
-                    }else if(hsBasicmap.get("serviceType").equals("HS") && chkSSGstRebate > 0){
-                          pay0286.put("rebateAmtPerInstallment", -5); // - RM5 for HS GST Rebate when change the service type SS to HS
+               // Get SS PV Rebate info - PAY0367D
+               EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(hsBasicmap);
+
+               if(!srvPackageResult.isEmpty() && Integer.parseInt(hsBasicmap.get("appTypeId").toString()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL){
+                       // if found existing have self service rebate, then update stusid = 8 in PAY0286D
+                       if(getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0){
+                            Map<String,Object> oriPay0286 = new HashMap();
+                            oriPay0286.put("stusId", 8);
+                            oriPay0286.put("ordId", getSSGstRebateInfo.get("ordId"));
+                            oriPay0286.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
+                            oriPay0286.put("updUserId", sessionVO.getUserId());
+                            hsManualMapper.updateSSRebateStatus(oriPay0286);
+                       }
+
+                       if(getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0){
+                             Map<String,Object> oriPay0367 = new HashMap();
+                             oriPay0367.put("stusId", 8);
+                             oriPay0367.put("ordId", getPvSSRebateInfo.get("ordId"));
+                             oriPay0367.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
+                             oriPay0367.put("updUserId", sessionVO.getUserId());
+                             hsManualMapper.updatePvSSRebateStatus(oriPay0367);
+                      }
+
+                       if(hsBasicmap.get("serviceType").equals("SS")){
+                           // Insert the SS GST Rebate - PAY0286D
+                           Map<String,Object> newPay0286 = new HashMap();
+                           newPay0286.put("ordId", hsBasicmap.get("salesOrderId"));
+                           newPay0286.put("rebateType", 0);
+                           newPay0286.put("rebateStartInstallment", 1);
+                           newPay0286.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+                           newPay0286.put("rem", hsBasicmap.get("ordMthRentAmt"));
+                           newPay0286.put("crtUserId", sessionVO.getUserId());
+                           newPay0286.put("updUserId", sessionVO.getUserId());
+                           newPay0286.put("stusId", 1);
+                           newPay0286.put("cntrctId", 0);
+                           newPay0286.put("rebateAmtPerInstallment", 5); // RM5 for Self Service Discount Rebate
+                           orderRegisterMapper.insertSSRebate(newPay0286);
+
+                           //Insert the SS PV Rebate - PAY0367D
+                           Map<String,Object> pay0367 = new HashMap();
+                           pay0367.put("ordId", hsBasicmap.get("salesOrderId"));
+                           pay0367.put("pvRebateType", 0);
+                           pay0367.put("pvRebateStartInstallment", 1);
+                           pay0367.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+                           pay0367.put("rem", hsBasicmap.get("ordMthRentAmt"));
+                           pay0367.put("crtUserId", sessionVO.getUserId());
+                           pay0367.put("updUserId", sessionVO.getUserId());
+                           pay0367.put("stusId", 1);
+                           pay0367.put("cntrctId", 0);
+                           pay0367.put("pvRebatePerInstallment", pvRebatePerInstallment); // PV for Self Service Rebate
+                           hsManualMapper.insertPvSSRebate(pay0367);
                     }
-                     orderRegisterMapper.insertSSRebate(pay0286);
-                 }
+               }
            }
-     }
+      }
       sal0090.put("srvType", hsBasicmap.get("serviceType"));
       // sal0090.put("SrvUpdateAt", SYSDATE);
       // hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
-  
+
       // SrvConfigSetting --> Installation : 281
       List<EgovMap> configSettingMap = hsManualMapper.selectConfigSettingYn(hsBasicmap);
 

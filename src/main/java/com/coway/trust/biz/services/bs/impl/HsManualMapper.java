@@ -364,9 +364,17 @@ public interface HsManualMapper {
 
   List<EgovMap> getOderOutsInfo(Map<String, Object> params);
 
-  int chkSSGstRebate(Map<String, Object> params);
-
   void insertHsConfigBasicHistory(Map<String, Object> params);
 
   List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params);
+
+  EgovMap getSSGstRebate(Map<String, Object> params);
+
+  void updateSSRebateStatus(Map<String, Object> params);
+
+  EgovMap getPvSSRebate(Map<String, Object> params);
+
+  void updatePvSSRebateStatus(Map<String, Object> params);
+
+  void insertPvSSRebate(Map<String, Object> params);
 }

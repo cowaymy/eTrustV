@@ -5349,7 +5349,9 @@ SELECT DISTINCT A.ORD_ID FROM (
                   T2.STK_ID,
                   T2.STK_CODE,
                   T2.STK_DESC,
-                  S3.SRV_TYPE AS PROMO_ITM_SRV_TYPE
+                  S3.SRV_TYPE AS PROMO_ITM_SRV_TYPE,
+                  S3.PROMO_ITM_PV,
+                  S3.PROMO_ITM_PV_SS
             FROM SAL0001D S1
             JOIN SAL0002D S2 ON S2.SALES_ORD_ID = S1.SALES_ORD_ID
             JOIN SYS0013M T ON T.CODE_ID = S1.APP_TYPE_ID
@@ -5366,12 +5368,6 @@ SELECT DISTINCT A.ORD_ID FROM (
                 CALL SP_GET_ORD_OTSTND_INFO ( #{salesOrdId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStandingInfo})
           }
           ]]>
-     </select>
-
-     <select id="chkSSGstRebate" parameterType="Map" resultType="int">
-          SELECT COUNT(*)
-          FROM PAY0286D
-          WHERE ord_id =#{salesOrderId}
      </select>
 
      <insert id="insertHsConfigBasicHistory" parameterType="Map">
@@ -5431,4 +5427,92 @@ SELECT DISTINCT A.ORD_ID FROM (
         WHERE B.SRV_SO_ID = #{salesOrdId}
      </select>
 
+    <select id="getSSGstRebate" parameterType="Map" resultType="egovMap">
+    SELECT  GST_REBATE_ID
+                , ORD_ID
+                , REBATE_TYPE
+                , REBATE_AMT_PER_INSTLMT
+                , REBATE_START_INSTLMT
+                , REBATE_END_INSTLMT
+                , REM
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , STUS_ID
+                , CNTRCT_ID
+       FROM PAY0286D
+       WHERE ORD_ID = #{salesOrderId}
+       AND STUS_ID = 1
+    </select>
+
+     <update id="updateSSRebateStatus" parameterType="Map">
+        UPDATE PAY0286D
+        SET STUS_ID = #{stusId}
+              , UPD_USER_ID = #{updUserId}
+              , UPD_DT = SYSDATE
+        WHERE ORD_ID = #{ordId}
+        AND GST_REBATE_ID = #{gstRebateId}
+    </update>
+
+    <select id="getPvSSRebate" parameterType="Map" resultType="egovMap">
+            SELECT  PV_REBATE_ID
+                        , ORD_ID
+                        , PV_REBATE_TYPE
+                        , PV_REBATE_PER_INSTLMT
+                        , PV_REBATE_START_INSTLMT
+                        , PV_REBATE_END_INSTLMT
+                        , REM
+                        , CRT_DT
+                        , CRT_USER_ID
+                        , UPD_DT
+                        , UPD_USER_ID
+                        , STUS_ID
+                        , CNTRCT_ID
+               FROM PAY0367D
+               WHERE ORD_ID = #{salesOrderId}
+               AND STUS_ID = 1
+    </select>
+
+    <update id="updatePvSSRebateStatus" parameterType="Map">
+        UPDATE PAY0367D
+        SET STUS_ID = #{stusId}
+              , UPD_USER_ID = #{updUserId}
+              , UPD_DT = SYSDATE
+        WHERE ORD_ID = #{ordId}
+        AND PV_REBATE_ID = #{pvRebateId}
+    </update>
+
+    <insert id="insertPvSSRebate" parameterType="Map">
+       INSERT INTO PAY0367D
+        (
+                PV_REBATE_ID
+                , ORD_ID
+                , PV_REBATE_TYPE
+                , PV_REBATE_PER_INSTLMT
+                , PV_REBATE_START_INSTLMT
+                , PV_REBATE_END_INSTLMT
+                , REM
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , STUS_ID
+                , CNTRCT_ID
+        ) VALUES(
+                  PAY0367D_SEQ.NEXTVAL
+                  , #{ordId}
+                  , #{pvRebateType}
+                  , #{pvRebatePerInstallment}
+                  , #{pvRebateStartInstallment}
+                  , #{pvRebateEndInstallment}
+                  , #{rem}
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , #{stusId}
+                  , #{cntrctId}
+          )
+    </insert>
 </mapper>

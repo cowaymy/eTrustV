@@ -16,11 +16,11 @@
     var srvTypeChgHistoryLogGridID;
 
     var srvTypeHistoryColumnLayout = [
-                                                        {dataField : "srvCrtDt", headerText : "<spring:message code='service.title.CreateDate'/>", editable : false , dataType : "date", formatString : "dd/mm/yyyy"},
-                                                        {dataField : "srvTypeChgFrom", headerText : "<spring:message code='service.title.from'/>", editable : false},
-                                                        {dataField : "srvTypeChgTo", headerText : "<spring:message code='service.title.to'/>", editable : false},
-                                                        {dataField : "remark", headerText : "<spring:message code='service.title.Remark'/>", editable : false},
-                                                        {dataField : "creator", headerText : "<spring:message code='service.title.Creator'/>", editable : false},
+                                                        {dataField : "srvCrtDt", headerText : "<spring:message code='service.title.CreateDate'/>", width:150, editable : false , dataType : "date", formatString : "dd/mm/yyyy"},
+                                                        {dataField : "srvTypeChgFrom", headerText : "<spring:message code='service.title.from'/>", width:80, editable : false},
+                                                        {dataField : "srvTypeChgTo", headerText : "<spring:message code='service.title.to'/>", width:80, editable : false},
+                                                        {dataField : "remark", headerText : "<spring:message code='service.title.Remark'/>", width:400, editable : false},
+                                                        {dataField : "creator", headerText : "<spring:message code='service.title.Creator'/>", width:150, editable : false},
                                                      ];
 
     var srvTypeHistoryGridPros = {
@@ -209,7 +209,9 @@
                    oldSrvType: $('#oldSvcType').val(),
                    appTypeId: '${promoInfo.appTypeId}',
                    ordSrvPacId: '${promoInfo.srvPacId}',
-                   ordMthRentAmt: '${promoInfo.mthRentAmt}'
+                   ordMthRentAmt: '${promoInfo.mthRentAmt}',
+                   promoItmPv : '${promoInfo.promoItmPv}',
+                   promoItmPvSs : '${promoInfo.promoItmPvSs}'
         }
 
         var  saveForm ={
