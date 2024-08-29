@@ -202,6 +202,11 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 GovEInvcVO govEInvc = new GovEInvcVO();
                 govEinvcMain = eInvcClaimList.get(i);
                 govEinvcMain.put("issueDate", formattedDate);
+
+                if(params.get("invType").equals("02")){
+                    govEinvcMain.put("issueDate", eInvcClaimList.get(i).get("invprdStartDt").toString());
+                }
+
                 if(govEinvcMain.get("invTypeCode").toString().equals("02") || govEinvcMain.get("invTypeCode").toString().equals("03")){
                 	govEinvcMain.put("issueTime", "00:05:00");
                 }else{
@@ -240,6 +245,9 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 jsonParams.put("userId", 349);
                 jsonParams.put("status", 104);
                 jsonParams.put("issueDt", formattedDate);
+                if(params.get("invType").equals("02")){
+                	jsonParams.put("issueDt", eInvcClaimList.get(i).get("invprdStartDt").toString());
+                }
                 updEInvJsonString(jsonParams);
 
             }catch (Exception e) {
