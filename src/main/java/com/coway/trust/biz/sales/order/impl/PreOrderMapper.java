@@ -64,4 +64,6 @@ public interface PreOrderMapper {
 	int chkExtradeScheduleEpapan();
 
 	String selectExistingSalesVoucherCode(PreOrderVO preOrderVO);
+
+	void updatePwp(Map<String, Object> params);
 }

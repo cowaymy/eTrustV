@@ -251,4 +251,6 @@ public interface OrderRegisterMapper {
   BigDecimal selectSVMAmt(int salesOrdId);
 
   void insertSSRebate( Map<String, Object> params );
+
+  void insertPwp(Map<String, Object> params);
 }

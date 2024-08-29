@@ -181,6 +181,10 @@
     <th scope="row">Product Usage Month</th>
     <td colspan="1">${orderDetail.prodUsgMthInfo.productUsageMonth}</td>
 </tr>
+<tr>
+    <th scope="row">PWP Binding No</th>
+    <td colspan="1">${orderDetail.basicInfo.mainPwpOrdNo}</td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

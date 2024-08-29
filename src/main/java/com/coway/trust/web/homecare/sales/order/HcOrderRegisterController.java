@@ -1,5 +1,6 @@
 package com.coway.trust.web.homecare.sales.order;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -506,5 +507,47 @@ public class HcOrderRegisterController {
 	    EgovMap result = orderRegisterService.checkPreBookConfigurationPerson(params);
 
 	    return ResponseEntity.ok(result);
+	  }
+
+	  @RequestMapping(value = "/pwpOrderNoPop.do")
+	  public String pwpOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    model.put("custId", params.get("custId"));
+	    logger.info("[pwpOrderNoPop] :: custId :: " + params.get("custId"));
+	    return "homecare/sales/order/pwpOrderNoPop";
+	  }
+
+	  @RequestMapping(value = "/selectPwpOrderNoList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectPwpOrderNoList(@RequestParam Map<String, Object> params) {
+	    List<EgovMap> result = hcOrderRegisterService.selectPwpOrderNoList(params);
+	    return ResponseEntity.ok(result);
+	  }
+
+	  @RequestMapping(value = "/checkPwpOrderId.do", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> checkPwpOrderId(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
+	    EgovMap RESULT = hcOrderRegisterService.checkPwpOrderId(params);
+	    return ResponseEntity.ok(RESULT);
+	  }
+
+	  @RequestMapping(value = "/pwpOrderPop.do")
+	  public String pwpOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+//		Map<String, Object> cParam = new HashMap();
+//
+//		cParam.put("ordNo", params.get("salesOrdNo"));
+//
+//		EgovMap rMap = null;
+//		String bundleId = "";
+//		String anoOrderNo = "";
+//		if(isHc){
+//			rMap = hcOrderListService.selectHcOrderInfo(cParam);
+//			bundleId = rMap.get("bndlNo").toString();
+//			anoOrderNo = rMap.get("anoOrdNo").toString();
+//		}
+
+//		model.put("bundleId", bundleId);
+//		model.put("anoOrderNo", anoOrderNo);
+
+	    return "homecare/sales/order/pwpOrderPop";
 	  }
 }

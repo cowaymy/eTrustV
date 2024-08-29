@@ -2045,6 +2045,18 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 //           }
 //    	}
     }
+
+    // SAL0420D - PWP Info
+    if(salesOrderMVO.getExTrade() == 4 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX){
+    	EgovMap pwpInfo = new EgovMap();
+    	pwpInfo.put("mainOrdId", orderVO.getPwpOrderId());
+    	pwpInfo.put("pwpOrdId", salesOrderMVO.getSalesOrdId());
+    	pwpInfo.put("userId",sessionVO.getUserId());
+
+    	//insert into SAL0420D
+    	orderRegisterMapper.insertPwp(pwpInfo);
+    }
+
   }
 
   private void doSaveOrder(OrderVO orderVO) {
@@ -2727,4 +2739,59 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     }
   }
 
+//  @Override
+//  public List<EgovMap> selectPwpOrderNoList(Map<String, Object> params) {
+//    // TODO ProductCodeList 호출시 error남
+//    return orderRegisterMapper.selectPwpOrderNoList(params);
+//  }
+//
+//  @Override
+//  public EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException {
+//
+//    String msg = "" ;
+//    boolean isPass = false;
+//
+//    logger.info("!@#### custId:" + (String) params.get("custId"));
+//    logger.info("!@#### salesOrdNo:" + (String) params.get("salesOrdNo"));
+//
+//    EgovMap RESULT = new EgovMap();
+//    EgovMap ordInfo = orderRegisterMapper.selectPwpOrderNoList(params).get(0);
+//
+//    if (ordInfo != null) {
+//
+//      if(ordInfo.get("stusCodeId").toString().equals("1") || ordInfo.get("stusCodeId").toString().equals("4")){
+//    	  isPass = true;
+//
+//    	  if(ordInfo.get("stusCodeId").toString().equals("4")){
+//    		Date now = new Date();
+//
+//    		if(ordInfo.containsKey("srvExprDt")){
+//    			Date expDt= new SimpleDateFormat("dd/MM/yyyy").parse(ordInfo.get("srvExprDt").toString());
+//
+//    			if(now.after(expDt)){
+//    				isPass = false;
+//        	        msg = "* Expired or without membership is disallowed to register for PWP!";
+//    			}
+//
+//    		} else{
+//    			isPass = false;
+//    	        msg = "* Expired or without membership is disallowed to register for PWP!";
+//    		}
+//    	  }
+//
+//      } else{
+//    	  isPass = false;
+//          msg = "* Order status not under ACT and COM is disallowed to register for PWP!";
+//      }
+//
+//    }else{
+//    	isPass = false;
+//    	msg = "* Order Number not found!";
+//    }
+//
+//    RESULT.put("IsPass", isPass);
+//    RESULT.put("MSG", msg);
+//
+//    return RESULT;
+//  }
 }

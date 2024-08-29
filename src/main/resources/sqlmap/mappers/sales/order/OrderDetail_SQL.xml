@@ -133,6 +133,7 @@
                            , V1.SST_RGIST_NO
                            , V1.CUST_TIN
                            <!-- Added for e-Invoice. By Celeste, 14/06/2024 [e]-->
+                           , V13.SALES_ORD_NO MAIN_PWP_ORD_NO
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -152,6 +153,8 @@
                     AND STUS_ID = 4
                     AND DISC_WAIVE > 0
                     GROUP BY SALES_ORD_ID_OLD) V11 ON V2.SALES_ORD_ID_OLD = V11.SALES_ORD_ID_OLD
+    LEFT JOIN SAL0420D V12 ON V12.PWP_SO_ID = V1.ORD_ID
+    LEFT JOIN SAL0001D V13 ON V13.SALES_ORD_ID = V12.MAIN_SO_ID
     WHERE V1.ORD_ID = #{salesOrderId}
   </select>
 

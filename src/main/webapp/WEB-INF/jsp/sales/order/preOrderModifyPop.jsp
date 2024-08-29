@@ -79,6 +79,23 @@ var totPvSs = "";
             applyCurrentUsedVoucher();
         }
 
+        if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+            $('#pwpNo').removeClass("blind");
+//             $('#btnPwpNoEkeyIn').removeClass("blind");
+            $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+            $('#relatedNo').addClass("blind");
+            $('#btnRltdNoEKeyIn').addClass("blind");
+            $('#btnRltdNoEKeyIn').hide();
+
+        }else{
+            $('#pwpNo').addClass("blind");
+//             $('#btnPwpNoEkeyIn').addClass("blind");
+            $('#btnPwpNoEkeyIn').hide();
+            $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+//             $('#btnRltdNoEKeyIn').removeClass("blind");
+        }
+
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
         var custId = '${preOrderInfo.custId}';
@@ -235,6 +252,10 @@ var totPvSs = "";
     $(function(){
         $('#btnRltdNoEKeyIn').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+        });
+
+        $('#btnRltdNoEKeyIn').click(function() {
+            Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
 
         $('#btnConfirm').click(function() {
@@ -482,6 +503,13 @@ var totPvSs = "";
             fn_clearAddCpnt();
             $('#relatedNo').val("");
 
+            $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+            $('#pwpNo').val("");
+            $('#txtMainPwpOrderID').val("");
+            $('#pwpNo').addClass("blind");
+            $('#btnPwpNoEkeyIn').addClass("blind");
+
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNoEKeyIn').removeClass("blind");
@@ -504,8 +532,18 @@ var totPvSs = "";
                      }
                }
 
-            }
-            else {
+            }else if ($("#exTrade").val() == '4'){
+                $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
+                $('#btnRltdNoEKeyIn').addClass("blind");
+
+                $('#pwpNo').removeClass("blind");
+                $('#btnPwpNoEkeyIn').removeClass("blind");
+                $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+                $('#relatedNo').addClass("blind");
+
+            } else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#relatedNo').val('');
                 $('#hiddenMonthExpired').val('');
@@ -1347,6 +1385,11 @@ var totPvSs = "";
                 isValid = false;
                 msg += "* Please select old order no.<br>";
             }
+        }else if(exTrade == '4') {
+            if(FormUtil.checkReqValue($('#pwpNo'))) {
+                isValid = false;
+                msg += "* Please select main PWP order no.<br>";
+            }
         }
 
         if($('#voucherType').val() == ""){
@@ -1530,7 +1573,9 @@ var totPvSs = "";
                 relatedNo               : $('#relatedNo').val(),
                 isExtradePR         : vIsReturnExtrade,
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
-                voucherCode : voucherAppliedCode
+                voucherCode : voucherAppliedCode,
+                pwpOrderId          : $('#txtMainPwpOrderID').val(),
+                pwpOrderNo          : $('#pwpNo').val()
         };
 
         var formData = new FormData();
@@ -1852,6 +1897,7 @@ var totPvSs = "";
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#pwpNo').val('');
         $('#hiddenMonthExpired').val('');
         $('#hiddenPreBook').val('');
         $('#isReturnExtrade').prop("checked", true);
@@ -2175,6 +2221,9 @@ var totPvSs = "";
 
         $('#relatedNo').val('${preOrderInfo.relatedNo}');
         $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+
+        $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
+        $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
         if('${preOrderInfo.isExtradePr}' == 1){
             $("#isReturnExtrade").prop("checked", true);
         }
@@ -3291,11 +3340,19 @@ var totPvSs = "";
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Ex-Trade/Related No/Jom Tukar</th>
+    <th scope="row">Ex-Trade/Related No/Jom Tukar/PWP</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
+        <!-- For Extrade and ICare [S]-->
         <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
-        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <a id="isReturnExtradeChkBoxEkeyIn" class=""><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <!-- For Extrade and ICare [E] -->
+
+        <!-- For PWP [S]-->
+        <a id="btnPwpNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
+        <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
+        <!-- For PWP [E]-->
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
         </td>

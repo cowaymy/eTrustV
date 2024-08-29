@@ -105,4 +105,6 @@ public interface HcOrderRegisterMapper {
 	public List<EgovMap> selectHcAcComboOrderJsonList(Map<String, Object> params);
 	public List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
 	public List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
+
+	List<EgovMap> selectPwpOrderNoList(Map<String, Object> params);
 }

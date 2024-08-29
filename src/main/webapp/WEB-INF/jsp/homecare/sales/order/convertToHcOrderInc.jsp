@@ -124,6 +124,8 @@
                 $('#exTrade').val('${preOrderInfo.exTrade}');
                 $('#relatedNo').val('${preOrderInfo.relatedNo}');
                 $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+                $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
+                $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
                 $('#txtBusType').val('${preOrderInfo.busType}');
                 $('#installDur').val('${preOrderInfo.instPriod}');
                 $('#poNo').val('${preOrderInfo.custPoNo}');

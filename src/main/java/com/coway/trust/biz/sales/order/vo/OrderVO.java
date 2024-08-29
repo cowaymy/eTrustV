@@ -120,6 +120,8 @@ public class OrderVO implements Serializable {
 
 	private String hcSetOrdYn;
 
+	private int pwpOrderId;
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -546,6 +548,14 @@ public class OrderVO implements Serializable {
 
 	public void setHcSetOrdYn(String hcSetOrdYn) {
 		this.hcSetOrdYn = hcSetOrdYn;
+	}
+
+	public int getPwpOrderId() {
+		return pwpOrderId;
+	}
+
+	public void setPwpOrderId(int pwpOrderId) {
+		this.pwpOrderId = pwpOrderId;
 	}
 
 }

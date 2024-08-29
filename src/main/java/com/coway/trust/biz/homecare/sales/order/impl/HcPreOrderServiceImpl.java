@@ -152,6 +152,18 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
     			matPreOrdId = preOrderVO.getPreOrdId();
 			}
 
+			// PWP Info
+		    if(preOrderVO.getExTrade() == 4 && preOrderVO.getAppTypeId() != SalesConstants.APP_TYPE_CODE_ID_AUX){
+		    	EgovMap pwpInfo = new EgovMap();
+		    	pwpInfo.put("mainOrdId", preOrderVO.getPwpOrderId());
+		    	pwpInfo.put("mainOrdNo", preOrderVO.getPwpOrderNo());
+		    	pwpInfo.put("preOrdId", preOrderVO.getPreOrdId());
+		    	pwpInfo.put("userId",sessionVO.getUserId());
+
+		    	//update into SAL0213M MAIN_PW_ORD_ID
+		    	preOrderMapper.updatePwp(pwpInfo);
+		    }
+
 			// Frame register
 			if(fraStkId > 0) {
     			// Frame register

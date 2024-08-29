@@ -1341,6 +1341,15 @@
                 $("#promoDiscPeriod").val(basicInfo.promoDiscPeriod);
 
                 $('#relatedNo').val(basicInfo.ordPromoRelatedNo);
+                $('#pwpNo').val(basicInfo.mainPwpOrdNo);
+
+                if(exTrade == 4){
+                	$(".relatedNoField").hide();
+                	$(".PwpField").show();
+                }else{
+                	$(".relatedNoField").show();
+                	$(".PwpField").hide();
+                }
 
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
@@ -4152,11 +4161,15 @@ console.log(salesOrderMVO);
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
-       <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly />
+       <th scope="row" class="relatedNoField"><spring:message code="sal.title.text.relatedNo" /></th>
+       <td class="relatedNoField"><input id="" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly />
        <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
        <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
        </td>
+
+       <th scope="row" class="PwpField">PWP Binding Order</th>
+       <td class="PwpField"><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly" readonly /> </td>
+
        <td colspan="2"><p id="pBtnCal" class="btn_sky blind">
          <a id="btnCal" href="#">Exclude GST Calculation</a>
         </p></td>

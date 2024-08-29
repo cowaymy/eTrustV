@@ -159,6 +159,10 @@ public class PreOrderVO implements Serializable {
 
     private String srvType;
 
+	private int pwpOrderId;
+
+	private int pwpOrderNo;
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -1001,4 +1005,20 @@ public class PreOrderVO implements Serializable {
   public void setSrvType(String srvType) {
     this.srvType = srvType;
   }
+
+public int getPwpOrderId() {
+	return pwpOrderId;
+}
+
+public void setPwpOrderId(int pwpOrderId) {
+	this.pwpOrderId = pwpOrderId;
+}
+
+public int getPwpOrderNo() {
+	return pwpOrderNo;
+}
+
+public void setPwpOrderNo(int pwpOrderNo) {
+	this.pwpOrderNo = pwpOrderNo;
+}
 }

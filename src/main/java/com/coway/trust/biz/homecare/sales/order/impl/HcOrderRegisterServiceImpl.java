@@ -2,6 +2,8 @@ package com.coway.trust.biz.homecare.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -360,5 +362,69 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
    public List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params) {
     List<EgovMap> lst = hcOrderRegisterMapper.selectHcAcCmbOrderDtlList(params);
     return lst;
+  }
+
+  @Override
+  public List<EgovMap> selectPwpOrderNoList(Map<String, Object> params) {
+    // TODO ProductCodeList 호출시 error남
+    return hcOrderRegisterMapper.selectPwpOrderNoList(params);
+  }
+
+  @Override
+  public EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException {
+
+    String msg = "" , mainOrdId = "";
+    boolean isPass = false;
+
+    logger.info("!@#### custId:" + (String) params.get("custId"));
+    logger.info("!@#### salesOrdNo:" + (String) params.get("salesOrdNo"));
+
+    EgovMap RESULT = new EgovMap();
+    EgovMap ordInfo = hcOrderRegisterMapper.selectPwpOrderNoList(params).get(0);
+
+    if (ordInfo != null) {
+      if(ordInfo.get("appTypeId").toString().equals("144") || // EDUCATION
+    		  ordInfo.get("appTypeId").toString().equals("145") || // FREE TRIAL
+    		  ordInfo.get("appTypeId").toString().equals("5764")){ // AUXILIARY
+    	  isPass = false;
+          msg = "* Education, Free trial and auxiliary are disallowed to register for PWP!";
+
+      }else{
+          if(ordInfo.get("stusCodeId").toString().equals("1") || ordInfo.get("stusCodeId").toString().equals("4")){
+        	  isPass = true;
+        	  mainOrdId = ordInfo.get("salesOrdId").toString();
+
+        	  if(ordInfo.get("stusCodeId").toString().equals("4")){
+        		Date now = new Date();
+
+        		if(ordInfo.containsKey("srvExprDt")){
+        			Date expDt= new SimpleDateFormat("dd/MM/yyyy").parse(ordInfo.get("srvExprDt").toString());
+
+        			if(now.after(expDt)){
+        				isPass = false;
+            	        msg = "* Expired or without membership is disallowed to register for PWP!";
+        			}
+
+        		} else{
+        			isPass = false;
+        	        msg = "* Expired or without membership is disallowed to register for PWP!";
+        		}
+        	  }
+
+          } else{
+        	  isPass = false;
+              msg = "* Order status not under ACT and COM is disallowed to register for PWP!";
+          }
+      }
+    }else{
+    	isPass = false;
+    	msg = "* Order Number not found!";
+    }
+
+    RESULT.put("Main_Order_Id", mainOrdId);
+    RESULT.put("IsPass", isPass);
+    RESULT.put("MSG", msg);
+
+    return RESULT;
   }
 }

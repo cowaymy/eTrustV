@@ -85,6 +85,21 @@
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 
+        if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+            $('#pwpNo').removeClass("blind");
+//             $('#btnPwpNo').removeClass("blind");
+            $('#isReturnExtradeChkBox').addClass("blind");
+            $('#relatedNo').addClass("blind");
+            $('#btnRltdNo').addClass("blind");
+
+        }else{
+            $('#pwpNo').addClass("blind");
+            $('#btnPwpNo').addClass("blind");
+            $('#isReturnExtradeChkBox').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+            $('#btnRltdNo').removeClass("blind");
+        }
+
         //Pre-Order Info
         if(convToOrdYn == 'Y') {
             fn_loadPreOrderInfo();
@@ -608,6 +623,11 @@
     $(function() {
         $('#btnRltdNo').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
+            fn_clearOrderSalesman();
+        });
+
+        $('#btnPwpNo').click(function() {
+            Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
             fn_clearOrderSalesman();
         });
 
@@ -1246,6 +1266,13 @@
             $('#isReturnExtrade').prop("checked", false);
             $('#isReturnExtrade').attr("disabled",true);
 
+            $('#isReturnExtradeChkBox').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+            $('#pwpNo').val('');
+            $('#txtMainPwpOrderID').val('');
+            $('#pwpNo').addClass("blind");
+            $('#btnPwpNo').addClass("blind");
+
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNo').removeClass("blind");
@@ -1275,9 +1302,25 @@
                }
 
 
+            } else if($("#exTrade").val() == '4'){
+                $('#txtOldOrderID').val('');
+                $('#txtBusType').val('');
+                $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
+                $('#btnRltdNo').addClass("blind");
+                $('#isReturnExtrade').prop("checked", false);
+
+                $('#pwpNo').removeClass("blind");
+                $('#btnPwpNo').removeClass("blind");
+                $('#isReturnExtradeChkBox').addClass("blind");
+                $('#relatedNo').addClass("blind");
+
+
             } else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                  $('#txtOldOrderID').val('');
+                 $('#txtMainPwpOrderID').val('');
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#btnRltdNo').addClass("blind");
@@ -1550,6 +1593,12 @@
                         $('#relatedNo').val();
                         Common.popupDiv("/homecare/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
 
+                    } else if ($("#exTrade").val() == 4){
+                    	// Add validation if select PWP
+                        $('#pwpNo').val();
+                        $('#txtMainPwpOrderID').val();
+                        Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#pwpNo').val()}, null, true);
+
                     } else {
                     	fn_popOrderDetail();
                     }
@@ -1659,6 +1708,10 @@
         if($("#ordPromo option:selected").index() > 0) {
             if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+
+            } else if($("#exTrade").val() == 4){
+            	Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+
             } else {
             	fn_popOrderDetail();
             }
@@ -1745,6 +1798,7 @@
             copyOrderChgYn    : "${COPY_CHANGE_YN}",
             copyQty               : $('#hiddenCopyQty').val(),
             ordSeqNo             : '${ordSeqNo}' > 0 ? '${ordSeqNo}' : $('#matBndlId').val(),
+            pwpOrderId          : $('#txtMainPwpOrderID').val(),
 
             salesOrderMVO1 : {
                 advBill                   : $('input:radio[name="advPay"]:checked').val(),
@@ -2765,7 +2819,9 @@
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
         $('#btnMatRltdNo').addClass('blind');
-        $('#srvPacId').val('')
+        $('#srvPacId').val('');
+        $('#pwpNo').val('');
+        $('#txtMainPwpOrderID').val('');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -3451,12 +3507,20 @@
 	    <span style="width:48.5%;"><select id="appType" name="appType" class="w100p"></select></span>
 	    <span style="width:48.45%;"><select id="srvPacId"  name="srvPacId" class="w100p"></select></span>
     </td>
-    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
+    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" />/Jom Tukar/PWP</th>
     <td>
         <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p"></select></span>
+        <!-- For Extrade and ICare [S]-->
         <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" placeholder="Related Number" class="w100p readonly" readonly /></span>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <a id="isReturnExtradeChkBox"><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <!-- For Extrade and ICare [E]-->
+
+        <!-- For PWP [S]-->
+        <span style="width:45%;"><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></span>
+        <a id="btnPwpNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
+        <!-- For PWP [E]-->
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
     </td>

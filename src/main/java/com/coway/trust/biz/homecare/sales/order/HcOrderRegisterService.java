@@ -71,4 +71,7 @@ public interface HcOrderRegisterService {
 
   List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
 
+  List<EgovMap> selectPwpOrderNoList(Map<String, Object> params);
+
+  EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException;
 }

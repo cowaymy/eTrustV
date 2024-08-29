@@ -73,6 +73,21 @@ var userType = '${SESSION_INFO.userTypeId}';
 	  	voucherAppliedStatus = 1;
     }
 
+    if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+    	$('#pwpNo').removeClass("blind");
+//         $('#btnPwpNoEkeyIn').removeClass("blind");
+        $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+        $('#relatedNo').addClass("blind");
+        $('#btnRltdNoEKeyIn').addClass("blind");
+
+    }else{
+    	$('#pwpNo').addClass("blind");
+        $('#btnPwpNoEkeyIn').addClass("blind");
+        $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+        $('#relatedNo').removeClass("blind");
+        $('#btnRltdNoEKeyIn').removeClass("blind");
+    }
+
     var custId = '${preOrderInfo.custId}';
     var salesOrdIdOld = '${preOrderInfo.salesOrdIdOld}';
     if(salesOrdIdOld != null || salesOrdIdOld != '' || salesOrdIdOld != '0'){
@@ -824,6 +839,13 @@ var userType = '${SESSION_INFO.userTypeId}';
       fn_clearAddCpnt();
       $('#relatedNo').val("");
 
+      $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+      $('#relatedNo').removeClass("blind");
+      $('#pwpNo').val("");
+      $('#txtMainPwpOrderID').val("");
+      $('#pwpNo').addClass("blind");
+      $('#btnPwpNoEkeyIn').addClass("blind");
+
           if($('#exTrade').val()=='1'){
               var todayDD = Number(TODAY_DD.substr(0, 2));
               var todayYY = Number(TODAY_DD.substr(6, 4));
@@ -840,6 +862,19 @@ var userType = '${SESSION_INFO.userTypeId}';
                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                    return;
                }
+
+         }else if ($("#exTrade").val() == '4'){
+             $('#txtOldOrderID').val('');
+             $('#txtBusType').val('');
+             $('#relatedNo').val('');
+             $('#hiddenMonthExpired').val('');
+             $('#hiddenPreBook').val('');
+             $('#btnRltdNoEKeyIn').addClass("blind");
+
+             $('#pwpNo').removeClass("blind");
+             $('#btnPwpNoEkeyIn').removeClass("blind");
+             $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+             $('#relatedNo').addClass("blind");
 
          }else {
              //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
@@ -1145,6 +1180,11 @@ var userType = '${SESSION_INFO.userTypeId}';
             isValid = false;
             msg += "* Please select old order no.<br>";
         }
+    }else if(exTrade == '4') {
+        if(FormUtil.checkReqValue($('#pwpNo'))) {
+            isValid = false;
+            msg += "* Please select main PWP order no.<br>";
+        }
     }
 
     if($('#voucherType').val() == ""){
@@ -1338,7 +1378,9 @@ var userType = '${SESSION_INFO.userTypeId}';
       relatedNo               : $('#relatedNo').val(),
       isExtradePR         : vIsReturnExtrade,
       receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
-      voucherCode : voucherAppliedCode
+      voucherCode : voucherAppliedCode,
+      pwpOrderId          : $('#txtMainPwpOrderID').val(),
+      pwpOrderNo          : $('#pwpNo').val()
     };
 
     var formData = new FormData();
@@ -1674,6 +1716,7 @@ var userType = '${SESSION_INFO.userTypeId}';
   function fn_clearSales() {
     $('#installDur').val('');
     $('#relatedNo').val('');
+    $('#pwpNo').val('');
 
     $('#ordProduct1').val('');
     $('#ordPromo1').val('');
@@ -1986,6 +2029,9 @@ var userType = '${SESSION_INFO.userTypeId}';
 
     $('#relatedNo').val('${preOrderInfo.relatedNo}');
     $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+
+    $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
+    $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
     if('${preOrderInfo.isExtradePr}' == 1){
         $("#isReturnExtrade").prop("checked", true);
     }
@@ -3197,11 +3243,20 @@ var userType = '${SESSION_INFO.userTypeId}';
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">Ex-Trade/Related No</th>
+                  <th scope="row">Ex-Trade/Related No/Jom Tukar/PWP</th>
                   <td>
                     <p><select id="exTrade" name="exTrade" class="w100p" disabled></select></p>
+                    <!-- For Extrade and ICare [S]-->
                     <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
-                    <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+                    <a id="isReturnExtradeChkBoxEkeyIn"><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" class="" disabled/> Return ex-trade product</a>
+                    <!-- For Extrade and ICare [E]-->
+
+                    <!-- For PWP [S]-->
+                    <a id="btnPwpNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                    <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
+                    <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
+                    <!-- For PWP [E]-->
+
                     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
                     <input id="txtBusType"  name="txtBusType" type="hidden" />
                     <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />

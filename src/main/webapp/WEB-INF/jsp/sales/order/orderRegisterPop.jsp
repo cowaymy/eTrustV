@@ -83,6 +83,24 @@
 
     $(document).ready(function(){
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', 'getSub'); //Common Code
+
+        if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+            $('#pwpNo').removeClass("blind");
+            $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
+            $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
+//             $('#btnPwpNo).removeClass("blind");
+            $('#isReturnExtradeChkBox').addClass("blind");
+            $('#relatedNo').addClass("blind");
+            $('#btnRltdNo').addClass("blind");
+
+
+        }else{
+            $('#pwpNo').addClass("blind");
+            $('#btnPwpNo').addClass("blind");
+            $('#isReturnExtradeChkBox').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+            $('#btnRltdNo').removeClass("blind");
+        }
     });
 
     function createAUIGrid() {
@@ -607,6 +625,11 @@
                //** End exTrade Neo to Neo Plus **//
 
                Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+               $('#salesmanCd').val('');
+               $('#salesmanNm').val('');
+        });
+        $('#btnPwpNo').click(function() {
+               Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                $('#salesmanCd').val('');
                $('#salesmanNm').val('');
         });
@@ -1187,6 +1210,13 @@
             $('#isReturnExtrade').prop("checked", false);
             $('#isReturnExtrade').attr("disabled",true);
 
+            $('#isReturnExtradeChkBox').removeClass("blind");
+            $('#relatedNo').removeClass("blind");
+            $('#pwpNo').val('');
+            $('#txtMainPwpOrderID').val('');
+            $('#pwpNo').addClass("blind");
+            $('#btnPwpNo').addClass("blind");
+
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNo').removeClass("blind");
@@ -1210,10 +1240,25 @@
                      }
                }
 
-            }
-            else {
+            } else if($("#exTrade").val() == '4'){
+            	$('#txtOldOrderID').val('');
+                $('#txtBusType').val('');
+                $('#relatedNo').val('');
+                $('#hiddenMonthExpired').val('');
+                $('#hiddenPreBook').val('');
+                $('#btnRltdNo').addClass("blind");
+                $('#isReturnExtrade').prop("checked", false);
+
+                $('#pwpNo').removeClass("blind");
+                $('#btnPwpNo').removeClass("blind");
+                $('#isReturnExtradeChkBox').addClass("blind");
+                $('#relatedNo').addClass("blind");
+
+
+            } else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#txtOldOrderID').val('');
+                $('#txtMainPwpOrderID').val('');
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#hiddenMonthExpired').val('');
@@ -1449,6 +1494,10 @@
                                             $('#txtOldOrderID').val();
                                             $('#relatedNo').val();
                                             Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
+                                        }if($("#exTrade").val() == 4) {
+                                        	$('#txtMainPwpOrderID').val();
+                                            $('#pwpNo').val();
+                                            Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                                         }
                                         else{
                                         Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1461,6 +1510,10 @@
                                      $('#txtOldOrderID').val();
                                      $('#relatedNo').val();
                                      Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
+                                 }if($("#exTrade").val() == 4) {
+                                     $('#txtMainPwpOrderID').val();
+                                     $('#pwpNo').val();
+                                     Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                                  }
                                  else{
                                  Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1481,6 +1534,10 @@
                         $('#txtOldOrderID').val();
                         $('#relatedNo').val();
                         Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
+                    }if($("#exTrade").val() == 4) {
+                        $('#txtMainPwpOrderID').val();
+                        $('#pwpNo').val();
+                        Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                     }
                     else {
                         Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1590,6 +1647,8 @@
 
             if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            }if($("#exTrade").val() == 4) {
+                Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
             }
             else {
                 Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1672,6 +1731,7 @@
             preOrderYN      : '${CONV_TO_ORD_YN}',
             copyOrderBulkYN : '${BULK_ORDER_YN}',
             copyQty         : $('#hiddenCopyQty').val(),
+            pwpOrderId          : $('#txtMainPwpOrderID').val(),
 
             salesOrderMVO : {
                 advBill                 : $('input:radio[name="advPay"]:checked').val(),
@@ -2623,6 +2683,8 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
+        $('#pwpNo').val('');
+        $('#txtMainPwpOrderID').val('');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -3310,13 +3372,22 @@
     <p><select id="appType" name="appType" class="w100p"></select></p>
     <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
     </td>
-    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" />/Jom Tukar</th>
-    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+    <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" />/Jom Tukar/PWP</th>
+    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
+        <!-- For Extrade and ICare [S]-->
+        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <a id="isReturnExtradeChkBox"><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        <!-- For Extrade and ICare [E] -->
+
+        <!-- For PWP [S]-->
+        <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
+        <a id="btnPwpNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
+        <!-- For PWP [E]-->
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
-        </td>
+    </td>
 </tr>
 <tr>
     <th scope="row">Voucher Type<span class="must">*</span></th>

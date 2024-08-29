@@ -186,6 +186,10 @@
               Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'A'}, null, true);
         });
 
+        $('#btnPwpNoEkeyIn').click(function() {
+            Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true)
+        });
+
           $('#btnConfirm').click(function() {
               if(!fn_validConfirm())  return false;
               if(fn_isExistESalesNo() == 'true') return false;
@@ -1064,6 +1068,11 @@
                   isValid = false;
                   msg += "* Please select old order no.<br>";
               }
+          }else if(exTrade == '4') {
+        	  if(FormUtil.checkReqValue($('#pwpNo'))) {
+                  isValid = false;
+                  msg += "* Please select main PWP order no.<br>";
+              }
           }
 
           if($('#voucherType').val() == ""){
@@ -1326,7 +1335,9 @@
               relatedNo               : $('#relatedNo').val(),
               isExtradePR         : vIsReturnExtrade,
               busType                  : vBusType
-              ,voucherCode : voucherAppliedCode
+              ,voucherCode : voucherAppliedCode,
+              pwpOrderId          : $('#txtMainPwpOrderID').val(),
+              pwpOrderNo          : $('#pwpNo').val(),
           };
 
           var formData = new FormData();
@@ -2239,6 +2250,13 @@
           $('#isReturnExtrade').prop("checked", false);
           $('#relatedNo').val("");
 
+          $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+          $('#relatedNo').removeClass("blind");
+          $('#pwpNo').val("");
+          $('#txtMainPwpOrderID').val("");
+          $('#pwpNo').addClass("blind");
+          $('#btnPwpNoEkeyIn').addClass("blind");
+
               if($('#exTrade').val()=='1'){
                 //$('#isReturnExtrade').prop("checked", true); --no product return
                 $('#btnRltdNoEKeyIn').removeClass("blind");
@@ -2260,8 +2278,22 @@
                        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                        return;
                    }
+             }else if ($("#exTrade").val() == '4'){
+            	 $('#txtOldOrderID').val('');
+                 $('#txtBusType').val('');
+                 $('#relatedNo').val('');
+                 $('#hiddenMonthExpired').val('');
+                 $('#hiddenPreBook').val('');
+                 $('#btnRltdNoEKeyIn').addClass("blind");
+
+                 $('#pwpNo').removeClass("blind");
+                 $('#btnPwpNoEkeyIn').removeClass("blind");
+                 $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+                 $('#relatedNo').addClass("blind");
+
              }else{
                $('#txtOldOrderID').val('');
+               $('#txtMainPwpOrderID').val('');
                  $('#txtBusType').val('');
                $('#relatedNo').val('');
                $('#hiddenMonthExpired').val('');
@@ -3159,16 +3191,25 @@
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">Ex-Trade/Related No</th>
+                  <th scope="row">Ex-Trade/Related No/Jom Tukar/PWP</th>
                   <td>
                     <p>
                       <select id="exTrade" name="exTrade" class="w100p"></select>
                     </p>
+                    <!-- For Extrade and ICare [S]-->
                     <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                     <p>
                       <input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly />
                     </p>
-                    <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled /> Return ex-trade product</a>
+                    <a id="isReturnExtradeChkBoxEkeyIn"><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled /> Return ex-trade product</a>
+                    <!-- For Extrade and ICare [E]-->
+
+                    <!-- For PWP [S]-->
+                    <a id="btnPwpNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                    <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
+                    <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
+                    <!-- For PWP [E]-->
+
                     <input id="txtOldOrderID" name="txtOldOrderID" data-ref="" type="hidden" />
                     <input id="txtBusType" name="txtBusType" type="hidden" />
                     <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
