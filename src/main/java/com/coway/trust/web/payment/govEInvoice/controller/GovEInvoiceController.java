@@ -232,7 +232,6 @@ public class GovEInvoiceController {
 	    searchMap.put("invType", eInvClaim.get("sInvType"));
 	    searchMap.put("invBillType", eInvClaim.get("sInvBillType"));
 	    searchMap.put("invMonth", eInvClaim.get("sRqtStartDt"));
-	    //searchMap.put("invoicePeriod", eInvClaim.get("sRqtStartDt"));
 	    searchMap.put("status", "1");
 
 	    List<EgovMap> isActiveBatchList = govEInvoiceService.selectGovEInvoiceList(searchMap);
@@ -245,7 +244,19 @@ public class GovEInvoiceController {
 
 	    searchMap.put("userId", sessionVO.getUserId());
 
-	      govEInvoiceService.createTaxInvConsolidateClaim(searchMap);
+	    if(eInvClaim.get("sInvBillType").equals("01")){
+		      govEInvoiceService.createTaxInvConsolidateClaim(searchMap);
+	    }
+	    else if(eInvClaim.get("sInvBillType").equals("02")){
+		      govEInvoiceService.createTaxInvConsolidateClaimCNDN(searchMap);
+	    }
+	    else{
+		    ReturnMessage message = new ReturnMessage();
+		    message.setCode(AppConstants.FAIL);
+		    message.setMessage("No Invoice Type is selected.");
+
+		    return ResponseEntity.ok(message);
+	    }
 
 	      String resultStr = searchMap.get("p1").toString();
 

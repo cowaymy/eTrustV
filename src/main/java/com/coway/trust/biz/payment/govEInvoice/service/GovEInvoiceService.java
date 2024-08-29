@@ -45,4 +45,6 @@ public interface GovEInvoiceService{
 
 	Map<String, Object> clearTaxCheckStatusReqApi(Map<String, Object> params);
 
+	Map<String, Object> createTaxInvConsolidateClaimCNDN(Map<String, Object> params);
+
 }

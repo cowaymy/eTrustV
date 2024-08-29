@@ -38,6 +38,8 @@ public interface GovEInvoiceMapper {
 
 	Map<String, Object> createTaxInvConsolidateClaim(Map<String, Object> param);
 
+	Map<String, Object> createTaxInvConsolidateClaimCNDN(Map<String, Object> param);
+
 	int saveEInvBatchMain(Map<String, Object> params);
 
 	int saveEInvDeactivateBatchEInv(Map<String, Object> params);

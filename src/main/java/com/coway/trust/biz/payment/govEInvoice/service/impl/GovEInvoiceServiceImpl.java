@@ -151,8 +151,12 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
 
     @Override
     public Map<String, Object> createTaxInvConsolidateClaim(Map<String, Object> params) {
-    	//sInvBillType
         return govEInvoiceMapper.createTaxInvConsolidateClaim(params);
+    }
+
+    @Override
+    public Map<String, Object> createTaxInvConsolidateClaimCNDN(Map<String, Object> params) {
+        return govEInvoiceMapper.createTaxInvConsolidateClaimCNDN(params);
     }
 
     @Override
