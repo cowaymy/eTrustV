@@ -1413,25 +1413,25 @@ public class ClaimController {
 	String day = format1.format(today);
     if(day.equals("01") || day.equals("29")|| day.equals("30")){//20240829
 
-	// insert batch email table
-	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
+    	// insert batch email table
+    	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
 
-	String zipFile = filePath + claimMap.get("subPath").toString() + claimMap.get("batchName").toString() + '_' +claimMap.get("ctrlBatchDt").toString() + ".zip";
+    	String zipFile = filePath + claimMap.get("subPath").toString() + claimMap.get("batchName").toString() + '_' +claimMap.get("ctrlBatchDt").toString() + ".zip";
 
-    Map<String,Object> emailDet = new HashMap<String, Object>();
-    emailDet.put("mailId", mailIDNextVal);
-    emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
-    emailDet.put("attachment", zipFile);
-    emailDet.put("categoryId", 5);
-    emailDet.put("emailParams", claimMap.get("emailBody").toString());
-    emailDet.put("email", emailReceiver);
-    //emailDet.put("email", "huiding.teoh@coway.com.my");
-    emailDet.put("emailSentStus", 1);
-    emailDet.put("name", "");
-    emailDet.put("userId", 349);
-    emailDet.put("emailSubject", claimMap.get("emailSubject").toString());
+        Map<String,Object> emailDet = new HashMap<String, Object>();
+        emailDet.put("mailId", mailIDNextVal);
+        emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
+        emailDet.put("attachment", zipFile);
+        emailDet.put("categoryId", 5);
+        emailDet.put("emailParams", claimMap.get("emailBody").toString());
+        emailDet.put("email", emailReceiver);
+        //emailDet.put("email", "huiding.teoh@coway.com.my");
+        emailDet.put("emailSentStus", 1);
+        emailDet.put("name", "");
+        emailDet.put("userId", 349);
+        emailDet.put("emailSubject", claimMap.get("emailSubject").toString().replace("{0}", claimMap.get("ctrlBatchDt").toString()));
 
-    voucherMapper.insertBatchEmailSender(emailDet);
+        voucherMapper.insertBatchEmailSender(emailDet);
 
     }
 
@@ -2760,7 +2760,12 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           email.setText(emailBody);
           email.addFile(file);
 
-          adaptorService.sendEmail(email, false);
+        Date today = new Date();
+      	SimpleDateFormat format1 = new SimpleDateFormat("dd");
+      	String day = format1.format(today);
+          if(!(day.equals("01") || day.equals("29")|| day.equals("30"))){//20240829
+        	  adaptorService.sendEmail(email, false);
+          }
 
           claimMap.put("file", subPathFile);
       }
