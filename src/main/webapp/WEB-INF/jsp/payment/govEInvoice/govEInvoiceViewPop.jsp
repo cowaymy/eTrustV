@@ -34,7 +34,9 @@ $(document).ready(function() {
 });
 
 function fn_search(){
-	Common.ajax("GET","/payment/einv/selectEInvoiceDetail.do",{"batchId":$("#hiddenBatchId").val()}, function(result){
+	var invType = "${data.invType}";
+
+	Common.ajax("GET","/payment/einv/selectEInvoiceDetail.do",{"batchId":$("#hiddenBatchId").val(),"invType": invType}, function(result){
         AUIGrid.setGridData(fileItemID, result);
         AUIGrid.resize(fileItemID,906, 280);
 	});
@@ -221,6 +223,22 @@ function fn_batchPayItemList(validStatusId, gubun) {
                         <th scope="row"></th>
                         <td></td>
                     </tr>
+                    <tr>
+                        <th scope="row">Record Active</th>
+                        <td id="txt_rcrdActive"><span><c:out value="${data.recordActive}"/></span></td>
+                        <th scope="row">Record Processing</th>
+                        <td id="txt_rcrdProcessing"><span><c:out value="${data.recordProcessing}"/></span></td>
+                        <th scope="row">Record Sent</th>
+                        <td id="txt_rcrdSent"><span><c:out value="${data.recordSent}"/></span></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Record Confirm</th>
+                        <td id="txt_rcrdSuccess"><span><c:out value="${data.recordConfirm}"/></span></td>
+                        <th scope="row">Record Failed</th>
+                        <td id="txt_rcrdFailed"><span><c:out value="${data.recordFailed}"/></span></td>
+                        <th scope="row">Record Inactive</th>
+                        <td id="txt_rcrdInactive"><span><c:out value="${data.recordInactive}"/></span></td>
+                    </tr>
                 </tbody>
             </table><!-- table end -->
         </article><!-- tap_area end -->
@@ -228,6 +246,9 @@ function fn_batchPayItemList(validStatusId, gubun) {
         <article class="tap_area">
             <!-- title_line start -->
             <aside class="title_line">
+			<c:if test="${data.invType == '02'}">
+				<p style="color:red; margin-bottom:10px;">Consolidate Detail will not be shown as data set are too large</p>
+			</c:if>
             <h2 id="itemGubun_conf">All Items</h2>
             <ul class="right_btns">
                 <li><p class="btn_grid"><a href="javascript:clearMyFilter();"><spring:message code='pay.btn.allItems'/></a></p></li>

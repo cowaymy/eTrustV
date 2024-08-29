@@ -111,8 +111,9 @@ public class GovEInvoiceController {
 
 		LOGGER.debug("params : {}", params);
 
-		list = govEInvoiceService.selectGovEInvoiceDetail(params);
-
+		if(CommonUtils.nvl(params.get("invType")).equals("02") == false){
+			list = govEInvoiceService.selectGovEInvoiceDetail(params);
+		}
 		return ResponseEntity.ok(list);
 	}
 
