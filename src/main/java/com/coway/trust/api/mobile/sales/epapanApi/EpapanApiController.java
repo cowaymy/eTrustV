@@ -652,4 +652,18 @@ public class EpapanApiController {
 
 	  }
 
+	  @ApiOperation(value = "insertCustomerContactAddAf", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/insertCustomerContactAddAf")
+	  public ResponseEntity<ReturnMessage> insertCustomerContactAddAf(@RequestBody EpapanApiMagicAddressForm param) throws Exception {
+
+	    int custCntcId = customerService.insertCustomerContactAddAf(EpapanApiMagicAddressForm.createMap(param));
+
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage("Success!");
+	    message.setData(custCntcId);
+
+	    return ResponseEntity.ok(message);
+	  }
+
 }

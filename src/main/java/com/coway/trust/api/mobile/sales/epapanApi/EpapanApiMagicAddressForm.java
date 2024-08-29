@@ -85,7 +85,20 @@ public class EpapanApiMagicAddressForm {
 		params.put("cardTypeId", vo.getCardTypeId());
 		params.put("tknId", vo.getTknId());
 		params.put("refNo", vo.getRefNo());
-
+		params.put("cntcName", vo.getCntcName());
+		params.put("cntcInitial", vo.getCntcInitial());
+		params.put("cntcNric", vo.getCntcNric());
+		params.put("cntcPos", vo.getCntcPos());
+		params.put("cntcTelm", vo.getCntcTelm());
+		params.put("cntcTelo", vo.getCntcTelo());
+		params.put("cntcTelr", vo.getCntcTelr());
+		params.put("cntcTelf", vo.getCntcTelf());
+		params.put("cntcDob", vo.getCntcDob());
+		params.put("cntcGender", vo.getCntcGender());
+		params.put("cntcCmbRaceTypeId", vo.getCntcCmbRaceTypeId());
+		params.put("cntcEmail", vo.getCntcEmail());
+		params.put("cntcDept", vo.getCntcDept());
+		params.put("cntcExpno", vo.getCntcExpno());
 
 		return params;
 	}
@@ -451,6 +464,91 @@ public class EpapanApiMagicAddressForm {
 	public void setRefNo(String refNo) {
 		this.refNo = refNo;
 	}
+	public String getCntcName() {
+		return cntcName;
+	}
+	public void setCntcName(String cntcName) {
+		this.cntcName = cntcName;
+	}
+	public String getCntcInitial() {
+		return cntcInitial;
+	}
+	public void setCntcInitial(String cntcInitial) {
+		this.cntcInitial = cntcInitial;
+	}
+	public String getCntcNric() {
+		return cntcNric;
+	}
+	public void setCntcNric(String cntcNric) {
+		this.cntcNric = cntcNric;
+	}
+	public String getCntcPos() {
+		return cntcPos;
+	}
+	public void setCntcPos(String cntcPos) {
+		this.cntcPos = cntcPos;
+	}
+	public String getCntcTelm() {
+		return cntcTelm;
+	}
+	public void setCntcTelm(String cntcTelm) {
+		this.cntcTelm = cntcTelm;
+	}
+	public String getCntcTelo() {
+		return cntcTelo;
+	}
+	public void setCntcTelo(String cntcTelo) {
+		this.cntcTelo = cntcTelo;
+	}
+	public String getCntcTelr() {
+		return cntcTelr;
+	}
+	public void setCntcTelr(String cntcTelr) {
+		this.cntcTelr = cntcTelr;
+	}
+	public String getCntcTelf() {
+		return cntcTelf;
+	}
+	public void setCntcTelf(String cntcTelf) {
+		this.cntcTelf = cntcTelf;
+	}
+	public String getCntcDob() {
+		return cntcDob;
+	}
+	public void setCntcDob(String cntcDob) {
+		this.cntcDob = cntcDob;
+	}
+	public String getCntcGender() {
+		return cntcGender;
+	}
+	public void setCntcGender(String cntcGender) {
+		this.cntcGender = cntcGender;
+	}
+	public String getCntcCmbRaceTypeId() {
+		return cntcCmbRaceTypeId;
+	}
+	public void setCntcCmbRaceTypeId(String cntcCmbRaceTypeId) {
+		this.cntcCmbRaceTypeId = cntcCmbRaceTypeId;
+	}
+	public String getCntcEmail() {
+		return cntcEmail;
+	}
+	public void setCntcEmail(String cntcEmail) {
+		this.cntcEmail = cntcEmail;
+	}
+	public String getCntcDept() {
+		return cntcDept;
+	}
+	public void setCntcDept(String cntcDept) {
+		this.cntcDept = cntcDept;
+	}
+	public String getCntcExpno() {
+		return cntcExpno;
+	}
+	public void setCntcExpno(String cntcExpno) {
+		this.cntcExpno = cntcExpno;
+	}
+
 
 	public String state;
     public String city;
@@ -509,6 +607,19 @@ public class EpapanApiMagicAddressForm {
 	public String cardTypeId;
 	public String tknId;
 	public String refNo;
-
+	public String cntcName;
+	public String cntcInitial;
+	public String cntcNric;
+	public String cntcPos;
+	public String cntcTelm;
+	public String cntcTelo;
+	public String cntcTelr;
+	public String cntcTelf;
+	public String cntcDob;
+	public String cntcGender;
+	public String cntcCmbRaceTypeId;
+	public String cntcEmail;
+	public String cntcDept;
+	public String cntcExpno;
 
 }
