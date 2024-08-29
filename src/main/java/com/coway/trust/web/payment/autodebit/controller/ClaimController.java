@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
@@ -98,6 +101,9 @@ public class ClaimController {
 
   @Autowired
   private AdaptorService adaptorService;
+
+  @Resource(name = "voucherMapper")
+	private VoucherMapper voucherMapper;
 
   @Resource(name = "claimService")
   private ClaimService claimService;
@@ -1399,6 +1405,33 @@ public class ClaimController {
     	  generateEncryptFile(claimMap);
           //zipFilesEncrypt(claimMap);
       }
+
+    }
+
+    Date today = new Date();
+	SimpleDateFormat format1 = new SimpleDateFormat("dd");
+	String day = format1.format(today);
+    if(day.equals("01") || day.equals("29")|| day.equals("30")){//20240829
+
+	// insert batch email table
+	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
+
+	String zipFile = filePath + claimMap.get("subPath").toString() + claimMap.get("batchName").toString() + '_' +claimMap.get("ctrlBatchDt").toString() + ".zip";
+
+    Map<String,Object> emailDet = new HashMap<String, Object>();
+    emailDet.put("mailId", mailIDNextVal);
+    emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
+    emailDet.put("attachment", zipFile);
+    emailDet.put("categoryId", 5);
+    emailDet.put("emailParams", claimMap.get("emailBody").toString());
+    emailDet.put("email", emailReceiver);
+    //emailDet.put("email", "huiding.teoh@coway.com.my");
+    emailDet.put("emailSentStus", 1);
+    emailDet.put("name", "");
+    emailDet.put("userId", 349);
+    emailDet.put("emailSubject", claimMap.get("emailSubject").toString());
+
+    voucherMapper.insertBatchEmailSender(emailDet);
 
     }
 
