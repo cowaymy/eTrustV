@@ -78,6 +78,12 @@ public class MilesMeasController {
     model.put("bfDay", bfDay);
     model.put("toDay", toDay);
 
+    List<EgovMap> srvStat = milesMeasService.selectSrvStat();
+    List<EgovMap> srvFailInst = milesMeasService.selectSrvFailInst();
+
+    model.addAttribute("srvStat", srvStat);
+    model.addAttribute("srvFailInst", srvFailInst);
+
     return "services/miles/milesMeasRawPop";
   }
 
