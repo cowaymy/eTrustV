@@ -75,4 +75,6 @@ public interface SupplementSubmissionMapper {
   void updateStockTransferDReq( Map<String, Object> params );
 
   int getWhLocId(String params);
+
+  String getCdcCodebyWhLocCode(String params);
 }

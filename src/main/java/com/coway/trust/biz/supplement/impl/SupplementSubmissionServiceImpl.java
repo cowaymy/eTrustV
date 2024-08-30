@@ -159,7 +159,11 @@ public class SupplementSubmissionServiceImpl
         for ( int idx = 0; idx < supplementItem.size(); idx++ ) {
           Map<String, Object> itemMap = (Map<String, Object>) supplementItem.get( idx );
           Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-          locInfoEntry.put( "CT_CODE", SalesConstants.SUPPLEMENT_WH_LOC_CODE ); // HQ Warehouse location code
+
+          String CDCCode = supplementSubmissionMapper.getCdcCodebyWhLocCode(SalesConstants.SUPPLEMENT_WH_LOC_CODE);
+
+          if (!CDCCode.isEmpty()){
+          locInfoEntry.put( "CT_CODE", CDCCode ); // HQ Warehouse location code
           locInfoEntry.put( "STK_CODE", itemMap.get( "stkId" ) );
           EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY( locInfoEntry );
           if ( locInfo == null ) {
@@ -176,7 +180,14 @@ public class SupplementSubmissionServiceImpl
                           "Insufficient stock available in warehouse. Please try again later when the stock is replenished. "
                             + itemMap.get( "stkCode" ) + " - " + itemMap.get( "stkDesc" ) );
               return rtnMap;
+              }
             }
+          }else{
+            rtnMap.put( "logError", "999" );
+            rtnMap.put( "message",
+                        "Warehouse CDC Code not found. "
+                          + itemMap.get( "stkCode" ) + " - " + itemMap.get( "stkDesc" ) );
+            return rtnMap;
           }
         }
         insertSupplementMaster( supplementMasterVO, supplementSubm, params );
