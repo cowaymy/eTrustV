@@ -108,8 +108,8 @@
                       var h = d.getDate();
                       var i = d.getHours();
                       console.log("h value date: " + h)
-                      if(h == 30){
-                          if(8 < i && i < 18){
+                      if(h == 1){
+                          if(8 < i && i < 15){
                               Common.alert("This page cannot be search on 1st day of every month from 9am - 3pm");
                               return;
                           }
