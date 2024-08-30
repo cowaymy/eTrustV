@@ -739,7 +739,7 @@
         AND WH_LOC_STUS_ID = 1
   </select>
 
-  <select id="getCdcCodebyWhLocCode" parameterType="String" resultType="Integer">
+  <select id="getCdcCodebyWhLocCode" parameterType="String" resultType="String">
     SELECT CDC_CODE
     FROM SYS0028M
     WHERE WH_LOC_CODE = #{params}
