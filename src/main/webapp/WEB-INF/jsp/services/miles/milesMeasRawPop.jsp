@@ -261,11 +261,21 @@
         <tr>
           <th scope="row">Service Status</th>
           <td>
-            <select id="rawSrvStat" name="rawSrvStat" class="w100p"></select>
+            <select id="rawSrvStat" name="rawSrvStat" class="w100p">
+              <option value="">Choose One</option>
+              <c:forEach var="list" items="${srvStat}" varStatus="status">
+                <option value="${list.stusCodeId}">${list.code}</option>
+              </c:forEach>
+            </select>
           </td>
           <th scope="row">Fail at (For Installation Only). </th>
           <td>
-            <select id="rawSrvFailAt" name="rawSrvFailAt" class="w100p"></select>
+            <select id="rawSrvFailAt" name="rawSrvFailAt" class="w100p">
+              <option value="">Choose One</option>
+              <c:forEach var="list" items="${srvFailInst}" varStatus="status">
+                <option value="${list.stusCodeId}">${list.code}</option>
+              </c:forEach>
+            </select>
           </td>
         </tr>
       </tbody>
