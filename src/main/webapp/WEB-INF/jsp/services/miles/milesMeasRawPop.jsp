@@ -76,6 +76,11 @@
       params["rawBranchId"] =$("#rawBranchId").val();
       params["rawMemCode"] =$("#rawMemCode").val();
 
+      params["rawOrdNo"] =$("#rawOrdNo").val();
+      params["rawSrvNo"] =$("#rawSrvNo").val();
+      params["rawSrvStat"] =$("#rawSrvStat").val();
+      params["rawSrvFailAt"] =$("#rawSrvFailAt").val();
+
       Common.ajax("GET", "/services/miles/getMilesMeasRaw.do", params, function(result) {
         AUIGrid.setProp(rawGridID, "rowStyleFunction", function( rowIndex, item) {
           if (item.rawSrvNo == "S") {
@@ -138,6 +143,16 @@
       width : '15%',
       editable : false,
       formatString : "#,##0.00"
+    }, {
+      dataField : "rawSrvStat",
+      headerText : 'SERVICE STATUS',
+      width : '15%',
+      editable : false
+    }, {
+      dataField : "rawSrvFailAt",
+      headerText : 'FAIL AT (INST. ONLY)',
+      width : '25%',
+      editable : false
     }];
 
     var gridPros = {
@@ -231,6 +246,26 @@
           <th scope="row">Member Code</th>
           <td>
             <input id="rawMemCode" name="rawMemCode" type="text" title="" placeholder="Member Code" class="w100p" />
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Order No.</th>
+          <td>
+            <input id="rawOrdNo" name="rawOrdNo" type="text" title="" placeholder="Order No" class="w100p" />
+          </td>
+          <th scope="row">Service No.</th>
+          <td>
+            <input id="rawSrvNo" name="rawSrvNo" type="text" title="" placeholder="Service No." class="w100p" />
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Service Status</th>
+          <td>
+            <select id="rawSrvStat" name="rawSrvStat" class="w100p"></select>
+          </td>
+          <th scope="row">Fail at (For Installation Only). </th>
+          <td>
+            <select id="rawSrvFailAt" name="rawSrvFailAt" class="w100p"></select>
           </td>
         </tr>
       </tbody>
