@@ -480,6 +480,8 @@
              , RELATED_NO = #{relatedNo}
              , EX_TRADE_PR = #{isExtradePR}
              , VOUCHER_CODE = #{voucherCode}
+             , MAIN_PWP_ORD_ID = #{pwpOrderId}
+             , MAIN_PWP_ORD_NO = #{pwpOrderNo}
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 

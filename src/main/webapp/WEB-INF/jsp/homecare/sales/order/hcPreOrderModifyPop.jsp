@@ -344,6 +344,14 @@ var userType = '${SESSION_INFO.userTypeId}';
         callPrgm : "PRE_ORD_BILL_GRP"
       }, null, true);
     });
+
+    $('#srvPacId,#appType').click(function() {
+        //CHECK IF EXISTING ORDER IS PWP AND CHANGE APP TYPE IS NOT ALLOW
+       if('${preOrderInfo.exTrade}' == '4'){
+           Common.alert('App Type is disallowed to change due to it is PWP.');
+       }
+   });
+
     $('#appType').change(function() {
       $('#scPayInfo').addClass("blind");
 
@@ -872,7 +880,7 @@ var userType = '${SESSION_INFO.userTypeId}';
              $('#btnRltdNoEKeyIn').addClass("blind");
 
              $('#pwpNo').removeClass("blind");
-             $('#btnPwpNoEkeyIn').removeClass("blind");
+//              $('#btnPwpNoEkeyIn').removeClass("blind");
              $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
              $('#relatedNo').addClass("blind");
 

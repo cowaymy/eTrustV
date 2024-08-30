@@ -85,12 +85,12 @@ var totPvSs = "";
             $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
             $('#relatedNo').addClass("blind");
             $('#btnRltdNoEKeyIn').addClass("blind");
-            $('#btnRltdNoEKeyIn').hide();
+//             $('#btnRltdNoEKeyIn').hide();
 
         }else{
             $('#pwpNo').addClass("blind");
-//             $('#btnPwpNoEkeyIn').addClass("blind");
-            $('#btnPwpNoEkeyIn').hide();
+            $('#btnPwpNoEkeyIn').addClass("blind");
+//             $('#btnPwpNoEkeyIn').hide();
             $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
             $('#relatedNo').removeClass("blind");
 //             $('#btnRltdNoEKeyIn').removeClass("blind");
@@ -254,7 +254,7 @@ var totPvSs = "";
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
 
-        $('#btnRltdNoEKeyIn').click(function() {
+        $('#btnPwpNoEkeyIn').click(function() {
             Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
 
@@ -316,6 +316,13 @@ var totPvSs = "";
         });
         $('#billGrpBtn').click(function() {
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_BILL_GRP"}, null, true);
+        });
+
+        $('#srvPacId,#appType').click(function() {
+        	 //CHECK IF EXISTING ORDER IS PWP AND CHANGE APP TYPE IS NOT ALLOW
+            if('${preOrderInfo.exTrade}' == '4'){
+                Common.alert('App Type is disallowed to change due to it is PWP.');
+            }
         });
         $('#appType').change(function() {
 
