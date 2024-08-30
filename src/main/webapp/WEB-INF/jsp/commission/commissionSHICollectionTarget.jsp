@@ -107,7 +107,7 @@
                       var d = new Date();
                       var h = d.getDate();
                       var i = d.getHours();
-                      if(h == 1){
+                      if(h == 30){
                           if(8 < i && i < 15){
                               Common.alert("This page cannot be search on 1st day of every month from 9am - 3pm");
                               return;
