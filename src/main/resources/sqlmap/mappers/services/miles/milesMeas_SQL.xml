@@ -106,30 +106,52 @@
   </select>
 
   <select id="getMilesMeasRaw" parameterType="Map" resultType="egovMap">
-    SELECT F.CODE AS RAW_DSC_CDE,
-               C.MEM_CODE AS RAW_CT_CDE,
-               TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS RAW_CLAIM_DT,
-               D.SALES_ORD_NO AS RAW_ORD_NO,
-               B.SVC_NO AS RAW_SRV_NO,
-               CASE WHEN B.SVC_NO = 'S' THEN A.T_MIL
-                                                       ELSE B.MIL END AS RAW_TTL_MILES,
-               CASE WHEN B.SVC_NO = 'S' THEN A.T_TRV_DIST
-                                                       ELSE B.TRV_DIST END AS RAW_TM_TRAV,
-               CASE WHEN B.SVC_NO = 'S' THEN A.T_AMT
-                                                       ELSE 0 END AS RAW_TTL_AMT
-    FROM SVC0137M A
-    JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
-    JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
-    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
-    JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
-    WHERE A.DISB = 0
-    AND A.CLM_DT BETWEEN TO_DATE(#{dpDateRangeFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpDateRangeTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-    AND C.BRNCH = #{rawBranchId}
-    <if test="rawMemCode != null and rawMemCode != '' ">
-      AND C.MEM_CODE = #{rawMemCode}
-    </if>
-    ORDER BY B.MIL_CLM_NO,
-                   B.CRT_DT,
-                   B.MIL_CLM_SUB_NO
+    SELECT A.RAW_DSC_CDE,
+               A.RAW_CT_CDE,
+               A.RAW_CLAIM_DT,
+               A.RAW_ORD_NO,
+               A.RAW_SRV_NO,
+               A.RAW_TTL_MILES,
+               A.RAW_TM_TRAV,
+               A.RAW_TTL_AMT,
+               B.CODE AS RAW_SRV_STAT,
+               A.RAW_SRV_FAIL_AT
+    FROM ( SELECT B.MIL_CLM_NO AS MIL_CLM_NO,
+                          B.CRT_DT AS CRT_DT,
+                          B.MIL_CLM_SUB_NO AS MIL_CLM_SUB_NO,
+                          F.CODE AS RAW_DSC_CDE,
+                          C.MEM_CODE AS RAW_CT_CDE,
+                          TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS RAW_CLAIM_DT,
+                          D.SALES_ORD_NO AS RAW_ORD_NO,
+                          B.SVC_NO AS RAW_SRV_NO,
+                          J.DEFECT_DESC AS RAW_SRV_FAIL_AT,
+                          CASE WHEN G.STUS_CODE_ID IS NOT NULL THEN G.STUS_CODE_ID ELSE CASE WHEN H.AS_STUS_ID IS NOT NULL THEN H.AS_STUS_ID ELSE CASE WHEN I.STUS_CODE_ID IS NOT NULL THEN I.STUS_CODE_ID ELSE 0 END END END AS RAW_SRV_STAT,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_MIL
+                                                                  ELSE B.MIL END AS RAW_TTL_MILES,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_TRV_DIST
+                                                                  ELSE B.TRV_DIST END AS RAW_TM_TRAV,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_AMT
+                                                                  ELSE 0 END AS RAW_TTL_AMT
+               FROM SVC0137M A
+               JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
+               JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+               LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+               JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
+               LEFT JOIN SAL0046D G ON B.SVC_NO = G.INSTALL_ENTRY_NO
+               LEFT JOIN SAL0047D K ON FN_GET_SAL0047D_MAX_ID(G.INSTALL_ENTRY_ID, '1') = K.RESULT_ID
+               LEFT JOIN SVC0001D H ON B.SVC_NO = H.AS_NO
+               LEFT JOIN LOG0038D I ON B.SVC_NO = I.RETN_NO
+               LEFT JOIN SYS0100M J ON K.FAIL_LOC = J.DEFECT_ID AND J.DEFECT_TYP = 'IF' AND J.DEFECT_STATUS = 1
+
+               WHERE A.DISB = 0
+                   AND A.CLM_DT BETWEEN TO_DATE(#{dpDateRangeFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpDateRangeTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                   AND C.BRNCH = #{rawBranchId}
+               <if test="rawMemCode != null and rawMemCode != '' ">
+                 AND C.MEM_CODE = #{rawMemCode}
+               </if>
+    ) A LEFT JOIN SYS0038M B ON A.RAW_SRV_STAT = B.STUS_CODE_ID
+    ORDER BY A.MIL_CLM_NO,
+                   A.CRT_DT,
+                   A.MIL_CLM_SUB_NO
   </select>
 </mapper>
