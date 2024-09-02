@@ -504,23 +504,26 @@
 	             D.STK_DESC,
 	             A.STUS_CODE_ID,
 	             E.NAME STATUS,
-	             TO_CHAR(F.SRV_START_DT, 'MM/DD/YYYY') SRV_START_DT,
-	             TO_CHAR(F.SRV_EXPR_DT, 'MM/DD/YYYY') SRV_EXPR_DT
+	             TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
+                 TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT
 	        FROM SAL0001D A
 	        LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
 	        LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
 	        LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
 	        LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
-	        LEFT JOIN (
-	            SELECT
-	                SAL95.*,
-	                ROW_NUMBER() OVER(PARTITION BY SAL95.SRV_SALES_ORD_ID ORDER BY SAL95.SRV_EXPR_DT DESC)
-	            FROM SAL0095D SAL95
-	            WHERE SAL95.SRV_STUS_CODE_ID = 4
-	        ) F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+	        LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4
 	        WHERE A.CUST_ID = #{custId}
 	        <if test='salesOrdNo != null and salesOrdNo !=""'>
 	              AND A.SALES_ORD_NO = #{salesOrdNo}
 	          </if>
+	        GROUP BY
+	             A.SALES_ORD_ID,
+			     A.SALES_ORD_NO,
+			     A.APP_TYPE_ID,
+			     C.CODE_NAME,
+			     D.STK_CODE,
+			     D.STK_DESC,
+			     A.STUS_CODE_ID,
+			     E.NAME
 	  </select>
 </mapper>
