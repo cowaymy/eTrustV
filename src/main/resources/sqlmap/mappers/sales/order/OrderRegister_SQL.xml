@@ -3695,7 +3695,7 @@ WHERE
   </insert>
 
   <insert id="insertPwp" parameterType="Map">
-    INSERT INTO SAL0420D ( PWP_ID ,
+    INSERT INTO SAL0421D ( PWP_ID ,
                                          MAIN_SO_ID ,
                                          PWP_SO_ID ,
                                          STUS ,
@@ -3703,7 +3703,7 @@ WHERE
                                          CRT_USER_ID ,
                                          UPD_DT ,
                                          UPD_USER_ID
-    ) VALUES ( SAL0420D_PWP_ID_SEQ.NEXTVAL
+    ) VALUES ( SAL0421D_PWP_ID_SEQ.NEXTVAL
                   , #{mainOrdId}
                   , #{pwpOrdId}
                   , 1
