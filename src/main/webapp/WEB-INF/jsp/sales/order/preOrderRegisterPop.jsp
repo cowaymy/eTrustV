@@ -677,6 +677,8 @@
                   $('#hiddenMonthExpired').val('');
                   $('#hiddenPreBook').val('');
                   $('#btnRltdNoEKeyIn').addClass("blind");
+                  $('#txtOldOrderID').val('');
+                  $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
 
                   $('#pwpNo').removeClass("blind");
                   $('#btnPwpNoEkeyIn').removeClass("blind");
@@ -687,6 +689,7 @@
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#relatedNo').val('');
                 $('#txtMainPwpOrderID').val("");
+                $('#pwpNo').val("");
                 $('#hiddenMonthExpired').val('');
                 $('#hiddenPreBook').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");

@@ -2285,6 +2285,7 @@
                  $('#hiddenMonthExpired').val('');
                  $('#hiddenPreBook').val('');
                  $('#btnRltdNoEKeyIn').addClass("blind");
+                 $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
 
                  $('#pwpNo').removeClass("blind");
                  $('#btnPwpNoEkeyIn').removeClass("blind");
