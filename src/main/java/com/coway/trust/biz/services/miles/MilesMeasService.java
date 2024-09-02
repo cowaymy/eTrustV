@@ -21,4 +21,8 @@ public interface MilesMeasService {
 
   List<EgovMap> getMilesMeasRaw(Map<String, Object> params);
 
+  List<EgovMap> selectSrvStat();
+
+  List<EgovMap> selectSrvFailInst();
+
 }
