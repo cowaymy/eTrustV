@@ -149,9 +149,42 @@
                <if test="rawMemCode != null and rawMemCode != '' ">
                  AND C.MEM_CODE = #{rawMemCode}
                </if>
+
+               <if test="rawOrdNo != null and rawOrdNo != '' ">
+                 AND D.SALES_ORD_NO = #{rawOrdNo}
+               </if>
+
+               <if test="rawSrvNo != null and rawSrvNo != '' ">
+                 AND B.SVC_NO = #{rawSrvNo}
+               </if>
+
+               <if test="rawSrvFailAt != null and rawSrvFailAt != '' ">
+                 AND K.FAIL_LOC = #{rawSrvFailAt}
+               </if>
+
     ) A LEFT JOIN SYS0038M B ON A.RAW_SRV_STAT = B.STUS_CODE_ID
+    WHERE 1=1
+    <if test="rawSrvStat != null and rawSrvStat != '' ">
+      AND A.RAW_SRV_STAT = #{rawSrvStat}
+    </if>
     ORDER BY A.MIL_CLM_NO,
                    A.CRT_DT,
                    A.MIL_CLM_SUB_NO
+  </select>
+
+  <select id="selectSrvStat" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID,
+               CODE
+    FROM SYS0038M
+    WHERE STUS_CODE_ID IN ('1', '4', '10', '19', '21')
+  </select>
+
+  <select id="selectSrvFailInst" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.DEFECT_ID STUS_CODE_ID,
+               Extent1.DEFECT_DESC CODE
+    FROM SYS0100M Extent1
+    WHERE DEFECT_TYP = 'IF'
+        AND DEFECT_STATUS = 1
+    ORDER BY DEFECT_ID
   </select>
 </mapper>
