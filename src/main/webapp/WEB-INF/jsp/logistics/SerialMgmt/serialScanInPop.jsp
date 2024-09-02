@@ -353,7 +353,8 @@ function fn_splitBarcode(){
                 continue;
             }
 
-            stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString().substr(0,6);
+            //stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString().substr(0,6); // Edited to remove the limit to scan only 6 digit stock code. Hui Ding, 02/09/2024
+            stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
             if(stockCode == "0"){
                 failSound = true;
                 rowData = {
