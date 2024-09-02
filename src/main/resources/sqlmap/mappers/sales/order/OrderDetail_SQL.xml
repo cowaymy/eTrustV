@@ -134,6 +134,7 @@
                            , V1.CUST_TIN
                            <!-- Added for e-Invoice. By Celeste, 14/06/2024 [e]-->
                            , V13.SALES_ORD_NO MAIN_PWP_ORD_NO
+                           , v13.SALES_ORD_ID MAIN_PWP_ORD_ID
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID

@@ -85,9 +85,21 @@
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 
-        if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+        if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){        // HC - eKey-In > Convert Sales
+            $('#pwpNo').removeClass("blind");
+            $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
+            $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
+//             $('#btnPwpNo).removeClass("blind");
+            $('#isReturnExtradeChkBox').addClass("blind");
+            $('#relatedNo').addClass("blind");
+            $('#btnRltdNo').addClass("blind");
+
+        }else if('${orderInfo.basicInfo.exTrade}' != null && '${orderInfo.basicInfo.exTrade}' != "" && '${orderInfo.basicInfo.exTrade}' == '4'){ // HC - ORDER MGMT > COPY(CHANGE)
             $('#pwpNo').removeClass("blind");
 //             $('#btnPwpNo').removeClass("blind");
+            $('#pwpNo').val('${orderInfo.basicInfo.mainPwpOrdNo}');
+            $('#txtMainPwpOrderID').val('${orderInfo.basicInfo.mainPwpOrdId}');
+            $('#exTrade').val('${orderInfo.basicInfo.exTrade}');
             $('#isReturnExtradeChkBox').addClass("blind");
             $('#relatedNo').addClass("blind");
             $('#btnRltdNo').addClass("blind");
