@@ -50,4 +50,14 @@ public class MilesMeasServiceImpl implements MilesMeasService {
     return milesMeasMapper.getMilesMeasRaw(params);
   }
 
+  @Override
+  public List<EgovMap> selectSrvStat() {
+    return milesMeasMapper.selectSrvStat();
+  }
+
+  @Override
+  public List<EgovMap> selectSrvFailInst() {
+    return milesMeasMapper.selectSrvFailInst();
+  }
+
 }
