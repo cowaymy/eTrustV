@@ -5692,7 +5692,7 @@ SELECT MST.*
                             NVL ( SAL0027D.EMAIL, '' ) AS MAIL_ADDRESS,
                             NVL ( SAL0029D.CUST_VA_NO, '' ) AS CUSTOMER_VA_NO,
                             NVL ( SAL0047D.SIRIM_NO, '' ) AS SIRIM_NO,
-                            NVL ( SAL0047D.SERIAL_NO, '' ) AS SERAIL_NO,
+                            NVL ( SAL0047D.SERIAL_NO, '' ) AS SERIAL_NO,
                             NVL ( TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '' ) AS SETTLED_DATE,
                             NVL ( TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '' ) AS EXPIRY_DATE,
                             NVL ( SAL0095D.SRV_DUR, '') AS CONTRACT_DURATION,
