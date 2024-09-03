@@ -253,7 +253,7 @@ public class DtInstallationJobDto {
 
   private String memCode;
 
-  private String sryTyp;
+  private String srvTyp;
 
   private String dispComm;
 
@@ -941,12 +941,12 @@ public class DtInstallationJobDto {
     this.longitude = longitude;
   }
 
-  public String getSryTyp() {
-    return sryTyp;
+  public String getSrvTyp() {
+    return srvTyp;
   }
 
-  public void setSryTyp( String sryTyp ) {
-    this.sryTyp = sryTyp;
+  public void setSrvTyp( String srvTyp ) {
+    this.srvTyp = srvTyp;
   }
 
   public String getDispComm() {
