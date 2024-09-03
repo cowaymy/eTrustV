@@ -666,4 +666,14 @@ public class EpapanApiController {
 	    return ResponseEntity.ok(message);
 	  }
 
+	  @ApiOperation(value = "selectCustomerContactJsonList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectCustomerContactJsonList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCustomerContactJsonList(@RequestBody EpapanApiMagicAddressForm param) throws Exception {
+
+	    List<EgovMap> contactlist = null;
+	    LOGGER.info("##### customer Contact Parsing START #####");
+	    contactlist = customerService.selectCustomerContactJsonList(EpapanApiMagicAddressForm.createMap(param));
+	    return ResponseEntity.ok(contactlist);
+	  }
+
 }
