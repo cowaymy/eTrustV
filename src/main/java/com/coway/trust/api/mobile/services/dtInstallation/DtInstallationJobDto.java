@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "InstallationJobDto", description = "공통코드 Dto")
 public class DtInstallationJobDto {
-
   @ApiModelProperty(value = "주문번호")
   private String salesOrderNo;
 
@@ -100,15 +99,13 @@ public class DtInstallationJobDto {
   @ApiModelProperty(value = "")
   private String instruction;
 
-  /* Woongjin Jun */
   @ApiModelProperty(value = "")
-  private int salesPromotion;
+  private String salesPromotion;
 
   @ApiModelProperty(value = "")
   private int contractDuration;
 
   @ApiModelProperty(value = "")
-  /* KV - private int monthlyRentalFees ; */
   private String monthlyRentalFees;
 
   @ApiModelProperty(value = "")
@@ -256,46 +253,59 @@ public class DtInstallationJobDto {
 
   private String memCode;
 
+  private String sryType;
+
+  private String dispComm;
+
   public int getPartnerCode() {
-	return partnerCode;
-}
-public String getMemCode() {
-	return memCode;
-}
-public void setPartnerCode(int partnerCode) {
-	this.partnerCode = partnerCode;
-}
-public void setMemCode(String memCode) {
-	this.memCode = memCode;
-}
-public String getSerialChk() {
-	  return serialChk;
+    return partnerCode;
   }
-  public void setSerialChk(String serialChk) {
-	this.serialChk = serialChk;
+
+  public String getMemCode() {
+    return memCode;
+  }
+
+  public void setPartnerCode( int partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public void setMemCode( String memCode ) {
+    this.memCode = memCode;
+  }
+
+  public String getSerialChk() {
+    return serialChk;
+  }
+
+  public void setSerialChk( String serialChk ) {
+    this.serialChk = serialChk;
   }
 
   private String fraSerialChk;
+
   public String getFraSerialChk() {
-	  return fraSerialChk;
+    return fraSerialChk;
   }
-  public void setFraSerialChk(String fraSerialChk) {
-	this.fraSerialChk = fraSerialChk;
+
+  public void setFraSerialChk( String fraSerialChk ) {
+    this.fraSerialChk = fraSerialChk;
   }
 
   private String selFraSerialNo;
+
   public String getSelFraSerialNo() {
-	  return selFraSerialNo;
+    return selFraSerialNo;
   }
-  public void setSelFraSerialNo(String selFraSerialNo) {
-	this.selFraSerialNo = selFraSerialNo;
+
+  public void setSelFraSerialNo( String selFraSerialNo ) {
+    this.selFraSerialNo = selFraSerialNo;
   }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(String salesOrderNo) {
+  public void setSalesOrderNo( String salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -303,7 +313,7 @@ public String getSerialChk() {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -311,7 +321,7 @@ public String getSerialChk() {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -319,7 +329,7 @@ public String getSerialChk() {
     return jobType;
   }
 
-  public void setJobType(String jobType) {
+  public void setJobType( String jobType ) {
     this.jobType = jobType;
   }
 
@@ -327,7 +337,7 @@ public String getSerialChk() {
     return jobStatus;
   }
 
-  public void setJobStatus(int jobStatus) {
+  public void setJobStatus( int jobStatus ) {
     this.jobStatus = jobStatus;
   }
 
@@ -335,7 +345,7 @@ public String getSerialChk() {
     return appointmentDate;
   }
 
-  public void setAppointmentDate(String appointmentDate) {
+  public void setAppointmentDate( String appointmentDate ) {
     this.appointmentDate = appointmentDate;
   }
 
@@ -343,7 +353,7 @@ public String getSerialChk() {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public void setAppointmentTime( String appointmentTime ) {
     this.appointmentTime = appointmentTime;
   }
 
@@ -351,7 +361,7 @@ public String getSerialChk() {
     return jobSession;
   }
 
-  public void setJobSession(String jobSession) {
+  public void setJobSession( String jobSession ) {
     this.jobSession = jobSession;
   }
 
@@ -359,7 +369,7 @@ public String getSerialChk() {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -367,7 +377,7 @@ public String getSerialChk() {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -375,7 +385,7 @@ public String getSerialChk() {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -383,7 +393,7 @@ public String getSerialChk() {
     return customerType;
   }
 
-  public void setCustomerType(String customerType) {
+  public void setCustomerType( String customerType ) {
     this.customerType = customerType;
   }
 
@@ -391,7 +401,7 @@ public String getSerialChk() {
     return customerId;
   }
 
-  public void setCustomerId(int customerId) {
+  public void setCustomerId( int customerId ) {
     this.customerId = customerId;
   }
 
@@ -399,7 +409,7 @@ public String getSerialChk() {
     return serviceState;
   }
 
-  public void setServiceState(String serviceState) {
+  public void setServiceState( String serviceState ) {
     this.serviceState = serviceState;
   }
 
@@ -407,7 +417,7 @@ public String getSerialChk() {
     return planYear;
   }
 
-  public void setPlanYear(int planYear) {
+  public void setPlanYear( int planYear ) {
     this.planYear = planYear;
   }
 
@@ -415,7 +425,7 @@ public String getSerialChk() {
     return planMonth;
   }
 
-  public void setPlanMonth(int planMonth) {
+  public void setPlanMonth( int planMonth ) {
     this.planMonth = planMonth;
   }
 
@@ -423,7 +433,7 @@ public String getSerialChk() {
     return customerGps;
   }
 
-  public void setCustomerGps(String customerGps) {
+  public void setCustomerGps( String customerGps ) {
     this.customerGps = customerGps;
   }
 
@@ -431,7 +441,7 @@ public String getSerialChk() {
     return installAddress;
   }
 
-  public void setInstallAddress(String installAddress) {
+  public void setInstallAddress( String installAddress ) {
     this.installAddress = installAddress;
   }
 
@@ -439,7 +449,7 @@ public String getSerialChk() {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -447,7 +457,7 @@ public String getSerialChk() {
     return handphoneTel;
   }
 
-  public void setHandphoneTel(String handphoneTel) {
+  public void setHandphoneTel( String handphoneTel ) {
     this.handphoneTel = handphoneTel;
   }
 
@@ -455,7 +465,7 @@ public String getSerialChk() {
     return homeTel;
   }
 
-  public void setHomeTel(String homeTel) {
+  public void setHomeTel( String homeTel ) {
     this.homeTel = homeTel;
   }
 
@@ -463,7 +473,7 @@ public String getSerialChk() {
     return officeTel;
   }
 
-  public void setOfficeTel(String officeTel) {
+  public void setOfficeTel( String officeTel ) {
     this.officeTel = officeTel;
   }
 
@@ -471,7 +481,7 @@ public String getSerialChk() {
     return mailAddress;
   }
 
-  public void setMailAddress(String mailAddress) {
+  public void setMailAddress( String mailAddress ) {
     this.mailAddress = mailAddress;
   }
 
@@ -479,7 +489,7 @@ public String getSerialChk() {
     return customerVaNo;
   }
 
-  public void setCustomerVaNo(String customerVaNo) {
+  public void setCustomerVaNo( String customerVaNo ) {
     this.customerVaNo = customerVaNo;
   }
 
@@ -487,7 +497,7 @@ public String getSerialChk() {
     return customerJomPayRefNo;
   }
 
-  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+  public void setCustomerJomPayRefNo( String customerJomPayRefNo ) {
     this.customerJomPayRefNo = customerJomPayRefNo;
   }
 
@@ -495,7 +505,7 @@ public String getSerialChk() {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void setImageUrl( String imageUrl ) {
     this.imageUrl = imageUrl;
   }
 
@@ -503,7 +513,7 @@ public String getSerialChk() {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName( String productName ) {
     this.productName = productName;
   }
 
@@ -511,7 +521,7 @@ public String getSerialChk() {
     return productCode;
   }
 
-  public void setProductCode(String productCode) {
+  public void setProductCode( String productCode ) {
     this.productCode = productCode;
   }
 
@@ -519,7 +529,7 @@ public String getSerialChk() {
     return appType;
   }
 
-  public void setAppType(String appType) {
+  public void setAppType( String appType ) {
     this.appType = appType;
   }
 
@@ -527,15 +537,15 @@ public String getSerialChk() {
     return instruction;
   }
 
-  public void setInstruction(String instruction) {
+  public void setInstruction( String instruction ) {
     this.instruction = instruction;
   }
 
-  public int getSalesPromotion() {
+  public String getSalesPromotion() {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(int salesPromotion) {
+  public void setSalesPromotion( String salesPromotion ) {
     this.salesPromotion = salesPromotion;
   }
 
@@ -543,17 +553,15 @@ public String getSerialChk() {
     return contractDuration;
   }
 
-  public void setContractDuration(int contractDuration) {
+  public void setContractDuration( int contractDuration ) {
     this.contractDuration = contractDuration;
   }
 
   public String getMonthlyRentalFees() {
-    /* KV - public int getMonthlyRentalFees() { */
     return monthlyRentalFees;
   }
 
-  public void setMonthlyRentalFees(String monthlyRentalFees) {
-    /* KV - public void setMonthlyRentalFees(int monthlyRentalFees) { */
+  public void setMonthlyRentalFees( String monthlyRentalFees ) {
     this.monthlyRentalFees = monthlyRentalFees;
   }
 
@@ -561,7 +569,7 @@ public String getSerialChk() {
     return registrationFees;
   }
 
-  public void setRegistrationFees(int registrationFees) {
+  public void setRegistrationFees( int registrationFees ) {
     this.registrationFees = registrationFees;
   }
 
@@ -569,7 +577,7 @@ public String getSerialChk() {
     return paymentMode;
   }
 
-  public void setPaymentMode(String paymentMode) {
+  public void setPaymentMode( String paymentMode ) {
     this.paymentMode = paymentMode;
   }
 
@@ -577,7 +585,7 @@ public String getSerialChk() {
     return bankCode;
   }
 
-  public void setBankCode(int bankCode) {
+  public void setBankCode( int bankCode ) {
     this.bankCode = bankCode;
   }
 
@@ -585,7 +593,7 @@ public String getSerialChk() {
     return bankName;
   }
 
-  public void setBankName(String bankName) {
+  public void setBankName( String bankName ) {
     this.bankName = bankName;
   }
 
@@ -593,7 +601,7 @@ public String getSerialChk() {
     return cardAccountNo;
   }
 
-  public void setCardAccountNo(String cardAccountNo) {
+  public void setCardAccountNo( String cardAccountNo ) {
     this.cardAccountNo = cardAccountNo;
   }
 
@@ -601,7 +609,7 @@ public String getSerialChk() {
     return outstanding;
   }
 
-  public void setOutstanding(String outstanding) {
+  public void setOutstanding( String outstanding ) {
     this.outstanding = outstanding;
   }
 
@@ -609,7 +617,7 @@ public String getSerialChk() {
     return expiryDate;
   }
 
-  public void setExpiryDate(String expiryDate) {
+  public void setExpiryDate( String expiryDate ) {
     this.expiryDate = expiryDate;
   }
 
@@ -617,7 +625,7 @@ public String getSerialChk() {
     return dscCode;
   }
 
-  public void setDscCode(String dscCode) {
+  public void setDscCode( String dscCode ) {
     this.dscCode = dscCode;
   }
 
@@ -625,7 +633,7 @@ public String getSerialChk() {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -633,7 +641,7 @@ public String getSerialChk() {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -641,7 +649,7 @@ public String getSerialChk() {
     return hpName;
   }
 
-  public void setHpName(String hpName) {
+  public void setHpName( String hpName ) {
     this.hpName = hpName;
   }
 
@@ -649,7 +657,7 @@ public String getSerialChk() {
     return hpTel;
   }
 
-  public void setHpTel(String hpTel) {
+  public void setHpTel( String hpTel ) {
     this.hpTel = hpTel;
   }
 
@@ -657,7 +665,7 @@ public String getSerialChk() {
     return smName;
   }
 
-  public void setSmName(String smName) {
+  public void setSmName( String smName ) {
     this.smName = smName;
   }
 
@@ -665,7 +673,7 @@ public String getSerialChk() {
     return smTel;
   }
 
-  public void setSmTel(String smTel) {
+  public void setSmTel( String smTel ) {
     this.smTel = smTel;
   }
 
@@ -673,7 +681,7 @@ public String getSerialChk() {
     return hmName;
   }
 
-  public void setHmName(String hmName) {
+  public void setHmName( String hmName ) {
     this.hmName = hmName;
   }
 
@@ -681,7 +689,7 @@ public String getSerialChk() {
     return hmTel;
   }
 
-  public void setHmTel(String hmTel) {
+  public void setHmTel( String hmTel ) {
     this.hmTel = hmTel;
   }
 
@@ -689,7 +697,7 @@ public String getSerialChk() {
     return billAmount;
   }
 
-  public void setBillAmount(String billAmount) {
+  public void setBillAmount( String billAmount ) {
     this.billAmount = billAmount;
   }
 
@@ -697,7 +705,7 @@ public String getSerialChk() {
     return paidAmount;
   }
 
-  public void setPaidAmount(String paidAmount) {
+  public void setPaidAmount( String paidAmount ) {
     this.paidAmount = paidAmount;
   }
 
@@ -705,7 +713,7 @@ public String getSerialChk() {
     return adjustmentAmount;
   }
 
-  public void setAdjustmentAmount(String adjustmentAmount) {
+  public void setAdjustmentAmount( String adjustmentAmount ) {
     this.adjustmentAmount = adjustmentAmount;
   }
 
@@ -713,7 +721,7 @@ public String getSerialChk() {
     return fileImg1Url;
   }
 
-  public void setFileImg1Url(String fileImg1Url) {
+  public void setFileImg1Url( String fileImg1Url ) {
     this.fileImg1Url = fileImg1Url;
   }
 
@@ -721,7 +729,7 @@ public String getSerialChk() {
     return fileImg2Url;
   }
 
-  public void setFileImg2Url(String fileImg2Url) {
+  public void setFileImg2Url( String fileImg2Url ) {
     this.fileImg2Url = fileImg2Url;
   }
 
@@ -729,7 +737,7 @@ public String getSerialChk() {
     return fileImg3Url;
   }
 
-  public void setFileImg3Url(String fileImg3Url) {
+  public void setFileImg3Url( String fileImg3Url ) {
     this.fileImg3Url = fileImg3Url;
   }
 
@@ -737,7 +745,7 @@ public String getSerialChk() {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -745,7 +753,7 @@ public String getSerialChk() {
     return ownerCode;
   }
 
-  public void setOwnerCode(String ownerCode) {
+  public void setOwnerCode( String ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -753,7 +761,7 @@ public String getSerialChk() {
     return ownerCodeNm;
   }
 
-  public void setOwnerCodeNm(String ownerCodeNm) {
+  public void setOwnerCodeNm( String ownerCodeNm ) {
     this.ownerCodeNm = ownerCodeNm;
   }
 
@@ -761,7 +769,7 @@ public String getSerialChk() {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -769,7 +777,7 @@ public String getSerialChk() {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -777,7 +785,7 @@ public String getSerialChk() {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -785,7 +793,7 @@ public String getSerialChk() {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -793,7 +801,7 @@ public String getSerialChk() {
     return rcCode;
   }
 
-  public void setRcCode(int rcCode) {
+  public void setRcCode( int rcCode ) {
     this.rcCode = rcCode;
   }
 
@@ -801,7 +809,7 @@ public String getSerialChk() {
     return failReasonCode;
   }
 
-  public void setFailReasonCode(int failReasonCode) {
+  public void setFailReasonCode( int failReasonCode ) {
     this.failReasonCode = failReasonCode;
   }
 
@@ -809,7 +817,7 @@ public String getSerialChk() {
     return failReasonName;
   }
 
-  public void setFailReasonName(String failReasonName) {
+  public void setFailReasonName( String failReasonName ) {
     this.failReasonName = failReasonName;
   }
 
@@ -817,7 +825,7 @@ public String getSerialChk() {
     return settledBy;
   }
 
-  public void setSettledBy(String settledBy) {
+  public void setSettledBy( String settledBy ) {
     this.settledBy = settledBy;
   }
 
@@ -825,7 +833,7 @@ public String getSerialChk() {
     return settledDate;
   }
 
-  public void setSettledDate(String settledDate) {
+  public void setSettledDate( String settledDate ) {
     this.settledDate = settledDate;
   }
 
@@ -833,7 +841,7 @@ public String getSerialChk() {
     return settledTime;
   }
 
-  public void setSettledTime(String settledTime) {
+  public void setSettledTime( String settledTime ) {
     this.settledTime = settledTime;
   }
 
@@ -841,7 +849,7 @@ public String getSerialChk() {
     return lastPaymentDate;
   }
 
-  public void setLastPaymentDate(String lastPaymentDate) {
+  public void setLastPaymentDate( String lastPaymentDate ) {
     this.lastPaymentDate = lastPaymentDate;
   }
 
@@ -849,7 +857,7 @@ public String getSerialChk() {
     return nextCallDate;
   }
 
-  public void setNextCallDate(String nextCallDate) {
+  public void setNextCallDate( String nextCallDate ) {
     this.nextCallDate = nextCallDate;
   }
 
@@ -857,7 +865,7 @@ public String getSerialChk() {
     return nextCallTime;
   }
 
-  public void setNextCallTime(String nextCallTime) {
+  public void setNextCallTime( String nextCallTime ) {
     this.nextCallTime = nextCallTime;
   }
 
@@ -865,7 +873,7 @@ public String getSerialChk() {
     return asExchangeYN;
   }
 
-  public void setAsExchangeYN(String asExchangeYN) {
+  public void setAsExchangeYN( String asExchangeYN ) {
     this.asExchangeYN = asExchangeYN;
   }
 
@@ -873,7 +881,7 @@ public String getSerialChk() {
     return beforeProductCode;
   }
 
-  public void setBeforeProductCode(String beforeProductCode) {
+  public void setBeforeProductCode( String beforeProductCode ) {
     this.beforeProductCode = beforeProductCode;
   }
 
@@ -881,7 +889,7 @@ public String getSerialChk() {
     return beforeProductSerialNo;
   }
 
-  public void setBeforeProductSerialNo(String beforeProductSerialNo) {
+  public void setBeforeProductSerialNo( String beforeProductSerialNo ) {
     this.beforeProductSerialNo = beforeProductSerialNo;
   }
 
@@ -889,7 +897,7 @@ public String getSerialChk() {
     return fraYn;
   }
 
-  public void setFraYn(String fraYn) {
+  public void setFraYn( String fraYn ) {
     this.fraYn = fraYn;
   }
 
@@ -897,7 +905,7 @@ public String getSerialChk() {
     return fraOrdNo;
   }
 
-  public void setFraOrdNo(String fraOrdNo) {
+  public void setFraOrdNo( String fraOrdNo ) {
     this.fraOrdNo = fraOrdNo;
   }
 
@@ -905,7 +913,7 @@ public String getSerialChk() {
     return fraProductCode;
   }
 
-  public void setFraProductCode(String fraProductCode) {
+  public void setFraProductCode( String fraProductCode ) {
     this.fraProductCode = fraProductCode;
   }
 
@@ -913,28 +921,43 @@ public String getSerialChk() {
     return fraProductName;
   }
 
-  public void setFraProductName(String fraProductName) {
+  public void setFraProductName( String fraProductName ) {
     this.fraProductName = fraProductName;
   }
 
-  public BigDecimal getLatitude(){
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude){
+  public void setLatitude( BigDecimal latitude ) {
     this.latitude = latitude;
   }
 
-  public BigDecimal getLongitude(){
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude){
-     this.longitude = longitude;
+  public void setLongitude( BigDecimal longitude ) {
+    this.longitude = longitude;
   }
 
-  public static DtInstallationJobDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, DtInstallationJobDto.class);
+  public String getSryType() {
+    return sryType;
   }
 
+  public void setSryType( String sryType ) {
+    this.sryType = sryType;
+  }
+
+  public String getDispComm() {
+    return dispComm;
+  }
+
+  public void setDispComm( String dispComm ) {
+    this.dispComm = dispComm;
+  }
+
+  public static DtInstallationJobDto create( EgovMap egvoMap ) {
+    return BeanConverter.toBean( egvoMap, DtInstallationJobDto.class );
+  }
 }
