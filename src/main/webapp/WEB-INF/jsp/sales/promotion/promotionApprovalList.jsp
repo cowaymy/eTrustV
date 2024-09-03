@@ -1226,6 +1226,7 @@
                   promoDiscOnBill : $('#promoSpecialDisId').val(),
                   extradeFr: $('#extradeMonthFrom').val(),
                   extradeTo: $('#extradeMonthTo').val(),
+                  woHs: $('input:radio[name="woHs"]:checked').val(),
                   extradeAppType: $('#extradeAppType').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
