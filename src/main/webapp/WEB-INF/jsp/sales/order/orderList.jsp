@@ -508,7 +508,7 @@
 
         var TODAY_DD = "${toDay}";
         var todayDD = Number(TODAY_DD.substr(0, 2));
-        if (  todayDD == 1 || todayDD == 2) {
+        if (  todayDD == 3 || todayDD == 4) {
             //                      var msg = "Rental convert Outright is not allowed on 1, 2 of every month";
             var msg = '<spring:message code="sal.msg.rentConvOutr" />';
 
