@@ -5713,10 +5713,10 @@ SELECT MST.*
                             CASE WHEN SAL0047D.DT_PAIR_ID IS NOT NULL
                                     THEN ( SELECT MEM_CODE
                                                FROM ORG0001D
-                                               WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID)
+                                               WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID )
                                     ELSE '' END AS MEM_CODE,
-                            SAL0045D.SRV_TYPE as SRV_TYP,
-                            SAL0047D.DISP_COMM as DISP_COMM
+                            TO_CHAR( SAL0045D.SRV_TYPE ) as SRV_TYP,
+                            TO_CHAR( SAL0047D.DISP_COMM ) as DISP_COMM
                  FROM SAL0046D,
                           ORG0001D,
                           ORG0005D,
