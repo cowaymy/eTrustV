@@ -424,20 +424,6 @@
     }
 
     function fn_orderSimulPop() {
-
-    	var TODAY_DD = "${toDay}";
-        var todayDD = Number(TODAY_DD.substr(0, 2));
-        if (  todayDD == 3 || todayDD == 4) {
-            //                      var msg = "Rental convert Outright is not allowed on 1, 2 of every month";
-            var msg = '<spring:message code="sal.msg.rentConvOutr" />';
-
-            Common.alert(
-                '<spring:message code="sal.alert.msg.actionRestriction" />'
-                    + DEFAULT_DELIMITER + "<b>" + msg
-                    + "</b>");
-            return false;
-          }
-
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
             Common.popupDiv("/homecare/sales/order/hcOrderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
