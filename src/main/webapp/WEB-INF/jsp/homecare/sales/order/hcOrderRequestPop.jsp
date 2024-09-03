@@ -1412,7 +1412,7 @@
                     return false;
                 }
                  if(todayYY >= 2018) {
-                    if(todayDD == 1 || todayDD == 2) {
+                    if(todayDD == 3 || todayDD == 4) {
                         msg = '<spring:message code="sal.msg.chkCancDate" />';
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                         return false;
@@ -1513,7 +1513,7 @@
                 }
 
                 if(todayYY >= 2018) {
-                    if(todayDD == 1 || todayDD == 2) {
+                    if(todayDD == 3 || todayDD == 4) {
                         msg = '<spring:message code="sal.msg.underOwnTrans2" />';
 
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
@@ -2191,7 +2191,7 @@
         var todayDD = Number(TODAY_DD.substr(0, 2));
         var todayYY = Number(TODAY_DD.substr(6, 4));
 
-        if(todayYY >= 2018 && (todayDD == 1 || todayDD == 2)) {
+        if(todayYY >= 2018 && (todayDD == 3 || todayDD == 4)) {
             msg = '<spring:message code="sal.msg.underOwnTrans2" />';
             Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
             return false;
