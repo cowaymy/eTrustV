@@ -668,7 +668,7 @@ public class EpapanApiController {
 
 	  @ApiOperation(value = "selectCustomerContactJsonList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	  @RequestMapping(value = "/selectCustomerContactJsonList", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectCustomerContactJsonList(@RequestBody EpapanApiMagicAddressForm param) throws Exception {
+	  public ResponseEntity<List<EgovMap>> selectCustomerContactJsonList(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
 
 	    List<EgovMap> contactlist = null;
 	    LOGGER.info("##### customer Contact Parsing START #####");
