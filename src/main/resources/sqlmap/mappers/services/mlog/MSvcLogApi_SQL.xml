@@ -5614,157 +5614,165 @@ SELECT MST.*
   <select id="getDtInstallationJobList" parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT A.*
-              , CASE WHEN FRA_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS FRA_YN
-         , (SELECT MAX(T3.STK_CODE)
-                       FROM SAL0001D T1
-                          , SAL0002D T2
-                          , SYS0026M T3
-                      WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
-                        AND T2.ITM_STK_ID = T3.STK_ID(+)
-                        AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_CODE
-                  , (SELECT MAX(T3.STK_DESC)
-                       FROM SAL0001D T1
-                          , SAL0002D T2
-                          , SYS0026M T3
-                      WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
-                        AND T2.ITM_STK_ID = T3.STK_ID(+)
-                        AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_NAME
-                  , (SELECT MAX(T3.SERIAL_CHK)
-                       FROM SAL0001D T1
-                          , SAL0002D T2
-                          , SYS0026M T3
-                      WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
-                        AND T2.ITM_STK_ID = T3.STK_ID(+)
-                        AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
-                  , (SELECT MAX(T3.SERIAL_NO) AS SERIAL_NO
-                         FROM SAL0001D T1
-                            , SAL0046D T2
-                            , SAL0047D T3
-                        WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID
-                          AND T2.INSTALL_ENTRY_ID = T3.ENTRY_ID(+)
-                          AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS SEL_FRA_SERIAL_NO
-      FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
-                   SAL0046D.INSTALL_ENTRY_NO AS service_No,
-                   SAL0046D.STUS_CODE_ID AS job_Status,
-                   NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS appointment_Date,
-                   CASE WHEN SAL0046D.APPNT_TM IS NULL
-                      THEN DECODE (SAL0046D.SESION_CODE,
-                                   'M', '1000',
-                                   'A', '1400',
-                                   'E', '1900',
-                                   'O', '2000',
-                                   '2000')
-                      ELSE TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':')) END appointment_Time,
-                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY'), '') AS plan_Year,
-                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'MM'), '') AS plan_Month,
-                   CASE WHEN SAL0046D.SESION_CODE IS NULL
-                     THEN 'O'
-                     ELSE SAL0046D.SESION_CODE END AS job_Session,
-                   (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
-                   (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Name,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Tel,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Name,
-                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Tel,
-                   NVL (ORG0001D.MEM_CODE, '') AS settled_By,
-                   NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
-                   NVL (SAL0001D.CUST_ID, '') AS customer_Id,
-                   FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
-                   NVL (TO_CHAR (SAL0001D.PROMO_ID), '') AS sales_Promotion,
-                   NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
-                   NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
-                   NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
-                   NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
-                   NVL (SAL0024D.CUST_BILL_PAY_REF_NO1, '') AS customer_Jom_Pay_Ref_No,
-                   NVL (SAL0027D.TEL_M1, '') AS handphone_Tel,
-                   NVL (SAL0027D.TEL_R, '') AS home_Tel,
-                   NVL (SAL0027D.TEL_O, '') AS office_Tel,
-                   NVL (SAL0029D.NAME, '') AS cust_Name,
-                   NVL (TO_CHAR (SAL0029D.TYPE_ID), '') AS customer_Type,
-                   NVL (SAL0027D.EMAIL, '') AS mail_Address,
-                   NVL (SAL0029D.CUST_VA_NO, '') AS customer_Va_No,
-                   NVL (SAL0047D.SIRIM_NO, '') AS sirim_No,
-                   NVL (SAL0047D.SERIAL_NO, '') AS serial_No,
-                   NVL (TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '') AS settled_Date,
-                   NVL (TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '') AS expiry_Date,
-                   NVL (SAL0095D.SRV_DUR, '') AS contract_Duration,
-                   NVL(SYS0064M.POSTCODE, '') postcode,
-                   NVL(SYS0064M.STATE, '') service_State,
-                   (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
-                   NVL (SYS0026M.STK_DESC, '') AS product_Name,
-                   NVL (SYS0026M.STK_CODE, '') AS product_Code,
-                   NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
-                   NVL (SYS0005M.CODE, '') AS dsc_Code,
-                   NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
-                   (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
-                   SAL0047D.REM AS RESULT_REMARK,
-                   NVL (SAL0047D.DT_PAIR_ID, '') AS PARTNER_CODE,
-
-                   CASE WHEN SAL0047D.DT_PAIR_ID IS NOT NULL
-                    THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID)
-                    ELSE '' END AS MEM_CODE
-
-            FROM SAL0046D,
-                 ORG0001D,
-                 ORG0005D,
-                 ORG1001V,
-                 SAL0001D,
-                 SAL0002D,
-                 (SELECT CUST_ID AS CUST_ID, MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID, MAX(CUST_ACC_NO) AS CUST_ACC_NO FROM SAL0022D GROUP BY CUST_ID) SAL0022D,
-                 SAL0023D,
-                 SAL0024D,
-                 SAL0027D,
-                 SAL0029D,
-                 SAL0045D,
-                 SAL0047D,
-                 SAL0095D,
-                 SYS0005M,
-                 SYS0026M,
-                 CCR0006D,
-                 CCR0007D,
-                 (SELECT *
-                  FROM SYS0064M
-                  WHERE STATUS_ID = 1) SYS0064M
-            WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
-              AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
-              AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
-              AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
-              AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
-              AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
-              AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
-              AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
-              AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
-              AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
-              AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
-              AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
-              AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
-              AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
-              AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID(+)
-              AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
-              AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-              AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-              AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-              AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
-              AND ORG0001D.mem_code = #{userId}
-              AND SYS0026M.STK_CTGRY_ID NOT IN (SELECT A.CODE_ID
-                                                            FROM SYS0013M A, SYS0094M B
-                                                            WHERE A.CODE = B.CODE
-                                                            AND A.CODE_MASTER_ID = 11
-                                                            AND B.IND = 'HOMECARE'
-                                                            AND A.CODE IN ('FRM','ACO'))
-              AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
-              AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-              ) A WHERE rnum = 1
+              , CASE WHEN FRA_ORD_NO IS NULL
+                        THEN 'N' ELSE 'Y' END AS FRA_YN
+              , ( SELECT MAX(T3.STK_CODE)
+                  FROM SAL0001D T1
+                         , SAL0002D T2
+                         , SYS0026M T3
+                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
+                      AND T2.ITM_STK_ID = T3.STK_ID(+)
+                      AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_CODE
+              , ( SELECT MAX(T3.STK_DESC)
+                  FROM SAL0001D T1
+                         , SAL0002D T2
+                         , SYS0026M T3
+                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
+                      AND T2.ITM_STK_ID = T3.STK_ID(+)
+                      AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_NAME
+              , ( SELECT MAX(T3.SERIAL_CHK)
+                  FROM SAL0001D T1
+                        , SAL0002D T2
+                        , SYS0026M T3
+                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
+                      AND T2.ITM_STK_ID = T3.STK_ID(+)
+                      AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
+              , ( SELECT MAX(T3.SERIAL_NO) AS SERIAL_NO
+                  FROM SAL0001D T1
+                        , SAL0046D T2
+                        , SAL0047D T3
+                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID
+                      AND T2.INSTALL_ENTRY_ID = T3.ENTRY_ID(+)
+                      AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS SEL_FRA_SERIAL_NO
+      FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
+                            SAL0046D.INSTALL_ENTRY_NO AS SERVICE_NO,
+                            SAL0046D.STUS_CODE_ID AS JOB_STATUS,
+                            NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS APPOINTMENT_DATE,
+                            CASE WHEN SAL0046D.APPNT_TM IS NULL
+                                    THEN DECODE (SAL0046D.SESION_CODE, 'M', '1000',
+                                                                                              'A', '1400',
+                                                                                              'E', '1900',
+                                                                                              'O', '2000',
+                                                                                              '2000')
+                                    ELSE TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':')) END APPOINTMENT_TIME,
+                            NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY'), '') AS PLAN_YEAR,
+                            NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'MM'), '') AS PLAN_MONTH,
+                            CASE WHEN SAL0046D.SESION_CODE IS NULL
+                                    THEN 'O'
+                                    ELSE SAL0046D.SESION_CODE END AS JOB_SESSION,
+                            ( SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID ) AS HP_NAME,
+                            ( SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID ) AS HP_TEL,
+                            CASE WHEN TO_CHAR( ORG1001V.LVL3_UP_ID ) = '0'
+                                    THEN ( SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID )
+                                    ELSE ( SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID ) END AS HM_NAME,
+                            CASE WHEN TO_CHAR( ORG1001V.LVL3_UP_ID ) = '0'
+                                    THEN ( SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID )
+                                    ELSE ( SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID ) END AS HM_TEL,
+                            CASE WHEN TO_CHAR( ORG1001V.LVL2_UP_ID ) = '0'
+                                    THEN ( SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID )
+                                    ELSE ( SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID ) END AS SM_NAME,
+                            CASE WHEN TO_CHAR( ORG1001V.LVL2_UP_ID ) = '0'
+                                    THEN ( SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID )
+                                    ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID ) END AS SM_TEL,
+                            NVL ( ORG0001D.MEM_CODE, '' ) AS SETTLED_BY,
+                            NVL ( SAL0001D.SALES_ORD_NO, '' ) AS SALES_ORDER_NO,
+                            NVL ( SAL0001D.CUST_ID, '' ) AS CUSTOMER_ID,
+                            FN_GET_COMMCD ( 10, SAL0001D.APP_TYPE_ID ) AS APP_TYPE,
+                            NVL ( TO_CHAR (SAL0017D.PROMO_DESC), '' ) AS SALES_PROMOTION,
+                            NVL ( TO_CHAR (SAL0001D.MTH_RENT_AMT), '0' ) AS MONTHLY_RENTAL_FEES,
+                            NVL ( SAL0001D.TOT_AMT, '' ) AS REGISTRATION_FEES,
+                            NVL ( SAL0022D.CUST_ACC_BANK_ID, '' ) AS BANK_CODE,
+                            NVL ( SAL0022D.CUST_ACC_NO, '' ) AS CARD_ACCOUNT_NO,
+                            NVL ( SAL0024D.CUST_BILL_PAY_REF_NO1, '' ) AS CUSTOMER_JOM_PAY_REF_NO,
+                            NVL ( SAL0027D.TEL_M1, '' ) AS HANDPHONE_TEL,
+                            NVL ( SAL0027D.TEL_R, '' ) AS HOME_TEL,
+                            NVL ( SAL0027D.TEL_O, '' ) AS OFFICE_TEL,
+                            NVL ( SAL0029D.NAME, '' ) AS CUST_NAME,
+                            NVL ( TO_CHAR (SAL0029D.TYPE_ID), '' ) AS CUSTOMER_TYPE,
+                            NVL ( SAL0027D.EMAIL, '' ) AS MAIL_ADDRESS,
+                            NVL ( SAL0029D.CUST_VA_NO, '' ) AS CUSTOMER_VA_NO,
+                            NVL ( SAL0047D.SIRIM_NO, '' ) AS SIRIM_NO,
+                            NVL ( SAL0047D.SERIAL_NO, '' ) AS SERAIL_NO,
+                            NVL ( TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '' ) AS SETTLED_DATE,
+                            NVL ( TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '' ) AS EXPIRY_DATE,
+                            NVL ( SAL0095D.SRV_DUR, '') AS CONTRACT_DURATION,
+                            NVL ( SYS0064M.POSTCODE, '' ) POSTCODE,
+                            NVL( SYS0064M.STATE, '' ) SERVICE_STATE,
+                            ( SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY ) INSTALL_ADDRESS,
+                            NVL ( SYS0026M.STK_DESC, '' ) AS PRODUCT_NAME,
+                            NVL ( SYS0026M.STK_CODE, '' ) AS PRODUCT_CODE,
+                            NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
+                            NVL (SYS0005M.CODE, '') AS DSC_CODE,
+                            NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS INSTRUCTION,
+                            ( SELECT FRA_ORD_NO
+                              FROM HMC0011D
+                              WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO
+                                  AND ROWNUM = 1) AS FRA_ORD_NO,
+                            SAL0047D.REM AS RESULT_REMARK,
+                            NVL (SAL0047D.DT_PAIR_ID, '') AS PARTNER_CODE,
+                            CASE WHEN SAL0047D.DT_PAIR_ID IS NOT NULL
+                                    THEN ( SELECT MEM_CODE
+                                               FROM ORG0001D
+                                               WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID)
+                                    ELSE '' END AS MEM_CODE,
+                            SAL0045D.SRV_TYPE as SRV_TYP,
+                            SAL0047D.DISP_COMM as DISP_COMM
+                 FROM SAL0046D,
+                          ORG0001D,
+                          ORG0005D,
+                          ORG1001V,
+                          SAL0001D,
+                          SAL0002D,
+                          ( SELECT CUST_ID AS CUST_ID, MAX (CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID, MAX(CUST_ACC_NO) AS CUST_ACC_NO
+                            FROM SAL0022D GROUP BY CUST_ID ) SAL0022D,
+                          SAL0023D,
+                          SAL0024D,
+                          SAL0027D,
+                          SAL0029D,
+                          SAL0045D,
+                          SAL0047D,
+                          SAL0095D,
+                          SYS0005M,
+                          SYS0026M,
+                          CCR0006D,
+                          CCR0007D,
+                          ( SELECT *
+                            FROM SYS0064M
+                            WHERE STATUS_ID = 1 ) SYS0064M,
+                          SAL0017D
+                 WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
+                     AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
+                     AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
+                     AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
+                     AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID (+)
+                     AND SAL0001D.CUST_ID = SAL0022D.CUST_ID (+)
+                     AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID (+)
+                     AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID (+)
+                     AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID (+)
+                     AND SAL0001D.CUST_ID = SAL0029D.CUST_ID (+)
+                     AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID (+)
+                     AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID (+)
+                     AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID (+)
+                     AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
+                     AND SAL0002D.ITM_STK_ID = SYS0026M.STK_ID (+)
+                     AND SAL0023D.AREA_ID = SYS0064M.AREA_ID (+)
+                     AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+                     AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+                     AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+                     AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
+                     AND ORG0001D.mem_code = #{userId}
+                     AND SYS0026M.STK_CTGRY_ID NOT IN ( SELECT A.CODE_ID
+                                                                              FROM SYS0013M A,
+                                                                                       SYS0094M B
+                                                                              WHERE A.CODE = B.CODE
+                                                                                  AND A.CODE_MASTER_ID = 11
+                                                                                  AND B.IND = 'HOMECARE'
+                                                                                  AND A.CODE IN ('FRM','ACO'))
+                     AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
+                     AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+                     AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID
+      ) A WHERE rnum = 1
     ]]>
-    <!-- WHERE rnum = 1 -->
   </select>
 
   <select id="getFraOrdInfo" parameterType="Map" resultType="egovMap">
