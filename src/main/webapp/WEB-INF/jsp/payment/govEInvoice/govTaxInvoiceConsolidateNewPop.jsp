@@ -150,9 +150,6 @@ function btnGenerate_Click(){
 </colgroup>
 <tbody>
 <tr>
-	<p style="color:red">Currently connected to STAGING url</p>
-</tr>
-<tr>
     <th scope="row">Invoice Type</th>
     <td>
     <select class=" w100p" id="sInvType" name="sInvType">

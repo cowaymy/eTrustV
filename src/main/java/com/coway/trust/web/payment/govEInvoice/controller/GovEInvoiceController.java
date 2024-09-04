@@ -401,7 +401,7 @@ public class GovEInvoiceController {
 	public void checkStatusEInvClaim(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
-    	params.put("invType", "01"); //For Consolidated Tax Invoice
+    	params.put("invType", "01"); //For E-Invoice Only
 		resultValue = govEInvoiceService.checkStatusEInvClaim(params);
 
 	}

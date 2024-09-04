@@ -107,12 +107,6 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
     @Value("${cleartax.api.url.upload}")
     private String ClearTaxApiUpload;
 
-    @Value("${cleartax.api.url.domains.staging}")
-    private String ClearTaxApiDomainStaging;
-
-    @Value("${cleartax.api.value.staging}")
-    private String ClearTaxApiValueStaging;
-
 
     @Override
     public List<EgovMap> selectGovEInvoiceList(Map<String, Object> params) {
@@ -351,7 +345,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                             einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiGenerate+"?einvoice-type=SALES");
                         }
                         else if(params.get("invType").equals("02")){ //Consolidate
-                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomainStaging + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
+                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
                         }
                         einvApiParams.put("json", json);
                         einvApiParams.put("groupId", groupId);
@@ -454,12 +448,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
-            if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
-                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValueStaging);
-            }
-            else{
-                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
-            }
+            conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
             OutputStream os = conn.getOutputStream();
             os.write(jsonString.getBytes());
             os.flush();
@@ -638,7 +627,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                     einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES");
                 }
                 else if(params.get("invType").equals("02")){ //Consolidate
-                    einvApiParams.put("cleartaxUrl", ClearTaxApiDomainStaging + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES_B2C");
+                    einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + documentParams.get("documentId").toString() +  ClearTaxApiChkSts+"?einvoice-type=SALES_B2C");
                 }
                 einvApiParams.put("documentId", documentParams.get("documentId").toString());
                 einvApiParams.put("invRefNo", documentParams.get("invRefNo").toString());
@@ -684,12 +673,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             conn.setRequestMethod("GET");
 //            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
-            if(CommonUtils.nvl(params.get("invType")).equals("02")){ //for consolidate test
-                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValueStaging);
-            }
-            else{
-                conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
-            }
+            conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
 //            OutputStream os = conn.getOutputStream();
 //            os.flush();
 
