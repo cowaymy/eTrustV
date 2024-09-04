@@ -5716,7 +5716,8 @@ SELECT MST.*
                                                WHERE ORG0001D.MEM_ID = SAL0047D.DT_PAIR_ID )
                                     ELSE '' END AS MEM_CODE,
                             TO_CHAR( SAL0045D.SRV_TYPE ) as SRV_TYP,
-                            TO_CHAR( SAL0047D.DISP_COMM ) as DISP_COMM
+                            TO_CHAR( SAL0047D.DISP_COMM ) as DISP_COMM,
+                            TO_CHAR( SYS0013M.CODE ) AS PROD_CAT
                  FROM SAL0046D,
                           ORG0001D,
                           ORG0005D,
@@ -5739,7 +5740,8 @@ SELECT MST.*
                           ( SELECT *
                             FROM SYS0064M
                             WHERE STATUS_ID = 1 ) SYS0064M,
-                          SAL0017D
+                          SAL0017D,
+                          SYS0013M
                  WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
                      AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
                      AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -5770,7 +5772,8 @@ SELECT MST.*
                                                                                   AND A.CODE IN ('FRM','ACO'))
                      AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                      AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-                     AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID
+                     AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID (+)
+                     AND SYS0026M.STK_CTGRY_ID = SYS0013M.CODE_ID (+)
       ) A WHERE rnum = 1
     ]]>
   </select>
