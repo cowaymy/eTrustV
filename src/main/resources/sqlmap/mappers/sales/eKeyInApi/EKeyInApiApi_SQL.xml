@@ -1509,6 +1509,7 @@ UNION ALL
                                       , BNDL_ID
                                       , VOUCHER_CODE
                                       , SRV_TYPE
+                                      , TOT_PV_SS
     ) VALUES ( #{preOrdId}
                   , SYSDATE
                   , #{chnnl}
@@ -1578,6 +1579,7 @@ UNION ALL
                   , #{bndlId}
                   , #{voucherCode}
                   , #{srvType}
+                  , #{totPvSs}
     )
   </insert>
 
@@ -1659,7 +1661,7 @@ UNION ALL
         , A.CPNT_ID = #{cpntId}
         , A.VOUCHER_CODE = #{voucherCode}
         , A.SRV_TYPE = #{srvType}
-      <!--   , A.TOT_PV_SS = #{totPvSs} -->
+        , A.TOT_PV_SS = #{totPvSs}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
