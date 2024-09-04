@@ -101,6 +101,7 @@
                       , CASE WHEN IR.ALLOW_COMM IS NOT NULL
                            THEN IR.ALLOW_COMM
                            ELSE 0 END AS ALLOW_COMMISION,
+                      IR.DISP_COMM AS DISPOSAL_COMMISSION,
 	                  IR.ATCH_FILE_GRP_ID ,
 	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN 'DOWN' ELSE NULL END AS ATTCHMENT_DOWNLOAD,
 	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN AT2.FILE_SUB_PATH ELSE NULL END AS FILE_SUB_PATH,
@@ -496,6 +497,7 @@
                       , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
                       ,FAIL_LOC = #{failLoc}
                       ,FAIL_ID = #{failReason}
+                      , DISP_COMM = NVL(#{dispComm},0)
     WHERE ( RESULT_ID = #{resultId} )
   </update>
 

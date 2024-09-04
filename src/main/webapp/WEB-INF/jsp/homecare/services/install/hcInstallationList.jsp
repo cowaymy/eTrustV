@@ -203,7 +203,8 @@
                              }
                 }
             },
-	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150}, //Added by Keyi
+	        {dataField : "allowCommision",     headerText:'Allow Commission',width: 150}, //Added by Keyi
+	        {dataField : "disposalCommission",     headerText:'Disposal Commission',width: 150},
 	        {dataField : "serialRequireChkYn",headerText : 'Serial Require Check Y/N',width : 180}, //Added by Keyi
 	        {dataField : "lstUpd",           headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
 	        {dataField : "brnchId",          width : 0},

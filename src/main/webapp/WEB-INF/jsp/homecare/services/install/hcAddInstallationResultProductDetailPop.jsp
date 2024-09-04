@@ -107,6 +107,18 @@ var installAccTypeId = 583;
         $("#addInstallForm #m7").hide();
       }
 
+   	  // Old Mattress Disposal - only for Mattress , disabled for other category
+      if($("#ordCtgryCd").val() == "MAT"){
+      	$('[name="dispComm"]').prop("disabled", false);
+      	$('#dispCommYes').prop("checked", true);
+      	$("#oldMatDispLbl").append('<span class="must">*</span>');
+
+      }else{
+        $('[name="dispComm"]').prop("disabled", true);
+		  $('#dispCommYes').prop("checked", true);
+		  $("#oldMatDispLbl").find("span").remove();
+      }
+
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
       /*
         ("#hiddenPostCode").val("${customerAddress.typeId}");
@@ -930,9 +942,13 @@ var installAccTypeId = 583;
      <tr>
           <th scope="row"><spring:message code="service.title.installation.accessories" />
           <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
-    		<td colspan="3">
+    		<td>
     		<select class="w100p" id="installAcc" name="installAcc">
     		</select>
+    		</td>
+    	   <th id="oldMatDispLbl" scope="row"><spring:message code='service.title.oldMattressDisposal'/></th>
+    		<td><input id="dispCommYes" name="dispComm" type="radio" value="1" /><span><spring:message code='sal.title.text.yes'/></span>
+        	<input id="dispCommNo" name="dispComm" type="radio" value="0" /><span><spring:message code='sal.title.text.no'/></span>
     		</td>
           </tr>
      <tr>

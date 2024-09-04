@@ -7,6 +7,7 @@
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
+    var dispComm = ${installInfo.dispComm};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -18,6 +19,23 @@
 
     if (reqsms == 1) {
       $("#reqsms").prop("checked", true);
+    }
+
+    if(dispComm == 1){
+		$('#dispCommYes').prop("checked", true);
+    }else{
+    	$('#dispCommNo').prop("checked", true);
+    }
+
+ 	// Old Mattress Disposal - only for Mattress , disabled for other category
+ 	console.log('ordCtgryCd ' + $("#ordCtgryCd").val() );
+    if($("#ordCtgryCd").val() == "MAT"){
+    	$('[name="dispComm"]').prop("disabled", false);
+    	$("#oldMatDispLbl").append('<span class="must">*</span>');
+
+    }else{
+        $('[name="dispComm"]').prop("disabled", true);
+		$("#oldMatDispLbl").find("span").remove();
     }
 
     $("#installdt").change( function() {
@@ -229,7 +247,7 @@
 	    <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" />
 	    <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordNo}"/>" id="hidSalesOrderNo" name="hidSalesOrderNo" />
 	    <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
-
+		<input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordCtgryCd}"/>" id="ordCtgryCd" name="ordCtgryCd" />
 	    <input type="hidden" value="<c:out value="${frameInfo.serialChk}"/>" id="hidFrmSerialChkYn" name="hidFrmSerialChkYn" />
 	    <input type="hidden" value="<c:out value="${frameInfo.salesOrdId}"/>" id="hidFrmOrdId" name="hidFrmOrdId" />
 	    <input type="hidden" value="<c:out value="${frameInfo.salesOrdNo}"/>" id="hidFrmOrdNo" name="hidFrmOrdNo" />
@@ -297,8 +315,10 @@
           id="installdt" name="installdt"
           value="<c:out value="${installInfo.installDt}" />" />
        </td>
-       <th scope="row"></th>
-       <td></td>
+       <th id="oldMatDispLbl" scope="row"><spring:message code='service.title.oldMattressDisposal'/></th>
+    		<td><input id="dispCommYes" name="dispComm" type="radio" value="1" /><span><spring:message code='sal.title.text.yes'/></span>
+        	<input id="dispCommNo" name="dispComm" type="radio" value="0" /><span><spring:message code='sal.title.text.no'/></span>
+    		</td>
       </tr>
             <tr>
             <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>

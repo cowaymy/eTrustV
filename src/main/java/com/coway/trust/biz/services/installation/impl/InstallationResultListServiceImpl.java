@@ -1913,6 +1913,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("gasPreAIns", params.get("gaspreAftIns"));//After Installation
 
     installResult.put("signData", params.get("signData"));
+    installResult.put("dispComm", params.get("dispComm"));
+
 //    if(!CommonUtils.nvl(params.get("checkSend")).toString().equals(null)){
 //		installResult.put("checkSend", CommonUtils.nvl(params.get("checkSend")).toString());
 //	}else{

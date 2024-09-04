@@ -228,6 +228,19 @@
             $(".dtPair4").hide();
         }
 
+        // Old Mattress Disposal - only for Mattress , disabled for other category
+        if($("#ordCtgryCd").val() == "MAT"){
+        	$('[name="dispComm"]').prop("disabled", false);
+        	$('#dispCommYes').prop("checked", true);
+        	$("#oldMatDispLbl").append('<span class="must">*</span>');
+
+        }else{
+          $('[name="dispComm"]').prop("disabled", true);
+  		  $('#dispCommNo').prop("checked", true);
+  		  $("#oldMatDispLbl").find("span").remove();
+        }
+
+
         // Attachment picture
         $('#attch1').change(function(evt) {
             var file = evt.target.files[0];
@@ -404,11 +417,13 @@
 	           }
 
 	           console.log("stockCode " + stockCode);
+	           console.log("hidStockCode " + $("#hidStockCode").val());
 
 	          var frmStockCode = "";
 	          frmStockCode = (js.String.roughScale($("#addInstallForm #frmSerialNo").val().trim().substr(3,5), 36)).toString();
 
 	          console.log("frmStockCode " + frmStockCode);
+	          console.log("hidFrmStockCode " + $("#hidFrmStockCode").val());
 
 	          if(frmStockCode != "0" && $("#hidFrmStockCode").val() != frmStockCode){
 	              msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
@@ -1408,9 +1423,13 @@
      <tr>
           <th scope="row"><spring:message code="service.title.installation.accessories" />
           <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
-    		<td colspan="3">
+    		<td>
     		<select class="w100p" id="installAcc" name="installAcc">
     		</select>
+    		</td>
+    		<th id="oldMatDispLbl" scope="row"><spring:message code='service.title.oldMattressDisposal'/></th>
+    		<td><input id="dispCommYes" name="dispComm" type="radio" value="1" /><span><spring:message code='sal.title.text.yes'/></span>
+        	<input id="dispCommNo" name="dispComm" type="radio" value="0" /><span><spring:message code='sal.title.text.no'/></span>
     		</td>
           </tr>
      <tr>

@@ -35,6 +35,7 @@ var installAccValues = JSON.parse("${installAccValues}");
     var reqsms = ${installInfo.c9};
     var dismantle = ${installInfo.dismantle};
     var stusId = ${installInfo.stusCodeId};
+    var dispComm = ${installInfo.dispComm};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -53,6 +54,22 @@ var installAccValues = JSON.parse("${installAccValues}");
       }else{
     	  $('input:radio[name=dismantle][value="0"]').attr('checked', true);
       }
+
+    if(dispComm == 1){
+		$('#dispCommYes').prop("checked", true);
+    }else{
+    	$('#dispCommNo').prop("checked", true);
+    }
+
+ 	// Old Mattress Disposal - only for Mattress , disabled for other category
+    if($("#ordCtgryCd").val() == "MAT"){
+    	$('[name="dispComm"]').prop("disabled", false);
+    	$("#oldMatDispLbl").append('<span class="must">*</span>');
+
+    }else{
+        $('[name="dispComm"]').prop("disabled", true);
+		$("#oldMatDispLbl").find("span").remove();
+    }
 
     if (stusId == 4){
       	$("#chkInstallAcc").prop("checked", true);
@@ -736,9 +753,13 @@ function fn_AlphanumericRegexCheck(value){
      <tr>
            <th scope="row"><spring:message code="service.title.installation.accessories" />
           <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
-    		<td colspan="3">
+    		<td>
     		<select class="w100p" id="installAcc" name="installAcc">
     		</select>
+    		</td>
+    		<th id="oldMatDispLbl" scope="row"><spring:message code='service.title.oldMattressDisposal'/></th>
+    		<td><input id="dispCommYes" name="dispComm" type="radio" value="1" /><span><spring:message code='sal.title.text.yes'/></span>
+        	<input id="dispCommNo" name="dispComm" type="radio" value="0" /><span><spring:message code='sal.title.text.no'/></span>
     		</td>
           </tr>
       <tr>

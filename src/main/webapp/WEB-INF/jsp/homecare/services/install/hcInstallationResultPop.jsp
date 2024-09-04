@@ -39,6 +39,11 @@ $(document).ready(function() {
     		$("#chkInstallAcc").attr("checked",true);
     		doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
     	}
+	    if("${resultInfo.dispComm}" == "1"){
+            $('#dispCommYes').prop("checked", true);
+    	}else{
+    		$('#dispCommNo').prop("checked", true);
+    	}
     }
 
 
@@ -235,7 +240,10 @@ function fn_winClose(){
         <label><input type="radio" name="dismantle" disabled="disabled" value="1"/><span>Yes</span></label>
         <label><input type="radio" name="dismantle" disabled="disabled" value="0"/><span>No</span></label>
 </td>
-   <th scope="row"></th><td></td>
+   <th id="oldMatDispLbl" scope="row"><spring:message code='service.title.oldMattressDisposal'/></th>
+    <td><input id="dispCommYes" name="dispComm" type="radio" disabled="disabled"  value="1" /><span><spring:message code='sal.title.text.yes'/></span>
+    <input id="dispCommNo" name="dispComm" type="radio" disabled="disabled"  value="0" /><span><spring:message code='sal.title.text.no'/></span>
+    </td>
  </tr>
  <tr>
    <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
@@ -275,13 +283,13 @@ function fn_winClose(){
     </td>
 </tr>
 <tr>
-           <th scope="row"><spring:message code="service.title.installation.accessories" />
-          <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
-    		<td colspan="3">
-    		<select class="w100p" id="installAcc" name="installAcc">
-    		</select>
-    		</td>
-          </tr>
+    <th scope="row"><spring:message code="service.title.installation.accessories" />
+    <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)"/></th>
+    <td colspan="3">
+    <select class="w100p" id="installAcc" name="installAcc">
+    </select>
+    </td>
+</tr>
 <tr>
 <tr>
     <th scope="row">Result Key By</th>
