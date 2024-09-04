@@ -28,8 +28,7 @@
     var voucherPromotionId = [];
 
     var preSrvType = "${preOrderInfo.srvType}";
-    var totPv = "";
-    var totPvSs = "";
+    var totPvSs = "${preOrderInfo.totPvSs}";
 
 	//Voucher Management
     var codeList_562 = [];
@@ -53,9 +52,9 @@
 
         fn_selectDocSubmissionList();
 
-/*         if(totPvSs != null || totPvSs != ""){
-        	$('#ordPvSs').val(parseFloat(totPvSs).toFixed(2));
-        } */
+        if(totPvSs != null || totPvSs != ""){
+        	$('#ordPvSs').val(totPvSs);
+        }
 
         fn_checkPreSrvType(preSrvType);
 
@@ -860,9 +859,11 @@
         	$("#srvTypeLbl").find("span").remove();
         	if($('input:radio[name="srvType"]:checked').val() == 'SS'){
         		$("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-        		$('#ordPv').val(totPvSs);
+        		$('#ordPvSs').val(totPvSs);
+        		$("#selfSrvPvLbl").show();
         	}else{
-        		$('#ordPv').val(totPv);
+        		$('#ordPvSs').val('');
+        		$("#selfSrvPvLbl").hide();
         	}
         });
         $('#appType').change(function() {
@@ -2559,8 +2560,8 @@
                 $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#orgOrdPriceId").val(stkPriceInfo.priceId);
  */
- 				totPv = promoPriceInfo.orderPVPromo;
  				totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
+ 				console.log('totPvSs : ' + totPvSs);
  				fn_checkPreSrvType(promoPriceInfo.srvType);
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
@@ -3075,17 +3076,22 @@
 	  if(preSrvType == "HS"){
 		  $('[name="srvType"]').prop("disabled", true);
 		  $('#srvTypeHS').prop("checked", true);
+		  $("#selfSrvPvLbl").hide();
 	  }else if(preSrvType == "SS"){
 		  $('[name="srvType"]').prop("disabled", true);
 		  $('#srvTypeSS').prop("checked", true);
 		  $("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-		  $('#ordPv').val(totPvSs);
+		  $('#ordPvSs').val(totPvSs);
+		  $("#selfSrvPvLbl").show();
+
 	  }else if(preSrvType == "BOTH"){
 		  $('[name="srvType"]').prop("disabled", false);
 		  $('#srvTypeHS').prop("checked", true);
+		  $("#selfSrvPvLbl").hide();
 	  }else{
 		  $('[name="srvType"]').prop("disabled", true);
 		  $('#srvTypeHS').prop("checked", true);
+		  $("#selfSrvPvLbl").hide();
 	  }
   }
 
@@ -3093,6 +3099,7 @@
 	  $('[name="srvType"]').prop("disabled", true);
       $("#srvTypeLbl").find("span").remove();
       $('[name="srvType"]').prop("checked", false);
+      $("#selfSrvPvLbl").hide();
   }
 </script>
 
@@ -3513,6 +3520,11 @@
     <td colspan="3"><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
    </tr>
+<tr id = "selfSrvPvLbl">
+    <th scope="row">SS <spring:message code="sal.title.text.pv" /><span class="must">*</span></th>
+    <td colspan="3"><input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
+    </td>
+</tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark"></textarea></td>

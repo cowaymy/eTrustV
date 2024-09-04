@@ -192,6 +192,7 @@
 		     , T1.NOR_RNT_FEE
 		     , T1.DISC_RNT_FEE
 		     , T1.TOT_PV
+		     , T1.TOT_PV_SS
              , T1.TOT_PV_GST
 		     , T1.PRC_ID
 		     , T1.MEM_CODE
@@ -338,6 +339,7 @@
 		     , SRV_TYPE
 		     , MAIN_PWP_ORD_ID
 		     , MAIN_PWP_ORD_NO
+		     , TOT_PV_SS
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -412,6 +414,7 @@
              , #{srvType}
              , #{pwpOrderId}
              , #{pwpOrderNo}
+             , #{totPvSs}
 		     )
     </insert>
 
@@ -444,6 +447,7 @@
              , NOR_RNT_FEE                = #{norRntFee}
              , DISC_RNT_FEE               = #{discRntFee}
              , TOT_PV                     = #{totPv}
+             , TOT_PV_SS                  = #{totPvSs}
              , TOT_PV_GST                 = #{totPvGst}
              , PRC_ID                     = #{prcId}
              , MEM_CODE                   = #{memCode}

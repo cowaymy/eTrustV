@@ -64,4 +64,6 @@ EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
 
 EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params);
 
+  List<EgovMap> selectPvRebateList(Map<String, Object> params);
+
 }

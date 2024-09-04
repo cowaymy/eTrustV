@@ -81,6 +81,12 @@
 	            	fn_selectGstRebateList();
                 }
                 break;
+            case 'pvRebateInfo' :
+                AUIGrid.resize(pvRebateGridID, 942, 380);
+	            if(AUIGrid.getRowCount(pvRebateGridID) <= 0) {
+	            	fn_selectPvRebateList();
+                }
+                break;
             case 'mcoRemark' :
                 AUIGrid.resize(mcoRemarkGridID, 942, 380);
 	            if(AUIGrid.getRowCount(mcoRemarkGridID) <= 0) {
@@ -125,6 +131,7 @@
 	<li><a id="aTabGC"href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('gstRebateInfo');"><spring:message code="sal.title.text.gstRebate" /></a></li>
+	<li><a href="#" onClick="javascript:chgTab('pvRebateInfo');">PV <spring:message code="sal.title.text.gstRebate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
 	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
 	<li><a href="#" onClick="javascript:chgTab('renAgr');">Rental Agreement</a></li>
@@ -202,6 +209,10 @@
     GST Rebate
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/gstRebateList.jsp" %>
+<!------------------------------------------------------------------------------
+    PV Rebate
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/pvRebateList.jsp" %>
 <!------------------------------------------------------------------------------
     MCO Remark
 ------------------------------------------------------------------------------->

@@ -163,6 +163,8 @@ public class PreOrderVO implements Serializable {
 
 	private int pwpOrderNo;
 
+	private BigDecimal totPvSs;
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -1020,5 +1022,13 @@ public int getPwpOrderNo() {
 
 public void setPwpOrderNo(int pwpOrderNo) {
 	this.pwpOrderNo = pwpOrderNo;
+}
+
+public BigDecimal getTotPvSs() {
+  return totPvSs;
+}
+
+public void setTotPvSs(BigDecimal totPvSs) {
+  this.totPvSs = totPvSs;
 }
 }

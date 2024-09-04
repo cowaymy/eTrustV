@@ -58,6 +58,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.order.vo.SupplementMasterVO;
+import com.coway.trust.biz.services.bs.impl.HsManualMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -102,6 +103,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "voucherMapper")
   private VoucherMapper voucherMapper;
+
+  @Resource(name = "hsManualMapper")
+  private HsManualMapper hsManualMapper;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -1950,9 +1954,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
-    // Self Service Rebate - PAY0286D
+    // Self Service Rebate
     if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && srvType != null && srvType.equals("SS")){
-      insertSelfServiceRebate(salesOrderMVO , sessionVO);
+      EgovMap params = new EgovMap();
+      params.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
+      EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
+      // Rebate - PAY0286D
+      insertSelfServiceRebate(salesOrderMVO , sessionVO , srvPackageResult);
+      // PV Rebate - PAY0367D
+      insertPvSelfServiceRebate(salesOrderMVO , salesOrderDVO , sessionVO , srvPackageResult);
     }
 
     // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
@@ -2718,10 +2728,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
   }
 
-  private void insertSelfServiceRebate( SalesOrderMVO salesOrderMVO , SessionVO sessionVO ) {
-    Map<String,Object> params = new HashMap();
-    params.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
-    EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
+  private void insertSelfServiceRebate( SalesOrderMVO salesOrderMVO , SessionVO sessionVO , EgovMap srvPackageResult ) {
+    Map<String,Object> params = new HashMap<String, Object>();
 
     if(!srvPackageResult.isEmpty()){
       params.put("ordId", salesOrderMVO.getSalesOrdId());
@@ -2736,6 +2744,37 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       params.put("cntrctId", 0);
 
       orderRegisterMapper.insertSSRebate(params);
+    }
+  }
+
+  private void insertPvSelfServiceRebate( SalesOrderMVO salesOrderMVO , SalesOrderDVO salesOrderDVO , SessionVO sessionVO , EgovMap srvPackageResult ) {
+    Map<String, Object> params = new HashMap<String, Object>();
+
+    params.put("promoId", Integer.toString(salesOrderMVO.getPromoId()));
+    params.put("stkId", salesOrderDVO.getItmStkId());
+    params.put("srvPacId", salesOrderMVO.getSrvPacId());
+    params.put("orderAppType", salesOrderMVO.getAppTypeId());
+
+    EgovMap priceInfo = this.selectProductPromotionPriceByPromoStockID(params);
+
+    if(!priceInfo.isEmpty() && !srvPackageResult.isEmpty()){
+
+      int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
+      int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
+      int pvRebate = totPv - totPvSs;
+
+      params.put("ordId", salesOrderMVO.getSalesOrdId());
+      params.put("pvRebateType", 0);
+      params.put("pvRebatePerInstallment", pvRebate); //
+      params.put("pvRebateStartInstallment", 1);  //
+      params.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+      params.put("rem", salesOrderMVO.getTotPv());
+      params.put("crtUserId", sessionVO.getUserId());
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("stusId", 1);
+      params.put("cntrctId", 0);
+
+      hsManualMapper.insertPvSSRebate(params);
     }
   }
 

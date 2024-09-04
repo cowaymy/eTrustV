@@ -120,4 +120,6 @@ public interface OrderDetailMapper {
 
   EgovMap selectMobileAutoDebitInfo(Map<String, Object> params);
 
+  List<EgovMap> selectPvRebateList(Map<String, Object> params); // Discount
+
 }

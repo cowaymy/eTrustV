@@ -8,8 +8,7 @@ var blockDtFrom = "${hsBlockDtFrom}";
 var blockDtTo = "${hsBlockDtTo}";
 var userType = "${userType}";
 var preSrvType = "${preOrderInfo.srvType}";
-var totPv = "";
-var totPvSs = "";
+var totPvSs = "${preOrderInfo.totPvSs}";
 
 
     //AUIGrid 생성 후 반환 ID
@@ -609,6 +608,8 @@ var totPvSs = "";
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
 
+                $("#ordPvSs").val('');
+
                 return;
             }
 
@@ -696,9 +697,11 @@ var totPvSs = "";
         	$("#preSrvTypeLbl").find("span").remove();
         	if($('input:radio[name="preSrvType"]:checked').val() == 'SS'){
         		$("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-        		$('#ordPv').val(totPvSs);
+        		$('#ordPvSs').val(totPvSs);
+        		$("#selfServiceTypeLbl").show();
         	}else{
-        		$('#ordPv').val(totPv);
+        		$('#ordPvSs').val('');
+        		$("#selfServiceTypeLbl").hide();
         	}
         });
 
@@ -1549,6 +1552,7 @@ var totPvSs = "";
 //                norRntFee            : $('#normalOrdRentalFees').val().trim(),
                 discRntFee           : $('#ordRentalFees').val().trim(),
                 totPv 				 : $('#ordPv').val().trim(),
+                totPvSs 			 : $('#ordPvSs').val().trim(),
                 totPvGst             : $('#ordPvGST').val().trim(),
                 prcId                : $('#ordPriceId').val(),
                 memCode              : $('#salesmanCd').val(),
@@ -1807,7 +1811,6 @@ var totPvSs = "";
 
                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
-                totPv = promoPriceInfo.orderPVPromo;
                 totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
                 fn_checkPreSrvType(promoPriceInfo.srvType);
             }
@@ -2937,17 +2940,21 @@ var totPvSs = "";
 		  if(preSrvType == "HS"){
 			  $('[name="preSrvType"]').prop("disabled", true);
 			  $('#preSrvTypeHS').prop("checked", true);
+			  $("#selfServiceTypeLbl").hide();
 		  }else if(preSrvType == "SS"){
 			  $('[name="preSrvType"]').prop("disabled", true);
 			  $('#preSrvTypeSS').prop("checked", true);
 			  $("#preSrvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-			  $('#ordPv').val(totPvSs)
+			  $('#ordPvSs').val(totPvSs);
+			  $("#selfServiceTypeLbl").show();
 		  }else if(preSrvType == "BOTH"){
 			  $('[name="preSrvType"]').prop("disabled", false);
 			  $('#preSrvTypeHS').prop("checked", true);
+			  $("#selfServiceTypeLbl").hide();
 		  }else{
 			  $('[name="preSrvType"]').prop("disabled", true);
 			  $('#preSrvTypeHS').prop("checked", true);
+			  $("#selfServiceTypeLbl").hide();
 		  }
 	  }
 
@@ -2955,6 +2962,7 @@ var totPvSs = "";
 		  $('[name="preSrvType"]').prop("disabled", true);
 	      $("#preSrvTypeLbl").find("span").remove();
 	      $('[name="preSrvType"]').prop("checked", false);
+	      $("#selfServiceTypeLbl").hide();
 	  }
 </script>
 
@@ -3399,7 +3407,7 @@ var totPvSs = "";
         <input id="preSrvTypeSS" name="preSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
     </td>
 </tr>
-<tr>
+<tr id = "selfServiceTypeLbl">
     <th></th>
     <td><label id="preSrvTypeLbl"></label></td>
 </tr>
@@ -3453,6 +3461,11 @@ var totPvSs = "";
     <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
+</tr>
+<tr style="display:none;">
+   <th scope="row">SS PV<span class="must">*</span></th>
+   <td><input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
+   </td>
 </tr>
 <tr style="display:none;">
     <th scope="row">SST Type<span class="must">*</span></th>

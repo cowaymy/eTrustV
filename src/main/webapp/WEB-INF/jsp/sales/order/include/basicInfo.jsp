@@ -73,8 +73,8 @@
     <td>(${orderDetail.basicInfo.keyinBrnchCode} )${orderDetail.basicInfo.keyinBrnchName}</td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-    <td>${orderDetail.basicInfo.ordPv}</td>
+    <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
+    <td>${orderDetail.basicInfo.ordPromoRelatedNo}</td>
     <th scope="row"><spring:message code="sal.title.text.normalPrcRpf" /></th>
     <td>${orderDetail.basicInfo.norAmt}</td>
     <th scope="row"><spring:message code="sal.title.text.finalPrcRpf" /></th>
@@ -89,6 +89,13 @@
     <td>${orderDetail.basicInfo.mthRentalFees}</td>
 </tr>
 <tr>
+	<th></th><td></td>
+	<th scope="row"><spring:message code="sal.title.text.pv" /></th>
+    <td>${orderDetail.basicInfo.ordPv}</td>
+    <th scope="row"><spring:message code="sal.title.text.finalPv" /></th>
+    <td>${orderDetail.basicInfo.ordPvFinal}</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.title.text.instDuration" /></th>
     <td>${orderDetail.basicInfo.installmentDuration}</td>
     <th scope="row"><spring:message code="sal.title.text.pvMth" /></br>(<spring:message code="sal.title.text.mthYear" />)</th>
@@ -99,8 +106,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.promo" /></th>
     <td colspan="3"><c:if test="${orderDetail.basicInfo.ordPromoId > 0}">(${orderDetail.basicInfo.ordPromoCode}) ${orderDetail.basicInfo.ordPromoDesc}</c:if></td>
-    <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
-    <td>${orderDetail.basicInfo.ordPromoRelatedNo}</td>
+    <th></th><td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.eligiAdvDisc" /></th>

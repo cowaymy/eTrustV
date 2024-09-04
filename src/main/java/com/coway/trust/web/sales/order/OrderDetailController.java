@@ -361,4 +361,18 @@ public class OrderDetailController {
     // 데이터 리턴.
     return ResponseEntity.ok(fmcoEvoucherList);
   }
+  
+  @RequestMapping(value = "/selectPvRebateList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPvRebateList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    logger.debug("!@##############################################################################");
+    logger.debug("!@###### salesOrderId : " + params.get("salesOrderId"));
+    logger.debug("!@##############################################################################");
+
+    List<EgovMap> pvRebateList = orderDetailService.selectPvRebateList(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(pvRebateList);
+  }
+
 }
