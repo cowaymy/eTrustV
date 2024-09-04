@@ -1856,6 +1856,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("voucherCode", param.getVoucherCode());
     sal0213M.put("srvType", param.getSrvType());
     //sal0213M.put("totPvSs", param.getTotPvSs());
+    sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
@@ -2266,6 +2267,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("voucherCode", param.getVoucherCode());
     sal0213M.put("srvType", param.getSrvType());
    // sal0213M.put("totPvSs", param.getTotPvSs());
+    sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
