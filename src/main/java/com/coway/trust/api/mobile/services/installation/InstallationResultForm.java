@@ -132,6 +132,8 @@ public class InstallationResultForm {
 
   private String chkInstallAcc;
 
+  private String dispComm;
+
   @ApiModelProperty(value = "installAccList")
   private List<InstallationResultDetailForm> installAccList;
 
@@ -594,6 +596,14 @@ public class InstallationResultForm {
 
   public void setCompetitorBrand( String competitorBrand ) {
     this.competitorBrand = competitorBrand;
+  }
+
+  public String getDispComm() {
+    return dispComm;
+  }
+
+  public void setDispComm( String dispComm ) {
+    this.dispComm = dispComm;
   }
 
   public List<InstallationResultDetailForm> getPartList() {
