@@ -19,7 +19,7 @@ $(document).ready(function() {
     fn_createBasketGrid();
     fn_initField();
 
-    var itmType = {itemType : 7615};
+    var itmType = {itemType : 7617};
     CommonCombo.make('_purcItems', "/supplement/selectSupplementItmList", itmType , '', ItmOption);
 
     $("#_basketAdd").click(function() {
