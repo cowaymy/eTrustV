@@ -3632,7 +3632,6 @@
                   , Project1.NTU
                   , Project1.COMPETITOR_FLAG
                   , Project1.COMPETITOR_BRAND
-                  , Project1.DISP_COMM
          FROM ( SELECT Extent1.RESULT_ID RESULT_ID
                      , to_char(Extent1.INSTALL_DT,'yyyy-mm-dd')  INSTALL_DT
                      , Extent1.REM REM
@@ -3662,7 +3661,6 @@
                      , Extent1.NTU
                      , NVL(Extent1.COMP_YN, 'N') AS COMPETITOR_FLAG
                      , CASE WHEN (Extent1.COMP_BRAND IS NOT NULL) THEN Extent7.CODE_DESC ELSE '-' END COMPETITOR_BRAND
-                     , Extent1.DISP_COMM
                 FROM SAL0047D Extent1
                 JOIN SAL0046D Extent2 ON Extent1.ENTRY_ID = Extent2.INSTALL_ENTRY_ID
                 LEFT JOIN SYS0038M Extent3 ON Extent2.STUS_CODE_ID = Extent3.STUS_CODE_ID
