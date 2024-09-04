@@ -1018,9 +1018,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
       sal0090.put("faucetExch", hsBasicmap.get("faucetExch"));
 
+      /* Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024 */
       String originalSrvType = hsBasicmap.get("oldSrvType").toString();
       String serviceType = hsBasicmap.get("serviceType").toString();
 
+      // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
       // calculate the PV for SS Rebate
       int promoItmPv = Integer.parseInt(hsBasicmap.get("promoItmPv").toString());
       int promoItmPvSs = Integer.parseInt(hsBasicmap.get("promoItmPvSs").toString());
@@ -1028,6 +1030,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       hsBasicmap.put("srvUpdateAt", sessionVO.getUserId());
 
+      // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
       if(hsBasicmap.get("serviceType") != null){
           if(!originalSrvType.equals(serviceType)) {
                // Insert SAL0090H
@@ -1093,9 +1096,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                            hsManualMapper.insertPvSSRebate(pay0367);
                     }
                }
+               sal0090.put("srvType", hsBasicmap.get("serviceType"));
            }
       }
-      sal0090.put("srvType", hsBasicmap.get("serviceType"));
+
       // sal0090.put("SrvUpdateAt", SYSDATE);
       // hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
@@ -3945,23 +3949,27 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
      hsManualMapper.editHSEditSettleDate(params);
    }
 
+   // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
    @Override
    public int getSrvTypeChgTm(Map<String, Object> params) {
      return hsManualMapper.getSrvTypeChgTm(params);
    }
 
+   // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
    @Override
    public EgovMap getPromoItemInfo(Map<String, Object> params) {
      return hsManualMapper.getPromoItemInfo(params);
    }
 
-   //check the outstanding order
+   // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
+   //  check the outstanding order
    @Override
    public List<EgovMap> getOderOutsInfo(Map<String, Object> params) {
      hsManualMapper.getOderOutsInfo(params);
     return (List<EgovMap>) params.get("p1");
    }
 
+   // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
    @Override
    public List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params) {
      return hsManualMapper.getSrvTypeChgHistoryLogInfo(params);

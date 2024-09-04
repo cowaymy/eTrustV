@@ -103,18 +103,36 @@
              //$("#orgGrCombo option:eq(1)").attr("selected", "selected");
 
 
+              /* Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024 */
                $("#cmbSrvType option[value="+srvType +"]").attr("selected", true);
                $("#txtSrvTypeChangeCount").val(srvTypeChangeCnt);
 
                if(appType == "REN" && totOutStandingAmt == "0.00"){
-                    if (srvType != promoItmSrvType){
+                    if (srvType != promoItmSrvType ){
                 	   $("#cmbSrvType").prop("disabled",false);
                    } else{
                 	   $("#cmbSrvType").prop("disabled",true);
                    }
+
+                    if(srvType === "SS"){
+                        $("#entry_cmbServiceMem").prop("disabled",true);
+                    }else{
+                        $("#entry_cmbServiceMem").prop("disabled",false);
+                    }
               }
                srvTypeChgHistoryLogGridID = AUIGrid.create("#srvTypeHistoryLog_view_grid_wrap", srvTypeHistoryColumnLayout, srvTypeHistoryGridPros);
               fn_getSrvTypeChgHistoryLogInfo(); //Get the service type changes history log information in gridview
+
+              document.getElementById("cmbSrvType").addEventListener("change", function(){
+            	  var selectedValue = this.value;
+
+            	  if(selectedValue === "SS"){
+                      $("#entry_cmbServiceMem").prop("disabled",true);
+                  }else{
+                      $("#entry_cmbServiceMem").prop("disabled",false);
+                  }
+
+              });
 	    });
 
 	 function fn_getSrvTypeChgHistoryLogInfo(){
