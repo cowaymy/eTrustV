@@ -256,6 +256,8 @@ public class DtInstallationJobDto {
   private String srvTyp;
 
   private String dispComm;
+  
+  private String prodCat;
 
   public int getPartnerCode() {
     return partnerCode;
@@ -955,6 +957,14 @@ public class DtInstallationJobDto {
 
   public void setDispComm( String dispComm ) {
     this.dispComm = dispComm;
+  }
+
+  public String getProdCat() {
+    return prodCat;
+  }
+
+  public void setProdCat( String prodCat ) {
+    this.prodCat = prodCat;
   }
 
   public static DtInstallationJobDto create( EgovMap egvoMap ) {
