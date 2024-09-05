@@ -73,6 +73,7 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Order No",     dataField : "salesOrdNo", width : 120 }
+          , { headerText : "Order Sof No",     dataField : "refNo",    width : 120 }
           , { headerText : "App Type",     dataField : "appType",    width : 120 }
           , { headerText : "Product Code", dataField : "stkCode",    width : 120 }
           , { headerText : "Product Name", dataField : "stkDesc"}

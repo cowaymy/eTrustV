@@ -498,6 +498,7 @@
 	        SELECT
 	             A.SALES_ORD_ID,
 	             A.SALES_ORD_NO,
+	             A.REF_NO REF_NO,
 	             A.APP_TYPE_ID,
 	             C.CODE_NAME APP_TYPE,
 	             D.STK_CODE,
@@ -524,6 +525,7 @@
 			     D.STK_CODE,
 			     D.STK_DESC,
 			     A.STUS_CODE_ID,
-			     E.NAME
+			     E.NAME,
+			     A.REF_NO
 	  </select>
 </mapper>
