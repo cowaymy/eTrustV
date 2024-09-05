@@ -269,19 +269,28 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           priceInfo.put("normalRentalFees", new DecimalFormat("0.00").format(normalRentalFees));
 
         } else {
-
-
-        	// App Type == AUX & EDU
-        	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX || ordAppType == SalesConstants.APP_TYPE_CODE_ID_EDUCATION ) {
-        		priceInfo = new EgovMap();
+          logger.info("@@@@@@@@@@@@@@@@@@@@@@ priceInfo empty:: ");
+          priceInfo = new EgovMap();
+        	// App Type == AUX
+        	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
         	   	 logger.info("0000000");
-        		priceInfo.put("orderPricePromo", "0.00");
+        	   	  priceInfo.put("orderPricePromo", "0.00");
                 priceInfo.put("orderPVPromo", "0.00");
                 priceInfo.put("orderPVPromoGST", "0.00");
                 priceInfo.put("orderRentalFeesPromo", "0.00");
                 priceInfo.put("promoDiscPeriodTp", "");
                 priceInfo.put("promoDiscPeriod", "");
                 priceInfo.put("normalRentalFees", "0.00");
+                priceInfo.put("srvType", "HS"); // Default Service Type - HS
+        	}else{
+        	  priceInfo.put("orderPricePromo", "0.00");
+            priceInfo.put("orderPVPromo", "0.00");
+            priceInfo.put("orderPVPromoGST", "0.00");
+            priceInfo.put("orderRentalFeesPromo", "0.00");
+            priceInfo.put("promoDiscPeriodTp", "");
+            priceInfo.put("promoDiscPeriod", "");
+            priceInfo.put("normalRentalFees", "0.00");
+            priceInfo.put("srvType", "HS"); // Default Service Type - HS
         	}
         }
       } else {

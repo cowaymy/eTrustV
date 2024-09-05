@@ -1169,6 +1169,13 @@
                     srvPacId   = $('#srvPacId').val();
                 }
 
+        	if(appTypeVal == '142' || appTypeVal == '143'){ // Sponsor & Service
+                $("#srvTypeLbl").find("span").remove();
+                $('[name="srvType"]').prop("disabled", true);
+        		$('#srvTypeHS').prop("checked", true);
+        		$("#selfSrvPvLbl").hide();
+              }
+
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
