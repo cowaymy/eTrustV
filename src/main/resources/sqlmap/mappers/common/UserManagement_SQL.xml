@@ -51,7 +51,7 @@
         AND a.user_id = b.user_id(+)
 	    AND b.role_id = c.role_id(+)
 	    AND a.user_stus_id = d.stus_code_id
-	    AND b.STUS_ID = '1'
+        <!-- AND b.STUS_ID = '1' -->
 	    AND a.hr_code = e.mem_code(+)
 	    <if test="userId != null and userId !=''">
         AND a.user_id LIKE #{userId} || '%'
