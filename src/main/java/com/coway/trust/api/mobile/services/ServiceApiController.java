@@ -2738,18 +2738,10 @@ public class ServiceApiController {
   @ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
   public ResponseEntity<AsFromCodyDto> selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
-
+    @SuppressWarnings("static-access")
     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
-
-    LOGGER.debug("selectOrderInfo Param", params);
-    LOGGER.debug("### selectOrderInfo Param FORM : " + params.toString());
-
     EgovMap resultMap = null;
-
     resultMap = asFromCodyApiService.selectOrderInfo(params);
-
-    LOGGER.debug("### selectOrderInfo Param FORM : " + resultMap.toString());
-
     return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
   }
 
