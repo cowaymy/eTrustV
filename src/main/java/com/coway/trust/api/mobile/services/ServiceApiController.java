@@ -2742,7 +2742,11 @@ public class ServiceApiController {
     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
     EgovMap resultMap = null;
     resultMap = asFromCodyApiService.selectOrderInfo(params);
-    return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
+    if (resultMap != null) {
+      return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
+    } else {
+      return ResponseEntity.ok(null);
+    }
   }
 
   @ApiOperation(value = "Insert As From Cody Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
