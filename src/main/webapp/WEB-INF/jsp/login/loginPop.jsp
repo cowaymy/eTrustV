@@ -142,8 +142,8 @@ function fn_AcceptAgreement() {
                 var successMsg = "";
 
                 if(userType == "1") {
-//                     successMsg = "Please print the agreement copy for your own record."
-                	  successMsg = "Thank you."
+                     successMsg = "Please print the agreement copy for your own record."
+                	  //successMsg = "Thank you."
                 } else if(userType == "2") {
                     successMsg = "Thank you for signing up as Coway Malaysia Lady(Cody). <br /><br />";// +
                 }else if(userType == "7") {
