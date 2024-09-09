@@ -22,6 +22,8 @@ showStateColumn : false,
 softRemoveRowMode:false
 };
 
+var today =  "${today}";
+
 $(document).ready(function() {
 
 	if ($("#hiddenStatus").val() == 5 ){
@@ -157,6 +159,82 @@ function fn_batchPayItemList(validStatusId, gubun) {
       }
     });
   }
+
+  function fn_invoiceMainRptGen() {
+
+		var batchId  = $('#txt_batchId').text();
+      var reportDownFileName = ""; //download report name
+      var reportFileName = ""; //reportFileName
+      var reportViewType = ""; //viewType
+
+
+      //default input setting
+      $("#reportForm").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+      $("#reportForm").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+      $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+
+      reportFileName = "/payment/GovEInvoiceMainData.rpt"; //reportFileName
+      reportDownFileName = "GovEInvoiceMainData_" + "_" + today;  //report name
+      reportViewType = "EXCEL"; //viewType
+
+      //set parameters
+      $("#reportForm").append('<input type="hidden" id="batchId" name="batchId" value="" /> ');
+      $("#reportForm #batchId").val(batchId);
+
+      //report info
+      if (batchId == "") {
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
+          return;
+      }
+
+     //default setting
+     $("#reportForm #reportFileName").val(reportFileName);
+     $("#reportForm #reportDownFileName").val(reportDownFileName);
+     $("#reportForm #viewType").val(reportViewType);
+
+     //  report 호출
+     var option = { isProcedure : false };
+
+     Common.report("reportForm", option);
+  }
+
+
+  function fn_invoiceDetailRptGen() {
+		var batchId  = $('#txt_batchId').text();
+      var reportDownFileName = ""; //download report name
+      var reportFileName = ""; //reportFileName
+      var reportViewType = ""; //viewType
+
+
+      //default input setting
+      $("#reportForm").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+      $("#reportForm").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+      $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+
+      reportFileName = "/payment/GovEInvoiceMainData.rpt"; //reportFileName
+      reportDownFileName = "GovEInvoiceMainData_" + "_" + today;  //report name
+      reportViewType = "EXCEL"; //viewType
+
+      //set parameters
+      $("#reportForm").append('<input type="hidden" id="batchId" name="batchId" value="" /> ');
+      $("#reportForm #batchId").val(batchId);
+
+      //report info
+      if (batchId == "") {
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
+          return;
+      }
+
+     //default setting
+     $("#reportForm #reportFileName").val(reportFileName);
+     $("#reportForm #reportDownFileName").val(reportDownFileName);
+     $("#reportForm #viewType").val(reportViewType);
+
+     //  report 호출
+     var option = { isProcedure : false };
+
+     Common.report("reportForm", option);
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -208,6 +286,14 @@ function fn_batchPayItemList(validStatusId, gubun) {
                             <td id="txt_createdAt"><span><c:out value="${data.crtDt}"/></span></td>
                     </tr>
                     <tr>
+                        <th scope="row">Invoice Bill Type</th>
+                            <td id="txt_einvBillType"><span><c:out value="${data.invTypeBillName}"/></span></td>
+                        <th scope="row"></th>
+                            <td></td>
+                        <th scope="row"></th>
+                            <td></td>
+                    </tr>
+                    <tr>
                         <th scope="row">Confirm By</th>
                             <td id="txt_confirmBy"><span><c:out value="${data.confUserName}"/></span></td>
                         <th scope="row">Confirm At</th>
@@ -250,6 +336,11 @@ function fn_batchPayItemList(validStatusId, gubun) {
 				<p style="color:red; margin-bottom:10px;">Consolidate Detail will not be shown as data set are too large</p>
 			</c:if>
             <h2 id="itemGubun_conf">All Items</h2>
+
+            <ul class="right_btns" style="margin-bottom:10px;">
+                <li><p class="btn_grid"><a href="javascript:fn_invoiceMainRptGen();">Main Record Generate</a></p></li>
+                <li><p class="btn_grid"><a href="javascript:fn_invoiceDetailRptGen();">Detail Record Generate</a></p></li>
+            </ul>
             <ul class="right_btns">
                 <li><p class="btn_grid"><a href="javascript:clearMyFilter();"><spring:message code='pay.btn.allItems'/></a></p></li>
                 <li><p class="btn_grid"><a href="javascript:myCustomFilter('121');">Submitted Items</a></p></li>
@@ -273,3 +364,4 @@ function fn_batchPayItemList(validStatusId, gubun) {
 <!-- </section> -->
 
 </div><!-- popup_wrap end -->
+<form name="reportForm" id="reportForm" method="post"></form>

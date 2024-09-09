@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -102,6 +103,11 @@ public class GovEInvoiceController {
 
 		Map<String, Object> mainMap = govEInvoiceService.selectGovEInvoiceMain(params);
 		model.addAttribute("data", mainMap);
+
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+		model.addAttribute("today", today);
 		return "payment/govEInvoice/govEInvoiceViewPop";
 	}
 

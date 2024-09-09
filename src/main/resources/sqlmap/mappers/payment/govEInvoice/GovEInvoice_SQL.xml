@@ -79,9 +79,11 @@
         ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (104)) RECORD_PROCESSING
         ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (121)) RECORD_SENT
         ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (4)) RECORD_CONFIRM
+        ,INV_TYPE_BILL.CODE_NAME INV_TYPE_BILL_NAME
 	FROM EIV0003M A
 	LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = A.STATUS
 	LEFT JOIN EIV0009M INV_TYPE ON INV_TYPE.CODE_MASTER_ID =1 AND INV_TYPE.CODE = A.INV_TYPE
+	LEFT JOIN EIV0009M INV_TYPE_BILL ON INV_TYPE_BILL.CODE_MASTER_ID =4 AND INV_TYPE_BILL.CODE = A.INV_TYPE_BILL
 	LEFT JOIN SYS0047M USERN ON USERN.USER_ID = A.CRT_USER_ID
 	LEFT JOIN SYS0047M CONFUSERN ON CONFUSERN.USER_ID = A.CONF_USER_ID
 	WHERE
@@ -176,7 +178,7 @@
 <select id="createTaxInvConsolidateClaim" statementType="CALLABLE"
   parameterType="Map">
   {
-  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE(#{invType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
   }
 </select>
 
@@ -184,7 +186,7 @@
 <select id="createTaxInvConsolidateClaimCNDN" statementType="CALLABLE"
   parameterType="Map">
   {
-  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE_CNDN(#{invType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE_CNDN(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
   }
 </select>
 
