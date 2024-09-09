@@ -3207,7 +3207,7 @@
 
                     <!-- For PWP [S]-->
                     <a id="btnPwpNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                    <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
+                    <input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly />
                     <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
                     <!-- For PWP [E]-->
 
