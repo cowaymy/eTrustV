@@ -153,4 +153,20 @@ public class MobileLumpSumPaymentApiController {
 
 		return ResponseEntity.ok(result);
 	}
+
+	@ApiOperation(value = "sendEmail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
+	public ResponseEntity<MobileLumpSumPaymentApiDto> sendEmail(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
+		LOGGER.debug(params.toString());
+
+		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
+
+		params.put("mobPayGroupNo", "3009");
+		params.put("email1", "frango.liew@coway.com.my");
+		params.put("email2", "pohleng.boi@coway.com.my");
+
+		mobileLumpSumPaymentKeyInService.sendEmail(params);
+		return ResponseEntity.ok(result);
+	}
 }
