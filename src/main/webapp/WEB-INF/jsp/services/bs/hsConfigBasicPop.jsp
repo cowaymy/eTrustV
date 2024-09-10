@@ -201,9 +201,11 @@
        if(promoItmSrvType == "SS" && $("#cmbSrvType").val() != "SS"){
            Common.alert("* The service type (" + $("#cmbSrvType").val() +") must same with service type of promotion product ("+promoItmSrvType+")");
            return;
-
        }else if(promoItmSrvType == "HS" && $("#cmbSrvType").val() != "HS"){
            Common.alert("* The service type (" + $("#cmbSrvType").val() +") must same with service type of promotion product ("+promoItmSrvType+").<br/>");
+           return;
+       }else if(($("#cmbSrvType").val() == "HS" || $("#cmbSrvType").val() == "SS") && totOutStandingAmt != "0.00"){
+           Common.alert("* The total outstanding amount must be zero!");
            return;
        }
 
