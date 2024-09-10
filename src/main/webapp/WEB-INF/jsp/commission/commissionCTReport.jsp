@@ -6,6 +6,7 @@
     //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     today = "${today}";
     memberType = "${memberType}";
+    var userTypeId = '${SESSION_INFO.userTypeId}';
     $(document).ready(function() {
 
         //form clear
@@ -20,9 +21,66 @@
             var $reportForm = $("#reportForm")[0];
             $($reportForm).empty(); //remove children
             $("#mConfirm").hide(); //stat
+            $(".j_date2").monthpicker("destroy");
+            $('.j_date2').unbind('monthpicker-change-year');
             if (val == "1") { //ctComm_PDF.rpt
                 $("#searchForm #confirmChk").val("N");
                 $("#searchForm #mConfirm").show();
+                
+                if (userTypeId == 3) {
+                	var currentYear = new Date().getFullYear();
+                    var currentMonth = new Date().getMonth();
+                    var months = [];
+                    var allowedMonths = [];
+                    
+                    for (var i = 0; i < 3; i++) {
+                        var month = currentMonth - i;
+                        var year = currentYear;
+
+                        if (month < 0) {
+                            month += 12;
+                            year -= 1;
+                        }
+                        
+                        months.push({
+                            month: month + 1, 
+                            year: year
+                        });
+                    }
+                    
+                    months.forEach(function(item) {
+                        if (!allowedMonths[item.year]) {
+                            allowedMonths[item.year] = [];
+                        }
+                        allowedMonths[item.year].push(item.month);
+                    });
+                    var disabledMonths = {};
+
+                    for (var year in allowedMonths) {
+                        var allowed = allowedMonths[year];
+                        var allMonths = Array.from({length: 12}, (_, i) => i + 1);
+
+                        var disabled = allMonths.filter(month => !allowed.includes(month));
+                     
+                        if (disabled.length > 0) {
+                            disabledMonths[year] = disabled;
+                            }
+                     }
+                     var monthOptions = {
+                             pattern: 'mm/yyyy',
+                             startYear: months[2].year,
+                             finalYear: months[0].year,
+                             selectedMonth: months[1].month,
+                             selectedYear: months[1].year,
+                             dateSeparator: '/'
+                        };
+                   
+                     $(".j_date2").monthpicker(monthOptions);
+                     $(".j_date2").monthpicker("disableHideMonths", disabledMonths[monthOptions.selectedYear]);
+                     $(".j_date2").monthpicker("setValue", monthOptions);
+                     $(".j_date2").monthpicker("setMonthPickerToCurrentMonthAndYear", monthOptions);
+                     setMonthPicker(monthOptions, disabledMonths, val); 
+                } 
             }
         });
 
@@ -94,8 +152,15 @@
                     Common.alert("<spring:message code='commission.alert.report.enterCtCode'/>");
                     return;
                 }
-
-                reportFileName = "/commission/CTCommission_PDF.rpt"; //reportFileName           
+               //Wording in CT's commission statement changed for Enhancement: request for CT commission report module   
+                if(year >= 2024 && month >=05 || year > 2024)
+                {
+                	reportFileName = "/commission/CTCommission_PDF_202409.rpt"; 
+                }
+                else {
+                	reportFileName = "/commission/CTCommission_PDF.rpt"; //100%Extrade
+                }
+                
                 reportDownFileName = "CTCommission_" + today; //report name         
                 reportViewType = "PDF"; //viewType
 
@@ -228,6 +293,19 @@
     function fn_loadOrderSalesman(memId, memCode) {
         $("#salesPersonCd").val(memCode);
     }
+    
+    function setMonthPicker(monthOptions, disabledMonths, val) {
+        $('.j_date2').monthpicker(monthOptions).bind('monthpicker-change-year', (e, year) => {
+        	if (year == monthOptions.startYear) {
+               $(e.target).monthpicker('disableHideMonths', disabledMonths[monthOptions.startYear]);
+            } else if (year == monthOptions.finalYear) {
+               $(e.target).monthpicker('disableHideMonths', disabledMonths[monthOptions.finalYear]);
+            }  else {
+               $(e.target).monthpicker('disableHideMonths', []);
+            }     
+        })
+    }
+    
 </script>
 
 

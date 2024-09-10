@@ -179,6 +179,50 @@
                 }
             });
         },
+        
+        disableHideMonths: function (months) {
+             var 
+                settings = this.data('monthpicker').settings,
+                container = $('#' + settings.id);
+
+            settings.disabledMonths = months;
+
+            container.find('.mtz-monthpicker-month').each(function () {
+                var m = parseInt($(this).data('month'));
+                if ($.inArray(m, months) >= 0) {
+                     $(this).css({
+                        visibility: 'hidden'
+                    });
+                } else {
+                    $(this).css({
+                        visibility: 'visible'
+                    });
+                }
+            });
+        },
+        
+        setMonthPickerToCurrentMonthAndYear: function(monthOptions) {
+            var
+                settings = this.data('monthpicker').settings,
+                container = $('#' + settings.id);
+                
+            container.find('.mtz-monthpicker-month').each(function() {
+                var m = parseInt($(this).data('month'));
+                if (m === monthOptions.selectedMonth) {
+                    $(this).addClass('ui-state-active');
+                }
+                else {
+                    $(this).removeClass('ui-state-active');
+                }
+            });
+
+            container.find('.mtz-monthpicker-year .mtz-monthpicker').each(function() {
+                var y = parseInt($(this).val());
+                if (y === monthOptions.selectedYear) {
+                    $(this).attr('selected', 'selected');
+                }
+            });
+        },
 
         mountWidget: function (settings) {
             var
