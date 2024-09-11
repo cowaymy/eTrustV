@@ -642,4 +642,10 @@ public class CommonController {
     EgovMap rtnData = commonService.getDhlShptDtl( params );
     return ResponseEntity.ok( rtnData );
   }
+
+  @RequestMapping(value = "/createDhlShpt.do", method = RequestMethod.POST)
+  public ResponseEntity<EgovMap> createDhlShpt( @RequestBody Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    EgovMap rtnData = commonService.createDhlShpt( params );
+    return ResponseEntity.ok( rtnData );
+  }
 }
