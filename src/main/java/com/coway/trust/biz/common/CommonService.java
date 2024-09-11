@@ -485,4 +485,7 @@ public interface CommonService
 
     EgovMap getDhlShptDtl( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 
+    EgovMap createDhlShpt( Map<String, Object> params ) throws IOException, JSONException, ParseException;
+
+
 }
