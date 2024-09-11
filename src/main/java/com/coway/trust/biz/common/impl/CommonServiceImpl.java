@@ -104,6 +104,8 @@ public class CommonServiceImpl
   @Value("${dhl.shptDtl.url}")
   private String dhlShptDtlTokenUrl;
 
+  @Value("${dhl.crtShptDtl.url}")
+  private String dhlCrtShptDtlUrl;
 
   @Override
   public List<EgovMap> selectCodeList( Map<String, Object> params ) {
@@ -2193,6 +2195,349 @@ public class CommonServiceImpl
     }
 
     rtnStat.put( "status", "000" );
+    rtnStat.put( "message", "" );
+    rtnStat.put( "value", respParam );
+    return rtnStat;
+  }
+
+  @SuppressWarnings("unchecked")
+  public EgovMap createDhlShpt( Map<String, Object> params ) throws IOException, JSONException, ParseException {
+    EgovMap rtnStat = new EgovMap();
+    Map<String, Object> respParam = new HashMap<>();
+
+    // STEP 1 :: VALIDATE SUBSCRIPTION KEY & API TOKEN & URL
+    if ("".equals(CommonUtils.nvl(dhlClientId))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR DHL CLIENT ID. PLEASE CHECK FOR DHL CLIENT ID." );
+      return rtnStat;
+    }
+
+    if ("".equals(CommonUtils.nvl(dhlClientPassword))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR DHL CLIENT PASSWORD. PLEASE CHECK FOR DHL CLIENT PASSWORD." );
+      return rtnStat;
+    }
+
+    if ("".equals(CommonUtils.nvl(dhlAuthTokenUrl))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR DHL AUTH TOKEN URL. PLEASE CHECK FOR  AUTH TOKEN URL." );
+      return rtnStat;
+    }
+
+    if ("".equals(CommonUtils.nvl(dhlCrtShptDtlUrl))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "NO VALUE FOR DHL CREATE SHIPMENT URL. PLEASE CHECK FOR DHL CREATE SHIPMENT URL." );
+      return rtnStat;
+    }
+
+    // STEP 2 :: VALIDATE REQUIRED PARAMETER
+    if ("".equals( CommonUtils.nvl(params.get( "tckInfo" )))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "MAIN INFO. IS REQUIRED." );
+      return rtnStat;
+    }
+    if ("".equals( CommonUtils.nvl(params.get( "custInfo" )))) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "CUSTOMER INFO. IS REQUIRED." );
+      return rtnStat;
+    }
+
+    List<Map<String, Object>> tckInfoList_ = (List<Map<String, Object>>) params.get("tckInfo");
+    List<Map<String, Object>> custInfoList_ = (List<Map<String, Object>>) params.get("custInfo");
+
+    if (tckInfoList_.size() != custInfoList_.size()) {
+      rtnStat.put( "status", "999" );
+      rtnStat.put( "message", "TOTAL NUMBER OF TRACKING INFO. NOT SAME NUMBER AS CUSTOMER INFO." );
+      return rtnStat;
+    }
+
+    for (int a=0; a < tckInfoList_.size();a++) {
+      Map<String, Object> tckList = tckInfoList_.get(a);
+      if ("".equals( CommonUtils.nvl(tckList.get( "tckNo" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "TRACKING NUMBER IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(tckList.get( "itmDesc" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "ITEM DESCRIPTION IS REQUIRED." );
+        return rtnStat;
+      }
+    }
+
+    for (int b=0; b < custInfoList_.size();b++) {
+      Map<String, Object> custList = custInfoList_.get(b);
+      if ("".equals( CommonUtils.nvl(custList.get( "name" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER NAME IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "addr1" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS 1 IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "addr2" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS 2 IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "city" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS CITY IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "state" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS STATE IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "country" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS COUNTRY IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "postCode" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER ADDRESS POSTCODE IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "phone" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER CONTACT NUMBER IS REQUIRED." );
+        return rtnStat;
+      }
+      if ("".equals( CommonUtils.nvl(custList.get( "email" )))) {
+        rtnStat.put( "status", "999" );
+        rtnStat.put( "message", "CUSTOMER EMAIL IS REQUIRED." );
+        return rtnStat;
+      }
+    }
+
+    String responseStatusCode = "000";
+
+    // STEP 3 CALL URL GET DHL AUTH. TOKEN
+    String urlString = CommonUtils.nvl(dhlAuthTokenUrl) + "?clientId=" + CommonUtils.nvl(dhlClientId);
+    urlString += "&password=" + CommonUtils.nvl(dhlClientPassword);
+    urlString += "&returnFormat=json";
+
+    // STEP 4 FORM REQUEST PARAM TO JSON FOR CREATE REQUEST DETAIL
+    Map<String, Object> reqsDhlAuthParam = new HashMap<>();
+    reqsDhlAuthParam.put( "reqsId", commonMapper.getDhlReqsId() );
+    JSONObject parameters = new JSONObject();
+    parameters.put("clientId", CommonUtils.nvl(dhlClientId));
+    parameters.put("password", CommonUtils.nvl(dhlClientPassword));
+    parameters.put("returnFormat", "json");
+
+    reqsDhlAuthParam.put( "url", CommonUtils.nvl(urlString));
+    reqsDhlAuthParam.put( "dhlTyp", '1'); // REQUEST TOKEN
+    reqsDhlAuthParam.put( "reqsParam", parameters.toString());
+
+    if (!"".equals( CommonUtils.nvl(params.get( "reqsMod" )))) {
+      reqsDhlAuthParam.put( "reqsMod", CommonUtils.nvl(params.get( "reqsMod" )) ); // REQUEST MODULE - DEFAULT CMN
+    }
+
+    // STEP 5 CREATE REQUEST ENTRY
+    commonMapper.createDhlAuthReqs( reqsDhlAuthParam );
+
+    // STEP 6 CALL URL
+    URL url = new URL(CommonUtils.nvl(urlString));
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+    // SET REQUEST HEADER
+    connection.setRequestProperty("Cache-Control", "no-cache");
+    connection.setRequestProperty("Subscription-Key", CommonUtils.nvl(gDexSubscrKey));
+    connection.setRequestProperty("ApiToken", CommonUtils.nvl(gDexApiToken));
+
+    connection.setRequestMethod("GET");
+
+    int status = connection.getResponseCode();
+    Map<String, Object> respDhlAuthParam = new HashMap<>();
+
+    if (status == 200) { // SUCCESS
+      // READ RESPONE
+      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String inputLine;
+      StringBuffer response = new StringBuffer();
+      while ((inputLine = in.readLine()) != null) {
+        response.append(inputLine);
+      }
+      in.close();
+
+      // STEP 7 EXTRACT RESPONSE DATE
+      // PARSE RESPONE JSON STRING TO JSONOBJECT
+      JSONObject jsonResponse = new JSONObject(response.toString());
+      JSONObject accessTokenResponse = jsonResponse.getJSONObject("accessTokenResponse");
+      String token = accessTokenResponse.getString("token");
+      String code = accessTokenResponse.getJSONObject("responseStatus").getString("code");
+
+      respDhlAuthParam.put( "status", CommonUtils.nvl(code) );
+      respDhlAuthParam.put( "response", response.toString() );
+      respDhlAuthParam.put( "reqsId", CommonUtils.nvl(reqsDhlAuthParam.get( "reqsId" )) );
+      respDhlAuthParam.put( "token", CommonUtils.nvl(token) );
+
+      connection.disconnect();
+
+      // STEP 8 UPDATE RESPONE DETAIL
+      commonMapper.updateDhlAuthResp( respDhlAuthParam );
+
+      // = GET SHIPMENT INFO START =
+      // GET LOCAL TIME AND CONVERT TO CORRECT FORMAT
+      LocalDateTime now = LocalDateTime.now();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+      ZonedDateTime zonedDateTime = now.atZone(ZoneId.of("Asia/Singapore"));
+      String formattedDate = zonedDateTime.format(formatter);
+
+      // STEP 9 START CREATE JSON REQUEST PARAMETER FOR REQUEST SHIPMENT INFORMATION
+      JSONObject hdr = new JSONObject();
+      hdr.put("messageType", "LABEL");
+      hdr.put("accessToken", CommonUtils.nvl(respDhlAuthParam.get( "token" )));
+      hdr.put("messageDateTime", CommonUtils.nvl(formattedDate));
+      hdr.put("messageVersion", "1.4");
+      hdr.put("messageLanguage", "en");
+
+      JSONObject bd = new JSONObject();
+
+      bd.put("pickupAccountId", "5395801");
+      bd.put("soldToAccountId", "5305721665");
+
+      JSONArray shipmentItmList = new JSONArray();
+      for (int c=0; c < tckInfoList_.size();c++) {
+        JSONObject consigneeAddrs = new JSONObject();
+        Map<String, Object> custList = custInfoList_.get(c);
+        consigneeAddrs.put("name", CommonUtils.nvl(custList.get( "name" )));
+        consigneeAddrs.put("address1", CommonUtils.nvl(custList.get( "addr1" )));
+        consigneeAddrs.put("address2", CommonUtils.nvl(custList.get( "addr2" )));
+        consigneeAddrs.put("address3", CommonUtils.nvl(custList.get( "addr3" )));
+        consigneeAddrs.put("city", CommonUtils.nvl(custList.get( "city" )));
+        consigneeAddrs.put("state", CommonUtils.nvl(custList.get( "state" )));
+        consigneeAddrs.put("country", CommonUtils.nvl(custList.get( "country" )));
+        consigneeAddrs.put("postCode", CommonUtils.nvl(custList.get( "postCode" )));
+        consigneeAddrs.put("phone", CommonUtils.nvl(custList.get( "phone" )));
+        consigneeAddrs.put("email", CommonUtils.nvl(custList.get( "email" )));
+
+        JSONObject shipmentItm = new JSONObject();
+        Map<String, Object> tckList = tckInfoList_.get(c);
+        shipmentItm.put("shipmentID", CommonUtils.nvl(tckList.get( "tckNo" )));
+        shipmentItm.put("packageDesc", CommonUtils.nvl(tckList.get( "itmDesc" )));
+        shipmentItm.put("remarks", CommonUtils.nvl(tckList.get( "itmDesc" )));
+        shipmentItm.put("totalWeight", 1);
+        shipmentItm.put("totalWeightUOM", "G");
+        shipmentItm.put("productCode", "PDO");
+        shipmentItm.put("currency", "MYR");
+
+        shipmentItm.put("consigneeAddress", consigneeAddrs);
+
+        shipmentItmList.put(shipmentItm);
+      }
+
+      bd.put("shipmentItems", shipmentItmList);
+
+      JSONObject label = new JSONObject();
+      label.put( "pageSize", "400x600" );
+      label.put( "format", "PNG" );
+      label.put( "layout", "1x1" );
+
+      bd.put("label", label);
+
+      JSONObject trackItemRequest = new JSONObject();
+      trackItemRequest.put("hdr", hdr);
+      trackItemRequest.put("bd", bd);
+
+      JSONObject mainObject = new JSONObject();
+      mainObject.put("labelRequest", trackItemRequest);
+
+      Map<String, Object> reqsDhlCrtShptParam = new HashMap<>();
+      reqsDhlCrtShptParam.put( "reqsId", commonMapper.getDhlReqsId() ); // RUNING SEQUENCE NUMBER
+
+      reqsDhlCrtShptParam.put( "url", CommonUtils.nvl(dhlCrtShptDtlUrl));
+      reqsDhlCrtShptParam.put( "dhlTyp", '3'); // CREATE SHIPMENT
+      reqsDhlCrtShptParam.put( "reqsParam", CommonUtils.nvl(mainObject.toString())); // JSON REQUEST PARAMETER
+
+      if (!"".equals( CommonUtils.nvl(params.get( "reqsMod" )))) {
+        reqsDhlCrtShptParam.put( "reqsMod", CommonUtils.nvl(params.get( "reqsMod" )) ); // REQUEST MODULE - DEFAULT CMN
+      }
+
+      // STEP 11 CREATE SHIPMENT DETAILS REQUEST
+      commonMapper.createDhlShipmDtlReqs( reqsDhlCrtShptParam );
+
+      // STEP 12 CALL URL FOR TRACKING SHIPMENT DETAIL
+      URL reqCrtShpt = new URL(CommonUtils.nvl(dhlCrtShptDtlUrl));
+      // OPEN A CONNECTION TO THE URL
+      connection = (HttpURLConnection) reqCrtShpt.openConnection();
+      // SET THE REQUEST METHOD TO POST
+      connection.setRequestMethod("POST");
+      // SET HEADERS
+      connection.setRequestProperty("Content-Type", "application/json");
+      connection.setRequestProperty("Accept", "application/json");
+      // ENABLE OUTPUT AND INPUT STREAM
+      connection.setDoOutput(true);
+      connection.setDoInput(true);
+      // WRITE JSON PARAMETER TO THE OUT STREAM
+      DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+      outputStream.writeBytes(mainObject.toString());
+      outputStream.flush();
+      outputStream.close();
+      // READ RESPONSE FROM THE INPUT STREAM
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String line;
+      StringBuilder responseDetail = new StringBuilder();
+      while ((line = reader.readLine()) != null) {
+        responseDetail.append(line);
+      }
+      reader.close();
+
+      // PARSE RESPONE JSON STRING TO JSONObject
+      jsonResponse = new JSONObject(responseDetail.toString());
+
+      responseStatusCode = jsonResponse.getJSONObject("labelResponse").getJSONObject("bd").getJSONObject("responseStatus").getString("code");
+
+      reqsDhlCrtShptParam.put( "response", CommonUtils.nvl(jsonResponse.toString()) );
+      reqsDhlCrtShptParam.put( "status", CommonUtils.nvl(responseStatusCode) );
+
+       // UPDATE RESPONSE PAYMENT LINK DETAIL
+      commonMapper.updateDhlShptDtlResp( reqsDhlCrtShptParam );
+
+      if (CommonUtils.nvl(responseStatusCode).equals( "200" ) || CommonUtils.nvl(responseStatusCode).equals( "204" )) { // SUCCESS OR PARTIALLY SUCCESS
+        connection.disconnect();
+
+        JSONArray shipmentLabels = jsonResponse.getJSONObject("labelResponse").getJSONObject("bd").getJSONArray("labels");
+        List<Map<String, Object>> shipmentsResultList = new ArrayList<>();
+
+        for (int i = 0; i < shipmentLabels.length(); i++) {
+          JSONObject shipmentItem = shipmentLabels.getJSONObject(i);
+          String shipmentID = CommonUtils.nvl(shipmentItem.getString("shipmentID"));
+          String deliveryComfirmNo = CommonUtils.nvl(shipmentItem.getString("deliveryConfirmationNo"));
+          String shipmentStat = shipmentItem.getJSONObject( "responseStatus" ).getString("code");
+          String shipmentMessage = shipmentItem.getJSONObject( "responseStatus" ).getString("message");
+
+          Map<String, Object> shipmentMap = new HashMap<>();
+          shipmentMap.put("shipmentID", shipmentID);
+          shipmentMap.put("deliveryComfirmNo", deliveryComfirmNo);
+          shipmentMap.put("shipmentStat", shipmentStat);
+          shipmentMap.put("shipmentMessage", shipmentMessage);
+
+          shipmentsResultList.add(shipmentMap);
+        }
+
+        respParam.put( "shipmentResultList", shipmentsResultList);
+      } else {
+        connection.disconnect();
+
+        // UPDATE RESPONE DETAIL
+        respParam.put( "status", CommonUtils.nvl(responseStatusCode) );
+        respParam.put( "response","Fail to Receive Response from DHL." );
+        respParam.put( "reqsId", reqsDhlCrtShptParam.get( "reqsId" ) );
+        commonMapper.updateDhlShptDtlResp( respParam );
+
+        rtnStat.put( "status", CommonUtils.nvl(responseStatusCode) );
+        rtnStat.put( "message", "Fail to Receive Response from DHL." );
+        rtnStat.put( "value", "" );
+        return rtnStat;
+      }
+    }
+
+    rtnStat.put( "status", responseStatusCode);
     rtnStat.put( "message", "" );
     rtnStat.put( "value", respParam );
     return rtnStat;
