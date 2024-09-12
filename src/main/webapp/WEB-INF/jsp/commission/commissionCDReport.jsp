@@ -134,7 +134,11 @@ console.log(year);
 			}
 			else
 			{
-				if(year >= 2024 && month >=03 || year > 2024)
+				if(year >= 2024 && month >=09 || year > 2024)
+                {
+                    reportFileName = "/commission/CodyComm_PDF_202409.rpt"; //100%Extrade
+                }
+				else if(year >= 2024 && month >=03 || year > 2024)
                 {
                     reportFileName = "/commission/CodyComm_PDF_202403.rpt"; //100%Extrade
                 }
@@ -189,8 +193,13 @@ console.log(year);
                 $("#reportForm #Year").val(year);
                 $("#reportForm #TaskID").val(taskID);
             } else if (type == "2") {
-
-                reportFileName = "/commission/CMCommissionRawData_Excel.rpt"; //reportFileName
+            	if(year >= 2024 && month >=09|| year > 2024)
+                {
+                    reportFileName = "/commission/CMCommissionRawData_Excel_202409.rpt";
+                }
+            	else {
+            		reportFileName = "/commission/CMCommissionRawData_Excel.rpt"; //reportFileName
+            	}
                 reportDownFileName = "CMCommissionRawData_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
@@ -276,17 +285,23 @@ console.log(year);
                 $("#reportForm #TaskID").val(taskID);
 
             } else if (type == "9") {
+            	if(year >= 2024 && month >=09|| year > 2024)
+                {
+            		reportFileName = "/commission/CodyCommissionRawData_Excel_202409.rpt";
+                }
+            	else {
+            		reportFileName = "/commission/CodyCommissionRawData_Excel.rpt"; //reportFileName
+            	}
+            
+                reportDownFileName = "CodyCommissionRawData_Excel_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
 
-            reportFileName = "/commission/CodyCommissionRawData_Excel.rpt"; //reportFileName
-            reportDownFileName = "CodyCommissionRawData_Excel_" + today; //report name
-            reportViewType = "EXCEL"; //viewType
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="Cody" name="Cody" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
-            //set parameters
-            $($reportForm).append('<input type="hidden" id="Cody" name="Cody" value="" /> ');
-            $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-            $("#reportForm #Cody").val(memberType);
-            $("#reportForm #TaskID").val(taskID);
+                $("#reportForm #Cody").val(memberType);
+                $("#reportForm #TaskID").val(taskID);
 
           } else if (type == "10") {
 

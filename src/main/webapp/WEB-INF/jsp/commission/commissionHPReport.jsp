@@ -139,7 +139,11 @@
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 				}else{
-					if(year >= 2024 && month >=03|| year > 2024)
+					if(year >= 2024 && month >=09|| year > 2024)
+                    {
+                        reportFileName = "/commission/HPComm_PDF_202409.rpt";
+                    }
+				    else if(year >= 2024 && month >=03|| year > 2024)
                     {
                         reportFileName = "/commission/HPComm_PDF_202403.rpt"; //100% Extrade + 36 Months Government
                     }
@@ -183,8 +187,14 @@
 				$("#reportForm #Year").val(year);
 				$("#reportForm #TaskID").val(taskID);
 			} else if (type == "2") {
-
-				reportFileName = "/commission/HPCommissionRawData_Excel.rpt"; //reportFileName
+				if(year >= 2024 && month >=09|| year > 2024)
+                {
+					reportFileName = "/commission/HPCommissionRawData_Excel_202409.rpt"; //reportFileName
+                }
+				else {
+					reportFileName = "/commission/HPCommissionRawData_Excel.rpt"; //reportFileName
+				}
+				
 				reportDownFileName = "HPCommissionRawData_" + today; //report name
 				reportViewType = "EXCEL"; //viewType
 

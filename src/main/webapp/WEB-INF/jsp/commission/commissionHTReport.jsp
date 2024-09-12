@@ -156,7 +156,12 @@
 
                 if(memLvl == '2')
                 {
-                	if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
+                	if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
+                        reportFileName = "/commission/SHMCommission_PDF_202409.rpt"; //reportFileName
+                        reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                    }
+                	else if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
                 		reportFileName = "/commission/SHMCommission_PDF_202405.rpt"; //reportFileName
                         reportDownFileName = "SHMCommission_" + salesPersonCd + "_" + today;  //report name
                         reportViewType = "PDF"; //viewType
@@ -174,7 +179,12 @@
                 }
                 else if(memLvl == '3')
                 {
-                	if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
+                	if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
+                        reportFileName = "/commission/HTMCommission_PDF_202409.rpt"; //reportFileName
+                        reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
+                        reportViewType = "PDF"; //viewType
+                    }
+                	else if (taskID >= 136){ // start from comm month = 05/2024. Added by Celeste, 24/05/2024
                 		reportFileName = "/commission/HTMCommission_PDF_202405.rpt"; //reportFileName
                         reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
                         reportViewType = "PDF"; //viewType
@@ -192,7 +202,12 @@
                 }
                 else
                 {
-                	if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
+                	if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
+                        reportFileName = "/commission/HTCommission_PDF_202409.rpt"; //reportFileName
+                        reportViewType = "PDF"; //viewType
+                        reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                    }
+                	else if (taskID >= 132){ // start from comm month = 01/2024. Added by Celeste, 02/02/2024
                 		reportFileName = "/commission/HTCommission_PDF_202402.rpt"; //reportFileName
                         reportViewType = "PDF"; //viewType
                         reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
@@ -289,7 +304,14 @@ debugger;
                     return;
                 }
                 if (memberLvl == 3) {
-                    reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
+                	if(year >= 2024 && month >=09|| year > 2024)
+                    {
+                		reportFileName = "/commission/HTMCommissionRawRate_Excel_202409.rpt"; //reportFileName
+                    }
+                    else {
+                    	reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
+                    }
+                    
                     reportDownFileName = "HTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -302,7 +324,14 @@ debugger;
 
 
                 } else if (memberLvl == 2) {
-                    reportFileName = "/commission/SHTMCommissionRawRate_Excel.rpt"; //reportFileName
+                	if(year >= 2024 && month >=09|| year > 2024)
+                    {
+                		reportFileName = "/commission/SHTMCommissionRawRate_Excel_202409.rpt"; //reportFileName
+                    }
+                    else {
+                    	reportFileName = "/commission/SHTMCommissionRawRate_Excel.rpt"; //reportFileName
+                    }
+                    
                     reportDownFileName = "SHTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -447,8 +476,14 @@ debugger;
                $("#reportForm #TaskID").val(taskID);
            }
            else if (type == "7") {
-
-               reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
+        	   if(year >= 2024 && month >=09|| year > 2024)
+               {
+        		   reportFileName = "/commission/HTCommissionRawData_R_Excel_202409.rpt"; //reportFileName
+               }
+               else {
+            	   reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
+               }
+               
                reportDownFileName = "HTCommissionRawData_Rate_Excel_" + today; //report name
                reportViewType = "EXCEL"; //viewType
 
