@@ -131,7 +131,7 @@
           return false;
         }
 
-        if (todayDD == 3 || todayDD == 4) { // Block if date on  1 / 2 of the month
+        if (todayDD == 1 || todayDD == 2) { // Block if date on  1 / 2 of the month
           var msg = '<spring:message code="sal.msg.chkCancDate" />';
             Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
             return false;
