@@ -72,7 +72,7 @@
 		doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
          doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
-         doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
+         doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S','exTradeCallbackFn'); //EX-TRADE
          doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
 //       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
 //       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
@@ -86,9 +86,10 @@
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 
         if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){        // HC - eKey-In > Convert Sales
-            $('#pwpNo').removeClass("blind");
+        	$('#pwpNo').removeClass("blind");
             $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
             $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
+            $('#exTrade').val('${preOrderInfo.exTrade}');
 //             $('#btnPwpNo).removeClass("blind");
             $('#isReturnExtradeChkBox').addClass("blind");
             $('#relatedNo').addClass("blind");
@@ -3232,6 +3233,15 @@
 		        }
 		  });
 	  }
+  }
+
+  function exTradeCallbackFn() {
+      if(convToOrdYn == 'Y') {
+    	  $('#exTrade').val('${preOrderInfo.exTrade}');
+      }
+      if(copyChangeYn == 'Y') {
+    	  $('#exTrade').val('${preOrderInfo.exTrade}');
+      }
   }
 </script>
 
