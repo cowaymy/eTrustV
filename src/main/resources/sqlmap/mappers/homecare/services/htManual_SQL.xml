@@ -583,252 +583,219 @@ SELECT * FROM
         FROM
             (
                 SELECT
-                    project2.no           no,
-                    project2.hs_date      hs_date,
+                    project2.no no,
+                    project2.hs_date hs_date,
                     project2.stus_code_id stus_code_id,
-                    project2.code         code,
-
-
+                    project2.code code,
                     project2.sales_ord_no sales_ord_no,
                     project2.assign_cody  c5,
                     project2.action_cody  AS actn_mem_id,
                     project2.mem_id,
-                    project2.name         name,
+                    project2.name name,
                     project2.cust_id,
                     project2.ht_status,
                     project2.setl_dt,
                     project2.remarks,
-                    project2.brnch_id     AS brnch_id,
-                    project2.schdul_id    schdul_id,
+                    project2.brnch_id AS brnch_id,
+                    project2.schdul_id schdul_id,
                     project2.sales_ord_id,
                     project2.ht_brnch_code,
                     project2.ht_mgr_code,
-                    project2.result       AS result,
+                    project2.result AS result,
                     project2.dept_code,
                     project2.grpcode,
                     project2.crt_user_id,
-                    CASE
-                        WHEN ( substr(project2.mat_desc,
-                                      1,
-                                      instr(project2.mat_desc, ' (C', 1, 1)) ) IS NULL THEN
-                            project2.mat_desc
+                    CASE WHEN (substr(project2.mat_desc, 1, instr(project2.mat_desc, ' (C', 1, 1)) ) IS NULL
+                            THEN project2.mat_desc
+                        ELSE substr(project2.mat_desc,1, instr(project2.mat_desc, ' (C', 1, 1))
+                    END mat_stk_desc,
+                    CASE WHEN (substr(project2.fra_desc,1, instr(project2.fra_desc, ' (C', 1, 1)) ) IS NULL
+                            THEN project2.fra_desc
                         ELSE
-                            substr(project2.mat_desc,
-                                   1,
-                                   instr(project2.mat_desc, ' (C', 1, 1))
-                    END                   mat_stk_desc,
-                    CASE
-                        WHEN ( substr(project2.fra_desc,
-                                      1,
-                                      instr(project2.fra_desc, ' (C', 1, 1)) ) IS NULL THEN
-                            project2.fra_desc
-                        ELSE
-                            substr(project2.fra_desc,
-                                   1,
-                                   instr(project2.fra_desc, ' (C', 1, 1))
-                    END                   fra_stk_desc,
+                            substr(project2.fra_desc, 1, instr(project2.fra_desc, ' (C', 1, 1))
+                    END fra_stk_desc,
                     project2.apptype,
                     project2.sales_prod_sz,
                     project2.app_type_id,
                     project2.srv_type,
                     project2.unit_type,
                     project2.service_type,
-                    project2.agingmth     aging_mth
+                    project2.agingmth aging_mth
                 FROM
                     (
                         (
-                            SELECT DISTINCT
-                                hs.no             AS no,
-                                hs.stus_code_id   AS stus_code_id,
-                                hs.month
-                                || '/'
-                                || hs.year        AS hs_date,
-                                hs.month,
-                                hs.year,
-                                st.code,
-                                hr.no             AS result,
-                                so.sales_ord_no   sales_ord_no,
-                                so.app_type_id,
-                                mi.stk_desc       AS mat_desc,
-                                fi.stk_desc       AS fra_desc,
-                                ap.code           AS apptype,
-                                so.sales_prod_sz,
-                                cu2.name          name,
-                                cd.mem_code       AS assign_cody,
-                                cd.mem_id,
-                                ac.mem_code       AS action_cody,
-                                mg.state,
-                                mg.area,
-                                cu2.cust_id,
-                                stus.code         AS ht_status,
-                                hr.setl_dt,
-                                rem.code_name     AS remarks,
-                                br.brnch_id       AS brnch_id,
-                                hs.schdul_id      schdul_id,
-                                so.sales_ord_id   AS sales_ord_id,
-                                br.code           AS ht_brnch_code,
-                                mem3.mem_code     ht_mgr_code,
-                                og.dept_code,
-                                CASE
-                                    WHEN hs.crt_user_id = '2222' THEN
-                                        ''
-                                    ELSE
-                                        usr.user_name
-                                END               AS crt_user_id,
-                                so.pv_month,
-                                so.pv_year,
-                                t6.org_code       AS orgcode,
-                                t6.grp_code       AS grpcode,
-                                t6.dept_code      AS deptcode,
-                                CASE
-                                    WHEN srt.code IS NOT NULL THEN
-                                        srt.code_name
-                                    ELSE
-                                        type.stk_ctgry
-                                END               AS srv_type,
-                                so.unit_type,
-                                so.srv_type       AS service_type,
-                                ag.curr_mth_aging agingmth
-                            FROM
-                                     svc0008d hs
+                            SELECT DISTINCT hs.no AS no,
+                                      hs.stus_code_id AS stus_code_id,
+                                      hs.month || '/' || hs.year AS hs_date,
+                                      hs.month,
+                                      hs.year,
+                                      st.code,
+                                      hr.no AS result,
+                                      so.sales_ord_no sales_ord_no,
+                                      so.app_type_id,
+                                      mi.stk_desc AS mat_desc,
+                                      fi.stk_desc AS fra_desc,
+                                      ap.code AS apptype,
+                                      so.sales_prod_sz,
+                                      cu2.name  name,
+                                      cd.mem_code AS assign_cody,
+                                      cd.mem_id,
+                                      ac.mem_code AS action_cody,
+                                      mg.state,
+                                      mg.area,
+                                      cu2.cust_id,
+                                      stus.code AS ht_status,
+                                      hr.setl_dt,
+                                      rem.code_name AS remarks,
+                                      br.brnch_id AS brnch_id,
+                                      hs.schdul_id schdul_id,
+                                      so.sales_ord_id AS sales_ord_id,
+                                      br.code AS ht_brnch_code,
+                                      mem3.mem_code ht_mgr_code,
+                                      og.dept_code,
+                                      CASE WHEN hs.crt_user_id = '2222'
+                                              THEN ''
+                                              ELSE usr.user_name
+                                      END AS crt_user_id,
+                                      so.pv_month,
+                                      so.pv_year,
+                                      t6.org_code AS orgcode,
+                                      t6.grp_code AS grpcode,
+                                      t6.dept_code AS deptcode,
+                                      CASE WHEN srt.code IS NOT NULL
+                                              THEN srt.code_name
+                                          ELSE type.stk_ctgry
+                                      END  AS srv_type,
+                                      so.unit_type,
+                                      so.srv_type AS service_type,
+                                      ag.curr_mth_aging agingmth
+                            FROM SVC0008D hs
                                 JOIN (
-                                    SELECT
-                                        s1.sales_ord_id,
-                                        s1.brnch_id,
-                                        s1.cust_id,
-                                        s1.sales_ord_no,
-                                        s1.stus_code_id,
-                                        s1.pv_year,
-                                        s1.pv_month,
-                                        s1.app_type_id,
-                                        TO_NUMBER(s2.srv_type) srv_type,
-                                        s2.sales_prod_sz,
-                                        s2.unit_type           unit_type,
-                                        s1.bndl_id
-                                    FROM
-                                             sal0001d s1
-                                        JOIN sal0225d s2 ON s2.srv_ord_id = s1.sales_ord_id
-
-                                )        so ON so.sales_ord_id = hs.sales_ord_id
-                                INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
-                                INNER JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
-                                LEFT JOIN sys0064m mg ON mg.area_id = ad.area_id
-                                LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
-                                LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
-                                INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
-                                JOIN sal0029d cu2 ON cu2.cust_id = so.cust_id
-                                LEFT JOIN org0001d cd ON cd.mem_id = hs.cody_id
-                                LEFT JOIN sys0038m stus ON stus.stus_code_id = cd.stus
-                                LEFT JOIN org0001d ac ON ac.mem_id = hs.cody_id
-                                LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
-                                LEFT JOIN org0005d og ON og.mem_id = cd.mem_id
-                                LEFT JOIN org0001d mem3 ON og.mem_up_id = mem3.mem_id
-                                LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
-                                LEFT JOIN org1001v t6 ON t6.mem_id = og.mem_id
+                                    SELECT s1.sales_ord_id,
+                                              s1.brnch_id,
+                                              s1.cust_id,
+                                              s1.sales_ord_no,
+                                              s1.stus_code_id,
+                                              s1.pv_year,
+                                              s1.pv_month,
+                                              s1.app_type_id,
+                                              TO_NUMBER(s2.srv_type) srv_type,
+                                              s2.sales_prod_sz,
+                                              s2.unit_type unit_type,
+                                              s1.bndl_id
+                                    FROM SAL0001D s1
+                                    JOIN SAL0225D s2 ON s2.srv_ord_id = s1.sales_ord_id
+                                ) so ON so.sales_ord_id = hs.sales_ord_id
+                                INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
+                                INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
+                                LEFT JOIN SYS0064M mg ON mg.area_id = ad.area_id
+                                LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
+                                LEFT JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
+                                INNER JOIN SYS0013M ap ON ap.code_id = so.app_type_id
+                                JOIN SAL0029D cu2 ON cu2.cust_id = so.cust_id
+                                LEFT JOIN ORG0001D cd ON cd.mem_id = hs.cody_id
+                                LEFT JOIN SYS0038M stus ON stus.stus_code_id = cd.stus
+                                LEFT JOIN ORG0001D ac ON ac.mem_id = hs.cody_id
+                                LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
+                                LEFT JOIN ORG0005D og ON og.mem_id = cd.mem_id
+                                LEFT JOIN ORG0001D mem3 ON og.mem_up_id = mem3.mem_id
+                                LEFT JOIN SYS0047M usr ON hs.crt_user_id = usr.user_id
+                                LEFT JOIN ORG1001V t6 ON t6.mem_id = og.mem_id
                                 LEFT JOIN (
-                                    SELECT
-                                        fr.resn_id      AS code_id,
-                                        fr.code
-                                        || '-'
-                                        || fr.resn_desc AS code_name
-                                    FROM
-                                        sys0032m fr
-                                    WHERE
-                                        ( 167 = fr.resn_type_id )
-                                        AND ( 1 = fr.stus_code_id )
-                                )        rem ON rem.code_id = hr.fail_resn_id
-                                LEFT JOIN sys0013m srt ON so.srv_type = srt.code_id
-                                LEFT JOIN sal0002d ms ON ms.sales_ord_id = so.sales_ord_id
-                                LEFT JOIN sys0026m mi ON mi.stk_id = ms.itm_stk_id
-                                LEFT JOIN hmc0011d hc ON hc.ord_seq_no = so.bndl_id
-                                LEFT JOIN sal0001d fo ON fo.sales_ord_no = hc.fra_ord_no
-                                LEFT JOIN sal0002d fs ON fs.sales_ord_id = fo.sales_ord_id
-                                LEFT JOIN sys0026m fi ON fi.stk_id = fs.itm_stk_id
-                                LEFT JOIN rep0010s ag ON ag.ord_id = hs.sales_ord_id
-                                LEFT JOIN rep0011s type ON type.ord_no = so.sales_ord_no
-                            WHERE
-                                cd.mem_id IS NOT NULL
+                                    SELECT fr.resn_id AS code_id,
+                                               fr.code  || '-'  || fr.resn_desc AS code_name
+                                    FROM SYS0032M fr
+                                    WHERE ( 167 = fr.resn_type_id )
+                                    AND ( 1 = fr.stus_code_id )
+                                ) rem ON rem.code_id = hr.fail_resn_id
+                                LEFT JOIN SYS0013M srt ON so.srv_type = srt.code_id
+                                LEFT JOIN SAL000D ms ON ms.sales_ord_id = so.sales_ord_id
+                                LEFT JOIN SYS0026M mi ON mi.stk_id = ms.itm_stk_id
+                                LEFT JOIN HMC0011D hc ON hc.ord_seq_no = so.bndl_id
+                                LEFT JOIN SAL0001D fo ON fo.sales_ord_no = hc.fra_ord_no
+                                LEFT JOIN SAL0002D fs ON fs.sales_ord_id = fo.sales_ord_id
+                                LEFT JOIN SYS0026M fi ON fi.stk_id = fs.itm_stk_id
+                                LEFT JOIN REP0010S ag ON ag.ord_id = hs.sales_ord_id
+                                LEFT JOIN REP0011S type ON type.ord_no = so.sales_ord_no
+                            WHERE cd.mem_id IS NOT NULL
+                          <if test="cmdCdManager != null and cmdCdManager != ''">
+                            AND MEM3.MEM_ID =  #{cmdCdManager}
+                          </if>
+                          <if test="userType == '3'.toString()">
+                            AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                          </if>
+                          <if test="cmdBranchCode != null and cmdBranchCode != ''">
+                            AND ( BR.BRNCH_id = #{cmdBranchCode})
+                          </if>
+                           <if test="orgCode != null and orgCode != ''">
+                            AND T6.ORG_CODE = #{orgCode}
+                           </if>
+                           <if test="grpCode != null and grpCode != ''">
+                             AND T6.GRP_CODE = #{grpCode}
+                          </if>
+                           <if test="deptCode != null and deptCode != ''">
+                             AND T6.DEPT_CODE = #{deptCode}
+                          </if>
+                           <![CDATA[
+                            AND hs.TYPE_ID  <> (SELECT CODE_ID
+                                                           FROM SYS0013M
+                                                           WHERE CODE_MASTER_ID = 34
+                                                            AND CODE = 'MSS')
+                            ]]>
 
-                <if test="cmdCdManager != null and cmdCdManager != ''">
-                  AND MEM3.MEM_ID =  #{cmdCdManager}
-                </if>
-                <if test="userType == '3'.toString()">
-                  AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
-                </if>
-                <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                  AND ( BR.BRNCH_id = #{cmdBranchCode})
-                </if>
-                 <if test="orgCode != null and orgCode != ''">
-                  AND T6.ORG_CODE = #{orgCode}
-                 </if>
-                 <if test="grpCode != null and grpCode != ''">
-                   AND T6.GRP_CODE = #{grpCode}
-                </if>
-                 <if test="deptCode != null and deptCode != ''">
-                   AND T6.DEPT_CODE = #{deptCode}
-                </if>
+                  UNION
 
-                            UNION
-                            SELECT DISTINCT
-                                hs.no             AS no,
-                                hs.stus_code_id   AS stus_code_id,
-                                hs.month
-                                || '/'
-                                || hs.year        AS hs_date,
-                                hs.month,
-                                hs.year,
-                                st.code,
-                                hr.no             AS result,
-                                so.sales_ord_no   sales_ord_no,
-                                so.app_type_id,
-                                mi.stk_desc       AS mat_desc,
-                                fi.stk_desc       AS fra_desc,
-                                ap.code           AS apptype,
-                                so.sales_prod_sz,
-                                cu2.name          name,
-                                cd.mem_code       AS assign_cody,
-                                cd.mem_id,
-                                ac.mem_code       AS action_cody,
-                                mg.state,
-                                mg.area,
-                                cu2.cust_id,
-                                stus.code         AS ht_status,
-                                hr.setl_dt,
-                                rem.code_name     AS remarks,
-                                br.brnch_id       AS brnch_id,
-                                hs.schdul_id      schdul_id,
-                                so.sales_ord_id   AS sales_ord_id,
-                                br.code           AS ht_brnch_code,
-                                mem3.mem_code     ht_mgr_code,
-                                og.dept_code,
-                                CASE
-                                    WHEN hs.crt_user_id = '2222' THEN
-                                        ''
-                                    ELSE
-                                        usr.user_name
-                                END               AS crt_user_id,
-                                so.pv_month,
-                                so.pv_year,
-                                t6.org_code       AS orgcode,
-                                t6.grp_code       AS grpcode,
-                                t6.dept_code      AS deptcode,
-                                CASE
-                                    WHEN srt.code IS NOT NULL THEN
-                                        srt.code_name
-                                    ELSE
-                                        type.stk_ctgry
-                                END               AS srv_type,
-                                so.unit_type,
-                                so.srv_type       AS service_type,
-                                ag.curr_mth_aging agingmth
-                            FROM
-                                     svc0008d hs
+                            SELECT DISTINCT hs.no AS no,
+                                      hs.stus_code_id AS stus_code_id,
+                                      hs.month || '/' || hs.year AS hs_date,
+                                      hs.month,
+                                      hs.year,
+                                      st.code,
+                                      hr.no  AS result,
+                                      so.sales_ord_no sales_ord_no,
+                                      so.app_type_id,
+                                      mi.stk_desc AS mat_desc,
+                                      fi.stk_desc AS fra_desc,
+                                      ap.code AS apptype,
+                                      so.sales_prod_sz,
+                                      cu2.name name,
+                                      cd.mem_code AS assign_cody,
+                                      cd.mem_id,
+                                      ac.mem_code AS action_cody,
+                                      mg.state,
+                                      mg.area,
+                                      cu2.cust_id,
+                                      stus.code AS ht_status,
+                                      hr.setl_dt,
+                                      rem.code_name  AS remarks,
+                                      br.brnch_id  AS brnch_id,
+                                      hs.schdul_id schdul_id,
+                                      so.sales_ord_id AS sales_ord_id,
+                                      br.code AS ht_brnch_code,
+                                      mem3.mem_code ht_mgr_code,
+                                      og.dept_code,
+                                      CASE WHEN hs.crt_user_id = '2222'
+                                              THEN  ''
+                                          ELSE usr.user_name
+                                      END AS crt_user_id,
+                                      so.pv_month,
+                                      so.pv_year,
+                                      t6.org_code AS orgcode,
+                                      t6.grp_code AS grpcode,
+                                      t6.dept_code AS deptcode,
+                                      CASE WHEN srt.code IS NOT NULL
+                                              THEN srt.code_name
+                                          ELSE type.stk_ctgry
+                                      END AS srv_type,
+                                      so.unit_type,
+                                      so.srv_type AS service_type,
+                                      ag.curr_mth_aging agingmth
+                            FROM SVC0008D hs
                                 JOIN (
-                                    SELECT
-                                        srv_ord_id          sales_ord_id,
+                                    SELECT srv_ord_id  sales_ord_id,
                                         brnch_id,
                                         cust_id,
-                                        srv_ord_no          sales_ord_no,
+                                        srv_ord_no sales_ord_no,
                                         stus_code_id,
                                         pv_year,
                                         pv_month,
@@ -836,137 +803,131 @@ SELECT * FROM
                                         TO_NUMBER(srv_type) srv_type,
                                         sales_prod_sz,
                                         unit_type,
-                                        0                   bndl_id
-                                    FROM
-                                        sal0225d
-                                )        so ON so.sales_ord_id = hs.sales_ord_id
-                                INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
-                                INNER JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
-                                LEFT JOIN sys0064m mg ON mg.area_id = ad.area_id
-                                LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
-                                LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
-                                INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
-                                JOIN sal0029d cu2 ON cu2.cust_id = so.cust_id
-                                LEFT JOIN org0001d cd ON cd.mem_id = hs.cody_id
-                                LEFT JOIN sys0038m stus ON stus.stus_code_id = cd.stus
-                                LEFT JOIN org0001d ac ON ac.mem_id = hs.cody_id
-                                LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
-                                LEFT JOIN org0005d og ON og.mem_id = cd.mem_id
-                                LEFT JOIN org0001d mem3 ON og.mem_up_id = mem3.mem_id
-                                LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
-                                LEFT JOIN org1001v t6 ON t6.mem_id = og.mem_id
+                                        0  bndl_id
+                                    FROM SAL0225D
+                                ) so ON so.sales_ord_id = hs.sales_ord_id
+                                INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
+                                INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
+                                LEFT JOIN SYS0064M mg ON mg.area_id = ad.area_id
+                                LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
+                                LEFT JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
+                                INNER JOIN SYS0013M ap ON ap.code_id = so.app_type_id
+                                JOIN SAL0029D cu2 ON cu2.cust_id = so.cust_id
+                                LEFT JOIN ORG0001D cd ON cd.mem_id = hs.cody_id
+                                LEFT JOIN SYS0038M stus ON stus.stus_code_id = cd.stus
+                                LEFT JOIN ORG0001D ac ON ac.mem_id = hs.cody_id
+                                LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
+                                LEFT JOIN ORG0005D og ON og.mem_id = cd.mem_id
+                                LEFT JOIN ORG0001D mem3 ON og.mem_up_id = mem3.mem_id
+                                LEFT JOIN SYS0047M usr ON hs.crt_user_id = usr.user_id
+                                LEFT JOIN OTG1001V t6 ON t6.mem_id = og.mem_id
                                 LEFT JOIN (
-                                    SELECT
-                                        fr.resn_id      AS code_id,
-                                        fr.code
-                                        || '-'
-                                        || fr.resn_desc AS code_name
-                                    FROM
-                                        sys0032m fr
-                                    WHERE
-                                        ( 167 = fr.resn_type_id )
-                                        AND ( 1 = fr.stus_code_id )
-                                )        rem ON rem.code_id = hr.fail_resn_id
-                                LEFT JOIN sys0013m srt ON so.srv_type = srt.code_id
-                                LEFT JOIN sal0002d ms ON ms.sales_ord_id = so.sales_ord_id
-                                LEFT JOIN sys0026m mi ON mi.stk_id = ms.itm_stk_id
-                                LEFT JOIN hmc0011d hc ON hc.ord_seq_no = so.bndl_id
-                                LEFT JOIN sal0001d fo ON fo.sales_ord_no = hc.fra_ord_no
-                                LEFT JOIN sal0002d fs ON fs.sales_ord_id = fo.sales_ord_id
-                                LEFT JOIN sys0026m fi ON fi.stk_id = fs.itm_stk_id
-                                LEFT JOIN rep0010s ag ON ag.ord_id = hs.sales_ord_id
-                                LEFT JOIN rep0011s type ON type.ord_no = so.sales_ord_no
-                            WHERE
-                                cd.mem_id IS NOT NULL
+                                    SELECT  fr.resn_id      AS code_id,
+                                                fr.code || '-' || fr.resn_desc AS code_name
+                                    FROM SYS0032M fr
+                                    WHERE ( 167 = fr.resn_type_id )
+                                    AND ( 1 = fr.stus_code_id )
+                                )  rem ON rem.code_id = hr.fail_resn_id
+                                LEFT JOIN SYS0013Mm srt ON so.srv_type = srt.code_id
+                                LEFT JOIN SAL0002D ms ON ms.sales_ord_id = so.sales_ord_id
+                                LEFT JOIN SYS0026M mi ON mi.stk_id = ms.itm_stk_id
+                                LEFT JOIN HMC0011D hc ON hc.ord_seq_no = so.bndl_id
+                                LEFT JOIN SAL0001D fo ON fo.sales_ord_no = hc.fra_ord_no
+                                LEFT JOIN SAL0002D fs ON fs.sales_ord_id = fo.sales_ord_id
+                                LEFT JOIN SYS0026M fi ON fi.stk_id = fs.itm_stk_id
+                                LEFT JOIN REP0010Ss ag ON ag.ord_id = hs.sales_ord_id
+                                LEFT JOIN REP0011S type ON type.ord_no = so.sales_ord_no
+                            WHERE cd.mem_id IS NOT NULL
 
-                <if test="cmdCdManager != null and cmdCdManager != ''">
-                  AND MEM3.MEM_ID =  #{cmdCdManager}
-                </if>
-                <if test="userType == '3'.toString()">
-                  AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
-                </if>
-                <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                  AND ( BR.BRNCH_id = #{cmdBranchCode})
-                </if>
-                 <if test="orgCode != null and orgCode != ''">
-                  AND T6.ORG_CODE = #{orgCode}
-                 </if>
-                 <if test="grpCode != null and grpCode != ''">
-                   AND T6.GRP_CODE = #{grpCode}
-                </if>
-                 <if test="deptCode != null and deptCode != ''">
-                   AND T6.DEPT_CODE = #{deptCode}
-                </if>
+                          <if test="cmdCdManager != null and cmdCdManager != ''">
+                            AND MEM3.MEM_ID =  #{cmdCdManager}
+                          </if>
+                          <if test="userType == '3'.toString()">
+                            AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                          </if>
+                          <if test="cmdBranchCode != null and cmdBranchCode != ''">
+                            AND ( BR.BRNCH_id = #{cmdBranchCode})
+                          </if>
+                           <if test="orgCode != null and orgCode != ''">
+                            AND T6.ORG_CODE = #{orgCode}
+                           </if>
+                           <if test="grpCode != null and grpCode != ''">
+                             AND T6.GRP_CODE = #{grpCode}
+                          </if>
+                           <if test="deptCode != null and deptCode != ''">
+                             AND T6.DEPT_CODE = #{deptCode}
+                          </if>
+                           <![CDATA[
+                            AND hs.TYPE_ID  <> (SELECT CODE_ID
+                                                           FROM SYS0013M
+                                                           WHERE CODE_MASTER_ID = 34
+                                                            AND CODE = 'MSS')
+                             ]]>
                         )
+
                         UNION
                         (
-                        SELECT DISTINCT
-                            hs.no             AS no,
-                            hs.stus_code_id   AS stus_code_id,
-                            hs.month
-                            || '/'
-                            || hs.year        AS hs_date,
-                            hs.month,
-                            hs.year,
-                            st.code,
-                            hr.no             AS result,
-                            so.sales_ord_no   sales_ord_no,
-                            so.app_type_id,
-                            mi.stk_desc       AS mat_desc,
-                            fi.stk_desc       AS fra_desc,
-                            ap.code           AS apptype,
-                            so.sales_prod_sz,
-                            cu.name,
-                            cd.mem_code       AS assign_cody,
-                            cd.mem_id,
-                            ac.mem_code       AS action_cody,
-                            mg.state,
-                            mg.area,
-                            cu.cust_id        AS cust_id,
-                            stus.code         AS ht_status,
-                            hr.setl_dt,
-                            rem.code_name     AS remarks,
-                            br.brnch_id       AS brnch_id,
-                            hs.schdul_id      schdul_id,
-                            so.sales_ord_id   AS sales_ord_id,
-                            br.code           AS ht_brnch_code,
-                            mem3.mem_code     ht_mgr_code,
-                            og.dept_code,
-                            CASE WHEN hs.crt_user_id = '2222' THEN '' ELSE usr.user_name END AS crt_user_id,
-                            so.pv_month,
-                            so.pv_year,
-                            t6.org_code       AS orgcode,
-                            t6.grp_code       AS grpcode,
-                            t6.dept_code      AS deptcode,
-                            CASE
-                                WHEN srt.code IS NOT NULL THEN
-                                    srt.code_name
-                                ELSE
-                                    type.stk_ctgry
-                            END               AS srv_type,
-                            so.unit_type,
-                            so.srv_type       AS service_type,
-                            ag.curr_mth_aging agingmth
-                        FROM
-                                 svc0008d hs
+                          SELECT DISTINCT hs.no AS no,
+                                    hs.stus_code_id   AS stus_code_id,
+                                    hs.month || '/' || hs.year AS hs_date,
+                                    hs.month,
+                                    hs.year,
+                                    st.code,
+                                    hr.no AS result,
+                                    so.sales_ord_no sales_ord_no,
+                                    so.app_type_id,
+                                    mi.stk_desc AS mat_desc,
+                                    fi.stk_desc AS fra_desc,
+                                    ap.code AS apptype,
+                                    so.sales_prod_sz,
+                                    cu.name,
+                                    cd.mem_code AS assign_cody,
+                                    cd.mem_id,
+                                    ac.mem_code AS action_cody,
+                                    mg.state,
+                                    mg.area,
+                                    cu.cust_id AS cust_id,
+                                    stus.code AS ht_status,
+                                    hr.setl_dt,
+                                    rem.code_name AS remarks,
+                                    br.brnch_id AS brnch_id,
+                                    hs.schdul_id schdul_id,
+                                    so.sales_ord_id AS sales_ord_id,
+                                    br.code AS ht_brnch_code,
+                                    mem3.mem_code ht_mgr_code,
+                                    og.dept_code,
+                                    CASE WHEN hs.crt_user_id = '2222'
+                                             THEN ''
+                                    ELSE usr.user_name END AS crt_user_id,
+                                    so.pv_month,
+                                    so.pv_year,
+                                    t6.org_code AS orgcode,
+                                    t6.grp_code AS grpcode,
+                                    t6.dept_code AS deptcode,
+                                    CASE WHEN srt.code IS NOT NULL
+                                            THEN srt.code_name
+                                    ELSE type.stk_ctgry
+                                    END AS srv_type,
+                                    so.unit_type,
+                                    so.srv_type AS service_type,
+                                    ag.curr_mth_aging agingmth
+                        FROM svc0008d hs
                             JOIN (
-                                SELECT
-                                    s1.sales_ord_id,
-                                    s1.brnch_id,
-                                    s1.cust_id,
-                                    s1.sales_ord_no,
-                                    s1.stus_code_id,
-                                    s1.pv_year,
-                                    s1.pv_month,
-                                    s1.app_type_id,
-                                    TO_NUMBER(s2.srv_type) srv_type,
-                                    s2.sales_prod_sz,
-                                    s2.unit_type           unit_type,
-                                    s1.bndl_id
-                                FROM
-                                         sal0001d s1
-                                    JOIN sal0225d s2 ON s2.srv_ord_id = s1.sales_ord_id
-                            )        so ON so.sales_ord_id = hs.sales_ord_id
+                                SELECT s1.sales_ord_id,
+                                            s1.brnch_id,
+                                            s1.cust_id,
+                                            s1.sales_ord_no,
+                                            s1.stus_code_id,
+                                            s1.pv_year,
+                                            s1.pv_month,
+                                            s1.app_type_id,
+                                            TO_NUMBER(s2.srv_type) srv_type,
+                                            s2.sales_prod_sz,
+                                            s2.unit_type           unit_type,
+                                            s1.bndl_id
+                                FROM sal0001d s1
+                                JOIN sal0225d s2 ON s2.srv_ord_id = s1.sales_ord_id
+                            ) so ON so.sales_ord_id = hs.sales_ord_id
                             INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
                             INNER JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
                             LEFT JOIN sys0064m mg ON mg.area_id = ad.area_id
@@ -983,17 +944,12 @@ SELECT * FROM
                             LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
                             LEFT JOIN org1001v t6 ON t6.mem_id = og.mem_id
                             LEFT JOIN (
-                                SELECT
-                                    fr.resn_id      AS code_id,
-                                    fr.code
-                                    || '-'
-                                    || fr.resn_desc AS code_name
-                                FROM
-                                    sys0032m fr
-                                WHERE
-                                    ( 167 = fr.resn_type_id )
-                                    AND ( 1 = fr.stus_code_id )
-                            )        rem ON rem.code_id = hr.fail_resn_id
+                                SELECT fr.resn_id AS code_id,
+                                           fr.code || '-' || fr.resn_desc AS code_name
+                                FROM sys0032m fr
+                                WHERE ( 167 = fr.resn_type_id )
+                                AND ( 1 = fr.stus_code_id )
+                            ) rem ON rem.code_id = hr.fail_resn_id
                             LEFT JOIN sys0013m srt ON so.srv_type = srt.code_id
                             LEFT JOIN sal0002d ms ON ms.sales_ord_id = so.sales_ord_id
                             LEFT JOIN sys0026m mi ON mi.stk_id = ms.itm_stk_id
@@ -1003,65 +959,65 @@ SELECT * FROM
                             LEFT JOIN sys0026m fi ON fi.stk_id = fs.itm_stk_id
                             LEFT JOIN rep0010s ag ON ag.ord_id = hs.sales_ord_id
                             LEFT JOIN rep0011s type ON type.ord_no = so.sales_ord_no
-                        WHERE
-                            cd.mem_id IS NULL
+                        WHERE cd.mem_id IS NULL
+                         <![CDATA[
+                        AND hs.TYPE_ID  <> (SELECT CODE_ID
+                                                       FROM SYS0013M
+                                                       WHERE CODE_MASTER_ID = 34
+                                                       AND CODE = 'MSS')
+                        ]]>
 
-                          UNION
-                          SELECT DISTINCT
-                            hs.no             AS no,
-                            hs.stus_code_id   AS stus_code_id,
-                            hs.month
-                            || '/'
-                            || hs.year        AS hs_date,
-                            hs.month,
-                            hs.year,
-                            st.code,
-                            hr.no             AS result,
-                            so.sales_ord_no   sales_ord_no,
-                            so.app_type_id,
-                            mi.stk_desc       AS mat_desc,
-                            fi.stk_desc       AS fra_desc,
-                            ap.code           AS apptype,
-                            so.sales_prod_sz,
-                            cu.name,
-                            cd.mem_code       AS assign_cody,
-                            cd.mem_id,
-                            ac.mem_code       AS action_cody,
-                            mg.state,
-                            mg.area,
-                            cu.cust_id        AS cust_id,
-                            stus.code         AS ht_status,
-                            hr.setl_dt,
-                            rem.code_name     AS remarks,
-                            br.brnch_id       AS brnch_id,
-                            hs.schdul_id      schdul_id,
-                            so.sales_ord_id   AS sales_ord_id,
-                            br.code           AS ht_brnch_code,
-                            mem3.mem_code     ht_mgr_code,
-                            og.dept_code,
-                            CASE WHEN hs.crt_user_id = '2222' THEN '' ELSE usr.user_name END AS crt_user_id,
-                            so.pv_month,
-                            so.pv_year,
-                            t6.org_code       AS orgcode,
-                            t6.grp_code       AS grpcode,
-                            t6.dept_code      AS deptcode,
-                            CASE
-                                WHEN srt.code IS NOT NULL THEN
-                                    srt.code_name
-                                ELSE
-                                    type.stk_ctgry
-                            END               AS srv_type,
-                            so.unit_type,
-                            so.srv_type       AS service_type,
-                            ag.curr_mth_aging agingmth
-                        FROM
-                                 svc0008d hs
+                        UNION
+
+                        SELECT DISTINCT hs.no AS no,
+                                    hs.stus_code_id AS stus_code_id,
+                                    hs.month || '/' || hs.year AS hs_date,
+                                    hs.month,
+                                    hs.year,
+                                    st.code,
+                                    hr.no AS result,
+                                    so.sales_ord_no sales_ord_no,
+                                    so.app_type_id,
+                                    mi.stk_desc AS mat_desc,
+                                    fi.stk_desc AS fra_desc,
+                                    ap.code AS apptype,
+                                    so.sales_prod_sz,
+                                    cu.name,
+                                    cd.mem_code AS assign_cody,
+                                    cd.mem_id,
+                                    ac.mem_code AS action_cody,
+                                    mg.state,
+                                    mg.area,
+                                    cu.cust_id AS cust_id,
+                                    stus.code AS ht_status,
+                                    hr.setl_dt,
+                                    rem.code_name AS remarks,
+                                    br.brnch_id  AS brnch_id,
+                                    hs.schdul_id schdul_id,
+                                    so.sales_ord_id AS sales_ord_id,
+                                    br.code AS ht_brnch_code,
+                                    mem3.mem_code ht_mgr_code,
+                                    og.dept_code,
+                                    CASE WHEN hs.crt_user_id = '2222'
+                                            THEN ''
+                                    ELSE usr.user_name END AS crt_user_id,
+                                    so.pv_month,
+                                    so.pv_year,
+                                    t6.org_code AS orgcode,
+                                    t6.grp_code AS grpcode,
+                                    t6.dept_code AS deptcode,
+                                    CASE WHEN srt.code IS NOT NULL
+                                            THEN srt.code_name
+                                    ELSE type.stk_ctgry END AS srv_type,
+                                    so.unit_type,
+                                    so.srv_type AS service_type,
+                                    ag.curr_mth_aging agingmth
+                        FROM svc0008d hs
                             JOIN (
-                                SELECT
-                                    srv_ord_id          sales_ord_id,
+                                SELECT srv_ord_id sales_ord_id,
                                     brnch_id,
                                     cust_id,
-                                    srv_ord_no          sales_ord_no,
+                                    srv_ord_no sales_ord_no,
                                     stus_code_id,
                                     pv_year,
                                     pv_month,
@@ -1069,10 +1025,9 @@ SELECT * FROM
                                     TO_NUMBER(srv_type) srv_type,
                                     sales_prod_sz,
                                     unit_type,
-                                    0                   bndl_id
-                                FROM
-                                    sal0225d
-                            )        so ON so.sales_ord_id = hs.sales_ord_id
+                                    0 bndl_id
+                                FROM sal0225d
+                            ) so ON so.sales_ord_id = hs.sales_ord_id
                             INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
                             INNER JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
                             LEFT JOIN sys0064m mg ON mg.area_id = ad.area_id
@@ -1089,17 +1044,12 @@ SELECT * FROM
                             LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
                             LEFT JOIN org1001v t6 ON t6.mem_id = og.mem_id
                             LEFT JOIN (
-                                SELECT
-                                    fr.resn_id      AS code_id,
-                                    fr.code
-                                    || '-'
-                                    || fr.resn_desc AS code_name
-                                FROM
-                                    sys0032m fr
-                                WHERE
-                                    ( 167 = fr.resn_type_id )
-                                    AND ( 1 = fr.stus_code_id )
-                            )        rem ON rem.code_id = hr.fail_resn_id
+                                SELECT fr.resn_id      AS code_id,
+                                           fr.code || '-' || fr.resn_desc AS code_name
+                                FROM sys0032m fr
+                                WHERE ( 167 = fr.resn_type_id )
+                                AND ( 1 = fr.stus_code_id )
+                            ) rem ON rem.code_id = hr.fail_resn_id
                             LEFT JOIN sys0013m srt ON so.srv_type = srt.code_id
                             LEFT JOIN sal0002d ms ON ms.sales_ord_id = so.sales_ord_id
                             LEFT JOIN sys0026m mi ON mi.stk_id = ms.itm_stk_id
@@ -1109,18 +1059,21 @@ SELECT * FROM
                             LEFT JOIN sys0026m fi ON fi.stk_id = fs.itm_stk_id
                             LEFT JOIN rep0010s ag ON ag.ord_id = hs.sales_ord_id
                             LEFT JOIN rep0011s type ON type.ord_no = so.sales_ord_no
-                        WHERE
-                            cd.mem_id IS NULL
-                            )
+                        WHERE cd.mem_id IS NULL
+                        <![CDATA[
+                        AND hs.TYPE_ID  <> (SELECT CODE_ID
+                                                       FROM SYS0013M
+                                                       WHERE CODE_MASTER_ID = 34
+                                                        AND CODE = 'MSS')
+                        ]]>
+                        )
                     ) project2
                 WHERE
                         1 = 1
-
                  <if test="myBSMonth != null and myBSMonth != ''">
                   AND Project2.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                   AND Project2.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                 </if>
-
                  <choose>
                   <when test="myBSMonth != ''">
                     <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
@@ -1133,7 +1086,6 @@ SELECT * FROM
                     </if>
                   </otherwise>
                 </choose>
-
                 <choose>
                   <when test="myBSMonth != ''">
                     <if test="txtSalesOrder != null and txtSalesOrder != ''">
@@ -1141,7 +1093,6 @@ SELECT * FROM
                     </if>
                   </when>
                   <otherwise>
-
                     <choose>
                       <when test="txtHsOrderNo != ''">
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
@@ -1154,37 +1105,29 @@ SELECT * FROM
                         </if>
                       </otherwise>
                     </choose>
-
                   </otherwise>
                 </choose>
-
                 <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
                   AND Project2.ASSIGN_CODY = #{txtAssigncodyCode}
                 </if>
-
                 <if test="myInstallMonth != null and myInstallMonth != ''">
                   AND Project2.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
                 </if>
-
                 <if test="myInstallMonth != null and myInstallMonth != ''">
                   AND Project2.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
                 </if>
-
                 <if test="cmbStatusType != null and cmbStatusType != ''">
                   AND Project2.STUS_CODE_ID = #{cmbStatusType}
                 </if>
-
                 <if test="txtCustomer != null and txtCustomer != ''">
                   AND Project2.CUST_ID  = #{txtCustomer}
                 </if>
-
                 <if test='arrAppType != null and arrAppType != ""'>
                   AND Project2.APP_TYPE_ID IN
                   <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-
                 <if test="serviceTypeIdHsManagement != null and serviceTypeIdHsManagement != '' ">
                     AND Project2.SERVICE_TYPE = #{serviceTypeIdHsManagement}
                 </if>
@@ -1194,29 +1137,26 @@ SELECT * FROM
                     #{item}
                   </foreach>
                 </if>
-
                 <if test='arrUnitTypeIdHsManagement != null and arrUnitTypeIdHsManagement != ""'>
                   AND Project2.UNIT_TYPE IN
                   <foreach item="item" collection="arrUnitTypeIdHsManagement" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-
                 <if test="startDate != '' and startDate != '' ">
                     <![CDATA[ AND  Project2.SETL_DT >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
                 </if>
-
                 <if test="endDate != '' and endDate != '' ">
                     <![CDATA[  AND Project2.SETL_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                 </if>
-
             ) project3
-        <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 50000 ]]>
-                </select>
+        <![CDATA[
+        ) WHERE DUM_SEQ = 1
+        AND ROWNUM <= 50000
+        ]]>
+       </select>
 
-                  <select id="selectHsAssiinlList_1" parameterType="Map" resultType="egovMap">
-
-
+       <select id="selectHsAssiinlList_1" parameterType="Map" resultType="egovMap">
                          SELECT Project2.C1 C1  ,
                                     Project2.SCHDUL_ID SCHDUL_ID  ,
                                     Project2.No No  ,
@@ -1243,60 +1183,60 @@ SELECT * FROM
                                     Project2.BRNCH_ID,
                                     Project2.cust_id,
                                     Project2.actn_mem_id
-                      FROM ( SELECT Project2.SCHDUL_ID SCHDUL_ID  ,
-                                    Project2.No No  ,
-                                    Project2.HS_DATE HS_DATE   ,
-                                    Project2.CODY_ID CODY_ID  ,
-                                    Project2.STUS_CODE_ID STUS_CODE_ID  ,
-                                    Project2.Code Code  ,
-                                    Project2.SALES_ORD_ID SALES_ORD_ID  ,
-                                    Project2.SALES_ORD_NO SALES_ORD_NO  ,
-                                    Project2.Name Name  ,
-                                    Project2.NRIC NRIC  ,
-                                    Project2.Code1 Code1  ,
-                                    Project2.INST_STATE INST_STATE  ,
-                                    Project2.INST_AREA INST_AREA  ,
-                                    Project2.C1 C1  ,
-                                    Project2.C2 C2  ,
-                                    Project2.C3 C3  ,
-                                    Project2.C4 C4  ,
-                                    Project2.C5 C5  ,
-                                    Project2.C6 C6  ,
-                                    Project2.C7 C7  ,
-                                    Project2.C8 C8  ,
-                                    Project2.CODY_STATUS as CODY_STATUS,
-                                    Project2.BRNCH_ID as BRNCH_ID,
-                                    Project2.cust_id as cust_id,
-                                    Project2.actn_mem_id AS actn_mem_id,
-                                    ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID ASC  ) row_number
+                      FROM (
+                                 SELECT Project2.SCHDUL_ID SCHDUL_ID  ,
+                                          Project2.No No  ,
+                                          Project2.HS_DATE HS_DATE   ,
+                                          Project2.CODY_ID CODY_ID  ,
+                                          Project2.STUS_CODE_ID STUS_CODE_ID  ,
+                                          Project2.Code Code  ,
+                                          Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                                          Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                                          Project2.Name Name  ,
+                                          Project2.NRIC NRIC  ,
+                                          Project2.Code1 Code1  ,
+                                          Project2.INST_STATE INST_STATE  ,
+                                          Project2.INST_AREA INST_AREA  ,
+                                          Project2.C1 C1  ,
+                                          Project2.C2 C2  ,
+                                          Project2.C3 C3  ,
+                                          Project2.C4 C4  ,
+                                          Project2.C5 C5  ,
+                                          Project2.C6 C6  ,
+                                          Project2.C7 C7  ,
+                                          Project2.C8 C8  ,
+                                          Project2.CODY_STATUS as CODY_STATUS,
+                                          Project2.BRNCH_ID as BRNCH_ID,
+                                          Project2.cust_id as cust_id,
+                                          Project2.actn_mem_id AS actn_mem_id,
+                                          ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID ASC  ) ROW_NUMBER
                              FROM ( SELECT Distinct1.SCHDUL_ID SCHDUL_ID  ,
-                                           Distinct1.No No  ,
-                                           Distinct1.HS_DATE HS_DATE  ,
-                                           Distinct1.CODY_ID CODY_ID  ,
-                                           Distinct1.STUS_CODE_ID STUS_CODE_ID  ,
-                                           Distinct1.Code Code  ,
-                                           Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
-                                           Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
-                                           Distinct1.Name Name  ,
-                                           Distinct1.NRIC NRIC  ,
-                                           Distinct1.Code1 Code1  ,
-                                           Distinct1.INST_STATE INST_STATE  ,
-                                           Distinct1.INST_AREA INST_AREA  ,
-                                           Distinct1.C1 C1  ,
-                                           Distinct1.C2 C2  ,
-                                           Distinct1.C3 C3  ,
-                                           Distinct1.C4 C4  ,
-                                           Distinct1.C5 C5  ,
-                                           Distinct1.C6 C6  ,
-                                           Distinct1.C7 C7  ,
-                                           Distinct1.C8 C8  ,
-                                           Distinct1.CODY_STATUS as CODY_STATUS,
-                                           Distinct1.BRNCH_ID as BRNCH_ID,
-                                           Distinct1.cust_id cust_id,
-                                           Distinct1.actn_mem_id
+                                                   Distinct1.No No  ,
+                                                   Distinct1.HS_DATE HS_DATE  ,
+                                                   Distinct1.CODY_ID CODY_ID  ,
+                                                   Distinct1.STUS_CODE_ID STUS_CODE_ID  ,
+                                                   Distinct1.Code Code  ,
+                                                   Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+                                                   Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+                                                   Distinct1.Name Name  ,
+                                                   Distinct1.NRIC NRIC  ,
+                                                   Distinct1.Code1 Code1  ,
+                                                   Distinct1.INST_STATE INST_STATE  ,
+                                                   Distinct1.INST_AREA INST_AREA  ,
+                                                   Distinct1.C1 C1  ,
+                                                   Distinct1.C2 C2  ,
+                                                   Distinct1.C3 C3  ,
+                                                   Distinct1.C4 C4  ,
+                                                   Distinct1.C5 C5  ,
+                                                   Distinct1.C6 C6  ,
+                                                   Distinct1.C7 C7  ,
+                                                   Distinct1.C8 C8  ,
+                                                   Distinct1.CODY_STATUS as CODY_STATUS,
+                                                   Distinct1.BRNCH_ID as BRNCH_ID,
+                                                   Distinct1.cust_id cust_id,
+                                                   Distinct1.actn_mem_id
                                     FROM (
-                                                    SELECT DISTINCT
-                                                                 Extent1.SCHDUL_ID SCHDUL_ID,
+                                                    SELECT DISTINCT Extent1.SCHDUL_ID SCHDUL_ID,
                                                                  Extent1.NO NO,
                                                                  Extent1.MONTH  || '/' ||   Extent1.YEAR HS_DATE,
                                                                  Extent1.CODY_ID CODY_ID,
@@ -1310,54 +1250,41 @@ SELECT * FROM
                                                                  Extent6.INST_STATE INST_STATE,
                                                                  Extent6.INST_AREA INST_AREA,
                                                                  1 C1,
-                                                                 CASE
-                                                                    WHEN (Extent7.RESULT_ID IS NOT NULL)
-                                                                    THEN Extent7.RESULT_ID
-                                                                    ELSE 0
-                                                                 END C2,
-                                                                 CASE
-                                                                    WHEN (Extent7.RESULT_ID IS NOT NULL)
-                                                                    THEN  Extent7.NO
-                                                                    ELSE ''
-                                                                 END C3,
-                                                                 CASE
-                                                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                                                    THEN Extent8.MEM_TYPE
-                                                                    ELSE  0
-                                                                 END C4,
-                                                                 CASE
-                                                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                                                    THEN Extent8.MEM_CODE
-                                                                    ELSE ''
-                                                                 END C5,
-                                                                 CASE
-                                                                    WHEN (Extent8.MEM_ID IS NOT NULL)
-                                                                    THEN  Extent8.STUS
-                                                                    ELSE 0
-                                                                 END C6,
-                                                                 CASE
-                                                                    WHEN (Extent6.FIRST_INSTALL_DT  IS NOT NULL)
-                                                                    THEN (Extent6.FIRST_INSTALL_DT)
-                                                                    ELSE  ('1900-01-01 00:00:00')
-                                                                 END  C7,
-                                                                 CASE
-                                                                    WHEN (Extent9.MEM_ID IS NOT NULL)
-                                                                    THEN Extent9.MEM_CODE
-                                                                    ELSE   ''
-                                                                 END C8,
+                                                                 CASE WHEN (Extent7.RESULT_ID IS NOT NULL)
+                                                                         THEN Extent7.RESULT_ID
+                                                                 ELSE 0 END C2,
+                                                                 CASE WHEN (Extent7.RESULT_ID IS NOT NULL)
+                                                                         THEN  Extent7.NO
+                                                                  ELSE '' END C3,
+                                                                 CASE WHEN (Extent8.MEM_ID IS NOT NULL)
+                                                                         THEN Extent8.MEM_TYPE
+                                                                  ELSE  0 END C4,
+                                                                 CASE WHEN (Extent8.MEM_ID IS NOT NULL)
+                                                                         THEN Extent8.MEM_CODE
+                                                                    ELSE '' END C5,
+                                                                 CASE WHEN (Extent8.MEM_ID IS NOT NULL)
+                                                                         THEN  Extent8.STUS
+                                                                  ELSE 0 END C6,
+                                                                 CASE WHEN (Extent6.FIRST_INSTALL_DT  IS NOT NULL)
+                                                                         THEN (Extent6.FIRST_INSTALL_DT)
+                                                                 ELSE  ('1900-01-01 00:00:00')
+                                                                 END C7,
+                                                                 CASE WHEN (Extent9.MEM_ID IS NOT NULL)
+                                                                          THEN Extent9.MEM_CODE
+                                                                 ELSE '' END C8,
                                                                  Extent4.STUS_CODE_ID as CODY_STATUS,
                                                                  Extent3.BRNCH_ID as BRNCH_ID,
                                                                  Extent3.cust_id cust_id,
-                                                                 extent1.actn_mem_id as actn_mem_id
-                                                    from SVC0008D Extent1
+                                                                 Extent1.actn_mem_id as actn_mem_id
+                                                    FROM SVC0008D Extent1
                                                             ,SYS0038M Extent2
                                                             ,SAL0001D Extent3
                                                             ,SAL0029D Extent4
                                                             ,SYS0013M Extent5
-                                                            , (SELECT vOrderInstallationInfo. ORD_ID ORD_ID,
-                                                                          vOrderInstallationInfo. INST_STATE INST_STATE,
-                                                                          vOrderInstallationInfo. INST_AREA INST_AREA,
-                                                                          vOrderInstallationInfo.  INST_CNT_NAME INST_CNT_NAME,
+                                                            , (SELECT vOrderInstallationInfo.ORD_ID ORD_ID,
+                                                                          vOrderInstallationInfo.INST_STATE INST_STATE,
+                                                                          vOrderInstallationInfo.INST_AREA INST_AREA,
+                                                                          vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME,
                                                                           vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC,
                                                                           vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL,
                                                                           vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M,
@@ -1395,27 +1322,32 @@ SELECT * FROM
                                                                     ,SVC0006D Extent7
                                                                     ,ORG0001D Extent8
                                                                     ,ORG0001D Extent9
-                                                    where Extent2.STUS_CODE_ID =  Extent1.STUS_CODE_ID
-                                                        and Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-                                                        and Extent4.CUST_ID = Extent3.CUST_ID
-                                                        and Extent5.CODE_ID =  Extent3.APP_TYPE_ID
-                                                        and Extent6.ORD_ID =  Extent1.SALES_ORD_ID
-                                                        and Extent7.SCHDUL_ID(+) =  Extent1.SCHDUL_ID
-                                                        and  Extent8.MEM_ID(+) = Extent1.CODY_ID
-                                                        and  Extent9.MEM_ID(+) = Extent7.CODY_ID
+                                               WHERE Extent2.STUS_CODE_ID =  Extent1.STUS_CODE_ID
+                                                        AND Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+                                                        AND Extent4.CUST_ID = Extent3.CUST_ID
+                                                        AND Extent5.CODE_ID =  Extent3.APP_TYPE_ID
+                                                        AND Extent6.ORD_ID =  Extent1.SALES_ORD_ID
+                                                        AND Extent7.SCHDUL_ID(+) =  Extent1.SCHDUL_ID
+                                                        AND Extent8.MEM_ID(+) = Extent1.CODY_ID
+                                                        AND Extent9.MEM_ID(+) = Extent7.CODY_ID
                                                         AND 306 = Extent7.TYPE_ID(+)
-                                                        and  1 = Extent7.RESULT_IS_CURR(+)
-                                                        and 1 = Extent1.STUS_CODE_ID
+                                                        AND 1 = Extent7.RESULT_IS_CURR(+)
+                                                        AND 1 = Extent1.STUS_CODE_ID
                                                         AND ( Extent3.SALES_ORD_NO = #{salesOrder})
-                                                      ) Distinct1 ) Project2 ) Project2
+                                                        <![CDATA[
+                                                        AND Extent1.TYPE_ID  <> (SELECT CODE_ID
+                                                                                               FROM SYS0013M
+                                                                                               WHERE CODE_MASTER_ID = 34
+                                                                                               AND CODE = 'MSS')
+                                                        ]]>
+                                            ) Distinct1
+                                    ) Project2
+                      ) Project2
                      WHERE  Project2.row_number > 0
-                      ORDER BY Project2.SCHDUL_ID ASC
+                     ORDER BY Project2.SCHDUL_ID ASC
           </select>
 
-
-
-
-                 <select id="selectHsFilterList" parameterType="Map" resultType="egovMap">
+          <select id="selectHsFilterList" parameterType="Map" resultType="egovMap">
                         SELECT Distinct1.C1 C1  ,
                                    Distinct1.STK_ID STK_ID  ,
                                    Distinct1.STK_CODE STK_CODE  ,
