@@ -3329,6 +3329,7 @@
            , Limit1.COMPETITOR_FLAG
            , Limit1.COMPETITOR_BRAND_ID
            , Limit1.COMPETITOR_BRAND_DESC
+           , Limit1.DISP_COMM
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3389,6 +3390,7 @@
                   , NVL(Extent3.COMP_YN, 'N') AS COMPETITOR_FLAG
                   , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent3.COMP_BRAND ELSE NULL END COMPETITOR_BRAND_ID
                   , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent9.CODE_DESC ELSE NULL END COMPETITOR_BRAND_DESC
+                  , NVL(Extent3.DISP_COMM,0) DISP_COMM
          FROM SAL0046D Extent1
          JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = Extent1.SALES_ORD_ID
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
@@ -3618,6 +3620,7 @@
                   , Project1.SIRIM_NO SIRIM_NO
                   , Project1.SERIAL_NO SERIAL_NO
                   , Project1.ALLOW_COMM ALLOW_COMM
+                  , Project1.DISP_COMM
                   , Project1.IS_TRADE_IN IS_TRADE_IN
                   , Project1.REQUIRE_SMS REQUIRE_SMS
                   , Project1.NEXT_CALL_DT NEXT_CALL_DT
@@ -3640,6 +3643,7 @@
                      , Extent1.SERIAL_NO SERIAL_NO
                      , to_char(Extent1.NEXT_CALL_DT,'yyyy-mm-dd') NEXT_CALL_DT
                      , Extent1.ALLOW_COMM ALLOW_COMM
+                     , Extent1.DISP_COMM
                      , Extent1.IS_TRADE_IN IS_TRADE_IN
                      , Extent1.REQUIRE_SMS REQUIRE_SMS
                      , Extent2.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
@@ -3830,6 +3834,7 @@
                         , DT_PAIR_ID
                         , COMP_YN
                         , COMP_BRAND
+                        , DISP_COMM
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3879,6 +3884,7 @@
             , #{dtPairId}
             , #{competitor}
             , #{competitorBrand}
+            , nvl(#{dispComm},0)
     )
   </insert>
 
@@ -5060,6 +5066,7 @@
                         <if test="competitorBrand != null and competitorBrand != ''">
                       , COMP_BRAND = #{competitorBrand}
                       	</if>
+                      , DISP_COMM = #{dispComm}
 
     WHERE ( RESULT_ID = #{resultId} )
   </update>
