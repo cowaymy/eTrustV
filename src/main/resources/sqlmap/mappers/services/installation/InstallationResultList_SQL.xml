@@ -3385,7 +3385,7 @@
                   , NVL(Extent3.GAS_PRES_BEF,0) GAS_PRES_BEF
                   , NVL(Extent3.GAS_PRES_AFT,0) GAS_PRES_AFT
                   , NVL(Extent3.NTU,0) NTU
-                  , CASE WHEN (SOM.EX_TRADE = '3') THEN 'Y' ELSE '0' END  JOM_TUKAR_FLAG
+                  , CASE WHEN (SOM.EX_TRADE = '3') THEN 'Y' ELSE 'N' END  JOM_TUKAR_FLAG
                   , NVL(Extent3.COMP_YN, 'N') AS COMPETITOR_FLAG
                   , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent3.COMP_BRAND ELSE NULL END COMPETITOR_BRAND_ID
                   , CASE WHEN (Extent3.COMP_BRAND IS NOT NULL) THEN Extent9.CODE_DESC ELSE NULL END COMPETITOR_BRAND_DESC
@@ -3659,7 +3659,7 @@
                      , Extent1.GAS_PRES_BEF
                      , Extent1.GAS_PRES_AFT
                      , Extent1.NTU
-                     , CASE WHEN (SOM.EX_TRADE = '3') THEN 'Y' ELSE '0' END  JOM_TUKAR_FLAG
+                     , CASE WHEN (SOM.EX_TRADE = '3') THEN 'Y' ELSE 'N' END  JOM_TUKAR_FLAG
                      , NVL(Extent1.COMP_YN, 'N') AS COMPETITOR_FLAG
                      , CASE WHEN (Extent1.COMP_BRAND IS NOT NULL) THEN Extent7.CODE_DESC ELSE '-' END COMPETITOR_BRAND
                 FROM SAL0047D Extent1
