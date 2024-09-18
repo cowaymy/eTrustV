@@ -2066,7 +2066,8 @@
 		                , T1.SALES_ORD_ID
 		           FROM PAY0042D T1
 		           JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
-		           LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+		           LEFT JOIN SAL0074D T7 ON T7.SALES_ORD_ID = T1.SALES_ORD_ID
+		           LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T7.BANK_ID AND T7.BANK_ID <![CDATA[ <> ]]> 0
 		           LEFT JOIN SAL0028D T4 ON T4.CUST_CRC_ID = T1.CUST_CRC_ID
 		           LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
 		           LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
@@ -2101,7 +2102,8 @@
 				        , T1.SALES_ORD_ID
 				    FROM PAY0102D T1
 				    LEFT JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
-				    LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+				    LEFT JOIN SAL0074D T7 ON T7.SALES_ORD_ID = T1.SALES_ORD_ID
+				    LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T7.BANK_ID AND T7.BANK_ID <![CDATA[ <> ]]> 0
 				    LEFT JOIN SAL0028D T4 ON  T4.CUST_CRC_TOKEN = T1.BANK_DTL_DR_ACC_NO AND
 				                            T4.CUST_CRC_OWNER = T1.BANK_DTL_DR_NAME AND
 				                            T4.CUST_CRC_BANK_ID = T1.BANK_DTL_DR_BANK_TYPE_ID AND
@@ -2175,17 +2177,29 @@
 		    <!--===============================-->
 		    <!--  RENTAL PAY SETTING HISTORY   -->
 		    <!--===============================-->
-		    SELECT * FROM (
+		    SELECT
+		          TO_CHAR(C.DT,'DD/MM/YYYY') DT,
+                  C.CUST_ACC_NO,
+                  C.EXP_DT,
+                  C.PAYMODE,
+                  C.ISSUER_BANK,
+                  C.CARD_TYPE,
+                  C.TRANSACTION_TYPE,
+                  C.RESULT,
+                  C.TRX_AMT,
+                  C.APPROVAL_CODE_RECEIPT_NO,
+                  C.UPD_DT
+             FROM (
 		         SELECT
 		            CASE
 		                WHEN (Extent1.DD_APPLY_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd'))
                         THEN
                             CASE
-                                WHEN (Extent1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_REJCT_DT, 'DD/MM/YYYY')
-                                WHEN (Extent1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_START_DT, 'DD/MM/YYYY')
-                                WHEN (Extent1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Extent1.DD_SUBMIT_DT, 'DD/MM/YYYY')
-                            ELSE TO_CHAR(Extent1.DD_APPLY_DT, 'DD/MM/YYYY') END
-		            ELSE '-'
+                                WHEN (Extent1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Extent1.DD_REJCT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                WHEN (Extent1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Extent1.DD_START_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                WHEN (Extent1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Extent1.DD_SUBMIT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                            ELSE TO_DATE(TO_CHAR(Extent1.DD_APPLY_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') END
+		            ELSE TO_DATE(NULL,'DD/MM/YYYY')
 		            END DT,
 		             CASE WHEN (131 <![CDATA[ <> ]]> Extent1.MODE_ID) THEN
 		               CASE WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
@@ -2246,11 +2260,11 @@
 		                  WHEN (Ext1.DD_APPLY_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd'))
                           THEN
                               CASE
-                                  WHEN (Ext1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_REJCT_DT, 'DD/MM/YYYY')
-                                  WHEN (Ext1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_START_DT, 'DD/MM/YYYY')
-                                  WHEN (Ext1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_CHAR(Ext1.DD_SUBMIT_DT, 'DD/MM/YYYY')
-                              ELSE TO_CHAR(Ext1.DD_APPLY_DT, 'DD/MM/YYYY') END
-		               ELSE '-'
+                                  WHEN (Ext1.DD_REJCT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Ext1.DD_REJCT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                  WHEN (Ext1.DD_START_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Ext1.DD_START_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                  WHEN (Ext1.DD_SUBMIT_DT <![CDATA[ > ]]> TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(Ext1.DD_SUBMIT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                              ELSE TO_DATE(TO_CHAR(Ext1.DD_APPLY_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') END
+		               ELSE TO_DATE(NULL,'DD/MM/YYYY')
 		               END DT,
 		               CASE WHEN (131 <![CDATA[ <> ]]> Ext1.MODE_ID) THEN
 		                     CASE WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL) OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0))) THEN LPAD(SUBSTR(Ext3.CUST_ACC_NO,-4),LENGTH(Ext3.CUST_ACC_NO),'*')
@@ -2302,6 +2316,7 @@
 		               AND Ext1.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND Ext1.UPD_DT
 		        )
 		    )C
+		    WHERE C.DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND C.DT
 
 		)
 		ORDER BY TO_DATE(DT,'DD/MM/YYYY') DESC
@@ -2385,7 +2400,16 @@
 		            SELECT
 		                MODE_ID
 		                , SALES_ORD_ID
-		                , DD_APPLY_DT
+		                , CASE
+                            WHEN (DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd'))
+                            THEN
+                                CASE
+                                    WHEN (DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_REJCT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                    WHEN (DD_START_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_START_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                    WHEN (DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_SUBMIT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                ELSE TO_DATE(TO_CHAR(DD_APPLY_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') END
+                        ELSE TO_DATE(NULL,'DD/MM/YYYY')
+                        END DT
 		            FROM SAL0074D
 
 		            UNION
@@ -2393,7 +2417,16 @@
 		            SELECT
 		                MODE_ID
 		                , SALES_ORD_ID
-		                , DD_APPLY_DT
+		                , CASE
+                            WHEN (DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd'))
+                            THEN
+                                CASE
+                                    WHEN (DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_REJCT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                    WHEN (DD_START_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_START_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                    WHEN (DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy/MM/dd')) THEN TO_DATE(TO_CHAR(DD_SUBMIT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY')
+                                ELSE TO_DATE(TO_CHAR(DD_APPLY_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') END
+                        ELSE TO_DATE(NULL,'DD/MM/YYYY')
+                        END DT
 		            FROM SAL0076D
 		        )A
 		        WHERE A.SALES_ORD_ID = #{ordId}
@@ -2469,37 +2502,37 @@
 		        , NVL(MAX(PREV_6_MONTH), '') AS PREV_6_MONTH
 		    FROM (
 		        SELECT 'Rental Paymode' AS TYPE
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS CUR_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS PREV_1_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS PREV_2_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS PREV_3_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS PREV_4_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
 		                END AS PREV_5_MONTH
-		            , CASE WHEN TO_CHAR(PAY.DD_APPLY_DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 6), 'YYYY-MM')
+		            , CASE WHEN TO_CHAR(PAY.DT, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, - 6), 'YYYY-MM')
 		                THEN CASE WHEN PAY.MODE_ID = '130' THEN 'Converted Regular'
 		                          WHEN PAY.MODE_ID IN ('131','132','135') THEN 'Update'
 		                            ELSE '' END
