@@ -211,8 +211,8 @@ function fn_batchPayItemList(validStatusId, gubun) {
       $("#reportForm").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
       $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
 
-      reportFileName = "/payment/GovEInvoiceMainData.rpt"; //reportFileName
-      reportDownFileName = "GovEInvoiceMainData_" + "_" + today;  //report name
+      reportFileName = "/payment/GovEInvoiceDetailData.rpt"; //reportFileName
+      reportDownFileName = "GovEInvoiceDetailData_" + "_" + today;  //report name
       reportViewType = "EXCEL"; //viewType
 
       //set parameters
