@@ -784,6 +784,78 @@
               }
               console.log(myFileCaches);
           });
+
+          $('#exTrade').change(function() {
+        	  $('#ordPromo1 option').remove();
+    	      $('#ordPromo2 option').remove();
+    	      fn_clearAddCpnt();
+    	      $('#isReturnExtrade').prop("checked", false);
+    	      $('#relatedNo').val("");
+
+    	      $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+    	      $('#relatedNo').removeClass("blind");
+    	      $('#pwpNo').val("");
+    	      $('#txtMainPwpOrderID').val("");
+    	      $('#pwpNo').addClass("blind");
+    	      $('#btnPwpNoEkeyIn').addClass("blind");
+
+    	      if($('#exTrade').val()=='1'){
+    	    	  //$('#isReturnExtrade').prop("checked", true); --no product return
+    	          $('#btnRltdNoEKeyIn').removeClass("blind");
+
+    	          $('#ordProduct1').change();
+
+    	          var todayDD = Number(TODAY_DD.substr(0, 2));
+    	          var todayYY = Number(TODAY_DD.substr(6, 4));
+
+    	          var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+    	          var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+    	          //console.log("todayDD: " + todayDD);
+    	          //console.log("blockDtFrom : " + blockDtFrom);
+    	          //console.log("blockDtTo : " + blockDtTo);
+
+    	          if(todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
+    	        	  var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+    	              Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+    	              return;
+    	          }
+    	      }else if ($("#exTrade").val() == '4'){
+    	    	  $('#txtOldOrderID').val('');
+    	          $('#txtBusType').val('');
+    	          $('#relatedNo').val('');
+    	          $('#hiddenMonthExpired').val('');
+    	          $('#hiddenPreBook').val('');
+    	          $('#btnRltdNoEKeyIn').addClass("blind");
+    	          $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
+
+    	          $('#pwpNo').removeClass("blind");
+    	          $('#btnPwpNoEkeyIn').removeClass("blind");
+    	          $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+    	          $('#relatedNo').addClass("blind");
+
+    	      }else{
+    	          $('#txtOldOrderID').val('');
+    	          $('#txtMainPwpOrderID').val('');
+    	          $('#txtBusType').val('');
+    	          $('#relatedNo').val('');
+    	          $('#hiddenMonthExpired').val('');
+    	          $('#hiddenPreBook').val('');
+    	          $('#btnRltdNoEKeyIn').addClass("blind");
+
+    	          if($("#exTrade").val() == '3'){
+    	        	  $('#exTrade').val('');
+
+    	              var msg = "HC is not allowed for Jom Tukar.";
+    	              Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+    	              return;
+    	          }
+    	      }
+
+    	      $('#isReturnExtrade').attr("disabled",true);
+    	      $('#ordProduct1').val('');
+    	      $('#ordProduct2').val('');
+ 	       });
       });
 
       function fn_loadBankAccountPop(bankAccId) {
@@ -2241,80 +2313,6 @@
             alert("Fail to check Air Conditioner. Please contact IT");
       });
     }
-
-      $('#exTrade').change(function() {
-
-        $('#ordPromo1 option').remove();
-          $('#ordPromo2 option').remove();
-          fn_clearAddCpnt();
-          $('#isReturnExtrade').prop("checked", false);
-          $('#relatedNo').val("");
-
-          $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
-          $('#relatedNo').removeClass("blind");
-          $('#pwpNo').val("");
-          $('#txtMainPwpOrderID').val("");
-          $('#pwpNo').addClass("blind");
-          $('#btnPwpNoEkeyIn').addClass("blind");
-
-              if($('#exTrade').val()=='1'){
-                //$('#isReturnExtrade').prop("checked", true); --no product return
-                $('#btnRltdNoEKeyIn').removeClass("blind");
-
-                $('#ordProduct1').change();
-
-                  var todayDD = Number(TODAY_DD.substr(0, 2));
-                  var todayYY = Number(TODAY_DD.substr(6, 4));
-
-                  var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
-                  var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
-
-                  //console.log("todayDD: " + todayDD);
-                  //console.log("blockDtFrom : " + blockDtFrom);
-                  //console.log("blockDtTo : " + blockDtTo);
-
-                   if(todayDD >= blockDtFrom && todayDD <= blockDtTo) { // Block if date > 22th of the month
-                       var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
-                       Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                       return;
-                   }
-             }else if ($("#exTrade").val() == '4'){
-            	 $('#txtOldOrderID').val('');
-                 $('#txtBusType').val('');
-                 $('#relatedNo').val('');
-                 $('#hiddenMonthExpired').val('');
-                 $('#hiddenPreBook').val('');
-                 $('#btnRltdNoEKeyIn').addClass("blind");
-                 $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
-
-                 $('#pwpNo').removeClass("blind");
-                 $('#btnPwpNoEkeyIn').removeClass("blind");
-                 $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
-                 $('#relatedNo').addClass("blind");
-
-             }else{
-               $('#txtOldOrderID').val('');
-               $('#txtMainPwpOrderID').val('');
-                 $('#txtBusType').val('');
-               $('#relatedNo').val('');
-               $('#hiddenMonthExpired').val('');
-               $('#hiddenPreBook').val('');
-                 $('#btnRltdNoEKeyIn').addClass("blind");
-
-                if($("#exTrade").val() == '3'){
-                    $('#exTrade').val('');
-
-                    var msg = "HC is not allowed for Jom Tukar.";
-                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                    return;
-                }
-
-             }
-              $('#isReturnExtrade').attr("disabled",true);
-              $('#ordProduct1').val('');
-              $('#ordProduct2').val('');
-
-      });
 
       function displayVoucherSection(){
         if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
