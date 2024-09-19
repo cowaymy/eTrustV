@@ -144,7 +144,8 @@ function recalculateTotalAmt(){
         }
     }
 
-    oldTotalAmt = totalAmt;
+    //oldTotalAmt = totalAmt;
+    oldTotalAmt = Math.round(totalAmt * 100) / 100;
 }
 
 //승인처리
