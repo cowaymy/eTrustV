@@ -96,7 +96,7 @@
 
         $('#excelDown').click(function() {
             var excelProps = {
-                fileName     : "color_grid",
+                fileName     : "color_grid - supplement",
                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
             };
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
