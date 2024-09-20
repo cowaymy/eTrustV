@@ -146,6 +146,7 @@ function recalculateTotalAmt(){
 
     //oldTotalAmt = totalAmt;
     oldTotalAmt = Math.round(totalAmt * 100) / 100;
+    console.log(":: oldTotalAmt :: " + oldTotalAmt);
 }
 
 //승인처리
