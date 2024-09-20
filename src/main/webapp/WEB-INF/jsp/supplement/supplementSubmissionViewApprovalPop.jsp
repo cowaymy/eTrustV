@@ -105,7 +105,7 @@
         var saveSubmissionApproval = function() {
           var data = { supSubmId : supSubmId,
                              stus : $("#subApprovalStatus").val(),
-                             remark : $("#subApprovalRemark").val().replace(/[\r\n]+/g, ' ')
+                             remark : $("#subApprovalRemark").val().replace(/[\r\n]+/g, ' ').replace(/['"]/g, ' ')
           };
 
           Common.ajax("POST", "/supplement/updateSubmissionApprovalStatus.do", data,
