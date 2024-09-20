@@ -132,13 +132,13 @@
                 style: 'left_style'
             }, {
                 dataField : "ordStatus",
-                headerText : "<spring:message code='sal.title.text.ordStus' />",
+                headerText : "<spring:message code='supplement.title.text.ordStus' />",
                 width : 250,
                 editable : false,
                 style: 'left_style'
             },{
                 dataField : "ordStage",
-                headerText : "<spring:message code='sal.title.text.ordStus' />",
+                headerText : "<spring:message code='supplement.title.text.ordStages' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
@@ -168,7 +168,7 @@
                 style: 'left_style'
             }, {
                 dataField : "keyInMonth",
-                headerText : "Key In Month",
+                headerText : "<spring:message code='supplement.title.text.keyInMonth' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
@@ -234,7 +234,8 @@
     }
 
 	  function createExcelAUIGrid() {
-		   var excelColumnLayout = [{
+		 var excelColumnLayout = [
+		   {
                dataField : "ordNo",
                headerText : "<spring:message code='supplement.title.text.ordNo' />",
                width : 100,
@@ -242,13 +243,13 @@
                style: 'left_style'
            }, {
                dataField : "ordStatus",
-               headerText : "<spring:message code='sal.title.text.ordStus' />",
+               headerText : "<spring:message code='supplement.title.text.ordStus' />",
                width : 250,
                editable : false,
                style: 'left_style'
            },{
                dataField : "ordStage",
-               headerText : "<spring:message code='sal.title.text.ordStus' />",
+               headerText : "<spring:message code='supplement.title.text.ordStages' />",
                width : 100,
                editable : false,
                style: 'left_style'
@@ -278,7 +279,7 @@
                style: 'left_style'
            }, {
                dataField : "keyInMonth",
-               headerText : "Key In Month",
+               headerText : "<spring:message code='supplement.title.text.keyInMonth' />",
                width : 100,
                editable : false,
                style: 'left_style'
