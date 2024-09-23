@@ -1408,32 +1408,32 @@ public class ClaimController {
 
     }
 
-    Date today = new Date();
-	SimpleDateFormat format1 = new SimpleDateFormat("dd");
-	String day = format1.format(today);
-    if(day.equals("24")){//20240829
-
-    	// insert batch email table
-    	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
-
-    	String zipFile = filePath + claimMap.get("subPath").toString() + claimMap.get("batchName").toString() + '_' +claimMap.get("ctrlBatchDt").toString() + ".zip";
-
-        Map<String,Object> emailDet = new HashMap<String, Object>();
-        emailDet.put("mailId", mailIDNextVal);
-        emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
-        emailDet.put("attachment", zipFile);
-        emailDet.put("categoryId", 5);
-        emailDet.put("emailParams", claimMap.get("emailBody").toString());
-        emailDet.put("email", emailReceiver);
-        //emailDet.put("email", "huiding.teoh@coway.com.my");
-        emailDet.put("emailSentStus", 1);
-        emailDet.put("name", "");
-        emailDet.put("userId", 349);
-        emailDet.put("emailSubject", claimMap.get("emailSubject").toString().replace("{0}", claimMap.get("ctrlBatchDt").toString()));
-
-        voucherMapper.insertBatchEmailSender(emailDet);
-
-    }
+//    Date today = new Date();
+//	SimpleDateFormat format1 = new SimpleDateFormat("dd");
+//	String day = format1.format(today);
+//    if(day.equals("24")){//20240829
+//
+//    	// insert batch email table
+//    	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
+//
+//    	String zipFile = filePath + claimMap.get("subPath").toString() + claimMap.get("batchName").toString() + '_' +claimMap.get("ctrlBatchDt").toString() + ".zip";
+//
+//        Map<String,Object> emailDet = new HashMap<String, Object>();
+//        emailDet.put("mailId", mailIDNextVal);
+//        emailDet.put("emailType",AppConstants.EMAIL_TYPE_NORMAL);
+//        emailDet.put("attachment", zipFile);
+//        emailDet.put("categoryId", 5);
+//        emailDet.put("emailParams", claimMap.get("emailBody").toString());
+//        emailDet.put("email", emailReceiver);
+//        //emailDet.put("email", "huiding.teoh@coway.com.my");
+//        emailDet.put("emailSentStus", 1);
+//        emailDet.put("name", "");
+//        emailDet.put("userId", 349);
+//        emailDet.put("emailSubject", claimMap.get("emailSubject").toString().replace("{0}", claimMap.get("ctrlBatchDt").toString()));
+//
+//        voucherMapper.insertBatchEmailSender(emailDet);
+//
+//    }
 
     // 결과 만들기
     ReturnMessage message = new ReturnMessage();
@@ -2380,7 +2380,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   public void createCreditCardFileCIMB(EgovMap claimMap) throws Exception {
 
     CreditCardFileCIMBHandler downloadHandler = null;
-    String sFile;
+    String sFile = "";
     String todayDate;
     String inputDate;
 
@@ -2406,6 +2406,14 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           LOGGER.info(ex.getMessage());
         }
       }
+
+   // //파일다운로드 정보 INSERT
+      // claimMap.put("fileNo", 1);
+       claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
+       claimMap.put("fileName", sFile);
+
+       claimService.insertClaimFileDownloadInfo(claimMap);
+
     }
   }
 
@@ -2468,6 +2476,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
     claimMap.put("subPath", subPath);
     claimMap.put("emailSubject", "SCB CRC Deduction File");
 
+  claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
+  claimMap.put("fileName", sFile);
+
+  claimService.insertClaimFileDownloadInfo(claimMap);
+
   }
 
   private CreditCardFileMBBHandler getTextDownloadCreditCardMBBHandler(String fileName, String[] columns,
@@ -2488,7 +2501,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   public void createCreditCardFileHSBC(EgovMap claimMap) throws Exception {
       ClaimFileGeneralHandler downloadHandler = null;
       String sFile = "";
+      String sFile1 = "";
       String subPath = "";
+      String subPath1 = "";
       String inputDate = "";
 
       Map<String, Object> map = new HashMap<String, Object>();
@@ -2506,9 +2521,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
                   // Form File Name
                   // HSBC has no file extension
                   sFile = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", "_" + claimMap.get("pageNo").toString());
+                  sFile1 = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", "");
 
                   inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
                   subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")) + inputDate + "/";
+                  subPath1= CommonUtils.nvl(fileInfoConf.get("ctrlSubPath"));
 
                   downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
                   largeExcelService.downloadCreditCardFileHSBC(claimMap, downloadHandler);
@@ -2527,6 +2544,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
                   LOGGER.debug(ex.getMessage());
               }
           }
+
+          claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
+          claimMap.put("fileName", sFile);
+
+          claimService.insertClaimFileDownloadInfo(claimMap);
       }
   }
 
@@ -2540,7 +2562,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   public void createCreditCardFileAMB(EgovMap claimMap) throws Exception {
       ClaimFileGeneralHandler downloadHandler = null;
       String sFile = "";
+      String sFile1 = "";
       String subPath = "";
+      String subPath1 = "";
       String inputDate = "";
       String todayDate = "";
 
@@ -2564,9 +2588,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
                   todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
                   sFile = fileName + todayDate + "_" + batchNo + "." + ext;
+                  sFile1= fileName;
 
                   inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
                   subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")) + inputDate + "/";
+                  subPath1 = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath"));
 
                   downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
                   largeExcelService.downloadCreditCardFileAMB(claimMap, downloadHandler);
@@ -2586,6 +2612,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
                   LOGGER.debug(ex.getMessage());
               }
           }
+
+          claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
+          claimMap.put("fileName", sFile);
+
+          claimService.insertClaimFileDownloadInfo(claimMap);
       }
   }
 
@@ -2760,12 +2791,12 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           email.setText(emailBody);
           email.addFile(file);
 
-        Date today = new Date();
-      	SimpleDateFormat format1 = new SimpleDateFormat("dd");
-      	String day = format1.format(today);
-          if(!day.equals("24")){//20240829
-        	  adaptorService.sendEmail(email, false);
-          }
+//        Date today = new Date();
+//      	SimpleDateFormat format1 = new SimpleDateFormat("dd");
+//      	String day = format1.format(today);
+//          if(!day.equals("24")){//20240829
+//        	  adaptorService.sendEmail(email, false);
+//          }
 
           claimMap.put("file", subPathFile);
       }
@@ -3301,5 +3332,56 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  	  }
 
 	      return ResponseEntity.ok(message);
+		}
+
+		@RequestMapping(value = "/downloadCreditCardClaimFile.do", method = RequestMethod.POST)
+		public void fileDownCreditCardClaim(	@RequestParam("dloadCtrlId") String dloadCtrlId,
+											HttpServletRequest request,
+											HttpServletResponse response) throws Exception {
+
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("ctrlId", dloadCtrlId);
+			List<EgovMap> resultList = claimService.selectClaimFileDown(params);
+
+			String filename = "";
+
+			if(resultList.size() < 1){
+				throw new FileDownException(AppConstants.FAIL, "Could not get file : " + filename);
+			}
+
+			String filePath1 = resultList.get(0).get("filePath").toString();
+			LOGGER.debug("params: downloadSubPathAndName:" + filePath1);
+
+			String[] tempArray = filePath1.split("/");
+
+			if(tempArray.length > 0){
+				int indexFileName = tempArray.length - 1;
+				filename = tempArray[indexFileName];
+			}
+
+			File dFile = new File(filePath, filePath1);
+			long fSize = dFile.length();
+
+			if (fSize > 0) {
+				String mimetype = "application/octet-stream";
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+				FileInputStream in = null;
+				ServletOutputStream out = response.getOutputStream();
+
+				try {
+					in = new FileInputStream(dFile);
+					FileCopyUtils.copy(in, out);
+					in.close();
+					out.flush();
+				} catch (IOException ex) {
+					LOGGER.debug("IO Exception", ex);
+				} finally {
+					//out.close();
+				}
+
+			} else {
+				throw new FileDownException(AppConstants.FAIL, "Could not get file : " + filename);
+			}
 		}
 }
