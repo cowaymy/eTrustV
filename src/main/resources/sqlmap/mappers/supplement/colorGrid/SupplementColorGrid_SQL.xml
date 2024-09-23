@@ -11,7 +11,8 @@
                       CUST.NAME AS CUST_NAME,
                       NVL(EM.MEM_CODE, '-') AS SALESMAN_CODE,
                       NVL(DELSTUS.CODE_NAME,'-') AS DELIVERY_STATUS ,
-                      <![CDATA[ (CASE WHEN NVL (A.PV_MONTH, 0)  >  0
+                      <![CDATA[
+                      (CASE WHEN NVL (A.PV_MONTH, 0)  >  0
                                     THEN (CASE WHEN NVL(A.PV_MONTH, 0) < 10
                                                THEN
                                                     '0' || NVL (A.PV_MONTH, 0) || '/' || NVL (A.PV_YEAR, 0)
@@ -32,6 +33,7 @@
              JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
              JOIN ORG1001V EM ON EM.MEM_ID = A.MEM_ID
              JOIN SAL0029D CUST ON CUST.CUST_ID = A.CUST_ID
+             LEFT JOIN ORG0001D ORG ON ORG.MEM_ID = EM.MEM_ID
              LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
              LEFT JOIN SUP0007M CC ON CC.SUP_REF_ID = A.SUP_REF_ID
              LEFT JOIN SUP0008M RG ON RG.SUP_REF_ID =  CC.SUP_REF_ID AND RG.SUP_REQ_CANC_ID = CC.SUP_REQ_CANC_ID AND RG.DEL_FLG = 'N'
@@ -54,9 +56,18 @@
             <if test="deptCode != null and deptCode != ''">
                AND NVL (EM.DEPT_CODE, '-') = #{deptCode}
             </if>
-            <if test="memID!= null and memID != ''" >
-               AND NVL (EM.MEM_ID, '') = #{memID}
+            <if test="memtype!= null and memtype != ''">
+               AND NVL (ORG.MEM_TYPE, '') = #{memtype}
             </if>
+            <if test="salesmanCode != null and salesmanCode != ''">
+               AND NVL (EM.MEM_CODE, '-') = #{salesmanCode}
+            </if>
+            <if test="cmbCustomerType != null and cmbCustomerType != ''">
+               AND CUST.TYPE_ID IN
+                 <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+             </if>
             <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
                AND A.SUP_APPL_TYP IN
                  <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
@@ -79,8 +90,12 @@
                    #{item}
                  </foreach>
              </if>
-             ORDER BY A.SUP_REF_NO
+             <if test="keyInMonth != null and keyInMonth != ''">
+                   AND (EXTRACT(MONTH FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) =#{keyinMon}
+                   OR EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) = #{keyinYear})
+             </if>
 
+             ORDER BY A.SUP_REF_NO
   </select>
 
   <select id="colorGridCmbProduct" resultType="egovMap">
@@ -101,7 +116,7 @@
              S.STK_CODE,
              S.STK_DESC,
              C.CODE_NAME
-    ORDER BY c.CODE_NAME,
+    ORDER BY C.CODE_NAME,
              S.STK_DESC
   </select>
 

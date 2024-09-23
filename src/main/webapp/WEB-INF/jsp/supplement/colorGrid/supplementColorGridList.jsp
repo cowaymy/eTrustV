@@ -503,15 +503,16 @@
                 this.checked = false;
 
             }else if (tag === 'select'){
-            	if($("#memType").val() != "7"){ //check not HT level
-            		 this.selectedIndex = 0;
-            	}
+            	 this.selectedIndex = 0;
             }
 
             $("#cmbCustomerType").multipleSelect("uncheckAll");
             $("#cmbProduct").multipleSelect("checkAll");
             $('#cmbAppType').multipleSelect("checkAll");
             $('#cmbProductCtgry').multipleSelect("checkAll");
+            AUIGrid.clearGridData(myGridID);
+            AUIGrid.clearGridData(excelListGridID);
+            AUIGrid.clearGridData(itemDtlListGridID);
         });
     };
 
