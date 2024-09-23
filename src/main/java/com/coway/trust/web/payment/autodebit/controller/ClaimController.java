@@ -1411,7 +1411,7 @@ public class ClaimController {
     Date today = new Date();
 	SimpleDateFormat format1 = new SimpleDateFormat("dd");
 	String day = format1.format(today);
-    if(day.equals("01")){//20240829
+    if(day.equals("24")){//20240829
 
     	// insert batch email table
     	int mailIDNextVal = voucherMapper.getBatchEmailNextVal();
@@ -2763,7 +2763,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
         Date today = new Date();
       	SimpleDateFormat format1 = new SimpleDateFormat("dd");
       	String day = format1.format(today);
-          if(!day.equals("01")){//20240829
+          if(!day.equals("24")){//20240829
         	  adaptorService.sendEmail(email, false);
           }
 
