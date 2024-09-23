@@ -161,10 +161,23 @@ public class PreCcpRegisterController {
               ficoScore = 9999;
             }
 
-            ResRequestVO resRequestVO = ResRequestVO.builder().custIc(params.get("customerNric").toString()).resultRaw(response)
-                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();
+//            builder().custIc(params.get("customerNric").toString()).resultRaw(response)
+//                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();
+
+
+            ResRequestVO resRequestVO = new ResRequestVO();
+            LOGGER.info("resRequestVO:: " + resRequestVO);
+
+            resRequestVO.setCustIc(params.get("customerNric").toString());
+            resRequestVO.setBatchNo(params.get("batchNo").toString());
+            resRequestVO.setConfirmEntity(confirmEntity);
+            resRequestVO.setCtosDate(new Date());
+            resRequestVO.setFicoScore(Integer.toString(ficoScore));
+            resRequestVO.setResultRaw(response);
 
             Map<String, Object> param = BeanConverter.toMap(resRequestVO);
+
+            LOGGER.info("resRequestVO param:: " + param);
             param.put("ccrisId", resultMapList.get(0).get("ccrisId").toString());
             param.put("seq", params.get("preccpSeq"));
         	preCcpRegisterService.updateCcrisId(param);
