@@ -922,6 +922,13 @@ function fn_ordersListPop(){
 
     	    Common.report("excelForm", option);
 } */
+
+function fn_downloadClaimFile(resultData) {
+	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	$("#dloadCtrlId").val(ctrlId);
+    $("#dloadPathAndName").val('C:/works/workspace/etrust/src/main/webapp/resources/WebShare/CRT/CRC/CIMB_GROUP/CRC__2023-12-08.zip');
+    $("#downloadFileForm").submit();
+}
 </script>
 
 <!-- content start -->
@@ -1036,6 +1043,7 @@ function fn_ordersListPop(){
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.newClaim'/></a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_uploadM2Pop();"><spring:message code='pay.btn.uploadMonth2'/></a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_ordersListPop();"><spring:message code='pay.btn.listOrderMonth'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_downloadClaimFile();">Download File</a></p></li>
 <%-- 						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();"><spring:message code='pay.btn.scheduleSetting'/></a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();"><spring:message code='pay.btn.scheduleClaimBatch'/></a></p></li> --%>
                     </ul>
@@ -1445,6 +1453,10 @@ function fn_ordersListPop(){
 
      </section><!-- pop_body end -->
     <!-- pop_header end -->
+    <form name="downloadFileForm" id="downloadFileForm" method="post" action="/payment/downloadCreditCardClaimFile.do">
+    <input id="dloadPathAndName" name="dloadPathAndName" type="hidden" >
+    <input id="dloadCtrlId" name="dloadCtrlId" type="hidden" >
+ </form>
 </div>
 <!-- popup_wrap end -->
 
