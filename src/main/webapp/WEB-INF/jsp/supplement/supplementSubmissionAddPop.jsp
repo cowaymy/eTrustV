@@ -957,7 +957,7 @@
       memCode : $('#salesmanCd').val(),
       memBrnchId : $('#salesmanBrnch').val(),
       usrBrnchId : $('#_memBrnch').val(),
-      remark : $('#remark').val().replace(/[\r\n]+/g, ' ').replace(/['"]/g, ' ') ,
+      remark : $('#remark').val().replace(/[\r\n]+/g, ' ').replace(/'/g, '"') ,
       totAmt : totAmt,
       atchFileGrpId : atchFileGrpId,
       supplementItmList : prchParam
