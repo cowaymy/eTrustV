@@ -1123,7 +1123,7 @@
     INSERT
     INTO PAY0267M (CTRL_ID, FILE_NO, FILE_PATH,FILE_NAME)
     VALUES
-    (#{ctrlId},#{fileNo},#{filePath},#{fileName})
+    (#{ctrlId},(select nvl(max(file_no),0)+1 from PAY0267M where CTRL_ID = #{ctrlId}),#{filePath},#{fileName})
   </insert>
 
   <!--클레임 파일 다운로드 리스트 -->
@@ -1140,6 +1140,7 @@
     PAY0267M
     WHERE
     CTRL_ID = #{ctrlId}
+    ORDER BY FILE_NO DESC
   </select>
 
   <select id="selectMstConf" parameterType="Map" resultType="egovMap">
