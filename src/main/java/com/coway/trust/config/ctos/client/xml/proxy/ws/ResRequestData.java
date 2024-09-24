@@ -13,13 +13,18 @@ import lombok.Data;
 public class ResRequestData {
     private String custIc;
     private String resultRaw;
-    private String ficoScore;
+    private int ficoScore;
     private String batchNo;
     private Date ctosDate;
-    private boolean bankRupt;
+    private String bankRupt;
     private String confirmEntity;
 
-
+	public String getConfirmEntity() {
+		return confirmEntity;
+	}
+	public void setConfirmEntity(String confirmEntity) {
+		this.confirmEntity = confirmEntity;
+	}
 	public String getCustIc() {
 		return custIc;
 	}
@@ -32,10 +37,10 @@ public class ResRequestData {
 	public void setResultRaw(String resultRaw) {
 		this.resultRaw = resultRaw;
 	}
-	public String getFicoScore() {
+	public int getFicoScore() {
 		return ficoScore;
 	}
-	public void setFicoScore(String ficoScore) {
+	public void setFicoScore(int ficoScore) {
 		this.ficoScore = ficoScore;
 	}
 	public String getBatchNo() {
@@ -50,18 +55,13 @@ public class ResRequestData {
 	public void setCtosDate(Date ctosDate) {
 		this.ctosDate = ctosDate;
 	}
-	public boolean isBankRupt() {
+	public String getBankRupt() {
 		return bankRupt;
 	}
-	public void setBankRupt(boolean bankRupt) {
+	public void setBankRupt(String bankRupt) {
 		this.bankRupt = bankRupt;
 	}
-	public String getConfirmEntity() {
-		return confirmEntity;
-	}
-	public void setConfirmEntity(String confirmEntity) {
-		this.confirmEntity = confirmEntity;
-	}
+
 
 
 
