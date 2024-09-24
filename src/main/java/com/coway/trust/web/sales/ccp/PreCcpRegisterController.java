@@ -3,8 +3,8 @@ package com.coway.trust.web.sales.ccp;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
-/*import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;*/
-import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestData;
+/*import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestData;*/
+import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
 
 import java.io.File;
 import java.io.IOException;
@@ -166,7 +166,7 @@ public class PreCcpRegisterController {
                     .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();*/
 
             /*Map<String, Object> param = BeanConverter.toMap(resRequestVO);*/
-            ResRequestData resRequestData = new ResRequestData();
+            ResRequestVO resRequestData = new ResRequestVO();
             LOGGER.info("resRequestData:: " + resRequestData);
 
             resRequestData.setCustIc(params.get("customerNric").toString());
