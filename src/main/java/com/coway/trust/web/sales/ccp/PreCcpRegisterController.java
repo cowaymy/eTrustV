@@ -3,7 +3,6 @@ package com.coway.trust.web.sales.ccp;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.RequestData;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.Proxy;
 import com.coway.trust.config.ctos.client.xml.proxy.ws.StaxXMLReader;
-/*import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestData;*/
 import com.coway.trust.config.ctos.client.xml.proxy.ws.ResRequestVO;
 
 import java.io.File;
@@ -162,24 +161,10 @@ public class PreCcpRegisterController {
               ficoScore = 9999;
             }
 
-            /*ResRequestVO resRequestVO = ResRequestVO.builder().custIc(params.get("customerNric").toString()).resultRaw(response)
-                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();*/
+            ResRequestVO resRequestVO = ResRequestVO.builder().custIc(params.get("customerNric").toString()).resultRaw(response)
+                    .ficoScore(ficoScore).batchNo(params.get("batchNo").toString()).ctosDate(new Date()).bankRupt(bankRupt).confirmEntity(confirmEntity).build();
 
-            /*Map<String, Object> param = BeanConverter.toMap(resRequestVO);*/
-            ResRequestVO resRequestData = new ResRequestVO();
-            LOGGER.info("resRequestData:: " + resRequestData);
-
-            resRequestData.setCustIc(params.get("customerNric").toString());
-            resRequestData.setBatchNo(params.get("batchNo").toString());
-            resRequestData.setConfirmEntity(confirmEntity);
-            resRequestData.setCtosDate(new Date());
-            resRequestData.setFicoScore(ficoScore);
-            resRequestData.setResultRaw(response);
-            resRequestData.setBankRupt(bankRupt);
-
-
-            Map<String, Object> param = BeanConverter.toMap(resRequestData);
-
+            Map<String, Object> param = BeanConverter.toMap(resRequestVO);
             param.put("ccrisId", resultMapList.get(0).get("ccrisId").toString());
             param.put("seq", params.get("preccpSeq"));
         	preCcpRegisterService.updateCcrisId(param);
