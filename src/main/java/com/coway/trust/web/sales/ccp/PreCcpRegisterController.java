@@ -174,7 +174,8 @@ public class PreCcpRegisterController {
             resRequestData.setCtosDate(new Date());
             resRequestData.setFicoScore(Integer.toString(ficoScore));
             resRequestData.setResultRaw(response);
-            resRequestData.setBankRupt(true);
+            resRequestData.setBankRupt(params.get("bankRupt").toString());
+
 
             Map<String, Object> param = BeanConverter.toMap(resRequestData);
 
