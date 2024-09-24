@@ -5654,13 +5654,29 @@ AND J.CODE IN ('COM','FAL','CAN')
        AND S.STUS_CODE_ID =1
     ORDER BY CODE_NAME, STK_ID -->
 
-    SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
+    <!-- SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
        FROM SYS0013M C JOIN SYS0026M S ON C.CODE = S.STK_CODE
        JOIN SYS0013M C1 ON S.STK_TYPE_ID = C1.CODE_ID
      WHERE C.CODE_MASTER_ID = #{groupCode}
        AND C.DISAB <![CDATA[<>]]> 1
        AND S.STUS_CODE_ID =1
-       ORDER BY CODE_NAME, STK_ID
+       ORDER BY CODE_NAME, STK_ID -->
+
+       SELECT D.STK_ID STK_ID
+             , E.code_name
+             , D.STK_CODE || ' - ' || D.STK_DESC c1
+    FROM LOG0043M A,
+             LOG0044D B,
+             SYS0026M C,
+             SYS0026M D
+             ,SYS0013M E
+    WHERE A.BOM = B.BOM
+        AND A.MATRL_NO = C.STK_CODE
+        AND B.BOM_COMPNT = D.STK_CODE
+        AND C.STK_CODE = #{stkCode}
+        AND E.CODE_ID = D.STK_TYPE_ID
+        AND NVL(B.DEL_INDICT , 'N')  <![CDATA[<>]]> 'Y'
+    ORDER BY E.CODE_NAME,D.STK_CODE
 </select>
 
 <insert id="insertFilterChargeOut" parameterType="Map" >
@@ -5771,4 +5787,40 @@ AND J.CODE IN ('COM','FAL','CAN')
     ]]>
   </select>
 
+  <insert id="insertPreFilterChargeOut" parameterType="Map" >
+
+    INSERT INTO SAL0423D (
+        INS_RESULT_ID
+        , INS_ENTRY_ID
+        , SALES_ORD_ID
+        , INS_NO
+        , SEQ
+        , TYPE
+        , FILTER_ID
+        , FILTER_CODE
+        , QTY
+        , PART_SERIAL_NO
+        , PAY_MODE
+        , CRT_DT
+        , CRT_USER_ID
+        , UPD_DT
+        , UPD_USER_ID
+        ) VALUES (
+            #{insResultId}
+            , #{insEntryId}
+            , #{salesOrdId}
+            , #{insNo}
+            , #{seq}
+            , #{type}
+            , #{stkId}
+            , #{stkCode}
+            , #{qty}
+            , #{partSerialNo}
+            , #{payMode}
+            , sysdate
+            , #{crtUserId}
+            , sysdate
+            , #{crtUserId}
+        )
+  </insert>
 </mapper>

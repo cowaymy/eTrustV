@@ -564,6 +564,7 @@
     var chkMobileNo = custMobileNo.substring(0, 2); */
     var url = "";
 
+    console.log("hidSerialRequireChkYn" + $("#hidSerialRequireChkYn").val());
     if ($("#hidSerialRequireChkYn").val() == 'Y') {
       url = "/services/addInstallationSerial.do";
     } else {
@@ -1447,7 +1448,11 @@
               headerText : "Stock Type",
               width : 150,
               visible : true
-	        } ];
+	        } , {
+	              dataField : "filterStockCode",
+	              headerText : "Stock Code",
+	              visible : false
+	            } ];
 
 	    var gridPros2 = {
 	      usePaging : true,
@@ -1471,6 +1476,7 @@
 	  if (chk.checked){
 		    $("#chrFee_div").attr("style", "display:block");
 		    doGetComboAndGroup2('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + stkCode , '', 'stkId', 'ddlFilterCode', 'S', 'fn_setOptGrpClass');
+		    //doGetCombo('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + stkCode , '', '', 'ddlFilterCode', 'S', '');
 	  } else{
 		    $("#chrFee_div").attr("style", "display:none");
 		    $("#ddlFilterCode").empty();
@@ -1634,15 +1640,19 @@
 	    };
 
 	    var typeId;
+	    var filStockCode;
 	    Common.ajaxSync("GET", "/services/getStockCatType.do", jsonObj,
         function(result) {
           if(result != null){
         	  console.log("result.stktypeid: " + result.stktypeid);
+        	  console.log("result.stkcode: " + result.stkcode);
         	  typeId = result.stktypeid;
+        	  filStockCode = result.stkcode;
           }
         });
 
 	    fitem.stockTypeId = typeId;
+	    fitem.filterStockCode = filStockCode;
 
 	    // CHECK PRICE
 	    var chargePrice = 0;

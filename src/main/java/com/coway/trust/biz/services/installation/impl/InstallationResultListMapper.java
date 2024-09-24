@@ -332,4 +332,6 @@ public interface InstallationResultListMapper {
 
  List<EgovMap> selectCompetitorBrand();
 
+ void insertPreFilterChargeOut (Map<String, Object> params);
+
 }

@@ -358,6 +358,25 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         } else {
           LOGGER.debug(" ============= NO FILTER MATCHED TO PROCESS =============");
         }
+
+        for (int i = 0; i < addListing.size(); i++) {
+            LOGGER.debug(" ============= :: " + i);
+            if (addListing.get(i) != null) {
+            	Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
+            	LOGGER.debug(" ============= :: " + CommonUtils.nvl(updateMap.get("filterCode")).toString() + " = " + CommonUtils.nvl(fltConfLstMap.get("stkId")).toString());
+            	LOGGER.debug("addListing ======" + addListing);
+            	LOGGER.debug("updateMap ======" + updateMap);
+            	if (updateMap.get("filterCode").toString().equals("113794")) { //FOR PRE-FILTER
+            		mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
+
+            		EgovMap param = new EgovMap();
+            		param.put("itmcode", "3118441");
+            		EgovMap entry2 = ASManagementListMapper.selectStkCatType(param);
+            		mp.put("fID", entry2.get("stkid"));
+            		insert_SAL0087D(mp);
+            	}
+            }
+        }
       }
     }
     LOGGER.debug(" ============= END INSERT MINERAL RECORD ============= ");
@@ -1925,17 +1944,19 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
       ///////////////////////// LOGISTIC SP CALL END //////////////////////
 
-      LOGGER.debug("mobileYn ====>> " +  params.get("mobileYn").toString());
+      String mobileYn = params.get("mobileYn") == null ? "" :params.get("mobileYn").toString();
+      LOGGER.debug("mobileYn ====>> " + mobileYn);
       LOGGER.debug("chkInstallAcc ====>> " +  CommonUtils.nvl(params.get("chkInstallAcc")));
 
-      if (params.get("mobileYn").toString() == "Y") { // from mobile
+//      if (params.get("mobileYn").toString() == "Y") { // from mobile
+	  if (mobileYn == "Y") { // from mobile
 
           List<String> installAccList = (List<String>) svc0004dmap.get("instAccLst");
           EgovMap installResult = new EgovMap();
 
           installResult.put("asEntryNo", svc0004dmap.get("AS_RESULT_NO"));
           installResult.put("salesOrdId", svc0004dmap.get("AS_SO_ID"));
-          installResult.put("mobileYn", params.get("mobileYn"));
+          installResult.put("mobileYn", mobileYn);
           installResult.put("chkInstallAcc", CommonUtils.nvl(params.get("chkInstallAcc")));
           //params.put("chkInstallAcc", svc0004dmap.get("INS_ACC_CHK"));
           params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
@@ -4367,5 +4388,17 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   public List<EgovMap> selectInstallAccWithAsEntryId(Map<String, Object> params) {
     return ASManagementListMapper.selectInstallAccWithAsEntryId(params);
   }
+
+	// CELESTE [20240828] - New Product External Filter Registration Enhancement [S]
+  @Override
+  public EgovMap selectMembershipValidity(Map<String, Object> params) {
+    return ASManagementListMapper.selectMembershipValidity(params);
+  }
+
+  @Override
+  public int insert_SAL0423D(Map<String, Object> params) {
+    return ASManagementListMapper.insert_SAL0423D(params);
+  }
+	// CELESTE [20240828] - New Product External Filter Registration Enhancement [E]
 
 }

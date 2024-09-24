@@ -112,6 +112,8 @@
 			$("#inHouseRepair_div").attr("style", "display:none");
 		}
 
+		fn_membershipValidity(); // CELESTE [20240828] - New Product External Filter Registration Enhancement
+
 	});
 
 	function fn_inHouseAutoClose() {
@@ -590,7 +592,11 @@
 			headerText : "<spring:message code='service.grid.FilterId'/>",
 			width : 150,
 			visible : false
-		} ];
+		}, {
+            dataField : "filterCode",
+            headerText : "Filter Code",
+            visible : false
+        } ];
 
 		var gridPros2 = {
 			usePaging : true,
@@ -875,6 +881,10 @@
 		fitem.filterID = $("#ddlFilterCode").val();
 		//fitem.filterCODE =$("#ddlFilterCode").va();
 		fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
+		var ddlFilterCodeText = $("#ddlFilterCode option:selected").text();
+		ddlFilterCodeText = ddlFilterCodeText.substr(0, ddlFilterCodeText.indexOf(" "));
+		fitem.filterCode = ddlFilterCodeText;
+		console.log("ddlFilterCodeText: " + ddlFilterCodeText);
 
 		// CHECK PRICE
 
@@ -2759,6 +2769,17 @@
 		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
 		    }
 		  }
+
+	// CELESTE [20240828] - New Product External Filter Registration Enhancement [S]
+	  function fn_membershipValidity(){
+		  var membershipValidity = "${membershipValidity.mbrshMths}";
+		  console.log("membershipValidity: " + membershipValidity);
+		  if(membershipValidity != null && membershipValidity > 0 && membershipValidity <= 24){
+			  Common.alert("Please be aware that membership validity is less than 24 months. Cannot add pre-filter within 2 years. ");
+		  }
+	  }
+	// CELESTE [20240828] - New Product External Filter Registration Enhancement [E]
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
     <!-- popup_wrap start -->

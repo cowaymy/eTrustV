@@ -458,6 +458,11 @@ public class ASManagementListController {
     List<EgovMap> reworkProj = ASManagementListService.selectReworkProj();
     model.addAttribute("reworkProj", reworkProj);
 
+    // CELESTE [20240828] - New Product External Filter Registration Enhancement [S]
+    EgovMap membershipValidity = ASManagementListService.selectMembershipValidity(params);
+    model.addAttribute("membershipValidity", membershipValidity);
+    // CELESTE [20240828] - New Product External Filter Registration Enhancement [E]
+
     return "services/as/newASResultPop";
   }
 

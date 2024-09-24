@@ -1014,7 +1014,7 @@
   </select>
 
         <select id="selectStkCatType" parameterType="Map" resultType="egovMap">
-            SELECT STK_CODE stkcode, STK_DESC stkdesc, STK_TYPE_ID stktypeid, STK_CTGRY_ID stkctgryid FROM SYS0026M WHERE 1=1
+            SELECT STK_CODE stkcode, STK_DESC stkdesc, STK_TYPE_ID stktypeid, STK_CTGRY_ID stkctgryid, STK_ID stkid FROM SYS0026M WHERE 1=1
             <choose>
                 <when test="stockId !=null and stockId != '' ">
                    AND STK_ID = #{stockId}

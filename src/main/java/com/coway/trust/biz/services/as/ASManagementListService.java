@@ -234,4 +234,7 @@ public interface ASManagementListService {
 
 	List<EgovMap> selectInstallAccWithAsEntryId(Map<String, Object> params);
 
+	EgovMap selectMembershipValidity(Map<String, Object> params); 	// CELESTE [20240828] - New Product External Filter Registration Enhancement
+
+	int insert_SAL0423D(Map<String, Object> params); // CELESTE [20240828] - New Product External Filter Registration Enhancement
 }

@@ -5120,4 +5120,63 @@
 		AND A.DISB = 0
 </select>
 
+<!-- // CELESTE [20240828] - New Product External Filter Registration Enhancement [S] -->
+<select id="selectMembershipValidity" parameterType="Map" resultType="egovMap">
+     SELECT CEIL(MONTHS_BETWEEN(LAST_SRV_MEM_EXPR_DATE, SYSDATE)) MBRSH_MTHS, CURR_DATE, LAST_SRV_MEM_EXPR_DATE FROM (
+            SELECT TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS CURR_DATE,
+                       TO_DATE(MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE,'YYYY-MM-DD')), 'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
+            FROM SAL1014V
+            WHERE ORD_ID = #{salesOrderId}
+            GROUP BY ORD_ID
+            )
+  </select>
+
+  <insert id="insert_SAL0423D" parameterType="Map">
+    INSERT INTO SAL0423D ( INS_RESULT_ID,
+                            INS_ENTRY_ID,
+                            SALES_ORD_ID,
+                            INS_NO, SEQ,
+                            TYPE,
+                            FILTER_ID,
+                            FILTER_CODE,
+                            QTY,
+                            PART_SERIAL_NO,
+                            PAY_MODE,
+                            REMARK,
+                            CRT_DT,
+                            CRT_USER_ID,
+                            UPD_DT,
+                            UPD_USER_ID
+    ) VALUES ( SAL0087D_SRV_FILTER_ID_SEQ.NEXTVAL,
+               #{configId},
+               NVL(#{fID},0),
+               NVL((SELECT LEAD_TM_OFFSET_N FROM LOG0044D A JOIN
+               SYS0026M B ON A.BOM_COMPNT =
+               B.STK_CODE WHERE B.STK_ID = #{fID}),0),
+               TO_DATE(#{AS_SETL_DT},'DD/MM/YYYY'),
+               '1',
+               #{AS_ORD_NO},
+               SYSDATE,
+               '349',
+               SYSDATE,
+               '349',
+               TO_DATE(#{AS_SETL_DT},'DD/MM/YYYY'),
+               '1'
+    )
+  </insert>
+
+  <select id="selectStkCatType" parameterType="Map" resultType="egovMap">
+            SELECT STK_CODE stkcode, STK_DESC stkdesc, STK_TYPE_ID stktypeid, STK_CTGRY_ID stkctgryid, STK_ID stkid FROM SYS0026M WHERE 1=1
+            <choose>
+                <when test="stockId !=null and stockId != '' ">
+                   AND STK_ID = #{stockId}
+                </when>
+                <otherwise>
+                   AND STK_CODE = #{itmcode}
+                </otherwise>
+            </choose>
+
+        </select>
+
+<!-- // CELESTE [20240828] - New Product External Filter Registration Enhancement [E] -->
 </mapper>

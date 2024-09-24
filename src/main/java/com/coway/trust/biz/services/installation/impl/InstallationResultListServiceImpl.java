@@ -3700,6 +3700,29 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     			  installationResultListMapper.insertFilterChargeOut(param);
     			  seq++;
     		  }
+    		  else if(addItem.get("filterStockCode").toString().equals("113794") && addItem.get("stockTypeId").toString().equals("63")){
+    			  logger.info("### is pre-filter's filter ###");
+    			// insert into new table -  INS filter charge out filter
+    			  param = new EgovMap();
+    			  param.put("insEntryId", entry.get("installEntryId"));
+    			  param.put("insResultId", entry.get("installResultId"));
+    			  param.put("salesOrdId", entry.get("salesOrdId"));
+    			  param.put("insNo", entry.get("installEntryNo"));
+    			  param.put("seq", seq);
+    			  param.put("type", 62); // default filter
+    			  param.put("stkCode", "3118441");
+    			  param.put("itmcode", "3118441");
+    			  param.put("qty", addItem.get("filterQty"));
+    			  param.put("payMode", addItem.get("filterType"));
+    			  param.put("crtUserId", userId);
+
+    			  EgovMap entry2 = stockMapper.selectStkCatType(param);
+
+    			  param.put("stkId", entry2.get("stkid"));
+
+    			  installationResultListMapper.insertPreFilterChargeOut(param);
+    			  seq++;
+    		  }
     	  }
 	  }
   }
