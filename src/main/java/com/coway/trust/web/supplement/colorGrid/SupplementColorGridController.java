@@ -1,6 +1,5 @@
 package com.coway.trust.web.supplement.colorGrid;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,89 +26,80 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/supplement/colorGrid")
 public class SupplementColorGridController {
+  private static final Logger logger = LoggerFactory.getLogger( SupplementColorGridController.class );
 
-	private static final Logger logger = LoggerFactory.getLogger(SupplementColorGridController.class);
+  @Resource(name = "supplementColorGridService")
+  private SupplementColorGridService supplementColorGridService;
 
-	@Resource(name = "supplementColorGridService")
-	private SupplementColorGridService supplementColorGridService;
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
-	@Resource(name = "salesCommonService")
-	private SalesCommonService salesCommonService;
+  @Autowired
+  private SessionHandler sessionHandler;
 
-	@Autowired
-	private SessionHandler sessionHandler;
+  @RequestMapping(value = "/supplementColorGridList.do")
+  public String supplementColorGridList( @RequestParam Map<String, Object> params, ModelMap model ) {
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    params.put( "userId", sessionVO.getUserId() );
 
-	/**
-	 * 화면 호출. supplement Color Grid
-	 */
-	@RequestMapping(value = "/supplementColorGridList.do")
-	public String supplementColorGridList(@RequestParam Map<String, Object>params, ModelMap model) {
+    if ( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7 ) {
+      EgovMap getUserInfo = salesCommonService.getUserInfo( params );
+      model.put( "memType", getUserInfo.get( "memType" ) );
+      model.put( "orgCode", getUserInfo.get( "orgCode" ) );
+      model.put( "grpCode", getUserInfo.get( "grpCode" ) );
+      model.put( "deptCode", getUserInfo.get( "deptCode" ) );
+      model.put( "memCode", getUserInfo.get( "memCode" ) );
+    }
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		params.put("userId", sessionVO.getUserId());
+    List<EgovMap> appTypeList = supplementColorGridService.selectCodeList();
+    model.addAttribute( "appTypeList", appTypeList );
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
-			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
-			model.put("memType", getUserInfo.get("memType"));
-			model.put("orgCode", getUserInfo.get("orgCode"));
-			model.put("grpCode", getUserInfo.get("grpCode"));
-			model.put("deptCode", getUserInfo.get("deptCode"));
-			model.put("memCode", getUserInfo.get("memCode"));
-		}
+    List<EgovMap> productList = supplementColorGridService.colorGridCmbProduct();
+    model.addAttribute( "productList", productList );
 
-		List<EgovMap> appTypeList = supplementColorGridService.selectCodeList();
-		model.addAttribute("appTypeList", appTypeList);
-	  List<EgovMap> productList = supplementColorGridService.colorGridCmbProduct();
-	  model.addAttribute("productList", productList);
-	  List<EgovMap> productCategoryList = supplementColorGridService.selectProductCategoryList();
-    model.addAttribute("productCategoryList", productCategoryList);
+    List<EgovMap> productCategoryList = supplementColorGridService.selectProductCategoryList();
+    model.addAttribute( "productCategoryList", productCategoryList );
 
-		return "supplement/colorGrid/supplementColorGridList";
-	}
+    return "supplement/colorGrid/supplementColorGridList";
+  }
 
-	@RequestMapping(value = "/supplementColorGridJsonList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> supplementColorGridJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+  @RequestMapping(value = "/supplementColorGridJsonList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> supplementColorGridJsonList( @RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ) {
+    String[] cmbAppTypeList = request.getParameterValues( "cmbAppType" );
+    String[] cmbCustomerType = request.getParameterValues( "cmbCustomerType" );
+    String[] cmbProductCtgry = request.getParameterValues( "cmbProductCtgry" );
+    String[] cmbProduct = request.getParameterValues( "cmbProduct" );
 
-		logger.info("[SupplementColorGridController - supplementColorGridJsonList] params :: {}" +params);
+    if ( params.get( "memCode" ) != null && !params.get( "memCode" ).toString().equalsIgnoreCase( "" ) ) {
+      String memID = supplementColorGridService.getMemID( params );
+      params.put( "memID", memID );
+    }
 
-		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
-		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
-    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
-    String[] cmbProduct = request.getParameterValues("cmbProduct");
+    if ( cmbCustomerType != null ) {
+      for ( int i = 0; i < cmbCustomerType.length; i++ ) {
+        int tmp = Integer.parseInt( cmbCustomerType[i].toString() );
+        if ( tmp == 964 ) {
+          params.put( "Individual", "individual" );
+        }
+      }
+      params.put( "cmbCustomerType", cmbCustomerType );
+    } else {
+      params.put( "cmbCustomerType", "" );
+    }
 
+    params.put( "cmbAppTypeList", cmbAppTypeList );
+    params.put( "cmbProduct", cmbProduct );
+    params.put( "cmbProductCtgry", cmbProductCtgry );
 
-    if (params.get("memCode") != null && !params.get("memCode").toString().equalsIgnoreCase("")){
-    			String memID = supplementColorGridService.getMemID(params);
-    			params.put("memID", memID);
-		}
+    List<EgovMap> colorGridList = supplementColorGridService.colorGridList( params );
 
-		if (cmbCustomerType != null) {
-			for (int i = 0; i < cmbCustomerType.length; i++) {
-				int tmp = Integer.parseInt(cmbCustomerType[i].toString());
+    return ResponseEntity.ok( colorGridList );
+  }
 
-				if (tmp == 964) {
-					params.put("Individual", "individual");
-				}
-			}
-			params.put("cmbCustomerType", cmbCustomerType);
-		} else {
-			params.put("cmbCustomerType", "");
-		}
-
-		params.put("cmbAppTypeList", cmbAppTypeList);
-		params.put("cmbProduct", cmbProduct);
-		params.put("cmbProductCtgry",cmbProductCtgry);
-
-		List<EgovMap> colorGridList = supplementColorGridService.colorGridList(params);
-
-		return ResponseEntity.ok(colorGridList);
-	}
-
-	 @RequestMapping(value = "/getSupplementDetailList")
-	  public ResponseEntity<List<EgovMap>> getSupplementDetailList(@RequestParam Map<String, Object> params) throws Exception {
-	   logger.info("[SupplementColorGridController - getSupplementDetailList] params :: {} " + params);
-	    List<EgovMap> detailList = null;
-	    detailList = supplementColorGridService.getSupplementDetailList(params);
-	    return ResponseEntity.ok(detailList);
-	  }
+  @RequestMapping(value = "/getSupplementDetailList")
+  public ResponseEntity<List<EgovMap>> getSupplementDetailList( @RequestParam Map<String, Object> params ) throws Exception {
+    List<EgovMap> detailList = null;
+    detailList = supplementColorGridService.getSupplementDetailList( params );
+    return ResponseEntity.ok( detailList );
+  }
 }
