@@ -1140,14 +1140,23 @@
 	    FROM DUAL
     </select>
 
-    <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
-
-	    SELECT
-	       MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT
-		FROM SAL1014V
-		WHERE ORD_ID =  #{salesOrdId}
+  <!-- <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
+    SELECT MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT
+    FROM SAL1014V
+    WHERE ORD_ID =  #{salesOrdId}
         GROUP BY ORD_ID
-    </select>
+  </select> -->
+
+  <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(MAX(MBRSH_EXPR_DT),'YYYY-MM-DD') AS SRV_MEM_EXPR_DT
+    FROM ( SELECT TO_DATE(A.MBRSH_EXPR_DT,'DD-MM-RRRR HH24:MI:SS') MBRSH_EXPR_DT
+               FROM SAL1003V A
+               LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME AND SRV_MEM_PAC_ID  =  27
+               WHERE A.SALES_ORD_ID = #{salesOrdId}
+                   AND A.MBRSH_STUS_CODE = 'COM'
+                   AND B.SRV_MEM_PAC_ID IS NULL
+    )
+  </select>
 
      <select id="getServicePacIdExist" parameterType="String" resultType="String">
            SELECT CASE
