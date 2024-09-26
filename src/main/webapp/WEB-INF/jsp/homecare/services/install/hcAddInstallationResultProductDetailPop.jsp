@@ -297,19 +297,19 @@ var installAccTypeId = 583;
 
   function fn_saveInstall() {
 	var msg = "";
-    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+   /*  var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
     var chkMobileNo = custMobileNo.substring(0, 2);
     if (chkMobileNo == '60'){
         custMobileNo = custMobileNo.substring(1);
     }
-    $("#custMobileNo").val(custMobileNo);
+    $("#custMobileNo").val(custMobileNo); */
 
     var hpPhoneNo = $("#hpPhoneNo").val().replace(/[^0-9\.]+/g, "") ;
     var chkHpPhoneNo = hpPhoneNo.substring(0, 2);
     if (chkHpPhoneNo == '60'){
         hpPhoneNo = hpPhoneNo.substring(1);
     }
-    $("#hpPhoneNo").val(hpPhoneNo);
+    $("#hpPhoneNo").val(hpPhoneNo); 
 
     if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
       if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
