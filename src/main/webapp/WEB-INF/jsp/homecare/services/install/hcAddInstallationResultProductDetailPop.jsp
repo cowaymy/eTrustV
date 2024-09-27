@@ -115,7 +115,7 @@ var installAccTypeId = 583;
 
       }else{
         $('[name="dispComm"]').prop("disabled", true);
-		  $('#dispCommYes').prop("checked", true);
+		  $('#dispCommNo').prop("checked", true);
 		  $("#oldMatDispLbl").find("span").remove();
       }
 
@@ -309,7 +309,7 @@ var installAccTypeId = 583;
     if (chkHpPhoneNo == '60'){
         hpPhoneNo = hpPhoneNo.substring(1);
     }
-    $("#hpPhoneNo").val(hpPhoneNo); 
+    $("#hpPhoneNo").val(hpPhoneNo);
 
     if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
       if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
