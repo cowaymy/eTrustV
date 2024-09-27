@@ -2795,7 +2795,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 //      	SimpleDateFormat format1 = new SimpleDateFormat("dd");
 //      	String day = format1.format(today);
 //          if(!day.equals("24")){//20240829
-//        	  adaptorService.sendEmail(email, false);
+        	  adaptorService.sendEmail(email, false);
 //          }
 
           claimMap.put("file", subPathFile);
