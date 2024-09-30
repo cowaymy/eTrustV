@@ -731,6 +731,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
 
                     einvUpdParams.put("documentId", documentId);
                     einvUpdParams.put("uuid", uuid);
+                    einvUpdParams.put("internalId", internalId);
                     einvUpdParams.put("dateTimeValidated", dateTimeValidated);
                     einvUpdParams.put("userId", 349);
                     einvUpdParams.put("status", 4);

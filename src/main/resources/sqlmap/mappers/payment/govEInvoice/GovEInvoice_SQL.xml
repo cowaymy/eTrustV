@@ -468,6 +468,9 @@
     <if test="uuid != null and uuid != '' ">
         UUID = #{uuid},
     </if>
+    <if test="internalId != null and internalId != '' ">
+        INTERNAL_ID = #{internalId},
+    </if>
         STATUS = #{status},
         DT_TM_VALIDATED = TO_DATE(#{dateTimeValidated}, 'YYYY-MM-DD"T"HH24:MI:SS'),
         UPD_USER_ID = #{userId},
