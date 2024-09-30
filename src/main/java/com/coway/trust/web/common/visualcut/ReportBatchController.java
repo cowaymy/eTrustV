@@ -552,13 +552,37 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("AgingDate", "");// parameter
     params.put("RentalStatus", "");// parameter
+    params.put("OrderType", "HA");// parameter
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Finance" + File.separator + "RentalAging12Month" + CommonUtils.getNowDate() + ".xls");
+        "Finance" + File.separator + "HA_RentalAging12Month" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RentalAging12Month...");
+    this.HCRentalAging12Month();
   }
+
+  @RequestMapping(value = "/HCRentalAging12Month.do")
+  //Generated after HA RentalAging12Month Report.
+  public void HCRentalAging12Month() {
+    LOGGER.info("[START] RentalAging12Month...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RentalAging12Month.rpt");// visualcut
+                                                                      // rpt
+                                                                      // file
+                                                                      // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("AgingDate", "");// parameter
+    params.put("RentalStatus", "");// parameter
+    params.put("OrderType", "HC");// parameter
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Finance" + File.separator + "HC_RentalAging12Month" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] HCRentalAging12Month...");
+  }
+
 
   @RequestMapping(value = "/RentalAgingReport.do")
   //@Scheduled(cron = "0 0 3 2 * *")//2nd day of the month (3am)
@@ -569,12 +593,31 @@ public class ReportBatchController {
                                                                      // rpt file
                                                                      // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("OrderType", "HA");// parameter
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Finance" + File.separator + "RentalAgingReport" + CommonUtils.getNowDate() + ".xls");
+        "Finance" + File.separator + "HA_RentalAgingReport" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RentalAgingReport...");
+  }
+
+  @RequestMapping(value = "/HCRentalAgingReport.do")
+  //Generated after HA RentalAgingReport.
+  public void HCRentalAgingReport() {
+    LOGGER.info("[START] HCRentalAgingReport...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RentalAgingReport.rpt");// visualcut
+                                                                     // rpt file
+                                                                     // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("OrderType", "HC");// parameter
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Finance" + File.separator + "HC_RentalAgingReport" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] HCRentalAgingReport...");
   }
 
   @RequestMapping(value = "/OutrightPlusAgingCollection_12Month.do")
