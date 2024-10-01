@@ -126,7 +126,15 @@
             	Common.alert("Request Cancellation" + DEFAULT_DELIMITER + "<b>Select Edit Type</b>");
             	return;
             }
-            fn_changeTab(tabNm);
+    		var isValid = true;
+    		if (window["fn_checkAccessRequest"]) {
+    			isValid = fn_checkAccessRequest(tabNm);
+    		}
+    		if (!isValid) {
+    			return false;
+    		} else {
+    			fn_changeTab(tabNm);
+    		}
         });
         $('#txtPenaltyAdj').change(function() {
             if(FormUtil.isEmpty($('#txtPenaltyAdj').val().trim())) {

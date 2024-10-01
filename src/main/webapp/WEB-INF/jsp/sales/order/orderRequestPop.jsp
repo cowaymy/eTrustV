@@ -84,9 +84,16 @@
 
   $(function() {
     $('#btnEditType').click(function() {
-      var tabNm = $('#ordReqType').val();
-      fn_changeTab(tabNm);
-      //Change Tab Need reset all voucher and reapply to correct tab
+		var tabNm = $('#ordReqType').val();
+		var isValid = true;
+		if (window["fn_checkAccessRequest"]) {
+			isValid = fn_checkAccessRequest(tabNm);
+		}
+		if (!isValid) {
+			return false;
+		} else {
+			fn_changeTab(tabNm);
+		}
     });
 
     $('#txtPenaltyAdj').change(function() {
