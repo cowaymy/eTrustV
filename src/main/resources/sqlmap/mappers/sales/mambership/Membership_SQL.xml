@@ -78,6 +78,10 @@
             AND to_char(A.MBRSH_CRT_DT,'yyyymmdd')  BETWEEN  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd') AND   to_char(to_date (#{MBRSH_END_DT} ,'DD/MM/YYYY'),'yyyymmdd')
         </if>
 
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND A.MBRSH_CRT_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+           
         <if test="REF_NO != null and REF_NO != ''">
            AND A.REF_NO = #{REF_NO}
         </if>

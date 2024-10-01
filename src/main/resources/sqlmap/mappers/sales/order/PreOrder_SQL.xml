@@ -98,6 +98,9 @@
          <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
 		   AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{_reqstEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
          </if>
+         <if test='pdpaMonth != null and pdpaMonth != 0'>
+		   AND T1.REQST_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+         </if>
          <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
            AND T1.STUS_ID IN
              <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">

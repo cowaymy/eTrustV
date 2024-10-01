@@ -165,6 +165,7 @@ function fn_clear(){
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
+			<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
             <input type="hidden" name="rowCount" id="rowCount" value="25" />
             <input type="hidden" name="pageNo" id="pageNo" />
             <table class="type1"><!-- table start -->

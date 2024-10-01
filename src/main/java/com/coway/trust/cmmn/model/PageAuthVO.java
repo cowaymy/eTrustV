@@ -38,6 +38,7 @@ public class PageAuthVO implements Serializable {
 	private String funcUserDefine28;
 	private String funcUserDefine29;
 	private String funcUserDefine30;
+	private int pdpaMonth;
 
 	public String getFuncView() {
 		return funcView;
@@ -301,5 +302,13 @@ public class PageAuthVO implements Serializable {
 
 	public void setFuncUserDefine30(String funcUserDefine30) {
 		this.funcUserDefine30 = funcUserDefine30;
+	}
+
+	public int getPdpaMonth() {
+		return pdpaMonth;
+	}
+
+	public void setPdpaMonth(int pdpaMonth) {
+		this.pdpaMonth = pdpaMonth;
 	}
 }

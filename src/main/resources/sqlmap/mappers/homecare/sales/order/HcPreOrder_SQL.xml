@@ -139,6 +139,9 @@
          <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
            AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
          </if>
+         <if test='pdpaMonth != null and pdpaMonth != 0'>
+		   AND T1.REQST_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+         </if>
          <if test='arrOrdProudctList != null and arrOrdProudctList != ""'>
           <!--   AND T4.STK_ID  = #{ordProudctList} -->
            AND T4.STK_ID  IN

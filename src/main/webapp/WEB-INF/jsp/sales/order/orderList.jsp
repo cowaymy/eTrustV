@@ -788,6 +788,7 @@
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
     <input id="editInstallAccess" name="editInstallAccess" type="hidden" value='${PAGE_AUTH.funcUserDefine28}'/>
+    <input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
 <%--     <input id="memId" name="memId" type="hidden" value="${memId}"/> --%>
 
 <table class="type1"><!-- table start -->

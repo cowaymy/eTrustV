@@ -144,6 +144,10 @@
                 <if test="salesDate != null and salesDate != ''">
                     AND to_char(FL.SRV_CNTRCT_CRT_DT ,'yyyymmdd') =  to_char( to_date(#{salesDate},'dd/mm/yyyy'),'yyyymmdd' )
                 </if>
+                
+                <if test='pdpaMonth != null and pdpaMonth != 0'>
+                    AND FL.SRV_CNTRCT_CRT_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                </if>
 
                 <if test="orderNo != null and orderNo != ''">
                     AND FL.SALES_ORD_NO = #{orderNo}

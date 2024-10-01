@@ -346,6 +346,7 @@ function fn_updateStus(){
 <input type="hidden" id="deActQotatId" name="srvCntrctQuotId" />
 <input type="hidden" id="deActQotatRefNo" name="srvMemQuotNo" />
 <input type="hidden" id="deActOrdNo" name="ordNo" />
+<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

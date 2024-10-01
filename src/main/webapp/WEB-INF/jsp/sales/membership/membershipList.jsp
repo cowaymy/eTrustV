@@ -338,6 +338,7 @@
 <section class="search_table">
   <!-- search_table start -->
   <form action="#"  id="listSForm" name="listSForm" method="post">
+	<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
     <table class="type1">
     <!-- table start -->
       <caption>table</caption>

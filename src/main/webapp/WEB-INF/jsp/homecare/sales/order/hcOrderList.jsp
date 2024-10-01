@@ -728,6 +728,7 @@
 
         <form id="listSearchForm" name="listSearchForm" action="#" method="post" autocomplete=off>
             <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
+            <input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
             <!--  <input id="memId" name="memId" type="hidden" value="${memId}"/>-->
             <table class="type1">
                 <!-- table start -->

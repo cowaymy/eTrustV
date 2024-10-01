@@ -43,6 +43,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initTaxInvoiceRentalPop.do")
 	public String initTaxInvoiceRental(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/taxInvoiceRentalPop";
 	}
 	
@@ -81,6 +83,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initTaxInvoiceOutrightPop.do")
 	public String initTaxInvoiceOutright(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/taxInvoiceOutrightPop";
 	}
 	
@@ -114,6 +118,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initTaxInvoiceMembershipPop.do")
 	public String initTaxInvoiceMembership(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/taxInvoiceMembershipPop";
 	}
 	
@@ -147,6 +153,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initTaxInvoiceRenMembershipPop.do")
 	public String initTaxInvoiceRenMembership(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/taxInvoiceRenMembershipPop";
 	}
 	
@@ -184,6 +192,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initTaxInvoiceMiscellaneousPop.do")
 	public String initTaxInvoiceMiscellaneous(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/taxInvoiceMiscellaneousPop";
 	}
 	
@@ -217,6 +227,8 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/initStatementCompanyRentalPop.do")
 	public String initStatementCompanyRental(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/statementCompanyRentalPop";
 	}
 	

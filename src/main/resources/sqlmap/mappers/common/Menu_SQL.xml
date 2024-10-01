@@ -225,18 +225,21 @@
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN28', FUNC_YN) ) AS funcUserDefine28
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN29', FUNC_YN) ) AS funcUserDefine29
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN30', FUNC_YN) ) AS funcUserDefine30
+                    ,MIN (DECODE (PGM_TRN_CODE, 'VIEW', PDPA_MONTH)) AS pdpaMonth
             FROM (SELECT I.MENU_CODE
                         ,I.PGM_TRN_CODE
                         ,I.VALID_DT_FROM
                         ,I.VALID_DT_TO
                         ,I.FUNC_YN
                         ,I.EXIST_YN
+                        ,I.PDPA_MONTH
                     FROM (SELECT DISTINCT H.MENU_CODE
                                          ,H.PGM_TRN_CODE
                                          ,H.VALID_DT_FROM
                                          ,H.VALID_DT_TO
                                          ,H.FUNC_YN
                                          ,H.EXIST_YN
+                                         ,H.PDPA_MONTH
                                          ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
                                           ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
                                      FROM (
@@ -248,6 +251,7 @@
                                                  ,G.VALID_DT_TO
                                                  ,G.FUNC_YN
                                                  ,'N' AS EXIST_YN
+                                                 ,G.PDPA_MONTH
                                              FROM SYS0057M G
                                             WHERE G.USER_ID = #{userId}
                                            UNION
@@ -264,6 +268,7 @@
                                                         THEN 'Y'
                                                      ELSE 'N'
                                                   END AS EXIST_YN
+                                                 ,E.PDPA_MONTH
                                              FROM SYS0056M E
                                                  , (SELECT D.ROLE_ID
                                                           ,D.AUTH_CODE
@@ -287,6 +292,7 @@
                                                  ,B.VALID_DT_TO
                                                  ,A.FUNC_YN
                                                  ,'N' AS EXIST_YN
+                                                 ,A.PDPA_MONTH
                                              FROM SYS0056M A, SYS0055M B
                                             WHERE A.AUTH_CODE = B.AUTH_CODE
                                               AND B.USER_ID = #{userId}) H) I

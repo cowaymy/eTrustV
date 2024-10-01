@@ -393,6 +393,7 @@ function fn_doPrint(){
 <form action="#" method="post" id='listSForm' name='listSForm'>
 <input type="hidden" id="deActQuotNo" name="srvMemQuotNo" />
 <input type="hidden" id="deActOrdNo" name="ordNo" />
+<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -53,6 +53,8 @@ public class BillingInvoiceController {
 	 */
 	@RequestMapping(value = "/initCompanyInvoicePop.do")
 	public String initCompanyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/companyInvoicePop";
 	}
 
@@ -85,7 +87,9 @@ public class BillingInvoiceController {
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
 		map.put("custNRIC", custNRIC);
-
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
+		
 		list = invoiceService.selectCompanyInvoice(map);
 
 		return ResponseEntity.ok(list);
@@ -103,7 +107,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initIndividualRentalStatementPop.do")
 	public String initIndividualRentalStatement(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/individualRentalStatementPop";
 	}
 
@@ -134,7 +139,9 @@ public class BillingInvoiceController {
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
 		map.put("custNRIC", custNRIC);
-
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
+		
 		list = invoiceService.selectRentalStatementList(map);
 
 		return ResponseEntity.ok(list);
@@ -152,7 +159,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initMembershipInvoicePop.do")
 	public String initMembershipInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/membershipInvoicePop";
 	}
 
@@ -185,7 +193,9 @@ public class BillingInvoiceController {
 		map.put("custName", custName);
 		map.put("custNRIC", custNRIC);
 		map.put("quotationNo", quotationNo);
-
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
+		
 		list = invoiceService.selectMembershipInvoiceList(map);
 
 		return ResponseEntity.ok(list);
@@ -202,7 +212,8 @@ public class BillingInvoiceController {
 	 */
 	@RequestMapping(value = "/initOutrightInvoicePop.do")
 	public String initOutrightInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/outrightInvoicePop";
 	}
 
@@ -239,13 +250,15 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initProformaInvoicePop.do")
 	public String initProformaInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/proformaInvoicePop";
 	}
 
 	@RequestMapping(value = "/initAdvancedInvoiceQuotationRentalPop.do")
 	public String initAdvancedInvoiceQuotationRentalPop(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/advancedInvoiceQuotationRentalPop";
 	}
 
@@ -283,6 +296,8 @@ public class BillingInvoiceController {
 
 		map.put("orderDateFrom", orderDtFr);
 		map.put("orderDateTo", orderDtTo);
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
 
 		list = invoiceService.selectProformaInvoiceList(map);
 
@@ -334,7 +349,9 @@ public class BillingInvoiceController {
 
 		map.put("orderDateFrom", orderDtFr);
 		map.put("orderDateTo", orderDtTo);
-
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
+		
 		list = invoiceService.selectAdvancedRentalInvoiceList(map);
 
 		return ResponseEntity.ok(list);
@@ -437,7 +454,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initCompanyStatementPop.do")
 	public String initCompanyStatement(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/companyStatementPop";
 	}
 
@@ -468,7 +486,9 @@ public class BillingInvoiceController {
 		map.put("custName", customerName);
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
-
+		if(params.get("pdpaMonth") != null)
+			map.put("pdpaMonth", params.get("pdpaMonth"));
+		
 		list = invoiceService.selectCompanyStatementList(map);
 
 		return ResponseEntity.ok(list);
@@ -486,6 +506,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initPenaltyInvoicePop.do")
 	public String initPenaltyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/penaltyInvoicePop";
 	}
 
@@ -539,7 +561,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initSummaryOfInvoicePop.do")
 	public String initSummaryInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/summaryInvoicePop";
 	}
 
@@ -558,7 +581,8 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initSummaryOfAccountPop.do")
 	public String initSummaryAccount(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "payment/billinggroup/summaryAccountPop";
 	}
 

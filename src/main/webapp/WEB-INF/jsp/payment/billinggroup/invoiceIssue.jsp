@@ -54,8 +54,7 @@ function fn_makeStatementList(type){
 
 function fn_goSelectedPage() {
 	var url = "/payment/" + $('#statementList').val();
-    Common.popupDiv(url, null, null, true,"");
-
+    Common.popupDiv(url, {pdpaMonth:${PAGE_AUTH.pdpaMonth}}, null, true,"");
 }
 
 </script>

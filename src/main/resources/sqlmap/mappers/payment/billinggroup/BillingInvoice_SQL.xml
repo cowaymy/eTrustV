@@ -87,6 +87,9 @@
 		<if test="sYear != '' ">
 			AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND TO_DATE((utils.datepart('MONTH', Filter1.RENT_DT_TM)) || '/' || '01' || '/' || (utils.datepart('YEAR', Filter1.RENT_DT_TM)), 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+		</if>
 		ORDER BY Filter1.SALES_ORD_ID DESC
 	</select>
 
@@ -148,6 +151,9 @@
 		<if test="sYear != '' ">
 			AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND TO_DATE((utils.datepart('MONTH', Filter1.RENT_DT_TM)) || '/' || '01' || '/' || (utils.datepart('YEAR', Filter1.RENT_DT_TM)), 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+		</if>
 		ORDER BY Filter1.SALES_ORD_ID DESC
 
 	</select>
@@ -191,6 +197,9 @@
 		<if test="quotationNo != '' ">
 			AND ( Extent3.SRV_MEM_QUOT_NO LIKE '%' || #{quotationNo} || '%'ESCAPE
 			'~' )
+		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Extent4.SALES_ORD_ID DESC
 	</select>
@@ -271,6 +280,9 @@
 			</foreach>
 			)
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Filter1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+		</if>
 		ORDER BY Filter1.SALES_ORD_ID DESC
 		<include refid="pagingEnd" />
 	</select>
@@ -300,6 +312,9 @@
 				'${appType[index]}'
 			</foreach>
 			)
+		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 	</select>
 
@@ -344,6 +359,9 @@
 		</if>
 		<if test="sYear != '' ">
 			AND Extent1.PV_YEAR = #{sYear}
+		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND TO_DATE(Extent1.PV_MONTH || '/' || '01' || '/' || Extent1.PV_YEAR, 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Extent1.BILL_ID DESC
 	</select>
@@ -585,6 +603,11 @@
 			TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[<=]]>
 			TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS') )
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+			TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+			TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END) >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+		</if>
 		<if test="custId != '' ">
 			AND ( (CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN
 			Filter1.CustomerID ELSE 0 END) = #{custId} )
@@ -683,6 +706,9 @@
         </if>
         <if test="orderDateTo != '' ">
             AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
         <if test="keyInBranchList != '' and keyInBranchList != null">
             AND Extent1.BRNCH_ID  IN (
@@ -885,6 +911,9 @@ SELECT DISTINCT V1.ORD_ID
 		<if test="billNo != null and billNo != '' ">
 			AND Extent2.RETN_NO = #{billNo}
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+		</if>
 		ORDER BY Extent2.STK_RETN_ID DESC
 
 	</select>
@@ -942,6 +971,9 @@ SELECT DISTINCT V1.ORD_ID
 			AND TO_CHAR(TAX_INVC_REF_DT,'MMYYYY') = TO_CHAR( TO_DATE(
 			#{invoiceRefDate},'MM/YYYY'),'MMYYYY')
 		</if>
+		<if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND TAX_INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
 		<if test="refNo != null and refNo != '' ">
 			AND C.TAX_INVC_REF_NO = #{refNo}
 		</if>
@@ -967,6 +999,9 @@ SELECT DISTINCT V1.ORD_ID
         <if test="invoiceRefDate != null and invoiceRefDate != '' ">
             AND TO_CHAR(A.STATE_PRIOD_START,'MMYYYY') = TO_CHAR( TO_DATE(
             #{invoiceRefDate},'MM/YYYY'),'MMYYYY')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND A.STATE_PRIOD_START >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
 
         ORDER BY A.STATE_CUST_ID
