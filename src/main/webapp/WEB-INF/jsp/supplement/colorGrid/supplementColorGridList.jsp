@@ -119,6 +119,12 @@
         selectAll : true,
         width : '80%'
       });
+
+      $('#supRefStus').change(function() {
+      }).multipleSelect({
+        selectAll : true,
+        width : '80%'
+      });
     });
   }
 
@@ -418,8 +424,7 @@
       showRowNumColumn : true
     };
 
-    itemDtlListGridID = GridCommon.createAUIGrid("itm_detail_grid_wrap",
-        itemDtlColumnLayout, "", itemDtlGridPros);
+    itemDtlListGridID = GridCommon.createAUIGrid("itm_detail_grid_wrap", itemDtlColumnLayout, "", itemDtlGridPros);
 
     var footerLayout = [ {
       labelText : "Total",
@@ -536,6 +541,7 @@
       $("#cmbProduct").multipleSelect("checkAll");
       $('#cmbAppType').multipleSelect("checkAll");
       $('#cmbProductCtgry').multipleSelect("checkAll");
+      $('#supRefStus').multipleSelect("uncheckAll");
       AUIGrid.clearGridData(myGridID);
       AUIGrid.clearGridData(excelListGridID);
       AUIGrid.clearGridData(itemDtlListGridID);
@@ -588,11 +594,11 @@
           </a>
         </p>
       </li>
-      <!-- <li>
+      <li>
         <p class="btn_blue">
           <a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span> <spring:message code="supplement.btn.clear" /></a>
         </p>
-      </li> -->
+      </li>
     </ul>
   </aside>
 
@@ -667,6 +673,22 @@
                 </p>
               </div>
             </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='supplement.title.text.ordStus' /></th>
+            <td>
+              <select class="multy_select w100p" multiple="multiple" id="supRefStus" name="supRefStus">
+                <c:forEach var="list" items="${supRefStus}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
+              </select>
+            </td>
+            <th scope="row"><spring:message code="supplement.text.isRefund" /></th>
+            <td>
+              <input type="checkbox" value="Y" id="isRefund" name="isRefund" />
+            </td>
+            <th scope="row"></th>
+            <td></td>
           </tr>
           <tr>
             <th scope="row"><spring:message code="supplement.title.text.custType" /></th>

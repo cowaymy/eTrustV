@@ -60,15 +60,21 @@ public class SupplementColorGridController {
     List<EgovMap> productCategoryList = supplementColorGridService.selectProductCategoryList();
     model.addAttribute( "productCategoryList", productCategoryList );
 
+    List<EgovMap> supRefStus = supplementColorGridService.selectSupRefStus();
+    model.addAttribute( "supRefStus", supRefStus);
+
     return "supplement/colorGrid/supplementColorGridList";
   }
 
   @RequestMapping(value = "/supplementColorGridJsonList", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> supplementColorGridJsonList( @RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ) {
+    logger.info("[SupplementColorGridController - supplementColorGridJsonList] params :: {} " + params);
     String[] cmbAppTypeList = request.getParameterValues( "cmbAppType" );
     String[] cmbCustomerType = request.getParameterValues( "cmbCustomerType" );
     String[] cmbProductCtgry = request.getParameterValues( "cmbProductCtgry" );
     String[] cmbProduct = request.getParameterValues( "cmbProduct" );
+    String[] supSubmRefStatArray = request.getParameterValues("supRefStus");
+    logger.info("[SupplementColorGridController - supplementColorGridJsonList] supSubmRefStatArray :: {} " + supSubmRefStatArray);
 
     if ( params.get( "memCode" ) != null && !params.get( "memCode" ).toString().equalsIgnoreCase( "" ) ) {
       String memID = supplementColorGridService.getMemID( params );
@@ -90,8 +96,10 @@ public class SupplementColorGridController {
     params.put( "cmbAppTypeList", cmbAppTypeList );
     params.put( "cmbProduct", cmbProduct );
     params.put( "cmbProductCtgry", cmbProductCtgry );
+    params.put("supSubmRefStatArray", supSubmRefStatArray);
 
     List<EgovMap> colorGridList = supplementColorGridService.colorGridList( params );
+    logger.info("[SupplementColorGridController - supplementColorGridJsonList] colorGridList :: {} " + colorGridList);
 
     return ResponseEntity.ok( colorGridList );
   }

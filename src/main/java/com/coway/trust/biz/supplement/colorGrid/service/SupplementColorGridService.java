@@ -17,4 +17,6 @@ public interface SupplementColorGridService {
   List<EgovMap> selectCodeList();
 
   List<EgovMap> getSupplementDetailList( Map<String, Object> params ) throws Exception;
+
+  List<EgovMap> selectSupRefStus();
 }

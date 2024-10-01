@@ -35,6 +35,10 @@ public class SupplementColorGridServiceImpl
     return supplementColorGridMapper.colorGridCmbProduct();
   }
 
+  public List<EgovMap> selectSupRefStus() {
+    return supplementColorGridMapper.selectSupRefStus();
+  }
+
   public String getMemID( Map<String, Object> params ) {
     return supplementColorGridMapper.getMemID( params );
   }

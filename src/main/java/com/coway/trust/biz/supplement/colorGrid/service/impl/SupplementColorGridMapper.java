@@ -19,4 +19,6 @@ public interface SupplementColorGridMapper {
   List<EgovMap> selectCodeList();
 
   List<EgovMap> getSupplementDetailList( Map<String, Object> params );
+
+  List<EgovMap> selectSupRefStus();
 }

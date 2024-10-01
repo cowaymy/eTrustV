@@ -114,6 +114,16 @@
        OR EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) = #{keyinYear})
     </if>
 
+     <if test=" null != isRefund and '' != isRefund">
+        AND A.SUP_RTN_RFND = #{isRefund}
+      </if>
+
+    <if test="supSubmRefStatArray != null and supSubmRefStatArray != '' ">
+       AND A.SUP_REF_STUS IN
+     <foreach item="item" collection="supSubmRefStatArray" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
     ORDER BY A.SUP_REF_NO
   </select>
 
@@ -185,4 +195,13 @@
     JOIN SUP0001M Extent3 ON Extent1.SUP_REF_ID = Extent3.SUP_REF_ID
     WHERE Extent3.SUP_REF_ID = #{ordId}
   </select>
+
+  <select id="selectSupRefStus"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STUS_CODE_ID CODE_ID
+             , Extent1.CODE CODE
+             , Extent1.NAME CODE_NAME
+    FROM SYS0038M Extent1
+    WHERE Extent1.STUS_CODE_ID IN (1,4,10)
+  </select>
+
 </mapper>
