@@ -5,11 +5,20 @@
   <select id="colorGridList" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT A.SUP_REF_NO AS ORD_NO,
                              A.SUP_REF_ID AS ORD_ID,
+                             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:mm PM') AS ORD_DT,
                              STUS.NAME AS ORD_STATUS,
                              STG.CODE_NAME AS ORD_STAGE,
                              APPTYPE.CODE_NAME AS APP_TYPE,
+                             NVL(SUBBR.CODE, '') AS SUB_BR,
+                             NVL(REG.CODE, '') AS SUB_REG,
+                             A.CUST_ID AS CUST_ID,
                              CUST.NAME AS CUST_NAME,
+                             NVL(CUST.GENDER, '') AS CUST_GENDER,
+                             NVL(RACE.CODE_NAME, '') AS CUST_RACE,
+                             NVL(MEMTYP.CODE, '') AS SALESMAN_TYP,
                              NVL(EM.MEM_CODE, '-') AS SALESMAN_CODE,
+                             NVL(ORG.FULL_NAME, '-') AS SALESMAN_NAME,
+                             NVL(SALMANBR.CODE, '-') AS SALESMAN_NAME_BR,
                              NVL(DELSTUS.CODE_NAME,'-') AS DELIVERY_STATUS ,
 
                              <![CDATA[
@@ -25,8 +34,10 @@
                               NVL(A.PV_MONTH, 0) PV_MONTH,
                               NVL(A.PV_YEAR, 0) PV_YEAR,
                               NVL(EXTRACT(MONTH FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) , 0) AS KEY_IN_MONTH,
+                              NVL(EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT, 'DD/MM/YYYY')), 0) AS KEY_IN_YEAR,
                               A.SUP_RTN_RFND AS IS_REFUND,
-                              NVL(RTNDVYSTUS.NAME,'-') AS RETURN_DELIVERY_STATUS
+                              NVL(RTNDVYSTUS.NAME,'-') AS RETURN_DELIVERY_STATUS,
+                              NVL(SUBAPPUSR.USER_NAME, '') AS SUB_UPDBY
     FROM SUP0001M A
     JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
     JOIN ORG1001V EM ON EM.MEM_ID = A.MEM_ID
@@ -41,6 +52,12 @@
     LEFT JOIN SYS0013M DELSTUS ON DELSTUS.CODE = A.SUP_REF_DEL_STUS AND DELSTUS.CODE_MASTER_ID = '585'
     LEFT JOIN SYS0013M EXTCUST ON EXTCUST.CODE_ID = CUST.IS_EXST_CUST AND EXTCUST.CODE_MASTER_ID = '566'
     LEFT JOIN SYS0038M RTNDVYSTUS ON RG.SUP_RTN_STAT = RTNDVYSTUS.STUS_CODE_ID
+    LEFT JOIN SYS0013M RACE ON CUST.RACE_ID = RACE.CODE_ID AND RACE.CODE_MASTER_ID = 2
+    LEFT JOIN SYS0005M SALMANBR ON SALMANBR.BRNCH_ID = ORG.BRNCH
+    LEFT JOIN SYS0005M SUBBR ON SUBBR.BRNCH_ID = A.MEM_BRNCH_ID
+    LEFT JOIN SYS0013M REG ON REG.CODE_ID = SUBBR.REGN_ID AND REG.CODE_MASTER_ID = 49
+    LEFT JOIN SYS0013M MEMTYP ON MEMTYP.CODE_ID = ORG.MEM_TYPE AND MEMTYP.CODE_MASTER_ID = 1
+    LEFT JOIN SYS0047M SUBAPPUSR ON SUBAPPUSR.USER_ID = A.CRT_USR_ID
     WHERE A.DEL_FLG = 'N'
 
     <if test="ordNo != null and ordNo != ''">
