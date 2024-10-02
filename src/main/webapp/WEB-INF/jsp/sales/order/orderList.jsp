@@ -649,7 +649,7 @@
     function fn_checkAccessRequest(tabNm) {
 
         var isValid = true, msg = "";
-
+        
         if(tabNm == 'CANC' && '${PAGE_AUTH.funcUserDefine15}'  != 'Y') {
             isValid = false;
         } else if(tabNm == 'PEXC' && '${PAGE_AUTH.funcUserDefine17}' != 'Y') {
@@ -661,9 +661,11 @@
         } else if(tabNm == 'OTRN' && '${PAGE_AUTH.funcUserDefine16}' != 'Y') {
             isValid = false;
         }
-
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-
+        
+        if (!isValid) {
+        	Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
+        
         return isValid;
     }
 

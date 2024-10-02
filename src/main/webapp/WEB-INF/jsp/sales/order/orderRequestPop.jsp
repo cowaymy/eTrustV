@@ -65,10 +65,15 @@
     }
 
     if (FormUtil.isNotEmpty(TAB_NM)) {
-      <c:if test="${callCenterYn != 'Y'}">
-        if(!fn_checkAccessRequest(TAB_NM)) return false;
-      </c:if>
-      fn_changeTab(TAB_NM);
+		var isValid = true;
+		if (window["fn_checkAccessRequest"]) {
+			isValid = fn_checkAccessRequest(TAB_NM);
+		}
+		if (!isValid) {
+			return false;
+		} else {
+			fn_changeTab(TAB_NM);
+		}
     }
 
     // j_date
