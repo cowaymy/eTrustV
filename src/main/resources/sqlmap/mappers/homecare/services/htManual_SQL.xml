@@ -709,7 +709,7 @@ SELECT * FROM
                                     AND ( 1 = fr.stus_code_id )
                                 ) rem ON rem.code_id = hr.fail_resn_id
                                 LEFT JOIN SYS0013M srt ON so.srv_type = srt.code_id
-                                LEFT JOIN SAL000D ms ON ms.sales_ord_id = so.sales_ord_id
+                                LEFT JOIN SAL0002D ms ON ms.sales_ord_id = so.sales_ord_id
                                 LEFT JOIN SYS0026M mi ON mi.stk_id = ms.itm_stk_id
                                 LEFT JOIN HMC0011D hc ON hc.ord_seq_no = so.bndl_id
                                 LEFT JOIN SAL0001D fo ON fo.sales_ord_no = hc.fra_ord_no
@@ -820,7 +820,7 @@ SELECT * FROM
                                 LEFT JOIN ORG0005D og ON og.mem_id = cd.mem_id
                                 LEFT JOIN ORG0001D mem3 ON og.mem_up_id = mem3.mem_id
                                 LEFT JOIN SYS0047M usr ON hs.crt_user_id = usr.user_id
-                                LEFT JOIN OTG1001V t6 ON t6.mem_id = og.mem_id
+                                LEFT JOIN ORG1001V t6 ON t6.mem_id = og.mem_id
                                 LEFT JOIN (
                                     SELECT  fr.resn_id      AS code_id,
                                                 fr.code || '-' || fr.resn_desc AS code_name
@@ -828,14 +828,14 @@ SELECT * FROM
                                     WHERE ( 167 = fr.resn_type_id )
                                     AND ( 1 = fr.stus_code_id )
                                 )  rem ON rem.code_id = hr.fail_resn_id
-                                LEFT JOIN SYS0013Mm srt ON so.srv_type = srt.code_id
+                                LEFT JOIN SYS0013M srt ON so.srv_type = srt.code_id
                                 LEFT JOIN SAL0002D ms ON ms.sales_ord_id = so.sales_ord_id
                                 LEFT JOIN SYS0026M mi ON mi.stk_id = ms.itm_stk_id
                                 LEFT JOIN HMC0011D hc ON hc.ord_seq_no = so.bndl_id
                                 LEFT JOIN SAL0001D fo ON fo.sales_ord_no = hc.fra_ord_no
                                 LEFT JOIN SAL0002D fs ON fs.sales_ord_id = fo.sales_ord_id
                                 LEFT JOIN SYS0026M fi ON fi.stk_id = fs.itm_stk_id
-                                LEFT JOIN REP0010Ss ag ON ag.ord_id = hs.sales_ord_id
+                                LEFT JOIN REP0010S ag ON ag.ord_id = hs.sales_ord_id
                                 LEFT JOIN REP0011S type ON type.ord_no = so.sales_ord_no
                             WHERE cd.mem_id IS NOT NULL
 
