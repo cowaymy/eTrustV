@@ -138,6 +138,13 @@
           style : 'left_style'
         },
         {
+          dataField : "ordDt",
+          headerText : "<spring:message code='supplement.title.text.ordDate' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "ordStatus",
           headerText : "<spring:message code='supplement.title.text.ordStus' />",
           width : 100,
@@ -159,6 +166,27 @@
           style : 'left_style'
         },
         {
+          dataField : "subBr",
+          headerText : "<spring:message code='supplement.text.submissionBranch' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "subReg",
+          headerText : "<spring:message code='sal.title.text.region' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "custId",
+          headerText : "<spring:message code='sal.text.customerId' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "custName",
           headerText : "<spring:message code='supplement.title.text.custName' />",
           width : 250,
@@ -166,9 +194,44 @@
           style : 'left_style'
         },
         {
+          dataField : "custGender",
+          headerText : "<spring:message code='sal.text.gender' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "custRace",
+          headerText : "<spring:message code='sal.title.race' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanTyp",
+          headerText : "<spring:message code='sal.text.memtype' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "salesmanCode",
           headerText : "<spring:message code='supplement.title.text.salManCode' />",
           width : 120,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanName",
+          headerText : "<spring:message code='sal.text.salManName' />",
+          width : 120,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanNameBr",
+          headerText : "<spring:message code='sales.salesman' />" + " " + "<spring:message code='sal.text.branch' />",
+          width : 150,
           editable : false,
           style : 'left_style'
         },
@@ -182,6 +245,13 @@
         {
           dataField : "keyInMonth",
           headerText : "<spring:message code='supplement.title.text.keyInMonth' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "keyInYear",
+          headerText : "Key-in Year",
           width : 100,
           editable : false,
           style : 'left_style'
@@ -229,6 +299,13 @@
           dataField : "isRefund",
           headerText : "<spring:message code='supplement.title.text.refund' />",
           width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "subUpdby",
+          headerText : "<spring:message code='supplement.text.submissionApproval' />",
+          width : 150,
           editable : false,
           style : 'left_style'
         } ];
@@ -262,6 +339,13 @@
           style : 'left_style'
         },
         {
+          dataField : "ordDt",
+          headerText : "<spring:message code='supplement.title.text.ordDate' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "ordStatus",
           headerText : "<spring:message code='supplement.title.text.ordStus' />",
           width : 250,
@@ -283,6 +367,27 @@
           style : 'left_style'
         },
         {
+          dataField : "subBr",
+          headerText : "<spring:message code='supplement.text.submissionBranch' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "subReg",
+          headerText : "<spring:message code='sal.title.text.region' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "custId",
+          headerText : "<spring:message code='sal.text.customerId' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "custName",
           headerText : "<spring:message code='supplement.title.text.custName' />",
           width : 250,
@@ -290,9 +395,44 @@
           style : 'left_style'
         },
         {
+          dataField : "custGender",
+          headerText : "<spring:message code='sal.text.gender' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "custRace",
+          headerText : "<spring:message code='sal.title.race' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanTyp",
+          headerText : "<spring:message code='sal.text.memtype' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
           dataField : "salesmanCode",
           headerText : "<spring:message code='supplement.title.text.salManCode' />",
           width : 120,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanName",
+          headerText : "<spring:message code='sal.text.salManName' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesmanNameBr",
+          headerText : "<spring:message code='sales.salesman' />" + " " + "<spring:message code='sal.text.branch' />",
+          width : 150,
           editable : false,
           style : 'left_style'
         },
@@ -306,6 +446,13 @@
         {
           dataField : "keyInMonth",
           headerText : "<spring:message code='supplement.title.text.keyInMonth' />",
+          width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "keyInYear",
+          headerText : "Key-in Year",
           width : 100,
           editable : false,
           style : 'left_style'
@@ -353,6 +500,13 @@
           dataField : "isRefund",
           headerText : "<spring:message code='supplement.title.text.refund' />",
           width : 100,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "subUpdby",
+          headerText : "<spring:message code='supplement.text.submissionApproval' />",
+          width : 150,
           editable : false,
           style : 'left_style'
         } ];
