@@ -4619,16 +4619,23 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      </select>
 
      <select id="selectRejoin" parameterType="Map" resultType="egovMap">
-       SELECT
-                O46D.MEM_ID
-                , O46D.APPR_STUS
-                , S38M.NAME <!--  Approval status name -->
-                , O46D.SAL_ORG_REJOIN
-        FROM ORG0046D O46D
-        LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID
-        WHERE O46D.NRIC = #{nric}
-        AND O46D.APPR_STUS = '5'
-        ORDER BY O46D.APPR_DT DESC
+       WITH CTE AS (
+
+  SELECT
+    O46D.MEM_ID,
+    O46D.APPR_STUS,
+    S38M.NAME,
+    O46D.SAL_ORG_REJOIN,
+    ROW_NUMBER() OVER (ORDER BY O46D.MEM_ID DESC) AS RN
+  FROM ORG0046D O46D
+  LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID
+  WHERE O46D.NRIC = #{nric}
+  AND O46D.APPR_STUS = '5'
+)
+
+SELECT MEM_ID, APPR_STUS, NAME, SAL_ORG_REJOIN
+FROM CTE
+WHERE RN = 1
      </select>
 
     <update id="updateCodyPaDate" parameterType="Map">
