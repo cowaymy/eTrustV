@@ -9,7 +9,7 @@ console.log("preOrderList");
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
 	var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
-	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
+	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"},{"codeId": "133","codeName": "Non Coverage Area"}];
 	var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
 	var myFileCaches = {};
 	var recentGridItem = null;
@@ -186,10 +186,16 @@ console.log("preOrderList");
             $('#view_sofNo').text(sofNo);
             $('#view_custIc').text(custNric);
 
-            if(stusId == 4 || stusId == 10){
+            if(stusId == 4 || stusId == 10 || stusId == 133){
                 Common.alert("Completed eKey-in cannot be edited.");
                 isValid = false;
             }
+
+            var isBlackArea = AUIGrid.getCellValue(listGridID, selectRowIdx, "instStatus");
+            if(isBlackArea == "Yes"){
+               $('#_action').val("133").attr('selected','selected');
+               $('#_action').attr('disabled','disabled').addClass("disabled");
+             }
         }else {
            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
            isValid = false;
@@ -297,9 +303,9 @@ console.log("preOrderList");
                 }
             } */
           , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
-            , { headerText : "updDt",      dataField : "updDt",   visible  : false}
-
-            ];
+          , { headerText : "updDt",      dataField : "updDt",   visible  : false}
+          ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width : '10%'}
+          ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -356,6 +362,7 @@ console.log("preOrderList");
           , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
           ,{ headerText : "Installation State", dataField: "state", editable : false, width: 300}
+          ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width: 200}
             ];
 
         //그리드 속성 설정
@@ -416,7 +423,7 @@ console.log("preOrderList");
 	            	$('#_action').val("10").attr('selected','selected');
 	            	$('#_action').attr('disabled','disabled').addClass("disabled");
             	}
-            	$('#updFail_wrap').show();
+        	    $('#updFail_wrap').show();
             }
         });
         $('#_btnFailSave').click(function() {
@@ -612,6 +619,12 @@ console.log("preOrderList");
                             Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
                             return false;
                         }
+                    }
+
+                    var isBlackArea = AUIGrid.getCellValue(listGridID, selIdx, "instStatus");
+                    if(isBlackArea == 'Yes'){
+                        Common.alert("Please proceed with updating the status to \"failed\" due to the area being under a non-coverage zone.");
+                        return false;
                     }
 
                     Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);

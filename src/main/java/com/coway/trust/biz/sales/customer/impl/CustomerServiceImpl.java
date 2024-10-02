@@ -1108,4 +1108,24 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	  return customerMapper.searchCreditCardNoExp(params);
   }
 
+  public boolean getBlackArea(Map<String, Object> params)throws Exception {
+
+	int count = 0;
+
+	LOGGER.info("######################################### areaId : " + params);
+
+    count = customerMapper.getBlackArea(params);
+
+	if(count > 0){
+		return true;
+	}else{
+		return false;
+	}
+  }
+
+  @Override
+  public List<EgovMap> selectBlacklistedAreawithProductCategoryList(Map<String, Object> params) {
+    return customerMapper.selectBlacklistedAreawithProductCategoryList(params);
+  }
+
 }

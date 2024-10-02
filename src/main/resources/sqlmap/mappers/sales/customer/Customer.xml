@@ -3489,4 +3489,43 @@
 	ORDER BY HIST_ID DESC
   </select>
 
+    <select id="getBlackArea" parameterType="Map" resultType="java.lang.Integer">
+    SELECT COUNT(*) COUNT
+       FROM SYS0121D SYS
+          JOIN SAL0001D EXT1 ON EXT1.SALES_ORD_ID = #{salesOrdId}
+          JOIN SAL0002D EXT2 ON EXT2.SALES_ORD_ID = EXT1.SALES_ORD_ID
+          JOIN SYS0026M SYC ON SYC.STK_ID = EXT2.ITM_STK_ID AND SYC.STK_CTGRY_ID = SYS.CAT_CODE_ID
+          JOIN SAL0023D EXT3 ON EXT3.CUST_ADD_ID = #{custAddId}
+          JOIN SYS0064M ETX4 ON ETX4.AREA_ID = EXT3.AREA_ID AND ETX4.BLCK_AREA_GRP_ID = SYS.BLCK_AREA_GRP_ID
+    WHERE 1 = 1
+       AND SYS.STUS_CODE_ID = '1'
+    </select>
+
+<select id="selectBlacklistedAreawithProductCategoryList" parameterType="Map" resultType="egovMap">
+SELECT
+    EXT1.AREA_ID AS AREA_ID,
+    EXT1.AREA AS AREA,
+    EXT1.POSTCODE AS POSTCODE,
+    EXT1.CITY AS CITY,
+    EXT1.STATE AS STATE,
+    EXT1.COUNTRY AS COUNTRY,
+    EXT3.CODE_NAME AS CATEGORY
+
+  FROM SYS0064M EXT1
+  JOIN SYS0121D EXT2 ON EXT2.BLCK_AREA_GRP_ID = EXT1.BLCK_AREA_GRP_ID
+  JOIN SYS0013M EXT3 ON EXT3.CODE_ID = EXT2.CAT_CODE_ID AND EXT3.CODE_MASTER_ID = '11'
+
+  WHERE 1 = 1
+
+   <if test="state != null and state != '' ">
+   AND UPPER(EXT1.STATE) = UPPER(#{state})
+   </if>
+   <if test="postcode != null and postcode != '' ">
+   AND EXT1.POSTCODE = #{postcode}
+   </if>
+   <if test="area != null and area != '' ">
+   AND UPPER(EXT1.AREA) LIKE UPPER('%' ||#{area}|| '%')
+   </if>
+ORDER BY EXT1.STATE, EXT1.CITY, EXT1.POSTCODE, EXT1.AREA, EXT1.AREA_ID
+  </select>
 </mapper>

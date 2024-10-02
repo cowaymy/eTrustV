@@ -664,4 +664,8 @@ public interface CustomerMapper {
   void updateCustomerTinStatus(Map<String, Object> params);
 
   List<EgovMap> selectCustomerBasicInfoHistoryLogList(Map<String, Object> params);
+
+  int getBlackArea(Map<String, Object> params);
+
+  List<EgovMap> selectBlacklistedAreawithProductCategoryList(Map<String, Object> params);
 }

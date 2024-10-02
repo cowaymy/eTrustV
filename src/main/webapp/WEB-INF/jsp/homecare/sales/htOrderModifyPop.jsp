@@ -2086,6 +2086,15 @@
                     .alert('<spring:message code="sal.alert.msg.ordUpdSummary" />'
                             + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
+        Common.ajaxSync("GET", "/sales/customer/checkBlackArea", { custAddId : $('#modInstCustAddId').val(),salesOrdId : ORD_ID}, function(result) {
+
+            if(result == true){
+                isValid = false;
+                Common.alert('* The area is not under coverage for the product categories. Reinstall and HS is not allow.');
+                return isValid;
+            }
+        });
+
         return isValid;
     }
 

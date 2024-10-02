@@ -2895,4 +2895,28 @@ public class CustomerController {
 		  // 데이터 리턴.
 		  return ResponseEntity.ok(custBasicInfoHistLog);
 	  }
+
+		@RequestMapping(value = "/checkBlackArea")
+		public ResponseEntity<Boolean> isBlackArea(@RequestParam Map<String, Object> params) throws Exception {
+			boolean result = false;
+
+		    LOGGER.debug("checkBlackArea params : {}", params.toString());
+		    result = customerService.getBlackArea(params);
+
+			return ResponseEntity.ok(result);
+		}
+
+		  @RequestMapping(value = "/blacklistedAreaWithProductCategory.do")
+		  public String blacklistedAreaWithProductCategoryList(@RequestParam Map<String, Object> params) {
+		    return "/sales/customer/blacklistedAreaWithProductCategory";
+		  }
+
+		  @RequestMapping(value = "/selectBlacklistedAreawithProductCategoryList.do")
+		  public ResponseEntity<List<EgovMap>> selectTokenIdMaintain(@RequestParam Map<String, Object> params) {
+
+		    List<EgovMap> resultList = customerService.selectBlacklistedAreawithProductCategoryList(params);
+		    return ResponseEntity.ok(resultList);
+		  }
+
+
 }

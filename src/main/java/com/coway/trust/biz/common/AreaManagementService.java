@@ -21,6 +21,14 @@ public interface AreaManagementService {
 
 	List<EgovMap> selectMyPostcode(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectBlackArea(Map<String, Object> params)throws Exception;
+
+	List<EgovMap> selectProductCategory(Map<String, Object> params)throws Exception;
+
+	List<EgovMap> selectBlacklistedArea(Map<String, Object> params)throws Exception;
+
+	String insertBlacklistedArea(Map<String, Object> param);
+
 	/**
 	 * 동일한 Area 건수 조회.
 	 * @Author KR-SH

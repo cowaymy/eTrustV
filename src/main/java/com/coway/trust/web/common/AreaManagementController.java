@@ -1,11 +1,13 @@
 package com.coway.trust.web.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,5 +256,88 @@ public class AreaManagementController {
 		return ResponseEntity.ok(selectMyPostcode);
 	}
 
+    @RequestMapping(value = "/selectBlackAreaList")
+    public ResponseEntity<List<EgovMap>> selectBlackArea (@RequestParam Map<String, Object> params) throws Exception{
+
+        LOGGER.info("######################  get Black Area Detail ###################");
+        List<EgovMap> detailList = null;
+        detailList = areaManagementService.selectBlackArea(params);
+
+        return ResponseEntity.ok(detailList);
+    }
+
+	@RequestMapping(value = "/editBlackAreaPop.do")
+	public String editBlackAreaPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		LOGGER.debug("params editBlackAreaPop ================================>>  " + params);
+		model.put("areaId", params.get("popAreaId"));
+		model.put("blckAreaGrpId", params.get("popBlckAreaGrpId"));
+		LOGGER.debug("model editBlackAreaPop ================================>>  " + model);
+		return "common/editBlackAreaPop";
+	}
+
+	@RequestMapping(value = "/selectProductCatergory.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectProductCatergory(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> result = new HashMap();
+
+	    List<EgovMap> list = areaManagementService.selectProductCategory(result);
+
+	    result.put("data", list);
+
+	    return ResponseEntity.ok(result);
+	  }
+
+	@RequestMapping(value = "/selectBlacklistedArea.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectBlacklistedArea(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> result = new HashMap();
+
+		String areaId = request.getParameter("areaId");
+
+		params.put("areaId", areaId);
+
+	    List<EgovMap> list = areaManagementService.selectBlacklistedArea(params);
+
+	    result.put("data", list);
+
+	    return ResponseEntity.ok(result);
+	  }
+
+	  @RequestMapping(value = "/updateBlacklistedArea.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> stockMovementService(@RequestBody Map<String, Object> params, Model model) {
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    int loginId;
+	    if (sessionVO == null) {
+	      loginId = 99999999;
+	    } else {
+	      loginId = sessionVO.getUserId();
+	    }
+	    Map<String, Object> itemGridList = (Map<String, Object>) params.get("itemGridList");
+	    List<Object> insList= (List<Object>)itemGridList.get(AppConstants.AUIGRID_ALL);
+	    List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+	    List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+	    Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+	    Map<String, Object> param = new HashMap();
+	    param.put("all", insList);
+	    param.put("form", formMap);
+	    param.put("userId", loginId);
+	    String reqNo = areaManagementService.insertBlacklistedArea(param);
+
+	    // 결과 만들기 예.
+	    ReturnMessage message = new ReturnMessage();
+	    if (reqNo != null && !"".equals(reqNo)) {
+	      // 결과 만들기 예.
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	    } else {
+	      message.setCode(AppConstants.FAIL);
+	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	    }
+
+	    message.setData(reqNo);
+
+	    return ResponseEntity.ok(message);
+	  }
 
 }

@@ -617,4 +617,7 @@ public interface CustomerService {
 
   void insertCustomerTinId(Map<String, Object> params);
 
+  boolean getBlackArea(Map<String, Object> params)throws Exception;
+
+  List<EgovMap> selectBlacklistedAreawithProductCategoryList(Map<String, Object> params);
 }

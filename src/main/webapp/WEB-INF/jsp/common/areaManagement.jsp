@@ -5,6 +5,7 @@
 
     // Make AUIGrid
     var myGridID;
+    var detailGridID;
 
     var aPostCode = "<spring:message code='sys.title.postcode' />";
     var aCountry = "<spring:message code='sys.country' />";
@@ -12,8 +13,21 @@
     //Start AUIGrid
     $(document).ready(function() {
 
+    	// Event listener to refresh the page
+        window.addEventListener("refreshAreaManagement", function() {
+            location.reload();
+        });
+
         // Create AUIGrid
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "");
+        createDetailGrid();
+
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
+             var detailParam = {areaId : event.item.areaId, blckAreaGrpId : event.item.blckAreaGrpId};
+             Common.ajax("GET", "/common/selectBlackAreaList", detailParam , function(Result){
+                 AUIGrid.setGridData(detailGridID, Result);
+             });
+        });
 
        //Rule Book Item search
         $("#search").click(function(){
@@ -69,6 +83,8 @@
             //return false;
         //}
 
+        $("#popBlckAreaGrpId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "blckAreaGrpId"));
+        console.log("def" + $("#popBlckAreaGrpId").val());
         $("#popAreaId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "areaId"));
         $("#popArea").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "area"));
         $("#popPostcode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "postcode"));
@@ -100,6 +116,37 @@
         });
     }
 
+    function createDetailGrid(){
+        var  columnLayouts = [
+                            /* {dataField : "areaId", headerText : '<spring:message code="sys.areaId" />', width : "8%" , editable : false}, */
+                             {dataField : "productName", headerText : '<spring:message code="sales.category" />', width : "45%" , editable : false},
+                            /* {dataField : "crtDt", headerText : '<spring:message code="log.head.createdate" />', width : "10%" , editable : false},
+                             {dataField : "crtUserName", headerText : '<spring:message code="sal.text.createBy" />', width : "16%" , editable : false},
+                             {dataField : "updDt", headerText : '<spring:message code="log.head.updatedate" />', width : "7%" , editable : false},
+                             {dataField : "updUserName", headerText : '<spring:message code="sal.text.updateBy" />', width : "7%" , editable : false},
+                             {dataField : "blckAreaGrpId", visible : false, editable : false, visible : false}, */
+                             {dataField : "instStus", headerText : '<spring:message code="service.title.InstallationStatus" />', width : "15%" , editable : false},
+                             ]
+
+        //그리드 속성 설정
+        var gridPross = {
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                fixedColumnCount    : 1,
+                showStateColumn     : false,
+                displayTreeOpen     : false,
+       //         selectionMode       : "multipleCells",  //"multipleCells",
+                headerHeight        : 30,
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : false
+            };
+
+        detailGridID = GridCommon.createAUIGrid("#detail_grid_wrap", columnLayouts,'', gridPross);
+    }
+
 
     // AUIGrid 칼럼 설정
     var columnLayout = [{
@@ -107,6 +154,12 @@
         headerText : '<spring:message code="sys.areaId" />',
         width : 120,
         editable : false
+
+    },{
+        dataField : "blckAreaGrpId",
+        editable : false,
+        width : 120,
+        visible : false
 
     },{
         dataField : "area",
@@ -152,6 +205,11 @@
     },{
         dataField : "id",
         headerText : '<spring:message code="sys.source" />',
+        editable : false
+    },
+    {
+        dataField : "blckAreaGrpId",
+        headerText : 'blackAreaGroupId',
         editable : false
     }];
 
@@ -217,8 +275,35 @@
         Common.popupDiv("/common/areaNewAddressOtherPop.do", $("#popSForm").serializeJSON(), null, true, "areaNewAddressOtherPop");
     }
 
-</script>
+    //edit Black Area
+    function fn_editBlackArea(){
 
+        var selectedItems = AUIGrid.getSelectedItems(myGridID);
+        if(selectedItems.length <= 0) {
+            Common.alert("<spring:message code='expense.msg.NoData'/> ");
+            return;
+        }
+        // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
+        var first = selectedItems[0];
+        var vCity = AUIGrid.getCellValue(myGridID , first.rowIndex , "city")
+        var vStatusId = AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId");
+        var vId = AUIGrid.getCellValue(myGridID , first.rowIndex , "id");
+
+        $("#popBlckAreaGrpId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "blckAreaGrpId"));
+        console.log("asd" + $("#popBlckAreaGrpId").val());
+        $("#popAreaId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "areaId"));
+        $("#popArea").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "area"));
+        $("#popPostcode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "postcode"));
+        $("#popCity").val(vCity);
+        $("#popState").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "state"));
+        $("#popCountry").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "country"));
+        $("#popStatusId").val(vStatusId);
+        $("#popId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "id"));
+
+       Common.popupDiv("/common/editBlackAreaPop.do", $("#popSForm").serializeJSON(), null, true, "editBlackAreaPop");
+    }
+
+</script>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home"/></li>
@@ -240,6 +325,7 @@
 <section class="search_table"><!-- search_table start -->
 <form action="#"  id="popSForm" name="popSForm" method="post">
 <input type="hidden" id="popAreaId" name="popAreaId"/>
+<input type="hidden" id="popBlckAreaGrpId" name="popBlckAreaGrpId"/>
 <input type="hidden" id="popArea" name="popArea"/>
 <input type="hidden" id="popPostcode" name="popPostcode"/>
 <input type="hidden" id="popCity" name="popCity"/>
@@ -295,7 +381,21 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="width:100%; height:100%; margin:0 auto;" class="autoGridHeight"></div>
+    <div id="grid_wrap" style="width:100%; height:300; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+    <li>
+       <li><p class="btn_grid"><a href="#" id="editBlackArea" onClick="javascript:fn_editBlackArea();"><spring:message code='sys.btn.edit'/></a></p></li>
+    </li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="detail_grid_wrap" style="width:100%; height:300; margin:0 auto;" ></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

@@ -23,6 +23,20 @@ public interface AreaManagementMapper {
 
 	List<EgovMap> selectMyPostcode(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectBlackArea(Map<String, Object> params);
+
+	List<EgovMap> selectProductCategory(Map<String, Object> params);
+
+	List<EgovMap> selectBlacklistedArea(Map<String, Object> params);
+
+	void updateBlackAreaStatus(Map<String, Object> fMap);
+
+	String selectBlackAreaGroupIdSeq(Map<String, Object> params);
+
+	void updateSys0064mBlckAreaGrpId(Map<String, Object> fMap);
+
+	void insBlacklistedArea(Map<String, Object> insMap);
+
 	/**
 	 * 동일한 Area 건수 조회.
 	 * @Author KR-SH

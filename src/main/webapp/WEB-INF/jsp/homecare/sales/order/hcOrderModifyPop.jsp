@@ -321,8 +321,12 @@
 
         // Save Install Info
         $('#btnSaveInstInfo').click(function() {
-            if (!fn_validInstallInfo()) return false;
-            fn_doSaveInstallInfo();
+            if (!fn_validInstallInfo()){
+            	return false;
+            }else{
+            	 console.log("please stop");
+                 fn_doSaveInstallInfo();
+            }
         });
 
         $('#btnSavePayChan').click(function() {
@@ -2131,6 +2135,15 @@
       Common
           .alert('<spring:message code="sal.alert.msg.ordUpdSummary" />'
               + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+    Common.ajaxSync("GET", "/sales/customer/checkBlackArea", { custAddId : $('#modInstCustAddId').val(),salesOrdId : ORD_ID}, function(result) {
+
+        if(result == true){
+            isValid = false;
+            Common.alert('Unable to save due to the area being under a non-coverage zone.');
+            return isValid;
+        }
+    });
 
     return isValid;
   }

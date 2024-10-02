@@ -128,4 +128,53 @@ public class AreaManagementServiceImpl extends EgovAbstractServiceImpl implement
 		return false;
 	}
 
+	@Override
+	public List<EgovMap> selectBlackArea(Map<String, Object> params) throws Exception {
+
+		return areaManagementMapper.selectBlackArea(params);
+	}
+
+	@Override
+	public List<EgovMap> selectProductCategory(Map<String, Object> params) throws Exception {
+
+		return areaManagementMapper.selectProductCategory(params);
+	}
+
+	@Override
+	public List<EgovMap> selectBlacklistedArea(Map<String, Object> params) throws Exception {
+
+		return areaManagementMapper.selectBlacklistedArea(params);
+	}
+
+	  @Override
+	  public String insertBlacklistedArea(Map<String, Object> params) {
+
+		List<Object> insList= (List<Object>)params.get(AppConstants.AUIGRID_ALL);
+	    Map<String, Object> fMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+	    fMap.put("userId", params.get("userId"));
+
+	    areaManagementMapper.updateBlackAreaStatus(fMap);
+
+	    String seq = areaManagementMapper.selectBlackAreaGroupIdSeq(fMap);
+
+	    fMap.put("seq", seq);
+
+	    areaManagementMapper.updateSys0064mBlckAreaGrpId(fMap);
+
+	    if (insList.size() > 0) {
+	      for (int i = 0; i < insList.size(); i++) {
+	        Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+
+	        insMap.put("popAreaId", fMap.get("popAreaId"));
+	        insMap.put("seq", seq);
+	        insMap.put("userId", params.get("userId"));
+	        areaManagementMapper.insBlacklistedArea(insMap);
+	      }
+	    }
+
+	    return seq;
+
+	  }
+
 }
