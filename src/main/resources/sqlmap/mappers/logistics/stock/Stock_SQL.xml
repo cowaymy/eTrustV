@@ -1223,4 +1223,7 @@
   AND APPV_STUS = 60
   </select>
 
+  <select id="selectStkCodeById" parameterType="Map" resultType="String">
+	  SELECT STK_CODE FROM SYS0026M WHERE STK_ID = #{stkId}
+  </select>
 </mapper>

@@ -86,6 +86,10 @@ public interface StockMapper {
 
 	void updatePriceReqstApproval(Map<String, Object> params);
 
+	// to select stock code by stock id, Hui Ding. 02/10/2024
+	String selectStkCodeById(Map<String, Object> params);
+
+
 	/*//bom manual execution
 	List<EgovMap> selectITF180Data();
 	void insertBomMaster43M(Map<String, Object> map);
