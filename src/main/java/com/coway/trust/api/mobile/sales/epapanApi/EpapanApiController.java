@@ -676,4 +676,146 @@ public class EpapanApiController {
 	    return ResponseEntity.ok(contactlist);
 	  }
 
+	  @ApiOperation(value = "preOrderModifyPop", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/preOrderModifyPop", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> preOrderModifyPop(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+
+	    //[Tap]Basic Info
+		EgovMap model = new EgovMap();
+		EgovMap result = preOrderService.selectPreOrderInfo(EpapanApiMagicAddressForm.createMap(param));
+
+//		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+//
+//		model.put("toDay", toDay);
+		model.put("preOrderInfo", result);
+
+		EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+        String dayFrom = "", dayTo = "";
+
+        if(checkExtradeSchedule!=null){
+        	dayFrom = checkExtradeSchedule.get("startDate").toString();
+        	dayTo = checkExtradeSchedule.get("endDate").toString();
+        }
+        else{
+        	dayFrom = "20"; // default 20-{month-1}
+       	  dayTo = "31"; // default LAST DAY OF THE MONTH
+        }
+
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+					SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("hsBlockDtFrom", dayFrom);
+		model.put("hsBlockDtTo", dayTo);
+
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+		model.put("userType", EpapanApiMagicAddressForm.createMap(param).get("userTypeId"));
+        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+	    return ResponseEntity.ok(model);
+	  }
+
+	  @ApiOperation(value = "attachFileUpdate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/attachFileUpdate", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> attachFileUpdate(@ApiIgnore MultipartHttpServletRequest request) throws Exception {
+
+		String userId = request.getParameter("userId");
+		Map<String, Object> ps = new HashMap();
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		LocalDate date = LocalDate.now();
+	    String year    = String.valueOf(date.getYear());
+	    String month   = String.format("%02d",date.getMonthValue());
+
+	    String subPath = File.separator + "sales"
+	                   + File.separator + "ekeyin"
+	                   + File.separator + year
+	                   + File.separator + month
+	                   + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
+			try{
+				 Set set = request.getFileMap().entrySet();
+				 Iterator i = set.iterator();
+
+				 while(i.hasNext()) {
+				     Map.Entry me = (Map.Entry)i.next();
+				     String key = (String)me.getKey();
+				     seqs.add(key);
+				 }
+
+				//List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+				List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+				ps.put(CommonConstants.USER_ID, userId);
+
+				preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, ps, seqs);
+
+				ps.put("attachFiles", list);
+				code = AppConstants.SUCCESS;
+			}catch(ApplicationException e){
+				err = e.getMessage();
+				code = AppConstants.FAIL;
+			}
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(code);
+			message.setData(ps);
+			message.setMessage(err);
+
+			return ResponseEntity.ok(message);
+		}
+
+	  @ApiOperation(value = "modifyPreOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/modifyPreOrder", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> modifyPreOrder(@RequestBody PreOrderVO preOrderVO) throws Exception {
+
+		  SessionVO sessionVO = new SessionVO();
+		  sessionVO.setUserId(preOrderVO.getCrtUserId());
+		  preOrderService.updatePreOrder(preOrderVO, sessionVO);
+
+		  String msg = "", appTypeName = "";
+
+			switch(preOrderVO.getAppTypeId()) {
+	    		case SalesConstants.APP_TYPE_CODE_ID_RENTAL :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHT_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_INSTALLMENT_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_SPONSOR :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_SPONSOR_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_SERVICE :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_SERVICE_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_EDUCATION :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_EDUCATION_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_FREE_TRIAL :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_FREE_TRIAL_FULL;
+	    			break;
+	    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS :
+	    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS_FULL;
+	    			break;
+	    		default :
+	    			break;
+	    	}
+
+	        msg += "Order successfully updated.<br />";
+	        msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
+	        msg += "Application Type : " + appTypeName + "<br />";
+
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setMessage(msg);
+
+			return ResponseEntity.ok(message);
+		}
 }

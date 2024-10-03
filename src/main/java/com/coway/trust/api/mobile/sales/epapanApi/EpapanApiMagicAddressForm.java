@@ -99,6 +99,8 @@ public class EpapanApiMagicAddressForm {
 		params.put("cntcEmail", vo.getCntcEmail());
 		params.put("cntcDept", vo.getCntcDept());
 		params.put("cntcExpno", vo.getCntcExpno());
+		params.put("userTypeId", vo.getUserTypeId());
+		params.put("preOrdId", vo.getPreOrdId());
 
 		return params;
 	}
@@ -548,6 +550,18 @@ public class EpapanApiMagicAddressForm {
 	public void setCntcExpno(String cntcExpno) {
 		this.cntcExpno = cntcExpno;
 	}
+	public String getUserTypeId() {
+		return userTypeId;
+	}
+	public void setUserTypeId(String userTypeId) {
+		this.userTypeId = userTypeId;
+	}
+	public String getPreOrdId() {
+		return preOrdId;
+	}
+	public void setPreOrdId(String preOrdId) {
+		this.preOrdId = preOrdId;
+	}
 
 
 	public String state;
@@ -621,5 +635,7 @@ public class EpapanApiMagicAddressForm {
 	public String cntcEmail;
 	public String cntcDept;
 	public String cntcExpno;
+	public String userTypeId;
+	public String preOrdId;
 
 }
