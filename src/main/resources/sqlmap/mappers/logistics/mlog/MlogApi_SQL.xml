@@ -1291,7 +1291,6 @@
                L44.VALID_FROM_DT,
                L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE,
                S26.STK_TYPE_ID PART_TYPE,
-               S16.AMT SALES_PRICE,
                nvl(S16.AMT, 0) as SALES_PRICE
     FROM LOG0043M L43,
              LOG0044D L44,
