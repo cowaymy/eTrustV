@@ -1291,7 +1291,8 @@
                L44.VALID_FROM_DT,
                L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE,
                S26.STK_TYPE_ID PART_TYPE,
-               S16.AMT SALES_PRICE
+               S16.AMT SALES_PRICE,
+               nvl(S16.AMT, 0) as SALES_PRICE
     FROM LOG0043M L43,
              LOG0044D L44,
              SYS0026M S26,
@@ -1307,6 +1308,36 @@
         AND L44.VALID_TO_DT <![CDATA[>=]]> sysdate
 
     UNION ALL
+
+        SELECT DISTINCT MATRL_NO PRODUCT_CODE,
+               ( select STK_ID
+                 from sys0026m
+                 where stk_code = l43.MATRL_NO) product_Id,
+               S26.STK_DESC FILTER_NAME,
+               BOM_COMPNT FILTER_CODE,
+               S26.STK_ID filter_Parts_Id,
+               L44.ALTER_ITM_GRP FILTER_GROUP_CODE,
+               L44.USE_PROBABILTIY,
+               L44.ALTER_ITM_RANK_ORD,
+               L44.VALID_FROM_DT,
+               L44.VALID_TO_DT,
+               'INST_PART' AS DIVISION_CODE,
+               S26.STK_TYPE_ID PART_TYPE,
+               nvl(S16.AMT, 0) as SALES_PRICE
+    FROM LOG0043M L43,
+             LOG0044D L44,
+             SYS0026M S26,
+             SAL0016M S16
+    WHERE 1=1
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S16.STK_ID = S26.STK_ID
+        AND L44.ALTER_ITM_GRP IS NULL
+        AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
+        AND L44.VALID_FROM_DT <![CDATA[<=]]> sysdate
+        AND L44.VALID_TO_DT <![CDATA[>=]]> sysdate
+
+<!--     UNION ALL
 
     SELECT DISTINCT '' AS PRODUCT_CODE,
                0 AS product_Id,
@@ -1358,7 +1389,7 @@
         AND S16.STK_ID  =  S26.STK_ID
         AND S26.STUS_CODE_ID = '1'
         AND S16.STUS_CODE_ID = '1'
-        AND S26.STK_TYPE_ID in ('63','64')
+        AND S26.STK_TYPE_ID in ('63','64') -->
   </select>
 
   <select id="getItemBankLocationList" parameterType="Map" resultType="egovMap">
