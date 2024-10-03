@@ -1332,6 +1332,7 @@
         AND L44.BOM_COMPNT = S26.STK_CODE
         AND S16.STK_ID = S26.STK_ID
         AND L44.ALTER_ITM_GRP IS NULL
+        AND S16.AMT IS NOT NULL
         AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
         AND L44.VALID_FROM_DT <![CDATA[<=]]> sysdate
         AND L44.VALID_TO_DT <![CDATA[>=]]> sysdate
