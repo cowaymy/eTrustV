@@ -292,7 +292,7 @@ SELECT A.CUST_ID AS CUST_ID
                     , A.PRC_ID AS PRC_ID
                     , A.TOT_PV_GST AS TOT_PV_GST
                     , A.PRE_ORD_ID AS PRE_ORD_ID
-                    , B.IS_EXST_CUST AS CUSTOMER_STATUS_CODE
+                    , TO_CHAR(B.IS_EXST_CUST) AS CUSTOMER_STATUS_CODE
         FROM SAL0213M A
         INNER JOIN SAL0029D B ON  A.CUST_ID = B.CUST_ID
         WHERE A.PRE_ORD_ID = #{preOrdId}
