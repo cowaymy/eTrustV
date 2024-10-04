@@ -1510,6 +1510,7 @@ UNION ALL
                                       , VOUCHER_CODE
                                       , SRV_TYPE
                                       , TOT_PV_SS
+                                      , TNB_ACC_NO
     ) VALUES ( #{preOrdId}
                   , SYSDATE
                   , #{chnnl}
@@ -1580,6 +1581,7 @@ UNION ALL
                   , #{voucherCode}
                   , #{srvType}
                   , #{totPvSs}
+                  , #{elecAccNo}
     )
   </insert>
 
