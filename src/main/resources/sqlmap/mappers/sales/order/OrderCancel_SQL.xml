@@ -1782,6 +1782,7 @@
                             UPD_BY = #{userId},
                             DISB = 1
         WHERE SUB_ORD_ID = #{salesOrdId}
+        AND DISB = 0
    </update>
 
 </mapper>

@@ -803,6 +803,8 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
     }
     logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
 
+    orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table SAL0349D - DISB = 1 for Air Con Bulk promotion package
+
     logger.info("####################### Confirm To Cancel save END!! #####################");
 
     String msg = "Order Number : " + (String) somMap.get("salesOrdNo") + "<br/>Cancelled successfully.<br/>"
