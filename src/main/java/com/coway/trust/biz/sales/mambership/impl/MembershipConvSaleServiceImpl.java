@@ -706,22 +706,24 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
         	    					 Map<String, Object>  get2dMap = list.get(i);
         	    					 Map<String, Object>  pay32dMap = new HashMap();
 
-        	         	    		 pay32dMap.put("taxInvcId",    taxInvcId);
-        	  		    		     pay32dMap.put("invcItmType",get2dMap.get("invcItmType"));
-        	  		    		     pay32dMap.put("invcItmOrdNo",get2dMap.get("invcItmOrdNo"));
-        	  		    		     pay32dMap.put("invcItmCode", get2dMap.get("invcItmCode"));
-        	  		    		     pay32dMap.put("invcItmDesc1",get2dMap.get("invcItmDesc1"));
-        	  		    		     pay32dMap.put("invcItmQty",   get2dMap.get("invcItmQty"));
-        	  		    		     pay32dMap.put("invcItmGstRate",get2dMap.get("invcItmGstRate"));
-        	  		    		     pay32dMap.put("invcItmGstTxs",get2dMap.get("invcItmGstTxs"));
-        	  		    		     pay32dMap.put("invcItmChrg",  get2dMap.get("invcItmChrg"));
-        	  		    		     pay32dMap.put("invcItmAmtDue",get2dMap.get("invcItmAmtDue") );
+        	    					 if(Integer.parseInt(get2dMap.get("invcItmChrg").toString()) > 0) {
+        	    						 pay32dMap.put("taxInvcId",    taxInvcId);
+            	  		    		     pay32dMap.put("invcItmType",get2dMap.get("invcItmType"));
+            	  		    		     pay32dMap.put("invcItmOrdNo",get2dMap.get("invcItmOrdNo"));
+            	  		    		     pay32dMap.put("invcItmCode", get2dMap.get("invcItmCode"));
+            	  		    		     pay32dMap.put("invcItmDesc1",get2dMap.get("invcItmDesc1"));
+            	  		    		     pay32dMap.put("invcItmQty",   get2dMap.get("invcItmQty"));
+            	  		    		     pay32dMap.put("invcItmGstRate",get2dMap.get("invcItmGstRate"));
+            	  		    		     pay32dMap.put("invcItmGstTxs",get2dMap.get("invcItmGstTxs"));
+            	  		    		     pay32dMap.put("invcItmChrg",  get2dMap.get("invcItmChrg"));
+            	  		    		     pay32dMap.put("invcItmAmtDue",get2dMap.get("invcItmAmtDue") );
 
 
-        	      		       	     logger.debug(" in Filter Invoice detail   ==>"+pay32dMap.toString());
-        	      		       		 int detailCnt =membershipConvSaleMapper.PAY0032DFilter_insert(pay32dMap);
-        	      		       	     logger.debug("in Filter Invoice detail    Cnt  ==>"+detailCnt);
+            	      		       	     logger.debug(" in Filter Invoice detail   ==>"+pay32dMap.toString());
+            	      		       		 int detailCnt =membershipConvSaleMapper.PAY0032DFilter_insert(pay32dMap);
+            	      		       	     logger.debug("in Filter Invoice detail    Cnt  ==>"+detailCnt);
 
+        	    					 }
         	    				 }
         	    			 }
         	    		 }
