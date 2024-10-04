@@ -12,9 +12,6 @@ import io.swagger.annotations.ApiModel;
 /**
  * @ClassName : EKeyInApiDto.java
  * @Description : TO-DO Class Description
- *
- *
- *
  * @History
  *
  *          <pre>
@@ -30,240 +27,460 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "EKeyInApiDto", description = "EKeyInApiDto")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EKeyInApiDto {
-
   @SuppressWarnings("unchecked")
-  public static EKeyInApiDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, EKeyInApiDto.class);
+  public static EKeyInApiDto create( EgovMap egvoMap ) {
+    return BeanConverter.toBean( egvoMap, EKeyInApiDto.class );
   }
 
   private List<EKeyInApiDto> codeList;
+
   private List<EKeyInApiDto> bankList;
+
   private List<EKeyInApiDto> productList;
+
   private List<EKeyInApiDto> promotionList;
+
   private List<EKeyInApiDto> packTypeList;
+
   private List<EgovMap> cpntList;
+
   private List<EgovMap> promoByCpntIdList;
+
   private EKeyInApiDto saveData;
+
   private EKeyInApiDto basic;
+
   private EKeyInApiDto homecare;
+
   private EKeyInApiDto mattress;
+
   private EKeyInApiDto frame;
+
   private List<EKeyInApiDto> mattressProductList;
+
   private List<EKeyInApiDto> frameProductList;
+
   private List<EKeyInApiDto> attachment;
+
   private EKeyInApiDto selectAnotherContactMain;
+
   private EKeyInApiDto selectAnotherAddressMain;
+
   private int custId;
+
   private String custName;
+
   private String hcGu;
+
   private String sofNo;
+
   private String reqstDt;
+
   private int stusId;
+
   private String stusName;
+
   private String stkDesc;
+
   private int preOrdId;
+
   private String rem1;
+
   private String rem2;
+
   private int codeMasterId;
+
   private int codeId;
+
   private String code;
+
   private String codeName;
+
   private String codeDesc;
+
   private int bankId;
+
   private int typeId;
+
   private String typeIdName;
+
   private String nric;
+
   private String initials;
+
   private String companyType;
+
   private String dob;
+
   private String gender;
+
   private String nation;
+
   private String race;
+
   private String pasSportExpr;
+
   private String visaExpr;
+
   private int receivingMarketingMsgStatus;
+
   private String name;
+
   private String telM1;
+
   private String telR;
+
   private String telO;
+
   private String telf;
+
   private String email;
+
   private String ext;
+
   private int appTypeId;
+
   private int srvPacId;
+
   private int instPriod;
+
   private String srvPacName;
+
   private int itmStkId;
+
   private int promoId;
+
   private BigDecimal totAmt;
+
   private BigDecimal norAmt;
+
   private BigDecimal mthRentAmt;
+
   private BigDecimal totPv;
+
   private BigDecimal totPvSs;
+
   private BigDecimal totPvGst;
+
   private String instct;
+
   private String yyyy;
+
   private String mm;
+
   private int empChk;
+
   private int exTrade;
+
   private int stkId;
+
   private String c1;
+
   private int discontinue;
+
   private String promoDesc;
+
   private String promoDtFrom;
+
   private String addrDtl;
+
   private String street;
+
   private String area;
+
   private String city;
+
   private String postcode;
+
   private String state;
+
   private String country;
+
   private String addrDtlBilling;
+
   private String streetBilling;
+
   private String areaBilling;
+
   private String cityBilling;
+
   private String postcodeBilling;
+
   private String stateBilling;
+
   private String countryBilling;
+
   private String dscBrnch;
+
   private String postingBrnch;
+
   private String hdcBrnch;
+
   private int rentPayModeId;
+
   private String custOriCrcNo;
+
   private int custCrcTypeId;
+
   private String custCrcOwner;
+
   private String custCrcExpr;
+
   private int custCrcBankId;
+
   private int cardTypeId;
+
   private int matPreOrdId;
+
   private int fraPreOrdId;
+
   private int stkCtgryId;
+
   private int custCntcId;
+
   private int custInitial;
+
   private String pos;
+
   private String telM2;
+
   private int raceId;
+
   private int stusCodeId;
+
   private int idOld;
+
   private String dept;
+
   private int dcm;
+
   private String stusCodeIdName;
+
   private String regId;
+
   private int prcId;
+
   private BigDecimal amt;
+
   private BigDecimal monthlyRental;
+
   private BigDecimal prcRpf;
+
   private BigDecimal prcPv;
+
   private BigDecimal tradeInPv;
+
   private BigDecimal prcCosting;
+
   private BigDecimal orderPricePromo;
+
   private BigDecimal ordPvGST;
+
   private BigDecimal orderRentalFeesPromo;
+
   private BigDecimal promoDiscPeriodTp;
+
   private BigDecimal promoDiscPeriod;
+
   private BigDecimal normalPricePromo;
+
   private BigDecimal discRntFee;
+
   private int promoItmId;
+
   private int promoItmStkId;
+
   private int stkCode;
+
   private int promoItmCurId;
+
   private BigDecimal promoItmPrc;
+
   private BigDecimal promoAmt;
+
   private BigDecimal promoPrcRpf;
+
   private BigDecimal promoItmPv;
+
   private BigDecimal promoItmPvGst;
+
   private int promoAppTypeId;
+
   private int custAddId;
+
   private int custAddBillingId;
+
   private String fullAddr;
+
   private String areaId;
+
   private String rem;
+
   private int custCrcId;
+
   private String cardTypeIdName;
+
   private String paramVal;
+
   private int tknId;
+
   private String etyPoint;
+
   private String refNo;
+
   private String tknzUrl;
+
   private String tknzMerchantId;
+
   private String tknzVerfKey;
+
   private String pan;
+
   private String expyear;
+
   private String expmonth;
+
   private String urlReq;
+
   private String merchantId;
+
   private String signature;
+
   private String custCrcExprMM;
+
   private String custCrcExprYYYY;
+
   private String custCrcRem;
+
   private String crcCheck;
+
   private String errorDesc;
+
   private String crcNo;
+
   private String token;
+
   private String stus;
+
   private int memId;
+
   private String memCode;
+
   private BigDecimal targetTot;
+
   private BigDecimal collectTot;
+
   private BigDecimal rcPrct;
+
   private int opCnt;
+
   private int flg6Month;
+
   private int cnt;
+
   private String userId;
+
   private int dscBrnchId;
+
   private int postingBrnchId;
+
   private int hdcBrnchId;
+
   private int keyinBrnchId;
+
   private int instAddId;
+
   private int rentPayCustId;
+
   private int custBillCustId;
+
   private int custBillCntId;
+
   private int custBillAddId;
+
   private String custBillEmail;
+
   private String orderType;
+
   private int atchFileGrpId;
+
   private String subPath;
+
   private String fileKeySeq;
+
   private int crtUserId;
+
   private int updUserId;
+
   private int atchFileId;
+
   private String atchFileName;
+
   private String fileSubPath;
+
   private String physiclFileName;
+
   private String fileExtsn;
+
   private String saveFlag;
+
   private int updateAtchFileGrpId;
+
   private int atchFileIdSales;
+
   private int atchFileIdNric;
+
   private int atchFileIdPayment;
+
   private int atchFileIdTemporary;
+
   private int atchFileIdoOthersform;
+
   private int atchFileIdoOthersform2;
+
   private int ordSeqNo;
+
   private String promoDt;
+
   private String gu;
+
   private String cpntCode;
+
   private String cpntCodeName;
+
   private BigDecimal quotaStus;
+
   private int isHcAcInstallationFlag;
+
   private String acBrnch;
+
   private int acBrnchId;
+
   private int custCrcTokenIdStus;
+
   private int Is3rdParty;
+
   private int voucherValid;
+
   private String voucherCode;
+
   private int voucherType;
+
   private String voucherEmail;
+
   private String customerStatusCode;
+
   private String customerStatus;
+
   private String srvType;
 
+  private String elecAccNo;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
   }
 
-  public void setCodeList(List<EKeyInApiDto> codeList) {
+  public void setCodeList( List<EKeyInApiDto> codeList ) {
     this.codeList = codeList;
   }
 
@@ -271,7 +488,7 @@ public class EKeyInApiDto {
     return bankList;
   }
 
-  public void setBankList(List<EKeyInApiDto> bankList) {
+  public void setBankList( List<EKeyInApiDto> bankList ) {
     this.bankList = bankList;
   }
 
@@ -279,7 +496,7 @@ public class EKeyInApiDto {
     return productList;
   }
 
-  public void setProductList(List<EKeyInApiDto> productList) {
+  public void setProductList( List<EKeyInApiDto> productList ) {
     this.productList = productList;
   }
 
@@ -287,7 +504,7 @@ public class EKeyInApiDto {
     return promotionList;
   }
 
-  public void setPromotionList(List<EKeyInApiDto> promotionList) {
+  public void setPromotionList( List<EKeyInApiDto> promotionList ) {
     this.promotionList = promotionList;
   }
 
@@ -295,7 +512,7 @@ public class EKeyInApiDto {
     return packTypeList;
   }
 
-  public void setPackTypeList(List<EKeyInApiDto> packTypeList) {
+  public void setPackTypeList( List<EKeyInApiDto> packTypeList ) {
     this.packTypeList = packTypeList;
   }
 
@@ -303,7 +520,7 @@ public class EKeyInApiDto {
     return cpntList;
   }
 
-  public void setCpntList(List<EgovMap> cpntList) {
+  public void setCpntList( List<EgovMap> cpntList ) {
     this.cpntList = cpntList;
   }
 
@@ -311,7 +528,7 @@ public class EKeyInApiDto {
     return promoByCpntIdList;
   }
 
-  public void setPromoByCpntIdList(List<EgovMap> promoByCpntIdList) {
+  public void setPromoByCpntIdList( List<EgovMap> promoByCpntIdList ) {
     this.promoByCpntIdList = promoByCpntIdList;
   }
 
@@ -319,7 +536,7 @@ public class EKeyInApiDto {
     return saveData;
   }
 
-  public void setSaveData(EKeyInApiDto saveData) {
+  public void setSaveData( EKeyInApiDto saveData ) {
     this.saveData = saveData;
   }
 
@@ -327,7 +544,7 @@ public class EKeyInApiDto {
     return basic;
   }
 
-  public void setBasic(EKeyInApiDto basic) {
+  public void setBasic( EKeyInApiDto basic ) {
     this.basic = basic;
   }
 
@@ -335,7 +552,7 @@ public class EKeyInApiDto {
     return homecare;
   }
 
-  public void setHomecare(EKeyInApiDto homecare) {
+  public void setHomecare( EKeyInApiDto homecare ) {
     this.homecare = homecare;
   }
 
@@ -343,7 +560,7 @@ public class EKeyInApiDto {
     return mattress;
   }
 
-  public void setMattress(EKeyInApiDto mattress) {
+  public void setMattress( EKeyInApiDto mattress ) {
     this.mattress = mattress;
   }
 
@@ -351,7 +568,7 @@ public class EKeyInApiDto {
     return frame;
   }
 
-  public void setFrame(EKeyInApiDto frame) {
+  public void setFrame( EKeyInApiDto frame ) {
     this.frame = frame;
   }
 
@@ -359,7 +576,7 @@ public class EKeyInApiDto {
     return mattressProductList;
   }
 
-  public void setMattressProductList(List<EKeyInApiDto> mattressProductList) {
+  public void setMattressProductList( List<EKeyInApiDto> mattressProductList ) {
     this.mattressProductList = mattressProductList;
   }
 
@@ -367,7 +584,7 @@ public class EKeyInApiDto {
     return frameProductList;
   }
 
-  public void setFrameProductList(List<EKeyInApiDto> frameProductList) {
+  public void setFrameProductList( List<EKeyInApiDto> frameProductList ) {
     this.frameProductList = frameProductList;
   }
 
@@ -375,7 +592,7 @@ public class EKeyInApiDto {
     return attachment;
   }
 
-  public void setAttachment(List<EKeyInApiDto> attachment) {
+  public void setAttachment( List<EKeyInApiDto> attachment ) {
     this.attachment = attachment;
   }
 
@@ -383,7 +600,7 @@ public class EKeyInApiDto {
     return selectAnotherContactMain;
   }
 
-  public void setSelectAnotherContactMain(EKeyInApiDto selectAnotherContactMain) {
+  public void setSelectAnotherContactMain( EKeyInApiDto selectAnotherContactMain ) {
     this.selectAnotherContactMain = selectAnotherContactMain;
   }
 
@@ -391,7 +608,7 @@ public class EKeyInApiDto {
     return selectAnotherAddressMain;
   }
 
-  public void setSelectAnotherAddressMain(EKeyInApiDto selectAnotherAddressMain) {
+  public void setSelectAnotherAddressMain( EKeyInApiDto selectAnotherAddressMain ) {
     this.selectAnotherAddressMain = selectAnotherAddressMain;
   }
 
@@ -399,7 +616,7 @@ public class EKeyInApiDto {
     return custId;
   }
 
-  public void setCustId(int custId) {
+  public void setCustId( int custId ) {
     this.custId = custId;
   }
 
@@ -407,7 +624,7 @@ public class EKeyInApiDto {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -415,7 +632,7 @@ public class EKeyInApiDto {
     return hcGu;
   }
 
-  public void setHcGu(String hcGu) {
+  public void setHcGu( String hcGu ) {
     this.hcGu = hcGu;
   }
 
@@ -423,7 +640,7 @@ public class EKeyInApiDto {
     return sofNo;
   }
 
-  public void setSofNo(String sofNo) {
+  public void setSofNo( String sofNo ) {
     this.sofNo = sofNo;
   }
 
@@ -431,7 +648,7 @@ public class EKeyInApiDto {
     return reqstDt;
   }
 
-  public void setReqstDt(String reqstDt) {
+  public void setReqstDt( String reqstDt ) {
     this.reqstDt = reqstDt;
   }
 
@@ -439,7 +656,7 @@ public class EKeyInApiDto {
     return stusId;
   }
 
-  public void setStusId(int stusId) {
+  public void setStusId( int stusId ) {
     this.stusId = stusId;
   }
 
@@ -447,7 +664,7 @@ public class EKeyInApiDto {
     return stusName;
   }
 
-  public void setStusName(String stusName) {
+  public void setStusName( String stusName ) {
     this.stusName = stusName;
   }
 
@@ -455,7 +672,7 @@ public class EKeyInApiDto {
     return stkDesc;
   }
 
-  public void setStkDesc(String stkDesc) {
+  public void setStkDesc( String stkDesc ) {
     this.stkDesc = stkDesc;
   }
 
@@ -463,7 +680,7 @@ public class EKeyInApiDto {
     return preOrdId;
   }
 
-  public void setPreOrdId(int preOrdId) {
+  public void setPreOrdId( int preOrdId ) {
     this.preOrdId = preOrdId;
   }
 
@@ -471,7 +688,7 @@ public class EKeyInApiDto {
     return rem1;
   }
 
-  public void setRem1(String rem1) {
+  public void setRem1( String rem1 ) {
     this.rem1 = rem1;
   }
 
@@ -479,7 +696,7 @@ public class EKeyInApiDto {
     return rem2;
   }
 
-  public void setRem2(String rem2) {
+  public void setRem2( String rem2 ) {
     this.rem2 = rem2;
   }
 
@@ -487,7 +704,7 @@ public class EKeyInApiDto {
     return codeMasterId;
   }
 
-  public void setCodeMasterId(int codeMasterId) {
+  public void setCodeMasterId( int codeMasterId ) {
     this.codeMasterId = codeMasterId;
   }
 
@@ -495,7 +712,7 @@ public class EKeyInApiDto {
     return codeId;
   }
 
-  public void setCodeId(int codeId) {
+  public void setCodeId( int codeId ) {
     this.codeId = codeId;
   }
 
@@ -503,7 +720,7 @@ public class EKeyInApiDto {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode( String code ) {
     this.code = code;
   }
 
@@ -511,7 +728,7 @@ public class EKeyInApiDto {
     return codeName;
   }
 
-  public void setCodeName(String codeName) {
+  public void setCodeName( String codeName ) {
     this.codeName = codeName;
   }
 
@@ -519,7 +736,7 @@ public class EKeyInApiDto {
     return codeDesc;
   }
 
-  public void setCodeDesc(String codeDesc) {
+  public void setCodeDesc( String codeDesc ) {
     this.codeDesc = codeDesc;
   }
 
@@ -527,7 +744,7 @@ public class EKeyInApiDto {
     return bankId;
   }
 
-  public void setBankId(int bankId) {
+  public void setBankId( int bankId ) {
     this.bankId = bankId;
   }
 
@@ -535,7 +752,7 @@ public class EKeyInApiDto {
     return typeId;
   }
 
-  public void setTypeId(int typeId) {
+  public void setTypeId( int typeId ) {
     this.typeId = typeId;
   }
 
@@ -543,7 +760,7 @@ public class EKeyInApiDto {
     return typeIdName;
   }
 
-  public void setTypeIdName(String typeIdName) {
+  public void setTypeIdName( String typeIdName ) {
     this.typeIdName = typeIdName;
   }
 
@@ -551,7 +768,7 @@ public class EKeyInApiDto {
     return nric;
   }
 
-  public void setNric(String nric) {
+  public void setNric( String nric ) {
     this.nric = nric;
   }
 
@@ -559,7 +776,7 @@ public class EKeyInApiDto {
     return initials;
   }
 
-  public void setInitials(String initials) {
+  public void setInitials( String initials ) {
     this.initials = initials;
   }
 
@@ -567,7 +784,7 @@ public class EKeyInApiDto {
     return companyType;
   }
 
-  public void setCompanyType(String companyType) {
+  public void setCompanyType( String companyType ) {
     this.companyType = companyType;
   }
 
@@ -575,7 +792,7 @@ public class EKeyInApiDto {
     return dob;
   }
 
-  public void setDob(String dob) {
+  public void setDob( String dob ) {
     this.dob = dob;
   }
 
@@ -583,7 +800,7 @@ public class EKeyInApiDto {
     return gender;
   }
 
-  public void setGender(String gender) {
+  public void setGender( String gender ) {
     this.gender = gender;
   }
 
@@ -591,7 +808,7 @@ public class EKeyInApiDto {
     return nation;
   }
 
-  public void setNation(String nation) {
+  public void setNation( String nation ) {
     this.nation = nation;
   }
 
@@ -599,7 +816,7 @@ public class EKeyInApiDto {
     return race;
   }
 
-  public void setRace(String race) {
+  public void setRace( String race ) {
     this.race = race;
   }
 
@@ -607,7 +824,7 @@ public class EKeyInApiDto {
     return pasSportExpr;
   }
 
-  public void setPasSportExpr(String pasSportExpr) {
+  public void setPasSportExpr( String pasSportExpr ) {
     this.pasSportExpr = pasSportExpr;
   }
 
@@ -615,7 +832,7 @@ public class EKeyInApiDto {
     return visaExpr;
   }
 
-  public void setVisaExpr(String visaExpr) {
+  public void setVisaExpr( String visaExpr ) {
     this.visaExpr = visaExpr;
   }
 
@@ -623,7 +840,7 @@ public class EKeyInApiDto {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName( String name ) {
     this.name = name;
   }
 
@@ -631,7 +848,7 @@ public class EKeyInApiDto {
     return telM1;
   }
 
-  public void setTelM1(String telM1) {
+  public void setTelM1( String telM1 ) {
     this.telM1 = telM1;
   }
 
@@ -639,7 +856,7 @@ public class EKeyInApiDto {
     return telR;
   }
 
-  public void setTelR(String telR) {
+  public void setTelR( String telR ) {
     this.telR = telR;
   }
 
@@ -647,7 +864,7 @@ public class EKeyInApiDto {
     return telO;
   }
 
-  public void setTelO(String telO) {
+  public void setTelO( String telO ) {
     this.telO = telO;
   }
 
@@ -655,7 +872,7 @@ public class EKeyInApiDto {
     return telf;
   }
 
-  public void setTelf(String telf) {
+  public void setTelf( String telf ) {
     this.telf = telf;
   }
 
@@ -663,7 +880,7 @@ public class EKeyInApiDto {
     return email;
   }
 
-  public void setEmail(String email) {
+  public void setEmail( String email ) {
     this.email = email;
   }
 
@@ -671,7 +888,7 @@ public class EKeyInApiDto {
     return ext;
   }
 
-  public void setExt(String ext) {
+  public void setExt( String ext ) {
     this.ext = ext;
   }
 
@@ -679,7 +896,7 @@ public class EKeyInApiDto {
     return appTypeId;
   }
 
-  public void setAppTypeId(int appTypeId) {
+  public void setAppTypeId( int appTypeId ) {
     this.appTypeId = appTypeId;
   }
 
@@ -687,7 +904,7 @@ public class EKeyInApiDto {
     return srvPacId;
   }
 
-  public void setSrvPacId(int srvPacId) {
+  public void setSrvPacId( int srvPacId ) {
     this.srvPacId = srvPacId;
   }
 
@@ -695,7 +912,7 @@ public class EKeyInApiDto {
     return instPriod;
   }
 
-  public void setInstPriod(int instPriod) {
+  public void setInstPriod( int instPriod ) {
     this.instPriod = instPriod;
   }
 
@@ -703,7 +920,7 @@ public class EKeyInApiDto {
     return srvPacName;
   }
 
-  public void setSrvPacName(String srvPacName) {
+  public void setSrvPacName( String srvPacName ) {
     this.srvPacName = srvPacName;
   }
 
@@ -711,7 +928,7 @@ public class EKeyInApiDto {
     return itmStkId;
   }
 
-  public void setItmStkId(int itmStkId) {
+  public void setItmStkId( int itmStkId ) {
     this.itmStkId = itmStkId;
   }
 
@@ -719,7 +936,7 @@ public class EKeyInApiDto {
     return promoId;
   }
 
-  public void setPromoId(int promoId) {
+  public void setPromoId( int promoId ) {
     this.promoId = promoId;
   }
 
@@ -727,7 +944,7 @@ public class EKeyInApiDto {
     return totAmt;
   }
 
-  public void setTotAmt(BigDecimal totAmt) {
+  public void setTotAmt( BigDecimal totAmt ) {
     this.totAmt = totAmt;
   }
 
@@ -735,7 +952,7 @@ public class EKeyInApiDto {
     return norAmt;
   }
 
-  public void setNorAmt(BigDecimal norAmt) {
+  public void setNorAmt( BigDecimal norAmt ) {
     this.norAmt = norAmt;
   }
 
@@ -743,7 +960,7 @@ public class EKeyInApiDto {
     return mthRentAmt;
   }
 
-  public void setMthRentAmt(BigDecimal mthRentAmt) {
+  public void setMthRentAmt( BigDecimal mthRentAmt ) {
     this.mthRentAmt = mthRentAmt;
   }
 
@@ -751,23 +968,23 @@ public class EKeyInApiDto {
     return totPv;
   }
 
-  public void setTotPv(BigDecimal totPv) {
+  public void setTotPv( BigDecimal totPv ) {
     this.totPv = totPv;
   }
 
   public BigDecimal getTotPvSs() {
-	return totPvSs;
+    return totPvSs;
   }
 
-  public void setTotPvSs(BigDecimal totPvSs) {
-	this.totPvSs = totPvSs;
+  public void setTotPvSs( BigDecimal totPvSs ) {
+    this.totPvSs = totPvSs;
   }
 
   public BigDecimal getTotPvGst() {
     return totPvGst;
   }
 
-  public void setTotPvGst(BigDecimal totPvGst) {
+  public void setTotPvGst( BigDecimal totPvGst ) {
     this.totPvGst = totPvGst;
   }
 
@@ -775,7 +992,7 @@ public class EKeyInApiDto {
     return instct;
   }
 
-  public void setInstct(String instct) {
+  public void setInstct( String instct ) {
     this.instct = instct;
   }
 
@@ -783,7 +1000,7 @@ public class EKeyInApiDto {
     return yyyy;
   }
 
-  public void setYyyy(String yyyy) {
+  public void setYyyy( String yyyy ) {
     this.yyyy = yyyy;
   }
 
@@ -791,7 +1008,7 @@ public class EKeyInApiDto {
     return mm;
   }
 
-  public void setMm(String mm) {
+  public void setMm( String mm ) {
     this.mm = mm;
   }
 
@@ -799,7 +1016,7 @@ public class EKeyInApiDto {
     return empChk;
   }
 
-  public void setEmpChk(int empChk) {
+  public void setEmpChk( int empChk ) {
     this.empChk = empChk;
   }
 
@@ -807,7 +1024,7 @@ public class EKeyInApiDto {
     return exTrade;
   }
 
-  public void setExTrade(int exTrade) {
+  public void setExTrade( int exTrade ) {
     this.exTrade = exTrade;
   }
 
@@ -815,7 +1032,7 @@ public class EKeyInApiDto {
     return stkId;
   }
 
-  public void setStkId(int stkId) {
+  public void setStkId( int stkId ) {
     this.stkId = stkId;
   }
 
@@ -823,7 +1040,7 @@ public class EKeyInApiDto {
     return c1;
   }
 
-  public void setC1(String c1) {
+  public void setC1( String c1 ) {
     this.c1 = c1;
   }
 
@@ -831,7 +1048,7 @@ public class EKeyInApiDto {
     return discontinue;
   }
 
-  public void setDiscontinue(int discontinue) {
+  public void setDiscontinue( int discontinue ) {
     this.discontinue = discontinue;
   }
 
@@ -839,7 +1056,7 @@ public class EKeyInApiDto {
     return promoDesc;
   }
 
-  public void setPromoDesc(String promoDesc) {
+  public void setPromoDesc( String promoDesc ) {
     this.promoDesc = promoDesc;
   }
 
@@ -847,7 +1064,7 @@ public class EKeyInApiDto {
     return promoDtFrom;
   }
 
-  public void setPromoDtFrom(String promoDtFrom) {
+  public void setPromoDtFrom( String promoDtFrom ) {
     this.promoDtFrom = promoDtFrom;
   }
 
@@ -855,7 +1072,7 @@ public class EKeyInApiDto {
     return addrDtl;
   }
 
-  public void setAddrDtl(String addrDtl) {
+  public void setAddrDtl( String addrDtl ) {
     this.addrDtl = addrDtl;
   }
 
@@ -863,7 +1080,7 @@ public class EKeyInApiDto {
     return street;
   }
 
-  public void setStreet(String street) {
+  public void setStreet( String street ) {
     this.street = street;
   }
 
@@ -871,7 +1088,7 @@ public class EKeyInApiDto {
     return area;
   }
 
-  public void setArea(String area) {
+  public void setArea( String area ) {
     this.area = area;
   }
 
@@ -879,7 +1096,7 @@ public class EKeyInApiDto {
     return city;
   }
 
-  public void setCity(String city) {
+  public void setCity( String city ) {
     this.city = city;
   }
 
@@ -887,7 +1104,7 @@ public class EKeyInApiDto {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -895,7 +1112,7 @@ public class EKeyInApiDto {
     return state;
   }
 
-  public void setState(String state) {
+  public void setState( String state ) {
     this.state = state;
   }
 
@@ -903,7 +1120,7 @@ public class EKeyInApiDto {
     return country;
   }
 
-  public void setCountry(String country) {
+  public void setCountry( String country ) {
     this.country = country;
   }
 
@@ -911,7 +1128,7 @@ public class EKeyInApiDto {
     return addrDtlBilling;
   }
 
-  public void setAddrDtlBilling(String addrDtlBilling) {
+  public void setAddrDtlBilling( String addrDtlBilling ) {
     this.addrDtlBilling = addrDtlBilling;
   }
 
@@ -919,7 +1136,7 @@ public class EKeyInApiDto {
     return streetBilling;
   }
 
-  public void setStreetBilling(String streetBilling) {
+  public void setStreetBilling( String streetBilling ) {
     this.streetBilling = streetBilling;
   }
 
@@ -927,7 +1144,7 @@ public class EKeyInApiDto {
     return areaBilling;
   }
 
-  public void setAreaBilling(String areaBilling) {
+  public void setAreaBilling( String areaBilling ) {
     this.areaBilling = areaBilling;
   }
 
@@ -935,7 +1152,7 @@ public class EKeyInApiDto {
     return cityBilling;
   }
 
-  public void setCityBilling(String cityBilling) {
+  public void setCityBilling( String cityBilling ) {
     this.cityBilling = cityBilling;
   }
 
@@ -943,7 +1160,7 @@ public class EKeyInApiDto {
     return postcodeBilling;
   }
 
-  public void setPostcodeBilling(String postcodeBilling) {
+  public void setPostcodeBilling( String postcodeBilling ) {
     this.postcodeBilling = postcodeBilling;
   }
 
@@ -951,7 +1168,7 @@ public class EKeyInApiDto {
     return stateBilling;
   }
 
-  public void setStateBilling(String stateBilling) {
+  public void setStateBilling( String stateBilling ) {
     this.stateBilling = stateBilling;
   }
 
@@ -959,7 +1176,7 @@ public class EKeyInApiDto {
     return countryBilling;
   }
 
-  public void setCountryBilling(String countryBilling) {
+  public void setCountryBilling( String countryBilling ) {
     this.countryBilling = countryBilling;
   }
 
@@ -967,7 +1184,7 @@ public class EKeyInApiDto {
     return dscBrnch;
   }
 
-  public void setDscBrnch(String dscBrnch) {
+  public void setDscBrnch( String dscBrnch ) {
     this.dscBrnch = dscBrnch;
   }
 
@@ -975,7 +1192,7 @@ public class EKeyInApiDto {
     return postingBrnch;
   }
 
-  public void setPostingBrnch(String postingBrnch) {
+  public void setPostingBrnch( String postingBrnch ) {
     this.postingBrnch = postingBrnch;
   }
 
@@ -983,7 +1200,7 @@ public class EKeyInApiDto {
     return hdcBrnch;
   }
 
-  public void setHdcBrnch(String hdcBrnch) {
+  public void setHdcBrnch( String hdcBrnch ) {
     this.hdcBrnch = hdcBrnch;
   }
 
@@ -991,7 +1208,7 @@ public class EKeyInApiDto {
     return rentPayModeId;
   }
 
-  public void setRentPayModeId(int rentPayModeId) {
+  public void setRentPayModeId( int rentPayModeId ) {
     this.rentPayModeId = rentPayModeId;
   }
 
@@ -999,7 +1216,7 @@ public class EKeyInApiDto {
     return custOriCrcNo;
   }
 
-  public void setCustOriCrcNo(String custOriCrcNo) {
+  public void setCustOriCrcNo( String custOriCrcNo ) {
     this.custOriCrcNo = custOriCrcNo;
   }
 
@@ -1007,7 +1224,7 @@ public class EKeyInApiDto {
     return custCrcTypeId;
   }
 
-  public void setCustCrcTypeId(int custCrcTypeId) {
+  public void setCustCrcTypeId( int custCrcTypeId ) {
     this.custCrcTypeId = custCrcTypeId;
   }
 
@@ -1015,7 +1232,7 @@ public class EKeyInApiDto {
     return custCrcOwner;
   }
 
-  public void setCustCrcOwner(String custCrcOwner) {
+  public void setCustCrcOwner( String custCrcOwner ) {
     this.custCrcOwner = custCrcOwner;
   }
 
@@ -1023,7 +1240,7 @@ public class EKeyInApiDto {
     return custCrcExpr;
   }
 
-  public void setCustCrcExpr(String custCrcExpr) {
+  public void setCustCrcExpr( String custCrcExpr ) {
     this.custCrcExpr = custCrcExpr;
   }
 
@@ -1031,7 +1248,7 @@ public class EKeyInApiDto {
     return custCrcBankId;
   }
 
-  public void setCustCrcBankId(int custCrcBankId) {
+  public void setCustCrcBankId( int custCrcBankId ) {
     this.custCrcBankId = custCrcBankId;
   }
 
@@ -1039,7 +1256,7 @@ public class EKeyInApiDto {
     return cardTypeId;
   }
 
-  public void setCardTypeId(int cardTypeId) {
+  public void setCardTypeId( int cardTypeId ) {
     this.cardTypeId = cardTypeId;
   }
 
@@ -1047,7 +1264,7 @@ public class EKeyInApiDto {
     return matPreOrdId;
   }
 
-  public void setMatPreOrdId(int matPreOrdId) {
+  public void setMatPreOrdId( int matPreOrdId ) {
     this.matPreOrdId = matPreOrdId;
   }
 
@@ -1055,7 +1272,7 @@ public class EKeyInApiDto {
     return fraPreOrdId;
   }
 
-  public void setFraPreOrdId(int fraPreOrdId) {
+  public void setFraPreOrdId( int fraPreOrdId ) {
     this.fraPreOrdId = fraPreOrdId;
   }
 
@@ -1063,7 +1280,7 @@ public class EKeyInApiDto {
     return stkCtgryId;
   }
 
-  public void setStkCtgryId(int stkCtgryId) {
+  public void setStkCtgryId( int stkCtgryId ) {
     this.stkCtgryId = stkCtgryId;
   }
 
@@ -1071,7 +1288,7 @@ public class EKeyInApiDto {
     return custCntcId;
   }
 
-  public void setCustCntcId(int custCntcId) {
+  public void setCustCntcId( int custCntcId ) {
     this.custCntcId = custCntcId;
   }
 
@@ -1079,7 +1296,7 @@ public class EKeyInApiDto {
     return custInitial;
   }
 
-  public void setCustInitial(int custInitial) {
+  public void setCustInitial( int custInitial ) {
     this.custInitial = custInitial;
   }
 
@@ -1087,7 +1304,7 @@ public class EKeyInApiDto {
     return pos;
   }
 
-  public void setPos(String pos) {
+  public void setPos( String pos ) {
     this.pos = pos;
   }
 
@@ -1095,7 +1312,7 @@ public class EKeyInApiDto {
     return telM2;
   }
 
-  public void setTelM2(String telM2) {
+  public void setTelM2( String telM2 ) {
     this.telM2 = telM2;
   }
 
@@ -1103,7 +1320,7 @@ public class EKeyInApiDto {
     return raceId;
   }
 
-  public void setRaceId(int raceId) {
+  public void setRaceId( int raceId ) {
     this.raceId = raceId;
   }
 
@@ -1111,7 +1328,7 @@ public class EKeyInApiDto {
     return stusCodeId;
   }
 
-  public void setStusCodeId(int stusCodeId) {
+  public void setStusCodeId( int stusCodeId ) {
     this.stusCodeId = stusCodeId;
   }
 
@@ -1119,7 +1336,7 @@ public class EKeyInApiDto {
     return idOld;
   }
 
-  public void setIdOld(int idOld) {
+  public void setIdOld( int idOld ) {
     this.idOld = idOld;
   }
 
@@ -1127,7 +1344,7 @@ public class EKeyInApiDto {
     return dept;
   }
 
-  public void setDept(String dept) {
+  public void setDept( String dept ) {
     this.dept = dept;
   }
 
@@ -1135,7 +1352,7 @@ public class EKeyInApiDto {
     return dcm;
   }
 
-  public void setDcm(int dcm) {
+  public void setDcm( int dcm ) {
     this.dcm = dcm;
   }
 
@@ -1143,7 +1360,7 @@ public class EKeyInApiDto {
     return stusCodeIdName;
   }
 
-  public void setStusCodeIdName(String stusCodeIdName) {
+  public void setStusCodeIdName( String stusCodeIdName ) {
     this.stusCodeIdName = stusCodeIdName;
   }
 
@@ -1151,7 +1368,7 @@ public class EKeyInApiDto {
     return regId;
   }
 
-  public void setRegId(String regId) {
+  public void setRegId( String regId ) {
     this.regId = regId;
   }
 
@@ -1159,7 +1376,7 @@ public class EKeyInApiDto {
     return prcId;
   }
 
-  public void setPrcId(int prcId) {
+  public void setPrcId( int prcId ) {
     this.prcId = prcId;
   }
 
@@ -1167,7 +1384,7 @@ public class EKeyInApiDto {
     return amt;
   }
 
-  public void setAmt(BigDecimal amt) {
+  public void setAmt( BigDecimal amt ) {
     this.amt = amt;
   }
 
@@ -1175,7 +1392,7 @@ public class EKeyInApiDto {
     return monthlyRental;
   }
 
-  public void setMonthlyRental(BigDecimal monthlyRental) {
+  public void setMonthlyRental( BigDecimal monthlyRental ) {
     this.monthlyRental = monthlyRental;
   }
 
@@ -1183,7 +1400,7 @@ public class EKeyInApiDto {
     return prcRpf;
   }
 
-  public void setPrcRpf(BigDecimal prcRpf) {
+  public void setPrcRpf( BigDecimal prcRpf ) {
     this.prcRpf = prcRpf;
   }
 
@@ -1191,7 +1408,7 @@ public class EKeyInApiDto {
     return prcPv;
   }
 
-  public void setPrcPv(BigDecimal prcPv) {
+  public void setPrcPv( BigDecimal prcPv ) {
     this.prcPv = prcPv;
   }
 
@@ -1199,7 +1416,7 @@ public class EKeyInApiDto {
     return tradeInPv;
   }
 
-  public void setTradeInPv(BigDecimal tradeInPv) {
+  public void setTradeInPv( BigDecimal tradeInPv ) {
     this.tradeInPv = tradeInPv;
   }
 
@@ -1207,7 +1424,7 @@ public class EKeyInApiDto {
     return prcCosting;
   }
 
-  public void setPrcCosting(BigDecimal prcCosting) {
+  public void setPrcCosting( BigDecimal prcCosting ) {
     this.prcCosting = prcCosting;
   }
 
@@ -1215,7 +1432,7 @@ public class EKeyInApiDto {
     return orderPricePromo;
   }
 
-  public void setOrderPricePromo(BigDecimal orderPricePromo) {
+  public void setOrderPricePromo( BigDecimal orderPricePromo ) {
     this.orderPricePromo = orderPricePromo;
   }
 
@@ -1223,7 +1440,7 @@ public class EKeyInApiDto {
     return ordPvGST;
   }
 
-  public void setOrdPvGST(BigDecimal ordPvGST) {
+  public void setOrdPvGST( BigDecimal ordPvGST ) {
     this.ordPvGST = ordPvGST;
   }
 
@@ -1231,7 +1448,7 @@ public class EKeyInApiDto {
     return orderRentalFeesPromo;
   }
 
-  public void setOrderRentalFeesPromo(BigDecimal orderRentalFeesPromo) {
+  public void setOrderRentalFeesPromo( BigDecimal orderRentalFeesPromo ) {
     this.orderRentalFeesPromo = orderRentalFeesPromo;
   }
 
@@ -1239,7 +1456,7 @@ public class EKeyInApiDto {
     return promoDiscPeriodTp;
   }
 
-  public void setPromoDiscPeriodTp(BigDecimal promoDiscPeriodTp) {
+  public void setPromoDiscPeriodTp( BigDecimal promoDiscPeriodTp ) {
     this.promoDiscPeriodTp = promoDiscPeriodTp;
   }
 
@@ -1247,7 +1464,7 @@ public class EKeyInApiDto {
     return promoDiscPeriod;
   }
 
-  public void setPromoDiscPeriod(BigDecimal promoDiscPeriod) {
+  public void setPromoDiscPeriod( BigDecimal promoDiscPeriod ) {
     this.promoDiscPeriod = promoDiscPeriod;
   }
 
@@ -1255,7 +1472,7 @@ public class EKeyInApiDto {
     return normalPricePromo;
   }
 
-  public void setNormalPricePromo(BigDecimal normalPricePromo) {
+  public void setNormalPricePromo( BigDecimal normalPricePromo ) {
     this.normalPricePromo = normalPricePromo;
   }
 
@@ -1263,7 +1480,7 @@ public class EKeyInApiDto {
     return discRntFee;
   }
 
-  public void setDiscRntFee(BigDecimal discRntFee) {
+  public void setDiscRntFee( BigDecimal discRntFee ) {
     this.discRntFee = discRntFee;
   }
 
@@ -1271,7 +1488,7 @@ public class EKeyInApiDto {
     return promoItmId;
   }
 
-  public void setPromoItmId(int promoItmId) {
+  public void setPromoItmId( int promoItmId ) {
     this.promoItmId = promoItmId;
   }
 
@@ -1279,7 +1496,7 @@ public class EKeyInApiDto {
     return promoItmStkId;
   }
 
-  public void setPromoItmStkId(int promoItmStkId) {
+  public void setPromoItmStkId( int promoItmStkId ) {
     this.promoItmStkId = promoItmStkId;
   }
 
@@ -1287,7 +1504,7 @@ public class EKeyInApiDto {
     return stkCode;
   }
 
-  public void setStkCode(int stkCode) {
+  public void setStkCode( int stkCode ) {
     this.stkCode = stkCode;
   }
 
@@ -1295,7 +1512,7 @@ public class EKeyInApiDto {
     return promoItmCurId;
   }
 
-  public void setPromoItmCurId(int promoItmCurId) {
+  public void setPromoItmCurId( int promoItmCurId ) {
     this.promoItmCurId = promoItmCurId;
   }
 
@@ -1303,7 +1520,7 @@ public class EKeyInApiDto {
     return promoItmPrc;
   }
 
-  public void setPromoItmPrc(BigDecimal promoItmPrc) {
+  public void setPromoItmPrc( BigDecimal promoItmPrc ) {
     this.promoItmPrc = promoItmPrc;
   }
 
@@ -1311,7 +1528,7 @@ public class EKeyInApiDto {
     return promoAmt;
   }
 
-  public void setPromoAmt(BigDecimal promoAmt) {
+  public void setPromoAmt( BigDecimal promoAmt ) {
     this.promoAmt = promoAmt;
   }
 
@@ -1319,7 +1536,7 @@ public class EKeyInApiDto {
     return promoPrcRpf;
   }
 
-  public void setPromoPrcRpf(BigDecimal promoPrcRpf) {
+  public void setPromoPrcRpf( BigDecimal promoPrcRpf ) {
     this.promoPrcRpf = promoPrcRpf;
   }
 
@@ -1327,7 +1544,7 @@ public class EKeyInApiDto {
     return promoItmPv;
   }
 
-  public void setPromoItmPv(BigDecimal promoItmPv) {
+  public void setPromoItmPv( BigDecimal promoItmPv ) {
     this.promoItmPv = promoItmPv;
   }
 
@@ -1335,7 +1552,7 @@ public class EKeyInApiDto {
     return promoItmPvGst;
   }
 
-  public void setPromoItmPvGst(BigDecimal promoItmPvGst) {
+  public void setPromoItmPvGst( BigDecimal promoItmPvGst ) {
     this.promoItmPvGst = promoItmPvGst;
   }
 
@@ -1343,7 +1560,7 @@ public class EKeyInApiDto {
     return promoAppTypeId;
   }
 
-  public void setPromoAppTypeId(int promoAppTypeId) {
+  public void setPromoAppTypeId( int promoAppTypeId ) {
     this.promoAppTypeId = promoAppTypeId;
   }
 
@@ -1351,7 +1568,7 @@ public class EKeyInApiDto {
     return custAddId;
   }
 
-  public void setCustAddId(int custAddId) {
+  public void setCustAddId( int custAddId ) {
     this.custAddId = custAddId;
   }
 
@@ -1359,7 +1576,7 @@ public class EKeyInApiDto {
     return custAddBillingId;
   }
 
-  public void setCustAddBillingId(int custAddBillingId) {
+  public void setCustAddBillingId( int custAddBillingId ) {
     this.custAddBillingId = custAddBillingId;
   }
 
@@ -1367,7 +1584,7 @@ public class EKeyInApiDto {
     return fullAddr;
   }
 
-  public void setFullAddr(String fullAddr) {
+  public void setFullAddr( String fullAddr ) {
     this.fullAddr = fullAddr;
   }
 
@@ -1375,7 +1592,7 @@ public class EKeyInApiDto {
     return areaId;
   }
 
-  public void setAreaId(String areaId) {
+  public void setAreaId( String areaId ) {
     this.areaId = areaId;
   }
 
@@ -1383,7 +1600,7 @@ public class EKeyInApiDto {
     return rem;
   }
 
-  public void setRem(String rem) {
+  public void setRem( String rem ) {
     this.rem = rem;
   }
 
@@ -1391,7 +1608,7 @@ public class EKeyInApiDto {
     return custCrcId;
   }
 
-  public void setCustCrcId(int custCrcId) {
+  public void setCustCrcId( int custCrcId ) {
     this.custCrcId = custCrcId;
   }
 
@@ -1399,7 +1616,7 @@ public class EKeyInApiDto {
     return cardTypeIdName;
   }
 
-  public void setCardTypeIdName(String cardTypeIdName) {
+  public void setCardTypeIdName( String cardTypeIdName ) {
     this.cardTypeIdName = cardTypeIdName;
   }
 
@@ -1407,7 +1624,7 @@ public class EKeyInApiDto {
     return paramVal;
   }
 
-  public void setParamVal(String paramVal) {
+  public void setParamVal( String paramVal ) {
     this.paramVal = paramVal;
   }
 
@@ -1415,7 +1632,7 @@ public class EKeyInApiDto {
     return tknId;
   }
 
-  public void setTknId(int tknId) {
+  public void setTknId( int tknId ) {
     this.tknId = tknId;
   }
 
@@ -1423,7 +1640,7 @@ public class EKeyInApiDto {
     return etyPoint;
   }
 
-  public void setEtyPoint(String etyPoint) {
+  public void setEtyPoint( String etyPoint ) {
     this.etyPoint = etyPoint;
   }
 
@@ -1431,7 +1648,7 @@ public class EKeyInApiDto {
     return refNo;
   }
 
-  public void setRefNo(String refNo) {
+  public void setRefNo( String refNo ) {
     this.refNo = refNo;
   }
 
@@ -1439,7 +1656,7 @@ public class EKeyInApiDto {
     return tknzUrl;
   }
 
-  public void setTknzUrl(String tknzUrl) {
+  public void setTknzUrl( String tknzUrl ) {
     this.tknzUrl = tknzUrl;
   }
 
@@ -1447,7 +1664,7 @@ public class EKeyInApiDto {
     return tknzMerchantId;
   }
 
-  public void setTknzMerchantId(String tknzMerchantId) {
+  public void setTknzMerchantId( String tknzMerchantId ) {
     this.tknzMerchantId = tknzMerchantId;
   }
 
@@ -1455,7 +1672,7 @@ public class EKeyInApiDto {
     return tknzVerfKey;
   }
 
-  public void setTknzVerfKey(String tknzVerfKey) {
+  public void setTknzVerfKey( String tknzVerfKey ) {
     this.tknzVerfKey = tknzVerfKey;
   }
 
@@ -1463,7 +1680,7 @@ public class EKeyInApiDto {
     return pan;
   }
 
-  public void setPan(String pan) {
+  public void setPan( String pan ) {
     this.pan = pan;
   }
 
@@ -1471,7 +1688,7 @@ public class EKeyInApiDto {
     return expyear;
   }
 
-  public void setExpyear(String expyear) {
+  public void setExpyear( String expyear ) {
     this.expyear = expyear;
   }
 
@@ -1479,7 +1696,7 @@ public class EKeyInApiDto {
     return expmonth;
   }
 
-  public void setExpmonth(String expmonth) {
+  public void setExpmonth( String expmonth ) {
     this.expmonth = expmonth;
   }
 
@@ -1487,7 +1704,7 @@ public class EKeyInApiDto {
     return urlReq;
   }
 
-  public void setUrlReq(String urlReq) {
+  public void setUrlReq( String urlReq ) {
     this.urlReq = urlReq;
   }
 
@@ -1495,7 +1712,7 @@ public class EKeyInApiDto {
     return merchantId;
   }
 
-  public void setMerchantId(String merchantId) {
+  public void setMerchantId( String merchantId ) {
     this.merchantId = merchantId;
   }
 
@@ -1503,7 +1720,7 @@ public class EKeyInApiDto {
     return signature;
   }
 
-  public void setSignature(String signature) {
+  public void setSignature( String signature ) {
     this.signature = signature;
   }
 
@@ -1511,7 +1728,7 @@ public class EKeyInApiDto {
     return custCrcExprMM;
   }
 
-  public void setCustCrcExprMM(String custCrcExprMM) {
+  public void setCustCrcExprMM( String custCrcExprMM ) {
     this.custCrcExprMM = custCrcExprMM;
   }
 
@@ -1519,7 +1736,7 @@ public class EKeyInApiDto {
     return custCrcExprYYYY;
   }
 
-  public void setCustCrcExprYYYY(String custCrcExprYYYY) {
+  public void setCustCrcExprYYYY( String custCrcExprYYYY ) {
     this.custCrcExprYYYY = custCrcExprYYYY;
   }
 
@@ -1527,7 +1744,7 @@ public class EKeyInApiDto {
     return custCrcRem;
   }
 
-  public void setCustCrcRem(String custCrcRem) {
+  public void setCustCrcRem( String custCrcRem ) {
     this.custCrcRem = custCrcRem;
   }
 
@@ -1535,7 +1752,7 @@ public class EKeyInApiDto {
     return crcCheck;
   }
 
-  public void setCrcCheck(String crcCheck) {
+  public void setCrcCheck( String crcCheck ) {
     this.crcCheck = crcCheck;
   }
 
@@ -1543,7 +1760,7 @@ public class EKeyInApiDto {
     return errorDesc;
   }
 
-  public void setErrorDesc(String errorDesc) {
+  public void setErrorDesc( String errorDesc ) {
     this.errorDesc = errorDesc;
   }
 
@@ -1551,7 +1768,7 @@ public class EKeyInApiDto {
     return crcNo;
   }
 
-  public void setCrcNo(String crcNo) {
+  public void setCrcNo( String crcNo ) {
     this.crcNo = crcNo;
   }
 
@@ -1559,7 +1776,7 @@ public class EKeyInApiDto {
     return token;
   }
 
-  public void setToken(String token) {
+  public void setToken( String token ) {
     this.token = token;
   }
 
@@ -1567,7 +1784,7 @@ public class EKeyInApiDto {
     return stus;
   }
 
-  public void setStus(String stus) {
+  public void setStus( String stus ) {
     this.stus = stus;
   }
 
@@ -1575,7 +1792,7 @@ public class EKeyInApiDto {
     return memId;
   }
 
-  public void setMemId(int memId) {
+  public void setMemId( int memId ) {
     this.memId = memId;
   }
 
@@ -1583,7 +1800,7 @@ public class EKeyInApiDto {
     return memCode;
   }
 
-  public void setMemCode(String memCode) {
+  public void setMemCode( String memCode ) {
     this.memCode = memCode;
   }
 
@@ -1591,7 +1808,7 @@ public class EKeyInApiDto {
     return targetTot;
   }
 
-  public void setTargetTot(BigDecimal targetTot) {
+  public void setTargetTot( BigDecimal targetTot ) {
     this.targetTot = targetTot;
   }
 
@@ -1599,7 +1816,7 @@ public class EKeyInApiDto {
     return collectTot;
   }
 
-  public void setCollectTot(BigDecimal collectTot) {
+  public void setCollectTot( BigDecimal collectTot ) {
     this.collectTot = collectTot;
   }
 
@@ -1607,7 +1824,7 @@ public class EKeyInApiDto {
     return rcPrct;
   }
 
-  public void setRcPrct(BigDecimal rcPrct) {
+  public void setRcPrct( BigDecimal rcPrct ) {
     this.rcPrct = rcPrct;
   }
 
@@ -1615,7 +1832,7 @@ public class EKeyInApiDto {
     return opCnt;
   }
 
-  public void setOpCnt(int opCnt) {
+  public void setOpCnt( int opCnt ) {
     this.opCnt = opCnt;
   }
 
@@ -1623,7 +1840,7 @@ public class EKeyInApiDto {
     return flg6Month;
   }
 
-  public void setFlg6Month(int flg6Month) {
+  public void setFlg6Month( int flg6Month ) {
     this.flg6Month = flg6Month;
   }
 
@@ -1631,7 +1848,7 @@ public class EKeyInApiDto {
     return cnt;
   }
 
-  public void setCnt(int cnt) {
+  public void setCnt( int cnt ) {
     this.cnt = cnt;
   }
 
@@ -1639,7 +1856,7 @@ public class EKeyInApiDto {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId( String userId ) {
     this.userId = userId;
   }
 
@@ -1647,7 +1864,7 @@ public class EKeyInApiDto {
     return dscBrnchId;
   }
 
-  public void setDscBrnchId(int dscBrnchId) {
+  public void setDscBrnchId( int dscBrnchId ) {
     this.dscBrnchId = dscBrnchId;
   }
 
@@ -1655,7 +1872,7 @@ public class EKeyInApiDto {
     return postingBrnchId;
   }
 
-  public void setPostingBrnchId(int postingBrnchId) {
+  public void setPostingBrnchId( int postingBrnchId ) {
     this.postingBrnchId = postingBrnchId;
   }
 
@@ -1663,7 +1880,7 @@ public class EKeyInApiDto {
     return hdcBrnchId;
   }
 
-  public void setHdcBrnchId(int hdcBrnchId) {
+  public void setHdcBrnchId( int hdcBrnchId ) {
     this.hdcBrnchId = hdcBrnchId;
   }
 
@@ -1671,7 +1888,7 @@ public class EKeyInApiDto {
     return keyinBrnchId;
   }
 
-  public void setKeyinBrnchId(int keyinBrnchId) {
+  public void setKeyinBrnchId( int keyinBrnchId ) {
     this.keyinBrnchId = keyinBrnchId;
   }
 
@@ -1679,7 +1896,7 @@ public class EKeyInApiDto {
     return instAddId;
   }
 
-  public void setInstAddId(int instAddId) {
+  public void setInstAddId( int instAddId ) {
     this.instAddId = instAddId;
   }
 
@@ -1687,7 +1904,7 @@ public class EKeyInApiDto {
     return rentPayCustId;
   }
 
-  public void setRentPayCustId(int rentPayCustId) {
+  public void setRentPayCustId( int rentPayCustId ) {
     this.rentPayCustId = rentPayCustId;
   }
 
@@ -1695,7 +1912,7 @@ public class EKeyInApiDto {
     return custBillCustId;
   }
 
-  public void setCustBillCustId(int custBillCustId) {
+  public void setCustBillCustId( int custBillCustId ) {
     this.custBillCustId = custBillCustId;
   }
 
@@ -1703,7 +1920,7 @@ public class EKeyInApiDto {
     return custBillCntId;
   }
 
-  public void setCustBillCntId(int custBillCntId) {
+  public void setCustBillCntId( int custBillCntId ) {
     this.custBillCntId = custBillCntId;
   }
 
@@ -1711,7 +1928,7 @@ public class EKeyInApiDto {
     return custBillAddId;
   }
 
-  public void setCustBillAddId(int custBillAddId) {
+  public void setCustBillAddId( int custBillAddId ) {
     this.custBillAddId = custBillAddId;
   }
 
@@ -1719,7 +1936,7 @@ public class EKeyInApiDto {
     return custBillEmail;
   }
 
-  public void setCustBillEmail(String custBillEmail) {
+  public void setCustBillEmail( String custBillEmail ) {
     this.custBillEmail = custBillEmail;
   }
 
@@ -1727,7 +1944,7 @@ public class EKeyInApiDto {
     return orderType;
   }
 
-  public void setOrderType(String orderType) {
+  public void setOrderType( String orderType ) {
     this.orderType = orderType;
   }
 
@@ -1735,7 +1952,7 @@ public class EKeyInApiDto {
     return atchFileGrpId;
   }
 
-  public void setAtchFileGrpId(int atchFileGrpId) {
+  public void setAtchFileGrpId( int atchFileGrpId ) {
     this.atchFileGrpId = atchFileGrpId;
   }
 
@@ -1743,7 +1960,7 @@ public class EKeyInApiDto {
     return subPath;
   }
 
-  public void setSubPath(String subPath) {
+  public void setSubPath( String subPath ) {
     this.subPath = subPath;
   }
 
@@ -1751,7 +1968,7 @@ public class EKeyInApiDto {
     return fileKeySeq;
   }
 
-  public void setFileKeySeq(String fileKeySeq) {
+  public void setFileKeySeq( String fileKeySeq ) {
     this.fileKeySeq = fileKeySeq;
   }
 
@@ -1759,7 +1976,7 @@ public class EKeyInApiDto {
     return crtUserId;
   }
 
-  public void setCrtUserId(int crtUserId) {
+  public void setCrtUserId( int crtUserId ) {
     this.crtUserId = crtUserId;
   }
 
@@ -1767,7 +1984,7 @@ public class EKeyInApiDto {
     return updUserId;
   }
 
-  public void setUpdUserId(int updUserId) {
+  public void setUpdUserId( int updUserId ) {
     this.updUserId = updUserId;
   }
 
@@ -1775,7 +1992,7 @@ public class EKeyInApiDto {
     return atchFileId;
   }
 
-  public void setAtchFileId(int atchFileId) {
+  public void setAtchFileId( int atchFileId ) {
     this.atchFileId = atchFileId;
   }
 
@@ -1783,7 +2000,7 @@ public class EKeyInApiDto {
     return atchFileName;
   }
 
-  public void setAtchFileName(String atchFileName) {
+  public void setAtchFileName( String atchFileName ) {
     this.atchFileName = atchFileName;
   }
 
@@ -1791,7 +2008,7 @@ public class EKeyInApiDto {
     return fileSubPath;
   }
 
-  public void setFileSubPath(String fileSubPath) {
+  public void setFileSubPath( String fileSubPath ) {
     this.fileSubPath = fileSubPath;
   }
 
@@ -1799,7 +2016,7 @@ public class EKeyInApiDto {
     return physiclFileName;
   }
 
-  public void setPhysiclFileName(String physiclFileName) {
+  public void setPhysiclFileName( String physiclFileName ) {
     this.physiclFileName = physiclFileName;
   }
 
@@ -1807,7 +2024,7 @@ public class EKeyInApiDto {
     return fileExtsn;
   }
 
-  public void setFileExtsn(String fileExtsn) {
+  public void setFileExtsn( String fileExtsn ) {
     this.fileExtsn = fileExtsn;
   }
 
@@ -1815,7 +2032,7 @@ public class EKeyInApiDto {
     return saveFlag;
   }
 
-  public void setSaveFlag(String saveFlag) {
+  public void setSaveFlag( String saveFlag ) {
     this.saveFlag = saveFlag;
   }
 
@@ -1823,7 +2040,7 @@ public class EKeyInApiDto {
     return updateAtchFileGrpId;
   }
 
-  public void setUpdateAtchFileGrpId(int updateAtchFileGrpId) {
+  public void setUpdateAtchFileGrpId( int updateAtchFileGrpId ) {
     this.updateAtchFileGrpId = updateAtchFileGrpId;
   }
 
@@ -1831,7 +2048,7 @@ public class EKeyInApiDto {
     return atchFileIdSales;
   }
 
-  public void setAtchFileIdSales(int atchFileIdSales) {
+  public void setAtchFileIdSales( int atchFileIdSales ) {
     this.atchFileIdSales = atchFileIdSales;
   }
 
@@ -1839,7 +2056,7 @@ public class EKeyInApiDto {
     return atchFileIdNric;
   }
 
-  public void setAtchFileIdNric(int atchFileIdNric) {
+  public void setAtchFileIdNric( int atchFileIdNric ) {
     this.atchFileIdNric = atchFileIdNric;
   }
 
@@ -1847,7 +2064,7 @@ public class EKeyInApiDto {
     return atchFileIdPayment;
   }
 
-  public void setAtchFileIdPayment(int atchFileIdPayment) {
+  public void setAtchFileIdPayment( int atchFileIdPayment ) {
     this.atchFileIdPayment = atchFileIdPayment;
   }
 
@@ -1855,7 +2072,7 @@ public class EKeyInApiDto {
     return atchFileIdTemporary;
   }
 
-  public void setAtchFileIdTemporary(int atchFileIdTemporary) {
+  public void setAtchFileIdTemporary( int atchFileIdTemporary ) {
     this.atchFileIdTemporary = atchFileIdTemporary;
   }
 
@@ -1863,7 +2080,7 @@ public class EKeyInApiDto {
     return atchFileIdoOthersform;
   }
 
-  public void setAtchFileIdoOthersform(int atchFileIdoOthersform) {
+  public void setAtchFileIdoOthersform( int atchFileIdoOthersform ) {
     this.atchFileIdoOthersform = atchFileIdoOthersform;
   }
 
@@ -1871,7 +2088,7 @@ public class EKeyInApiDto {
     return atchFileIdoOthersform2;
   }
 
-  public void setAtchFileIdoOthersform2(int atchFileIdoOthersform2) {
+  public void setAtchFileIdoOthersform2( int atchFileIdoOthersform2 ) {
     this.atchFileIdoOthersform2 = atchFileIdoOthersform2;
   }
 
@@ -1879,7 +2096,7 @@ public class EKeyInApiDto {
     return ordSeqNo;
   }
 
-  public void setOrdSeqNo(int ordSeqNo) {
+  public void setOrdSeqNo( int ordSeqNo ) {
     this.ordSeqNo = ordSeqNo;
   }
 
@@ -1887,7 +2104,7 @@ public class EKeyInApiDto {
     return promoDt;
   }
 
-  public void setPromoDt(String promoDt) {
+  public void setPromoDt( String promoDt ) {
     this.promoDt = promoDt;
   }
 
@@ -1895,7 +2112,7 @@ public class EKeyInApiDto {
     return gu;
   }
 
-  public void setGu(String gu) {
+  public void setGu( String gu ) {
     this.gu = gu;
   }
 
@@ -1903,7 +2120,7 @@ public class EKeyInApiDto {
     return cpntCode;
   }
 
-  public void setCpntCode(String cpntCode) {
+  public void setCpntCode( String cpntCode ) {
     this.cpntCode = cpntCode;
   }
 
@@ -1911,7 +2128,7 @@ public class EKeyInApiDto {
     return cpntCodeName;
   }
 
-  public void setCpntCodeName(String cpntCodeName) {
+  public void setCpntCodeName( String cpntCodeName ) {
     this.cpntCodeName = cpntCodeName;
   }
 
@@ -1919,7 +2136,7 @@ public class EKeyInApiDto {
     return quotaStus;
   }
 
-  public void setQuotaStus(BigDecimal quotaStus) {
+  public void setQuotaStus( BigDecimal quotaStus ) {
     this.quotaStus = quotaStus;
   }
 
@@ -1927,7 +2144,7 @@ public class EKeyInApiDto {
     return receivingMarketingMsgStatus;
   }
 
-  public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
+  public void setReceivingMarketingMsgStatus( int receivingMarketingMsgStatus ) {
     this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
   }
 
@@ -1935,7 +2152,7 @@ public class EKeyInApiDto {
     return isHcAcInstallationFlag;
   }
 
-  public void setIsHcAcInstallationFlag(int isHcAcInstallationFlag) {
+  public void setIsHcAcInstallationFlag( int isHcAcInstallationFlag ) {
     this.isHcAcInstallationFlag = isHcAcInstallationFlag;
   }
 
@@ -1943,7 +2160,7 @@ public class EKeyInApiDto {
     return acBrnch;
   }
 
-  public void setAcBrnch(String acBrnch) {
+  public void setAcBrnch( String acBrnch ) {
     this.acBrnch = acBrnch;
   }
 
@@ -1951,7 +2168,7 @@ public class EKeyInApiDto {
     return acBrnchId;
   }
 
-  public void setAcBrnchId(int acBrnchId) {
+  public void setAcBrnchId( int acBrnchId ) {
     this.acBrnchId = acBrnchId;
   }
 
@@ -1959,7 +2176,7 @@ public class EKeyInApiDto {
     return custCrcTokenIdStus;
   }
 
-  public void setCustCrcTokenIdStus(int custCrcTokenIdStus) {
+  public void setCustCrcTokenIdStus( int custCrcTokenIdStus ) {
     this.custCrcTokenIdStus = custCrcTokenIdStus;
   }
 
@@ -1967,7 +2184,7 @@ public class EKeyInApiDto {
     return Is3rdParty;
   }
 
-  public void setIs3rdParty(int Is3rdParty) {
+  public void setIs3rdParty( int Is3rdParty ) {
     this.Is3rdParty = Is3rdParty;
   }
 
@@ -1975,7 +2192,7 @@ public class EKeyInApiDto {
     return voucherValid;
   }
 
-  public void setVoucherValid(int voucherValid) {
+  public void setVoucherValid( int voucherValid ) {
     this.voucherValid = voucherValid;
   }
 
@@ -1983,7 +2200,7 @@ public class EKeyInApiDto {
     return voucherCode;
   }
 
-  public void setVoucherCode(String voucherCode) {
+  public void setVoucherCode( String voucherCode ) {
     this.voucherCode = voucherCode;
   }
 
@@ -1991,7 +2208,7 @@ public class EKeyInApiDto {
     return voucherType;
   }
 
-  public void setVoucherType(int voucherType) {
+  public void setVoucherType( int voucherType ) {
     this.voucherType = voucherType;
   }
 
@@ -1999,7 +2216,7 @@ public class EKeyInApiDto {
     return voucherEmail;
   }
 
-  public void setVoucherEmail(String voucherEmail) {
+  public void setVoucherEmail( String voucherEmail ) {
     this.voucherEmail = voucherEmail;
   }
 
@@ -2007,7 +2224,7 @@ public class EKeyInApiDto {
     return customerStatusCode;
   }
 
-  public void setCustomerStatusCode(String customerStatusCode) {
+  public void setCustomerStatusCode( String customerStatusCode ) {
     this.customerStatusCode = customerStatusCode;
   }
 
@@ -2015,16 +2232,24 @@ public class EKeyInApiDto {
     return customerStatus;
   }
 
-  public void setCustomerStatus(String customerStatus) {
+  public void setCustomerStatus( String customerStatus ) {
     this.customerStatus = customerStatus;
   }
 
   public String getSrvType() {
-	return srvType;
+    return srvType;
   }
 
-  public void setSrvType(String srvType) {
-	this.srvType = srvType;
+  public void setSrvType( String srvType ) {
+    this.srvType = srvType;
+  }
+
+  public String getElecAccNo() {
+    return elecAccNo;
+  }
+
+  public void setElecAccNo( String elecAccNo ) {
+    this.elecAccNo = elecAccNo;
   }
 
 }
