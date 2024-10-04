@@ -1857,6 +1857,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("srvType", param.getSrvType());
     //sal0213M.put("totPvSs", param.getTotPvSs());
     sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
+    sal0213M.put("elecAccNo", CommonUtils.nvl(param.getElecAccNo()));
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
