@@ -205,9 +205,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             EKeyInApiDto selectOrderInfoFrame = selectOrderInfo(frame);
             frame.setPackTypeList(selectOrderInfoFrame.getPackTypeList());
             frame.setProductList(selectOrderInfoFrame.getProductList());
+            frame.setItmStkId(frameItmStkId); // frame itmStkId set
             frame.setPromotionList(selectOrderInfoFrame.getPromotionList());
 
-            frame.setItmStkId(frameItmStkId); // frame itmStkId set
+            //frame.setItmStkId(frameItmStkId); // frame itmStkId set
             frame.setFraPreOrdId(frame.getPreOrdId());
             selecteKeyInDetail.setFrame(frame);
           }
