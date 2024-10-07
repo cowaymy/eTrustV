@@ -2227,7 +2227,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       logger.debug("getTotPv : " + param.getTotPv());
       logger.debug("getTotPvSs : " + CommonUtils.nvl(param.getTotPvSs()));
       logger.debug("getTotPvGst : " + param.getTotPvGst());
-      logger.debug("getElecAccNo : " + param.getElecAccNo());
+      logger.debug("getElecAccNo : " + CommonUtils.nvl(param.getElecAccNo()));
       logger.debug("####################################################");
       logger.debug("####################################################");
       logger.debug("####################################################");
