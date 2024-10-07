@@ -279,8 +279,17 @@ public class AfterServiceJobDto {
 
   private String instAccsVal;
 
+  private String srvType;
 
-  public BigDecimal getNtu() {
+  public String getSrvType() {
+	return srvType;
+}
+
+public void setSrvType(String srvType) {
+	this.srvType = srvType;
+}
+
+public BigDecimal getNtu() {
 	return ntu;
 }
 

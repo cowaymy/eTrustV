@@ -279,7 +279,17 @@ public class AfterServiceJobDto_b {
 
   private String instAccsVal;
 
-  public int getNtu() {
+  private String srvType;
+
+  public String getSrvType() {
+	return srvType;
+}
+
+public void setSrvType(String srvType) {
+	this.srvType = srvType;
+}
+
+public int getNtu() {
 	return ntu;
 }
 
