@@ -183,6 +183,8 @@ SELECT A.CUST_ID AS CUST_ID
 
                , UPPER(M.CODE ||' - '|| M.NAME) AS HDC_BRNCH
                , M.BRNCH_ID AS HDC_BRNCH_ID
+               , UPPER(CASE WHEN X.CODE IS NOT NULL AND X.NAME IS NOT NULL THEN X.CODE ||' - '|| X.NAME ELSE NULL END) AS AC_BRNCH
+               , X.BRNCH_ID AS AC_BRNCH_ID
 
      --BILLING------------------------------------------------------------------
                , UPPER(R.ADDR_DTL) AS ADDR_DTL_BILLING
@@ -237,6 +239,7 @@ SELECT A.CUST_ID AS CUST_ID
       LEFT JOIN MSC0057D U ON U.VOUCHER_CODE = A.VOUCHER_CODE
       LEFT JOIN MSC0056M V ON V.ID = U.ID
       LEFT JOIN SYS0013M W ON W.CODE_MASTER_ID = '566' AND W.CODE_ID = B.IS_EXST_CUST
+      LEFT JOIN SYS0005M X ON S.AC_BRNCH_CODE= X.CODE AND X.STUS_ID = '1'
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
