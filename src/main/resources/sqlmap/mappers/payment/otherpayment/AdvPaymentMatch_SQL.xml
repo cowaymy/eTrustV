@@ -370,7 +370,7 @@
   <resultMap id="resultJompayMap" type="egovMap" />
   <select id="saveJompayPaymentMapping" statementType="CALLABLE" parameterType="Map">
     {
-    call SP_INST_JOMPAY_ADV_MAPPING(#{fileId},#{jompayTransDateFr},#{jompayTransDateTo}, #{userId})
+    call SP_INST_JOMPAY_ADV_MAPPING_V2(#{fileId},#{jompayTransDateFr},#{jompayTransDateTo}, #{userId})
     }
   </select>
 
