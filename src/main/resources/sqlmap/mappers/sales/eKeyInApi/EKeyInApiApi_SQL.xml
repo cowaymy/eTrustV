@@ -1666,6 +1666,7 @@ UNION ALL
         , A.VOUCHER_CODE = #{voucherCode}
         , A.SRV_TYPE = #{srvType}
         , A.TOT_PV_SS = #{totPvSs}
+        , A.TNB_ACC_NO = #{elecAccNo}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
