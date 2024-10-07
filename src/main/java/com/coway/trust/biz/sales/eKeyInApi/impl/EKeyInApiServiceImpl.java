@@ -1975,6 +1975,16 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       }
     }
 
+    if (CommonUtils.isNotEmpty(param.getAtchFileIdSalesTC()) && param.getAtchFileIdSalesTC() > 0) {
+      Map<String, Object> sys0071D = new HashMap<String, Object>();
+      sys0071D.put("atchFileId", param.getAtchFileIdSalesTC());
+      int saveCnt = eKeyInApiMapper.deleteSYS0071D(sys0071D);
+
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+      }
+    }
+
     if (CommonUtils.isNotEmpty(param.getAtchFileIdNric()) && param.getAtchFileIdNric() > 0) {
       Map<String, Object> sys0071D = new HashMap<String, Object>();
       sys0071D.put("atchFileId", param.getAtchFileIdNric());
@@ -2024,6 +2034,38 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
       }
     }
+
+    //
+    if (CommonUtils.isNotEmpty(param.getAtchFileIdMSales()) && param.getAtchFileIdMSales() > 0) {
+      Map<String, Object> sys0071D = new HashMap<String, Object>();
+      sys0071D.put("atchFileId", param.getAtchFileIdMSales());
+      int saveCnt = eKeyInApiMapper.deleteSYS0071D(sys0071D);
+
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+      }
+    }
+
+    if (CommonUtils.isNotEmpty(param.getAtchFileIdMSalesTC()) && param.getAtchFileIdMSalesTC() > 0) {
+      Map<String, Object> sys0071D = new HashMap<String, Object>();
+      sys0071D.put("atchFileId", param.getAtchFileIdMSalesTC());
+      int saveCnt = eKeyInApiMapper.deleteSYS0071D(sys0071D);
+
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+      }
+    }
+
+    if (CommonUtils.isNotEmpty(param.getAtchFileIdMSalesElecBill()) && param.getAtchFileIdMSalesElecBill() > 0) {
+      Map<String, Object> sys0071D = new HashMap<String, Object>();
+      sys0071D.put("atchFileId", param.getAtchFileIdMSalesElecBill());
+      int saveCnt = eKeyInApiMapper.deleteSYS0071D(sys0071D);
+
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+      }
+    }
+
     return param;
   };
 
@@ -2185,6 +2227,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       logger.debug("getTotPv : " + param.getTotPv());
       logger.debug("getTotPvSs : " + CommonUtils.nvl(param.getTotPvSs()));
       logger.debug("getTotPvGst : " + param.getTotPvGst());
+      logger.debug("getElecAccNo : " + param.getElecAccNo());
       logger.debug("####################################################");
       logger.debug("####################################################");
       logger.debug("####################################################");
@@ -2269,6 +2312,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("srvType", param.getSrvType());
    // sal0213M.put("totPvSs", param.getTotPvSs());
     sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
+    sal0213M.put("elecAccNo", CommonUtils.nvl(param.getElecAccNo()));
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
