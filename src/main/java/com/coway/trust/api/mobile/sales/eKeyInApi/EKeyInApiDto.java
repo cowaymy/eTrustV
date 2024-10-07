@@ -428,6 +428,8 @@ public class EKeyInApiDto {
 
   private int atchFileIdSales;
 
+  private int atchFileIdSalesTC;
+
   private int atchFileIdNric;
 
   private int atchFileIdPayment;
@@ -437,6 +439,12 @@ public class EKeyInApiDto {
   private int atchFileIdoOthersform;
 
   private int atchFileIdoOthersform2;
+
+  private int atchFileIdMSales;
+
+  private int atchFileIdMSalesTC;
+
+  private int atchFileIdMSalesElecBill;
 
   private int ordSeqNo;
 
@@ -2090,6 +2098,38 @@ public class EKeyInApiDto {
 
   public void setAtchFileIdoOthersform2( int atchFileIdoOthersform2 ) {
     this.atchFileIdoOthersform2 = atchFileIdoOthersform2;
+  }
+
+  public int getAtchFileIdSalesTC() {
+    return atchFileIdSalesTC;
+  }
+
+  public void setAtchFileIdSalesTC( int atchFileIdSalesTC ) {
+    this.atchFileIdSalesTC = atchFileIdSalesTC;
+  }
+
+  public int getAtchFileIdMSales() {
+    return atchFileIdMSales;
+  }
+
+  public void setAtchFileIdMSales( int atchFileIdMSales ) {
+    this.atchFileIdMSales = atchFileIdMSales;
+  }
+
+  public int getAtchFileIdMSalesTC() {
+    return atchFileIdMSalesTC;
+  }
+
+  public void setAtchFileIdMSalesTC( int atchFileIdMSalesTC ) {
+    this.atchFileIdMSalesTC = atchFileIdMSalesTC;
+  }
+
+  public int getAtchFileIdMSalesElecBill() {
+    return atchFileIdMSalesElecBill;
+  }
+
+  public void setAtchFileIdMSalesElecBill( int atchFileIdMSalesElecBill ) {
+    this.atchFileIdMSalesElecBill = atchFileIdMSalesElecBill;
   }
 
   public int getOrdSeqNo() {
