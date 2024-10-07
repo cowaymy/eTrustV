@@ -245,6 +245,7 @@
                         FROM SVC0008D A,
                         ORG0001D B
                         WHERE A.CODY_ID = B.MEM_ID
+                          AND A.TYPE_ID not in ('7660')
                           AND A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                           AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
                           AND B.MEM_CODE = #{userId}) A,
@@ -565,7 +566,8 @@
                                       prodCat AS prodCat,
                                       PARTNER_CODE AS PARTNER_CODE,
                                       MEM_CODE as MEM_CODE,
-                                      NTU AS NTU
+                                      NTU AS NTU,
+                                      SRV_TYPE AS SRV_TYPE
 
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -665,8 +667,8 @@
                                            CASE WHEN SVC0004d.PARTNER_CODE IS NOT NULL
                                            THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SVC0004d.PARTNER_CODE)
                                            ELSE '' END AS MEM_CODE,
-                                           NVL (SVC0004d.NTU, '') AS NTU
-
+                                           NVL (SVC0004d.NTU, '') AS NTU,
+                                           SAL0090D.SRV_TYPE AS SRV_TYPE
                                     FROM sal0001d,
                                          sal0002d,
                                          sal0022d,
@@ -685,7 +687,8 @@
                                          sys0005m,
                                          sys0026m,
                                          CCR0006D,
-                                         CCR0007D
+                                         CCR0007D,
+                                         SAL0090D
                                     WHERE svc0001d.as_mem_id = org0001d.mem_id
                                       AND sal0001d.sales_ord_id = sal0002d.sales_ord_id
                                       AND sal0001d.sales_ord_id = svc0001d.as_so_id
@@ -707,6 +710,7 @@
                                       AND svc0001d.AS_CALLLOG_ID = CCR0006D.CALL_ENTRY_ID
                                       AND CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID
                                       AND ORG0001D.MEM_CODE = #{userId}
+                                      AND SAL0001D.SALES_ORD_ID = SAL0090D.SRV_SO_ID
                                       AND SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                                       AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')))
                               WHERE 1 = 1 AND rn = 1)
@@ -1806,6 +1810,7 @@
            LATITUDE AS LATITUDE,
            LONGITUDE AS LONGITUDE,
            PARTNER_CODE AS PARTNER_CODE,
+           TO_CHAR(SRV_TYPE) AS SRV_TYPE,
            NTU AS NTU
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
@@ -5063,6 +5068,7 @@ SELECT MST.*
                         FROM SVC0008D A,
                         ORG0001D B
                         WHERE A.CODY_ID = B.MEM_ID
+                          AND A.TYPE_ID not in ('7660')
                           AND A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                           AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
                           AND B.MEM_CODE = #{userId}) A,
@@ -5438,6 +5444,7 @@ SELECT MST.*
                         FROM SVC0008D A,
                         ORG0001D B
                         WHERE A.CODY_ID = B.MEM_ID
+                          AND A.TYPE_ID not in ('7660')
                           AND A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                           AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
                           AND B.MEM_CODE = #{userId}) A,
