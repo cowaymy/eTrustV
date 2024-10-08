@@ -33,6 +33,7 @@
              , PROMO_DISC_PERIOD      = #{promoDiscPeriod}
              , DISC_RNT_FEE                 = #{discRntFee}
              , NOR_AMT                      = #{norAmt}
+             , TNB_ACC_NO                   = #{tnbAccNo}
 
          WHERE SALES_ORD_ID           = #{salesOrdId}
     </update>

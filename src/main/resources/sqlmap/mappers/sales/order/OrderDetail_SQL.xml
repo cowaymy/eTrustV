@@ -136,6 +136,7 @@
                            , V13.SALES_ORD_NO MAIN_PWP_ORD_NO
                            , v13.SALES_ORD_ID MAIN_PWP_ORD_ID
                            , V1.ORD_PV - NVL(V14.TOTAL_REBATE,0) AS ORD_PV_FINAL
+                           , V2.TNB_ACC_NO
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -1971,5 +1972,13 @@
     JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.ORD_ID
     WHERE T1.ORD_ID = #{salesOrderId}
         AND 1 = T1.STUS_ID
+  </select>
+
+  <select id="selectSedaPromo" parameterType="Map" resultType="egovMap">
+    select case when b.code is not null then 'Y' else 'N' end seda_Flag
+    from sal0001d a
+    left join sys0013m b on a.promo_id = b.code and b.code_master_id = 602
+    where a.sales_ord_id = #{salesOrderId}
+    and rownum =1
   </select>
 </mapper>

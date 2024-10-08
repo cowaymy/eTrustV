@@ -427,4 +427,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
     return RESULT;
   }
+
+  @Override
+  public List<EgovMap> selectSeda4PromoList(Map<String, Object> params) {
+    List<EgovMap> lst = hcOrderRegisterMapper.selectSeda4PromoList(params);
+    return lst;
+  }
 }

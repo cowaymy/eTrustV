@@ -107,4 +107,6 @@ public interface HcOrderRegisterMapper {
 	public List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
 
 	List<EgovMap> selectPwpOrderNoList(Map<String, Object> params);
+
+	List<EgovMap> selectSeda4PromoList(Map<String, Object> params);
 }

@@ -122,4 +122,5 @@ public interface OrderDetailMapper {
 
   List<EgovMap> selectPvRebateList(Map<String, Object> params); // Discount
 
+  EgovMap selectSedaPromo(Map<String, Object> params);
 }

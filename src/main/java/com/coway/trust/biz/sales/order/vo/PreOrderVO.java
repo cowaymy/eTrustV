@@ -196,6 +196,8 @@ public class PreOrderVO implements Serializable {
     private String rcdTms2;
     private Integer bndlId;
 
+    private String tnbAccNo;
+
 	public Integer getBndlId() {
 		return bndlId;
 	}
@@ -1030,5 +1032,13 @@ public BigDecimal getTotPvSs() {
 
 public void setTotPvSs(BigDecimal totPvSs) {
   this.totPvSs = totPvSs;
+}
+
+public String getTnbAccNo() {
+	return tnbAccNo;
+}
+
+public void setTnbAccNo(String tnbAccNo) {
+	this.tnbAccNo = tnbAccNo;
 }
 }

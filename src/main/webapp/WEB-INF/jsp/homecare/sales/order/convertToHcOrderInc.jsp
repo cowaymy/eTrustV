@@ -278,6 +278,12 @@
                         /* if(FormUtil.isNotEmpty(custInfo.custTin)){
                             $('#billMthdEInv').removeAttr("disabled");
                         } */
+
+                        if('${preOrderInfo.tnbAccNo}' != null) {
+                        	$("#tnbAccNoLbl").show();
+                            $("#tnbAccNo").val("${preOrderInfo.tnbAccNo}");
+                            $("#tnbAccNo").show();
+                        }
                     }
 
                 } else {

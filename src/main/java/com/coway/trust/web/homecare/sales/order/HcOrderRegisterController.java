@@ -550,4 +550,17 @@ public class HcOrderRegisterController {
 
 	    return "homecare/sales/order/pwpOrderPop";
 	  }
+
+	  @RequestMapping(value = "/selectSeda4PromoList.do", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> selectSeda4PromoList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    ReturnMessage message = new ReturnMessage();
+
+	    logger.info("==================/selectSeda4PromoList.do=======================");
+
+	    List<EgovMap> seda4List = hcOrderRegisterService.selectSeda4PromoList(params);
+
+	    message.setDataList(seda4List);
+//	    message.setCode(Integer.toString(statCode));
+	    return ResponseEntity.ok(message);
+	  }
 }

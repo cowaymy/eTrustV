@@ -22,6 +22,7 @@ var userType = '${SESSION_INFO.userTypeId}';
   var sofTncFileId = 0;
   var msofFileId = 0;
   var msofTncFileId = 0;
+  var elecBillFileId = 0;
 
   var sofFileName = "";
   var nricFileName = "";
@@ -32,6 +33,7 @@ var userType = '${SESSION_INFO.userTypeId}';
   var sofTncFileName = "";
   var msofFileName = "";
   var msofTncFileName = "";
+  var elecBillFileName = "";
 
   var salesManType = "";
 
@@ -39,6 +41,9 @@ var userType = '${SESSION_INFO.userTypeId}';
   var voucherAppliedCode = "";
   var voucherAppliedEmail = "";
   var voucherPromotionId = [];
+
+  var seda4PromotionId = []; //202410
+  var countMatch = 0;
 
   var codeList_562 = [];
   codeList_562.push({codeId:"0", codeName:"No", code:"No"});
@@ -65,6 +70,14 @@ var userType = '${SESSION_INFO.userTypeId}';
     doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID', '', 'agreementType', 'S', ''); //Common Code
 
     doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');
+
+    $("#tnbAccNoLbl").hide();
+    $("#tnbAccNo").hide();
+    Common.ajax("GET", "/homecare/sales/order/selectSeda4PromoList.do", null, function(result) {
+        if(result.dataList.length > 0){
+            seda4PromotionId = result.dataList;
+        }
+    });
 
     if('${preOrderInfo.voucherInfo}' != null && '${preOrderInfo.voucherInfo}' != ""){
     	$('#voucherCode').val('${preOrderInfo.voucherInfo.voucherCode}');
@@ -641,6 +654,24 @@ var userType = '${SESSION_INFO.userTypeId}';
       var promoIdIdx = $("#ordPromo" + _tagNum + " option:selected").index();
       var promoIdVal = $("#ordPromo" + _tagNum).val();
 
+      if(_tagNum == 1){
+          countMatch = 0;
+          for( i = 0 ; i < seda4PromotionId.length ; i ++){
+              if(seda4PromotionId[i].code == $("#ordPromo"+_tagNum).val() ){
+                  countMatch = countMatch + 1;
+              }
+          }
+          if(countMatch > 0){
+              $("#tnbAccNoLbl").show();
+              $("#tnbAccNo").val('');
+              $("#tnbAccNo").show();
+          }else{
+              $("#tnbAccNoLbl").hide();
+              $("#tnbAccNo").val('');
+              $("#tnbAccNo").hide();
+          }
+      }
+
       var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
 
       if (promoIdIdx > 0 && promoIdVal != '0') {
@@ -834,6 +865,18 @@ var userType = '${SESSION_INFO.userTypeId}';
             myFileCaches[9] = {file:file};
             if(msofTncFileName != ""){
                 update.push(msofTncFileId);
+            }
+        }
+    });
+
+    $('#elecBillFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(elecBillFileId);
+        }else if(file.name != elecBillFileName){
+            myFileCaches[10] = {file:file};
+            if(elecBillFileName != ""){
+                update.push(elecBillFileId);
             }
         }
     });
@@ -1214,6 +1257,14 @@ var userType = '${SESSION_INFO.userTypeId}';
       }
     }
 
+    if(countMatch == 1){
+        if($("#tnbAccNo").val() == undefined || $("#tnbAccNo").val() == ''){
+            isValid = false;
+            text = 'TNB Acc. No.';
+            msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+        }
+    }
+
     if (!isValid)
       Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
     return isValid;
@@ -1388,7 +1439,8 @@ var userType = '${SESSION_INFO.userTypeId}';
       receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
       voucherCode : voucherAppliedCode,
       pwpOrderId          : $('#txtMainPwpOrderID').val(),
-      pwpOrderNo          : $('#pwpNo').val()
+      pwpOrderNo          : $('#pwpNo').val(),
+      tnbAccNo : $("#tnbAccNo").val()
     };
 
     var formData = new FormData();
@@ -1995,6 +2047,13 @@ var userType = '${SESSION_INFO.userTypeId}';
           Common.alert('<b>Goverment Customer</b>');
         }
 
+        if('${preOrderInfo.tnbAccNo}' != '') {
+            $("#tnbAccNoLbl").show();
+            $("#tnbAccNo").val("${preOrderInfo.tnbAccNo}");
+            $("#tnbAccNo").show();
+            countMatch = 1;
+        }
+
       } else {
         Common.confirm('<b>* This customer is existing customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop);
       }
@@ -2427,6 +2486,12 @@ var userType = '${SESSION_INFO.userTypeId}';
                 $(".input_text[id='msofTncFileTxt']").val(msofTncFileName);
                 break;
 
+            case '10':
+            	elecBillFileId = result[i].atchFileId;
+            	elecBillFileName = result[i].atchFileName;
+                $(".input_text[id='elecBillFileTxt']").val(elecBillFileName);
+                break;
+
             default:
               Common.alert("no files");
             }
@@ -2507,6 +2572,11 @@ var userType = '${SESSION_INFO.userTypeId}';
         $(".input_text[name='msofTncFileTxt']").val("");
         $('#msofTncFile').change();
     }
+    else if(name == "ELECBILL") {
+        $("#elecBillFile").val("");
+        $(".input_text[name='elecBillFileTxt']").val("");
+        $('#elecBillFile').change();
+    }
   }
 
   function fn_validFile() {
@@ -2520,6 +2590,14 @@ var userType = '${SESSION_INFO.userTypeId}';
       isValid = false;
       msg += "* Please upload copy of NRIC<br>";
     }
+
+    if(countMatch == 1){
+        if(FormUtil.isEmpty($('#elecBillFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of Electric Bill<br>";
+        }
+    }
+
     if (!isValid)
       Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
@@ -3344,6 +3422,12 @@ var userType = '${SESSION_INFO.userTypeId}';
                     <input id="ordPv1" name="ordPv1" type="text" data-ref='ordProduct1' title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /> <input id="ordPvGST1" name="ordPvGST1" type="hidden" data-ref='ordProduct1' />
                   </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label  id="tnbAccNoLbl">Electricity account number</label></th>
+				    <td>
+				        <input id="tnbAccNo" name="tnbAccNo" type="text" placeholder="TNB Account No." class="w100p "  />
+				    </td>
+                </tr>
               </tbody>
             </table>
             <!-- Frame -->
@@ -4087,6 +4171,19 @@ var userType = '${SESSION_INFO.userTypeId}';
                             <span class='label_text'><a href='#'>Upload</a></span>
                         </label>
                         <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Electric Bill</th>
+                <td>
+                    <div class="auto_file2 auto_file3">
+                        <input type="file" title="file add" id="elecBillFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='elecBillFileTxt'/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                        <span class='label_text'><a href='#' onclick='fn_removeFile("ELECBILL")'>Remove</a></span>
                     </div>
                 </td>
             </tr>

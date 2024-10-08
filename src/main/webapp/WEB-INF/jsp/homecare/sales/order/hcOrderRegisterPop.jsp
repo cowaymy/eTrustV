@@ -31,6 +31,9 @@
     var voucherAppliedEmail = "";
     var voucherPromotionId = [];
 
+    var seda4PromotionId = []; //202410
+    var countMatch = 0;
+
     var codeList_10 = [];
     <c:forEach var="obj" items="${codeList_10}">
     codeList_10.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
@@ -81,6 +84,14 @@
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
        //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
         fn_tabOnOffSet('REL_CER', 'HIDE');
+
+        $("#tnbAccNoLbl").hide();
+        $("#tnbAccNo").hide();
+        Common.ajax("GET", "/homecare/sales/order/selectSeda4PromoList.do", null, function(result) {
+            if(result.dataList.length > 0){
+            	seda4PromotionId = result.dataList;
+            }
+        });
 
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
@@ -1423,6 +1434,22 @@
                         $('#hiddenCboOrdNoTag').val("");
                       }
                   });
+
+                  countMatch = 0;
+                  for( i = 0 ; i < seda4PromotionId.length ; i ++){
+                	  if(seda4PromotionId[i].code == $("#ordPromo"+_tagNum).val() ){
+                		  countMatch = countMatch + 1;
+                	  }
+                  }
+                  if(countMatch > 0){
+                	  $("#tnbAccNoLbl").show();
+                	  $("#tnbAccNo").val('');
+                      $("#tnbAccNo").show();
+                  }else{
+                	  $("#tnbAccNoLbl").hide();
+                	  $("#tnbAccNo").val('');
+                      $("#tnbAccNo").hide();
+                  }
             }
             fn_promoChg(_tagNum);
 
@@ -1857,6 +1884,7 @@
                 comboOrdBind           : $('#hiddenCboOrdNoTag').val(),
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 ,voucherCode : voucherAppliedCode
+                , tnbAccNo : $("#tnbAccNo").val()
             },
             salesOrderMVO2 : {
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),
@@ -2246,6 +2274,14 @@
                      msg +=  'Product size is different. Please check.';
                  }
              });
+        }
+
+        if(countMatch == 1){
+        	if($("#tnbAccNo").val() == undefined || $("#tnbAccNo").val() == ''){
+        		isValid = false;
+        		text = 'TNB Acc. No.';
+        		msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+        	}
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -3680,8 +3716,10 @@
     </td>
 </tr>
 <tr>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><label  id="tnbAccNoLbl">Electricity account number</label></th>
+    <td>
+        <input id="tnbAccNo" name="tnbAccNo" type="text" placeholder="TNB Account No." class="w100p "  />
+    </td>
     <th scope="row"><spring:message code="sal.text.trialNo" /></th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
         <input id="trialNo" name="trialNo" type="text" placeholder="Trial No" style="width:210px;" class="readonly" readonly />

@@ -165,6 +165,8 @@ public class SalesOrderMVO implements Serializable {
 
   private String voucherCode;
 
+  private String tnbAccNo;
+
   public String getSalesProdSz() {
 	return salesProdSz;
 }
@@ -769,4 +771,11 @@ public void setVoucherCode(String voucherCode) {
 	this.voucherCode = voucherCode;
 }
 
+public String getTnbAccNo() {
+	return tnbAccNo;
+}
+
+public void setTnbAccNo(String tnbAccNo) {
+	this.tnbAccNo = tnbAccNo;
+}
 }

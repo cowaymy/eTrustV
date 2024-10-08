@@ -528,4 +528,16 @@
 			     E.NAME,
 			     A.REF_NO
 	  </select>
+
+	  <select id="selectSeda4PromoList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
+        SELECT DISTINCT T2.PROMO_ID CODE
+                 , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
+
+         FROM SAL0018D T1
+           JOIN SAL0017D T2
+             ON T2.PROMO_ID = T1.PROMO_ID
+
+        WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 602)
+    </select>
 </mapper>

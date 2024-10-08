@@ -20,6 +20,9 @@
     var CUST_TYPE_ID = "${typeId}";
     var STK_ID = "${stkId}";
     var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
+    var showSedaPromo = 'Y';
+    var seda4PromotionId = []; //202410
+    var countMatch = 0;
 
     var keyValueList = [];
     var modDocGridID;
@@ -57,6 +60,18 @@
         if ("${memType}" == "2") {
             TAB_NM = 'CNT';
             $("#ordEditType").prop("disabled", true);
+        }
+
+        Common.ajax("GET", "/homecare/sales/order/selectSeda4PromoList.do", null, function(result) {
+            if(result.dataList.length > 0){
+                seda4PromotionId = result.dataList;
+            }
+        });
+        if("${orderDetail.seda4promo.sedaFlag}" == 'N'){
+        	showSedaPromo = 'N';
+        	$(".tnbAccNoLbl").hide();
+        }else if("${orderDetail.seda4promo.sedaFlag}" == 'Y'){
+        	countMatch = 1;
         }
 
         var paramGrpCode;
@@ -778,6 +793,22 @@
     $('#ordPromo').change(function() {
         $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
 
+        countMatch = 0;
+        for( i = 0 ; i < seda4PromotionId.length ; i ++){
+            if(seda4PromotionId[i].code == $("#ordPromo option:selected").val()){
+                countMatch = countMatch + 1;
+            }
+        }
+        if(countMatch > 0){
+            $(".tnbAccNoLbl").show();
+            $("#tnbAccNo").val('');
+            $("#tnbAccNo").show();
+        }else{
+            $(".tnbAccNoLbl").hide();
+            $("#tnbAccNo").val('');
+            $("#tnbAccNo").hide();
+        }
+
         var stkIdVal = $("#stkId").val();
         var promoIdIdx = $("#ordPromo option:selected").index();
         var promoIdVal = $("#ordPromo").val();
@@ -1347,6 +1378,8 @@
                 $('#relatedNo').val(basicInfo.ordPromoRelatedNo);
                 $('#pwpNo').val(basicInfo.mainPwpOrdNo);
 
+                $('#tnbAccNo').val(basicInfo.tnbAccNo);
+
                 if(exTrade == 4){
                 	$(".relatedNoField").hide();
                 	$(".PwpField").show();
@@ -1381,6 +1414,7 @@
                         srvPacId : SRV_PAC_ID
                         , voucherPromotion: voucherAppliedStatus
                         ,custStatus: basicInfo.custStatusId
+                        ,seda4promo:showSedaPromo
                       }, promoId, 'ordPromo', 'S', 'voucherPromotionCheck'); //Common Code
 
                  if(basicInfo.voucherInfo != null && basicInfo.voucherInfo != ""){
@@ -2305,6 +2339,14 @@
       msg += '<spring:message code="sal.alert.msg.pressCalBtn" />';
     }
 
+    if(countMatch == 1){
+        if($("#tnbAccNo").val() == undefined || $("#tnbAccNo").val() == ''){
+            isValid = false;
+            text = 'TNB Acc. No.';
+            msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+        }
+    }
+
     if (!isValid) {
         Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
     }
@@ -2722,6 +2764,7 @@
                 salesOrdNo : ORD_NO,
                 defRentAmt : $('#ordRentalFees').val().trim(),
                 norAmt : $('#orgOrdPrice').val().trim()
+                , tnbAccNo : $("#tnbAccNo").val()
             };
         } else {
             var salesOrderMVO = {
@@ -4186,6 +4229,11 @@ console.log(salesOrderMVO);
        <td colspan="2"><p id="pBtnCal" class="btn_sky blind">
          <a id="btnCal" href="#">Exclude GST Calculation</a>
         </p></td>
+      </tr>
+
+      <tr>
+      <th scope="row" class="tnbAccNoLbl">Electricity account number</th>
+       <td class="tnbAccNoLbl"><input id="tnbAccNo" name="tnbAccNo" type="text" title="" placeholder="Electricity account number" class="w100p" />
       </tr>
      </tbody>
     </table>

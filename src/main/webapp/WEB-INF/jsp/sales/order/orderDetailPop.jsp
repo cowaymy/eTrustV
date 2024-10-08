@@ -18,6 +18,10 @@
 
         	Common.report("printForm");
         });
+        $('#btnSedaReceipt').click(function() {
+
+        	Common.report("sedaReceiptForm");
+        });
 
         var option1 = {
                 winName : "popup",
@@ -41,6 +45,9 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.ordView" /></h1>
 <ul class="right_opt">
+<c:if test="${orderDetail.seda4promo.sedaFlag == 'Y' && orderDetail.basicInfo.ordStusId == '4'}">
+    <li><p class="btn_blue2"><a id="btnSedaReceipt" href="#">Generate Receipt</a></p></li>
+</c:if>
 	<li><p class="btn_blue2"><a id="btnOrderSerialNoHistory" href="#">Order Serial No. History</a></p></li>
 	<!-- <li><p class="btn_blue2"><a id="btnPrint" href="#">Customer Score Card</a></p></li> -->
 	<li><p class="btn_blue2"><a id="btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
@@ -70,6 +77,14 @@
     <input type="hidden" id="ordNo" name="ordNo" value="${orderDetail.basicInfo.ordNo }">
     <input type="hidden" id="refDocNo" name="refDocNo" value="">
 </form>
+<form id="sedaReceiptForm" name="sedaReceiptForm">
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="V_ORDID" name="V_ORDID" value="${orderDetail.basicInfo.ordId}"/>
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/OrderSeda4Receipt.rpt" /><br />
+
+    <input type="hidden" id="sedaFlag" name="sedaFlag" value="${orderDetail.seda4promo.sedaFlag}"/>
+    <input type="hidden" id="ordStusId" name="ordStusId" value="${orderDetail.basicInfo.ordStusId}"/>
+  </form>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

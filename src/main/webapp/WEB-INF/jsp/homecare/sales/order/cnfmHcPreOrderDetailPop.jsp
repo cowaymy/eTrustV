@@ -52,6 +52,7 @@
 	        if(myFileCaches[7] != null) $('#txtSofTncFileName_RW').text(myFileCaches[7].file.name);
 	        if(myFileCaches[8] != null) $('#txtMSofFileName_RW').text(myFileCaches[8].file.name);
             if(myFileCaches[9] != null) $('#txtMSofTncFileName_RW').text(myFileCaches[9].file.name);
+            if(myFileCaches[10] != null) $('#txtElecBillFileName_RW').text(myFileCaches[10].file.name);
 	    }
 	});
 
@@ -111,6 +112,10 @@
 
 	                        case '9':
                                 $(".input_text[id='txtMSofTncFileName_RW").val(result[i].atchFileName);
+                                break;
+
+	                        case '10':
+                                $(".input_text[id='txtElecBillFileName_RW").val(result[i].atchFileName);
                                 break;
 
 	                        default:
@@ -254,6 +259,10 @@
         <tr>
             <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
             <td><span id="txtMSofTncFileName_RW"></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Electric Bill</th>
+            <td><span id="txtElecBillFileName_RW"></span></td>
         </tr>
 	</tbody>
 </table><!-- table end -->

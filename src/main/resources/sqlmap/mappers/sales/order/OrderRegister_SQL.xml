@@ -418,6 +418,9 @@
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
                   </if>
+                  <if test='seda4promo == "N"'>
+                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 602)
+                  </if>
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -440,6 +443,9 @@
                   </if>
                   <if test='voucherPromotion == null or voucherPromotion == "0"'>
                   AND T2.VOUCHER_PROMOTION = 0
+                  </if>
+                  <if test='seda4promo == "N"'>
+                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 602)
                   </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
@@ -1365,6 +1371,7 @@
                   , ECOMM_ORD_ID
                   , EX_TRADE_PR
                   , VOUCHER_CODE
+                  ,TNB_ACC_NO
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1430,6 +1437,7 @@
              , #{ecommOrdId}
              , #{isExtradePR}
              , #{voucherCode}
+             , #{tnbAccNo}
      )
   </insert>
 
