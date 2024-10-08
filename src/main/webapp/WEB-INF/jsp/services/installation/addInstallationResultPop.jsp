@@ -1836,7 +1836,6 @@
 	  }
 
 	  function fn_notCompetitor(){
-		  debugger;
 		  $('input[name="competitor"][value="N"]').prop('checked', true);
 
 		  $("#competitorBrand").attr('disabled', 'disabled');
