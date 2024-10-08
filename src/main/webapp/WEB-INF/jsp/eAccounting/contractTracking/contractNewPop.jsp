@@ -775,7 +775,7 @@ function fn_addCycleGridRow() {
 
 		var cutOffDur = $("#aRenewalDur").val() ;
 		var commDtSplit = $("#_contractCommDt").val().split("/");
-		var commDtRevert = commDtSplit[2] + "/" + commDtSplit [1] + "/" + commDtSplit[0];
+		var commDtRevert = commDtSplit[0] + "/" + commDtSplit [1] + "/" + commDtSplit[2];
 		var parts = $("#_contractExpDt").val().split("/");
 
 		var day = parts[0];
