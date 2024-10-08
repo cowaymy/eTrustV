@@ -557,6 +557,20 @@
       $("#addInstallForm #m29").hide();
   }
 
+  function fn_checkCompetitor(){
+      if($("input[type='radio'][name=jomTukar]:checked").val() == "Y" &&
+              ($("input[type='radio'][name=competitor]:checked").val() == "N")){
+
+                 var message = "Please confirm if the customer does not own a competitor's product. </br>" +
+                 "<span style='color:red;'>Acknowledgment: Please note that any discrepancies or mismatches identified may impact your performance.</span>";
+                 // User click Yes -> Competitor Product = No
+                 // User click No -> back to previous page, CT reselect again
+                 Common.confirmCustomizingButton(message,"Yes", "No", fn_notCompetitor, fn_popCloseCompetitor);
+       }else{
+    	   fn_saveInstall();
+       }
+  }
+
   function fn_saveInstall() {
 
     var msg = "";
@@ -594,9 +608,9 @@
       }
 
       if($("input[type='radio'][name=jomTukar]:checked").val() == "Y"){
-    	  if($("input[type='radio'][name=competitor]:checked").val() != "Y"){
+    	  if($("input[type='radio'][name=competitor]:checked").val() == undefined){
     		  msg += "* <spring:message code='sys.msg.necessary' arguments='Competitor Product' htmlEscape='false'/> </br>";
-    	  }
+          }
       }
 
       if($("input[type='radio'][name=competitor]:checked").val() == "Y"){
@@ -757,7 +771,7 @@
       if(fileContentsArr.length < 3){
           isValid = false;
       }else{
-          isValid = true;
+    	  isValid = true;
       }
 
         if(isValid == true)  {
@@ -1815,11 +1829,25 @@
 			  $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand<span class='must'>*</span></th>");
 		  }else{
 			  $("#competitorBrand").attr('disabled', 'disabled');
-			  $("#competitorBrand").val('');
-			  //$("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product</th>");
-			  $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand</th>");
+              $("#competitorBrand").val('');
+              //$("#competitorHeader").replaceWith("<th scope='row' id='competitorHeader'>Competitor Product</th>");
+              $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand</th>");
 		  }
 	  }
+
+	  function fn_notCompetitor(){
+		  debugger;
+		  $('input[name="competitor"][value="N"]').prop('checked', true);
+
+		  $("#competitorBrand").attr('disabled', 'disabled');
+          $("#competitorBrandHeader").replaceWith("<th scope='row' id='competitorBrandHeader'>Competitor Brand</th>");
+
+          fn_saveInstall();
+      }
+
+	  function fn_popCloseCompetitor(){
+		  $('input[name="competitor"]').prop('checked', false);
+      }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -2787,7 +2815,8 @@
     <div id='sav_div'>
       <ul class="center_btns">
         <li><p class="btn_blue2">
-            <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
+<%--             <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a> --%>
+            <a href="#" onclick="fn_checkCompetitor()"><spring:message code='service.btn.SaveInstallationResult' /></a>
           </p></li>
       </ul>
     </div>
