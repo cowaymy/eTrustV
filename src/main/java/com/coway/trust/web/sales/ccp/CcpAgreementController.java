@@ -191,8 +191,9 @@ public class CcpAgreementController {
 
 
 	@RequestMapping(value = "/searchOrderNoPop.do")
-	public String	searchOrderNoPop (@RequestParam Map<String, Object> params) throws Exception{
-
+	public String	searchOrderNoPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "sales/ccp/ccpAgreementSearchOrderNoPop";
 	}
 

@@ -186,7 +186,7 @@ function fn_getDatabsHistory(){
  }
 
 function  fn_goCustSearch(){
-    Common.popupDiv('/sales/ccp/searchOrderNoPop.do' ,null, null , true, '_searchDiv');
+    Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , {pdpaMonth:${pdpaMonth}}, null , true, '_searchDiv');
 }
 
 
@@ -596,7 +596,7 @@ function fn_validStartDate(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="sForm"  name="sForm" method="post">
-
+<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 
 
 

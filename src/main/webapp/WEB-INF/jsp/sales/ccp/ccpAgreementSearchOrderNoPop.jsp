@@ -163,6 +163,7 @@ $(document).ready(function() {
     <li><p class="btn_blue"><span class="clear" ></span><a href="#" onclick="javascript:$('#_searchOrdForm').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 <form id="_searchOrdForm" method="get">
+<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

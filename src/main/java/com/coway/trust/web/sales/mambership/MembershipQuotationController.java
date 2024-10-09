@@ -114,7 +114,8 @@ public class  MembershipQuotationController {
 
 		int sstValue = commonService.getSstTaxRate();
 		model.put("sstValue", sstValue);
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "sales/membership/mNewQuotationPop";
 	}
 

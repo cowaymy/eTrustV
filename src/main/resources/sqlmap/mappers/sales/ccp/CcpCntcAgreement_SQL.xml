@@ -415,6 +415,9 @@
 				           <if test=" '' != searchOrdDate and null != searchOrdDate">
 				                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
 				           </if>
+				           <if test='pdpaMonth != null and pdpaMonth != 0'>
+					            AND Extent1.ORD_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+					       </if>
 				           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
 				                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
 				           </if>

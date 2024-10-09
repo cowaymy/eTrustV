@@ -130,7 +130,8 @@ public class  MembershipRentalQuotationController {
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "sales/membership/mRentalNewQuotationPop";
 	}
 

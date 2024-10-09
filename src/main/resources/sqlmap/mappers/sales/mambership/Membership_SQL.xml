@@ -731,6 +731,9 @@
            left join sal0002d b on b.sales_ord_id = a.sales_ord_id
          where a.stus_code_id in('1', '4')
             and a.sales_ord_no = #{ORD_NO}
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND a.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
     </select>
 
     <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">

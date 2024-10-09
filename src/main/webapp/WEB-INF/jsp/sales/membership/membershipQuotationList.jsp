@@ -197,7 +197,7 @@
 
 
  function  fn_goNewQuotation(){
-	    Common.popupDiv("/sales/membership/mNewQuotation.do" ,$("#listSForm").serialize(), null , true , '_NewQuotDiv1');
+	    Common.popupDiv("/sales/membership/mNewQuotation.do", $("#listSForm").serializeJSON(), null , true , '_NewQuotDiv1');
  }
 
  function  fn_goQuotationRawData(){

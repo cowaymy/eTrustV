@@ -191,7 +191,7 @@ function fn_selectListAjax() {
    
 
  function  fn_goNewQuotation(){
-        Common.popupDiv("/sales/membershipRentalQut/mNewQuotation.do" ,$("#listSForm").serialize(), null , true , '_NewQuotDiv1');
+        Common.popupDiv("/sales/membershipRentalQut/mNewQuotation.do" ,$("#listSForm").serializeJSON(), null , true , '_NewQuotDiv1');
  }
    
    

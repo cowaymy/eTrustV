@@ -342,6 +342,8 @@ public class MembershipController {
 		logger.debug("			pram set end  ");
 
 		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
 		return "sales/membership/membershipFreePop";
 	}
 

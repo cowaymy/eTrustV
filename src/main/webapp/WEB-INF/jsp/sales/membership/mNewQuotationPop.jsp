@@ -261,7 +261,7 @@ $(document).ready(function(){
 	}
 
 	function fn_goCustSearch() {
-		Common.popupDiv('/sales/ccp/searchOrderNoPop.do', $('#_searchForm_').serializeJSON(), null, true, '_searchDiv');
+		Common.popupDiv('/sales/ccp/searchOrderNoPop.do', {pdpaMonth:${pdpaMonth}}, null, true, '_searchDiv');
 	}
 
 	function fn_callbackOrdSearchFunciton(item) {
@@ -1904,6 +1904,7 @@ $(document).ready(function(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#"   id="sForm"  name="sForm" method="post" >
+<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

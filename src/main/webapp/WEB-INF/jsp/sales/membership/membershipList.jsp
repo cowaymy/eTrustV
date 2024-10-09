@@ -202,7 +202,7 @@
       // return;
     // }
     //Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do" ,_option);
-    Common.popupDiv("/sales/membership/membershipFreePop.do" , null, null , true, '_FreeMembership');
+    Common.popupDiv("/sales/membership/membershipFreePop.do" , {pdpaMonth:${PAGE_AUTH.pdpaMonth}}, null , true, '_FreeMembership');
 
      // Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do?MBRSH_ID="+selectedItems[0].item.mbrshId, _option);
   }
