@@ -1825,6 +1825,7 @@ SELECT MST.*
                , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time
                , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS last_Chg_Date_Origin
                , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS last_Chg_Time_Origin
+               , TO_CHAR (A.SRV_FILTER_PRIOD) AS parts_Period
           FROM (SELECT TO_CHAR (B.CUST_ID) as CUST_ID,
                        TO_CHAR (B.SALES_ORD_ID) AS sales_Orderid,
                        TO_CHAR (B.SALES_ORD_NO) AS sales_Order_No,
@@ -1837,7 +1838,7 @@ SELECT MST.*
                        TO_CHAR (NVL(H.IS_SMO, '')) AS is_Smo,
                        TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS is_Serial_Replace,
                        TO_CHAR (F.STK_TYPE_ID) AS part_Type,
-                       TO_CHAR (TRIM(E.LEAD_TM_OFFSET)) AS parts_Period,
+                       <!-- TO_CHAR (TRIM(E.LEAD_TM_OFFSET)) AS parts_Period, -->
                        TO_CHAR (E.COMPNT_QTY) AS quanity,
                        TO_CHAR(S5D.ASR_ITM_PART_QTY) AS chg_Qty ,
                        TO_CHAR(S5D.ASR_ITM_CHRG_FOC) AS charges_Foc ,
