@@ -716,6 +716,69 @@ public class EpapanApiController {
 	    return ResponseEntity.ok(model);
 	  }
 
+	  @ApiOperation(value = "selectPreOrderModifyDataList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectPreOrderModifyDataList",  method = RequestMethod.GET)
+		public ResponseEntity<EgovMap> selectPreOrderModifyDataList(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+			// Search Pre Order Info
+		    EgovMap model = new EgovMap();
+			Map<String, Object> ps = new HashMap();
+
+			EgovMap preOrderInfo = null;
+			// 매핑테이블 조회. - HMC0011D
+			EgovMap hcPreOrdInfo = hcPreOrderService.selectHcPreOrderInfo(EpapanApiMagicAddressForm.createMap(param));
+			EgovMap matOrderInfo = null;
+			EgovMap frmOrderInfo = null;
+
+			String matPreOrdId = CommonUtils.nvl(hcPreOrdInfo.get("matPreOrdId"));
+			String fraPreOrdId =  CommonUtils.nvl(hcPreOrdInfo.get("fraPreOrdId"));
+
+			if(!"".equals(matPreOrdId) && !"0".equals(matPreOrdId)) {
+				// Mattress Order Info
+				ps.put("preOrdId", matPreOrdId);
+				matOrderInfo = preOrderService.selectPreOrderInfo(ps);
+				preOrderInfo = preOrderService.selectPreOrderInfo(ps);
+			}
+			if(!"".equals(fraPreOrdId) && !"0".equals(fraPreOrdId)) {
+	    		// Frame Order Info
+				ps.put("preOrdId", fraPreOrdId);
+	    		frmOrderInfo = preOrderService.selectPreOrderInfo(ps);
+			}
+
+			//model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		   EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+	        String dayFrom = "", dayTo = "";
+
+	        if(checkExtradeSchedule!=null){
+	        	dayFrom = checkExtradeSchedule.get("startDate").toString();
+	        	dayTo = checkExtradeSchedule.get("endDate").toString();
+	        }
+	        else{
+	        	dayFrom = "20"; // default 20-{month-1}
+	       	  dayTo = "31"; // default LAST DAY OF THE MONTH
+	        }
+
+			String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+						SalesConstants.DEFAULT_DATE_FORMAT1);
+			String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+			model.put("hsBlockDtFrom", dayFrom);
+			model.put("hsBlockDtTo", dayTo);
+
+			model.put("bfDay", bfDay);
+			model.put("toDay", toDay);
+
+			model.put("preOrderInfo", preOrderInfo);
+			model.put("hcPreOrdInfo", hcPreOrdInfo);
+			model.put("preMatOrderInfo", matOrderInfo);
+			model.put("preFrmOrderInfo", frmOrderInfo);
+
+	        model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+
+	        return ResponseEntity.ok(model);
+		}
+
 	  @ApiOperation(value = "attachFileUpdate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	  @RequestMapping(value = "/attachFileUpdate", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> attachFileUpdate(@ApiIgnore MultipartHttpServletRequest request) throws Exception {
@@ -817,5 +880,13 @@ public class EpapanApiController {
 			message.setMessage(msg);
 
 			return ResponseEntity.ok(message);
+		}
+
+	  @ApiOperation(value = "selectAttachList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectAttachList", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> getAttachList(@ModelAttribute EpapanApiMagicAddressForm param) {
+			List<EgovMap> attachList = preOrderService.getAttachList(EpapanApiMagicAddressForm.createMap(param)) ;
+
+			return ResponseEntity.ok( attachList);
 		}
 }

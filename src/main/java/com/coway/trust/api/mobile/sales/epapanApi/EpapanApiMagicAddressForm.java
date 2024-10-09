@@ -101,6 +101,7 @@ public class EpapanApiMagicAddressForm {
 		params.put("cntcExpno", vo.getCntcExpno());
 		params.put("userTypeId", vo.getUserTypeId());
 		params.put("preOrdId", vo.getPreOrdId());
+		params.put("atchFileGrpId", vo.getAtchFileGrpId());
 
 		return params;
 	}
@@ -562,6 +563,12 @@ public class EpapanApiMagicAddressForm {
 	public void setPreOrdId(String preOrdId) {
 		this.preOrdId = preOrdId;
 	}
+	public String getAtchFileGrpId() {
+		return atchFileGrpId;
+	}
+	public void setAtchFileGrpId(String atchFileGrpId) {
+		this.atchFileGrpId = atchFileGrpId;
+	}
 
 
 	public String state;
@@ -637,5 +644,6 @@ public class EpapanApiMagicAddressForm {
 	public String cntcExpno;
 	public String userTypeId;
 	public String preOrdId;
+	public String atchFileGrpId;
 
 }
