@@ -845,6 +845,12 @@ function fn_openDivPopDown(){
 function fn_report(){
 
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+    $("#dloadCtrlId").val(ctrlId);
+    $("#fileType").val("Details");
+    $("#dloadPathAndName").val('C:/works/workspace/etrust/src/main/webapp/resources/WebShare/CRT/CRC/CIMB_GROUP/CRC__2023-12-08.zip');
+    $("#downloadFileForm").submit();
+
+	/* var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -857,7 +863,7 @@ function fn_report(){
             isProcedure : true
     };
 
-    Common.report("excelForm", option);
+    Common.report("excelForm", option); */
 
 }
 
@@ -926,6 +932,7 @@ function fn_ordersListPop(){
 function fn_downloadClaimFile(resultData) {
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	$("#dloadCtrlId").val(ctrlId);
+	$("#fileType").val("ClaimFile");
     $("#dloadPathAndName").val('C:/works/workspace/etrust/src/main/webapp/resources/WebShare/CRT/CRC/CIMB_GROUP/CRC__2023-12-08.zip');
     $("#downloadFileForm").submit();
 }
@@ -1456,6 +1463,7 @@ function fn_downloadClaimFile(resultData) {
     <form name="downloadFileForm" id="downloadFileForm" method="post" action="/payment/downloadCreditCardClaimFile.do">
     <input id="dloadPathAndName" name="dloadPathAndName" type="hidden" >
     <input id="dloadCtrlId" name="dloadCtrlId" type="hidden" >
+    <input id="fileType" name="fileType" type="hidden" >
  </form>
 </div>
 <!-- popup_wrap end -->
