@@ -65,10 +65,14 @@ import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.claim.FormDef;
+import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
+import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcDetExcelHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
@@ -1435,6 +1439,9 @@ public class ClaimController {
 //
 //    }
 
+    //create order basic claim file
+    createClaimFileExcel(claimMap);
+
     // 결과 만들기
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
@@ -2409,10 +2416,13 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
    // //파일다운로드 정보 INSERT
       // claimMap.put("fileNo", 1);
-       claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
-       claimMap.put("fileName", sFile);
+      if(String.valueOf(claimMap.get("pageNo")).equals("1")){
+    	  claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
+    	  claimMap.put("fileName", sFile);
+    	  claimMap.put("fileType", "ClaimFile");
 
-       claimService.insertClaimFileDownloadInfo(claimMap);
+    	  claimService.insertClaimFileDownloadInfo(claimMap);
+      }
 
     }
   }
@@ -2476,11 +2486,13 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
     claimMap.put("subPath", subPath);
     claimMap.put("emailSubject", "SCB CRC Deduction File");
 
-  claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
-  claimMap.put("fileName", sFile);
+    if(String.valueOf(claimMap.get("pageNo")).equals("1")){
+    	claimMap.put("filePath", subPath+batchName+"_"+claimMap.get("ctrlBatchDt")+".zip");
+    	claimMap.put("fileName", sFile);
+  	  claimMap.put("fileType", "ClaimFile");
 
-  claimService.insertClaimFileDownloadInfo(claimMap);
-
+    	claimService.insertClaimFileDownloadInfo(claimMap);
+    }
   }
 
   private CreditCardFileMBBHandler getTextDownloadCreditCardMBBHandler(String fileName, String[] columns,
@@ -2545,10 +2557,13 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
               }
           }
 
-          claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
-          claimMap.put("fileName", sFile);
+          if(String.valueOf(claimMap.get("pageNo")).equals("1")){
+        	  claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
+        	  claimMap.put("fileName", sFile);
+        	  claimMap.put("fileType", "ClaimFile");
 
-          claimService.insertClaimFileDownloadInfo(claimMap);
+        	  claimService.insertClaimFileDownloadInfo(claimMap);
+          }
       }
   }
 
@@ -2613,10 +2628,13 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
               }
           }
 
-          claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
-          claimMap.put("fileName", sFile);
+          if(String.valueOf(claimMap.get("pageNo")).equals("1")){
+        	  claimMap.put("filePath", subPath1+sFile1+"_"+claimMap.get("ctrlBatchDt")+".zip");
+        	  claimMap.put("fileName", sFile);
+        	  claimMap.put("fileType", "ClaimFile");
+        	  claimService.insertClaimFileDownloadInfo(claimMap);
+          }
 
-          claimService.insertClaimFileDownloadInfo(claimMap);
       }
   }
 
@@ -3336,11 +3354,13 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 		@RequestMapping(value = "/downloadCreditCardClaimFile.do", method = RequestMethod.POST)
 		public void fileDownCreditCardClaim(	@RequestParam("dloadCtrlId") String dloadCtrlId,
+				@RequestParam("fileType") String fileType,
 											HttpServletRequest request,
 											HttpServletResponse response) throws Exception {
 
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("ctrlId", dloadCtrlId);
+			params.put("fileType", fileType);
 			List<EgovMap> resultList = claimService.selectClaimFileDown(params);
 
 			String filename = "";
@@ -3384,4 +3404,113 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 				throw new FileDownException(AppConstants.FAIL, "Could not get file : " + filename);
 			}
 		}
+
+		public void createClaimFileExcel(EgovMap claimMap ) {//order basic credit card claim list excel
+
+		    ClaimFileCrcDetExcelHandler downloadHandler = null;
+		    String sFile;
+		    String ctrlBatchDt;
+		    String inputDate;
+
+		    ExcelDownloadHandler excelDownloadHandler = null;
+		    try {
+		      ctrlBatchDt = (String) claimMap.get("ctrlBatchDt");
+		      inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
+		      sFile = "AutoDebitDetails_" + claimMap.get("ctrlId") + "_"+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + ".xls";
+
+		      String[] titles = new String[] {"BATCH_NO","DEBIT_DT","ORD_NO","ACCOUNT_NO","ACCOUNT_NAME","ISSUE_BANK","CARD_TYPE","AMOUNT","APPROVE_CODE","REFERENCE_NO"};
+
+//		      String[] columns = new String[] {"BATCH_NO","DEBIT_DT","ORD_NO","ACCOUNT_NO","ACCOUNT_NAME","ISSUE_BANK","CARD_TYPE","AMOUNT","APPROVE_CODE","REFERENCE_NO"};
+		      String[] columns = new String[] {"batchNo","debitDt","ordNo","accountNo","accountName","issueBank","cardType","amount","approveCode","referenceNo"};
+		      ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(sFile, columns,titles);
+		      downloadHandler = getTextDownloadCrcDetExcelHandler(sFile, columns, null, filePath, "/CRC/ClaimDetails/", claimMap,excelDownloadVO);
+
+		      largeExcelService.downLoadClaimFileExcel(claimMap, downloadHandler);
+
+//		      if(String.valueOf(claimMap.get("pageNo")).equals("1")){
+		    	  claimMap.put("filePath", "/CRC/ClaimDetails/"+sFile);
+		    	  claimMap.put("fileName", sFile);
+		    	  claimMap.put("fileType", "Details");
+
+		    	  claimService.insertClaimFileDownloadInfo(claimMap);
+//		      }
+
+//		      downloadHandler.writeFooter();
+
+		      //
+//				sFile = "AutoDebitDetails_" + claimMap.get("ctrlId") + "_"+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + ".xlsx";
+//
+//				String[] columns = new String[] { "clctrId", "ordId", "strtgOs", "closOs", "isDrop",
+//						"isExclude", "runId", "taskId" };
+//
+//				String[]  titles = new String[] { "clctrId", "ordId", "strtgOs", "closOs", "isDrop",
+//						"isExclude", "runId", "taskId" };
+//
+//				ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(sFile, columns,titles);
+//				FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+//			    excelDownloadVO.setFilePath(filePath);
+//			    excelDownloadVO.setSubFilePath("/CRC/ClaimDetails/");
+//				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
+//
+//				Map map = new HashMap();
+//				map.put("ctrlId", claimMap.get("ctrlId") );
+//
+//				largeExcelService.downLoadClaimFileExcel(map, excelDownloadHandler);
+//		      ExcelFileGenerator
+
+//		      Map<String, Object> map = new HashMap<String, Object>();
+//	    		map.put("payDateFr", request.getParameter("payDateFr") == null ? "01/01/1900" :  request.getParameter("payDateFr"));
+//	    		map.put("payDateTo", request.getParameter("payDateTo") == null ? "01/01/1900" :  request.getParameter("payDateTo"));
+
+//	    		String[] columns;
+//	            String[] titles;
+//
+//	            columns = new String[] {"receiptno","orderno","trxDate","name","bankAcc","debtCode","branchcode","payitemappvno","payitemchqno",
+//	            		"username","description","cardmode","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","refDtl","crcmode",
+//	            		"crctype","payitemccholdername","payitemccexpirydate","refdate","keyinby","issuedbank","deptcode","orderstatus",
+//	            		"custvano","bankChgAmt","advancemth","runningno","cardtype","pvMonth","pvYear","crcStatementNo","crcStatus",
+//	            		"crcStatementRemark","custcategory","custtype","transId","ordCrtDt","keyInScrn","paymentcollector","batchPayId","crcStateId"};
+//
+//	            titles = new String[] {"RECEIPTNO","ORDERNO","TRX_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
+//	            		"DESCRIPTION","CARD_MODE","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","REF_DTL","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
+//	            		"PAYITEMCCEXPIRYDATE","REFDATE","KEYINBY","ISSUEDBANK","DEPTCODE","ORDERSTATUS","CUSTVANO","BANK_CHG_AMT","ADVANCEMTH",
+//	            		"RUNNINGNO","CARDTYPE","PV_MONTH","PV_YEAR","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType","TRANS_ID",
+//	            		"ORD_CRT_DT" ,"KEY IN SCRN" ,"PAYMENTCOLLECTOR" ,"BATCH_PAY_ID", "CRC STATE ID"};
+//
+//
+//				downloadHandler = getExcelDownloadHandler(response, "DailyCollectionRawData.xlsx", columns, titles);
+//				largeExcelService.downloadDailyCollectionRawData(map, downloadHandler);
+
+		    } catch (Exception ex) {
+		      throw new ApplicationException(ex, AppConstants.FAIL);
+		    } finally {
+		      if (downloadHandler != null) {
+		        try {
+		          downloadHandler.close();
+		        } catch (Exception ex) {
+		          LOGGER.info(ex.getMessage());
+		        }
+		      }
+		    }
+
+		    // E-mail 전송하기
+//		    File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+//		    EmailVO email = new EmailVO();
+//
+//		    email.setTo(emailReceiver);
+//		    email.setHtml(false);
+//		    email.setSubject("ALB Auto Debit Claim File - Batch Date : " + inputDate);
+//		    email.setText("Please find attached the claim file for your kind perusal.");
+//		    email.addFile(file);
+//
+//		    adaptorService.sendEmail(email, false);
+		  }
+
+		private ClaimFileCrcDetExcelHandler getTextDownloadCrcDetExcelHandler(String fileName, String[] columns
+				, String[] titles,String path, String subPath, Map<String, Object> params,ExcelDownloadVO excelDownloadVO) {
+			    FileInfoVO FileInfoVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+			    FileInfoVO.setFilePath(path);
+			    FileInfoVO.setSubFilePath(subPath);
+			    return new ClaimFileCrcDetExcelHandler(FileInfoVO, params,excelDownloadVO);
+			  }
 }

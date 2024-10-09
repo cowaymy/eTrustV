@@ -6,6 +6,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcDetExcelHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
@@ -178,4 +179,5 @@ public interface LargeExcelService {
   void downLoadECashGrpDeductionFileHSBC(Object parameter,
 		ECashGrpDeductionFileHSBCHandler eCashGrpDeductionFileHSBCHandler);
 
+  void downLoadClaimFileExcel(Object parameter, ClaimFileCrcDetExcelHandler claimFileExcelHandler);
 }

@@ -10,6 +10,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcDetExcelHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
@@ -404,4 +405,8 @@ public class LargeExcelServiceImpl implements LargeExcelService {
     this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileHSBCHandler);
   }
 
+  @Override
+	public void downLoadClaimFileExcel(Object parameter, ClaimFileCrcDetExcelHandler claimFileExcelHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_EXCEL.getQueryId(), parameter, claimFileExcelHandler);
+	}
 }

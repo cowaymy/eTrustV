@@ -307,4 +307,6 @@ public interface ClaimMapper {
   int selectUnableBulkUploadList(List<String> params) throws Exception;
 
   List<EgovMap> selectUnableBulkUploadList2(Map<String, Object> params);
+
+  List<EgovMap> selectAutoDebitCcDetail(Map<String, Object> params);
 }

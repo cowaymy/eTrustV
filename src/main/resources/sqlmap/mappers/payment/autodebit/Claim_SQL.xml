@@ -1121,9 +1121,9 @@
   <!--Auto Debit - -->
   <insert id="insertClaimFileDownloadInfo" parameterType="Map">
     INSERT
-    INTO PAY0267M (CTRL_ID, FILE_NO, FILE_PATH,FILE_NAME)
+    INTO PAY0267M (CTRL_ID, FILE_NO, FILE_PATH,FILE_NAME,FILE_TYPE)
     VALUES
-    (#{ctrlId},(select nvl(max(file_no),0)+1 from PAY0267M where CTRL_ID = #{ctrlId}),#{filePath},#{fileName})
+    (#{ctrlId},(select nvl(max(file_no),0)+1 from PAY0267M where CTRL_ID = #{ctrlId}),#{filePath},#{fileName},#{fileType})
   </insert>
 
   <!--클레임 파일 다운로드 리스트 -->
@@ -1140,6 +1140,9 @@
     PAY0267M
     WHERE
     CTRL_ID = #{ctrlId}
+    <if test="fileType != null and fileType != ''">
+    AND FILE_TYPE = #{fileType}
+    </if>
     ORDER BY FILE_NO DESC
   </select>
 
@@ -1584,6 +1587,59 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
     WHERE D.BATCH_ID = #{batchId}
     AND F.MODE_ID IN (130)
     AND E.STUS_CODE_ID <![CDATA[ <> ]]> '10' -->
+    </select>
+
+    <select id="selectAutoDebitCcDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.BANK_DTL_CTRL_ID BATCH_NO,
+            TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') DEBIT_DT,
+            (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) <![CDATA[   > ]]> 0 THEN
+                (CASE
+                    WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]>  7 THEN
+                        SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO)
+                    ELSE
+                        SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent3.SALES_ORD_NO)
+                    END
+                )
+            ELSE
+                TRIM(Extent3.SALES_ORD_NO)
+                  END) ORD_NO,
+            Extent1.BANK_DTL_DR_ACC_NO ACCOUNT_NO,
+            Extent1.BANK_DTL_DR_NAME  ACCOUNT_NAME,
+            EXTENT6.NAME ISSUE_BANK,
+            (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 AND pay.MODE_ID <![CDATA[   <> ]]> 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0074D extent7
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = extent7.CUST_CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE extent7.SALES_ORD_ID = extent1.SALES_ORD_ID  AND extent7.SVC_CNTRCT_ID = Extent1.SVC_CNTRCT_ID AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId})
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) = 0 AND pay.MODE_ID <![CDATA[   <> ]]> 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0074D extent7
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = extent7.CUST_CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE extent7.SALES_ORD_ID = extent1.SALES_ORD_ID  AND extent7.SVC_CNTRCT_ID = 0 AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId})
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) <![CDATA[   > ]]> 0 AND pay.MODE_ID = 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0236D aaa
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = aaa.CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE aaa.SALES_ORD_ID = extent1.SALES_ORD_ID  AND aaa.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} AND ROWNUM <![CDATA[   <= ]]> 1)
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) = 0 AND pay.MODE_ID = 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0236D aaa
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = aaa.CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE aaa.SALES_ORD_ID = extent1.SALES_ORD_ID  AND aaa.SRV_CNTRCT_ID = 0 AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} AND ROWNUM <![CDATA[   <= ]]> 1)
+            END) AS CARD_TYPE ,
+            Extent1.BANK_DTL_AMT AMOUNT,
+            Extent1.BANK_DTL_APPR_CODE APPROVE_CODE,
+            Extent1.BANK_DTL_GRP_ID REFERENCE_NO
+        FROM
+            PAY0042D Extent1
+            JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+            LEFT JOIN SYS0004M Extent6 ON Extent1.BANK_DTL_DR_BANK_TYPE_ID = Extent6.BANK_ID
+            LEFT JOIN SAL0074D pay ON pay.SALES_ORD_ID = Extent3.SALES_ORD_ID and pay.SVC_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+        ORDER BY Extent1.BANK_DTL_CTRL_ID
     </select>
 
 </mapper>
