@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.csv.CSVRecord;
 
+import com.coway.trust.util.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GovEInvcVO {
@@ -51,7 +52,19 @@ public class GovEInvcVO {
 	        //this.InvoiceLine = (List<GovEInvcLineVO>) mapValue.get("invoiceLine");
 
 	        AdditionalDocumentReference additionalDocumentReference = new AdditionalDocumentReference();
-	        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
+	        //Have to set Consolidate Invoice internal Id for CN/DN consolidate
+	        if(CommonUtils.nvl(mapValue.get("invType")).equals("02")){
+	            if(mapValue.get("invTypeCode").toString().equals("02") || mapValue.get("invTypeCode").toString().equals("03")){
+	    	        additionalDocumentReference.setId(mapValue.get("billRefInternalId")==null?"":mapValue.get("billRefInternalId").toString());
+	            }
+	            else{
+			        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
+	            }
+	        }
+	        else{
+		        additionalDocumentReference.setId(mapValue.get("billRefNo")==null?"":mapValue.get("billRefNo").toString());
+	        }
+
 	        BillingReference billingReference = new BillingReference();
 	        billingReference.setAdditionalDocumentReference(additionalDocumentReference);
 	        BillingReference.add(billingReference);

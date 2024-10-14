@@ -295,12 +295,13 @@
 		, B.DOCUMENT_ID
 		, B.BILL_REF_NO
 		--, C.CNT
+		, B.BILL_REF_INTERNAL_ID
      FROM EIV0003M A
      LEFT JOIN EIV0004D B ON B.BATCH_ID = A.BATCH_ID
      --LEFT JOIN (SELECT BATCH_ID,INV_ID,COUNT(1) CNT FROM EIV0005D GROUP BY BATCH_ID,INV_ID ) C ON C.BATCH_ID = B.BATCH_ID AND C.INV_ID = B.INV_ID
      WHERE
      1=1
-     <if test="einvStatus != null and einvStatus != ''">
+ 	<if test="einvStatus != null and einvStatus != ''">
          AND B.STATUS = #{einvStatus}
      </if>
      <if test="batchStatus != null and batchStatus != ''">

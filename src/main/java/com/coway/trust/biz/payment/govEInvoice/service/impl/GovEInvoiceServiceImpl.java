@@ -198,6 +198,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 govEinvcMain.put("issueDate", formattedDate);
 
                 if(params.get("invType").equals("02")){
+                	govEinvcMain.put("invType", params.get("invType"));
                     govEinvcMain.put("issueDate", eInvcClaimList.get(i).get("invprdStartDt").toString());
                 }
 
@@ -671,7 +672,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("GET");
-//            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-clear-tin", ClearTaxApiTin);
             conn.setRequestProperty(ClearTaxApiKey, ClearTaxApiValue);
 //            OutputStream os = conn.getOutputStream();
@@ -681,7 +682,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
             //System.out.println("Response Code: " + responseCode);
 
             LOGGER.error("Start Calling Cleartax API return......\n");
-            LOGGER.error("Start Calling Cleartax API return" + conn.getResponseMessage() + "......\n");
+            LOGGER.error("Start Calling Cleartax API  return" + conn.getResponseMessage() + "......\n");
 
             if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_REQUEST) {
                 respSeq = govEInvoiceMapper.selectApiInvoiceSeq();
