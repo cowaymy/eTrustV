@@ -20,7 +20,7 @@ import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto
 import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
-import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
+//import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationDetailService;
@@ -60,8 +60,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   @Resource(name = "hcInstallResultListService")
 	private HcInstallResultListService hcInstallResultListService;
 
-  @Resource(name = "stockMapper")
-  private StockMapper stockMapper;
+  //@Resource(name = "stockMapper")
+  //private StockMapper stockMapper;
 
   @Override
   public ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult)
@@ -393,17 +393,17 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
     		  List<Map<String, Object>> newPartList = new ArrayList<Map<String, Object>>();
     		  Map<String, Object> newPart = null;
-    		  Map<String, Object> filter = null;
+    		  //Map<String, Object> filter = null;
     		  for (Map<String, Object> part : paramsDetail){
     			  if (part != null){
     				  newPart = new HashMap<String, Object>();
-    				  filter = new HashMap<String, Object>();
+    				  //filter = new HashMap<String, Object>();
 
     				  // to add stock code as filterStockCode. 02/10/2024, Hui Ding
-    				  filter.put("stkId", String.valueOf(part.get("filterCode")));
-    				  String filterStockCode = stockMapper.selectStkCodeById(filter);
-    				  if (filterStockCode != null && !filterStockCode.isEmpty())
-    					  newPart.put("filterStockCode", filterStockCode);
+    				  //filter.put("stkId", String.valueOf(part.get("filterCode")));
+    				  //String filterStockCode = stockMapper.selectStkCodeById(filter);
+    				  //if (filterStockCode != null && !filterStockCode.isEmpty())
+    					  //newPart.put("filterStockCode", filterStockCode);
     				// end. to add stock code as filterStockCode. 02/10/2024, Hui Ding
 
     				  newPart.put("filterID", String.valueOf(part.get("filterCode")));
