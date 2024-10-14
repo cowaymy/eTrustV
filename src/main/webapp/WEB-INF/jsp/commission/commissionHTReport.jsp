@@ -202,7 +202,12 @@
                 }
                 else
                 {
-                	if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
+                	if (taskID >= 141){ // start from comm month = 10/2024. Added by Celeste, 07/10/2024 - 100% Payout for Extrade
+                        reportFileName = "/commission/HTCommission_PDF_202410.rpt"; //reportFileName
+                        reportViewType = "PDF"; //viewType
+                        reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                    }
+                	else if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
                         reportFileName = "/commission/HTCommission_PDF_202409.rpt"; //reportFileName
                         reportViewType = "PDF"; //viewType
                         reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
@@ -311,7 +316,7 @@ debugger;
                     else {
                     	reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
                     }
-                    
+
                     reportDownFileName = "HTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -331,7 +336,7 @@ debugger;
                     else {
                     	reportFileName = "/commission/SHTMCommissionRawRate_Excel.rpt"; //reportFileName
                     }
-                    
+
                     reportDownFileName = "SHTMCommissionRawRate_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -354,7 +359,13 @@ debugger;
                     return;
                 }
                 if (mLvl == 4) {
-                    reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
+                	if(year >= 2024 && month >=09|| year > 2024){
+                		reportFileName = "/commission/HT_Sales_Rental_Commission_202410.rpt";
+                	}
+                	else{
+                		reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
+                	}
+
                     reportDownFileName = "HT Sales Rental Commission_" + today;
                     reportViewType = "EXCEL";
 
@@ -483,7 +494,7 @@ debugger;
                else {
             	   reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
                }
-               
+
                reportDownFileName = "HTCommissionRawData_Rate_Excel_" + today; //report name
                reportViewType = "EXCEL"; //viewType
 
