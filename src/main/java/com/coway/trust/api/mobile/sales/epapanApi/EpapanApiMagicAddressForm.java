@@ -102,6 +102,8 @@ public class EpapanApiMagicAddressForm {
 		params.put("userTypeId", vo.getUserTypeId());
 		params.put("preOrdId", vo.getPreOrdId());
 		params.put("atchFileGrpId", vo.getAtchFileGrpId());
+		params.put("update", vo.getUpdate());
+		params.put("remove", vo.getRemove());
 
 		return params;
 	}
@@ -570,6 +572,18 @@ public class EpapanApiMagicAddressForm {
 		this.atchFileGrpId = atchFileGrpId;
 	}
 
+	public String getUpdate() {
+		return update;
+	}
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+	public String getRemove() {
+		return remove;
+	}
+	public void setRemove(String remove) {
+		this.remove = remove;
+	}
 
 	public String state;
     public String city;
@@ -645,5 +659,7 @@ public class EpapanApiMagicAddressForm {
 	public String userTypeId;
 	public String preOrdId;
 	public String atchFileGrpId;
+	public String update;
+	public String remove;
 
 }

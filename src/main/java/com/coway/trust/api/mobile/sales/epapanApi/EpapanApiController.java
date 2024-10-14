@@ -781,7 +781,7 @@ public class EpapanApiController {
 
 	  @ApiOperation(value = "attachFileUpdate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	  @RequestMapping(value = "/attachFileUpdate", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> attachFileUpdate(@ApiIgnore MultipartHttpServletRequest request) throws Exception {
+	  public ResponseEntity<ReturnMessage> attachFileUpdate(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
 
 		String userId = request.getParameter("userId");
 		Map<String, Object> ps = new HashMap();
@@ -813,7 +813,8 @@ public class EpapanApiController {
 				List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 				ps.put(CommonConstants.USER_ID, userId);
 
-				preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, ps, seqs);
+
+				preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, EpapanApiMagicAddressForm.createMap(param), seqs);
 
 				ps.put("attachFiles", list);
 				code = AppConstants.SUCCESS;
