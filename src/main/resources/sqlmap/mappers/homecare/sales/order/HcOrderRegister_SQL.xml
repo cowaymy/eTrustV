@@ -180,11 +180,8 @@
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
         SELECT DISTINCT T2.PROMO_ID CODE
                  , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
-
          FROM SAL0018D T1
-           JOIN SAL0017D T2
-             ON T2.PROMO_ID = T1.PROMO_ID
-
+           JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
         WHERE T2.PROMO_ID = 31723
     </select>
 
@@ -482,7 +479,9 @@
                 G.CODE AS APP_TYPE,
                 D.STK_DESC AS PROD,
                 E.PROMO_CODE AS PROMO_CDE,
-                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORD_DT
+                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                H.CODE AS ORDER_STATUS,
+                B.NOR_RNT_FEE AS ORIGINAL_NOR_RNT_FEE
       FROM SAL0349D A
       JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
       JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
@@ -490,8 +489,12 @@
       JOIN SAL0017D E ON B.PROMO_ID = E.PROMO_ID
       JOIN SAL0029D F ON B.CUST_ID = F.CUST_ID
       JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND B.APP_TYPE_ID = G.CODE_ID
+      JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
       WHERE A.MAIN_ORD_ID = #{ordId}
       AND A.DISB = 0
+      <if test='subOrdId != null and subOrdId !=""'>
+        AND A.SUB_ORD_ID = #{subOrdId}
+      </if>
   </select>
 
       <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
@@ -540,4 +543,33 @@
 
         WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 602)
     </select>
+
+     <select id="getLastHcAcComboOrdId" parameterType="Map" resultType="string">
+        SELECT MAX(SUB_ORD_ID) AS ORDER_ID
+        FROM SAL0349D
+        WHERE
+         DISB = 0
+        <if test = 'ordId != null and ordId !=0'>
+            AND MAIN_ORD_ID = #{ordId}
+        </if>
+           GROUP BY MAIN_ORD_ID
+     </select>
+
+     <select id="chkHcAcCmbOrdStus" parameterType="Map" resultType="int">
+         SELECT COUNT(*)
+         FROM(
+                    SELECT A.SUB_ORD_ID AS SUB_ORD_ID,
+                                   B.SALES_ORD_NO,
+                                   B.NOR_RNT_FEE AS ORIGINAL_FEE,
+                                   B.STUS_CODE_ID
+                    FROM SAL0349D A
+                    JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID
+                    JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+                    WHERE A.MAIN_ORD_ID = #{ordId}
+                    AND A.DISB = 0
+                    AND B.STUS_CODE_ID = '4'
+                     AND A.CHG_SEQ >= 1
+                    AND B.CUST_ID = #{custId}
+          )
+       </select>
 </mapper>

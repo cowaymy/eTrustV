@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.homecare.sales.impl.htOrderDetailMapper">
 
-
-    <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
+<select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
     SELECT
        V1.APP_TYPE_ID,
        V1.APP_TYPE_CODE,
@@ -71,8 +70,7 @@
        V1.CUST_NAME2,
 	   V1.PROD_CAT
        FROM (
-       SELECT DISTINCT
-                cd.CODE APP_TYPE_CODE,
+       SELECT DISTINCT cd.CODE APP_TYPE_CODE,
                 som.APP_TYPE_ID,
                 cd.CODE_NAME APP_TYPE_NAME,
                 NVL (u.USER_NAME, ' ') CRT_USER_ID,
@@ -81,14 +79,10 @@
                 som.CUST_ID,
                 NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
                 c.TYPE_ID CUST_TYPE_ID,
-              (
-                  CASE
-                      WHEN C.TYPE_ID NOT IN (964)
-                           AND C.CORP_TYPE_ID > 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
-                      || ' ('
-                      || NVL(CORPTYPE.CODE_NAME,' ')
-                      || ')' )
-                      ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+                (
+                  CASE WHEN C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
+                              THEN ( NVL(CUSTTYPE.CODE_NAME,' ') || ' (' || NVL(CORPTYPE.CODE_NAME,' ') || ')' )
+                          ELSE NVL(CUSTTYPE.CODE_NAME,' ')
                   END
               ) CUST_TYPE,
               (
@@ -99,8 +93,7 @@
               ) AS CUST_DOB,
               NVL(CO.NAME,' ') CUST_NATION,
               (
-                  CASE
-                      WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
+                  CASE WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
                       ELSE ' '
                   END
               ) CUST_GENDER,
@@ -108,55 +101,54 @@
               NVL(C.EMAIL,' ') CUST_EMAIL,
               C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
               C.VISA_EXPR CUST_VISA_EXPR,
-                NVL(SOM.BRNCH_ID, 0) KEYIN_BRNCH_ID,
-                NVL(B.CODE || ' - ' || B.NAME,' ') KEYIN_BRNCH_NAME,
-                TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
-                som.SALES_DT,
-                som.SRV_ORD_ID ORD_ID,
-                som.SRV_ORD_NO ORD_NO,
-                S.CODE ORD_STUS_CODE,
-                som.STUS_CODE_ID ORD_STUS_ID,
-                NVL (som.CUST_PO_NO, ' ') ORD_PO_NO,
-                som.TOT_AMT,
-                NVL (som.REF_NO, ' ') ORD_REF_NO,
-                NVL (som.MEM_ID, 0) ORD_MEM_ID,
-                NVL (mem.NAME, ' ') ORD_MEM_NAME,
-                NVL (mem.NRIC, ' ') ORD_MEM_NRIC,
-                NVL (mem.MEM_CODE, ' ') ORD_MEM_CODE,
-                NVL (mem.MEM_TYPE, 0) ORD_MEM_TYPE_ID,
-                NVL (mt.CODE_NAME,' ') ORD_MEM_TYPE_NAME ,
-                NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
-                cp2.TEL_M1 MAIL_TEL_MOB,
-                cp2.TELF MAIL_TEL_FAX,
-                cp2.TEL_O MAIL_TEL_OFF,
-                cp2.TEL_R MAIL_TEL_RES,
-                cp3.TELF INST_TEL_FAX,
-                cp3.TEL_M1 INST_TEL_MOB,
-                cp3.TEL_O INST_TEL_OFF,
-                cp3.TEL_R INST_TEL_RES,
-                som.PV_MONTH PV_MONTH,
-                som.PV_YEAR PV_YEAR,
-                 som.PROMO_ID,
-                NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
-                NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
-                NVL (som.BINDING_NO, ' ') RELATED_NO,
-                NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
-                NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
-                som.DEPT_CODE ORD_DEPT_CODE,
-                som.GRP_CODE ORD_GRP_CODE,
-                som.ORG_CODE ORD_ORG_CODE,
-                som.SALES_HM_ID ORD_HM_ID,
-                som.SALES_SM_ID ORD_SM_ID,
-                som.SALES_GM_ID ORD_GM_ID,
-                som.SALES_PROD_SZ PRODUCT_NAME,
-
-                som.REM ORD_REM,
-                 TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
-                  u2.USER_NAME UPD_USER_ID,
-                  so.cust_id CUST_ID2,
-                  cust.NRIC CUST_IC2,
-                  cust.NAME CUST_NAME2,
-				E.CODE AS PROD_CAT
+              NVL(SOM.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+              NVL(B.CODE || ' - ' || B.NAME,' ') KEYIN_BRNCH_NAME,
+              TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
+              som.SALES_DT,
+              som.SRV_ORD_ID ORD_ID,
+              som.SRV_ORD_NO ORD_NO,
+              S.CODE ORD_STUS_CODE,
+              som.STUS_CODE_ID ORD_STUS_ID,
+              NVL (som.CUST_PO_NO, ' ') ORD_PO_NO,
+              som.TOT_AMT,
+              NVL (som.REF_NO, ' ') ORD_REF_NO,
+              NVL (som.MEM_ID, 0) ORD_MEM_ID,
+              NVL (mem.NAME, ' ') ORD_MEM_NAME,
+              NVL (mem.NRIC, ' ') ORD_MEM_NRIC,
+              NVL (mem.MEM_CODE, ' ') ORD_MEM_CODE,
+              NVL (mem.MEM_TYPE, 0) ORD_MEM_TYPE_ID,
+              NVL (mt.CODE_NAME,' ') ORD_MEM_TYPE_NAME ,
+              NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
+              cp2.TEL_M1 MAIL_TEL_MOB,
+              cp2.TELF MAIL_TEL_FAX,
+              cp2.TEL_O MAIL_TEL_OFF,
+              cp2.TEL_R MAIL_TEL_RES,
+              cp3.TELF INST_TEL_FAX,
+              cp3.TEL_M1 INST_TEL_MOB,
+              cp3.TEL_O INST_TEL_OFF,
+              cp3.TEL_R INST_TEL_RES,
+              som.PV_MONTH PV_MONTH,
+              som.PV_YEAR PV_YEAR,
+              som.PROMO_ID,
+              NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
+              NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
+              NVL (som.BINDING_NO, ' ') RELATED_NO,
+              NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
+              NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
+              som.DEPT_CODE ORD_DEPT_CODE,
+              som.GRP_CODE ORD_GRP_CODE,
+              som.ORG_CODE ORD_ORG_CODE,
+              som.SALES_HM_ID ORD_HM_ID,
+              som.SALES_SM_ID ORD_SM_ID,
+              som.SALES_GM_ID ORD_GM_ID,
+              som.SALES_PROD_SZ PRODUCT_NAME,
+              som.REM ORD_REM,
+              TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
+              u2.USER_NAME UPD_USER_ID,
+              so.cust_id CUST_ID2,
+              cust.NRIC CUST_IC2,
+              cust.NAME CUST_NAME2,
+  		      E.CODE AS PROD_CAT
            FROM SAL0225D som
                 JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
                 LEFT JOIN SAL0001D SO ON SO.SALES_ORD_ID = som.SRV_ORD_ID
@@ -180,9 +172,7 @@
                 LEFT JOIN SYS0026M D ON D.STK_ID =  SO2.ITM_STK_ID
                 LEFT JOIN SYS0013M E ON E.CODE_ID = D.STK_CTGRY_ID
        ) V1
-
        WHERE  1= 1
-
        AND V1.ORD_ID = #{salesOrderId}
 
     </select>
@@ -224,8 +214,7 @@
         ) T WHERE ROWNUM &lt;= 1
     </select>
 
-    <select id="selectOrderAgreementByOrderID" parameterType="Map"
-        resultType="egovMap">
+    <select id="selectOrderAgreementByOrderID" parameterType="Map" resultType="egovMap">
         SELECT T.GOV_AG_ITM_ID
         , T.GOV_AG_ID
         , T.GOV_AG_ITM_BATCH_NO
@@ -267,8 +256,7 @@
         WHERE RANK1 = 1
     </select>
 
-    <select id="selectOrderReferralInfoList" parameterType="Map"
-        resultType="egovMap">
+    <select id="selectOrderReferralInfoList" parameterType="Map" resultType="egovMap">
         SELECT T.SALES_ORD_ID
         , T.ORD_REF_ID
         , T.SALES_ORD_NO
@@ -308,8 +296,7 @@
     </select>
 
     <resultMap id="callLogClobMap" type="egovMap">
-        <result property="callRem" column="CALL_REM" jdbcType="CLOB"
-            javaType="string" />
+        <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string" />
     </resultMap>
     <select id="selectCallLogList" parameterType="Map" resultMap="callLogClobMap">
         SELECT ROWNUM
@@ -1961,5 +1948,36 @@
             SRV_REM = #{txtRemark}
          WHERE SRV_SALES_ORD_ID = #{ordId}
     </update>
+
+    <select id="selectHcAcBulkOrderDtlList" parameterType="Map" resultType="egovMap">
+     SELECT A.SUB_ORD_ID AS ORDER_ID,
+                B.SALES_ORD_NO AS AIRCOND_BULK_ORDER_NO,
+                A.COMBO_GRP AS COMBO_GROUP,
+                G.CODE AS APP_TYPE,
+                D.STK_DESC AS PRODUCT,
+                E.PROMO_ID AS PROMO_ID,
+                E.PROMO_CODE AS PROMO_CODE,
+                E.PROMO_DESC AS PROMO_NAME,
+                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORDER_DATE,
+                H.CODE AS ORDER_STATUS
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+      JOIN SAL0017D E ON B.PROMO_ID = E.PROMO_ID
+      JOIN SAL0029D F ON B.CUST_ID = F.CUST_ID
+      JOIN SYS0013M G ON B.APP_TYPE_ID = G.CODE_ID
+      JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
+      WHERE
+      <if test="pckBindingId != 0">
+          A.MAIN_ORD_ID =#{pckBindingId}
+      </if>
+      <if test="pckBindingId == 0">
+          A.MAIN_ORD_ID = #{ordId}
+      </if>
+      AND A.SUB_ORD_ID <![CDATA[ <> ]]> #{ordId}
+      AND A.DISB = 0
+      ORDER BY B.SALES_ORD_NO ASC
+  </select>
 
 </mapper>

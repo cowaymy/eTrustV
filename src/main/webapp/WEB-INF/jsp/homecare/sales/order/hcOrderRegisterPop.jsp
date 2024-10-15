@@ -137,7 +137,9 @@
     function createAUIGrid() {
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            {dataField : "chkfield",       width: 70,
+            {
+            	dataField : "chkfield",
+            	width: 70,
             	renderer : {
 	            	type : "CheckBoxEditRenderer",
 	                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -3093,6 +3095,43 @@
   function fn_setBindComboOrd(ordNo, ordId) {
 	    $('#cboOrdNoTag').val(ordNo);
 	    $('#hiddenCboOrdNoTag').val(ordId);
+
+	    //check the order status if status active
+        Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do", {custId : $('#hiddenCustId').val(), ordId : ordId},function(result) {
+            if(result.code == "0"){
+                //compare the price of the each unit in aircond bulk promotion
+                Common.ajax("GET", "/homecare/sales/order/selectLastHcAcCmbOrderInfo.do",
+                                    {promoNo : $("#ordPromo1").val(), prod : $("#ordProduct1").val(), custId : $('#hiddenCustId').val(), ordId : ordId},
+                      function(result) {
+                          if(result != null && result != ""){
+                            if($("#totOrgOrdRentalFees").val() > result){
+                                Common.alert("Current selected product not allowed to add on due to normal rental fee high than previous order product");
+
+                                $('#ordProduct1').val("");
+                                $('#ordPromo1').val("");
+                                $('#ordPromo1 option').remove();
+                                $('#cboOrdNoTag').val("");
+                                $('#hiddenCboOrdNoTag').val("");
+                                $('#promoDiscPeriodTp1').val("");
+                                $('#promoDiscPeriod1').val("");
+                                $('#ordRentalFees1').val("");
+                                $('#ordPv1').val("");
+                            }
+                          }
+                 });
+              }else{
+                  Common.alert("Current selected product not allowed to add on due to others order of this bulk promotion is completed");
+                  $('#ordProduct1').val("");
+                  $('#ordPromo1').val("");
+                  $('#ordPromo1 option').remove();
+                  $('#cboOrdNoTag').val("");
+                  $('#hiddenCboOrdNoTag').val("");
+                  $('#promoDiscPeriodTp1').val("");
+                  $('#promoDiscPeriod1').val("");
+                  $('#ordRentalFees1').val("");
+                  $('#ordPv1').val("");
+              }
+       });
   }
 
   function displayVoucherSection(){

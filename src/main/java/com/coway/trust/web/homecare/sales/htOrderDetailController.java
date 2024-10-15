@@ -388,4 +388,18 @@ public class htOrderDetailController {
 	     return ResponseEntity.ok(rsltList);
 	   }
 
+	   @RequestMapping(value = "/hcAirCondBulkOrderSearchPop.do")
+     public String airCondBulkOrderSearchPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
+       model.put("ordId", params.get("ordId"));
+       model.put("pckBindingId", params.get("pckBindingId"));
+       return "homecare/sales/order/hcAirCondBulkOrderSearchPop";
+     }
+
+    @RequestMapping(value = "/selectHcAcBulkOrderDtlList", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectHcAcBulkOrderDtlList(@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) {
+      logger.debug("[htOrderDetailController - selectHcAcBulkOrderDtlList]  params : {}", params);
+      List<EgovMap> orderList = htOrderDetailService.selectHcAcBulkOrderDtlList(params);
+      return ResponseEntity.ok(orderList);
+    }
+
 }

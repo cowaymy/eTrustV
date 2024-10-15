@@ -76,4 +76,8 @@ public interface HcOrderRegisterService {
   EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException;
 
   List<EgovMap> selectSeda4PromoList(Map<String, Object> params);
+
+  public String selectLastHcAcCmbOrderInfo(Map<String, Object> params);
+
+  int chkHcAcCmbOrdStus(Map<String, Object> params);
 }

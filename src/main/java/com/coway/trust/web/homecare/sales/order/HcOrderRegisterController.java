@@ -282,7 +282,7 @@ public class HcOrderRegisterController {
 	@RequestMapping(value = "/hcRegisterOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> hcRegisterOrder(@RequestBody OrderVO orderVO, SessionVO sessionVO) throws Exception {
 		String appTypeName = HomecareConstants.cnvAppTypeName(orderVO.getSalesOrderMVO1().getAppTypeId());
-		// Registe Homecare Order
+		// Register Homecare Order
 		hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
 
 		//String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR().toString();
@@ -465,14 +465,14 @@ public class HcOrderRegisterController {
         model.put("codeList_17", codeList_17);
         model.put("codeList_19", codeList_19);
         model.put("codeList_322", codeList_322);
-		model.put("hcPreOrdInfo", hcPreOrdInfo);
-		model.put("orderInfo", matOrderInfo);
-		model.put("orderInfo2", frmOrderInfo);
-		model.put("COPY_CHANGE_YN", "Y");
-		model.put("matOrdId", matOrdId);
-		model.put("fraOrdId", fraOrdId);
-		model.put("ordSeqNo", hcPreOrdInfo.get("ordSeqNo"));
-		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+    		model.put("hcPreOrdInfo", hcPreOrdInfo);
+    		model.put("orderInfo", matOrderInfo);
+    		model.put("orderInfo2", frmOrderInfo);
+    		model.put("COPY_CHANGE_YN", "Y");
+    		model.put("matOrdId", matOrdId);
+    		model.put("fraOrdId", fraOrdId);
+    		model.put("ordSeqNo", hcPreOrdInfo.get("ordSeqNo"));
+    		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "homecare/sales/order/hcOrderRegisterPop";
 	}
@@ -563,4 +563,24 @@ public class HcOrderRegisterController {
 //	    message.setCode(Integer.toString(statCode));
 	    return ResponseEntity.ok(message);
 	  }
+
+	  @RequestMapping(value = "/selectLastHcAcCmbOrderInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<String> selectLastHcAcCmbOrderInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+      logger.debug("[HcOrderRegisterController - selectLastHcAcCmbOrderInfo] params : {}", params);
+      String prvOrdOriNorRntFee = hcOrderRegisterService.selectLastHcAcCmbOrderInfo(params);
+      return ResponseEntity.ok(prvOrdOriNorRntFee);
+    }
+
+    @RequestMapping(value = "/chkHcAcCmbOrdStus.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> chkHcAcCmbOrdStus(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+      ReturnMessage message = new ReturnMessage();
+
+      logger.debug("==================/chkHcAcCmbOrdStus=======================");
+      logger.debug("[HcOrderRegisterController - chkHcAcCmbOrdStus] params : {}", params);
+      logger.debug("==================/chkHcAcCmbOrdStus=======================");
+
+      int cmbOrdStus =  hcOrderRegisterService.chkHcAcCmbOrdStus(params);
+      message.setCode(Integer.toString(cmbOrdStus));
+      return ResponseEntity.ok(message);
+    }
 }

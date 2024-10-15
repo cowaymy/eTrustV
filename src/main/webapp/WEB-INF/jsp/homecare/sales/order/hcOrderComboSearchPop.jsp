@@ -30,7 +30,7 @@
                }, {
                    dataField : "comboGrp",
                    headerText : "<spring:message code='sal.title.text.group'/>",
-                   width : 100,
+                   width : 80,
                    editable : false,
                    style : 'left_style'
                }, {
@@ -54,8 +54,13 @@
                }, {
                  dataField : "promoCde",
                  headerText : "<spring:message code='sales.promoCd'/>",
-                 width : 200,
+                 width : 180,
                  editable : false
+               },{
+                   dataField : "orderStatus",
+                   headerText : "<spring:message code='sal.text.orderStatus'/>",
+                   width : 160,
+                   editable : false
                }];
 
   $(document).ready(

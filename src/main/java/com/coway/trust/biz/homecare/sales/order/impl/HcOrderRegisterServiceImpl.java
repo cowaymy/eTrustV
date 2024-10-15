@@ -433,4 +433,26 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     List<EgovMap> lst = hcOrderRegisterMapper.selectSeda4PromoList(params);
     return lst;
   }
+
+  @Override
+  public String selectLastHcAcCmbOrderInfo(Map<String, Object> params){
+    String lastCmbOrdId = hcOrderRegisterMapper.getLastHcAcComboOrdId(params);
+    params.put("subOrdId", lastCmbOrdId);
+
+    List<EgovMap> lstCmbOrdOriNormalRntFeeList = hcOrderRegisterMapper.selectHcAcCmbOrderDtlList(params);
+
+    String lstOrdOriRntFee = "";
+    if(lstCmbOrdOriNormalRntFeeList != null && lstCmbOrdOriNormalRntFeeList.size() > 0){
+        for(EgovMap lastOrderOriNorRntFee : lstCmbOrdOriNormalRntFeeList){
+          lstOrdOriRntFee = lastOrderOriNorRntFee.get("originalNorRntFee").toString();
+        }
+    }
+    return lstOrdOriRntFee;
+  }
+
+  @Override
+  public int chkHcAcCmbOrdStus(Map<String, Object> params) {
+      int cmbOrdStus = hcOrderRegisterMapper.chkHcAcCmbOrdStus(params);
+      return cmbOrdStus;
+   }
 }
