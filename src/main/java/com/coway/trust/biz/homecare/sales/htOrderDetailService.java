@@ -65,6 +65,6 @@ public interface htOrderDetailService {
 
 	List<EgovMap> selectResnCodeList(Map<String, Object> params);
 
-	List<EgovMap> selectHcAcBulkOrderDtlList(Map<String, Object> params);
+	// List<EgovMap> selectHcAcBulkOrderDtlList(Map<String, Object> params);
 
 }

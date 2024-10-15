@@ -706,10 +706,10 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	    return htOrderDetailMapper.selectResnCodeList(params);
 	  }
 
-	  @Override
+	/*  @Override
     public List<EgovMap> selectHcAcBulkOrderDtlList(Map<String, Object> params) {
       List<EgovMap> lst = htOrderDetailMapper.selectHcAcBulkOrderDtlList(params);
       return lst;
     }
-
+   */
 }

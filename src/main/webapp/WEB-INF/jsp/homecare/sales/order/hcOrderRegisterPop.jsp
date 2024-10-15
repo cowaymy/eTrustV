@@ -3095,7 +3095,7 @@
   function fn_setBindComboOrd(ordNo, ordId) {
 	    $('#cboOrdNoTag').val(ordNo);
 	    $('#hiddenCboOrdNoTag').val(ordId);
-
+      /*
 	    //check the order status if status active
         Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do", {custId : $('#hiddenCustId').val(), ordId : ordId},function(result) {
             if(result.code == "0"){
@@ -3132,6 +3132,7 @@
                   $('#ordPv1').val("");
               }
        });
+      */
   }
 
   function displayVoucherSection(){

@@ -434,6 +434,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     return lst;
   }
 
+  /*
   @Override
   public String selectLastHcAcCmbOrderInfo(Map<String, Object> params){
     String lastCmbOrdId = hcOrderRegisterMapper.getLastHcAcComboOrdId(params);
@@ -454,5 +455,5 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
   public int chkHcAcCmbOrdStus(Map<String, Object> params) {
       int cmbOrdStus = hcOrderRegisterMapper.chkHcAcCmbOrdStus(params);
       return cmbOrdStus;
-   }
+   }*/
 }

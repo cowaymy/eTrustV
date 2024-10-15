@@ -1949,7 +1949,8 @@
          WHERE SRV_SALES_ORD_ID = #{ordId}
     </update>
 
-    <select id="selectHcAcBulkOrderDtlList" parameterType="Map" resultType="egovMap">
+ <!--
+  <select id="selectHcAcBulkOrderDtlList" parameterType="Map" resultType="egovMap">
      SELECT A.SUB_ORD_ID AS ORDER_ID,
                 B.SALES_ORD_NO AS AIRCOND_BULK_ORDER_NO,
                 A.COMBO_GRP AS COMBO_GROUP,
@@ -1979,5 +1980,5 @@
       AND A.DISB = 0
       ORDER BY B.SALES_ORD_NO ASC
   </select>
-
+  -->
 </mapper>

@@ -56,12 +56,12 @@
                  headerText : "<spring:message code='sales.promoCd'/>",
                  width : 180,
                  editable : false
-               },{
+               }/*,{
                    dataField : "orderStatus",
                    headerText : "<spring:message code='sal.text.orderStatus'/>",
                    width : 160,
                    editable : false
-               }];
+               }*/];
 
   $(document).ready(
     function() {
