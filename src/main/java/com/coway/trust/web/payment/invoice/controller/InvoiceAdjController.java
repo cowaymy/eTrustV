@@ -418,7 +418,12 @@ public class InvoiceAdjController {
 				//	totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
 				//}
 
-				totalAmount += (itemAdjsutment * 100 / (100 + Integer.parseInt(String.valueOf(gridMap.get("billitemtaxrate")))));
+				// Celeste 20241014 - Comment out due to PAY0011D > MEMO_ADJ_TOT_AMT should be Total_Amt + Tax,
+				// 						       this line of code is to reverse calculate the initial amount (item amount) without tax and causing the amount in CNDN request approval wrong
+				//							   as upon CDDN request approval, program will use this amount to deduct the taxed amount to calculate the item amount (causing double deduct tax amount)
+				//totalAmount += (itemAdjsutment * 100 / (100 + Integer.parseInt(String.valueOf(gridMap.get("billitemtaxrate")))));
+
+				totalAmount += itemAdjsutment;
 
 				//리스트에 추가
 				detailParamList.add(detailParamMap);
