@@ -543,7 +543,7 @@
            JOIN SAL0017D T2
              ON T2.PROMO_ID = T1.PROMO_ID
 
-        WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 602)
+        WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 587 ) <!-- DEV = 602 -->
     </select>
 
     <!--

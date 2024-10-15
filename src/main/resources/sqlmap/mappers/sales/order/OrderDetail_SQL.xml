@@ -1979,7 +1979,7 @@
   <select id="selectSedaPromo" parameterType="Map" resultType="egovMap">
     select case when b.code is not null then 'Y' else 'N' end seda_Flag
     from sal0001d a
-    left join sys0013m b on a.promo_id = b.code and b.code_master_id = 602
+    left join sys0013m b on a.promo_id = b.code and b.code_master_id = 587 <!-- DEV = 602 -->
     where a.sales_ord_id = #{salesOrderId}
     and rownum =1
   </select>

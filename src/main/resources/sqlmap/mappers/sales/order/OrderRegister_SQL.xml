@@ -419,7 +419,7 @@
                   AND T2.VOUCHER_PROMOTION = 0
                   </if>
                   <if test='seda4promo == "N"'>
-                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 602)
+                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 587) <!-- DEV = 602 -->
                   </if>
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
@@ -445,7 +445,7 @@
                   AND T2.VOUCHER_PROMOTION = 0
                   </if>
                   <if test='seda4promo == "N"'>
-                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 602)
+                  and t2.PROMO_ID not in (select code from sys0013m where code_master_id = 587) <!-- DEV = 602 -->
                   </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
