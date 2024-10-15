@@ -623,7 +623,7 @@ console.log("preOrderList");
 
                     var isBlackArea = AUIGrid.getCellValue(listGridID, selIdx, "instStatus");
                     if(isBlackArea == 'Yes'){
-                        Common.alert("Please proceed with updating the status to \"failed\" due to the area being under a non-coverage zone.");
+                        Common.alert("The area is not under coverage for the product categories. Convert Order is not allow.");
                         return false;
                     }
 
