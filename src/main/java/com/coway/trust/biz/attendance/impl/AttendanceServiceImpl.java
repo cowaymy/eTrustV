@@ -212,7 +212,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							e.printStackTrace();
 						}
 					});
-					HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents").openConnection();
+					HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendEvents").openConnection();
 					connection.setDoOutput(true);
 					byte[] inputData = new Gson().toJson(completeData).getBytes("utf-8");
 					connection.setRequestMethod( "PUT" );
@@ -336,7 +336,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 			memberInfo.stream().forEach((m) -> {
 				try {
-					URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
+					URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
 					connection.setRequestProperty("Authorization", epapanAuth);
 					BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 					String input;
@@ -376,6 +376,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 									n.put("hpType", member.get("hpType"));
 									n.put("memCode", member.get("memCode"));
 									n.put("memLvl", member.get("memLvl"));
+									n.put("loc", member.get("loc"));
 								}
 								return n;
 							}).collect(Collectors.toList()));
@@ -388,6 +389,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							n.put("hpType", m.get("hpType"));
 							n.put("memCode", m.get("memCode"));
 							n.put("memLvl", m.get("memLvl"));
+							n.put("loc", m.get("loc"));
 							return n;
 						}).collect(Collectors.toList()));
 					}
@@ -423,6 +425,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 			f.put("deptCode", d.get("deptCode"));
 	 			f.put("hpCode", d.get("memCode"));
 	 			f.put("hpType", d.get("hpType"));
+	 			f.put("location", d.get("title"));
 	 			f.put("QR - A0001", type.equals("A0001") ? 1 : "");
 	 			f.put("Public Holiday - A0002", type.equals("A0002") ? 1 : "");
 	 			f.put("State Holiday - A0003", type.equals("A0003") ? 1 : "");

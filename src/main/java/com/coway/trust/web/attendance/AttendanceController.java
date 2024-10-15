@@ -322,7 +322,7 @@ public class AttendanceController {
 	  public ResponseEntity<String> getAttendanceResetHist(@RequestParam Map<String, Object> p) throws MalformedURLException, IOException {
 		  Map<String, Object> ret = new HashMap();
 		  if (attendanceService.checkIfHp(p) > 0) {
-			  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendTokenHist/" + p.get("memCode")).openConnection();
+			  URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendTokenHist/" + p.get("memCode")).openConnection();
               connection.setRequestProperty("Authorization", epapanAuth);
 			  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
               String input;
@@ -345,7 +345,7 @@ public class AttendanceController {
 	  public ResponseEntity<String> resetAttendance(@RequestBody Map<String, Object> p, SessionVO session) throws MalformedURLException, IOException {
 		  	Map<String, Object> ret = new HashMap();
 		  	if (attendanceService.checkIfHp(p) > 0) {
-		  		HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendToken").openConnection();
+		  		HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendToken").openConnection();
 		  		connection.setDoOutput(true);
 		  		Map<String, Object> d = new HashMap();
 		  		d.put("userName", p.get("memCode"));
@@ -383,7 +383,7 @@ public class AttendanceController {
 
 	  @RequestMapping(value="/modifyHoliday.do", method = RequestMethod.POST)
 	  public ResponseEntity<String> addHoliday(@RequestBody Map<String, Object> p) throws MalformedURLException, IOException {
-		  HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/cowayMergeHoliday").openConnection();
+		  HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/cowayMergeHoliday").openConnection();
 			connection.setDoOutput(true);
 			Map<String, Object> d = new HashMap();
 			d.put("eventDate", p.get("date"));
@@ -411,7 +411,7 @@ public class AttendanceController {
 
 	  @RequestMapping(value="/getHolidays.do")
 	  public ResponseEntity<String> getHolidays(@RequestParam Map<String, Object> p) throws MalformedURLException, IOException {
-		  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/cowayMergeHoliday/" + p.get("month")).openConnection();
+		  URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/cowayMergeHoliday/" + p.get("month")).openConnection();
           connection.setRequestProperty("Authorization", epapanAuth);
 		  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
           String input;
@@ -439,7 +439,7 @@ public class AttendanceController {
 			  return ResponseEntity.ok(new Gson().toJson(AtdList));
 		  } else {
 			  String memCode = params.get("hpCode") != null ? params.get("hpCode").toString() : attendanceService.getMemCode(params);
-			  URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendEvents/" + memCode + "/reqDate/" + new SimpleDateFormat("yyyyMM").format(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))).openConnection();
+			  URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendEvents/" + memCode + "/reqDate/" + new SimpleDateFormat("yyyyMM").format(new SimpleDateFormat("MM/yyyy").parse((String) params.get("calMonthYear")))).openConnection();
               connection.setRequestProperty("Authorization", epapanAuth);
 			  BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
               String input;
@@ -562,7 +562,7 @@ public class AttendanceController {
 		List<EgovMap> hps = attendanceService.selectHPReporting(p);
 		hps = hps.stream().map((hp) -> {
 			try {
-				URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
+				URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
 				connection.setRequestProperty("Authorization", epapanAuth);
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String input;
@@ -590,7 +590,7 @@ public class AttendanceController {
 		if (hps.size() > 0) {
 			EgovMap hp = hps.stream().findFirst().get();
 			try {
-				URLConnection connection = new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
+				URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendanceAllowLocation/" + hp.get("memCode")).openConnection();
 				connection.setRequestProperty("Authorization", epapanAuth);
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String input;
@@ -617,7 +617,7 @@ public class AttendanceController {
 
 	@RequestMapping(value="/removeLocation.do", method=RequestMethod.POST)
 	public ResponseEntity<String> removeLocation(@RequestBody Map<String, Object> p) throws MalformedURLException, IOException, ProtocolException {
-		HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation").openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendanceAllowLocation").openConnection();
 		connection.setDoOutput(true);
 		Map<String, Object> d = new HashMap();
 		d.put("attendDate", "undefi");
@@ -647,7 +647,7 @@ public class AttendanceController {
 	@RequestMapping(value="/addLocation.do", method = RequestMethod.POST)
 	public ResponseEntity<HashMap<String, Object>> addLocation(@RequestBody Map<String, Object> params) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL("https://epapanapis.malaysia.coway.do/apps/api/calendar/attendanceAllowLocation").openConnection();
+			HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendanceAllowLocation").openConnection();
 			connection.setDoOutput(true);
 			Map<String, Object> d = new HashMap();
 			d.put("attendAllowHpCode", params.get("code"));
