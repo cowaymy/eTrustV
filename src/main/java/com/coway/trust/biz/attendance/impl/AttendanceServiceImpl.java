@@ -212,7 +212,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							e.printStackTrace();
 						}
 					});
-					HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendEvents").openConnection();
+					HttpURLConnection connection = (HttpURLConnection) new URL("https://cowaymalaysiaapi.my.coway.com/apps/api/calendar/attendEvents").openConnection();
 					connection.setDoOutput(true);
 					byte[] inputData = new Gson().toJson(completeData).getBytes("utf-8");
 					connection.setRequestMethod( "PUT" );
@@ -336,7 +336,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 			memberInfo.stream().forEach((m) -> {
 				try {
-					URLConnection connection = new URL("https://cowaymalaysia.my.coway.com/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
+					URLConnection connection = new URL("https://cowaymalaysiaapi.my.coway.com/apps/api/calendar/attendEvents/" + m.get("memCode") + "/reqDate/" + params.get("calMonthYear")).openConnection();
 					connection.setRequestProperty("Authorization", epapanAuth);
 					BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 					String input;
