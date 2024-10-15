@@ -130,7 +130,9 @@ public class LoginController {
 		// QR코드 주소 생성
 /*		String format2 = "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
 */
-		String format2 = "https://qrcode.tec-it.com/API/QRCode?size=small&dpi=150&data=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
+//		String format2 = "https://qrcode.tec-it.com/API/QRCode?size=small&dpi=150&data=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
+
+		String format2 = "https://cowaymalaysiaapi.my.coway.com/apps/mfa/makeEtrustMFA?issuer=%s&account=%s&secretKey=%s";
 
 		return String.format(format2, user, host, secret);
 	}
