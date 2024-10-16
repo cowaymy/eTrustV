@@ -361,7 +361,7 @@ public class OrderDetailController {
     // 데이터 리턴.
     return ResponseEntity.ok(fmcoEvoucherList);
   }
-  
+
   @RequestMapping(value = "/selectPvRebateList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectPvRebateList(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -373,6 +373,24 @@ public class OrderDetailController {
 
     // 데이터 리턴.
     return ResponseEntity.ok(pvRebateList);
+  }
+
+  @RequestMapping(value = "/getHSAppointmentDate.do")
+  public String getHSAppointmentDate(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
+
+    model.addAttribute("ordNo", params.get("ordNo"));
+
+    return "sales/order/orderConfigAppntDateViewerPop";
+  }
+
+  @RequestMapping(value = "/getHsAppntDateInfo.do")
+  public ResponseEntity<List<EgovMap>> getHsAppntDateInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("===========================================>");
+    logger.debug("params : {}", params);
+    logger.debug("===========================================>");
+    List<EgovMap> results = orderDetailService.getHsAppntDateInfo(params);
+    return ResponseEntity.ok(results);
   }
 
 }

@@ -440,6 +440,9 @@ var myDetailGridData = null;
 //     	}
 //     }
 
+	var appointmentTm = "${basicinfo.nextAppntTm}";
+ 	$("#nextAppntTime").val(appointmentTm);
+
     var statusCd = "${basicinfo.stusCodeId}";
     $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
 
@@ -597,6 +600,45 @@ var myDetailGridData = null;
         return false;
       }
 
+    }
+
+    if ($('#nextAppntDt').val() == "") {
+    	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
+    	return false;
+    }
+
+    if ($('#nextAppntTime').val() == "") {
+    	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
+    	return false;
+    }else{
+    	var timeString = $('#nextAppntTime').val();
+
+    	// Parse the time using JavaScript's Date object
+    	var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
+    	if (timeParts) {
+    	    var hours = parseInt(timeParts[1]);
+    	    var minutes = parseInt(timeParts[2]);
+    	    var period = timeParts[3];
+
+    	    // Convert the hours to 24-hour format
+    	    if (period === "PM" && hours !== 12) {
+    	       hours += 12;
+    	    } else if (period === "AM" && hours === 12) {
+    	       hours = 0;
+    	    }
+
+    	    var formattedHours = (hours < 10 ? '0' : '') + hours;
+            var formattedMinutes = '00';
+
+       		// Combine hours and minutes into the desired format
+       		var result = formattedHours + formattedMinutes;
+
+    	    // Set the result in the hidden input
+    	    $('#nextAppointmentTime').val(result);
+    	    console.log("Formatted Time: " + result);
+    	}else {
+    	    Common.alert("Invalid time format. Please enter a valid time.");
+    	}
     }
 
     var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
@@ -770,7 +812,7 @@ var myDetailGridData = null;
 </article><!-- acodi_wrap end -->
 
 <form action="#" id="editHSResultForm" method="post">
-
+<input type="hidden" id='nextAppointmentTime' name='nextAppointmentTime' />
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>CS Result Information</h2>
 </aside><!-- title_line end -->
@@ -813,6 +855,19 @@ var myDetailGridData = null;
             </c:forEach>
     </select> --%>
     </td>
+    <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td>
+	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${basicinfo.nextAppntDt}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
+	 <div class="time_picker">
+                  <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />
+                  <ul>
+                    <li><spring:message code='service.text.timePick' /></li>
+                    <c:forEach var="list" items="${timePick}" varStatus="status">
+                      <li><a href="#">${list.codeName}</a></li>
+                    </c:forEach>
+                  </ul>
+                </div>
+	</td>
 </tr>
 
 <tr>

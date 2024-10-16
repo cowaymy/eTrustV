@@ -1174,14 +1174,8 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
     // bsResultMas.put("ResultCreated", sysdate);
 
-
-
-
-
-
-
-
-
+    bsResultMas.put("nextAppntDt", String.valueOf(params.get("nextAppntDt")));
+    bsResultMas.put("nextAppntTime", String.valueOf(params.get("nextAppointmentTime")));
 
     bsResultMas.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
     // bsResultMas.put("ResultUpdated", sysdate);

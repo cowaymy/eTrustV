@@ -1471,6 +1471,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     // [19-09-2018] ADD HS INSTRUCTION REMARK FOR MAPPER USE
     bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
 
+    bsResultMas.put("nextAppntDt", String.valueOf(params.get("nextAppntDt")));
+    bsResultMas.put("nextAppntTime", String.valueOf(params.get("nextAppointmentTime")));
+
     /*
      * logger.debug("configBsRem isEmpty : " +
      * StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim()));

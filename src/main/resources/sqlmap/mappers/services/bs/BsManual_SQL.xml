@@ -1804,7 +1804,9 @@
 		Limit1.distance distance,
 		Limit1.CANC_REQ_NO,
 		Limit1.INSTCT,
-		Limit1.HS_CHKLIST HS_CHKLIST
+		Limit1.HS_CHKLIST HS_CHKLIST ,
+		Limit1.NEXT_APPNT_DT,
+		Limit1.NEXT_APPNT_TM
 		FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID,
 		Extent1.NO NO ,
 		Extent1.MONTH MONTH ,
@@ -1834,6 +1836,15 @@
 		Extent1.next_svc_area next_svc_area,
 		Extent1.distance distance,
 		Extent1.CANC_REQ_NO,
+		TO_CHAR(Extent11.NEXT_APPNT_DT,'DD/MM/YYYY') AS NEXT_APPNT_DT ,
+		CASE
+        WHEN SUBSTR(Extent11.NEXT_APPNT_TM, -2) >= '60' THEN
+            TO_CHAR(TO_DATE(SUBSTR(Extent11.NEXT_APPNT_TM, 1, 2) || '00', 'HH24MI'), 'HH:MI AM')
+        WHEN Extent11.NEXT_APPNT_TM >= '2400' THEN
+            TO_CHAR(TO_DATE('0000', 'HH24MI'), 'HH:MI AM')
+        ELSE
+            TO_CHAR(TO_DATE(Extent11.NEXT_APPNT_TM, 'HH24MI'), 'HH:MI AM')
+        END AS NEXT_APPNT_TM,
 		<!-- Extent10.INSTCT -->
 		<!-- [19-09-2018] GET INSTUCTION FROM SAL0090D RATHER THAN FROM SAL0045D -->
 		Extent8.SRV_REM AS INSTCT,
@@ -3406,6 +3417,8 @@
 		,RESULT_IS_ADJ
 		,HS_CHKLIST
 		,OLD_SETL_DT
+		,NEXT_APPNT_DT
+		,NEXT_APPNT_TM
 		)
 		values
 		(
@@ -3433,6 +3446,8 @@
 		,#{ResultIsAdjust}
 		,#{instChklstCheckBox}
 		,TO_DATE(#{SettleDate},'DD/MM/YYYY')
+		,#{nextAppntDt}
+		,#{nextAppntTime}
 		)
 	</insert>
 
@@ -3451,7 +3466,9 @@
 		SYSDATE,
 		RESULT_UPD_USER_ID = #{ResultCreator},
 		HS_CHKLIST =
-		#{instChklstCheckBox}
+		#{instChklstCheckBox},
+		NEXT_APPNT_DT = #{nextAppntDt},
+		NEXT_APPNT_TM = #{nextAppntTime}
 		WHERE SCHDUL_ID = #{ScheduleID}
 		AND RESULT_IS_CURR
 		= 1

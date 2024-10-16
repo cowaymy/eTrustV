@@ -404,6 +404,9 @@ public class htManualController {
     params.put("groupCode", "511");
     model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
 
+    List<EgovMap> timePick = commonService.selectTimePick();
+    model.addAttribute( "timePick", timePick );
+
     return "homecare/services/htDetailPop";
 
   }
@@ -443,6 +446,9 @@ public class htManualController {
     model.addAttribute("ROW", params.get("ROW"));
     params.put("groupCode", "511");
     model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
+
+    List<EgovMap> timePick = commonService.selectTimePick();
+    model.addAttribute( "timePick", timePick );
 
     return "homecare/services/htEditPop";
 

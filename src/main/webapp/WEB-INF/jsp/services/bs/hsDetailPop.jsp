@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<%@ page import="java.time.LocalTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <script type="text/javaScript">
    var gSelMainRowIdx = 0;
    var gSelMainColIdx = 0;
@@ -603,6 +604,58 @@
             return false;
         }
     */
+    if ($('#nextAppntDt').val() == "") {
+  	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
+        return false;
+    }else{
+    	var dateString = $('#nextAppntDt').val();  // Example: "27/12/2024"
+
+    	// Split the date by '/'
+    	var dateParts = dateString.split('/');
+
+    	// Rearrange the date parts to "YYYYMMDD" format
+    	var formattedDate = dateParts[2] + dateParts[1] + dateParts[0];  // "YYYYMMDD"
+
+    	// Set the formatted date back into the input (if needed)
+    	$('#nextAppntDt').val(formattedDate);
+
+    	// Output to console (for debugging)
+    	console.log("Formatted date: " + formattedDate);
+    }
+
+    if ($('#nextAppntTime').val() == "") {
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
+        return false;
+    }else{
+    	 var timeString = $('#nextAppntTime').val();
+
+         // Parse the time using JavaScript's Date object
+         var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
+         if (timeParts) {
+             var hours = parseInt(timeParts[1]);
+             var minutes = parseInt(timeParts[2]);
+             var period = timeParts[3];
+
+             // Convert the hours to 24-hour format
+             if (period === "PM" && hours !== 12) {
+                 hours += 12;
+             } else if (period === "AM" && hours === 12) {
+                 hours = 0;
+             }
+
+             var formattedHours = (hours < 10 ? '0' : '') + hours;
+             var formattedMinutes = '00';
+
+        	 // Combine hours and minutes into the desired format
+        	 var result = formattedHours + formattedMinutes;
+
+             // Set the result in the hidden input
+             $('#nextAppointmentTime').val(result);
+             console.log("Formatted Time: " + result);
+    }else {
+        Common.alert("Invalid time format. Please enter a valid time.");
+    	}
+    }
 
     // 시리얼넘버체크
     //수정된 행 아이템들(배열)
@@ -817,6 +870,7 @@ function fnSerialSearchResult(data) {
  <input type="hidden" value="${orderDetail.basicInfo.ordNo}" id="hidSalesOrdNo" name="hidSalesOrdNo"/>
  <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
  <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+ <input type="hidden" id='nextAppointmentTime' name='nextAppointmentTime' />
  <input type="hidden" value="${hsDefaultInfo.srvRem}" id="srvRem" name="hidSrvRem"/>
   <input type="hidden" value="WEB" id="srcform" name="srcform"/>
 <header class="pop_header"><!-- pop_header start -->
@@ -893,9 +947,22 @@ function fnSerialSearchResult(data) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
-	<td colspan="3">
+	<td>
 	  <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
 	  <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+	</td>
+	<th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td>
+	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
+	 <div class="time_picker">
+                  <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />
+                  <ul>
+                    <li><spring:message code='service.text.timePick' /></li>
+                    <c:forEach var="list" items="${timePick}" varStatus="status">
+                      <li><a href="#">${list.codeName}</a></li>
+                    </c:forEach>
+                  </ul>
+                </div>
 	</td>
 </tr>
 <tr>

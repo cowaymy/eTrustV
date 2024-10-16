@@ -369,6 +369,9 @@ public class HsManualController {
 
     model.addAttribute("serialEditBtnAccess", params.get("serialEditBtnAccess"));
 
+    List<EgovMap> timePick = commonService.selectTimePick();
+    model.addAttribute( "timePick", timePick );
+
     return "services/bs/hsDetailPop";
 
   }
@@ -408,6 +411,9 @@ public class HsManualController {
     params.put("groupCode", "511");
     model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
     model.addAttribute("serialEditBtnAccess", params.get("serialEditBtnAccess"));
+
+    List<EgovMap> timePick = commonService.selectTimePick();
+    model.addAttribute( "timePick", timePick );
 
     return "services/bs/hsEditPop";
 

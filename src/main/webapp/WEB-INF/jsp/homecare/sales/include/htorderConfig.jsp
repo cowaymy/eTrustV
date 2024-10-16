@@ -72,6 +72,19 @@
     <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 4}">checked</c:if> disabled/><span><spring:message code="sal.text.week4" /></span></label>
     </td>
 </tr>
+<tr>
+  <th scope="row"><spring:message code="service.title.AppointmentDate" /></th>
+  <td colspan="5">
+    <ul class="btns">
+      <li>
+        <p class="btn_grid">
+          <a href="#" onClick=
+            "{Common.popupDiv('/sales/order/getHSAppointmentDate.do', { ordNo : '${orderDetail.basicInfo.ordNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a>
+        </p>
+       </li>
+      </ul>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

@@ -673,4 +673,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
   public List<EgovMap> selectPvRebateList(Map<String, Object> params) {
     return orderDetailMapper.selectPvRebateList(params);
   }
+
+  @Override
+  public List<EgovMap> getHsAppntDateInfo(Map<String, Object> params) {
+    return orderDetailMapper.getHsAppntDateInfo(params);
+  }
 }
