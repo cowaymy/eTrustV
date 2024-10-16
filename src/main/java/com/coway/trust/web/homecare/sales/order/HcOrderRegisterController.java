@@ -564,7 +564,7 @@ public class HcOrderRegisterController {
 	    return ResponseEntity.ok(message);
 	  }
 
-	/*  @RequestMapping(value = "/selectLastHcAcCmbOrderInfo.do", method = RequestMethod.GET)
+   @RequestMapping(value = "/selectLastHcAcCmbOrderInfo.do", method = RequestMethod.GET)
     public ResponseEntity<String> selectLastHcAcCmbOrderInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
       logger.debug("[HcOrderRegisterController - selectLastHcAcCmbOrderInfo] params : {}", params);
       String prvOrdOriNorRntFee = hcOrderRegisterService.selectLastHcAcCmbOrderInfo(params);
@@ -582,5 +582,5 @@ public class HcOrderRegisterController {
       int cmbOrdStus =  hcOrderRegisterService.chkHcAcCmbOrdStus(params);
       message.setCode(Integer.toString(cmbOrdStus));
       return ResponseEntity.ok(message);
-    }*/
+    }
 }

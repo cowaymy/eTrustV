@@ -121,5 +121,5 @@ public interface htOrderDetailMapper {
 
 	void updateCSMembershipStatus(Map<String, Object> params);
 
-  //  List<EgovMap> selectHcAcBulkOrderDtlList(Map<String, Object> params);
+  List<EgovMap> selectHcAcBulkOrderDtlList(Map<String, Object> params);
 }

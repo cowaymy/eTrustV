@@ -138,8 +138,8 @@
                            , V1.ORD_PV - NVL(V14.TOTAL_REBATE,0) AS ORD_PV_FINAL
                            , V2.TNB_ACC_NO
                            <!-- Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024-->
-                           <!-- , CASE WHEN (SELECT COUNT(*) FROM SAL0349D WHERE SUB_ORD_ID =  V2.SALES_ORD_ID) != 0 THEN 'TRUE'
-                                     ELSE 'FALSE' END AS IS_ACI_COMBO-->
+                           , CASE WHEN (SELECT COUNT(*) FROM SAL0349D WHERE SUB_ORD_ID =  V2.SALES_ORD_ID) != 0 THEN 'TRUE'
+                                     ELSE 'FALSE' END AS IS_ACI_COMBO
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID

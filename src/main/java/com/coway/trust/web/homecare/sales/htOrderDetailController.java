@@ -388,7 +388,7 @@ public class htOrderDetailController {
 	     return ResponseEntity.ok(rsltList);
 	   }
 
-	/*   @RequestMapping(value = "/hcAirCondBulkOrderSearchPop.do")
+	   @RequestMapping(value = "/hcAirCondBulkOrderSearchPop.do")
      public String airCondBulkOrderSearchPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
        model.put("ordId", params.get("ordId"));
        model.put("pckBindingId", params.get("pckBindingId"));
@@ -401,5 +401,5 @@ public class htOrderDetailController {
       List<EgovMap> orderList = htOrderDetailService.selectHcAcBulkOrderDtlList(params);
       return ResponseEntity.ok(orderList);
     }
-   */
+
 }

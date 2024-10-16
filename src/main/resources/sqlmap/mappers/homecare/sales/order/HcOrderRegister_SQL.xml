@@ -492,11 +492,10 @@
       JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
       WHERE A.MAIN_ORD_ID = #{ordId}
       AND A.DISB = 0
-   <!--
-    <if test='subOrdId != null and subOrdId !=""'>
+      <if test='subOrdId != null and subOrdId !=""'>
         AND A.SUB_ORD_ID = #{subOrdId}
       </if>
-    -->
+
   </select>
 
       <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
@@ -546,12 +545,10 @@
         WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 587 ) <!-- DEV = 602 -->
     </select>
 
-    <!--
     <select id="getLastHcAcComboOrdId" parameterType="Map" resultType="string">
         SELECT MAX(SUB_ORD_ID) AS ORDER_ID
         FROM SAL0349D
-        WHERE
-         DISB = 0
+        WHERE DISB = 0
         <if test = 'ordId != null and ordId !=0'>
             AND MAIN_ORD_ID = #{ordId}
         </if>
@@ -571,8 +568,8 @@
                     WHERE A.MAIN_ORD_ID = #{ordId}
                     AND A.DISB = 0
                     AND B.STUS_CODE_ID = '4'
-                     AND A.CHG_SEQ >= 1
+                     AND A.CHG_SEQ <![CDATA[>= 1]]>
                     AND B.CUST_ID = #{custId}
           )
-       </select> -->
+       </select>
 </mapper>
