@@ -22,12 +22,15 @@
                 ,DET.VEN_NAME VENDOR_NAME
             FROM SAL0413M MAIN
             LEFT JOIN SAL0414D DET ON DET.CONT_TRACK_ID = MAIN.CONT_TRACK_ID
-            LEFT JOIN SYS0013M CONTTYPE ON CONTTYPE.CODE_ID = MAIN.CONT_TYPE AND CONTTYPE.CODE_MASTER_ID = 577
+            LEFT JOIN SYS0013M CONTTYPE ON CONTTYPE.CODE_ID = MAIN.CONT_TYPE AND CONTTYPE.CODE_MASTER_ID = 600
             LEFT JOIN SYS0047M CRTUSER ON CRTUSER.USER_ID = MAIN.CRT_USER_ID
             WHERE MAIN.STATUS <![CDATA[ <> ]]> 8
 
             <if test="sContractRefNo != null and sContractRefNo != '' ">
 	            AND UPPER(MAIN.CONT_REF_NO) LIKE UPPER(#{sContractRefNo}) || '%'
+	        </if>
+            <if test="sRunNo != null and sRunNo != '' ">
+	            AND UPPER(MAIN.CONT_TRACK_NO) LIKE UPPER(#{sRunNo}) || '%'
 	        </if>
             <if test="_createdFrDt != null and _createdFrDt != '' and _createdEndDt != null and _createdEndDt != '' ">
 	            AND to_date(TO_CHAR(MAIN.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') between TO_DATE(#{_createdFrDt},'DD/MM/YYYY') and  TO_DATE(#{_createdEndDt},'DD/MM/YYYY')

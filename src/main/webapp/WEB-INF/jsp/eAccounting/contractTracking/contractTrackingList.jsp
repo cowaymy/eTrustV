@@ -6,7 +6,7 @@ var myGridID;
 var cnfmDt, joinDt, agmtStus, memberid;
 
 $(document).ready(function() {
-	doGetComboData('/common/selectCodeList.do', { groupCode : '577' , orderValue : 'code_id'}, '', 'listContractType', 'M','fn_multiCombo');
+	doGetComboData('/common/selectCodeList.do', { groupCode : '600' , orderValue : 'code_id'}, '', 'listContractType', 'M','fn_multiCombo');
 
 	createAUIGrid();
 
@@ -203,8 +203,8 @@ function fn_contractRaw() {
                             <option value="82">Expired</option>
 			            </select>
 			        </td>
-                    <th scope="row" ></th>
-                    <td></td>
+                    <th scope="row">Automatic Module Generated Running No.</th>
+                    <td><input type="text" placeholder="" class="w100p" id="sRunNo" name="sRunNo" /></td>
                     <th scope="row" ></th>
                     <td></td>
                 </tr>
