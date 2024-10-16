@@ -890,4 +890,30 @@ public class EpapanApiController {
 
 			return ResponseEntity.ok( attachList);
 		}
+
+	  @ApiOperation(value = "updateHcPreOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/updateHcPreOrder", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> updateHcPreOrder(@RequestBody PreOrderVO preOrderVO) throws Exception {
+
+		    SessionVO sessionVO = new SessionVO();
+		    sessionVO.setUserId(preOrderVO.getCrtUserId());
+		    hcPreOrderService.updateHcPreOrder(preOrderVO, sessionVO);
+
+			String msg = "Order successfully saved.<br />";
+
+			if(!"".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getMatPreOrdId()))) {
+				msg += "Pre Order Number(Mattres) : " + preOrderVO.getHcOrderVO().getMatPreOrdId() + "<br />";
+			}
+			if(!"".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId()))) {
+				msg += "Pre Order Number(Frame) : "   + preOrderVO.getHcOrderVO().getFraPreOrdId() + "<br />";
+			}
+			msg += "Application Type : " + HomecareConstants.cnvAppTypeName(preOrderVO.getAppTypeId()) + "<br />";
+
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(msg);
+
+			return ResponseEntity.ok(message);
+		}
 }
