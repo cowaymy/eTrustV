@@ -1704,6 +1704,13 @@
            		}
          	}
         });
+
+        Common.ajaxSync("GET", "/sales/order/chkACBulkCancel.do",{salesOrderId : ORD_ID}, function(result) {
+  	      if (result != 0) {
+  	    	  var msg = '<spring:message code="sal.title.text.reqCancConfrm60Install" />';
+  	    	  Common.alert('<spring:message code="sal.title.text.reqCancConfrm" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+  	      }
+        });
     }
 
     function fn_isLock(pMsg, tabNm) {
@@ -3104,7 +3111,7 @@
 <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+<%-- <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
 <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->

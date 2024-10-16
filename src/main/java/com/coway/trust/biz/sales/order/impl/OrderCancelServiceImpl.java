@@ -737,4 +737,9 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 		return message;
 	}
 
+  @Override
+  public Integer chkACBulkCancel(Map<String, Object> params) {
+    return orderCancelMapper.chkACBulkCancel(params);
+  }
+
 }

@@ -1785,4 +1785,18 @@
         AND DISB = 0
    </update>
 
+   <select id="chkACBulkCancel" parameterType="Map" resultType="integer">
+    SELECT COUNT(*)
+    FROM SAL0349D T1
+    LEFT JOIN SAL0046D T2 ON T1.SUB_ORD_ID = T2.SALES_ORD_ID
+    LEFT JOIN SAL0001D T3 ON T1.SUB_ORD_ID = T3.SALES_ORD_ID
+    WHERE
+    T1.DISB = 0
+    AND T1.SUB_ORD_ID = #{salesOrderId}
+    AND T3.STUS_CODE_ID = 4
+    <![CDATA[
+    AND T2.INSTALL_DT <= SYSDATE - 60
+    ]]>
+  </select>
+
 </mapper>

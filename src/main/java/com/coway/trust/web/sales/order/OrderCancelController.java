@@ -567,4 +567,13 @@ public class OrderCancelController {
     return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/chkACBulkCancel.do", method = RequestMethod.GET)
+  public ResponseEntity<Integer> chkACBulkCancel(@RequestParam Map<String, Object> params) {
+    logger.debug("=============================chkACBulkCancel.do=====================================");
+    logger.debug("= PARAMS = " + params.toString());
+    logger.debug("=============================chkACBulkCancel.do=====================================");
+    Integer result = orderCancelService.chkACBulkCancel(params);
+    return ResponseEntity.ok(result);
+  }
+
 }

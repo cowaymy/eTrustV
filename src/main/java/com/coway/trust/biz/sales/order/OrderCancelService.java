@@ -137,4 +137,6 @@ public interface OrderCancelService {
 
   ReturnMessage prSendEmail(Map<String, Object> params);
 
+  Integer chkACBulkCancel(Map<String, Object> params);
+
 }
