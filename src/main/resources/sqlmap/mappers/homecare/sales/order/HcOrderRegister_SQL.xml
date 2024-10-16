@@ -499,38 +499,69 @@
   </select>
 
       <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
-	        SELECT
-	             A.SALES_ORD_ID,
-	             A.SALES_ORD_NO,
-	             A.REF_NO REF_NO,
-	             A.APP_TYPE_ID,
-	             C.CODE_NAME APP_TYPE,
-	             D.STK_CODE,
-	             D.STK_DESC,
-	             A.STUS_CODE_ID,
-	             E.NAME STATUS,
-	             TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
-                 TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT
-	        FROM SAL0001D A
-	        LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
-	        LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
-	        LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
-	        LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
-	        LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4
-	        WHERE A.CUST_ID = #{custId}
-	        <if test='salesOrdNo != null and salesOrdNo !=""'>
-	              AND A.SALES_ORD_NO = #{salesOrdNo}
-	          </if>
-	        GROUP BY
-	             A.SALES_ORD_ID,
-			     A.SALES_ORD_NO,
-			     A.APP_TYPE_ID,
-			     C.CODE_NAME,
-			     D.STK_CODE,
-			     D.STK_DESC,
-			     A.STUS_CODE_ID,
-			     E.NAME,
-			     A.REF_NO
+		SELECT
+		     AA.SALES_ORD_ID,
+		     AA.SALES_ORD_NO,
+		     AA.REF_NO REF_NO,
+		     AA.APP_TYPE_ID,
+		     C.CODE_NAME APP_TYPE,
+		     D.STK_CODE,
+		     D.STK_DESC,
+		     AA.STUS_CODE_ID,
+		     E.NAME STATUS,
+		     AA.SRV_START_DT,
+		     AA.SRV_EXPR_DT
+		FROM (
+		    SELECT <!-- STATUS = COM, VALID MEMBERSHIP-->
+		         A.SALES_ORD_ID,
+		         A.SALES_ORD_NO,
+		         A.REF_NO REF_NO,
+		         A.APP_TYPE_ID,
+		         TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
+		         TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT,
+		         B.ITM_STK_ID,
+		         A.STUS_CODE_ID
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		    LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4 AND F.SRV_EXPR_DT  <![CDATA[>]]>  SYSDATE
+		    WHERE A.CUST_ID = #{custId}
+		          AND A.APP_TYPE_ID NOT IN (144,145,5764) <!-- EDUCATION, FREE TRIAL, AUXILIARY!-->
+		          AND A.STUS_CODE_ID = 4
+		          AND F.SRV_EXPR_DT IS NOT NULL
+		    <if test='salesOrdNo != null and salesOrdNo !=""'>
+                  AND A.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+		    GROUP BY
+		         A.SALES_ORD_ID,
+		         A.SALES_ORD_NO,
+		         A.APP_TYPE_ID,
+		         A.REF_NO,
+		         B.ITM_STK_ID,
+		         A.STUS_CODE_ID
+
+		    UNION
+
+		    SELECT <!-- STATUS = ACT-->
+		         A.SALES_ORD_ID,
+		         A.SALES_ORD_NO,
+		         A.REF_NO REF_NO,
+		         A.APP_TYPE_ID,
+		         '-' SRV_START_DT,
+		         '-' SRV_EXPR_DT,
+		         B.ITM_STK_ID,
+		         A.STUS_CODE_ID
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		    WHERE A.CUST_ID = #{custId}
+		          AND A.APP_TYPE_ID NOT IN (144,145,5764) <!-- EDUCATION, FREE TRIAL, AUXILIARY!-->
+		          AND A.STUS_CODE_ID = 1
+		    <if test='salesOrdNo != null and salesOrdNo !=""'>
+                  AND A.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+		)AA
+		LEFT JOIN SYS0013M C ON C.CODE_ID = AA.APP_TYPE_ID
+		LEFT JOIN SYS0026M D ON D.STK_ID = AA.ITM_STK_ID
+		LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = AA.STUS_CODE_ID
 	  </select>
 
 	  <select id="selectSeda4PromoList" parameterType="Map" resultType="egovMap">

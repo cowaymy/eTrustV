@@ -2637,60 +2637,86 @@
     </select>
 
     <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
-        SELECT T1.SALES_ORD_NO
-             , T4.CODE_NAME AS APP_TYPE
-             , T3.STK_CODE
-             , T3.STK_DESC
-             , T1.PROMO_ID
-             , T1.SALES_ORD_ID
-             , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
-                   WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
-                   = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID)
-                   BUS_TYPE
-             , T1.REF_NO REF_NO
-          FROM SAL0001D T1
-          JOIN SAL0002D T2
-            ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
-          JOIN SYS0026M T3
-            ON T3.STK_ID = T2.ITM_STK_ID
-          JOIN SYS0013M T4
-            ON T4.CODE_ID = T1.APP_TYPE_ID
-         WHERE T1.CUST_ID = #{custId}
-           AND T1.STUS_CODE_ID = '4'
-           <choose>
-              <when test='isHomecare == "1" '>
-              <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
-              AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                          WHERE AA.CODE = BB.CODE
-                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
-              </when>
-              <when test='isHomecare == "2" '>
-              and T3.STK_CTGRY_ID = '55'
-               AND T1.SALES_ORD_ID IN (
-            SELECT A.SALES_ORD_ID
-    FROM
-                   SAL0070D A
-                   JOIN
-                   (
-                   SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
-                   ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
-                    JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
-                     JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
-                     JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID AND D.STK_CTGRY_ID = 55
-                    WHERE
-                   A.RENT_INST_TYPE_ID = 159
-                   AND B.CUST_ID = #{custId}
-<!--                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6 -->
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) > 0
-            )
-              </when>
-              <otherwise>
-               <!-- and T4.CODE <![CDATA[<> ]]> 'AUX' -->
-              AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                          WHERE AA.CODE = BB.CODE
-                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
-              </otherwise>
-           </choose>
+	    SELECT
+		    A.SALES_ORD_NO
+		    , A.APP_TYPE
+		    , A.STK_CODE
+		    , A.STK_DESC
+		    , A.PROMO_ID
+		    , A.SALES_ORD_ID
+		    , A.BUS_TYPE
+		    , A.REF_NO
+        FROM(
+	        SELECT T1.SALES_ORD_NO
+	             , T4.CODE_NAME AS APP_TYPE
+	             , T3.STK_CODE
+	             , T3.STK_DESC
+	             , T1.PROMO_ID
+	             , T1.SALES_ORD_ID
+	             , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
+	                   WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
+	                   = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID)
+	                   BUS_TYPE
+	             , T1.REF_NO REF_NO
+	             , T1.EX_TRADE
+	             , T1.APP_TYPE_ID
+	             , T1.CUST_ID
+	          FROM SAL0001D T1
+	          JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+	          JOIN SYS0026M T3 ON T3.STK_ID = T2.ITM_STK_ID
+	          JOIN SYS0013M T4 ON T4.CODE_ID = T1.APP_TYPE_ID
+	          WHERE T1.CUST_ID = #{custId}
+	            AND T1.STUS_CODE_ID = '4'
+	           <choose>
+	              <when test='isHomecare == "1" '>
+	                AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+	                                                          WHERE AA.CODE = BB.CODE
+	                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+	              </when>
+	              <when test='isHomecare == "2" '>
+	                AND T3.STK_CTGRY_ID = '55'
+	                AND T1.SALES_ORD_ID IN (
+	                        SELECT A.SALES_ORD_ID
+	                        FROM SAL0070D A
+		                    JOIN
+		                    (
+			                   SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
+			                ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
+	                        JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
+	                        JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+	                        JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID AND D.STK_CTGRY_ID = 55
+	                        WHERE
+	                            A.RENT_INST_TYPE_ID = 159
+	                   AND B.CUST_ID = #{custId}
+	                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) > 0
+	                )
+	              </when>
+	              <otherwise>
+	                AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+	                                                                WHERE AA.CODE = BB.CODE
+	                                                                AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+	              </otherwise>
+	           </choose>
+           ) A
+           LEFT JOIN SAL0095D B ON B.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+		   LEFT JOIN PAY0024D C ON C.SRV_MEM_ID = B.SRV_MEM_ID
+           LEFT JOIN SAL0071D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+           LEFT JOIN PAY0022D E ON E.RENT_SO_ID = A.SALES_ORD_ID AND A.APP_TYPE_ID = 66 <!-- RENTAL -->
+           LEFT JOIN PAY0035D F ON F.TRADE_SO_ID = A.SALES_ORD_ID AND A.APP_TYPE_ID IN (67,68,1412,142,143) <!-- OUT,INST,OUTPLUS,SPONSOR,SERVICE-->
+           WHERE B.SRV_STUS_CODE_ID = 4 <!-- COMPLETED MEMBERSHIP-->
+                AND A.EX_TRADE <![CDATA[<> ]]> 1 <!-- DOES THIS ORDER PERFORM EXTRADE BEFORE? -->
+                AND A.APP_TYPE_ID NOT IN (144, 145) <!-- EDUCATION, FREE TRAIL IS DISABLED FOR EXTRADE -->
+                AND D.STUS_CODE_ID IN ( 'REG','INV','SUS') <!-- RENTAL, ONLY REG,INV,SUS ALLOW TO EXTRADE -->
+           GROUP BY A.SALES_ORD_NO
+		      , A.APP_TYPE
+		      , A.STK_CODE
+		      , A.STK_DESC
+		      , A.PROMO_ID
+		      , A.SALES_ORD_ID
+		      , A.BUS_TYPE
+		      , A.REF_NO
+		      , A.CUST_ID
+		HAVING NVL(SUM(C.SRV_MEM_AMT),0) <![CDATA[<= ]]> 0 AND NVL(SUM(E.RENT_AMT),0) <![CDATA[<= ]]> 0 AND NVL(SUM(F.TRADE_AMT),0) <![CDATA[<= ]]> 0
     </select>
 
   <select id="selectProductComponent" parameterType="Map" resultType="egovMap">

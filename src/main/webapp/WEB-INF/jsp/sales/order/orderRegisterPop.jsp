@@ -107,7 +107,7 @@
             $('#btnPwpNo').addClass("blind");
             $('#isReturnExtradeChkBox').removeClass("blind");
             $('#relatedNo').removeClass("blind");
-            $('#btnRltdNo').removeClass("blind");
+//                   $('#btnRltdNo').removeClass("blind");
         }
     });
 
