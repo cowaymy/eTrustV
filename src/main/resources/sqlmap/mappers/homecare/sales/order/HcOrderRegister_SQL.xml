@@ -196,10 +196,10 @@
 
     <select id="getPrevOrdSeq" parameterType="String" resultType="int">
         SELECT A.ORD_SEQ_NO
-		FROM HMC0011D A
-		JOIN SAL0001D B ON A.ORD_SEQ_NO = B.BNDL_ID
-		JOIN API0005D C ON C.ECOMM_ORD_ID = B.ECOMM_ORD_ID AND B.SALES_ORD_ID = C.SALES_ORD_ID
-		WHERE C.BNDL_ID = #{bndlId}
+        FROM HMC0011D A
+        JOIN SAL0001D B ON A.ORD_SEQ_NO = B.BNDL_ID
+        JOIN API0005D C ON C.ECOMM_ORD_ID = B.ECOMM_ORD_ID AND B.SALES_ORD_ID = C.SALES_ORD_ID
+        WHERE C.BNDL_ID = #{bndlId}
     </select>
 
     <select id="getPrevOrdId" parameterType="Map" resultType="int">
@@ -492,79 +492,49 @@
       JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
       WHERE A.MAIN_ORD_ID = #{ordId}
       AND A.DISB = 0
-      <if test='subOrdId != null and subOrdId !=""'>
+   <!--
+    <if test='subOrdId != null and subOrdId !=""'>
         AND A.SUB_ORD_ID = #{subOrdId}
       </if>
-
+    -->
   </select>
 
       <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
-		SELECT
-		     AA.SALES_ORD_ID,
-		     AA.SALES_ORD_NO,
-		     AA.REF_NO REF_NO,
-		     AA.APP_TYPE_ID,
-		     C.CODE_NAME APP_TYPE,
-		     D.STK_CODE,
-		     D.STK_DESC,
-		     AA.STUS_CODE_ID,
-		     E.NAME STATUS,
-		     AA.SRV_START_DT,
-		     AA.SRV_EXPR_DT
-		FROM (
-		    SELECT <!-- STATUS = COM, VALID MEMBERSHIP-->
-		         A.SALES_ORD_ID,
-		         A.SALES_ORD_NO,
-		         A.REF_NO REF_NO,
-		         A.APP_TYPE_ID,
-		         TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
-		         TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT,
-		         B.ITM_STK_ID,
-		         A.STUS_CODE_ID
-		    FROM SAL0001D A
-		    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
-		    LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4 AND F.SRV_EXPR_DT  <![CDATA[>]]>  SYSDATE
-		    WHERE A.CUST_ID = #{custId}
-		          AND A.APP_TYPE_ID NOT IN (144,145,5764) <!-- EDUCATION, FREE TRIAL, AUXILIARY!-->
-		          AND A.STUS_CODE_ID = 4
-		          AND F.SRV_EXPR_DT IS NOT NULL
-		    <if test='salesOrdNo != null and salesOrdNo !=""'>
+            SELECT
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.REF_NO REF_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME APP_TYPE,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME STATUS,
+                 TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
+                 TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT
+            FROM SAL0001D A
+            LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+            LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+            LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
+            LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+            LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4
+            WHERE A.CUST_ID = #{custId}
+            <if test='salesOrdNo != null and salesOrdNo !=""'>
                   AND A.SALES_ORD_NO = #{salesOrdNo}
-            </if>
-		    GROUP BY
-		         A.SALES_ORD_ID,
-		         A.SALES_ORD_NO,
-		         A.APP_TYPE_ID,
-		         A.REF_NO,
-		         B.ITM_STK_ID,
-		         A.STUS_CODE_ID
+              </if>
+            GROUP BY
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME,
+                 A.REF_NO
+      </select>
 
-		    UNION
-
-		    SELECT <!-- STATUS = ACT-->
-		         A.SALES_ORD_ID,
-		         A.SALES_ORD_NO,
-		         A.REF_NO REF_NO,
-		         A.APP_TYPE_ID,
-		         '-' SRV_START_DT,
-		         '-' SRV_EXPR_DT,
-		         B.ITM_STK_ID,
-		         A.STUS_CODE_ID
-		    FROM SAL0001D A
-		    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
-		    WHERE A.CUST_ID = #{custId}
-		          AND A.APP_TYPE_ID NOT IN (144,145,5764) <!-- EDUCATION, FREE TRIAL, AUXILIARY!-->
-		          AND A.STUS_CODE_ID = 1
-		    <if test='salesOrdNo != null and salesOrdNo !=""'>
-                  AND A.SALES_ORD_NO = #{salesOrdNo}
-            </if>
-		)AA
-		LEFT JOIN SYS0013M C ON C.CODE_ID = AA.APP_TYPE_ID
-		LEFT JOIN SYS0026M D ON D.STK_ID = AA.ITM_STK_ID
-		LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = AA.STUS_CODE_ID
-	  </select>
-
-	  <select id="selectSeda4PromoList" parameterType="Map" resultType="egovMap">
+      <select id="selectSeda4PromoList" parameterType="Map" resultType="egovMap">
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
         SELECT DISTINCT T2.PROMO_ID CODE
                  , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
@@ -576,10 +546,12 @@
         WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 587 ) <!-- DEV = 602 -->
     </select>
 
+    <!--
     <select id="getLastHcAcComboOrdId" parameterType="Map" resultType="string">
         SELECT MAX(SUB_ORD_ID) AS ORDER_ID
         FROM SAL0349D
-        WHERE DISB = 0
+        WHERE
+         DISB = 0
         <if test = 'ordId != null and ordId !=0'>
             AND MAIN_ORD_ID = #{ordId}
         </if>
@@ -599,8 +571,8 @@
                     WHERE A.MAIN_ORD_ID = #{ordId}
                     AND A.DISB = 0
                     AND B.STUS_CODE_ID = '4'
-                     AND A.CHG_SEQ <![CDATA[>= 1]]>
+                     AND A.CHG_SEQ >= 1
                     AND B.CUST_ID = #{custId}
           )
-       </select>
+       </select> -->
 </mapper>
