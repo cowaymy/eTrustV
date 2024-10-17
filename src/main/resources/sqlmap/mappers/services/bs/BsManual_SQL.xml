@@ -3417,8 +3417,8 @@
 		,RESULT_IS_ADJ
 		,HS_CHKLIST
 		,OLD_SETL_DT
-		,NEXT_APPNT_DT
-		,NEXT_APPNT_TM
+<!-- 		,NEXT_APPNT_DT
+		,NEXT_APPNT_TM -->
 		)
 		values
 		(
@@ -3446,8 +3446,8 @@
 		,#{ResultIsAdjust}
 		,#{instChklstCheckBox}
 		,TO_DATE(#{SettleDate},'DD/MM/YYYY')
-		,#{nextAppntDt}
-		,#{nextAppntTime}
+<!-- 		,#{nextAppntDt}
+		,#{nextAppntTime} -->
 		)
 	</insert>
 
@@ -3466,9 +3466,9 @@
 		SYSDATE,
 		RESULT_UPD_USER_ID = #{ResultCreator},
 		HS_CHKLIST =
-		#{instChklstCheckBox},
-		NEXT_APPNT_DT = #{nextAppntDt},
-		NEXT_APPNT_TM = #{nextAppntTime}
+		#{instChklstCheckBox}
+<!-- 		, NEXT_APPNT_DT = #{nextAppntDt}
+		, NEXT_APPNT_TM = #{nextAppntTime} -->
 		WHERE SCHDUL_ID = #{ScheduleID}
 		AND RESULT_IS_CURR
 		= 1
