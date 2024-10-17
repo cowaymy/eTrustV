@@ -810,7 +810,9 @@ var myDetailGridData = null;
     if ($('#nextAppntTime').val() == "") {
     	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
     	return false;
-    }else{
+    }
+
+    if ($('#nextAppntTime').val() != ""){
     	var timeString = $('#nextAppntTime').val();
 
     	// Parse the time using JavaScript's Date object
@@ -838,6 +840,7 @@ var myDetailGridData = null;
     	    console.log("Formatted Time: " + result);
     	}else {
     	    Common.alert("Invalid time format. Please enter a valid time.");
+    	    return false;
     	}
     }
 

@@ -395,11 +395,11 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
 
     }
 
-     if ($('#nextAppntDt').val() == "") {
+     if ($('#nextAppntDate').val() == "") {
      	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
            return false;
        }else{
-       	var dateString = $('#nextAppntDt').val();  // Example: "27/12/2024"
+       	var dateString = $('#nextAppntDate').val();  // Example: "27/12/2024"
 
        	// Split the date by '/'
        	var dateParts = dateString.split('/');
@@ -417,7 +417,9 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
        if ($('#nextAppntTime').val() == "") {
            Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
            return false;
-       }else{
+       }
+
+       if ($('#nextAppntTime').val() != "") {
        	 var timeString = $('#nextAppntTime').val();
 
             // Parse the time using JavaScript's Date object
@@ -445,8 +447,9 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
                 console.log("Formatted Time: " + result);
        }else {
            Common.alert("Invalid time format. Please enter a valid time.");
+           return false;
        	}
-       }
+     }
 
      var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
 
@@ -564,6 +567,7 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
  <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
  <input type="hidden" value="${hsDefaultInfo.srvRem}" id="srvRem" name="hidSrvRem"/>
  <input type="hidden" id='nextAppointmentTime' name='nextAppointmentTime' />
+ <input type="hidden" id='nextAppntDt' name='nextAppntDt' />
  <input type="hidden" value="WEB" id="srcform" name="srcform"/>
 <header class="pop_header"><!-- pop_header start -->
 
@@ -654,7 +658,7 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
     </td>
     <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
 	<td>
-	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
+	<input type="text" id ="nextAppntDate" name = "nextAppntDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />
                   <ul>

@@ -610,7 +610,9 @@ var myDetailGridData = null;
     if ($('#nextAppntTime').val() == "") {
     	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
     	return false;
-    }else{
+    }
+
+    if ($('#nextAppntTime').val() != ""){
     	var timeString = $('#nextAppntTime').val();
 
     	// Parse the time using JavaScript's Date object
@@ -638,6 +640,7 @@ var myDetailGridData = null;
     	    console.log("Formatted Time: " + result);
     	}else {
     	    Common.alert("Invalid time format. Please enter a valid time.");
+    	    return false;
     	}
     }
 
@@ -847,15 +850,15 @@ var myDetailGridData = null;
     </select>
     </td>
    <!--  <th scope="row" style="width: 244px; ">Collection Code<span class="must">*</span></th> -->
-    <td>
+   <!--  <td> -->
    <%--  <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
         <option value="0" selected>Choose One</option>
             <c:forEach var="list" items="${cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>
     </select> --%>
-    </td>
-    <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+    <!-- </td> -->
+    <th scope="row" style="width: 186px;"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
 	<td>
 	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${basicinfo.nextAppntDt}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">

@@ -604,11 +604,11 @@
             return false;
         }
     */
-    if ($('#nextAppntDt').val() == "") {
+    if ($('#nextAppntDate').val() == "") {
   	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
         return false;
     }else{
-    	var dateString = $('#nextAppntDt').val();  // Example: "27/12/2024"
+    	var dateString = $('#nextAppntDate').val();  // Example: "27/12/2024"
 
     	// Split the date by '/'
     	var dateParts = dateString.split('/');
@@ -626,11 +626,12 @@
     if ($('#nextAppntTime').val() == "") {
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
         return false;
-    }else{
-    	 var timeString = $('#nextAppntTime').val();
+    }
 
-         // Parse the time using JavaScript's Date object
-         var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
+    if ($('#nextAppntTime').val() != "") {
+    var timeString = $('#nextAppntTime').val();
+    // Parse the time using JavaScript's Date object
+    var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
          if (timeParts) {
              var hours = parseInt(timeParts[1]);
              var minutes = parseInt(timeParts[2]);
@@ -654,6 +655,7 @@
              console.log("Formatted Time: " + result);
     }else {
         Common.alert("Invalid time format. Please enter a valid time.");
+        return false;
     	}
     }
 
@@ -871,6 +873,7 @@ function fnSerialSearchResult(data) {
  <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
  <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
  <input type="hidden" id='nextAppointmentTime' name='nextAppointmentTime' />
+ <input type="hidden" id='nextAppntDt' name='nextAppntDt' />
  <input type="hidden" value="${hsDefaultInfo.srvRem}" id="srvRem" name="hidSrvRem"/>
   <input type="hidden" value="WEB" id="srcform" name="srcform"/>
 <header class="pop_header"><!-- pop_header start -->
@@ -953,7 +956,7 @@ function fnSerialSearchResult(data) {
 	</td>
 	<th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
 	<td>
-	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
+	<input type="text" id ="nextAppntDate" name = "nextAppntDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />
                   <ul>
