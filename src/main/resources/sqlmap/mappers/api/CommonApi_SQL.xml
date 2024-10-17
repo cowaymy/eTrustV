@@ -10,10 +10,13 @@
  -->
 
 <select id="checkAccess" parameterType="Map" resultType="egovMap">
-    SELECT *
-    FROM API0001M
-        WHERE API_USER_STUS_ID = 1
-        AND API_KEY = #{key}
+  SELECT *
+  FROM API0001M
+  WHERE API_USER_STUS_ID = 1
+  AND API_KEY = #{key}
+  <if test="userName != null and userName != ''">
+    AND API_USER_NAME = #{userName}
+  </if>
 </select>
 
 <insert id="insertApiAccessLog" parameterType="Map">

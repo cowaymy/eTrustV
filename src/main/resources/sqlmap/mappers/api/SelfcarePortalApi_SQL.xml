@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.SelfcarePortalApiMapper">
+
+  <select id="checkOrderNo" parameterType="Map" resultType="egovMap">
+    SELECT * FROM SAL0001D WHERE SALES_ORD_NO = #{orderNo}
+  </select>
+  
+  <select id="selectProductDetail" parameterType="Map" resultType="egovMap">
+  	SELECT DISTINCT
+	    PRODUCT_TOTAL_OUTSTANDING,
+	    MEMBERSHIP_OUTSTANDING,
+	    NVL(TO_CHAR(TO_DATE(INSTALL_DT, 'YYYY/MM/DD HH24:MI:SS'),'DD/MM/YYYY'),'-') INSTALL_DATE,
+	    NVL(TO_CHAR(TO_DATE(LAST_SERVICE_DT, 'YYYY/MM/DD HH24:MI:SS'),'DD/MM/YYYY'),'-') LAST_SERVICE_DATE,
+	    SALES_ORD_NO,
+	    APP_TYPE,
+	    STK_CODE,
+	    SERIAL_NO,
+	    STK_DESC,
+	    STK_CTGRY_CODE PROD_CAT,
+	    ADD1,
+	    ADD2,
+	    POSTCODE POST_CODE,
+	    AREA AREA_NAME,
+	    STATE_NAME,
+	    BILLER_CODE,
+	    JOMPAY_REF,
+	    MONTHLY_RENTAL,
+	    CODY_CONTACT,
+	    CODY_NAME,
+	    MAIL_CNT_NAME,
+	    MAIL_CNT_TELM MAIL_CNT_TEL_NO,
+	    MAIL_CNT_EMAIL,
+	    MAIL_CNT_NRIC,
+	    ACCOUNT_CODE,
+	    SERVICE_MODE,
+	    UN_BILL_AMT
+	FROM
+	    CP1013V
+	WHERE
+	    SALES_ORD_NO = #{orderNo}
+    </select>
+    
+    <select id="selectMembershipDetail" parameterType="Map" resultType="egovMap">
+  	SELECT DISTINCT
+	    MEMBERSHIP_TYPE,
+	    NVL(TO_CHAR(TO_DATE(MEMBERSHIP_START_DATE, 'YYYY/MM/DD HH24:MI:SS'),'DD/MM/YYYY'),'-') MEMBERSHIP_START_DATE,
+	    NVL(TO_CHAR(TO_DATE(MEMBERSHIP_EXPIRY_DATE, 'YYYY/MM/DD HH24:MI:SS'),'DD/MM/YYYY'),'-') MEMBERSHIP_EXPIRY_DATE,
+	    MEMBERSHIP_FEE,
+	    MEMBERSHIP_YEAR,
+	    IS_CHARGE
+	FROM
+	    CP1025V
+	WHERE
+	    SALES_ORD_NO = #{orderNo}
+    </select>
+    
+    <select id="selectServiceList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+            BS_NO ,
+            CODY_NO ,
+            CODY_NAME ,
+            NVL(TO_CHAR(TO_DATE(LAST_SERVICE_DATE, 'YYYY/MM/DD HH24:MI:SS'),'DD/MM/YYYY'),'-') LAST_SERVICE_DATE ,
+            SRV_TYPE AS SERVICE_MODE
+         FROM CP1014V
+         WHERE ORD_NO = #{orderNo}
+    </select>
+    
+    <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT
+            STK_CODE ,
+            STK_DESC AS FILTER_NAME ,
+            SRV_FILTER_PRV_CHG_DT AS LAST_CHANGE_DATE,
+            SRV_FILTER_PRV_NEXT_DT AS NEXT_CHANGE_DATE
+         FROM CP1027V
+         WHERE SALES_ORD_NO = #{orderNo}
+	</select>
+	
+	<select id="selectUpcomingServices" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT
+			A.MONTH||'/'|| A.YEAR AS SVC_MONTH, 
+			B.SRV_TYPE AS SVC_MODE,
+			CASE WHEN B.SRV_TYPE = 'SS' THEN 'DHL eCommerce' ELSE C.MEM_CODE END AS COMPLETED_BY,
+			CASE WHEN B.SRV_TYPE = 'SS' THEN A.NO ELSE '-' END AS TRACKING_NO
+		FROM SVC0008D A
+		JOIN SAL0090D B ON B.SRV_SO_ID = A.SALES_ORD_ID AND B.SRV_STUS_ID = 1 AND B.SRV_BS_GEN = 1 
+		JOIN ORG0001D C ON A.CODY_ID = C.MEM_ID
+		JOIN SAL0001D D ON D.SALES_ORD_ID = B.SRV_SO_ID
+		WHERE A.STUS_CODE_ID = 1 AND TO_DATE(A.MONTH || '/' || A.YEAR, 'MM/YYYY') >= FN_GET_FIRST_DAY_MONTH(SYSDATE)
+		AND D.SALES_ORD_NO = #{orderNo}
+	</select>
+
+</mapper>

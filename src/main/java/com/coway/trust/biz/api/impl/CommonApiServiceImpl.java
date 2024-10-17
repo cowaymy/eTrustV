@@ -254,4 +254,35 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
 
   }
 
+    @Override
+    public EgovMap verifyBasicAPIAuth( HttpServletRequest request )
+    {
+        String message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
+        int code = Integer.parseInt( AppConstants.FAIL );
+        String userName = request.getHeader( "userName" );
+        String key = request.getHeader( "key" );
+        EgovMap reqPrm = new EgovMap();
+        reqPrm.put( "userName", userName );
+        reqPrm.put( "key", key );
+        EgovMap access = new EgovMap();
+        access = commonApiMapper.checkAccess( reqPrm );
+        if ( access == null )
+        {
+            code = AppConstants.RESPONSE_CODE_UNAUTHORIZED;
+            message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+        }
+        else
+        {
+            code = AppConstants.RESPONSE_CODE_SUCCESS;
+            message = AppConstants.RESPONSE_DESC_SUCCESS;
+            apiUserId = access.get( "apiUserId" ).toString();
+            sysUserId = access.get( "sysUserId" ).toString();
+            reqPrm.put( "apiUserId", apiUserId );
+            reqPrm.put( "sysUserId", sysUserId );
+        }
+        reqPrm.put( "code", code );
+        reqPrm.put( "message", message );
+        return reqPrm;
+    }
+
 }
