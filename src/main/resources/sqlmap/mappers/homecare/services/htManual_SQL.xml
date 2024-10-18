@@ -3720,8 +3720,8 @@ SELECT * FROM
             ,RESULT_IS_CURR
             ,RESULT_MTCH_ID
             ,RESULT_IS_ADJ
-<!--             ,NEXT_APPNT_DT
-			,NEXT_APPNT_TM -->
+            ,NEXT_APPNT_DT
+			,NEXT_APPNT_TM
             )
             values
             (
@@ -3747,8 +3747,8 @@ SELECT * FROM
             ,#{ResultIsCurrent}
             ,#{ResultMatchID}
             ,#{ResultIsAdjust}
-<!--             ,#{nextAppntDt}
-		    ,#{nextAppntTime} -->
+            ,#{nextAppntDt}
+		    ,#{nextAppntTime}
             )
           </insert>
 
@@ -3762,8 +3762,8 @@ SELECT * FROM
                 RESULT_STOCK_USE = #{ResultStockUse},
 				RESULT_UPD_DT =		SYSDATE,
 				RESULT_UPD_USER_ID = #{ResultCreator}
-<!-- 				, NEXT_APPNT_DT = #{nextAppntDt}
-				, NEXT_APPNT_TM = #{nextAppntTime} -->
+ 				, NEXT_APPNT_DT = #{nextAppntDt}
+				, NEXT_APPNT_TM = #{nextAppntTime}
             WHERE SCHDUL_ID = #{ScheduleID}
             AND RESULT_IS_CURR = 1
           </update>
