@@ -98,7 +98,7 @@ public interface HcOrderRegisterMapper {
 	public int chkPromoCboMst(Map<String, Object> params);
 	public int chkPromoCboSub(Map<String, Object> params);
 	public int chkCanMapCnt(Map<String, Object> params);
-  public int chkQtyHcAcCmbByGroup(Map<String, Object> params);
+    public int chkQtyHcAcCmbByGroup(Map<String, Object> params);
 	public int chkCmbGrpMaxQty(Map<String, Object> params);
 	public int chkQtyCmbOrd(Map<String, Object> params);
 
@@ -111,4 +111,6 @@ public interface HcOrderRegisterMapper {
 	List<EgovMap> selectSeda4PromoList(Map<String, Object> params);
 	String getLastHcAcComboOrdId(Map<String, Object> params);
 	public int chkHcAcCmbOrdStus(Map<String, Object> params);
+	public int chkNextHcAcComboOrdGrp(Map<String, Object> params);
+	public int chkCmbGrpByPromoIdProd(Map<String, Object> params);
 }

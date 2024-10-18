@@ -67,17 +67,19 @@ public interface HcOrderRegisterService {
 
 	List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
 
-  int chkQtyCmbOrd(Map<String, Object> params);
+    int chkQtyCmbOrd(Map<String, Object> params);
 
-  List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
+    List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
 
-  List<EgovMap> selectPwpOrderNoList(Map<String, Object> params);
+    List<EgovMap> selectPwpOrderNoList(Map<String, Object> params);
 
-  EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException;
+    EgovMap checkPwpOrderId(Map<String, Object> params) throws ParseException;
 
-  List<EgovMap> selectSeda4PromoList(Map<String, Object> params);
+    List<EgovMap> selectSeda4PromoList(Map<String, Object> params);
 
-  public String selectLastHcAcCmbOrderInfo(Map<String, Object> params);
+    public String selectLastHcAcCmbOrderInfo(Map<String, Object> params);
 
-  int chkHcAcCmbOrdStus(Map<String, Object> params);
+    int chkHcAcCmbOrdStus(Map<String, Object> params);
+
+    int chkSeqGrpAcCmbPromoPerOrd(Map<String, Object> params);
 }

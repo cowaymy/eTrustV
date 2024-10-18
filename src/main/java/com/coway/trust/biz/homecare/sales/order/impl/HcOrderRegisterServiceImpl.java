@@ -455,4 +455,24 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
       int cmbOrdStus = hcOrderRegisterMapper.chkHcAcCmbOrdStus(params);
       return cmbOrdStus;
    }
+
+  @Override
+  public int chkSeqGrpAcCmbPromoPerOrd(Map<String, Object> params) {
+	 logger.info("[HcOrderRegisterServiceImpl - chkSeqGrpAcCmbPromoPerOrd] params :: {} " + params);
+
+     int chkNextHcAcCmbByPromo;
+     int chkSelectedPromotionPerProdCmbGrp;
+
+      // check the current homecare aic-con combo group by promotion
+      chkNextHcAcCmbByPromo = hcOrderRegisterMapper.chkNextHcAcComboOrdGrp(params);
+      
+      // check selected promotion per product combo group
+      chkSelectedPromotionPerProdCmbGrp = hcOrderRegisterMapper.chkCmbGrpByPromoIdProd(params);
+      
+      if(chkSelectedPromotionPerProdCmbGrp > chkNextHcAcCmbByPromo){
+    	return 99;
+      }
+      return 0;
+   }
+
 }

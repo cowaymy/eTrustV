@@ -583,4 +583,20 @@ public class HcOrderRegisterController {
       message.setCode(Integer.toString(cmbOrdStus));
       return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/chkSeqGrpAcCmbPromoPerOrd.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> chkSeqGrpAcCmbPromoPerOrd(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+      ReturnMessage message = new ReturnMessage();
+
+      logger.debug("==================/chkSeqGrpAcCmbPromoPerOrd=======================");
+      logger.debug("[HcOrderRegisterController - chkSeqGrpAcCmbPromoPerOrd] params : {}", params);
+      logger.debug("==================/chkSeqGrpAcCmbPromoPerOrd=======================");
+
+      int seqGrpCmbPromo =  hcOrderRegisterService.chkSeqGrpAcCmbPromoPerOrd(params);
+      logger.info("[HcOrderRegisterController - chkSeqGrpAcCmbPromoPerOrd] seqGrpCmbPromo :: " + seqGrpCmbPromo);
+
+      message.setCode(Integer.toString(seqGrpCmbPromo));
+      return ResponseEntity.ok(message);
+    }
 }
