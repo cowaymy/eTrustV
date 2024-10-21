@@ -323,135 +323,132 @@
 
 
 
-          <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
-SELECT * FROM (
-SELECT DISTINCT
-    C.CUST_ID CUST_ID,
-    C.NAME NAME,
-    SOM.SRV_ORD_NO CCS_ORD_NO,
-    SO.SALES_ORD_NO SALES_ORD_NO ,
-    HSM.MONTH,
-    HSM.YEAR YEAR,
-    HSM.MONTH
-    || '/'
-    || HSM.YEAR HS_DATE,
-    HSM.NO,
-    HSM.CODY_ID,
-    HSM.STUS_CODE_ID STUS_CODE_ID,
-    EXTENT2.CODE CODE,
-    SAL023.AREA_ID,
-    (
-        SELECT
-            MEM_CODE
-        FROM
-            ORG0001D ME
-        WHERE
-            1 = 1
-            AND   ME.MEM_ID = HSM.CODY_ID
-    ) AS C5,
-    SOM.SRV_ORD_ID AS SALES_ORD_ID,
-    SOM.BRNCH_ID AS BRNCH_ID,
-    SAL023.ADDR_DTL AS ADDRESS,
-    (CASE WHEN (SOM.SRV_TYPE = 6861)THEN SOM.SALES_PROD_SZ ELSE NULL END) AS STK_DESC,
-    SCP.SRV_PRD_DUR HS_FREQ,
-    (
-        CASE
-            WHEN (
-                EXTRACT(MONTH FROM LAST_BRM.SETL_DT) = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE,-1) )
-                AND EXTRACT(YEAR FROM LAST_BRM.SETL_DT) = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-1) )
-            ) THEN STUS.CODE
-            ELSE 'X'
-        END
-    ) PREV_MTH_HS_STATUS,
-    STUS1.CODE HT_STATUS,
-    MEM2.DEPT_CODE ,
-    HSM.SCHDUL_ID ,
-    MEM3.MEM_CODE HT_MGR_CODE ,
-    BRNCH.CODE HT_BRNCH_CODE ,
-     MEM4.DEPT_CODE DEPT_CODE_1 ,
-    AP.CODE AS APPTYPE ,
-    SOM.SALES_PROD_SZ,
-    SRT.CODE AS SRV_TYPE,
-    SOM.SRV_TYPE AS SERVICE_TYPE,
-    SOM.UNIT_TYPE
-FROM
-    SAL0225D SOM
-    LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
-                                      AND  hsm.YEAR = #{myBSYear}
-                                      AND  hsm.MONTH = #{myBSMonth}
-    LEFT JOIN SAL0001D SO ON SOM.SRV_ORD_ID = SO.SALES_ORD_ID AND SO.BNDL_ID IS NOT NULL
-    LEFT JOIN SAL0029D C ON SOM.CUST_ID = C.CUST_ID
-    LEFT JOIN SYS0013M CORPTYPE ON C.CORP_TYPE_ID = CORPTYPE.CODE_ID
-    LEFT JOIN SYS0038M EXTENT2 ON HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID
-    LEFT JOIN SAL0045D I ON I.SALES_ORD_ID = SOM.SRV_ORD_ID
-    LEFT JOIN SAL0023D SAL023 ON I.ADD_ID = SAL023.CUST_ADD_ID
-    LEFT JOIN SVC0006D LAST_BRM ON LAST_BRM.SCHDUL_ID = HSM.SCHDUL_ID
-    LEFT JOIN SAL0090D SC ON SC.SRV_SO_ID = SOM.SRV_ORD_ID
-    LEFT JOIN SAL0088D SCP ON SC.SRV_CONFIG_ID = SCP.SRV_CONFIG_ID
-    LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = LAST_BRM.RESULT_STUS_CODE_ID
-    LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = SC.SRV_CODY_ID
-    LEFT JOIN ORG0005D MEM2 ON MEM.MEM_ID = MEM2.MEM_ID
-    LEFT JOIN SYS0038M STUS1 ON STUS1.STUS_CODE_ID = MEM.STUS
-    LEFT JOIN ORG0001D MEM3 ON MEM2.MEM_UP_ID = MEM3.MEM_ID
-    LEFT JOIN ORG0005D MEM4 ON MEM3.MEM_ID = MEM4.MEM_ID
-    LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
-    LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
-    LEFT JOIN SYS0013M AP ON SOM.APP_TYPE_ID = AP.CODE_ID
-    LEFT JOIN SYS0013M SRT ON SOM.SRV_TYPE = SRT.CODE_ID
-    WHERE 1 = 1
+  <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+      SELECT DISTINCT C.CUST_ID CUST_ID,
+                               C.NAME NAME,
+                               SOM.SRV_ORD_NO CCS_ORD_NO,
+                               SO.SALES_ORD_NO SALES_ORD_NO ,
+                               HSM.MONTH,
+                               HSM.YEAR YEAR,
+                               HSM.MONTH || '/' || HSM.YEAR HS_DATE,
+                               HSM.NO,
+                               HSM.CODY_ID,
+                               HSM.STUS_CODE_ID STUS_CODE_ID,
+                               EXTENT2.CODE CODE,
+                               SAL023.AREA_ID,
+                               ( SELECT MEM_CODE
+                                 FROM ORG0001D ME
+                                 WHERE 1 = 1
+                                     AND ME.MEM_ID = HSM.CODY_ID
+                               ) AS C5,
+                               SOM.SRV_ORD_ID AS SALES_ORD_ID,
+                               SOM.BRNCH_ID AS BRNCH_ID,
+                               SAL023.ADDR_DTL AS ADDRESS,
+                               (CASE WHEN (SOM.SRV_TYPE = 6861)THEN SOM.SALES_PROD_SZ ELSE NULL END) AS STK_DESC,
+                               SCP.SRV_PRD_DUR HS_FREQ,
+                               (CASE WHEN ( EXTRACT(MONTH FROM LAST_BRM.SETL_DT) = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE,-1) ) AND EXTRACT(YEAR FROM LAST_BRM.SETL_DT) = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-1) ) ) THEN STUS.CODE
+                               ELSE 'X' END ) PREV_MTH_HS_STATUS,
+                                 STUS1.CODE HT_STATUS,
+                               MEM2.DEPT_CODE ,
+                               HSM.SCHDUL_ID ,
+                               MEM3.MEM_CODE HT_MGR_CODE ,
+                               BRNCH.CODE HT_BRNCH_CODE ,
+                               MEM4.DEPT_CODE DEPT_CODE_1 ,
+                               AP.CODE AS APPTYPE ,
+                               SOM.SALES_PROD_SZ,
+                               SRT.CODE AS SRV_TYPE,
+                               SOM.SRV_TYPE AS SERVICE_TYPE,
+                               SOM.UNIT_TYPE
+      FROM SAL0225D SOM
+      LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
+                                         AND hsm.YEAR = #{myBSYear}
+                                         AND hsm.MONTH = #{myBSMonth}
+      <![CDATA[
+        AND NVL(HSM.TYPE_ID, 0) <> ( SELECT CODE_ID
+                                                     FROM SYS0013M
+                                                     WHERE CODE_MASTER_ID = 34
+                                                         AND CODE = 'MSS'
+        )
+      ]]>
 
-                 <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)
-                                ]]>
-<if test="userType == '3'.toString()">
+      LEFT JOIN SAL0001D SO ON SOM.SRV_ORD_ID = SO.SALES_ORD_ID AND SO.BNDL_ID IS NOT NULL
+      LEFT JOIN SAL0029D C ON SOM.CUST_ID = C.CUST_ID
+      LEFT JOIN SYS0013M CORPTYPE ON C.CORP_TYPE_ID = CORPTYPE.CODE_ID
+      LEFT JOIN SYS0038M EXTENT2 ON HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID
+      LEFT JOIN SAL0045D I ON I.SALES_ORD_ID = SOM.SRV_ORD_ID
+      LEFT JOIN SAL0023D SAL023 ON I.ADD_ID = SAL023.CUST_ADD_ID
+      LEFT JOIN SVC0006D LAST_BRM ON LAST_BRM.SCHDUL_ID = HSM.SCHDUL_ID
+      LEFT JOIN SAL0090D SC ON SC.SRV_SO_ID = SOM.SRV_ORD_ID
+      LEFT JOIN SAL0088D SCP ON SC.SRV_CONFIG_ID = SCP.SRV_CONFIG_ID
+      LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = LAST_BRM.RESULT_STUS_CODE_ID
+      LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = SC.SRV_CODY_ID
+      LEFT JOIN ORG0005D MEM2 ON MEM.MEM_ID = MEM2.MEM_ID
+      LEFT JOIN SYS0038M STUS1 ON STUS1.STUS_CODE_ID = MEM.STUS
+      LEFT JOIN ORG0001D MEM3 ON MEM2.MEM_UP_ID = MEM3.MEM_ID
+      LEFT JOIN ORG0005D MEM4 ON MEM3.MEM_ID = MEM4.MEM_ID
+      LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
+      LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
+      LEFT JOIN SYS0013M AP ON SOM.APP_TYPE_ID = AP.CODE_ID
+      LEFT JOIN SYS0013M SRT ON SOM.SRV_TYPE = SRT.CODE_ID
+      WHERE 1 = 1
+
+      <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)  ]]>
+
+      <if test="userType == '3'.toString()">
         AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
-</if>
-) A WHERE 1 = 1
+      </if>
+    ) A WHERE 1 = 1
 
-                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
-                                      AND A.CCS_ORD_NO = #{ManuaSalesOrder}
-                               </if>
+    <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
+      AND A.CCS_ORD_NO = #{ManuaSalesOrder}
+    </if>
 
-                               <if test="ManuaSalesOrderNo != null and ManuaSalesOrderNo != ''">
-                                      AND A.SALES_ORD_NO = #{ManuaSalesOrderNo}
-                               </if>
+    <if test="ManuaSalesOrderNo != null and ManuaSalesOrderNo != ''">
+      AND A.SALES_ORD_NO = #{ManuaSalesOrderNo}
+    </if>
 
-                                  <if test="ManualCustomer != null and ManualCustomer != ''">
-                                      AND A.CUST_ID = #{ManualCustomer}
-                               </if>
-                               <if test="manualCustomer != null and manualCustomer != ''">
-                                      AND A.CUST_ID = #{manualCustomer}
-                               </if>
+    <if test="ManualCustomer != null and ManualCustomer != ''">
+      AND A.CUST_ID = #{ManualCustomer}
+    </if>
 
-                                      <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
-                                      AND ( A.HT_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6))
-                               </if>
-                                <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
-                                     AND A.DEPT_CODE_1 =  SUBSTR(#{cmdCdManager1},1,7)
-                               </if>
+    <if test="manualCustomer != null and manualCustomer != ''">
+      AND A.CUST_ID = #{manualCustomer}
+    </if>
 
-                                <if test="saleOrdListSp != null and saleOrdListSp != '' ">
-                                    AND A.SALES_ORD_NO IN
-                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                    </foreach>
-                                </if>
-                                <if test="serviceTypeIdHsManua != null and serviceTypeIdHsManua != '' ">
-				                    AND A.SERVICE_TYPE = #{serviceTypeIdHsManua}
-				                </if>
-				                <if test='listProductIdHsManua != null and listProductIdHsManua != ""'>
-				                    AND A.SALES_PROD_SZ IN
-				                   <foreach item="item" collection="listProductIdHsManua" index="index" open="(" separator="," close=")">
-				                        #{item}
-				                  </foreach>
-				                </if>
-				                <if test='unitTypeIdHsManua != null and unitTypeIdHsManua != ""'>
-				                    AND A.UNIT_TYPE IN
-				                   <foreach item="item" collection="unitTypeIdHsManua" index="index" open="(" separator="," close=")">
-				                        #{item}
-				                   </foreach>
-				                </if>
+    <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
+      AND ( A.HT_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6))
+    </if>
 
-          </select>
+    <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
+      AND A.DEPT_CODE_1 =  SUBSTR(#{cmdCdManager1},1,7)
+    </if>
+
+    <if test="saleOrdListSp != null and saleOrdListSp != '' ">
+      AND A.SALES_ORD_NO IN
+      <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="serviceTypeIdHsManua != null and serviceTypeIdHsManua != '' ">
+      AND A.SERVICE_TYPE = #{serviceTypeIdHsManua}
+    </if>
+
+    <if test='listProductIdHsManua != null and listProductIdHsManua != ""'>
+      AND A.SALES_PROD_SZ IN
+      <foreach item="item" collection="listProductIdHsManua" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test='unitTypeIdHsManua != null and unitTypeIdHsManua != ""'>
+      AND A.UNIT_TYPE IN
+     <foreach item="item" collection="unitTypeIdHsManua" index="index" open="(" separator="," close=")">
+       #{item}
+     </foreach>
+    </if>
+  </select>
 
 <!-- cyc 2017- Nov- 13 -->
  <select id="selectHsConfigList" parameterType="Map" resultType="egovMap">
