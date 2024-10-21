@@ -575,7 +575,7 @@
      </select>
 
      <select id="chkNextHcAcComboOrdGrp" parameterType="Map" resultType="int">
-            SELECT CASE WHEN MAX(COMBO_GRP) <![CDATA[<= 1]]>
+            SELECT CASE WHEN MAX(COMBO_GRP) <![CDATA[<= 2]]>
                                THEN MAX(COMBO_GRP) + 1
                                ELSE MAX(COMBO_GRP) END AS NEXT_COMBO_GRP
             FROM SAL0349D
