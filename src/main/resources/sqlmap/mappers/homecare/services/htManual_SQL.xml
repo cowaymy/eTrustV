@@ -3744,7 +3744,7 @@ SELECT * FROM
             ,#{ResultIsCurrent}
             ,#{ResultMatchID}
             ,#{ResultIsAdjust}
-            ,#{nextAppntDt}
+            ,TO_DATE(#{nextAppntDt},'DD/MM/YYYY')
 		    ,#{nextAppntTime}
             )
           </insert>
@@ -3759,7 +3759,7 @@ SELECT * FROM
                 RESULT_STOCK_USE = #{ResultStockUse},
 				RESULT_UPD_DT =		SYSDATE,
 				RESULT_UPD_USER_ID = #{ResultCreator}
- 				, NEXT_APPNT_DT = #{nextAppntDt}
+ 				, NEXT_APPNT_DT = TO_DATE( NVL(#{nextAppntDt},'01/01/1900'), 'DD/MM/YYYY')
 				, NEXT_APPNT_TM = #{nextAppntTime}
             WHERE SCHDUL_ID = #{ScheduleID}
             AND RESULT_IS_CURR = 1

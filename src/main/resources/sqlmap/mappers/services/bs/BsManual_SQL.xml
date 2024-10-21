@@ -430,7 +430,7 @@
         AND( SCP.SRV_PRD_ID IS NULL OR SCP.SRV_PRD_ID = ( SELECT MAX(SRV_PRD_ID)
                                                                                        FROM SAL0088D
                                                                                        WHERE SRV_CONFIG_ID = SC.SRV_CONFIG_ID
-        AND SRV_PRD_STUS_ID = 1)) 
+        AND SRV_PRD_STUS_ID = 1))
         <!-- 20180320 Edit by Sun HanYi scp.srv_prd_stus_id -->
         AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
         AND MEM.MEM_ID(+) = HSM.CODY_ID
@@ -447,39 +447,39 @@
                                                           AND CODE = 'MSS'
           )
         ]]>
-        
+
         <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
           AND hsm.YEAR(+) = #{myBSYear}
           AND hsm.MONTH(+) = #{myBSMonth}
         </if>
-        
+
         <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
           AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
         </if>
-       
+
         <if test="ManualCustomer != null and ManualCustomer != ''">
            AND C.CUST_ID = #{ManualCustomer}
         </if>
-        
+
         <if test="manualCustomer != null and manualCustomer != ''">
           AND C.CUST_ID = #{manualCustomer}
         </if>
-        
+
         <if test="saleOrdListSp != null and saleOrdListSp != '' ">
           AND SOM.SALES_ORD_NO IN
           <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
             #{item}
           </foreach>
         </if>
-        
+
         <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
           AND SYS064.CODY_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6)
         </if>
-        
+
         <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
           AND SYS064.CODY_MANGR_USER_ID = SUBSTR(#{cmdCdManager1},1,7)
         </if>
-        
+
         <if test="userType == '3'.toString()">
           AND MEM.MEM_CODE IN ( SELECT MEM_CODE
                                               FROM ORG0001D
@@ -3427,7 +3427,7 @@
 		,#{ResultIsAdjust}
 		,#{instChklstCheckBox}
 		,TO_DATE(#{SettleDate},'DD/MM/YYYY')
- 		,#{nextAppntDt}
+ 		,TO_DATE(#{nextAppntDt},'DD/MM/YYYY')
 		,#{nextAppntTime}
 		)
 	</insert>
@@ -3448,7 +3448,7 @@
 		RESULT_UPD_USER_ID = #{ResultCreator},
 		HS_CHKLIST =
 		#{instChklstCheckBox}
- 		, NEXT_APPNT_DT = #{nextAppntDt}
+ 		, NEXT_APPNT_DT = TO_DATE(NVL(#{nextAppntDt},'01/01/1900'), 'DD/MM/YYYY')
 		, NEXT_APPNT_TM = #{nextAppntTime}
 		WHERE SCHDUL_ID = #{ScheduleID}
 		AND RESULT_IS_CURR
