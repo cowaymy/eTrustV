@@ -893,7 +893,7 @@ console.log("preOrderList");
             <option value="">Choose One</option>
             <option value="1">Web</option>
             <option value="0">Mobile Apps</option>
-            <option value="2">Epapan</option>
+            <option value="2">Coway World</option>
         </select>
     </td>
     <th scope="row"><spring:message code='sales.promoCd'/></th>
