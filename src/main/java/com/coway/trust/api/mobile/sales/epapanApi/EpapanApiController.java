@@ -916,4 +916,12 @@ public class EpapanApiController {
 
 			return ResponseEntity.ok(message);
 		}
+
+	  @ApiOperation(value = "selectPwpOrderNoList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectPwpOrderNoList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectPwpOrderNoList(@ModelAttribute EpapanApiMagicAddressForm param) {
+	    List<EgovMap> result = hcOrderRegisterService.selectPwpOrderNoList(EpapanApiMagicAddressForm.createMap(param));
+	    return ResponseEntity.ok(result);
+	  }
+
 }
