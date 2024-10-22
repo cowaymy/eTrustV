@@ -768,13 +768,13 @@
 
 
         $('#brandType').change(function() {
-        	var brandTypeIdx = $("#brandType option:selected").index();
-        	console.log('brandTypeIdx : ' + brandTypeIdx);
+        	var brandTypeVal = $("#brandType option:selected").val();
 
-        	if(brandTypeIdx == '11'){
+        	if(brandTypeVal.trim().toUpperCase() == 'OTHER'){
         		  $('#otherBrand').removeAttr("disabled");
         	}
         	else{
+        		$('#otherBrand').val('');
         		 $('#otherBrand').prop("disabled", true);
         	}
 
@@ -984,9 +984,13 @@
         var vServiceType = "";
         var vUnitType = "";
 
-        var brandTypeIdx = $("#brandType option:selected").index();
-        if (brandTypeIdx == 11 ){
+        var brandTypeVal = $("#brandType option:selected").val();
+        if (brandTypeVal.trim().toUpperCase() == "OTHER"){
         	vProdBrand = $('#otherBrand').val();
+
+        	if(vProdBrand.trim() == ""){
+            	vProdBrand = $('#brandType').val();
+        	}
         }
         else{
         	vProdBrand = $('#brandType').val();

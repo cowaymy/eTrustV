@@ -1618,8 +1618,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         vo_1261.setAsChargesTypeId("1261");
         vo_1261.setAsChargeQty("1");
         vo_1261.setSparePartId("0");
-        vo_1261.setSparePartCode((String) svc0004dmap.get("productCode"));
-        vo_1261.setSparePartName((String) svc0004dmap.get("productName"));
+        //rename for  part name
+        vo_1261.setSparePartCode(CommonUtils.nvl(svc0004dmap.get("productCode")) == "" ? "LABOUR CHARGE" : CommonUtils.nvl(svc0004dmap.get("productCode")));
+        vo_1261.setSparePartName(CommonUtils.nvl(svc0004dmap.get("productName")) == "" ? "LABOUR CHARGE" : CommonUtils.nvl(svc0004dmap.get("productName")));
         vo_1261.setSparePartSerial((String) svc0004dmap.get("serialNo"));
         vo_1261.setSpareCharges(Double.toString(t_SpareCharges)); //
         vo_1261.setSpareTaxes(Double.toString(t_SpareTaxes));

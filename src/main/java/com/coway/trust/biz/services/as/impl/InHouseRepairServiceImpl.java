@@ -1616,8 +1616,8 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
         vo_1261.setAsChargesTypeId("1261");
         vo_1261.setAsChargeQty("1");
         vo_1261.setSparePartId("0");
-        vo_1261.setSparePartCode((String) SVC0109Dmap.get("productCode"));
-        vo_1261.setSparePartName((String) SVC0109Dmap.get("productName"));
+        vo_1261.setSparePartCode(CommonUtils.nvl(SVC0109Dmap.get("productCode")) == "" ? "LABOUR CHARGE" : CommonUtils.nvl(SVC0109Dmap.get("productCode")));
+        vo_1261.setSparePartName(CommonUtils.nvl(SVC0109Dmap.get("productName")) == "" ? "LABOUR CHARGE" : CommonUtils.nvl(SVC0109Dmap.get("productName")));
         vo_1261.setSparePartSerial((String) SVC0109Dmap.get("serialNo"));
         vo_1261.setSpareCharges(Double.toString(t_SpareCharges)); //
         vo_1261.setSpareTaxes(Double.toString(t_SpareTaxes));
