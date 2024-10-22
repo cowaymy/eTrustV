@@ -2,6 +2,7 @@ package com.coway.trust.api.mobile.sales.epapanApi;
 
 
 import java.io.File;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -922,6 +923,13 @@ public class EpapanApiController {
 	  public ResponseEntity<List<EgovMap>> selectPwpOrderNoList(@ModelAttribute EpapanApiMagicAddressForm param) {
 	    List<EgovMap> result = hcOrderRegisterService.selectPwpOrderNoList(EpapanApiMagicAddressForm.createMap(param));
 	    return ResponseEntity.ok(result);
+	  }
+
+	  @ApiOperation(value = "checkPwpOrderId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/checkPwpOrderId", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> checkPwpOrderId(@ModelAttribute EpapanApiMagicAddressForm param) throws ParseException {
+	    EgovMap RESULT = hcOrderRegisterService.checkPwpOrderId(EpapanApiMagicAddressForm.createMap(param));
+	    return ResponseEntity.ok(RESULT);
 	  }
 
 }
