@@ -9,8 +9,7 @@
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
     var CATE_ID  = "14";
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"},{"codeId": "5764","codeName": "Auxiliary"}];
-    var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
-    /* ,{"codeId": "133","codeName": "Non Coverage Area"} */
+    var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"},{"codeId": "133","codeName": "Non Coverage Area"}];
     var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
     var myFileCaches = {};
     var recentGridItem = null;
@@ -200,10 +199,7 @@
     }
 
     function fn_setDetail(gridID, rowIdx){
-		var pageAuth = {
-			funcUserDefine6 : '${PAGE_AUTH.funcUserDefine6}'
-		};
-        Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId"), pageAuth : JSON.stringify(pageAuth) }, null, true, "_divPreOrdModPop");
+        Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
     }
 
     function fn_setOptGrpClass() {
@@ -225,17 +221,16 @@
             $('#view_sofNo').text(sofNo);
             $('#view_custIc').text(custNric);
 
-            /* || stusId == 133 */
-            if(stusId == 4 || stusId == 10 ){
+            if(stusId == 4 || stusId == 10 || stusId == 133){
                 Common.alert("Completed eKey-in cannot be edited.");
                 isValid = false;
             }
 
-           /*  var isBlackArea = AUIGrid.getCellValue(listGridID, selectRowIdx, "instStatus");
+            var isBlackArea = AUIGrid.getCellValue(listGridID, selectRowIdx, "instStatus");
             if(isBlackArea == "Yes"){
                $('#_action').val("133").attr('selected','selected');
                $('#_action').attr('disabled','disabled').addClass("disabled");
-             } */
+             }
         } else {
            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
            isValid = false;
@@ -327,8 +322,8 @@
           , {headerText : "StatusId",                 dataField : "stusId",           visible  : false}
           , {headerText : "preOrdId",               dataField : "preOrdId",       visible  : false}
           , {headerText : "updDt",                  dataField : "updDt",   visible : false}
-/*           ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width : '10%'}
- */        ];
+          ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width : '10%'}
+        ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -384,8 +379,8 @@
           , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
           , { headerText : "Installation State", dataField : "state",  editable : false, width : 300}
-/*           ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width: 200}
- */        ];
+          ,{ headerText : "Blacklisted Area", dataField: "instStatus", editable : false, width: 200}
+        ];
 
         //그리드 속성 설정
         var excelGridPros = {
@@ -557,11 +552,11 @@
                         }
                     }
 
-            /*         var isBlackArea = AUIGrid.getCellValue(listGridID, selIdx, "instStatus");
+                    var isBlackArea = AUIGrid.getCellValue(listGridID, selIdx, "instStatus");
                     if(isBlackArea == 'Yes'){
                         Common.alert("The area is not under coverage for the product categories. Convert Order is not allow.");
                         return false;
-                    } */
+                    }
 
                     Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
 
