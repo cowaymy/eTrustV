@@ -199,7 +199,10 @@
     }
 
     function fn_setDetail(gridID, rowIdx){
-        Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
+		var pageAuth = {
+			funcUserDefine6 : '${PAGE_AUTH.funcUserDefine6}'
+		};
+        Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId"), pageAuth : JSON.stringify(pageAuth) }, null, true, "_divPreOrdModPop");
     }
 
     function fn_setOptGrpClass() {
