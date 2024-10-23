@@ -126,7 +126,6 @@ function fn_setdetail(result){
     var errorM = "";
 	var date = new Date();
 
-    //var year = date.getFullYear() % 1000;
     var year = date.getFullYear();
     var month = date.getMonth()+1;
     var day = date.getDate();
@@ -140,12 +139,9 @@ function fn_setdetail(result){
     if(month.length>2){
     	month = month.replace('0','');
     }
-    //alert(result.list1.c3.substr(0,5));
-    //alert(year+'/'+month);
-    //alert(result.list1.stusCodeId);
-	if(result.list1.stusCodeId==4){
-		if(result.list1.c3==null){
-			//$("#lblErrorMessage").text(result.list1.salesOrdNo);
+
+	if (result.list1.stusCodeId == 4) {
+		if (result.list1.c3 == null) {
 			$("#btnReverse").hide();
 			$("#lblErrorMessage").show();
 			$("#lblErrorMessage").text("* No installation record found for this order.");
@@ -153,39 +149,32 @@ function fn_setdetail(result){
 		}
 
 		// or 조건은 ??  무조건 통과 ;;;
-		//if("${SESSION_INFO.userId}" != "19872" || "${SESSION_INFO.userId}" != "40785" || "${SESSION_INFO.userId}" != "517"){
-		 	//if(result.list1.c3==(day+'/'+month+'/'+year)){
-		    if (result.list1.insMonYr == (month+year)) {
-				console.log(result.list1.c3);
-				console.log(result.list1.insMonYr);
-				errorM = "";
-				$("#lblErrorMessage").text(errorM);
-				$("#lblErrorMessage").hide();
-				$("#btnReverse").show();
-				$("#divResultReversal").show();
-			}else{
-			    console.log(result.list1.c3);
-			    console.log(result.list1.insMonYr);
-				errorM ="* This installation is past day. Reversal is disallowed.";
-				$("#lblErrorMessage").show();
-				$("#lblErrorMessage").text(errorM);
-				$("#btnReverse").hide();
-	            $("#divResultReversal").hide();
-			}
-		//}
-
-		// master_id = 10, 67:Outright
-		if(result.list1.codeId == '67'){
-
-			errorM =   errorM + " OutRight Type is disallowed." ;
-			  $("#lblErrorMessage").show();
-	          $("#lblErrorMessage").text(errorM);
-	          $("#btnReverse").hide();
-	          $("#divResultReversal").hide();
-
+	    if (result.list1.insMonYr == (month.toString() + year.toString())) {
+			console.log(result.list1.c3);
+			errorM = "";
+			$("#lblErrorMessage").text(errorM);
+			$("#lblErrorMessage").hide();
+			$("#btnReverse").show();
+			$("#divResultReversal").show();
+		} else {
+		    console.log(result.list1.c3);
+			errorM ="* This installation is past month. Reversal is disallowed.";
+			$("#lblErrorMessage").show();
+			$("#lblErrorMessage").text(errorM);
+			$("#btnReverse").hide();
+            $("#divResultReversal").hide();
 		}
 
-	}else{
+		// master_id = 10, 67:Outright
+		if (result.list1.codeId == '67') {
+			errorM =   errorM + " OutRight Type is disallowed." ;
+			$("#lblErrorMessage").show();
+			$("#lblErrorMessage").text(errorM);
+			$("#btnReverse").hide();
+			$("#divResultReversal").hide();
+		}
+
+	} else {
         $("#lblErrorMessage").show();
 		$("#lblErrorMessage").text("* Only installation complete result can be reverse.");
 		$("#btnReverse").hide();
