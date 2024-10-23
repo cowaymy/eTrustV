@@ -804,82 +804,106 @@
         }
      </select>
 
-    <!-- Search Good Receipt Popup List -->
-    <select id="goodReceiptPopList" parameterType="Map" resultType="egovMap">
-        /* com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper.goodReceiptPopList */
-        SELECT ROWNUM rnum , T.* FROM (
-            SELECT l47.REQST_NO
-                     , l48.REQST_NO_ITM
-                     , l55.DELVRY_NO
-                     , l55.DELVRY_NO_ITM
-                     , l47.TRNSC_TYPE
-                     , l47.TRNSC_TYPE_DTL
-                     , l54.DELVRY_DT
-                     , l54.DELVRY_GI_DT
-                     , l54.DELVRY_GR_DT
-                     , l48.ITM_CODE
-                     , l48.ITM_NAME
-                     , l55.DELVRY_QTY
-                     , l48.UOM
-                     , l47.RCIV_CDC_RDC
-                     , NVL(l55.RCIPT_QTY , 0) DELVRY_GI_CMPLT
-                     , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
-                               WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_FT_CHK = 'Y'  THEN 'Y' ELSE 'N' END
-                               WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-                        ELSE 'N' END SERIAL_CHK
-                      , (
-                SELECT COUNT(1)
-                  FROM (
-                                 SELECT ROW_NUMBER() OVER (PARTITION BY L99.SERIAL_NO ORDER BY L99.SCAN_NO DESC ) AS RN
-                                    , L99.REQST_NO
-                                    , L99.REQST_NO_ITM
-                                    , L99.DELVRY_NO
-                                    , L99.DELVRY_NO_ITM
-                                    , L99.ITM_CODE
-                                    , L99.SCAN_STUS_CODE
-                                    , L99.IO_TYPE
-                         FROM LOG0099D L99, LOG0055D L55
-                         WHERE L99.DELVRY_NO = L55.DELVRY_NO
-                         AND L99.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
-                         AND L99.ITM_CODE = L55.ITM_CODE
-                         AND L99.SCAN_STUS_CODE = 'D'
-                         AND L99.IO_TYPE = 'I'
-                      ) Z1
-               WHERE  Z1.RN = 1
-                AND Z1.DELVRY_NO = L55.DELVRY_NO
-                AND Z1.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
-                AND Z1.ITM_CODE = L55.ITM_CODE
-               ) AS SCAN_QTY
-               , NVL(S28Q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
-              FROM LOG0047M l47
-                      , LOG0048D L48
-                      , LOG0054M L54
-                      , LOG0055D L55
-                      , SYS0028M S28C
-                      , SYS0028M S28Q
-                      , SYS0026M S26
-             WHERE L48.ITM_CODE             = S26.STK_CODE(+)
-                 AND L47.RCIV_CDC_RDC      = S28C.WH_LOC_ID
-                 AND L47.REQST_CDC_RDC   = S28Q.WH_LOC_ID
-                 AND L48.ITM_CODE            = L55.ITM_CODE
-                 AND L54.DELVRY_NO          = L55.DELVRY_NO
-                 AND L48.REQST_NO            = L55.REQST_NO
-                 AND L47.REQST_NO            = L48.REQST_NO
-                 AND NVL(l55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
-                 AND l54.DELVRY_NO IN
-                 <choose>
-                     <when test="arrDelyList !=null">
-                         <foreach item="item" collection="arrDelyList" index="index" open="(" separator="," close=")">
-                             #{item}
-                         </foreach>
-                     </when>
-                     <otherwise>
-                         (#{delyno})
-                     </otherwise>
-                 </choose>
-               ORDER BY l54.DELVRY_NO DESC
-           ) T
-    </select>
+  <!-- Search Good Receipt Popup List -->
+  <select id="goodReceiptPopList" parameterType="Map" resultType="egovMap">
+    /* com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper.goodReceiptPopList */
+    SELECT ROWNUM RNUM ,
+               T.* FROM ( SELECT L47.REQST_NO
+                                        , L48.REQST_NO_ITM
+                                        , L55.DELVRY_NO
+                                        , L55.DELVRY_NO_ITM
+                                        , L47.TRNSC_TYPE
+                                        , L47.TRNSC_TYPE_DTL
+                                        , L54.DELVRY_DT
+                                        , L54.DELVRY_GI_DT
+                                        , L54.DELVRY_GR_DT
+                                        , L48.ITM_CODE
+                                        , L48.ITM_NAME
+                                        , L55.DELVRY_QTY
+                                        , L48.UOM
+                                        , L47.RCIV_CDC_RDC
+                                        , NVL(L55.RCIPT_QTY , 0) DELVRY_GI_CMPLT
+                                        , CASE WHEN S26.STK_TYPE_ID= 61
+                                            THEN CASE WHEN S26.SERIAL_CHK = 'Y'
+                                                               AND S28Q.SERIAL_PD_CHK = 'Y'
+                                                             THEN 'Y'
+                                                             ELSE 'N' END
+                                          WHEN S26.STK_TYPE_ID= 62
+                                            THEN CASE WHEN S26.SERIAL_CHK = 'Y'
+                                                               AND S28Q.SERIAL_FT_CHK = 'Y'
+                                                             THEN 'Y'
+                                                             ELSE 'N' END
+                                          WHEN S26.STK_TYPE_ID= 63
+                                            THEN CASE WHEN S26.SERIAL_CHK = 'Y'
+                                                               AND S28Q.SERIAL_PT_CHK = 'Y'
+                                                             THEN 'Y'
+                                                             ELSE 'N' END
+                                          ELSE 'N' END SERIAL_CHK
+                                        , ( SELECT COUNT(1)
+                                            FROM ( SELECT ROW_NUMBER() OVER (PARTITION BY L99.SERIAL_NO ORDER BY L99.SCAN_NO DESC ) AS RN
+                                                                , L99.REQST_NO
+                                                                , L99.REQST_NO_ITM
+                                                                , L99.DELVRY_NO
+                                                                , L99.DELVRY_NO_ITM
+                                                                , L99.ITM_CODE
+                                                                , L99.SCAN_STUS_CODE
+                                                                , L99.IO_TYPE
+                                                       FROM LOG0099D L99,
+                                                                LOG0055D L55
+                                                       WHERE L99.DELVRY_NO IN
+
+                                                       <choose>
+                                                         <when test="arrDelyList !=null">
+                                                           <foreach item="item" collection="arrDelyList" index="index" open="(" separator="," close=")">
+                                                             #{item}
+                                                           </foreach>
+                                                         </when>
+                                                         <otherwise>
+                                                           (#{delyno})
+                                                         </otherwise>
+                                                       </choose>
+
+                                                           AND L99.DELVRY_NO = L55.DELVRY_NO
+                                                           AND L99.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
+                                                           AND L99.ITM_CODE = L55.ITM_CODE
+                                                           AND L99.SCAN_STUS_CODE = 'D'
+                                                           AND L99.IO_TYPE = 'I'
+                                            ) Z1 WHERE Z1.RN = 1
+                                                       AND Z1.DELVRY_NO = L55.DELVRY_NO
+                                                       AND Z1.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
+                                                       AND Z1.ITM_CODE = L55.ITM_CODE
+                                        ) AS SCAN_QTY
+                                        , NVL(S28Q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+                               FROM LOG0047M L47
+                                      , LOG0048D L48
+                                      , LOG0054M L54
+                                      , LOG0055D L55
+                                      , SYS0028M S28C
+                                      , SYS0028M S28Q
+                                      , SYS0026M S26
+                               WHERE L48.ITM_CODE = S26.STK_CODE(+)
+                                   AND L47.RCIV_CDC_RDC = S28C.WH_LOC_ID
+                                   AND L47.REQST_CDC_RDC = S28Q.WH_LOC_ID
+                                   AND L48.ITM_CODE = L55.ITM_CODE
+                                   AND L54.DELVRY_NO = L55.DELVRY_NO
+                                   AND L48.REQST_NO = L55.REQST_NO
+                                   AND L47.REQST_NO = L48.REQST_NO
+                                   AND NVL(L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+                                   AND L54.DELVRY_NO IN
+
+                                   <choose>
+                                     <when test="arrDelyList !=null">
+                                       <foreach item="item" collection="arrDelyList" index="index" open="(" separator="," close=")">
+                                         #{item}
+                                       </foreach>
+                                     </when>
+                                     <otherwise>
+                                       (#{delyno})
+                                     </otherwise>
+                                   </choose>
+                               ORDER BY L54.DELVRY_NO DESC
+    ) T
+  </select>
 
     <!-- Added for resolving duplicate issue. By Hui Ding, 2020-07-17 -->
     <select id="checkRcdTms" parameterType="Map" resultType="int">
