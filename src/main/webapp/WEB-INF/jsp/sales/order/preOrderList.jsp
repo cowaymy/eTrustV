@@ -37,7 +37,6 @@ console.log("preOrderList");
 
 
     $(document).ready(function(){
-
     	fn_statusCodeSearch();
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -165,7 +164,10 @@ console.log("preOrderList");
 
     function fn_setDetail(gridID, rowIdx){
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
-        Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
+		var pageAuth = {
+			funcUserDefine6 : '${PAGE_AUTH.funcUserDefine6}'
+		};
+        Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId"), pageAuth : JSON.stringify(pageAuth) }, null, true, "_divPreOrdModPop");
     }
 
     function fn_setOptGrpClass() {

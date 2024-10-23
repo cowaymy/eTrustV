@@ -50,7 +50,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
     </c:forEach>
 
     $(document).ready(function(){
-
         createAUIGridStk();
         createAUIGridFailedRemark();
         fn_selectFailedRemarkList();
@@ -114,7 +113,12 @@ var totPvSs = "${preOrderInfo.totPvSs}";
             $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
             $("#scPreOrdArea").find("p.btn_grid").hide();
             $('#btnSave').hide();
-            $(".input_text").attr('disabled',false).addClass("readonly");;
+            if(userType == 1 || userType == 2 || userType == 7 || '${pageAuth.funcUserDefine6}' != 'Y'){
+            	$(".input_text").attr('disabled', true).addClass("readonly");
+            }
+            else{
+            	$(".input_text").attr('disabled', false);
+            }
         }
 
         if('${preOrderInfo.atchFileGrpId}' != 0){
@@ -2072,7 +2076,7 @@ var totPvSs = "${preOrderInfo.totPvSs}";
                 var maskedNric;
 
                 if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-                    if(userType == 1 || userType == 2 || userType == 7){
+                    if(userType == 1 || userType == 2 || userType == 7 || '${pageAuth.funcUserDefine6}' != 'Y'){
                         maskedNric = custInfo.nric.substr(-4).padStart(custInfo.nric.length, '*');
                     }
                     else{
@@ -2603,7 +2607,7 @@ var totPvSs = "${preOrderInfo.totPvSs}";
 
                     // 파일 다운
                      if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-                         if(userType != 1 && userType != 2 && userType != 7){
+                         if(userType != 1 && userType != 2 && userType != 7 && '${pageAuth.funcUserDefine6}' == 'Y'){
                              $(".input_text").dblclick(function() {
                                  var oriFileName = $(this).val();
                                  var fileGrpId;

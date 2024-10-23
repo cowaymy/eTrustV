@@ -29,6 +29,8 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -330,6 +332,13 @@ public class HcPreOrderController {
 		model.put("preFrmOrderInfo", frmOrderInfo);
 
         model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+        
+        if(params.containsKey("pageAuth")) {
+        	ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> pageAuthMap = objectMapper.readValue(params.get("pageAuth").toString(), new TypeReference<Map<String, String>>() {});
+
+    		model.put("pageAuth", pageAuthMap);
+        }
 
 		return "homecare/sales/order/hcPreOrderModifyPop";
 	}
