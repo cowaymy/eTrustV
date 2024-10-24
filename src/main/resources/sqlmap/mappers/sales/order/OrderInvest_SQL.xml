@@ -2,123 +2,155 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderInvestMapper">
 
-    <select id="orderInvestigationList" parameterType="Map" resultType="egovMap">
-        SELECT Filter1.INV_REQ_ID ,
-			       Filter1.INV_REQ_NO ,
-			       Filter1.SO_ID ,
-			       Filter1.INV_REQ_STUS_ID ,
-			       Filter1.INV_REQ_PARTY_ID ,
-			       Filter1.INV_REQ_REM ,
-			       Filter1.INV_REQ_CRT_DT ,
-			       Filter1.INV_REQ_CRT_USER_ID ,
-			       Filter1.INV_REQ_UPD_USER_ID ,
-			       Filter1.INV_REQ_USER_ID_AUTO ,
-			       Filter1.INV_REQ_HAS_ATTACH ,
-			       Extent5.SALES_ORD_NO ,
-			       Filter1.INV_REQ_UPD_DT ,
-			       CASE
-			            WHEN ( Filter1.INV_REQ_ATTACH_FILE IS NULL ) THEN ''
-			       ELSE Filter1.INV_REQ_ATTACH_FILE
-			            END INV_REQ_ATTACH_FILE  ,
-			       Filter1.CODE2 CODE ,
-			       Filter1.INV_REQ_STUS_NAME ,
-			       Filter1.CODE3 CODE1  ,
-			       Filter1.INV_REQ_PARTY_NAME ,
-			       Filter1.INV_REQ_CRT_USER_NAME
-			       <if test="orgCode != null and orgCode != ''">
-                   , Filter1.LAST_ORG_CODE
-                   , Filter1.LAST_GRP_CODE
-                   , Filter1.LAST_DEPT_CODE
-                   </if>
-		   FROM ( SELECT Extent1.INV_REQ_ID ,
-				                Extent1.INV_REQ_NO ,
-				                Extent1.SO_ID ,
-				                Extent1.INV_REQ_STUS_ID ,
-				                Extent1.INV_REQ_PARTY_ID ,
-				                Extent1.INV_REQ_REM ,
-				                Extent1.INV_REQ_CRT_DT,
-				                Extent1.INV_REQ_CRT_USER_ID ,
-				                Extent1.INV_REQ_UPD_DT ,
-				                Extent1.INV_REQ_UPD_USER_ID ,
-				                Extent1.INV_REQ_USER_ID_AUTO ,
-				                Extent1.INV_REQ_HAS_ATTACH ,
-				                Extent1.INV_REQ_ATTACH_FILE ,
-				                Extent2.CODE CODE2  ,
-				                Extent2.NAME INV_REQ_STUS_NAME,
-				                Extent3.CODE CODE3  ,
-				                Extent3.CODE_DESC INV_REQ_PARTY_NAME,
-				                Extent4.USER_NAME INV_REQ_CRT_USER_NAME
-				                <if test="orgCode != null and orgCode != ''">
-				                , Extent5.LAST_ORG_CODE
-                                , Extent5.LAST_GRP_CODE
-                                , Extent5.LAST_DEPT_CODE
-				                </if>
-				         FROM SAL0050D Extent1
-				                LEFT JOIN SYS0038M Extent2   ON Extent1.INV_REQ_STUS_ID = Extent2.STUS_CODE_ID
-				                LEFT JOIN SYS0013M Extent3   ON Extent1.INV_REQ_PARTY_ID = Extent3.CODE_ID
-				                LEFT JOIN SYS0047M Extent4   ON Extent1.INV_REQ_CRT_USER_ID = Extent4.USER_ID
-				                <if test="orgCode != null and orgCode != ''">
-				                LEFT JOIN (SELECT usr.USER_ID, C.ORG_CODE LAST_ORG_CODE, C.GRP_CODE LAST_GRP_CODE, C.DEPT_CODE LAST_DEPT_CODE
-                                              FROM SYS0047M usr, ORG0005D A, ORG0001D B, ORG1001V C
-                                            WHERE usr.USER_NAME = B.MEM_CODE
-                                               AND B.MEM_ID = A.MEM_ID
-                                               AND C.MEM_ID = B.MEM_ID
-                                               AND usr.USER_STUS_ID = 1
-                                               AND B.STUS = 1
-                                               AND A.ORG_STUS_CODE_ID = 1) Extent5 ON Extent1.INV_REQ_CRT_USER_ID = Extent5.USER_ID
-                                </if>
-                 <![CDATA[
-				     WHERE  0 <> Extent1.INV_REQ_ID
-				 ]]>
-				    <if test="invReqStusIdList != null and invReqStusIdList != ''">
-				        AND  Extent1.INV_REQ_STUS_ID IN
-				        <foreach item="item" collection="invReqStusIdList" index="index" open="(" separator="," close=")">
-                            #{item}
-                        </foreach>
-				    </if>
-				    <if test="invReqStusIdList == null and invReqStusIdList == ''">
-				        AND  Extent1.INV_REQ_STUS_ID IN ( 1,44,5 )
-				    </if>
-			         ) Filter1
-			         JOIN SAL0001D Extent5   ON Extent5.SALES_ORD_ID = Filter1.SO_ID
-			    WHERE 1=1
-			        <if test="invReqNo != null and invReqNo != ''">
-			             AND UPPER(Filter1.INV_REQ_NO) LIKE '%' || UPPER(#{invReqNo}) || '%'
-			        </if>
-			        <if test="startCrtDt != null and startCrtDt != ''">
-			             <![CDATA[
-			             AND Filter1.INV_REQ_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-			             ]]>
-			        </if>
-			        <if test="endCrtDt != null and endCrtDt != ''">
-                         <![CDATA[
-                         AND Filter1.INV_REQ_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
-                         ]]>
-                    </if>
-			        <if test="salesOrdNo != null and salesOrdNo != ''">
-			             AND Extent5.SALES_ORD_NO LIKE '%' || #{salesOrdNo} || '%'
-			        </if>
-			        <if test="invReqPartyId != null and invReqPartyId != ''">
-			             AND Filter1.INV_REQ_PARTY_ID = #{invReqPartyId}
-			        </if>
-			        <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
-			             AND UPPER(Filter1.INV_REQ_CRT_USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
-			        </if>
-			        <if test="orgCode != null and orgCode != ''">
-                         AND Filter1.LAST_ORG_CODE = #{orgCode}
-                    </if>
-                    <if test="grpCode != null and grpCode != ''">
-                         AND Filter1.LAST_GRP_CODE = #{grpCode}
-                    </if>
-                    <if test="deptCode != null and deptCode != ''">
-                         AND Filter1.LAST_DEPT_CODE = #{deptCode}
-                    </if>
+  <select id="orderInvestigationList" parameterType="Map" resultType="egovMap">
+     SELECT FILTER1.INV_REQ_ID ,
+                FILTER1.INV_REQ_NO ,
+                FILTER1.SO_ID ,
+                FILTER1.INV_REQ_STUS_ID ,
+                FILTER1.INV_REQ_PARTY_ID ,
+                FILTER1.INV_REQ_REM ,
+                FILTER1.INV_REQ_CRT_DT ,
+                FILTER1.INV_REQ_CRT_USER_ID ,
+                FILTER1.INV_REQ_UPD_USER_ID ,
+                FILTER1.INV_REQ_USER_ID_AUTO ,
+                FILTER1.INV_REQ_HAS_ATTACH ,
+                EXTENT5.SALES_ORD_NO ,
+                FILTER1.INV_REQ_UPD_DT ,
+                CASE
+                  WHEN ( FILTER1.INV_REQ_ATTACH_FILE IS NULL ) THEN ''
+                  ELSE FILTER1.INV_REQ_ATTACH_FILE END INV_REQ_ATTACH_FILE  ,
+                FILTER1.CODE2 CODE ,
+                FILTER1.INV_REQ_STUS_NAME ,
+                FILTER1.CODE3 CODE1  ,
+                FILTER1.INV_REQ_PARTY_NAME ,
+                FILTER1.INV_REQ_CRT_USER_NAME
+                <if test="orgCode != null and orgCode != ''">
+                  , FILTER1.LAST_ORG_CODE
+                  , FILTER1.LAST_GRP_CODE
+                  , FILTER1.LAST_DEPT_CODE
+                </if>
+      FROM ( SELECT EXTENT1.INV_REQ_ID ,
+                            EXTENT1.INV_REQ_NO ,
+                            EXTENT1.SO_ID ,
+                            EXTENT1.INV_REQ_STUS_ID ,
+                            EXTENT1.INV_REQ_PARTY_ID ,
+                            EXTENT1.INV_REQ_REM ,
+                            EXTENT1.INV_REQ_CRT_DT,
+                            EXTENT1.INV_REQ_CRT_USER_ID ,
+                            EXTENT1.INV_REQ_UPD_DT ,
+                            EXTENT1.INV_REQ_UPD_USER_ID ,
+                            EXTENT1.INV_REQ_USER_ID_AUTO ,
+                            EXTENT1.INV_REQ_HAS_ATTACH ,
+                            EXTENT1.INV_REQ_ATTACH_FILE ,
+                            EXTENT2.CODE CODE2  ,
+                            EXTENT2.NAME INV_REQ_STUS_NAME,
+                            EXTENT3.CODE CODE3  ,
+                            EXTENT3.CODE_DESC INV_REQ_PARTY_NAME,
+                            EXTENT4.USER_NAME INV_REQ_CRT_USER_NAME
+                            <if test="orgCode != null and orgCode != ''">
+                              , EXTENT5.LAST_ORG_CODE
+                              , EXTENT5.LAST_GRP_CODE
+                              , EXTENT5.LAST_DEPT_CODE
+                            </if>
+                 FROM SAL0050D EXTENT1
+                 LEFT JOIN SYS0038M EXTENT2 ON EXTENT1.INV_REQ_STUS_ID = EXTENT2.STUS_CODE_ID
+                 LEFT JOIN SYS0013M EXTENT3 ON EXTENT1.INV_REQ_PARTY_ID = EXTENT3.CODE_ID
+                 LEFT JOIN SYS0047M EXTENT4 ON EXTENT1.INV_REQ_CRT_USER_ID = EXTENT4.USER_ID
+                 <if test="orgCode != null and orgCode != ''">
+                   LEFT JOIN (SELECT USR.USER_ID,
+                                              C.ORG_CODE LAST_ORG_CODE,
+                                              C.GRP_CODE LAST_GRP_CODE,
+                                              C.DEPT_CODE LAST_DEPT_CODE
+                                   FROM SYS0047M USR,
+                                            ORG0005D A,
+                                            ORG0001D B,
+                                            ORG1001V C
+                                   WHERE USR.USER_NAME = B.MEM_CODE
+                                       AND B.MEM_ID = A.MEM_ID
+                                       AND C.MEM_ID = B.MEM_ID
+                                       AND USR.USER_STUS_ID = 1
+                                       AND B.STUS = 1
+                                       AND A.ORG_STUS_CODE_ID = 1
 
+                                       <if test="orgCode != null and orgCode != ''">
+                                         AND B.LAST_ORG_CODE = #{orgCode}
+                                       </if>
+
+                                       <if test="grpCode != null and grpCode != ''">
+                                         AND B.LAST_GRP_CODE = #{grpCode}
+                                       </if>
+
+                                       <if test="deptCode != null and deptCode != ''">
+                                         AND B.LAST_DEPT_CODE = #{deptCode}
+                                       </if>
+
+                   ) EXTENT5 ON EXTENT1.INV_REQ_CRT_USER_ID = EXTENT5.USER_ID
+                 </if>
+                 <![CDATA[
+                   WHERE 0 <> EXTENT1.INV_REQ_ID
+                 ]]>
+
+                 <if test="invReqStusIdList != null and invReqStusIdList != ''">
+                   AND  EXTENT1.INV_REQ_STUS_ID IN
+                     <foreach item="item" collection="invReqStusIdList" index="index" open="(" separator="," close=")">
+                       #{item}
+                     </foreach>
+                 </if>
+
+                 <if test="invReqStusIdList == null and invReqStusIdList == ''">
+                   AND EXTENT1.INV_REQ_STUS_ID IN ( 1,44,5 )
+                 </if>
+
+                 <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
+                   AND LOWER(EXTENT4.USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
+                 </if>
+      ) FILTER1
+      JOIN SAL0001D EXTENT5 ON EXTENT5.SALES_ORD_ID = FILTER1.SO_ID
+      WHERE 1=1
+
+      <if test="invReqNo != null and invReqNo != ''">
+        AND UPPER(FILTER1.INV_REQ_NO) LIKE '%' || UPPER(#{invReqNo}) || '%'
+      </if>
+
+      <if test="startCrtDt != null and startCrtDt != ''">
+        <![CDATA[
+          AND FILTER1.INV_REQ_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        ]]>
+      </if>
+
+      <if test="endCrtDt != null and endCrtDt != ''">
+        <![CDATA[
+          AND FILTER1.INV_REQ_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+      </if>
+
+      <if test="salesOrdNo != null and salesOrdNo != ''">
+        AND EXTENT5.SALES_ORD_NO LIKE '%' || #{salesOrdNo} || '%'
+      </if>
+
+      <if test="invReqPartyId != null and invReqPartyId != ''">
+        AND FILTER1.INV_REQ_PARTY_ID = #{invReqPartyId}
+      </if>
+
+      <!-- <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
+        AND UPPER(FILTER1.INV_REQ_CRT_USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
+      </if>
+
+      <if test="orgCode != null and orgCode != ''">
+        AND FILTER1.LAST_ORG_CODE = #{orgCode}
+      </if>
+
+      <if test="grpCode != null and grpCode != ''">
+        AND FILTER1.LAST_GRP_CODE = #{grpCode}
+      </if>
+
+      <if test="deptCode != null and deptCode != ''">
+        AND FILTER1.LAST_DEPT_CODE = #{deptCode}
+      </if>  -->
     </select>
 
     <select id="orderInvestInfo" parameterType="Map" resultType="egovMap">
-        SELECT Extent1.INV_REQ_ID ,
-			       Extent1.INV_REQ_NO ,
+        SELECT Extent1.INV_REQ_ID ,  		       Extent1.INV_REQ_NO ,
 			       Extent1.INV_REQ_STUS_ID ,
 			       Extent3.CODE ,
 			       Extent3.NAME ,
