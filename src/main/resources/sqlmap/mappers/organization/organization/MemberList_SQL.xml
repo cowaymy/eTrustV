@@ -4871,7 +4871,6 @@ WHERE RN = 1
                         FROM SYS0064M
                         WHERE ISO = 'MY'
                         AND AREA_ID = #{areaId}
-                        AND STATUS_ID = 1
       </select>
 
       <update id="SP_SVC_LOG_SYS0028M" parameterType="Map"  statementType="CALLABLE" >
