@@ -2117,93 +2117,107 @@ SELECT * FROM
 WHERE ROWNUM = 1
 </select>
 
-<select id="selectCCPTicket" parameterType="Map" resultMap="calCcpListClobMap">
-    WITH TICKET_LOG AS (
-        SELECT
-            ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID) F,
-            ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID DESC) L,
-            Z.TICKET_LOG_ID,
-            Z.TICKET_ID,
-            Z.LOG_CONTENT,
-            Z.CRT_DT,
-            Z.CRT_USR_ID
-        FROM SAL0338D Z
-    ),
-    SALESMAN AS (
-	    SELECT
-	       A.MEM_ID,
-	       A.MEM_TYPE,
-	       HIST_MONTH,
-	       HIST_YEAR
-	    FROM ORG1002V A
-	    <where>
-	       <if test="deptCode != '' and deptCode != null">
-	           AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
-	       </if>
-	       AND MEM_LVL = 4
-	    </where>
-	    UNION
-	    SELECT
-	       B.MEM_ID,
-	       C.MEM_TYPE,
-	       EXTRACT(MONTH FROM SYSDATE),
-	       EXTRACT(YEAR FROM SYSDATE)
-	    FROM ORG1001V B
-	    JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
-	    <where>
-           <if test="deptCode != '' and deptCode != null">
-               AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
-           </if>
-           AND MEM_LVL = 4
-        </where>
-    )
-    SELECT
-        A.TICKET_ID,
-        B.SALES_ORD_NO,
-        CUST.NAME,
-        CHS.CHS_STUS,
-        CHS.CHS_RSN,
-        D.CCP_STUS_ID,
-        D.CCP_REM,
-        A.TYPE_ID,
-        F.LOG_CONTENT TICKET_QUERY,
-        CASE WHEN
-            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
-        THEN
-            G.LOG_CONTENT
-        ELSE
-            ''
-        END FEEDBACK,
-        A.STATUS,
-        A.CRT_DT,
-        USR.USER_NAME,
-        CASE WHEN
-            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
-        THEN
-            G.CRT_DT
-        ELSE
-            NULL
-        END RESP_DT,
-        CASE WHEN
-            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
-        THEN
-            RESP.USER_NAME
-        ELSE
-            NULL
-        END RESP_USR
+  <select id="selectCCPTicket" parameterType="Map" resultMap="calCcpListClobMap">
+    WITH TICKET_LOG AS ( SELECT ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID) F,
+                                                ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID DESC) L,
+                                                Z.TICKET_LOG_ID,
+                                                Z.TICKET_ID,
+                                                Z.LOG_CONTENT,
+                                                Z.CRT_DT,
+                                                Z.CRT_USR_ID
+                                     FROM SAL0338D Z ),
+             SALESMAN AS ( SELECT M.MEM_ID ,
+                                              M.MEM_TYPE ,
+                                              o.HIST_MONTH,
+                                              o.HIST_YEAR
+                                   FROM ORG0001D M
+                                   JOIN (SELECT *
+                                            FROM ORG0006D
+                                            WHERE MEM_LVL = 4
+                                            <if test="deptCode != '' and deptCode != null">
+                                                AND DEPT_CODE = #{deptCode}
+                                            </if>
+                                            ) O ON M.MEM_ID = O.MEM_ID
+                                            JOIN ORG0006D O2 ON O2.MEM_ID = O.MEM_UP_ID AND O.HIST_MONTH = O2.HIST_MONTH AND O.HIST_YEAR = O2.HIST_YEAR
+                                            JOIN ORG0006D O3 ON O3.MEM_ID = O2.MEM_UP_ID AND O3.HIST_MONTH = O2.HIST_MONTH AND O3.HIST_YEAR = O2.HIST_YEAR
+                                            JOIN ORG0006D O4 ON O4.MEM_ID = O3.MEM_UP_ID AND O4.HIST_MONTH = O3.HIST_MONTH AND O4.HIST_YEAR = O3.HIST_YEAR
+                                            JOIN ORG0006D O5 ON O5.MEM_ID = O4.MEM_UP_ID AND O5.HIST_MONTH = O4.HIST_MONTH AND O5.HIST_YEAR = O4.HIST_YEAR
+
+                                            WHERE 1=1
+                                            <if test="deptCode != '' and deptCode != null">
+                                              AND (O.DEPT_CODE = #{deptCode}
+                                                OR O3.DEPT_CODE = #{deptCode}
+                                                OR O4.DEPT_CODE = #{deptCode}
+                                                OR O5.DEPT_CODE = #{deptCode})
+                                            </if>
+                                            AND O.MEM_LVL = 4
+
+             <!-- SELECT A.MEM_ID,
+                                              A.MEM_TYPE,
+                                              HIST_MONTH,
+                                              HIST_YEAR
+                                   FROM ORG1002V A
+             <where>
+               <if test="deptCode != '' and deptCode != null">
+                 AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
+               </if>
+               AND MEM_LVL = 4
+             </where> -->
+
+             UNION
+
+             SELECT B.MEM_ID,
+                        C.MEM_TYPE,
+                        EXTRACT(MONTH FROM SYSDATE),
+                        EXTRACT(YEAR FROM SYSDATE)
+             FROM ORG1001V B
+             JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+
+            <where>
+              <if test="deptCode != '' and deptCode != null">
+                 AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
+              </if>
+              AND MEM_LVL = 4
+            </where>
+             )
+
+    SELECT A.TICKET_ID,
+               B.SALES_ORD_NO,
+               CUST.NAME,
+               CHS.CHS_STUS,
+               CHS.CHS_RSN,
+               D.CCP_STUS_ID,
+               D.CCP_REM,
+               A.TYPE_ID,
+               F.LOG_CONTENT TICKET_QUERY,
+               CASE WHEN F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+                 THEN G.LOG_CONTENT
+                 ELSE '' END FEEDBACK,
+               A.STATUS,
+               A.CRT_DT,
+               USR.USER_NAME,
+               CASE WHEN F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+                 THEN G.CRT_DT
+                 ELSE NULL END RESP_DT,
+               CASE WHEN F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+                 THEN RESP.USER_NAME
+                 ELSE NULL END RESP_USR
     FROM SAL0337M A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
-    JOIN SALESMAN C ON C.MEM_ID = B.MEM_ID AND C.HIST_MONTH = EXTRACT(MONTH FROM B.SALES_DT) AND C.HIST_YEAR = EXTRACT(YEAR FROM B.SALES_DT)
+    JOIN SALESMAN C ON C.MEM_ID = B.MEM_ID
+                            AND C.HIST_MONTH = EXTRACT(MONTH FROM B.SALES_DT)
+                            AND C.HIST_YEAR = EXTRACT(YEAR FROM B.SALES_DT)
     LEFT JOIN SAL0102D D ON D.CCP_SALES_ORD_ID = B.SALES_ORD_ID
     JOIN TICKET_LOG F ON A.TICKET_ID = F.TICKET_ID  AND F.F = 1
     JOIN TICKET_LOG G ON A.TICKET_ID = G.TICKET_ID AND G.L = 1
 
     JOIN SAL0029D CUST ON CUST.CUST_ID = B.CUST_ID
     LEFT JOIN SAL0262D CHS ON CHS.CUST_ID = B.CUST_ID
-        AND CHS.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
-        AND CHS.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
+                                AND CHS.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
+                                AND CHS.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
     JOIN SYS0047M USR ON USR.USER_ID = A.CRT_USR_ID
     JOIN SYS0047M RESP ON G.CRT_USR_ID = RESP.USER_ID
+
     <where>
         <if test="ordNo != '' and ordNo != null">
             AND B.SALES_ORD_NO = #{ordNo}
@@ -2221,8 +2235,9 @@ WHERE ROWNUM = 1
             AND A.STATUS = #{ticketStatus}
         </if>
     </where>
+
     ORDER BY G.TICKET_LOG_ID DESC
-</select>
+  </select>
 
 <select id="selectDuplicateTickets" parameterType="Map" resultType="int">
     SELECT
