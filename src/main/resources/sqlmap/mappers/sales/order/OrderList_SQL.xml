@@ -1962,8 +1962,8 @@
         <!-- ==================================================================== -->
         <!--  M2 STATUS + OPENING & CURRENT PAYMODE + OPENING & CURRENT CARD TYPE -->
         <!--==================================================================== -->
-            , NVL(CD1.CODE, ' ') AS OPEN_ODR_PAYMODE
-            , NVL(CD2.CODE, ' ') AS CURR_ODR_PAYMODE
+            , NVL(CD1.CODE, '-') AS OPEN_ODR_PAYMODE
+            , NVL(CD2.CODE, '-') AS CURR_ODR_PAYMODE
             , NVL(CD3.CODE_NAME, ' ') AS OPEN_CRC_TYPE
             , NVL(CD4.CODE_NAME, ' ') AS CURR_CRC_TYPE,
             CASE WHEN CA.MONTH_TYPE = 'M2' AND A.TARGET <![CDATA[ <> ]]> A.COLLECTION THEN CA.MONTH_TYPE
@@ -2075,7 +2075,7 @@
 		           LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
 		           LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
 		           WHERE T1.SALES_ORD_ID = #{ordId}
-		           AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+		           AND T2.CRT_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM') AND T2.CRT_DT
 
 		           UNION
 
@@ -2104,7 +2104,7 @@
 				        , T2.CRT_DT
 				        , T1.SALES_ORD_ID
 				    FROM PAY0102D T1
-				    LEFT JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
+				    LEFT JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
 				    LEFT JOIN SAL0074D T7 ON T7.SALES_ORD_ID = T1.SALES_ORD_ID
 				    LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T7.BANK_ID AND T7.BANK_ID <![CDATA[ <> ]]> 0
 				    LEFT JOIN SAL0028D T4 ON  T4.CUST_CRC_TOKEN = T1.BANK_DTL_DR_ACC_NO AND
@@ -2114,7 +2114,7 @@
 				    LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
 				    LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
 				    WHERE T1.SALES_ORD_ID = #{ordId}
-				    AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+				    AND T2.CRT_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND T2.CRT_DT
 
 		        ) T
 		        LEFT JOIN SYS0013M T6 ON T6.CODE = T.BATCH_MODE AND T6.CODE_MASTER_ID = 19
@@ -2167,7 +2167,7 @@
 		        AND A.FILE_ITM_ORD_ID = #{ordId}
 		        AND C.MODE_ID = 131
 		        AND A.FILE_ITM_STUS_ID != 8
-		        AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
+		        AND A.FILE_ITM_CRT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND A.FILE_ITM_CRT
 		    ) B
 
 		   <!--===============================-->
@@ -2253,7 +2253,7 @@
 		        LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.MODE_ID
 		        WHERE (Extent1.SALES_ORD_ID = #{ordId})
 		         AND (Extent1.SVC_CNTRCT_ID = '0')
-		         AND Extent1.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND Extent1.UPD_DT
+		         AND Extent1.UPD_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND Extent1.UPD_DT
 
 		        UNION ALL
 
@@ -2316,10 +2316,10 @@
 		            LEFT JOIN SYS0013M Ext10 ON Ext10.CODE_ID = Ext1.MODE_ID
 		            WHERE (Ext1.SALES_ORD_ID = #{ordId})
 		               AND (Ext1.SVC_CNTRCT_ID = '0')
-		               AND Ext1.UPD_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND Ext1.UPD_DT
+		               AND Ext1.UPD_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND Ext1.UPD_DT
 		        )
 		    )C
-		    WHERE C.DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND C.DT
+		    WHERE C.DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND C.DT
 
 		)
 		ORDER BY TO_DATE(DT,'DD/MM/YYYY') DESC
@@ -2366,7 +2366,7 @@
 
 		                   WHERE 1=1
 		                   AND T1.SALES_ORD_ID = #{ordId}
-		                   AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+		                   AND T2.CRT_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND T2.CRT_DT
 
 		                   UNION
 
@@ -2397,7 +2397,7 @@
 		                    LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T4.CARD_TYPE_ID
 		                    LEFT JOIN SYS0094M T6 ON T6.CODE = T1.BANK_DTL_APPR_CODE AND T6.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
 		                    WHERE T1.SALES_ORD_ID = #{ordId}
-		                    AND T2.CRT_DT BETWEEN ADD_MONTHS (SYSDATE, -6) AND T2.CRT_DT
+		                    AND T2.CRT_DT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND T2.CRT_DT
 
 		                ) T
 		                LEFT JOIN SYS0013M T6 ON T6.CODE = T.BATCH_MODE AND T6.CODE_MASTER_ID = 19
@@ -2423,7 +2423,7 @@
 		            WHERE 1=1
 		                AND A.FILE_ITM_ORD_ID = #{ordId}
 		                AND C.MODE_ID = 131
-		                AND A.FILE_ITM_CRT BETWEEN ADD_MONTHS (SYSDATE, -6) AND A.FILE_ITM_CRT
+		                AND A.FILE_ITM_CRT BETWEEN TRUNC(ADD_MONTHS(SYSDATE,-6),'MM')AND A.FILE_ITM_CRT
 		            ) B
 		        ) D
 		    ),
@@ -2608,9 +2608,6 @@
 				FROM SAL0074D A
 				JOIN SAL0028D B ON B.CUST_CRC_ID = A.CUST_CRC_ID
 				WHERE A.SALES_ORD_ID = #{ordId})
-				AND EXT1.MODE_ID = 131
-				AND EXT3.APP_TYPE_ID = 66
-				AND EXT3.STUS_CODE_ID = 4
 			ORDER BY EXT3.SALES_ORD_NO ASC
 		) A
         WHERE A.SALES_ORD_ID <![CDATA[ <> ]]> #{ordId}
