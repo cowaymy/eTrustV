@@ -499,6 +499,7 @@ public class ClaimController {
           map.put("refCode", r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
+          map.put("macCode", r.getMacCode());
 
           return map;
         }).collect(Collectors.toList());
