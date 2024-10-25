@@ -11,10 +11,6 @@
     var accLinkGridID;
     var accLinkInfo;
 
-    ordNo = "${headerInfo.ordNo}";
-    ordId = "${ordId}";
-    today = "${today}";
-
     var oriMailMobileNo = "${headerInfo.mailCntTelM}";
     var oriMailOfficeNo = "${headerInfo.mailCntTelO}";
     var oriMailHouseNo = "${headerInfo.mailCntTelR}";
@@ -223,41 +219,12 @@
 	      }
     }
 
-    function fn_matrixRptPop(){
-        var reportDownFileName = ""; //download report name
-        var reportFileName = ""; //reportFileName
-        var reportViewType = ""; //viewType
-
-        //default input setting
-        $("#reportForm").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
-        $("#reportForm").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
-        $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
-
-        reportFileName = "/sales/AutoDebitMatrixReport.rpt"; //reportFileName
-        reportDownFileName = "AD_Matrix_" + ordNo + "_" + today;  //report name
-        reportViewType = "PDF"; //viewType
-
-        //set parameters
-        $("#reportForm").append('<input type="hidden" id="ORDID" name="ORDID" value="" /> ');
-        $("#reportForm #ORDID").val(ordId);
-        console.log($("#reportForm #ORDID").val());
-
-        //report info
-        if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
-            return;
-        }
-
-       //default setting
-       $("#reportForm #reportFileName").val(reportFileName);
-       $("#reportForm #reportDownFileName").val(reportDownFileName);
-       $("#reportForm #viewType").val(reportViewType);
-
-       //  report 호출
+ function fn_matrixRptPop(){
        var option = { isProcedure : false };
 
        Common.report("reportForm", option);
     }
+
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
@@ -373,4 +340,10 @@
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 
-<form name="reportForm" id="reportForm" method="post"></form>
+<form name="reportForm" id="reportForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/AutoDebitMatrixReport.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="AD_Matrix_${headerInfo.ordNo}_${today}" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+
+    <input type="hidden" id="ORDID" name="ORDID" value="${ordId}" />
+</form>
