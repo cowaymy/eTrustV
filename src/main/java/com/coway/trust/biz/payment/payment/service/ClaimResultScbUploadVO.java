@@ -7,6 +7,7 @@ public class ClaimResultScbUploadVO {
 	private String refCode;
 	private int itemId;
 	private String apprCode;
+	private String macCode;
 
 
 	public static ClaimResultScbUploadVO create(CSVRecord CSVRecord) {
@@ -17,9 +18,11 @@ public class ClaimResultScbUploadVO {
 		vo.setRefCode(CSVRecord.get(0).substring(71,73).trim());
 		vo.setItemId(Integer.parseInt(CSVRecord.get(0).substring(87,102).trim()));
 		vo.setApprCode(CSVRecord.get(0).substring(65,71).trim());
+		vo.setMacCode(CSVRecord.get(0).substring(120,122).trim());
 
 		return vo;
 	}
+
 
 	public String getRefNo() {
 		return refNo;
@@ -52,5 +55,15 @@ public class ClaimResultScbUploadVO {
 	public void setApprCode(String apprCode) {
 	  this.apprCode = apprCode;
 	}
+
+	public String getMacCode() {
+		return macCode;
+	}
+
+	public void setMacCode(String macCode) {
+		this.macCode = macCode;
+	}
+
+
 
 }
