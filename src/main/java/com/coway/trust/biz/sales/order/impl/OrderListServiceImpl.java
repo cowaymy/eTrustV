@@ -6,6 +6,7 @@ package com.coway.trust.biz.sales.order.impl;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -658,21 +659,29 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 
 	  @Override
 	  public EgovMap selectHeaderInfo(Map<String, Object> params) {
-	    return orderListMapper.selectHeaderInfo(params);
+	    orderListMapper.selectHeaderInfo(params);
+	    EgovMap result = (EgovMap) ((ArrayList) params.get("p1")).get(0);
+		return result;
 	  };
 
 	  @Override
 	  public List<EgovMap> selectHistInfo(Map<String, Object> params) {
-		  return orderListMapper.selectHistInfo(params);
+		  orderListMapper.selectHistInfo(params);
+		  List<EgovMap> result = (List<EgovMap>) params.get("p1");
+		  return result;
 	  };
 
 	  @Override
 	  public List<EgovMap> selectMatrixInfo(Map<String, Object> params) {
-		  return orderListMapper.selectMatrixInfo(params);
+		  orderListMapper.selectMatrixInfo(params);
+		  List<EgovMap> result = (List<EgovMap>) params.get("p1");
+		  return result;
 	  };
 
 	  @Override
 	  public List<EgovMap> selectAccLinkInfo(Map<String, Object> params) {
-		  return orderListMapper.selectAccLinkInfo(params);
+		  orderListMapper.selectAccLinkInfo(params);
+		  List<EgovMap> result = (List<EgovMap>) params.get("p1");
+		  return result;
 	  };
 }

@@ -220,9 +220,9 @@
     }
 
  function fn_matrixRptPop(){
-       var option = { isProcedure : false };
+       var option = { isProcedure : true };
 
-       Common.report("reportForm", option);
+       Common.report("dataForm", option);
     }
 
 </script>
@@ -340,10 +340,10 @@
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 
-<form name="reportForm" id="reportForm">
+<form name="dataForm" id="dataForm">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/AutoDebitMatrixReport.rpt" /><!-- Report Name  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="AD_Matrix_${headerInfo.ordNo}_${today}" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
 
-    <input type="hidden" id="ORDID" name="ORDID" value="${ordId}" />
+    <input type="hidden" id="ordId" name="V_ORD_ID" value="${ordId}" />
 </form>
