@@ -1975,11 +1975,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     }
 
     // SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING
+    //HA and HC super crazy
     if (CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode")) > 01 && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
       EgovMap params = new EgovMap();
       params.put("custId", salesOrderMVO.getCustId());
       params.put("salesOrdIdOld", salesOrderMVO.getSalesOrdIdOld());
       //EgovMap preBookInfo = hcPreBookingOrderMapper.selectPreBookOrderEligibleCheck(params);
+
+      if(CommonUtils.isEmpty(salesOrderMVO.getSalesOrdId())){
+    	  logger.debug("!@#### GET ORDER_ID  :" + salesOrderMVO.getSalesOrdId());
+      }
 
     	if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02){
     		EgovMap map1 = new EgovMap();
@@ -1990,7 +1995,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		map1.put("percentage",50);
     		BigDecimal CNamt = salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
     		map1.put("cnAmt",CNamt);
-    		map1.put("status",1);
+    		map1.put("status",CommonUtils.intNvl("1"));
     		map1.put("userId",sessionVO.getUserId());
 
     		orderRegisterMapper.insertSalesSpecialPromotion(map1);
