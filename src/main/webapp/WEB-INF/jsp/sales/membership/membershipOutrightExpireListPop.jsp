@@ -466,7 +466,7 @@ function btnGenerateExcel_Click(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <%-- <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li> --%>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
