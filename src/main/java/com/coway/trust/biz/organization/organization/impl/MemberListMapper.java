@@ -410,4 +410,13 @@ public interface MemberListMapper {
 
 	List<EgovMap> checkEmail(Map<String, Object> params);
 
+    /**
+     * Get State List (Magic Address)
+     *
+     * @param params
+     * @exception Exception
+     * @author
+     */
+    List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception;
+
 }
