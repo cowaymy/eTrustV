@@ -6428,4 +6428,60 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
        ]]>
       </select>
 
+     <select id="selectMagicAddressComboList" parameterType="Map"
+	     resultType="egovMap">
+	     SELECT DISTINCT
+
+	     <if test=" null != colState and '' != colState">
+	       STATE AS CODE_ID,
+	       STATE AS CODE_NAME
+	     </if>
+
+	     <if test=" null != colCity and '' != colCity">
+	       CITY AS CODE_ID,
+	       CITY AS CODE_NAME
+	     </if>
+
+	     <if test=" null != colPostCode and '' != colPostCode">
+	       POSTCODE AS CODE_ID,
+	       POSTCODE AS CODE_NAME
+	     </if>
+
+	     <if test=" null != colArea and '' != colArea">
+	       AREA AS CODE_ID,
+	       AREA AS CODE_NAME
+	     </if>
+
+	     FROM
+	     SYS0064M
+	     WHERE COUNTRY = 'Malaysia'
+	     <if test="null != state and '' != state"> <!-- city -->
+	       AND STATE = #{state}
+	     </if>
+	     <if test="null != city and '' != city"> <!-- post code -->
+	       AND CITY = #{city}
+	     </if>
+	     <if test="null != postcode and '' != postcode"> <!-- area -->
+	       AND POSTCODE = #{postcode}
+	     </if>
+	     AND AREA_ID NOT LIKE 'DM%'
+	     <!-- Sorting -->
+	     <if test=" null != colState and '' != colState">
+	       ORDER BY STATE
+	     </if>
+
+	     <if test=" null != colCity and '' != colCity">
+	       ORDER BY CITY
+	     </if>
+
+	     <if test=" null != colPostCode and '' != colPostCode">
+	       ORDER BY POSTCODE
+	     </if>
+
+	     <if test=" null != colArea and '' != colArea">
+	       ORDER BY AREA
+	     </if>
+
+	  </select>
+
 </mapper>
