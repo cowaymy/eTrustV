@@ -3154,4 +3154,35 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			return message;
 		}
 	}
+
+   /**
+    * selectMagicAddressComboList (Magic Address)
+    *
+    * @param params
+    * @return
+    * @exception Exception
+    * @author
+    */
+   @Override
+   public List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception {
+
+     // State
+     if (params.get("state") == null && params.get("city") == null && params.get("postcode") == null) {
+       params.put("colState", "1");
+     }
+     // City
+     if (params.get("state") != null && params.get("city") == null && params.get("postcode") == null) {
+       params.put("colCity", "1");
+     }
+     // Post Code
+     if (params.get("state") != null && params.get("city") != null && params.get("postcode") == null) {
+       params.put("colPostCode", "1");
+     }
+     // Area
+     if (params.get("state") != null && params.get("city") != null && params.get("postcode") != null) {
+       params.put("colArea", "1");
+     }
+
+     return memberListMapper.selectMagicAddressComboList(params);
+   }
 }
