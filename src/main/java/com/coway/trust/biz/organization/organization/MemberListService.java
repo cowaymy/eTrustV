@@ -300,7 +300,17 @@ public interface MemberListService {
 	List<EgovMap> checkEmail(Map<String, Object> params);
 
 	Map<String, Object> suspendFromCU(Map<String, Object> params) throws Exception;
-	
+
 	ReturnMessage sendWhatsApp(Map<String, Object> params);
+
+    /**
+     * Get State List (Magic Address)
+     *
+     * @param params
+     * @return
+     * @exception Exception
+     * @author
+     */
+    List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception;
 
 }
