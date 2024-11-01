@@ -17,6 +17,7 @@ var atchFileId = '';
 var atchFileIdNew = '';
 var myFileCaches = {};
 var checkFileValid = true;
+var isAreaValid = true;
 
 var update = new Array();
 var remove = new Array();
@@ -915,11 +916,16 @@ function fn_setMemInfo(data){
 
 	    $("#areaId").val(data.areaId);
 
-	    if(data.areaId!=null&&jQuery.trim(data.areaId).length>0){
+	    if (data.areaId != null && jQuery.trim(data.areaId).length > 0) {
 	    	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
-
-	            fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
-
+	            if (result) {
+	                isAreaValid = true;
+	                fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
+	            } else {
+	            	isAreaValid = false;
+	                console.error("Area not found. Area ID: ",  data.areaId);
+	                Common.alert("Invalid member address: Please select a valid area for this member.");
+	            }
 	       });
 	    }
 
@@ -1507,6 +1513,11 @@ function fn_saveValidation(){
         message += "* Invalid Income Tax Format.<br/>";
     }
 
+    if (!isAreaValid) {
+    	valid = false;
+    	message += "Please select a valid area.<br/> Go to Member Address > Area search";
+    }
+
     //Display Message
     if (!valid)
     {
@@ -1537,17 +1548,17 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
 
         //Call Ajax
 
-        CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
+        CommonCombo.make('mState', "/organization/selectMagicAddressComboList", '' , mstate, optionState);
 
         var cityJson = {state : mstate}; //Condition
-        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
+        CommonCombo.make('mCity', "/organization/selectMagicAddressComboList", cityJson, mcity , optionCity);
 
         var postCodeJson = {state : mstate , city : mcity}; //Condition
-        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+        CommonCombo.make('mPostCd', "/organization/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
 
         var areaJson = {groupCode : mpostcode};
         var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
-        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+        CommonCombo.make('mArea', "/organization/selectMagicAddressComboList", areaJson, marea , optionArea);
 
         $("#areaId").val(areaid);
 
@@ -1622,7 +1633,7 @@ function fn_selectCity(selVal){
 
         //Call ajax
         var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
-        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+        CommonCombo.make('mPostCd', "/organization/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
     }
 
 }
@@ -1643,7 +1654,7 @@ function fn_selectPostCode(selVal){
 
         //Call ajax
         var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
-        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
+        CommonCombo.make('mArea', "/organization/selectMagicAddressComboList", areaJson, '' , optionArea);
     }
 
 }
@@ -1670,7 +1681,7 @@ function fn_selectState(selVal){
 
         //Call ajax
         var cityJson = {state : tempVal}; //Condition
-        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
+        CommonCombo.make('mCity', "/organization/selectMagicAddressComboList", cityJson, '' , optionCity);
     }
 
 }
