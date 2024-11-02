@@ -78,7 +78,7 @@
 
             <mvc:exclude-mapping path="/sample/**"/>
 
-            <mvc:exclude-mapping path="/**/api/**"/>
+            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
 
@@ -92,7 +92,7 @@
 
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
-            <mvc:exclude-mapping path="/**/api/**"/>
+            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
 
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
         </mvc:interceptor>
@@ -103,7 +103,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/mobileWeb/**"/>
             <mvc:exclude-mapping path="/mobileWeb/login.do"/>
-            <mvc:exclude-mapping path="/**/api/**"/>
+            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
 
             <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
         </mvc:interceptor>
