@@ -69,16 +69,17 @@ public class OrderColorGridController {
 
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
-    String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
-    String[] cmbSalesType = request.getParameterValues("cmbSalesType");
-    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
-    String[] cmbState = request.getParameterValues("cmbState");
+        String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
+        String[] cmbSalesType = request.getParameterValues("cmbSalesType");
+        String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
+        String[] cmbState = request.getParameterValues("cmbState");
 
-    String[] cmbProduct = request.getParameterValues("cmbProduct");
-    String[] cmbCondition = request.getParameterValues("cmbCondition");
+        String[] cmbProduct = request.getParameterValues("cmbProduct");
+        String[] cmbCondition = request.getParameterValues("cmbCondition");
 
-    logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
-    logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
+        String cmbServiceType = request.getParameter("cmbSrvType");
+        logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
+        logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
 
 		//if (params.containsKey("memCode")) {
@@ -131,6 +132,7 @@ public class OrderColorGridController {
 		params.put("cmbCondition", cmbCondition);
 		params.put("cmbProductCtgry",cmbProductCtgry);
 		params.put("cmbState",cmbState);
+        params.put("cmbServiceType",cmbServiceType);
 
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 

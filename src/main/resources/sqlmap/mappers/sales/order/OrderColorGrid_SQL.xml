@@ -150,7 +150,8 @@
                D1.KEY_IN_MONTH,
                D1.IS_EXTRADE_PR,
                D1.CANCELLATION_REQUEST_NO,
-               D1.CANCELLATION_STATUS_NAME
+               D1.CANCELLATION_STATUS_NAME,
+               D1.SERVICE_TYPE
     FROM ( SELECT DISTINCT F1.ORDERID1 ORD_ID ,
                                         F1.ORD_NO ,
                                         F1.APP_TYPE_CODE ,
@@ -203,7 +204,8 @@
                                         F1.KEY_IN_MONTH,
                                         F1.IS_EXTRADE_PR,
                                         F1.CANCELLATION_REQUEST_NO,
-                                        F1.CANCELLATION_STATUS_NAME
+                                        F1.CANCELLATION_STATUS_NAME,
+                                        F1.SERVICE_TYPE
                FROM ( SELECT E1.ORD_ID ORDERID1 ,
                                      E1.ORD_NO ,
                                      E1.ORD_DT ,
@@ -243,7 +245,8 @@
                                      E1.KEY_IN_MONTH,
                                      E1.IS_EXTRADE_PR,
                                      E1.CANCELLATION_REQUEST_NO,
-                                     E1.CANCELLATION_STATUS_NAME
+                                     E1.CANCELLATION_STATUS_NAME,
+                                     E1.SERVICE_TYPE
                       FROM ( SELECT * FROM (
                                    SELECT SOM.SALES_ORD_ID ORD_ID,
                                               SOM.SALES_ORD_NO ORD_NO,
@@ -274,8 +277,7 @@
                                               NVL (INSTSTATUS.CODE, '-') INSTALL_STUS,
                                               NVL (INSTREASON.RESN_DESC, '-') INSTALL_FAIL_RESN,
                                               NVL (SOM.COMM_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy')) COM_DT,
-                                              NVL (SOM.PAY_COM_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy'))
-                                              PAY_COM_DT,
+                                              NVL (SOM.PAY_COM_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy')) PAY_COM_DT,
                                               0 TOT_CNT,
                                               0 TOT_OTSTND,
                                               NVL (PROMO.PROMO_CODE, ' ') PROMO_CODE,
@@ -301,7 +303,8 @@
                                               SOM.KEY_IN_MONTH,
                                               SOM.IS_EXTRADE_PR,
                                               SOM.CANCELLATION_REQUEST_NO,
-                                              SOM.CANCELLATION_STATUS_NAME
+                                              SOM.CANCELLATION_STATUS_NAME,
+                                              INS.SRV_TYPE AS SERVICE_TYPE
                                    FROM SOM
                                    JOIN SAL0002D SOD ON SOM.SALES_ORD_ID = SOD.SALES_ORD_ID
                                    JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
@@ -336,31 +339,31 @@
                                       <if test="item == 1 ">
                                         ( SOM.STUS_CODE_ID = 1 )
                                       </if>
-                                      
+
                                       <if test="item == 2 ">
                                         ( SOM.STUS_CODE_ID = 10 )
                                       </if>
-                                      
+
                                       <if test="item == 3 ">
                                         ( SOM.STUS_CODE_ID = 4
                                           AND NVL (SOM.PV_YEAR, 0) <![CDATA[>]]> 0
                                           AND NVL (SOM.PV_MONTH, 0) <![CDATA[>]]> 0
                                         )
                                       </if>
-                                      
+
                                       <if test="item == 4 ">
                                         ( SOM.STUS_CODE_ID = 4
                                           AND NVL (SOM.PV_YEAR, 0) = 0
                                           AND NVL (SOM.PV_MONTH, 0) = 0
                                         )
                                       </if>
-                                      
+
                                       <if test="item == 5 ">
                                         ( NVL (IE.STUS_CODE_ID, 0) = 21
                                           AND SOM.STUS_CODE_ID != 10
                                         )
                                       </if>
-                                      
+
                                       <if test="item == 6 ">
                                         ( NVL (IE.STUS_CODE_ID, 0) = 1
                                           AND SOM.STUS_CODE_ID != 10
@@ -368,41 +371,41 @@
                                       </if>
                                     </foreach>
                                    </if>
-                                   
+
                                   <if test="custName != null and custName != ''">
                                     AND C.NAME LIKE '%'|| #{custName} || '%'
                                   </if>
-                                  
+
                                   <if test="custIc != null and custIc != ''">
                                     AND C.NRIC LIKE '%'|| #{custIc} || '%'
                                   </if>
-                                  
+
                                   <if test="cmbProduct != null and cmbProduct != ''">
                                     AND SOD.ITM_STK_ID IN
                                     <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
                                       #{item}
                                     </foreach>
                                   </if>
-                                  
+
                                   <if test="salesmanCode != null and salesmanCode != ''">
                                     AND MEM.MEM_CODE = #{salesmanCode}
                                   </if>
-                                  
+
                                   <if test="promoCode != null and promoCode != ''">
                                     AND NVL (PROMO.PROMO_CODE, '') = #{promoCode}
                                   </if>
-                                  
+
                                   <if test="memtype != null and memtype != ''">
                                      AND MEM.MEM_TYPE = #{memtype}
                                   </if>
-                                  
+
                                   <if test="cmbCustomerType != null and cmbCustomerType != ''">
                                     AND C.TYPE_ID IN
                                     <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
                                       #{item}
                                     </foreach>
                                   </if>
-                                  
+
                                   <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
                                     AND C.CORP_TYPE_ID IN
                                     <choose>
@@ -419,59 +422,63 @@
                                       </otherwise>
                                     </choose>
                                   </if>
-                                  
+
                                   <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                                     AND STK.STK_CTGRY_ID IN
                                     <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
                                       #{item}
                                     </foreach>
                                   </if>
-                                  
+
                                   <if test="cmbState != null and cmbState != ''">
                                     AND ADR.STATE_ID IN
                                     <foreach item="item" collection="cmbState" index="index" open="(" separator="," close=")">
                                       #{item}
                                     </foreach>
                                   </if>
-                                  
+
                                   <if test="matPack != null and matPack != ''">
                                     AND STK.STK_CTGRY_ID IN (5706)
                                     AND EXISTS ( SELECT 1 FROM HMC0011D WHERE ORD_SEQ_NO = SOM.BNDL_ID
                                     <if test="matPack == 'set' ">
                                       AND FRA_ORD_NO IS NOT NULL
                                     </if>
-                                    
+
                                     <if test="matPack == 'mat' ">
                                       AND FRA_ORD_NO IS NULL
                                     </if>
                                     )
                                   </if>
-                                  
+
                                   <if test="ccpStus != null and ccpStus != ''">
                                     <if test="ccpStus == 'appv'">
                                       AND CCP.CCP_STUS_ID = 5
                                     </if>
-                                    
+
                                     <if test="ccpStus == 'act'">
                                       AND CCP.CCP_STUS_ID = 1
                                     </if>
-                                    
+
                                     <if test="ccpStus == 'rjct'">
                                       AND CCP.CCP_STUS_ID = 6
                                     </if>
                                   </if>
-                                  
+
                                   <if test="isExtradePR != null and isExtradePR != ''">
                                     AND SOM.IS_EXTRADE_PR = #{isExtradePR}
                                   </if>
+
+                                  <if test="cmbServiceType !=null and cmbServiceType !=''">
+                                     AND INS.SRV_TYPE = #{cmbServiceType}
+                                  </if>
                                   ) E WHERE 1=1
-                                  
-                             <if test="cmbSalesType != null and cmbSalesType != ''">
-                              AND E.SALES_TYPE IN
-                                <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
-                                  #{item}
-                                </foreach>
-                            </if>
+
+                                 <if test="cmbSalesType != null and cmbSalesType != ''">
+                                  AND E.SALES_TYPE IN
+                                    <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
+                                      #{item}
+                                    </foreach>
+                                </if>
                             ) E1
                             <if test="contactNum != null and contactNum != ''">
                               /*
@@ -507,7 +514,7 @@
                                         OR B.TELF = #{contactNum}
                               ) E3 ON E3.SALES_ORD_ID = E1.ORD_ID
                             </if>
-                            
+
                             <if test="neoProStus != null and neoProStus != ''">
                               WHERE E1.NEO_PRO_STATUS = #{neoProStus}
                             </if>

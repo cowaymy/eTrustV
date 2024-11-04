@@ -27,8 +27,13 @@
 
 	var excelListGridID;
 
-	$(document).ready(function() {
+	var arrSrvTypeCode = [
+                          {"codeId": "SS"  ,"codeName": "Self Service"},
+                          {"codeId": "HS" ,"codeName": "Heart Service"}
+                        ];
 
+	$(document).ready(function() {
+		 doDefCombo(arrSrvTypeCode, '', 'cmbSrvType', 'S', '');
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         createExcelAUIGrid();
@@ -321,7 +326,7 @@
             }, {
                 dataField : "comDt",
                 headerText : "<spring:message code='sal.title.text.comDate' />",
-                width : 90,
+                width : 80,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
                 editable : false,
@@ -329,7 +334,7 @@
             }, {
                 dataField : "payComDt",
                 headerText : "<spring:message code='sal.title.text.payDate' />",
-                width : 90,
+                width : 80,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
                 editable : false,
@@ -346,6 +351,12 @@
             }, {
                 dataField : "isExtradePr",
                 headerText : "Product Return",
+                width : 120,
+                editable : false,
+                style: 'left_style'
+            },{
+            	dataField : "serviceType",
+                headerText : "<spring:message code='sales.srvType'/>",
                 width : 100,
                 editable : false,
                 style: 'left_style'
@@ -480,14 +491,14 @@
                headerText : "Com Date",
                dataType : "date",
                formatString : "dd/mm/yyyy" ,
-               width : 90,
+               width : 80,
                editable : false
                }, {
                dataField : "payComDt",
                headerText : "Pay Date",
                dataType : "date",
                formatString : "dd/mm/yyyy" ,
-               width : 90,
+               width : 80,
                editable : false
                }, {
                dataField : "state",
@@ -510,6 +521,12 @@
                    dataField : "cancellationStatusName",
                    headerText : "OCR Status",
                    width : 100,
+                   editable : false,
+                   style: 'left_style'
+               },{
+                   dataField : "serviceType",
+                   headerText : "<spring:message code='sales.srvType'/>",
+                   width : 90,
                    editable : false,
                    style: 'left_style'
                }];
@@ -543,7 +560,7 @@
 
         //  lev 1  Order Date    Order Date
         //  lev 2   netSalesMonth
-console.log("searchColorGrid");
+       console.log("searchColorGrid");
         var isValid = true;
         if(FormUtil.isEmpty($("#ordNo").val())         &&
            FormUtil.isEmpty($("#contactNum").val()) &&
@@ -583,13 +600,10 @@ console.log("searchColorGrid");
 
 	        	isValid = true;
 	        }
-
         }
-
 
 /*
        if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
-
             var startDate = $('#createStDate').val();
             var endDate = $('#createEnDate').val();
             if( fn_getDateGap(startDate , endDate) > 31){
@@ -598,7 +612,6 @@ console.log("searchColorGrid");
             }
         }
 */
-
 
 /*
         //Search Condition max 31Days -- add by Lee seok hee
@@ -621,13 +634,9 @@ console.log("searchColorGrid");
                 Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                 return;
             }
-
-
         }
 */
-
-
-          if(isValid == true){
+         if(isValid == true){
         	var param =  $("#searchForm").serialize();
             var htMemberType = $('#memtype').find('option:selected').val();
         	if('${SESSION_INFO.memberLevel}' =="3" || '${SESSION_INFO.memberLevel}' =="4"){
@@ -636,14 +645,9 @@ console.log("searchColorGrid");
         		 }
         	}
 
-
-
-
-
 	       	Common.ajax("GET", "/sales/order/orderColorGridJsonList", param, function(result) {
 	            AUIGrid.setGridData(myGridID, result);
 	            AUIGrid.setGridData(excelListGridID, result);
-
 
 	            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
 	                if(item.stusId == 4) {
@@ -658,13 +662,11 @@ console.log("searchColorGrid");
 	                }else{
 	                	return "";
 	                }
-
 	             });
 
 	             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
 	             AUIGrid.update(myGridID);
 	        });
-
            }else{
                Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
                return ;
@@ -672,7 +674,6 @@ console.log("searchColorGrid");
     }
 
     function fn_getDateGap(sdate, edate){
-
         var startArr, endArr;
 
         startArr = sdate.split('/');
@@ -683,15 +684,13 @@ console.log("searchColorGrid");
 
         var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
 
-//        console.log("gap : " + gap);
-
+        // console.log("gap : " + gap);
         return gap;
     }
 
 
     //def Combo(select Box OptGrouping)
     function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
-
       $.ajax({
           type : "GET",
           url : url,
@@ -713,7 +712,6 @@ console.log("searchColorGrid");
    } ;
 
    function fn_otpGrouping(data, obj){
-
        var targetObj = document.getElementById(obj);
 
        for(var i=targetObj.length-1; i>=0; i--) {
@@ -725,7 +723,6 @@ console.log("searchColorGrid");
        // grouping
        var count = 0;
        $.each(data, function(index, value){
-
            if(index == 0){
               $("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
            }
@@ -741,42 +738,49 @@ console.log("searchColorGrid");
                $(obj).append('<optgroup label="">');
                count++;
            }
+
            if(data[index].codeId == 736 && count == 0){
                $(obj).append('<optgroup label="Air Purifier">');
                count++;
            }
+
            if(data[index].codeId == 110  && count == 0){
                $(obj).append('<optgroup label="Bidet">');
                count++;
            }
+
            if(data[index].codeId == 1653  && count == 0){
                $(obj).append('<optgroup label="Frame">');
                count++;
            }
+
            if(data[index].codeId == 790 && count == 0){
                $(obj).append('<optgroup label="Juicer">');
                count++;
            }
+
            if(data[index].codeId == 1646 && count == 0){
                $(obj).append('<optgroup label="Mattress">');
                count++;
            }
+
            //
            if(data[index].codeId == 856 && count == 0){
                $(obj).append('<optgroup label="Point Of Entry ">');
                count++;
            }
+
            if(data[index].codeId == 538 && count == 0){
                $(obj).append('<optgroup label="Softener ">');
                count++;
            }
+
            if(data[index].codeId == 217 && count == 0){
                $(obj).append('<optgroup label="Water Purifier ">');
                count++;
            }
 
            $('<option />', {value : data[index].codeId, text: data[index].codeName}).appendTo(obj); // WH_LOC_ID
-
 
            if(index == data.length){
                $(obj).append('</optgroup>');
@@ -793,6 +797,7 @@ console.log("searchColorGrid");
             if (tag === 'form'){
                 return $(':input',this).clearForm();
             }
+            
             if (type === 'text' || type === 'password'  || tag === 'textarea'){
             	if($("#"+this.id).hasClass("readonly")){
 
@@ -807,6 +812,7 @@ console.log("searchColorGrid");
             		 this.selectedIndex = 0;
             	}
             }
+            
             $("#cmbAppType").multipleSelect("checkAll");
             $("#cmbCustomerType").multipleSelect("uncheckAll");
             $("#cmbCorpTypeId").multipleSelect("uncheckAll");
@@ -1078,6 +1084,14 @@ console.log("searchColorGrid");
         <option value="0">Choose One</option>
         <option value="1">Yes</option>
         <option value="2">No</option></td>
+</tr>
+<tr>
+     <th scope="row"><spring:message code='sales.srvType'/></th>
+     <td><select class="w100p" id="cmbSrvType" name="cmbSrvType"></td>
+     <th scope="row"></th>
+     <td></td>
+     <th scope="row"></th>
+     <td></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
