@@ -52,7 +52,7 @@ public class LoginDto {
   @ApiModelProperty(value = "memId")
   private String memId;
 
-  private String properiesUserSessionKey;
+  private String sKey;
 
   public static LoginDto create( LoginVO loginVO ) {
     LoginDto dto = new LoginDto();
@@ -71,7 +71,7 @@ public class LoginDto {
     dto.setUserMainDeptId( loginVO.getUserMainDeptId() );
     dto.setSerialRequireChkYn( loginVO.getSerialRequireChkYn() );
     dto.setMemId( loginVO.getMemId() );
-    dto.setProperiesUserSessionKey( loginVO.getProperiesUserSessionKey() );
+    dto.setsKey( loginVO.getsKey() );
     return dto;
   }
 
@@ -195,12 +195,12 @@ public class LoginDto {
     this.memId = memId;
   }
 
-  public String getProperiesUserSessionKey() {
-    return properiesUserSessionKey;
+  public String getsKey() {
+    return sKey;
   }
 
-  public void setProperiesUserSessionKey( String properiesUserSessionKey ) {
-    this.properiesUserSessionKey = properiesUserSessionKey;
+  public void setsKey( String sKey ) {
+    this.sKey = sKey;
   }
 
 }
