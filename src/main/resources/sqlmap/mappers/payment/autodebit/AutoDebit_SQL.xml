@@ -505,7 +505,7 @@
     <if test="selectType != null and selectType != '' ">
       <choose>
         <when test='selectType.equals("1")'>
-          AND REPLACE(UPPER(A.NAME), ' ', '') LIKE '%'||REPLACE(UPPER(#{selectKeyword}), ' ', '')||'%'
+          AND REPLACE(UPPER(A.NAME), ' ', '') = UPPER(#{selectKeyword})
         </when>
 
          <when test='selectType.equals("2")'>
