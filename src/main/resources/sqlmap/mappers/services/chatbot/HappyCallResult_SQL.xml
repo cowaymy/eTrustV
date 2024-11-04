@@ -48,16 +48,16 @@
                     JOIN CBT0002M E ON E.SURV_ID = A.HC_DEF_ID
                     WHERE 1=1
                     <if test='periodMonth != null and periodMonth != ""'>
-                    AND b.txn_dt >= TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
-                    AND b.txn_dt <= last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+                    AND b.txn_dt <![CDATA[>=]]> TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+                    AND b.txn_dt <![CDATA[<=]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
 
                     </if>
                     GROUP BY A.HC_ID
                 ) D ON C.HC_ID = D.CCR_HC_ID
             WHERE 1=1
             AND CCR_HC_ID IS NOT NULL
-            AND c.txn_dt >= TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
-            AND c.txn_dt <= last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+            AND c.txn_dt <![CDATA[>=]]> TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+            AND c.txn_dt <![CDATA[<=]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
             GROUP BY C.TXN_SURVYE_CODE
                 ) CCRM ON CCRM.CCR_TXN_SURVYE_CODE = HCM.TXN_SURVYE_CODE <!-- AND CCRM.CCR_HC_ID = HCM.HC_ID  -->
         WHERE 1=1
@@ -69,8 +69,8 @@
 			             AND HCM.TXN_SURVYE_CODE = #{agentCode}
 			        </if>
 			        <if test='periodMonth != null and periodMonth != ""'>
-                  AND hcm.txn_dt >= TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
-                  AND hcm.txn_dt <= last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+                  AND hcm.txn_dt <![CDATA[ >= ]]>TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+                  AND hcm.txn_dt <![CDATA[ <= ]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
 			        </if>
 			        <if test='deptCode != null and deptCode != ""'>
 			             AND ORG.DEPT_CODE = #{deptCode}
