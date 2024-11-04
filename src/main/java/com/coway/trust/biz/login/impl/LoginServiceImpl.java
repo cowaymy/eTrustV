@@ -500,7 +500,7 @@ public class LoginServiceImpl
   @Override
   public String getPropUsrSessionKey( Map<String, Object> params) throws NoSuchAlgorithmException {
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    String key_1 = CommonUtils.nvl(params.get( "userId" )) + CommonUtils.nvl(params.get( "password" ));
+    String key_1 = CommonUtils.nvl(params.get( "userId" )) + CommonUtils.nvl(loginMapper.getApiKey(8));
     byte[] hashBytes = digest.digest(key_1.getBytes());
     StringBuilder hexString = new StringBuilder();
     for (byte b : hashBytes) {
