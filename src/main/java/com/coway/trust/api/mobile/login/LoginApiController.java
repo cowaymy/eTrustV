@@ -94,7 +94,7 @@ public class LoginApiController {
 
       // FORM HASH SESSION KEY (properiesUserSessionKey)
       String usrSessionKey =  loginService.getPropUsrSessionKey(params);
-      loginVO.setProperiesUserSessionKey( CommonUtils.nvl( usrSessionKey ));
+      loginVO.setsKey( CommonUtils.nvl( usrSessionKey ));
 
       HttpSession session = sessionHandler.getCurrentSession();
       session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
