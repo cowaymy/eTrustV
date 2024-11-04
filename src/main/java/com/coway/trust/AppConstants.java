@@ -200,6 +200,7 @@ public class AppConstants {
 	public static final String RESPONSE_DESC_FORBIDDEN = "Forbidden";
 	public static final String RESPONSE_DESC_NOT_FOUND = "User not found";
 	public static final String RESPONSE_DESC_DUP = "Duplicated record(s)";
+	public static final String RESPONSE_DESC_NOT_COVERED = "Address area not in coverage";
 
 	public static final String DESC_SUCCESS = "Success";
 	public static final String DESC_FAILED = "Failed";
@@ -213,7 +214,7 @@ public class AppConstants {
 	public static final String E_VOUCHER_RECEIPT_BATCH_TEMPLATE = "template/html/eVoucherReceipt.html";
 
 	public static final String BILLER_CODE = "9928 (COWAY (MALAYSIA) SDN BHD)";
-	
+
 	//whatsApp
 	public static final String WA_TYPE_TEMPLATE = "wa_template";
 	public static final String WA_PLATFORM = "whatsapp";

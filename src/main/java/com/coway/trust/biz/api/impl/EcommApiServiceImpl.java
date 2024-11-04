@@ -126,6 +126,15 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         }
         else
         {
+        	//Check for black area product blocking
+        	int isBlackAreaFound = ecommApiMapper.isProductUnderBlackArea(reqPrm);
+        	if(isBlackAreaFound > 0){
+                code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+                message = AppConstants.RESPONSE_DESC_NOT_COVERED;
+
+                return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
+        	}
+
         	ecommApiMapper.registerOrd(reqPrm);
             ecommApiMapper.getCustomerInfo(reqPrm);
 

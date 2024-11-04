@@ -232,4 +232,11 @@
         LEFT JOIN SYS0013M CUST_STATUS ON CUST_STATUS.CODE_ID = CUST.IS_EXST_CUST
         WHERE CUST.NRIC = #{custNric}
   </select>
+
+<select id="isProductUnderBlackArea" parameterType="Map" resultType="int">
+  	SELECT COUNT(*) FROM SYS0064M A
+	JOIN SYS0121D B ON A.AREA_ID = B.AREA_ID AND A.BLCK_AREA_GRP_ID = B.BLCK_AREA_GRP_ID
+	JOIN SYS0026M C ON C.STK_CTGRY_ID = B.CAT_CODE_ID
+	WHERE A.AREA_ID = #{areaId} AND C.STK_ID = #{product} AND B.STUS_CODE_ID = 1
+  </select>
 </mapper>
