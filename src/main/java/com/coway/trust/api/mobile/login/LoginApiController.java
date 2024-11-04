@@ -80,17 +80,21 @@ public class LoginApiController {
       throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Invalid ID or password.");
     } else {
       if (loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 7) {
-        if (loginVO.getMemberLevel() != 3) { // TEMP ALLOW MANAGER LEVEL ACCESS MOBILE
+        //if (loginVO.getMemberLevel() != 3) { // TEMP ALLOW MANAGER LEVEL ACCESS MOBILE
           if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
             LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please accept e-Agreement via eTRUST web application.");
           }
-        }
+        //}
       }
 
       if( CommonUtils.isEmpty(loginVO.getMobileUseYn()) || loginVO.getMobileUseYn().equals("N") ){
           throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Entered ID are not applicable to acess mobile application, please contact respective support department.");
       }
+
+      // FORM HASH SESSION KEY (properiesUserSessionKey)
+      String usrSessionKey =  loginService.getPropUsrSessionKey(params);
+      loginVO.setProperiesUserSessionKey( CommonUtils.nvl( usrSessionKey ));
 
       HttpSession session = sessionHandler.getCurrentSession();
       session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
