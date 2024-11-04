@@ -105,7 +105,7 @@ public class LoginVO {
 
   private int checkMfaFlag;
 
-  private String properiesUserSessionKey;
+  private String sKey;
 
   public String getUserMemCode() {
     return userMemCode;
@@ -526,12 +526,11 @@ public class LoginVO {
     this.checkMfaFlag = checkMfaFlag;
   }
 
-  public String getProperiesUserSessionKey() {
-    return properiesUserSessionKey;
+  public String getsKey() {
+    return sKey;
   }
 
-  public void setProperiesUserSessionKey( String properiesUserSessionKey ) {
-    this.properiesUserSessionKey = properiesUserSessionKey;
+  public void setsKey( String sKey ) {
+    this.sKey = sKey;
   }
-
 }
