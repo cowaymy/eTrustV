@@ -92,12 +92,14 @@ public class AuthenticInterceptor
           if (sessionVO != null && sessionVO.getUserId() > 0) {
             checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
           } else {
+            LOGGER.debug(">>>>sKey>>>>", CommonUtils.nvl(request.getParameter("sKey")));
+            LOGGER.debug(">>>>usrNm>>>>", CommonUtils.nvl(request.getParameter("usrNm")));
             if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
               Map<String, Object> acsPrm = new HashMap<String, Object>();
               acsPrm.put( "userId", request.getParameter("usrNm") );
               acsPrm.put( "properiesUserSessionKey", request.getParameter("sKey") );
-              LOGGER.debug(">>>>>>>>", request.getParameter("usrNm"));
-              LOGGER.debug(">>>>>>>>", request.getParameter("sKey"));
+              LOGGER.debug(">>>>usrNm>>>>", request.getParameter("usrNm"));
+              LOGGER.debug(">>>>>sKey>>>", request.getParameter("sKey"));
               if (!chkAcessKey(acsPrm)) {
                 throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
               }
@@ -165,7 +167,7 @@ public class AuthenticInterceptor
     throws Exception {
     // check request to Callcenter
     if ( VerifyRequest.isNotCallCenterRequest( request ) ) {
-      LOGGER.debug( "preHandle :: URI :: " + request );
+      LOGGER.debug( "postHandle :: URI :: " + request );
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
       boolean flag = bypassAuthorized( request );
       if ( !flag ) {
