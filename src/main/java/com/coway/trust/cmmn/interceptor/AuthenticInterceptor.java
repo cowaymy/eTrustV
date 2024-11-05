@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,23 +96,14 @@ public class AuthenticInterceptor
           if (sessionVO != null && sessionVO.getUserId() > 0) {
             checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
           } else {
+            logRequestHeaders(request);
+            logRequestParameters(request);
+            logRequestAttributes(request);
+
             if (!validateApiAccess(request)) {
               throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
             }
-
-            /*if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
-              Map<String, Object> acsPrm = new HashMap<String, Object>();
-              acsPrm.put( "userId", request.getParameter("usrNm") );
-              acsPrm.put( "properiesUserSessionKey", request.getParameter("sKey") );
-              if (!chkAcessKey(acsPrm)) {
-                throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-              }
-            } else {
-              LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
-              throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            };*/
           }
-
         } else {
           LOGGER.info("[preHandle] this url is call by Callcenter.......");
         }
@@ -175,6 +167,18 @@ public class AuthenticInterceptor
       boolean flag = bypassAuthorized( request );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
+          LOGGER.info( " ++++ " + request.getParameter( "sKey" ) );
+          LOGGER.info( " ++++ " + request.getParameter( "sUid" ) );
+          logRequestHeaders(request);
+          logRequestParameters(request);
+          logRequestAttributes(request);
+          try {
+            System.out.println("Request Body: " + getRequestBody(request));
+          }
+          catch ( IOException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           if (!validateApiAccess(request)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
           }
@@ -254,6 +258,42 @@ public class AuthenticInterceptor
       e.printStackTrace();
     }
     return false;
+  }
+
+  public void logRequestHeaders(HttpServletRequest request) {
+    Enumeration<String> headerNames = request.getHeaderNames();
+    while (headerNames.hasMoreElements()) {
+        String headerName = headerNames.nextElement();
+        String headerValue = request.getHeader(headerName);
+        System.out.println("Header: " + headerName + " = " + headerValue);
+    }
+  }
+
+  public void logRequestParameters(HttpServletRequest request) {
+    Map<String, String[]> parameterMap = request.getParameterMap();
+    for (String paramName : parameterMap.keySet()) {
+        String[] paramValues = parameterMap.get(paramName);
+        System.out.println("Parameter: " + paramName + " = " + String.join(", ", paramValues));
+    }
+  }
+
+  public void logRequestAttributes(HttpServletRequest request) {
+    Enumeration<String> attributeNames = request.getAttributeNames();
+    while (attributeNames.hasMoreElements()) {
+        String attributeName = attributeNames.nextElement();
+        Object attributeValue = request.getAttribute(attributeName);
+        System.out.println("Attribute: " + attributeName + " = " + attributeValue);
+    }
+  }
+
+  public String getRequestBody(HttpServletRequest request) throws IOException {
+    StringBuilder stringBuilder = new StringBuilder();
+    BufferedReader bufferedReader = request.getReader();
+    String line;
+    while ((line = bufferedReader.readLine()) != null) {
+        stringBuilder.append(line);
+    }
+    return stringBuilder.toString();
   }
 
 }
