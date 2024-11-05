@@ -378,7 +378,9 @@
   </select>
 
     <select id="checkScanSerial" parameterType="Map" resultType="egovMap">
-        SELECT
+
+    <![CDATA[
+        SELECT /*+INDEX (A LOG0082M_IDX1) */
            A.SEQ
            ,A.STK_ID
            ,B.STK_CODE
@@ -392,12 +394,15 @@
         AND NVL(S07.FILTER_SRL_UNMATCH_RSN,0) = 0
         AND A.OLD_SERIAL = #{barcode}
         and MEM_ID = #{codyId}
+        ]]>
+
         <if test="servicesdt !=null and servicesdt !=''">
             AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
        </if>
        <if test="serviceedt !=null and serviceedt !=''">
             AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
        </if>
+
   </select>
 
     <select id="getScanNoSequence" parameterType="Map" resultType="String">
