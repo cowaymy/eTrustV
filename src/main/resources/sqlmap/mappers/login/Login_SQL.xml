@@ -698,10 +698,4 @@
     <update id="updateCheckMfaFlag" parameterType="Map">
         update sys0047m set CHECK_MFA = 1 where USER_ID = #{userId}
     </update>
-
-    <select id="getApiKey" parameterType="Map" resultType="loginVO">
-      SELECT API_KEY
-      FROM API0001M
-      WHERE API_USER_ID = #{keyId}
-    </select>
 </mapper>
