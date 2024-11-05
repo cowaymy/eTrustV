@@ -1,5 +1,7 @@
 package com.coway.trust.cmmn.interceptor;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,7 @@ import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -92,21 +95,21 @@ public class AuthenticInterceptor
           if (sessionVO != null && sessionVO.getUserId() > 0) {
             checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
           } else {
-            LOGGER.debug(">>>>sKey>>>>", CommonUtils.nvl(request.getParameter("sKey")));
-            LOGGER.debug(">>>>usrNm>>>>", CommonUtils.nvl(request.getParameter("usrNm")));
-            if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
+            if (!validateApiAccess(request)) {
+              throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            }
+
+            /*if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
               Map<String, Object> acsPrm = new HashMap<String, Object>();
               acsPrm.put( "userId", request.getParameter("usrNm") );
               acsPrm.put( "properiesUserSessionKey", request.getParameter("sKey") );
-              LOGGER.debug(">>>>usrNm>>>>", request.getParameter("usrNm"));
-              LOGGER.debug(">>>>>sKey>>>", request.getParameter("sKey"));
               if (!chkAcessKey(acsPrm)) {
                 throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
               }
             } else {
               LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
               throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            };
+            };*/
           }
 
         } else {
@@ -172,13 +175,8 @@ public class AuthenticInterceptor
       boolean flag = bypassAuthorized( request );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
-          if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
-            Map<String, Object> acsPrm = new HashMap<String, Object>();
-            acsPrm.put( "userId", request.getParameter("usrNm") );
-            acsPrm.put( "properiesUserSessionKey", request.getParameter("sKey") );
-            if (!chkAcessKey(acsPrm)) {
-              throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            }
+          if (!validateApiAccess(request)) {
+            throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
           }
         }
         if ( modelAndView != null ) {
@@ -205,8 +203,43 @@ public class AuthenticInterceptor
     }
   }
 
+  private boolean validateApiAccess(HttpServletRequest request) {
+    StringBuilder stringBuilder = new StringBuilder();
+    BufferedReader bufferedReader;
+    try {
+      bufferedReader = request.getReader();
+      String line;
+      String jsonBody;
+      while ((line = bufferedReader.readLine()) != null) {
+          stringBuilder.append(line);
+      }
+      jsonBody = stringBuilder.toString();
+      ObjectMapper objectMapper = new ObjectMapper();
+      Map<String, String> bodyMap = objectMapper.readValue(jsonBody, Map.class);
+      String sKey = bodyMap.get("sKey");
+      String sUid = bodyMap.get("sUid");
+
+      LOGGER.debug( "=sKey= " + sKey );
+      LOGGER.debug( "=sUid= " + sUid );
+
+      if (!CommonUtils.nvl(sKey).equals( "" ) && !CommonUtils.nvl(sUid).equals( "" )) {
+        Map<String, Object> acsPrm = new HashMap<String, Object>();
+        acsPrm.put( "sUid", sUid);
+        acsPrm.put( "sKey", sKey );
+        if (!chkAcessKey(acsPrm)) {
+          return false;
+        }
+        return true;
+      } else {
+        return false;
+      }
+    } catch ( IOException e ) {
+      return false;
+    }
+  }
+
   private boolean chkAcessKey(Map<String, Object> params ) {
-    String accKey = CommonUtils.nvl(params.get( "properiesUserSessionKey" ));
+    String accKey = CommonUtils.nvl(params.get( "sKey" ));
     String actAccKey = "";
     try {
       actAccKey = CommonUtils.nvl(loginService.getPropUsrSessionKey(params));
