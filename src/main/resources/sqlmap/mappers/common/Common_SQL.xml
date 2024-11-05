@@ -2613,4 +2613,10 @@
                                     , UPD_DT = SYSDATE
       WHERE DHL_REQ_ID =  #{reqsId}
   </update>
+
+  <select id="getApiKey" parameterType="Integer" resultType="String">
+    SELECT TO_CHAR(API_KEY)
+    FROM API0001M
+    WHERE API_USER_ID = #{keyId}
+  </select>
 </mapper>
