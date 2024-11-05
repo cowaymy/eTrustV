@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -647,5 +648,11 @@ public class CommonController {
   public ResponseEntity<EgovMap> createDhlShpt( @RequestBody Map<String, Object> params ) throws IOException, JSONException, ParseException {
     EgovMap rtnData = commonService.createDhlShpt( params );
     return ResponseEntity.ok( rtnData );
+  }
+
+  @RequestMapping(value = "/getApisKey.do", method = RequestMethod.POST)
+  public ResponseEntity <String> getApisKey( @RequestBody String uID ) throws NoSuchAlgorithmException {
+    String sKey = commonService.getApisKey( uID );
+    return ResponseEntity.ok( sKey );
   }
 }
