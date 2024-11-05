@@ -170,7 +170,7 @@ public class AuthenticInterceptor
       boolean flag = bypassAuthorized( request );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
-          if (!CommonUtils.nvl(request.getParameter("properiesUserSessionKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
+          if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
             Map<String, Object> acsPrm = new HashMap<String, Object>();
             acsPrm.put( "userId", request.getParameter("usrNm") );
             acsPrm.put( "properiesUserSessionKey", request.getParameter("properiesUserSessionKey") );
