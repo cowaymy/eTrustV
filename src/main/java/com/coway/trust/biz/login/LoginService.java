@@ -76,6 +76,4 @@ public interface LoginService {
   public int checkSecurityAnswer( Map<String, Object> params );
 
   public void updateCheckMfaFlag( int userId );
-
-  String getPropUsrSessionKey(Map<String, Object> params) throws NoSuchAlgorithmException;
 }
