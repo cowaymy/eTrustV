@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AccessMonitoringService;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.exception.AuthException;
@@ -45,6 +46,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
   @Autowired
   private LoginService loginService;
+
+  @Autowired
+  private CommonService commonService;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
@@ -202,7 +206,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
       // GET ACTUAL TOKEN
       String a_sKey;
       try {
-        a_sKey = CommonUtils.nvl(loginService.getPropUsrSessionKey(sUid[0]));
+        a_sKey = CommonUtils.nvl(commonService.getApisKey(sUid[0]));
         LOGGER.debug( "=sUid= " + sUid[0] );
         LOGGER.debug( "=sKey= " + sKey[0] );
         LOGGER.debug( "=a_sKey= " + a_sKey );
