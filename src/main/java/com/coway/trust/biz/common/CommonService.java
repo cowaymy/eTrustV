@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -487,5 +488,5 @@ public interface CommonService
 
     EgovMap createDhlShpt( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 
-
+    String getApisKey ( String uID ) throws NoSuchAlgorithmException;
 }
