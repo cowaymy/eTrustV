@@ -72,7 +72,7 @@
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp1', 'S', '');      // Discount period
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp2', 'S', '');      // Discount period
         doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
-		doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+        doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
          doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
          doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S','exTradeCallbackFn'); //EX-TRADE
@@ -89,7 +89,7 @@
         $("#tnbAccNo").hide();
         Common.ajax("GET", "/homecare/sales/order/selectSeda4PromoList.do", null, function(result) {
             if(result.dataList.length > 0){
-            	seda4PromotionId = result.dataList;
+                seda4PromotionId = result.dataList;
             }
         });
 
@@ -97,7 +97,7 @@
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 
         if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){        // HC - eKey-In > Convert Sales
-        	$('#pwpNo').removeClass("blind");
+            $('#pwpNo').removeClass("blind");
             $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
             $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
             $('#exTrade').val('${preOrderInfo.exTrade}');
@@ -121,7 +121,7 @@
             $('#btnPwpNo').addClass("blind");
             $('#isReturnExtradeChkBox').removeClass("blind");
             $('#relatedNo').removeClass("blind");
-//             	   $('#btnRltdNo').removeClass("blind");
+//                 $('#btnRltdNo').removeClass("blind");
         }
 
         //Pre-Order Info
@@ -138,14 +138,14 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [
             {
-            	dataField : "chkfield",
-            	width: 70,
-            	renderer : {
-	            	type : "CheckBoxEditRenderer",
-	                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-	                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-	                checkValue : 1, // true, false 인 경우가 기본
-	                unCheckValue : 0
+                dataField : "chkfield",
+                width: 70,
+                renderer : {
+                    type : "CheckBoxEditRenderer",
+                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                    checkValue : 1, // true, false 인 경우가 기본
+                    unCheckValue : 0
                 }
             },
             {dataField : "typeDesc",       headerText  : '<spring:message code="sal.title.text.document" />',       editable : false,       style : 'left_style'},
@@ -190,26 +190,26 @@
 
         if(custId != $('#hiddenCustId').val()) {
             Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
-	            if(result != null && result.length == 1) {
-	                var custInfo = result[0];
+                if(result != null && result.length == 1) {
+                    var custInfo = result[0];
 
-	                $('#hiddenThrdPartyId').val(custInfo.custId)
-	                $('#thrdPartyId').val(custInfo.custId)
-	                $('#thrdPartyType').val(custInfo.codeName1)
-	                $('#thrdPartyName').val(custInfo.name)
-	                $('#thrdPartyNric').val(custInfo.nric)
+                    $('#hiddenThrdPartyId').val(custInfo.custId)
+                    $('#thrdPartyId').val(custInfo.custId)
+                    $('#thrdPartyType').val(custInfo.codeName1)
+                    $('#thrdPartyName').val(custInfo.name)
+                    $('#thrdPartyNric').val(custInfo.nric)
 
-	                $('#thrdPartyId').removeClass("readonly");
-	                $('#thrdPartyType').removeClass("readonly");
-	                $('#thrdPartyName').removeClass("readonly");
-	                $('#thrdPartyNric').removeClass("readonly");
+                    $('#thrdPartyId').removeClass("readonly");
+                    $('#thrdPartyType').removeClass("readonly");
+                    $('#thrdPartyName').removeClass("readonly");
+                    $('#thrdPartyNric').removeClass("readonly");
 
-	            } else {
-	                if(sMethd == 2) {
-	                    Common.alert('<spring:message code="sal.alert.msg.input3rdPartyId" arguments="'+custId+'"/>');
-	                }
-	            }
-	        });
+                } else {
+                    if(sMethd == 2) {
+                        Common.alert('<spring:message code="sal.alert.msg.input3rdPartyId" arguments="'+custId+'"/>');
+                    }
+                }
+            });
 
         } else {
             Common.alert('<spring:message code="sal.alert.msg.samePerson3rdPartyId" arguments="'+custId+'"/>');
@@ -251,10 +251,10 @@
                 $("#custStatus").val(custInfo.custStatus); //Customer Status
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
-                	$("#marketMessageYes").prop("checked", true);
+                    $("#marketMessageYes").prop("checked", true);
                 }
                 else{
-                	$("#marketMessageNo").prop("checked", true);
+                    $("#marketMessageNo").prop("checked", true);
                 }
 
                 if(custInfo.corpTypeId > 0) {
@@ -349,11 +349,11 @@
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(custInfo) {
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
-                	if(convToOrdYn && copyChangeYn){ //check the string is positive value (means it is not empty or null)
-                		if (convToOrdYn != "Y" && copyChangeYn != "Y") {
+                    if(convToOrdYn && copyChangeYn){ //check the string is positive value (means it is not empty or null)
+                        if (convToOrdYn != "Y" && copyChangeYn != "Y") {
                               fn_clearSales();
                        }
-                	}
+                    }
 
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
@@ -424,7 +424,7 @@
 
     //Customise Installation DSC/HDC Load for Aircon Checking Usage and not including fn_clearSales for after onchange use
     function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare, isAC) {
-    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare,'isAC' : isAC}, function(custInfo) {
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare,'isAC' : isAC}, function(custInfo) {
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
@@ -500,13 +500,13 @@
                 }
 
                 //if(convToOrdYn != 'Y') {
-                	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
-                		AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
-                		if(docDefaultChk == false) docDefaultChk = true;
-                	}
+                    if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
+                        AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                        if(docDefaultChk == false) docDefaultChk = true;
+                    }
                 //}
             } else {
-            	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
+                if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
                     AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
                     //if(docDefaultChk == false) docDefaultChk = true;
                 }
@@ -600,9 +600,9 @@
                 $('#billMthdEmailTxt2').removeAttr("disabled");
 
                 if($("#corpTypeId").val() == 1151 || $("#corpTypeId").val() ==1154 || $("#corpTypeId").val() == 1333){
-                	$('#billMthdPost').removeAttr("disabled");
+                    $('#billMthdPost').removeAttr("disabled");
                 } else {
-                	$('#billMthdPost').prop("disabled",true);
+                    $('#billMthdPost').prop("disabled",true);
                 }
 
             } else if($('#typeId').val() == '964') { //Individual
@@ -802,10 +802,10 @@
         });
 
         $('#billMthdPost').change(function() {
-        	if($("#billMthdPost").is(":checked")) {
-        		$('#billMthdEstm').change();
-        		$('#billMthdSms').change();
-        	}
+            if($("#billMthdPost").is(":checked")) {
+                $('#billMthdEstm').change();
+                $('#billMthdSms').change();
+            }
         });
 
         $('#billMthdSms').change(function() {
@@ -813,7 +813,7 @@
             $('#billMthdSms2').prop("checked", false).prop("disabled", true);
 
             if($("#billMthdSms").is(":checked")) {
-            	$('#billMthdEstm').change();
+                $('#billMthdEstm').change();
                 $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdSms2').removeAttr("disabled");
             }
@@ -828,7 +828,7 @@
             $('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
-            	$('#billMthdSms').change();
+                $('#billMthdSms').change();
                 $('#spEmail1').text("*");
                 $('#spEmail2').text("*");
                 $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
@@ -957,11 +957,11 @@
                             var vCustType = $("#typeId").val();
 
                             if (vCustType == '965' ){
-                            	$("#corpCustType").val('').removeAttr("disabled");
-                            	$("#agreementType").val('').removeAttr("disabled");
+                                $("#corpCustType").val('').removeAttr("disabled");
+                                $("#agreementType").val('').removeAttr("disabled");
 
                             } else {
-                            	$("#corpCustType").val('').prop("disabled", true);
+                                $("#corpCustType").val('').prop("disabled", true);
                                 $("#agreementType").val('').prop("disabled", true);
                             }
 
@@ -1091,8 +1091,8 @@
                     if (custTypeId != '964' || (custTypeId == '964' && nationalityId != '1') ) {
                         doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     } else {
-	                    //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-	                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
+                        //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                        doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     }
                     $('#ordProduct1 ').removeAttr("disabled");
                     $('#ordProduct2 ').removeAttr("disabled");
@@ -1155,11 +1155,11 @@
 
             //debugger;
             if($('#ordProduct1 option').length < 2 && $('#ordProduct2 option').length >= 2){
-            	$('#btnMatRltdNo').removeClass("blind");
-            	MAT_TAG = 'Y';
+                $('#btnMatRltdNo').removeClass("blind");
+                MAT_TAG = 'Y';
             }else{
-            	$('#btnMatRltdNo').addClass("blind");
-            	MAT_TAG = 'N';
+                $('#btnMatRltdNo').addClass("blind");
+                MAT_TAG = 'N';
             }
         });
 
@@ -1178,7 +1178,7 @@
             // 필드 초기화.
             var dataList = $('[data-ref="'+_tagId+'"]');
             for(var i=0; i<dataList.length; ++i) {
-            	$('#'+ $(dataList[i]).attr('id')).val('');
+                $('#'+ $(dataList[i]).attr('id')).val('');
             }
 
             //check main aircon only ajax
@@ -1186,12 +1186,12 @@
                 stockIdVal = $("#ordProduct"+_tagNum).val();
                 //
                 if(!FormUtil.isEmpty(stockIdVal)){
-                	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
+                    checkIfIsAcInstallationProductCategoryCode(stockIdVal);
                 }
             }
 
             if(FormUtil.isEmpty(_tagObj.val())) {
-            	totSumPrice();   // 합계
+                totSumPrice();   // 합계
                 return;
             }else{
                 let stkId   = $("#ordProduct"+_tagNum).val();
@@ -1234,13 +1234,13 @@
 
                 //}
                 if(copyChangeYn == 'Y') {
-                	if(_tagNum == '1') {
+                    if(_tagNum == '1') {
                         fn_loadProductPromotion_chg(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, '${orderInfo.basicInfo.ordPromoId}', _tagNum);
                     } else {
                         fn_loadProductPromotion_chg(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, '${orderInfo2.basicInfo.ordPromoId}', _tagNum);
                     }
                 } else {
-                	fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+                    fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
                 }
             }
 
@@ -1284,7 +1284,7 @@
 
         $('#exTrade').change(function() {
 
-        	$('#ordPromo1 option').remove();
+            $('#ordPromo1 option').remove();
             $('#ordPromo2 option').remove();
             fn_clearAddCpnt();
             fn_clearOrderSalesman();
@@ -1304,7 +1304,7 @@
                 $('#btnRltdNo').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
-                	//$('#isReturnExtrade').prop("checked", true); --no product return
+                    //$('#isReturnExtrade').prop("checked", true); --no product return
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -1321,7 +1321,7 @@
                          $('#ordProduct2').val('');
                          $('#speclInstct').val('');
 
-                    	 var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
+                         var msg = "Extrade sales key-in does not meet period date (Submission start on 1st of every month)";
                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                          return;
                      }
@@ -1355,9 +1355,9 @@
                 $('#ordProduct2').val('');
 
                 if($("#exTrade").val() == '3'){
-                	$('#exTrade').val('');
+                    $('#exTrade').val('');
 
-                	var msg = "HC is not allowed for Jom Tukar.";
+                    var msg = "HC is not allowed for Jom Tukar.";
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                     return;
                 }
@@ -1405,7 +1405,7 @@
 
 
         $('#ordPromo1, #ordPromo2').change(function(event) {
-        	var _tagObj = $(event.target);
+            var _tagObj = $(event.target);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
 
@@ -1439,17 +1439,17 @@
 
                   countMatch = 0;
                   for( i = 0 ; i < seda4PromotionId.length ; i ++){
-                	  if(seda4PromotionId[i].code == $("#ordPromo"+_tagNum).val() ){
-                		  countMatch = countMatch + 1;
-                	  }
+                      if(seda4PromotionId[i].code == $("#ordPromo"+_tagNum).val() ){
+                          countMatch = countMatch + 1;
+                      }
                   }
                   if(countMatch > 0){
-                	  $("#tnbAccNoLbl").show();
-                	  $("#tnbAccNo").val('');
+                      $("#tnbAccNoLbl").show();
+                      $("#tnbAccNo").val('');
                       $("#tnbAccNo").show();
                   }else{
-                	  $("#tnbAccNoLbl").hide();
-                	  $("#tnbAccNo").val('');
+                      $("#tnbAccNoLbl").hide();
+                      $("#tnbAccNo").val('');
                       $("#tnbAccNo").hide();
                   }
             }
@@ -1470,15 +1470,15 @@
     });
 
     function fn_srvPacId() {
-    	$('#srvPacId').change();
+        $('#srvPacId').change();
     }
 
     function fn_promoChg1(){
-    	fn_promoChg("1");
+        fn_promoChg("1");
     }
 
     function fn_promoChg2(){
-    	fn_promoChg("2");
+        fn_promoChg("2");
     }
 
     function fn_promoChg(_tagNum) {
@@ -1495,11 +1495,11 @@
        var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() || '${orderInfo.basicInfo.srvPacId}': 0;
 
        if(_tagNum == '1'){
-    	   voucherPromotionCheck();
+           voucherPromotionCheck();
        }
 
         if(promoIdIdx > 0 && promoIdVal != '0') {
-        	if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
+            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
                 $('#trialNoChk').removeAttr("disabled");
             }
             fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId, _tagNum);
@@ -1563,11 +1563,11 @@
                     return false;
 
                 } else {
-                	fn_preCheckSave2();
+                    fn_preCheckSave2();
                 }
             });
         } else {
-        	fn_preCheckSave2();
+            fn_preCheckSave2();
         }
     }
 
@@ -1590,12 +1590,12 @@
         }
 
         if(convToOrdYn == 'Y') {// if it is eKeyin order
-        	Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
+            Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
                 if(result.code == "99"){
                     Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
                     return;
                 }else{
-                	if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ) {
+                    if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ) {
                         var contactNumber = {
                               contactNumber       : $('#custCntcTelM').val()
                             , residenceNumber    : $('#custCntcTelR').val()
@@ -1636,17 +1636,17 @@
                         Common.popupDiv("/homecare/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
 
                     } else if ($("#exTrade").val() == 4){
-                    	// Add validation if select PWP
+                        // Add validation if select PWP
                         $('#pwpNo').val();
                         $('#txtMainPwpOrderID').val();
                         Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#pwpNo').val()}, null, true);
 
                     } else {
-                    	fn_popOrderDetail();
+                        fn_popOrderDetail();
                     }
 
                 } else {
-                	fn_popOrderDetail();
+                    fn_popOrderDetail();
                 }
             }
         }
@@ -1752,14 +1752,14 @@
                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
 
             } else if($("#exTrade").val() == 4){
-            	Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+                Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
 
             } else {
-            	fn_popOrderDetail();
+                fn_popOrderDetail();
             }
 
         } else {
-        	fn_popOrderDetail();
+            fn_popOrderDetail();
         }
     }
 
@@ -2020,7 +2020,7 @@
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
-        	$("#btnConfirm_RW").show();
+            $("#btnConfirm_RW").show();
             try {
                 Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b><b>' + jqXHR.responseJSON.message + "</b>");
             } catch (e) {
@@ -2124,13 +2124,13 @@
             }
 
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
-            	if($("#ordProduct1 option:selected").index() > 0) {
+                if($("#ordProduct1 option:selected").index() > 0) {
                     if($("#ordPromo1 option:selected").index() <= 0) {
                         isValid = false;
                         msg += "* Please select the matress promotion code.<br>";
                     }
                 }
-            	// If is MT Rental Starter 60 (SET) and promotion is null
+                // If is MT Rental Starter 60 (SET) and promotion is null
                 if($("#ordProduct2 option:selected").index() > 0 && srvPacVal == 10) {
                     if($("#ordPromo2 option:selected").index() <= 0) {
                         isValid = false;
@@ -2183,15 +2183,15 @@
         }
 
         if($('#voucherType').val() == ""){
-       	 isValid = false;
+         isValid = false;
             msg += "* Please select voucher type.<br>";
        }
 
        if($('#voucherType').val() != "" && $('#voucherType').val() > 0){
-       	if(voucherAppliedStatus == 0){
-       	 isValid = false;
+        if(voucherAppliedStatus == 0){
+         isValid = false;
             msg += "* You have selected a voucher type. Please apply a voucher is any.<br>";
-       	}
+        }
        }
 
      // ADD COMBO PROMOTION CHECKING
@@ -2214,20 +2214,20 @@
         if ($("#compType1 option:selected").val() != undefined){
             if($("#compType1 option").length > 1) {
                 if ($("#compType1 option:selected").index() <= 0) {
-                	isChkCompTy1 = false;
+                    isChkCompTy1 = false;
                 }
             }
         }
         if ($("#compType2 option:selected").val() != undefined){
             if($("#compType2 option").length > 1) {
                 if ($("#compType2 option:selected").index() <= 0) {
-                	isChkCompTy2 = false;
+                    isChkCompTy2 = false;
                 }
             }
         }
         if(!(isChkCompTy1 && isChkCompTy2)) {
-        	isValid = false;
-        	msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
+            isValid = false;
+            msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
         }
         // ADD ON COMPONENT CHECKING - END
 
@@ -2254,17 +2254,17 @@
 
         if(MAT_TAG == 'Y'){
 
-        	if(FormUtil.checkReqValue($("#matRelatedNo"))){
-        		isValid = false;
+            if(FormUtil.checkReqValue($("#matRelatedNo"))){
+                isValid = false;
                 msg += '<spring:message code="sal.alert.msg.plzSelMattressOrd" />';
-        	}else{
-        		 Common.ajaxSync("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#matStkId").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+            }else{
+                 Common.ajaxSync("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#matStkId").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
                      if(result.code != '00') {
-                    	 isValid = false;
-                    	 msg +=  '<spring:message code="sal.alert.msg.matSizeDiff" />';
+                         isValid = false;
+                         msg +=  '<spring:message code="sal.alert.msg.matSizeDiff" />';
                      }
                  });
-        	}
+            }
 
         }
 
@@ -2279,11 +2279,11 @@
         }
 
         if(countMatch == 1){
-        	if($("#tnbAccNo").val() == undefined || $("#tnbAccNo").val() == ''){
-        		isValid = false;
-        		text = 'TNB Acc. No.';
-        		msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
-        	}
+            if($("#tnbAccNo").val() == undefined || $("#tnbAccNo").val() == ''){
+                isValid = false;
+                text = 'TNB Acc. No.';
+                msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+            }
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -2618,33 +2618,33 @@
         if(LoginRoleID != "105" && LoginRoleID != "97")//Modified by Keyi bypass HOR & Supervisor Key In restriction
         {
 
-		        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode, custId : custId}, function(memRc) {
-		            console.log("checkRc");
-		            if(memRc != null) {
-		                if(memRc.rookie == 1) {
-		                    if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
-		                        // Not own purchase and SHI below 50
-		                        fn_clearOrderSalesman();
-		                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to RC below 50%.");
-		                        return false;
-		                    } else if(memRc.opCnt > 0) {
-		                         // Own Purchase
-		                         /* if(memRc.flg6Month == 0) {
-		                             Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
-		                             return false;
-		                         } */
+                Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode, custId : custId}, function(memRc) {
+                    console.log("checkRc");
+                    if(memRc != null) {
+                        if(memRc.rookie == 1) {
+                            if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
+                                // Not own purchase and SHI below 50
+                                fn_clearOrderSalesman();
+                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to RC below 50%.");
+                                return false;
+                            } else if(memRc.opCnt > 0) {
+                                 // Own Purchase
+                                 /* if(memRc.flg6Month == 0) {
+                                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                                     return false;
+                                 } */
 
-		                         if(memRc.rcPrct <= 55) {
-		                             Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
-		                             return false;
-		                         }
-		                    }
-		                } else {
-		                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-		                    return false;
-		                }
-		            }
-		     });
+                                 if(memRc.rcPrct <= 55) {
+                                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                                     return false;
+                                 }
+                            }
+                        } else {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                            return false;
+                        }
+                    }
+             });
         }
 
             Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
@@ -2723,7 +2723,7 @@
             }
         }
         else{
-        	if(appTypeVal !=66){
+            if(appTypeVal !=66){
                 doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
             } else {
                 doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), voucherPromotion: voucherAppliedStatus,custStatus: $('#hiddenCustStatusId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
@@ -2784,7 +2784,7 @@
 
     // 합계
     function totSumPrice() {
-    	// 합계
+        // 합계
         var totOrdPrice = js.String.naNcheck($("#ordPrice1").val()) + js.String.naNcheck($("#ordPrice2").val());
         var totOrgOrdRentalFees = js.String.naNcheck($("#orgOrdRentalFees1").val()) + js.String.naNcheck($("#orgOrdRentalFees2").val());
         var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val()) + js.String.naNcheck($("#ordRentalFees2").val());
@@ -2990,9 +2990,9 @@
 
     // product comboBox 생성
     function fn_setProductCombo(){
-    	 var stkType = $("#appType").val() == '66' ? '1' : '2';
-    	 const postcode = $("#instPostCode").val()
-    	 //productType is use for indicating if is MAIN unit or AUX unit, 1-(MAIN),2-(AUX) as per _tagNum
+         var stkType = $("#appType").val() == '66' ? '1' : '2';
+         const postcode = $("#instPostCode").val()
+         //productType is use for indicating if is MAIN unit or AUX unit, 1-(MAIN),2-(AUX) as per _tagNum
          // StkCategoryID - Mattress(5706)
          doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), postcode:postcode, productType: '1'}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
          // StkCategoryID - Frame(5707)
@@ -3011,49 +3011,49 @@
     }
 
     function fn_clearAddCpnt() {
-		$('#trCpntId1').css("visibility","collapse");
-	    $('#compType1 option').remove();
-	    $('#trCpntId2').css("visibility","collapse");
-	    $('#compType2 option').remove();
-	}
+        $('#trCpntId1').css("visibility","collapse");
+        $('#compType1 option').remove();
+        $('#trCpntId2').css("visibility","collapse");
+        $('#compType2 option').remove();
+    }
 
-	function fn_loadProductComponent(appTyp, stkId, tagNum) {
-	   $('#compType'+tagNum+' option').remove();
-	   $('#compType'+tagNum).removeClass("blind");
-	   $('#compType'+tagNum).removeClass("disabled");
+    function fn_loadProductComponent(appTyp, stkId, tagNum) {
+       $('#compType'+tagNum+' option').remove();
+       $('#compType'+tagNum).removeClass("blind");
+       $('#compType'+tagNum).removeClass("disabled");
 
-	   doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType'+tagNum, 'S', '');
-	}
+       doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType'+tagNum, 'S', '');
+    }
 
-	function fn_check(a, tagNum) {
-	    if ($('#compType'+tagNum+' option').length <= 0) {
-	        if (a == 3) {
-	            return;
-	        } else {
-	            setTimeout(function() { fn_check( parseInt(a) + 1, tagNum) }, 500);
-	        }
-	    } else if ($('#compType'+tagNum+' option').length <= 1) {
-	        $('#trCpntId'+tagNum).css("visibility","collapse");
-	        $('#compType'+tagNum+' option').remove();
-	        $('#compType'+tagNum).addClass("blind");
-	        $('#compType'+tagNum).prop("disabled", true);
+    function fn_check(a, tagNum) {
+        if ($('#compType'+tagNum+' option').length <= 0) {
+            if (a == 3) {
+                return;
+            } else {
+                setTimeout(function() { fn_check( parseInt(a) + 1, tagNum) }, 500);
+            }
+        } else if ($('#compType'+tagNum+' option').length <= 1) {
+            $('#trCpntId'+tagNum).css("visibility","collapse");
+            $('#compType'+tagNum+' option').remove();
+            $('#compType'+tagNum).addClass("blind");
+            $('#compType'+tagNum).prop("disabled", true);
 
-	    } else if ($('#compType'+tagNum+' option').length > 1) {
-	        $('#trCpntId'+tagNum).css("visibility","visible");
-	        $('#compType'+tagNum).remove("blind");
-	        $('#compType'+tagNum).removeAttr("disabled");
+        } else if ($('#compType'+tagNum+' option').length > 1) {
+            $('#trCpntId'+tagNum).css("visibility","visible");
+            $('#compType'+tagNum).remove("blind");
+            $('#compType'+tagNum).removeAttr("disabled");
 
-	        var key = 0;
+            var key = 0;
 
-	        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProduct"+tagNum).val()}, function(defaultKey) {
-		        if(defaultKey != null) {
-		            key = defaultKey.code;
-		            $('#compType'+tagNum).val(key).change();
-		            fn_reloadPromo(tagNum);
-		        }
-	        });
-	    }
-	}
+            Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProduct"+tagNum).val()}, function(defaultKey) {
+                if(defaultKey != null) {
+                    key = defaultKey.code;
+                    $('#compType'+tagNum).val(key).change();
+                    fn_reloadPromo(tagNum);
+                }
+            });
+        }
+    }
 
   function fn_reloadPromo(tagNum) {
     $('#ordPromo'+tagNum+' option').remove();
@@ -3070,282 +3070,252 @@
   }
 
   function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
-	  	Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+        Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
 
-	        if(result != null)
-	        {
-	        	var custAddId = $('#hiddenCustAddId').val();
-	    		fn_clearInstallAddr();
-	            $('#liInstNewAddr').removeClass("blind");
-	            $('#liInstSelAddr').removeClass("blind");
-	        	if(result.data == 1){
-	        		//change installation branch to AC //load AC combobox
-	                fn_loadInstallAddrForDiffBranch(custAddId,'N','Y');
-	        	}
-	        	else{
-	        		//change installation branch to HDC //load hdc combobox
-					fn_loadInstallAddrForDiffBranch(custAddId,'Y');
-	        	}
-	        }
-	    },  function(jqXHR, textStatus, errorThrown) {
-	        alert("Fail to check Air Conditioner. Please contact IT");
-	  });
+            if(result != null)
+            {
+                var custAddId = $('#hiddenCustAddId').val();
+                fn_clearInstallAddr();
+                $('#liInstNewAddr').removeClass("blind");
+                $('#liInstSelAddr').removeClass("blind");
+                if(result.data == 1){
+                    //change installation branch to AC //load AC combobox
+                    fn_loadInstallAddrForDiffBranch(custAddId,'N','Y');
+                }
+                else{
+                    //change installation branch to HDC //load hdc combobox
+                    fn_loadInstallAddrForDiffBranch(custAddId,'Y');
+                }
+            }
+        },  function(jqXHR, textStatus, errorThrown) {
+            alert("Fail to check Air Conditioner. Please contact IT");
+      });
   }
 
   function fn_setBindComboOrd(ordNo, ordId) {
-	    $('#cboOrdNoTag').val(ordNo);
-	    $('#hiddenCboOrdNoTag').val(ordId);
+        $('#cboOrdNoTag').val(ordNo);
+        $('#hiddenCboOrdNoTag').val(ordId);
 
-	    // [Project ID: 7594966239] Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024
-	    // Check the promotion sequence group for aircond units
-	    var isValidSeqGrpPromo = fn_chkSeqGrpAcCmbPromoPerOrd($("#ordPromo1").val(), $("#ordProduct1").val(), ordId);
+        //check the order status if status active
+        Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do", {custId : $('#hiddenCustId').val(), ordId : ordId},function(result) {
+            if(result.code == "0"){
+                //compare the price of the each unit in aircond bulk promotion
+                Common.ajax("GET", "/homecare/sales/order/selectLastHcAcCmbOrderInfo.do",
+                                    {promoNo : $("#ordPromo1").val(), prod : $("#ordProduct1").val(), custId : $('#hiddenCustId').val(), ordId : ordId},
+                      function(result) {
+                          if(result != null && result != ""){
+                            if($("#totOrgOrdRentalFees").val() > result){
+                                Common.alert("Current selected product not allowed to add on due to normal rental fee high than previous order product");
 
-	    if(isValidSeqGrpPromo == 0){
-      	    //check the order status if status active
-              Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do",
-              		           {custId : $('#hiddenCustId').val(), ordId : ordId},
-              		           function(result) {
-                                    if(result.code == "0"){
-                                       //compare the price of the each unit in aircond bulk promotion
-                                        Common.ajax("GET", "/homecare/sales/order/selectLastHcAcCmbOrderInfo.do",
-                                                            {promoNo : $("#ordPromo1").val(), prod : $("#ordProduct1").val(), custId : $('#hiddenCustId').val(), ordId : ordId},
-                                                            function(result) {
-                                                                if(result != null && result != ""){
-                                                                  if($("#totOrgOrdRentalFees").val() > result){
-                                                                      Common.alert("Current selected product not allowed to add on due to normal rental fee high than previous order product");
-                                                                      $('#ordProduct1').val("");
-                                                                      $('#ordPromo1').val("");
-                                                                      $('#ordPromo1 option').remove();
-                                                                      $('#cboOrdNoTag').val("");
-                                                                      $('#hiddenCboOrdNoTag').val("");
-                                                                      $('#promoDiscPeriodTp1').val("");
-                                                                      $('#promoDiscPeriod1').val("");
-                                                                      $('#ordRentalFees1').val("");
-                                                                      $('#ordPv1').val("");
-                                                                  }
-                                                                }
-                                                           }
-                                         );
-                                    }else{
-                                          Common.alert("Current selected product not allowed to add on due to others order of this bulk promotion is completed");
-                                          $('#ordProduct1').val("");
-                                          $('#ordPromo1').val("");
-                                          $('#ordPromo1 option').remove();
-                                          $('#cboOrdNoTag').val("");
-                                          $('#hiddenCboOrdNoTag').val("");
-                                          $('#promoDiscPeriodTp1').val("");
-                                          $('#promoDiscPeriod1').val("");
-                                          $('#ordRentalFees1').val("");
-                                          $('#ordPv1').val("");
-                                      }
-                           }
-             );
-	    }
-  }
-
-  function fn_chkSeqGrpAcCmbPromoPerOrd(promoNo, prod, ordId){
-	  var isSeqGrp = 0;
-	  Common.ajax("POST", "/homecare/sales/order/chkSeqGrpAcCmbPromoPerOrd.do",
-              {promoNo : promoNo, prod :prod, ordId : ordId},
-              function(result) {
-            	  if(result.code == "99"){
-                      Common.alert("Current selected promotion not allowed to add on due to selected invalid sequence unit");
-                      isSeqGrp = 1;
-                      $('#ordPromo1').val("");
-                      $('#cboOrdNoTag').val("");
-                      $('#hiddenCboOrdNoTag').val("");
-                      $('#promoDiscPeriodTp1').val("");
-                      $('#promoDiscPeriod1').val("");
-                      $('#ordRentalFees1').val("");
-                      $('#ordPv1').val("");
-                  }
+                                $('#ordProduct1').val("");
+                                $('#ordPromo1').val("");
+                                $('#ordPromo1 option').remove();
+                                $('#cboOrdNoTag').val("");
+                                $('#hiddenCboOrdNoTag').val("");
+                                $('#promoDiscPeriodTp1').val("");
+                                $('#promoDiscPeriod1').val("");
+                                $('#ordRentalFees1').val("");
+                                $('#ordPv1').val("");
+                            }
+                          }
+                 });
+              }else{
+                  Common.alert("Current selected product not allowed to add on due to others order of this bulk promotion is completed");
+                  $('#ordProduct1').val("");
+                  $('#ordPromo1').val("");
+                  $('#ordPromo1 option').remove();
+                  $('#cboOrdNoTag').val("");
+                  $('#hiddenCboOrdNoTag').val("");
+                  $('#promoDiscPeriodTp1').val("");
+                  $('#promoDiscPeriod1').val("");
+                  $('#ordRentalFees1').val("");
+                  $('#ordPv1').val("");
               }
-     );
-	 return isSeqGrp;
+       });
   }
 
   function displayVoucherSection(){
-	  if(convToOrdYn == "Y"){
-		  voucherAppliedDisplay();
-	  }
+      if(convToOrdYn == "Y"){
+          voucherAppliedDisplay();
+      }
 
-	  if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
-	  {
-		  $('.voucherSection').show();
-	  }
-	  else{
-		  $('.voucherSection').hide();
-			clearVoucherData();
-	  }
+      if($('#voucherType option:selected').val() != null && $('#voucherType option:selected').val() != "" && $('#voucherType option:selected').val() != "0")
+      {
+          $('.voucherSection').show();
+      }
+      else{
+          $('.voucherSection').hide();
+            clearVoucherData();
+      }
   }
 
   function applyVoucher() {
-	  var voucherCode = $('#voucherCode').val();
-	  var voucherEmail = $('#voucherEmail').val();
-	  var voucherType = $('#voucherType option:selected').val();
+      var voucherCode = $('#voucherCode').val();
+      var voucherEmail = $('#voucherEmail').val();
+      var voucherType = $('#voucherType option:selected').val();
 
-	  if(voucherCode.length == 0 || voucherEmail.length ==0){
-		clearVoucherData();
-		  Common.alert('Both voucher code and voucher email must be key in');
-		  return;
-	  }
-	  Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-	        if(result.code == "00") {
-	        	voucherAppliedStatus = 1;
-	        	$('#voucherMsg').text('Voucher Applied for ' + voucherCode);
-		      	voucherAppliedCode = voucherCode;
-		      	voucherAppliedEmail = voucherEmail;
-	        	$('#voucherMsg').show();
+      if(voucherCode.length == 0 || voucherEmail.length ==0){
+        clearVoucherData();
+          Common.alert('Both voucher code and voucher email must be key in');
+          return;
+      }
+      Common.ajax("GET", "/misc/voucher/voucherVerification.do", {platform: voucherType, voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+            if(result.code == "00") {
+                voucherAppliedStatus = 1;
+                $('#voucherMsg').text('Voucher Applied for ' + voucherCode);
+                voucherAppliedCode = voucherCode;
+                voucherAppliedEmail = voucherEmail;
+                $('#voucherMsg').show();
 
-	        	Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
-	        		if(result.length > 0){
-	        			voucherPromotionId = result;
-	        			//voucherPromotionCheck();
+                Common.ajax("GET", "/misc/voucher/getVoucherUsagePromotionId.do", {voucherCode: voucherCode, custEmail: voucherEmail}, function(result) {
+                    if(result.length > 0){
+                        voucherPromotionId = result;
+                        //voucherPromotionCheck();
 
-	                    var appTypeIdx = $("#appType option:selected").index();
-	                    var appTypeVal = $("#appType").val();
-	                    var custTypeVal = $("#typeId").val();
-	                    var stkIdx         = $("#ordProduct1 option:selected").index();
-	                    var stkIdVal      = $("#ordProduct1").val();
-	                    var empChk     = $("#empChk").val();
-	                    var exTrade      = $("#exTrade").val();
-	                    var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() ||  '${orderInfo.basicInfo.srvPacId}'  : 0;
+                        var appTypeIdx = $("#appType option:selected").index();
+                        var appTypeVal = $("#appType").val();
+                        var custTypeVal = $("#typeId").val();
+                        var stkIdx         = $("#ordProduct1 option:selected").index();
+                        var stkIdVal      = $("#ordProduct1").val();
+                        var empChk     = $("#empChk").val();
+                        var exTrade      = $("#exTrade").val();
+                        var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() ||  '${orderInfo.basicInfo.srvPacId}'  : 0;
 
-	                    if(stkIdx > 0) {
-		                	fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, "1");
-	                    }
-	        		}
-	        		else{
-	        			//reset everything
-	    				clearVoucherData();
-	        			Common.alert("No Promotion is being entitled for this voucher code");
-	        			return;
-	        		}
-	        	});
-	        }
-	        else{
-				clearVoucherData();
-	        	Common.alert(result.message);
-	        	return;
-	        }
-	  });
+                        if(stkIdx > 0) {
+                            fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, "1");
+                        }
+                    }
+                    else{
+                        //reset everything
+                        clearVoucherData();
+                        Common.alert("No Promotion is being entitled for this voucher code");
+                        return;
+                    }
+                });
+            }
+            else{
+                clearVoucherData();
+                Common.alert(result.message);
+                return;
+            }
+      });
   }
 
   //Voucher Promotion Check only for Main Product
   function voucherPromotionCheck(){
-	 if(voucherAppliedStatus == 1){
-		var orderPromoId = [];
-		var orderPromoIdToRemove = [];
-		$("#ordPromo1 option").each(function()
-		{
-			  orderPromoId.push($(this).val());
-	    });
-		orderPromoIdToRemove = orderPromoId.filter(function(obj) {
-		    return !voucherPromotionId.some(function(obj2) {
-			        return obj == obj2;
-		    });
-		});
+     if(voucherAppliedStatus == 1){
+        var orderPromoId = [];
+        var orderPromoIdToRemove = [];
+        $("#ordPromo1 option").each(function()
+        {
+              orderPromoId.push($(this).val());
+        });
+        orderPromoIdToRemove = orderPromoId.filter(function(obj) {
+            return !voucherPromotionId.some(function(obj2) {
+                    return obj == obj2;
+            });
+        });
 
-		if(orderPromoIdToRemove.length > 0){
-		   	$('#ordPromo1').val('');
-			for(var i = 0; i < orderPromoIdToRemove.length; i++){
-				if(orderPromoIdToRemove[i] == ""){
-				}
-				else{
-					$("#ordPromo1 option[value='" + orderPromoIdToRemove[i] +"']").remove();
-				}
-			}
-		}
-	}
+        if(orderPromoIdToRemove.length > 0){
+            $('#ordPromo1').val('');
+            for(var i = 0; i < orderPromoIdToRemove.length; i++){
+                if(orderPromoIdToRemove[i] == ""){
+                }
+                else{
+                    $("#ordPromo1 option[value='" + orderPromoIdToRemove[i] +"']").remove();
+                }
+            }
+        }
+    }
   }
 
   function clearVoucherData(){
-	  	$('#voucherCode').val('');
-    	$('#voucherEmail').val('');
-  		$('#voucherMsg').hide();
-  		$('#voucherMsg').text('');
-  	  	voucherAppliedStatus = 0;
-    	voucherAppliedCode = "";
-    	voucherAppliedEmail = "";
+        $('#voucherCode').val('');
+        $('#voucherEmail').val('');
+        $('#voucherMsg').hide();
+        $('#voucherMsg').text('');
+        voucherAppliedStatus = 0;
+        voucherAppliedCode = "";
+        voucherAppliedEmail = "";
         voucherPromotionId =[];
 
         $('#ordProduct1').val('');
-     	$('#ordPromo1').val('');
-     	$('#ordPromo1 option').remove();
+        $('#ordPromo1').val('');
+        $('#ordPromo1 option').remove();
   }
 
   function fn_checkPreOrderSalesPerson(memId,memCode) {
-  	Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
-  		if(memInfo == null) {
+    Common.ajax("GET", "/homecare/sales/order/checkPreBookSalesPerson.do", {memId : memId, memCode : memCode}, function(memInfo) {
+        if(memInfo == null) {
               Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
               fn_clearOrderSalesman();
           }
-  	});
+    });
   }
 
   function fn_checkPreOrderConfigurationPerson(memId,memCode,salesOrdId,salesOrdNo) {
-  	Common.ajax("GET", "/homecare/sales/order/hcCheckPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
-  		if(memInfo == null) {
+    Common.ajax("GET", "/homecare/sales/order/hcCheckPreBookConfigurationPerson.do", {memId : memId, memCode : memCode, salesOrdId : salesOrdId , salesOrdNo : salesOrdNo}, function(memInfo) {
+        if(memInfo == null) {
               Common.alert('<b>Your input member code : '+ memCode +' is not allowed for extrade pre-order.</b>');
               fn_clearOrderSalesman();
           }
-  	});
+    });
   }
 
   function checkSalesPerson(memCode,salesOrdId,salesOrdNo){
-	  if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
+      if(memCode == "100116" || memCode == "100224" || memCode == "ASPLKW"){
           return;
       }else{
         if($('#exTrade').val() == '1') {
-        	fn_checkPreOrderSalesPerson(0,memCode);
+            fn_checkPreOrderSalesPerson(0,memCode);
         }
-//         	 if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
-//               	 fn_checkPreOrderSalesPerson(0,memCode);
+//           if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() == '' && $('#hiddenMonthExpired').val() != '1') {
+//                   fn_checkPreOrderSalesPerson(0,memCode);
 //             }else if ($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() != '1'){
-//              	 fn_checkPreOrderSalesPerson(0,memCode);
+//                   fn_checkPreOrderSalesPerson(0,memCode);
 //             }else if($('#exTrade').val() == '1' && $("#typeId").val() == '964' && $('#relatedNo').val() != '' && $('#hiddenMonthExpired').val() == '1'){
-//               	 fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
+//                   fn_checkPreOrderConfigurationPerson(0,memCode,salesOrdId,salesOrdNo);
 //             }else{
-//         		//do nothing
+//              //do nothing
 //             }
       }
   }
 
   function fn_checkPromotionExtradeAvail(){
-	  var appTypeId = $('#appType option:selected').val();
+      var appTypeId = $('#appType option:selected').val();
       var oldOrderNo = $('#relatedNo').val();
       var promoId = $('#ordPromo1 option:selected').val();
       var extradeId = $('#exTrade option:selected').val();
-	  console.log("OLDORDERNO"+oldOrderNo);
-	  console.log("PROMOID"+promoId);
+      console.log("OLDORDERNO"+oldOrderNo);
+      console.log("PROMOID"+promoId);
 
-	  if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
-		  Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
-				  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId, isHomeCare: 'Y'}, function(result) {
-		        if(result == null) {
-		         	  $('#ordPromo1').val('');
-		         	  $('#ordPromo2').val('');
-		         	  $('#relatedNo').val('');
-		         	  Common.alert("No extrade with promo order found");
-		        }
-		        else{
-		        	if(result.code == "99"){
-			         	  $('#ordPromo1').val('');
-			         	  $('#ordPromo2').val('');
-			         	  //$('#relatedNo').val('');
-			         	  Common.alert(result.message);
-		        	}
-		        }
-		  });
-	  }
+      if(FormUtil.isNotEmpty(promoId) && FormUtil.isNotEmpty(oldOrderNo)) {
+          Common.ajax("GET", "/sales/order/checkExtradeWithPromoOrder.do",
+                  {appTypeId : appTypeId, oldOrderNo : oldOrderNo, promoId : promoId, extradeId : extradeId, isHomeCare: 'Y'}, function(result) {
+                if(result == null) {
+                      $('#ordPromo1').val('');
+                      $('#ordPromo2').val('');
+                      $('#relatedNo').val('');
+                      Common.alert("No extrade with promo order found");
+                }
+                else{
+                    if(result.code == "99"){
+                          $('#ordPromo1').val('');
+                          $('#ordPromo2').val('');
+                          //$('#relatedNo').val('');
+                          Common.alert(result.message);
+                    }
+                }
+          });
+      }
   }
 
   function exTradeCallbackFn() {
       if(convToOrdYn == 'Y') {
-    	  $('#exTrade').val('${preOrderInfo.exTrade}');
+          $('#exTrade').val('${preOrderInfo.exTrade}');
       }
       if(copyChangeYn == 'Y') {
-    	  $('#exTrade').val('${preOrderInfo.exTrade}');
+          $('#exTrade').val('${preOrderInfo.exTrade}');
       }
   }
 </script>
@@ -3456,17 +3426,17 @@
     <td colspan="3"><select id="empChk" name="empChk" class="w100p"></select></select></td>
 </tr>
  <tr>
-	<th scope="row">Receiving Marketing Message</th>
-	<td colspan="3">
-		<div style="display:inline-block;width:100%;">
-			<div style="display:inline-block;">
-			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
-			</div>
-			<div style="display:inline-block;">
-			<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
-			</div>
-		</div>
-	</td>
+    <th scope="row">Receiving Marketing Message</th>
+    <td colspan="3">
+        <div style="display:inline-block;width:100%;">
+            <div style="display:inline-block;">
+            <input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+            </div>
+            <div style="display:inline-block;">
+            <input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+            </div>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">Customer Status</th>
@@ -3631,8 +3601,8 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.appType" /><span class="must">*</span></th>
     <td>
-	    <span style="width:48.5%;"><select id="appType" name="appType" class="w100p"></select></span>
-	    <span style="width:48.45%;"><select id="srvPacId"  name="srvPacId" class="w100p"></select></span>
+        <span style="width:48.5%;"><select id="appType" name="appType" class="w100p"></select></span>
+        <span style="width:48.45%;"><select id="srvPacId"  name="srvPacId" class="w100p"></select></span>
     </td>
     <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" />/Jom Tukar/PWP</th>
     <td>
@@ -3655,7 +3625,7 @@
 <tr>
     <th scope="row">Voucher Type<span class="must">*</span></th>
     <td colspan="3">
-	    <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p"></select></p>
+        <p> <select id="voucherType" name="voucherType" onchange="displayVoucherSection()" class="w100p"></select></p>
         <p class="voucherSection"><input id="voucherCode" name="voucherCode" type="text" title="Voucher Code" placeholder="Voucher Code" class="w100p"/></p>
         <p class="voucherSection"><input id="voucherEmail" name="voucherEmail" type="text" title="Voucher Email" placeholder="Voucher Email" class="w100p"/></p>
         <p style="width: 70px;" class="voucherSection btn_grid"><a id="btnVoucherApply" href="#" onclick="javascript:applyVoucher()">Apply</a></p>
@@ -3701,7 +3671,7 @@
 </tr>
 <tr>
     <td>
-	        <h3>Main Product</h3>
+            <h3>Main Product</h3>
     </td>
     <td></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
@@ -3726,9 +3696,9 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
     <td>
-	    <select id="ordPromo1"     name="ordPromo1"    data-ref='ordProduct1' class="w100p" disabled></select>
-	    <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='ordProduct1' type="hidden" />
-	    <input id="txtBusType"  name="txtBusType" type="hidden" />
+        <select id="ordPromo1"     name="ordPromo1"    data-ref='ordProduct1' class="w100p" disabled></select>
+        <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='ordProduct1' type="hidden" />
+        <input id="txtBusType"  name="txtBusType" type="hidden" />
     </td>
     <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>

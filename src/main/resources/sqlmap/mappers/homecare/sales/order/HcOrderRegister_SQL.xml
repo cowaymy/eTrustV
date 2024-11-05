@@ -493,9 +493,11 @@
       JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
       WHERE A.MAIN_ORD_ID = #{ordId}
       AND A.DISB = 0
+      <!--
       <if test='subOrdId != null and subOrdId !=""'>
         AND A.SUB_ORD_ID = #{subOrdId}
       </if>
+       -->
   </select>
 
       <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
@@ -546,18 +548,18 @@
     </select>
 
     <select id="getLastHcAcComboOrdId" parameterType="Map" resultType="string">
-        SELECT MAX(SUB_ORD_ID) AS ORDER_ID
+       <!--  SELECT MAX(SUB_ORD_ID) AS ORDER_ID
         FROM SAL0349D
         WHERE
          DISB = 0
         <if test = 'ordId != null and ordId !=0'>
             AND MAIN_ORD_ID = #{ordId}
         </if>
-           GROUP BY MAIN_ORD_ID
+           GROUP BY MAIN_ORD_ID-->
      </select>
 
      <select id="chkHcAcCmbOrdStus" parameterType="Map" resultType="int">
-         SELECT COUNT(*)
+        <!--  SELECT COUNT(*)
          FROM(
                     SELECT A.SUB_ORD_ID AS SUB_ORD_ID,
                                    B.SALES_ORD_NO,
@@ -571,11 +573,11 @@
                     AND B.STUS_CODE_ID = '4'
                      AND A.CHG_SEQ >= 1
                     AND B.CUST_ID = #{custId}
-          )
+          )-->
      </select>
 
      <select id="chkNextHcAcComboOrdGrp" parameterType="Map" resultType="int">
-            SELECT CASE WHEN MAX(COMBO_GRP) <![CDATA[<= 2]]>
+           <!--  SELECT CASE WHEN MAX(COMBO_GRP) <![CDATA[<= 2]]>
                                THEN MAX(COMBO_GRP) + 1
                                ELSE MAX(COMBO_GRP) END AS NEXT_COMBO_GRP
             FROM SAL0349D
@@ -583,11 +585,11 @@
             <if test = 'ordId != null and ordId !=0'>
                 AND MAIN_ORD_ID = #{ordId}
             </if>
-            GROUP BY MAIN_ORD_ID
+            GROUP BY MAIN_ORD_ID-->
      </select>
 
      <select id ="chkCmbGrpByPromoIdProd" parameterType="Map" resultType="int">
-        SELECT COMBO_GRP
+        <!-- SELECT COMBO_GRP
         FROM (
                        SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK THEN 1
                        ELSE 0 END AS COMBO_GRP
@@ -604,6 +606,6 @@
                       WHERE SUB_PROMO_ID = #{promoNo}
                       AND SUB_PROD_ID = #{prod}
                       AND SUB_PROD_CAT = 'ACI'
-        )
+        )-->
      </select>
 </mapper>
