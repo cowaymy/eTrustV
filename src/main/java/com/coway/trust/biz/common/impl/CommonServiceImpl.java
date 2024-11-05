@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
@@ -2541,5 +2543,16 @@ public class CommonServiceImpl
     rtnStat.put( "message", "" );
     rtnStat.put( "value", respParam );
     return rtnStat;
+  }
+
+  public String getApisKey( String uID ) throws NoSuchAlgorithmException {
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    String key_1 = CommonUtils.nvl(uID) + CommonUtils.nvl(commonMapper.getApiKey(8));
+    byte[] hashBytes = digest.digest(key_1.getBytes());
+    StringBuilder hexString = new StringBuilder();
+    for (byte b : hashBytes) {
+        hexString.append(String.format("%02x", b));
+    }
+    return hexString.toString();
   }
 }
