@@ -736,7 +736,6 @@
 </form>
 <section class="search_table"><!-- search_table start -->
 <form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post" autocomplete=off>
-<!-- <input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/> -->
 <!-- <input id="callPrgm" name="callPrgm" value="PRE_ORD" type="hidden" /> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
