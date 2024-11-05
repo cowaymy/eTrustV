@@ -33,8 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-public class AuthenticInterceptor
-  extends WebContentInterceptor {
+public class AuthenticInterceptor extends WebContentInterceptor {
   private static final Logger LOGGER = LoggerFactory.getLogger( AuthenticInterceptor.class );
 
   @Autowired
@@ -50,8 +49,7 @@ public class AuthenticInterceptor
   private LoginService loginService;
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-      throws ServletException {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
     // Kit Wai - Start - 20180427
     LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
     Map<String, Object> params = new HashMap<String, Object>();
@@ -211,6 +209,7 @@ public class AuthenticInterceptor
     StringBuilder stringBuilder = new StringBuilder();
     BufferedReader bufferedReader;
     try {
+      LOGGER.debug( "=getReader= " + request.getReader() );
       bufferedReader = request.getReader();
       String line;
       String jsonBody;
