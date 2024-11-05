@@ -94,6 +94,4 @@ public interface LoginMapper {
   int checkSecurityAnswer(Map<String, Object> params);
 
   void updateCheckMfaFlag(int userId);
-
-  String getApiKey(int keyId);
 }
