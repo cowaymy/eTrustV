@@ -173,7 +173,7 @@ public class AuthenticInterceptor
           if (!CommonUtils.nvl(request.getParameter("sKey")).equals( "" ) && !CommonUtils.nvl(request.getParameter("usrNm")).equals( "" )) {
             Map<String, Object> acsPrm = new HashMap<String, Object>();
             acsPrm.put( "userId", request.getParameter("usrNm") );
-            acsPrm.put( "properiesUserSessionKey", request.getParameter("properiesUserSessionKey") );
+            acsPrm.put( "properiesUserSessionKey", request.getParameter("sKey") );
             if (!chkAcessKey(acsPrm)) {
               throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
             }
