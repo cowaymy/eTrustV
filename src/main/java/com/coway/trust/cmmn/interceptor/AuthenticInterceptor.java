@@ -3,7 +3,6 @@ package com.coway.trust.cmmn.interceptor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,7 +28,6 @@ import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -54,39 +52,34 @@ public class AuthenticInterceptor extends WebContentInterceptor {
     LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
     Map<String, Object> params = new HashMap<String, Object>();
 
-    // Request URI's as param
+    // REQUEST URI'S AS PARAM
     String[] URI = ((String) request.getRequestURI()).split("/");
     params.put("mainDo", URI[URI.length - 1]);
     EgovMap item = new EgovMap();
 
     item = (EgovMap) loginService.checkByPass(params);
 
-    /*
-     * Skip validation if value found in SYS0088M Param - URI .do
-     */
+    // SKIP VALIDATION IF VALUE FOUND IN SYS0088M PARAM - URI .do
     if (item == null) {
       item = null;
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
-      // Reset param
+      // RESET PARAM
       params.clear();
-      // UserIDType as parameter
+
+      // UserIDType AS PARAMETER
       params.put("memTyp", sessionVO.getUserTypeId());
       item = (EgovMap) loginService.checkByPass(params);
 
-      /*
-       * Skip validation if value found in SYS0088M Param - Member Type
-       */
+      // SKIP VALIDATION IF VALUE FOUND IN SYS0088M PARAM - MEMBER TYPE
       if (item != null) {
         String[] doListStr = ((String) item.get("bypassDoList")).split("\\|\\|\\|");
 
         List<String> doList = Arrays.asList(doListStr);
 
-        /*
-         * Only permits navigation/action within set URLs
-         */
+        // ONLY PERMITS NAVIGATION / ACTION WITHIN SET URLs
         if (!doList.contains(request.getRequestURI())) {
-          LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
+          LOGGER.debug("[preHandle] AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
           throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
       } else {
@@ -94,11 +87,13 @@ public class AuthenticInterceptor extends WebContentInterceptor {
           if (sessionVO != null && sessionVO.getUserId() > 0) {
             checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
           } else {
+            // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
             logRequestHeaders(request);
             logRequestParameters(request);
             logRequestAttributes(request);
 
             if (!validateApiAccess(request)) {
+              LOGGER.debug("[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
               throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
             }
           }
@@ -141,46 +136,39 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
   private boolean bypassAuthorized( HttpServletRequest request ) {
     Map<String, Object> params = new HashMap<String, Object>();
-    // Request URI's as param
+    // REQUEST URI's AS PARAM
     String[] URI = ( (String) request.getRequestURI() ).split( "/" );
     params.put( "mainDo", URI[URI.length - 1] );
     EgovMap item = new EgovMap();
     item = (EgovMap) loginService.checkByPass( params );
     if ( item == null ) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }
 
   @Override
-  public void postHandle( HttpServletRequest request, HttpServletResponse response, Object handler,
-                          ModelAndView modelAndView )
+  public void postHandle( HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView )
     throws Exception {
-    // check request to Callcenter
+    // CHECK REQUEST TO CALL CENTER
     if ( VerifyRequest.isNotCallCenterRequest( request ) ) {
       LOGGER.debug( "postHandle :: URI :: " + request );
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
       boolean flag = bypassAuthorized( request );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
-          LOGGER.info( " ++++ " + request.getParameter( "sKey" ) );
-          LOGGER.info( " ++++ " + request.getParameter( "sUid" ) );
+          // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
           logRequestHeaders(request);
           logRequestParameters(request);
           logRequestAttributes(request);
-          try {
-            System.out.println("Request Body: " + getRequestBody(request));
-          }
-          catch ( IOException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+
           if (!validateApiAccess(request)) {
+            LOGGER.debug("[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
             throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
           }
         }
+
         if ( modelAndView != null ) {
           Map<String, Object> params = new HashMap<>();
           params.put( "userId", sessionVO.getUserId() );
@@ -199,66 +187,38 @@ public class AuthenticInterceptor extends WebContentInterceptor {
           modelAndView.getModelMap().put( AppConstants.MENU_FAVORITES, menuService.getFavoritesList( sessionVO ) );
         }
       }
-    }
-    else {
+    } else {
       LOGGER.info( "[postHandle] this url is call by Callcenter......." );
     }
   }
 
   private boolean validateApiAccess(HttpServletRequest request) {
-    StringBuilder stringBuilder = new StringBuilder();
-    BufferedReader bufferedReader;
-    try {
-      LOGGER.debug( "=getReader= " + request.getReader() );
-      bufferedReader = request.getReader();
-      String line;
-      String jsonBody;
-      while ((line = bufferedReader.readLine()) != null) {
-          stringBuilder.append(line);
-      }
-      jsonBody = stringBuilder.toString();
-      ObjectMapper objectMapper = new ObjectMapper();
-      Map<String, String> bodyMap = objectMapper.readValue(jsonBody, Map.class);
-      String sKey = bodyMap.get("sKey");
-      String sUid = bodyMap.get("sUid");
+      @SuppressWarnings("unchecked")
+      Map<String, String[]> parameterMap = request.getParameterMap();
 
-      LOGGER.debug( "=sKey= " + sKey );
-      LOGGER.debug( "=sUid= " + sUid );
+      // REQUEST PARAMS
+      String[] sKey = parameterMap.get( "sKey" );
+      String[] sUid = parameterMap.get( "sUid" );
+      // GET ACTUAL TOKEN
+      String a_sKey;
+      try {
+        a_sKey = CommonUtils.nvl(loginService.getPropUsrSessionKey(sUid[0]));
+        LOGGER.debug( "=sUid= " + sUid[0] );
+        LOGGER.debug( "=sKey= " + sKey[0] );
+        LOGGER.debug( "=a_sKey= " + a_sKey );
 
-      if (!CommonUtils.nvl(sKey).equals( "" ) && !CommonUtils.nvl(sUid).equals( "" )) {
-        Map<String, Object> acsPrm = new HashMap<String, Object>();
-        acsPrm.put( "sUid", sUid);
-        acsPrm.put( "sKey", sKey );
-        if (!chkAcessKey(acsPrm)) {
+        if (a_sKey.equals( sKey[0] )) {
+          return true;
+        } else {
           return false;
         }
-        return true;
-      } else {
+      }
+      catch ( NoSuchAlgorithmException e ) {
         return false;
       }
-    } catch ( IOException e ) {
-      return false;
-    }
   }
 
-  private boolean chkAcessKey(Map<String, Object> params ) {
-    String accKey = CommonUtils.nvl(params.get( "sKey" ));
-    String actAccKey = "";
-    try {
-      actAccKey = CommonUtils.nvl(loginService.getPropUsrSessionKey(params));
-      LOGGER.debug( "=actAccKey= " + actAccKey );
-      LOGGER.debug( "=accKey= " + accKey );
-      if (actAccKey.equals( accKey )) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch ( NoSuchAlgorithmException e ) {
-      e.printStackTrace();
-    }
-    return false;
-  }
-
+  /* FOR LOGS USED*/
   public void logRequestHeaders(HttpServletRequest request) {
     Enumeration<String> headerNames = request.getHeaderNames();
     while (headerNames.hasMoreElements()) {
