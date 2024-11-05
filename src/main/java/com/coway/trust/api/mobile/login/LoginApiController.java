@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.LoginVO;
@@ -52,6 +53,9 @@ public class LoginApiController {
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private CommonService commonService;
 
   @ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -93,7 +97,7 @@ public class LoginApiController {
       }
 
       // FORM HASH SESSION KEY (properiesUserSessionKey)
-      String usrSessionKey =  loginService.getPropUsrSessionKey(params);
+      String usrSessionKey =  CommonUtils.nvl(commonService.getApisKey(params.get( "userId" ).toString()));
       loginVO.setsKey( CommonUtils.nvl( usrSessionKey ));
 
       HttpSession session = sessionHandler.getCurrentSession();
