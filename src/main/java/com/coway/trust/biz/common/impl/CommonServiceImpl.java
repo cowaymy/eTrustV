@@ -2548,6 +2548,7 @@ public class CommonServiceImpl
   public String getApisKey( String uID ) throws NoSuchAlgorithmException {
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
     String key_1 = CommonUtils.nvl(uID) + CommonUtils.nvl(commonMapper.getApiKey(8));
+    LOGGER.debug( " >>>>> key_1 " + key_1);
     byte[] hashBytes = digest.digest(key_1.getBytes());
     StringBuilder hexString = new StringBuilder();
     for (byte b : hashBytes) {
