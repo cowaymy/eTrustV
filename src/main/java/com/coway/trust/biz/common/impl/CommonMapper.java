@@ -363,7 +363,9 @@ public interface CommonMapper
     void updateDhlAuthResp ( Map<String, Object> params );
 
     void createDhlShipmDtlReqs ( Map<String, Object> params );
-    
+
     void updateDhlShptDtlResp ( Map<String, Object> params );
-    
+
+    String getApiKey(int keyId);
+
 }
