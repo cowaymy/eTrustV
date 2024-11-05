@@ -495,17 +495,4 @@ public class LoginServiceImpl
   public void updateCheckMfaFlag( int userId ) {
     loginMapper.updateCheckMfaFlag( userId );
   }
-
-
-  @Override
-  public String getPropUsrSessionKey( Map<String, Object> params) throws NoSuchAlgorithmException {
-    MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    String key_1 = CommonUtils.nvl(params.get( "sUid" )) + CommonUtils.nvl(loginMapper.getApiKey(8));
-    byte[] hashBytes = digest.digest(key_1.getBytes());
-    StringBuilder hexString = new StringBuilder();
-    for (byte b : hashBytes) {
-        hexString.append(String.format("%02x", b));
-    }
-    return hexString.toString();
-  }
 }
