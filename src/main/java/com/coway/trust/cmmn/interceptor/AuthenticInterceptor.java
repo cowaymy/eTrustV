@@ -265,7 +265,7 @@ public class AuthenticInterceptor
     while (headerNames.hasMoreElements()) {
         String headerName = headerNames.nextElement();
         String headerValue = request.getHeader(headerName);
-        System.out.println("Header: " + headerName + " = " + headerValue);
+        LOGGER.debug("Header: " + headerName + " = " + headerValue);
     }
   }
 
@@ -273,7 +273,7 @@ public class AuthenticInterceptor
     Map<String, String[]> parameterMap = request.getParameterMap();
     for (String paramName : parameterMap.keySet()) {
         String[] paramValues = parameterMap.get(paramName);
-        System.out.println("Parameter: " + paramName + " = " + String.join(", ", paramValues));
+        LOGGER.debug("Parameter: " + paramName + " = " + String.join(", ", paramValues));
     }
   }
 
@@ -282,7 +282,7 @@ public class AuthenticInterceptor
     while (attributeNames.hasMoreElements()) {
         String attributeName = attributeNames.nextElement();
         Object attributeValue = request.getAttribute(attributeName);
-        System.out.println("Attribute: " + attributeName + " = " + attributeValue);
+        LOGGER.debug("Attribute: " + attributeName + " = " + attributeValue);
     }
   }
 
