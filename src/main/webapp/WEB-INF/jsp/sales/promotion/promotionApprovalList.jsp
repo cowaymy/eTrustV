@@ -596,7 +596,7 @@
 
                       $('#modifyForm').find(':input').prop("disabled", true);
 
-                      if(promoInfo.promoDiscOnBill == '7675') {
+                      if(promoInfo.promoDiscOnBill == '7690') {
                           $('#billDiscField').show();
                       }
                       else {
@@ -732,7 +732,7 @@
                       $('#viewForm').find(':input').prop("disabled", true);
                       $('#v_editForm').find(':input').prop("disabled", true);
 
-                      if(promoInfo.promoDiscOnBill == '7675') {
+                      if(promoInfo.promoDiscOnBill == '7690') {
                           $('#v_billDiscField').show();
                       }
                       else {

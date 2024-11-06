@@ -115,7 +115,7 @@
             $('.extradeMonth').attr("hidden", true);
         }
 
-        if('${promoInfo.promoDiscOnBill}' == "7675"){
+        if('${promoInfo.promoDiscOnBill}' == "7690"){
         	$('#billDiscField').show();
 
         }
@@ -600,7 +600,7 @@
         });
 
         $('#promoSpecialDisId').change(function() {
-            if($('#promoSpecialDisId').val() == '7675') {
+            if($('#promoSpecialDisId').val() == '7690') {
                 $('#billDiscField').show();
             }
             else {
@@ -792,7 +792,7 @@
             }
         }
 
-        if($('#promoSpecialDisId').val() == '7675'){
+        if($('#promoSpecialDisId').val() == '7690'){
             if(FormUtil.isEmpty($('#billDiscValue').val())){
                 isValid = false;
                 msg += "Please key in discount type on billing value<br />";
