@@ -3096,42 +3096,72 @@
         $('#cboOrdNoTag').val(ordNo);
         $('#hiddenCboOrdNoTag').val(ordId);
 
-        //check the order status if status active
-        Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do", {custId : $('#hiddenCustId').val(), ordId : ordId},function(result) {
-            if(result.code == "0"){
-                //compare the price of the each unit in aircond bulk promotion
-                Common.ajax("GET", "/homecare/sales/order/selectLastHcAcCmbOrderInfo.do",
-                                    {promoNo : $("#ordPromo1").val(), prod : $("#ordProduct1").val(), custId : $('#hiddenCustId').val(), ordId : ordId},
-                      function(result) {
-                          if(result != null && result != ""){
-                            if($("#totOrgOrdRentalFees").val() > result){
-                                Common.alert("Current selected product not allowed to add on due to normal rental fee high than previous order product");
+        // [Project ID: 7594966239] Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024
+        // Check the promotion sequence group for aircond units
+        var isValidSeqGrpPromo = fn_chkSeqGrpAcCmbPromoPerOrd($("#ordPromo1").val(), $("#ordProduct1").val(), ordId);
 
-                                $('#ordProduct1').val("");
-                                $('#ordPromo1').val("");
-                                $('#ordPromo1 option').remove();
-                                $('#cboOrdNoTag').val("");
-                                $('#hiddenCboOrdNoTag').val("");
-                                $('#promoDiscPeriodTp1').val("");
-                                $('#promoDiscPeriod1').val("");
-                                $('#ordRentalFees1').val("");
-                                $('#ordPv1').val("");
-                            }
-                          }
-                 });
-              }else{
-                  Common.alert("Current selected product not allowed to add on due to others order of this bulk promotion is completed");
-                  $('#ordProduct1').val("");
-                  $('#ordPromo1').val("");
-                  $('#ordPromo1 option').remove();
-                  $('#cboOrdNoTag').val("");
-                  $('#hiddenCboOrdNoTag').val("");
-                  $('#promoDiscPeriodTp1').val("");
-                  $('#promoDiscPeriod1').val("");
-                  $('#ordRentalFees1').val("");
-                  $('#ordPv1').val("");
+        if(isValidSeqGrpPromo == 0){
+            //check the order status if status active
+              Common.ajax("POST", "/homecare/sales/order/chkHcAcCmbOrdStus.do",
+                               {custId : $('#hiddenCustId').val(), ordId : ordId},
+                               function(result) {
+                                    if(result.code == "0"){
+                                       //compare the price of the each unit in aircond bulk promotion
+                                        Common.ajax("GET", "/homecare/sales/order/selectLastHcAcCmbOrderInfo.do",
+                                                            {promoNo : $("#ordPromo1").val(), prod : $("#ordProduct1").val(), custId : $('#hiddenCustId').val(), ordId : ordId},
+                                                            function(result) {
+                                                                if(result != null && result != ""){
+                                                                  if($("#totOrgOrdRentalFees").val() > result){
+                                                                      Common.alert("Current selected product not allowed to add on due to normal rental fee high than previous order product");
+                                                                      $('#ordProduct1').val("");
+                                                                      $('#ordPromo1').val("");
+                                                                      $('#ordPromo1 option').remove();
+                                                                      $('#cboOrdNoTag').val("");
+                                                                      $('#hiddenCboOrdNoTag').val("");
+                                                                      $('#promoDiscPeriodTp1').val("");
+                                                                      $('#promoDiscPeriod1').val("");
+                                                                      $('#ordRentalFees1').val("");
+                                                                      $('#ordPv1').val("");
+                                                                  }
+                                                                }
+                                                           }
+                                         );
+                                    }else{
+                                          Common.alert("Current selected product not allowed to add on due to others order of this bulk promotion is completed");
+                                          $('#ordProduct1').val("");
+                                          $('#ordPromo1').val("");
+                                          $('#ordPromo1 option').remove();
+                                          $('#cboOrdNoTag').val("");
+                                          $('#hiddenCboOrdNoTag').val("");
+                                          $('#promoDiscPeriodTp1').val("");
+                                          $('#promoDiscPeriod1').val("");
+                                          $('#ordRentalFees1').val("");
+                                          $('#ordPv1').val("");
+                                      }
+                           }
+             );
+        }
+  }
+
+  function fn_chkSeqGrpAcCmbPromoPerOrd(promoNo, prod, ordId){
+      var isSeqGrp = 0;
+      Common.ajax("POST", "/homecare/sales/order/chkSeqGrpAcCmbPromoPerOrd.do",
+              {promoNo : promoNo, prod :prod, ordId : ordId},
+              function(result) {
+                  if(result.code == "99"){
+                      Common.alert("Current selected promotion not allowed to add on due to selected invalid sequence unit");
+                      isSeqGrp = 1;
+                      $('#ordPromo1').val("");
+                      $('#cboOrdNoTag').val("");
+                      $('#hiddenCboOrdNoTag').val("");
+                      $('#promoDiscPeriodTp1').val("");
+                      $('#promoDiscPeriod1').val("");
+                      $('#ordRentalFees1').val("");
+                      $('#ordPv1').val("");
+                  }
               }
-       });
+     );
+     return isSeqGrp;
   }
 
   function displayVoucherSection(){
