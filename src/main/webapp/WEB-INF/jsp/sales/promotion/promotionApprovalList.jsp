@@ -511,6 +511,10 @@
                       $("#extradeMonthFrom").val(promoInfo.extradeFr);
                       $("#extradeMonthTo").val(promoInfo.extradeTo);
                       $("#extradeAppType").val(promoInfo.extradeAppType);
+                      $("#billDiscType").val(promoInfo.billDiscType);
+                      $("#billDiscValue").val(promoInfo.billDiscValue);
+                      $("#billDiscPeriodFrom").val(promoInfo.billDiscFr);
+                      $("#billDiscPeriodTo").val(promoInfo.billDiscTo);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#custStatusNew').prop("checked", true);
@@ -553,6 +557,7 @@
                      doGetCombo('/common/selectCodeList.do', '581', promoInfo.extradeAppType, 'extradeAppType', 'S'); //Extrade App Type
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
+                      doGetComboData('/common/selectCodeList.do',  {groupCode :'323'}, promoInfo.billDiscType, 'billDiscType', 'S'); //Discount on Billing
 
                       if(promoInfo.megaDeal == '1') {
                           $('#megaDealY').prop("checked", true);
@@ -590,6 +595,17 @@
                       }
 
                       $('#modifyForm').find(':input').prop("disabled", true);
+
+                      if(promoInfo.promoDiscOnBill == '7675') {
+                          $('#billDiscField').show();
+                      }
+                      else {
+                          $('#billDiscField').hide();
+                          $('#billDiscType').val('');
+                          $('#billDiscValue').val('').prop("disabled", true);
+                          $('#billDiscPeriodFrom').val('');
+                          $('#billDiscPeriodTo').val('');
+                      }
 
                       fn_selectPromotionPrdListAjax(promoReqstId, val);
 
@@ -630,6 +646,10 @@
                       $("#v_extradeMonthFrom").val(promoInfo.extradeFr);
                       $("#v_extradeMonthTo").val(promoInfo.extradeTo);
                       $("#v_extradeAppType").val(promoInfo.extradeAppType);
+                      $("#v_billDiscType").val(promoInfo.billDiscType);
+                      $("#v_billDiscValue").val(promoInfo.billDiscValue);
+                      $("#v_billDiscPeriodFrom").val(promoInfo.billDiscFr);
+                      $("#v_billDiscPeriodTo").val(promoInfo.billDiscTo);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#v_custStatusNew').prop("checked", true);
@@ -672,6 +692,7 @@
                       doGetCombo('/common/selectCodeList.do', '581', promoInfo.extradeAppType, 'v_extradeAppType', 'S'); //Extrade App Type
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'v_stkSize', 'S', '');
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.billDiscType, 'v_billDiscType', 'S'); //Discount on Billing
 
                       if(promoInfo.megaDeal == '1') {
                           $('#v_megaDealY').prop("checked", true);
@@ -710,6 +731,17 @@
 
                       $('#viewForm').find(':input').prop("disabled", true);
                       $('#v_editForm').find(':input').prop("disabled", true);
+
+                      if(promoInfo.promoDiscOnBill == '7675') {
+                          $('#v_billDiscField').show();
+                      }
+                      else {
+                          $('#v_billDiscField').hide();
+                          $('#v_billDiscType').val('');
+                          $('#v_billDiscValue').val('').prop("disabled", true);
+                          $('#v_billDiscPeriodFrom').val('');
+                          $('#v_billDiscPeriodTo').val('');
+                      }
 
                       fn_selectPromotionPrdListAjax(promoReqstId, val);
 
@@ -1227,7 +1259,11 @@
                   extradeFr: $('#extradeMonthFrom').val(),
                   extradeTo: $('#extradeMonthTo').val(),
                   woHs: $('input:radio[name="woHs"]:checked').val(),
-                  extradeAppType: $('#extradeAppType').val()
+                  extradeAppType: $('#extradeAppType').val(),
+                  billDiscType: $('#billDiscType option:selected').val(),
+                  billDiscValue: $('#billDiscValue').val(),
+                  billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
+                  billDiscPeriodTo: $('#billDiscPeriodTo').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1340,7 +1376,11 @@
               extradeFr: $('#extradeMonthFrom').val(),
               extradeTo: $('#extradeMonthTo').val(),
               woHs: $('input:radio[name="woHs"]:checked').val(),
-              extradeAppType: $('#extradeAppType').val()
+              extradeAppType: $('#extradeAppType').val(),
+              billDiscType: $('#billDiscType option:selected').val(),
+              billDiscValue: $('#billDiscValue').val(),
+              billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
+              billDiscPeriodTo: $('#billDiscPeriodTo').val()
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1720,6 +1760,26 @@
         <input id="preBookN" name="preBook" type="radio" value="0" /><span>No</span>
     </td>
 </tr>
+<tr id="billDiscField" style="display:none;"> <!-- This part affect in CN part -->
+    <th scope="row">Discount type on billing<span class="must">*</span></th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><select id="billDiscType" name="billDiscType" class="w100p"></select></p>
+            <p><input id="billDiscValue" name="billDiscValue" type="number" placeholder="" class="w100p" min="0" oninput="validity.valid||(value='');" disabled /></p>
+        </div>
+    </td>
+
+    <th scope="row">Discount period on billing<span class="must">*</span></th>
+    <td>
+        <div class="w100p" >
+            <div style="display: flex;">
+                <p><input style="width: 100px" id="billDiscPeriodFrom" name="billDiscPeriodFrom" type="number" min="0" placeholder="Month From" oninput="validity.valid||(value='');" value="${promoInfo.billDiscFr}" /></p>
+                <span style="padding: 5px;">To</span>
+                <p><input style="width: 100px" id="billDiscPeriodTo" name="billDiscPeriodTo" type="number" min="0" placeholder="Month To" oninput="validity.valid||(value='');" value="${promoInfo.billDiscTo}" /></p>
+            </div>
+        </div>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 </form>
@@ -1998,6 +2058,26 @@
     <td style="display:none;">
         <input id="v_preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
         <input id="v_preBookN" name="preBook" type="radio" value="0" /><span>No</span>
+    </td>
+</tr>
+<tr id="v_billDiscField" style="display:none;"> <!-- This part affect in CN part -->
+    <th scope="row">Discount type on billing<span class="must">*</span></th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><select id="v_billDiscType" name="v_billDiscType" class="w100p"></select></p>
+            <p><input id="v_billDiscValue" name="v_billDiscValue" type="number" placeholder="" class="w100p" min="0" oninput="validity.valid||(value='');" disabled /></p>
+        </div>
+    </td>
+
+    <th scope="row">Discount period on billing<span class="must">*</span></th>
+    <td>
+        <div class="w100p" >
+            <div style="display: flex;">
+                <p><input style="width: 100px" id="v_billDiscPeriodFrom" name="v_billDiscPeriodFrom" type="number" min="0" placeholder="Month From" oninput="validity.valid||(value='');" /></p>
+                <span style="padding: 5px;">To</span>
+                <p><input style="width: 100px" id="v_billDiscPeriodTo" name="v_billDiscPeriodTo" type="number" min="0" placeholder="Month To" oninput="validity.valid||(value='');" /></p>
+            </div>
+        </div>
     </td>
 </tr>
 </tbody>

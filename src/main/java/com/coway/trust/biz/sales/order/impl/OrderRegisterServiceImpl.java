@@ -2014,6 +2014,31 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		map1.put("userId",sessionVO.getUserId());
     		orderRegisterMapper.insertSalesSpecialPromotion(map1);
     	}
+    	else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 06){
+    		EgovMap map1 = new EgovMap();
+    		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
+    		map1.put("fromPeriod",CommonUtils.intNvl(specialPromoMap.get("billDiscFr")));
+    		map1.put("toPeriod",CommonUtils.intNvl(specialPromoMap.get("billDiscTo")));
+    		map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+    		BigDecimal CNamt;
+
+    		if(CommonUtils.intNvl(specialPromoMap.get("billDiscType")) == 1){ // AMOUNT
+    			map1.put("percentage", 0);
+    			CNamt= (BigDecimal) specialPromoMap.get("billDiscValue");
+
+    		}else{ //PERCENTAGE
+
+    			map1.put("percentage", CommonUtils.intNvl(specialPromoMap.get("billDiscValue")));
+//    			CNamt= salesOrderMVO.getMthRentAmt().divide(new BigDecimal(2),0,RoundingMode.DOWN);
+    			double percent = (100 - Double.parseDouble(specialPromoMap.get("billDiscValue").toString())) / 100;
+    			CNamt = (salesOrderMVO.getMthRentAmt().multiply(new BigDecimal(percent))).setScale(2,RoundingMode.DOWN);
+    		}
+
+    		map1.put("cnAmt",CNamt);
+    		map1.put("status",1);
+    		map1.put("userId",sessionVO.getUserId());
+    		orderRegisterMapper.insertSalesSpecialPromotion(map1);
+    	}
     	//SAL0408D SPECIAL PROMOTION - DISCOUNT ON BILLING (PRE-BOOK EXTRADE)
 //    	else if(CommonUtils.intNvl(specialPromoMap.get("promoDiscOnBillCode"))  == 02 && preBookInfo != null){
 //    		int preBookId = CommonUtils.intNvl(preBookInfo.get("preBookId"));

@@ -30,6 +30,7 @@
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '${promoInfo.eSales}',        'eSales',        'S'); //Discount Type
         doGetCombo('/common/selectCodeList.do', '568',  '${promoInfo.promoDiscOnBill}', 'promoSpecialDisId',       'S'); //Discount on billing
+        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.billDiscType}',        'billDiscType',        'S'); //Discount on billing
 
       //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
         doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : '${promoInfo.promoAppTypeId}'}, '${promoInfo.promoSrvMemPacId}', 'promoSrvMemPacId', 'S'); //Common Code
@@ -112,6 +113,18 @@
         }
         else{
             $('.extradeMonth').attr("hidden", true);
+        }
+
+        if('${promoInfo.promoDiscOnBill}' == "7675"){
+        	$('#billDiscField').show();
+
+        }
+        else{
+        	$('#billDiscField').hide();
+            $('#billDiscType').val('');
+            $('#billDiscValue').val('').prop("disabled", true);
+            $('#billDiscPeriodFrom').val('');
+            $('#billDiscPeriodTo').val('');
         }
     });
 
@@ -299,7 +312,11 @@
                 extradeFr: $('#extradeMonthFrom').val(),
                 extradeTo: $('#extradeMonthTo').val(),
                 woHs: $('input:radio[name="woHs"]:checked').val(),
-                extradeAppType: $('#extradeAppType').val()
+                extradeAppType: $('#extradeAppType').val(),
+                billDiscType: $('#billDiscType option:selected').val(),
+                billDiscValue: $('#billDiscValue').val(),
+                billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
+                billDiscPeriodTo: $('#billDiscPeriodTo').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -572,6 +589,28 @@
         $('#btnPromoEdit').click(function() {
             fn_chgPageMode('MODIFY');
         });
+
+        $('#billDiscType').change(function() {
+            if($('#billDiscType').val() == '') {
+                $('#billDiscValue').val('').prop("disabled", true);
+            }
+            else {
+                $('#billDiscValue').val('').removeAttr("disabled");
+            }
+        });
+
+        $('#promoSpecialDisId').change(function() {
+            if($('#promoSpecialDisId').val() == '7675') {
+                $('#billDiscField').show();
+            }
+            else {
+                $('#billDiscField').hide();
+                $('#billDiscType').val('');
+                $('#billDiscValue').val('').prop("disabled", true);
+                $('#billDiscPeriodFrom').val('');
+                $('#billDiscPeriodTo').val('');
+            }
+        });
     });
 
     function fn_chgPageMode(vMode) {
@@ -603,6 +642,11 @@
             $('#extradeMonthFrom').val(extradeFr);
             $('#extradeMonthTo').val(extradeTo);
             $('#extradeAppType').val(extradeAppType);
+
+            $('#billDiscType').val("${promoInfo.billDiscType}");
+            $('#billDiscValue').val("${promoInfo.billDiscValue}");
+            $('#billDiscPeriodFrom').val("${promoInfo.billDiscFr}");
+            $('#billDiscPeriodTo').val("${promoInfo.billDiscTo}");
         }
         else if(vMode == 'VIEW') {
 			mode = "VIEW";
@@ -632,6 +676,11 @@
             $('#extradeMonthFrom').val(extradeFr);
             $('#extradeMonthTo').val(extradeTo);
             $('#extradeAppType').val(extradeAppType);
+
+            $('#billDiscType').val("${promoInfo.billDiscType}");
+            $('#billDiscValue').val("${promoInfo.billDiscValue}");
+            $('#billDiscPeriodFrom').val("${promoInfo.billDiscFr}");
+            $('#billDiscPeriodTo').val("${promoInfo.billDiscTo}");
         }
     }
 
@@ -740,6 +789,47 @@
                 	isValid = false;
                     msg += "Extrade Month are in number format only<br />";
             	}
+            }
+        }
+
+        if($('#promoSpecialDisId').val() == '7675'){
+            if(FormUtil.isEmpty($('#billDiscValue').val())){
+                isValid = false;
+                msg += "Please key in discount type on billing value<br />";
+
+            }else{
+                var billDiscValue = $('#billDiscValue').val();
+                console.log(billDiscValue);
+
+                var billDiscValue2 = billDiscValue.replace("-","");
+
+                if(!FormUtil.onlyNumCheck(billDiscValue2)){
+                    isValid = false;
+                    msg += "Discount on billing value is in number format only<br />";
+                }
+            }
+
+            if(FormUtil.isEmpty($('#billDiscPeriodFrom').val()) || FormUtil.isEmpty($('#billDiscPeriodTo').val())){
+                isValid = false;
+                msg += "Please enter discount period on billing month<br />";
+
+            }else{
+                var billDiscPeriodFrom = $('#billDiscPeriodFrom').val();
+                var billDiscPeriodTo = $('#billDiscPeriodTo').val();
+
+                var mFrom = billDiscPeriodFrom.replace("-","");
+                var mTo = billDiscPeriodTo.replace("-","");
+
+                if(FormUtil.onlyNumCheck(mFrom) && FormUtil.onlyNumCheck(mTo)){
+                     if(mTo >= mFrom){
+                         isValid = false;
+                         msg += "Discount period month To must be larger or equal value than From<br />";
+                     }
+                }
+                else{
+                    isValid = false;
+                    msg += "Discount period on billing are in number format only<br />";
+                }
             }
         }
 
@@ -1260,6 +1350,26 @@
     <td style="display:none;">
         <input id="preBookY" name="preBook" type="radio" value="1" /><span>Yes</span>
         <input id="preBookN" name="preBook" type="radio" value="0" /><span>No</span>
+    </td>
+</tr>
+<tr id="billDiscField" style="display:none;"> <!-- This part affect in CN part -->
+    <th scope="row">Discount type on billing<span class="must">*</span></th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><select id="billDiscType" name="billDiscType" class="w100p"></select></p>
+            <p><input id="billDiscValue" name="billDiscValue" type="number" placeholder="" class="w100p" min="0" oninput="validity.valid||(value='');" disabled /></p>
+        </div>
+    </td>
+
+    <th scope="row">Discount period on billing<span class="must">*</span></th>
+    <td>
+        <div class="w100p" >
+            <div style="display: flex;">
+                <p><input style="width: 100px" id="billDiscPeriodFrom" name="billDiscPeriodFrom" type="number" min="0" placeholder="Month From" oninput="validity.valid||(value='');"/></p>
+                <span style="padding: 5px;">To</span>
+                <p><input style="width: 100px" id="billDiscPeriodTo" name="billDiscPeriodTo" type="number" min="0" placeholder="Month To" oninput="validity.valid||(value='');"/></p>
+            </div>
+        </div>
     </td>
 </tr>
 </tbody>

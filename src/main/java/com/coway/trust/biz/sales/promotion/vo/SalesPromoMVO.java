@@ -109,6 +109,11 @@ public class SalesPromoMVO implements Serializable {
 	private int extradeTo;
 	private int extradeAppType;
 
+	private int billDiscType;
+	private int billDiscValue;
+	private int billDiscPeriodFrom;
+	private int billDiscPeriodTo;
+
 	public int getPromoId() {
 		return promoId;
 	}
@@ -517,6 +522,38 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setExtradeAppType(int extradeAppType) {
 		this.extradeAppType = extradeAppType;
+	}
+
+	public int getBillDiscType() {
+		return billDiscType;
+	}
+
+	public void setBillDiscType(int billDiscType) {
+		this.billDiscType = billDiscType;
+	}
+
+	public int getBillDiscValue() {
+		return billDiscValue;
+	}
+
+	public void setBillDiscValue(int billDiscValue) {
+		this.billDiscValue = billDiscValue;
+	}
+
+	public int getBillDiscPeriodFrom() {
+		return billDiscPeriodFrom;
+	}
+
+	public void setBillDiscPeriodFrom(int billDiscPeriodFrom) {
+		this.billDiscPeriodFrom = billDiscPeriodFrom;
+	}
+
+	public int getBillDiscPeriodTo() {
+		return billDiscPeriodTo;
+	}
+
+	public void setBillDiscPeriodTo(int billDiscPeriodTo) {
+		this.billDiscPeriodTo = billDiscPeriodTo;
 	}
 
 }
