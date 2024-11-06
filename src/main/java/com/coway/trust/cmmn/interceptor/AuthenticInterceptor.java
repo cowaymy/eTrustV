@@ -33,7 +33,8 @@ import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-public class AuthenticInterceptor extends WebContentInterceptor {
+public class AuthenticInterceptor
+  extends WebContentInterceptor {
   private static final Logger LOGGER = LoggerFactory.getLogger( AuthenticInterceptor.class );
 
   @Autowired
@@ -52,58 +53,55 @@ public class AuthenticInterceptor extends WebContentInterceptor {
   private CommonService commonService;
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
+  public boolean preHandle( HttpServletRequest request, HttpServletResponse response, Object handler )
+    throws ServletException {
     // Kit Wai - Start - 20180427
-    LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
+    LOGGER.debug( "preHandle :: URI :: " + request.getRequestURI() );
     Map<String, Object> params = new HashMap<String, Object>();
-
     // REQUEST URI'S AS PARAM
-    String[] URI = ((String) request.getRequestURI()).split("/");
-    params.put("mainDo", URI[URI.length - 1]);
+    String[] URI = ( (String) request.getRequestURI() ).split( "/" );
+    params.put( "mainDo", URI[URI.length - 1] );
     EgovMap item = new EgovMap();
-
-    item = (EgovMap) loginService.checkByPass(params);
-
+    item = (EgovMap) loginService.checkByPass( params );
     // SKIP VALIDATION IF VALUE FOUND IN SYS0088M PARAM - URI .do
-    if (item == null) {
+    if ( item == null ) {
       item = null;
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-
       // RESET PARAM
       params.clear();
-
       // UserIDType AS PARAMETER
-      params.put("memTyp", sessionVO.getUserTypeId());
-      item = (EgovMap) loginService.checkByPass(params);
-
+      params.put( "memTyp", sessionVO.getUserTypeId() );
+      item = (EgovMap) loginService.checkByPass( params );
       // SKIP VALIDATION IF VALUE FOUND IN SYS0088M PARAM - MEMBER TYPE
-      if (item != null) {
-        String[] doListStr = ((String) item.get("bypassDoList")).split("\\|\\|\\|");
-
-        List<String> doList = Arrays.asList(doListStr);
-
+      if ( item != null ) {
+        String[] doListStr = ( (String) item.get( "bypassDoList" ) ).split( "\\|\\|\\|" );
+        List<String> doList = Arrays.asList( doListStr );
         // ONLY PERMITS NAVIGATION / ACTION WITHIN SET URLs
-        if (!doList.contains(request.getRequestURI())) {
-          LOGGER.debug("[preHandle] AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
-          throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        if ( !doList.contains( request.getRequestURI() ) ) {
+          LOGGER.debug( "[preHandle] AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+                        request.getRequestURI() );
+          throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
         }
-      } else {
-        if (VerifyRequest.isNotCallCenterRequest(request)) {
-          if (sessionVO != null && sessionVO.getUserId() > 0) {
-            checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
-          } else {
+      }
+      else {
+        if ( VerifyRequest.isNotCallCenterRequest( request ) ) {
+          if ( sessionVO != null && sessionVO.getUserId() > 0 ) {
+            checkAuthorized( sessionVO.getUserId(), request.getRequestURI() );
+          }
+          else {
             // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-            logRequestHeaders(request);
-            logRequestParameters(request);
-            logRequestAttributes(request);
-
-            if (!validateApiAccess(request)) {
-              LOGGER.debug("[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
-              throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            logRequestHeaders( request );
+            logRequestParameters( request );
+            logRequestAttributes( request );
+            if ( !validateApiAccess( request ) ) {
+              LOGGER.debug( "[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
+                            request.getContextPath(), request.getRequestURI() );
+              throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
             }
           }
-        } else {
-          LOGGER.info("[preHandle] this url is call by Callcenter.......");
+        }
+        else {
+          LOGGER.info( "[preHandle] this url is call by Callcenter......." );
         }
       }
     }
@@ -148,13 +146,15 @@ public class AuthenticInterceptor extends WebContentInterceptor {
     item = (EgovMap) loginService.checkByPass( params );
     if ( item == null ) {
       return false;
-    } else {
+    }
+    else {
       return true;
     }
   }
 
   @Override
-  public void postHandle( HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView )
+  public void postHandle( HttpServletRequest request, HttpServletResponse response, Object handler,
+                          ModelAndView modelAndView )
     throws Exception {
     // CHECK REQUEST TO CALL CENTER
     if ( VerifyRequest.isNotCallCenterRequest( request ) ) {
@@ -165,16 +165,15 @@ public class AuthenticInterceptor extends WebContentInterceptor {
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
           // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-          logRequestHeaders(request);
-          logRequestParameters(request);
-          logRequestAttributes(request);
-
-          if (!validateApiAccess(request)) {
-            LOGGER.debug("[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
-            throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+          logRequestHeaders( request );
+          logRequestParameters( request );
+          logRequestAttributes( request );
+          if ( !validateApiAccess( request ) ) {
+            LOGGER.debug( "[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
+                          request.getContextPath(), request.getRequestURI() );
+            throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
           }
         }
-
         if ( modelAndView != null ) {
           Map<String, Object> params = new HashMap<>();
           params.put( "userId", sessionVO.getUserId() );
@@ -193,73 +192,79 @@ public class AuthenticInterceptor extends WebContentInterceptor {
           modelAndView.getModelMap().put( AppConstants.MENU_FAVORITES, menuService.getFavoritesList( sessionVO ) );
         }
       }
-    } else {
+    }
+    else {
       LOGGER.info( "[postHandle] this url is call by Callcenter......." );
     }
   }
 
-  private boolean validateApiAccess(HttpServletRequest request) {
-      @SuppressWarnings("unchecked")
-      Map<String, String[]> parameterMap = request.getParameterMap();
-
+  private boolean validateApiAccess( HttpServletRequest request ) {
+    @SuppressWarnings("unchecked")
+    Map<String, String[]> parameterMap = request.getParameterMap();
+    LOGGER.debug( "=sUid= " + parameterMap.size() );
+    if ( parameterMap.size() > 0 ) {
       // REQUEST PARAMS
       String[] sKey = parameterMap.get( "sKey" );
       String[] sUid = parameterMap.get( "sUid" );
       // GET ACTUAL TOKEN
       String a_sKey;
       try {
-        a_sKey = CommonUtils.nvl(commonService.getApisKey(sUid[0]));
-        LOGGER.debug( "=sUid= " + CommonUtils.nvl(sUid[0]) );
-        LOGGER.debug( "=sKey= " + CommonUtils.nvl(sKey[0]) );
+        a_sKey = CommonUtils.nvl( commonService.getApisKey( CommonUtils.nvl( sUid[0] ) ) );
+        LOGGER.debug( "=sUid= " + CommonUtils.nvl( sUid[0] ) );
+        LOGGER.debug( "=sKey= " + CommonUtils.nvl( sKey[0] ) );
         LOGGER.debug( "=a_sKey= " + a_sKey );
-
-        if (a_sKey.equals( CommonUtils.nvl(sKey[0]) )) {
+        if ( a_sKey.equals( CommonUtils.nvl( sKey[0] ) ) ) {
           //sessionHandler.getCurrentSessionInfo().setUserId( 349 );
           return true;
-        } else {
+        }
+        else {
           return false;
         }
       }
       catch ( NoSuchAlgorithmException e ) {
         return false;
       }
+    }
+    else {
+      return false;
+    }
   }
 
-  /* FOR LOGS USED*/
-  public void logRequestHeaders(HttpServletRequest request) {
+  /* FOR LOGS USED */
+  public void logRequestHeaders( HttpServletRequest request ) {
     Enumeration<String> headerNames = request.getHeaderNames();
-    while (headerNames.hasMoreElements()) {
-        String headerName = headerNames.nextElement();
-        String headerValue = request.getHeader(headerName);
-        LOGGER.debug("Header: " + headerName + " = " + headerValue);
+    while ( headerNames.hasMoreElements() ) {
+      String headerName = headerNames.nextElement();
+      String headerValue = request.getHeader( headerName );
+      LOGGER.debug( "Header: " + headerName + " = " + headerValue );
     }
   }
 
-  public void logRequestParameters(HttpServletRequest request) {
+  public void logRequestParameters( HttpServletRequest request ) {
     Map<String, String[]> parameterMap = request.getParameterMap();
-    for (String paramName : parameterMap.keySet()) {
-        String[] paramValues = parameterMap.get(paramName);
-        LOGGER.debug("Parameter: " + paramName + " = " + String.join(", ", paramValues));
+    for ( String paramName : parameterMap.keySet() ) {
+      String[] paramValues = parameterMap.get( paramName );
+      LOGGER.debug( "Parameter: " + paramName + " = " + String.join( ", ", paramValues ) );
     }
   }
 
-  public void logRequestAttributes(HttpServletRequest request) {
+  public void logRequestAttributes( HttpServletRequest request ) {
     Enumeration<String> attributeNames = request.getAttributeNames();
-    while (attributeNames.hasMoreElements()) {
-        String attributeName = attributeNames.nextElement();
-        Object attributeValue = request.getAttribute(attributeName);
-        LOGGER.debug("Attribute: " + attributeName + " = " + attributeValue);
+    while ( attributeNames.hasMoreElements() ) {
+      String attributeName = attributeNames.nextElement();
+      Object attributeValue = request.getAttribute( attributeName );
+      LOGGER.debug( "Attribute: " + attributeName + " = " + attributeValue );
     }
   }
 
-  public String getRequestBody(HttpServletRequest request) throws IOException {
+  public String getRequestBody( HttpServletRequest request )
+    throws IOException {
     StringBuilder stringBuilder = new StringBuilder();
     BufferedReader bufferedReader = request.getReader();
     String line;
-    while ((line = bufferedReader.readLine()) != null) {
-        stringBuilder.append(line);
+    while ( ( line = bufferedReader.readLine() ) != null ) {
+      stringBuilder.append( line );
     }
     return stringBuilder.toString();
   }
-
 }
