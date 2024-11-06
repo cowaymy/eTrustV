@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,6 +161,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
       LOGGER.debug( "postHandle :: URI :: " + request );
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
       boolean flag = bypassAuthorized( request );
+      LOGGER.debug( " :: " + sessionVO.getUserId() );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
           // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
@@ -207,11 +209,12 @@ public class AuthenticInterceptor extends WebContentInterceptor {
       String a_sKey;
       try {
         a_sKey = CommonUtils.nvl(commonService.getApisKey(sUid[0]));
-        LOGGER.debug( "=sUid= " + sUid[0] );
-        LOGGER.debug( "=sKey= " + sKey[0] );
+        LOGGER.debug( "=sUid= " + CommonUtils.nvl(sUid[0]) );
+        LOGGER.debug( "=sKey= " + CommonUtils.nvl(sKey[0]) );
         LOGGER.debug( "=a_sKey= " + a_sKey );
 
-        if (a_sKey.equals( sKey[0] )) {
+        if (a_sKey.equals( CommonUtils.nvl(sKey[0]) )) {
+          //sessionHandler.getCurrentSessionInfo().setUserId( 349 );
           return true;
         } else {
           return false;
