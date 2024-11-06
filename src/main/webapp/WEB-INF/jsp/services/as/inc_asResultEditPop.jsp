@@ -27,6 +27,7 @@
   var asRslt;
   var ops;
   var matchMatDefCode = [];
+  var removeList = [];
   var installAccTypeId = 582;
   var installAccValues = JSON.parse("${installAccValues}");
   var isSet = 0;
@@ -136,6 +137,10 @@
           width : 150,
           editable : false,
           visible : false
+        }, {
+            dataField : "filterCode",
+            headerText : "Filter Code",
+            visible : false
         }];
 
     var gridPros2 = {
@@ -152,16 +157,16 @@
   }
 
   function auiAddRowHandler(event) {
-	 //Added by keyi - restructure AS result 202208
+     //Added by keyi - restructure AS result 202208
      matchMatDefCode.push(event.items[0].filterId);
   }
 
   function auiRemoveRowHandler(event) {
-	const filters = AUIGrid.getOrgGridData(myFltGrd10)
-	const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
-	const cFilter = event.items[0]
-	$("#txtFilterCharge").val((fTotal - (cFilter.filterType == "CHG" ? cFilter.filterTotal : 0)).toFixed(2));
-	fn_calculateTotalCharges()
+    const filters = AUIGrid.getOrgGridData(myFltGrd10)
+    const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
+    const cFilter = event.items[0]
+    $("#txtFilterCharge").val((fTotal - (cFilter.filterType == "CHG" ? cFilter.filterTotal : 0)).toFixed(2));
+    fn_calculateTotalCharges()
     /*if (event.items[0].filterType == "CHG") {
       var fChage = Number($("#txtFilterCharge").val());
       var totchrge = Number($("#txtTotalCharge").val());
@@ -175,10 +180,16 @@
       }
     }*/
     //Added by keyi - restructure AS result 202208
+    console.log("removeRow");
+    debugger;
     var index = matchMatDefCode.indexOf(event.items[0].filterId);
     if (index >= 0) {
-        matchMatDefCode.splice(index,1);
+        console.log("index: " + index);
+    	matchMatDefCode.splice(index,1);
     }
+
+    removeList.push(event.items[0]);
+    console.log("removeList" + JSON.stringify(removeList));
   }
 
   // RE-INSERT BACK VALUE
@@ -706,10 +717,10 @@
     }
 
     if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" ){
-    	$("#m28").show();
+        $("#m28").show();
         $("#ntuCom").attr("disabled", false);
     }else{
-    	$("#m28").hide();
+        $("#m28").hide();
         $("#ntuCom").attr("disabled", true);
         $("#ntuCom").val("0");
     }
@@ -1309,6 +1320,9 @@
     fitem.filterId = $("#ddlFilterCode").val();
     //fitem.filterCODE =$("#ddlFilterCode").val();
     fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
+    var ddlFilterCodeText = $("#ddlFilterCode option:selected").text();
+    ddlFilterCodeText = ddlFilterCodeText.substr(0, ddlFilterCodeText.indexOf(" "));
+    fitem.filterCode = ddlFilterCodeText;
 
     var chargePrice = 0;
     var chargeTotalPrice = 0;
@@ -1510,25 +1524,25 @@
           }
         }
 
-	   if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
-	    	if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
-	      		if(!($("#ntuCom").val() >= 0 && $("#ntuCom").val() <= 10 )){
-	    			rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
-	    			rtnValue = false;
-	      		}
-	    	}else{
-	    			rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
-	    			rtnValue = false;
-	    		}
-	    	}
+       if($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"){ // WP & POE
+            if (!($("#ntuCom").val() == "" || $("#ntuCom").val() == null )){
+                if(!($("#ntuCom").val() >= 0 && $("#ntuCom").val() <= 10 )){
+                    rtnMsg += "* <spring:message code='sys.msg.range' arguments='NTU,0.00,10.00' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
+            }else{
+                    rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
+            }
 
-	   // Installation Accessory checking for Complete status
-	   if($("#ddlStatus").val() == 4 ){
-	      if($("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
-	    	  rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
-	    	  rtnValue = false;
-	      		}
-	      }
+       // Installation Accessory checking for Complete status
+       if($("#ddlStatus").val() == 4 ){
+          if($("#chkInstallAcc").is(":checked") && ($("#installAcc").val() == "" || $("#installAcc").val() == null)){
+              rtnMsg += "* <spring:message code='sys.msg.invalid' arguments='Installation Accessory' htmlEscape='false'/> </br>";
+              rtnValue = false;
+                }
+          }
 
         if (FormUtil.checkReqValue($("#tpSettleTime"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Time' htmlEscape='false'/> </br>";
@@ -1834,14 +1848,15 @@
         });
 
       } else if ($("#requestMod").val() == "RESULTEDIT") {
-    	if (addedRowItems == "" || removedRowItems == "") {
+        if (addedRowItems == "" || removedRowItems == "") {
           saveForm = {
             "asResultM" : asResultM,
             "add" : allRowItems,
             "update" : editedRowItems,
             "remove" : editedRowItems,
             "installAccList" : $("#installAcc").val(),
-            "mobileYn" : "N"
+            "mobileYn" : "N",
+            "removeList" : removeList
           // "all" : allRowItems
           }
         } else {
@@ -1851,10 +1866,11 @@
             "update" : editedRowItems,
             "remove" : removedRowItems,
             "installAccList" : $("#installAcc").val(),
-            "mobileYn" : "N"
+            "mobileYn" : "N",
+            "removeList" : removeList
           }
         }
-
+        console.log("SaveForm: " + JSON.stringify(saveForm));
         // KR-OHK Serial Check add
         var url = "";
         if ($("#hidSerialRequireChkYn").val() == 'Y') {
@@ -2478,22 +2494,22 @@
   }
 
   function f_multiCombo(){
-	    $(function() {
-	        $('#installAcc').change(function() {
-	        }).multipleSelect({
-	            selectAll: false, // 전체선택
-	            width: '80%'
-	        }).multipleSelect("setSelects", installAccValues);
-	    });
-	}
+        $(function() {
+            $('#installAcc').change(function() {
+            }).multipleSelect({
+                selectAll: false, // 전체선택
+                width: '80%'
+            }).multipleSelect("setSelects", installAccValues);
+        });
+    }
 
-	function fn_InstallAcc_CheckedChanged(_obj) {
-		    if (_obj.checked) {
-		        doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
-		    } else {
-		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
-		    }
-		  }
+    function fn_InstallAcc_CheckedChanged(_obj) {
+            if (_obj.checked) {
+                doGetComboSepa('/common/selectCodeList.do', installAccTypeId, '', '','installAcc', 'M' , 'f_multiCombo');
+            } else {
+                doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
+            }
+          }
 
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
@@ -2636,17 +2652,17 @@
               <th scope="row">Rework Project<span id='m100' name='m100' class="must" style="display: none">*</span></th>
               <td><input type="text" title="" placeholder="Rework Project" class="disabled w100p" disabled="disabled" id='reworkProj' name='reworkProj' /></td>
               <th scope="row"><spring:message code='service.title.ntu'/><span id="m28" class="must">*</span></th>
-           	  <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
-           	  </td>
+              <td><input type="text" title="NTU" class="w100p" id="ntuCom" name="ntuCom" placeholder="0.00" maxlength="5" onkeypress='validate(event)' />
+              </td>
             </tr>
             <tr>
-          		<th scope="row"><spring:message code="service.title.installation.accessories" />
-          		<input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
-    			<td colspan="3">
-    			<select class="w100p" id="installAcc" name="installAcc">
-    			</select>
-    			</td>
-          	</tr>
+                <th scope="row"><spring:message code="service.title.installation.accessories" />
+                <input type="checkbox" id="chkInstallAcc" name="chkInstallAcc" onChange="fn_InstallAcc_CheckedChanged(this)" checked/></th>
+                <td colspan="3">
+                <select class="w100p" id="installAcc" name="installAcc">
+                </select>
+                </td>
+            </tr>
             <tr>
               <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>

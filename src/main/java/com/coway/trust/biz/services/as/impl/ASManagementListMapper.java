@@ -373,4 +373,10 @@ int insert_SAL0423D(Map<String, Object> params); // CELESTE [20240828] - New Pro
 
 EgovMap selectStkCatType(Map<String, Object> params);
 
+int updateStatus_SAL0087D(Map<String, Object> params);
+
+int selectExistingPreFilterCount(Map<String, Object> params);
+
+EgovMap selectExistingPreFilterInfo(Map<String, Object> params);
+
 }

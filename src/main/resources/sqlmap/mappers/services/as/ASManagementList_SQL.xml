@@ -1455,6 +1455,7 @@
            S.ASR_ITM_REM
            filter_Remark ,
            S.SERIAL_NO srv_Filter_Last_Serial
+           , S.STK_CODE
            FROM ( SELECT E1.ASR_ITM_ID ,
                          E1.ASR_ITM_PART_QTY ,
                          E1.ASR_ITM_PART_PRC ,
@@ -1475,6 +1476,7 @@
                              THEN E3.RESN_ID
                              ELSE 0
                       END C4
+                      , E2.STK_CODE
                       FROM SVC0005D E1 JOIN SYS0026M E2 ON E1.ASR_ITM_PART_ID = E2.STK_ID
                       LEFT JOIN SYS0032M E3 ON E1.ASR_ITM_EXCHG_ID = E3.RESN_ID
                       WHERE ( 0 <![CDATA[ <> ]]> E1.ASR_ITM_PART_ID )
@@ -5165,6 +5167,15 @@
     )
   </insert>
 
+  <update id="updateStatus_SAL0087D" parameterType="Map">
+
+    UPDATE SAL0087D SET SRV_FILTER_STUS_ID = #{status}
+    , SRV_FILTER_UPD_DT = SYSDATE
+    , SRV_FILTER_UPD_USER_ID = #{userId}
+    WHERE SRV_CONFIG_ID = #{configId} AND SRV_FILTER_STK_ID = (SELECT STK_ID FROM SYS0026M WHERE 1=1 AND STK_ID = #{fID})
+
+  </update>
+
   <select id="selectStkCatType" parameterType="Map" resultType="egovMap">
             SELECT STK_CODE stkcode, STK_DESC stkdesc, STK_TYPE_ID stktypeid, STK_CTGRY_ID stkctgryid, STK_ID stkid FROM SYS0026M WHERE 1=1
             <choose>
@@ -5176,7 +5187,25 @@
                 </otherwise>
             </choose>
 
-        </select>
+  </select>
+
+  <select id="selectExistingPreFilterCount" parameterType="Map" resultType="java.lang.Integer">
+
+    SELECT COUNT(1)
+    FROM SAL0087D
+    WHERE SRV_CONFIG_ID = #{configId}
+    AND SRV_FILTER_STK_ID = (SELECT STK_ID FROM SYS0026M WHERE 1=1 AND STK_ID = #{fID})
+
+  </select>
+
+  <select id="selectExistingPreFilterInfo" parameterType="Map" resultType="egovMap">
+
+    SELECT SRV_FILTER_STUS_ID, SRV_FILTER_ID
+    FROM SAL0087D
+    WHERE SRV_CONFIG_ID = #{configId}
+    AND SRV_FILTER_STK_ID = (SELECT STK_ID FROM SYS0026M WHERE 1=1 AND STK_ID = #{fID})
+
+  </select>
 
 <!-- // CELESTE [20240828] - New Product External Filter Registration Enhancement [E] -->
 </mapper>

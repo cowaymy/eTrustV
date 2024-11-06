@@ -307,6 +307,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       List<EgovMap> fltConfLst = (List<EgovMap>) getfltConfLst();
       List<EgovMap> addListing = (List<EgovMap>) params.get("add");
+      List<EgovMap> removeListing = (List<EgovMap>) params.get("removeList");
       boolean fltSta = false;
 
       LOGGER.debug(" ============= OPTIONAL FILTER NUMBER:: " + fltConfLst.size());
@@ -353,6 +354,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               mp.put("configId", "0");
             }
             mp.put("fID", fltConfLstMap.get("stkId"));
+            mp.put("status", "1");
             insert_SAL0087D(mp);
           }
         } else {
@@ -366,17 +368,59 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             	LOGGER.debug(" ============= :: " + CommonUtils.nvl(updateMap.get("filterCode")).toString() + " = " + CommonUtils.nvl(fltConfLstMap.get("stkId")).toString());
             	LOGGER.debug("addListing ======" + addListing);
             	LOGGER.debug("updateMap ======" + updateMap);
-            	if (updateMap.get("filterCode").toString().equals("113794")) { //FOR PRE-FILTER
+
+
+            	if (CommonUtils.nvl(updateMap.get("filterCode")).toString().equals("113794")) { //FOR PRE-FILTER
             		mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
 
             		EgovMap param = new EgovMap();
             		param.put("itmcode", "3118441");
             		EgovMap entry2 = ASManagementListMapper.selectStkCatType(param);
             		mp.put("fID", entry2.get("stkid"));
-            		insert_SAL0087D(mp);
+
+            		int prefilCount = ASManagementListMapper.selectExistingPreFilterCount(mp);
+            		if(prefilCount > 0){
+            			EgovMap preFilterInfo = ASManagementListMapper.selectExistingPreFilterInfo(mp);
+
+            			if(CommonUtils.nvl(preFilterInfo.get("srvFilterStusId")).toString().equals("8")){
+            				mp.put("status", "1"); //add new filter = update filter status in SAL0087D to active when exists, else insert 1 new row
+            				mp.put("userId", params.get("updator"));
+            				updateStatus_SAL0087D(mp);
+            			}else if(CommonUtils.nvl(preFilterInfo.get("srvFilterStusId")).toString().equals("1")){
+            				mp.put("status", "8"); //add new filter = update filter status in SAL0087D to active when exists, else insert 1 new row
+            				mp.put("userId", params.get("updator"));
+            				updateStatus_SAL0087D(mp);
+            			}
+
+            		}
+            		else{
+            			mp.put("status", "1"); //add new filter = update filter status in SAL0087D to active when exists, else insert 1 new row
+                		insert_SAL0087D(mp);
+            		}
             	}
             }
         }
+
+        LOGGER.debug(" ============= REMOVE FILTER DURING EDIT ASR =============");
+
+        for(int i = 0; i < removeListing.size(); i++){
+        	LOGGER.debug(" ============= :: " + i);
+        	if(removeListing.get(i) != null){
+        		Map<String, Object> deleteMap = (Map<String, Object>) removeListing.get(i);
+        		if (CommonUtils.nvl(deleteMap.get("stkCode")).toString().equals("113794")) { //FOR PRE-FILTER
+        			mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
+
+        			EgovMap param1 = new EgovMap();
+        			param1.put("itmcode", "3118441");
+            		EgovMap entry2 = ASManagementListMapper.selectStkCatType(param1);
+            		mp.put("fID", entry2.get("stkid"));
+            		mp.put("userId", params.get("updator"));
+            		mp.put("status", "8"); //remove filter = update filter status in SAL0087D to inactive
+            		updateStatus_SAL0087D(mp);
+        		}
+        	}
+        }
+
       }
     }
     LOGGER.debug(" ============= END INSERT MINERAL RECORD ============= ");
@@ -401,6 +445,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public int insert_SAL0087D(Map<String, Object> params) {
     return ASManagementListMapper.insert_SAL0087D(params);
+  }
+
+  @Override
+  public int updateStatus_SAL0087D(Map<String, Object> params) {
+	  return ASManagementListMapper.updateStatus_SAL0087D(params);
   }
 
   @Override
