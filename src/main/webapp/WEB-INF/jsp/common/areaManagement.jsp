@@ -390,7 +390,7 @@
 
 <ul class="right_btns">
     <li>
-       <li><p class="btn_grid"><a href="#" id="editBlackArea" onClick="javascript:fn_editBlackArea();"><spring:message code='sys.btn.edit'/></a></p></li>
+       <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}"><li><p class="btn_grid"><a href="#" id="editBlackArea" onClick="javascript:fn_editBlackArea();"><spring:message code='sys.btn.edit'/></a></p></li></c:if>
     </li>
 </ul>
 

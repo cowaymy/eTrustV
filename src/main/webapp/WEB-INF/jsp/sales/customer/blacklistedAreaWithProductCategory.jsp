@@ -118,9 +118,11 @@ function fn_validSearchList() {
     </p>
     <h2>Blacklisted Area with Product Category</h2>
     <ul class="right_btns">
-      <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-      <li><p class="btn_blue"><a href="javascript:fn_excelDown();">Generate</a></p></li>
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+        <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+      </c:if>
+      <c:if test="${PAGE_AUTH.funcPrint == 'Y'}"><li><p class="btn_blue"><a href="javascript:fn_excelDown();">Generate</a></p></li></c:if>
     </ul>
   </aside>
   <!-- title_line end -->
