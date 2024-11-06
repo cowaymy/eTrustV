@@ -78,10 +78,12 @@
 
             <mvc:exclude-mapping path="/sample/**"/>
 
+            <!-- MOBILE 1ST TIME LOGIN BY PASS -->
             <mvc:exclude-mapping path="/**/api/**/login"/>
-            <mvc:exclude-mapping path="/**/api/**/myStockList"/>
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
+            <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
+
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
@@ -96,10 +98,11 @@
 
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
+            <!-- MOBILE 1ST TIME LOGIN BY PASS -->
             <mvc:exclude-mapping path="/**/api/**/login"/>
-            <mvc:exclude-mapping path="/**/api/**/myStockList"/>
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
+            <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
 
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
@@ -111,10 +114,11 @@
         <mvc:interceptor>
             <mvc:mapping path="/mobileWeb/**"/>
             <mvc:exclude-mapping path="/mobileWeb/login.do"/>
+            <!-- MOBILE 1ST TIME LOGIN BY PASS -->
             <mvc:exclude-mapping path="/**/api/**/login"/>
-            <mvc:exclude-mapping path="/**/api/**/myStockList"/>
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
+            <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
 
             <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
