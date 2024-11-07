@@ -7,6 +7,7 @@ public class ClaimResultHsbcUploadVO {
 	private String refCode;
 	private int itemId;
 	private String apprCode;
+	private String descResp;
 
 
 	public static ClaimResultHsbcUploadVO create(CSVRecord CSVRecord) {
@@ -17,6 +18,7 @@ public class ClaimResultHsbcUploadVO {
     		vo.setRefCode(CSVRecord.get(0).substring(120,123).trim());
     		vo.setItemId(Integer.parseInt(CSVRecord.get(0).substring(43,52).trim()));
     		vo.setApprCode(CSVRecord.get(0).substring(39,43).trim());
+    		vo.setDescResp(CSVRecord.get(0).substring(93,117).trim());
 		}else{
 			vo.setRefCode(CSVRecord.get(0).substring(99,102).trim());
 			vo.setItemId(Integer.parseInt(CSVRecord.get(0).substring(48,57).trim()));
@@ -56,6 +58,14 @@ public class ClaimResultHsbcUploadVO {
 
 	public void setApprCode(String apprCode) {
 	  this.apprCode = apprCode;
+	}
+
+	public String getDescResp() {
+		return descResp;
+	}
+
+	public void setDescResp(String descResp) {
+		this.descResp = descResp;
 	}
 
 }
