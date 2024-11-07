@@ -90,9 +90,9 @@ public class AuthenticInterceptor
           }
           else {
             // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-            // logRequestHeaders( request );
-            // logRequestParameters( request );
-            // logRequestAttributes( request );
+            logRequestHeaders( request );
+            logRequestParameters( request );
+            logRequestAttributes( request );
 
             if ( !validateApiAccess( request ) ) {
               LOGGER.debug( "[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
@@ -165,9 +165,9 @@ public class AuthenticInterceptor
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
           // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-          // logRequestHeaders( request );
-          // logRequestParameters( request );
-          // logRequestAttributes( request );
+          logRequestHeaders( request );
+          logRequestParameters( request );
+          logRequestAttributes( request );
 
           if ( !validateApiAccess( request ) ) {
             LOGGER.debug( "[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
