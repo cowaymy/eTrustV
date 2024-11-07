@@ -17,7 +17,6 @@ var atchFileId = '';
 var atchFileIdNew = '';
 var myFileCaches = {};
 var checkFileValid = true;
-var isAreaValid = true;
 
 var update = new Array();
 var remove = new Array();
@@ -919,10 +918,8 @@ function fn_setMemInfo(data){
 	    if (data.areaId != null && jQuery.trim(data.areaId).length > 0) {
 	    	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
 	            if (result) {
-	                isAreaValid = true;
 	                fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
 	            } else {
-	            	isAreaValid = false;
 	                console.error("Area not found. Area ID: ",  data.areaId);
 	                Common.alert("Invalid member address: Please select a valid area for this member.");
 	            }
@@ -1511,11 +1508,6 @@ function fn_saveValidation(){
     if (!regIncTax.test($("#incomeTaxNo").val())){
         valid = false;
         message += "* Invalid Income Tax Format.<br/>";
-    }
-
-    if (!isAreaValid) {
-    	valid = false;
-    	message += "Please select a valid area.<br/> Go to Member Address > Area search";
     }
 
     //Display Message
