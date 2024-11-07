@@ -500,6 +500,7 @@ public class ClaimController {
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
           map.put("macCode", r.getMacCode());
+          map.put("descResp", null);
 
           return map;
         }).collect(Collectors.toList());
@@ -544,6 +545,8 @@ public class ClaimController {
           map.put("refCode", r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
+          map.put("macCode", null);
+          map.put("descResp", null);
 
           return map;
         }).collect(Collectors.toList());
@@ -587,6 +590,16 @@ public class ClaimController {
           map.put("refCode", r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
+          map.put("macCode", null);
+
+          // since got 2 type of token
+          String descResp = r.getDescResp();
+
+          if (descResp == null || descResp.isEmpty()) {
+        	  map.put("descResp", null);
+          } else {
+        	  map.put("descResp", descResp);
+          }
 
           return map;
         }).collect(Collectors.toList());
@@ -630,6 +643,8 @@ public class ClaimController {
           map.put("apprCode", !CommonUtils.nvl(r.getApprCode()).equals("A") ? "0" : r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
+          map.put("macCode", null);
+          map.put("descResp", null);
 
           return map;
         }).collect(Collectors.toList());
@@ -674,6 +689,8 @@ public class ClaimController {
           map.put("refCode", r.getRefCode());
           map.put("id", claimMap.get("ctrlId"));
           map.put("itemId", r.getItemId());
+          map.put("macCode", null);
+          map.put("descResp", null);
 
           return map;
         }).collect(Collectors.toList());
