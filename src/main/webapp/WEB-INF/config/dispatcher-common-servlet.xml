@@ -83,6 +83,7 @@
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
+            <mvc:exclude-mapping path="/mobile/api/v1/service/hTReAppointmtRequest"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
@@ -104,6 +105,7 @@
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
+            <mvc:exclude-mapping path="/mobile/api/v1/service/hTReAppointmtRequest"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
@@ -122,6 +124,7 @@
             <mvc:exclude-mapping path="/**/api/**/logistics/**"/>
             <mvc:exclude-mapping path="/**/api/**/common/**"/>
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
+            <mvc:exclude-mapping path="/mobile/api/v1/service/hTReAppointmtRequest"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
             <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
