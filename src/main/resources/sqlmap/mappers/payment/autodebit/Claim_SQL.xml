@@ -143,7 +143,7 @@
 
   <!--Auto Debit - Claim Result Update : 아이템 등록 -->
   <insert id="insertClaimResultItem" parameterType="Map">
-    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, , MAC_CODE)
+    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, MAC_CODE, DESC_RESP)
     VALUES (
     (CASE WHEN
     LENGTH(#{refNo}) <![CDATA[   < ]]>
@@ -167,13 +167,14 @@
     #{id},
     #{itemId},
     #{apprCode},
-    #{item.macCode}
+    #{item.macCode},
+    #{item.descResp}
     )
   </insert>
 
   <!--Auto Debit - Claim Result Update : 아이템 등록 -->
   <insert id="insertClaimResultItemBulk" parameterType="java.util.List">
-    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, MAC_CODE)
+    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, MAC_CODE, DESC_RESP)
     <foreach collection="list" item="item" index="index"
       separator=" UNION ALL ">
       SELECT
@@ -182,7 +183,8 @@
       #{item.id},
       #{item.itemId},
       #{item.apprCode},
-      #{item.macCode}
+      #{item.macCode},
+      #{item.descResp}
       FROM DUAL
     </foreach>
   </insert>
