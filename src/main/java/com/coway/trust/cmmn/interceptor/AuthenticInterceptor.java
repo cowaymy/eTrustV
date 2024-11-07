@@ -90,9 +90,10 @@ public class AuthenticInterceptor
           }
           else {
             // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-            logRequestHeaders( request );
-            logRequestParameters( request );
-            logRequestAttributes( request );
+            // logRequestHeaders( request );
+            // logRequestParameters( request );
+            // logRequestAttributes( request );
+
             if ( !validateApiAccess( request ) ) {
               LOGGER.debug( "[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
                             request.getContextPath(), request.getRequestURI() );
@@ -161,13 +162,13 @@ public class AuthenticInterceptor
       LOGGER.debug( "postHandle :: URI :: " + request );
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
       boolean flag = bypassAuthorized( request );
-      LOGGER.debug( " :: " + sessionVO.getUserId() );
       if ( !flag ) {
         if ( sessionVO == null || sessionVO.getUserId() == 0 ) {
           // WRITE LOGS FOR HEADER, PARAMS AND ATTRIBUTE
-          logRequestHeaders( request );
-          logRequestParameters( request );
-          logRequestAttributes( request );
+          // logRequestHeaders( request );
+          // logRequestParameters( request );
+          // logRequestAttributes( request );
+
           if ( !validateApiAccess( request ) ) {
             LOGGER.debug( "[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
                           request.getContextPath(), request.getRequestURI() );
@@ -201,31 +202,28 @@ public class AuthenticInterceptor
   private boolean validateApiAccess( HttpServletRequest request ) {
     @SuppressWarnings("unchecked")
     Map<String, String[]> parameterMap = request.getParameterMap();
-    LOGGER.debug( "=sUid= " + parameterMap.size() );
     if ( parameterMap.size() > 0 ) {
-      // REQUEST PARAMS
-      String[] sKey = parameterMap.get( "sKey" );
-      String[] sUid = parameterMap.get( "sUid" );
-      // GET ACTUAL TOKEN
-      String a_sKey;
-      try {
-        a_sKey = CommonUtils.nvl( commonService.getApisKey( CommonUtils.nvl( sUid[0] ) ) );
-        LOGGER.debug( "=sUid= " + CommonUtils.nvl( sUid[0] ) );
-        LOGGER.debug( "=sKey= " + CommonUtils.nvl( sKey[0] ) );
-        LOGGER.debug( "=a_sKey= " + a_sKey );
-        if ( a_sKey.equals( CommonUtils.nvl( sKey[0] ) ) ) {
-          //sessionHandler.getCurrentSessionInfo().setUserId( 349 );
-          return true;
-        }
-        else {
+      if (parameterMap.get( "sKey" ) != null && parameterMap.get( "sUid" ) != null) {
+        // REQUEST PARAMS
+        String[] sKey = parameterMap.get( "sKey" );
+        String[] sUid = parameterMap.get( "sUid" );
+        // GET ACTUAL TOKEN
+        String a_sKey;
+        try {
+          a_sKey = CommonUtils.nvl( commonService.getApisKey( CommonUtils.nvl( sUid[0] ) ) );
+          if ( a_sKey.equals( CommonUtils.nvl( sKey[0] ) ) ) {
+            //sessionHandler.getCurrentSessionInfo().setUserId( 349 );
+            return true;
+          } else {
+            return false;
+          }
+        } catch ( NoSuchAlgorithmException e ) {
           return false;
         }
-      }
-      catch ( NoSuchAlgorithmException e ) {
+      } else {
         return false;
       }
-    }
-    else {
+    } else {
       return false;
     }
   }
