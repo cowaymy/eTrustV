@@ -1,7 +1,10 @@
 package com.coway.trust.cmmn.interceptor;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -28,6 +31,7 @@ import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.wrapper.CachedBodyHttpServletRequestWrapper;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,10 +99,12 @@ public class AuthenticInterceptor
             logRequestParameters( request );
             logRequestAttributes( request );
 
-            if ( !validateApiAccess( request ) ) {
-              LOGGER.debug( "[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
-                            request.getContextPath(), request.getRequestURI() );
-              throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
+            if ("GET".equalsIgnoreCase(request.getMethod())) {
+              if ( !validateApiAccess( request ) ) {
+                LOGGER.debug( "[preHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
+                              request.getContextPath(), request.getRequestURI() );
+                throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
+              }
             }
           }
         }
@@ -170,10 +176,12 @@ public class AuthenticInterceptor
           logRequestParameters( request );
           logRequestAttributes( request );
 
-          if ( !validateApiAccess( request ) ) {
-            LOGGER.debug( "[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
-                          request.getContextPath(), request.getRequestURI() );
-            throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
+          if ("GET".equalsIgnoreCase(request.getMethod())) {
+            if ( !validateApiAccess( request ) ) {
+              LOGGER.debug( "[postHandle] AuthenticInterceptor > API ACCESS VARIFICATION > AuthException [ URI : {}{}]",
+                            request.getContextPath(), request.getRequestURI() );
+              throw new AuthException( HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase() );
+            }
           }
         }
         if ( modelAndView != null ) {
@@ -225,33 +233,7 @@ public class AuthenticInterceptor
          return false;
       }
     } else {
-      try {
-        LOGGER.debug( "getRequestBody" + getRequestBody(request) );
-        String requestBody = getRequestBody(request);
-        /*ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> bodyMap = mapper.readValue(requestBody, Map.class);
-        if ((String) bodyMap.get("sKey") != null && (String) bodyMap.get("sUid") != null) {
-          // REQUEST PARAMS
-          String sKey = (String) bodyMap.get("sKey");
-          String sUid = (String) bodyMap.get("sUid");
-          // GET ACTUAL TOKEN
-          String a_sKey;
-          try {
-            a_sKey = CommonUtils.nvl( commonService.getApisKey( CommonUtils.nvl( sUid ) ) );
-            if ( a_sKey.equals( CommonUtils.nvl( sKey ) ) ) {
-              return true;
-            } else {
-              return false;
-            }
-          } catch ( NoSuchAlgorithmException e ) {
-            return false;
-          }
-        }*/
-        return false;
-      } catch ( IOException e ) {
-        e.printStackTrace();
-        return false;
-      }
+       return false;
     }
   }
 
@@ -284,12 +266,13 @@ public class AuthenticInterceptor
 
   public String getRequestBody( HttpServletRequest request )
     throws IOException {
-    StringBuilder stringBuilder = new StringBuilder();
-    BufferedReader bufferedReader = request.getReader();
-    String line;
-    while ( ( line = bufferedReader.readLine() ) != null ) {
-      stringBuilder.append( line );
+    StringBuilder body = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            body.append(line);
+        }
     }
-    return stringBuilder.toString();
+    return body.toString();
   }
 }
