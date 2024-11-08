@@ -5204,6 +5204,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         SELECT COUNT(*) CNT
         FROM SAL0090H
         WHERE SRV_SO_ID = #{salesOrdId}
+        AND SRV_STUS_ID = 1
     </select>
 
      <select id="getPromoItemInfo" parameterType="Map" resultType="egovMap">
@@ -5294,8 +5295,9 @@ SELECT DISTINCT A.ORD_ID FROM (
                     C.USER_NAME AS CREATOR
         FROM SAL0090D A
         LEFT JOIN SAL0090H B ON A.SRV_SO_ID = B.SRV_SO_ID
-        LEFT JOIN SYS0047M C ON A.SRV_UPD_USER_ID = C.USER_ID
+        LEFT JOIN SYS0047M C ON B.SRV_UPD_USER_ID = C.USER_ID
         WHERE B.SRV_SO_ID = #{salesOrdId}
+        AND (A.SRV_STUS_ID = 1 AND B.SRV_STUS_ID = 1)
      </select>
 
     <select id="getSSGstRebate" parameterType="Map" resultType="egovMap">
