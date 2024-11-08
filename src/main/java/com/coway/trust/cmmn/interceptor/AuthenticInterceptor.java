@@ -30,6 +30,7 @@ import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -221,10 +222,36 @@ public class AuthenticInterceptor
           return false;
         }
       } else {
-        return false;
+         return false;
       }
     } else {
-      return false;
+      try {
+        LOGGER.debug( "getRequestBody" + getRequestBody(request) );
+        String requestBody = getRequestBody(request);
+        /*ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> bodyMap = mapper.readValue(requestBody, Map.class);
+        if ((String) bodyMap.get("sKey") != null && (String) bodyMap.get("sUid") != null) {
+          // REQUEST PARAMS
+          String sKey = (String) bodyMap.get("sKey");
+          String sUid = (String) bodyMap.get("sUid");
+          // GET ACTUAL TOKEN
+          String a_sKey;
+          try {
+            a_sKey = CommonUtils.nvl( commonService.getApisKey( CommonUtils.nvl( sUid ) ) );
+            if ( a_sKey.equals( CommonUtils.nvl( sKey ) ) ) {
+              return true;
+            } else {
+              return false;
+            }
+          } catch ( NoSuchAlgorithmException e ) {
+            return false;
+          }
+        }*/
+        return false;
+      } catch ( IOException e ) {
+        e.printStackTrace();
+        return false;
+      }
     }
   }
 
