@@ -821,10 +821,10 @@
                 var mTo = billDiscPeriodTo.replace("-","");
 
                 if(FormUtil.onlyNumCheck(mFrom) && FormUtil.onlyNumCheck(mTo)){
-                     if(mTo >= mFrom){
-                         isValid = false;
-                         msg += "Discount period month To must be larger or equal value than From<br />";
-                     }
+//                      if(mFrom >= mTo){
+//                          isValid = false;
+//                          msg += "Discount period month To must be larger or equal value than From<br />";
+//                      }
                 }
                 else{
                     isValid = false;
