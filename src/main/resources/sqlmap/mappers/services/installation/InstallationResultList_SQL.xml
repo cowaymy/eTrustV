@@ -3789,7 +3789,9 @@
                         , ENTRY_ID
                         , STUS_CODE_ID
                         , CT_ID
+                       <if test="installDate != null and installDate != ''">
                         , INSTALL_DT
+                       </if>
                         , REM
                         , GL_POST
                         , CRT_USER_ID
@@ -3839,7 +3841,9 @@
             , #{entryId}
             , #{statusCodeId}
             , #{ctid}
-            , TO_DATE(#{installDate},'DD-MM-YYYY')
+            <if test="installDate != null and installDate != ''">
+              , TO_DATE(#{installDate},'DD-MM-YYYY')
+            </if>
             , #{remark}
             , #{glpost}
             , #{creator}
