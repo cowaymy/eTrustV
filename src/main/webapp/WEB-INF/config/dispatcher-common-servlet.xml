@@ -85,7 +85,8 @@
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
-            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
+            <mvc:exclude-mapping path="/common/getApisKey.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
             <!-- MOBILE WEB -->
             <mvc:exclude-mapping path="/mobileWeb/**"/>
 
@@ -106,7 +107,8 @@
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
-            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
+            <mvc:exclude-mapping path="/common/getApisKey.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
         </mvc:interceptor>
@@ -124,7 +126,8 @@
             <mvc:exclude-mapping path="/**/api/**/service/**_b"/>
             <mvc:exclude-mapping path="/**/api/**/service/selectSerialList"/>
             <mvc:exclude-mapping path="/**/api/**/mobileMenu/**"/>
-            <!-- <mvc:exclude-mapping path="/**/api/**"/> to remove temporary by Hui Ding. all API calls should involve session login, 02/11/2024-->
+            <mvc:exclude-mapping path="/common/getApisKey.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
         </mvc:interceptor>
