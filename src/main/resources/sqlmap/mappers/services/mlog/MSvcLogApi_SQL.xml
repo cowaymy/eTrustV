@@ -71,6 +71,10 @@
            ) THEN  '1'  ELSE '0' END AS need_Filter ,
            TO_CHAR( NVL((SELECT FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH ) ,0)) AS warranty ,
           (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
+          CASE WHEN (SELECT SRV_TYPE FROM SAL0090D WHERE sales_Order_Id = SRV_SO_ID) = 'SS'
+          THEN (SELECT TO_CHAR(MAX(SRV_UPD_DT), 'DD/MM/YYYY') FROM SAL0090H WHERE sales_Order_Id = SRV_SO_ID AND SRV_STUS_ID ='1' AND ROWNUM = 1)
+          ELSE 'N/A'
+          END AS SS_update_date,
           A.prodCat
            <!-- /*  20221108 CELESTE [S] Edit Customer Contact Info */ -->
           ,A.NEW_HANDPHONE_TEL,
@@ -411,6 +415,7 @@
           ,TO_CHAR(SERIAL_NO)             AS      serial_No
           ,TO_CHAR(WRANTY)                AS      warranty
           ,TO_CHAR(MBRSH_CNTRCT_EXPR)     AS      Membership_Contract_Expiry
+          ,TO_CHAR(SS_UPDATE_DATE)           AS      SS_UPDATE_DATE
           ,TO_CHAR(RENTAL_STUS)           AS      rental_Status
           ,TO_CHAR(DSC_CODE)              AS      dsc_Code
           ,TO_CHAR(LAST_PAY_DT)           AS      last_Payment_Date
