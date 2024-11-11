@@ -258,6 +258,17 @@ public class HeartServiceJobDto {
 
   private BigDecimal longitude;
 
+  private String ssUpdateDate;
+
+
+public String getSsUpdateDate() {
+	return ssUpdateDate;
+}
+
+public void setSsUpdateDate(String ssUpdateDate) {
+	this.ssUpdateDate = ssUpdateDate;
+}
+
 public String getSerialChk() {
     return serialChk;
   }
