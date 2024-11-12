@@ -43,12 +43,14 @@ public class SecureCookieFilter implements Filter {
 		}
 
 		@Override
-		public void addCookie(Cookie cookie) { // Apply secure attributes to cookies
+		public void addCookie(Cookie cookie) {
+			// Apply secure attributes to cookies
 			cookie.setSecure(true);
 			super.addCookie(cookie);
 		}
 
-		public void applySecureAttributes() { // Method to apply secure attributes after the request processing
+		public void applySecureAttributes() {
+			// Method to apply secure attributes after the request processing
 			// Not used in this wrapper but can be extended if needed
 		}
 	}

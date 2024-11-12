@@ -71,7 +71,6 @@ public class XSSPreventionFilter implements Filter {
 			if (headers == null)
 				return null;
 			return new Enumeration<String>() {
-
 				@Override
 				public boolean hasMoreElements() {
 					return headers.hasMoreElements();

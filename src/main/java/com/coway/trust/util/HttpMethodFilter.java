@@ -31,7 +31,8 @@ public class HttpMethodFilter implements Filter {
 
 		// Check if the method is in the list of disallowed methods
 		for (String disallowedMethod : DISALLOWED_METHODS) {
-			if (method.equalsIgnoreCase(disallowedMethod)) { // Respond with 405 Method Not Allowed
+			if (method.equalsIgnoreCase(disallowedMethod)) {
+				// Respond with 405 Method Not Allowed
 				httpResponse.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Method Not Allowed");
 				return;
 			}
@@ -44,4 +45,5 @@ public class HttpMethodFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
+
 }
