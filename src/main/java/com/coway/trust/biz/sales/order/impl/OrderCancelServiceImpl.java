@@ -335,12 +335,14 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       if (reqStageId == 25) {
         saveParam.put("prgrsId", 12);
         saveParam.put("isLok", 1);
+
       } else {
         saveParam.put("prgrsId", 13);
         saveParam.put("isLok", 0);
-
-        orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
       }
+
+      orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
+
       saveParam.put("refId", 0);
       orderInvestMapper.insertSalesOrdLog(saveParam); // SalesOrderLog
 
