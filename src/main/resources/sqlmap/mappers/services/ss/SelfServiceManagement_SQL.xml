@@ -419,30 +419,38 @@
   <select id="selectSelfServiceItmList" parameterType="Map" resultType="egovMap">
   SELECT LISTAGG(B.STK_CODE|| '-' || A.SS_RESULT_PART_QTY, ', ') WITHIN GROUP (ORDER BY A.SS_RESULT_ID) AS ITM_LIST
   	FROM SVC0145D A
-  LEFT JOIN SYS0026M B ON A.SS_RESULT_PART_ID = B.STK_ID
+    LEFT JOIN SYS0026M B ON A.SS_RESULT_PART_ID = B.STK_ID
   WHERE
   	A.SS_RESULT_ID = #{ssResultId}
- </select>
+  </select>
 
- <update id="updateHsMasterStatus" parameterType="Map">
-  UPDATE SVC0008D
+  <update id="updateHsMasterStatus" parameterType="Map">
+   UPDATE SVC0008D
 		SET STUS_CODE_ID = #{stusCodeId},
 			FAIL_RESN_ID = #{failResnId},
 			REM = #{remark},
 			UPD_DT = SYSDATE ,
 			UPD_USER_ID = #{updUsrId}
-  WHERE SCHDUL_ID = #{schdulId}
- </update>
+   WHERE SCHDUL_ID = #{schdulId}
+  </update>
 
- <update id="updateSsMasterStatus" parameterType="Map">
-  UPDATE SVC0144M
+  <update id="updateSsMasterStatus" parameterType="Map">
+   UPDATE SVC0144M
 		SET SS_RESULT_STUS_CODE_ID = #{stusCodeId},
 			SS_FAIL_RESN_ID = #{failResnId},
 			SS_RESULT_REM = #{remark},
 			SS_RESULT_UPD_DT = SYSDATE ,
 			SS_RESULT_UPD_USER_ID = #{updUsrId}
-  WHERE SCHDUL_ID = #{schdulId}
+   WHERE SCHDUL_ID = #{schdulId}
   		AND SS_RESULT_ID = #{ssResultId}
- </update>
+  </update>
+
+  <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
+   SELECT COUNT(*) CNT
+		FROM SVC0008D A,
+		SVC0144M B
+   WHERE A.SCHDUL_ID = B.SCHDUL_ID
+		 AND A.NO = #{serviceNo}
+  </select>
 
 </mapper>

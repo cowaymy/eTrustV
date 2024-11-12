@@ -27,4 +27,6 @@ public interface SelfServiceManagementService {
 
   List<EgovMap> getSelfServiceRtnItmList(Map<String, Object> params) throws Exception;
 
+  int saveValidation(Map<String, Object> params);
+
 }

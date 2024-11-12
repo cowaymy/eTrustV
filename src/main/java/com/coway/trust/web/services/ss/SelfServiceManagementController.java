@@ -300,7 +300,7 @@ public class SelfServiceManagementController {
   @RequestMapping(value = "/saveValidation.do", method = RequestMethod.POST)
   public ResponseEntity<Integer> saveValidation(@RequestBody Map<String, Object> params, HttpServletRequest request,
       SessionVO sessionVO) throws ParseException {
-    int resultValue = hsManualService.saveValidation(params);
+    int resultValue = selfServiceManagementService.saveValidation(params);
     return ResponseEntity.ok(resultValue);
   }
 

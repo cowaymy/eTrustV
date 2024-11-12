@@ -57,4 +57,6 @@ public interface SelfServiceManagementMapper {
 
   void updateSsMasterStatus(Map<String, Object> params);
 
+  int saveValidation(Map<String, Object> params);
+
 }

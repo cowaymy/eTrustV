@@ -682,7 +682,8 @@
 									Common
 											.alert('<spring:message code="service.ss.text.saveSelfServiceSummary" />'
 													+ DEFAULT_DELIMITER
-													+ "HS Order : ${hsDefaultInfo.no} result has been updated. Kindly research again for latest update.");
+													+ '<spring:message code="service.ss.alert.updateResultDisallow" arguments="'+hsNo+'"/>',
+													fn_parentReload);
 									return false;
 								}
 							});

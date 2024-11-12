@@ -123,7 +123,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     }
 
     insertSelfServiceResult(params, selfServiceItemGrid);
-    //prepareAndSendDHLShipment(params, rtnMap);
+    // prepareAndSendDHLShipment(params, rtnMap);
   }
 
   private boolean checkStockAvailability(Map<String, Object> itemMap, Map<String, Object> locInfoEntry)
@@ -334,6 +334,11 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       selfServiceManagementMapper.rollbackSelfServiceReturnQty(params);
     }
     return rtnMap;
+  }
+
+  @Override
+  public int saveValidation(Map<String, Object> params) {
+    return selfServiceManagementMapper.saveValidation(params);
   }
 
 }
