@@ -447,10 +447,19 @@
 
   <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
    SELECT COUNT(*) CNT
-		FROM SVC0008D A,
+   FROM SVC0008D A,
 		SVC0144M B
    WHERE A.SCHDUL_ID = B.SCHDUL_ID
 		 AND A.NO = #{serviceNo}
+  </select>
+
+  <select id="ssFailReasonList" parameterType="Map" resultType="egovMap">
+   SELECT Extent1.RESN_ID AS CODE_ID,
+		           Extent1.CODE || '-' || Extent1.RESN_DESC AS CODE_NAME
+   FROM SYS0032M Extent1
+   WHERE Extent1.RESN_TYPE_ID = 7692
+		 AND Extent1.STUS_CODE_ID = 1
+   ORDER BY Extent1.CODE ASC
   </select>
 
 </mapper>

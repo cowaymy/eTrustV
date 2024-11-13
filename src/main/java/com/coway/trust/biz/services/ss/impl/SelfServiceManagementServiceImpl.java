@@ -341,4 +341,9 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     return selfServiceManagementMapper.saveValidation(params);
   }
 
+  @Override
+  public List<EgovMap> ssFailReasonList(Map<String, Object> params) {
+    return selfServiceManagementMapper.ssFailReasonList(params);
+  }
+
 }

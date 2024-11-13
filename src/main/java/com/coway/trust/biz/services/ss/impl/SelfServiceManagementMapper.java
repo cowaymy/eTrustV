@@ -59,4 +59,6 @@ public interface SelfServiceManagementMapper {
 
   int saveValidation(Map<String, Object> params);
 
+  List<EgovMap> ssFailReasonList(Map<String, Object> params);
+
 }

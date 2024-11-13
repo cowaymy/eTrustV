@@ -164,7 +164,7 @@ public class SelfServiceManagementController {
     orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     basicinfo = hsManualService.selectHsViewBasicInfo(params);
     orderInfo = selfServiceManagementService.selectSelfServiceResultInfo(params);
-    List<EgovMap> failReasonList = hsManualService.failReasonList(params);
+    List<EgovMap> failReasonList = selfServiceManagementService.ssFailReasonList(params);
 
     model.addAttribute("ssResultId", params.get("ssResultId"));
     model.addAttribute("salesOrdId", params.get("salesOrderId"));
