@@ -689,6 +689,10 @@
 							});
 		}
 	}
+
+	function fn_ssFilterForecastList() {
+        Common.popupDiv("/services/ss/report/ssFilterForecastListingPop.do",null, null, true, '');
+    }
 </script>
 <form id="frmSearchSerial" name="frmSearchSerial" method="post">
      <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
@@ -844,6 +848,14 @@
           </dt>
           <dd>
             <ul class="btns">
+             <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+               <!-- test temprarily: SS Filter Forecast Listing -->
+                 <li>
+                   <p class="link_btn type2">
+                        <a href="#" onclick="javascript:fn_ssFilterForecastList()"><spring:message code='service.title.ssFilterForecastListing'/></a>
+                   </p>
+                </li>
+             </c:if>
             </ul>
             <p class="hide_btn">
               <a href="#">
