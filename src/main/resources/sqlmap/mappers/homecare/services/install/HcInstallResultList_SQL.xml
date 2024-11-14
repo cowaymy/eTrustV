@@ -107,8 +107,8 @@
 	                   HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
                      ,exchg.SO_CUR_STUS_ID ord_stus_code_id
-                    ,NVL(delvrSts.DELVRY_GR_CMPLT,'N')delvry_gr
-                    ,NVL(returnSts.DELVRY_GR_CMPLT,'N')return_gr
+                    ,NVL(delvrSts.DELVRY_GR_CMPLT,' ')delvry_gr
+                    ,NVL(returnSts.DELVRY_GR_CMPLT,' ')return_gr
                     ,  CASE
                             WHEN PREINS.STUS_CODE_ID = 4 THEN 'Pre-Com'
                             WHEN PREINS.STUS_CODE_ID = 21 THEN 'Pre-Fail'
