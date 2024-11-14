@@ -223,24 +223,24 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 
         logger.info("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
 
-        /*
+
             EgovMap revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
 
             revCboPckage.put("reqStageId", "25");
 
             logger.info("= PARAM 2 = " + revCboPckage.toString());
             orderListMapper.insertSAL0254D(revCboPckage);
-        */
 
-        /*Modify by Fannie on 13/11/2024 - to fix unable to save product return issue when after install type for cancellation order*/
-        List<EgovMap> revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
-        if (revCboPckage != null && revCboPckage.size() > 0) {
-        	for(EgovMap revCboPck : revCboPckage) {
-            	revCboPck.put("reqStageId", "25");
-                logger.info("= PARAM 2 = " + revCboPckage.toString());
-                orderListMapper.insertSAL0254D(revCboPck);
-            }
-        }
+
+//        /*Modify by Fannie on 13/11/2024 - to fix unable to save product return issue when after install type for cancellation order*/
+//        List<EgovMap> revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
+//        if (revCboPckage != null && revCboPckage.size() > 0) {
+//        	for(EgovMap revCboPck : revCboPckage) {
+//            	revCboPck.put("reqStageId", "25");
+//                logger.info("= PARAM 2 = " + revCboPckage.toString());
+//                orderListMapper.insertSAL0254D(revCboPck);
+//            }
+//        }
 
       } else {
         // DO NOTHING (IS NOT A COMBO PACKAGE)
@@ -571,23 +571,23 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 
         logger.info("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
 
-        /*
+
             EgovMap revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
             revCboPckage.put("reqStageId", "25");
             logger.info("= PARAM 2 = " + revCboPckage.toString());
             orderListMapper.insertSAL0254D(revCboPckage);
-        */
-        /*Modify by Fannie on 13/11/2024 - to fix unable to save product return issue when after install type for cancellation order*/
-        List<EgovMap> revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
-        if(revCboPckage != null && revCboPckage.size() > 0){
 
-            for(EgovMap revCboPck : revCboPckage) {
-            	revCboPck.put("reqStageId", "25");
-                logger.info("= PARAM 2 = " + revCboPckage.toString());
-                //orderListMapper.insertSAL0254D(revCboPckage);
-                orderListMapper.insertSAL0254D(revCboPck);
-            }
-        }
+//        /*Modify by Fannie on 13/11/2024 - to fix unable to save product return issue when after install type for cancellation order*/
+//        List<EgovMap> revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
+//        if(revCboPckage != null && revCboPckage.size() > 0){
+//
+//            for(EgovMap revCboPck : revCboPckage) {
+//            	revCboPck.put("reqStageId", "25");
+//                logger.info("= PARAM 2 = " + revCboPckage.toString());
+//                //orderListMapper.insertSAL0254D(revCboPckage);
+//                orderListMapper.insertSAL0254D(revCboPck);
+//            }
+//        }
       } else {
         // DO NOTHING (IS NOT A COMBO PACKAGE)
       }
