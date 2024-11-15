@@ -343,6 +343,11 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
       orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
 
+      if (appTypeId == 66) {
+    	  //rebate combo 202411 - [Enhancement] RM10 Rebate for HC Product Purchases (Combo)
+    	  orderCancelMapper.updateCancelSAL0424D(saveParam);
+      }
+
       saveParam.put("refId", 0);
       orderInvestMapper.insertSalesOrdLog(saveParam); // SalesOrderLog
 

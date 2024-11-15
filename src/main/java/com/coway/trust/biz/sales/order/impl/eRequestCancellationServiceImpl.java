@@ -807,6 +807,11 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 
     logger.info("####################### Confirm To Cancel save END!! #####################");
 
+    if(appTypeId == 66){
+    	//rebate combo 202411 - [Enhancement] RM10 Rebate for HC Product Purchases (Combo)
+    	orderCancelMapper.updateCancelSAL0424D(saveParam);
+    }
+
     String msg = "Order Number : " + (String) somMap.get("salesOrdNo") + "<br/>Cancelled successfully.<br/>"
     // + "Request Number : " + reqNo + "<br />"
     ;
