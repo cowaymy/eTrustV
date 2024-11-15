@@ -626,7 +626,7 @@
             LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
             LEFT JOIN SAL0424D F ON F.SALES_ORD_ID = A.SALES_ORD_ID
             WHERE A.CUST_ID = #{custId}
-            AND A.STUS_CODE_ID = 1 AND ((F.SALES_ORD_ID IS NOT NULL AND F.STUS_ID NOT IN (1,30)) OR (F.STUS_ID NOT IN (1,30)))
+            AND A.STUS_CODE_ID = 1 AND ((F.SALES_ORD_ID IS NOT NULL AND F.STUS_ID NOT IN (1,30))) OR (F.STUS_ID NOT IN (1,30))
             <if test='salesOrdNo != null and salesOrdNo !=""'>
                   AND A.SALES_ORD_NO = #{salesOrdNo}
               </if>
