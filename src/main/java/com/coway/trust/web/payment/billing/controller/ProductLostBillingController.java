@@ -86,7 +86,7 @@ public class ProductLostBillingController {
 					taxRate = 0;
 				}else{
 					taxCodeId = 32;//SR
-					taxRate = 6;
+					taxRate = 0;
 				}
 			}
 
