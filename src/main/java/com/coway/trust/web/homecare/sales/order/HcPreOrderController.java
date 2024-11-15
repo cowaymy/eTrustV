@@ -334,8 +334,8 @@ public class HcPreOrderController {
         model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
 
         if(params.containsKey("pageAuth")) {
-        	//ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> pageAuthMap = CommonUtils.parseJson(params.get("pageAuth").toString());//objectMapper.readValue(params.get("pageAuth").toString(), new TypeReference<Map<String, String>>() {});
+        	ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> pageAuthMap = objectMapper.readValue(params.get("pageAuth").toString(), new TypeReference<Map<String, String>>() {});
 
     		model.put("pageAuth", pageAuthMap);
         }

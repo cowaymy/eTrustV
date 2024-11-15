@@ -1462,27 +1462,4 @@ public static boolean isInteger(String s, int radix) {
       Matcher matcher = pattern.matcher(password);
       return matcher.matches();
   }
-
-  public static Map<String, String> parseJson(String jsonString) {
-      Map<String, String> map = new HashMap<>();
-
-      // Remove curly braces and quotes
-      jsonString = jsonString.trim().replaceAll("[{}\"]", "");
-
-      // Split the JSON by commas (key-value pairs)
-      String[] keyValuePairs = jsonString.split(",");
-
-      for (String pair : keyValuePairs) {
-          // Split each pair by the colon to get the key and value
-          String[] keyValue = pair.split(":");
-          if (keyValue.length == 2) {
-              String key = keyValue[0].trim();
-              String value = keyValue[1].trim();
-
-              // Remove any extra spaces or unwanted characters
-              map.put(key, value);
-          }
-      }
-      return map;
-  }
 }
