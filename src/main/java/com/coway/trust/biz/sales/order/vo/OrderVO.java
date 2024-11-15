@@ -122,6 +122,8 @@ public class OrderVO implements Serializable {
 
 	private int pwpOrderId;
 
+	private int rebateOrderId;
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -556,6 +558,14 @@ public class OrderVO implements Serializable {
 
 	public void setPwpOrderId(int pwpOrderId) {
 		this.pwpOrderId = pwpOrderId;
+	}
+
+	public int getRebateOrderId() {
+		return rebateOrderId;
+	}
+
+	public void setRebateOrderId(int rebateOrderId) {
+		this.rebateOrderId = rebateOrderId;
 	}
 
 }

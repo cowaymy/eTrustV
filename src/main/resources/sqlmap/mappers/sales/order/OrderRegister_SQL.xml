@@ -3755,4 +3755,70 @@ WHERE
                   , #{userId}
      )
   </insert>
+
+  <select id="selectOldOrder" parameterType="Map" resultType="EgovMap">
+            SELECT COUNT (F.SALES_ORD_ID) OLD_ORD_COUNT
+            FROM SAL0001D A
+            LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+            LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+            LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
+            LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+            LEFT JOIN SAL0424D F ON F.SALES_ORD_ID = A.SALES_ORD_ID
+            WHERE A.CUST_ID = #{custId}
+            AND A.STUS_CODE_ID = 1 AND ((F.SALES_ORD_ID IS NOT NULL) OR (F.STUS_ID NOT IN (1,30)))
+            <if test='salesOrdNo != null and salesOrdNo !=""'>
+                  AND A.SALES_ORD_NO = #{salesOrdNo}
+              </if>
+            GROUP BY
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME,
+                 A.REF_NO,
+                 F.STUS_ID
+      </select>
+
+  <select id="selectOldOrderList" parameterType="Map" resultType="egovMap">
+            SELECT COUNT(SEQ) SEQ, COMBO_ID
+			FROM SAL0424D
+			WHERE COMBO_ID = (
+			    SELECT COMBO_ID
+			    FROM SAL0424D A
+			    WHERE 1=1
+			    AND A.SALES_ORD_ID = #{salesOrdId}
+			    AND STUS_ID = 1
+			)
+			GROUP BY COMBO_ID
+  </select>
+
+  <select id="getComboId" parameterType="Map" resultType="int">
+         SELECT SAL0424D_COMBO_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertRebate" parameterType="Map">
+    INSERT INTO SAL0424D ( COMBO_ID
+                                        , SEQ
+                                        , SALES_ORD_ID
+                                        , STUS_ID
+                                        , CRT_USER_ID
+                                        , CRT_DT
+                                        , UPD_USER_ID
+                                        , UPD_DT
+                                        , EXECUTE_FLAG
+    ) VALUES (
+                   #{comboId}
+                  , #{seq}
+                  , #{salesOrdId}
+                  , #{status}
+                  , #{userId}
+                  , SYSDATE
+                  , #{userId}
+                  , SYSDATE
+                  , #{executeFlag}
+     )
+  </insert>
 </mapper>

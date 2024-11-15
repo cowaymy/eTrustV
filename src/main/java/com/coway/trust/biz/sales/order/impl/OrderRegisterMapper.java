@@ -253,4 +253,13 @@ public interface OrderRegisterMapper {
   void insertSSRebate( Map<String, Object> params );
 
   void insertPwp(Map<String, Object> params);
+
+  void insertRebate(Map<String, Object> params);
+
+  EgovMap selectOldOrder(Map<String, Object> params);
+
+  EgovMap selectOldOrderList(Map<String, Object> params);
+
+  int getComboId(Map<String, Object> params);
+
 }

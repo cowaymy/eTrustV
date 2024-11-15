@@ -107,6 +107,12 @@
             case 'ccpTicket':
             	AUIGrid.resize("logGrid", 942, 380);
                 break;
+            case 'comboRebateInfo' :
+                AUIGrid.resize(discountGridID, 942, 380);
+                if(AUIGrid.getRowCount(discountGridID) <= 0) {
+                	fn_selectComboRebateList();
+                }
+                break;
         };
     }
 </script>
@@ -137,6 +143,7 @@
 	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
 	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
 	<li><a href="#" onClick="javascript:chgTab('renAgr');">Rental Agreement</a></li>
+	<li><a href="#" onClick="javascript:chgTab('comboRebateInfo');">Rebate 2</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -227,5 +234,9 @@
     CCP Rental Agreement
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/rentalAgrInfo.jsp" %>
+<!------------------------------------------------------------------------------
+    Rebate 2 - 18th Anniversary
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/comboRebateList.jsp" %>
 </section><!-- tap_wrap end -->
 

@@ -125,4 +125,6 @@ public interface OrderDetailMapper {
   EgovMap selectSedaPromo(Map<String, Object> params);
 
   List<EgovMap> getHsAppntDateInfo(Map<String, Object> params);
+
+  List<EgovMap> selectComboRebateList(Map<String, Object> params);
 }

@@ -68,4 +68,6 @@ EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params);
 
   public List<EgovMap> getHsAppntDateInfo(Map<String, Object> params);
 
+  public List<EgovMap> selectComboRebateList(Map<String, Object> params);
+
 }

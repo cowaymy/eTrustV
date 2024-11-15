@@ -393,4 +393,18 @@ public class OrderDetailController {
     return ResponseEntity.ok(results);
   }
 
+  // 18th Anniversary Rebate
+  @RequestMapping(value = "/selectComboRebateList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectComboRebateList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    logger.debug("!@##############################################################################");
+    logger.debug("!@###### salesOrderId : " + params.get("salesOrderId"));
+    logger.debug("!@##############################################################################");
+
+    List<EgovMap> memInfoList = orderDetailService.selectComboRebateList(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(memInfoList);
+  }
+
 }

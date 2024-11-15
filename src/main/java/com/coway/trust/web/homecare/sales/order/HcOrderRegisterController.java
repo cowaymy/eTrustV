@@ -599,4 +599,18 @@ public class HcOrderRegisterController {
       message.setCode(Integer.toString(seqGrpCmbPromo));
       return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/rebateOrderNoPop.do")
+	  public String rebateOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    model.put("custId", params.get("custId"));
+	    logger.info("[rebateOrderNoPop] :: custId :: " + params.get("custId"));
+	    return "homecare/sales/order/rebateOrderNoPop";
+	  }
+
+    @RequestMapping(value = "/selectRebateOrderNoList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectRebateOrderNoList(@RequestParam Map<String, Object> params) {
+	    List<EgovMap> result = hcOrderRegisterService.selectRebateOrderNoList(params);
+	    return ResponseEntity.ok(result);
+	  }
 }

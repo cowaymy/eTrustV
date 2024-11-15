@@ -465,14 +465,20 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
       // check the current homecare aic-con combo group by promotion
       chkNextHcAcCmbByPromo = hcOrderRegisterMapper.chkNextHcAcComboOrdGrp(params);
-      
+
       // check selected promotion per product combo group
       chkSelectedPromotionPerProdCmbGrp = hcOrderRegisterMapper.chkCmbGrpByPromoIdProd(params);
-      
+
       if(chkSelectedPromotionPerProdCmbGrp > chkNextHcAcCmbByPromo){
     	return 99;
       }
       return 0;
    }
+
+  @Override
+  public List<EgovMap> selectRebateOrderNoList(Map<String, Object> params) {
+    // TODO ProductCodeList 호출시 error남
+    return hcOrderRegisterMapper.selectRebateOrderNoList(params);
+  }
 
 }

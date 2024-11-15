@@ -82,4 +82,6 @@ public interface HcOrderRegisterService {
     int chkHcAcCmbOrdStus(Map<String, Object> params);
 
     int chkSeqGrpAcCmbPromoPerOrd(Map<String, Object> params);
+
+    List<EgovMap> selectRebateOrderNoList(Map<String, Object> params);
 }

@@ -113,4 +113,7 @@ public interface HcOrderRegisterMapper {
 	public int chkHcAcCmbOrdStus(Map<String, Object> params);
 	public int chkNextHcAcComboOrdGrp(Map<String, Object> params);
 	public int chkCmbGrpByPromoIdProd(Map<String, Object> params);
+
+	List<EgovMap> selectRebateOrderNoList(Map<String, Object> params);
+
 }

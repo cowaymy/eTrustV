@@ -2025,4 +2025,12 @@
   	WHERE
   	T3.SRV_ORD_NO = #{ordNo}
   </select>
+
+  <select id="selectComboRebateList" parameterType="Map" resultType="egovMap">
+    SELECT C.SALES_ORD_NO, A.CN_AMT REBATE_AMT, A.FROM_PERIOD, A.TO_PERIOD, A.STUS_ID, B.CODE STUS_DESC
+	FROM SAL0408D A
+	JOIN SYS0038M B ON A.STUS_ID = B.STUS_CODE_ID
+	JOIN SAL0001D C ON C.SALES_ORD_ID = A.SALES_ORD_ID
+	WHERE A.SALES_ORD_ID = #{salesOrderId}
+  </select>
 </mapper>

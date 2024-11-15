@@ -201,6 +201,10 @@
             Common.popupDiv("/homecare/sales/order/pwpOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true)
         });
 
+        $('#btnRebateNoEkeyIn').click(function() {
+            Common.popupDiv("/homecare/sales/order/rebateOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true)
+        });
+
           $('#btnConfirm').click(function() {
               if(!fn_validConfirm())  return false;
               if(fn_isExistESalesNo() == 'true') return false;
@@ -835,8 +839,13 @@
     	      $('#relatedNo').removeClass("blind");
     	      $('#pwpNo').val("");
     	      $('#txtMainPwpOrderID').val("");
+    	      $('#rebateNo').val("");
+    	      $('#txtMainRebateOrderID').val("");
     	      $('#pwpNo').addClass("blind");
     	      $('#btnPwpNoEkeyIn').addClass("blind");
+    	      $('#txtMainRebateOrderID').val("");
+    	      $('#rebateNo').addClass("blind");
+    	      $('#btnRebateNoEkeyIn').addClass("blind");
 
     	      if($('#exTrade').val()=='1'){
     	    	  //$('#isReturnExtrade').prop("checked", true); --no product return
@@ -870,6 +879,20 @@
 
     	          $('#pwpNo').removeClass("blind");
     	          $('#btnPwpNoEkeyIn').removeClass("blind");
+    	          $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+    	          $('#relatedNo').addClass("blind");
+
+    	      }else if ($("#exTrade").val() == '5'){
+    	    	  $('#txtOldOrderID').val('');
+    	          $('#txtBusType').val('');
+    	          $('#relatedNo').val('');
+    	          $('#hiddenMonthExpired').val('');
+    	          $('#hiddenPreBook').val('');
+    	          $('#btnRltdNoEKeyIn').addClass("blind");
+    	          $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
+
+    	          $('#rebateNo').removeClass("blind");
+    	          $('#btnRebateNoEkeyIn').removeClass("blind");
     	          $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
     	          $('#relatedNo').addClass("blind");
 
@@ -1184,6 +1207,11 @@
                   isValid = false;
                   msg += "* Please select main PWP order no.<br>";
               }
+          }else if(exTrade == '5') {
+              if(FormUtil.checkReqValue($('#rebateNo'))) {
+                  isValid = false;
+                  msg += "* Please select main Rebate order no.<br>";
+              }
           }
 
           if($('#voucherType').val() == ""){
@@ -1464,7 +1492,8 @@
               ,voucherCode : voucherAppliedCode,
               pwpOrderId          : $('#txtMainPwpOrderID').val(),
               pwpOrderNo          : $('#pwpNo').val(),
-              tnbAccNo : $("#tnbAccNo").val()
+              tnbAccNo : $("#tnbAccNo").val(),
+              rebateOrderNo          : $('#rebateNo').val()
           };
 
           var formData = new FormData();
@@ -3249,7 +3278,7 @@
               </colgroup>
               <tbody>
                 <tr>
-                  <th scope="row">Ex-Trade/Related No/Jom Tukar/PWP</th>
+                  <th scope="row">Ex-Trade/Related No/Jom Tukar/PWP/Rebate</th>
                   <td>
                     <p>
                       <select id="exTrade" name="exTrade" class="w100p"></select>
@@ -3267,6 +3296,12 @@
                     <input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly />
                     <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
                     <!-- For PWP [E]-->
+
+                    <!-- For Rebate [S]-->
+                    <a id="btnRebateNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                    <input id="rebateNo" name="rebateNo" type="text" title="" placeholder="Rebate Number" class="w100p readonly blind" readonly />
+                    <input id="txtMainRebateOrderID" name="txtMainRebateOrderID" type="hidden" />
+                    <!-- For Rebate [E]-->
 
                     <input id="txtOldOrderID" name="txtOldOrderID" data-ref="" type="hidden" />
                     <input id="txtBusType" name="txtBusType" type="hidden" />
