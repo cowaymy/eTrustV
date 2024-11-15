@@ -83,7 +83,7 @@
   });
 
   function loadThirdPartyCustData(){
-    var custData =`${thirdPartyCustomerInfo}`;
+    var custData ="${thirdPartyCustomerInfo}";
     if(custData != null && custData != ""){
         loadThirdPartyPopData(JSON.parse(custData));
     }
@@ -402,7 +402,7 @@
 
   function loadGeneralInfoData(){
 
-	 var custName =`${mobileAutoDebitDetail.name}`;
+	 var custName ="${mobileAutoDebitDetail.name}";
 
     $('#preAutoDebitNo').val("${mobileAutoDebitDetail.padNo}");
     $('#spanPreAutoDebitNo').text("${mobileAutoDebitDetail.padNo}");
