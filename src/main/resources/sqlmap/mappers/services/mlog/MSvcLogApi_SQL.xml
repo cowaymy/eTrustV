@@ -1039,7 +1039,7 @@
                                          FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
                                          NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
                                          NVL (TO_CHAR (SAL0017D.PROMO_ID), '') AS sales_Promotion_Cde,
-                                         NVL (TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
+                                         NVL(TO_CHAR(SAL0001D.MTH_RENT_AMT), 0) - NVL(PAY0286D.TOTAL_REBATE, 0) AS monthly_Rental_Fees,
                                          NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
                                          NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
                                          NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
@@ -1135,7 +1135,8 @@
                 WHERE STATUS_ID = 1) SYS0064M,
                SAL0233M,
                SVC0113D,
-               SAL0017D
+               SAL0017D,
+               (SELECT H.ORD_ID , SUM(H.REBATE_AMT_PER_INSTLMT) TOTAL_REBATE  FROM PAY0286D H WHERE H.STUS_ID = 1 GROUP BY H.ORD_ID ) PAY0286D
       WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
           AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
           AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -1162,6 +1163,7 @@
           AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
           AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
           AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
+          AND SAL0001D.SALES_ORD_ID = PAY0286D.ORD_ID (+)
     ]]>
     ) WHERE rnum = 1
   </select>
