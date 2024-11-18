@@ -1963,7 +1963,7 @@ var userType = '${SESSION_INFO.userTypeId}';
         var maskedNric;
 
         if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-            if(userType == 1 || userType == 2 || userType == 7  || '${pageAuth.funcUserDefine6}' == 'Y'){
+            if(userType == 1 || userType == 2 || userType == 7  || '${pageAuth.funcUserDefine6}' != 'Y'){
                 maskedNric = custInfo.nric.substr(-4).padStart(custInfo.nric.length, '*');
             }
             else{
@@ -2504,7 +2504,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 
           // 파일 다운
           if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-              if(userType != 1 && userType != 2 && userType != 7  && '${pageAuth.funcUserDefine6}' != 'Y'){
+              if(userType != 1 && userType != 2 && userType != 7  && '${pageAuth.funcUserDefine6}' == 'Y'){
                   $(".input_text").dblclick(function() {
                       var oriFileName = $(this).val();
                       var fileGrpId;
