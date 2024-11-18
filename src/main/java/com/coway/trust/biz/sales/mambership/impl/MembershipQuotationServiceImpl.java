@@ -566,6 +566,11 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		return membershipQuotationMapper.mEligibleEVoucher(params);
 	}
 
+	@Override
+	public List<EgovMap> getPromoDetails(Map<String, Object> params) {
+		return membershipQuotationMapper.getPromoDetails(params);
+	}
+
 }
 
 

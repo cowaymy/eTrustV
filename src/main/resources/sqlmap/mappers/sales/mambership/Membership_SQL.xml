@@ -22,7 +22,7 @@
                    A.CUST_IC,
                    A.REF_NO
            FROM SAL1004V A
-
+           LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.ORD_ID
            <if test='userTypeId =="1" or userTypeId == "2" '>
                    JOIN ORG1001V B ON A.SRV_MEM_SALES_MEM_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">
@@ -39,6 +39,15 @@
                                           </if>
             </if>
         WHERE  1=1
+        <choose>
+            <when test='isHc == "1"'>
+                AND B.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND B.BNDL_ID IS NULL
+            </otherwise>
+        </choose>
+
         <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
             AND A.MBRSH_STUS_ID IN
             <foreach item="item" collection="MBRSH_STUS_ID" index="index" open="(" separator="," close=")">
@@ -81,7 +90,7 @@
         <if test='pdpaMonth != null and pdpaMonth != 0'>
             AND A.MBRSH_CRT_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
-           
+
         <if test="REF_NO != null and REF_NO != ''">
            AND A.REF_NO = #{REF_NO}
         </if>
@@ -734,6 +743,14 @@
         <if test='pdpaMonth != null and pdpaMonth != 0'>
             AND a.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
+        <choose>
+            <when test='isHc == "1"'>
+                AND A.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND A.BNDL_ID IS NULL
+            </otherwise>
+        </choose>
     </select>
 
     <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">

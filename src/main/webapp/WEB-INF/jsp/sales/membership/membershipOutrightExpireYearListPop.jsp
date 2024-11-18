@@ -109,6 +109,11 @@ function btnGenerate_Click(){
 
 	      }
 
+		if($("#isHc").val() != null && $("#isHc").val() != ''){
+		    whereSQL += " AND som.BNDL_ID IS NOT NULL ";
+		}else{
+		    whereSQL += " AND som.BNDL_ID IS NULL ";
+		}
 
         $("#V_WHERESQL").val(whereSQL);
 
@@ -198,6 +203,7 @@ function btnGenerate_Click(){
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+<input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
 
 </form>
 

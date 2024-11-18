@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.coway.trust.web.sales.mambership;
+package com.coway.trust.web.homecare.sales.membership;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +40,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  */
 @Controller
-@RequestMapping(value = "/sales/membership")
-public class MembershipController {
+@RequestMapping(value = "/homecare/sales/membership")
+public class HcMembershipController {
 
-	private static Logger logger = LoggerFactory.getLogger(MembershipController.class);
+	private static Logger logger = LoggerFactory.getLogger(HcMembershipController.class);
 
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
@@ -76,10 +76,25 @@ public class MembershipController {
 			model.put("memCode", result.get("memCode"));
 		}
 
-		return "sales/membership/membershipList";
+		return "homecare/sales/membership/hcmembershipList";
 	}
 
-	@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET)
+	@RequestMapping(value = "/membershipFreePop.do")
+	public String membershipFree(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  membershipFree ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
+		if(params.get("pdpaMonth") != null)
+			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
+		return "homecare/sales/membership/hcmembershipFreePop";
+	}
+
+	/*@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectMembershipList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
@@ -126,7 +141,7 @@ public class MembershipController {
 		model.addAttribute("contactInfoTab", contactInfoTab);
 		model.addAttribute("action", params.get("ACTION"));
 
-		return "sales/membership/selMembershipViewPop";
+		return "homecare/sales/membership/selMembershipViewPop";
 	}
 
 	@RequestMapping(value = "/inc_orderInfo.do")
@@ -148,7 +163,7 @@ public class MembershipController {
 		model.addAttribute("orderInfoTab", orderInfoTab);
 		model.addAttribute("contactInfoTab", contactInfoTab);
 
-		return "sales/membership/inc_membershipOderInfoPop";
+		return "homecare/sales/membership/inc_membershipOderInfoPop";
 	}
 
 
@@ -189,7 +204,7 @@ public class MembershipController {
 		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
 		model.addAttribute("membershipInfoTab", membershipInfoTab);
 
-		return "sales/membership/inc_membershipInfoPop";
+		return "homecare/sales/membership/inc_membershipInfoPop";
 	}
 
 	@RequestMapping(value = "/inc_contactPersonInfo.do")
@@ -207,7 +222,7 @@ public class MembershipController {
 		model.addAttribute("membershipInfoTab", membershipInfoTab);
 
 
-		return "sales/membership/inc_membershipContactPersonPop";
+		return "homecare/sales/membership/inc_membershipContactPersonPop";
 	}
 
 
@@ -242,7 +257,7 @@ public class MembershipController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-		return "sales/membership/inc_membershipQuotFilterInfoPop";
+		return "homecare/sales/membership/inc_membershipQuotFilterInfoPop";
 	}
 
 
@@ -265,7 +280,7 @@ public class MembershipController {
 		quotInfo = membershipService.selectQuotInfo(params);
 		model.addAttribute("quotInfo", quotInfo);
 
-		return "sales/membership/inc_membershipQuoInfoPop" ;
+		return "homecare/sales/membership/inc_membershipQuoInfoPop" ;
 	}
 
 
@@ -313,7 +328,7 @@ public class MembershipController {
 
 		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
 
-		return "sales/membership/selMembershipViewLeaderPop";
+		return "homecare/sales/membership/selMembershipViewLeaderPop";
 	}
 
 	@RequestMapping(value = "/selectMembershipViewLeader", method = RequestMethod.GET)
@@ -332,21 +347,6 @@ public class MembershipController {
 		return ResponseEntity.ok(list);
 	}
 
-	@RequestMapping(value = "/membershipFreePop.do")
-	public String membershipFree(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-
-		logger.debug("in  membershipFree ");
-
-		logger.debug("			pram set  log");
-		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");
-
-		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
-		if(params.get("pdpaMonth") != null)
-			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
-		return "sales/membership/membershipFreePop";
-	}
-
 	@RequestMapping(value = "/memberFreeContactPop.do")
 	public String memberFreePop_contactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
@@ -356,7 +356,7 @@ public class MembershipController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-		return "sales/membership/memberFreeContactPop";
+		return "homecare/sales/membership/memberFreeContactPop";
 	}
 
 	@RequestMapping(value = "/memberFreeNewContactPop.do")
@@ -368,7 +368,7 @@ public class MembershipController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-		return "sales/membership/memberFreeNewContactPop";
+		return "homecare/sales/membership/memberFreeNewContactPop";
 	}
 
 	@RequestMapping(value = "/selectMembershipFreeConF", method = RequestMethod.GET)
@@ -571,13 +571,13 @@ public class MembershipController {
 		return ResponseEntity.ok(list);
 	}
 
-	/**
+	*//**
 	 * @param params
 	 * @param request
 	 * @param model
 	 * @param sessionVO
 	 * @return
-	 */
+	 *//*
 	@RequestMapping(value = "/membershipNewContatSave", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> membershipNewContatSave(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
@@ -611,8 +611,7 @@ public class MembershipController {
 
 	@RequestMapping(value = "/membershipOutrightKeyInListPop.do")
 	public String membershipOutrightKeyInList(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("isHc", params.get("isHc"));
-		return "sales/membership/membershipOutrightKeyInRPop";
+		return "homecare/sales/membership/membershipOutrightKeyInRPop";
 	}
 
 	@Autowired
@@ -621,9 +620,9 @@ public class MembershipController {
 
 
 	@RequestMapping(value="/membershipOutrightYSListingPop.do")
-	public String membershipOutrightYSListingPop(@RequestParam Map<String, Object> params, ModelMap model){
-		model.addAttribute("isHc", params.get("isHc"));
-		return "sales/membership/membershipOutrightYSListingPop";
+	public String membershipOutrightYSListingPop(){
+
+		return "homecare/sales/membership/membershipOutrightYSListingPop";
 	}
 
 	@RequestMapping(value="/getOGDCodeList")
@@ -652,10 +651,10 @@ public class MembershipController {
 
 			logger.debug("membershipOutrightExpireListPop - model : " + model);
 		}
-		model.addAttribute("isHc", params.get("isHc"));
+
 		//model.put("userTypeId", sessionVO.getUserTypeId());
 
-		return "sales/membership/membershipOutrightExpireListPop";
+		return "homecare/sales/membership/membershipOutrightExpireListPop";
 	}
 
 	@RequestMapping(value="/membershipOutrightExpireYearListPop.do")
@@ -674,9 +673,9 @@ public class MembershipController {
 
 			logger.debug("membershipOutrightExpireYearListPop - model : " + model);
 		}
-		model.addAttribute("isHc", params.get("isHc"));
 
-		return "sales/membership/membershipOutrightExpireYearListPop";
+
+		return "homecare/sales/membership/membershipOutrightExpireYearListPop";
 	}
 
 
@@ -765,5 +764,5 @@ public class MembershipController {
 		EgovMap result = new EgovMap();
 		result = membershipService.checkMembershipConfigurationSalesPerson(params);
 		return ResponseEntity.ok(result);
-	}
+	}*/
 }

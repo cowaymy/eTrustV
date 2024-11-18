@@ -160,6 +160,12 @@ function btnGeneratePDF_Click(){
              whereSQL += ") ";
         }
 
+	    if($("#isHc").val() != null && $("#isHc").val() != ''){
+	        whereSQL += " AND som.BNDL_ID IS NOT NULL ";
+	    }else{
+	        whereSQL += " AND som.BNDL_ID IS NULL ";
+	    }
+
 	 // ADDED BY TPY - 25/07/2019 [SCR]
 	  var memType = "${SESSION_INFO.userTypeId}";
 	  var memLevel = "${SESSION_INFO.memberLevel}";
@@ -482,7 +488,7 @@ function btnGenerateExcel_Click(){
 <input type="hidden" id="V_USERNAME" name="V_USERNAME" value="" />
 
 <input type="hidden" id="userName" name="userName" value="${SESSION_INFO.userName}">
-
+<input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
 </form>
 
 </section><!-- content end -->

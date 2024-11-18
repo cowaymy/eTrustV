@@ -55,6 +55,7 @@
     	var crtStartDt   = "";
     	var crtEndDt     = "";
     	var validStusId  = "";
+    	var isHc  = "1";
     	var date = new Date();
     	var month = date.getMonth() + 1;
     	var day = date.getDate();
@@ -96,6 +97,7 @@
       $("#quotationRawDataForm #V_CRTSTARTDT").val(crtStartDt);
       $("#quotationRawDataForm #V_CRTENDDT").val(crtEndDt);
       $("#quotationRawDataForm #V_VALIDSTUSID").val(validStusId);
+      $("#quotationRawDataForm #V_ISHOMECARE").val(isHc);
       $("#quotationRawDataForm #reportFileName").val('/sales/QuotationRawData_Excel.rpt');
       $("#quotationRawDataForm #viewType").val("EXCEL");
       $("#quotationRawDataForm #reportDownFileName").val("QuotationRawData_" + day + month + date.getFullYear());
@@ -132,7 +134,7 @@
  <header class="pop_header">
   <!-- pop_header start -->
   <h1>
-   Quoatation Raw Data
+   HC Quoatation Raw Data
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
@@ -153,10 +155,9 @@
     <input type="hidden" id="V_VALIDSTUSID" name="V_VALIDSTUSID" />
     <input type="hidden" id="V_ISHOMECARE" name="V_ISHOMECARE" />
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
-    <input type="hidden" id="reportFileName" name="reportFileName" /> <input
-     type="hidden" id="viewType" name="viewType" /> <input
-     type="hidden" id="reportDownFileName" name="reportDownFileName"
-     value="DOWN_FILE_NAME" />
+    <input type="hidden" id="reportFileName" name="reportFileName" />
+    <input type="hidden" id="viewType" name="viewType" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>

@@ -120,6 +120,7 @@ public class BillingTaxInvoiceController {
 	public String initTaxInvoiceMembership(@RequestParam Map<String, Object> params, ModelMap model) {
 		if(params.get("pdpaMonth") != null)
 			model.addAttribute("pdpaMonth", params.get("pdpaMonth"));
+		model.addAttribute("isHc", params.get("isHc"));
 		return "payment/billinggroup/taxInvoiceMembershipPop";
 	}
 	

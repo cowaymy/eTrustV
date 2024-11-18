@@ -65,4 +65,5 @@ public interface MembershipQuotationService {
 
   List<EgovMap> mEligibleEVoucher(Map<String, Object> params);
 
+  List<EgovMap> getPromoDetails(Map<String, Object> params);
 }

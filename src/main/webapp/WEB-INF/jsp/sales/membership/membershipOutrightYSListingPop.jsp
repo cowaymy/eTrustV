@@ -185,7 +185,13 @@ function btnGenerate_PDF_Click(){
     		createdDate = " - ";
     	}
     }
-    
+
+    if($("#isHc").val() != null && $("#isHc").val() != ''){
+        whereSQL += " AND A.BNDL_ID IS NOT NULL ";
+    }else{
+        whereSQL += " AND A.BNDL_ID IS NULL ";
+    }
+
     $("#V_WHERESQL").val(whereSQL);
     $("#V_MEMBERTYPE_SHOW").val(memberType);
     $("#V_ORGCODE_SHOW").val(orgCode);
@@ -434,6 +440,7 @@ function cmbGrpCode_SelectedIndexChanged(){
 <input type="hidden" id="V_CREATEDDATE_SHOW" name="V_CREATEDDATE_SHOW" value="" />
 
 <input type="hidden" id="userName" name="userName" value="${SESSION_INFO.userName}">
+<input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
 
 </form>
 

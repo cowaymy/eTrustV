@@ -94,6 +94,12 @@ function fn_generate(method){
          WhereSQL += "AND sm.SRV_CRT_USER_ID = " + $("#hiddenSalesmanId").val() + " ";
      }
 
+     if($("#dataForm #isHc").val() != null && $("#dataForm #isHc").val() != ''){
+    	 whereSQL += " AND som.BNDL_ID IS NOT NULL ";
+     }else{
+    	 whereSQL += " AND som.BNDL_ID IS NULL ";
+     }
+
      if($("#_sortBy").val() != null && $("#_sortBy").val() != '' ){
 
          if($("#_sortBy").val() == '1'){
@@ -202,6 +208,7 @@ function fn_multy(){
 
     <!--common param  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+    <input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

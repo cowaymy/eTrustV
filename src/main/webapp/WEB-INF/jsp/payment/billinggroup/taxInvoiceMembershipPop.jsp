@@ -179,6 +179,7 @@ function fn_clear(){
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
 			<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
+			<input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
