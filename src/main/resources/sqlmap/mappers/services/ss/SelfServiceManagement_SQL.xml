@@ -454,7 +454,7 @@
    UPDATE SVC0006D
 		SET RESULT_STUS_CODE_ID = #{ssStusId},
 			RESULT_REM = #{ssRemark},
-			FAIL_RESN_ID = #{ssFailReason}
+			FAIL_RESN_ID = #{ssFailReason},
 			UPD_DT = SYSDATE ,
 			UPD_USER_ID = #{updUsrId}
    WHERE SCHDUL_ID = #{schdulId}
