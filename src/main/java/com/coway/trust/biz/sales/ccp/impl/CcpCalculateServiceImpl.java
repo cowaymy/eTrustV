@@ -1436,6 +1436,12 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
+	public EgovMap selectCcpEresubmitView(Map<String, Object> params) throws Exception {
+
+		return ccpCalculateMapper.selectCcpEresubmitView(params);
+	}
+
+	@Override
 	public List<EgovMap> selectCcpHistory(Map<String, Object> params) throws Exception {
 
 		return ccpCalculateMapper.selectCcpHistory(params);
