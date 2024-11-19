@@ -231,7 +231,8 @@ public class CcpCalculateController {
 
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
-    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmitView(params);
+    	LOGGER.info("Check 1");
 
     	//Model
     	model.addAttribute("ccpId", params.get("ccpId"));
@@ -330,6 +331,7 @@ public class CcpCalculateController {
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
     	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	LOGGER.info("Check 2");
 
     	//Model
     	model.addAttribute("ccpId", params.get("ccpId"));
@@ -775,6 +777,7 @@ public class CcpCalculateController {
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
     	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	LOGGER.info("Check 3");
 
     	//Model
 //    	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
@@ -926,6 +929,7 @@ public class CcpCalculateController {
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
     	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	LOGGER.info("Check 4");
 
     	EgovMap tempMap1 = null;
     	tempMap1 = (EgovMap)orderDetail.get("salesmanInfo");
