@@ -5,6 +5,7 @@ var ssResultId = '${ssResultId}';
 var salesOrdId = '${salesOrdId}';
 var schdulId = '${schdulId}';
 var hsNo = '${hsNo}';
+var ssRtnNo = '${orderInfo.ssRtnNo}'
 var ssRtnItmDetailGridID;
 
   $(document).ready(
@@ -36,6 +37,7 @@ var ssRtnItmDetailGridID;
 		              ssResultId : ssResultId ,
 	    		  	  salesOrdId : salesOrdId ,
 	    		  	  schdulId : schdulId ,
+	    		  	  ssRtnNo : ssRtnNo ,
 		              rtnItmList : rtnItmList
 		            };
 
@@ -63,7 +65,7 @@ var ssRtnItmDetailGridID;
 	      var itm = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'itemDesc');
 	      var itmQty = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'quantity');
 	      var itmGoodCondQty = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'totGoodCond');
-	      var itmDefectCondQty = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'totDefectCond');
+	      //var itmDefectCondQty = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'totDefectCond');
 	      var itmMiaCondQty = AUIGrid.getColumnValues(ssRtnItmDetailGridID, 'totMiaCond');
 	      var msgLabel = "";
 
@@ -73,11 +75,11 @@ var ssRtnItmDetailGridID;
 	        return false;
 	      }
 
-	      if (itmDefectCondQty == "") {
+	     /*  if (itmDefectCondQty == "") {
 	        msgLabel = itm + " (" + "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>" + ") ";
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='" + msgLabel +"' htmlEscape='false'/>");
 	        return false;
-	      }
+	      } */
 
 	      if (itmMiaCondQty == "") {
 	        msgLabel = itm + " (" + "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>" + ") ";
@@ -93,7 +95,7 @@ var ssRtnItmDetailGridID;
 	        }
 	      } else {
 	        // TOTAL QUANTITY MUST EQUAL TO  TOTAL GOOD CONDITION  AND DEFECTIVE CONDITION GOODS.
-	        var insertQty = Number(itmGoodCondQty[a]) + Number(itmDefectCondQty[a]);
+	        var insertQty = Number(itmGoodCondQty[a]);
 	        if (itmQty[a] != insertQty) {
 	          Common.alert("<spring:message code='supplement.alert.msg.rtnQtyNoSame' arguments='"+ insertQty + ";" + itmQty[a] + " (" + itm[a] + ")" +"' htmlEscape='false' argumentSeparator=';'/>");
 	          return false;
@@ -132,12 +134,6 @@ var ssRtnItmDetailGridID;
           editable : true,
           dataType : "numeric"
       }, {
-          dataField : "totDefectCond",
-          headerText : "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>",
-          width : '25%',
-          editable : true,
-          dataType : "numeric"
-      }, {
           dataField : "totMiaCond",
           headerText : "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>",
           width : '25%',
@@ -146,6 +142,10 @@ var ssRtnItmDetailGridID;
       } , {
 			dataField : "stkId",
 			headerText : "Stock ID",
+			visible : false
+		}, {
+			dataField : "ssRtnItmId",
+			headerText : "Self Service Return Item ID",
 			visible : false
 		}];
 

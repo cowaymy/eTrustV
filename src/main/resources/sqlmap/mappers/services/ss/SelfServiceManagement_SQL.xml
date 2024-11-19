@@ -272,9 +272,11 @@
 		SS_SHIPMENT_NO ,
 		SS_DELIVRY_STUS_ID ,
 		Extent2.CODE_NAME AS SS_DELIVRY_STUS ,
-		TO_CHAR(Extent1.SS_DELIVRY_DT, 'DD/MM/YYYY') AS SS_DELIVRY_DT
+		TO_CHAR(Extent1.SS_DELIVRY_DT, 'DD/MM/YYYY') AS SS_DELIVRY_DT,
+		Extent3.SS_RTN_NO
 	FROM SVC0144M Extent1
 	LEFT JOIN SYS0013M Extent2 ON Extent1.SS_DELIVRY_STUS_ID = Extent2.CODE AND Extent2.CODE_MASTER_ID = 585
+	LEFT JOIN SVC0146M Extent3 ON Extent1.SCHDUL_ID = Extent3.SS_REF_ID
 	WHERE
 		Extent1.SS_RESULT_ID = #{ssResultId}
 		AND Extent1.SCHDUL_ID = #{schdulId}
@@ -309,13 +311,17 @@
         Extent3.FILTER_BARCD_SERIAL_NO SERIAL_NO,
         Extent3.SS_RESULT_ID,
         Extent3.SS_RESULT_ITM_ID,
-        0 AS TOT_GOOD_COND,
-        0 AS TOT_DEFECT_COND,
-        0 AS TOT_MIA_COND
+        Extent5.SS_RTN_NO ,
+        Extent6.SS_RTN_ITM_ID ,
+        CASE WHEN Extent6.SS_RTN_GDS != 0 THEN Extent6.SS_RTN_GDS ELSE 0 END AS TOT_GOOD_COND,
+        CASE WHEN Extent6.SS_RTN_BAD_GDS != 0 THEN Extent6.SS_RTN_BAD_GDS ELSE 0 END AS TOT_DEFECT_COND,
+        CASE WHEN Extent6.SS_RTN_MISS_GDS !=0 THEN Extent6.SS_RTN_MISS_GDS ELSE 0 END AS TOT_MIA_COND
     FROM SVC0008D Extent1
     LEFT JOIN SVC0144M Extent2 ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
     LEFT JOIN SVC0145D Extent3 ON Extent2.SS_RESULT_ID = Extent3.SS_RESULT_ID
     LEFT JOIN SYS0026M Extent4 ON Extent3.SS_RESULT_PART_ID = Extent4.STK_ID
+    LEFT JOIN SVC0146M Extent5 ON Extent1.SCHDUL_ID = Extent5.SS_REF_ID
+    LEFT JOIN SVC0147D Extent6 ON Extent5.SS_RTN_ID = Extent6.SS_RTN_ID AND Extent3.SS_RESULT_PART_ID = Extent6.SS_STK_ID AND Extent6.DEL_FLG = 'N'
 	WHERE
        Extent1.SALES_ORD_ID = #{salesOrdId}
        AND Extent1.SCHDUL_ID = #{schdulId}
@@ -390,6 +396,17 @@
      )
    </insert>
 
+   <update id="updateSelfServiceStockReturnDetail" parameterType="Map">
+    UPDATE SVC0147D SET SS_RTN_GDS = #{totGoodCond}
+    					, SS_RTN_MISS_GDS = #{totMiaCond}
+   						, UPD_USR_ID = #{crtUsrId}
+   						, UPD_DT = SYSDATE
+    WHERE
+   		SS_RTN_ITM_ID = #{ssRtnItmId}
+   		AND SS_STK_ID = #{stkId}
+   		AND DEL_FLG = 'N'
+   </update>
+
    <update id="rollbackSelfServiceReturnGoodsQty" parameterType="Map">
     UPDATE SVC0146M SET DEL_FLG = 'Y'
    						, UPD_USR_ID = #{crtUsrId}
@@ -426,9 +443,18 @@
 
   <update id="updateHsMasterStatus" parameterType="Map">
    UPDATE SVC0008D
-		SET STUS_CODE_ID = #{stusCodeId},
-			FAIL_RESN_ID = #{failResnId},
-			REM = #{remark},
+		SET STUS_CODE_ID = #{ssStusId},
+			REM = #{ssRemark},
+			UPD_DT = SYSDATE ,
+			UPD_USER_ID = #{updUsrId}
+   WHERE SCHDUL_ID = #{schdulId}
+  </update>
+
+  <update id="updateHsResultStatus" parameterType="Map">
+   UPDATE SVC0006D
+		SET RESULT_STUS_CODE_ID = #{ssStusId},
+			RESULT_REM = #{ssRemark},
+			FAIL_RESN_ID = #{ssFailReason}
 			UPD_DT = SYSDATE ,
 			UPD_USER_ID = #{updUsrId}
    WHERE SCHDUL_ID = #{schdulId}
@@ -436,9 +462,9 @@
 
   <update id="updateSsMasterStatus" parameterType="Map">
    UPDATE SVC0144M
-		SET SS_RESULT_STUS_CODE_ID = #{stusCodeId},
-			SS_FAIL_RESN_ID = #{failResnId},
-			SS_RESULT_REM = #{remark},
+		SET SS_RESULT_STUS_CODE_ID = #{ssStusId},
+			SS_FAIL_RESN_ID = #{ssFailReason},
+			SS_RESULT_REM = #{ssRemark},
 			SS_RESULT_UPD_DT = SYSDATE ,
 			SS_RESULT_UPD_USER_ID = #{updUsrId}
    WHERE SCHDUL_ID = #{schdulId}

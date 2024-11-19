@@ -250,6 +250,8 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     try {
       selfServiceManagementMapper.updateHsMasterStatus(params);
 
+      selfServiceManagementMapper.updateHsResultStatus(params);
+
       selfServiceManagementMapper.updateSsMasterStatus(params);
 
       // LOGISTIC CALL HERE
@@ -268,6 +270,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   public Map<String, Object> updateReturnGoodsQty(Map<String, Object> params) throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     try {
+      String ssRtnNo = params.get("ssRtnNo").toString();
       // Early validation
       if (params == null || params.get("rtnItmList") == null) {
         throw new IllegalArgumentException("Return item list is missing.");
@@ -280,34 +283,36 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
         throw new IllegalArgumentException("Creator user ID is missing.");
       }
 
-      // Generate Return Master ID and Number
-      String ssRtnNo = orderRegisterMapper.selectDocNo(203);
       if (ssRtnNo == null || ssRtnNo.isEmpty()) {
-        throw new IllegalArgumentException("Unable to generate return number.");
-      }
+        ssRtnNo = orderRegisterMapper.selectDocNo(203);
 
-      int ssRtnMasterSeq = selfServiceManagementMapper.getSeqSVC0146M();
-      if (ssRtnMasterSeq == 0) {
-        throw new IllegalStateException("Failed to generate valid sequence for Return Master.");
-      }
+        int ssRtnMasterSeq = selfServiceManagementMapper.getSeqSVC0146M();
+        if (ssRtnMasterSeq == 0) {
+          throw new IllegalStateException("Failed to generate valid sequence for Return Master.");
+        }
 
-      params.put("ssRtnId", ssRtnMasterSeq);
-      params.put("ssRtnNo", ssRtnNo);
+        params.put("ssRtnId", ssRtnMasterSeq);
+        params.put("ssRtnNo", ssRtnNo);
 
-      // Insert into Self Service Stock Return Master (SVC0146M)
-      selfServiceManagementMapper.insertSelfServiceStockReturnMaster(params);
+        // Insert into Self Service Stock Return Master (SVC0146M)
+        selfServiceManagementMapper.insertSelfServiceStockReturnMaster(params);
 
-      // Insert Return Items Details
-      for (int idx = 0; idx < ssItemGrid.size(); idx++) {
-        Map<String, Object> itemMap = (Map<String, Object>) ssItemGrid.get(idx);
-
-        int ssRtnDetailSeq = selfServiceManagementMapper.getSeqSVC0147D();
-        itemMap.put("ssRtnItmId", ssRtnDetailSeq);
-        itemMap.put("ssRtnId", ssRtnMasterSeq);
-        itemMap.put("crtUsrId", params.get("crtUsrId"));
-
-        // Insert item into details
-        selfServiceManagementMapper.insertSelfServiceStockReturnDetail(itemMap);
+        // Insert Return Items Details
+        for (int idx = 0; idx < ssItemGrid.size(); idx++) {
+          Map<String, Object> itemMap = (Map<String, Object>) ssItemGrid.get(idx);
+          int ssRtnDetailSeq = selfServiceManagementMapper.getSeqSVC0147D();
+          itemMap.put("ssRtnItmId", ssRtnDetailSeq);
+          itemMap.put("ssRtnId", ssRtnMasterSeq);
+          itemMap.put("crtUsrId", params.get("crtUsrId"));
+          // Insert item into details
+          selfServiceManagementMapper.insertSelfServiceStockReturnDetail(itemMap);
+        }
+      } else {
+        for (int idx = 0; idx < ssItemGrid.size(); idx++) {
+          Map<String, Object> itemMap = (Map<String, Object>) ssItemGrid.get(idx);
+          itemMap.put("crtUsrId", params.get("crtUsrId"));
+          selfServiceManagementMapper.updateSelfServiceStockReturnDetail(itemMap);
+        }
       }
 
       // Placeholder for Logistics handling

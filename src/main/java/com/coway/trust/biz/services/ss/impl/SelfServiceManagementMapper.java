@@ -31,6 +31,8 @@ public interface SelfServiceManagementMapper {
 
   void insertSelfServiceStockReturnDetail(Map<String, Object> params);
 
+  void updateSelfServiceStockReturnDetail(Map<String, Object> params);
+
   int rollbackSelfServiceResultMaster( Map<String, Object> params );
 
   int rollbackSelfServiceResultDetail( Map<String, Object> params );
@@ -56,6 +58,8 @@ public interface SelfServiceManagementMapper {
   void updateHsMasterStatus(Map<String, Object> params);
 
   void updateSsMasterStatus(Map<String, Object> params);
+
+  void updateHsResultStatus(Map<String, Object> params);
 
   int saveValidation(Map<String, Object> params);
 
