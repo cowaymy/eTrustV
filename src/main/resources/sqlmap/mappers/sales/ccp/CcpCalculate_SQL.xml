@@ -1937,6 +1937,18 @@ AND T1.CNT = 1
    from SAL0304D where sales_ord_id = #{salesOrdId} and ccp_id = #{ccpId}
 </select>
 
+<select id="selectCcpEresubmitView"  parameterType="Map" resultType="EgovMap" >
+   select
+   sales_ord_id,
+   ccp_id,
+   stus_id,
+   ATCH_FILE_GRP_ID,
+   remarks
+   from SAL0304D where sales_ord_id = #{salesOrdId} and ccp_id = #{ccpId}
+   order by ref_no desc
+   fetch first 1 row only
+ </select>
+
 <update id="updateCcpEresubmitStus" parameterType="Map">
             UPDATE SAL0304D set stus_id = #{eRstatusEdit}
             <if test="null != remarks">
