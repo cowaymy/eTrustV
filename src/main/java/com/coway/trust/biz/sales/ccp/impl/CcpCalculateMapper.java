@@ -123,6 +123,8 @@ public interface CcpCalculateMapper {
 
 	EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception;
 
+	EgovMap selectCcpEresubmitView(Map<String, Object> params) throws Exception;
+
 	List<EgovMap>selectCcpHistory(Map<String, Object> params) throws Exception;
 
 	void updateCcpEresubmitStus(Map<String, Object> params) throws Exception;
