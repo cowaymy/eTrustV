@@ -25,7 +25,8 @@
 			CRT_DT,
 			UPD_USER_ID,
 			UPD_DT,
-			PROG_STATUS
+			PROG_STATUS,
+			STATISTICS_UNSUBSCRIBED
 	   ) VALUES (
 	       CBT0005D_RESP_ID_SEQ.NEXTVAL,
 	       #{txnId},
@@ -40,7 +41,8 @@
            SYSDATE,
            349,
            SYSDATE,
-           1
+           1,
+           #{statisticsUnsubscribed}
 	   )
 	</insert>
 

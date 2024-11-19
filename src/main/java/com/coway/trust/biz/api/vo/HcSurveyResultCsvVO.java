@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModel;
 public class HcSurveyResultCsvVO{
 	private int txnId;
 	private Date statisticsProcessed;
+	private Date statisticsUnsubscribed;
 	private Date statisticsSent;
 	private Date statisticsDelivered;
 	private Date statisticsSeen;
@@ -24,12 +25,13 @@ public class HcSurveyResultCsvVO{
 
 		vo.setTxnId(Integer.parseInt(CSVRecord[0]));
 		vo.setStatisticsProcessed((CSVRecord.length < 2 || CSVRecord[1].isEmpty()) ? null : dtFormat.parse(CSVRecord[1]));
-		vo.setStatisticsSent((CSVRecord.length < 3 || CSVRecord[2].isEmpty()) ? null : dtFormat.parse(CSVRecord[2]));
-		vo.setStatisticsDelivered((CSVRecord.length < 4 || CSVRecord[3].isEmpty()) ? null : dtFormat.parse(CSVRecord[3]));
-		vo.setStatisticsSeen((CSVRecord.length < 5 || CSVRecord[4].isEmpty()) ? null : dtFormat.parse(CSVRecord[4]));
-		vo.setStatisticsClicked((CSVRecord.length < 6 || CSVRecord[5].isEmpty()) ? null : dtFormat.parse(CSVRecord[5]));
-		vo.setStatisticsResponded((CSVRecord.length < 7 || CSVRecord[6].isEmpty()) ? null : dtFormat.parse(CSVRecord[6]));
-		vo.setResponse((CSVRecord.length < 8 || CSVRecord[7].isEmpty()) ? null : CSVRecord[7]);
+		vo.setStatisticsUnsubscribed((CSVRecord.length < 3 || CSVRecord[2].isEmpty()) ? null : dtFormat.parse(CSVRecord[2]));
+		vo.setStatisticsSent((CSVRecord.length < 4 || CSVRecord[3].isEmpty()) ? null : dtFormat.parse(CSVRecord[3]));
+		vo.setStatisticsDelivered((CSVRecord.length < 5 || CSVRecord[4].isEmpty()) ? null : dtFormat.parse(CSVRecord[4]));
+		vo.setStatisticsSeen((CSVRecord.length < 6 || CSVRecord[5].isEmpty()) ? null : dtFormat.parse(CSVRecord[5]));
+		vo.setStatisticsClicked((CSVRecord.length < 7 || CSVRecord[6].isEmpty()) ? null : dtFormat.parse(CSVRecord[6]));
+		vo.setStatisticsResponded((CSVRecord.length < 8 || CSVRecord[7].isEmpty()) ? null : dtFormat.parse(CSVRecord[7]));
+		vo.setResponse((CSVRecord.length < 9 || CSVRecord[8].isEmpty()) ? null : CSVRecord[8]);
 
 		return vo;
 	}
@@ -48,6 +50,14 @@ public class HcSurveyResultCsvVO{
 
 	public void setStatisticsProcessed(Date statisticsProcessed) {
 		this.statisticsProcessed = statisticsProcessed;
+	}
+
+	public Date getStatisticsUnsubscribed() {
+		return statisticsUnsubscribed;
+	}
+
+	public void setStatisticsUnsubscribed(Date statisticsUnsubscribed) {
+		this.statisticsUnsubscribed = statisticsUnsubscribed;
 	}
 
 	public Date getStatisticsSent() {
