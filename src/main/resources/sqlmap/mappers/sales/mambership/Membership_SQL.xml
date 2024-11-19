@@ -22,7 +22,7 @@
                    A.CUST_IC,
                    A.REF_NO
            FROM SAL1004V A
-           <!-- LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.ORD_ID -->
+           LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.ORD_ID
            <if test='userTypeId =="1" or userTypeId == "2" '>
                    JOIN ORG1001V B ON A.SRV_MEM_SALES_MEM_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">
