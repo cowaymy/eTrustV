@@ -30,6 +30,7 @@
 	                Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
 	                Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
 	                Extent4.CUST_ID TAX_INVC_CUST_ID,
+                    Extent4.SALES_DT SALES_DT,
                     CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
                         ELSE 'N'
                     END AS GEN_E_INV
@@ -65,7 +66,7 @@
             AND Filter1.TAX_INVC_CUST_ID = #{custID}
             </if>
             <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TO_DATE(Filter1.TAX_INVC_MONTH || '/' || '01' || '/' || Filter1.TAX_INVC_YEAR, 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Filter1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
             </if>
         --ORDER BY Filter1.INVC_ITM_ORD_NO DESC
 
@@ -116,7 +117,7 @@
             AND txm.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
             </if>
             <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND txm.TAX_INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND orm.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
             </if>
             <if test="custID != null and custID != '' ">
             AND orm.CUST_ID = #{custID}
@@ -165,7 +166,7 @@
             AND Extent1.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
             </if>
             <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND Extent1.TAX_INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
             </if>
             <if test="custName != null and custName != '' ">
             AND Extent1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
@@ -211,10 +212,12 @@
 	                Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
 	                Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
 	                Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO  ,
-	                Extent2.INVC_ITM_DESC2 INVC_ITM_DESC2
+	                Extent2.INVC_ITM_DESC2 INVC_ITM_DESC2,
+	                Extent4.SALES_DT SALES_DT
                 FROM
                     PAY0029D Extent1
                     JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
                 WHERE
                     Extent1.TAX_INVC_BILL_TYPE = 134) Filter1
                 LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
@@ -233,7 +236,7 @@
             AND  Filter1.TAX_INVC_YEAR = #{year}
             </if>
             <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TO_DATE(Filter1.TAX_INVC_MONTH || '/' || '01' || '/' || Filter1.TAX_INVC_YEAR, 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Filter1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
             </if>
             <if test="custName != null and custName != '' ">
             AND Filter1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
@@ -261,6 +264,11 @@
             FROM
                 PAY0031D Extent1
                 LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+                LEFT JOIN (   SELECT Extent2.TAX_INVC_ID, MAX(Extent3.SALES_DT) SALES_DT
+                    FROM PAY0032D Extent2
+                    LEFT JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
+                    GROUP BY Extent2.TAX_INVC_ID
+                ) Extent4 ON Extent4.TAX_INVC_ID = Extent1.TAX_INVC_ID
             WHERE
                 Extent1.TAX_INVC_TYPE = #{invoiceType}
                 <if test="invoiceNo != null and invoiceNo != '' ">
@@ -274,7 +282,7 @@
                 AND Extent1.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
                 </if>
                 <if test='pdpaMonth != null and pdpaMonth != 0'>
-	            AND Extent1.TAX_INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+	            AND Extent4.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 	            </if>
                 <if test="custName != null and custName != '' ">
                 AND Extent1.TAX_INVC_CUST_NAME LIKE '%' ||#{custName} || '%'
@@ -312,7 +320,7 @@
                     AND  Extent1.STATE_YEAR = #{year}
                 </if>
                 <if test='pdpaMonth != null and pdpaMonth != 0'>
-	            AND TO_DATE(Extent1.STATE_MONTH || '/' || '01' || '/' || Extent1.STATE_YEAR, 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+	            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 	            </if>
                 <if test="custName != null and custName != '' ">
                 AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'

@@ -88,7 +88,7 @@
 			AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
 		</if>
 		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TO_DATE((utils.datepart('MONTH', Filter1.RENT_DT_TM)) || '/' || '01' || '/' || (utils.datepart('YEAR', Filter1.RENT_DT_TM)), 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Filter1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Filter1.SALES_ORD_ID DESC
 	</select>
@@ -152,7 +152,7 @@
 			AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
 		</if>
 		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TO_DATE((utils.datepart('MONTH', Filter1.RENT_DT_TM)) || '/' || '01' || '/' || (utils.datepart('YEAR', Filter1.RENT_DT_TM)), 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Filter1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Filter1.SALES_ORD_ID DESC
 
@@ -199,7 +199,7 @@
 			'~' )
 		</if>
 		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND Extent1.INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Extent4.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Extent4.SALES_ORD_ID DESC
 	</select>
@@ -361,7 +361,7 @@
 			AND Extent1.PV_YEAR = #{sYear}
 		</if>
 		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TO_DATE(Extent1.PV_MONTH || '/' || '01' || '/' || Extent1.PV_YEAR, 'MM/DD/YYYY') >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND Extent5.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 		</if>
 		ORDER BY Extent1.BILL_ID DESC
 	</select>
@@ -972,7 +972,7 @@ SELECT DISTINCT V1.ORD_ID
 			#{invoiceRefDate},'MM/YYYY'),'MMYYYY')
 		</if>
 		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND TAX_INVC_REF_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            AND A.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
 		<if test="refNo != null and refNo != '' ">
 			AND C.TAX_INVC_REF_NO = #{refNo}

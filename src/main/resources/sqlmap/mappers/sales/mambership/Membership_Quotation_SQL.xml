@@ -165,11 +165,11 @@
                <if test="CRT_EDT != null and CRT_EDT != ''">
                   AND TO_CHAR(A.CRT_DT, 'yyyymmdd') <![CDATA[<=]]>  TO_CHAR(TO_DATE(#{CRT_EDT}, 'dd/mm/yyyy'),'yyyymmdd')
                </if>
-               
+
 	           <if test='pdpaMonth != null and pdpaMonth != 0'>
-				  AND A.CRT_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+				  AND A.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
 	           </if>
-               
+
                <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
                   AND A.CRT_USER_ID = #{CRT_USER_ID}
                </if>

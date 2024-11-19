@@ -68,9 +68,9 @@
                  <if test="CRT_EDT != null and CRT_EDT != ''">
                               AND TO_CHAR(E1.QOTAT_CRT_DT, 'yyyymmdd') <![CDATA[<=]]>   TO_CHAR(TO_DATE(#{CRT_EDT}, 'dd/mm/yyyy'),'yyyymmdd')
                  </if>
-                 
+
                  <if test='pdpaMonth != null and pdpaMonth != 0'>
-                              AND E1.QOTAT_CRT_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                              AND E3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
                  </if>
 
                  <if test="STUS_ID != null and  STUS_ID != ''">
