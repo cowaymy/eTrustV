@@ -126,6 +126,8 @@
                 $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
                 $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
                 $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
+                $('#rebateNo').val('${preOrderInfo.mainRebateOrdNo}');
+                $('#txtMainRebateOrderID').val('${preOrderInfo.mainRebateOrdId}');
                 $('#txtBusType').val('${preOrderInfo.busType}');
                 $('#installDur').val('${preOrderInfo.instPriod}');
                 $('#poNo').val('${preOrderInfo.custPoNo}');

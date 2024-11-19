@@ -66,4 +66,6 @@ public interface PreOrderMapper {
 	String selectExistingSalesVoucherCode(PreOrderVO preOrderVO);
 
 	void updatePwp(Map<String, Object> params);
+
+	void updateRebate(Map<String, Object> params);
 }

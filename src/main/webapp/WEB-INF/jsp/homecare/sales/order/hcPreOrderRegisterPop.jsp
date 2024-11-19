@@ -1493,6 +1493,7 @@
               pwpOrderId          : $('#txtMainPwpOrderID').val(),
               pwpOrderNo          : $('#pwpNo').val(),
               tnbAccNo : $("#tnbAccNo").val(),
+              rebateOrderId          : $('#txtMainRebateOrderID').val(),
               rebateOrderNo          : $('#rebateNo').val()
           };
 
