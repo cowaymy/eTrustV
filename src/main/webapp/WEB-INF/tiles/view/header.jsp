@@ -232,7 +232,7 @@
 		});
 
 		$("#menuLinkHelpDesk").on("click", function(){
-            window.open("http://trustdesk.coway.com.my:8282/", 'blank');
+            window.open("http://trustdesk.coway.com.my/", 'blank');
         });
 
    });
