@@ -1039,7 +1039,7 @@
                                          FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
                                          NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
                                          NVL (TO_CHAR (SAL0017D.PROMO_ID), '') AS sales_Promotion_Cde,
-                                         NVL (SAL0001D.MTH_RENT_AMT, 0) - NVL(PAY0286D.TOTAL_REBATE, 0) AS monthly_Rental_Fees,
+                                         TO_CHAR(NVL(SAL0001D.MTH_RENT_AMT, 0) - NVL(PAY0286D.TOTAL_REBATE, 0)) AS monthly_Rental_Fees,
                                          NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
                                          NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
                                          NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
