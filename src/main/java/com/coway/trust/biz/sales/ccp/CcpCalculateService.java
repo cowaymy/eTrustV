@@ -76,6 +76,8 @@ public interface CcpCalculateService {
 
 	EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception;
 
+	EgovMap selectCcpEresubmitView(Map<String, Object> params) throws Exception;
+
 	int getMemberID(Map<String, Object> params);
 
 	EgovMap selectOwnPurchaseInfo(Object object) throws Exception;
