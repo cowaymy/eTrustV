@@ -41,12 +41,6 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
   @Resource(name = "CommonApiMapper")
   private CommonApiMapper commonApiMapper;
 
-  @Value("${cw.api.auth.username}")
-  private String CWApiAuthUsername;
-
-  @Value("${cw.api.auth.password}")
-  private String CWApiAuthPassword;
-
   @Override
   public EgovMap checkAccess(HttpServletRequest request,CommonApiForm commonApiForm){
 
@@ -211,7 +205,7 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
   @Override
   public EgovMap verifyBasicAuth(HttpServletRequest request,Map<String, Object> params)  throws Exception {
 
-    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+    /*String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.reset();
@@ -251,7 +245,8 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
     }
 
     return rtnRespMsg(request, code, message, respTm, params, null,apiUserId);
-
+*/
+	  return null;
   }
 
     @Override
