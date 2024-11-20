@@ -38,6 +38,10 @@
                                           AND B.DEPT_CODE = #{deptCode}
                                           </if>
             </if>
+            <if test="userBranchId != null and userBranchId != '' ">
+                JOIN SAL0001D C ON A.ORD_ID = C.SALES_ORD_ID
+                AND C.BRNCH_ID = #{userBranchId}
+            </if>
         WHERE  1=1
         <choose>
             <when test='isHc == "1"'>

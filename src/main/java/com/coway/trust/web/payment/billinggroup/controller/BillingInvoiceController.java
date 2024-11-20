@@ -263,7 +263,7 @@ public class BillingInvoiceController {
 	}
 
 	@RequestMapping(value = "/selectProformaInvoiceList.do")
-	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		List<EgovMap> list = null;
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -282,6 +282,18 @@ public class BillingInvoiceController {
 		map.put("refNo", searchVO.getRefNo().trim());
 		map.put("poNo", searchVO.getPoNo().trim());
 		map.put("contactNo", searchVO.getContactNo());
+		
+		if(sessionVO.getUserTypeId() == 2) {
+		    map.put("userTypeId", sessionVO.getUserTypeId());
+		    map.put("memLevel", sessionVO.getMemberLevel());
+		    map.put("deptCode", sessionVO.getDeptCode());
+		    map.put("grpCode", sessionVO.getGroupCode());
+		    map.put("orgCode", sessionVO.getOrgCode());
+		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    map.put("userBranchId", sessionVO.getUserBranchId());
+		}
 
 		String orderDtFr = "";
 		String orderDtTo = "";
@@ -316,7 +328,7 @@ public class BillingInvoiceController {
 
 
 	@RequestMapping(value = "/selectAdvancedRentalInvoiceList.do")
-	public ResponseEntity<List<EgovMap>> searchAdvancedRentalInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> searchAdvancedRentalInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		List<EgovMap> list = null;
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -335,6 +347,18 @@ public class BillingInvoiceController {
 //		map.put("refNo", searchVO.getRefNo().trim());
 //		map.put("poNo", searchVO.getPoNo().trim());
 //		map.put("contactNo", searchVO.getContactNo());
+		
+		if(sessionVO.getUserTypeId() == 2) {
+		    map.put("userTypeId", sessionVO.getUserTypeId());
+		    map.put("memLevel", sessionVO.getMemberLevel());
+		    map.put("deptCode", sessionVO.getDeptCode());
+		    map.put("grpCode", sessionVO.getGroupCode());
+		    map.put("orgCode", sessionVO.getOrgCode());
+		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    map.put("userBranchId", sessionVO.getUserBranchId());
+		}
 
 		String orderDtFr = "";
 		String orderDtTo = "";

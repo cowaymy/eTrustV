@@ -288,7 +288,12 @@
             }
           });
         });
+        
 
+        $('#btnInvoice').click(function() {
+            Common.popupDiv("/sales/order/orderInvoicePop.do");
+        });
+      
     });
 
     function fn_letter_report() {
@@ -497,9 +502,11 @@
         } else if(tabNm == 'GST' && '${PAGE_AUTH.funcUserDefine8}'  != 'Y') {
             isValid = false;
         }
-
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-
+        
+        if(!isValid) {
+        	Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
+        
         return isValid;
     }
 
@@ -518,9 +525,9 @@
         } else if(tabNm == 'OTRN' && '${PAGE_AUTH.funcUserDefine16}' != 'Y') {
             isValid = false;
         }
-
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-
+        if(!isValid) {
+            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+        }
         return isValid;
     }
 
@@ -821,7 +828,9 @@
       <c:if test="${PAGE_AUTH.funcUserDefine24 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnOrderOverview">Order Overview</a></p></li>
       </c:if>
-
+      <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" id="btnInvoice">Invoice</a></p></li>
+      </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

@@ -174,10 +174,14 @@ function fn_report(){
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpOrderDateTo+"', 'MM/dd/YY'))";
     }
 
-    if($("#cmbKeyBranch :selected").index() > 0){
-        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+    if("${SESSION_INFO.roleId}" == 256) {
+        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
     }
-
+    else {
+    	if($("#cmbKeyBranch :selected").index() > 0){
+            whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+        }
+    }
 
 	var date = new Date().getDate();
     if(date.toString().length == 1){

@@ -546,15 +546,22 @@
 			))
 		</if>
 		AND ( 1 = Extent1.ORD_STUS_ID )
-		<if test="keyInBranchList != '' and keyInBranchList != null">
-			AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
-			Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
-			<foreach collection="keyInBranchList" index="index"
-				separator=",">
-				'${keyInBranchList[index]}'
-			</foreach>
-			))
-		</if>
+		<choose>
+            <when test="userBranchId != null and userBranchId != '' ">
+                AND Extent1.KEYIN_BRNCH_ID = #{userBranchId}
+            </when>
+            <otherwise>
+                <if test="keyInBranchList != '' and keyInBranchList != null">
+                 AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
+                 Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
+                <foreach collection="keyInBranchList" index="index"
+                separator=",">
+                '${keyInBranchList[index]}'
+                </foreach>
+                ))
+                </if>
+            </otherwise>
+         </choose>
 		<if test="dscBranchList != '' and dscBranchList != null">
 			AND ( (CASE WHEN ( Extent1.DSC_BRNCH_ID IS NOT NULL ) THEN
 			Extent1.DSC_BRNCH_ID ELSE 0 END) IN (
@@ -645,6 +652,20 @@
 			OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
 			)
 		</if>
+        <if test="userTypeId != null and userTypeId != '' ">
+             <if test="memLevel == 4">
+              AND Filter1.OrderMemID = #{memId}
+              </if>
+              <if test="memLevel == 3">
+               AND Extent3.DEPT_CODE = #{deptCode}
+              </if>
+              <if test="memLevel == 2">
+               AND Extent3.GRP_CODE = #{grpCode}
+              </if>
+              <if test="memLevel == 1">
+              AND Extent3.ORG_CODE = #{orgCode}
+              </if>
+        </if>
 		ORDER BY Filter1.OrderNo ASC
 	</select>
 
@@ -710,14 +731,21 @@
         <if test='pdpaMonth != null and pdpaMonth != 0'>
             AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
-        <if test="keyInBranchList != '' and keyInBranchList != null">
-            AND Extent1.BRNCH_ID  IN (
-            <foreach collection="keyInBranchList" index="index"
-                separator=",">
-                '${keyInBranchList[index]}'
-            </foreach>
-            )
-        </if>
+         <choose>
+            <when test="userBranchId != null and userBranchId != '' ">
+            	AND Extent1.BRNCH_ID = #{userBranchId}
+            </when>
+            <otherwise>
+            	<if test="keyInBranchList != '' and keyInBranchList != null">
+            		AND Extent1.BRNCH_ID IN (
+            		<foreach collection="keyInBranchList" index="index"
+            			separator=",">
+            			'${keyInBranchList[index]}'
+            		</foreach>
+            		)
+            	</if>
+            </otherwise>
+         </choose>
         <if test="custId != '' ">
             AND Extent1.CUST_ID = #{custId}
         </if>
@@ -741,7 +769,20 @@
             </foreach>
             )
         </if>
-
+        <if test="userTypeId != null and userTypeId != '' ">
+            <if test="memLevel == 4">
+             AND Extent1.MEM_ID = #{memId}
+             </if>
+             <if test="memLevel == 3">
+              AND Extent1.DEPT_CODE = #{deptCode}
+             </if>
+             <if test="memLevel == 2">
+              AND Extent1.GRP_CODE = #{grpCode}
+             </if>
+             <if test="memLevel == 1">
+             AND Extent1.ORG_CODE = #{orgCode}
+             </if>
+          </if>
       ORDER BY Extent1.SALES_ORD_NO
     </select>
 

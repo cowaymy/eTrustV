@@ -125,6 +125,10 @@ logger.debug("params : {}", params);
 		    params.put("memType", sessionVO.getUserTypeId());
 		    params.put("memlvl", sessionVO.getMemberLevel());
 		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    params.put("branchId", sessionVO.getUserBranchId());
+		}
 
 		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
 		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
@@ -237,4 +241,9 @@ logger.debug("params : {}", params);
 		return arrayCustId;
   }
 
+	@RequestMapping(value="/orderInvoicePop.do")
+	public String orderInvoicePop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+		model.addAttribute("sessionRoleId", sessionVO.getRoleId());
+		return "sales/order/orderInvoicePop";
+	}
 }

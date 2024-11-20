@@ -200,6 +200,10 @@ function btnGeneratePDF_Click(){
 	    }else if($("#cmbDeptCode :selected").val() == 0){
 	    	deptCode = "All";
 	    }
+	     
+	    if("${SESSION_INFO.roleId}" == 256) {
+            whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+"";
+        }
 
 	    var custTypeList = "";
 	    if($('#cmbCustType :selected').length > 0){
@@ -224,6 +228,7 @@ function btnGeneratePDF_Click(){
 	    if(date.toString().length == 1){
 	        date = "0" + date;
 	    }
+
 	    $("#reportDownFileName").val("SalesYSListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	    $("#form #viewType").val("PDF");
 	    $("#form #reportFileName").val("/sales/SalesYSListing_PDF.rpt");

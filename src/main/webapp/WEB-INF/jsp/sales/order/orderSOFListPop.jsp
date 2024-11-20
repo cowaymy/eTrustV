@@ -145,9 +145,15 @@ function fn_report(viewType){
 	    orderNoTo = txtOrderNoTo;
 	    whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+txtOrderNoFr+"' AND '"+txtOrderNoTo+"')";
 	}
-	if($("#cmbKeyBranch :selected").index() > 0){
-		keyInBranch = $("#cmbKeyBranch :selected").val();
-		whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+	
+	 if("${SESSION_INFO.roleId}" == 256) {
+	        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
+	 }
+	else {
+	        if($("#cmbKeyBranch :selected").index() > 0){
+	        	keyInBranch = $("#cmbKeyBranch :selected").val();
+	            whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+	        }
 	}
 	if(!($("#txtCustName").val().trim() == null || $("#txtCustName").val().trim().length == 0)){
 		custName = $("#txtCustName").val().trim();

@@ -1187,6 +1187,9 @@
     LEFT JOIN SAL0071D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID AND 66 = T1.APP_TYPE_ID
     LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
     WHERE T1.SALES_ORD_NO = #{salesOrdNo}
+    <if test="userBranchId != null and userBranchId != '' ">
+         AND T1.BRNCH_ID = #{userBranchId}
+    </if>
       AND ROWNUM &lt;= 1
   </select>
 

@@ -4,6 +4,11 @@
 <script type="text/javaScript" language="javascript">
 
     var ORD_NO = '${ordNo}';
+    var userBranchId = null;
+    if("${SESSION_INFO.roleId}" == 256) {
+    	userBranchId = '${SESSION_INFO.userBranchId}';
+    }
+    
 
     $(document).ready(function(){
         if(FormUtil.isNotEmpty(ORD_NO)) {
@@ -127,7 +132,7 @@
 
         if(!FormUtil.checkReqValue($('#txtOrderNo'))) {
 
-                Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNo').val()}, function(result) {
+                Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId}, function(result) {
                     if(fn_validInfoSimul()) {
 
                         var installdate = result.installdate;
@@ -277,7 +282,7 @@
         var msgT = '';
         var msg = '';
 
-        Common.ajaxSync("GET", "/sales/order/selectValidateInfoSimul.do", {salesOrdNo : $('#txtOrderNo').val()}, function(rsltInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectValidateInfoSimul.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 valid = rsltInfo.isInValid;
                 msgT  = rsltInfo.msgT;

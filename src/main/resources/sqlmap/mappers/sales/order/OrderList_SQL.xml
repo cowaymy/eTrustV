@@ -1705,6 +1705,29 @@
             ) SVC
             ON V1.ORD_ID = SVC.SALES_ORD_ID
             </if>
+            <if test='branchId != null and branchId != "" '>
+            JOIN(
+                SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
+                FROM SAL0001D S
+                JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
+                JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
+                WHERE 1=1
+                <if test='ordId != null and ordId != ""'>
+                AND S.SALES_ORD_ID = #{ordId}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                AND S.SALES_ORD_NO = #{ordNo}
+                </if>
+                <if test='ordDt == null || ordDt == ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                AND S.BRNCH_ID = #{branchId}
+            ) SVC
+            ON V1.ORD_ID = SVC.SALES_ORD_ID
+            </if>
            WHERE 1 = 1
            <if test='ordDt == null || ordDt == ""'>
              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')

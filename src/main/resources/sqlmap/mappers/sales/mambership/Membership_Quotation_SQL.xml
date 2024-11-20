@@ -136,6 +136,10 @@
                 <if test='userTypeId =="1" or userTypeId == "2" '>
                   JOIN ORG B ON A.SRV_SALES_MEM_ID = B.MEM_ID
                 </if>
+                <if test="userBranchId != null and userBranchId != '' ">
+                JOIN SAL0001D C ON A.ORD_ID = C.SALES_ORD_ID
+                AND C.BRNCH_ID = #{userBranchId}
+                </if>
 
                 LEFT OUTER JOIN PAY0024D P ON  P.SRV_MEM_QOTAT_ID = A.QUOT_ID
 

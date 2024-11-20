@@ -52,6 +52,11 @@
       $("#memCode").attr("class", "w100p readonly");
       $("#memCode").attr("readonly", "readonly");
     }
+    
+    var roleId = '${SESSION_INFO.roleId}';
+    if(roleId == 256){
+        $("#userBranchId").val('${SESSION_INFO.userBranchId}');
+    }
 
     var optionUnit = { id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
                                name: "codeName",  // 콤보박스 text 에 지정할 필드명.
@@ -339,6 +344,7 @@
   <!-- search_table start -->
   <form action="#"  id="listSForm" name="listSForm" method="post">
 	<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
+	<input id="userBranchId" name="userBranchId" type="hidden" value="" />
     <table class="type1">
     <!-- table start -->
       <caption>table</caption>

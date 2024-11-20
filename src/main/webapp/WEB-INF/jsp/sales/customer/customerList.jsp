@@ -27,7 +27,12 @@
             $("#_custId").val(event.item.custId);
             $("#_custAddId").val(event.item.custAddId);
             $("#_custCntcId").val(event.item.custCntcId);
-            Common.popupDiv("/sales/customer/selectCustomerView.do", $("#popForm").serializeJSON());
+            
+            if('${PAGE_AUTH.funcUserDefine23}'  != 'Y') {
+                Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+            } else {
+            	Common.popupDiv("/sales/customer/selectCustomerView.do", $("#popForm").serializeJSON());
+            }
         });
         // 셀 클릭 이벤트 바인딩
 
@@ -177,7 +182,13 @@
                           $("#_custAddId").val(item.custAddId);
                           $("#_custCntcId").val(item.custCntcId);
                           $("#_custNric").val(item.nric);
-                          Common.popupDiv("/sales/customer/updateCustomerBasicInfoPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv1');
+                                                    
+                          if('${PAGE_AUTH.funcUserDefine22}'  != 'Y') {
+                        	  Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+                          }
+                          else {
+                        	  Common.popupDiv("/sales/customer/updateCustomerBasicInfoPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv1');
+                          } 
                       }
                }
            }];

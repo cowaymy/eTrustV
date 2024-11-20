@@ -24,22 +24,28 @@ function fn_report(){
 	
 	$("#reportFileName").val("");
 	$("#reportDownFileName").val("");
+	var whereSQL = "";
 	
 	var salesMonth = parseInt($("#mypSalesMonth").val().substring(0, 2));
 	var salesYear = parseInt($("#mypSalesMonth").val().substring(3, 7));
 	
 	$("#V_MONTH").val(salesMonth);
-	$("#V_YEAR").val(salesYear);
-	
+	$("#V_YEAR").val(salesYear);	
 	
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
-	$("#reportDownFileName").val("ASOSalesReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-	$("#reportFileName").val("/sales/ASONetSalesReport.rpt");
-	$("#viewType").val("PDF");
-	
+    }
+    whereSQL += " AND TO_DATE(TO_CHAR(som.PV_YEAR) || '/' || LPAD(TO_CHAR(som.PV_MONTH),2,'0') || '/' || '01','YYYY/MM/DD') BETWEEN ADD_MONTHS(TO_DATE(TO_CHAR(" + salesYear+ ") || '/' || LPAD(TO_CHAR(" + salesMonth+ "),2,'0') || '/' || '01','YYYY/MM/DD'), -1) AND TO_DATE(TO_CHAR(" + salesYear + ") || '/' || LPAD(TO_CHAR(" + salesMonth+ "),2,'0') || '/' || '01','YYYY/MM/DD') ";
+    if("${SESSION_INFO.roleId}" == 256) {
+        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
+    }
+    
+	$("#form #reportDownFileName").val("ASOSalesReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	$("#form #reportFileName").val("/sales/ASONetSalesReport.rpt");
+	$("#form #viewType").val("PDF");
+	$("#V_WHERESQL").val(whereSQL);
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -93,6 +99,7 @@ function fn_report(){
 
 <input type="hidden" id="V_MONTH" name="V_MONTH" value="" />
 <input type="hidden" id="V_YEAR" name="V_YEAR" value="" />
+<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
 
 </form>
 

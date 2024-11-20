@@ -65,6 +65,11 @@
             $("#memCode").attr("readonly", "readonly");
         }
 
+        var roleId = '${SESSION_INFO.roleId}';
+        if(roleId == 256){
+            $("#userBranchId").val('${SESSION_INFO.userBranchId}');
+        }
+        
         createAUIGrid();
 
         $("#btnDeactive").hide();
@@ -394,7 +399,7 @@ function fn_doPrint(){
 <input type="hidden" id="deActQuotNo" name="srvMemQuotNo" />
 <input type="hidden" id="deActOrdNo" name="ordNo" />
 <input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${PAGE_AUTH.pdpaMonth}'/>
-
+<input id="userBranchId" name="userBranchId" type="hidden" value="" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

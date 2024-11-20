@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.payment.billinggroup.service.BillingTaxInvoiceService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -133,8 +134,21 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/selectTaxInvoiceMembershipList.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceMembershipList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestBody Map<String, Object> params, ModelMap model) {		
-
+				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {		
+		
+		if(sessionVO.getUserTypeId() == 2) {
+		    params.put("userTypeId", sessionVO.getUserTypeId());
+		    if (sessionVO.getMemberLevel() == 4)
+		    	params.put("memCode", sessionVO.getUserMemCode());
+		    else if (sessionVO.getMemberLevel() == 3)
+		    	params.put("deptCode", sessionVO.getDeptCode());
+		    else if (sessionVO.getMemberLevel() == 2)
+		    	params.put("grpCode", sessionVO.getGroupCode());
+		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    params.put("userBranchId", sessionVO.getUserBranchId());
+		}
         // 조회.
         List<EgovMap> resultList = billingTaxInvoiceService.selectTaxInvoiceMembershipList(params);		
 		//List<EgovMap> resultList = new ArrayList<EgovMap>();

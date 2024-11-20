@@ -123,7 +123,7 @@ function fn_report(viewType){
         whereSQL += " AND (doc.DOC_SUB_DT BETWEEN TO_DATE('"+dpSubmitDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpSubmitDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
     }
 
-    if($('#_brnchId :selected').length > 0){
+   /*  if($('#_brnchId :selected').length > 0){
         whereSQL += " AND (";
 
         $('#_brnchId :selected').each(function(i, mul){
@@ -140,7 +140,31 @@ function fn_report(viewType){
         });
         whereSQL += ") ";
     }
-    runNo = 0;
+    runNo = 0; */
+    
+    if("${SESSION_INFO.roleId}" == 256) {
+        whereSQL += " AND BRNCH.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
+    }
+    else {
+         if($('#_brnchId :selected').length > 0){
+                whereSQL += " AND (";
+
+                $('#_brnchId :selected').each(function(i, mul){
+                    if(runNo > 0){
+                        whereSQL += " OR BRNCH.BRNCH_ID = '"+$(mul).val()+"' ";
+                        keyInBranch += ", "+$(mul).text();
+
+                    }else{
+                        whereSQL += " BRNCH.BRNCH_ID = '"+$(mul).val()+"' ";
+                        keyInBranch += $(mul).text();
+
+                    }
+                    runNo += 1;
+                });
+                whereSQL += ") ";
+            }
+            runNo = 0;
+    }
 
     if($("#cmbMemType :selected").index() > 0){
     	memType = $("#cmbMemType :selected").val();

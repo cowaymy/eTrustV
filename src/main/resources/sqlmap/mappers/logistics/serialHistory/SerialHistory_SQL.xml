@@ -26,6 +26,7 @@
 				    SELECT
 				                    T1.SALES_ORD_ID AS SALES_ORD_ID
 				                    , T2.SALES_ORD_NO AS SALES_ORD_NO
+				                    , T2.BRNCH_ID AS SALES_BRNCH_ID
 				                    , T1.ITM_CODE  AS ITM_CODE
 				                    , T5.STK_DESC  AS STK_DESC
 				                    , T1.SEQ   AS SEQ
@@ -72,6 +73,9 @@
 	    </if>
         <if test="ordNo != null and ordNo != ''">
           AND Z.SALES_ORD_NO = #{ordNo}
+        </if>
+        <if test="userBranchId != null and userBranchId != '' ">
+          AND Z.SALES_BRNCH_ID = #{userBranchId}
         </if>
 	    </where>
 		ORDER   BY Z.CRT_DT DESC, Z.SEQ DESC

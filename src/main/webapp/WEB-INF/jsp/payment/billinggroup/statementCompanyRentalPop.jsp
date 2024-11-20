@@ -42,6 +42,20 @@ $(document).ready(function(){
 
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {
+	var roleId = '${SESSION_INFO.roleId}';
+	var userTypeId = '${SESSION_INFO.userTypeId}';
+    if(roleId == 256){
+        $("#searchForm #userBranchId").val('${SESSION_INFO.userBranchId}');
+    }
+    
+    if(userTypeId == 2){
+        $("#searchForm #userTypeId").val(userTypeId);
+        $("#searchForm #memLevel").val('${SESSION_INFO.memberLevel}');
+        $("#searchForm #memId").val('${SESSION_INFO.memId}');
+        $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
+        $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+        $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+    }
 
     if(FormUtil.checkReqValue($("#billingNo")) && FormUtil.checkReqValue($("#orderNo")) && FormUtil.checkReqValue($("#custID"))){
     	//Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
@@ -108,6 +122,13 @@ function fn_clear(){
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
 			<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
+			<input id="userBranchId" name="userBranchId" type="hidden" value="" />
+            <input id="userTypeId" name="userTypeId" type="hidden" value="" />
+            <input id="memLevel" name="memLevel" type="hidden" value="" />
+            <input id="memId" name="memId" type="hidden" value="" />
+            <input id="deptCode" name="deptCode" type="hidden" value="" />
+            <input id="grpCode" name="grpCode" type="hidden" value="" />
+            <input id="orgCode" name="orgCode" type="hidden" value="" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

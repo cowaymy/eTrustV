@@ -137,11 +137,15 @@ function fn_report(viewType){
 
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY')+1 )";
     }
-
-	if($("#cmbKeyBranch :selected").index() > 0){
-		keyInBranch = $("#cmbKeyBranch :selected").text();
-		whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
-	}
+    if("${SESSION_INFO.roleId}" == 256) {
+        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
+    }
+    else {
+        if($("#cmbKeyBranch :selected").index() > 0) {
+            keyInBranch = $("#cmbKeyBranch :selected").text();
+            whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
+        }
+    }
 
 	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 		orderNoFrom = $("#txtOrderNoFr").val().trim();
@@ -181,7 +185,6 @@ function fn_report(viewType){
         submitBranch = $("#cmbSubmitBranch :selected").text();
         whereSQL += " AND sm.BRNCH_ID = '"+$("#cmbSubmitBranch :selected").val()+"'";
     }
-
     $("#reportDownFileName").val("OrderDDCRCList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
     if(viewType == "PDF"){

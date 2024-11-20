@@ -79,6 +79,10 @@
 
  function fn_search(){
 
+	 var roleId = '${SESSION_INFO.roleId}';
+     if(roleId == 256){
+         $("#dataForm #userBranchId").val('${SESSION_INFO.userBranchId}');
+     }
 //	 console.log("++++ ::" + FormUtil.isEmpty($("#serialNo").val()) + ", " + FormUtil.isEmpty($("#refDocNo").val()) + ", " + FormUtil.isEmpty($("#ordNo").val()) );
 	 if( !FormUtil.isEmpty($("#serialNo").val()) || !FormUtil.isEmpty($("#refDocNo").val()) || !FormUtil.isEmpty($("#ordNo").val()) ){
 
@@ -176,6 +180,7 @@
       </td>
      </tr>
 </tbody>
+<input id="userBranchId" name="userBranchId" type="hidden" value="" />
 </table><!-- table end -->
 </form>
 

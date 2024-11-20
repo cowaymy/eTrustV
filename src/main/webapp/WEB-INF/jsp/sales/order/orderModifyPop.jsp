@@ -351,7 +351,6 @@
         }
 
         if ("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
-            Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             return false;
         }
 
@@ -1138,7 +1137,7 @@
     var isEditable;
 
     Common
-        .ajax(
+        .ajaxSync(
             "GET",
             "/sales/order/checkNricEdit.do",
             {
@@ -1163,6 +1162,7 @@
                 return isEditable;
               }
             });
+    return isEditable;
   }
 
   function fn_changeTab(tabNm) {

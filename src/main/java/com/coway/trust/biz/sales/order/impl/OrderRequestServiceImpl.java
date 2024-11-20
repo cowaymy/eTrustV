@@ -2261,7 +2261,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   }
 
   private EgovMap selectOrderSimulatorViewByOrderNo2(Map<String, Object> params) {
-
+	
     EgovMap view = orderRequestMapper.selectOrderSimulatorViewByOrderNo(params);
 
     int CurrentBillMth = 0;
@@ -2325,7 +2325,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
           noPromo.put("promoItmStkId", view.get("itmStkId"));
 
           EgovMap promoId = orderRequestMapper.selectPromoD(noPromo);
-          tracePromoID = ((BigDecimal) promoId.get("promoId")).intValue();
+         // tracePromoID = ((BigDecimal) promoId.get("promoId")).intValue();     
+          tracePromoID = (promoId != null ? (BigDecimal) promoId.get("promoId") : tracePromoID).intValue();
           // tracePromoID = 577;
         }
 
@@ -2354,7 +2355,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             OutrightPrice = BigDecimal.valueOf(SumPrice);
         }
         else{
-        	 OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
+        	 //OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
+        	 OutrightPrice = opMap != null ? (BigDecimal) opMap.get("promoItmPrc") : OutrightPrice;
         }
 
 
@@ -2438,7 +2440,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         }
       }
     }
-
+    else {
+    	view = new EgovMap();
+    }
     view.put("currentbillmth", CurrentBillMth);
     view.put("lastbillmth", LastBillMth);
     view.put("installdate", installDate);
