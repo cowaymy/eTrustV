@@ -39,14 +39,14 @@
                                           </if>
             </if>
         WHERE  1=1
-        <!-- <choose>
+        <choose>
             <when test='isHc == "1"'>
                 AND B.BNDL_ID IS NOT NULL
             </when>
             <otherwise>
                 AND B.BNDL_ID IS NULL
             </otherwise>
-        </choose> -->
+        </choose>
 
         <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
             AND A.MBRSH_STUS_ID IN
@@ -743,14 +743,14 @@
         <if test='pdpaMonth != null and pdpaMonth != 0'>
             AND a.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
-        <!-- <choose>
+        <choose>
             <when test='isHc == "1"'>
                 AND A.BNDL_ID IS NOT NULL
             </when>
             <otherwise>
                 AND A.BNDL_ID IS NULL
             </otherwise>
-        </choose> -->
+        </choose>
     </select>
 
     <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">

@@ -174,14 +174,14 @@
             <if test="custID != null and custID != '' ">
             AND Extent3.CUST_ID = #{custID}
             </if>
-            <!-- <choose>
+            <choose>
             <when test='isHc == "1"'>
                 AND Extent3.BNDL_ID IS NOT NULL
             </when>
             <otherwise>
                 AND Extent3.BNDL_ID IS NULL
             </otherwise>
-        </choose> -->
+        </choose>
 
         ORDER BY Extent1.TAX_INVC_SVC_NO DESC
     </select>

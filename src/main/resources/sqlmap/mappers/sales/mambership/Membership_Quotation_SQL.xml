@@ -139,14 +139,14 @@
 
                 LEFT OUTER JOIN PAY0024D P ON  P.SRV_MEM_QOTAT_ID = A.QUOT_ID
 
-			<!-- <choose>
+			<choose>
 			    <when test='isHc == "1"'>
 			        JOIN SAL0001D HC ON HC.SALES_ORD_ID = A.ORD_ID AND HC.BNDL_ID IS NOT NULL
 			    </when>
 			    <otherwise>
 			        JOIN SAL0001D HC ON HC.SALES_ORD_ID = A.ORD_ID AND HC.BNDL_ID IS NULL
 			    </otherwise>
-			</choose> -->
+			</choose>
 
                 WHERE  1=1
 
@@ -530,9 +530,9 @@
 					            <if test="E_YN != null and E_YN != ''">
                                          AND A.EMP_CHK = #{E_YN}
                                 </if>
-					            <!-- <if test="CARE_SERV_TYPE != null and CARE_SERV_TYPE != ''">
+					            <if test="CARE_SERV_TYPE != null and CARE_SERV_TYPE != ''">
                                          AND A.CARE_SERV_TYPE = #{CARE_SERV_TYPE}
-                                </if> -->
+                                </if>
 
 
 
@@ -1511,13 +1511,13 @@
                  ]]>
       </select>
 
-<!-- <select id="getPromoDetails" parameterType="Map" resultType="egovMap">
+<select id="getPromoDetails" parameterType="Map" resultType="egovMap">
                      SELECT  A.CARE_SERV_TYPE,B.CODE_NAME CARE_SERV_TYPE_NM
                             FROM  SAL0017D A
                             LEFT JOIN SYS0013M B ON B.CODE = A.CARE_SERV_TYPE
                             JOIN SYS0012M C ON C.CODE_MASTER_ID = B.CODE_MASTER_ID AND C.CODE_MASTER_NAME = 'Homecare Membership Type'
                     WHERE 1=1
                             AND A.PROMO_ID =#{PROMO_ID}
-         </select> -->
+         </select>
 
 </mapper>
