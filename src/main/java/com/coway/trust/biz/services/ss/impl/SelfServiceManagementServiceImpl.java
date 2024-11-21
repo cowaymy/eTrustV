@@ -15,13 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.impl.HsManualMapper;
 import com.coway.trust.biz.services.ss.SelfServiceManagementService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -58,7 +61,8 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   private static final String SUCCESS_CODE = "000";
   private static final String ERROR_CODE = "999";
   private static final String WAREHOUSE_LOC_CODE = "2010"; // CJ KL_A
-  // private static final String WAREHOUSE_LOC_ID = "1532";
+  private static final String WAREHOUSE_FROM_LOC_ID = "1532";
+  private static final String WAREHOUSE_TO_LOC_ID = "107609";
   private static final String ERROR_MESSAGE_STOCK = "Insufficient stock available in warehouse (CJ KL_A). Please try again later when the stock is replenished.";
   private static final String ERROR_MESSAGE_SERIAL_USE = "This serial had been used.";
 
@@ -85,7 +89,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       if (BigDecimal.ZERO.equals(ssResultId)) {
         handleNewResultEntry(params, rtnMap, locInfoEntry);
       } else {
-        updateExistingItems(params);
+        updateExistingResultEntry(params);
       }
 
       rtnMap.put("logError", SUCCESS_CODE);
@@ -113,6 +117,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       if (!checkStockAvailability(itemMap, locInfoEntry)) {
         throw new Exception(ERROR_MESSAGE_STOCK + " " + itemMap.get("stkCode") + " - " + itemMap.get("stkDesc"));
       }
+
       // check serial used in SVC0145D
       EgovMap filter = selfServiceManagementMapper.checkFilterBarCodeNo(itemMap);
       if (filter != null && !filter.isEmpty()) {
@@ -120,9 +125,34 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       } else {
         // do nothing.
       }
+
+      // check serial in LOG0100M & LOG0062M
+      String serialNo = itemMap.get("serialNo") != null ? itemMap.get("serialNo").toString() : null;
+      if (serialNo != null && !serialNo.isEmpty()) {
+        Map<String, Object> setmap = new HashMap();
+        setmap.put("serialNo", serialNo);
+        setmap.put("delvryNo", "");
+        setmap.put("fromLocId", WAREHOUSE_FROM_LOC_ID);
+        setmap.put("trnscType", "US");
+        setmap.put("ioType", "O");
+        setmap.put("userId", params.get("crtUsrId"));
+
+        selfServiceManagementMapper.SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE(setmap);
+        String errCode = (String) setmap.get("pErrcode");
+        String errMsg = (String) setmap.get("pErrmsg");
+        LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_SAVE RROR CODE : " + errCode);
+        LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_SAVE ERROR MSG: " + errMsg);
+
+        // pErrcode : 000 = Success, others = Fail
+        if (!"000".equals(errCode)) {
+          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+        }
+      }
+
     }
 
     insertSelfServiceResult(params, selfServiceItemGrid);
+    insertSelfServiceSTO(params);
     // prepareAndSendDHLShipment(params, rtnMap);
   }
 
@@ -154,7 +184,32 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     }
   }
 
-  // Helper method to prepare and send DHL shipment
+  private void insertSelfServiceSTO(Map<String, Object> params) throws Exception {
+    Map<String, Object> setmap = new HashMap();
+    setmap.put("ssResultId", params.get("ssResultId"));
+    setmap.put("fromLocId", WAREHOUSE_FROM_LOC_ID);
+    setmap.put("toLocId", WAREHOUSE_TO_LOC_ID);
+    setmap.put("trnscType", "US");
+    setmap.put("ioType", "O");
+    setmap.put("userId", params.get("crtUsrId"));
+
+    boolean dataExists = selfServiceManagementMapper.checkIfDataExists(setmap);
+    if (!dataExists) {
+      throw new ApplicationException(AppConstants.FAIL, "No matching data found for the provided parameters.");
+    }
+
+    selfServiceManagementMapper.SP_LOGISTIC_SS_SAVE(setmap);
+    String errCode = (String) setmap.get("pErrcode");
+    String errMsg = (String) setmap.get("pErrmsg");
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_SAVE ERROR CODE : " + errCode);
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_SAVE ERROR MSG: " + errMsg);
+
+    // pErrcode : 000 = Success, others = Fail
+    if (!"000".equals(errCode)) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+    }
+  }
+
   private void prepareAndSendDHLShipment(Map<String, Object> params, Map<String, Object> rtnMap) throws Exception {
     EgovMap ssItmString = selfServiceManagementMapper.selectSelfServiceItmList(params);
     if (ssItmString == null)
@@ -204,16 +259,46 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   }
 
   // Helper method to update existing items
-  private void updateExistingItems(Map<String, Object> params) {
+  private void updateExistingResultEntry(Map<String, Object> params) throws Exception {
     List<Map<String, Object>> updateSelfServiceItemGrid = (List<Map<String, Object>>) params.get("edit");
+
+    revertSelfServiceSTO(params);
+
     for (Map<String, Object> itemMap : updateSelfServiceItemGrid) {
       itemMap.put("updUsrId", params.get("crtUsrId"));
       selfServiceManagementMapper.updateSelfServiceResultDetail(itemMap);
     }
+
+    insertSelfServiceSTO(params);
+
+  }
+
+  private void revertSelfServiceSTO(Map<String, Object> params) throws Exception {
+    Map<String, Object> setmap = new HashMap();
+    setmap.put("ssResultId", params.get("ssResultId"));
+    setmap.put("fromLocId", WAREHOUSE_FROM_LOC_ID);
+    setmap.put("userId", params.get("crtUsrId"));
+
+    boolean dataExists = selfServiceManagementMapper.checkIfDataExists(setmap);
+    if (!dataExists) {
+      throw new ApplicationException(AppConstants.FAIL, "No matching data found for the provided parameters.");
+    }
+
+    selfServiceManagementMapper.SP_LOGISTIC_SS_EDIT(setmap);
+    String errCode = (String) setmap.get("pErrcode");
+    String errMsg = (String) setmap.get("pErrmsg");
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_EDIT ERROR CODE : " + errCode);
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_SS_EDIT ERROR MSG: " + errMsg);
+
+    // pErrcode : 000 = Success, others = Fail
+    if (!"000".equals(errCode)) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+    }
   }
 
   // Helper method to handle exceptions
-  private void handleException(Map<String, Object> params, Map<String, Object> rtnMap, Exception e) {
+  private void handleException(Map<String, Object> params, Map<String, Object> rtnMap, Exception e) throws Exception {
+    revertSelfServiceSTO(params);
     selfServiceManagementMapper.rollbackSelfServiceResultMaster(params);
     selfServiceManagementMapper.rollbackSelfServiceResultDetail(params);
     rtnMap.put("logError", ERROR_CODE);
@@ -245,6 +330,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     return selfServiceManagementMapper.selectSelfServiceResultInfo(params);
   }
 
+  @Transactional
   public Map<String, Object> updateSelfServiceResultStatus(Map<String, Object> params) throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
     try {
@@ -254,7 +340,6 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
 
       selfServiceManagementMapper.updateSsMasterStatus(params);
 
-      // LOGISTIC CALL HERE
       rtnMap.put("logError", SUCCESS_CODE);
       rtnMap.put("message", "");
 

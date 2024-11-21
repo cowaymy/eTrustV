@@ -65,4 +65,12 @@ public interface SelfServiceManagementMapper {
 
   List<EgovMap> ssFailReasonList(Map<String, Object> params);
 
+  Map<String, Object> SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE(Map<String, Object> param);
+
+  Map<String, Object> SP_LOGISTIC_SS_SAVE(Map<String, Object> param);
+
+  Map<String, Object> SP_LOGISTIC_SS_EDIT(Map<String, Object> param);
+
+  boolean checkIfDataExists(Map<String, Object> setmap);
+
 }

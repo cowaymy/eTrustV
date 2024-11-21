@@ -488,4 +488,40 @@
    ORDER BY Extent1.CODE ASC
   </select>
 
+  <select id="SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE( #{serialNo}, #{delvyNo}, #{fromLocId}, #{trnscType}, #{ioType} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="SP_LOGISTIC_SS_SAVE" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_SS_SAVE( #{ssResultId}, #{fromLocId}, #{toLocId}, #{trnscType}, #{ioType} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="SP_LOGISTIC_SS_EDIT" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_SS_EDIT( #{ssResultId}, #{fromLocId} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="checkIfDataExists" resultType="boolean" parameterType="map">
+    SELECT CASE
+             WHEN EXISTS (
+                 SELECT 1
+                 FROM SVC0144M
+                 WHERE ss_result_id = #{ssResultId}
+             ) THEN 1
+             ELSE 0
+           END AS isValid
+    FROM DUAL
+</select>
+
 </mapper>
