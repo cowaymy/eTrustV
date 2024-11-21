@@ -48,4 +48,30 @@ public interface CpeService {
     List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params);
 
 	boolean checkCpeRequestStatusActiveExist(Map<String, Object> params);
+
+	boolean checkEcpeRequestStatusActiveExist(Map<String, Object> params);
+
+	EgovMap checkOrder(Map<String, Object> params);
+
+	List<EgovMap> selectReason() throws Exception;
+
+	List<EgovMap> getEcpeMainDeptList();
+
+	int selectNextEcpeId();
+
+	void insertEcpe(Map<String, Object> params);
+
+	List<EgovMap> selectEcpeRequestList(Map<String, Object> params);
+
+	List<EgovMap> getEcpeHistoryList(Map<String, Object> params);
+
+	EgovMap selectEcpeCurrentRequestInfo(Map<String, Object> params);
+
+	void ecpeTransfer(Map<String, Object> params);
+
+	List<EgovMap> selectDscBranch(Map<String, Object> params);
+
+	void ecpeApprove(Map<String, Object> params);
+
+	void ecpeReject(Map<String, Object> params);
 }

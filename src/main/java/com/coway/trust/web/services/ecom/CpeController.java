@@ -29,11 +29,14 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.organization.organization.MemberListService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.ecom.CpeService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
@@ -67,6 +70,12 @@ public class CpeController {
 
 	@Autowired
 	private FileApplication fileApplication;
+
+	@Resource(name = "memberListService")
+	private MemberListService memberListService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 	@RequestMapping(value = "/cpe.do")
 	public String viewCpe(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -408,5 +417,290 @@ public class CpeController {
 	  @RequestMapping(value = "/cpeGenerateEnquiryRawPop.do")
 	  public String cpeGenerateEnquiryRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		return "services/ecom/cpeGenerateEnquiryRawPop";
+	  }
+
+
+	@RequestMapping(value = "/eCpe.do")
+	public String vieweCpe(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		model.addAttribute("params", params);
+
+		List<EgovMap> cpeStat = cpeService.getCpeStat(params);
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-90), SalesConstants.DEFAULT_DATE_FORMAT3,
+						SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+
+		model.addAttribute("cpeStat", cpeStat);
+
+		params.put("userId", sessionVO.getUserId());
+		EgovMap userRole = memberListService.getUserRole(params);
+		// logger.debug("userRole " + userRole);+
+		model.addAttribute("userRole", userRole.get("roleid"));
+		model.put("userId", params.get("userId"));
+
+		if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 3
+				|| sessionVO.getUserTypeId() == 7 || sessionVO.getUserTypeId() == 5758
+				|| sessionVO.getUserTypeId() == 6672) {
+
+			EgovMap result = salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+
+		}
+
+		return "services/ecom/eCpeList";
+	}
+
+	@RequestMapping(value = "/eCpeRequest.do")
+	public String eCpeRequest(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("In eCPE Request");
+		logger.debug("Params: " + params.toString());
+
+		return "services/ecom/eCpeRequestNewSearchPop";
+
+	}
+
+	@RequestMapping(value = "/checkEcpeRequestStatus", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkEcpeRequestStatus(@RequestParam Map<String, Object> params) throws Exception{
+
+		EgovMap resultMap = new EgovMap();
+		//서비스
+		boolean result = cpeService.checkEcpeRequestStatusActiveExist(params);
+
+		resultMap.put("status", new Boolean(result).toString());
+
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/checkResultStatus.do")
+	public ResponseEntity<EgovMap> checkResultStatus(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		EgovMap resultMap = cpeService.checkOrder(params);
+		model.addAttribute("orderInfo", resultMap);
+
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/eCpeNewSearchResultPop.do", method = RequestMethod.POST)
+	public String eCpeNewSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+        List<EgovMap> mainDeptList = cpeService.getEcpeMainDeptList();
+
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("mainDeptList", mainDeptList);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		model.addAttribute("orderDscCodeSys", retrieveDscAsSubDept(orderDetail));
+
+		return "services/ecom/eCpeNewSearchResultPop";
+	}
+
+	@RequestMapping(value = "/selectReasonJsonList")
+	public ResponseEntity<List<EgovMap>> selectReasonJsonList() throws Exception{
+
+		logger.info("################## Call RequestType List (Combo Box) ##################");
+
+		List<EgovMap> reason = null;
+
+		reason = cpeService.selectReason();
+
+		return ResponseEntity.ok(reason);
+	}
+
+	@RequestMapping(value = "/insertEcpeReqst.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertEcpeReqst(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("insertCpe =====================================>>  " + params);
+
+		String atchSubPath = generateAttchmtSubPath();
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, atchSubPath, AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("requestorBranch", sessionVO.getUserBranchId());
+
+	    logger.debug("== REQUEST FILE LISTING {} ", list);
+	    logger.debug("== REQUEST FILE SIZE " + list.size());
+
+	    if (list.size() > 0) {
+	      params.put("fileName", list.get(0).getServerSubPath() + list.get(0).getFileName());
+	      int fileGroupKey = fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+	      params.put("atchFileGrpId", fileGroupKey);
+	    }
+
+        int cpeReqId = cpeService.selectNextEcpeId();
+		params.put("cpeReqId", cpeReqId);
+		cpeService.insertEcpe(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/selectEcpeRequestList", method = RequestMethod.GET )
+	public ResponseEntity<List<EgovMap>> selectEcpeRequestList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		String[] arrReqStageId   = request.getParameterValues("reqStageId");//Order stage when request is made
+		String[] arrRequestorBranch = request.getParameterValues("requestorBranch");
+		String[] arrStatusList = request.getParameterValues("statusList"); //Request Status
+		String[] arrDscBrnchId = request.getParameterValues("dsc_branch"); //DSC Branch
+		String[] arrReqType = request.getParameterValues("reqType"); //Request Type
+
+		if(arrReqStageId      != null && !CommonUtils.containsEmpty(arrReqStageId))      params.put("arrReqStageId", arrReqStageId);
+		if(arrRequestorBranch    != null && !CommonUtils.containsEmpty(arrRequestorBranch))    params.put("arrRequestorBranch", arrRequestorBranch);
+		if(arrStatusList != null && !CommonUtils.containsEmpty(arrStatusList)) params.put("arrStatusList", arrStatusList);
+		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
+		if(arrReqType   != null && !CommonUtils.containsEmpty(arrReqType))   params.put("arrReqType", arrReqType);
+
+		params.put("userBranchId", sessionVO.getUserBranchId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userId", sessionVO.getUserId());
+
+		logger.debug("selectEcpeRequestList==========================>> " + params);
+		List<EgovMap> cpeRequestList = cpeService.selectEcpeRequestList(params);
+		return ResponseEntity.ok(cpeRequestList);
+	}
+
+	@RequestMapping(value = "/ecpeGenerateRawPop.do")
+	public String ecpeGenerateRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		List<EgovMap> cpeStat = cpeService.getCpeStat(params);
+		model.addAttribute("cpeStat", cpeStat);
+		return "services/ecom/ecpeGenerateRawPop";
+	}
+
+	@RequestMapping(value = "/ecpeDetailPop.do")
+	public String ecpeDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		logger.debug("params =====================================>>  " + params);
+
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+
+		EgovMap requestInfo = cpeService.selectEcpeCurrentRequestInfo(params);
+		model.addAttribute("requestInfo", requestInfo);
+
+		return "services/ecom/ecpeDetailPop";
+	}
+
+	@RequestMapping(value = "/selectEcpeHistoryList", method = RequestMethod.GET )
+	public ResponseEntity<List<EgovMap>> selectEcpeHistoryList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		logger.debug("selectEcpeHistoryList==========================>> " + params);
+		List<EgovMap> ecpeHistoryList = cpeService.getEcpeHistoryList(params);
+		return ResponseEntity.ok(ecpeHistoryList);
+	}
+
+	@RequestMapping(value = "/ecpeRqstUpdateApprovePop.do")
+	public String ecpeRequestUpdateApprove(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		logger.debug("params =====================================>>  " + params);
+
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		model.put("orderDetail", orderDetail);
+
+		EgovMap requestInfo = cpeService.selectEcpeCurrentRequestInfo(params);
+		model.addAttribute("requestInfo", requestInfo);
+
+		return "services/ecom/ecpeRqstUpdateApprovePop";
+	}
+
+	@RequestMapping(value = "/ecpeTransfer.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ecpeTransfer(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("ecpeTransfer====================================>>  " + params);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userFullname", sessionVO.getUserFullname());
+
+
+		cpeService.ecpeTransfer(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/ecpeDscBranchSearchPop.do")
+	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("params =====================================>>  " + params);
+
+		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("call", params.get("call"));
+		return "services/ecom/ecpeDscBranchSearchPop";
+	}
+
+	@RequestMapping(value = "/selectDscBranch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDscBranch(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("params =====================================>>  " + params);
+
+		List<EgovMap> list = cpeService.selectDscBranch(params);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/ecpeApprove.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ecpeApprove(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("ecpeApprove====================================>>  " + params);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userFullname", sessionVO.getUserFullname());
+
+
+		cpeService.ecpeApprove(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/ecpeReject.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ecpeReject(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("ecpeReject====================================>>  " + params);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userFullname", sessionVO.getUserFullname());
+
+
+		cpeService.ecpeReject(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 }

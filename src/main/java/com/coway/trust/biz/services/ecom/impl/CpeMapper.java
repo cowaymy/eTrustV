@@ -60,4 +60,44 @@ public interface CpeMapper {
 	public EgovMap selectUserMemberLevel(Map<String, Object> params);
 
 	public int checkExistingCpeRequestStatusActive(Map<String, Object> params);
+
+	public int checkExistingEcpeRequestStatusActive(Map<String, Object> params);
+
+	public EgovMap selectOrderInfo(Map<String, Object> params);
+
+	public List<EgovMap> selectReason();
+
+	public List<EgovMap> selectEcpeMainDept();
+
+	public void insertEcpeReqst(Map<String, Object> params);
+
+	public int selectNextEcpeId();
+
+	public List<EgovMap> selectEcpeRequestList(Map<String, Object> params);
+
+	public EgovMap selectEcpeCurrentRequestInfo(Map<String, Object> params);
+
+	public List<EgovMap> getEcpeHistoryList(Map<String, Object> params);
+
+	public void ecpeTransfer(Map<String, Object> params);
+
+	List<EgovMap> selectDscBranch(Map<String, Object> params);
+
+	public void ecpeApprove(Map<String, Object> params);
+
+	public void ecpeReject(Map<String, Object> params);
+
+	int insertAddNewAddress(Map<String, Object> param);
+
+	int insertCustContact(Map<String, Object> param);
+
+	public void updateStatusAddId(Map<String, Object> params);
+
+	public void updateStatusCntcId(Map<String, Object> params);
+
+	public void updateEcpeSal0001d(Map<String, Object> params);
+
+	public void updateEcpeSal0045d(Map<String, Object> params);
+
+	void updateCustBillMaster(Map<String, Object> params);
 }

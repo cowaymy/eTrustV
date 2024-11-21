@@ -241,10 +241,118 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 		return cpeMapper.getOrderDscCode(orderDscCode);
 	}
 
-	  @Override
-	  public List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params) {
-	    return cpeMapper.selectCpeHistoryDetailPop(params);
-	  }
+	@Override
+	public List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params) {
+		return cpeMapper.selectCpeHistoryDetailPop(params);
+	}
 
+	@Override
+	public boolean checkEcpeRequestStatusActiveExist(Map<String, Object> params) {
+		int result = cpeMapper.checkExistingEcpeRequestStatusActive(params);
 
+		if(result > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	@Override
+	public EgovMap checkOrder(Map<String, Object> params) {
+		return cpeMapper.selectOrderInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectReason() throws Exception {
+		return cpeMapper.selectReason();
+	}
+
+	@Override
+	public List<EgovMap> getEcpeMainDeptList() {
+		return cpeMapper.selectEcpeMainDept();
+	}
+
+	@Override
+	public void insertEcpe(Map<String, Object> params) {
+
+		int ordStatusId = Integer.parseInt((String) params.get("ordStusId"));
+
+		logger.debug("insertCpeReqst (master table) ===================================>>  " + params);
+		cpeMapper.insertEcpeReqst(params);
+	}
+
+	@Override
+	public int selectNextEcpeId() {
+		return cpeMapper.selectNextEcpeId();
+	}
+
+	@Override
+	public List<EgovMap> selectEcpeRequestList(Map<String, Object> params) {
+		String adminFlag = CommonUtils.nvl(params.get("adminFlag"));
+		params.put("adminFlag", adminFlag.toString());
+		//EgovMap userBranch = cpeMapper.selectUserBranch(params);
+		EgovMap userMemberLevel = cpeMapper.selectUserMemberLevel(params);
+
+//		params.put("userBranchCode", userBranch.get("code").toString());
+
+		if(userMemberLevel != null){
+			params.put("memLvl", userMemberLevel.get("memLvl").toString());
+			params.put("deptCode", userMemberLevel.get("deptCode").toString());
+			params.put("grpCode", userMemberLevel.get("grpCode").toString());
+			params.put("orgCode", userMemberLevel.get("orgCode").toString());
+		}
+
+		return cpeMapper.selectEcpeRequestList(params);
+	}
+
+	@Override
+	public EgovMap selectEcpeCurrentRequestInfo(Map<String, Object> params) {
+		return cpeMapper.selectEcpeCurrentRequestInfo(params);
+	}
+
+	public List<EgovMap> getEcpeHistoryList(Map<String, Object> params) {
+		return cpeMapper.getEcpeHistoryList(params);
+	}
+
+	@Override
+	public void ecpeTransfer(Map<String, Object> params) {
+		cpeMapper.ecpeTransfer(params);
+
+	}
+
+	@Override
+	public List<EgovMap> selectDscBranch(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return cpeMapper.selectDscBranch(params);
+	}
+
+	@Override
+	public void ecpeApprove(Map<String, Object> params) {
+
+		this.cpeMapper.insertAddNewAddress(params); //INSERT NEW INSTALLATION ADDRESS SAL0023D
+
+		this.cpeMapper.insertCustContact(params); //INSERT NEW INSTALLATION ADDRESS SAL0027D
+
+		cpeMapper.updateStatusAddId(params);
+
+		cpeMapper.updateStatusCntcId(params);
+
+		cpeMapper.updateEcpeSal0045d(params);
+
+		cpeMapper.updateEcpeSal0001d(params);
+
+		if(params.get("isMailing").toString().equals("1")){
+			cpeMapper.updateCustBillMaster(params);
+		}
+
+		cpeMapper.ecpeApprove(params);
+
+	}
+
+	@Override
+	public void ecpeReject(Map<String, Object> params) {
+		cpeMapper.ecpeReject(params);
+
+	}
 }
