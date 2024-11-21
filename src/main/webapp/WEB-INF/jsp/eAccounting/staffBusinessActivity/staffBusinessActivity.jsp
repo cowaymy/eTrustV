@@ -2538,7 +2538,7 @@ var myGridPros = {
 							<th scope="row">Bank Account</th>
 							<td><input type="text" title="Bank Account No"
 								placeholder="Bank Account No" class="w100p" id="bankAccNo"
-								name="bankAccNo" maxlength="10"
+								name="bankAccNo" maxlength="16"
 								onKeypress="return event.charCode >= 48 && event.charCode <= 57" />
 								<!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
 							</td>
