@@ -280,24 +280,27 @@
      ]]>
     </select>
 
-    <select id="getErrorCodeList" parameterType="Map" resultType="egovMap">
-         SELECT
-                  ERR_TYPE_CODE CODE_ID
-                , ERR_TYPE_CODE || '_' || ERR_TYPE_NAME CODE_NAME
-         FROM SYS1021V
-         WHERE STUS_CODE_ID = 1
-         <if test="prodCat != null and prodCat != '' ">
-         AND UPPER(PROD_CAT) = UPPER(#{prodCat})
-        </if>
-        <if test="errorType != null and errorType != '' ">
-	          <if test="errorType == 'HA'">
-	          AND PROD_CAT NOT IN ('MAT','FRM')
-	          </if>
-	          <if test="errorType == 'HC'">
-              AND PROD_CAT IN ('MAT','FRM')
-              </if>
-         </if>
-    </select>
+  <select id="getErrorCodeList" parameterType="Map" resultType="egovMap">
+    SELECT ERR_TYPE_CODE CODE_ID
+             , ERR_TYPE_CODE || '_' || ERR_TYPE_NAME CODE_NAME
+    FROM SYS1021V
+    WHERE STUS_CODE_ID = 1
+        AND ERR_TYPE_CODE NOT IN ('9001200','1002500','1002700','1002600')
+
+    <if test="prodCat != null and prodCat != '' ">
+       AND UPPER(PROD_CAT) = UPPER(#{prodCat})
+    </if>
+
+    <if test="errorType != null and errorType != '' ">
+      <if test="errorType == 'HA'">
+        AND PROD_CAT NOT IN ('MAT','FRM')
+      </if>
+
+      <if test="errorType == 'HC'">
+        AND PROD_CAT IN ('MAT','FRM')
+      </if>
+    </if>
+  </select>
 
 	<insert id="submitPreAsSubmission" parameterType="java.util.Map">
 	<![CDATA[
