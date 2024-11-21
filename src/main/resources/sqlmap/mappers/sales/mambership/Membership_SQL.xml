@@ -24,24 +24,21 @@
            FROM SAL1004V A
            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.ORD_ID
            <if test='userTypeId =="1" or userTypeId == "2" '>
-                   JOIN ORG1001V B ON A.SRV_MEM_SALES_MEM_ID = B.MEM_ID
-                                        <if test="memCode != null and memCode != '' ">
-                                            AND B.MEM_CODE = #{memCode}
-                                        </if>
-                                          <if test="orgCode != null and orgCode != '' ">
-                                          AND B.ORG_CODE = #{orgCode}
-                                          </if>
-                                          <if test="grpCode != null and grpCode != '' ">
-                                          AND B.GRP_CODE = #{grpCode}
-                                          </if>
-                                          <if test="deptCode != null and deptCode != '' ">
-                                          AND B.DEPT_CODE = #{deptCode}
-                                          </if>
+                   JOIN ORG1001V C ON A.SRV_MEM_SALES_MEM_ID = C.MEM_ID
+                   <if test="memCode != null and memCode != '' ">
+                   AND C.MEM_CODE = #{memCode}
+                   </if>
+                   <if test="orgCode != null and orgCode != '' ">
+                   AND C.ORG_CODE = #{orgCode}
+                   </if>
+                   <if test="grpCode != null and grpCode != '' ">
+                   AND C.GRP_CODE = #{grpCode}
+                   </if>
+                   <if test="deptCode != null and deptCode != '' ">
+                   AND C.DEPT_CODE = #{deptCode}
+                   </if>
             </if>
-            <if test="userBranchId != null and userBranchId != '' ">
-                JOIN SAL0001D C ON A.ORD_ID = C.SALES_ORD_ID
-                AND C.BRNCH_ID = #{userBranchId}
-            </if>
+           
         WHERE  1=1
         <choose>
             <when test='isHc == "1"'>
@@ -51,7 +48,9 @@
                 AND B.BNDL_ID IS NULL
             </otherwise>
         </choose>
-
+        <if test="userBranchId != null and userBranchId != '' ">
+            AND B.BRNCH_ID = #{userBranchId}
+        </if>
         <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
             AND A.MBRSH_STUS_ID IN
             <foreach item="item" collection="MBRSH_STUS_ID" index="index" open="(" separator="," close=")">
