@@ -74,4 +74,8 @@ public interface CpeService {
 	void ecpeApprove(Map<String, Object> params);
 
 	void ecpeReject(Map<String, Object> params);
+
+	EgovMap getAreaId(Map<String, Object> params) throws Exception;
+
+	EgovMap getDscbyDscCode(Map<String, Object> params) throws Exception;
 }

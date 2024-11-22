@@ -95,7 +95,12 @@ window.addEventListener('resize', function(event){
         //Populate Request Date
         fn_setKeyInDate();
 
-        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   '_inputSubDeptSelect', 'S', ''); //Branch Code
+        let dscCode = "${orderDetail.installationInfo.dscCode2}";
+        let jsonObj3 = { dscCode : dscCode};
+        Common.ajax("GET", "/services/ecom/getDscbyDscCode.do", jsonObj3, function(result) {
+
+             doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', result.brnchId,   '_inputSubDeptSelect', 'S', ''); //Branch Code
+        });
 
         fn_initAddress();
 
@@ -201,7 +206,7 @@ window.addEventListener('resize', function(event){
         $.each(obj, function(key, value) {
           formData.append(key, value);
         });
-console.log("save");
+
         Common.ajaxFile("/services/ecom/insertEcpeReqst.do", formData, function(result) {
             console.log(result);
             $("#_cpeReqId").val(result.data.cpeReqId);
@@ -273,7 +278,7 @@ console.log("save");
              Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
              return ;
         }
-console.log("areaid : " + $("#areaId").val());
+
         if($("#areaId").val().trim() == ''){
             Common.alert('Area not found. <br/> Please check with System Administrator.');
             return ;
@@ -489,8 +494,13 @@ console.log("areaid : " + $("#areaId").val());
                                   postCodeValue : postCodeValue,
                                   areaValue : areaValue
                                 };
-            Common.ajax("GET", "/enquiry/getAreaId.do", jsonObj, function(result) {
+            Common.ajax("GET", "/services/ecom/getAreaId.do", jsonObj, function(result) {
                  $("#areaId").val(result.areaId);
+
+                 $("#_inputSubDeptSelect").val(result.brnchId);
+                 console.log("ni ma de");
+                 doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', $("#_inputSubDeptSelect").val(),   '_inputSubDeptSelect', 'S', ''); //Branch Code
+
             });
         }
     }
@@ -561,76 +571,14 @@ console.log("areaid : " + $("#areaId").val());
             var postCodeJson = {state : mstate , city : mcity}; //Condition
             CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
 
-            var areaJson = {groupCode : mpostcode};
             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea,fn_getAreaId);
 
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
             Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
-    }
-
-    function stylingCnt(){
-        document.querySelector(".modal").style.flexDirection = "row";
-        document.querySelector(".modal-dialog").style.width = "90%";
-        document.querySelector(".modalCnt").style.display = "flex";
-        document.querySelector(".modalCnt").style.textAlign = "center";
-        document.querySelector(".modalCnt").style.border = "1px solid #ccc";
-        document.querySelector(".modalCnt").style.borderRadius = "25px";
-        document.querySelector(".modalCnt").style.wordSpacing = "5px";
-    }
-
-    function rebindModal(){
-        $('#myModalConfirm').on('shown.bs.modal', function (e) {
-            setTimeout(() => {
-                e.stopImmediatePropagation()
-                let alertButton = document.querySelector("#myModalConfirm");
-                alertButton.style.display = "flex";
-                alertButton.style.alignItems = "center";
-                alertButton.style.width = "100%";
-                alertButton.style.justifyContent = "center";
-            }, 1)
-        });
-
-        $('#myModalTac').on('shown.bs.modal', function (e) {
-            setTimeout(() => {
-                e.stopImmediatePropagation()
-                let alertButton = document.querySelector("#myModalTac");
-                alertButton.style.display = "flex";
-                stylingCnt();
-            }, 1)
-        });
-
-        $('#myModalAlert2').on('shown.bs.modal', function (e) {
-            setTimeout(() => {
-                e.stopImmediatePropagation()
-                let alertButton = document.querySelector("#myModalAlert2");
-                alertButton.style.display = "flex";
-                stylingCnt();
-            }, 1)
-        });
-
-        $('#myModalComplete').on('shown.bs.modal', function (e) {
-            setTimeout(() => {
-                e.stopImmediatePropagation()
-                let alertButton = document.querySelector("#myModalComplete");
-                alertButton.style.display = "flex";
-                stylingCnt();
-            }, 1)
-        });
-
-        $('#myModalAlert').on('shown.bs.modal', function (e) {
-            setTimeout(() => {
-                e.stopImmediatePropagation()
-                let alertButton = document.querySelector("#myModalAlert");
-                alertButton.style.display = "flex";
-                alertButton.style.alignItems = "center";
-                alertButton.style.width = "100%";
-                alertButton.style.justifyContent = "center";
-            }, 1)
-        });
     }
 
 </script>

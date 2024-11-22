@@ -939,6 +939,7 @@
          <if test="dscBranchText != null and dscBranchText != ''">
          AND UPPER(CODE || ' - ' || NAME ) LIKE '%' || UPPER(#{dscBranchText}) || '%'
          </if>
+         AND TYPE_ID = '43' ORDER BY CODE ASC
     </select>
 
     <update id="ecpeApprove" parameterType="Map">
@@ -1128,4 +1129,22 @@
            </if>
          WHERE CUST_BILL_ID = (SELECT CUST_BILL_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId})
     </update>
+
+    <select id="getAreaId" parameterType="Map" resultType="egovMap">
+            SELECT
+                T.AREA_ID,
+                E.BRNCH_ID
+            FROM SYS0064M T
+            LEFT JOIN SYS0005M E ON E.CODE = T.CT_BRNCH_CODE AND E.TYPE_ID = 43
+            WHERE T.STATE = #{statValue}
+            AND T.CITY = #{cityValue}
+            AND T.POSTCODE = #{postCodeValue}
+            AND T.AREA = #{areaValue}
+    </select>
+
+        <select id="getDscbyDscCode" parameterType="Map" resultType="egovMap">
+            SELECT
+               BRNCH_ID FROM SYS0005M
+               WHERE CODE = #{dscCode}
+    </select>
 </mapper>

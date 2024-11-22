@@ -100,4 +100,8 @@ public interface CpeMapper {
 	public void updateEcpeSal0045d(Map<String, Object> params);
 
 	void updateCustBillMaster(Map<String, Object> params);
+
+	EgovMap getAreaId(Map<String, Object> params) throws Exception;
+
+	EgovMap getDscbyDscCode(Map<String, Object> params) throws Exception;
 }

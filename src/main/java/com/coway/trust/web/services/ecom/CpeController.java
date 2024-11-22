@@ -609,7 +609,7 @@ public class CpeController {
 	@RequestMapping(value = "/ecpeRqstUpdateApprovePop.do")
 	public String ecpeRequestUpdateApprove(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
-		logger.debug("params =====================================>>  " + params);
+		logger.debug("ecpeRqstUpdateApprovePop =====================================>>  " + params);
 
 		int prgrsId = 0;
 		EgovMap orderDetail = null;
@@ -647,7 +647,7 @@ public class CpeController {
 	@RequestMapping(value = "/ecpeDscBranchSearchPop.do")
 	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		logger.debug("params =====================================>>  " + params);
+		logger.debug("ecpeDscBranchSearchPop =====================================>>  " + params);
 
 		model.addAttribute("pop", params.get("pop"));
 		model.addAttribute("call", params.get("call"));
@@ -657,7 +657,7 @@ public class CpeController {
 	@RequestMapping(value = "/selectDscBranch.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDscBranch(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		logger.debug("params =====================================>>  " + params);
+		logger.debug("selectDscBranch =====================================>>  " + params);
 
 		List<EgovMap> list = cpeService.selectDscBranch(params);
 
@@ -703,4 +703,20 @@ public class CpeController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	 @RequestMapping(value = "/getAreaId.do")
+	 public ResponseEntity<EgovMap> getAreaId(@RequestParam Map<String, Object> params) throws Exception {
+
+	     	EgovMap areaMap = cpeService.getAreaId(params);
+
+	     	return ResponseEntity.ok(areaMap);
+	 }
+
+	 @RequestMapping(value = "/getDscbyDscCode.do")
+	 public ResponseEntity<EgovMap> getDscbyDscCode(@RequestParam Map<String, Object> params) throws Exception {
+
+	     	EgovMap areaMap = cpeService.getDscbyDscCode(params);
+
+	     	return ResponseEntity.ok(areaMap);
+	 }
 }

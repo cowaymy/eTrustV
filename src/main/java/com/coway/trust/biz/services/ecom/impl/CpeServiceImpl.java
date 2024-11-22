@@ -355,4 +355,14 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 		cpeMapper.ecpeReject(params);
 
 	}
+
+	 @Override
+	 public EgovMap getAreaId(Map<String, Object> params) throws Exception {
+	    return cpeMapper.getAreaId(params);
+	 }
+
+	 @Override
+	 public EgovMap getDscbyDscCode(Map<String, Object> params) throws Exception {
+	    return cpeMapper.getDscbyDscCode(params);
+	 }
 }
