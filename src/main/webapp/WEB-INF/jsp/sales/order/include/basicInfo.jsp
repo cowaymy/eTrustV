@@ -197,6 +197,8 @@
     <td colspan="1">${orderDetail.basicInfo.mainPwpOrdNo}</td>
     <th scope="row">Ele. Acc. No.</th>
     <td colspan="1">${orderDetail.basicInfo.tnbAccNo}</td>
+    <th scope="row">Rebate Binding No</th>
+    <td colspan="1">${orderDetail.basicInfo.mainRebateOrdNo}</td>
 </tr>
 </tbody>
 </table><!-- table end -->

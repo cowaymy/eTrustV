@@ -3799,6 +3799,13 @@ WHERE
          SELECT SAL0424D_COMBO_ID_SEQ.NEXTVAL FROM DUAL
   </select>
 
+  <select id="getExistingActOrdCount" parameterType="Map" resultType="int">
+         SELECT COUNT(SALES_ORD_ID)
+		 FROM SAL0424D
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+		 AND STUS_ID IN (1, 30)
+  </select>
+
   <insert id="insertRebate" parameterType="Map">
     INSERT INTO SAL0424D ( COMBO_ID
                                         , SEQ

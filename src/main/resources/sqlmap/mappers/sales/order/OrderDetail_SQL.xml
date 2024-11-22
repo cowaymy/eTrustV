@@ -140,6 +140,8 @@
                            <!-- Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024-->
                            , CASE WHEN (SELECT COUNT(*) FROM SAL0349D WHERE SUB_ORD_ID =  V2.SALES_ORD_ID) != 0 THEN 'TRUE'
                                      ELSE 'FALSE' END AS IS_ACI_COMBO
+                           , V17.SALES_ORD_NO MAIN_REBATE_ORD_NO
+                           , v16.SALES_ORD_ID MAIN_REBATE_ORD_ID
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -165,6 +167,9 @@
                     FROM PAY0367D
 					WHERE STUS_ID = 1
                     GROUP BY ORD_ID ) V14 ON V2.SALES_ORD_ID = V14.ORD_ID
+    LEFT JOIN (SELECT SALES_ORD_ID, STUS_ID, COMBO_ID COMBO_ID FROM SAL0424D WHERE SALES_ORD_ID = #{salesOrderId} AND STUS_ID = 1 AND SEQ <![CDATA[ <> ]]> 1) V15 ON V15.SALES_ORD_ID = V1.ORD_ID
+    LEFT JOIN SAL0424D V16 ON V16.COMBO_ID = V15.COMBO_ID AND V16.SEQ = 1
+    LEFT JOIN SAL0001D V17 ON V17.SALES_ORD_ID = V16.SALES_ORD_ID
     WHERE V1.ORD_ID = #{salesOrderId}
   </select>
 

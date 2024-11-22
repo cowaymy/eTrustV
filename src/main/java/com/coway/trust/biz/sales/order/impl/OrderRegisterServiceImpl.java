@@ -2130,25 +2130,34 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		   orderRegisterMapper.insertRebate(newOrderList);
 
 	   } else { //new Rebate Set
-		   //Insert Rebate Set with Old Order No
-		   int comboId = orderRegisterMapper.getComboId(oldData);
-		   int seq = 1;
 
-		   oldData.put("comboId", comboId);
-		   oldData.put("seq", seq);
-		   oldData.put("status", 1);
-		   oldData.put("executeFlag", 0);
-		   orderRegisterMapper.insertRebate(oldData);
+		   int existingActOrdCount = 0;
+		   existingActOrdCount = orderRegisterMapper.getExistingActOrdCount(oldData);
 
-		   EgovMap newOrderList = new EgovMap();
-		   newOrderList.put("comboId", comboId);
-		   newOrderList.put("seq", seq + 1);
-		   newOrderList.put("salesOrdId", salesOrderMVO.getSalesOrdId());
-		   newOrderList.put("status", 1);
-		   newOrderList.put("executeFlag", 0);
-		   newOrderList.put("userId",sessionVO.getUserId());
+		   if(existingActOrdCount >= 1){
+			   throw new ApplicationException(AppConstants.FAIL,
+						"Unable to convert sales with existing Rebate. Please reselect the Rebate Order.");
 
-		   orderRegisterMapper.insertRebate(newOrderList);
+		   } else { //Insert Rebate Set with Old Order No
+			   int comboId = orderRegisterMapper.getComboId(oldData);
+			   int seq = 1;
+
+			   oldData.put("comboId", comboId);
+			   oldData.put("seq", seq);
+			   oldData.put("status", 1);
+			   oldData.put("executeFlag", 0);
+			   orderRegisterMapper.insertRebate(oldData);
+
+			   EgovMap newOrderList = new EgovMap();
+			   newOrderList.put("comboId", comboId);
+			   newOrderList.put("seq", seq + 1);
+			   newOrderList.put("salesOrdId", salesOrderMVO.getSalesOrdId());
+			   newOrderList.put("status", 1);
+			   newOrderList.put("executeFlag", 0);
+			   newOrderList.put("userId",sessionVO.getUserId());
+
+			   orderRegisterMapper.insertRebate(newOrderList);
+		   }
 	   }
     }
    // SAL0424D - Rebate Info - INSERT INTO SAL0424D [E]

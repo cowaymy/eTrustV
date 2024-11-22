@@ -262,4 +262,6 @@ public interface OrderRegisterMapper {
 
   int getComboId(Map<String, Object> params);
 
+  int getExistingActOrdCount(Map<String, Object> params);
+
 }
