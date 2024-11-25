@@ -330,7 +330,7 @@ public class CcpCalculateController {
 
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
-    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmitView(params);
     	LOGGER.info("Check 2");
 
     	//Model
@@ -776,7 +776,7 @@ public class CcpCalculateController {
 
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
-    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmitView(params);
     	LOGGER.info("Check 3");
 
     	//Model
@@ -928,7 +928,7 @@ public class CcpCalculateController {
 
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
-    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmitView(params);
     	LOGGER.info("Check 4");
 
     	EgovMap tempMap1 = null;
