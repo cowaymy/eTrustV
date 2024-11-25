@@ -58,6 +58,14 @@
     	<th scope="row"><spring:message code="sal.text.bsType" /></th>
     	<td><span><c:out value="${basicinfo.codeName}"/></span></td>
 		</tr>
+		<tr>
+    	<th scope="row"><spring:message code="service.grid.HSStatus" /></th>
+    	<td><span><c:out value="${basicinfo.code}"/></span></td>
+    	<th scope="row"></th>
+    	<td></td>
+    	<th scope="row"></th>
+    	<td></td>
+		</tr>
       </tbody>
     </table>
 

@@ -71,6 +71,6 @@ public interface SelfServiceManagementMapper {
 
   Map<String, Object> SP_LOGISTIC_SS_EDIT(Map<String, Object> param);
 
-  boolean checkIfDataExists(Map<String, Object> setmap);
+  Map<String, Object> SP_LOGISTIC_RETURN_SS(Map<String, Object> param);
 
 }

@@ -108,12 +108,6 @@
           editable : false,
           dataType : "numeric"
       }, {
-          dataField : "totDefectCond",
-          headerText : "<spring:message code='supplement.text.supplementTtlRtnDefectCondQty'/>",
-          width : '25%',
-          editable : false,
-          dataType : "numeric"
-      }, {
           dataField : "totMiaCond",
           headerText : "<spring:message code='supplement.text.supplementTtlRtnMissCondQty'/>",
           width : '25%',

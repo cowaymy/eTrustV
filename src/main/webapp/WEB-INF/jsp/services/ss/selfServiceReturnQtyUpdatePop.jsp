@@ -5,7 +5,9 @@ var ssResultId = '${ssResultId}';
 var salesOrdId = '${salesOrdId}';
 var schdulId = '${schdulId}';
 var hsNo = '${hsNo}';
-var ssRtnNo = '${orderInfo.ssRtnNo}'
+var ssRtnNo = '${orderInfo.ssRtnNo}';
+var stusCodeId = '${basicinfo.stusCodeId}';
+var failResnId = '${basicinfo.failResnId}';
 var ssRtnItmDetailGridID;
 
   $(document).ready(
@@ -36,8 +38,11 @@ var ssRtnItmDetailGridID;
 		              parcelTrackNo : hsNo,
 		              ssResultId : ssResultId ,
 	    		  	  salesOrdId : salesOrdId ,
+	    		  	  stusCodeId : stusCodeId ,
+	    		  	  failResnId : failResnId ,
 	    		  	  schdulId : schdulId ,
 	    		  	  ssRtnNo : ssRtnNo ,
+
 		              rtnItmList : rtnItmList
 		            };
 
@@ -210,6 +215,14 @@ var ssRtnItmDetailGridID;
     	<td><span><c:out value="${basicinfo.monthy}"/></span></td>
     	<th scope="row"><spring:message code="sal.text.bsType" /></th>
     	<td><span><c:out value="${basicinfo.codeName}"/></span></td>
+		</tr>
+		<tr>
+    	<th scope="row"><spring:message code="service.grid.HSStatus" /></th>
+    	<td><span><c:out value="${basicinfo.code}"/></span></td>
+    	<th scope="row"></th>
+    	<td></td>
+    	<th scope="row"></th>
+    	<td></td>
 		</tr>
       </tbody>
     </table>

@@ -25,6 +25,8 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.impl.HsManualMapper;
 import com.coway.trust.biz.services.ss.SelfServiceManagementService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -65,6 +67,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   private static final String WAREHOUSE_TO_LOC_ID = "107609";
   private static final String ERROR_MESSAGE_STOCK = "Insufficient stock available in warehouse (CJ KL_A). Please try again later when the stock is replenished.";
   private static final String ERROR_MESSAGE_SERIAL_USE = "This serial had been used.";
+  private static final int CUST_LOST_PARCEL = 3595;
 
   @Override
   public List<EgovMap> selectSelfServiceJsonList(Map<String, Object> params) throws Exception {
@@ -193,11 +196,6 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     setmap.put("ioType", "O");
     setmap.put("userId", params.get("crtUsrId"));
 
-    boolean dataExists = selfServiceManagementMapper.checkIfDataExists(setmap);
-    if (!dataExists) {
-      throw new ApplicationException(AppConstants.FAIL, "No matching data found for the provided parameters.");
-    }
-
     selfServiceManagementMapper.SP_LOGISTIC_SS_SAVE(setmap);
     String errCode = (String) setmap.get("pErrcode");
     String errMsg = (String) setmap.get("pErrmsg");
@@ -279,11 +277,6 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     setmap.put("fromLocId", WAREHOUSE_FROM_LOC_ID);
     setmap.put("userId", params.get("crtUsrId"));
 
-    boolean dataExists = selfServiceManagementMapper.checkIfDataExists(setmap);
-    if (!dataExists) {
-      throw new ApplicationException(AppConstants.FAIL, "No matching data found for the provided parameters.");
-    }
-
     selfServiceManagementMapper.SP_LOGISTIC_SS_EDIT(setmap);
     String errCode = (String) setmap.get("pErrcode");
     String errMsg = (String) setmap.get("pErrmsg");
@@ -298,7 +291,6 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
 
   // Helper method to handle exceptions
   private void handleException(Map<String, Object> params, Map<String, Object> rtnMap, Exception e) throws Exception {
-    revertSelfServiceSTO(params);
     selfServiceManagementMapper.rollbackSelfServiceResultMaster(params);
     selfServiceManagementMapper.rollbackSelfServiceResultDetail(params);
     rtnMap.put("logError", ERROR_CODE);
@@ -356,6 +348,8 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     Map<String, Object> rtnMap = new HashMap<>();
     try {
       String ssRtnNo = params.get("ssRtnNo").toString();
+      int failResnId = CommonUtils.intNvl(params.get("failResnId"));
+      int stusCodeId = CommonUtils.intNvl(params.get("stusCodeId"));
       // Early validation
       if (params == null || params.get("rtnItmList") == null) {
         throw new IllegalArgumentException("Return item list is missing.");
@@ -400,8 +394,19 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
         }
       }
 
-      // Placeholder for Logistics handling
-      // insertLogisticsData(ssRtnNo, ssRtnMasterSeq); // Example method for logistics integration
+      if (SalesConstants.STATUS_FAILED == stusCodeId) {
+        if (failResnId == CUST_LOST_PARCEL) { // Return from Customer - OI13
+          params.put("transcType", "CUSTLOST");
+          params.put("ioType", "OD06");
+        } else { // Failed from DHL - OL11
+          params.put("transcType", "STO");
+          params.put("ioType", "OD12");
+        }
+      }else{
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR] updateReturnGoodsQty - invalid HS status : " + params.get("parcelTrackNo"));
+      }
+
+      updateSelfServiceStockReturn(params);
 
       // Success response
       rtnMap.put("logError", SUCCESS_CODE);
@@ -420,8 +425,8 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       rtnMap.put("message", "An error occurred: " + e.getMessage());
 
       // Rollback in case of failure
-      selfServiceManagementMapper.rollbackSelfServiceReturnGoodsQty(params);
-      selfServiceManagementMapper.rollbackSelfServiceReturnQty(params);
+      // selfServiceManagementMapper.rollbackSelfServiceReturnGoodsQty(params);
+      // selfServiceManagementMapper.rollbackSelfServiceReturnQty(params);
     }
     return rtnMap;
   }
@@ -434,6 +439,24 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   @Override
   public List<EgovMap> ssFailReasonList(Map<String, Object> params) {
     return selfServiceManagementMapper.ssFailReasonList(params);
+  }
+
+  private void updateSelfServiceStockReturn(Map<String, Object> params) throws Exception {
+    Map<String, Object> setmap = new HashMap();
+    setmap.put("ssRefNo", params.get("parcelTrackNo"));
+    setmap.put("fromLocId", WAREHOUSE_TO_LOC_ID);
+    setmap.put("trnscType", params.get("transcType"));
+    setmap.put("ioType", params.get("ioType"));
+    setmap.put("userId", params.get("crtUsrId"));
+
+    selfServiceManagementMapper.SP_LOGISTIC_RETURN_SS(setmap);
+    String errCode = (String) setmap.get("pErrcode");
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_RETURN_SSERROR CODE : " + errCode);
+
+    // pErrcode : 000 = Success, others = Fail
+    if (!"000".equals(errCode)) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode);
+    }
   }
 
 }
