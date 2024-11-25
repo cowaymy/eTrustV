@@ -1806,16 +1806,8 @@
 				A.COMBO_ID
 				, A.SEQ
 				, A.SALES_ORD_ID
-				, CASE
-				    WHEN A.SALES_ORD_ID = B.SALES_ORD_ID
-				    THEN '10'
-				    ELSE '30'
-				  END STUS_ID
-				, CASE
-				    WHEN A.SALES_ORD_ID = B.SALES_ORD_ID
-				    THEN '1'
-				    ELSE '0'
-				  END EXECUTE_FLAG
+				, '30' STUS_ID
+				, '0' EXECUTE_FLAG
 				, CASE
 				    WHEN A.SALES_ORD_ID = B.SALES_ORD_ID
 				    THEN 'ORDER CANCELLED'
