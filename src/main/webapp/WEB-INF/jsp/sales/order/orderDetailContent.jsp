@@ -4,9 +4,9 @@
 <script type="text/javaScript" language="javascript">
 
     $(document).ready(function(){
-        $('#btnViewAirConCboOrdNo').click(function() {
+      /*$('#btnViewAirConCboOrdNo').click(function() {
             Common.popupDiv("/homecare/sales/hcAirCondBulkOrderSearchPop.do", {ordId:"${orderDetail.basicInfo.ordId}", pckBindingId: "${orderDetail.basicInfo.pckageBindingNo}"}, null, true);
-        });
+        }); */
     });
 
     //그리드 속성 설정
