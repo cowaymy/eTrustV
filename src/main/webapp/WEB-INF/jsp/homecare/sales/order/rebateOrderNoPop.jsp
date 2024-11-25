@@ -20,8 +20,11 @@
         	$('#lblRebateOrderNo').text("");
 
         	var salesOrdNo= AUIGrid.getCellValue(rebateOrdNoGridID , event.rowIndex , "salesOrdNo");
+        	var salesOrdId= AUIGrid.getCellValue(rebateOrdNoGridID , event.rowIndex , "salesOrdId");
+        	fn_setData(salesOrdNo, salesOrdId);
+            $('#btnRebateOrderNo').click();
 
-	       	Common.ajax("GET", "/homecare/sales/order/checkPwpOrderId.do", {salesOrdNo : salesOrdNo, custId : $('#custId').val()}, function(RESULT) {
+	       	/* Common.ajax("GET", "/homecare/sales/order/checkPwpOrderId.do", {salesOrdNo : salesOrdNo, custId : $('#custId').val()}, function(RESULT) {
 
 	       	    if(RESULT.ispass == true){
 	       	    	fn_setData(salesOrdNo, RESULT.mainOrderId);
@@ -29,7 +32,7 @@
 	       	    }else{
 	       	    	$('#lblRebateOrderNo').text(RESULT.msg);
 	       	    }
-            });
+            }); */
 
         });
     });
