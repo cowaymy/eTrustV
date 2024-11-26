@@ -183,10 +183,10 @@
 			                 Common.alert('<spring:message code="service.ss.alert.updateRtnQtyDisallow" arguments="'+ssStuscd+'"/>');
 			                 return false;
 			             }else{
-			            	 /* if(ssRtnNo != '-'){
+			            	  if(ssRtnNo != '-'){
 			            		 Common.alert('<spring:message code="service.ss.alert.updateRtnQtyDisallow2" arguments="'+ssRtnNo+'"/>');
 				                 return false;
-			            	 }else{ */
+			            	 }else{
 			           Common.popupDiv("/services/ss/selfServiceReturnQtyUpdatePop", {
 			        	   salesOrderId : AUIGrid.getCellValue( selfServiceGridID, rowIdx, "salesOrdId") ,
 			        	   ssResultId : AUIGrid.getCellValue( selfServiceGridID, rowIdx, "ssResultId") ,
@@ -194,7 +194,7 @@
 			        	   custId : AUIGrid.getCellValue( selfServiceGridID, rowIdx, "custId") ,
 			        	   hsNo : AUIGrid.getCellValue( selfServiceGridID, rowIdx, "hsNo")
 			        	   }, null, true, '_insDiv');
-			             //}
+			             }
 			            }
 			         } else {
 			           Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
@@ -256,6 +256,12 @@
 					dataField : "ssStus",
 					headerText : '<spring:message code="service.ss.title.ssStatus" />',
 					width : '10%',
+					editable : false
+				},
+				{
+					dataField : "failResn",
+					headerText : '<spring:message code="sal.title.failReason" />',
+					width : 200,
 					editable : false
 				},
 				{
@@ -404,6 +410,12 @@
 				{
 					dataField : "ssStus",
 					headerText : '<spring:message code="service.ss.title.ssStatus" />',
+					width : 200,
+					editable : false
+				},
+				{
+					dataField : "failResn",
+					headerText : '<spring:message code="sal.title.failReason" />',
 					width : 200,
 					editable : false
 				},

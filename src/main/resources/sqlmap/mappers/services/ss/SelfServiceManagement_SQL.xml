@@ -33,7 +33,10 @@
 		N.AREA ,
 		R.TEL_M1 AS PHONE,
 		R.EMAIL ,
-		NVL(O.SS_RESULT_ID,0) SS_RESULT_ID
+		NVL(O.SS_RESULT_ID,0) SS_RESULT_ID ,
+		CASE WHEN A.STUS_CODE_ID = 21 AND D.FAIL_RESN_ID != 0 THEN S.RESN_DESC
+			 WHEN A.STUS_CODE_ID = 21 AND D.FAIL_RESN_ID = 0 THEN 'DHL Fail to Delivery'
+		ELSE '-' END AS FAIL_RESN
     FROM SVC0008D A
     LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
     LEFT JOIN SAL0029D C ON B.CUST_ID = C.CUST_ID
@@ -50,6 +53,7 @@
     LEFT JOIN SYS0013M P ON O.SS_DELIVRY_STUS_ID = P.CODE AND P.CODE_MASTER_ID = 585
     LEFT JOIN SVC0146M Q ON A.SCHDUL_ID = Q.SS_REF_ID
     LEFT JOIN SAL0027D R ON B.CUST_CNT_ID = R.CUST_CNTC_ID
+    LEFT JOIN SYS0032M S ON D.FAIL_RESN_ID = S.RESN_ID AND S.RESN_TYPE_ID = 7692 AND S.STUS_CODE_ID = 1
     WHERE
     	L.SRV_STUS_ID = 1
     <![CDATA[
@@ -77,7 +81,7 @@
     	AND D.SETL_DT BETWEEN TO_DATE(#{completeStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{completeEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
     </if>
 	<if test="deliveryStatusArray != null and deliveryStatusArray != '' ">
-       	AND F.DELVY_SEQ IN
+       	AND O.SS_DELIVRY_STUS_ID IN
      <foreach item="item" collection="deliveryStatusArray" index="index"
         open="(" separator="," close=")">
         #{item}

@@ -44,6 +44,7 @@ var schdulId = '${schdulId}';
 
   function fn_popClose() {
     $("#_systemClose").click();
+    fn_parentReload();
   }
 
 </script>
