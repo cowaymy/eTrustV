@@ -757,7 +757,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row"><spring:message code="sal.text.custName" /><span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName" maxlength="70"/> <!-- name  -->
+    <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName" maxlength="170"/> <!-- name  -->
     </td>
     <th scope="row"><spring:message code="sal.text.nationality" /> <span class="brown_text">#</span></th>
     <td>
