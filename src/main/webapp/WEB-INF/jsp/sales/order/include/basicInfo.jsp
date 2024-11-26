@@ -23,9 +23,9 @@
     <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><span>${orderDetail.basicInfo.ordNo} </span>
        <c:if test="${orderDetail.basicInfo.custNric == orderDetail.salesmanInfo.nric}">(${orderDetail.salesmanInfo.memCode})</c:if>
-       <c:if test="${(orderDetail.basicInfo.pckageBindingId.length() > 0 || empty orderDetail.basicInfo.pckageBindingId) && orderDetail.basicInfo.ordCtgryCd == 'ACI' && orderDetail.basicInfo.isAciCombo == 'TRUE'}">
+   <!--<c:if test="${(orderDetail.basicInfo.pckageBindingId.length() > 0 || empty orderDetail.basicInfo.pckageBindingId) && orderDetail.basicInfo.ordCtgryCd == 'ACI' && orderDetail.basicInfo.isAciCombo == 'TRUE'}">
           <a id="btnViewAirConCboOrdNo" style="float:right; margin-right: 75px;"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-       </c:if>
+       </c:if>  -->
     </td>
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>${fn:substring(orderDetail.basicInfo.ordDt, 0, 19)}</td>
