@@ -237,7 +237,7 @@ window.addEventListener('resize', function(event){
             checkResult = false;
           }
 
-        if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
+        if("" != $("#cntcEmail").val().trim() && null != $("#cntcEmail").val()){
 
             if(FormUtil.checkEmail($("#cntcEmail").val())){
                  Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');

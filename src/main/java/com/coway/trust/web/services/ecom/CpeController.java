@@ -435,6 +435,7 @@ public class CpeController {
 		model.addAttribute("cpeStat", cpeStat);
 
 		params.put("userId", sessionVO.getUserId());
+		params.put("userTypeId", sessionVO.getUserTypeId());
 		EgovMap userRole = memberListService.getUserRole(params);
 		// logger.debug("userRole " + userRole);+
 		model.addAttribute("userRole", userRole.get("roleid"));

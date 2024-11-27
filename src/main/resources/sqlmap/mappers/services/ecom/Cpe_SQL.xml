@@ -792,7 +792,7 @@
         </if>
 
         <if test="order_no != null and order_no != '' ">
-          AND T1.SALES_ORD_NO = #{order_no}
+          AND T2.SALES_ORD_NO = #{order_no}
         </if>
 
         <if test="customer_name != null and customer_name != '' ">

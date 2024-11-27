@@ -75,7 +75,9 @@ function checkCpeRequestExistStatus(){
     			         if(installStatus == 'Before Install'){
     			        	 if(ccpResult == 'CCP Result'){
     	                          Common.alert('Order under CCP Result. <br>Request CPE is disallowed.');
-    	                     }else{
+    	                     }else if(ccpResult == 'Order Cancel/Terminate'){
+                                 Common.alert('The order has benn Cancelled/Terminated. <br>Request CPE is disallowed.');
+                             }else{
     	                    	 fn_searchNewOrderPop();
     	                     }
 
