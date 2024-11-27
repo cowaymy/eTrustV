@@ -2211,8 +2211,17 @@
         const ordProd2 = $("#ordProduct2");
 
         if((ordProd1.find("option").length > 1 && ordProd1.find("option:selected").index() <= 0) || (ordProd2.find("option").length > 1 && ordProd2.find("option:selected").index() <= 0)){
-            isValid = false;
-            msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
+        	if(appTypeVal != '144'){
+        		isValid = false;
+            	msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
+        	}else{
+        		if($("#ordProduct1 option:selected").index() > 0) {
+                    if($("#ordPromo1 option:selected").index() <= 0) {
+                        isValid = false;
+                        msg += "* Please select the Main Product promotion code.<br>";
+                    }
+                }
+        	}
         }
         // 프레임만 주문 불가.
         if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() > 0 && MAT_TAG == 'N') {
