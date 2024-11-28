@@ -1000,8 +1000,12 @@
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)'
                         ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' ELSE 'Change Account' END) END CODE_NAME -->
-                        , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success' ELSE
-                        GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) END CODE_NAME
+                        , CASE
+                            WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Success'
+                            WHEN T3.BANK_ID = 17 AND T1.BANK_DTL_APPR_CODE IN (79, 82, 83) THEN
+                                GBSLCVD.FN_GET_HSBC_RMK(T1.BANK_DTL_APPR_CODE, tmp.DESC_RESP)
+                        ELSE
+                            GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) END CODE_NAME
                         , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Approved' ELSE
                         T4.DESC_CODE END DESC_CODE
                FROM PAY0042D T1
@@ -1010,6 +1014,7 @@
                LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
                LEFT JOIN SYS0115M T4 ON COALESCE(T1.BANK_DTL_APPR_CODE, 'EMP') = COALESCE(T4.RESP_CODE, 'EMP') AND T4.STUS_ID=1
                LEFT JOIN SYS0013M T5 ON T4.GRP_REASON_CODE = T5.CODE AND T5.CODE_MASTER_ID = 570
+               LEFT JOIN PAY0037D tmp ON tmp.ITM_ID = T1.BANK_DTL_GRP_ID AND tmp.id = T1.bank_dtl_ctrl_id
                <!-- LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD') -->
                WHERE T1.SALES_ORD_ID = #{salesOrderId}
     ) T ORDER BY T.BANK_DTL_ID DESC
