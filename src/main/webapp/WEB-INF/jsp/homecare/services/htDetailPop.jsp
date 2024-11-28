@@ -288,6 +288,9 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
     createAUIGrid();
     fn_getHsFilterListAjax();
 
+    $("#lblAppointmentDt").hide();
+    $("#lblAppointmentDt2").hide();
+
     // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
     $("#cmbStatusType1").change(function(){
      // AUIGrid.forceEditingComplete(myDetailGridID, null, false);
@@ -298,17 +301,26 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
           $("input[name='settleDate']").attr('disabled', false);
           $("select[name='failReason'] option").remove();
 
+          $("#lblAppointmentDt").show();
+          $("#lblAppointmentDt2").show();
+
       } else if ($("#cmbStatusType1").val() == 21) {    // Failed
           //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
           doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
           $('#settleDate').val('');
           $("input[name='settleDate']").attr('disabled', true);
 
+          $("#lblAppointmentDt").hide();
+          $("#lblAppointmentDt2").hide();
+
       } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
           //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
           doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
           $('#settleDate').val('');
           $("input[name='settleDate']").attr('disabled', true);
+
+          $("#lblAppointmentDt").hide();
+          $("#lblAppointmentDt2").hide();
 
       }
     });
@@ -360,42 +372,7 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
         return false;
       }
 
-      var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
-      var returnParam = true;
-      for (var i = 0; i < rsnGridDataList.length; i++) {
-          if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && (rsnGridDataList[i]["serialChk"] == "Y" && $("#hidSerialRequireChkYn").val() == 'Y')){
-              if (rsnGridDataList[i]["serialNo"] == null || rsnGridDataList[i]["serialNo"] == "") {
-                Common.alert("* Please choose the serial number. ");
-                returnParam = false;
-                }
-
-              if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null )
-                              && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
-            Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
-            returnParam = false;
-            }
-          }
-
-          if(returnParam == false){
-              return returnParam;
-          }
-      }
-
-
-    } else if ($("#cmbStatusType1").val() == 21) {    // Failed
-      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
-        Common.alert("Please Select 'Fail Reason'.");
-        return false;
-      }
-    } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
-      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
-        Common.alert("Please Select 'Fail Reason'.");
-        return false;
-      }
-
-    }
-
-     if ($('#nextAppntDate').val() == "") {
+      if ($('#nextAppntDate').val() == "") {
      	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
            return false;
        }else{
@@ -450,6 +427,41 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
            return false;
        	}
      }
+
+      var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
+      var returnParam = true;
+      for (var i = 0; i < rsnGridDataList.length; i++) {
+          if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && (rsnGridDataList[i]["serialChk"] == "Y" && $("#hidSerialRequireChkYn").val() == 'Y')){
+              if (rsnGridDataList[i]["serialNo"] == null || rsnGridDataList[i]["serialNo"] == "") {
+                Common.alert("* Please choose the serial number. ");
+                returnParam = false;
+                }
+
+              if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null )
+                              && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
+            Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
+            returnParam = false;
+            }
+          }
+
+          if(returnParam == false){
+              return returnParam;
+          }
+      }
+
+
+    } else if ($("#cmbStatusType1").val() == 21) {    // Failed
+      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+        Common.alert("Please Select 'Fail Reason'.");
+        return false;
+      }
+    } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
+      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+        Common.alert("Please Select 'Fail Reason'.");
+        return false;
+      }
+
+    }
 
      var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
 
@@ -656,8 +668,8 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
             </c:forEach>
     </select> --%>
     </td>
-    <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-	<td>
+    <th id="lblAppointmentDt" scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td id="lblAppointmentDt2">
 	<input type="text" id ="nextAppntDate" name = "nextAppntDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />

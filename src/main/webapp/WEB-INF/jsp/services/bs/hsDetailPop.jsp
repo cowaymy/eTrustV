@@ -357,6 +357,8 @@
     $("#instChklstCheckBox").hide();
     $("#instChklstDesc").hide();
 
+    $("#lblAppointmentDt").hide();
+    $("#lblAppointmentDt2").hide();
 
     if ($("#cmbStatusType1").val() == 4) {    // Completed
     	$("input[name='settleDate']").attr('disabled', false);
@@ -403,6 +405,10 @@
               $("#instChklstDesc").show();
         	    }
           }
+
+          $("#lblAppointmentDt").show();
+          $("#lblAppointmentDt2").show();
+
       } else if ($("#cmbStatusType1").val() == 21) {    // Failed
           //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
           doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -410,6 +416,8 @@
           $("input[name='settleDate']").attr('disabled', true);
           //$("select[name='cmbCollectType'] option").remove();
           //$("select[name=cmbCollectType]").attr('disabled', true);
+          $("#lblAppointmentDt").hide();
+          $("#lblAppointmentDt2").hide();
       } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
           //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
           doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -417,6 +425,8 @@
           $("input[name='settleDate']").attr('disabled', true);
           //$("select[name='cmbCollectType'] option").remove();
           //$("select[name=cmbCollectType]").attr('disabled', true);
+          $("#lblAppointmentDt").hide();
+          $("#lblAppointmentDt2").hide();
       }
     });
 
@@ -509,6 +519,62 @@
             }
         	}
        }
+
+        if ($('#nextAppntDate').val() == "") {
+        	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
+              return false;
+          }else{
+          	var dateString = $('#nextAppntDate').val();  // Example: "27/12/2024"
+
+          	// Split the date by '/'
+          	var dateParts = dateString.split('/');
+
+          	// Rearrange the date parts to "YYYYMMDD" format
+          	var formattedDate = dateParts[2] + dateParts[1] + dateParts[0];  // "YYYYMMDD"
+
+          	// Set the formatted date back into the input (if needed)
+          	$('#nextAppntDt').val(formattedDate);
+
+          	// Output to console (for debugging)
+          	console.log("Formatted date: " + formattedDate);
+          }
+
+          if ($('#nextAppntTime').val() == "") {
+              Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
+              return false;
+          }
+
+          if ($('#nextAppntTime').val() != "") {
+          var timeString = $('#nextAppntTime').val();
+          // Parse the time using JavaScript's Date object
+          var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
+               if (timeParts) {
+                   var hours = parseInt(timeParts[1]);
+                   var minutes = parseInt(timeParts[2]);
+                   var period = timeParts[3];
+
+                   // Convert the hours to 24-hour format
+                   if (period === "PM" && hours !== 12) {
+                       hours += 12;
+                   } else if (period === "AM" && hours === 12) {
+                       hours = 0;
+                   }
+
+                   var formattedHours = (hours < 10 ? '0' : '') + hours;
+                   var formattedMinutes = '00';
+
+              	 // Combine hours and minutes into the desired format
+              	 var result = formattedHours + formattedMinutes;
+
+                   // Set the result in the hidden input
+                   $('#nextAppointmentTime').val(result);
+                   console.log("Formatted Time: " + result);
+          }else {
+              Common.alert("Invalid time format. Please enter a valid time.");
+              return false;
+          	}
+          }
+
 
         var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
         var returnParam = true;
@@ -604,60 +670,6 @@
             return false;
         }
     */
-    if ($('#nextAppntDate').val() == "") {
-  	  Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
-        return false;
-    }else{
-    	var dateString = $('#nextAppntDate').val();  // Example: "27/12/2024"
-
-    	// Split the date by '/'
-    	var dateParts = dateString.split('/');
-
-    	// Rearrange the date parts to "YYYYMMDD" format
-    	var formattedDate = dateParts[2] + dateParts[1] + dateParts[0];  // "YYYYMMDD"
-
-    	// Set the formatted date back into the input (if needed)
-    	$('#nextAppntDt').val(formattedDate);
-
-    	// Output to console (for debugging)
-    	console.log("Formatted date: " + formattedDate);
-    }
-
-    if ($('#nextAppntTime').val() == "") {
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
-        return false;
-    }
-
-    if ($('#nextAppntTime').val() != "") {
-    var timeString = $('#nextAppntTime').val();
-    // Parse the time using JavaScript's Date object
-    var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
-         if (timeParts) {
-             var hours = parseInt(timeParts[1]);
-             var minutes = parseInt(timeParts[2]);
-             var period = timeParts[3];
-
-             // Convert the hours to 24-hour format
-             if (period === "PM" && hours !== 12) {
-                 hours += 12;
-             } else if (period === "AM" && hours === 12) {
-                 hours = 0;
-             }
-
-             var formattedHours = (hours < 10 ? '0' : '') + hours;
-             var formattedMinutes = '00';
-
-        	 // Combine hours and minutes into the desired format
-        	 var result = formattedHours + formattedMinutes;
-
-             // Set the result in the hidden input
-             $('#nextAppointmentTime').val(result);
-             console.log("Formatted Time: " + result);
-    }else {
-        Common.alert("Invalid time format. Please enter a valid time.");
-        return false;
-    	}
-    }
 
     // 시리얼넘버체크
     //수정된 행 아이템들(배열)
@@ -954,8 +966,9 @@ function fnSerialSearchResult(data) {
 	  <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
 	  <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
 	</td>
-	<th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-	<td>
+
+	<th id="lblAppointmentDt" scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td id="lblAppointmentDt2">
 	<input type="text" id ="nextAppntDate" name = "nextAppntDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />

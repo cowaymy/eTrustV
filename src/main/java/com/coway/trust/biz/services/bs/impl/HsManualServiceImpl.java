@@ -36,6 +36,9 @@ import com.ibm.icu.util.StringTokenizer;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service("hsManualService")
 public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsManualService {
 
@@ -403,7 +406,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
       insertHsResultfinal.put("failResnId", params.get("failReason"));
-      // insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+      insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 
       /*
        * if (status == 4) { // COMPLETED insertHsResultfinal.put("failResnId",
@@ -411,11 +414,23 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
        * insertHsResultfinal.put("failResnId", params.get("failReason")); }
        */
 
-      if (status == 4) { // COMPLETE
-        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
-      } else if (status == 21 || status == 10) { // FAIL & CANCELLED
-        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      if (status == 4) { // COMPLETE
+//        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      } else if (status == 21 || status == 10) { // FAIL & CANCELLED
+//        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      }
+
+      LocalDate currentDate = LocalDate.now();
+      LocalDate defaultNextAppntDt = currentDate;
+      if(status == SalesConstants.STATUS_FAILED){
+        defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(1);
+      }else if(status == SalesConstants.STATUS_CANCELLED) {
+        defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(2);
+      }else{
+         // DO NOTHING
       }
+
+      DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
       insertHsResultfinal.put("whId", params.get("wareHouse"));
       insertHsResultfinal.put("resultRem", params.get("remark"));
@@ -433,8 +448,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       // FOR MOBILE APPS DATA
       insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
-      insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
-      insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
+      insertHsResultfinal.put("nextAppntDt", status == SalesConstants.STATUS_COMPLETED ? params.get("nextAppntDt") : dateFormatter.format(defaultNextAppntDt));
+      insertHsResultfinal.put("nextAppointmentTime", status == SalesConstants.STATUS_COMPLETED ? params.get("nextAppointmentTime") : "0900");
       insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
       insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
       insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
@@ -1471,8 +1486,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     // [19-09-2018] ADD HS INSTRUCTION REMARK FOR MAPPER USE
     bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
 
-    bsResultMas.put("nextAppntDt", String.valueOf(params.get("nextAppntDt")));
-    bsResultMas.put("nextAppntTime", String.valueOf(params.get("nextAppointmentTime")));
+    LocalDate currentDate = LocalDate.now();
+    int stusCodeId = CommonUtils.intNvl(params.get("cmbStatusType2"));
+
+    LocalDate defaultNextAppntDt = currentDate;
+    if(stusCodeId == SalesConstants.STATUS_FAILED){
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(1);
+    }else if(stusCodeId == SalesConstants.STATUS_CANCELLED) {
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(2);
+    }else{
+      // DO NOTHING
+    }
+
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    bsResultMas.put("nextAppntDt", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppntDt")) : dateFormatter.format(defaultNextAppntDt));
+    bsResultMas.put("nextAppntTime", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppointmentTime")) : "0900");
 
     /*
      * logger.debug("configBsRem isEmpty : " +
@@ -2062,6 +2091,24 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     bsResultMas.put("ResultMatchID", String.valueOf(0));
     bsResultMas.put("ResultIsAdjust", String.valueOf(1));
     bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
+
+    LocalDate currentDate = LocalDate.now();
+    int stusCodeId = CommonUtils.intNvl(params.get("cmbStatusType2"));
+
+    LocalDate defaultNextAppntDt = currentDate;
+    if(stusCodeId == SalesConstants.STATUS_FAILED){
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(1);
+    }else if(stusCodeId == SalesConstants.STATUS_CANCELLED) {
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(2);
+    }else{
+      // DO NOTHING
+    }
+
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    bsResultMas.put("nextAppntDt", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppntDt")) : dateFormatter.format(defaultNextAppntDt));
+    bsResultMas.put("nextAppntTime", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppointmentTime")) : "0900");
+
 
     Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 

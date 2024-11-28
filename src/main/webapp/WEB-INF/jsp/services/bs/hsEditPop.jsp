@@ -542,13 +542,17 @@ var myDetailGridData = null;
     $("#instChklstDesc").hide();
     $("#instChklstCheckBox").prop("checked", false);
 
+    $("#lblAppointmentDt").hide();
+    $("#lblAppointmentDt2").hide();
+
     // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
     if ($("#cmbStatusType2").val() == 4) {    // Completed
       $("input[name='settleDt']").attr('disabled', true);
       $("select[name='failReason'] option").remove();
       //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
       //$("select[name=cmbCollectType]").attr('disabled', false);
-
+		$("#lblAppointmentDt").show();
+    	$("#lblAppointmentDt2").show();
       //Installation checklist
        if(stkCtgry == 54){
     	   if (stkId1 == 1735) {
@@ -556,6 +560,9 @@ var myDetailGridData = null;
           $("#grid_wrap_instChk_view").show();
           $("#instChklstCheckBox").show();
           $("#instChklstDesc").show();
+
+          $("#lblAppointmentDt").show();
+          $("#lblAppointmentDt2").show();
 
          if('${basicinfo.hsChklist}'=='Y'){
         	  $("#instChklstCheckBox").prop("checked", true);
@@ -572,6 +579,8 @@ var myDetailGridData = null;
         $("input[name='settleDt']").attr('disabled', true);
         //$("select[name='cmbCollectType'] option").remove();
         //$("select[name=cmbCollectType]").attr('disabled', true);
+        $("#lblAppointmentDt").hide();
+        $("#lblAppointmentDt2").hide();
      } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
         //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
         //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -579,6 +588,8 @@ var myDetailGridData = null;
         $("input[name='settleDt']").attr('disabled', true);
         //$("select[name='cmbCollectType'] option").remove();
         //$("select[name=cmbCollectType]").attr('disabled', true);
+        $("#lblAppointmentDt").hide();
+        $("#lblAppointmentDt2").hide();
      }
 
      $("#cmbStatusType2").change(function(){
@@ -600,7 +611,8 @@ var myDetailGridData = null;
          $("select[name='failReason'] option").remove();
          //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
          //$("select[name=cmbCollectType]").attr('disabled', false);
-
+		 $("#lblAppointmentDt").show();
+    	 $("#lblAppointmentDt2").show();
          //Installation checklist
           if(stkCtgry == 54){
         	  if(stkId1 == 1735){
@@ -617,6 +629,8 @@ var myDetailGridData = null;
          $("input[name='settleDt']").attr('disabled', true);
          //$("select[name='cmbCollectType'] option").remove();
          //$("select[name=cmbCollectType]").attr('disabled', true);
+         $("#lblAppointmentDt").hide();
+         $("#lblAppointmentDt2").hide();
        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
          //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
          doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -624,6 +638,8 @@ var myDetailGridData = null;
          $("input[name='settleDt']").attr('disabled', true);
          //$("select[name='cmbCollectType'] option").remove();
          //$("select[name=cmbCollectType]").attr('disabled', true);
+         $("#lblAppointmentDt").hide();
+         $("#lblAppointmentDt2").hide();
        }
      });
   });
@@ -706,6 +722,48 @@ var myDetailGridData = null;
          }
     	   }
       }
+
+       if ($('#nextAppntDt').val() == "") {
+       	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
+       	return false;
+       }
+
+       if ($('#nextAppntTime').val() == "") {
+       	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
+       	return false;
+       }
+
+       if ($('#nextAppntTime').val() != ""){
+       	var timeString = $('#nextAppntTime').val();
+
+       	// Parse the time using JavaScript's Date object
+       	var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
+       	if (timeParts) {
+       	    var hours = parseInt(timeParts[1]);
+       	    var minutes = parseInt(timeParts[2]);
+       	    var period = timeParts[3];
+
+       	    // Convert the hours to 24-hour format
+       	    if (period === "PM" && hours !== 12) {
+       	       hours += 12;
+       	    } else if (period === "AM" && hours === 12) {
+       	       hours = 0;
+       	    }
+
+       	    var formattedHours = (hours < 10 ? '0' : '') + hours;
+               var formattedMinutes = '00';
+
+          		// Combine hours and minutes into the desired format
+          		var result = formattedHours + formattedMinutes;
+
+       	    // Set the result in the hidden input
+       	    $('#nextAppointmentTime').val(result);
+       	    console.log("Formatted Time: " + result);
+       	}else {
+       	    Common.alert("Invalid time format. Please enter a valid time.");
+       	    return false;
+       	}
+       }
 
        var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
        var returnParam = true;
@@ -801,48 +859,6 @@ var myDetailGridData = null;
            return false;
          }
        } */
-
-    if ($('#nextAppntDt').val() == "") {
-    	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false' /></br>");
-    	return false;
-    }
-
-    if ($('#nextAppntTime').val() == "") {
-    	Common.alert("<spring:message code='sys.msg.necessary' arguments='Appointment Time' htmlEscape='false' /></br>");
-    	return false;
-    }
-
-    if ($('#nextAppntTime').val() != ""){
-    	var timeString = $('#nextAppntTime').val();
-
-    	// Parse the time using JavaScript's Date object
-    	var timeParts = timeString.match(/(\d+):(\d+)\s(AM|PM)/);
-    	if (timeParts) {
-    	    var hours = parseInt(timeParts[1]);
-    	    var minutes = parseInt(timeParts[2]);
-    	    var period = timeParts[3];
-
-    	    // Convert the hours to 24-hour format
-    	    if (period === "PM" && hours !== 12) {
-    	       hours += 12;
-    	    } else if (period === "AM" && hours === 12) {
-    	       hours = 0;
-    	    }
-
-    	    var formattedHours = (hours < 10 ? '0' : '') + hours;
-            var formattedMinutes = '00';
-
-       		// Combine hours and minutes into the desired format
-       		var result = formattedHours + formattedMinutes;
-
-    	    // Set the result in the hidden input
-    	    $('#nextAppointmentTime').val(result);
-    	    console.log("Formatted Time: " + result);
-    	}else {
-    	    Common.alert("Invalid time format. Please enter a valid time.");
-    	    return false;
-    	}
-    }
 
     // 시리얼넘버체크
     //수정된 행 아이템들(배열)
@@ -1146,8 +1162,8 @@ function SearchListAjax(obj){
       <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
       <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
     </td>
-    <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-	<td>
+    <th id="lblAppointmentDt" scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td id="lblAppointmentDt2" >
 	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${basicinfo.nextAppntDt}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />

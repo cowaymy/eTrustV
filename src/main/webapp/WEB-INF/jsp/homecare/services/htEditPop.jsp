@@ -481,26 +481,35 @@ var myDetailGridData = null;
       $("input[name='settleDt']").attr('disabled', false);
       $("select[name='failReason'] option").remove();
 
+      $("#lblAppointmentDt").show();
+      $("#lblAppointmentDt2").show();
+
     } else if ($("#cmbStatusType2").val() == 21) {    // Failed
 
         $('#settleDt').val('');
         $("input[name='settleDt']").attr('disabled', true);
+
+        $("#lblAppointmentDt").hide();
+        $("#lblAppointmentDt2").hide();
 
      } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
 
         $('#settleDt').val('');
         $("input[name='settleDt']").attr('disabled', true);
 
+        $("#lblAppointmentDt").hide();
+        $("#lblAppointmentDt2").hide();
+
      }
 
      $("#cmbStatusType2").change(function(){
-
-
-
        if ($("#cmbStatusType2").val() == 4) {    // Completed
     	   	  $('#settleDt').val('${toDay}');
          $("input[name='settleDt']").attr('disabled', false);
          $("select[name='failReason'] option").remove();
+
+         $("#lblAppointmentDt").show();
+         $("#lblAppointmentDt2").show();
 
        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
 
@@ -508,11 +517,17 @@ var myDetailGridData = null;
          $('#settleDt').val('');
          $("input[name='settleDt']").attr('disabled', true);
 
+         $("#lblAppointmentDt").hide();
+         $("#lblAppointmentDt2").hide();
+
        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
 
          doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
          $('#settleDt').val('');
          $("input[name='settleDt']").attr('disabled', true);
+
+         $("#lblAppointmentDt").hide();
+         $("#lblAppointmentDt2").hide();
 
        }
      });
@@ -858,8 +873,8 @@ var myDetailGridData = null;
             </c:forEach>
     </select> --%>
     <!-- </td> -->
-    <th scope="row" style="width: 186px;"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-	<td>
+    <th id="lblAppointmentDt" scope="row" style="width: 186px;"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+	<td id="lblAppointmentDt2">
 	<input type="text" id ="nextAppntDt" name = "nextAppntDt" value="${basicinfo.nextAppntDt}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
                   <input type="text" title="" placeholder="" id='nextAppntTime' name='nextAppntTime' class="time_date w100p" />

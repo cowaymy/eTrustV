@@ -30,10 +30,14 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberEventListController;
+import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.util.StringTokenizer;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service("htManualService")
 public class htManualServiceImpl extends EgovAbstractServiceImpl implements htManualService {
@@ -385,13 +389,25 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
       insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
       insertHsResultfinal.put("failResnId", params.get("failReason"));
-      // insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+      insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 
-      if (status == 4) { // Completed
-        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
-      } else if (status == 21 || status == 10) { // Fail & Cancelled
-        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      if (status == 4) { // Completed
+//        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      } else if (status == 21 || status == 10) { // Fail & Cancelled
+//        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+//      }
+
+      LocalDate currentDate = LocalDate.now();
+      LocalDate defaultNextAppntDt = currentDate;
+      if(status == SalesConstants.STATUS_FAILED){
+        defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(1);
+      }else if(status == SalesConstants.STATUS_CANCELLED) {
+        defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(2);
+      }else{
+         // DO NOTHING
       }
+
+      DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
       insertHsResultfinal.put("whId", params.get("wareHouse"));
       insertHsResultfinal.put("resultRem", params.get("remark"));
@@ -409,8 +425,8 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
       // api추가
       insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
-      insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
-      insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
+      insertHsResultfinal.put("nextAppntDt", status == SalesConstants.STATUS_COMPLETED ? params.get("nextAppntDt") : dateFormatter.format(defaultNextAppntDt));
+      insertHsResultfinal.put("nextAppointmentTime", status == SalesConstants.STATUS_COMPLETED ? params.get("nextAppointmentTime") : "0900");
       insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
       insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
       insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
@@ -1174,8 +1190,22 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
     // bsResultMas.put("ResultCreated", sysdate);
 
-    bsResultMas.put("nextAppntDt", String.valueOf(params.get("nextAppntDt")));
-    bsResultMas.put("nextAppntTime", String.valueOf(params.get("nextAppointmentTime")));
+    LocalDate currentDate = LocalDate.now();
+    int stusCodeId = CommonUtils.intNvl(params.get("cmbStatusType2"));
+
+    LocalDate defaultNextAppntDt = currentDate;
+    if(stusCodeId == SalesConstants.STATUS_FAILED){
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(1);
+    }else if(stusCodeId == SalesConstants.STATUS_CANCELLED) {
+      defaultNextAppntDt = currentDate.withDayOfMonth(5).plusMonths(2);
+    }else{
+      // DO NOTHING
+    }
+
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    bsResultMas.put("nextAppntDt", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppntDt")) : dateFormatter.format(defaultNextAppntDt));
+    bsResultMas.put("nextAppntTime", stusCodeId == SalesConstants.STATUS_COMPLETED ? String.valueOf(params.get("nextAppointmentTime")) : "0900");
 
     bsResultMas.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
     // bsResultMas.put("ResultUpdated", sysdate);
