@@ -668,7 +668,7 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
             </c:forEach>
     </select> --%>
     </td>
-    <th id="lblAppointmentDt" scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+    <th id="lblAppointmentDt" scope="row"><spring:message code='service.title.NextAppointmentDate' /><span class="must">*</span></th>
 	<td id="lblAppointmentDt2">
 	<input type="text" id ="nextAppntDate" name = "nextAppntDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"/>
 	 <div class="time_picker">
