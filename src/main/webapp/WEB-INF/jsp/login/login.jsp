@@ -108,9 +108,6 @@
 
     function fn_checkMFAForm(userInfo){
 
-        console.log(userInfo);
-
-
     	var param = {
     			userId : userInfo.userId,
     			userName: userInfo.userName,
