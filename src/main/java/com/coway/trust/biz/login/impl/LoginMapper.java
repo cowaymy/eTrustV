@@ -93,5 +93,10 @@ public interface LoginMapper {
 
   int checkSecurityAnswer(Map<String, Object> params);
 
-  void updateCheckMfaFlag(int userId);
+  void updateCheckMfaFlag(Map<String, Object> params);
+
+  int checkResetMFAEmail(Map<String, Object> params);
+
+  void updateResetMFA(Map<String, Object> params);
+
 }

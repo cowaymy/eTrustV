@@ -107,7 +107,18 @@ public class LoginVO {
 
   private String sKey;
 
-  public String getUserMemCode() {
+  private String mfaKey;
+
+
+  public String getMfaKey() {
+	return mfaKey;
+}
+
+public void setMfaKey(String mfaKey) {
+	this.mfaKey = mfaKey;
+}
+
+public String getUserMemCode() {
     return userMemCode;
   }
 

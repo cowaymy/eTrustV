@@ -6393,7 +6393,7 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
 
      <update id="resetMfa" parameterType="Map">
         UPDATE SYS0047M
-        SET CHECK_MFA = NULL
+        SET CHECK_MFA = 3, MFA_KEY = #{mfaKey}
         WHERE HR_CODE = #{memCode}
      </update>
 
@@ -6418,6 +6418,15 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
             , RESET_BY
             FROM ORG0054H
         WHERE MEM_CODE = #{memCode}
+      </select>
+
+      <select id="selectMfaDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+              HR_CODE as MEM_CODE
+            , USER_ID as RESET_USER_ID
+            , USER_EMAIL as EMAIL
+            FROM SYS0047M
+        WHERE HR_CODE = #{memCode} AND USER_STUS_ID = 1
       </select>
 
        <select id="checkEmail" parameterType="Map" resultType="egovMap">

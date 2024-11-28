@@ -3185,4 +3185,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
      return memberListMapper.selectMagicAddressComboList(params);
    }
+
+	@Override
+    public EgovMap selectMfaDetails(Map<String, Object> params) {
+        return memberListMapper.selectMfaDetails(params);
+    }
 }

@@ -313,4 +313,7 @@ public interface MemberListService {
      */
     List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception;
 
+    EgovMap selectMfaDetails(Map<String, Object> params);
+
+
 }

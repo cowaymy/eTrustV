@@ -108,13 +108,20 @@
 
     function fn_checkMFAForm(userInfo){
 
+        console.log(userInfo);
+
+
     	var param = {
     			userId : userInfo.userId,
     			userName: userInfo.userName,
     			email : userInfo.userEmail,
     			memCode: userInfo.userMemCode,
-    			isCheckMfa: userInfo.checkMfaFlag
+    			isCheckMfa: userInfo.checkMfaFlag,
+    			mfaKey: userInfo.mfaKey,
+    			userTypeId : userInfo.userTypeId
     	};
+
+    	console.log(param);
 
         Common.popupDiv("/login/checkMFA.do", param, null, true, 'checkMFAPop');
 }
@@ -273,7 +280,6 @@
 
     	otpMfaForm = "#otpMfaForm";
     	mfaObj = $(otpMfaForm).serializeJSON();
-    	console.log(mfaObj);
 
     	if(mfaObj.code != null && mfaObj.code != "") {
     	      Common.ajaxSync("POST"
@@ -315,6 +321,80 @@
 
     }
 
+    function fnResetOTP() {
+
+        otpMfaForm = "#otpMfaForm";
+        mfaObj = $(otpMfaForm).serializeJSON();
+
+              Common.ajaxSync("GET"
+                      , "/login/checkResetMFAEmail.do"
+                      , $(otpMfaForm).serializeJSON()
+                      , function (result) {
+                    	  console.log(result);
+                          if (result.data > 0) {
+                        	    Common.confirm("Are you sure you want to reset your OTP account code?", function() {
+                        	    	fnRequestMFAReset(mfaObj);
+                        	    });
+                          }
+                          else {
+                              Common.alert("Email is not in coway email format. Kindly check with administrator");
+                          }
+
+                      }
+                      , function (jqXHR, textStatus, errorThrown) {
+                          try {
+                              console.log("Fail Status : " + jqXHR.status);
+                              console.log("code : " + jqXHR.responseJSON.code);
+                              console.log("message : " + jqXHR.responseJSON.message);
+                              console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                          }
+                          catch (e) {
+                              console.log(e);
+                          }
+
+                          Common.alert("Fail : " + jqXHR.responseJSON.message);
+
+                      });
+
+    }
+
+    function fnRequestMFAReset(mfaObj) {
+
+               Common.ajaxSync("POST"
+                      , "/login/requestMFAReset.do"
+                      , mfaObj
+                      , function (result) {
+                          console.log(result);
+                          if(result.code != 99){
+                              mfaPopUpClose();
+                              Common.alert("OTP MFA Reset Successful! A QR code for reconfiguration has been sent to your registered email.");
+                              isCheckedMfa = "N";
+                              $("#isCheckedMfa").val(isCheckedMfa);
+
+                          }
+                          else {
+                              Common.alert(result.message);
+                          }
+
+                      }
+                      , function (jqXHR, textStatus, errorThrown) {
+                          try {
+                              console.log("Fail Status : " + jqXHR.status);
+                              console.log("code : " + jqXHR.responseJSON.code);
+                              console.log("message : " + jqXHR.responseJSON.message);
+                              console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                          }
+                          catch (e) {
+                              console.log(e);
+                          }
+
+                          Common.alert("Fail : " + jqXHR.responseJSON.message);
+
+                      });
+
+    }
+
+
     function fn_login() {
         var userId = $("#userId").val();
         var password = $("#password").val();
@@ -334,6 +414,8 @@
             }
             return false;
         }
+/*                 isCheckedMfa = "Y";
+        $("#isCheckedMfa").val(isCheckedMfa); */
 
         Common.ajax("POST"
             , "/login/getLoginInfo.do"
@@ -364,7 +446,7 @@
                     fnPassWordResetPopUp();
                 }
 
-                else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
+                          else if(returnUserInfo.checkMfaFlag != 2 && isCheckedMfa == "N") {
                     fn_checkMFAForm(returnUserInfo);
                 }
 

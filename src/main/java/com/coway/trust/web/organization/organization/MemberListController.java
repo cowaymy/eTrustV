@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3141,10 +3143,55 @@ public class MemberListController {
 			Map<String, Object> d = new HashMap();
 			d.put("memCode", p.get("memCode"));
 			d.put("userId", session.getUserId());
-			int resetMfa = memberListService.resetMfa(d);
-			int resetMfaHistory = memberListService.insertResetMfaHistory(d);
+			d.put("cowayMail", "@COWAY.COM.MY");
+
+			int chkAdminEmail =  loginService.checkResetMFAEmail(d);
+			int resetMfa = 0;
+			int resetMfaHistory = 0;
+
+			if (chkAdminEmail > 0){
+
+				EgovMap resetMem = memberListService.selectMfaDetails(p);
+
+				int userId =  Integer. parseInt((String) resetMem.get("resetUserId").toString());
+		    	Base32 codec =  new  Base32();
+			    //Generate authentication key
+			    SecureRandom secureRandom = new SecureRandom();
+			    String email = (String) resetMem.get("email");
+			    String memCode = (String) resetMem.get("memCode");
+
+			    byte[] secretKey = new byte[10];
+			  	byte[] bEncodedKey =  codec.encode(secretKey);
+			    String encodedKey =  "";
+
+			    secureRandom.nextBytes(secretKey);
+			    bEncodedKey =  codec.encode(secretKey);
+				encodedKey =  new  String (bEncodedKey);
+
+			    //Generate barcode address
+			    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
+			    boolean isEmailSent = false;
+
+		    	resetMem.put("userId", userId);
+		    	resetMem.put("mfaKey", encodedKey);
+		    	resetMem.put("mfaFlag", 3);
+		    	resetMem.put("qrLink", QrUrl);
+
+		    	isEmailSent = loginService.sendResetMFAEmail(resetMem);
+
+		    	if (isEmailSent) {
+					resetMfa = memberListService.resetMfa(d);
+					resetMfaHistory = memberListService.insertResetMfaHistory(d);
+		    	}
+
+			}
+			else {
+				resetMfa = 0;
+				resetMfaHistory = 0;
+			}
+
 			message.setCode(resetMfa > 0 ? AppConstants.SUCCESS : AppConstants.FAIL);
-			message.setMessage(resetMfa > 0 ? "Success to reset." : "Fail to reset.");
+			message.setMessage(resetMfa > 0 ? "Success to reset." : "Fail to reset. Kindly check your email is in Coway email format or you may contact system administrator");
 		} catch (Exception e) {
 			Map<String, Object> errorParam = new HashMap<>();
 			errorParam.put("pgmPath", "/organization");
@@ -3178,6 +3225,14 @@ public class MemberListController {
 		// logger.debug("message : {}", message);
 
 		return ResponseEntity.ok(message);
+	}
+
+	//Barcode creation function
+	public static String getQRBarcodeURL(String user, String host, String secret) {
+
+		String format2 = "https://cowaymalaysiaapi.my.coway.com/apps/mfa/makeEtrustMFA?issuer=%s&account=%s&secretKey=%s";
+
+		return String.format(format2, user, host, secret);
 	}
 
 	@RequestMapping(value = "/suspendCU.do", method = RequestMethod.GET)

@@ -67,7 +67,10 @@ function mfaPopUpClose()
           <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2></br>
          <input type="hidden" id="encodedKey" name="encodedKey" value = "${encodedKey}"/>
          <input type="hidden" id="userId" name="userId" value = "${userId}"/>
-         <c:if test="${isHideQR eq '1'}">
+         <input type="hidden" id="email" name="email" value = "${email}"/>
+         <input type="hidden" id="memCode" name="memCode" value = "${memCode}"/>
+
+         <c:if test="${isHideQR eq '1' or isHideQR eq '3'}">
          <p style = "font-weight:bold;">User Name: ${userName}</p>
          </br>
          <p style = "font-weight:bold;">Staff Code: ${memCode}</p>
@@ -85,16 +88,29 @@ function mfaPopUpClose()
            <ul class="center_btns" id="center_btns1">
            <li>
            <input maxlength="6" type = "text" class = "form-control"  id = "code" name = "code" placeholder = "Please enter the code" />
-           </li> <li>
+           </li>
+           <li>
            <p class="btn_blue">
            <a onclick="fn_submitMFA();">Send</a>
-           </p></li>
+           </p>
+           </li>
            </ul>
+           <c:if test="${isHideQR eq '1' and userTypeId eq '4'}">
+           <br>
+<!--            <ul class="login_opt">
+ -->           <ul class="login_opt" style="list-style-type: none; padding: 0; margin-top: 20px;">
+
+               <li style="text-align: center;"><a href="javascript:fnResetOTP();" style="font-size: 16px; color: #007bff; text-decoration: none;">Reset OTP</a></li>
+
+<!--                <li><a href="javascript:fnResetOTP();">Reset OTP</a></li>
+ -->           </ul>
+           </c:if>
          <!-- <input type = "submit" class = "btn btn-lg btn-dark" value = "Send" style = "margin-top:10px;"> -->
         </form>
     </article><!-- login_box end -->
     </div> <!-- lgoin box end -->
 
+    <c:if test="${isHideQR eq '0'}">
     <div style="text-align:left; margin:30;">
     <h3>Step Guidelines: </h3>
     <ol>
@@ -112,6 +128,7 @@ function mfaPopUpClose()
         <img src="${pageContext.request.contextPath}/resources/images/common/otpMFAGuide.png" alt="Coway"/>
         </div>
     </br>
+    </c:if>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
