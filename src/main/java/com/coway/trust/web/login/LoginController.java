@@ -115,11 +115,11 @@ public class LoginController {
 	  	byte[] bEncodedKey =  codec.encode(secretKey2);
 	    String  encodedKey =  "";
 
-	    if (mfaKey != null && mfaKey != "" && !mfaKey.isEmpty() && (isHideQR.equals("1") || isHideQR.equals("3"))){
+	    if (mfaKey != null && mfaKey != "" && !mfaKey.isEmpty() && (isHideQR.equals("1") || isHideQR.equals("2") || isHideQR.equals("3"))){
 	    	encodedKey = mfaKey;
 	    }
 
-	    else if ((mfaKey == null || mfaKey == "" || mfaKey.isEmpty()) && isHideQR.equals("1")){
+	    else if ((mfaKey == null || mfaKey == "" || mfaKey.isEmpty()) && (isHideQR.equals("1") || isHideQR.equals("2"))){
 	    	secretKey2 = Arrays.copyOf(email.getBytes(),  10 );
 	    	bEncodedKey =  codec.encode(secretKey2);
 		    encodedKey =  new  String (bEncodedKey);
