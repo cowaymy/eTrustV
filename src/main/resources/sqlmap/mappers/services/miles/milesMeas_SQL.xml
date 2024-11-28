@@ -143,7 +143,7 @@
                LEFT JOIN LOG0038D I ON B.SVC_NO = I.RETN_NO
                LEFT JOIN SYS0100M J ON K.FAIL_LOC = J.DEFECT_ID AND J.DEFECT_TYP = 'IF' AND J.DEFECT_STATUS = 1
 
-               WHERE A.DISB = 0
+               WHERE A.DISB = 0 AND B.DISB = 0
                    AND A.CLM_DT BETWEEN TO_DATE(#{dpDateRangeFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpDateRangeTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
                    AND C.BRNCH = #{rawBranchId}
                <if test="rawMemCode != null and rawMemCode != '' ">
