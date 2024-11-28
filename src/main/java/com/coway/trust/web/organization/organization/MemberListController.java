@@ -3157,7 +3157,7 @@ public class MemberListController {
 		    	Base32 codec =  new  Base32();
 			    //Generate authentication key
 			    SecureRandom secureRandom = new SecureRandom();
-			    String email = (String) resetMem.get("email");
+			    String resetEmail = (String) resetMem.get("email");
 			    String memCode = (String) resetMem.get("memCode");
 
 			    byte[] secretKey = new byte[10];
@@ -3169,15 +3169,19 @@ public class MemberListController {
 				encodedKey =  new  String (bEncodedKey);
 
 			    //Generate barcode address
-			    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
+			    String  QrUrl =  getQRBarcodeURL( memCode, resetEmail, encodedKey);
 			    boolean isEmailSent = false;
 
-		    	resetMem.put("userId", userId);
-		    	resetMem.put("mfaKey", encodedKey);
-		    	resetMem.put("mfaFlag", 3);
-		    	resetMem.put("qrLink", QrUrl);
+				Map<String, Object> r = new HashMap();
+		    	r.put("userId", userId);
+		    	r.put("mfaKey", encodedKey);
+		    	r.put("mfaFlag", 3);
+		    	r.put("qrLink", QrUrl);
+		    	r.put("email", session.getUserEmail());
+		    	r.put("memCode", memCode);
 
-		    	isEmailSent = loginService.sendResetMFAEmail(resetMem);
+
+		    	isEmailSent = loginService.sendResetMFAEmail(r);
 
 		    	if (isEmailSent) {
 					resetMfa = memberListService.resetMfa(d);
