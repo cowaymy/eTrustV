@@ -3195,7 +3195,7 @@ public class MemberListController {
 			}
 
 			message.setCode(resetMfa > 0 ? AppConstants.SUCCESS : AppConstants.FAIL);
-			message.setMessage(resetMfa > 0 ? "Success to reset." : "Fail to reset. Kindly check your email is in Coway email format or you may contact system administrator");
+			message.setMessage(resetMfa > 0 ? "Success to reset. Kindly check your email to provide the new QR for this staff" : "Fail to reset. Kindly check your email is in Coway email format or you may contact system administrator");
 		} catch (Exception e) {
 			Map<String, Object> errorParam = new HashMap<>();
 			errorParam.put("pgmPath", "/organization");
