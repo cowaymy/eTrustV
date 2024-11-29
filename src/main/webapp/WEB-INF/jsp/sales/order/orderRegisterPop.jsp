@@ -1511,7 +1511,7 @@
                                             $('#txtOldOrderID').val();
                                             $('#relatedNo').val();
                                             Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
-                                        }if($("#exTrade").val() == 4) {
+                                        }else if($("#exTrade").val() == 4) {
                                         	$('#txtMainPwpOrderID').val();
                                             $('#pwpNo').val();
                                             Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
@@ -1527,7 +1527,7 @@
                                      $('#txtOldOrderID').val();
                                      $('#relatedNo').val();
                                      Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
-                                 }if($("#exTrade").val() == 4) {
+                                 }else if($("#exTrade").val() == 4) {
                                      $('#txtMainPwpOrderID').val();
                                      $('#pwpNo').val();
                                      Common.popupDiv("/homecare/sales/order/pwpOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
