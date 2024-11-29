@@ -738,7 +738,8 @@
     <select id="selectMembershipFreeConF" parameterType="Map" resultType="egovMap">
          select a.sales_ord_id ord_id,
                   a.sales_ord_no ord_no,
-                  b.itm_stk_id stk_id
+                  b.itm_stk_id stk_id,
+                  a.APP_TYPE_ID
            from sal0001d a
            left join sal0002d b on b.sales_ord_id = a.sales_ord_id
          where a.stus_code_id in('1', '4')
