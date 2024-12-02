@@ -1488,44 +1488,46 @@ WHERE  CLM_TYPE = #{clmType}
    UPDATE FCM0022M SET CLAM_UN = #{clamUn} WHERE CLM_TYPE = #{clmType}
 </update>
 
-<select id="selectSameVender" parameterType="Map" resultType="String">
+  <select id="selectSameVender" parameterType="Map" resultType="String">
     /* webInvoiceMapper.selectSameVender */
-    SELECT
-        A.CLM_NO
+    SELECT A.CLM_NO
     FROM FCM0002M A
-    LEFT JOIN FCM0004M B
-        ON A.CLM_NO = B.APPV_REQ_KEY_NO
-        AND A.APPV_PRCSS_NO = B.APPV_PRCSS_NO /* 2018-10-23 - LaiKW - Added appv_prcss_no joining */
+    LEFT JOIN FCM0004M B ON A.CLM_NO = B.APPV_REQ_KEY_NO
+                                   AND TO_CHAR(A.APPV_PRCSS_NO) = B.APPV_PRCSS_NO /* 2018-10-23 - LaiKW - Added appv_prcss_no joining */
     WHERE B.APPV_PRCSS_STUS != 'J'
-        <if test="memAccId != null and memAccId != '' ">
-            AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId})
-        </if>
-        <if test="supplier != null and supplier != '' ">
-            AND UPPER(A.MEM_ACC_ID) = UPPER(#{supplier})
-        </if>
-        AND A.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
-        <if test="clmNo != null and clmNo != ''">
-            AND A.CLM_NO != #{clmNo}
-        </if>
+
+    <if test="memAccId != null and memAccId != '' ">
+       AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId})
+    </if>
+
+    <if test="supplier != null and supplier != '' ">
+        AND UPPER(A.MEM_ACC_ID) = UPPER(#{supplier})
+    </if>
+
+    AND A.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+
+    <if test="clmNo != null and clmNo != ''">
+        AND A.CLM_NO != #{clmNo}
+    </if>
 
     UNION ALL
 
-    SELECT
-        'B' || B.BATCH_ID || '-' || B.CLM_NO CLM_NO
+    SELECT 'B' || B.BATCH_ID || '-' || B.CLM_NO CLM_NO
     FROM FCM0025M A
-    INNER JOIN FCM0026D B
-        ON A.BATCH_ID = B.BATCH_ID
-    LEFT JOIN FCM0004M C
-        ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+    INNER JOIN FCM0026D B ON A.BATCH_ID = B.BATCH_ID
+    LEFT JOIN FCM0004M C ON TO_CHAR(A.APPV_PRCSS_NO) = C.APPV_PRCSS_NO
     WHERE C.APPV_PRCSS_STUS != 'J'
-        <if test="memAccId != null and memAccId != '' ">
-            AND UPPER(B.SUPPLIER) = UPPER(#{memAccId})
-        </if>
-        <if test="supplier != null and supplier != '' ">
-            AND UPPER(B.SUPPLIER) = UPPER(#{supplier})
-        </if>
-        AND B.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
-</select>
+
+    <if test="memAccId != null and memAccId != '' ">
+      AND UPPER(B.SUPPLIER) = UPPER(#{memAccId})
+    </if>
+
+    <if test="supplier != null and supplier != '' ">
+        AND UPPER(B.SUPPLIER) = UPPER(#{supplier})
+    </if>
+
+    AND B.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+  </select>
 
 <select id="getAppvExcelInfo" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.getAppvExcelInfo */
