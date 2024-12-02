@@ -4032,7 +4032,7 @@
            SYSDATE
     FROM LOG0015D
     WHERE 1 = 1
-      AND STK_REQ_ID = ( SELECT DISTINCT REQ_ID
+      AND STK_REQ_ID IN ( SELECT DISTINCT REQ_ID
                          FROM LOG0016D
                          WHERE REQ_ITM_REF_ID = #{OLD_AS_RESULT_ID}
       AND REQ_ITM_TYPE_ID ='457'
