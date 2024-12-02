@@ -1375,132 +1375,130 @@
     )
     </insert>
 
-    <select id="selectRequestRefundList" parameterType="Map" resultType="egovMap">
-        SELECT Rownum rnum, T.* FROM (
-        SELECT
-            A.REQ_ID AS REF_REQ_ID,
-            DT.GROUP_SEQ GRP_SEQ,
-            A.REASON_ID,
-            C.RESN_DESC AS REF_RESN_NM,
-            APPR.APPV_PRCSS_STUS REF_STUS_ID,
-             B.CODE_DESC AS REF_STUS_NM,
-             <!-- B.NAME AS REF_STUS_NM, -->
-            A.CRT_USER_ID,
-            D.USER_NAME AS REF_CRT_USER_NM,
-            A.CRT_DT REF_CRT_DT,
-            NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO,
-            H.CODE || ' - ' || H.NAME REQST_BRNCH,
-            <!-- I.USER_NAME AS REF_APPV_USER_NM -->
-            <!-- CASE WHEN APPR.APPV_PRCSS_STUS IN ('A','J') THEN I.USER_NAME
-                    ELSE ''
-                END REF_APPV_USER_NM -->
-             CASE WHEN APPRDT.appv_stus IN ('A','J') THEN I.USER_NAME
-                    ELSE ''
-                END REF_APPV_USER_NM
-             ,CASE WHEN APPR.APPV_PRCSS_STUS  = 'A' THEN 5
-            WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
-            WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1
-                    END AS APPV_STUS
-        FROM PAY0344M A
-        JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
-        JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
-        <if test='adminRole !="Y" '>
+  <select id="selectRequestRefundList" parameterType="Map" resultType="egovMap">
+    SELECT Rownum rnum,
+               T.* FROM ( SELECT A.REQ_ID AS REF_REQ_ID,
+                                          DT.GROUP_SEQ GRP_SEQ,
+                                          A.REASON_ID,
+                                          C.RESN_DESC AS REF_RESN_NM,
+                                          APPR.APPV_PRCSS_STUS REF_STUS_ID,
+                                          B.CODE_DESC AS REF_STUS_NM,
+                                          <!-- B.NAME AS REF_STUS_NM, -->
+                                          A.CRT_USER_ID,
+                                          D.USER_NAME AS REF_CRT_USER_NM,
+                                          A.CRT_DT REF_CRT_DT,
+                                          NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO,
+                                          H.CODE || ' - ' || H.NAME REQST_BRNCH,
+                                          <!-- I.USER_NAME AS REF_APPV_USER_NM -->
+                                          <!-- CASE WHEN APPR.APPV_PRCSS_STUS IN ('A','J') THEN I.USER_NAME
+                                                   ELSE '' END REF_APPV_USER_NM -->
+                                          CASE WHEN APPRDT.appv_stus IN ('A','J') THEN I.USER_NAME
+                                            ELSE '' END REF_APPV_USER_NM,
+                                          CASE WHEN APPR.APPV_PRCSS_STUS  = 'A' THEN 5
+                                          WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
+                                          WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1 END AS APPV_STUS
+                               FROM PAY0344M A
+                               JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
+                               JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
 
-        JOIN (
-                    SELECT PAY0348D.*
-                    <!-- CASE WHEN APPV_STUS = 'A' THEN 5
-                    WHEN APPV_STUS = 'J' THEN 6
-                    WHEN APPV_STUS = 'R' THEN 1
-                    END AS APPV_PRCSS_STUS -->
-                    FROM PAY0348D
-        ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
-        </if>
-        <if test='adminRole != null and adminRole == "Y"'>
-         LEFT JOIN (
-                    SELECT APDT.*, CASE WHEN APDT.APPV_STUS = 'A' THEN 5
-                    WHEN APDT.APPV_STUS = 'J' THEN 6
-                    WHEN APDT.APPV_STUS = 'R' THEN 1
-                    END AS APPV_PRCSS_STUS
-                    FROM (SELECT
-                      ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number, PAY0348D.*
-                    FROM PAY0348D
-                    WHERE PAY0348D.APPV_STUS IN ('A', 'J')
-                    ) APDT WHERE ROW_NUMBER = 1
-        ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
+                               <if test='adminRole !="Y" '>
+                                 JOIN ( SELECT PAY0348D.*
+                                           <!-- CASE WHEN APPV_STUS = 'A' THEN 5
+                                                  WHEN APPV_STUS = 'J' THEN 6
+                                                  WHEN APPV_STUS = 'R' THEN 1 END AS APPV_PRCSS_STUS -->
+                                           FROM PAY0348D
+                                 ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
+                               </if>
 
-        </if>
-        LEFT JOIN PAY0252T E ON DT.GROUP_SEQ = E.GROUP_SEQ
-        JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID AND DT.OR_NO = F.OR_NO
-        LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
-        LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]>0
-        LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
-        LEFT JOIN SYS0013M B ON APPR.APPV_PRCSS_STUS = B.CODE AND B.CODE_MASTER_ID = 508
-        <!-- LEFT JOIN SYS0038M  B ON APPRDT.APPV_PRCSS_STUS = B.STUS_CODE_ID -->
-        LEFT JOIN SYS0032M C ON A.REASON_ID = C.RESN_ID
-        LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
-        LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
-        LEFT JOIN SYS0047M I ON APPRDT.APPV_LINE_USER_ID = I.HR_CODE
-        WHERE 1=1
-        AND A.REQ_TYPE = 'REF'
+                               <if test='adminRole != null and adminRole == "Y"'>
+                                 LEFT JOIN ( SELECT APDT.*,
+                                                             CASE WHEN APDT.APPV_STUS = 'A' THEN 5
+                                                             WHEN APDT.APPV_STUS = 'J' THEN 6
+                                                             WHEN APDT.APPV_STUS = 'R' THEN 1 END AS APPV_PRCSS_STUS
+                                                  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number,
+                                                                       PAY0348D.*
+                                                            FROM PAY0348D
+                                                            WHERE PAY0348D.APPV_STUS IN ('A', 'J')
+                                                  ) APDT WHERE ROW_NUMBER = 1
+                                 ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
+                               </if>
 
-        <if test='adminRole !="Y" '>
-	        AND (APPR.APPV_PRCSS_STUS = 'R' OR APPR.APPV_PRCSS_STUS = 'P' OR APPR.APPV_PRCSS_STUS = 'A' or APPR.APPV_PRCSS_STUS = 'J')
-	        AND (APPRDT.APPV_STUS = 'R' OR APPRDT.APPV_STUS = 'A' OR APPRDT.APPV_STUS = 'J')
-        </if>
+                               LEFT JOIN PAY0252T E ON DT.GROUP_SEQ = E.GROUP_SEQ
+                               JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID AND DT.OR_NO = F.OR_NO
+                               LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
+                               LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]>0
+                               LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
+                               LEFT JOIN SYS0013M B ON APPR.APPV_PRCSS_STUS = B.CODE AND B.CODE_MASTER_ID = 508
+                               <!-- LEFT JOIN SYS0038M  B ON APPRDT.APPV_PRCSS_STUS = B.STUS_CODE_ID -->
+                               LEFT JOIN SYS0032M C ON A.REASON_ID = C.RESN_ID
+                               LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
+                               LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
+                               LEFT JOIN SYS0047M I ON APPRDT.APPV_LINE_USER_ID = I.HR_CODE
+                               WHERE 1=1
+                                   AND A.REQ_TYPE = 'REF'
 
-<!--            <if test="salesOrdNo != null and salesOrdNo != '' ">
-                AND APPRDT.APPV_LINE_USER_ID = #{memCode}
-            </if> -->
-           <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
-                AND A.CRT_DT <![CDATA[   >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
-                AND A.CRT_DT <![CDATA[   < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
-            </if>
-            <if test="status != null and status != '' ">
-                 <!-- AND APPRDT.APPV_STUS = #{status} -->
-                <if test='status == 1'>
-                    AND APPR.APPV_PRCSS_STUS = 'P'
-                </if>
-                <if test='status == 5'>
-                    AND APPR.APPV_PRCSS_STUS = 'A'
-                </if>
-                <if test='status == 6'>
-                    AND APPR.APPV_PRCSS_STUS = 'J'
-                </if>
-            </if>
-            <if test="reason != null and reason != '' ">
-                AND A.REASON_ID = #{reason}
-            </if>
-            <if test="reqNo != null and reqNo != '' ">
-                AND A.REQ_ID = #{reqNo}
-            </if>
-            <if test="salesOrdNo != null and salesOrdNo != '' ">
-                AND DT.GROUP_SEQ IN (
-                    SELECT
-                        DISTINCT A.GROUP_SEQ
-                    FROM PAY0252T A
-                    INNER JOIN PAY0064D B
-                        ON A.PAY_ID = B.PAY_ID
-                    LEFT JOIN SAL0001D S1
-                        ON B.SALES_ORD_ID = S1.SALES_ORD_ID
-                        AND B.BILL_ID = 0
-                    LEFT JOIN PAY0007D C
-                        ON B.BILL_ID = C.BILL_ID
-                        AND B.BILL_ID <![CDATA[ <> ]]> 0
-                    LEFT JOIN SAL0001D S2
-                        ON C.BILL_SO_ID = S2.SALES_ORD_ID
-                    WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
-                    AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo})
-            )
-            </if>
-            <if test="branchId != null and branchId != '' ">
-            AND H.BRNCH_ID = #{branchId}
-            </if>
-            <if test="userId != null and userId != '' ">
-            AND A.CRT_USER_ID = #{userId}
-            </if>
-        ORDER BY A.REQ_ID
-        )T
-    </select>
+                               <if test='adminRole !="Y" '>
+                                 AND (APPR.APPV_PRCSS_STUS = 'R' OR APPR.APPV_PRCSS_STUS = 'P' OR APPR.APPV_PRCSS_STUS = 'A' or APPR.APPV_PRCSS_STUS = 'J')
+                                 AND (APPRDT.APPV_STUS = 'R' OR APPRDT.APPV_STUS = 'A' OR APPRDT.APPV_STUS = 'J')
+                               </if>
+
+                               <!-- <if test="salesOrdNo != null and salesOrdNo != '' ">
+                                 AND APPRDT.APPV_LINE_USER_ID = #{memCode}
+                               </if> -->
+
+                               <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+                                 AND A.CRT_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+                                 AND A.CRT_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+                               </if>
+
+                               <if test="status != null and status != '' ">
+                                 <!-- AND APPRDT.APPV_STUS = #{status} -->
+                                 <if test='status == 1'>
+                                   AND APPR.APPV_PRCSS_STUS = 'P'
+                                 </if>
+                                 <if test='status == 5'>
+                                   AND APPR.APPV_PRCSS_STUS = 'A'
+                                 </if>
+                                 <if test='status == 6'>
+                                   AND APPR.APPV_PRCSS_STUS = 'J'
+                                 </if>
+                               </if>
+
+                               <if test="reason != null and reason != '' ">
+                                 AND A.REASON_ID = #{reason}
+                               </if>
+
+                               <if test="reqNo != null and reqNo != '' ">
+                                 AND A.REQ_ID = #{reqNo}
+                               </if>
+
+                               <if test="salesOrdNo != null and salesOrdNo != '' ">
+                                 AND <!-- DT.GROUP_SEQ IN ( SELECT DISTINCT A.GROUP_SEQ  -->
+                                        (SELECT COUNT(A.GROUP_SEQ)
+                                                                     FROM PAY0252T A
+                                                                     INNER JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                                                                     LEFT JOIN SAL0001D S1 ON B.SALES_ORD_ID = S1.SALES_ORD_ID
+                                                                                                     AND B.BILL_ID = 0
+                                                                     LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID
+                                                                                                    AND B.BILL_ID <![CDATA[ <> ]]> 0
+                                                                     LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
+                                                                     WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
+                                                                         AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo})
+                                                                         AND A.GROUP_SEQ = DT.GROUP_SEQ
+                                        ) > 0
+                                 <!-- ) -->
+                               </if>
+
+                               <if test="branchId != null and branchId != '' ">
+                                 AND H.BRNCH_ID = #{branchId}
+                               </if>
+
+                               <if test="userId != null and userId != '' ">
+                                 AND A.CRT_USER_ID = #{userId}
+                               </if>
+                               ORDER BY A.REQ_ID
+    ) T
+  </select>
 
     <select id="selectRequestRefundByGroupSeq" parameterType="Map" resultType="egovMap">
         SELECT
