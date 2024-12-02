@@ -196,9 +196,9 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 GovEInvcVO govEInvc = new GovEInvcVO();
                 govEinvcMain = eInvcClaimList.get(i);
                 govEinvcMain.put("issueDate", formattedDate);
+            	govEinvcMain.put("invType", params.get("invType"));
 
-                if(params.get("invType").equals("02")){
-                	govEinvcMain.put("invType", params.get("invType"));
+                if(params.get("invType").equals("02") && govEinvcMain.get("invTypeCode").toString().equals("01")){ //only consolidate BR set issue date
                     govEinvcMain.put("issueDate", eInvcClaimList.get(i).get("invprdStartDt").toString());
                 }
 
@@ -240,7 +240,7 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                 jsonParams.put("userId", 349);
                 jsonParams.put("status", 104);
                 jsonParams.put("issueDt", formattedDate);
-                if(params.get("invType").equals("02")){
+                if(params.get("invType").equals("02") && govEinvcMain.get("invTypeCode").toString().equals("01")){ //only consolidate BR set issue date
                 	jsonParams.put("issueDt", eInvcClaimList.get(i).get("invprdStartDt").toString());
                 }
                 updEInvJsonString(jsonParams);
@@ -345,14 +345,22 @@ public class GovEInvoiceServiceImpl  implements GovEInvoiceService {
                         if(params.get("invType").equals("01")){ //E-Invoice
                             einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiGenerate+"?einvoice-type=SALES");
                         }
+//                        else if(params.get("invType").equals("02")){ //Consolidate
+//                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
+//                        }
                         else if(params.get("invType").equals("02")){ //Consolidate
-                            einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
+                        	if(eInvcClaimList.get(i).get("invTypeCode").toString().equals("01")){ //Normal Invoice BR
+                                einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiUpload+"?einvoice-type=SALES_B2C");
+                        	}
+                        	else if(eInvcClaimList.get(i).get("invTypeCode").toString().equals("02") || eInvcClaimList.get(i).get("invTypeCode").toString().equals("03")){ //CN/DN invoice
+                                einvApiParams.put("cleartaxUrl", ClearTaxApiDomain + ClearTaxApiGenerate+"?einvoice-type=SALES_B2C");
+                        	}
                         }
+
                         einvApiParams.put("json", json);
                         einvApiParams.put("groupId", groupId);
                         //einvApiParams.put("uin", eInvcClaimList.get(i).get("uniqueId").toString());
                         einvApiParams.put("invType",params.get("invType"));
-
                         clearTaxSubmitReqApi(einvApiParams);
                     } catch (Exception e) {
                         e.printStackTrace();
