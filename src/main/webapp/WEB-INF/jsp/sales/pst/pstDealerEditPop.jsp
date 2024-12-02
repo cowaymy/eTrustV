@@ -32,7 +32,9 @@
         });
 
         $("#_newAddr").click(function() {
-            Common.popupDiv('/sales/pst/editDealerNewAddressPop.do', $("#paramForm").serializeJSON(), null , true ,'_editDiv2New');
+        	/*Common.popupDiv('/sales/pst/editDealerNewAddressPop.do', $("#paramForm").serializeJSON(), null , true ,'_editDiv2New'); */
+            /*Pass the serialized data to your popup (serialize the form into a query string format, such as dealerId=someValue&tempDealerId=&tempDealerAddrId=&tempDealerCntId=) */
+            Common.popupDiv('/sales/pst/editDealerNewAddressPop.do', $("#paramForm").serialize(), null , true ,'_editDiv2New');
         });
 
         $("#_newContact").click(function() {
