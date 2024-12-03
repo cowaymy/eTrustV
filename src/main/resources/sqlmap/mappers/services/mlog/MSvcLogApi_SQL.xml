@@ -6178,4 +6178,14 @@ SELECT MST.*
     WHERE SALES_ORD_NO = #{salesOrdNo}
   </select>
 
+  <insert id="saveErrorToDatabase" parameterType="Map">
+    INSERT INTO SVC0150T ( SVC_NO
+                                      , ERR_MSG
+                                      , STACK_TRACE
+    ) VALUES ( #{no}
+                  , #{errMsg}
+                  , #{stckTrc}
+    )
+  </insert>
+
 </mapper>
