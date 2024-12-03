@@ -1,5 +1,7 @@
 package com.coway.trust.biz.services.mlog.impl;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -1135,5 +1137,29 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public List<EgovMap> getCustNRIC(Map<String, Object> params) {
     return MSvcLogApiMapper.getCustNRIC(params);
+  }
+
+  @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void saveErrorToDatabase(Map<String, Object> e) {
+    Exception exception = (Exception) e.get("exception");
+
+    if (exception == null) {
+        return;
+    }
+
+    String errorMessage = exception.getMessage();
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    exception.printStackTrace(pw);
+    String stackTrace = sw.toString();
+
+    // Prepare map for database insertion
+    Map<String, Object> mapValue = new HashMap<>();
+    mapValue.put("errMsg", errorMessage);
+    mapValue.put("stckTrc", stackTrace);
+    mapValue.put("no", e.get("no"));
+
+    MSvcLogApiMapper.saveErrorToDatabase(mapValue);
   }
 }
