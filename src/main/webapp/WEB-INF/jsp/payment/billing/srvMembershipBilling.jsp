@@ -287,13 +287,20 @@
 						.getGridData(myGridID));
 
 				//Summary 값
-				var amtArray = AUIGrid.getColumnValues(myGridID, "totalAmt");
-				var sum = 0;
-				for (i = 0; i < amtArray.length; i++) {
-					sum += amtArray[i];
-				}
-				$('#view_count').text(AUIGrid.getRowCount(myGridID));
-				$('#view_total').text('RM ' + sum);
+				// edit by hakimin 20241203
+                var amtArray = AUIGrid.getColumnValues(myGridID, "totalAmt");
+                var sum = 0;
+
+                // Calculate sum
+                for (i = 0; i < amtArray.length; i++) {
+                    sum += amtArray[i];
+                }
+
+                // Fix floating-point precision and update the view
+                sum = Math.round((sum + Number.EPSILON) * 100) / 100;
+                $('#view_count').text(AUIGrid.getRowCount(myGridID));
+                $('#view_total').text('RM ' + sum.toFixed(2));
+
 			}
 		}
 	}
