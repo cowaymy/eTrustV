@@ -164,9 +164,10 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       } catch (Exception e) {
         logger.error( e.getMessage() );
         errMap.put( "no", serviceNo );
-        errMap.put( "e", e );
+        errMap.put( "exception", e );
         MSvcLogApiService.saveErrorToDatabase(errMap);
-        e.printStackTrace();
+        // e.printStackTrace();
+        throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
@@ -175,9 +176,9 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     } catch (Exception e) {
       logger.error( e.getMessage() );
       errMap.put( "no", serviceNo );
-      errMap.put( "e", e );
+      errMap.put( "exception", e );
       MSvcLogApiService.saveErrorToDatabase(errMap);
-      throw new ApplicationException(AppConstants.FAIL, "Fail");
+      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
     }
 
     return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
