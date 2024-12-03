@@ -168,6 +168,10 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     try {
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
+      Map<String, Object> errMap = new HashMap<String,Object>();
+      errMap.put( "no", serviceNo );
+      errMap.put( "e", e );
+      MSvcLogApiService.saveErrorToDatabase(errMap);
       throw new ApplicationException(AppConstants.FAIL, "Fail");
     }
 
