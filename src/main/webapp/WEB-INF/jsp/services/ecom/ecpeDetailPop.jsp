@@ -108,9 +108,13 @@
           dataField : "approvedBy",
           headerText : "Approval By",
           width : '12%'
-        }, {
+        },{
+            dataField : "oldDscBranch",
+            headerText : "From Dsc Branch",
+            width : '12%'
+          },{
           dataField : "dscBranch",
-          headerText : "Dsc Branch",
+          headerText : "To Dsc Branch",
           width : '12%'
         }, {
             dataField : "status",
@@ -163,11 +167,12 @@
                 }
             }
         }
+        ,{
+            dataField : "lastUpdateBy",
+            headerText : "Update By",
+            width : '12%'
+          }
 //         ,{
-//             dataField : "lastUpdateBy",
-//             headerText : "Last Update By",
-//             width : '12%'
-//           },{
 //               dataField : "lastUpdateDate",
 //               headerText : "Last Update Date",
 //               dataType : "date",
