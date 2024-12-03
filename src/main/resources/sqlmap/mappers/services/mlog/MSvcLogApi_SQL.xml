@@ -2391,94 +2391,94 @@ SELECT MST.*
   </select>
 
   <select id="getInstallResultByInstallEntryID" parameterType="Map" resultType="egovMap">
-    SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
-           Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
-           Extent3.SALES_ORD_ID SALES_ORD_ID  ,
-           Extent3.SALES_ORD_NO SALES_ORD_NO  ,
-           Extent3.REF_NO REF_NO  ,
-           Extent3.CUST_PO_NO CUST_PO_NO  ,
-           TO_CHAR(Extent3.SALES_DT,'DD-MM-YYYY') SALES_DT  ,
-           TO_CHAR(Extent1.INSTALL_DT,'DD-MM-YYYY')  C1  ,
-           Extent1.INSTALL_STK_ID INSTALL_STK_ID  ,
-           Extent9.STK_CODE STK_CODE  ,
-           Extent9.STK_DESC STK_DESC  ,
-           Extent10.NAME NAME  ,
-           Extent8.CODE_ID CODE_ID  ,
-           Extent8.CODE_NAME CODE_NAME  ,
-           Extent7.CODE_ID CODEID1  ,
-           Extent7.CODE CODE  ,
-           Extent7.CODE_NAME CODENAME1  ,
-           Extent13.STUS_CODE_ID STUS_CODE_ID  ,
-           Extent13.CODE CODE1  ,
-           Extent13.NAME NAME1  ,
-           Extent14.BRNCH_ID BRNCH_ID  ,
-           Extent10.CUST_ID CUST_ID  ,
-           Extent10.NRIC NRIC  ,
-           CASE WHEN ( Extent3.CUST_ADD_ID IS NOT NULL )
-             THEN Extent3.CUST_ADD_ID
-             ELSE 0 END C2  ,
-           Extent3.CUST_CNT_ID CUST_CNT_ID  ,
-           Extent2.SIRIM_NO SIRIM_NO  ,
-           Extent2.SERIAL_NO SERIAL_NO  ,
-           Extent11.USER_NAME USER_NAME  ,
-           Extent9.IS_SIRIM IS_SIRIM  ,
-           Extent9.STK_GRAD STK_GRAD  ,
-           TO_CHAR(Extent2.CRT_DT,'DD-MM-YYYY') C3  ,
-           Extent9.STK_CTGRY_ID STK_CTGRY_ID  ,
-           Extent2.DOC_REF_NO1 DOC_REF_NO1  ,
-           Extent2.DOC_REF_NO2 DOC_REF_NO2  ,
-           Extent2.ALLOW_COMM ALLOW_COMM  ,
-           Extent2.IS_TRADE_IN IS_TRADE_IN  ,
-           Extent2.REQUIRE_SMS REQUIRE_SMS  ,
-           CASE WHEN ( Extent12.USER_ID IS NOT NULL )
-             THEN Extent12.USER_NAME
-             ELSE ' ' END C4  ,
-           Extent2.CRT_DT C5  ,
-           CASE WHEN ( Extent2.RESULT_ID IS NOT NULL )
-             THEN Extent2.CT_ID
-             ELSE 0 END C6  ,
-           Extent15.MEM_CODE MEM_CODE  ,
-           Extent15.NAME NAME2  ,
-           Extent16.WH_LOC_ID WH_LOC_ID  ,
-           Extent4.DOC_ID DOC_ID  ,
-           Extent2.INSTALL_DT INSTALL_DT  ,
-           Extent2.NEXT_CALL_DT NEXT_CALL_DT  ,
-           Extent2.REM REM  ,
-           Extent2.BOOSTER_PUMP BOOSTER_PUMP ,
-           Extent2.AFT_PSI AFT_PSI ,
-           Extent2.AFT_LPM AFT_LPM ,
-           Extent2.TURB_LVL TURB_LVL ,
-           Extent2.WATER_SRC_TYPE WATER_SRC_TYPE ,
-           CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
-             THEN Extent3.CUST_BILL_ID
-             ELSE 0 END C7  ,
-           Extent6.CODE_NAME CODENAME2,
-           Extent4.TYPE_ID TYPE_ID,
-           Extent1.APPNT_DT,
-           Extent1.APPNT_TM,
-           Extent10.TYPE_ID as CUST_TYPE
-    FROM SAL0046D Extent1
-    LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
-    JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
-    LEFT JOIN CCR0006D Extent4 ON Extent1.CALL_ENTRY_ID = Extent4.CALL_ENTRY_ID
-    LEFT JOIN SAL0074D Extent5 ON Extent3.SALES_ORD_ID = Extent5.SALES_ORD_ID
-    LEFT JOIN SYS0013M Extent6 ON Extent5.MODE_ID = Extent6.CODE_ID
-    LEFT JOIN SYS0013M Extent7 ON Extent4.TYPE_ID = Extent7.CODE_ID
-    LEFT JOIN SYS0013M Extent8 ON Extent3.APP_TYPE_ID = Extent8.CODE_ID
-    LEFT JOIN SYS0026M Extent9 ON Extent1.INSTALL_STK_ID = Extent9.STK_ID
-    LEFT JOIN SAL0029D Extent10 ON Extent3.CUST_ID = Extent10.CUST_ID
-    LEFT JOIN SYS0047M  Extent11 ON Extent3.UPD_USER_ID = Extent11.USER_ID
-    LEFT JOIN SYS0047M  Extent12 ON Extent2.CRT_USER_ID = Extent12.USER_ID
-    LEFT JOIN SYS0038M Extent13 ON Extent1.STUS_CODE_ID = Extent13.STUS_CODE_ID
-    JOIN SAL0045D Extent14 ON Extent3.SALES_ORD_ID = Extent14.SALES_ORD_ID
-    LEFT JOIN ORG0001D Extent15 ON Extent2.CT_ID = Extent15.MEM_ID
-    LEFT JOIN SYS0028M Extent16 ON ( Extent15.MEM_CODE = Extent16.WH_LOC_CODE )
-           OR ( ( Extent15.MEM_CODE IS NULL )
-          AND ( Extent16.WH_LOC_CODE IS NULL ) )
-    WHERE  1=1
-    AND Extent3.SALES_ORD_NO = #{salesOrderNo}
-    AND Extent1.INSTALL_ENTRY_NO = #{serviceNo}
-    AND rownum =1
+    SELECT EXTENT1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID ,
+               EXTENT1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO ,
+               EXTENT3.SALES_ORD_ID SALES_ORD_ID ,
+               EXTENT3.SALES_ORD_NO SALES_ORD_NO ,
+               EXTENT3.REF_NO REF_NO ,
+               EXTENT3.CUST_PO_NO CUST_PO_NO ,
+               TO_CHAR(EXTENT3.SALES_DT,'DD-MM-YYYY') SALES_DT ,
+               TO_CHAR(EXTENT1.INSTALL_DT,'DD-MM-YYYY') C1 ,
+               EXTENT1.INSTALL_STK_ID INSTALL_STK_ID ,
+               EXTENT9.STK_CODE STK_CODE ,
+               EXTENT9.STK_DESC STK_DESC ,
+               EXTENT10.NAME NAME ,
+               EXTENT8.CODE_ID CODE_ID ,
+               EXTENT8.CODE_NAME CODE_NAME ,
+               EXTENT7.CODE_ID CODEID1 ,
+               EXTENT7.CODE CODE ,
+               EXTENT7.CODE_NAME CODENAME1 ,
+               EXTENT13.STUS_CODE_ID STUS_CODE_ID ,
+               EXTENT13.CODE CODE1 ,
+               EXTENT13.NAME NAME1 ,
+               EXTENT14.BRNCH_ID BRNCH_ID ,
+               EXTENT10.CUST_ID CUST_ID ,
+               EXTENT10.NRIC NRIC ,
+               CASE WHEN ( EXTENT3.CUST_ADD_ID IS NOT NULL )
+                       THEN EXTENT3.CUST_ADD_ID
+               ELSE 0 END C2 ,
+               EXTENT3.CUST_CNT_ID CUST_CNT_ID ,
+               EXTENT2.SIRIM_NO SIRIM_NO ,
+               EXTENT2.SERIAL_NO SERIAL_NO ,
+               EXTENT11.USER_NAME USER_NAME ,
+               EXTENT9.IS_SIRIM IS_SIRIM ,
+               EXTENT9.STK_GRAD STK_GRAD ,
+               TO_CHAR(EXTENT2.CRT_DT,'DD-MM-YYYY') C3 ,
+               EXTENT9.STK_CTGRY_ID STK_CTGRY_ID ,
+               EXTENT2.DOC_REF_NO1 DOC_REF_NO1 ,
+               EXTENT2.DOC_REF_NO2 DOC_REF_NO2 ,
+               EXTENT2.ALLOW_COMM ALLOW_COMM ,
+               EXTENT2.IS_TRADE_IN IS_TRADE_IN ,
+               EXTENT2.REQUIRE_SMS REQUIRE_SMS ,
+               CASE WHEN ( EXTENT12.USER_ID IS NOT NULL )
+                       THEN EXTENT12.USER_NAME
+               ELSE ' ' END C4 ,
+               EXTENT2.CRT_DT C5 ,
+               CASE WHEN ( EXTENT2.RESULT_ID IS NOT NULL )
+                       THEN EXTENT2.CT_ID
+                       ELSE 0 END C6 ,
+               EXTENT15.MEM_CODE MEM_CODE ,
+               EXTENT15.NAME NAME2 ,
+               EXTENT16.WH_LOC_ID WH_LOC_ID ,
+               EXTENT4.DOC_ID DOC_ID ,
+               EXTENT2.INSTALL_DT INSTALL_DT ,
+               EXTENT2.NEXT_CALL_DT NEXT_CALL_DT ,
+               EXTENT2.REM REM ,
+               EXTENT2.BOOSTER_PUMP BOOSTER_PUMP ,
+               EXTENT2.AFT_PSI AFT_PSI ,
+               EXTENT2.AFT_LPM AFT_LPM ,
+               EXTENT2.TURB_LVL TURB_LVL ,
+               EXTENT2.WATER_SRC_TYPE WATER_SRC_TYPE ,
+               CASE WHEN ( EXTENT3.CUST_BILL_ID IS NOT NULL )
+                       THEN EXTENT3.CUST_BILL_ID
+                       ELSE 0 END C7 ,
+               EXTENT6.CODE_NAME CODENAME2,
+               EXTENT4.TYPE_ID TYPE_ID,
+               EXTENT1.APPNT_DT,
+               EXTENT1.APPNT_TM,
+               EXTENT10.TYPE_ID AS CUST_TYPE
+    FROM SAL0046D EXTENT1
+    LEFT JOIN SAL0047D EXTENT2 ON EXTENT1.INSTALL_ENTRY_ID = EXTENT2.ENTRY_ID
+    JOIN SAL0001D EXTENT3 ON EXTENT1.SALES_ORD_ID = EXTENT3.SALES_ORD_ID
+    LEFT JOIN CCR0006D EXTENT4 ON EXTENT1.CALL_ENTRY_ID = EXTENT4.CALL_ENTRY_ID
+    LEFT JOIN SAL0074D EXTENT5 ON EXTENT3.SALES_ORD_ID = EXTENT5.SALES_ORD_ID
+    LEFT JOIN SYS0013M EXTENT6 ON EXTENT5.MODE_ID = EXTENT6.CODE_ID
+    LEFT JOIN SYS0013M EXTENT7 ON EXTENT4.TYPE_ID = EXTENT7.CODE_ID
+    LEFT JOIN SYS0013M EXTENT8 ON EXTENT3.APP_TYPE_ID = EXTENT8.CODE_ID
+    LEFT JOIN SYS0026M EXTENT9 ON EXTENT1.INSTALL_STK_ID = EXTENT9.STK_ID
+    LEFT JOIN SAL0029D EXTENT10 ON EXTENT3.CUST_ID = EXTENT10.CUST_ID
+    LEFT JOIN SYS0047M  EXTENT11 ON EXTENT3.UPD_USER_ID = EXTENT11.USER_ID
+    LEFT JOIN SYS0047M  EXTENT12 ON EXTENT2.CRT_USER_ID = EXTENT12.USER_ID
+    LEFT JOIN SYS0038M EXTENT13 ON EXTENT1.STUS_CODE_ID = EXTENT13.STUS_CODE_ID
+    JOIN SAL0045D EXTENT14 ON EXTENT3.SALES_ORD_ID = EXTENT14.SALES_ORD_ID
+    LEFT JOIN ORG0001D EXTENT15 ON EXTENT2.CT_ID = EXTENT15.MEM_ID
+    LEFT JOIN SYS0028M EXTENT16 ON ( EXTENT15.MEM_CODE = EXTENT16.WH_LOC_CODE )
+                                               OR ( ( EXTENT15.MEM_CODE IS NULL )
+                                               AND ( EXTENT16.WH_LOC_CODE IS NULL ) )
+    WHERE 1=1
+        AND EXTENT3.SALES_ORD_NO = #{salesOrderNo}
+        AND EXTENT1.INSTALL_ENTRY_NO = #{serviceNo}
+        AND ROWNUM =1
   </select>
 
   <insert id="insertInstallResult" parameterType="Map">
