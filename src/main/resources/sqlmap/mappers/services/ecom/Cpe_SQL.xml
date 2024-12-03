@@ -1127,6 +1127,7 @@
     <update id="updateEcpeSal0045d" parameterType="Map">
         UPDATE SAL0045D
              SET  ADD_ID = #{custAddId}
+             ,CNT_ID = #{custCntcId}
             ,UPD_DT = SYSDATE
             ,UPD_USER_ID = #{userId}
         WHERE SALES_ORD_ID = #{salesOrdId}
@@ -1160,6 +1161,6 @@
         <select id="getDscbyDscCode" parameterType="Map" resultType="egovMap">
             SELECT
                BRNCH_ID FROM SYS0005M
-               WHERE CODE = #{dscCode}
+               WHERE CODE = #{dscCode} AND STUS_ID = 1
     </select>
 </mapper>
