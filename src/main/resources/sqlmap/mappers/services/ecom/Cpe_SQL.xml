@@ -1118,7 +1118,9 @@
     <update id="updateEcpeSal0001d" parameterType="Map">
         UPDATE SAL0001D
              SET CUST_CNT_ID = #{custCntcId}
-            ,CUST_ADD_ID = #{custAddId}
+           <if test='isMailing != null and isMailing !=0'>
+             ,CUST_ADD_ID = #{custAddId}
+           </if>
             ,UPD_DT = SYSDATE
             ,UPD_USER_ID = #{userId}
         WHERE SALES_ORD_ID = #{salesOrdId}

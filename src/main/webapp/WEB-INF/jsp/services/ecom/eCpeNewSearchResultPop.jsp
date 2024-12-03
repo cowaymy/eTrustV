@@ -265,11 +265,16 @@ window.addEventListener('resize', function(event){
             return ;
         }
 
+        if($("#mArea").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinArea" />');
+            return ;
+       }
 
         if($("#mTown").val() == ''){
              Common.alert('<spring:message code="sal.alert.msg.plzKeyinTown" />');
              return ;
         }
+
         if($("#mStreet").val() == ''){
              Common.alert('<spring:message code="sal.alert.msg.plzKeyinStreet" />');
              return ;
@@ -498,7 +503,7 @@ window.addEventListener('resize', function(event){
                  $("#areaId").val(result.areaId);
 
                  $("#_inputSubDeptSelect").val(result.brnchId);
-                 console.log("ni ma de");
+
                  doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', $("#_inputSubDeptSelect").val(),   '_inputSubDeptSelect', 'S', ''); //Branch Code
 
             });
@@ -569,13 +574,15 @@ window.addEventListener('resize', function(event){
             CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
 
             var postCodeJson = {state : mstate , city : mcity}; //Condition
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity, function(){
 
-            var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea,fn_getAreaId);
+            	 var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+                 CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea,fn_getAreaId);
 
-            $("#areaId").val(areaid);
-            $("#_searchDiv").remove();
+                 $("#areaId").val(areaid);
+                 $("#_searchDiv").remove();
+            });
+
         }else{
             Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
