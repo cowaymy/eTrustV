@@ -470,7 +470,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params) throws Exception {
     String serviceNo = String.valueOf(params.get("serviceNo"));
-    SessionVO sessionVO1 = new SessionVO();
+    SessionVO sessionVO = new SessionVO();
     int resultSeq = 0;
 
     if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
@@ -487,152 +487,131 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     String date = String.format("%02d", cal.get(cal.DATE));
     String todayPlusOne = (String.valueOf(date) + '/' + String.valueOf(month) + '/' + String.valueOf(year));
 
-    int isInsCnt = installationResultListService.isInstallAlreadyResult(params);
+    int isInsCnt = installationResultListService.isInstallAlreadyResult(params); // SAL0046D STATUS <> 1
 
-    // IF STATUS ARE NOT ACTIVE
-    if (isInsCnt == 0) {
-      String statusId = "21";
+    if (isInsCnt == 0) { // INSTALLATION IS ACTIVE
+      String statusId = "21"; // FAILL STATUS IS 21
 
-      // SAL0046D
-      EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+      EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params); // GET LIST OF INSTALLATION DETAILS BASED ON SALES ORDER NUMBER & INSTALLATION NO
       params.put("installEntryId", installResult.get("installEntryId"));
 
-      EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+      String userId = MSvcLogApiService.getUseridToMemid(params); // GET USER ID FROM ORG0001D > MEM_ID
+      sessionVO.setUserId(Integer.parseInt(userId)); // SET USER SESSION
 
-      String userId = MSvcLogApiService.getUseridToMemid(params);
-      sessionVO1.setUserId(Integer.parseInt(userId));
-
-      params.put("installStatus", String.valueOf(statusId));// 21
-      params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-      params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
-      params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
-      params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
-      params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
-      params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
-      params.put("hidStockGrade", installResult.get("stkGrad"));
-      params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
-      params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
-      params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
-      params.put("hidCallType", String.valueOf(installResult.get("typeId")));
-      params.put("hidDocId", String.valueOf(installResult.get("docId")));
-      params.put("CTID", String.valueOf(userId));
-      params.put("installDate", "");
-      params.put("updator", String.valueOf(userId));
-      params.put("nextCallDate", String.valueOf(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
-      params.put("refNo1", "0");
-      params.put("refNo2", "0");
-      params.put("codeId", String.valueOf(installResult.get("typeId")));
-      params.put("failReason", String.valueOf(params.get("failReasonCode")));
-      params.put("failLocCde", String.valueOf(params.get("failLocCde")));
-      params.put("volt", String.valueOf(params.get("volt")));
-      params.put("psiRcd", String.valueOf(params.get("psiRcd")));
-      params.put("lpmRcd", String.valueOf(params.get("lpmRcd")));
-      params.put("tds", String.valueOf(params.get("tds")));
-      params.put("roomTemp", String.valueOf(params.get("roomTemp")));
-      params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
-      params.put("turbLvl", String.valueOf(params.get("turbLvl")));
-      params.put("ntu", String.valueOf(params.get("ntu")));
-      params.put("customerType", String.valueOf(installResult.get("custType")));
-      params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
-      params.put("remark", String.valueOf(params.get("remark")));
-      params.put("failLct", String.valueOf(params.get("failLocCde")));
-      params.put("failDeptChk", String.valueOf(params.get("failBfDepWH")));
-      params.put("chkInstallAcc", 'N');
-      params.put("instAccLst", null);
-      params.put("mobileYn", 'Y');
-
-      if (orderInfo != null) {
-        params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
-      } else {
-        params.put("hidOutright_Price", "0");
-      }
-
-      params.put("hidAppTypeId", installResult.get("codeId"));
+      params.put("hidAppTypeId", CommonUtils.nvl(installResult.get("codeId")));
 
       if (installResult.get("sirimNo") != null) {
-        params.put("sirimNo", installResult.get("sirimNo"));
+        params.put("sirimNo", CommonUtils.nvl(installResult.get("sirimNo")));
       } else {
         params.put("sirimNo", "");
       }
+
       if (installResult.get("serialNo") != null) {
-        params.put("serialNo", installResult.get("serialNo"));
+        params.put("serialNo", CommonUtils.nvl(installResult.get("serialNo")));
       } else {
         params.put("serialNo", "");
       }
 
-      /*
-       * params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get( "sirimNo")));
-       * params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get( "serialNo")));
-       * params.put("remark",insTransLogs.get(i).get("resultRemark"));
-       */
+      // ADDITTION PARAM(S) NEED TO ADD HERE
+      params.put("installStatus", CommonUtils.nvl(statusId));
+      params.put("statusCodeId", Integer.parseInt(CommonUtils.nvl(params.get("installStatus").toString())));
+      params.put("hidEntryId", CommonUtils.nvl(installResult.get("installEntryId")));
+      params.put("hidCustomerId", CommonUtils.nvl(installResult.get("custId")));
+      params.put("hidSalesOrderId", CommonUtils.nvl(installResult.get("salesOrdId")));
+      params.put("hidTaxInvDSalesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
+      params.put("hidStockIsSirim", CommonUtils.nvl(installResult.get("isSirim")));
+      params.put("hidStockGrade", CommonUtils.nvl(installResult.get("stkGrad")));
+      params.put("hidSirimTypeId", CommonUtils.nvl(installResult.get("stkCtgryId")));
+      params.put("hiddeninstallEntryNo", CommonUtils.nvl(installResult.get("installEntryNo")));
+      params.put("hidTradeLedger_InstallNo", CommonUtils.nvl(installResult.get("installEntryNo")));
+      params.put("hidCallType", CommonUtils.nvl(installResult.get("typeId")));
+      params.put("hidDocId", CommonUtils.nvl(installResult.get("docId")));
+      params.put("CTID", CommonUtils.nvl(userId));
+      params.put("installDate", ""); // NO INSTALLATION DATE DUE TO FAIL INSTALLATION
+      params.put("updator", CommonUtils.nvl(userId));
+      params.put("nextCallDate", CommonUtils.nvl(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
+      params.put("refNo1", "0");
+      params.put("refNo2", "0");
+      params.put("codeId", CommonUtils.nvl(installResult.get("typeId")));
+      params.put("failReason", CommonUtils.nvl(params.get("failReasonCode")));
+      params.put("failLocCde", CommonUtils.nvl(params.get("failLocCde")));
+      params.put("volt", CommonUtils.nvl(params.get("volt")));
+      params.put("psiRcd", CommonUtils.nvl(params.get("psiRcd")));
+      params.put("lpmRcd", CommonUtils.nvl(params.get("lpmRcd")));
+      params.put("tds", CommonUtils.nvl(params.get("tds")));
+      params.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")));
+      params.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")));
+      params.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")));
+      params.put("ntu", CommonUtils.nvl(params.get("ntu")));
+      params.put("customerType", CommonUtils.nvl(installResult.get("custType")));
+      params.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")));
+      params.put("remark", CommonUtils.nvl(params.get("remark")));
+      params.put("failLct", CommonUtils.nvl(params.get("failLocCde")));
+      params.put("failDeptChk", CommonUtils.nvl(params.get("failBfDepWH")));
+      params.put("chkInstallAcc", 'N');
+      params.put("instAccLst", null);
+      params.put("mobileYn", 'Y');
+
+      EgovMap orderInfo = installationResultListService.getOrderInfo(params); // GET LIST OF ORDER & INSTALLATION DETAILS INSTALLATION ENTRY ID
+
+      if (orderInfo != null) {
+        params.put("hidOutright_Price", CommonUtils.nvl(orderInfo.get("c5")));
+      } else {
+        params.put("hidOutright_Price", "0");
+      }
 
       logger.debug("= INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
-      Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
 
-      if (null != rtnValue) {
-        HashMap spMap = (HashMap) rtnValue.get("spMap");
-        if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-          String procTransactionId = serviceNo;
-          String procName = "Installation";
-          String procKey = serviceNo;
-          String procMsg = "PRODUCT FAIL";
-          String errorMsg = "PRODUCT FAIL";
-          throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-        } else {
-          if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-            MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
-          }
-        }
+      try {
+        // START CALL ETRUST API BY PASSING PARAMS
+        Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO);
 
-        spMap.put("pErrcode", "");
-        spMap.put("pErrmsg", "");
-        servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
-
-        String errCode = (String) spMap.get("pErrcode");
-        String errMsg = (String) spMap.get("pErrmsg");
-
-        logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
-        logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
-
-        // pErrcode : 000 = Success, others = Fail
-        if (!"000".equals(errCode)) {
-          String procTransactionId = serviceNo;
-          String procName = "Installation";
-          String procKey = serviceNo;
-          String procMsg = "PRODUCT LOC NO DATA";
-          String errorMsg = "PRODUCT LOC NO DATA";
-          throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-        }
-
-        // SEND SMS
-        /*Map<String, Object> smsResultValue = new HashMap<String, Object>();
-
-        try {
-          if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
-            smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
-
-            EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
-            params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-            params.put("hpMemId",salesmanInfo.get("memId"));
-            EgovMap failReason = hcInstallResultListService.selectFailReason(params);
-            params.put("resnDesc",failReason.get("resnDesc"));
-            params.put("resnCode",failReason.get("resnCode"));
-            String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "\n Install Status: Failed"
-                              + "\n Failed Reason: " + params.get("resnDesc") ;
-            params.put("hpMsg",hpMsg);
-
-            smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
-          }else{
-            smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+        if (null != rtnValue) {
+          HashMap spMap = (HashMap) rtnValue.get("spMap");
+          if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+            String procTransactionId = serviceNo;
+            String procName = "Installation";
+            String procKey = serviceNo;
+            String procMsg = "PRODUCT FAIL";
+            String errorMsg = "PRODUCT FAIL";
+            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          } else {
+            if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+              MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
+            }
           }
 
-        } catch (Exception e) {
-          logger.info("= SEND SMS" + smsResultValue.toString());
-          logger.info("= FAILED TO SEND SMS TO " + params.get("custMobileNo").toString() + "=");
-        }*/
+          spMap.put("pErrcode", "");
+          spMap.put("pErrmsg", "");
+
+          servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+          String errCode = (String) spMap.get("pErrcode");
+          String errMsg = (String) spMap.get("pErrmsg");
+
+          logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+          logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+          // pErrcode : 000 = Success, others = Fail
+          if (!"000".equals(errCode)) {
+            String procTransactionId = serviceNo;
+            String procName = "Installation";
+            String procKey = serviceNo;
+            String procMsg = "PRODUCT LOC NO DATA";
+            String errorMsg = "PRODUCT LOC NO DATA";
+            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          }
+        }
+      } catch (Exception e) {
+        logger.error( e.getMessage() );
+        Map<String, Object> errMap = new HashMap<String,Object>();
+        errMap.put( "no", serviceNo );
+        errMap.put( "e", e );
+        MSvcLogApiService.saveErrorToDatabase(errMap);
       }
-    } else {
+    } else { // INSTALLATION IS NOT ACTICE
       if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+        // TODO CHECK THIS WHERE IS CALL
         MSvcLogApiService.updateInsFailServiceLogs(params);
       }
     }
