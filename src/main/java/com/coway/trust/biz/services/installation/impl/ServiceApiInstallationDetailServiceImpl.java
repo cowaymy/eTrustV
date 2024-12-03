@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
@@ -25,6 +26,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationDetailService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -469,6 +471,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params) throws Exception {
+    Map<String, Object> errMap = new HashMap<String,Object>();
     String serviceNo = String.valueOf(params.get("serviceNo"));
     SessionVO sessionVO = new SessionVO();
     int resultSeq = 0;
@@ -495,8 +498,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params); // GET LIST OF INSTALLATION DETAILS BASED ON SALES ORDER NUMBER & INSTALLATION NO
       params.put("installEntryId", installResult.get("installEntryId"));
 
-      String userId = MSvcLogApiService.getUseridToMemid(params); // GET USER ID FROM ORG0001D > MEM_ID
-      sessionVO.setUserId(Integer.parseInt(userId)); // SET USER SESSION
+      String userId = CommonUtils.nvl(MSvcLogApiService.getUseridToMemid(params)); // GET USER ID FROM ORG0001D > MEM_ID
+      if (!"".equals( userId )) {
+        sessionVO.setUserId(Integer.parseInt(userId)); // SET USER SESSION
+      } else {
+        errMap.put( "no", serviceNo );
+        errMap.put( "exception", "User ID does not Exist (" + CommonUtils.nvl(params.get( "userId" )) + ") " );
+        MSvcLogApiService.saveErrorToDatabase(errMap);
+        throw new ApplicationException(AppConstants.FAIL, "User ID does not Exist (" + CommonUtils.nvl(params.get( "userId" )) + ") ");
+      }
 
       params.put("hidAppTypeId", CommonUtils.nvl(installResult.get("codeId")));
 
@@ -574,6 +584,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             String procKey = serviceNo;
             String procMsg = "PRODUCT FAIL";
             String errorMsg = "PRODUCT FAIL";
+
+            errMap.put( "no", serviceNo );
+            errMap.put( "exception", "PRODUCT INSTALLATION FAIL (" + CommonUtils.nvl(spMap.get("P_RESULT_MSG")) + ") " );
+            MSvcLogApiService.saveErrorToDatabase(errMap);
+
             throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
           } else {
             if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
@@ -581,7 +596,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             }
           }
 
-          spMap.put("pErrcode", "");
+          /*spMap.put("pErrcode", "");
           spMap.put("pErrmsg", "");
 
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
@@ -600,18 +615,20 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             String procMsg = "PRODUCT LOC NO DATA";
             String errorMsg = "PRODUCT LOC NO DATA";
             throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-          }
+          }*/
         }
       } catch (Exception e) {
         logger.error( e.getMessage() );
-        Map<String, Object> errMap = new HashMap<String,Object>();
         errMap.put( "no", serviceNo );
         errMap.put( "e", e );
         MSvcLogApiService.saveErrorToDatabase(errMap);
       }
     } else { // INSTALLATION IS NOT ACTICE
       if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
-        // TODO CHECK THIS WHERE IS CALL
+        errMap.put( "no", serviceNo );
+        errMap.put( "exception", "INSTALLATION STATUS NOT ACTIVE (" + CommonUtils.nvl(isInsCnt) + ") " );
+        MSvcLogApiService.saveErrorToDatabase(errMap);
+
         MSvcLogApiService.updateInsFailServiceLogs(params);
       }
     }
