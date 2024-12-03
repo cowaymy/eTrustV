@@ -795,6 +795,13 @@
           AND T2.SALES_ORD_NO = #{order_no}
         </if>
 
+        <if test="arrStatusList != null and arrStatusList != ''">
+            AND T1.ECPE_STUS_ID IN
+            <foreach item="item" collection="arrStatusList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
         <if test="customer_name != null and customer_name != '' ">
            AND UPPER(T3.NAME) LIKE '%'|| UPPER(#{customer_name}) ||'%'
         </if>
@@ -836,12 +843,16 @@
     SELECT
          T1.ECPE_REQ_ID AS ECPE_REQ_ID
          ,T2.USER_FULL_NAME AS CREATED_BY
+         ,T8.USER_FULL_NAME AS LAST_UPDATE_BY
+         ,TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD')  AS LAST_UPDATE_DATE
          ,T4.ORG_CODE
          ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
          ,CASE WHEN T1.ECPE_STUS_ID = 5 THEN 'T1.UPD_USER_ID' ELSE NULL END AS APPROVED_BY
          ,T5.CODE || ' - ' || T5.NAME AS DSC_BRANCH
          ,T3.NAME AS STATUS
-         ,CASE WHEN T1.ECPE_STUS_ID = 5 THEN TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD') ELSE NULL END AS APPROVAL_DATE
+         ,CASE WHEN T1.ECPE_STUS_ID IN (5,6) THEN TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD')
+         ELSE NULL END AS APPROVAL_DATE
+         ,T1.APPROVAL_REMARK
          ,T6.ATCH_FILE_GRP_ID
          ,T7.ATCH_FILE_ID
          ,T7.ATCH_FILE_NAME
@@ -854,7 +865,8 @@
     LEFT JOIN SYS0005M T5 ON T5.BRNCH_ID = T1.BRNCH_ID
     LEFT JOIN SYS0070M T6 ON T6.ATCH_FILE_GRP_ID = T1.ATCH_FILE_GRP_ID
     LEFT JOIN SYS0071D T7 ON T7.ATCH_FILE_ID = T6.ATCH_FILE_ID
-    WHERE T1.ECPE_REQ_ID = #{cpeReqId}
+    JOIN SYS0047M T8 ON T8.USER_ID = T1.UPD_USER_ID
+    WHERE T1.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SVC0148M WHERE ECPE_REQ_ID = #{cpeReqId})
     ORDER BY T1.ECPE_REQ_ID ASC
     </select>
 
@@ -1067,7 +1079,7 @@
                   , TRIM(#{contactTelO})
                   , TRIM(#{contactTelR})
                   , TRIM(#{contactTelf})
-                  , TO_DATE(NVL((SELECT TO_CHAR(TO_DATE(DOB,'DD/MM/YYYY'),'YYYY/MM/DD') FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = '1434958')), '1900/01/01'), 'YYYY/MM/DD')
+                  , TO_DATE(NVL((SELECT TO_CHAR(TO_DATE(DOB,'DD/MM/YY'),'YYYY/MM/DD') FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = '1434958')), '1900/01/01'), 'YYYY/MM/DD')
                   , (SELECT GENDER FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
                   , (SELECT RACE_ID FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
                   , TRIM(#{contactEmail})

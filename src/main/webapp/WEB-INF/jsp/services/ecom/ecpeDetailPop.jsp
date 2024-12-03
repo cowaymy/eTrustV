@@ -162,7 +162,27 @@
                 	}
                 }
             }
-        }];
+        }
+//         ,{
+//             dataField : "lastUpdateBy",
+//             headerText : "Last Update By",
+//             width : '12%'
+//           },{
+//               dataField : "lastUpdateDate",
+//               headerText : "Last Update Date",
+//               dataType : "date",
+//               width : '12%'
+//             }
+          ,{
+        	dataField : "approvalDate",
+            headerText : "Approval Date",
+            dataType : "date",
+            width : '15%'
+          },{
+              dataField : "approvalRemark",
+              headerText : "remark",
+              width : '25%'
+            }];
 
         var gridPros1 = {
           pageRowCount : 20,

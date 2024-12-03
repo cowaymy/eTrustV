@@ -68,37 +68,40 @@ function checkCpeRequestExistStatus(){
 		 }
 		 else{
 			  Common.ajax("GET", "/services/ecom/checkResultStatus.do",$("#_searchForm_").serialize(), function(result) {
-    			         console.log(result);
-    			         var ccpResult = result.ccpStatus;
-    			         var installStatus = result.requestStage;
+                  if(result != null) {
+        			         console.log(result);
+        			         var ccpResult = result.ccpStatus;
+        			         var installStatus = result.requestStage;
 
-    			         if(installStatus == 'Before Install'){
-    			        	 if(ccpResult == 'CCP Result'){
-    	                          Common.alert('Order under CCP Result. <br>Request CPE is disallowed.');
-    	                     }else if(ccpResult == 'Order Cancel/Terminate'){
-                                 Common.alert('The order has benn Cancelled/Terminated. <br>Request CPE is disallowed.');
-                             }else{
-    	                    	 fn_searchNewOrderPop();
-    	                     }
+        			         if(installStatus == 'Before Install'){
+        			        	 if(ccpResult == 'CCP Result'){
+        	                          Common.alert('Order under CCP Result. <br>Request CPE is disallowed.');
+        	                     }else if(ccpResult == 'Order Cancel/Terminate'){
+                                     Common.alert('The order has benn Cancelled/Terminated. <br>Request CPE is disallowed.');
+                                 }else{
+        	                    	 fn_searchNewOrderPop();
+        	                     }
 
+        			         }
+        			         else if(installStatus == 'After Install'){
+
+        			        	  if(ccpResult == 'Suspend Result'){
+        		                        Common.alert('Order under Suspend Result. <br>Request CPE is disallowed.');
+        		                  }
+        			        	  else if(ccpResult == 'Investigate Result'){
+        			        		    Common.alert('Order under Investigate Result. <br>Request CPE is disallowed.');
+        		                  }
+        			        	  else if(ccpResult == 'Order Cancel/Terminate'){
+        		                        Common.alert('The order has benn Cancelled/Terminated. <br>Request CPE is disallowed.');
+        		                  }
+        			        	  else{
+        			        		  fn_searchNewOrderPop();
+        			        	  }
+
+        			         }
+    			         }else{
+    			        	 Common.alert('No order found.');
     			         }
-    			         else if(installStatus == 'After Install'){
-
-    			        	  if(ccpResult == 'Suspend Result'){
-    		                        Common.alert('Order under Suspend Result. <br>Request CPE is disallowed.');
-    		                  }
-    			        	  else if(ccpResult == 'Investigate Result'){
-    			        		    Common.alert('Order under Investigate Result. <br>Request CPE is disallowed.');
-    		                  }
-    			        	  else if(ccpResult == 'Order Cancel/Terminate'){
-    		                        Common.alert('The order has benn Cancelled/Terminated. <br>Request CPE is disallowed.');
-    		                  }
-    			        	  else{
-    			        		  fn_searchNewOrderPop();
-    			        	  }
-
-    			         }
-
     			  });
 			    }
 	 });
