@@ -248,4 +248,5 @@ public interface MSvcLogApiService {
 
   List<EgovMap> getCustNRIC(Map<String, Object> params);
 
+  void saveErrorToDatabase(Map<String, Object> e);
 }
