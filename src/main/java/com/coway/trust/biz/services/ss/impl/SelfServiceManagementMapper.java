@@ -61,6 +61,10 @@ public interface SelfServiceManagementMapper {
 
   void updateHsResultStatus(Map<String, Object> params);
 
+  void updateHsConfigPrevDt(Map<String, Object> params);
+
+  void updateHsconfigSetting(Map<String, Object> params);
+
   int saveValidation(Map<String, Object> params);
 
   List<EgovMap> ssFailReasonList(Map<String, Object> params);

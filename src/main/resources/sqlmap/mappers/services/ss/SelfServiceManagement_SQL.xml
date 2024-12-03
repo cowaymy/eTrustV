@@ -171,7 +171,8 @@
                                          SS_RESULT_CRT_DT ,
                                          SS_RESULT_UPD_USER_ID ,
                                          SS_RESULT_UPD_DT,
-                                         SS_SHIPMENT_NO
+                                         SS_SHIPMENT_NO ,
+                                         SRV_PREV_DT
      ) VALUES ( #{ssResultId} ,
                      #{schdulId} ,
                      #{salesOrdId} ,
@@ -182,7 +183,8 @@
                      SYSDATE ,
                      #{crtUsrId} ,
                      SYSDATE,
-                     #{serviceNo}
+                     #{serviceNo},
+                     #{srvPrevDt}
      )
    </insert>
 
@@ -198,7 +200,8 @@
                                         SS_RESULT_UPD_DT ,
                                         SS_RESULT_UPD_USER_ID ,
                                         FILTER_BARCD_SERIAL_NO,
-                                        OLD_FILTER_BARCD_SERIAL_NO
+                                        OLD_FILTER_BARCD_SERIAL_NO,
+                                        SRV_FILTER_PRV_CHG_DT
      ) VALUES ( #{ssResultItmId} ,
                      #{ssResultId} ,
                      #{stkId} ,
@@ -210,7 +213,8 @@
                      SYSDATE ,
                      #{crtUsrId} ,
                      #{serialNo} ,
-                     #{oldSerialNo}
+                     #{oldSerialNo},
+                     #{srvFilterPrvChgDt}
     )
   </insert>
 
@@ -230,8 +234,9 @@
        Distinct1.SERIAL_CHK,
        Distinct1.SERIAL_NO,
        Distinct1.SS_RESULT_ID,
-       Distinct1.SS_RESULT_ITM_ID
-
+       Distinct1.SS_RESULT_ITM_ID,
+       Distinct1.OLD_SERIAL_NO,
+       Distinct1.SRV_FILTER_PRV_CHG_DT
   FROM (
                 SELECT Extent1.SALES_ORD_ID,
                        Extent4.STK_ID STK_ID,
@@ -240,8 +245,10 @@
                        Extent4.SERIAL_CHK,
                        Extent3.SS_RESULT_PART_QTY C1,
                        Extent3.FILTER_BARCD_SERIAL_NO SERIAL_NO,
+                       Extent3.OLD_FILTER_BARCD_SERIAL_NO OLD_SERIAL_NO ,
                        Extent3.SS_RESULT_ID,
-                       Extent3.SS_RESULT_ITM_ID
+                       Extent3.SS_RESULT_ITM_ID,
+                       Extent3.SRV_FILTER_PRV_CHG_DT
                   FROM SVC0008D Extent1
                   LEFT JOIN SVC0144M Extent2 ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
                   LEFT JOIN SVC0145D Extent3 ON Extent2.SS_RESULT_ID = Extent3.SS_RESULT_ID
@@ -270,17 +277,19 @@
 
 	<select id="selectSelfServiceResultInfo" parameterType="Map" resultType="egovMap">
 	SELECT
-		SS_RESULT_ID ,
-		SCHDUL_ID ,
-		SALES_ORD_ID ,
-		SS_SHIPMENT_NO ,
-		SS_DELIVRY_STUS_ID ,
+		Extent1.SS_RESULT_ID ,
+		Extent1.SCHDUL_ID ,
+		Extent1.SALES_ORD_ID ,
+		Extent1.SS_SHIPMENT_NO ,
+		Extent1.SS_DELIVRY_STUS_ID ,
 		Extent2.CODE_NAME AS SS_DELIVRY_STUS ,
 		TO_CHAR(Extent1.SS_DELIVRY_DT, 'DD/MM/YYYY') AS SS_DELIVRY_DT,
-		Extent3.SS_RTN_NO
+		Extent3.SS_RTN_NO,
+		Extent4.SRV_CONFIG_ID
 	FROM SVC0144M Extent1
 	LEFT JOIN SYS0013M Extent2 ON Extent1.SS_DELIVRY_STUS_ID = Extent2.CODE AND Extent2.CODE_MASTER_ID = 585
 	LEFT JOIN SVC0146M Extent3 ON Extent1.SCHDUL_ID = Extent3.SS_REF_ID
+	LEFT JOIN SAL0090D Extent4 ON Extent1.SALES_ORD_ID = Extent4.SRV_SO_ID AND Extent4.SRV_STUS_ID = 1
 	WHERE
 		Extent1.SS_RESULT_ID = #{ssResultId}
 		AND Extent1.SCHDUL_ID = #{schdulId}
@@ -473,6 +482,29 @@
 			SS_RESULT_UPD_USER_ID = #{updUsrId}
    WHERE SCHDUL_ID = #{schdulId}
   		AND SS_RESULT_ID = #{ssResultId}
+  </update>
+
+  <update id="updateHsConfigPrevDt" parameterType="Map">
+   UPDATE SAL0090D
+	   SET SRV_PREV_DT = (SELECT SRV_PREV_DT FROM SVC0144M WHERE SS_RESULT_ID = #{ssResultId}),
+		   SRV_UPD_USER_ID = #{updUsrId},
+		   SRV_UPD_DT = SYSDATE
+   WHERE SRV_CONFIG_ID = #{srvConfigId}
+		AND SRV_SO_ID = #{salesOrdId}
+		AND SRV_STUS_ID = 1
+  </update>
+
+  <update id="updateHsconfigSetting" parameterType="Map">
+   UPDATE SAL0087D
+	   SET SRV_FILTER_PRV_CHG_DT = #{srvFilterPrvChgDt} ,
+	       SRV_FILTER_EXPR_DT = ADD_MONTHS(SRV_FILTER_EXPR_DT , -SRV_FILTER_PRIOD) ,
+	   	   SRV_FILTER_LAST_SERIAL = #{oldSerialNo} ,
+	       SRV_FILTER_PREV_SERIAL = '',
+	       SRV_FILTER_CRT_USER_ID = #{updUsrId},
+	       SRV_FILTER_UPD_DT = SYSDATE
+   WHERE SRV_CONFIG_ID = #{srvConfigId}
+		AND SRV_FILTER_STK_ID = #{stkId}
+		AND SRV_FILTER_STUS_ID = 1
   </update>
 
   <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">

@@ -175,6 +175,10 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   private void insertSelfServiceResult(Map<String, Object> params, List<Map<String, Object>> selfServiceItemGrid)
       throws Exception {
     int selfServiceResultMasterSeq = selfServiceManagementMapper.getSeqSVC0144M();
+    params.put("salesOrderId", params.get("salesOrdId"));
+    EgovMap configBasicInfo = hsManualMapper.selectConfigBasicInfoYn(params);
+
+    params.put("srvPrevDt", configBasicInfo.get("srvPrevDt"));
     params.put("ssResultId", selfServiceResultMasterSeq);
     selfServiceManagementMapper.insertSelfServiceResultMaster(params);
 
@@ -322,6 +326,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     return selfServiceManagementMapper.selectSelfServiceResultInfo(params);
   }
 
+  @SuppressWarnings("unchecked")
   @Transactional
   public Map<String, Object> updateSelfServiceResultStatus(Map<String, Object> params) throws Exception {
     Map<String, Object> rtnMap = new HashMap<>();
@@ -331,6 +336,16 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
       selfServiceManagementMapper.updateHsResultStatus(params);
 
       selfServiceManagementMapper.updateSsMasterStatus(params);
+
+      selfServiceManagementMapper.updateHsConfigPrevDt(params);
+
+      List<EgovMap> getFilterItmList = getSelfServiceFilterList(params);
+
+      for (Map<String, Object> itemMap : getFilterItmList) {
+        itemMap.put("updUsrId", params.get("updUsrId"));
+        itemMap.put("srvConfigId", params.get("srvConfigId"));
+        selfServiceManagementMapper.updateHsconfigSetting(itemMap);
+      }
 
       rtnMap.put("logError", SUCCESS_CODE);
       rtnMap.put("message", "");
@@ -402,8 +417,9 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
           params.put("transcType", "STO");
           params.put("ioType", "OD12");
         }
-      }else{
-        throw new ApplicationException(AppConstants.FAIL, "[ERROR] updateReturnGoodsQty - invalid HS status : " + params.get("parcelTrackNo"));
+      } else {
+        throw new ApplicationException(AppConstants.FAIL,
+            "[ERROR] updateReturnGoodsQty - invalid HS status : " + params.get("parcelTrackNo"));
       }
 
       updateSelfServiceStockReturn(params);

@@ -5,6 +5,7 @@ var statusType = [{"codeId": "21","codeName": "Failed"}];
 var ssResultId = '${ssResultId}';
 var salesOrdId = '${salesOrdId}';
 var schdulId = '${schdulId}';
+var srvConfigId = '${orderInfo.srvConfigId}';
 
   $(document).ready(
     function() {
@@ -23,6 +24,7 @@ var schdulId = '${schdulId}';
 		          var data = { ssResultId : ssResultId,
 		        		  	   schdulId : schdulId,
 		        		  	   salesOrdId : salesOrdId,
+		        		  	   srvConfigId : srvConfigId,
 		                       ssStusId : $("#ssStatus").val(),
 		                       ssFailReason : $("#ssFailReason").val(),
 		                       ssRemark : $("#ssRemark").val().replace(/[\r\n]+/g, ' ').replace(/'/g, '"')
@@ -105,7 +107,15 @@ var schdulId = '${schdulId}';
         Detail Page Include END
       ------------------------------------------------------------------------------->
     </section>
-
+	<div class="inventory-statement">
+        <ul>
+          <li><strong>Term and Condition:</strong>
+            <ul>
+              <li style="color: red;">Last Change date for the filter will be revert back to previous change date which can be view in HS Configuration - HS Filter Maintenance.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <section>
       <aside class="title_line">
 
