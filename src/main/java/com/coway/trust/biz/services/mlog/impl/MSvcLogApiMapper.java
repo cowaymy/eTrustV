@@ -309,4 +309,7 @@ public interface MSvcLogApiMapper {
   EgovMap selectAsDetails (Map<String, Object> params);
 
   List<EgovMap> getCustNRIC(Map<String, Object> params);
+
+  void saveErrorToDatabase(Map<String, Object> e);
+
 }
