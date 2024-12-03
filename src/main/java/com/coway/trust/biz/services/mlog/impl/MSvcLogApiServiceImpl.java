@@ -1142,17 +1142,31 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveErrorToDatabase(Map<String, Object> e) {
-    Exception exception = (Exception) e.get("exception");
+    Object exceptionObj = e.get("exception");
 
-    if (exception == null) {
+    if (exceptionObj == null) {
         return;
     }
 
-    String errorMessage = exception.getMessage();
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    exception.printStackTrace(pw);
-    String stackTrace = sw.toString();
+    String errorMessage;
+    String stackTrace;
+
+    if (exceptionObj instanceof Exception) {
+        Exception exception = (Exception) exceptionObj;
+
+        errorMessage = exception.getMessage();
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        stackTrace = sw.toString();
+
+    } else if (exceptionObj instanceof String) {
+        errorMessage = (String) exceptionObj;
+        stackTrace = (String) exceptionObj;
+    } else {
+        System.err.println("Invalid exception type: " + exceptionObj.getClass().getName());
+        return;
+    }
 
     // Prepare map for database insertion
     Map<String, Object> mapValue = new HashMap<>();
