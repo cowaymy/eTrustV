@@ -1590,7 +1590,8 @@ var totPvSs = "${preOrderInfo.totPvSs}";
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
                 voucherCode : voucherAppliedCode,
                 pwpOrderId          : $('#txtMainPwpOrderID').val(),
-                pwpOrderNo          : $('#pwpNo').val()
+                pwpOrderNo          : $('#pwpNo').val(),
+                chnnl               : '${preOrderInfo.chnnl}'
         };
 
         var formData = new FormData();

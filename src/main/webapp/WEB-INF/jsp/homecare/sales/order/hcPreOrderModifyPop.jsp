@@ -1444,7 +1444,8 @@ var userType = '${SESSION_INFO.userTypeId}';
       voucherCode : voucherAppliedCode,
       pwpOrderId          : $('#txtMainPwpOrderID').val(),
       pwpOrderNo          : $('#pwpNo').val(),
-      tnbAccNo : $("#tnbAccNo").val()
+      tnbAccNo : $("#tnbAccNo").val(),
+      chnnl : '${preOrderInfo.chnnl}'
     };
 
     var formData = new FormData();
