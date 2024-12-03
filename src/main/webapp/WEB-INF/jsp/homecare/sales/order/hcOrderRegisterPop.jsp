@@ -3160,7 +3160,6 @@
 	    $('#cboOrdNoTag').val(ordNo);
 	    $('#hiddenCboOrdNoTag').val(ordId);
 
-	   /*
 	    // [Project ID: 7594966239] Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024
 	    // Check the promotion sequence group for aircond units
 	    var isValidSeqGrpPromo = fn_chkSeqGrpAcCmbPromoPerOrd($("#ordPromo1").val(), $("#ordProduct1").val(), ordId);
@@ -3205,10 +3204,10 @@
                                       }
                            }
              );
-	    }*/
+	    }
   }
 
-/*
+
   // [Project ID: 7594966239] Added for homecare-aircond bulk promotion. By Fannie, 07/10/2024
   function fn_chkSeqGrpAcCmbPromoPerOrd(promoNo, prod, ordId){
 	  var isSeqGrp = 0;
@@ -3229,7 +3228,7 @@
               }
      );
 	 return isSeqGrp;
-  }*/
+  }
 
   function displayVoucherSection(){
 	  if(convToOrdYn == "Y"){
