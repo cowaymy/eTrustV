@@ -1111,7 +1111,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                            hsManualMapper.insertPvSSRebate(pay0367);
                     }
                }
-               sal0090.put("srvType", hsBasicmap.get("serviceType"));
+               sal0090.put("srvType", hsBasicmap.get("oldSrvType"));
            }
       }
 

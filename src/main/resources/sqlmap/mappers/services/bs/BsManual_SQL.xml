@@ -2180,7 +2180,7 @@
                                         		Extent2.CONFIG_ID,
                                         		Extent2.CONFIG_BS_MEM_ID,
                                         		Extent2.FAUCET_EXCH,
-                                                Extent2.SRV_TYPE
+                                                Extent5.SRV_TYPE
               		                  FROM (
                                                     SELECT	vOrderBasicInfo.ORD_ID ORD_ID,
                                                         		vOrderBasicInfo.ORD_NO ORD_NO,
@@ -2283,7 +2283,8 @@
                                           ) Extent2 ON Extent1.ORD_ID = Extent2.ORD_ID
                                   		  LEFT JOIN ORG0001D Extent3 ON Extent2.CONFIG_BS_MEM_ID = Extent3.MEM_ID
                                   		  LEFT JOIN SVC0006D Extent4 ON (Extent1.ORD_ID = Extent4.SALES_ORD_ID) AND (4 = Extent4.RESULT_STUS_CODE_ID)
-                                  		  WHERE	Extent1.ORD_ID = #{salesOrdId}
+                                          JOIN SAL0090H Extent5 ON Extent5.SRV_SO_ID = Extent1.ORD_ID AND Extent5.SRV_STUS_ID = 1 AND Extent5.SRV_BS_GEN = 1
+                                  		  WHERE Extent1.ORD_ID = #{salesOrdId}
                      ) Project1
                 	 ORDER BY Project1.C4 DESC
       )
@@ -5282,15 +5283,15 @@ SELECT DISTINCT A.ORD_ID FROM (
                   DISINF_SRV_DT,
                   TGT_UPD_DT,
                   TGT_UPD_USER_ID,
-                  SRV_TYPE
+                  #{serviceType} AS SRV_TYPE
          FROM SAL0090D
          WHERE SRV_SO_ID = #{salesOrderId}
      </insert>
 
      <select id="getSrvTypeChgHistoryLogInfo" parameterType="Map" resultType="egovMap">
         SELECT TO_CHAR(TO_DATE(B.SRV_UPD_DT, 'DD/MM/YY'), 'DD/MM/YY') AS SRV_CRT_DT,
-                    B.SRV_TYPE AS SRV_TYPE_CHG_FROM,
-                    A.SRV_TYPE AS SRV_TYPE_CHG_TO,
+                    A.SRV_TYPE AS SRV_TYPE_CHG_FROM,
+                    B.SRV_TYPE AS SRV_TYPE_CHG_TO,
                     B.SRV_REM AS REMARK,
                     C.USER_NAME AS CREATOR
         FROM SAL0090D A
