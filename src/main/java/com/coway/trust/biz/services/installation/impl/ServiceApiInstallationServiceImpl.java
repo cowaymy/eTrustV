@@ -149,6 +149,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
+    Map<String, Object> errMap = new HashMap<String,Object>();
     Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
     serviceNo = String.valueOf(params.get("serviceNo"));
 
@@ -161,6 +162,10 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       try {
         MSvcLogApiService.saveInsFailServiceLogs(params);
       } catch (Exception e) {
+        logger.error( e.getMessage() );
+        errMap.put( "no", serviceNo );
+        errMap.put( "e", e );
+        MSvcLogApiService.saveErrorToDatabase(errMap);
         e.printStackTrace();
       }
     }
@@ -168,7 +173,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     try {
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
-      Map<String, Object> errMap = new HashMap<String,Object>();
+      logger.error( e.getMessage() );
       errMap.put( "no", serviceNo );
       errMap.put( "e", e );
       MSvcLogApiService.saveErrorToDatabase(errMap);
