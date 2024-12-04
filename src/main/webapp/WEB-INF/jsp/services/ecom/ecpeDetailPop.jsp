@@ -108,18 +108,25 @@
           dataField : "approvedBy",
           headerText : "Approval By",
           width : '12%'
-        },{
-            dataField : "oldDscBranch",
-            headerText : "From Dsc Branch",
-            width : '12%'
-          },{
+        }
+//       ,{
+//             dataField : "oldDscBranch",
+//             headerText : "From DSC Branch",
+//             width : '12%'
+//         },{
+//           dataField : "dscBranch",
+//           headerText : "To DSC Branch",
+//           width : '12%'
+//         }
+        ,{
           dataField : "dscBranch",
-          headerText : "To Dsc Branch",
+          headerText : "DSC Branch",
           width : '12%'
-        }, {
-            dataField : "status",
-            headerText : "Status",
-            width : '10%'
+        }
+        ,{
+          dataField : "status",
+          headerText : "Status",
+          width : '10%'
         },{
           dataField : "atchFileGrpId",
           visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -167,11 +174,11 @@
                 }
             }
         }
-        ,{
-            dataField : "lastUpdateBy",
-            headerText : "Update By",
-            width : '12%'
-          }
+//         ,{
+//             dataField : "lastUpdateBy",
+//             headerText : "Update By",
+//             width : '12%'
+//           }
 //         ,{
 //               dataField : "lastUpdateDate",
 //               headerText : "Last Update Date",
