@@ -146,12 +146,15 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
     Map<String, Object> errMap = new HashMap<String,Object>();
     Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
+    EgovMap rtnResultMap = new EgovMap();
     serviceNo = String.valueOf(params.get("serviceNo"));
+    rtnResultMap.put( "result", serviceNo );
 
     logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
     logger.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
@@ -166,22 +169,23 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
         errMap.put( "no", serviceNo );
         errMap.put( "exception", e );
         MSvcLogApiService.saveErrorToDatabase(errMap);
+        rtnResultMap.put( "status", false );
         // e.printStackTrace();
-        throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+        //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
     try {
-      serviceApiInstallationDetailService.installFailJobRequestProc(params);
+      rtnResultMap = serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
       logger.error( e.getMessage() );
       errMap.put( "no", serviceNo );
       errMap.put( "exception", e );
       MSvcLogApiService.saveErrorToDatabase(errMap);
-      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+      rtnResultMap.put( "status", false );
+      //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
     }
-
-    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
+    return ResponseEntity.ok(InstallFailJobRequestDto.create(rtnResultMap));
   }
 
   @Override
