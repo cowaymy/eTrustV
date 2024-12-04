@@ -593,7 +593,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               MSvcLogApiService.saveErrorToDatabase(errMap);
               // SET RETURN VALUE SET AS FALSE DUE TO ERROR
               rtnResultMap.put( "status", false );
-              //throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
             } else {
               if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
                 MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
@@ -625,18 +625,22 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           }
         } catch (Exception e) {
           logger.error( e.getMessage() );
+
           errMap.put( "no", serviceNo );
           errMap.put( "exception", e );
           MSvcLogApiService.saveErrorToDatabase(errMap);
 
           // SET RETURN VALUE SET AS FALSE DUE TO ERROR
           rtnResultMap.put( "status", false );
+
+          throw new ApplicationException(AppConstants.FAIL, e.getMessage());
         }
       } else { // INSTALLATION IS NOT ACTICE
         if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
           // UPDATE ERROR LOG SVC0150D
           errMap.put( "no", serviceNo );
           errMap.put( "exception", "INSTALLATION STATUS NOT ACTIVE (" + CommonUtils.nvl(isInsCnt) + ") " );
+
           MSvcLogApiService.saveErrorToDatabase(errMap);
           MSvcLogApiService.updateInsFailServiceLogs(params);
 
@@ -646,12 +650,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       }
     } catch (Exception e) {
       logger.error( e.getMessage() );
+
       errMap.put( "no", serviceNo );
       errMap.put( "exception", e );
       MSvcLogApiService.saveErrorToDatabase(errMap);
 
       // SET RETURN VALUE SET AS FALSE DUE TO ERROR
       rtnResultMap.put( "status", false );
+
+      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
     } finally {
       return rtnResultMap;
     }
