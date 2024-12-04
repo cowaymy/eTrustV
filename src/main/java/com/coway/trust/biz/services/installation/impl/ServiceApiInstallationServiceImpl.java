@@ -171,7 +171,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
         MSvcLogApiService.saveErrorToDatabase(errMap);
         rtnResultMap.put( "status", false );
         // e.printStackTrace();
-        //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+        throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
@@ -183,7 +183,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       errMap.put( "exception", e );
       MSvcLogApiService.saveErrorToDatabase(errMap);
       rtnResultMap.put( "status", false );
-      //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
     }
     return ResponseEntity.ok(InstallFailJobRequestDto.create(rtnResultMap));
   }
