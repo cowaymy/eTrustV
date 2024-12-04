@@ -893,11 +893,14 @@
            CASE WHEN t1.STREET IS NOT NULL
                 THEN (TO_CHAR(t1.STREET) || ', ')
                 ELSE ('') END ||
-           CASE WHEN t9.POSTCODE IS NOT NULL
-                THEN (TO_CHAR(t9.POSTCODE) || ' ')
-                ELSE ('') END ||
            CASE WHEN t9.CITY IS NOT NULL
                 THEN (TO_CHAR(t9.CITY) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.AREA IS NOT NULL
+                THEN (TO_CHAR(t9.AREA) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.POSTCODE IS NOT NULL
+                THEN (TO_CHAR(t9.POSTCODE) || ', ')
                 ELSE ('') END ||
            CASE WHEN t9.STATE IS NOT NULL
                 THEN (TO_CHAR(t9.STATE) || ', ')
