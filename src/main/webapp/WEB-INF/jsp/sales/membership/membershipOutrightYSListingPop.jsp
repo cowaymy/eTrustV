@@ -222,7 +222,13 @@ function btnGenerate_Excel_Click(){
     $("#reportDownFileName").val("");
     
     var whereSQL = SQL();
-    
+
+    if($("#isHc").val() != null && $("#isHc").val() != ''){
+        whereSQL += " AND A.BNDL_ID IS NOT NULL ";
+    }else{
+        whereSQL += " AND A.BNDL_ID IS NULL ";
+    }
+
     $("#V_WHERESQL").val(whereSQL);
     $("#V_MEMBERTYPE_SHOW").val("");
     $("#V_ORGCODE_SHOW").val("");
