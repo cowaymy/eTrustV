@@ -496,7 +496,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       int isInsCnt = installationResultListService.isInstallAlreadyResult(params); // SAL0046D STATUS <> 1
 
       if (isInsCnt == 0) { // INSTALLATION IS ACTIVE
-        String statusId = "21"; // FAILL STATUS IS 21
+        String statusId = "21a"; // FAILL STATUS IS 21
 
         EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params); // GET LIST OF INSTALLATION DETAILS BASED ON SALES ORDER NUMBER & INSTALLATION NO
         params.put("installEntryId", installResult.get("installEntryId"));
