@@ -5287,7 +5287,8 @@ CITY ,
 AREA_ID ,
 AREA ,
 POSTCODE,
-WATER_SRC_TYPE
+WATER_SRC_TYPE,
+NVL(NTU,'0') NTU
 FROM (
 
 SELECT 'AS' RESULT_TYPE ,
@@ -5339,7 +5340,8 @@ A.AS_BRNCH_ID BRNCH_ID ,
  O.AREA ,
  O.CITY ,
  O.POSTCODE,
-  T.CODE_NAME WATER_SRC_TYPE
+  T.CODE_NAME WATER_SRC_TYPE ,
+ B.NTU
 FROM
 SVC0001D A
 LEFT JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID AND B.AS_RESULT_TYPE_ID = 457 AND B.AS_RESULT_STUS_ID NOT IN (19) AND B.AS_RESULT_IS_CURR = 1
@@ -5435,7 +5437,8 @@ Q.NAME CUST_NAME ,
  S.AREA ,
  S.CITY ,
  S.POSTCODE ,
-  W.CODE_NAME WATER_SRC_TYPE
+  W.CODE_NAME WATER_SRC_TYPE,
+  C.NTU
 FROM SAL0045D A
 LEFT JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID AND B.CALL_ENTRY_ID NOT IN (0)
 LEFT JOIN SAL0047D C ON B.INSTALL_ENTRY_ID = C.ENTRY_ID
@@ -5621,6 +5624,10 @@ AND J.CODE IN ('COM','FAL','CAN')
 
                      <if test="afterPsiFrom != '' and afterPsiTo != '' and afterPsiFrom != null and afterPsiTo != null ">
       <![CDATA[  AND AFTER_PSI between #{afterPsiFrom} and #{afterPsiTo}]]>
+    </if>
+
+    				<if test="ntuFrom != '' and ntuTo != '' and ntuFrom != null and ntuTo != null ">
+      <![CDATA[  AND NTU between #{ntuFrom} and #{ntuTo}]]>
     </if>
 
          <if test="resultState != null and resultState != ''">
