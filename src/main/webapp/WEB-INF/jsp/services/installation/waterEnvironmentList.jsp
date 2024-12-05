@@ -209,6 +209,10 @@
       headerText : "Total Dissolved Solid (TDS)",
       width : 100
     }, {
+      dataField : "ntu",
+      headerText : "Nephelometric Turbidity Unit (NTU)",
+      width : 100
+    }, {
       dataField : "roomTemp",
       headerText : "Room Temperature",
       width : 100
@@ -721,6 +725,29 @@
       <input type="text" class="w100p" title="resultArea" placeholder="resultArea" id="resultArea" name="resultArea" />
        </td>
 
+</tr>
+<tr>
+  <th scope="row">Nephelometric Turbidity Units (NTU)</th>
+      <td>
+        <div class="date_set w100p">
+        <p>
+         <input type="text" title="From"
+          placeholder="From" class="w100p"  id="ntuFrom"
+          name="ntuFrom" />
+        </p>
+        <span>To</span>
+        <p>
+         <input type="text" title="To"
+          placeholder="To" class="w100p" id="ntuTo"
+          name="ntuTo" />
+        </p>
+        </div>
+      </td>
+      <th>
+      </th>
+      <td></td>
+      <th></th>
+      <td></td>
 </tr>
 
     </tbody>
