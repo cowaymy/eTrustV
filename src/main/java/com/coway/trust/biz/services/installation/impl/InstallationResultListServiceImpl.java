@@ -1762,7 +1762,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     String strOutrightTotalPrice = CommonUtils.nvl(params.get("hidOutright_Price"));
     String callTypeId = CommonUtils.nvl(params.get("hidCallType"));
     //int statusId = Integer.parseInt(CommonUtils.nvl(params.get("installStatus")).toString());
-    int statusId = Integer.parseInt(CommonUtils.nvl(params.get("installStatus")).toString() + 'A');
+    int statusId = Integer.parseInt(CommonUtils.nvl(params.get("installStatus")).toString());
     int failId = CommonUtils.nvl(params.get("failReason")) != "" ? Integer.parseInt(CommonUtils.nvl(params.get("failReason")).toString()) : 0;
     boolean allowComm = CommonUtils.nvl(params.get("checkCommission")) != "" ? true : false;
     boolean inTradeIn = CommonUtils.nvl(params.get("checkTrade")) != "" ? true : false;
