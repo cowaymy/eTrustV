@@ -1565,6 +1565,11 @@ AND T1.CNT = 1
         where
         b.sales_ord_no = #{ORD_NO} and a.CCP_REM is not null and a.ccp_stus_id = 1
         and (b.mem_id = #{memID} or b.mem_id in (select mem_id from org0005d where mem_up_id=#{memID}))
+        AND NOT EXISTS (
+        SELECT 1
+        FROM sal0304d c_sub
+        WHERE c_sub.sales_ord_id = b.sales_ord_id
+          AND c_sub.stus_id = 1 )
     </select>
 
   <select id="ccpEresubmitList" parameterType="Map" resultMap="calCcpListClobMap">
