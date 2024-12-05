@@ -575,34 +575,33 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
         logger.debug("= INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
 
-        try {
-          // START CALL ETRUST API BY PASSING PARAMS
-          Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO);
+        // START CALL ETRUST API BY PASSING PARAMS
+        Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO);
 
-          if (null != rtnValue) {
-            HashMap spMap = (HashMap) rtnValue.get("spMap");
-            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-              String procTransactionId = serviceNo;
-              String procName = "Installation";
-              String procKey = serviceNo;
-              String procMsg = "PRODUCT FAIL";
-              String errorMsg = "PRODUCT FAIL";
+        if (null != rtnValue) {
+          HashMap spMap = (HashMap) rtnValue.get("spMap");
+          if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+            String procTransactionId = serviceNo;
+            String procName = "Installation";
+            String procKey = serviceNo;
+            String procMsg = "PRODUCT FAIL";
+            String errorMsg = "PRODUCT FAIL";
 
-              errMap.put( "no", serviceNo );
-              errMap.put( "exception", "PRODUCT INSTALLATION FAIL (" + CommonUtils.nvl(spMap.get("P_RESULT_MSG")) + ") " );
-              MSvcLogApiService.saveErrorToDatabase(errMap);
-              // SET RETURN VALUE SET AS FALSE DUE TO ERROR
-              rtnResultMap.put( "status", false );
-              throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-            } else {
-              if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-                MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
-                // SET RETURN VALUE SET AS TRUE
-                rtnResultMap.put( "status", true );
-              }
+            errMap.put( "no", serviceNo );
+            errMap.put( "exception", "PRODUCT INSTALLATION FAIL (" + CommonUtils.nvl(spMap.get("P_RESULT_MSG")) + ") " );
+            MSvcLogApiService.saveErrorToDatabase(errMap);
+            // SET RETURN VALUE SET AS FALSE DUE TO ERROR
+            rtnResultMap.put( "status", false );
+            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          } else {
+            if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+              MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
+              // SET RETURN VALUE SET AS TRUE
+              rtnResultMap.put( "status", true );
             }
+          }
 
-            /*spMap.put("pErrcode", "");
+          /*spMap.put("pErrcode", "");
             spMap.put("pErrmsg", "");
 
             servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
@@ -621,19 +620,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               String procMsg = "PRODUCT LOC NO DATA";
               String errorMsg = "PRODUCT LOC NO DATA";
              throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-            }*/
-          }
-        } catch (Exception e) {
-          logger.error( e.getMessage() );
-
-          errMap.put( "no", serviceNo );
-          errMap.put( "exception", e );
-          MSvcLogApiService.saveErrorToDatabase(errMap);
-
-          // SET RETURN VALUE SET AS FALSE DUE TO ERROR
-          rtnResultMap.put( "status", false );
-
-          throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+            }
+          */
         }
       } else { // INSTALLATION IS NOT ACTICE
         if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
