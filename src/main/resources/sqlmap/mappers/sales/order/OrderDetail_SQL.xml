@@ -985,8 +985,8 @@
                         , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
                         , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
                         , NVL(T1.BANK_APPV, 0) BANK_APPV
-                        , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN '00' ELSE
-                        T1.BANK_DTL_APPR_CODE END AS BANK_DTL_APPR_CODE
+                        , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN '00'
+                                 ELSE T1.BANK_DTL_APPR_CODE END AS BANK_DTL_APPR_CODE
                         , T2.CTRL_IS_CRC CTRL_IS_CRC
                         <!-- , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds (Baki Tidak Mencukupi)'
@@ -1004,7 +1004,7 @@
                           <!--   WHEN T3.BANK_ID = 17 AND T1.BANK_DTL_APPR_CODE IN (79, 82, 83) THEN
                                 GBSLCVD.FN_GET_HSBC_RMK(T1.BANK_DTL_APPR_CODE, tmp.DESC_RESP)-->
                         ELSE
-                            GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) END CODE_NAME
+                            FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) END CODE_NAME
                         , CASE WHEN T3.BANK_ID = 23 AND LENGTH(T1.BANK_DTL_APPR_CODE) = 6 THEN 'Approved' ELSE
                         T4.DESC_CODE END DESC_CODE
                FROM PAY0042D T1
