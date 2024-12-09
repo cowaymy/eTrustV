@@ -337,9 +337,10 @@
 		                 , A.TRNSC_TYPE                 -- (HP)
 		                 , A.IO_TYPE
 		              FROM LOG0099D A
+		              WHERE A.REQST_NO = #{reqstNo}
 		           ) X
 		      WHERE X.RN = 1
-		        AND X.REQST_NO = #{reqstNo}
+		   <!--      AND X.REQST_NO = #{reqstNo} -->
     </select>
 
     <resultMap id="RETURNDATA" type="egovMap" />
@@ -520,54 +521,54 @@
 
   <select id="selectSerialInfoMul" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialInfo] - HLTANG */
-    SELECT x.REQST_NO, 
-               x.DELVRY_NO, 
-               x.ITM_CODE, 
+    SELECT x.REQST_NO,
+               x.DELVRY_NO,
+               x.ITM_CODE,
                x.IO_TYPE
-    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN, 
-                          A.SERIAL_NO, 
-                          A.SCAN_NO, 
-                          A.ITM_CODE, 
-                          A.SCAN_STUS_CODE, 
-                          A.REQST_NO, 
-                          A.REQST_NO_ITM, 
-                          NVL(A.DELVRY_NO,'') DELVRY_NO, 
-                          A.DELVRY_NO_ITM, 
-                          A.FROM_LOC_ID, 
-                          A.TO_LOC_ID, 
-                          A.TRNSC_TYPE, 
+    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN,
+                          A.SERIAL_NO,
+                          A.SCAN_NO,
+                          A.ITM_CODE,
+                          A.SCAN_STUS_CODE,
+                          A.REQST_NO,
+                          A.REQST_NO_ITM,
+                          NVL(A.DELVRY_NO,'') DELVRY_NO,
+                          A.DELVRY_NO_ITM,
+                          A.FROM_LOC_ID,
+                          A.TO_LOC_ID,
+                          A.TRNSC_TYPE,
                           A.IO_TYPE
               FROM LOG0099D A
               WHERE 1=1
-              
+
               <if test="arrReqstNo != null ">
                 AND ( A.DELVRY_NO IN
-                
+
                   <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
-                
+
                 OR
-                
+
                 A.REQST_NO in
                   <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 )
-                
+
               </if>
-              
+
               <if test="arrReqstNo == null ">
                 AND A.DELVRY_NO = ''
               </if>
-              
+
               <if test="zIoType !=null and zIoType !=''">
                 AND A.IO_TYPE = #{zIoType}
               </if>
     ) X WHERE X.RN = 1
-    GROUP BY x.ITM_CODE, 
-                   x.REQST_NO, 
-                   x.DELVRY_NO, 
+    GROUP BY x.ITM_CODE,
+                   x.REQST_NO,
+                   x.DELVRY_NO,
                    x.IO_TYPE
   </select>
 
