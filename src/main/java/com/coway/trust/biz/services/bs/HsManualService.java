@@ -196,4 +196,6 @@ public interface HsManualService {
 
   List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params);
 
+  EgovMap getSrvTypeChgInfo(Map<String, Object> params);
+
 }

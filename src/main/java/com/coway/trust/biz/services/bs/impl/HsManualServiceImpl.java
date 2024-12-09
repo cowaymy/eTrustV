@@ -1048,6 +1048,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
       if(hsBasicmap.get("serviceType") != null){
           if(!originalSrvType.equals(serviceType)) {
+
+        	  // [Project ID 7139026265] Self Service (DIY) Project - count the SAL0090H records add by Fannie - 05/12/2024
+        	  Map<String, Object> cntSrvTypeHistory = new HashMap<String, Object>();
+        	  cntSrvTypeHistory.put("salesOrdId", hsBasicmap.get("salesOrderId"));
+
+        	  if(getSrvTypeChgTm(cntSrvTypeHistory) > 0){
+        		  //Update the previous record SAL0090H Status to 8
+        		  hsManualMapper.updateHsConfigBasicHistoryStatus(hsBasicmap);
+        	  }
                // Insert SAL0090H
                hsManualMapper.insertHsConfigBasicHistory(hsBasicmap);
 
@@ -3995,7 +4004,6 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    @Override
    public void editHSEditSettleDate(Map<String, Object> params) {
      // TODO Auto-generated method stub
-
      hsManualMapper.editHSEditSettleDate(params);
    }
 
@@ -4023,5 +4031,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    @Override
    public List<EgovMap> getSrvTypeChgHistoryLogInfo(Map<String, Object> params) {
      return hsManualMapper.getSrvTypeChgHistoryLogInfo(params);
+   }
+
+   // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
+   @Override
+   public EgovMap getSrvTypeChgInfo(Map<String, Object> params) {
+     return hsManualMapper.getSrvTypeChgInfo(params);
    }
 }

@@ -723,6 +723,11 @@ public class HsManualController {
     EgovMap ordOutInfo = ordOutInfoList.get(0);
     model.addAttribute("ordOutInfo", ordOutInfo);
 
+     // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
+    //HS Configuration @ Service mode only update in history logs and month end update on changed service mode
+    EgovMap srvTypeChgInfo = hsManualService.getSrvTypeChgInfo(params);
+    model.put("serviceType", srvTypeChgInfo);
+
     int srvTypeChgTimes = hsManualService.getSrvTypeChgTm(params);
     model.put("srvTypeChgTimes", srvTypeChgTimes);
 

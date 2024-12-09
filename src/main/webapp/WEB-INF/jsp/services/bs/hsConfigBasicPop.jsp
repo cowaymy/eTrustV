@@ -10,7 +10,9 @@
     var appType = '${configBasicInfo.appTypeCode}';
     var promoItmSrvType = '${promoInfo.promoItmSrvType}';
     var totOutStandingAmt = '${ordOutInfo.ordTotOtstnd}';
-    var srvType = '${configBasicInfo.srvType}';
+    // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
+    // HS Configuration @ Service mode only update in history logs and month end update on changed service mode
+    var srvType = '${serviceType.srvType}';
     var srvTypeChangeCnt = '${srvTypeChgTimes}';
 
     var srvTypeChgHistoryLogGridID;
@@ -90,7 +92,7 @@
             	   $("#faucet_exch").prop("disabled",true);
                }
 
-	           //var srvMemId =  ${configBasicInfo.configBsMemId}
+	          //var srvMemId =  ${configBasicInfo.configBsMemId}
              //$("#entry_cmbServiceMem").val($("entry_cmbServiceMem option:first").val());
 
              //$("#entry_cmbServiceMem option:eq(0)").remove();
@@ -102,9 +104,13 @@
 
              //$("#orgGrCombo option:eq(1)").attr("selected", "selected");
 
-
-              /* Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024 */
-               $("#cmbSrvType option[value="+srvType +"]").attr("selected", true);
+               // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
+              // HS Configuration @ Service mode only update in history logs and month end update on changed service mode
+               if(srvType == ''){
+            	   $("#cmbSrvType option[value="+'${configBasicInfo.srvType}'+"]").attr("selected", true);
+               }else{
+            	    $("#cmbSrvType option[value="+srvType +"]").attr("selected", true);
+               }
                $("#txtSrvTypeChangeCount").val(srvTypeChangeCnt);
 
                if(appType == "REN" && totOutStandingAmt == "0.00"){
@@ -119,20 +125,19 @@
                     }else{
                         $("#entry_cmbServiceMem").prop("disabled",false);
                     }
-              }
-               srvTypeChgHistoryLogGridID = AUIGrid.create("#srvTypeHistoryLog_view_grid_wrap", srvTypeHistoryColumnLayout, srvTypeHistoryGridPros);
-              fn_getSrvTypeChgHistoryLogInfo(); //Get the service type changes history log information in gridview
+                }
+                srvTypeChgHistoryLogGridID = AUIGrid.create("#srvTypeHistoryLog_view_grid_wrap", srvTypeHistoryColumnLayout, srvTypeHistoryGridPros);
+                fn_getSrvTypeChgHistoryLogInfo(); //Get the service type changes history log information in gridview
 
-              document.getElementById("cmbSrvType").addEventListener("change", function(){
-            	  var selectedValue = this.value;
+                document.getElementById("cmbSrvType").addEventListener("change", function(){
+                	  var selectedValue = this.value;
 
-            	  if(selectedValue === "SS"){
-                      $("#entry_cmbServiceMem").prop("disabled",true);
-                  }else{
-                      $("#entry_cmbServiceMem").prop("disabled",false);
-                  }
-
-              });
+                	  if(selectedValue === "SS"){
+                          $("#entry_cmbServiceMem").prop("disabled",true);
+                      }else{
+                          $("#entry_cmbServiceMem").prop("disabled",false);
+                      }
+                 });
 	    });
 
 	 function fn_getSrvTypeChgHistoryLogInfo(){
@@ -314,7 +319,7 @@
             <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
             <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
             <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
-            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${configBasicInfo.srvType}"/>
+            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${serviceType.srvType}"/>
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>

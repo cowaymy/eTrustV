@@ -377,4 +377,8 @@ public interface HsManualMapper {
   void updatePvSSRebateStatus(Map<String, Object> params);
 
   void insertPvSSRebate(Map<String, Object> params);
+
+  void updateHsConfigBasicHistoryStatus(Map<String, Object> params);
+
+  EgovMap getSrvTypeChgInfo(Map<String, Object> params);
 }

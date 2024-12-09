@@ -562,18 +562,9 @@
 				#{item}
 			</foreach>
 		</if>
-
-
 	</select>
 
-
-
-
-	<select id="selectHsManualListPop" parameterType="Map"
-		resultType="egovMap">
-
-
-
+	<select id="selectHsManualListPop" parameterType="Map" resultType="egovMap">
 		SELECT distinct HSM.SCHDUL_ID
 		,C.NAME Name
 		, SOM.SALES_ORD_ID
@@ -622,7 +613,7 @@
 		AND
 		SAL023.CUST_ADD_ID = INS.ADD_ID
 		and sal023.area_id = sys064.area_id
-                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>
+         <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>
 		<if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
 			AND hsm.YEAR(+) = #{myBSYear}
 			AND hsm.MONTH(+) =
@@ -659,8 +650,6 @@
 			<if test="saleOrdListSp != null and saleOrdListSp != ''"> AND SOM.SALES_ORD_NO
 			IN <foreach item="item" collection="saleOrdListSp" index="index" open="("
 			separator="," close=")"> #{item} </foreach> </if> -->
-
-
 	</select>
 
   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
@@ -2002,7 +1991,7 @@
 	</select>
 
 	<select id="selectHistoryHSResult" parameterType="Map" resultType="egovMap">
-                   <![CDATA[
+   <![CDATA[
   SELECT Distinct1.C1 C1  ,
              Distinct1.RESULT_ID RESULT_ID  ,
              Distinct1.NO NO  ,
@@ -2142,8 +2131,8 @@
                         		Project1.CUST_NRIC CUST_NRIC ,
                         		Project1.CONFIG_ID,
                         		Project1.CONFIG_BS_MEM_ID,
-                        		Project1.FAUCET_EXCH,
-                                Project1.SRV_TYPE
+                        		Project1.FAUCET_EXCH
+                        		, Project1.SRV_TYPE
               		  FROM (
                                      SELECT Extent1.ORD_ID ORD_ID ,
                                         		Extent1.ORD_NO ORD_NO ,
@@ -2179,8 +2168,8 @@
                                         		Extent2.SRV_MEM_FREQ SRV_MEM_FREQ ,
                                         		Extent2.CONFIG_ID,
                                         		Extent2.CONFIG_BS_MEM_ID,
-                                        		Extent2.FAUCET_EXCH,
-                                                Extent5.SRV_TYPE
+                                        		Extent2.FAUCET_EXCH
+                                        		, Extent2.SRV_TYPE
               		                  FROM (
                                                     SELECT	vOrderBasicInfo.ORD_ID ORD_ID,
                                                         		vOrderBasicInfo.ORD_NO ORD_NO,
@@ -2277,13 +2266,12 @@
                                                               		vOrderSrvMemConfigInfo.LAST_SRV_MEM_ID LAST_SRV_MEM_ID ,
                                                               		vOrderSrvMemConfigInfo.LAST_SRV_MEM_START_DATE LAST_SRV_MEM_START_DATE,
                                                               		vOrderSrvMemConfigInfo.LAST_SRV_MEM_EXPR_DATE LAST_SRV_MEM_EXPR_DATE,
-                                                              		vOrderSrvMemConfigInfo.FAUCET_EXCH FAUCET_EXCH,
-                                                                    vOrderSrvMemConfigInfo.SRV_TYPE SRV_TYPE
+                                                              		vOrderSrvMemConfigInfo.FAUCET_EXCH FAUCET_EXCH
+                                                                    ,vOrderSrvMemConfigInfo.SRV_TYPE SRV_TYPE
                                   		                    FROM SAL1014V vOrderSrvMemConfigInfo
                                           ) Extent2 ON Extent1.ORD_ID = Extent2.ORD_ID
                                   		  LEFT JOIN ORG0001D Extent3 ON Extent2.CONFIG_BS_MEM_ID = Extent3.MEM_ID
                                   		  LEFT JOIN SVC0006D Extent4 ON (Extent1.ORD_ID = Extent4.SALES_ORD_ID) AND (4 = Extent4.RESULT_STUS_CODE_ID)
-                                          JOIN SAL0090H Extent5 ON Extent5.SRV_SO_ID = Extent1.ORD_ID AND Extent5.SRV_STUS_ID = 1 AND Extent5.SRV_BS_GEN = 1
                                   		  WHERE Extent1.ORD_ID = #{salesOrdId}
                      ) Project1
                 	 ORDER BY Project1.C4 DESC
@@ -5298,7 +5286,6 @@ SELECT DISTINCT A.ORD_ID FROM (
         LEFT JOIN SAL0090H B ON A.SRV_SO_ID = B.SRV_SO_ID
         LEFT JOIN SYS0047M C ON B.SRV_UPD_USER_ID = C.USER_ID
         WHERE B.SRV_SO_ID = #{salesOrdId}
-        AND (A.SRV_STUS_ID = 1 AND B.SRV_STUS_ID = 1)
      </select>
 
     <select id="getSSGstRebate" parameterType="Map" resultType="egovMap">
@@ -5389,4 +5376,20 @@ SELECT DISTINCT A.ORD_ID FROM (
                   , #{cntrctId}
           )
     </insert>
+
+    <select id="getSrvTypeChgInfo" parameterType="Map" resultType="egovMap">
+       SELECT SRV_TYPE
+       FROM SAL0090H
+       WHERE SRV_SO_ID = #{salesOrdId}
+       AND SRV_STUS_ID = 1
+    </select>
+
+    <update id="updateHsConfigBasicHistoryStatus" parameterType="Map">
+        UPDATE SAL0090H
+        SET SRV_STUS_ID = 8
+               , SRV_UPD_DT = SYSDATE
+               , SRV_UPD_USER_ID = #{srvUpdateAt}
+        WHERE SRV_SO_ID = #{salesOrderId}
+        AND SRV_STUS_ID = 1
+    </update>
 </mapper>
