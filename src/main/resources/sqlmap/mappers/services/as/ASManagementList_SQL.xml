@@ -392,7 +392,7 @@
   </select>
 
   <select id="selectOrderBasicInfo" parameterType="Map" resultType="egovMap">
-    <![CDATA[ SELECT Extent1.ORD_ID ORD_ID ,
+     SELECT Extent1.ORD_ID ORD_ID ,
                      Extent1.ORD_NO ORD_NO ,
                      Extent1.RENTAL_STUS RENTAL_STUS ,
                      Extent1.ORD_STUS_ID ORD_STUS_ID ,
@@ -528,20 +528,40 @@
                     vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
                     vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
                     vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
-             FROM SAL1006V vOrderBasicInfo ) Extent1
+             FROM SAL1006V vOrderBasicInfo
+             WHERE vOrderBasicInfo.ORD_NO = #{orderNo}
+             AND vOrderBasicInfo.BNDL_ID IS NULL
+             ) Extent1
              LEFT JOIN SAL0102D Extent2 ON Extent2.CCP_SALES_ORD_ID = Extent1.ORD_ID
-             JOIN SAL0009D Extent3 ON Extent3.LOG_ID = (SELECT MAX(LOG_ID)
+              <!-- JOIN SAL0009D Extent3 ON Extent3.LOG_ID = (SELECT MAX(LOG_ID)
                                                         FROM SAL0009D
                                                         WHERE SALES_ORD_ID = Extent1.ORD_ID
-                                                        GROUP BY SALES_ORD_ID)
+                                                        GROUP BY SALES_ORD_ID) -->
              WHERE ( Extent1.ORD_NO = #{orderNo} )
-               AND NOT EXISTS (SELECT 1
-                                 FROM SAL0001D Z
-                                WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
-                                  AND Z.BNDL_ID IS NOT NULL
-                              )             -- homecare Remove(except)
+              <!-- AND NOT EXISTS (SELECT 1
+                               FROM SAL0001D Z
+                              WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                AND Z.BNDL_ID IS NOT NULL
+                            )              homecare Remove(except) -->
                 AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
-                AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5))
+              <!-- AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5)) -->
+                AND EXISTS (
+        				SELECT
+							1
+        				FROM
+            				SAL0009D Extent3
+        				WHERE
+                			Extent3.LOG_ID = (
+                    						SELECT
+                        						MAX(LOG_ID)
+                    						FROM
+                        						SAL0009D
+                    						WHERE
+                        						SALES_ORD_ID = Extent1.ORD_ID
+                							)
+                AND ( ( Extent2.CCP_STUS_ID = 5	OR Extent2.CCP_STUS_ID IS NULL ) OR ( Extent3.PRGRS_ID = 5 ) )
+    			)
+    			<![CDATA[
                 AND ROWNUM <= 1
     ]]>
   </select>
