@@ -214,7 +214,7 @@
                      #{crtUsrId} ,
                      #{serialNo} ,
                      #{oldSerialNo},
-                     #{srvFilterPrvChgDt}
+                     TO_DATE(#{srvFilterPrvChgDt},'DD/MM/YYYY')
     )
   </insert>
 
