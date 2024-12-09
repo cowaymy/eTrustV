@@ -138,4 +138,15 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 		return commissionReportMapper.selectCTRawData(params);
 	}
 
+	@Override
+	public List<EgovMap> commSPCRgenrawSHIIndexCall2 (Map<String, Object> params){
+		return commissionReportMapper.commSHIIndexCall2(params);
+
+	}
+
+	@Override
+	public List<EgovMap> commSHIIndexDetailsCall2 (Map<String, Object> params){
+		return commissionReportMapper.commSHIIndexDetailsCall2(params);
+
+	}
 }

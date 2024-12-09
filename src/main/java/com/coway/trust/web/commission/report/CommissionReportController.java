@@ -1143,6 +1143,287 @@ public class CommissionReportController {
 		return "commission/commissionHTIncomeStatement";
 	}
 
+	@RequestMapping(value = "/commSHIIndexView2.do")
+	public String commSHICollection2(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		String dt = CommonUtils.getCalMonth(0);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
+
+		List memType = commissionReportService.commissionGroupType(params);
+		model.addAttribute("memType", memType);
+		model.addAttribute("today", today);
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("loginId",loginId);
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		  params.put("typeCode",sessionVO.getUserTypeId());
+		  //params.put("memCode", sessionVO.getUserMemCode());
+		  params.put("memCode", loginId); //ticket #24032866
+		  params.put("pvMonth", today.substring(2,4));
+		  params.put("pvYear", today.substring(4));
+
+      Map getUserInfo =commissionReportService.commSHIMemberSearch(params);
+
+      model.put("memCodeType", sessionVO.getUserTypeId() );
+      model.put("orgCode", getUserInfo.get("ORG_CODE"));
+      model.put("grpCode", getUserInfo.get("GRP_CODE"));
+      model.put("deptCode", getUserInfo.get("DEPT_CODE"));
+      model.put("memCode", getUserInfo.get("MEM_CODE"));
+		}
+
+		// 호출될 화면
+		return "commission/commissionSHICollectionTarget2";
+	}
+
+	@RequestMapping(value = "commSPCRgenrawSHIIndex2")
+	  public ResponseEntity<List> commSPCRgenrawSHIIndex2(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	    String date = params.get("shiDate").toString();
+	    String pvMonth =date.substring(0,2);
+	    String pvYear=date.substring(date.indexOf("/")+1,date.length());
+	    params.put("pvMonth",pvMonth);
+	    params.put("pvYear",pvYear);
+	    params.put("custType", params.get("custType").toString());
+	    params.put("catType", params.get("catType").toString());
+
+	    commissionReportService.commSPCRgenrawSHIIndexCall2(params);
+
+	    List<EgovMap> list =  (List<EgovMap>) params.get("cv_1");
+
+	    final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
+	    String sTOPORGCODE = "";
+	    String sORGCODE = "";
+	    String sGRPCODE = "";
+	    String sDEPTCODE = "";
+	    String sHPCODE = "";
+
+	    String nTOPORGCODE = "";
+	    String nORGCODE = "";
+	    String nGRPCODE = "";
+	    String nDEPTCODE = "";
+
+	    int sTOPOUNIT = 0;
+	    BigDecimal sTOPOCOLLECTTARGET = null;
+	    BigDecimal sTOPOCOLLECT_AMT = null;
+	    BigDecimal sTOPOOUTSTDTRATE = null;
+
+	    int sOUNIT = 0;
+	    BigDecimal sOCOLLECTTARGET = null;
+	    BigDecimal sOCOLLECT_AMT = null;
+	    BigDecimal sOOUTSTDTRATE = null;
+
+	    int sGUNIT = 0;
+	    BigDecimal sGCOLLECTTARGET = null;
+	    BigDecimal sGCOLLECT_AMT = null;
+	    BigDecimal sGOUTSTDTRATE = null;
+
+	    int sDUNIT = 0;
+	    BigDecimal sDCOLLECTTARGET = null;
+	    BigDecimal sDCOLLECT_AMT = null;
+	    BigDecimal sDOUTSTDTRATE = null;
+
+	    int mUNIT = 0;
+	    BigDecimal mCOLLECTTARGET = null;
+	    BigDecimal mCOLLECT_AMT = null;
+
+	    List<EgovMap> tempList = null;
+	    List finalList = new ArrayList();
+	    EgovMap topOrgCodeMap =new EgovMap();
+	    EgovMap orgCodeMap = new EgovMap();
+	    EgovMap grpCodeMap =new EgovMap();
+	    EgovMap deptCodeMap =new EgovMap();
+	    EgovMap memberMap =new EgovMap();
+
+	    List memberList = new ArrayList();
+
+	    int orgSize = 0;
+	    int grpSize = 0;
+
+	    int next = 0;
+	    boolean hasNext = true;
+
+	    for(int i = 0; i< list.size(); i++){
+	      next++;
+
+	      if(next == list.size())
+	        hasNext = false;
+
+	      memberMap =new EgovMap();
+
+	      nDEPTCODE   = hasNext ? list.get(next).get("deptCode").toString()   : null ;
+	      nGRPCODE    = hasNext ? list.get(next).get("grpCode").toString()    : null ;
+	      nORGCODE    = hasNext ? list.get(next).get("orgCode").toString()    : null ;
+	      nTOPORGCODE = hasNext ? list.get(next).get("topOrgCode").toString() : null ;
+
+	      sHPCODE     = list.get(i).get("memCode").toString();
+	      sDEPTCODE   = list.get(i).get("deptCode").toString();
+	      sGRPCODE    = list.get(i).get("grpCode").toString();
+	      sORGCODE    = list.get(i).get("orgCode").toString();
+	      sTOPORGCODE = list.get(i).get("topOrgCode").toString();
+
+	      mCOLLECTTARGET = new BigDecimal(list.get(i).get("targetatmt").toString());
+	      mCOLLECT_AMT   = new BigDecimal(list.get(i).get("collectamt").toString());
+	      mUNIT          = Integer.parseInt(list.get(i).get("unit").toString());
+	      memberMap.put("memCode",sHPCODE);
+	      memberMap.put("unit",mUNIT);
+	      memberMap.put("targetatmt",mCOLLECTTARGET);
+	      memberMap.put("collectamt",mCOLLECT_AMT);
+	      memberMap.put("collectrate", list.get(i).get("collectrate"));
+	      memberList.add(memberMap);
+
+	      sDCOLLECTTARGET = sDCOLLECTTARGET == null ? new BigDecimal(mCOLLECTTARGET.toString()) : sDCOLLECTTARGET.add(mCOLLECTTARGET);
+	      sDCOLLECT_AMT = sDCOLLECT_AMT == null ? new BigDecimal(mCOLLECT_AMT.toString()): sDCOLLECT_AMT.add(mCOLLECT_AMT);
+	      sDUNIT += mUNIT;
+
+	        if(!sDEPTCODE.equals(nDEPTCODE)){
+
+	          sDOUTSTDTRATE = sDCOLLECT_AMT.multiply(ONE_HUNDRED).divide(sDCOLLECTTARGET,2,RoundingMode.HALF_UP);
+
+	          deptCodeMap = new EgovMap();
+	          deptCodeMap.put("deptCode",sDEPTCODE);
+	          deptCodeMap.put("unit",sDUNIT);
+	          deptCodeMap.put("targetatmt",sDCOLLECTTARGET);
+	          deptCodeMap.put("collectamt",sDCOLLECT_AMT);
+	          deptCodeMap.put("collectrate",sDOUTSTDTRATE);
+
+	          sGCOLLECTTARGET = sGCOLLECTTARGET == null ? sDCOLLECTTARGET : sGCOLLECTTARGET.add(sDCOLLECTTARGET);
+	          sGCOLLECT_AMT   = sGCOLLECT_AMT == null   ? sDCOLLECT_AMT   : sGCOLLECT_AMT.add(sDCOLLECT_AMT);
+	          sGUNIT += sDUNIT;
+	          sGOUTSTDTRATE = sGCOLLECT_AMT.multiply(ONE_HUNDRED).divide(sGCOLLECTTARGET,2,RoundingMode.HALF_UP);
+
+	          finalList.add(deptCodeMap);
+	          finalList.addAll(memberList);
+
+	          memberList = new ArrayList();
+	          sDCOLLECTTARGET = BigDecimal.ZERO;
+	          sDCOLLECT_AMT = BigDecimal.ZERO;
+	          sDOUTSTDTRATE = BigDecimal.ZERO;
+	          sDUNIT = 0;
+	          grpSize++;
+	          orgSize++;
+	        }
+	        grpSize++;
+
+	        if(!sGRPCODE.equals(nGRPCODE)){
+	          grpCodeMap = new EgovMap();
+	          grpCodeMap.put("grpCode",sGRPCODE);
+
+	          grpCodeMap.put("unit",sGUNIT);
+	          grpCodeMap.put("targetatmt",sGCOLLECTTARGET);
+	          grpCodeMap.put("collectamt",sGCOLLECT_AMT);
+	          grpCodeMap.put("collectrate",sGOUTSTDTRATE);
+
+	          sOCOLLECTTARGET = sOCOLLECTTARGET == null ? sGCOLLECTTARGET : sOCOLLECTTARGET.add(sGCOLLECTTARGET);
+	          sOCOLLECT_AMT   = sOCOLLECT_AMT   == null ? sGCOLLECT_AMT   : sOCOLLECT_AMT.add(sGCOLLECT_AMT);
+	          sOUNIT += sGUNIT;
+	          sOOUTSTDTRATE = sOCOLLECT_AMT.multiply(ONE_HUNDRED).divide(sOCOLLECTTARGET,2,RoundingMode.HALF_UP);
+
+	          finalList.add(finalList.size() - grpSize,grpCodeMap);
+
+	          sGCOLLECTTARGET = BigDecimal.ZERO;
+	          sGCOLLECT_AMT = BigDecimal.ZERO;
+	          sGOUTSTDTRATE = BigDecimal.ZERO;
+	          sGUNIT = 0;
+	          grpSize = 0;
+	          orgSize++;
+	        }
+
+	        orgSize++;
+	        if(!sORGCODE.equals(nORGCODE)){
+
+	          orgCodeMap = new EgovMap();
+	          orgCodeMap.put("orgCode",sORGCODE);
+
+	          orgCodeMap.put("unit",sOUNIT);
+	          orgCodeMap.put("targetatmt",sOCOLLECTTARGET);
+	          orgCodeMap.put("collectamt",sOCOLLECT_AMT);
+	          orgCodeMap.put("collectrate",sOOUTSTDTRATE);
+
+	          finalList.add(finalList.size() - orgSize,orgCodeMap);
+
+	          sTOPOCOLLECTTARGET = sTOPOCOLLECTTARGET == null ? sOCOLLECTTARGET : sTOPOCOLLECTTARGET.add(sOCOLLECTTARGET);
+	          sTOPOCOLLECT_AMT   = sTOPOCOLLECT_AMT   == null ? sOCOLLECT_AMT   : sTOPOCOLLECT_AMT.add(sOCOLLECT_AMT);
+	          sTOPOUNIT += sOUNIT;
+	          sTOPOOUTSTDTRATE = sTOPOCOLLECT_AMT.multiply(ONE_HUNDRED).divide(sTOPOCOLLECTTARGET,2,RoundingMode.HALF_UP);
+
+	          sOCOLLECTTARGET = BigDecimal.ZERO;
+	          sOCOLLECT_AMT = BigDecimal.ZERO;
+	          sOOUTSTDTRATE = BigDecimal.ZERO;
+	          sOUNIT = 0;
+	          orgSize = 0;
+	        }
+
+	        if(!sTOPORGCODE.equals(nTOPORGCODE)){
+
+	          topOrgCodeMap = new EgovMap();
+	          topOrgCodeMap.put("topOrgCode",sTOPORGCODE);
+
+	          topOrgCodeMap.put("unit",sTOPOUNIT);
+	          topOrgCodeMap.put("targetatmt",sTOPOCOLLECTTARGET);
+	          topOrgCodeMap.put("collectamt",sTOPOCOLLECT_AMT);
+	          topOrgCodeMap.put("collectrate",sTOPOOUTSTDTRATE);
+
+	          finalList.add(0,topOrgCodeMap);
+
+	          sTOPOCOLLECTTARGET = BigDecimal.ZERO;
+	          sTOPOCOLLECT_AMT = BigDecimal.ZERO;
+	          sTOPOOUTSTDTRATE = BigDecimal.ZERO;
+	          sTOPOUNIT = 0;
+	        }
+	    }
+
+	    tempList=(List<EgovMap>)finalList;
+	    return ResponseEntity.ok(tempList);
+	  }
+
+	@RequestMapping(value = "/commSHIIndexViewDetailsPop2.do")
+	public String commSHIIndexViewDetailsPop2(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		String dt ="";
+
+		if(params.get("searchDt") != null){
+			dt = params.get("searchDt").toString();
+		}else{
+			dt = CommonUtils.getCalMonth(0);
+			dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		}
+
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+
+		model.addAttribute("today", today);
+		model.addAttribute("searchDtD", dt);
+		model.addAttribute("memCode", params.get("memCode"));
+
+	  model.addAttribute("data",params);
+
+		// 호출될 화면
+		return "commission/commissionSHIIndexViewDetailPop2";
+	}
+
+	@RequestMapping(value = "commSHIDetailSearch2")
+	public ResponseEntity<List<EgovMap>> commSHIDetailSearch2(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  System.out.println(params);
+
+	  String date = params.get("shiDate").toString();
+		String pvMonth =date.substring(0,2);
+		String pvYear=date.substring(date.indexOf("/")+1,date.length());
+		params.put("pvMonth",pvMonth);
+		params.put("pvYear",pvYear);
+
+		commissionReportService.commSHIIndexDetailsCall2(params);
+		List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
+
+		return ResponseEntity.ok(list);
+	}
+
 }
 
 

@@ -1049,4 +1049,18 @@
                   AND t0.WORKING_MONTH = 2
             </if>
     </select>
+
+    <resultMap id="commSHIIndexMap2" type="egovMap" />
+    <select id="commSHIIndexCall2" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_SHI_IDX_RAW(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{orgCode},#{grpCode},#{deptCode},#{custType},#{catType},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIIndexMap2})
+        }
+    </select>
+
+    <resultMap id="commSHIDetailMap2" type="egovMap" />
+    <select id="commSHIIndexDetailsCall2" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_SPC_SHI_IDX_DTL_RAW(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{custType},#{catType} ,#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIDetailMap2})
+        }
+    </select>
 </mapper>

@@ -49,4 +49,7 @@ public interface CommissionReportService
     List<EgovMap> selectCMRawData(Map<String, Object> params);
     List<EgovMap> selectHPRawData(Map<String, Object> params);
     List<EgovMap> selectCTRawData(Map<String, Object> params);
+
+    List<EgovMap> commSPCRgenrawSHIIndexCall2 (Map<String, Object> params);
+    List<EgovMap> commSHIIndexDetailsCall2 (Map<String, Object> params);
 }

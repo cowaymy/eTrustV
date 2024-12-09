@@ -60,4 +60,7 @@ public interface CommissionReportMapper {
 	List<EgovMap>selectCMRawData(Map<String, Object> params);
 	List<EgovMap>selectHPRawData(Map<String, Object> params);
 	List<EgovMap>selectCTRawData(Map<String, Object> params);
+
+	List<EgovMap> commSHIIndexCall2 (Map<String, Object> params);
+	List<EgovMap> commSHIIndexDetailsCall2 (Map<String, Object> params);
 }
