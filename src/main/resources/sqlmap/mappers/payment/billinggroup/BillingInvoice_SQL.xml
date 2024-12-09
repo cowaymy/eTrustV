@@ -669,8 +669,7 @@
 		ORDER BY Filter1.OrderNo ASC
 	</select>
 
-	<select id="selectAdvancedRentalInvoiceList" parameterType="Map"
-        resultType="egovMap">
+	<select id="selectAdvancedRentalInvoiceList" parameterType="Map" resultType="egovMap">
       SELECT
             Extent1.SALES_ORD_ID,
             Extent1.CUST_BILL_ID,
@@ -679,9 +678,10 @@
             Extent8.STK_DESC,
             Extent1.CUST_ID,
             Extent4.NAME CUST_NM,
-             CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
             ELSE Extent4.NRIC
-            END NRIC,
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
             Extent1.APP_TYPE_ID,
             Extent2.CODE_NAME APP_TYPE_NM,
             Extent1.PV_YEAR,
@@ -701,11 +701,25 @@
         FROM
             SAL0001D Extent1
             JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
-            JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Extent1.MEM_ID
-            JOIN SYS0026M Extent8   ON Extent8.STK_ID = Extent9.ITM_STK_ID
-            JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
             JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-            JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
             LEFT JOIN (
                             SELECT
                                 RENT_SO_ID,

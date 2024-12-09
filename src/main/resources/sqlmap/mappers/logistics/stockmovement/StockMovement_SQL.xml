@@ -14,7 +14,7 @@
 
   <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
-<!--              , reqs.code_name     staname -->
+<!--       , reqs.code_name     staname -->
              , (case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
              , s1.SALES_ORD_NO ordno
              , l47.reqst_no       reqstno
@@ -45,16 +45,38 @@
              , l48.itm_name      itmname
              , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID =  s26.STK_TYPE_ID) AS itmtype
              , l48.reqst_qty     reqstqty
-             , NVL (l55.DELVRY_QTY, 0) AS delyqty
+        <!--, NVL (l55.DELVRY_QTY, 0) AS delyqty -->
+             , (
+                  SELECT NVL(SUM(DELVRY_QTY),0) DELVRY_QTY
+                  FROM LOG0055D
+                  WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
+                  AND REQST_NO = l48.REQST_NO
+                  AND ITM_CODE = l48.ITM_CODE
+               )AS delyqty
              , 0 AS indelyqty
-             , nvl(l55.RCIPT_QTY , 0) as rciptqty
+        <!--, nvl(l55.RCIPT_QTY , 0) as rciptqty -->
+             , (
+                    SELECT NVL(SUM(RCIPT_QTY),0) RCIPT_QTY
+                    FROM LOG0055D
+                    WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
+                    AND REQST_NO = l48.REQST_NO
+                    AND ITM_CODE = l48.ITM_CODE
+                ) as rciptqty
              , l48.uom
              , uomt.code_name uomnm
              , l47.reqst_type reqsttype
              , l47.reqst_type_dtl reqsttypedtl
              , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l47.CRT_USER_ID),l47.CRT_USER_ID) user_Name
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
-             , NVL(l99.CNT, 0) SCAN_CNT
+           <!--, NVL(l99.CNT, 0) SCAN_CNT  -->
+             , (
+                    SELECT COUNT(1) AS CNT
+                    FROM LOG0099D
+                    WHERE SCAN_STUS_CODE = 'C'
+                    AND IO_TYPE = 'O'
+                    AND REQST_NO = l48.REQST_NO
+                    AND ITM_CODE = l48.ITM_CODE
+               ) SCAN_CNT
              , H11.BNDL_NO
              , (SELECT CODE_NAME
                       FROM SYS0013M
@@ -70,15 +92,16 @@
              , (select * from sys0013m where code_master_id = 309) reqs
              , sys0028m s28c
              , sys0028m s28q
-             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d where nvl(del_flag , 'N' ) <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
+      <!-- , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d where nvl(del_flag , 'N' ) <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55 -->
              , sys0026m s26
              , sal0046D s46
              , sal0001D s1
-             ,(SELECT REQST_NO, ITM_CODE, COUNT(1) AS CNT  -- SCAN COUNT
+             <!--SCAN COUNT -->
+      <!--  ,(SELECT REQST_NO, ITM_CODE, COUNT(1) AS CNT
 		          FROM LOG0099D
 		        WHERE SCAN_STUS_CODE = 'C'
 		            AND IO_TYPE  = 'O'
-		         GROUP BY REQST_NO, ITM_CODE) l99
+		         GROUP BY REQST_NO, ITM_CODE) l99 -->
 		     ,HMC0011D H11
 		     ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
 		     , sys0005m s5
@@ -90,15 +113,15 @@
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
            and l48.uom            = uomt.code_id
             and l48.itm_code = s26.stk_code
-           AND l48.reqst_no       = l55.reqst_no(+)
-           AND l48.itm_code       = l55.itm_code(+)
+      <!--AND l48.reqst_no       = l55.reqst_no(+)
+           AND l48.itm_code       = l55.itm_code(+)   -->
            and l47.reqst_stus     = reqs.code(+)
            and l47.trnsc_type     <![CDATA[<>]]> 'US'
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
            AND l47.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
            AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
-           AND l48.reqst_no = l99.REQST_NO(+)
-           AND l48.itm_code = l99.ITM_CODE(+)
+   <!--  AND l48.reqst_no = l99.REQST_NO(+)
+           AND l48.itm_code = l99.ITM_CODE(+)   -->
            AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
            and s26.stk_ctgry_id = s13h.code_id(+)
            AND s28q.WH_LOC_BRNCH_ID = s5.BRNCH_ID (+)
@@ -182,12 +205,9 @@
                     #{item}
                     </foreach>
            </if>
-
             <if test="searchBranch !=null and searchBranch !=''">
                 AND s5.BRNCH_ID= #{searchBranch}
            </if>
-
-
            ORDER by l47.CRT_DT desc
   </select>
 
