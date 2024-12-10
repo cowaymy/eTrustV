@@ -242,7 +242,12 @@
                 $("#reportForm #TaskID").val(taskID);
             } else if (type == "2") {
 
-                reportFileName = "/commission/HTCommissionRawData_M_Excel.rpt"; //reportFileName
+            	if (taskID >= 142){
+            		reportFileName = "/commission/HTCommissionRawData_M_Excel_202412.rpt"; //reportFileName
+            	}else{
+            		reportFileName = "/commission/HTCommissionRawData_M_Excel.rpt"; //reportFileName
+            	}
+            	//reportFileName = "/commission/HTCommissionRawData_M_Excel.rpt"; //reportFileName
                 reportDownFileName = "HTCommissionRawData_Mark_Excel_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
@@ -272,13 +277,18 @@
                 $("#reportForm #TaskID").val(taskID);
 
             } else if (type == '8') {
-debugger;
+
                 if (memberLvl == '') {
                     Common.alert("Please select a member level before generating the report.");
                     return;
                 }
                 if (memberLvl == 3) {
-                    reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
+                	if (taskID >= 142){
+                		reportFileName = "/commission/HTMCommissionRawMark_Excel_202412.rpt"; //reportFileName
+                	}else{
+                		reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
+                	}
+                    //reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
                     reportDownFileName = "HTMCommissionRawMark_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -290,7 +300,12 @@ debugger;
                     $("#reportForm #TaskID").val(taskID);
 
                 } else if (memberLvl == 2) {
-                    reportFileName = "/commission/SHTMCommissionRawMark_Excel.rpt"; //reportFileName
+                	if (taskID >= 142){
+                		reportFileName = "/commission/SHTMCommissionRawMark_Excel_202412.rpt"; //reportFileName
+                	}else{
+                		reportFileName = "/commission/SHTMCommissionRawMark_Excel.rpt"; //reportFileName
+                	}
+
                     reportDownFileName = "SHTMCommissionRawMark_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -309,7 +324,10 @@ debugger;
                     return;
                 }
                 if (memberLvl == 3) {
-                	if(year >= 2024 && month >=09|| year > 2024)
+                	if (year >= 2024 && month >=11|| year > 2024){
+                		reportFileName = "/commission/HTMCommissionRawRate_Excel_202412.rpt"; //reportFileName
+                	}
+                	else if(year >= 2024 && month >=09|| year > 2024)
                     {
                 		reportFileName = "/commission/HTMCommissionRawRate_Excel_202409.rpt"; //reportFileName
                     }
@@ -329,7 +347,10 @@ debugger;
 
 
                 } else if (memberLvl == 2) {
-                	if(year >= 2024 && month >=09|| year > 2024)
+                	if (year >= 2024 && month >=11|| year > 2024){
+                		reportFileName = "/commission/SHTMCommissionRawRate_Excel_202412.rpt"; //reportFileName
+                	}
+                	else if(year >= 2024 && month >=09|| year > 2024)
                     {
                 		reportFileName = "/commission/SHTMCommissionRawRate_Excel_202409.rpt"; //reportFileName
                     }
@@ -487,7 +508,10 @@ debugger;
                $("#reportForm #TaskID").val(taskID);
            }
            else if (type == "7") {
-        	   if(year >= 2024 && month >=09|| year > 2024)
+        	   if(year >= 2024 && month >=11|| year > 2024){
+        		   reportFileName = "/commission/HTCommissionRawData_R_Excel_202412.rpt"; //reportFileName
+        	   }
+        	   else if(year >= 2024 && month >=09|| year > 2024)
                {
         		   reportFileName = "/commission/HTCommissionRawData_R_Excel_202409.rpt"; //reportFileName
                }
