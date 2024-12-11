@@ -6393,7 +6393,7 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
 
      <update id="resetMfa" parameterType="Map">
         UPDATE SYS0047M
-        SET CHECK_MFA = 3, MFA_KEY = #{mfaKey}
+        SET CHECK_MFA = 3, MFA_KEY = #{newMfaKey}
         WHERE HR_CODE = #{memCode}
      </update>
 
@@ -6403,11 +6403,20 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
               MEM_CODE
             , RESET_DT
             , RESET_BY
+            , OLD_MFA_FLAG
+            , NEW_MFA_FLAG
+            , OLD_MFA_KEY
+            , NEW_MFA_KEY
         )
         SELECT
               #{memCode}
             , SYSDATE
             , #{userId}
+            , #{oldMfaFlag}
+            , 3
+            , #{oldMfaKey}
+            , #{newMfaKey}
+
         FROM DUAL
        </insert>
 
@@ -6425,6 +6434,8 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
               HR_CODE as MEM_CODE
             , USER_ID as RESET_USER_ID
             , USER_EMAIL as EMAIL
+            , CHECK_MFA as OLD_MFA_FLAG
+            , MFA_KEY as OLD_MFA_KEY
             FROM SYS0047M
         WHERE HR_CODE = #{memCode} AND USER_STUS_ID = 1
       </select>

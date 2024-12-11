@@ -3180,6 +3180,9 @@ public class MemberListController {
 		    	r.put("email", session.getUserEmail());
 		    	r.put("memCode", memCode);
 
+				d.put("oldMfaFlag", resetMem.get("oldMfaFlag"));
+				d.put("oldMfaKey", resetMem.get("oldMfaKey"));
+				d.put("newMfaKey", encodedKey);
 
 		    	isEmailSent = loginService.sendResetMFAEmail(r);
 
