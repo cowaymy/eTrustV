@@ -1054,9 +1054,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         	  cntSrvTypeHistory.put("salesOrdId", hsBasicmap.get("salesOrderId"));
 
         	  if(getSrvTypeChgTm(cntSrvTypeHistory) > 0){
-        		  //Update the previous record SAL0090H Status to 8
+        		  //Update the previous record SAL0090H Status to 4
         		  hsManualMapper.updateHsConfigBasicHistoryStatus(hsBasicmap);
         	  }
+
                // Insert SAL0090H
                hsManualMapper.insertHsConfigBasicHistory(hsBasicmap);
 

@@ -5249,9 +5249,8 @@ SELECT DISTINCT A.ORD_ID FROM (
                         FAUCET_EXCH_DT,
                         DISINF_SRV,
                         DISINF_SRV_DT,
-                        TGT_UPD_DT,
-                        TGT_UPD_USER_ID,
-                        SRV_TYPE
+                        SRV_TYPE,
+                        SRV_TYPE_FROM
         )
         SELECT SRV_CONFIG_ID,
                   SRV_SO_ID,
@@ -5269,9 +5268,8 @@ SELECT DISTINCT A.ORD_ID FROM (
                   FAUCET_EXCH_DT,
                   DISINF_SRV,
                   DISINF_SRV_DT,
-                  TGT_UPD_DT,
-                  TGT_UPD_USER_ID,
-                  #{serviceType} AS SRV_TYPE
+                  #{serviceType} AS SRV_TYPE,
+                  #{oldSrvType} AS SRV_TYPE_FROM
          FROM SAL0090D
          WHERE SRV_SO_ID = #{salesOrderId}
      </insert>
@@ -5386,7 +5384,7 @@ SELECT DISTINCT A.ORD_ID FROM (
 
     <update id="updateHsConfigBasicHistoryStatus" parameterType="Map">
         UPDATE SAL0090H
-        SET SRV_STUS_ID = 8
+        SET SRV_STUS_ID = 4
                , SRV_UPD_DT = SYSDATE
                , SRV_UPD_USER_ID = #{srvUpdateAt}
         WHERE SRV_SO_ID = #{salesOrderId}

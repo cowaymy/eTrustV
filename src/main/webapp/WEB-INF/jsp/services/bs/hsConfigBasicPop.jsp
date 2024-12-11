@@ -319,7 +319,7 @@
             <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
             <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
             <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
-            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${serviceType.srvType}"/>
+            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${configBasicInfo.srvType}"/>
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
