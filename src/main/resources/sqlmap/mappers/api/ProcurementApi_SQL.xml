@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.ProcurementApiMapper">
+
+    <select id="selectCostCtrGLaccBudgetCdInfo" parameterType="Map" resultType="egovMap">
+    SELECT  DISTINCT F1.BUDGET_PLAN_YEAR
+        , F1.BUDGET_PLAN_MONTH
+        , F1.COST_CENTR 
+        , UPPER(F8.COST_CENTER_TEXT)COST_CENTER_TEXT 
+        , F1.GL_ACC_CODE
+        , F9.GL_ACC_DESC
+        , F1.BUDGET_CODE
+        , F10.BUDGET_CODE_TEXT
+        , ROUND(NVL(F1.CHNG_AMT, 0), 2) CHNG_AMT
+        , NVL(TO_CHAR(F1.CRT_DT, 'DD/MM/YYYY'), '-') CRT_DT
+        , NVL(TO_CHAR(F1.UPD_DT, 'DD/MM/YYYY'), '-') UPD_DT
+    FROM FCM0101M F1
+    LEFT JOIN FCM0010M F10 ON F10.BUDGET_CODE = F1.BUDGET_CODE
+    LEFT JOIN FCM0008M F8 ON F8.COST_CENTER = F1.COST_CENTR
+    LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F1.GL_ACC_CODE
+    WHERE F1.BUDGET_PLAN_YEAR = #{budgetPlanYear} AND F1.BUDGET_PLAN_MONTH = #{budgetPlanMonth}  
+        --AND F1.BUDGET_CODE = '17016' AND COST_CENTR = 'A1601' 
+        --AND F1.CHNG_AMT > 10000
+    ORDER BY F1.COST_CENTR,F1.GL_ACC_CODE, F1.BUDGET_CODE ,F1.BUDGET_PLAN_YEAR,TO_NUMBER(F1.BUDGET_PLAN_MONTH)
+    </select>
+    
+    <select id="selectVendorPaymentRecord" resultType="egovMap">
+    SELECT A.VENDOR_REQ_NO
+        , A.VENDOR_ACC_ID
+        , UPPER(A.COST_CENTER_NAME)COST_CENTER_NAME
+        , A.VENDOR_NAME 
+        , A.VENDOR_REG_NO_NRIC
+        , A.BANK_COUNTRY
+        , NVL(PAY_TERM,0)PAY_TERM
+        , A.VENDOR_GRP
+        , A.ADD_HOUSE_LOT_NO
+        , A.ADD_STREET
+        , A.ADD_POSTAL_CODE
+        , A.ADD_CITY
+        , ADD_COUNTRY
+        , A.CONTACT_NAME
+        , A.CONTACT_PHONE_NO
+        , A.CONTACT_EMAIL
+        , B.APPV_PRCSS_STUS
+        , UPPER(C.CODE_DESC)APPV_PRCSS_STUS_DESC 
+        , NVL(TO_CHAR(A.CRT_DATE, 'DD/MM/YYYY'), '-') CRT_DATE
+        , NVL(TO_CHAR(A.UPD_DATE, 'DD/MM/YYYY'), '-') UPD_DATE -- STATUS ? 
+    FROM FCM0029D A 
+    JOIN FCM0004M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+    LEFT JOIN SYS0013M C ON C.CODE = B.APPV_PRCSS_STUS AND C.CODE_MASTER_ID = 508
+    ORDER BY A.CRT_DATE DESC
+    </select>
+
+</mapper>
