@@ -12,6 +12,12 @@
 //AUIGrid 그리드 객체
 var myGridID;
 var excelGridID;
+// Service type
+var arrSrvTypeCode = [
+                      {"codeId": "SS"  ,"codeName": "Self Service"},
+                      {"codeId": "HS" ,"codeName": "Heart Service"}
+                    ];
+
 
 function loadMember(){
     if("${orgCode}"){
@@ -68,7 +74,7 @@ function loadMember(){
 }
 
 $(document).ready(function(){
-
+	doDefCombo(arrSrvTypeCode, '', 'cmbSrvType', 'S', '');
     var gridPros = {
             // 편집 가능 여부 (기본값 : false)
             editable : false,
@@ -105,24 +111,30 @@ var columnLayout = [
         dataField : "sUnit",
         headerText : "<spring:message code='pay.head.unit'/>",
         editable : false,
+        width : 80,
         dataType:"numeric"
+    }, {
+    	dataField : "srvType",
+        headerText : "<spring:message code='sales.srvType'/>",
+        width : 100,
+        editable : false
     }, {
         dataField : "indOrd",
         headerText : "Individual Order",
         editable : false,
-        width : 100,
+        width : 150,
         dataType:"numeric"
     }, {
         dataField : "corpOrd",
         headerText : "Corporate Order",
         editable : false,
-        width : 100,
+        width : 150,
         dataType:"numeric"
     }, {
         dataField : "corpRatio",
         headerText : "Corporate Ratio",
         editable : false,
-        width : 100,
+        width : 150,
         dataType:"numeric",
         formatString:"###0.##"
     }, {
@@ -136,7 +148,8 @@ var columnLayout = [
         dataField : "sCol",
         headerText : "<spring:message code='pay.head.collection'/>",
         editable : false,
-        width : 100,dataType:"numeric",
+        width : 100,
+        dataType:"numeric",
         formatString:"###0.#"
     }, {
         dataField : "rcPrct",
@@ -174,6 +187,10 @@ var excelColumnLayout = [
                              headerText : "<spring:message code='pay.head.unit'/>",
                              editable : false,
                              dataType:"numeric"
+                         }, {
+                             dataField : "srvType",
+                             headerText : "<spring:message code='sales.srvType'/>",
+                             editable : false
                          }, {
                              dataField : "indOrd",
                              headerText : "Individual Order",
@@ -235,7 +252,7 @@ var excelColumnLayout = [
     // ajax list 조회.
     function searchList(){
     	   Common.ajax("GET","/payment/selectRentalCollectionByBSNewList",$("#searchForm").serialize(), function(result){
-    		   console.log('result:', result);
+    		console.log('result:', result);
     		AUIGrid.setGridData(myGridID, result);
     		AUIGrid.setGridData(excelGridID, result);
     	});
@@ -294,6 +311,12 @@ var excelColumnLayout = [
                         <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
                         <th scope="row">Member Code</th>
                         <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code" class="w100p"/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code='sales.srvType'/></th>
+                        <td><select class="w100p" id="cmbSrvType" name="cmbSrvType"></td>
+                        <th scope="row"></th>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

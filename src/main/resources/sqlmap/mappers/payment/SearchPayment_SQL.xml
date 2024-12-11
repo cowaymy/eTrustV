@@ -704,16 +704,21 @@
            A.AD_RATIO AS adRatio,
            MEM2.FULL_NAME AS cmName,
            SUBSTR(C.NAME, INSTR(C.NAME, '-') + 2) AS branch,
-           C.CODE_DESC AS region
+           C.CODE_DESC AS region,
+           A.SRV_TYPE AS srvType
         FROM REP0085S A
-        LEFT JOIN ORG1001V V   ON V.MEM_CODE = A.MEM_CODE
-        LEFT JOIN ORG0001D MEM2   ON MEM2.MEM_ID = V.LVL3_UP_ID AND V.LVL3_UP_ID > 0
+        LEFT JOIN ORG1001V V ON V.MEM_CODE = A.MEM_CODE
+        LEFT JOIN ORG0001D MEM2 ON MEM2.MEM_ID = V.LVL3_UP_ID AND V.LVL3_UP_ID > 0
         LEFT JOIN (
-        SELECT B.BRNCH_ID, B.CODE, B.NAME, A.CODE_DESC FROM SYS0013M A
-        INNER JOIN SYS0005M B ON B.REGN_ID = A.CODE_ID WHERE CODE_MASTER_ID = 49
+              SELECT B.BRNCH_ID,
+                         B.CODE,
+                         B.NAME,
+                         A.CODE_DESC
+              FROM SYS0013M A
+              INNER JOIN SYS0005M B ON B.REGN_ID = A.CODE_ID
+              WHERE CODE_MASTER_ID = 49
         ) C ON MEM2.BRNCH = C.BRNCH_ID
-        WHERE
-        1=1
+        WHERE 1=1
         <if test="orgCode != '' ">
            AND A.T_ORG_CODE = #{orgCode}
        </if>
@@ -728,6 +733,9 @@
        </if>
        <if test="memType != '' ">
            AND A.MEM_TYPE = #{memType}
+       </if>
+        <if test="cmbSrvType != '' ">
+           AND A.SRV_TYPE = #{cmbSrvType}
        </if>
        ORDER BY A.S_ID
     </select>
@@ -1886,20 +1894,18 @@
             ,B.ACC_DEBT_SUB_OPNG_OTSTND_AGING OPNG_AGING
             ,A.DEPT_CODE AS CM_CODE
             ,A.GRP_CODE AS SCMCODE
+            ,A.SRV_TYPE AS srvType
         FROM REP0087S A
-        INNER JOIN PAY0053S B
-            ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
-        LEFT JOIN PAY0042D C
-            ON A.SALES_ORD_ID = C.SALES_ORD_ID AND A.THSMNTH = C.BANK_DTL_ID
+        INNER JOIN PAY0053S B ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
+        LEFT JOIN PAY0042D C ON A.SALES_ORD_ID = C.SALES_ORD_ID AND A.THSMNTH = C.BANK_DTL_ID
         LEFT JOIN PAY0041D D ON D.CTRL_ID = C.BANK_DTL_CTRL_ID
         LEFT JOIN SYS0094M SYS ON SYS.CODE = C.BANK_DTL_APPR_CODE AND SYS.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
-        LEFT JOIN PAY0042D E
-            ON A.SALES_ORD_ID = E.SALES_ORD_ID AND A.PRVMNTH = E.BANK_DTL_ID
+        LEFT JOIN PAY0042D E ON A.SALES_ORD_ID = E.SALES_ORD_ID AND A.PRVMNTH = E.BANK_DTL_ID
         LEFT JOIN PAY0041D F ON D.CTRL_ID = E.BANK_DTL_CTRL_ID
         LEFT JOIN SYS0094M SYC ON SYC.CODE = E.BANK_DTL_APPR_CODE AND SYC.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
-         JOIN ORG0001D G ON G.MEM_CODE = A.CODY_CODE
-         JOIN SYS0038M SYD ON SYD.STUS_CODE_ID = G.STUS
-         JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = A.SALES_ORD_ID
+        JOIN ORG0001D G ON G.MEM_CODE = A.CODY_CODE
+        JOIN SYS0038M SYD ON SYD.STUS_CODE_ID = G.STUS
+        JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID
         LEFT JOIN SAL0074D PAYMODE ON PAYMODE.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0028D CARD ON CARD.CUST_CRC_ID = PAYMODE.CUST_CRC_ID
@@ -1960,6 +1966,9 @@
 		       <if test ="renPrd == 2">
 		       AND H.SRV_EXPR_DT <![CDATA[ < ]]>  SYSDATE
 		       </if>
+       </if>
+       <if test="cmbSrvType != ''">
+           AND A.SRV_TYPE = #{cmbSrvType}
        </if>
     </select>
 

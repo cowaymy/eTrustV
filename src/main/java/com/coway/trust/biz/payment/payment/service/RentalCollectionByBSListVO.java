@@ -28,6 +28,7 @@ public class RentalCollectionByBSListVO implements Serializable {
 	private String cmName;
 	private String branch;
 	private String region;
+	private String srvType;
 
 	public String getsID() {
 		return sID;
@@ -175,6 +176,13 @@ public class RentalCollectionByBSListVO implements Serializable {
     }
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public String getSrvType(){
+    	return srvType;
+    }
+    public void setSrvType(String srvType){
+    	this.srvType = srvType;
     }
 
 }

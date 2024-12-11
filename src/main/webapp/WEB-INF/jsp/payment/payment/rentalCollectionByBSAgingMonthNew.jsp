@@ -23,6 +23,8 @@ var bsMonth = [{"codeId":"","codeName":"All"},{"codeId":"Yes","codeName":"Yes"},
 var openingAging = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
 var rentalPeriod = [{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
 var custTypeCom = [{"codeId":"","codeName":"All"}];
+//Service type
+var arrSrvTypeCode = [{"codeId": "SS"  ,"codeName": "Self Service"},{"codeId": "HS" ,"codeName": "Heart Service"}];
 
 function loadMember(){
     if("${orgCode}"){
@@ -89,6 +91,7 @@ $(document).ready(function(){
 	doDefCombo(openingAging, '', 'cmbOpeningAging', 'S', '');
 	doDefCombo(rentalPeriod, '', 'renPrd', 'S', '');
 	doDefCombo(custTypeCom, '', 'custComType', 'S', '');
+	doDefCombo(arrSrvTypeCode, '', 'cmbSrvType', 'S', '');
 
     var gridPros = {
             // 편집 가능 여부 (기본값 : false)
@@ -136,6 +139,7 @@ $(document).ready(function(){
 var columnLayout = [
       {dataField : "salesOrdId", editable : false, visible : false}
     , {dataField : "bsMonth", headerText : "<spring:message code='sal.title.bsMonth'/>", editable : false}
+    , {dataField : "srvtype", headerText : "<spring:message code='sales.srvType'/>", editable : false, width : 100}
     , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
     , {dataField : "jompay", headerText : "Jompay No", editable: false, width: 100}
     , {dataField : "codyCode", headerText : "Cody Code", editable : false,width : 100}
@@ -158,6 +162,7 @@ var columnLayout = [
 var excelColumnLayout = [
                     {dataField : "salesOrdId", editable : false}
                   , {dataField : "bsMonth", headerText : "<spring:message code='sal.title.bsMonth'/>", editable : false}
+                  , {dataField : "srvtype", headerText : "<spring:message code='sales.srvType'/>", editable : false, width : 100}
                   , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
                   , {dataField : "jompay", headerText : "Jompay No", editable: false, width: 100}
                   , {dataField : "scmcode", headerText : "SCM Code", editable : false,width : 100}
@@ -183,6 +188,7 @@ var excelColumnLayout = [
     // ajax list 조회.
     function searchList(){
     	   Common.ajax("GET","/payment/selectRCByBSAgingMonthNewList.do",$("#searchForm").serialize(), function(result){
+    		console.log("result :: " + result);
     		AUIGrid.setGridData(myGridID, result);
     		AUIGrid.setGridData(excelGridID, result);
     	});
@@ -199,7 +205,6 @@ var excelColumnLayout = [
             Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
             return;
         }
-
     }
 
     function fn_clear(){
@@ -292,8 +297,8 @@ var excelColumnLayout = [
                         <td> <select id="renPrd" name="renPrd" class="w100p" ></select></td>
                     </tr>
                     <tr>
-                        <th scope="row"></th>
-                        <td></td>
+                        <th scope="row"><spring:message code='sales.srvType'/></th>
+                        <td><select class="w100p" id="cmbSrvType" name="cmbSrvType"></td>
                         <th scope="row">Cust Type Company</th>
                         <td> <select id="custComType" name="custComType" class="w100p" ></select></td>
                     </tr>
