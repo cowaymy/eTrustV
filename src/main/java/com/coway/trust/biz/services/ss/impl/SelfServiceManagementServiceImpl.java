@@ -156,7 +156,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
 
     insertSelfServiceResult(params, selfServiceItemGrid);
     insertSelfServiceSTO(params);
-    // prepareAndSendDHLShipment(params, rtnMap);
+    prepareAndSendDHLShipment(params, rtnMap);
   }
 
   private boolean checkStockAvailability(Map<String, Object> itemMap, Map<String, Object> locInfoEntry)
@@ -353,6 +353,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     } catch (Exception e) {
       rtnMap.put("logError", ERROR_CODE);
       rtnMap.put("message", e.getMessage());
+      throw e;
     }
     return rtnMap;
   }
