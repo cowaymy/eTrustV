@@ -5192,8 +5192,7 @@ SELECT DISTINCT A.ORD_ID FROM (
     <select id="getSrvTypeChgTm" parameterType="Map" resultType="Integer">
         SELECT COUNT(*) CNT
         FROM SAL0090H
-        WHERE SRV_SO_ID = #{salesOrdId}
-        AND SRV_STUS_ID = 1
+        WHERE SRV_SO_ID = #{salesOrdId}       
     </select>
 
      <select id="getPromoItemInfo" parameterType="Map" resultType="egovMap">
@@ -5276,7 +5275,7 @@ SELECT DISTINCT A.ORD_ID FROM (
 
      <select id="getSrvTypeChgHistoryLogInfo" parameterType="Map" resultType="egovMap">
         SELECT TO_CHAR(TO_DATE(B.SRV_UPD_DT, 'DD/MM/YY'), 'DD/MM/YY') AS SRV_CRT_DT,
-                    A.SRV_TYPE AS SRV_TYPE_CHG_FROM,
+                    B.SRV_TYPE_FROM AS SRV_TYPE_CHG_FROM,
                     B.SRV_TYPE AS SRV_TYPE_CHG_TO,
                     B.SRV_REM AS REMARK,
                     C.USER_NAME AS CREATOR

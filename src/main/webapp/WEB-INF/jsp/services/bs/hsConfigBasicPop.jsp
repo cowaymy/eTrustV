@@ -106,11 +106,12 @@
 
                // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
               // HS Configuration @ Service mode only update in history logs and month end update on changed service mode
-               if(srvType == ''){
+                if(srvType == ''){
             	   $("#cmbSrvType option[value="+'${configBasicInfo.srvType}'+"]").attr("selected", true);
                }else{
             	    $("#cmbSrvType option[value="+srvType +"]").attr("selected", true);
                }
+             
                $("#txtSrvTypeChangeCount").val(srvTypeChangeCnt);
 
                if(appType == "REN" && totOutStandingAmt == "0.00"){
@@ -319,7 +320,7 @@
             <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
             <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
             <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
-            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${configBasicInfo.srvType}"/>
+            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${serviceType.srvType}"/>
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
