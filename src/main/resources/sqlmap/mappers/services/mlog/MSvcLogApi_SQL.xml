@@ -556,7 +556,7 @@
                                            sal0071d.stus_code_id AS rental_Status,
                                            sys0005m.code AS dsc_Code,
                                            TO_CHAR (sal0047d.install_dt, 'YYYYMMDD') AS installation_Date,
-                                           svc0004d.as_workmnsh AS labour_Charge,
+                                           NVL(TO_CHAR(svc0004d.as_workmnsh), '0') AS labour_Charge,
                                            svc0004d.as_defect_type_id AS defect_Type_Id,
                                            svc0004d.as_defect_grp_id AS defect_Group_Id,
                                            svc0004d.as_defect_id AS defect_Id,
