@@ -147,7 +147,7 @@ public class AfterServiceJobDto {
   private String installationDate;
 
   @ApiModelProperty(value = "labour Charge 금액 (작업결과보기시 필요)")
-  private int labourCharge;
+  private String labourCharge;
 
   private int defectTypeId;
 
@@ -754,11 +754,11 @@ public void setReworkProj(String reworkProj) {
     this.installationDate = installationDate;
   }
 
-  public int getLabourCharge() {
+  public String getLabourCharge() {
     return labourCharge;
   }
 
-  public void setLabourCharge(int labourCharge) {
+  public void setLabourCharge(String labourCharge) {
     this.labourCharge = labourCharge;
   }
 
